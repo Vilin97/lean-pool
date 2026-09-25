@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
 
 /-!
 # Rigidity of the representative map on a forest face
@@ -57,6 +59,8 @@ by the length vector, and the enumeration in
 the accompanying analysis measures how many such
 faces a genus-five legged row has.
 -/
+
+@[expose] public section
 
 -- `Certificate` is a structure inside a namespace already ending in `Certificate`.
 namespace Utilities.Certificate.DegenerateSpec.DegSpec

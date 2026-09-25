@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationThree
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationThree
 
 /-!
 # Atanasov--Ranganathan configuration 5, generic in the core
@@ -32,6 +34,8 @@ spelled out directly.  A row supplies its lookup tables and the five
 height equations; nothing else.
 -/
 
+@[expose] public section
+
 namespace AtanasovRanganathan.ConfigurationFive
 
 open Utilities
@@ -42,10 +46,12 @@ open Certificate.DegenerateSpec
 
 /-! ## One-edge arithmetic used by configuration 5 -/
 
+/-- The contribution at the tail of a subdivided edge with the prescribed endpoint heights. -/
 def tailContribution (L hu hv : ℕ) : ℤ :=
   if L = 0 then 0
   else SubdivisionArithmetic.step L ((hu : ℤ) - (hv : ℤ)) 0
 
+/-- The contribution at the head of a subdivided edge with the prescribed endpoint heights. -/
 def headContribution (L hu hv : ℕ) : ℤ :=
   if L = 0 then 0
   else -SubdivisionArithmetic.step L ((hu : ℤ) - (hv : ℤ)) (L - 1)
@@ -131,7 +137,9 @@ theorem headContribution_eq_one_of_full {L hu hv : ℕ}
   simp [headContribution, hL.ne', hRise,
     ConfigurationCommon.lastStep_neg_full_eq_neg_one hL]
 
+/-- One chip when the edge length is positive, and zero for a collapsed edge. -/
 def positiveChip (L : ℕ) : ℤ := if L = 0 then 0 else 1
+/-- One chip for a collapsed edge, and zero when the edge length is positive. -/
 def zeroChip (L : ℕ) : ℤ := if L = 0 then 1 else 0
 
 theorem positiveChip_nonneg (L : ℕ) : 0 ≤ positiveChip L := by
@@ -192,6 +200,7 @@ theorem positiveChip_add_tail_nonneg {L h : ℕ} (hh : h ≤ L) :
     simp only [positiveChip, hPos.ne', ↓reduceIte, ge_iff_le]
     omega
 
+/-- The drain indicator: one unit for a positive height and zero at height zero. -/
 abbrev drain := ConfigurationThree.drain
 
 theorem headContribution_eq_neg_drain_of_ge {L hi lo : ℕ}
@@ -234,7 +243,9 @@ once and instantiated twice. -/
 read.  `tail L hu hv` is the contribution at the end carrying height `hu`,
 `head L hu hv` the contribution at the end carrying `hv`. -/
 structure SlotLedger where
+  /-- The tail contribution as a function of edge length and the two endpoint heights. -/
   tail : ℕ → ℕ → ℕ → ℤ
+  /-- The head contribution as a function of edge length and the two endpoint heights. -/
   head : ℕ → ℕ → ℕ → ℤ
   tail_nonneg : ∀ {L hu hv : ℕ}, hv ≤ hu → hu ≤ hv + L → 0 ≤ tail L hu hv
   zeroChip_add_tail_full : ∀ L : ℕ, 1 ≤ zeroChip L + tail L L 0

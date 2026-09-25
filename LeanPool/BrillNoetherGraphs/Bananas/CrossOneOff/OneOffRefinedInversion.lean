@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffPeriodBound
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteRows
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteCountSol
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffPeriodBound
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteRows
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteCountSol
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
 
 /-!
 # The refined same-strand one-off inversion count
@@ -23,6 +25,8 @@ There is one preferred row over every `1 <= x <= g`, and an additional row
 immediately before it whenever `(n-1) | x`.  Every ordered pair of compressed
 coordinates gives an inversion, as does each additional adjacent pair.
 -/
+
+@[expose] public section
 
 namespace Bananas
 
@@ -466,9 +470,13 @@ private theorem oneOffAdjacentPair_mem
   · rw [← hPre, ← hCol, hPreRow, hColRow]
     omega
 
+/-- Counting indices consisting of unordered pairs on the first part and individual
+adjacent-pair indices on the second. -/
 abbrev OneOffRefinedCountDomain (g F : ℕ) :=
   Sum (Sym2 (Fin (g - 1))) (Fin F)
 
+/-- Realize the triangular and adjacent-pair parts of the refined counting domain as pairs of
+natural numbers. -/
 noncomputable def oneOffRefinedCountPair (n g F : ℕ) :
     OneOffRefinedCountDomain g F → ℕ × ℕ
   | Sum.inl x => oneOffTriangularPair n g x

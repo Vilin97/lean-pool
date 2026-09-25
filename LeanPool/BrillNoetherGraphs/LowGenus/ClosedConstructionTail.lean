@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
 
 /-!
 # The common closing step of an Atanasov--Ranganathan closed-face row
@@ -19,6 +21,8 @@ least one by the closed-face separator theorem, hence is a
 Only the middle statement is row specific.  This file packages the other three
 once, so that a row's closing theorem is a single application.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.Configurations
 

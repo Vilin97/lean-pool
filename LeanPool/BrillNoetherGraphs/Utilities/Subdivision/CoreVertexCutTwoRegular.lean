@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutGenus
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.CycleRigidity
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutGenus
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.CycleRigidity
 
 /-!
 # Two-regular genus-one factors cut from a subdivided core
@@ -20,6 +22,8 @@ lengths.  Core vertices retain the checked incident-slot degree, while every
 interior path vertex has degree two.  Together with core connectedness and a
 checked side genus of one, this constructs a `PointedGenusOneRigid` witness.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineInversionFinite
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ExactTorsionAPI
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineInversionFinite
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ExactTorsionAPI
 
 /-!
 # Genus-two transmission inversions
@@ -16,6 +18,8 @@ The first ingredient is the paper's pointwise construction: a rank-zero,
 degree-one twist determines a unique inversion crossing the corresponding
 row and column of the transmission permutation.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

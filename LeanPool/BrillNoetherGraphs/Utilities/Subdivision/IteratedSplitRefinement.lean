@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.OneEdgeSplitRefinement
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.OneEdgeSplitRefinement
 
 /-!
 # Iterated canonical bivalent splits
@@ -21,6 +23,8 @@ finite chain of positive bivalent refinements.  In particular, Brill--Noether
 existence is invariant along the whole chain.
 -/
 
+@[expose] public section
+
 namespace Utilities.Certificate.IteratedSplitRefinement
 
 open ExplicitPotential SubdivisionGraph
@@ -28,8 +32,11 @@ open Utilities.Certificate.OneEdgeSplitRefinement
 
 /-- A subdivision specification together with its dependent core sizes. -/
 structure PackedSpec where
+  /-- The number of core vertices in the packed subdivision specification. -/
   n : ℕ
+  /-- The number of ordered core slots in the packed subdivision specification. -/
   p : ℕ
+  /-- The positive-length subdivision specification with the stored vertex and slot counts. -/
   spec : SubdivisionGraph.Spec n p
 
 namespace PackedSpec
@@ -56,8 +63,11 @@ def splitPacked (source : PackedSpec) (split : Fin source.p)
 separately generated presentation remains a subsequent `LaplacianEquiv`
 obligation. -/
 structure CanonicalSplitStep (source target : PackedSpec) where
+  /-- The source slot divided by this canonical split step. -/
   splitSlot : Fin source.p
+  /-- The positive length of the first segment created by the split. -/
   firstLength : ℕ
+  /-- The positive length of the second segment, completing the original slot length. -/
   secondLength : ℕ
   firstLength_pos : 0 < firstLength
   secondLength_pos : 0 < secondLength

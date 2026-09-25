@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrand
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointInversions
-import LeanPool.BrillNoetherGraphs.Utilities.Segments.SeamCalculus
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrand
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointInversions
+public import LeanPool.BrillNoetherGraphs.Utilities.Segments.SeamCalculus
 
 /-!
 # Generic-genus rank witnesses on bananas
@@ -15,6 +17,8 @@ This file is deliberately separate from `Statements.lean`.  It packages the
 rank facts used by the far-mark construction in Theorem 3.5 of
 the twice-marked banana paper.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

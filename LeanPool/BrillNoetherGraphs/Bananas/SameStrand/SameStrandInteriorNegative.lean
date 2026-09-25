@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.GenericRankWitness
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBasics
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.GenericRankWitness
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBasics
 
 /-!
 # Same-strand interior witnesses in arbitrary genus
@@ -20,6 +22,8 @@ after deleting `v_j` it slides to one of the two endpoint chips.  The two
 other deletions are respectively one chip and a nonprincipal degree-zero
 divisor.  Thus `rankDelta D = -1`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

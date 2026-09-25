@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import Mathlib.Tactic
 
 /-!
 # Finite loop-aware pseudocore certificates
@@ -29,6 +31,8 @@ marker counts, looplessness, core connectivity, and every unordered edge
 multiplicity are all replayed by finite Boolean folds.
 -/
 
+@[expose] public section
+
 namespace Utilities.Certificate.GenusFourPseudocore
 
 open Finset
@@ -37,7 +41,9 @@ open Finset
 to be an unordered nonloop multiplicity; validity checks symmetry and a zero
 diagonal explicitly. -/
 structure Pseudocore (n : ℕ) where
+  /-- The number of semantic loop occurrences based at each pseudocore vertex. -/
   loops : Fin n → ℕ
+  /-- The proposed multiplicity of nonloop edges between each pair of pseudocore vertices. -/
   multiplicity : Fin n → Fin n → ℕ
 
 namespace Pseudocore
@@ -229,7 +235,10 @@ def explicitCoreMultiplicity {vertexCount edgeCount : ℕ}
 The actual marker order and edge-slot order are arbitrary and are checked from
 the displayed functions. -/
 structure SplitMetadata where
+  /-- The original base vertex to which each split-loop marker is attached. -/
   markerBase : Fin core.loopCount → Fin n
+  /-- The proposed explicit core after adjoining one marker per loop and splitting each loop
+  into two slots. -/
   splitCore : ExplicitPotential.Core
     (n + core.loopCount) core.splitEdgeCount
 

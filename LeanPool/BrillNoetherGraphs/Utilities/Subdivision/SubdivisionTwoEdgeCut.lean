@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoEdgeConnectedRigidity
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionTopology
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoEdgeConnectedRigidity
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionTopology
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import Mathlib.Tactic
 
 /-!
 # Cut counting and bridgelessness for contractions and subdivisions
@@ -18,6 +20,8 @@ two-edge connectivity for an ordered core, counts crossing steps in a
 subdivision, and proves bridgelessness of positive subdivisions
 (`twoEdgeCutCondition_graph_of_coreTwoEdgeConnected`).
 -/
+
+@[expose] public section
 namespace Utilities.Certificate
 
 open Finset

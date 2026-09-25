@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Tricycle.Core
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SpecBurning
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Tricycle.Core
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SpecBurning
+public import Mathlib.Tactic
 
 /-!
 # Lemma 3.5 of van Dobben de Bruyn–Smit–van der Wegen
@@ -27,6 +29,8 @@ is *not* burned — pays for all of them at once, giving `|I₀| ≤ D(v₀)`.  
 `i ∈ I₁` the first vertex up the spoke is unburned while the far end is burned,
 so the slot has a burned/unburned split and therefore a chip in its interior.
 -/
+
+@[expose] public section
 
 namespace Utilities.Tricycle
 

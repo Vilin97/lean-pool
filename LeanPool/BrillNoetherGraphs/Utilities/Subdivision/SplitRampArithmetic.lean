@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionArithmetic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionArithmetic
 
 /-!
 # Two canonical ramps meeting at an interior chip
@@ -37,6 +39,8 @@ firing script is generic already -- `DegSpec.slotValueScript`,
 arbitrary slot-value function, `interpolatedScript` being merely the instance
 whose value is one ramp.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.SubdivisionArithmetic
 

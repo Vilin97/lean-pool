@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionChipDescentMain
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.UnitSubdivisionPresentation
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.BrillNoetherRank
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionChipDescentMain
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.UnitSubdivisionPresentation
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.BrillNoetherRank
+public import Mathlib.Tactic
 
 /-!
 # Odd subdivision descent for Brill--Noether rank
@@ -39,6 +41,8 @@ None of this needs a genus hypothesis or any algebraic-geometric input.  The
 witnesses) for a genus-five graph is a separate matter, discussed in the
 private research notes; this file proves only the descent.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec
 

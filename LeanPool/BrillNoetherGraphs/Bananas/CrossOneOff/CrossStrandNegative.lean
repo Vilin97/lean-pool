@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrand
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrand
 
 /-!
 # Cross-strand reduced negative-rank witness
@@ -13,6 +15,8 @@ This is the small, independently useful part of the far-mark calculation.
 The reducedness theorem supplies the rank `-1` conclusion directly; no
 additional rank-zero argument is bundled into it.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

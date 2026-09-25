@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoDegreeTwo
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffTransmission
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.GenericFarWitness
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoDegreeTwo
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffTransmission
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.GenericFarWitness
 
 /-!
 # Elementary rows in the theta transmission case table
@@ -16,6 +18,8 @@ The remaining task is the exhaustive classification of the default case; the
 exceptional rows below are graph-independent once their stated divisor-class
 conditions hold.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

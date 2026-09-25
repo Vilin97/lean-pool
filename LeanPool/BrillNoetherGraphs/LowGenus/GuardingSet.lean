@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationTwo
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationTwo
 
 /-!
 # Guarding sets: the abstract glue of an Atanasov--Ranganathan row proof
@@ -79,6 +81,8 @@ adjustment is bookkeeping: those files display their divisor as a
 a weight function.  `coreClassDivisor_eq_fourChipDivisor` below is that
 translation, proved for four pairwise-distinct chips.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.Guarding
 

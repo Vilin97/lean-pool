@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.AcyclicOrientation
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.AcyclicOrientation
 
 /-!
 # Orientability of degree `g - 1` divisor classes
@@ -75,6 +77,8 @@ their identities) is stated for an *arbitrary* edge multiset, because step (1) r
 `G.edges` is substituted only at the end.
 
 -/
+
+@[expose] public section
 
 namespace Utilities
 
@@ -764,7 +768,9 @@ private lemma exists_min_card_minimizer (G : CFGraph) (D : CFDiv G) :
 `\label{cor:minimal1}`). Defined as a minimizer of least cardinality; `chiMinimizer_subset`
 shows it is contained in every other minimizer, which is what makes it *the* minimal one. -/
 noncomputable def chiMinimizer (G : CFGraph) (D : CFDiv G) : Finset G.V :=
-  (exists_min_card_minimizer G D).choose
+  Classical.choose (show ∃ S : Finset G.V, eulerChi G S D = chiMin G D ∧
+      ∀ T : Finset G.V, eulerChi G T D = chiMin G D → S.card ≤ T.card from by
+    exact exists_min_card_minimizer G D)
 
 /-- `S₀(D)` is a minimizer. -/
 lemma chiMinimizer_eq (D : CFDiv G) : eulerChi G (chiMinimizer G D) D = chiMin G D :=

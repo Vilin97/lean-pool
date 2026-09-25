@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MovingPosition
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MovingPosition
 
 /-!
 # Signed window profiles on subdivision slots
@@ -20,6 +22,8 @@ its principal divisor solely from the signed window endpoints.  The slope is
 allowed to be any integer; the `-1`, `0`, and `1` profiles used in genus four
 are special cases.
 -/
+
+@[expose] public section
 
 open Finset
 
@@ -114,9 +118,14 @@ theorem windowSlope_divergence {length start stop j : ℕ} {slope : ℤ}
 the core vertices.  A zero slope or a degenerate window represents a constant
 slot. -/
 structure Data {n p : ℕ} (spec : SubdivisionGraph.Spec n p) where
+  /-- The integer potential value at each core vertex of the window profile. -/
   coreValue : Fin n → ℤ
+  /-- The initial path coordinate of the constant-slope window on each slot. -/
   start : Fin p → ℕ
+  /-- The final path coordinate of each window, between its start and the slot length. -/
   stop : Fin p → ℕ
+  /-- The integer slope inside each slot's window, compatible with the difference of the
+  endpoint potentials. -/
   slope : Fin p → ℤ
   start_le_stop : ∀ edge, start edge ≤ stop edge
   stop_le_length : ∀ edge, stop edge ≤ spec.length edge

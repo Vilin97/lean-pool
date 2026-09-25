@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBridge
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBasics
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.MarkedRankProfile
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgeDemazure
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBridge
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBasics
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.MarkedRankProfile
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgeDemazure
 
 /-!
 # Exact transmission and submodularity across a vertex wedge
@@ -23,6 +25,8 @@ The divisor algebra which turns an exact rank surface into a raw transmission
 permutation is kept abstract.  This avoids unfolding `oneChip` on a concrete
 wedge vertex type.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

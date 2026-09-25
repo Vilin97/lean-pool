@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCanonicalClassifier
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourPseudocoreCoverage
-import LeanPool.BrillNoetherGraphs.LowGenus.Infrastructure.CoreRelabelingClosed
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCanonicalClassifier
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourPseudocoreCoverage
+public import LeanPool.BrillNoetherGraphs.LowGenus.Infrastructure.CoreRelabelingClosed
 
 /-!
 # Closed coverage of the six cubic genus-four rows
@@ -16,6 +18,8 @@ the six fixed cubic rows.  Closed-face relabeling therefore turns six named
 row proofs into the classifier-facing coverage theorem consumed by the public
 pseudocore reduction.
 -/
+
+@[expose] public section
 namespace AtanasovRanganathan.GenusFourCubicCoverage
 
 open Utilities

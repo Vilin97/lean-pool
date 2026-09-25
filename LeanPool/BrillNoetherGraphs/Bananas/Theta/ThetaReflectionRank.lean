@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaGeometry
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaGeometry
 
 /-!
 # The reflected theta pair
@@ -13,6 +15,8 @@ On a genus-two banana, a point together with its reflection is a canonical
 degree-two divisor.  This is the rank-theoretic exclusion used in the
 `SameStrand` argument: a rank-zero pair cannot be a reflected pair.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

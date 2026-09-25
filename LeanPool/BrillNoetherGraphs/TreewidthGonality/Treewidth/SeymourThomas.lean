@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.SeymourThomasInduction
+
+public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.SeymourThomasInduction
 
 /-!
 # Seymour--Thomas duality
@@ -36,6 +38,8 @@ bramble of order `≥ treewidth H + 1` contains a sub-bramble of order exactly
 `treewidth H + 1`.  That is `exists_subfamily_order_eq` below, and it is
 strictly cheaper than the easy half of duality.
 -/
+
+@[expose] public section
 
 namespace Utilities.Treewidth
 

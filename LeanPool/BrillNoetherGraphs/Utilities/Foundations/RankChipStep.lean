@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
 
 /-!
 # Rank change under one marked chip
@@ -16,6 +18,8 @@ directly from the universal effective-subtraction definition of rank.
 These two inequalities are the rank-side input for propagating transmission
 conditions between adjacent lattice rows.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
+public import Mathlib.Tactic
 
 /-!
 # Atanasov--Ranganathan rank-one reductions
@@ -17,6 +19,8 @@ automatic rank-one tests.  Consequently Dhar calculations are needed only at
 vertices outside the support.  Their seven pictured configurations are local
 ways to establish precisely the remaining `Reaches` hypotheses below.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionTopology
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.InducedSubgraph
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionTopology
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.InducedSubgraph
+public import Mathlib.Tactic
 
 /-!
 # Euler accounting for topological graph contractions
@@ -23,6 +25,8 @@ fibre is a tree is the usual connected-graph lower bound on its internal edge
 count.  Keeping this boundary explicit avoids silently treating arbitrary
 quotients as rank-preserving contractions.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 

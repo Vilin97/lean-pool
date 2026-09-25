@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexReachability
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexReachability
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import Mathlib.Tactic
 
 /-!
 # Core-supported rank-one divisors on subdivisions
@@ -22,6 +24,8 @@ at least one chip at every member of a certified strong separator has rank at
 least one.  The subdivision theorems specialize it to the transparent divisor
 which is zero on every edge-interior vertex.
 -/
+
+@[expose] public section
 
 namespace Utilities.Subdivision.SubdivisionCoreSupport
 open Utilities.Certificate

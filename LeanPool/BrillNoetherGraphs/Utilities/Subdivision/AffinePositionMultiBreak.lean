@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffinePosition
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexReachability
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SlopeScript
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffinePosition
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexReachability
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SlopeScript
 
 /-!
 # Multi-code divisors and multi-break slope scripts
@@ -43,6 +45,8 @@ Nothing here is row specific and nothing here is decidable-by-`decide`: the
 only Boolean checks are the fail-closed bound checks already introduced by
 `AffinePosition`.
 -/
+
+@[expose] public section
 
 namespace MarkedGraphs.Certificate
 open Utilities.Certificate
@@ -234,6 +238,8 @@ end Carrier
 /-- A finite family of affine position codes.  Repetitions are allowed and
 become chip multiplicities in `divisorOf`. -/
 structure MultiCode (m p d : ℕ) where
+  /-- The indexed family of affine positions; repeated positions contribute repeated chips to
+  its divisor. -/
   code : Fin d → Code m p
 
 namespace MultiCode
@@ -590,13 +596,17 @@ namespace AffinePosition
 /-- One affine-positioned break: a position code together with the slope in
 force from that position onwards along its slot. -/
 structure BreakPoint (m p : ℕ) where
+  /-- The affine-coded position at which this change of slope starts. -/
   position : Code m p
+  /-- The integer slope prescribed from this break onward along its slot. -/
   slope : ℤ
 
 /-- A passive multi-break script: an ordered family of affine-positioned
 breaks.  Order matters, exactly as in a break list: a later entry on the same
 slot overrides an earlier one from its start index onwards. -/
 structure SlopeScript (m p b : ℕ) where
+  /-- The ordered break entries; a later entry on the same slot overrides an earlier one from
+  its starting position onward. -/
   entry : Fin b → BreakPoint m p
 
 namespace SlopeScript

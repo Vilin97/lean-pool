@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ElementaryExistence
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeContraction
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeRankOne
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.GenusThreeCycleWedge
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutConnectivity
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ElementaryExistence
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeContraction
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeRankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.GenusThreeCycleWedge
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutConnectivity
 
 /-!
 # Genus-four rank one across a one-vertex cut
@@ -18,6 +20,8 @@ entirely graph-theoretic.  Two genus-two factors glue with one chip saved;
 a genus-three factor and a pointed rigid genus-one factor glue without adding
 a chip.  This module keeps those statements in the public gluing layer.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

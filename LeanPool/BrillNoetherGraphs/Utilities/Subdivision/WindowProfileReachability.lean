@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.WindowProfile
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.WindowProfile
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
 
 /-!
 # Reachability consequences of signed window profiles
@@ -14,6 +16,8 @@ The endpoint formula for a compatible window profile can be used directly as
 a linear-equivalence witness.  These lemmas package that use for winnability
 and one-chip reachability without imposing restrictions on the profile slopes.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.WindowProfile.Data
 open Utilities.Certificate

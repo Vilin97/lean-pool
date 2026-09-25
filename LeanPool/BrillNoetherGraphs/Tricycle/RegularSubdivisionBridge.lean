@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.GonalityTransport
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.GonalityTransport
+public import Mathlib.Tactic
 
 /-!
 # The occurrence presentation of a unit-length subdivision spec
@@ -30,6 +32,8 @@ The content is a slot correspondence.  `spec.graph.edges` is
 The payoff is that the tricycle gap can be stated for
 `regularSubdivisionGonality : CFGraph → ℕ`, with no `Spec` in the statement.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec
 

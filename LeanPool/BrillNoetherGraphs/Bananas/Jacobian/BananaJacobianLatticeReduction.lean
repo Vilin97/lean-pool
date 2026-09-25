@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReducedInjectivity
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianDiagonal
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReducedInjectivity
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianDiagonal
 
 /-!
 # Integer-lattice reduction for banana coordinates
@@ -21,6 +23,8 @@ diagonal normalization with reducing coordinates larger than their strand
 length.  The lemmas here record the algebraic invariants needed by that
 iteration without hiding them in the full kernel of the class map.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

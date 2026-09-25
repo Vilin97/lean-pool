@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
+public import Mathlib.Tactic
 
 /-!
 # Transport of strong-separator certificates along a Laplacian equivalence
@@ -33,6 +35,8 @@ injective there.  Rather than redoing that argument in a setting where it is
 false, we run it on the contracted *positive* spec, where it applies verbatim,
 and pull the resulting certificate back along the equivalence.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 open Utilities.Certificate

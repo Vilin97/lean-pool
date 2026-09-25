@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Certificate.CubicMatrixReplay
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreRelabeling
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Certificate.CubicMatrixReplay
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreRelabeling
 
 /-!
 # Canonical branch pruning for the cubic matrix replay
@@ -57,6 +59,8 @@ empirical form was checked at `n = 6`, where the 20 canonical connected leaves
 carry all six atlas indices; see
 the accompanying analysis.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.CubicMatrixReplay
 open Utilities.Certificate

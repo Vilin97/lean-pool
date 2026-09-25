@@ -3,14 +3,16 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.AtanasovRanganathanExistence
-import LeanPool.BrillNoetherGraphs.Tricycle.Gap
-import LeanPool.BrillNoetherGraphs.TreewidthGonality.Gonality.TreewidthGonality
-import LeanPool.BrillNoetherGraphs.Bananas.ChainOfLoops.CDPR
-import LeanPool.BrillNoetherGraphs.Bananas.ChainOfLoops.BridgeChainTransport
-import LeanPool.BrillNoetherGraphs.Bananas.ChainOfLoops.CommonPeriodGonality
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.EvenlyMarkedThetaKGeneral
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.AtanasovRanganathanExistence
+public import LeanPool.BrillNoetherGraphs.Tricycle.Gap
+public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Gonality.TreewidthGonality
+public import LeanPool.BrillNoetherGraphs.Bananas.ChainOfLoops.CDPR
+public import LeanPool.BrillNoetherGraphs.Bananas.ChainOfLoops.BridgeChainTransport
+public import LeanPool.BrillNoetherGraphs.Bananas.ChainOfLoops.CommonPeriodGonality
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.EvenlyMarkedThetaKGeneral
 
 /-!
 # Highlights
@@ -28,6 +30,8 @@ lower bound on divisorial gonality.  Further headline theorems can be added one
 at a time in the same style.
 -/
 
+@[expose] public section
+
 namespace Highlights
 
 universe u
@@ -40,10 +44,13 @@ open Multiset Finset
 stored by either ordering of its endpoints; `numEdges` below forgets that
 ordering. -/
 structure CFGraph where
+  /-- The finite nonempty vertex type of the loopless multigraph. -/
   V : Type u
   [instDecidableEq : DecidableEq V]
   [instFintype : Fintype V]
   [instNonempty : Nonempty V]
+  /-- The multiset of edges, retaining parallel-edge multiplicities through ordered endpoint
+  pairs. -/
   edges : Multiset (V × V)
   loopless : ∀ v, (v, v) ∉ edges
 
@@ -158,8 +165,11 @@ def brillNoetherGeneral (G : CFGraph) : Prop :=
 packaged existentially so twice-marked graphs with different vertex types can
 occur in one list. -/
 structure TwiceMarkedGraph where
+  /-- The underlying finite loopless multigraph with two distinguished vertices. -/
   graph : CFGraph.{0}
+  /-- The first distinguished vertex, used as the incoming mark when joining a chain. -/
   u : graph.V
+  /-- The second distinguished vertex, used as the outgoing mark when joining a chain. -/
   v : graph.V
 
 /-- A harmless one-vertex value, used for an empty chain and for malformed

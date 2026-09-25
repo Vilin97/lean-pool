@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.GrassmannianShift
-import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.GrassmannianShift
+public import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
 
 /-!
 # Grassmannian transmission existence: the universal interface
@@ -15,6 +17,8 @@ Brill--Noether statement, rehomed from `GrassmannianLowGenus.lean` (which
 imports this file and keeps the genus-bounded consequences) so that the
 genus-generic transmission layer does not depend on the low-genus census.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoPoleSubdivision
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoPoleReachability
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoPoleSubdivision
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoPoleReachability
 
 /-!
 # Principal divisors on the factors of a two-pole subdivision
@@ -15,6 +17,8 @@ vertex its principal divisor differs from the factor principal divisor only
 by the outgoing slope of the first connector at its attachment pole. The
 second connector is constant, so its stored orientation has no effect.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.TwoPoleSubdivision.Data
 
@@ -96,10 +100,14 @@ open SubdivisionGraph
 variable {n p nA pA nB pB : ℕ}
 variable (s : Spec n p) (d : TwoPoleSubdivision.Data s.core nA pA nB pB)
 
+/-- The left subdivision's ordered attachment poles, obtained from the two designated left core
+vertices. -/
 def leftPoles : Utilities.TwoPole (d.leftSpec s).graph where
   first := (d.leftSpec s).coreVertex (d.leftPole 0)
   second := (d.leftSpec s).coreVertex (d.leftPole 1)
 
+/-- The right subdivision's ordered attachment poles, obtained from the two designated right
+core vertices. -/
 def rightPoles : Utilities.TwoPole (d.rightSpec s).graph where
   first := (d.rightSpec s).coreVertex (d.rightPole 0)
   second := (d.rightSpec s).coreVertex (d.rightPole 1)

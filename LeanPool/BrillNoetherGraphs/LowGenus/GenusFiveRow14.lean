@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationBananaTail
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationTwo
-import LeanPool.BrillNoetherGraphs.LowGenus.GuardingSet
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationBananaTail
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationTwo
+public import LeanPool.BrillNoetherGraphs.LowGenus.GuardingSet
 
 /-!
 # The Atanasov--Ranganathan construction on row 14
@@ -39,6 +41,8 @@ The two families are combined exactly as in `GenusFiveRow12`: each names its
 own centres, and between them they cover every chip-free vertex.
 -/
 
+@[expose] public section
+
 namespace AtanasovRanganathan.GenusFiveRow14
 
 open Utilities
@@ -57,6 +61,7 @@ open ConfigurationBananaTail
 
 /-! ## The divisor -/
 
+/-- The four guarding-set chip vertices 0, 3, 5, and 7 of row 14. -/
 def IsChipVertex (v : Fin 8) : Prop :=
   v = 0 ∨ v = 3 ∨ v = 5 ∨ v = 7
 
@@ -64,6 +69,7 @@ instance (v : Fin 8) : Decidable (IsChipVertex v) := by
   unfold IsChipVertex
   infer_instance
 
+/-- Indicator weight placing one chip at each guarding-set vertex. -/
 def chipWeight (v : Fin 8) : ℤ := if IsChipVertex v then 1 else 0
 
 theorem chipWeight_nonneg (v : Fin 8) : 0 ≤ chipWeight v := by
@@ -71,6 +77,8 @@ theorem chipWeight_nonneg (v : Fin 8) : 0 ≤ chipWeight v := by
 
 theorem sum_chipWeight : ∑ v : Fin 8, chipWeight v = 4 := by decide
 
+/-- The row-14 graph divisor obtained by pushing the four guarding-set chips to their core
+equivalence classes. -/
 def rowDivisor (d : DegSpec 8 12) : CFDiv d.graph :=
   d.coreClassDivisor chipWeight
 
@@ -87,36 +95,48 @@ def isCenter : Fin 8 → Bool
   | 1 | 2 | 4 => true
   | _ => false
 
+/-- First tripod arm at centres 1, 2, and 4, respectively slots 1, 4, and 8; other inputs use
+zero. -/
 def firstArm : Fin 8 → Fin 12
   | 1 => 1
   | 2 => 4
   | 4 => 8
   | _ => 0
 
+/-- Second tripod arm at centres 1, 2, and 4, respectively slots 6, 5, and 9; other inputs use
+zero. -/
 def secondArm : Fin 8 → Fin 12
   | 1 => 6
   | 2 => 5
   | 4 => 9
   | _ => 0
 
+/-- Third tripod arm at centres 1, 2, and 4, respectively slots 7, 10, and 11; other inputs use
+zero. -/
 def thirdArm : Fin 8 → Fin 12
   | 1 => 7
   | 2 => 10
   | 4 => 11
   | _ => 0
 
+/-- Chip at the end of the first tripod arm for centres 1, 2, and 4, respectively vertices 7, 0,
+and 5. -/
 def firstChip : Fin 8 → Fin 8
   | 1 => 7
   | 2 => 0
   | 4 => 5
   | _ => 0
 
+/-- Chip at the end of the second tripod arm for centres 1, 2, and 4, respectively vertices 3,
+3, and 0. -/
 def secondChip : Fin 8 → Fin 8
   | 1 => 3
   | 2 => 3
   | 4 => 0
   | _ => 0
 
+/-- Chip at the end of the third tripod arm for centres 1, 2, and 4, respectively vertices 5, 5,
+and 3. -/
 def thirdChip : Fin 8 → Fin 8
   | 1 => 5
   | 2 => 5
@@ -198,8 +218,10 @@ theorem rowDivisor_eq_tripodConfig (d : DegSpec 8 12) :
 `la = |3--1|` and `lb = |1--5|` are the two arms, `w = |7--1|` the middle
 slot, `p, q = |7--6|` the banana, and `u = |0--6|` the tail slot. -/
 
+/-- The shorter external arm of the banana-tail configuration, the minimum of lengths 6 and 7. -/
 def armMin (d : DegSpec 8 12) : ℕ := min (d.length 6) (d.length 7)
 
+/-- The shorter parallel banana slot, the minimum of lengths 2 and 3. -/
 def parMin (d : DegSpec 8 12) : ℕ := min (d.length 2) (d.length 3)
 
 /-- The height at the centre `6`. -/
@@ -213,12 +235,16 @@ def midHeight (d : DegSpec 8 12) : ℕ :=
 /-- The height at the chip-free arm vertex `1`. -/
 def armHeight (d : DegSpec 8 12) : ℕ := min (midHeight d) (armMin d)
 
+/-- Unquotiented banana-tail height: arm height at vertex 1, middle height at vertex 7, end
+height at vertex 6, and zero elsewhere. -/
 def rawHeight (d : DegSpec 8 12) (v : Fin 8) : ℕ :=
   if v = 1 then armHeight d
   else if v = 7 then midHeight d
   else if v = 6 then endHeight d
   else 0
 
+/-- Integer-valued firing potential given by the negative of the unquotiented banana-tail
+height. -/
 def rawPotential (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   -(rawHeight d v : ℤ)
 
@@ -283,6 +309,8 @@ middle slot has collapsed. -/
 def shiftWeight (d : DegSpec 8 12) : ℤ :=
   if d.length 1 = 0 ∧ midHeight d < endHeight d then 1 else 0
 
+/-- The four-chip weight redistributed across contracted arms 6 and 7 and tail 0, with a further
+transfer from 1 to 7 across contracted slot 1 when the height comparison requires it. -/
 def allocatedWeight (d : DegSpec 8 12) (vertex : Fin 8) : ℤ :=
   chipWeight vertex +
     (if d.length 6 = 0 then transferWeight 3 1 vertex else 0) +
@@ -330,6 +358,8 @@ theorem allocated_class_sum_eq
 
 /-! ## Which vertex of the centre's class carries the delivered chip -/
 
+/-- Target representative for centre 6: choose vertex 7 when a parallel slot contracts and the
+tail is longer than the shorter arm plus middle slot 1; choose vertex 6 otherwise. -/
 def targetOwner (d : DegSpec 8 12) : Fin 8 :=
   if parMin d = 0 ∧ armMin d + d.length 1 < d.length 0 then 7 else 6
 
@@ -382,6 +412,8 @@ theorem positiveEndpointContribution_eq_heightForm
 
 /-! ## The per-vertex coefficient of the local residual -/
 
+/-- Expanded coefficients of the allocated divisor after the banana-tail height script, with
+each incident slot read in its prescribed orientation. -/
 def bananaCoefficient (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then
     positiveChip (d.length 0) + rev.head (d.length 0) (endHeight d) 0

@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationEleven
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedTripod
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedRow
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow10Symmetry
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationEleven
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedTripod
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedRow
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow10Symmetry
 
 /-!
 # AR row 10, chamber 2
@@ -43,6 +45,8 @@ chamber and is carried for free by
 `GenusFiveRow10Symmetry.chamber_covers`.
 -/
 
+@[expose] public section
+
 namespace AtanasovRanganathan.GenusFiveRow10ChamberTwo
 
 open Utilities
@@ -66,6 +70,7 @@ open ConfigurationEleven
 /-- The chip on `e10`, at distance `|e4|` from the head `3`. -/
 def markA (d : DegSpec 8 12) : ℕ := d.length 10 - d.length 4
 
+/-- The second chamber marks slot 10 at offset `markA`; all other slots receive offset zero. -/
 def rowMark (d : DegSpec 8 12) (e : Fin 12) : ℕ := if e = 10 then markA d else 0
 
 @[simp] theorem rowMark_ten (d : DegSpec 8 12) : rowMark d 10 = markA d := by
@@ -240,6 +245,8 @@ theorem profileT {d : DegSpec 8 12} (hCore : d.core = row10Core)
 
 /-! ## The endpoint ledger, vertex by vertex -/
 
+/-- Incident-slot contribution for the second row-10 chamber, using the split-ramp formula on
+marked slot 10. -/
 def contribForm (d : DegSpec 8 12) (h : Fin 8 → ℕ) (v : Fin 8) : ℤ :=
   if v = 0 then
     slotTailForm d (rowMark d) h 10
@@ -290,6 +297,7 @@ theorem contrib_eq {d : DegSpec 8 12} (hCore : d.core = row10Core)
 
 /-! ## The divisor -/
 
+/-- Core-supported part of the second-chamber divisor: one chip each at vertices 1, 2, and 7. -/
 def chipWeight (v : Fin 8) : ℤ :=
   if v = 1 then 1 else if v = 2 then 1 else if v = 7 then 1 else 0
 
@@ -302,6 +310,8 @@ theorem sum_chipWeight : ∑ v : Fin 8, chipWeight v = 3 := by decide
 def rowDivisor (d : DegSpec 8 12) : CFDiv d.graph :=
   markedDivisorOne d chipWeight (rowMark d) 10
 
+/-- Base core weight combining the three core chips with the endpoint contribution of the marked
+chip on slot 10. -/
 def base (d : DegSpec 8 12) : Fin 8 → ℤ :=
   baseOne d chipWeight (rowMark d) 10
 
@@ -322,19 +332,27 @@ theorem base_eq {d : DegSpec 8 12} (hCore : d.core = row10Core) (v : Fin 8) :
 
 /-! ## Chip allocations -/
 
+/-- Allocation for the flat script, transferring chips from 0 to 3 and from 1 to 4 when slots 10
+and 4 respectively contract. -/
 def allocFlat (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   base d v
     + (if d.length 10 = 0 then transferWeight 0 3 v else 0)
     + (if d.length 4 = 0 then transferWeight 1 4 v else 0)
 
+/-- Allocation for the vertex-5 height adjustment, additionally transferring the chip at vertex
+2 across contracted slot 3. -/
 def allocB (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   allocFlat d v + (if d.length 3 = 0 then transferWeight 2 5 v else 0)
 
+/-- Allocation for the banana profile, additionally transferring across contracted slot 9 and
+across contracted slot 11 when its height comparison requires it. -/
 def allocP (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   allocB d v
     + (if d.length 9 = 0 then transferWeight 3 5 v else 0)
     + (if d.length 11 = 0 ∧ htD d < htE d then transferWeight 5 7 v else 0)
 
+/-- Allocation for the tripod at vertex 0, collecting chips from vertices 2 and 1 across
+contracted slots 0 and 2. -/
 def allocT (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   base d v
     + (if d.length 0 = 0 then transferWeight 2 0 v else 0)
@@ -418,6 +436,8 @@ end ClassSums
 
 /-! ## The flat profile: the apex `3` and the vertex `4` -/
 
+/-- Expanded core coefficients of the flat-height script applied to the second-chamber
+`allocFlat`. -/
 def fCoeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then
     zeroChip (markA d) - zeroChip (d.length 10)
@@ -514,6 +534,8 @@ theorem fCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 4 ≤ d.length 10)
 
 /-! ## The target-`B` profile -/
 
+/-- Expanded core coefficients after the height adjustment at vertex 5, applied to the
+second-chamber `allocB`. -/
 def bCoeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then
     zeroChip (markA d) - zeroChip (d.length 10)
@@ -666,6 +688,8 @@ theorem ownerB_rep {d : DegSpec 8 12} (hCore : d.core = row10Core) :
 
 /-! ## The target-`P` profile -/
 
+/-- Expanded core coefficients of the banana height profile applied to the second-chamber
+`allocP`. -/
 def pCoeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then
     zeroChip (markA d) - zeroChip (d.length 10)
@@ -864,6 +888,8 @@ theorem ownerP_rep {d : DegSpec 8 12} (hCore : d.core = row10Core) :
 
 /-! ## The tripod at `0` -/
 
+/-- Expanded core coefficients after the tripod script at vertex 0, applied to the
+second-chamber `allocT`. -/
 def tCoeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then
     zeroChip (d.length 0) + zeroChip (d.length 2) + zeroChip (markA d)

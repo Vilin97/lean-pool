@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Certificate.CubicMatrixCanonical
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Certificate.CubicMatrixCanonical
 
 /-!
 # Generated data for the pruned cubic classifier at n = 8
@@ -37,6 +39,8 @@ the corresponding `Certificate/...CanonicalClassifier.lean`.
 Generated classifier data
 with `--n 8 --deg 3 --layout bucket`.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.Generated.GenusFiveCanonicalClassifierData
 

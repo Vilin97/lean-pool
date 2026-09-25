@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
 
 /-!
 # Kernel-checked rank-one certificates
@@ -25,6 +27,8 @@ the data, but it is not part of the trusted proof.
 Our script convention agrees with `ChipFiringWithLean.prin`: the checked
 residual is `D - q + prin G sigma`, equivalently `D - q - L sigma`.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 
@@ -63,7 +67,10 @@ theorem effective_degree_one_eq_one_chip
 
 /-- Passive certificate data for a rank-one divisor on a fixed graph. -/
 structure RankOne (G : CFGraph) where
+  /-- The proposed divisor whose rank is to be certified as at least one. -/
   divisor : CFDiv G
+  /-- The proposed firing script for each removed-chip vertex; residual effectivity is checked
+  by `ValidAt`. -/
   scripts : G.V → firingScript G
 
 namespace RankOne

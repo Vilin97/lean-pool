@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffInversionLowerBound
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffInversionLowerBound
 
 /-!
 # One-off general-transmission obstruction
@@ -15,6 +17,8 @@ arithmetic hypothesis is deliberately explicit: it is exactly the condition
 under which the paper's one-off row block is large enough to obstruct
 generality.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

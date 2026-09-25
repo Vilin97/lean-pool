@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CubicCore
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionTopology
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CubicCore
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionTopology
 
 /-!
 # Expanding a small subdivision core to a larger one along a contraction
@@ -33,6 +35,8 @@ The output is a *topological contraction certificate*
 `bigSpec.graph → small.graph`: quotient multiplicities match exactly and every
 fibre is connected.  Nothing here is specific to genus four.
 -/
+
+@[expose] public section
 namespace Utilities.Subdivision.CoreExpansion
 open Utilities.Certificate
 

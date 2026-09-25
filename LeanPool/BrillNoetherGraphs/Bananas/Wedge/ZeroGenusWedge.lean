@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.MarkedRankProfile
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionSpecial
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.MarkedRankProfile
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionSpecial
 
 /-!
 # Removing genus-zero factors from a vertex wedge
@@ -19,6 +21,8 @@ whole factor into the coefficient of the gluing vertex on the other factor.
 This is the zero-genus reduction needed at the endpoints of the balancing
 argument in Corollary 6.16(2) of the banana-graph paper.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

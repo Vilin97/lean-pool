@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Examples.MechanicalAPIAudit
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Examples.MechanicalAPIAudit
 
 /-!
 # Bounded mechanical audit: evenly marked theta transmission
@@ -13,6 +15,8 @@ This file is intentionally disjoint from `Statements.lean` and all shared
 helpers.  It records only reductions that compile from the current API.  In
 particular, it is not an attempted proof of the theorem-level gaps.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

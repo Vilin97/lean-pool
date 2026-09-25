@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
 
 /-!
 # The normalization involution of Core 095
@@ -23,6 +25,8 @@ involution as an occurrence-preserving subdivision relabeling, so a proof in
 the normalized chamber transports to all positive length assignments.
 -/
 
+@[expose] public section
+
 namespace LowGenus.GenusFourRow095
 open Utilities.Certificate
 
@@ -35,6 +39,8 @@ def slotSwapFun : Fin 9 → Fin 9 := ![5, 1, 2, 8, 4, 0, 6, 7, 3]
 
 theorem slotSwapFun_bijective : Function.Bijective slotSwapFun := by decide
 
+/-- The involutive permutation of the nine slots induced by the row-095 core symmetry, packaged
+as an equivalence for transporting lengths. -/
 def slotSwap : Fin 9 ≃ Fin 9 where
   toFun := slotSwapFun
   invFun := slotSwapFun

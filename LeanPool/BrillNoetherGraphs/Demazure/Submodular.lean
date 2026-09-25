@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import LeanPool.BrillNoetherGraphs.Demazure.AspPerm
-import LeanPool.BrillNoetherGraphs.Demazure.Valley
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+module
+
+public import LeanPool.BrillNoetherGraphs.Demazure.AspPerm
+public import LeanPool.BrillNoetherGraphs.Demazure.Valley
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 /-!
 # Submodular slipfaces
@@ -15,6 +17,8 @@ uses this to define the operations $\star$, $\triangleleft$, and $\triangleright
 It corresponds roughly to Section 4 of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
+
+@[expose] public section
 
 /-! ### Submodular slipfaces and recovery of ASP permutations
 
@@ -143,23 +147,24 @@ private lemma unique_b {s : SlipFace} (hsub : s.submodular) (a : ℤ) :
     simpa [s.Γ_dual] using this
   exact unique_a (submodular_dual hsub) a
 
-private noncomputable def asp_func {s : SlipFace} (hsub : s.submodular) : ℤ → ℤ :=
-  fun b => (unique_a hsub b).choose
+/-- The permutation function selected from the unique graph point above each integer. -/
+noncomputable def aspFunc {s : SlipFace} (hsub : s.submodular) : ℤ → ℤ :=
+  fun b => (show ∃! a : ℤ, ⟨a, b⟩ ∈ s.Γ from by exact unique_a hsub b).choose
 
 private lemma asp_func_spec {s : SlipFace} (hsub : s.submodular) (a b : ℤ) :
-  asp_func hsub b = a ↔ ⟨a, b⟩ ∈ s.Γ := by
+  aspFunc hsub b = a ↔ ⟨a, b⟩ ∈ s.Γ := by
   constructor
   · intro eq
-    dsimp [asp_func] at eq
+    dsimp [aspFunc] at eq
     rw [← eq]
     exact (unique_a hsub b).choose_spec.1
   · intro mem
-    dsimp [asp_func]
+    dsimp [aspFunc]
     have := (unique_a hsub b).choose_spec.2 a mem
     rw [this]
 
 private lemma asp_bijective {s : SlipFace} (hsub : s.submodular) :
-  (asp_func hsub).Bijective := by
+  (aspFunc hsub).Bijective := by
   constructor
   · intro b1 b2 h
     let a1 := (unique_a hsub b1).choose
@@ -180,17 +185,17 @@ private lemma asp_bijective {s : SlipFace} (hsub : s.submodular) :
     have mem : ⟨a, b⟩ ∈ s.Γ := (unique_b hsub a).choose_spec.1
     let a' := (unique_a hsub b).choose
     suffices a = a' by
-      dsimp [asp_func]
+      dsimp [aspFunc]
       rw [this]
     exact (unique_a hsub b).choose_spec.2 a mem
 
 /-- The ASP permutation associated to a submodular slipface. It can be reconstructed from the set
 $\Gamma$ in the manner described in Section 4 of [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
 noncomputable def asp {s : SlipFace} (hsub : s.submodular) : AspPerm where
-  func := fun b => (unique_a hsub b).choose
-  bijective := asp_bijective hsub
+  func := aspFunc hsub
+  bijective := by exact asp_bijective hsub
   asp := by
-    let S := {b : ℤ | b * (asp_func hsub b) < 0}
+    let S := {b : ℤ | b * (aspFunc hsub b) < 0}
     suffices S.Finite by exact this
     obtain ⟨B, hB⟩ := s.dual.small_a 0
     obtain ⟨B', hB'⟩ := s.large_b 0
@@ -202,7 +207,7 @@ noncomputable def asp {s : SlipFace} (hsub : s.submodular) : AspPerm where
       clear b_neg
       suffices b < B' by
         exact lt_of_lt_of_le this (le_max_right 0 B')
-      let a := asp_func hsub b
+      let a := aspFunc hsub b
       have a_neg : a < 0 := by
         by_contra! a_nonneg
         have neg : b * a < 0 := hb
@@ -229,7 +234,7 @@ noncomputable def asp {s : SlipFace} (hsub : s.submodular) : AspPerm where
       clear b_nonneg
       suffices b ≥ B by
         exact le_trans (min_le_right 0 B) this
-      let a := asp_func hsub b
+      let a := aspFunc hsub b
       have a_pos : a > 0 := by
         by_contra! a_nonpos
         have nonneg : b * a ≥ 0 := by
@@ -370,9 +375,10 @@ submodular. -/
 Its minimum is $s_{\alpha \star \beta}(a,b)$, and its rightmost minimizer is
 the $M_{\alpha \star \beta}(a,b)$ of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227). In Lean that rightmost
-minimizer is `(AspValley α β a b).M`. *Definition 4.6 of
+minimizer is `(aspValley α β a b).M`. *Definition 4.6 of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), unlabeled in source.* -/
-private noncomputable def AspValley (α β : AspPerm) (a b : ℤ) : Valley where
+/-- The valley of the sum of the two ASP slipfaces along the intermediate integer. -/
+noncomputable def aspValley (α β : AspPerm) (a b : ℤ) : Valley where
     f := fun l => α.s a l + β.s l b
     rises := by
       intro m
@@ -391,28 +397,28 @@ private noncomputable def AspValley (α β : AspPerm) (a b : ℤ) : Valley where
       · linarith [α.s_nonneg a n, β.s_ge n b]
 
 private lemma AspSlipValley (α β : AspPerm) (a b : ℤ) :
-  (AspValley α β a b) = (SlipFace.SlipValley α.s β.s a b) := by
-  suffices (AspValley α β a b).f = (SlipFace.SlipValley α.s β.s a b).f by
+  (aspValley α β a b) = (SlipFace.SlipValley α.s β.s a b) := by
+  suffices (aspValley α β a b).f = (SlipFace.SlipValley α.s β.s a b).f by
     rwa [Valley.mk.injEq]
   ext l
-  dsimp [AspValley, SlipFace.SlipValley, AspPerm.s]
+  dsimp [aspValley, SlipFace.SlipValley, AspPerm.s]
 
 /-- If `τ = α ⋆ β` in the Demazure sense, then the minimum of
-`AspValley α β a b` is `τ.s a b`. -/
+`aspValley α β a b` is `τ.s a b`. -/
 private lemma AspValley_min_eq_s {α β τ : AspPerm} (dprod : τ.eqDprod α β) (a b : ℤ) :
-  (AspValley α β a b).min = τ.s a b := by
+  (aspValley α β a b).min = τ.s a b := by
   apply le_antisymm
   · have := dprod.2 a b
     unfold AspPerm.dprodValLe at this
     rcases this with ⟨l, hl⟩
     refine le_trans ?_ hl
-    exact (AspValley α β a b).min_spec l
+    exact (aspValley α β a b).min_spec l
   · have := dprod.1 a b
     unfold AspPerm.dprodValGe at this
-    specialize this (AspValley α β a b).M
+    specialize this (aspValley α β a b).M
     refine le_trans this ?_
-    rw [← (AspValley α β a b).f_M]
-    unfold AspValley
+    rw [← (aspValley α β a b).f_M]
+    unfold aspValley
     simp only [Std.le_refl]
 
 /-- Compare the minima and rightmost minimizers of two valleys that differ by
@@ -496,13 +502,13 @@ the rightmost minimizer can only move to the right. *Lemma 4.8 (`lem:Kstara+1`) 
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), in slightly different
 phrasing.* -/
 lemma AspValley_step_a (α β : AspPerm) (a b : ℤ) :
-  let v := AspValley α β a b
-  let w := AspValley α β (a+1) b
+  let v := aspValley α β a b
+  let w := aspValley α β (a+1) b
   w.min = v.min + (if v.M ≤ α⁻¹ a then 1 else 0) ∧ v.M ≤ w.M := by
   intro v w
   have : ∀ n : ℤ, w.f n = v.f n + (if n ≤ α⁻¹ a then 1 else 0) := by
     intro n
-    subst v w; simp only [AspValley]
+    subst v w; simp only [aspValley]
     rw [α.a_step a n]
     omega
   have low : (∀ n : ℤ, n ≤ α⁻¹ a → w.f n = v.f n + 1) := by
@@ -525,8 +531,8 @@ minimizer can only move to the right. *Lemma 4.9 (`lem:Kstarb+1`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), in slightly different
 phrasing.* -/
 lemma AspValley_step_b (α β : AspPerm) (a b : ℤ) :
-  let v := (AspValley α β a b)
-  let w := AspValley α β a (b+1)
+  let v := (aspValley α β a b)
+  let w := aspValley α β a (b+1)
   w.min = v.min - 1 + (if v.M ≤ β b then 1 else 0) ∧ v.M ≤ w.M := by
   intro v₀ w
   let v := v₀.shiftDown 1
@@ -544,7 +550,7 @@ lemma AspValley_step_b (α β : AspPerm) (a b : ℤ) :
   subst v₀
   have : ∀ n : ℤ, w.f n = v.f n + (if n ≤ β b then 1 else 0) := by
     intro n
-    subst v w; simp only [AspValley]
+    subst v w; simp only [aspValley]
     rw [β.b_step n b]
     unfold Valley.shiftDown
     by_cases h : n ≤ β b
@@ -566,8 +572,8 @@ lemma AspValley_step_b (α β : AspPerm) (a b : ℤ) :
     exact ⟨sed.1.2 (lt_of_not_ge h), sed.2⟩
 
 lemma AspValley_noninc (α β : AspPerm) (a b c : ℤ) (b_le_c : b ≤ c) :
-  let v := AspValley α β a b
-  let w := AspValley α β a c
+  let v := aspValley α β a b
+  let w := aspValley α β a c
   v.M ≤ w.M := by
   let n : ℕ := (c - b).toNat
   have : c = b + n := by omega
@@ -577,7 +583,7 @@ lemma AspValley_noninc (α β : AspPerm) (a b c : ℤ) (b_le_c : b ≤ c) :
     rw [Nat.cast_zero, add_zero]
   | succ n ih =>
     intro v w
-    let v' := AspValley α β a (b + n)
+    let v' := aspValley α β a (b + n)
     obtain ih : v.M ≤ v'.M := ih
     apply le_trans ih
     subst v' w
@@ -629,7 +635,7 @@ theorem submodular_of_star {s t : SlipFace} (subS : s.submodular) (subT : t.subm
   let β := asp subT
   have β_spec : β.s = t := asp_spec t subT
   intro eq
-  have : ∀ a b : ℤ, (s ⋆ t) a b = (AspValley α β a b).min := by
+  have : ∀ a b : ℤ, (s ⋆ t) a b = (aspValley α β a b).min := by
     intro a b
     have : (s ⋆ t) a b = (SlipFace.SlipValley s t a b).min := by
       rw [SlipFace.star_func_eq]
@@ -639,12 +645,12 @@ theorem submodular_of_star {s t : SlipFace} (subS : s.submodular) (subT : t.subm
   simp only [this] at eq ⊢
   have := (AspValley_step_b α β (a+1) b).1
   rw [this] at eq
-  let M' := (AspValley α β (a + 1) b).M
+  let M' := (aspValley α β (a + 1) b).M
   have M'_ge_b : M' ≤ β b := by
-    have : 1 = if (AspValley α β (a + 1) b).M ≤ β.func b then 1 else 0 := by
+    have : 1 = if (aspValley α β (a + 1) b).M ≤ β.func b then 1 else 0 := by
       linarith [eq]
     simpa using this
-  let M := (AspValley α β a b).M
+  let M := (aspValley α β a b).M
   have M_le_M' : M ≤ M' := by
     exact (AspValley_step_a α β a b).2
   have M_le_βb : M ≤ β b := le_trans M_le_M' M'_ge_b
@@ -1059,6 +1065,7 @@ $s_{\alpha \star \beta} = s_\alpha \star s_\beta$.
 @[simp] lemma star_spec (α β : AspPerm) : (star α β).s = α.s ⋆ β.s :=
   (Classical.choose_spec (star_exists α β)).1
 
+/-- Demazure product of almost-sign-preserving integer permutations. -/
 infixl:70 " ⋆ " => star
 
 /-- Left residual on ASP permutations, characterized by
@@ -1076,6 +1083,7 @@ $s_{\alpha \triangleleft \beta} = s_\alpha \triangleleft s_\beta$.
     (lres α β).s = α.s ◃ β.s :=
   (Classical.choose_spec (lres_exists α β)).1
 
+/-- Left residual of almost-sign-preserving integer permutations. -/
 infixl:70 " ◃ " => lres
 
 /-- Right residual on ASP permutations, characterized by
@@ -1093,6 +1101,7 @@ $s_{\alpha \triangleright \beta} = s_\alpha \triangleright s_\beta$.
     (rres α β).s = α.s ▹ β.s :=
   (Classical.choose_spec (rres_exists α β)).1
 
+/-- Right residual of almost-sign-preserving integer permutations. -/
 infixr:70 " ▹ " => rres
 
 /-- Demazure product on ASP permutations is associative.
@@ -1293,6 +1302,7 @@ instance : PartialOrder AspPerm where
 [An extended Demazure product](https://arxiv.org/abs/2206.14227): Bruhat order together with
 equality of shifts. In Lean this is the infix `≤χ`. -/
 def leChi (σ τ : AspPerm) : Prop := σ ≤ τ ∧ σ.χ = τ.χ
+/-- Bruhat comparison restricted to permutations with equal shift. -/
 infix:50 " ≤χ " => leChi
 
 /-- Bruhat order on ASP permutations agrees with pointwise order on their
@@ -1457,8 +1467,8 @@ theorem lel_of_dprod (α β : AspPerm) : β ≤L α ⋆ β := by
     exact lt_irrefl v u_lt_v
   have τv_le_τu : τ u < τ v := lt_of_le_of_ne τu_le_τv this; clear this τu_le_τv
   let a := τ v
-  let val_au := AspValley α β a u
-  let val_av := AspValley α β a v
+  let val_au := aspValley α β a u
+  let val_av := aspValley α β a v
   have Mau_gt_βu : val_au.M > β u := by
     contrapose! τv_le_τu with h
     have := (AspValley_step_b α β a u).1

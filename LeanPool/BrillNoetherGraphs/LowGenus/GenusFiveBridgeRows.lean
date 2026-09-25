@@ -3,14 +3,16 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCubicAtlas
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCubicCoverage
-import LeanPool.BrillNoetherGraphs.LowGenus.LowGenusExistence
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.GenusFiveVertexCut
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutGenus
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateCoreVertexCut
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCubicAtlas
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCubicCoverage
+public import LeanPool.BrillNoetherGraphs.LowGenus.LowGenusExistence
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.GenusFiveVertexCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutGenus
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateCoreVertexCut
 
 /-!
 # Articulation data for the four genus-five cubic bridge rows
@@ -20,6 +22,8 @@ genus-two lobe on vertices `{0,1,2}`, attached to the complementary
 genus-three side at vertex `0`.  The occurrence-level core cut checker and
 the factor-genus calculator verify this finite structural data directly.
 -/
+
+@[expose] public section
 namespace AtanasovRanganathan.GenusFiveBridgeRows
 
 open Utilities
@@ -33,18 +37,22 @@ open AtanasovRanganathan.Configurations
 open AtanasovRanganathan.GenusFiveCubicCoverage
 open AtanasovRanganathan.GenusFiveCubicAtlas
 
+/-- The root-double bridge cut, with gluing vertex zero and left vertex set `{0, 1, 2}`. -/
 def rootDoubleCut : Data rootDoubleCore where
   glue := 0
   left := {0, 1, 2}
 
+/-- The one-chord bridge cut, with gluing vertex zero and left vertex set `{0, 1, 2}`. -/
 def oneChordCut : Data oneChordCore where
   glue := 0
   left := {0, 1, 2}
 
+/-- The square bridge cut, with gluing vertex zero and left vertex set `{0, 1, 2}`. -/
 def squareCut : Data squareCore where
   glue := 0
   left := {0, 1, 2}
 
+/-- The double-matching bridge cut, with gluing vertex zero and left vertex set `{0, 1, 2}`. -/
 def doubleMatchingCut : Data doubleMatchingCore where
   glue := 0
   left := {0, 1, 2}

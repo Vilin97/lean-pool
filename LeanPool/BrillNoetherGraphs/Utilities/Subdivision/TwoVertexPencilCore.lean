@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Segments.SegmentReflection
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Segments.SegmentReflection
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
 
 /-!
 # The endpoint pencil on a two-vertex subdivision core (light half)
@@ -19,6 +21,8 @@ slot is recovered by the exact segment-reflection potential on that slot.
 This packages the uniform hyperelliptic argument for banana graphs.  It
 depends only on the segment-reflection and rank-one layers.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 

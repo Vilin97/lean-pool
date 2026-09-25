@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixChainConclusion
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.CycleTorsionOrder
-import LeanPool.BrillNoetherGraphs.Bananas.Examples.ExampleBngChain
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixChainConclusion
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.CycleTorsionOrder
+public import LeanPool.BrillNoetherGraphs.Bananas.Examples.ExampleBngChain
 
 /-!
 # Cools--Draisma--Payne--Robeva nonexistence for a chain of loops
@@ -74,6 +76,8 @@ at `v_0` under the prefix budget reports immediate counterexamples at `g = 2`
 (`ℓ_1 = m_1`, torsion order two, so `2 v_0` has rank one).
 -/
 
+@[expose] public section
+
 namespace ChainOfLoops
 
 open Utilities Bananas
@@ -89,7 +93,9 @@ The positivity hypotheses are bundled into the structure on purpose: a
 apply, where a `List (ℕ × ℕ)` with side conditions would force `List.pmap`
 throughout the `ChainMinBudget` arithmetic. -/
 structure Loop where
+  /-- The positive number of edges in the upper strand of the loop. -/
   top : ℕ
+  /-- The positive number of edges in the lower strand of the loop. -/
   bot : ℕ
   top_pos : 0 < top
   bot_pos : 0 < bot

@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.ReducedCutCriterion
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.TwoEdgeCuts
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.DegreeOneRepresentatives
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.SegmentScript
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.ReducedCutCriterion
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.TwoEdgeCuts
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.DegreeOneRepresentatives
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.SegmentScript
 
 /-!
 # Coordinate hygiene for the same-strand argument
@@ -18,6 +20,8 @@ file starts the formal version by recording the injectivity fact needed to
 turn vertex equalities into slot equalities when the positions concerned are
 genuinely interior.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrand
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeRankFormula
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrand
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeRankFormula
 
 /-!
 # Semibreak divisors on banana graphs
@@ -24,17 +26,23 @@ endpoint/semibreak normal form, extract that form from every left-reduced
 divisor, and hence construct one in every linear-equivalence class.
 -/
 
+@[expose] public section
+
 namespace Bananas
 
 open Utilities
 open Utilities.Certificate SubdivisionGraph
 open Utilities.Certificate.SubdivisionGraph.Spec
 
+/-- The divisor with the selected optional interior chip on each strand and no chips at the core
+vertices. -/
 def semibreakDivisor {g : ℕ} (B : Banana g)
     (chips : ∀ γ : Fin (g + 1), Option (Fin (B.length γ - 1))) : CFDiv B.graph
   | Sum.inl _ => 0
   | Sum.inr ⟨γ, offset⟩ => if chips γ = some offset then 1 else 0
 
+/-- A divisor represented by at most one selected interior chip per strand and none at the core
+vertices. -/
 def IsSemibreak {g : ℕ} (B : Banana g) (E : CFDiv B.graph) : Prop :=
   ∃ chips : ∀ γ : Fin (g + 1), Option (Fin (B.length γ - 1)),
     E = semibreakDivisor B chips

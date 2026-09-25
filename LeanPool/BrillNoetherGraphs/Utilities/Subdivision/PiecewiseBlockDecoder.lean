@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegeneratePiecewiseInterpolation
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegeneratePiecewiseInterpolation
 
 /-!
 # Finite block-end decoding
@@ -20,6 +22,8 @@ closed-face soundness proof.  The lowerer/checker bridge proves its three
 displayed facts from a concrete RPF block list.
 -/
 
+@[expose] public section
+
 namespace MarkedGraphs.Certificate
 open Utilities.Certificate
 
@@ -32,6 +36,8 @@ open Utilities.Certificate.DegenerateSpec
 `cover` is deliberately bounded by `ends.length`: although `endAt` has the
 convenient default `L` out of bounds, no phantom block may be selected. -/
 structure FiniteBlockEnds (L : ℕ) where
+  /-- The nonempty, weakly ordered list of block endpoints ending at `L`, covering every unit
+  step below `L`. -/
   ends : List ℕ
   nonempty : 0 < ends.length
   last : ends.getD (ends.length - 1) L = L

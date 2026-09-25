@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianLeftJustification
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReducedBridge
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianSurjectivity
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianLeftJustification
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReducedBridge
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianSurjectivity
 
 /-!
 # The banana Jacobian presentation
@@ -17,6 +19,8 @@ relations, while reduced-coordinate kernel triviality forces that
 representative to vanish.  The first isomorphism theorem then identifies the
 displayed quotient with the range of the graph-level divisor-class map.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

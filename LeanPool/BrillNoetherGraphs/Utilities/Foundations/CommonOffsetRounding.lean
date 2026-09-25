@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.Order.Ring.Int
-import Lean.Elab.Tactic.Omega
+
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.Order.Ring.Int
+public import Lean.Elab.Tactic.Omega
 
 /-!
 # A common offset for integer rounding
@@ -21,6 +23,8 @@ denominator has an offset that rounds every pair to equal integers.
 The endpoint-slope bounds used in finite graph specialization are preserved
 by this same rounding, including negative heights and negative slopes.
 -/
+
+@[expose] public section
 
 namespace Utilities.CommonOffsetRounding
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
-import Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite
+public import Mathlib.Tactic
 
 /-!
 # The underlying simple graph of a `CFGraph`
@@ -15,6 +17,8 @@ import Mathlib.Tactic
 connectivity and `SimpleGraph.Connected`.  This provides a general interface
 from chip-firing multigraphs to Mathlib's simple-graph connectivity theory.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

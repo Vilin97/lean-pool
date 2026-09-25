@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpec
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SlopeScript
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpec
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SlopeScript
 
 /-!
 # Firing scripts, potentials and the Laplacian on the closed length orthant
@@ -43,6 +45,8 @@ every face by addition, rather than being reproved once per face.  That is the
 whole economic argument for the closed-orthant layer, and it is a theorem
 here.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.DegenerateSpec
 open Utilities.Certificate

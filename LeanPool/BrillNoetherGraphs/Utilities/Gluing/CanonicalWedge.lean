@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RiemannRochWinnable
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedge
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RiemannRochWinnable
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedge
 
 /-!
 # Canonical divisors on a vertex wedge
@@ -23,6 +25,8 @@ on a connected wedge of total genus four, `K_G + K_H` has rank at least one.
 This file is deliberately independent of genus two and of two-pole joins.  It
 is the reusable one-pole calculation underlying the genus-two/genus-two seed.
 -/
+
+@[expose] public section
 
 open Finset
 

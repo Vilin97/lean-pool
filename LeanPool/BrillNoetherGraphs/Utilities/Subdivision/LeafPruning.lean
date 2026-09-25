@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LeafExtension
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LeafExtension
 
 /-!
 # Pruning a degree-one vertex
@@ -16,6 +18,8 @@ the unique neighbor, and exhibit the original graph as a `LaplacianEquiv` of
 the corresponding explicit leaf extension.  The rank-one lifting theorem is
 then an immediate composition of the two small certificate interfaces.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 
@@ -33,6 +37,7 @@ abbrev Remaining := {x : G.V // x ≠ leaf}
 /-! ## The unique neighbor of a degree-one vertex -/
 
 structure LeafData where
+  /-- The unique neighbor of the leaf, joined to it by exactly one edge occurrence. -/
   root : G.V
   count_root : numEdges G leaf root = 1
   count_other : ∀ x : G.V, x ≠ root → numEdges G leaf x = 0
@@ -66,10 +71,12 @@ theorem exists_leafData (hDegree : vertexDegree G leaf = 1) :
     simpa [Finset.sum_pair hRootNeX] using hBound
   omega
 
+/-- Choose the unique-neighbor data supplied by the hypothesis that the leaf has degree one. -/
 noncomputable def leafData (hDegree : vertexDegree G leaf = 1) :
     LeafData G leaf :=
   Classical.choice (exists_leafData G leaf hDegree)
 
+/-- The leaf's neighbor regarded as a vertex of the graph remaining after deletion of the leaf. -/
 noncomputable def root (hDegree : vertexDegree G leaf = 1) :
     Remaining G leaf :=
   ⟨(leafData G leaf hDegree).root, by
@@ -92,11 +99,13 @@ private theorem num_edges_leaf_eq (hDegree : vertexDegree G leaf = 1)
 def NonLeafEdge (edge : G.V × G.V) : Prop :=
   edge.1 ≠ leaf ∧ edge.2 ≠ leaf
 
-private noncomputable def keptEdges : Multiset (G.V × G.V) := by
+/-- The original edges with both endpoints different from the deleted leaf. -/
+noncomputable def keptEdges : Multiset (G.V × G.V) := by
   classical
   exact G.edges.filter (NonLeafEdge G leaf)
 
-private def restrictEdge (edge : G.V × G.V)
+/-- Regard an edge avoiding the deleted leaf as an edge on the remaining vertices. -/
+def restrictEdge (edge : G.V × G.V)
     (hEdge : NonLeafEdge G leaf edge) :
     Remaining G leaf × Remaining G leaf :=
   (⟨edge.1, hEdge.1⟩, ⟨edge.2, hEdge.2⟩)
@@ -113,7 +122,7 @@ noncomputable abbrev deleteLeaf
   V := Remaining G leaf
   instNonempty := ⟨root G leaf hDegree⟩
   edges := (keptEdges G leaf).pmap (restrictEdge G leaf)
-    (keptEdges_all G leaf)
+    (by exact keptEdges_all G leaf)
   loopless := by
     classical
     intro vertex hMem
@@ -134,7 +143,7 @@ noncomputable abbrev deleteLeaf
     (hDegree : vertexDegree G leaf = 1) :
     (deleteLeaf G leaf hDegree).edges =
       (keptEdges G leaf).pmap (restrictEdge G leaf)
-        (keptEdges_all G leaf) := rfl
+        (by exact keptEdges_all G leaf) := rfl
 
 private theorem filter_keptEdges_endpoints
     (x y : Remaining G leaf) :
@@ -166,7 +175,7 @@ private theorem filter_keptEdges_endpoints
   classical
   change
     ((Multiset.pmap (restrictEdge G leaf) (keptEdges G leaf)
-      (keptEdges_all G leaf)).filter
+      (by exact keptEdges_all G leaf)).filter
         (fun edge => edge = (x, y) ∨ edge = (y, x))).card =
       (G.edges.filter
         (fun edge =>

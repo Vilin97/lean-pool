@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
 
 /-!
 # A union-find connectivity check for ordered cores
@@ -51,6 +53,8 @@ check is also complete.  Neither checker is removed: `connectedCheck` remains
 the literal reading of the definition and stays available as an independent
 cross-check.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichLeafAssembly
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DoubledAnchorChecks
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichLeafAssembly
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DoubledAnchorChecks
 
 /-!
 # Marked leaf checkers: domination, multiplicity residuals, legged and pointed leaves
@@ -51,6 +53,8 @@ checker written elsewhere is invisible to `w.leggedLeafChecks` however the
 file is imported.  Keeping these four here is what lets the marked programmes
 consume the row-proof checker without maintaining a second copy of it.
 -/
+
+@[expose] public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

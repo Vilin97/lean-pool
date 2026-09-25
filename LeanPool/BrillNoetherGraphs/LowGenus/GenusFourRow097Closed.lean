@@ -3,14 +3,16 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateRamp
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateMultiBreakScript
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedCoreSymmetry
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedContraction
-import LeanPool.BrillNoetherGraphs.Utilities.Segments.AtanasovRanganathanConfigurations
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCubicAtlas
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateRamp
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateMultiBreakScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedCoreSymmetry
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedContraction
+public import LeanPool.BrillNoetherGraphs.Utilities.Segments.AtanasovRanganathanConfigurations
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCubicAtlas
 
 /-!
 # Unconditional CLOSED-ORTHANT existence on genus-four Core 097
@@ -69,6 +71,8 @@ The four per-march divisor identities of the retired open proof — four
 *single* generic one, `DegSpec.prin_ramp_eq`, instantiated nine-slot-wise.
 This file needs no heartbeat override.
 -/
+
+@[expose] public section
 
 namespace LowGenus.GenusFourRow097Closed
 

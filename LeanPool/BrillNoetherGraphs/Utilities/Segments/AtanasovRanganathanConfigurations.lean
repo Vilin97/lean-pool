@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Segments.AtanasovRanganathan
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MovingPosition
-import LeanPool.BrillNoetherGraphs.Utilities.Segments.GenusFourLoopLemma
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Segments.AtanasovRanganathan
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MovingPosition
+public import LeanPool.BrillNoetherGraphs.Utilities.Segments.GenusFourLoopLemma
 
 /-!
 # Reusable Atanasov--Ranganathan configuration moves
@@ -32,6 +34,8 @@ picture, or Core 095, has been encoded.  It gives the reusable checked moves
 to which such incidence data must eventually be connected.
 -/
 
+@[expose] public section
+
 namespace AtanasovRanganathan.Configurations
 
 open Utilities
@@ -47,6 +51,8 @@ variable {G : CFGraph}
 /-- One local Dhar calculation: after removing the target chip, the displayed
 integral firing script leaves an effective residual. -/
 structure DharMove (G : CFGraph) (D : CFDiv G) (target : G.V) where
+  /-- The integral firing script whose principal divisor makes the residual effective after
+  subtracting a chip at the target. -/
   script : firingScript G
   residual_effective :
     effective (D - oneChip target + prin G script)

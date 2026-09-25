@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.RankOne
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.RankOne
+public import Mathlib.Tactic
 
 /-!
 # A kernel interface for the strong-separator rank-one lemma
@@ -30,6 +32,8 @@ component-to-certificate construction, in particular for subdivided cores,
 is deliberately left as future graph-plumbing work; the soundness theorem
 below is complete and uses only the public `qReduced` API.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.StrongSeparator
 
@@ -180,9 +184,12 @@ theorem reaches_of_effective_representative {D E : CFDiv G} {v : G.V}
 
 /-- The finite complementary cell used by the strong-separator argument. -/
 structure ExpansionCell (G : CFGraph) (R : Finset G.V) where
+  /-- The nonempty finite complementary cell, disjoint from the reached set `R`. -/
   carrier : Finset G.V
   nonempty : carrier.Nonempty
   disjoint : Disjoint carrier R
+  /-- A reached boundary vertex in `R` used as the anchor for expanding into the complementary
+  cell. -/
   anchor : G.V
   anchor_mem : anchor ∈ R
   anchor_boundary : IsBoundary G carrier anchor

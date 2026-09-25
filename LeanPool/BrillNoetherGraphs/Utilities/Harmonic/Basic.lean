@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionSpecial
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionSpecial
 
 /-!
 # Rank-one witnesses from indexed harmonic maps
@@ -28,6 +30,8 @@ source vertex.  Equivalence of one-chip divisors on the target transports the
 corresponding fibres, so the fibre has rank at least one.
 -/
 
+@[expose] public section
+
 namespace MarkedGraphs
 
 open Utilities
@@ -37,8 +41,14 @@ open Finset
 /-- Passive finite data emitted by a search program for an indexed harmonic
 map.  `Valid` below, rather than this structure, records its correctness. -/
 structure IndexedHarmonicCertificate (G H : CFGraph) where
+  /-- The proposed map of source vertices to target vertices; harmonicity and adjacency
+  conditions are imposed by `Valid`. -/
   vertexMap : G.V → H.V
+  /-- The proposed local degree at each source vertex, used in the harmonicity equations checked
+  by `Valid`. -/
   localDegree : G.V → ℕ
+  /-- The total index assigned to each parallel bundle between source vertices; positivity and
+  compatibility are required separately by `Valid`. -/
   edgeIndex : G.V → G.V → ℕ
 
 namespace IndexedHarmonicCertificate

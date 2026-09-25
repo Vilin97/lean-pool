@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutConnectivity
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoEdgeConnectedRigidity
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoEdgeConnectedRigidity
+public import Mathlib.Tactic
 
 /-!
 # Two-edge connectivity of one-vertex-cut factors
@@ -17,6 +19,8 @@ for positive genus.  Rehomed from `OnceMarkedVertexCutOneFour.lean` (which
 imports this file) so that the bridgeless genus-two classification does not
 depend on the once-marked census.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

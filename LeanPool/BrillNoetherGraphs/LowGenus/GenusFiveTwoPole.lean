@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveTwoPoleData
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CanonicalDivisor
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionCoreSupport
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoPoleSubdivisionGluing
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveTwoPoleData
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CanonicalDivisor
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionCoreSupport
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoPoleSubdivisionGluing
 
 /-!
 # One canonical construction for six positive genus-five rows
@@ -20,6 +22,8 @@ connector in turn; no length chamber or graph-isomorphism certificate is used.
 The theorem here concerns positive subdivisions. `GenusFiveTwoPoleClosed`
 extends the same weights to contraction faces by discrete specialization.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.GenusFiveTwoPole
 

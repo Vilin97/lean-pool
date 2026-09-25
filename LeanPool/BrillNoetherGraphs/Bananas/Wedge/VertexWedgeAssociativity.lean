@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphConstructorIso
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphConstructorIso
 
 /-!
 # Associativity of vertex wedges
@@ -15,6 +17,8 @@ factor and every vertex of the right factor except its attachment vertex.
 Consequently, both bracketings of a three-factor wedge have the same three
 classes of vertices.  This file records the resulting graph isomorphism.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

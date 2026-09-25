@@ -3,11 +3,15 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Orientation
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Rank
+
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Orientation
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Rank
 
 /-! # RRGHelpers -/
+
+@[expose] public section
 open Multiset Finset
 
 /-!
@@ -39,7 +43,7 @@ private lemma qReducedRep_spec {G : CFGraph}
 zeroing out the chips at $q$. -/
 noncomputable def qReducedConfig {G : CFGraph}
     (h_conn : graphConnected G) (q : G.V) (D : CFDiv G) : Config G q :=
-  toConfig ⟨qReducedRep h_conn q D, (qReducedRep_spec h_conn q D).2.1⟩
+  toConfig ⟨qReducedRep h_conn q D, by exact (qReducedRep_spec h_conn q D).2.1⟩
 
 /-- The canonical configuration attached to $D$ is superstable. -/
 private lemma qReducedConfig_superstable {G : CFGraph}

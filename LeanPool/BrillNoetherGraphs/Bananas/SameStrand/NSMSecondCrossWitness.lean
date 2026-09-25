@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMCrossWitness
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiring
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMCrossWitness
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiring
 
 /-!
 # Second distinct-strand witness in Theorem 3.9
@@ -16,6 +18,8 @@ the penultimate point of its strand, while the first mark is not the first
 interior point.  The extra hypothesis `2 < B.length beta` excludes precisely
 the corrected length-two midpoint exception; without it the theorem is false.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

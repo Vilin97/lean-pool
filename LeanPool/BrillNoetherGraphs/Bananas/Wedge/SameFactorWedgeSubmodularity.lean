@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameLeft
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoEdgeConnectedRigidity
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.OneVertexCutFactors
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameLeft
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoEdgeConnectedRigidity
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.OneVertexCutFactors
 
 /-!
 # Same-factor submodularity on a rigid genus-one wedge
@@ -15,6 +17,8 @@ The same-factor branch of Theorem 4.13 only survives when that factor has
 two vertices.  The point is that a third vertex supplies the explicit
 negative rank-difference witness already used for Proposition 3.7.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Duality
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RRGHelpers
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Duality
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RRGHelpers
 
 /-!
 # Unwinnability at degree `g - 1` and acyclic orientations
@@ -41,6 +43,8 @@ The proof assembles the following results from `chip-firing-with-lean`:
   line from the public `unique_q_reduced`).
 
 -/
+
+@[expose] public section
 
 namespace Utilities
 

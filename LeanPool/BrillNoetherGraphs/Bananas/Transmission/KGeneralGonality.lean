@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralBNGeneral
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralBNGeneral
 
 /-!
 # Gonality forced by `k`-general transmission
@@ -23,6 +25,8 @@ inequality is the elementary observation from Pflueger--Solomon Lemma
 `lem:Fg1k`: affine periodicity applied to the transmission permutation of the
 zero divisor gives a rank-one divisor `k u`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

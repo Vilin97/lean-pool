@@ -3,10 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import Mathlib.Combinatorics.Young.YoungDiagram
-import Mathlib.Data.List.GetD
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionCorner
+public import Mathlib.Data.List.Enum
+
+
+public import Mathlib.Combinatorics.Young.YoungDiagram
+public import Mathlib.Data.List.GetD
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionCorner
 
 /-!
 # Once-marked Brill--Noether existence
@@ -22,6 +26,8 @@ the required finite inequalities are
 The auxiliary second mark in transmission disappears because every one of
 these rows lies on the cut `b = 0`.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

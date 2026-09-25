@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedFaceCensus
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedFaceCensus
 
 /-!
 # A closed-orthant row proof implies every contraction of its row
@@ -45,6 +47,8 @@ contracting both is not a forest.  The number of split loops is therefore
 constant along every face reachable this way, and a loop-carrying row is never
 a face of a loopless one.  See the corresponding closed-row proof module.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.ClosedContraction
 

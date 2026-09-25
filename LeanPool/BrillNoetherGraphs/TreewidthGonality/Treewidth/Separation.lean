@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.TreePath
-import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.Bramble
+
+public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.TreePath
+public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.Bramble
 
 /-!
 # Separation: Bellenbaum--Diestel's Lemma 1 and Lemma 4, and components
@@ -25,6 +27,8 @@ Three independent ingredients of the Seymour--Thomas induction:
   of `SeymourThomasInduction.lean` peels one component off a closed set at a
   time.
 -/
+
+@[expose] public section
 
 namespace Utilities.Treewidth
 

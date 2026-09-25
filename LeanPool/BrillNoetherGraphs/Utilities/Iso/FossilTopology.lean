@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.Fossil
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionFibreTree
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.DivisorialGonality
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.Fossil
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionFibreTree
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.DivisorialGonality
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
+public import Mathlib.Tactic
 
 /-!
 # Topology and gonality of the fossil
@@ -18,6 +20,8 @@ The short library name `fossil` means the degree-one Abel--Jacobi image, or
 needed by public applications: the fossil remains connected, has the same
 cyclomatic genus and divisorial gonality, and has no one-edge cuts or leaves.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

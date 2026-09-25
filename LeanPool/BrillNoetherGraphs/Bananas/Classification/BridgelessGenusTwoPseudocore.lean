@@ -3,13 +3,15 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocorePresentation
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreMarkerWedge
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.GraphIsoLaplacianEquiv
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.OneVertexCutFactors
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoTopology
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.GraphIsoCuts
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocorePresentation
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreMarkerWedge
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.GraphIsoLaplacianEquiv
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.OneVertexCutFactors
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoTopology
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.GraphIsoCuts
 
 /-!
 # Pseudocore presentation in bridgeless genus two
@@ -20,6 +22,8 @@ pseudocore normalization to show that the retained base core has at most two
 vertices; bivalent semantic-loop markers are retained by the pseudocore
 construction rather than accidentally suppressed.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

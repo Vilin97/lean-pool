@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotential
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotential
 
 /-!
 # Cubic ordered cores
@@ -13,6 +15,8 @@ Occurrence-sensitive incidence degree for an ordered explicit core.  Parallel
 slots are counted separately, and a loop contributes twice.  Looplessness is
 an independent property.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.ExplicitPotential.Core
 

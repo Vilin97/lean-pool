@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.BurnedSet
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.BurnedSet
+public import Mathlib.Tactic
 
 /-!
 # A linear non-existence certificate for positive rank
@@ -38,6 +40,8 @@ together with `D' ≥ 0 off v` and `D' v ≤ 0`
 (`not_rank_ge_one_of_burningOrder`).  Every component is `decide`-shaped:
 `BurningOrder` quantifies over `Fin π.length` and `G.V`, both finite.
 -/
+
+@[expose] public section
 
 namespace Utilities.Gonality
 

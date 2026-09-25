@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameLeft
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.MarkedIso
-import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixChainConclusion
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameLeft
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.MarkedIso
+public import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixChainConclusion
 
 /-!
 # The right-loop branch of Proposition 3.7
@@ -16,6 +18,8 @@ when both marks lie on the left cycle of a vertex wedge.  This file transports
 that theorem across commutativity of vertex wedges, supplying the symmetric
 right-cycle statement required by the paper's Proposition 3.7.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

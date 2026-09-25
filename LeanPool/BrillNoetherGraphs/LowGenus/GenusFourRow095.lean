@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Segments.AtanasovRanganathanConfigurations
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ConnectedCheckFast
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.WindowProfileReachability
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCubicAtlas
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Segments.AtanasovRanganathanConfigurations
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ConnectedCheckFast
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.WindowProfileReachability
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCubicAtlas
 
 /-!
 # The signed-window proof for genus-four Core 095
@@ -27,6 +29,8 @@ The catalog orientation is
 We first normalize `length 0 <= length 5`.  The opposite chamber is carried
 to this one by the Core-095 involution and is treated separately below.
 -/
+
+@[expose] public section
 
 namespace LowGenus.GenusFourRow095
 open Utilities.Certificate
@@ -72,9 +76,13 @@ theorem graphConnected : graphConnected (Spec length hLength).graph := by
 
 /-- The comparison parameters used in the paper's first-family picture. -/
 abbrev A : ℕ := length 0
+/-- Excess length of central slot 5 over slot 0, computed with natural-number subtraction. -/
 abbrev X : ℕ := length 5 - length 0
+/-- Length of slot 3, the first arm parameter in the row-095 construction. -/
 abbrev B : ℕ := length 3
+/-- Length of slot 8, the second arm parameter in the row-095 construction. -/
 abbrev C : ℕ := length 8
+/-- Length of central slot 4 in the row-095 construction. -/
 abbrev Delta : ℕ := length 4
 
 /-- Under the normalized inequality, the long central slot has length

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TwoVertexGenusOneTorsion
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderTwoGeneral
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.TwoVertexWedgeSubmodularity
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TwoVertexGenusOneTorsion
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderTwoGeneral
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.TwoVertexWedgeSubmodularity
 
 /-!
 # The same-factor exceptional wedge marking
@@ -16,6 +18,8 @@ vertices have exact order two in the whole wedge.  Consequently the general
 order-two criterion supplies general transmission as soon as submodularity is
 known.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

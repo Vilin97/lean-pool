@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Duality
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Duality
 
 /-!
 # Elementary Brill--Noether existence
@@ -14,6 +16,8 @@ nonpositive rectangle width, and rectangle width one.  These arguments use
 only effective divisors, the degree bound for winnability, and graph
 Riemann--Roch.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

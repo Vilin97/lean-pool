@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.BurnedSet
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.BurnedSet
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
+public import Mathlib.Tactic
 
 /-!
 # Burning along a subdivided slot
@@ -42,6 +44,8 @@ between are the slot interior.  Statements carry explicit
 `k ≤ spec.length e` hypotheses wherever clamping would otherwise silently
 change the meaning.
 -/
+
+@[expose] public section
 
 namespace Utilities.Gonality
 

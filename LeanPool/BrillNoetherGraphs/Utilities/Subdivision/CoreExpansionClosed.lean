@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreExpansion
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreExpansion
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
 
 /-!
 # Closed faces carried by a core expansion
@@ -21,6 +23,8 @@ This statement is genus-independent and contains no finite atlas data.  It is
 the combinatorial heart of lowering a closed construction on a trivalent
 expansion back to the smaller core.
 -/
+
+@[expose] public section
 namespace Utilities.Subdivision.CoreExpansion
 
 open Utilities

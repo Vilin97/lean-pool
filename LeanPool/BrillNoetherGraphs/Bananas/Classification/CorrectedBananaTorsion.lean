@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaTorsionSlopes
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.MidpointTorsion
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMFullClassification
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaTorsionSlopes
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.MidpointTorsion
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMFullClassification
 
 /-!
 # Corrected high-genus banana torsion dichotomy
@@ -17,6 +19,8 @@ The paper's exceptional family is corrected here: one of the two marked
 midpoint strands need only have length two; the other may have any even
 length.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

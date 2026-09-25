@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBasics
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBasics
 
 /-!
 # Negative rank differences at rank zero
@@ -14,6 +16,8 @@ phrases it using supports of a chosen effective representative; the intrinsic
 form below avoids choosing representatives and is exactly what the later
 reduced-divisor calculation consumes.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.DivisorialGonality
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.LegalFiring
-import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.Bramble
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.UnderlyingSimpleGraph
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.DivisorialGonality
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.LegalFiring
+public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.Bramble
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.UnderlyingSimpleGraph
 
 /-!
 # Theorem A: the bramble number bounds the gonality
@@ -35,6 +37,8 @@ edge multiplicities. The chip-firing side does: `outdegreeSet` and `edgeCut` cou
 Connectivity of a vertex set is `((underlyingSimpleGraph G).induce (↑B : Set G.V)).Connected`,
 the convention fixed in `TreewidthGonality/Treewidth/TreeDecomposition.lean`.
 -/
+
+@[expose] public section
 
 namespace Utilities.Gonality
 

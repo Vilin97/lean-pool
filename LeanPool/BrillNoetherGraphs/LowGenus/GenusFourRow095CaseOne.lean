@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095
 
 /-!
 # Core 095, first Atanasov--Ranganathan chamber
@@ -19,6 +21,8 @@ The proof deliberately uses only signed-window endpoint identities.  Thus
 the rather complicated firing scripts on arbitrary subdivisions are never
 expanded vertex-by-vertex.
 -/
+
+@[expose] public section
 
 namespace LowGenus.GenusFourRow095.CaseOne
 open Utilities.Certificate
@@ -53,6 +57,8 @@ def pStart : (Spec length hLength).Vertex :=
       have hP : P length ≤ length 3 := Nat.sub_le _ _
       omega⟩
 
+/-- Starting vertex of the window on slot 4, at path coordinate `Delta - m` measured from its
+tail. -/
 def deltaStart : (Spec length hLength).Vertex :=
   (Spec length hLength).pathVertex 4
     ⟨Delta length - m length, by
@@ -60,6 +66,7 @@ def deltaStart : (Spec length hLength).Vertex :=
       have hD : Delta length ≤ length 4 := by rfl
       omega⟩
 
+/-- Starting vertex of the window on slot 5, at path coordinate `X - m` measured from its tail. -/
 def xStart : (Spec length hLength).Vertex :=
   (Spec length hLength).pathVertex 5
     ⟨X length - m length, by

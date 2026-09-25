@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveClosedOrbit
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveClosedOrbit
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
 
 /-! **Independent generated check.** This module provides an additional generated proof of row 04 and is not imported by the main `LowGenus` root.
 
@@ -20,6 +22,8 @@ Every permutation is supplied with an explicit inverse, which keeps
 `reindexLength` definitionally transparent; all endpoint laws are
 `decide`d. -/
 
+@[expose] public section
+
 namespace AtanasovRanganathan.GenusFiveRow04Symmetry
 
 open Utilities
@@ -29,8 +33,13 @@ open Certificate.ExplicitPotential
 open Utilities.Certificate.CoreOrbitReduction
 open GenusFiveCoreAtlas ClosedOrbit
 
+/-- Read an eight-vertex reindexing from a list, with vertex zero as the default for missing
+entries. -/
 def vfun (data : List (Fin 8)) : Fin 8 → Fin 8 := fun i => data.getD i.val 0
+/-- Read a twelve-slot reindexing from a list, with slot zero as the default for missing
+entries. -/
 def sfun (data : List (Fin 12)) : Fin 12 → Fin 12 := fun i => data.getD i.val 0
+/-- Read the orientation-reversal flags of the twelve slots, treating missing flags as false. -/
 def bfun (data : List Bool) : Fin 12 → Bool := fun i => data.getD i.val false
 
 /-- A `CoreSymmetry` literal carrying its own inverses, so that
@@ -50,120 +59,160 @@ def mkSym (vmap vinv : Fin 8 → Fin 8) (smap sinv : Fin 12 → Fin 12)
   tail_eq := ht
   head_eq := hh
 
+/-- The identity symmetry of the row-04 core, preserving every vertex, slot, and orientation. -/
 def blockSym0 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) (sfun [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 block symmetry swapping vertex pairs 0 and 2, 1 and 3, 4 and 7, 5 and 6 and slot
+pairs 0 and 9, 1 and 10, 2 and 8, 3 and 6, 4 and 7. It reverses every slot orientation. -/
 def blockSym1 : CoreSymmetry row04Core :=
   mkSym (vfun [2, 3, 0, 1, 7, 6, 5, 4]) (vfun [2, 3, 0, 1, 7, 6, 5, 4])
     (sfun [9, 10, 8, 6, 7, 5, 3, 4, 2, 0, 1, 11]) (sfun [9, 10, 8, 6, 7, 5, 3, 4, 2, 0, 1, 11])
     (bfun [true, true, true, true, true, true, true, true, true, true, true, true])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 block symmetry swapping vertex pairs 0 and 5, 1 and 4, 2 and 6, 3 and 7 and slot
+pairs 0 and 3, 1 and 4, 5 and 11, 6 and 9, 7 and 10. It reverses every slot orientation. -/
 def blockSym2 : CoreSymmetry row04Core :=
   mkSym (vfun [5, 4, 6, 7, 1, 0, 2, 3]) (vfun [5, 4, 6, 7, 1, 0, 2, 3])
     (sfun [3, 4, 2, 0, 1, 11, 9, 10, 8, 6, 7, 5]) (sfun [3, 4, 2, 0, 1, 11, 9, 10, 8, 6, 7, 5])
     (bfun [true, true, true, true, true, true, true, true, true, true, true, true])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 block symmetry swapping vertex pairs 0 and 6, 1 and 7, 2 and 5, 3 and 4 and slot
+pairs 0 and 6, 1 and 7, 2 and 8, 3 and 9, 4 and 10, 5 and 11. It preserves every slot
+orientation. -/
 def blockSym3 : CoreSymmetry row04Core :=
   mkSym (vfun [6, 7, 5, 4, 3, 2, 0, 1]) (vfun [6, 7, 5, 4, 3, 2, 0, 1])
     (sfun [6, 7, 8, 9, 10, 11, 0, 1, 2, 3, 4, 5]) (sfun [6, 7, 8, 9, 10, 11, 0, 1, 2, 3, 4, 5])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that fixes every slot while fixing every vertex and preserving all
+slot orientations. -/
 def pairSym0 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) (sfun [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 9 and 10 while fixing every
+vertex and preserving all slot orientations. -/
 def pairSym1 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 9, 11]) (sfun [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 9, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 6 and 7 while fixing every
+vertex and preserving all slot orientations. -/
 def pairSym2 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 3, 4, 5, 7, 6, 8, 9, 10, 11]) (sfun [0, 1, 2, 3, 4, 5, 7, 6, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 6 and 7, 9 and 10 while fixing
+every vertex and preserving all slot orientations. -/
 def pairSym3 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 3, 4, 5, 7, 6, 8, 10, 9, 11]) (sfun [0, 1, 2, 3, 4, 5, 7, 6, 8, 10, 9, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 3 and 4 while fixing every
+vertex and preserving all slot orientations. -/
 def pairSym4 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 4, 3, 5, 6, 7, 8, 9, 10, 11]) (sfun [0, 1, 2, 4, 3, 5, 6, 7, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 3 and 4, 9 and 10 while fixing
+every vertex and preserving all slot orientations. -/
 def pairSym5 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 4, 3, 5, 6, 7, 8, 10, 9, 11]) (sfun [0, 1, 2, 4, 3, 5, 6, 7, 8, 10, 9, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 3 and 4, 6 and 7 while fixing
+every vertex and preserving all slot orientations. -/
 def pairSym6 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 4, 3, 5, 7, 6, 8, 9, 10, 11]) (sfun [0, 1, 2, 4, 3, 5, 7, 6, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 3 and 4, 6 and 7, 9 and 10 while
+fixing every vertex and preserving all slot orientations. -/
 def pairSym7 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 4, 3, 5, 7, 6, 8, 10, 9, 11]) (sfun [0, 1, 2, 4, 3, 5, 7, 6, 8, 10, 9, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 0 and 1 while fixing every
+vertex and preserving all slot orientations. -/
 def pairSym8 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [1, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) (sfun [1, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 0 and 1, 9 and 10 while fixing
+every vertex and preserving all slot orientations. -/
 def pairSym9 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [1, 0, 2, 3, 4, 5, 6, 7, 8, 10, 9, 11]) (sfun [1, 0, 2, 3, 4, 5, 6, 7, 8, 10, 9, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 0 and 1, 6 and 7 while fixing
+every vertex and preserving all slot orientations. -/
 def pairSym10 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [1, 0, 2, 3, 4, 5, 7, 6, 8, 9, 10, 11]) (sfun [1, 0, 2, 3, 4, 5, 7, 6, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 0 and 1, 6 and 7, 9 and 10 while
+fixing every vertex and preserving all slot orientations. -/
 def pairSym11 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [1, 0, 2, 3, 4, 5, 7, 6, 8, 10, 9, 11]) (sfun [1, 0, 2, 3, 4, 5, 7, 6, 8, 10, 9, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 0 and 1, 3 and 4 while fixing
+every vertex and preserving all slot orientations. -/
 def pairSym12 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [1, 0, 2, 4, 3, 5, 6, 7, 8, 9, 10, 11]) (sfun [1, 0, 2, 4, 3, 5, 6, 7, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 0 and 1, 3 and 4, 9 and 10 while
+fixing every vertex and preserving all slot orientations. -/
 def pairSym13 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [1, 0, 2, 4, 3, 5, 6, 7, 8, 10, 9, 11]) (sfun [1, 0, 2, 4, 3, 5, 6, 7, 8, 10, 9, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 0 and 1, 3 and 4, 6 and 7 while
+fixing every vertex and preserving all slot orientations. -/
 def pairSym14 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [1, 0, 2, 4, 3, 5, 7, 6, 8, 9, 10, 11]) (sfun [1, 0, 2, 4, 3, 5, 7, 6, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-04 core symmetry that exchanges parallel-slot pairs 0 and 1, 3 and 4, 6 and 7, 9 and
+10 while fixing every vertex and preserving all slot orientations. -/
 def pairSym15 : CoreSymmetry row04Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [1, 0, 2, 4, 3, 5, 7, 6, 8, 10, 9, 11]) (sfun [1, 0, 2, 4, 3, 5, 7, 6, 8, 10, 9, 11])

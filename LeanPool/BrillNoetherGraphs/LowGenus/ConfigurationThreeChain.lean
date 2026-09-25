@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationFive
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationFive
 
 /-!
 # The chip-free three-chain, generic in the core
@@ -71,6 +73,8 @@ The one-edge arithmetic itself is `ConfigurationFive`'s and is reused
 unchanged.
 -/
 
+@[expose] public section
+
 namespace AtanasovRanganathan.ConfigurationThreeChain
 
 open Utilities
@@ -88,7 +92,9 @@ picture's first end is the core tail of the slot and `reverse` when it is the
 core head. -/
 
 structure ChainLedger where
+  /-- The tail contribution along a chain slot, parameterized by length and endpoint heights. -/
   tail : ℕ → ℕ → ℕ → ℤ
+  /-- The head contribution along a chain slot, parameterized by length and endpoint heights. -/
   head : ℕ → ℕ → ℕ → ℤ
   tail_same : ∀ L h : ℕ, tail L h h = 0
   head_same : ∀ L h : ℕ, head L h h = 0

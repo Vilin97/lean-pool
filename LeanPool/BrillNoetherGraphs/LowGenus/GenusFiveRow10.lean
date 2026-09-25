@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow10ChamberOne
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow10ChamberTwo
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow10ChamberOne
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow10ChamberTwo
 
 /-!
 # The Atanasov--Ranganathan construction on row 10
@@ -41,6 +43,8 @@ four, in the special position `alpha = gamma ≤ beta` that the chamber's two
 inequalities supply.  `GenusFiveRow10Symmetry.chamber_covers` and
 `ClosedOrbit.closedConstruction_of_chamber` then finish the closed orthant.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.GenusFiveRow10
 

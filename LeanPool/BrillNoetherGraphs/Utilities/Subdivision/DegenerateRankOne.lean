@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateInterpolation
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateInterpolation
 
 /-!
 # From a closed-orthant explicit-potential record to rank one
@@ -48,6 +50,8 @@ names the face and the certificate does not.  `ZeroReach` and
 `repInvariant_evaluatedPotential_of_zeroReach` below discharge it from such a
 chain; that is the exact join with the contraction census.
 -/
+
+@[expose] public section
 
 -- `Certificate` is a structure inside a namespace already ending in `Certificate`;
 -- renaming either would ripple through every consumer.  Lean v4.33 added

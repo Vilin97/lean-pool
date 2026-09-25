@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoEdgeConnectedRigidity
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoEdgeConnectedRigidity
 
 /-!
 # Cut conditions under graph isomorphism
@@ -15,6 +17,8 @@ it must be transported across the graph isomorphisms supplied by structural
 normal forms.  Keeping this at the graph-isomorphism layer avoids rebuilding
 the same finite-cut argument for every presentation theorem.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

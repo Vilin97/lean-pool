@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RiemannRochWinnable
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.CanonicalWedge
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoPole
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RiemannRochWinnable
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.CanonicalWedge
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoPole
 
 /-!
 # Genus-two seeds for two-pole gluing
@@ -26,6 +28,8 @@ degree form of Riemann's inequality on whichever genus-two factor contains
 choose one seam phase compatible with the desired rank tests; that scalar
 problem is represented by `TwoPoleProfile.lean`.
 -/
+
+@[expose] public section
 
 namespace Utilities
 namespace TwoPole

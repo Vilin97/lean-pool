@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationThreeChain
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationThreeChain
 
 /-!
 # Atanasov--Ranganathan's sixth configuration, generic in the core
@@ -67,6 +69,8 @@ The one-edge arithmetic is `ConfigurationFive`'s, reused unchanged, and the
 orientation ledger extends `ConfigurationThreeChain.ChainLedger` by the one fact the
 proofs below need that it does not carry.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.ConfigurationBananaTail
 

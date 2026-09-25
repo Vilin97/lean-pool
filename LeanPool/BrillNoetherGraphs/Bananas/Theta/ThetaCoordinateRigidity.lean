@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaBoundarySubmodularity
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffDelta
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoDegreeTwo
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaBoundarySubmodularity
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffDelta
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoDegreeTwo
 
 /-!
 # Rigidity of the non-endpoint theta submodularity families
@@ -15,6 +17,8 @@ The theta branch of Theorem 4.13 needs the canonical correction in the
 genus-two inversion formula to vanish.  Here that is checked directly from
 the coordinate families of Corollary 3.6.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

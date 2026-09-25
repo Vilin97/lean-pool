@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ClosedConstructionTail
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationCommon
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ClosedConstructionTail
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationCommon
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
 
 /-!
 # Atanasov--Ranganathan configuration 3, generic in the core
@@ -46,6 +48,8 @@ whole file is size-free except for `closedConstruction`, which needs `0 < n`
 and takes it as a hypothesis, the same one
 `Guarding.GuardingSet.closedConstruction` carries.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.ConfigurationThree
 
@@ -359,17 +363,29 @@ pictures can declare only some of its chip-free vertices to be
 configuration-3 centres.  A row all of whose chip-free vertices are centres
 gets the whole closed-orthant construction from `closedConstruction`. -/
 structure ConfigThree (n p : ℕ) where
+  /-- The finite core graph carrying configuration three and its designated chip vertices. -/
   core : Core n p
+  /-- The first of the four designated chip vertices of configuration three. -/
   chipOne : Fin n
+  /-- The second of the four designated chip vertices of configuration three. -/
   chipTwo : Fin n
+  /-- The third of the four designated chip vertices of configuration three. -/
   chipThree : Fin n
+  /-- The fourth of the four designated chip vertices of configuration three. -/
   chipFour : Fin n
+  /-- The Boolean selector of the paired center vertices, disjoint from the chip vertices. -/
   isCenter : Fin n → Bool
+  /-- The opposite center in the involutive pairing of center vertices. -/
   partner : Fin n → Fin n
+  /-- The core slot connecting a center to its first assigned chip vertex. -/
   firstArm : Fin n → Fin p
+  /-- The core slot connecting a center to its second assigned chip vertex. -/
   secondArm : Fin n → Fin p
+  /-- The middle slot joining a pair of centers, shared by the two partners. -/
   middleSlot : Fin n → Fin p
+  /-- The chip vertex reached from a center along its first arm. -/
   firstChip : Fin n → Fin n
+  /-- The chip vertex reached from a center along its second arm. -/
   secondChip : Fin n → Fin n
   center_not_chip : ∀ v : Fin n, isCenter v = true →
     ¬ IsChipOf chipOne chipTwo chipThree chipFour v
@@ -530,6 +546,7 @@ theorem length_pos_of_incident_chip {center chip : Fin n} {edge : Fin p}
 
 /-! ### The two interpolation heights -/
 
+/-- The smaller length of the two arms incident to the selected center. -/
 def armMin (v : Fin n) : ℕ :=
   min (d.length (cfg.firstArm v)) (d.length (cfg.secondArm v))
 

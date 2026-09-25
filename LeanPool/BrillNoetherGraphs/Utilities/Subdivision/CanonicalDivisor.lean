@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.CycleRigidity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CubicCore
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.CycleRigidity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CubicCore
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
 
 /-!
 # Canonical divisors on positive subdivisions
@@ -22,6 +24,8 @@ The valence calculations are reused from `Utilities.Gluing.CycleRigidity`.
 All statements here concern positive `SubdivisionGraph.Spec` objects, not
 contracted zero-length faces.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

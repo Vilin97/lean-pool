@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveClosedOrbit
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveClosedOrbit
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
 
 /-! **Independent generated check.** This module provides an additional generated proof of row 06 and is not imported by the main `LowGenus` root.
 
@@ -20,6 +22,8 @@ Every permutation is supplied with an explicit inverse, which keeps
 `reindexLength` definitionally transparent; all endpoint laws are
 `decide`d. -/
 
+@[expose] public section
+
 namespace AtanasovRanganathan.GenusFiveRow06Symmetry
 
 open Utilities
@@ -29,8 +33,11 @@ open Certificate.ExplicitPotential
 open Utilities.Certificate.CoreOrbitReduction
 open GenusFiveCoreAtlas ClosedOrbit
 
+/-- Read an eight-vertex reindexing from a list, using vertex zero for a missing entry. -/
 def vfun (data : List (Fin 8)) : Fin 8 → Fin 8 := fun i => data.getD i.val 0
+/-- Read a twelve-slot reindexing from a list, using slot zero for a missing entry. -/
 def sfun (data : List (Fin 12)) : Fin 12 → Fin 12 := fun i => data.getD i.val 0
+/-- Read orientation-reversal flags for the twelve slots, using false for a missing flag. -/
 def bfun (data : List Bool) : Fin 12 → Bool := fun i => data.getD i.val false
 
 /-- A `CoreSymmetry` literal carrying its own inverses, so that
@@ -50,120 +57,158 @@ def mkSym (vmap vinv : Fin 8 → Fin 8) (smap sinv : Fin 12 → Fin 12)
   tail_eq := ht
   head_eq := hh
 
+/-- The identity symmetry of the row-06 core, preserving every vertex, slot, and orientation. -/
 def blockSym0 : CoreSymmetry row06Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) (sfun [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-06 block symmetry with vertex cycles `(4 7) (5 6)` and slot cycles `(4 9) (5 10) (6
+11) (7 8)`. It reverses precisely slots 7, 8. -/
 def blockSym1 : CoreSymmetry row06Core :=
   mkSym (vfun [0, 1, 2, 3, 7, 6, 5, 4]) (vfun [0, 1, 2, 3, 7, 6, 5, 4])
     (sfun [0, 1, 2, 3, 9, 10, 11, 8, 7, 4, 5, 6]) (sfun [0, 1, 2, 3, 9, 10, 11, 8, 7, 4, 5, 6])
     (bfun [false, false, false, false, false, false, false, true, true, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-06 block symmetry with vertex cycles `(0 1) (2 3) (4 5) (6 7)` and slot cycles `(2
+3) (4 7) (8 9)`. It reverses precisely slots 0, 1, 2, 3, 4, 5, 6, 7, 10, 11. -/
 def blockSym2 : CoreSymmetry row06Core :=
   mkSym (vfun [1, 0, 3, 2, 5, 4, 7, 6]) (vfun [1, 0, 3, 2, 5, 4, 7, 6])
     (sfun [0, 1, 3, 2, 7, 5, 6, 4, 9, 8, 10, 11]) (sfun [0, 1, 3, 2, 7, 5, 6, 4, 9, 8, 10, 11])
     (bfun [true, true, true, true, true, true, true, true, false, false, true, true])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-06 block symmetry with vertex cycles `(0 1) (2 3) (4 6) (5 7)` and slot cycles `(2
+3) (4 8) (5 10) (6 11) (7 9)`. It reverses precisely slots 0, 1, 2, 3, 5, 6, 7, 9, 10, 11. -/
 def blockSym3 : CoreSymmetry row06Core :=
   mkSym (vfun [1, 0, 3, 2, 6, 7, 4, 5]) (vfun [1, 0, 3, 2, 6, 7, 4, 5])
     (sfun [0, 1, 3, 2, 8, 10, 11, 9, 4, 7, 5, 6]) (sfun [0, 1, 3, 2, 8, 10, 11, 9, 4, 7, 5, 6])
     (bfun [true, true, true, true, false, true, true, true, false, true, true, true])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-06 block symmetry with vertex cycles `(0 4) (1 5)` and slot cycles `(0 10) (1 11) (2
+9) (3 8)`. It reverses precisely slots 3, 8. -/
 def blockSym4 : CoreSymmetry row06Core :=
   mkSym (vfun [4, 5, 2, 3, 0, 1, 6, 7]) (vfun [4, 5, 2, 3, 0, 1, 6, 7])
     (sfun [10, 11, 9, 8, 4, 5, 6, 7, 3, 2, 0, 1]) (sfun [10, 11, 9, 8, 4, 5, 6, 7, 3, 2, 0, 1])
     (bfun [false, false, false, true, false, false, false, false, true, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-06 block symmetry with vertex cycles `(0 4 7) (1 5 6)` and slot cycles `(0 10 5) (1
+11 6) (2 9 4) (3 8 7)`. It reverses precisely slots 3, 8. -/
 def blockSym5 : CoreSymmetry row06Core :=
   mkSym (vfun [4, 5, 2, 3, 7, 6, 1, 0]) (vfun [7, 6, 2, 3, 0, 1, 5, 4])
     (sfun [10, 11, 9, 8, 2, 0, 1, 3, 7, 4, 5, 6]) (sfun [5, 6, 4, 7, 9, 10, 11, 8, 3, 2, 0, 1])
     (bfun [false, false, false, true, false, false, false, false, true, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-06 block symmetry with vertex cycles `(0 5) (1 4) (2 3) (6 7)` and slot cycles `(0
+10) (1 11) (2 8) (3 9) (4 7)`. It reverses precisely slots 0, 1, 3, 4, 5, 6, 7, 9, 10, 11. -/
 def blockSym6 : CoreSymmetry row06Core :=
   mkSym (vfun [5, 4, 3, 2, 1, 0, 7, 6]) (vfun [5, 4, 3, 2, 1, 0, 7, 6])
     (sfun [10, 11, 8, 9, 7, 5, 6, 4, 2, 3, 0, 1]) (sfun [10, 11, 8, 9, 7, 5, 6, 4, 2, 3, 0, 1])
     (bfun [true, true, false, true, true, true, true, true, false, true, true, true])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-06 block symmetry with vertex cycles `(0 5 7 1 4 6) (2 3)` and slot cycles `(0 10 5)
+(1 11 6) (2 8 4 3 9 7)`. It reverses precisely slots 0, 1, 3, 4, 5, 6, 7, 9, 10, 11. -/
 def blockSym7 : CoreSymmetry row06Core :=
   mkSym (vfun [5, 4, 3, 2, 6, 7, 0, 1]) (vfun [6, 7, 3, 2, 1, 0, 4, 5])
     (sfun [10, 11, 8, 9, 3, 0, 1, 2, 4, 7, 5, 6]) (sfun [5, 6, 7, 4, 8, 10, 11, 9, 2, 3, 0, 1])
     (bfun [true, true, false, true, true, true, true, true, false, true, true, true])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-06 block symmetry with vertex cycles `(0 6 4 1 7 5) (2 3)` and slot cycles `(0 5 10)
+(1 6 11) (2 7 9 3 4 8)`. It reverses precisely slots 0, 1, 2, 3, 5, 6, 7, 9, 10, 11. -/
 def blockSym8 : CoreSymmetry row06Core :=
   mkSym (vfun [6, 7, 3, 2, 1, 0, 4, 5]) (vfun [5, 4, 3, 2, 6, 7, 0, 1])
     (sfun [5, 6, 7, 4, 8, 10, 11, 9, 2, 3, 0, 1]) (sfun [10, 11, 8, 9, 3, 0, 1, 2, 4, 7, 5, 6])
     (bfun [true, true, true, true, false, true, true, true, false, true, true, true])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-06 block symmetry with vertex cycles `(0 6) (1 7) (2 3) (4 5)` and slot cycles `(0
+5) (1 6) (2 7) (3 4) (8 9)`. It reverses precisely slots 0, 1, 2, 3, 4, 5, 6, 7, 10, 11. -/
 def blockSym9 : CoreSymmetry row06Core :=
   mkSym (vfun [6, 7, 3, 2, 5, 4, 0, 1]) (vfun [6, 7, 3, 2, 5, 4, 0, 1])
     (sfun [5, 6, 7, 4, 3, 0, 1, 2, 9, 8, 10, 11]) (sfun [5, 6, 7, 4, 3, 0, 1, 2, 9, 8, 10, 11])
     (bfun [true, true, true, true, true, true, true, true, false, false, true, true])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-06 block symmetry with vertex cycles `(0 7 4) (1 6 5)` and slot cycles `(0 5 10) (1
+6 11) (2 4 9) (3 7 8)`. It reverses precisely slots 7, 8. -/
 def blockSym10 : CoreSymmetry row06Core :=
   mkSym (vfun [7, 6, 2, 3, 0, 1, 5, 4]) (vfun [4, 5, 2, 3, 7, 6, 1, 0])
     (sfun [5, 6, 4, 7, 9, 10, 11, 8, 3, 2, 0, 1]) (sfun [10, 11, 9, 8, 2, 0, 1, 3, 7, 4, 5, 6])
     (bfun [false, false, false, false, false, false, false, true, true, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The row-06 block symmetry with vertex cycles `(0 7) (1 6)` and slot cycles `(0 5) (1 6) (2
+4) (3 7)`. It preserves every slot orientation. -/
 def blockSym11 : CoreSymmetry row06Core :=
   mkSym (vfun [7, 6, 2, 3, 4, 5, 1, 0]) (vfun [7, 6, 2, 3, 4, 5, 1, 0])
     (sfun [5, 6, 4, 7, 2, 0, 1, 3, 8, 9, 10, 11]) (sfun [5, 6, 4, 7, 2, 0, 1, 3, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The identity symmetry of the row-06 core, preserving every vertex, slot, and orientation. -/
 def pairSym0 : CoreSymmetry row06Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) (sfun [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The parallel-slot symmetry of row 06 with slot cycles `(10 11)`, fixing every vertex and
+preserving all orientations. -/
 def pairSym1 : CoreSymmetry row06Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 10]) (sfun [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 10])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The parallel-slot symmetry of row 06 with slot cycles `(5 6)`, fixing every vertex and
+preserving all orientations. -/
 def pairSym2 : CoreSymmetry row06Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 3, 4, 6, 5, 7, 8, 9, 10, 11]) (sfun [0, 1, 2, 3, 4, 6, 5, 7, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The parallel-slot symmetry of row 06 with slot cycles `(5 6) (10 11)`, fixing every vertex
+and preserving all orientations. -/
 def pairSym3 : CoreSymmetry row06Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [0, 1, 2, 3, 4, 6, 5, 7, 8, 9, 11, 10]) (sfun [0, 1, 2, 3, 4, 6, 5, 7, 8, 9, 11, 10])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The parallel-slot symmetry of row 06 with slot cycles `(0 1)`, fixing every vertex and
+preserving all orientations. -/
 def pairSym4 : CoreSymmetry row06Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [1, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) (sfun [1, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The parallel-slot symmetry of row 06 with slot cycles `(0 1) (10 11)`, fixing every vertex
+and preserving all orientations. -/
 def pairSym5 : CoreSymmetry row06Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [1, 0, 2, 3, 4, 5, 6, 7, 8, 9, 11, 10]) (sfun [1, 0, 2, 3, 4, 5, 6, 7, 8, 9, 11, 10])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The parallel-slot symmetry of row 06 with slot cycles `(0 1) (5 6)`, fixing every vertex and
+preserving all orientations. -/
 def pairSym6 : CoreSymmetry row06Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [1, 0, 2, 3, 4, 6, 5, 7, 8, 9, 10, 11]) (sfun [1, 0, 2, 3, 4, 6, 5, 7, 8, 9, 10, 11])
     (bfun [false, false, false, false, false, false, false, false, false, false, false, false])
     (by decide) (by decide) (by decide) (by decide) (by decide) (by decide)
 
+/-- The parallel-slot symmetry of row 06 with slot cycles `(0 1) (5 6) (10 11)`, fixing every
+vertex and preserving all orientations. -/
 def pairSym7 : CoreSymmetry row06Core :=
   mkSym (vfun [0, 1, 2, 3, 4, 5, 6, 7]) (vfun [0, 1, 2, 3, 4, 5, 6, 7])
     (sfun [1, 0, 2, 3, 4, 6, 5, 7, 8, 9, 11, 10]) (sfun [1, 0, 2, 3, 4, 6, 5, 7, 8, 9, 11, 10])

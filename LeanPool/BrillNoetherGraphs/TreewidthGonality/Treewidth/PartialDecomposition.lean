@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.TreeDecomposition
+
+public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.TreeDecomposition
 
 /-!
 # Partial tree decompositions
@@ -48,6 +50,8 @@ supports: `SimpleGraph.Connected.sum_sup_edge` gives connectivity and
   connectivity along the two summand inclusions;
 * `join` — the binary gluing along a common root bag.
 -/
+
+@[expose] public section
 
 namespace Utilities.Treewidth
 

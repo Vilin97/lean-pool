@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.GenusFourPseudocore
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexReachability
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.EffectiveDifference
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionCorner
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.GenusFourPseudocore
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexReachability
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.EffectiveDifference
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionCorner
 
 /-!
 # A loop-split interface for the genus-four loop lemma
@@ -29,6 +31,8 @@ construct the two-chip representatives after contracting the loops and prove
 the reflection move uniformly for two subdivided paths of arbitrary positive
 lengths.  Neither assertion is silently delegated to generated data here.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.GenusFourLoopLemma
 

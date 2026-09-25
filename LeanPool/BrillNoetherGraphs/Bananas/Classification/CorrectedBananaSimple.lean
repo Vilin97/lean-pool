@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMFullClassification
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMFullClassification
 
 /-!
 # Corrected Theorem 1.16
@@ -22,6 +24,8 @@ This module records the sharp corrected statement.  A normalized coordinate
 mark is the midpoint of a distinct length-two strand, or an explicit divisor
 has negative marked rank difference.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

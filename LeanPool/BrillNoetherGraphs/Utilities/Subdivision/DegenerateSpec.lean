@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
 
 /-!
 # Subdivision specifications on the CLOSED length orthant
@@ -57,6 +59,8 @@ The two bridges are
   `DegSpec` *is* an ordinary `Spec`, with `rep = id`.
 -/
 
+@[expose] public section
+
 namespace Utilities.Certificate.DegenerateSpec
 open Utilities.Certificate
 
@@ -72,7 +76,10 @@ condition.  Honest closed-face authoring interfaces use the canonical
 union-find representative rather than treating an arbitrary `rep` as a
 contraction. -/
 structure DegSpec (n p : ℕ) where
+  /-- The ordered core whose slots are subdivided when positive and contracted when their
+  lengths vanish. -/
   core : ExplicitPotential.Core n p
+  /-- The natural-number length of each slot; zero denotes contraction of its endpoints. -/
   length : Fin p → ℕ
   core_nonempty : 0 < n
   /-- Canonical representative of a core vertex after collapsing zero slots. -/
@@ -102,6 +109,8 @@ abbrev Class := {v : Fin n // d.rep v = v}
 contributes none, because `Fin (0 - 1) = Fin (1 - 1) = Fin 0`. -/
 abbrev Interior := Σ e : Fin p, Fin (d.length e - 1)
 
+/-- Vertices of the closed subdivision: representative core classes together with interior
+vertices of surviving slots. -/
 abbrev Vertex := d.Class ⊕ d.Interior
 
 /-- A unit step exists only on a slot of positive length. -/
@@ -110,6 +119,8 @@ abbrev Step := Σ e : Fin p, Fin (d.length e)
 /-- The class of a core vertex, as a vertex of the degenerate subdivision. -/
 def coreVertex (v : Fin n) : d.Vertex := Sum.inl ⟨d.rep v, d.rep_idem v⟩
 
+/-- The interior vertex at zero-based offset `o` on a slot, corresponding to path position `o +
+1`. -/
 def interiorVertex (e : Fin p) (o : Fin (d.length e - 1)) : d.Vertex :=
   Sum.inr ⟨e, o⟩
 
@@ -120,14 +131,17 @@ theorem coreVertex_eq_iff (u v : Fin n) :
   · intro h; exact congrArg Subtype.val (Sum.inl.inj h)
   · intro h; rw [Sum.inl.injEq]; exact Subtype.ext h
 
+/-- The left vertex of a unit step, using the tail core class at the initial step. -/
 def stepLeft (e : Fin p) (o : Fin (d.length e)) : d.Vertex :=
   if hzero : o.val = 0 then d.coreVertex (d.core.tail e)
   else d.interiorVertex e ⟨o.val - 1, by have := o.isLt; omega⟩
 
+/-- The right vertex of a unit step, using the head core class at the final step. -/
 def stepRight (e : Fin p) (o : Fin (d.length e)) : d.Vertex :=
   if hlast : o.val + 1 = d.length e then d.coreVertex (d.core.head e)
   else d.interiorVertex e ⟨o.val, by have := o.isLt; omega⟩
 
+/-- The ordered endpoint pair of a unit-step occurrence in the degenerate subdivision. -/
 def unitEdge (s : d.Step) : d.Vertex × d.Vertex :=
   (d.stepLeft s.1 s.2, d.stepRight s.1 s.2)
 
@@ -173,8 +187,12 @@ whenever the offset is *strictly* below the slot length — a bound that
 usually comes from `length_pos`.  On the closed orthant the third case,
 `offset = length`, is reachable and must be present. -/
 
+/-- All integer positions along a slot, including both endpoint positions even when the length
+is zero. -/
 abbrev PathPosition (e : Fin p) := Fin (d.length e + 1)
 
+/-- Decode a slot position as its tail, interior, or head vertex; a zero-length slot has a
+single contracted endpoint. -/
 def pathVertex (e : Fin p) (k : d.PathPosition e) : d.Vertex :=
   if hzero : k.val = 0 then d.coreVertex (d.core.tail e)
   else if hlast : k.val = d.length e then d.coreVertex (d.core.head e)
@@ -490,6 +508,8 @@ noncomputable def vertexEquiv : target.Vertex ≃ d.Vertex :=
   Equiv.sumCongr (Equiv.ofBijective _ c.classMap_bijective)
     (Equiv.ofBijective _ c.interiorMap_bijective)
 
+/-- The bijection from unit steps in the positive contracted presentation to surviving unit
+steps in the closed presentation, preserving offsets. -/
 noncomputable def stepEquiv : target.Step ≃ d.Step :=
   Equiv.ofBijective _ c.stepMap_bijective
 
@@ -579,6 +599,8 @@ noncomputable def laplacianEquiv : LaplacianEquiv target.graph d.graph where
         exact (hIff t).2 ht
     rw [hFilter, Finset.card_map]
 
+/-- The graph isomorphism from the positive contracted-core subdivision to the closed-face
+graph, preserving edge multiplicities. -/
 noncomputable def graphIso : CFGraphIso target.graph d.graph where
   vertexEquiv := c.vertexEquiv
   map_num_edges := c.laplacianEquiv.num_edges_eq

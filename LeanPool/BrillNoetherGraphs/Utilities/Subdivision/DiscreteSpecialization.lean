@@ -3,16 +3,18 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSlopeScript
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionCoreSupport
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoPoleSubdivision
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ConvexIntegerRounding
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.CommonOffsetRounding
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ScriptClamping
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSlopeScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionCoreSupport
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoPoleSubdivision
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ConvexIntegerRounding
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.CommonOffsetRounding
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ScriptClamping
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
 
 /-!
 # Transferring a script by comparing path endpoint slopes
@@ -22,6 +24,8 @@ After summing over contraction classes those edges cancel. On surviving
 slots, increasing the outgoing endpoint contributions preserves effectivity.
 This isolates the graph bookkeeping from the integer rounding argument.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.DiscreteSpecialization
 

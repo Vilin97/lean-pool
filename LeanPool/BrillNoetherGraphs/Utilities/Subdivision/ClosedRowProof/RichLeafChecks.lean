@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.Leaf
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.Leaf
 
 /-!
 # Executable checks for rich row-proof leaves
@@ -17,6 +19,8 @@ alternatives are delegated to `Cert.check`.
 The indices deliberately agree with `rpfcheck.c`: a named point has index
 `s : ℕ`, is the end of block `s - 1`, and hence runs in W4 start at `1`.
 -/
+
+@[expose] public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

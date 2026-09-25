@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
 
 /-!
 # Rank invariance under linear equivalence
@@ -13,6 +15,8 @@ The dependency library proves that winnability is invariant under linear
 equivalence.  This module lifts that statement through the universal tests in
 the definition of divisor rank.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

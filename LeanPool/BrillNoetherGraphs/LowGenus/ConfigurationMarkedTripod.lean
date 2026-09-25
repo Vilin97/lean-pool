@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedThree
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedThree
 
 /-!
 # The tripod centre over a marked script
@@ -48,6 +50,8 @@ more: `h = min` of three arms has no partner bookkeeping, no `k` indicator and
 no collapsed-middle-slot case, so the delivered chip is always charged to the
 centre itself and a row needs no `owner` indirection at a tripod.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.ConfigurationMarkedTripod
 

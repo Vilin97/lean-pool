@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TrivalentExpansion
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreExpansionClosed
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TrivalentExpansion
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreExpansionClosed
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
 
 /-!
 # The closed centipede face
@@ -15,6 +17,8 @@ Contracting the internal edges of the centipede expansion recovers the
 original subdivision.  This file expresses that observation in the closed
 orthant language consumed by the Atanasov--Ranganathan row constructions.
 -/
+
+@[expose] public section
 namespace Utilities.Subdivision.TrivalentExpansion
 
 open Utilities

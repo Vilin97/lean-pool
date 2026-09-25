@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.GenusThreeCycleWedge
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutTwoRegular
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.GenusThreeCycleWedge
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutTwoRegular
 
 /-!
 # Rank one across a checked genus-three/genus-one core cut
@@ -14,6 +16,8 @@ A two-regular genus-one side of a valid core articulation is a pointed rigid
 cycle after every positive subdivision.  The public genus-three rigid-wedge
 theorem then supplies a degree-three rank-one divisor on the ambient graph.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.CoreVertexCut.Data
 

@@ -3,15 +3,17 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaTorsionAPI
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaExactTorsionRelabel
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaArithmetic
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaGenusTwoCornerSum
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInvTauCorrection
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaBoundarySubmodularity
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaTorsionAPI
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaExactTorsionRelabel
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaArithmetic
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaGenusTwoCornerSum
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInvTauCorrection
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaBoundarySubmodularity
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
 
 /-!
 # Evenly marked theta graphs
@@ -20,6 +22,8 @@ The evenly-marked theta family: all-submodularity, exact torsion order,
 non-recurrence, and k-general transmission (Lemma 4.15, Theorem 4.8,
 Corollary 4.17).
 -/
+
+@[expose] public section
 
 namespace Bananas
 

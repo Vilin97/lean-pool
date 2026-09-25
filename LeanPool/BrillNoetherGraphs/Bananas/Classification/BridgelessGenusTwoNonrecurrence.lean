@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessDegreeOneClasses
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInversionCount
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessDegreeOneClasses
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInversionCount
 
 /-!
 # Nonrecurrence on bridgeless genus-two graphs
@@ -16,6 +18,8 @@ bridgeless graph, every effective divisor of degree one has rank zero and a
 unique vertex representative.  This module packages that argument with the
 library's `TwoEdgeCutCondition` as the no-bridge hypothesis.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

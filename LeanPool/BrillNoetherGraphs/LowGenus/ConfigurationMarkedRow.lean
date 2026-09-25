@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedThree
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedThree
 
 /-!
 # The row-authoring layer over a marked script
@@ -45,6 +47,8 @@ the height is constant across collapsed slots.  Those five facts give
 `prin_splitScript_interiorVertex_ge_neg_one` at the mark -- so the interior chip
 costs a chamber nothing beyond declaring its profile.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.ConfigurationMarkedRow
 
@@ -173,10 +177,12 @@ theorem marks_admissible {mark : Fin 12 → ℕ} {h : Fin 8 → ℕ}
 
 /-! ## Each slot as one or two ordinary arms -/
 
+/-- The tail contribution of a slot, splitting at an interior mark when one is present. -/
 def slotTailForm (mark : Fin 12 → ℕ) (h : Fin 8 → ℕ) (e : Fin 12) : ℤ :=
   if 0 < mark e then tailContribution (mark e) (h (d.core.tail e)) 0
   else tailContribution (d.length e) (h (d.core.tail e)) (h (d.core.head e))
 
+/-- The head contribution of a slot, using the arm beyond an interior mark when it exists. -/
 def slotHeadForm (mark : Fin 12 → ℕ) (h : Fin 8 → ℕ) (e : Fin 12) : ℤ :=
   if 0 < mark e then
     (if mark e < d.length e then

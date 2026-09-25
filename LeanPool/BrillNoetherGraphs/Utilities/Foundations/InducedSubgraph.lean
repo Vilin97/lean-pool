@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Basic
+
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Basic
 
 /-!
 # Induced subgraphs
@@ -14,6 +16,8 @@ Raw edge occurrences are filtered before their endpoints are bundled into the
 subtype, so parallel edges are retained without identification.
 -/
 
+@[expose] public section
+
 open Multiset Finset
 
 namespace Utilities
@@ -21,12 +25,13 @@ namespace Utilities
 universe u
 
 /-- The raw edges of `G` whose two endpoints belong to `S`. -/
-private noncomputable def inducedEdges (G : CFGraph.{u}) (S : Finset G.V) :
+noncomputable def inducedEdges (G : CFGraph.{u}) (S : Finset G.V) :
     Multiset (G.V × G.V) := by
   classical
   exact G.edges.filter (fun edge => edge.1 ∈ S ∧ edge.2 ∈ S)
 
-private def restrictInducedEdge (G : CFGraph.{u}) (S : Finset G.V) (edge : G.V × G.V)
+/-- Bundle both endpoints of an edge as vertices of the inducing set. -/
+def restrictInducedEdge (G : CFGraph.{u}) (S : Finset G.V) (edge : G.V × G.V)
     (hEdge : edge.1 ∈ S ∧ edge.2 ∈ S) :
     {v : G.V // v ∈ S} × {v : G.V // v ∈ S} :=
   (⟨edge.1, hEdge.1⟩, ⟨edge.2, hEdge.2⟩)
@@ -45,7 +50,7 @@ noncomputable abbrev inducedSubgraph (G : CFGraph.{u}) (S : Finset G.V)
     rcases hS with ⟨v, hv⟩
     exact ⟨⟨v, hv⟩⟩
   edges := (inducedEdges G S).pmap (restrictInducedEdge G S)
-    (inducedEdges_all G S)
+    (by exact inducedEdges_all G S)
   loopless := by
     classical
     intro vertex hMem
@@ -69,7 +74,7 @@ noncomputable abbrev inducedSubgraph (G : CFGraph.{u}) (S : Finset G.V)
 @[simp] theorem inducedSubgraph_edges (G : CFGraph.{u}) (S : Finset G.V)
     (hS : S.Nonempty) :
     (inducedSubgraph G S hS).edges =
-      (inducedEdges G S).pmap (restrictInducedEdge G S) (inducedEdges_all G S) := rfl
+      (inducedEdges G S).pmap (restrictInducedEdge G S) (by exact inducedEdges_all G S) := rfl
 
 /-- The inclusion of the induced vertex set into the original graph. -/
 def inducedSubgraphInclusion (G : CFGraph.{u}) (S : Finset G.V)
@@ -132,7 +137,7 @@ private theorem filter_inducedEdges_endpoints (G : CFGraph.{u}) (S : Finset G.V)
   classical
   change
     ((Multiset.pmap (restrictInducedEdge G S) (inducedEdges G S)
-      (inducedEdges_all G S)).filter
+      (by exact inducedEdges_all G S)).filter
         (fun edge => edge = (x, y) ∨ edge = (y, x))).card =
       (G.edges.filter
         (fun edge => edge = (x.val, y.val) ∨ edge = (y.val, x.val))).card

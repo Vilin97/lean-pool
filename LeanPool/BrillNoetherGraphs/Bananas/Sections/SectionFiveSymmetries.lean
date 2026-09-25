@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionFiveDefinitions
-import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionFiveTransports
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionFiveDefinitions
+public import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionFiveTransports
 
 /-!
 # Section 5: symmetries of transmission permutations
@@ -14,6 +16,8 @@ The two symmetry arguments are deliberately carried out at the raw
 `IsTransmissionPermutation` level.  This keeps the graph relabeling and
 linear-equivalence transports independent of the ASP packaging.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

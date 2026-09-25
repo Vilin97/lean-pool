@@ -3,20 +3,22 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveTwoPoleClosed
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow05
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow06
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow08
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow09
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow10
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow11
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow12Guarding
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow14
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow15
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow16
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveTwoPoleClosed
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow05
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow06
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow08
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow09
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow10
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow11
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow12Guarding
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow14
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow15
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow16
 
 /-!
 # The sixteen Atanasov--Ranganathan genus-five constructions
@@ -31,6 +33,8 @@ Each displayed core construction has its own theorem.  The length-independent
 rows and the named length-dependent families are kept separate so that filling
 one theorem is a genuine, reportable unit of progress.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.GenusFiveConstructions
 

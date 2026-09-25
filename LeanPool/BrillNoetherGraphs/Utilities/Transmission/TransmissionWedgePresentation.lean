@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionIso
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedge
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgePresentation
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionIso
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedge
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgePresentation
 
 /-!
 # Transmission through a presented vertex wedge
@@ -15,6 +17,8 @@ This file joins the abstract factor-profile theorem for a vertex wedge to the
 presentation interface for an ambient graph.  It is deliberately valid for
 an arbitrary ASP permutation and arbitrary factor divisors.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

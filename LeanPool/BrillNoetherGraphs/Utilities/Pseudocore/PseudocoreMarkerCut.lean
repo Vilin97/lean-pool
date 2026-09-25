@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutTwoRegular
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocorePresentation
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CorePairMultiplicity
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutTwoRegular
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocorePresentation
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CorePairMultiplicity
 
 /-!
 # Marker-loop cuts of compatible pseudocore splits
@@ -15,6 +17,8 @@ Each marker introduced by loop splitting is joined only to its designated base
 vertex, by two parallel slot occurrences.  The two vertices therefore form a
 canonical genus-one side of a core vertex cut.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.PseudocoreMarkerCut
 

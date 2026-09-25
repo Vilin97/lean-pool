@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroVertexBridge
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoEdgeConnectedRigidity
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroVertexBridge
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoEdgeConnectedRigidity
 
 /-!
 # Degree-one classes on a bridgeless graph
@@ -15,6 +17,8 @@ precise no-bridge hypothesis.  A nontriviality hypothesis is stated
 explicitly: for the one-vertex edgeless graph the cut condition is vacuous,
 but its unique degree-one class has rank one rather than rank zero.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

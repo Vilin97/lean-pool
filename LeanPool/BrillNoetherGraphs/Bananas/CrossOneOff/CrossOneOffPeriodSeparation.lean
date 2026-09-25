@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffKGeneral
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffKGeneral
 
 /-!
 # Period separation for the corrected cross-one-off block
@@ -15,6 +17,8 @@ strand regime the zero-rise exception is impossible.  Since then
 `crossOneOffCutoff g n ≤ g+1`, this supplies exactly the separation needed
 by the corrected finite-row inversion count.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

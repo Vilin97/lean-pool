@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
+public import Mathlib.Tactic
 
 /-!
 # Controlled graph-contraction certificates
@@ -21,6 +23,8 @@ source to the target.  It does **not** assert that arbitrary divisor rank is
 preserved by contraction.
 -/
 
+@[expose] public section
+
 namespace Utilities.Certificate
 
 open Finset
@@ -30,6 +34,8 @@ universe u v w
 /-- Passive data for a graph quotient/contraction.  The validity predicate,
 rather than the data structure, records the quotient equations. -/
 structure GraphContractionCertificate (G : CFGraph.{u}) (H : CFGraph.{v}) where
+  /-- The proposed map from source vertices to quotient vertices; the separate validity
+  predicate certifies the contraction equations. -/
   vertexMap : G.V → H.V
 
 namespace GraphContractionCertificate

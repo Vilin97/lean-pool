@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContraction
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffineCover
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContraction
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffineCover
+public import Mathlib.Tactic
 
 /-!
 # Topological graph-contraction certificates
@@ -20,6 +22,8 @@ The fibre condition is deliberately separate from `Valid`: quotient
 multiplicities alone do not prevent a certificate from identifying two
 disconnected pieces of the source graph.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 

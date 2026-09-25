@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionFiveDefinitions
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionFiveDefinitions
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
 
 /-!
 # The inversion count in Section 5
@@ -15,6 +17,8 @@ This module isolates the finite combinatorial part of the final proposition
 in Section 5.  Its remaining graph-theoretic input is the identification of
 the displayed rank-drop sum with the cardinality of the finite fibres below.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

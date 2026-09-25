@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSlopeScript
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSlopeScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
 
 /-!
 # Ramp (cut-march) scripts on the CLOSED length orthant
@@ -53,6 +55,8 @@ open `RampData`.  Stating the closed analogue here, on an arbitrary
 `DegSpec n p`, means the two closed ports share it rather than each growing a
 copy.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.DegenerateSpec
 open Utilities.Certificate

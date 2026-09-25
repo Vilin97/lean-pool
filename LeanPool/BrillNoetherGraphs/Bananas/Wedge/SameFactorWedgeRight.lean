@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.SameFactorWedgeKGeneral
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameRight
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.SameFactorWedgeKGeneral
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameRight
 
 /-!
 # Right-factor form of the same-factor wedge exception
@@ -13,6 +15,8 @@ import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameRight
 This is the factor-symmetric transport of the left-factor theorems across
 the explicit commutativity isomorphism for vertex wedges.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

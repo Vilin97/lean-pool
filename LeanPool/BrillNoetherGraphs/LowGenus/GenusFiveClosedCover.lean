@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffineCoverData
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpecCensus
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffineCoverData
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpecCensus
 
 /-!
 # Exact affine covers for closed genus-five rows
@@ -20,6 +22,8 @@ forest contraction.  The final adapter recovers the diagnostic AR pencil.
 Generated row modules contain data only: certificates, cones, and one checked
 cover tree.  All graph and divisor semantics are proved here once.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.GenusFiveClosedCover
 
@@ -59,8 +63,11 @@ def coordinateForm (edge : Fin p) : ExplicitPotential.AffineForm p where
 
 /-- Passive data for one cone of a closed row cover. -/
 structure CoordinateCell (core : ExplicitPotential.Core n p) where
+  /-- The integer chip multiplicities of the divisor used throughout this cone. -/
   divisor : Fin n → ℤ
+  /-- An explicit-potential witness for each anchor vertex of the core. -/
   witness : Fin n → AnchorWitness p n p
+  /-- The affine constraints specifying the cone where this cell certificate applies. -/
   cone : List (ExplicitPotential.AffineForm p)
 
 /-- Interpret a cell as the standard explicit-potential certificate. -/
@@ -159,6 +166,8 @@ inductive CellTree (p : ℕ) where
 
 namespace CellTree
 
+/-- The affine cone attached to a cell index, defaulting to the empty constraint list for an
+invalid index. -/
 def coneAt {core : ExplicitPotential.Core n p}
     (cells : List (CoordinateCell core)) (index : ℕ) :
     List (ExplicitPotential.AffineForm p) :=
@@ -170,6 +179,8 @@ def coneAt {core : ExplicitPotential.Core n p}
           potential := fun _ => 0 }
       cone := [] }).cone
 
+/-- Validity of the cell indices, Farkas receipts, and sign branches in a tree under the active
+affine constraints. -/
 def Valid {core : ExplicitPotential.Core n p}
     (cells : List (CoordinateCell core))
     (active : List (ExplicitPotential.AffineForm p)) : CellTree p → Prop
@@ -186,6 +197,8 @@ def Valid {core : ExplicitPotential.Core n p}
       negative.Valid cells
         (active ++ [Certificate.AffineCover.AffineForm.violation form])
 
+/-- The Boolean checker for cell coverage, contradiction receipts, and both branches of each
+affine split. -/
 def check {core : ExplicitPotential.Core n p}
     (cells : List (CoordinateCell core))
     (active : List (ExplicitPotential.AffineForm p)) : CellTree p → Bool
@@ -281,6 +294,8 @@ inductive CompactCellTree where
 
 namespace CompactCellTree
 
+/-- Expand the shared form and receipt indices into a full cell tree, using zero forms and empty
+receipts for invalid indices. -/
 def decode {p : ℕ}
     (forms : List (ExplicitPotential.AffineForm p))
     (receipts : List Certificate.AffineCover.FarkasData) :
@@ -292,6 +307,7 @@ def decode {p : ℕ}
       .split (forms.getD index 0)
         (nonnegative.decode forms receipts) (negative.decode forms receipts)
 
+/-- Check a compact tree by decoding its shared tables and checking the resulting cell tree. -/
 def check {core : ExplicitPotential.Core n p}
     (tree : CompactCellTree) (forms : List (ExplicitPotential.AffineForm p))
     (receipts : List Certificate.AffineCover.FarkasData)

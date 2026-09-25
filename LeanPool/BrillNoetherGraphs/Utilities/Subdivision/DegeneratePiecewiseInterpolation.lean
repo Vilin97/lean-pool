@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateInterpolation
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateInterpolation
 
 /-!
 # Canonical piecewise interpolation on closed subdivision faces
@@ -22,6 +24,8 @@ step.  This formulation is also meaningful on a closed face: a zero-length
 slot has no selected step, and `balance` then forces its two endpoint values to
 coincide.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.DegenerateSpec
 open Utilities.Certificate
@@ -56,8 +60,13 @@ The latter is intentionally a semantic finite-data interface: list indexing,
 ordering, and affine endpoint decoding belong in the lowering layer, while the
 proof below only needs the displayed containment inequalities. -/
 structure PiecewiseData (potential : Fin n → ℤ) where
+  /-- The selected block for a slot and unit-step index; the containment laws constrain every
+  surviving step. -/
   blockAt : Fin p → ℕ → ℕ
+  /-- The right endpoint position of each block on each slot. -/
   blockEnd : Fin p → ℕ → ℕ
+  /-- The prescribed total integer rise of each block, used to determine its canonical
+  interpolation slopes. -/
   blockRise : Fin p → ℕ → ℤ
   covers : ∀ e k, k < d.length e →
     blockStart blockEnd e (blockAt e k) ≤ k ∧

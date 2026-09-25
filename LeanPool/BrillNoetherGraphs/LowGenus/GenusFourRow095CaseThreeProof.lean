@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095CasesTwoThree
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095CasesTwoThree
 
 /-!
 # Endpoint replay for the short Core-095 chamber
@@ -14,6 +16,8 @@ profiles in the chamber `0 < C-B < min(X,Delta)`.  This file performs their
 sparse endpoint replay and closes the three remaining core reachability
 tests.
 -/
+
+@[expose] public section
 
 namespace LowGenus.GenusFourRow095.CaseThree
 open Utilities.Certificate

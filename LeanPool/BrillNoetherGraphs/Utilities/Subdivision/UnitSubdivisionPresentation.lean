@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.GraphIsoLaplacianEquiv
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.GraphIsoLaplacianEquiv
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
+public import Mathlib.Tactic
 
 /-!
 # Every finite multigraph as a unit subdivision
@@ -22,6 +24,8 @@ Thus two equal pairs occurring with multiplicity two give two different terms
 of `G.edges`, hence two different slots.  No conversion through `toFinset` is
 used, so parallel edges are never collapsed.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.UnitSubdivisionPresentation
 

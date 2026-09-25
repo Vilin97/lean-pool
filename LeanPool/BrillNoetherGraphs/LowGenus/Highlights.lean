@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.AtanasovRanganathanExistence
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConstructions
-import LeanPool.BrillNoetherGraphs.LowGenus.LowGenusExistence
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.AtanasovRanganathanExistence
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConstructions
+public import LeanPool.BrillNoetherGraphs.LowGenus.LowGenusExistence
 
 /-!
 # Highlights of the `LowGenus` library
@@ -32,6 +34,8 @@ the sixteen displayed AR constructions plus four bridge rows, all four handled
 by the same checked `(2,3)` articulation.  The public canonical classifiers
 make both reductions exhaustive.
 -/
+
+@[expose] public section
 
 namespace LowGenus.Highlights
 

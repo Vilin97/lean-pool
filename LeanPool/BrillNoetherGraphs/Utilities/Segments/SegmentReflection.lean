@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Segments.AtanasovRanganathanConfigurations
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Segments.AtanasovRanganathanConfigurations
 
 /-!
 # Reflection on one subdivision segment
@@ -15,6 +17,8 @@ of a position and its mirror image, is constant between them, and has slope
 so extending it by zero away from the chosen subdivision slot creates no
 unwanted firing across the rest of the core.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

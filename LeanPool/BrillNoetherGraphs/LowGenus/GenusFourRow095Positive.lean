@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095CaseOne
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095CasesTwoThree
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095CaseThreeProof
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095Symmetry
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095CaseOne
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095CasesTwoThree
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095CaseThreeProof
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095Symmetry
 
 /-!
 # Unconditional existence on genus-four Core 095
@@ -17,6 +19,8 @@ then removes the normalization `L₀ ≤ L₅` by the exact Core-095
 involution.  The result is a kernel-checked degree-three rank-one divisor for
 every positive integral subdivision of the public row-095 core.
 -/
+
+@[expose] public section
 
 namespace LowGenus.GenusFourRow095
 open Utilities.Certificate

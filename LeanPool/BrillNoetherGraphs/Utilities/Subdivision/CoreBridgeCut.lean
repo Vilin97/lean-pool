@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutGenus
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeCut
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutGenus
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeCut
 
 /-!
 # Checked core bridge cuts and subdivision lifts
@@ -18,6 +20,8 @@ and all of its interior vertices are put on the head side.  Thus no choice of
 an interior point, and no assumption that a bridge has length one, is hidden
 in a generated core row.
 -/
+
+@[expose] public section
 
 namespace MarkedGraphs.Certificate
 open Utilities.Certificate
@@ -34,7 +38,10 @@ universe u
 /-- Proof-free data for an oriented separating core slot.  `left` is the
 tail side; the head side is its complement. -/
 structure Data {n p : ℕ} (core : ExplicitPotential.Core n p) where
+  /-- The chosen tail-side core vertices; validity requires the distinguished bridge to leave
+  this set. -/
   left : Finset (Fin n)
+  /-- The candidate separating slot, oriented from the chosen left side to its complement. -/
   bridge : Fin p
 
 namespace Data

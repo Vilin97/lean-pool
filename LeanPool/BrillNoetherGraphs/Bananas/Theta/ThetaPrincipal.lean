@@ -3,10 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaMoment
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaMoment
 
 /-! # Theta Principal -/
+
+@[expose] public section
 
 namespace Bananas
 
@@ -16,6 +20,7 @@ open Utilities.Certificate SubdivisionGraph
 open Utilities.Certificate.SubdivisionGraph.Spec
 
 /-! Firing-script values and slopes in the normalized strand coordinates. -/
+/-- The firing-script value at a normalized strand position, extended by zero beyond the strand. -/
 def normalizedPathValue
     (B : Banana 2) (script : firingScript B.graph)
     (α : Fin 3) (r : ℕ) : ℤ :=
@@ -23,6 +28,7 @@ def normalizedPathValue
     script (strandVertex B α ⟨r, by omega⟩)
   else 0
 
+/-- The difference of firing-script values at consecutive normalized strand positions. -/
 def normalizedStepSlope
     (B : Banana 2) (script : firingScript B.graph)
     (α : Fin 3) (k : ℕ) : ℤ :=
@@ -62,6 +68,8 @@ theorem sum_normalizedStepSlope
 `normalizedStepSlope` always follows the common coordinate from core vertex
 `0` to core vertex `1`.  Thus a reversed stored edge needs both a sign and an
 index reversal. -/
+/-- The strand slope in the stored edge orientation, reversing its index and sign when the
+strand orientation is reversed. -/
 def storageStepSlope
     (B : Banana 2) (script : firingScript B.graph)
     (α : Fin 3) (k : ℕ) : ℤ :=

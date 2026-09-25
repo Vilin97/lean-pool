@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaGeometry
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaGeometry
 
 /-!
 # A cut criterion for reduced divisors
@@ -13,6 +15,8 @@ The paper's `SameStrand` argument is a reduced-divisor argument.  This lemma
 packages the only finite-set calculation it needs: a strict total chip versus
 boundary inequality produces the pointwise witness required by `qReduced`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

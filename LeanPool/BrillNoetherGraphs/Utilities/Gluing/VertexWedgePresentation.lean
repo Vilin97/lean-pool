@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedge
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedge
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
 
 /-!
 # Presentations of a vertex wedge
@@ -16,6 +18,8 @@ stated using edge multiplicities, so it can be used without choosing an
 orientation of the raw edge multisets.
 -/
 
+@[expose] public section
+
 namespace Utilities
 
 universe u v w
@@ -24,7 +28,11 @@ universe u v w
 `y`. -/
 structure VertexWedgePresentation (K : CFGraph.{w})
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) where
+  /-- The injective, edge-multiplicity-preserving placement of the left factor into the
+  presented wedge. -/
   leftMap : G.V → K.V
+  /-- The injective placement of the right factor, identifying only its marked vertex with the
+  left factor's mark. -/
   rightMap : H.V → K.V
   left_injective : Function.Injective leftMap
   right_injective : Function.Injective rightMap

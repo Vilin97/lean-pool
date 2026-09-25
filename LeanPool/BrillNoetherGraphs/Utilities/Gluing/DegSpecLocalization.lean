@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.InteriorScriptTransport
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpec
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.InteriorScriptTransport
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpec
 
 /-!
 # Localizing a guarding picture to one chip-free component
@@ -44,6 +46,8 @@ Dhar calculation by a genus-two one with two frozen endpoints.
 `Utilities` only: `DegSpec` already lives here, so `LowGenus` picture files
 may use this directly.
 -/
+
+@[expose] public section
 
 namespace Utilities.Gluing
 

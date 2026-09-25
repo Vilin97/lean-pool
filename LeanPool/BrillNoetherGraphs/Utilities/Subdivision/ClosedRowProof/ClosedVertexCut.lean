@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateCoreVertexCut
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedFaceCensus
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SpanningTreeConnectivity
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateCoreVertexCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedFaceCensus
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SpanningTreeConnectivity
 
 /-!
 # Closed-face vertex-cut adapter for row certificates
@@ -17,6 +19,8 @@ slots.  Canonical closed faces use `compFold`, so that extra hypothesis is
 automatic.  This small adapter presents the result in the exact form consumed
 by the deep-embedded closed-row checker.
 -/
+
+@[expose] public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

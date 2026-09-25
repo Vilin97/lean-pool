@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.OddSubdivisionDescent
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.GonalityTransport
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.OddSubdivisionDescent
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.GonalityTransport
+public import Mathlib.Tactic
 
 /-!
 # Descending a doubled degree-two divisor from an odd subdivision
@@ -58,6 +60,8 @@ This is a *partial* mechanism, not a complete one: a computational scan on
 for all of them.  Nothing in this file asserts that the square root exists; it
 only exploits one when it does.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec
 

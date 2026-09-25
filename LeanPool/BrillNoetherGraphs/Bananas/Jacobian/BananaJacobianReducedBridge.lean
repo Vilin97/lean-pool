@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReducedInjectivity
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffDelta
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReducedInjectivity
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffDelta
 
 /-!
 # Paper coordinate representatives are q-reduced
@@ -16,6 +18,8 @@ the corresponding semibreak chip, a terminal coordinate contributes a chip at
 the right endpoint, and every nonzero coordinate contributes one unit of debt
 at the left endpoint.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

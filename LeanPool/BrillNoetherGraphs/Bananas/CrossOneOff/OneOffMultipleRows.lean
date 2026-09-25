@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffTransmission
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffTransmission
 
 /-!
 # Multiple-residue rows for the same-strand one-off marking
@@ -15,6 +17,8 @@ prefix firing reduces the marked twist of `g • rightEndpoint` to
 `(g+m-b) • rightEndpoint`.  Its marked second difference is one, forcing
 `tau(b)=m`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

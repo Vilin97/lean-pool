@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.CommonOffsetRounding
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.CommonOffsetRounding
 
 /-!
 # Sampling and rounding a convex integer path
@@ -14,6 +16,8 @@ between `N` times the first and last slopes. Common-offset floor division
 therefore gives a coarse edge slope between those same slopes. Consecutive
 coarse slopes remain nondecreasing.
 -/
+
+@[expose] public section
 
 namespace Utilities.ConvexIntegerRounding
 

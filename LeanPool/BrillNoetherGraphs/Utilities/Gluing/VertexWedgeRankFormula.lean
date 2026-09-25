@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedge
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankChipStep
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedge
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankChipStep
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
 
 /-!
 # Rank profiles under vertex gluing
@@ -24,6 +26,8 @@ definition of rank and the exact winnability convolution in
 staggered crossing of the two marked rank profiles; its one-step offset is
 exactly the offset required by the common chip shift on the wedge.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

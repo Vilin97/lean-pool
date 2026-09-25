@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.Semibreak
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.Semibreak
 
 /-!
 # The endpoint rank-one criterion for banana graphs
@@ -21,6 +23,8 @@ left endpoint test forces the unrestricted left coefficient to be positive.
 If the Riemann--Roch term does not already give rank one, the right endpoint
 test forces the bounded right coefficient to be positive as well.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

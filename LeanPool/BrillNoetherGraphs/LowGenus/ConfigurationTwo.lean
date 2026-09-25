@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationThree
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationThree
 
 /-!
 # Atanasov--Ranganathan configuration 2, generic in the core
@@ -34,6 +36,8 @@ The generic slot arithmetic (`Ends`, `sum_three`, `slotTerm`, `slotValue`,
 currently lives in `ConfigurationThree.lean`; that is why this file imports
 it.  Neither structure mentions the other.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.ConfigurationTwo
 
@@ -77,18 +81,31 @@ three slots `firstArm v`, `secondArm v`, `thirdArm v` end on the chips
 `firstChip v`, `secondChip v`, `thirdChip v`, and `spareChip v` names the
 fourth chip, which the centre does not touch. -/
 structure ConfigTwo where
+  /-- The eight-vertex core graph carrying configuration two. -/
   core : Core
+  /-- The first of the four designated chip vertices of configuration two. -/
   chipOne : Fin 8
+  /-- The second of the four designated chip vertices of configuration two. -/
   chipTwo : Fin 8
+  /-- The third of the four designated chip vertices of configuration two. -/
   chipThree : Fin 8
+  /-- The fourth of the four designated chip vertices of configuration two. -/
   chipFour : Fin 8
+  /-- The Boolean selector of the center vertices, none of which is a designated chip vertex. -/
   isCenter : Fin 8 → Bool
+  /-- The slot joining a center to the first chip assigned to that center. -/
   firstArm : Fin 8 → Fin 12
+  /-- The slot joining a center to the second chip assigned to that center. -/
   secondArm : Fin 8 → Fin 12
+  /-- The slot joining a center to the third chip assigned to that center. -/
   thirdArm : Fin 8 → Fin 12
+  /-- The designated chip vertex at the far end of the center's first arm. -/
   firstChip : Fin 8 → Fin 8
+  /-- The designated chip vertex at the far end of the center's second arm. -/
   secondChip : Fin 8 → Fin 8
+  /-- The designated chip vertex at the far end of the center's third arm. -/
   thirdChip : Fin 8 → Fin 8
+  /-- The fourth chip vertex, complementary to the three assigned arm endpoints. -/
   spareChip : Fin 8 → Fin 8
   center_not_chip : ∀ v : Fin 8, isCenter v = true →
     ¬ IsChipOf chipOne chipTwo chipThree chipFour v

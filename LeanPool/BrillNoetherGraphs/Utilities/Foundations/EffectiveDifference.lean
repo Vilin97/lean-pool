@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RiemannRochWinnable
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RiemannRochWinnable
 
 /-!
 # The effective-difference lemma
@@ -31,6 +33,8 @@ Write `K` for `canonicalDivisor G` and `g` for `genus G`.
    complement `K - F*` is winnable too; let `F` be an effective representative.
 4. `F - E ~ (K - F*) - E = K - (E + F*) = K - M ~ K - (K - γ) = γ`.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

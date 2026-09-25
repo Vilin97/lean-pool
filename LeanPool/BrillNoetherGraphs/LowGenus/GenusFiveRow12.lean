@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow12Tripod
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow12Tripod
 
 /-!
 # The Atanasov--Ranganathan construction on row 12
@@ -22,6 +24,8 @@ centres and `{2,7}` to be a configuration-3 pair, and this file only has to
 name the row's lookup tables, check the incidence facts, and observe that the
 two tables between them cover every chip-free vertex.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.GenusFiveRow12
 
@@ -56,6 +60,8 @@ def firstArm : Fin 8 → Fin 12
   | 7 => 7
   | _ => 0
 
+/-- Second arm of the row-12 configuration, using slot 2 at centre 2 and slot 8 at centre 7,
+with zero as the unused default. -/
 def secondArm : Fin 8 → Fin 12
   | 2 => 2
   | 7 => 8

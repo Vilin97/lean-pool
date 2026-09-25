@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMSecondCrossWitness
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrandInteriorNegative
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMSecondCrossWitness
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrandInteriorNegative
 
 /-!
 # Same-strand endpoint witnesses for Theorem 3.9
@@ -21,6 +23,8 @@ For the left endpoint and an interior mark `v_j` with `j < n-1`, take
 `D - v_j ~ v_1`.  The right-endpoint witness is the reflected construction,
 `D = v_(j-1) + v_n`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

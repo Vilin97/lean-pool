@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgeDemazure
-import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgeDemazure
+public import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
 
 /-!
 # Iterated vertex gluing and the chain transmission theorem
@@ -40,6 +42,8 @@ generality would raise the level at every step.  Everything here therefore
 works with all factors in a single fixed universe, where the wedge is closed.
 -/
 
+@[expose] public section
+
 namespace Utilities
 
 universe u
@@ -47,8 +51,11 @@ universe u
 /-- A twice-marked graph, bundled so that an iterated wedge can change the
 vertex type at every step. -/
 structure MarkedGraph where
+  /-- The underlying graph of a chain factor with ordered attachment marks. -/
   graph : CFGraph.{u}
+  /-- The outside left mark retained when the factor is glued to another on its right. -/
   left : graph.V
+  /-- The outside right mark used to attach the next chain factor. -/
   right : graph.V
 
 namespace MarkedGraph

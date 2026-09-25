@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInversionFiniteSum
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInversionFiniteSum
 
 /-!
 # Degree-twist deletion identities
@@ -13,6 +15,8 @@ The inclusion--exclusion proof of Lemma 4.10 repeatedly removes one or both
 marked chips from a fixed-degree twist.  These elementary identities make the
 resulting shifts of the finite torsion index explicit.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

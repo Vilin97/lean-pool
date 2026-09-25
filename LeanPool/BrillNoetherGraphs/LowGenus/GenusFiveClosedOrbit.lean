@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreSymmetry
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSubdivisionIso
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreSymmetry
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSubdivisionIso
 
 /-!
 # Core automorphisms on the closed genus-five orthant
@@ -31,6 +33,8 @@ symmetry moving it into `P`, and the whole closed orthant follows.  Neither
 the forest hypothesis nor the looplessness hypothesis has to be re-proved at
 the moved face -- `isForest_iff` and `isLoopy_iff` transport them.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.ClosedOrbit
 

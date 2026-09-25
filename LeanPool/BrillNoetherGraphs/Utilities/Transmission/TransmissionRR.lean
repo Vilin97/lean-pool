@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
 
 /-!
 # Riemann--Roch duality for transmission rows
@@ -14,6 +16,8 @@ therefore converts its rank inequality into an equivalent lower bound for the
 canonical complement.  This file packages that conversion without yet using
 any ASP-specific simplification of the complementary slipface expression.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

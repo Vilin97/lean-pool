@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
 
 /-!
 # Rank transport under an adjacency-preserving vertex equivalence
@@ -17,6 +19,8 @@ Brill--Noether existence transport without requiring a general graph
 isomorphism API.
 -/
 
+@[expose] public section
+
 namespace Utilities.Certificate
 
 universe u v w
@@ -27,6 +31,8 @@ The name emphasizes the only graph structure used below: preservation of the
 chip-firing Laplacian.  No equality of the oriented edge multisets is required.
 -/
 structure LaplacianEquiv (G : CFGraph.{u}) (H : CFGraph.{v}) where
+  /-- The vertex equivalence preserving edge multiplicities, hence transporting the graph
+  Laplacian. -/
   toEquiv : G.V ≃ H.V
   num_edges_eq :
     ∀ x y : G.V,

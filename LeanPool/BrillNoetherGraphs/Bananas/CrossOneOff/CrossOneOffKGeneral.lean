@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffInversions
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaTorsionSlopes
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderExact
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffInversions
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaTorsionSlopes
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderExact
 
 /-!
 # The cross-one-off obstruction to general transmission
@@ -17,6 +19,8 @@ order-two branch of the corrected torsion dichotomy is impossible, so a
 `k`-general marking has `g ≤ k`.  The corrected decreasing block then has
 more than `genus = g` inversions as soon as `g ≥ 7`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

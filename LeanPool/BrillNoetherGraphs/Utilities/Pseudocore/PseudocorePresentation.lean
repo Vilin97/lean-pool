@@ -3,14 +3,16 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.UnitSubdivisionPresentation
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreCompatible
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreRelabeling
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LeafReduction
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.CycleRigidity
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.UnitSubdivisionPresentation
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreCompatible
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreRelabeling
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LeafReduction
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.CycleRigidity
 
 /-!
 # WP-A: the pseudocore presentation theorem
@@ -36,6 +38,8 @@ Both are proved by exhibiting the larger specification as a
 vertex/unit-step bijection has to be built by hand: the split's own
 `canonicalSplitLaplacianEquiv` supplies it.
 -/
+
+@[expose] public section
 namespace Utilities.Certificate.PseudocorePresentation
 
 open Finset
@@ -115,8 +119,12 @@ variable {n p : ℕ}
 distinct slots whose far endpoints differ.  Such a vertex is a genuine
 subdivision point and can be suppressed. -/
 structure MergeData (core : Core n p) where
+  /-- The degree-two core vertex to suppress by merging its two incident slots. -/
   vertex : Fin n
+  /-- The first incident slot end at the suppressed vertex, including its orientation flag. -/
   first : Fin p × Bool
+  /-- The second incident slot end; its slot differs from the first and together they exhaust
+  the incident ends. -/
   second : Fin p × Bool
   first_mem : first ∈ slotEnds core vertex
   second_mem : second ∈ slotEnds core vertex
@@ -802,7 +810,10 @@ theorem explicitCoreMultiplicity_reindex {n p n' p' : ℕ} (core : Core n p)
 vertex is either stable, or a marker carrying exactly two slots to a single
 stable partner. -/
 structure MarkedShape {N P : ℕ} (spec : Spec N P) where
+  /-- The Boolean designation of loop markers, distinguishing them from stable base vertices. -/
   isMarker : Fin N → Bool
+  /-- The stable base partner of each marker, joined to it by exactly two edge occurrences and
+  its only neighbor. -/
   partner : Fin N → Fin N
   base_stable : ∀ v : Fin N, isMarker v = false → 3 ≤ slotValence spec.core v
   partner_base : ∀ v : Fin N, isMarker v = true → isMarker (partner v) = false

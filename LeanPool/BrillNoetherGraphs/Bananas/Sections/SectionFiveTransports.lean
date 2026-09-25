@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.MarkedIso
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankDeltaDuality
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionDuality
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.MarkedIso
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankDeltaDuality
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionDuality
 
 /-!
 # Section 5: transmission transports
@@ -17,6 +19,8 @@ the twice-marked banana paper.  They are kept apart from the statement ledger so
 that the latter can expose the paper-facing names without becoming an
 implementation dependency for later symmetry arguments.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

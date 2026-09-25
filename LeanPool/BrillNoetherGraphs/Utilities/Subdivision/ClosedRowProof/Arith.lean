@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import Mathlib.Tactic
+
+public import Mathlib.Tactic
 
 /-!
 # The row-proof arithmetic layer, deep-embedded
@@ -36,6 +38,8 @@ nonnegative multiplier it contributes `0 ≥ 0` to the inequality part, and any
 multiplier contributes `0` to the equality part.  So the checker is
 fail-closed on malformed indices without spending a comparison on them.
 -/
+
+@[expose] public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

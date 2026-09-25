@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationFive
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationSeven
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationFive
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationSeven
 
 /-!
 # The chip-free pair over a marked script
@@ -50,6 +52,8 @@ of the contracted class owns the delivered chip*: when the middle slot collapses
 the two centres merge, and the chip may have to be charged to the partner.  That
 is the `targetOwner` device every finished row already uses.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.ConfigurationMarkedThree
 
@@ -419,6 +423,7 @@ height, so that both the target and the partner statement are proved once. -/
 /-- The one-edge facts the pair profile consumes.  `tail L hu hv` is the
 contribution at the end carrying height `hu`. -/
 structure PairLedger where
+  /-- The tail contribution of a paired slot as a function of length and endpoint heights. -/
   tail : ℕ → ℕ → ℕ → ℤ
   tail_nonneg : ∀ {L hu hv : ℕ}, hv ≤ hu → hu ≤ hv + L → 0 ≤ tail L hu hv
   tail_ge_neg_one : ∀ {L hu hv : ℕ}, hv ≤ hu + L → hu ≤ hv + L → -1 ≤ tail L hu hv

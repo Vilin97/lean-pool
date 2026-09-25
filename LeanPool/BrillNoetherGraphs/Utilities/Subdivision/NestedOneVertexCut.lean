@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutConnectivity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCut
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCut
 
 /-!
 # Restricting a one-vertex cut through another cut
@@ -15,6 +17,8 @@ the second cut restricts to that factor.  This is the elementary nesting step
 needed to display successive wedge factors without making any assumptions on
 their origin.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

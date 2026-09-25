@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
+public import Mathlib.Tactic
 
 /-!
 # The tricycle core
@@ -39,6 +41,8 @@ A subdivision `H` of `T_m` is `tricycleSpec length hpos` for an arbitrary
 positive length vector; `σ_k(T_m)` is `length ≡ k`; and a *tricycle graph* is
 one with `IsTricycle length`, i.e. the three transition slots have length one.
 -/
+
+@[expose] public section
 
 namespace Utilities.Tricycle
 

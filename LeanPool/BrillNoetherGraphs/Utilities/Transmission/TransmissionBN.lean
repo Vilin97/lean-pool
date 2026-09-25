@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
 
 /-!
 # Ordinary Brill--Noether witnesses from transmission rows
@@ -16,6 +18,8 @@ A transmission witness contains many ordinary rank witnesses: fixing one row
 This is the generic core needed later for the Grassmannian-transmission ⇒
 `W^r_d` implication.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

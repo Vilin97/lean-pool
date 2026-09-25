@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInversionCount
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInversionCount
 
 /-!
 # Counting a collision of crossing affine inversions
@@ -14,6 +16,8 @@ Proposition 6.1.  Two distinct inversions crossing the origin which represent
 the same affine inversion class force at least `2 * k - 1` distinct affine
 inversion classes.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

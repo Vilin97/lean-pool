@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
+public import Mathlib.Tactic
 
 /-!
 # From explicit subdivision potentials to rank one
@@ -22,6 +24,8 @@ sound strong-separator theorem then promotes core reachability to rank one.
 The remaining graph-theoretic input is the uniform statement that the core
 vertices form a strong separator in a subdivision.
 -/
+
+@[expose] public section
 
 -- `Certificate` is a structure inside a namespace already ending in `Certificate`;
 -- renaming either would ripple through every consumer.  Lean v4.33 added

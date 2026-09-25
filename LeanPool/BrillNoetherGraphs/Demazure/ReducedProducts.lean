@@ -3,7 +3,9 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import LeanPool.BrillNoetherGraphs.Demazure.Submodular
+module
+
+public import LeanPool.BrillNoetherGraphs.Demazure.Submodular
 
 /-!
 # Reduced products
@@ -12,6 +14,8 @@ This file compares the Demazure operations with ordinary multiplication on ASP
 permutations. It corresponds roughly to Section 5 of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
+
+@[expose] public section
 
 /-! ### Reduced products and ordinary products
 

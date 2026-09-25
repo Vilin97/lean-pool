@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffTransmission
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffTransmission
 
 /-!
 # The corrected cross-one-off transmission block
@@ -12,6 +14,8 @@ import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffTransmission
 This file assembles the three residue-specific calculations of corrected
 Lemma 4.30 over the full interval guaranteed by `CrossOneOffLongEnough`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

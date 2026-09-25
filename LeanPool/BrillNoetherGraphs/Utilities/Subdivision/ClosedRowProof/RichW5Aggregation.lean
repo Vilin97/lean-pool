@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichLeafSound
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichLeafSound
 
 /-!
 # W5 aggregation on a contracted core class
@@ -20,6 +22,8 @@ It is deliberately based on `RichLeafSound` rather than on the final assembly
 module, so that `RichLeafFullSound.richLeaf_sound` can consume it; the
 `hTail`/`hHead` hypotheses are produced by `RichChipBridge`.
 -/
+
+@[expose] public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

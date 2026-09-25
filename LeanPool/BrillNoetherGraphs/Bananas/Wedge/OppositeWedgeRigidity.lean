@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameLeft
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoDegreeTwo
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeRankFormula
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameLeft
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoDegreeTwo
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeRankFormula
 
 /-!
 # Rigidity of opposite-factor marks on a genus-one wedge
@@ -14,6 +16,8 @@ import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeRankFormula
 The phase `ell = 0` in the exact wedge rank formula shows that one chip on
 each factor has rank zero whenever neither chip is the gluing point.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

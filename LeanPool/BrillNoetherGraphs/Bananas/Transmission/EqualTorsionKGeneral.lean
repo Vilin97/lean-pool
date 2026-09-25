@@ -3,13 +3,15 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineReduction
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionFibreTree
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeSubmodularity
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralBNGeneral
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.ChainGluing
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineReduction
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionFibreTree
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeSubmodularity
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralBNGeneral
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.ChainGluing
 
 /-!
 # Chains with a common general-transmission period
@@ -22,6 +24,8 @@ reduction already developed for Proposition 6.13, then records the two-factor
 and iterated graph statements and the resulting Brill--Noether generality
 criterion.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

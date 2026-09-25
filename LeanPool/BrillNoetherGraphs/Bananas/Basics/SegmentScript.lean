@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Segments.SegmentReflection
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SlopeScript
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Segments.SegmentReflection
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SlopeScript
 
 /-!
 # Sub-interval reflection scripts
@@ -20,6 +22,8 @@ sub-interval `[lo, hi]` of one slot and extended by zero.  Its Laplacian
 consumes the chips at path positions `lo` and `hi` and produces chips at
 `target` and its mirror `lo + hi - target`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

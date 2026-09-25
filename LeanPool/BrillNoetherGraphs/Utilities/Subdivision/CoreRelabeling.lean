@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CorePairMultiplicity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CorePairMultiplicity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
 
 /-!
 # Occurrence-sensitive relabeling of ordered subdivision cores
@@ -16,6 +18,8 @@ slot occurrence and record whether that occurrence is reversed.  This module
 provides that neutral bridge, independently of any genus, atlas, or marked
 graph application.
 -/
+
+@[expose] public section
 namespace Utilities.Certificate.ExplicitPotential.Core
 
 open Utilities
@@ -97,8 +101,11 @@ theorem relabel_connected (core : Core n p) (vertexPerm : Equiv.Perm (Fin n))
 
 /-- An occurrence-sensitive relabeling between two ordered cores. -/
 structure Relabeling (source : Core n p) (target : Core m q) where
+  /-- The bijection of core vertices between the two ordered presentations. -/
   coreEquiv : Fin n ≃ Fin m
+  /-- The bijection of slot occurrences, retaining the distinction between parallel slots. -/
   slotEquiv : Fin p ≃ Fin q
+  /-- Whether each source slot has its endpoint orientation reversed in the target presentation. -/
   reversed : Fin p → Bool
   tail_eq : ∀ edge : Fin p,
     target.tail (slotEquiv edge) =

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichChipDecoder
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichChipDecoder
 
 /-!
 # The W5 endpoint chip bridge
@@ -38,6 +40,8 @@ Finally, W1's slack discipline bounds the realized collapse count by the
 declared slack, which is what the `minOver` in `tailContribution` /
 `headContribution` needs.
 -/
+
+@[expose] public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

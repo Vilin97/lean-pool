@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SlopeScript
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.GonalityTransport
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.CommonOffsetRounding
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SlopeScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.GonalityTransport
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.CommonOffsetRounding
+public import Mathlib.Tactic
 
 /-!
 # Descent of winnability and rank from a regular subdivision
@@ -63,6 +65,8 @@ round" fallacy recorded in the research notes: the rounding is justified step
 by step from the fine script, and the budget hypothesis is exactly what fails
 for two chips at the midpoints of an even refinement.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec
 

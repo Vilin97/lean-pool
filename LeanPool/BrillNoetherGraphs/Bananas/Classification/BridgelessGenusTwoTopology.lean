@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.TopologicalVertices
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessDegreeOneClasses
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.TopologicalVertices
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessDegreeOneClasses
 
 /-!
 # Structural genus-two preliminaries
@@ -15,6 +17,8 @@ the no-bridge condition already forces every vertex of a nontrivial graph to
 have valence at least two.  This module records that reduction and its sharp
 genus-two topological-vertex bound.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

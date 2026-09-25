@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSlopeScript
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ValidClosed
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSlopeScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ValidClosed
 
 /-!
 # Canonical integer interpolation on the CLOSED length orthant
@@ -43,6 +45,8 @@ definitionally, so the certificate's endpoint bounds apply verbatim.  Under
 `RepInvariant` the two readings agree anyway
 (`coreRise_eq_zero_of_length_zero`).
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.DegenerateSpec
 open Utilities.Certificate

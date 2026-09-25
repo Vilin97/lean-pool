@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationTwo
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationTwo
 
 /-!
 # The Atanasov--Ranganathan construction on row 11
@@ -24,6 +26,8 @@ calculation itself is core generic and lives in
 ramp and endpoint lemmas this file used to carry now live).  All this file
 does is name the row's lookup tables and check the incidence facts.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.GenusFiveRow11
 
@@ -53,6 +57,8 @@ def firstArm : Fin 8 → Fin 12
   | 7 => 5
   | _ => 0
 
+/-- Second tripod arm at centres 1, 2, 4, and 7, respectively slots 1, 3, 7, and 6; other inputs
+use zero. -/
 def secondArm : Fin 8 → Fin 12
   | 1 => 1
   | 2 => 3
@@ -60,6 +66,8 @@ def secondArm : Fin 8 → Fin 12
   | 7 => 6
   | _ => 0
 
+/-- Third tripod arm at centres 1, 2, 4, and 7, respectively slots 9, 11, 8, and 10; other
+inputs use zero. -/
 def thirdArm : Fin 8 → Fin 12
   | 1 => 9
   | 2 => 11
@@ -75,6 +83,8 @@ def firstChip : Fin 8 → Fin 8
   | 7 => 5
   | _ => 0
 
+/-- Chip at the end of the second tripod arm for centres 1, 2, 4, and 7, respectively vertices
+3, 0, 6, and 6. -/
 def secondChip : Fin 8 → Fin 8
   | 1 => 3
   | 2 => 0
@@ -82,6 +92,8 @@ def secondChip : Fin 8 → Fin 8
   | 7 => 6
   | _ => 0
 
+/-- Chip at the end of the third tripod arm for centres 1, 2, 4, and 7, respectively vertices 5,
+6, 0, and 3. -/
 def thirdChip : Fin 8 → Fin 8
   | 1 => 5
   | 2 => 6

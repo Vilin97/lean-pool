@@ -3,11 +3,15 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixChainConclusion
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeContraction
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixChainConclusion
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeContraction
 
 /-! # Bridge Chain Transport -/
+
+@[expose] public section
 
 open Utilities
 
@@ -15,11 +19,14 @@ universe u
 
 namespace Utilities.MarkedGraph
 
+/-- Join the right mark of the first graph to the left mark of the second by a bridge, retaining
+the outer marks. -/
 abbrev bridge (M N : MarkedGraph.{u}) : MarkedGraph.{u} where
   graph := bridgeGraph M.graph N.graph M.right N.left
   left := Sum.inl M.left
   right := Sum.inr N.right
 
+/-- Attach each graph in the list by a bridge, starting from the given marked graph. -/
 def bridgeChain (M : MarkedGraph.{u}) : List MarkedGraph.{u} → MarkedGraph.{u}
   | [] => M
   | N :: rest => bridgeChain (M.bridge N) rest
@@ -27,6 +34,7 @@ def bridgeChain (M : MarkedGraph.{u}) : List MarkedGraph.{u} → MarkedGraph.{u}
 end Utilities.MarkedGraph
 
 namespace Bananas
+/-- Reassociate a bridge followed by a vertex wedge without changing the graph. -/
 noncomputable def bridgeWedgeAssocIso (M N K : MarkedGraph.{u}) :
     CFGraphIso ((M.bridge N).wedge K).graph (M.bridge (N.wedge K)).graph := by
   change CFGraphIso
@@ -107,21 +115,25 @@ noncomputable def bridgeWedgeAssocIso (M N K : MarkedGraph.{u}) :
 
 /-- A graph isomorphism which also carries the displayed left mark. -/
 structure LeftMarkedIso (M N : MarkedGraph.{u}) where
+  /-- The underlying graph isomorphism that carries the left mark. -/
   iso : CFGraphIso M.graph N.graph
   map_left : iso.vertexEquiv M.left = N.left
 
 namespace LeftMarkedIso
 
+/-- The identity graph isomorphism with its left mark fixed. -/
 noncomputable def refl (M : MarkedGraph.{u}) : LeftMarkedIso M M where
   iso := CFGraphIso.refl M.graph
   map_left := rfl
 
+/-- Invert a graph isomorphism that preserves the left mark. -/
 noncomputable def symm {M N : MarkedGraph.{u}}
     (phi : LeftMarkedIso M N) : LeftMarkedIso N M where
   iso := phi.iso.symm
   map_left := by
     exact (phi.iso.vertexEquiv.symm_apply_eq).2 phi.map_left.symm
 
+/-- Compose two graph isomorphisms that preserve the left mark. -/
 noncomputable def trans {M N K : MarkedGraph.{u}}
     (phi : LeftMarkedIso M N) (psi : LeftMarkedIso N K) :
     LeftMarkedIso M K where
@@ -166,6 +178,8 @@ noncomputable def bridgeWedgeAssocLeftIso (M N K : MarkedGraph.{u}) :
 one-chip divisor.  This is exactly the interface needed to transport both
 ordinary and once-marked Brill--Noether statements. -/
 structure LeftRankTransport (M N : MarkedGraph.{u}) where
+  /-- Transport divisors while preserving subtraction, integer scaling, degree, rank, and the
+  chip at the left mark. -/
   mapDiv : CFDiv M.graph → CFDiv N.graph
   map_sub : ∀ D E, mapDiv (D - E) = mapDiv D - mapDiv E
   map_zsmul : ∀ (n : ℤ) D, mapDiv (n • D) = n • mapDiv D
@@ -176,6 +190,7 @@ structure LeftRankTransport (M N : MarkedGraph.{u}) where
 
 namespace LeftRankTransport
 
+/-- Transport divisors along a graph isomorphism preserving the left mark. -/
 noncomputable def ofIso {M N : MarkedGraph.{u}} (phi : LeftMarkedIso M N) :
     LeftRankTransport M N where
   mapDiv := phi.iso.mapDiv
@@ -187,6 +202,7 @@ noncomputable def ofIso {M N : MarkedGraph.{u}} (phi : LeftMarkedIso M N) :
   rank_map := phi.iso.rank_mapDiv
   genus_eq := phi.iso.genus_eq
 
+/-- Compose two transports of divisor rank and left-marked chips. -/
 noncomputable def trans {M N K : MarkedGraph.{u}}
     (first : LeftRankTransport M N) (second : LeftRankTransport N K) :
     LeftRankTransport M K where

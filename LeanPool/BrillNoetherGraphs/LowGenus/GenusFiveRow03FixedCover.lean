@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveClosedCover
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveClosedCover
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
 
 /-! **Independent generated check.** The main row-03 proof is now
 `GenusFiveTwoPoleClosed.row03_closedConstruction`; this module preserves
@@ -13,6 +15,8 @@ an additional exact replay.
 
 Generated exact replay of the fixed AR row-03 divisor.
 `cells_check` and `tree_check` replay every arithmetic obligation in the kernel. -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.GenusFiveRow03FixedCover
 
@@ -23,268 +27,428 @@ open Certificate.ExplicitPotential
 open Certificate.AffineCover
 open GenusFiveCoreAtlas GenusFiveClosedCover Configurations
 
+/-- Decode an integer coefficient list as a twelve-variable affine form: the first entry is the
+constant and missing entries are zero. -/
 def aff (data : List ℤ) : ExplicitPotential.AffineForm 12 where
   fixedValue := data.getD 0 0
   coefficient := fun coordinate => data.getD (coordinate.val + 1) 0
 
+/-- The fixed degree-four row-03 divisor, with one chip at each of vertices zero, one, four, and
+five. -/
 def rowDivisor : Fin 8 → ℤ := fun vertex =>
   ([1, 1, 0, 0, 1, 1, 0, 0] : List ℤ).getD vertex.val 0
 
+/-- The zero endpoint slopes and zero core potential used for an out-of-range witness-table
+lookup. -/
 def defaultWitness : AnchorWitness 12 8 12 :=
   { alpha := fun _ => 0, beta := fun _ => 0, potential := fun _ => 0 }
 
+/-- Endpoint-slope witness 0 for the row-03 closed cover: `alpha` is zero. `beta` is zero. The
+affine potential is zero. -/
 def witness0 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [], [], [], [], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 1 for the row-03 closed cover: `alpha` is 1 at slots 5, 6, 8, and
+zero elsewhere. `beta` is -1 at slots 5, 6, 7, 8, and zero elsewhere. The nonzero affine
+potentials occur at vertices 4, 5, 6, 7. -/
 def witness1 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, -1, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 2 for the row-03 closed cover: `alpha` is 1 at slots 6, 7, 8, and
+zero elsewhere. `beta` is -1 at slots 5, 6, 7, 8, and zero elsewhere. The nonzero affine
+potentials occur at vertices 4, 5, 6, 7. -/
 def witness2 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, -1, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 3 for the row-03 closed cover: `alpha` is 1 at slots 6, and zero
+elsewhere. `beta` is -1 at slots 6, 8, and zero elsewhere. The nonzero affine potentials occur
+at vertices 4, 5. -/
 def witness3 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 4 for the row-03 closed cover: `alpha` is 1 at slots 8, and zero
+elsewhere. `beta` is -1 at slots 6, 8, and zero elsewhere. The nonzero affine potentials occur
+at vertices 4, 5. -/
 def witness4 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 5 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+5, 8, 11, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, 11, and zero elsewhere. The
+nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness5 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 6 for the row-03 closed cover: `alpha` is -1 at slots 2; 1 at slots
+7, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8, and zero elsewhere. The nonzero
+affine potentials occur at vertices 3, 4, 5. -/
 def witness6 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 0, 1, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 7 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+8, 11, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The nonzero
+affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness7 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 8 for the row-03 closed cover: `alpha` is -1 at slots 2; 1 at slots
+3, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8, and zero elsewhere. The nonzero
+affine potentials occur at vertices 3, 4, 5. -/
 def witness8 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 9 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+1, 8, 11, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, 11, and zero elsewhere. The
+nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness9 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 10 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+1, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The nonzero
+affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness10 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 11 for the row-03 closed cover: `alpha` is -1 at slots 0, 5; 1 at
+slots 1, 8, 11, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The
+nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness11 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, -1, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 12 for the row-03 closed cover: `alpha` is -1 at slots 0, 5; 1 at
+slots 1, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 5, and zero
+elsewhere. The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness12 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, -1, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 13 for the row-03 closed cover: `alpha` is -1 at slots 2; 1 at slots
+8, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8; 1 at slots 2, and zero elsewhere. The
+nonzero affine potentials occur at vertices 3, 4, 5. -/
 def witness13 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 14 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+1, 6, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The nonzero
+affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness14 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 15 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+8, 11, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, 11; 1 at slots 0, and zero
+elsewhere. The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness15 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 16 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+1, 8, 11, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The nonzero
+affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness16 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 17 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 0, and zero elsewhere. The
+nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness17 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 18 for the row-03 closed cover: `alpha` is -1 at slots 0, 5; 1 at
+slots 8, 11, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 0, and zero
+elsewhere. The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness18 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 19 for the row-03 closed cover: `alpha` is -1 at slots 0, 5; 1 at
+slots 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 0, 5, and zero
+elsewhere. The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness19 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, 1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, -1, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 20 for the row-03 closed cover: `alpha` is 1 at slots 5, 6, 7, 8, and
+zero elsewhere. `beta` is -1 at slots 5, 6, 7, 8, and zero elsewhere. The nonzero affine
+potentials occur at vertices 4, 5, 6, 7. -/
 def witness20 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, -1, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 21 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+6, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The nonzero
+affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness21 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 22 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+1, 6, 8, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, 11, and zero elsewhere. The
+nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness22 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 23 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+5, 6, 8, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, 11, and zero elsewhere. The
+nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness23 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, -1, -1, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 24 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+6, 8, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, 11; 1 at slots 0, and zero
+elsewhere. The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness24 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 25 for the row-03 closed cover: `alpha` is -1 at slots 0, 5; 1 at
+slots 6, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 0, and zero
+elsewhere. The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness25 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, -1, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 26 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+8, 11, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 0, and zero elsewhere.
+The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness26 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 27 for the row-03 closed cover: `alpha` is -1 at slots 0, 5; 1 at
+slots 1, 6, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The
+nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness27 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, -1, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 28 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+6, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 0, and zero elsewhere.
+The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness28 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, -1], [], [0, -1, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 29 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+5, 6, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, and zero elsewhere. The nonzero
+affine potentials occur at vertices 2, 4, 5. -/
 def witness29 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 30 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+6, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8; 1 at slots 0, and zero elsewhere. The
+nonzero affine potentials occur at vertices 2, 4, 5. -/
 def witness30 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 31 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
+1, 6, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, and zero elsewhere. The nonzero
+affine potentials occur at vertices 2, 4, 5. -/
 def witness31 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 32 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
+slots 6, 7, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8; 1 at slots 11, and zero
+elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness32 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 1, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, -1, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 33 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
+slots 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 11, and zero elsewhere.
+The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness33 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 0, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 34 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
+slots 3, 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8; 1 at slots 11, and zero
+elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness34 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, -1, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 35 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
+slots 3, 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8, and zero elsewhere. The nonzero
+affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness35 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 36 for the row-03 closed cover: `alpha` is -1 at slots 2, 7, 11; 1 at
+slots 3, 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 11, and zero
+elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness36 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, -1, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 0, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 37 for the row-03 closed cover: `alpha` is -1 at slots 2, 7, 11; 1 at
+slots 3, 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 7, and zero elsewhere.
+The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness37 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, -1, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, -1, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 38 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
+slots 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8; 1 at slots 2, 11, and zero
+elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness38 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, -1, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 39 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
+slots 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 2, and zero elsewhere.
+The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness39 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 40 for the row-03 closed cover: `alpha` is -1 at slots 2, 7, 11; 1 at
+slots 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 2, 11, and zero
+elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness40 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, -1, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, 0, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 41 for the row-03 closed cover: `alpha` is -1 at slots 2, 7, 11; 1 at
+slots 3, 6, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 8, and zero elsewhere. The
+nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness41 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, -1, 1, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 42 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
+slots 3, 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 11, and zero
+elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness42 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 0, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 43 for the row-03 closed cover: `alpha` is -1 at slots 2, 7, 11; 1 at
+slots 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 2, 7, and zero elsewhere.
+The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness43 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, -1, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, 1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, -1, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 44 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
+slots 6, 7, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8, and zero elsewhere. The
+nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness44 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 1, 1, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 1, -1, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 45 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
+slots 6, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 8, and zero elsewhere. The nonzero
+affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness45 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 0, 1, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 46 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
+slots 3, 6, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8, and zero elsewhere. The
+nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness46 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, 0, 1, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 47 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
+slots 6, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8; 1 at slots 2, and zero
+elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness47 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 0, 1, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 48 for the row-03 closed cover: `alpha` is -1 at slots 2, 7, 11; 1 at
+slots 6, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 2, and zero elsewhere.
+The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness48 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, -1, 1, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- Endpoint-slope witness 49 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
+slots 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 2, 11, and zero
+elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness49 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, 0, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
     potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
+/-- The fifty endpoint-slope and affine-potential witnesses shared by the row-03 closed-cover
+cells. -/
 def witnesses : List (AnchorWitness 12 8 12) := [witness0, witness1, witness2, witness3, witness4, witness5, witness6, witness7, witness8, witness9, witness10, witness11, witness12, witness13, witness14, witness15, witness16, witness17, witness18, witness19, witness20, witness21, witness22, witness23, witness24, witness25, witness26, witness27, witness28, witness29, witness30, witness31, witness32, witness33, witness34, witness35, witness36, witness37, witness38, witness39, witness40, witness41, witness42, witness43, witness44, witness45, witness46, witness47, witness48, witness49]
 
+/-- Closed-cover cell 0 for the fixed row-03 divisor, with 16 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 1, 2, 0, 0, 3, 4]`; `cell0_check` verifies its
+explicit-potential certificate. -/
 def cell0 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -296,6 +460,9 @@ theorem cell0_check :
     cell0.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 1 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 5, 6, 0, 0, 7, 4]`; `cell1_check` verifies its
+explicit-potential certificate. -/
 def cell1 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -307,6 +474,9 @@ theorem cell1_check :
     cell1.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 2 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 5, 8, 0, 0, 7, 4]`; `cell2_check` verifies its
+explicit-potential certificate. -/
 def cell2 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -318,6 +488,9 @@ theorem cell2_check :
     cell2.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 3 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 9, 6, 0, 0, 7, 4]`; `cell3_check` verifies its
+explicit-potential certificate. -/
 def cell3 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -329,6 +502,9 @@ theorem cell3_check :
     cell3.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 4 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 9, 8, 0, 0, 7, 4]`; `cell4_check` verifies its
+explicit-potential certificate. -/
 def cell4 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -340,6 +516,9 @@ theorem cell4_check :
     cell4.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 5 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 6, 0, 0, 11, 4]`; `cell5_check` verifies its
+explicit-potential certificate. -/
 def cell5 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -351,6 +530,9 @@ theorem cell5_check :
     cell5.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 6 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 8, 0, 0, 11, 4]`; `cell6_check` verifies its
+explicit-potential certificate. -/
 def cell6 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -362,6 +544,9 @@ theorem cell6_check :
     cell6.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 7 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 6, 0, 0, 12, 4]`; `cell7_check` verifies its
+explicit-potential certificate. -/
 def cell7 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -373,6 +558,9 @@ theorem cell7_check :
     cell7.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 8 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 8, 0, 0, 12, 4]`; `cell8_check` verifies its
+explicit-potential certificate. -/
 def cell8 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -384,6 +572,9 @@ theorem cell8_check :
     cell8.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 9 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 5, 13, 0, 0, 7, 4]`; `cell9_check` verifies its
+explicit-potential certificate. -/
 def cell9 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -395,6 +586,9 @@ theorem cell9_check :
     cell9.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 10 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 9, 13, 0, 0, 7, 4]`; `cell10_check` verifies its
+explicit-potential certificate. -/
 def cell10 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -406,6 +600,9 @@ theorem cell10_check :
     cell10.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 11 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 13, 0, 0, 14, 4]`; `cell11_check` verifies
+its explicit-potential certificate. -/
 def cell11 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -417,6 +614,9 @@ theorem cell11_check :
     cell11.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 12 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 13, 0, 0, 11, 4]`; `cell12_check` verifies
+its explicit-potential certificate. -/
 def cell12 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -428,6 +628,9 @@ theorem cell12_check :
     cell12.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 13 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 13, 0, 0, 12, 4]`; `cell13_check` verifies
+its explicit-potential certificate. -/
 def cell13 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -439,6 +642,9 @@ theorem cell13_check :
     cell13.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 14 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 15, 6, 0, 0, 7, 4]`; `cell14_check` verifies its
+explicit-potential certificate. -/
 def cell14 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -450,6 +656,9 @@ theorem cell14_check :
     cell14.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 15 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 15, 8, 0, 0, 7, 4]`; `cell15_check` verifies its
+explicit-potential certificate. -/
 def cell15 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -461,6 +670,9 @@ theorem cell15_check :
     cell15.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 16 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 6, 0, 0, 7, 4]`; `cell16_check` verifies its
+explicit-potential certificate. -/
 def cell16 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -472,6 +684,9 @@ theorem cell16_check :
     cell16.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 17 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 8, 0, 0, 7, 4]`; `cell17_check` verifies its
+explicit-potential certificate. -/
 def cell17 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -483,6 +698,9 @@ theorem cell17_check :
     cell17.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 18 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 15, 13, 0, 0, 7, 4]`; `cell18_check` verifies its
+explicit-potential certificate. -/
 def cell18 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -494,6 +712,9 @@ theorem cell18_check :
     cell18.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 19 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 13, 0, 0, 7, 4]`; `cell19_check` verifies its
+explicit-potential certificate. -/
 def cell19 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -505,6 +726,9 @@ theorem cell19_check :
     cell19.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 20 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 16, 13, 0, 0, 7, 4]`; `cell20_check` verifies its
+explicit-potential certificate. -/
 def cell20 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -516,6 +740,9 @@ theorem cell20_check :
     cell20.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 21 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 6, 0, 0, 18, 4]`; `cell21_check` verifies its
+explicit-potential certificate. -/
 def cell21 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -527,6 +754,9 @@ theorem cell21_check :
     cell21.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 22 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 13, 0, 0, 18, 4]`; `cell22_check` verifies
+its explicit-potential certificate. -/
 def cell22 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -538,6 +768,9 @@ theorem cell22_check :
     cell22.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 23 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 6, 0, 0, 16, 4]`; `cell23_check` verifies its
+explicit-potential certificate. -/
 def cell23 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -549,6 +782,9 @@ theorem cell23_check :
     cell23.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 24 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 6, 0, 0, 14, 4]`; `cell24_check` verifies its
+explicit-potential certificate. -/
 def cell24 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -560,6 +796,9 @@ theorem cell24_check :
     cell24.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 25 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 8, 0, 0, 18, 4]`; `cell25_check` verifies its
+explicit-potential certificate. -/
 def cell25 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -571,6 +810,9 @@ theorem cell25_check :
     cell25.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 26 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 8, 0, 0, 16, 4]`; `cell26_check` verifies its
+explicit-potential certificate. -/
 def cell26 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -582,6 +824,9 @@ theorem cell26_check :
     cell26.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 27 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 8, 0, 0, 14, 4]`; `cell27_check` verifies its
+explicit-potential certificate. -/
 def cell27 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -593,6 +838,9 @@ theorem cell27_check :
     cell27.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 28 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 6, 0, 0, 19, 4]`; `cell28_check` verifies its
+explicit-potential certificate. -/
 def cell28 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -604,6 +852,9 @@ theorem cell28_check :
     cell28.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 29 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 8, 0, 0, 19, 4]`; `cell29_check` verifies its
+explicit-potential certificate. -/
 def cell29 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -615,6 +866,9 @@ theorem cell29_check :
     cell29.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 30 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 13, 0, 0, 19, 4]`; `cell30_check` verifies
+its explicit-potential certificate. -/
 def cell30 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -626,6 +880,9 @@ theorem cell30_check :
     cell30.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 31 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 20, 6, 0, 0, 21, 4]`; `cell31_check` verifies its
+explicit-potential certificate. -/
 def cell31 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -637,6 +894,9 @@ theorem cell31_check :
     cell31.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 32 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 22, 6, 0, 0, 21, 4]`; `cell32_check` verifies its
+explicit-potential certificate. -/
 def cell32 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -648,6 +908,9 @@ theorem cell32_check :
     cell32.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 33 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 23, 6, 0, 0, 21, 4]`; `cell33_check` verifies its
+explicit-potential certificate. -/
 def cell33 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -659,6 +922,9 @@ theorem cell33_check :
     cell33.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 34 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 24, 6, 0, 0, 21, 4]`; `cell34_check` verifies its
+explicit-potential certificate. -/
 def cell34 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -670,6 +936,9 @@ theorem cell34_check :
     cell34.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 35 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 20, 8, 0, 0, 21, 4]`; `cell35_check` verifies its
+explicit-potential certificate. -/
 def cell35 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -681,6 +950,9 @@ theorem cell35_check :
     cell35.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 36 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 22, 8, 0, 0, 21, 4]`; `cell36_check` verifies its
+explicit-potential certificate. -/
 def cell36 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -692,6 +964,9 @@ theorem cell36_check :
     cell36.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 37 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 23, 8, 0, 0, 21, 4]`; `cell37_check` verifies its
+explicit-potential certificate. -/
 def cell37 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -703,6 +978,9 @@ theorem cell37_check :
     cell37.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 38 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 24, 8, 0, 0, 21, 4]`; `cell38_check` verifies its
+explicit-potential certificate. -/
 def cell38 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -714,6 +992,9 @@ theorem cell38_check :
     cell38.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 39 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 6, 0, 0, 25, 4]`; `cell39_check` verifies its
+explicit-potential certificate. -/
 def cell39 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -725,6 +1006,9 @@ theorem cell39_check :
     cell39.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 40 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 8, 0, 0, 26, 4]`; `cell40_check` verifies its
+explicit-potential certificate. -/
 def cell40 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -736,6 +1020,9 @@ theorem cell40_check :
     cell40.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 41 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 8, 0, 0, 25, 4]`; `cell41_check` verifies its
+explicit-potential certificate. -/
 def cell41 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -747,6 +1034,9 @@ theorem cell41_check :
     cell41.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 42 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 6, 0, 0, 27, 4]`; `cell42_check` verifies its
+explicit-potential certificate. -/
 def cell42 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -758,6 +1048,9 @@ theorem cell42_check :
     cell42.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 43 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 8, 0, 0, 27, 4]`; `cell43_check` verifies its
+explicit-potential certificate. -/
 def cell43 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -769,6 +1062,9 @@ theorem cell43_check :
     cell43.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 44 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 6, 0, 0, 26, 4]`; `cell44_check` verifies its
+explicit-potential certificate. -/
 def cell44 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -780,6 +1076,9 @@ theorem cell44_check :
     cell44.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 45 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 6, 0, 0, 28, 4]`; `cell45_check` verifies its
+explicit-potential certificate. -/
 def cell45 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -791,6 +1090,9 @@ theorem cell45_check :
     cell45.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 46 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 8, 0, 0, 28, 4]`; `cell46_check` verifies its
+explicit-potential certificate. -/
 def cell46 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -802,6 +1104,9 @@ theorem cell46_check :
     cell46.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 47 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 20, 13, 0, 0, 21, 4]`; `cell47_check` verifies
+its explicit-potential certificate. -/
 def cell47 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -813,6 +1118,9 @@ theorem cell47_check :
     cell47.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 48 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 22, 13, 0, 0, 21, 4]`; `cell48_check` verifies
+its explicit-potential certificate. -/
 def cell48 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -824,6 +1132,9 @@ theorem cell48_check :
     cell48.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 49 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 23, 13, 0, 0, 21, 4]`; `cell49_check` verifies
+its explicit-potential certificate. -/
 def cell49 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -835,6 +1146,9 @@ theorem cell49_check :
     cell49.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 50 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 24, 13, 0, 0, 21, 4]`; `cell50_check` verifies
+its explicit-potential certificate. -/
 def cell50 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -846,6 +1160,9 @@ theorem cell50_check :
     cell50.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 51 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 13, 0, 0, 26, 4]`; `cell51_check` verifies
+its explicit-potential certificate. -/
 def cell51 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -857,6 +1174,9 @@ theorem cell51_check :
     cell51.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 52 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 13, 0, 0, 25, 4]`; `cell52_check` verifies
+its explicit-potential certificate. -/
 def cell52 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -868,6 +1188,9 @@ theorem cell52_check :
     cell52.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 53 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 13, 0, 0, 27, 4]`; `cell53_check` verifies
+its explicit-potential certificate. -/
 def cell53 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -879,6 +1202,9 @@ theorem cell53_check :
     cell53.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 54 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 17, 13, 0, 0, 28, 4]`; `cell54_check` verifies
+its explicit-potential certificate. -/
 def cell54 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -890,6 +1216,9 @@ theorem cell54_check :
     cell54.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 55 for the fixed row-03 divisor, with 17 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 1, 6, 0, 0, 3, 4]`; `cell55_check` verifies its
+explicit-potential certificate. -/
 def cell55 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -901,6 +1230,9 @@ theorem cell55_check :
     cell55.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 56 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 16, 6, 0, 0, 7, 4]`; `cell56_check` verifies its
+explicit-potential certificate. -/
 def cell56 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -912,6 +1244,9 @@ theorem cell56_check :
     cell56.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 57 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 16, 6, 0, 0, 16, 4]`; `cell57_check` verifies its
+explicit-potential certificate. -/
 def cell57 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -923,6 +1258,9 @@ theorem cell57_check :
     cell57.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 58 for the fixed row-03 divisor, with 17 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 1, 8, 0, 0, 3, 4]`; `cell58_check` verifies its
+explicit-potential certificate. -/
 def cell58 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -934,6 +1272,9 @@ theorem cell58_check :
     cell58.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 59 for the fixed row-03 divisor, with 17 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 1, 13, 0, 0, 3, 4]`; `cell59_check` verifies its
+explicit-potential certificate. -/
 def cell59 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -945,6 +1286,9 @@ theorem cell59_check :
     cell59.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 60 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 22, 13, 0, 0, 11, 4]`; `cell60_check` verifies
+its explicit-potential certificate. -/
 def cell60 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -956,6 +1300,9 @@ theorem cell60_check :
     cell60.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 61 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 5, 2, 0, 0, 3, 4]`; `cell61_check` verifies its
+explicit-potential certificate. -/
 def cell61 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -967,6 +1314,9 @@ theorem cell61_check :
     cell61.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 62 for the fixed row-03 divisor, with 17 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 2, 0, 0, 3, 4]`; `cell62_check` verifies its
+explicit-potential certificate. -/
 def cell62 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -978,6 +1328,9 @@ theorem cell62_check :
     cell62.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 63 for the fixed row-03 divisor, with 17 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 30, 2, 0, 0, 3, 4]`; `cell63_check` verifies its
+explicit-potential certificate. -/
 def cell63 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -989,6 +1342,9 @@ theorem cell63_check :
     cell63.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 64 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 9, 2, 0, 0, 3, 4]`; `cell64_check` verifies its
+explicit-potential certificate. -/
 def cell64 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1000,6 +1356,9 @@ theorem cell64_check :
     cell64.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 65 for the fixed row-03 divisor, with 19 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 10, 2, 0, 0, 3, 4]`; `cell65_check` verifies its
+explicit-potential certificate. -/
 def cell65 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1011,6 +1370,9 @@ theorem cell65_check :
     cell65.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 66 for the fixed row-03 divisor, with 17 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 2, 0, 0, 3, 4]`; `cell66_check` verifies its
+explicit-potential certificate. -/
 def cell66 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1022,6 +1384,9 @@ theorem cell66_check :
     cell66.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 67 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 32, 0, 0, 3, 33]`; `cell67_check` verifies
+its explicit-potential certificate. -/
 def cell67 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1033,6 +1398,9 @@ theorem cell67_check :
     cell67.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 68 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 32, 0, 0, 3, 33]`; `cell68_check` verifies
+its explicit-potential certificate. -/
 def cell68 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1044,6 +1412,9 @@ theorem cell68_check :
     cell68.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 69 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 34, 0, 0, 3, 33]`; `cell69_check` verifies
+its explicit-potential certificate. -/
 def cell69 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1055,6 +1426,9 @@ theorem cell69_check :
     cell69.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 70 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 35, 0, 0, 3, 36]`; `cell70_check` verifies
+its explicit-potential certificate. -/
 def cell70 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1066,6 +1440,9 @@ theorem cell70_check :
     cell70.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 71 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 35, 0, 0, 3, 37]`; `cell71_check` verifies
+its explicit-potential certificate. -/
 def cell71 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1077,6 +1454,9 @@ theorem cell71_check :
     cell71.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 72 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 34, 0, 0, 3, 33]`; `cell72_check` verifies
+its explicit-potential certificate. -/
 def cell72 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1088,6 +1468,9 @@ theorem cell72_check :
     cell72.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 73 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 35, 0, 0, 3, 36]`; `cell73_check` verifies
+its explicit-potential certificate. -/
 def cell73 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1099,6 +1482,9 @@ theorem cell73_check :
     cell73.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 74 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 35, 0, 0, 3, 37]`; `cell74_check` verifies
+its explicit-potential certificate. -/
 def cell74 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1110,6 +1496,9 @@ theorem cell74_check :
     cell74.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 75 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 38, 0, 0, 3, 33]`; `cell75_check` verifies
+its explicit-potential certificate. -/
 def cell75 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1121,6 +1510,9 @@ theorem cell75_check :
     cell75.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 76 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 38, 0, 0, 3, 33]`; `cell76_check` verifies
+its explicit-potential certificate. -/
 def cell76 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1132,6 +1524,9 @@ theorem cell76_check :
     cell76.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 77 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 39, 0, 0, 3, 40]`; `cell77_check` verifies
+its explicit-potential certificate. -/
 def cell77 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1143,6 +1538,9 @@ theorem cell77_check :
     cell77.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 78 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 35, 0, 0, 3, 41]`; `cell78_check` verifies
+its explicit-potential certificate. -/
 def cell78 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1154,6 +1552,9 @@ theorem cell78_check :
     cell78.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 79 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 35, 0, 0, 3, 42]`; `cell79_check` verifies
+its explicit-potential certificate. -/
 def cell79 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1165,6 +1566,9 @@ theorem cell79_check :
     cell79.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 80 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 39, 0, 0, 3, 43]`; `cell80_check` verifies
+its explicit-potential certificate. -/
 def cell80 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1176,6 +1580,9 @@ theorem cell80_check :
     cell80.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 81 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 39, 0, 0, 3, 40]`; `cell81_check` verifies
+its explicit-potential certificate. -/
 def cell81 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1187,6 +1594,9 @@ theorem cell81_check :
     cell81.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 82 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 35, 0, 0, 3, 42]`; `cell82_check` verifies
+its explicit-potential certificate. -/
 def cell82 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1198,6 +1608,9 @@ theorem cell82_check :
     cell82.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 83 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 39, 0, 0, 3, 43]`; `cell83_check` verifies
+its explicit-potential certificate. -/
 def cell83 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1209,6 +1622,9 @@ theorem cell83_check :
     cell83.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 84 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 30, 32, 0, 0, 3, 33]`; `cell84_check` verifies
+its explicit-potential certificate. -/
 def cell84 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1220,6 +1636,9 @@ theorem cell84_check :
     cell84.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 85 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 30, 34, 0, 0, 3, 33]`; `cell85_check` verifies
+its explicit-potential certificate. -/
 def cell85 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1231,6 +1650,9 @@ theorem cell85_check :
     cell85.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 86 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 30, 35, 0, 0, 3, 36]`; `cell86_check` verifies
+its explicit-potential certificate. -/
 def cell86 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1242,6 +1664,9 @@ theorem cell86_check :
     cell86.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 87 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 30, 35, 0, 0, 3, 37]`; `cell87_check` verifies
+its explicit-potential certificate. -/
 def cell87 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1253,6 +1678,9 @@ theorem cell87_check :
     cell87.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 88 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 30, 38, 0, 0, 3, 33]`; `cell88_check` verifies
+its explicit-potential certificate. -/
 def cell88 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1264,6 +1692,9 @@ theorem cell88_check :
     cell88.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 89 for the fixed row-03 divisor, with 22 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 30, 39, 0, 0, 3, 40]`; `cell89_check` verifies
+its explicit-potential certificate. -/
 def cell89 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1275,6 +1706,9 @@ theorem cell89_check :
     cell89.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 90 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 30, 35, 0, 0, 3, 42]`; `cell90_check` verifies
+its explicit-potential certificate. -/
 def cell90 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1286,6 +1720,9 @@ theorem cell90_check :
     cell90.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 91 for the fixed row-03 divisor, with 23 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 30, 39, 0, 0, 3, 43]`; `cell91_check` verifies
+its explicit-potential certificate. -/
 def cell91 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1297,6 +1734,9 @@ theorem cell91_check :
     cell91.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 92 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 44, 0, 0, 3, 45]`; `cell92_check` verifies
+its explicit-potential certificate. -/
 def cell92 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1308,6 +1748,9 @@ theorem cell92_check :
     cell92.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 93 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 44, 0, 0, 3, 45]`; `cell93_check` verifies
+its explicit-potential certificate. -/
 def cell93 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1319,6 +1762,9 @@ theorem cell93_check :
     cell93.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 94 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 46, 0, 0, 3, 45]`; `cell94_check` verifies
+its explicit-potential certificate. -/
 def cell94 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1330,6 +1776,9 @@ theorem cell94_check :
     cell94.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 95 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 46, 0, 0, 3, 45]`; `cell95_check` verifies
+its explicit-potential certificate. -/
 def cell95 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1341,6 +1790,9 @@ theorem cell95_check :
     cell95.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 96 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 35, 0, 0, 3, 41]`; `cell96_check` verifies
+its explicit-potential certificate. -/
 def cell96 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1352,6 +1804,9 @@ theorem cell96_check :
     cell96.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 97 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 47, 0, 0, 3, 45]`; `cell97_check` verifies
+its explicit-potential certificate. -/
 def cell97 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1363,6 +1818,9 @@ theorem cell97_check :
     cell97.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 98 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 47, 0, 0, 3, 45]`; `cell98_check` verifies
+its explicit-potential certificate. -/
 def cell98 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1374,6 +1832,9 @@ theorem cell98_check :
     cell98.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 99 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 29, 39, 0, 0, 3, 48]`; `cell99_check` verifies
+its explicit-potential certificate. -/
 def cell99 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1385,6 +1846,9 @@ theorem cell99_check :
     cell99.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 100 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 31, 39, 0, 0, 3, 48]`; `cell100_check` verifies
+its explicit-potential certificate. -/
 def cell100 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1396,6 +1860,9 @@ theorem cell100_check :
     cell100.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 101 for the fixed row-03 divisor, with 21 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 30, 44, 0, 0, 3, 45]`; `cell101_check` verifies
+its explicit-potential certificate. -/
 def cell101 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1407,6 +1874,9 @@ theorem cell101_check :
     cell101.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Closed-cover cell 102 for the fixed row-03 divisor, with 20 affine cone constraints. Anchors
+zero through seven use witness indices `[0, 0, 30, 47, 0, 0, 3, 45]`; `cell102_check` verifies
+its explicit-potential certificate. -/
 def cell102 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1418,6 +1888,8 @@ theorem cell102_check :
     cell102.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Cone 103 of the fixed row-03 degree-four divisor cover, using anchor-witness indices `0, 0,
+30, 39, 0, 0, 3, 48` and the listed affine inequalities. -/
 def cell103 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1429,6 +1901,8 @@ theorem cell103_check :
     cell103.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Cone 104 of the fixed row-03 degree-four divisor cover, using anchor-witness indices `0, 0,
+31, 39, 0, 0, 3, 49` and the listed affine inequalities. -/
 def cell104 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1440,6 +1914,8 @@ theorem cell104_check :
     cell104.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Cone 105 of the fixed row-03 degree-four divisor cover, using anchor-witness indices `0, 0,
+30, 35, 0, 0, 3, 41` and the listed affine inequalities. -/
 def cell105 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1451,6 +1927,8 @@ theorem cell105_check :
     cell105.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Cone 106 of the fixed row-03 degree-four divisor cover, using anchor-witness indices `0, 0,
+30, 46, 0, 0, 3, 45` and the listed affine inequalities. -/
 def cell106 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1462,6 +1940,8 @@ theorem cell106_check :
     cell106.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- Cone 107 of the fixed row-03 degree-four divisor cover, using anchor-witness indices `0, 0,
+30, 39, 0, 0, 3, 49` and the listed affine inequalities. -/
 def cell107 : CoordinateCell row03Core :=
   { divisor := rowDivisor
     witness := fun anchor =>
@@ -1473,10 +1953,15 @@ theorem cell107_check :
     cell107.certificate.checkClosed 4 = true := by
   decide +kernel
 
+/-- The 108 coordinate cells used by the independent row-03 cover replay; each carries the fixed
+degree-four divisor and its anchor witnesses. -/
 def cells : List (CoordinateCell row03Core) := [cell0, cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10, cell11, cell12, cell13, cell14, cell15, cell16, cell17, cell18, cell19, cell20, cell21, cell22, cell23, cell24, cell25, cell26, cell27, cell28, cell29, cell30, cell31, cell32, cell33, cell34, cell35, cell36, cell37, cell38, cell39, cell40, cell41, cell42, cell43, cell44, cell45, cell46, cell47, cell48, cell49, cell50, cell51, cell52, cell53, cell54, cell55, cell56, cell57, cell58, cell59, cell60, cell61, cell62, cell63, cell64, cell65, cell66, cell67, cell68, cell69, cell70, cell71, cell72, cell73, cell74, cell75, cell76, cell77, cell78, cell79, cell80, cell81, cell82, cell83, cell84, cell85, cell86, cell87, cell88, cell89, cell90, cell91, cell92, cell93, cell94, cell95, cell96, cell97, cell98, cell99, cell100, cell101, cell102, cell103, cell104, cell105, cell106, cell107]
 
+/-- The twelve coordinate nonnegativity inequalities defining the ambient cone of allowed row-03
+edge lengths. -/
 def base : List (ExplicitPotential.AffineForm 12) := [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], aff [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], aff [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], aff [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], aff [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0], aff [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0], aff [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0], aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]]
 
+/-- The shared affine forms whose signs split the row-03 length cone in the compact cover tree. -/
 def splitForms : List (ExplicitPotential.AffineForm 12) := [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0], aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0], aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0], aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0], aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1], aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1], aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0], aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1], aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0], aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0], aff [0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1], aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0], aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0], aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0], aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0], aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0], aff [0, 1, 0, 0, 0, 0, 1, -1, 0, 1, 0, 0, 0], aff [0, 0, -1, 0, 0, 0, -1, 1, 0, -1, 0, 0, 0], aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0], aff [0, -1, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0], aff [0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0], aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0], aff [0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1], aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1], aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, -1], aff [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1], aff [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -1], aff [0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0, 0, 0], aff [0, 0, 0, 0, 1, 0, 0, 1, -1, -1, 0, 0, 0], aff [0, 0, 0, 0, 1, 0, 0, 1, 0, -1, 0, 0, 0], aff [0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0, 0, 0], aff [0, 0, 0, 1, 0, 0, 0, 1, 1, -1, 0, 0, 0], aff [0, 0, 0, 0, -1, 0, 0, 0, -1, 0, 0, 0, 1], aff [0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 1], aff [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1], aff [0, 0, 0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0], aff [0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], aff [0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0], aff [0, -1, 0, 0, 0, 0, -1, 1, 0, -1, 0, 0, 0], aff [0, 0, 0, 0, 0, 0, 1, 1, -1, -1, 0, 0, 0], aff [0, 0, 0, 0, 0, 0, -1, -1, 1, 1, 0, 0, 0], aff [0, 0, -1, 0, 0, 0, 1, 1, 0, -1, 0, 0, 0], aff [0, -1, 0, 0, 0, 0, 1, 1, 0, -1, 0, 0, 0], aff [0, 0, 1, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0], aff [0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1], aff [0, 0, 1, 0, 0, 0, 1, -1, 0, 1, 0, 0, 0], aff [0, 0, -1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1], aff [0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 1], aff [0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0], aff [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, -1], aff [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, -1], aff [0, 0, 0, 0, -1, 0, 0, -1, 0, 1, 0, 0, 0], aff [0, 0, 0, 0, -1, 0, 0, -1, -1, 1, 0, 0, 0], aff [0, 0, 0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 1], aff [0, 0, 0, -1, 0, 0, 0, -1, 0, 1, 0, 0, 0], aff [0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 1], aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 1], aff [0, 0, 0, -1, 0, 0, 0, -1, -1, 1, 0, 0, 0], aff [0, 0, 0, 0, 1, 0, 0, 1, 1, -1, 0, 0, 0], aff [0, 0, 0, 0, -1, 0, 0, -1, 1, 1, 0, 0, 0], aff [0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 1], aff [0, 0, 0, -1, 0, 0, 0, -1, 1, 1, 0, 0, 0]]
 
 theorem splitForm0 : splitForms.getD 0 0 = aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0] := by rfl
@@ -1617,22 +2102,38 @@ theorem splitForm67 : splitForms.getD 67 0 = aff [0, 0, 0, -1, 0, 0, 0, 0, 0, 0,
 
 theorem splitForm68 : splitForms.getD 68 0 = aff [0, 0, 0, -1, 0, 0, 0, -1, 1, 1, 0, 0, 0] := by rfl
 
+/-- Farkas receipt entries 0 through 127 for the row-03 cover: sparse rational combinations of
+active inequalities used to certify cell inclusion or exclude a branch. -/
 def farkasReceipts0 : List Certificate.AffineCover.FarkasData := [{ terms := [{ row := 0, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 16, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 11, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 11, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 17, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 19, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 11, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 11, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 17, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 19, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 11, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 17, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 11, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 22, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 17, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 19, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 22, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 8, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 23, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 24, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 11, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 26, weight := 1 }] }]
 
+/-- Farkas receipt entries 128 through 255 for the row-03 cover: sparse rational combinations of
+active inequalities used to certify cell inclusion or exclude a branch. -/
 def farkasReceipts1 : List Certificate.AffineCover.FarkasData := [{ terms := [{ row := 1, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 22, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 8, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 23, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 25, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 24, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 11, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 24, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 20, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 20, weight := 2 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 21, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 22, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 8, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 23, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 25, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 24, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 26, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 21, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 19, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 25, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 14, weight := 1 }, { row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 11, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 14, weight := 1 }, { row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 20, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 11, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 22, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 8, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 23, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 25, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 27, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 26, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 26, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 14, weight := 1 }, { row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 22, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 22, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 24, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 22, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 22, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 11, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 22, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 8, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 22, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 26, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 29, weight := 1 }] }]
 
+/-- Farkas receipt entries 256 through 383 for the row-03 cover: sparse rational combinations of
+active inequalities used to certify cell inclusion or exclude a branch. -/
 def farkasReceipts2 : List Certificate.AffineCover.FarkasData := [{ terms := [{ row := 25, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 28, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 27, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 27, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 25, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 20, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 23, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 24, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 23, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 23, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 20, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 20, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 21, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 8, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 8, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 24, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 24, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 21, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 21, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 11, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 8, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 22, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 23, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 27, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 24, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 29, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 28, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 28, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 24, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 21, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 22, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 21, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 22, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 21, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 19, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 8, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 19, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 22, weight := 1 }, { row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 26, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 25, weight := 1 }, { row := 26, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 14, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 14, weight := 1 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 12, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 23, weight := 1 }, { row := 24, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 15, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 14, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 14, weight := 1 }, { row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 12, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 24, weight := 1 }, { row := 25, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 15, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 19, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 22, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 8, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 19, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 8, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 8, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 8, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 22, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 19, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 24, weight := 1 }] }]
 
+/-- Farkas receipt entries 384 through 511 for the row-03 cover: sparse rational combinations of
+active inequalities used to certify cell inclusion or exclude a branch. -/
 def farkasReceipts3 : List Certificate.AffineCover.FarkasData := [{ terms := [{ row := 0, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 19, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 21, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 21, weight := 2 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 22, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 21, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 25, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 22, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 22, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }, { row := 26, weight := 2 }] }, { terms := [{ row := 19, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }, { row := 27, weight := 2 }] }, { terms := [{ row := 18, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 12, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 21, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 22, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 21, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 16, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 16, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 19, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 16, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 16, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 16, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 21, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 26, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 12, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 16, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 20, weight := 2 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 20, weight := 2 }, { row := 21, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 21, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 22, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 21, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 27, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 16, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 22, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 12, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 20, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 22, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 25, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 23, weight := 1 }, { row := 24, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 8, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 26, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 8, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 8, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 11, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 22, weight := 1 }, { row := 28, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 22, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 27, weight := 1 }, { row := 28, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 18, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 2 }, { row := 20, weight := 1 }, { row := 23, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 12, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 26, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 25, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 24, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 23, weight := 1 }, { row := 24, weight := 1 }, { row := 25, weight := 2 }] }]
 
+/-- Farkas receipt entries 512 through 639 for the row-03 cover: sparse rational combinations of
+active inequalities used to certify cell inclusion or exclude a branch. -/
 def farkasReceipts4 : List Certificate.AffineCover.FarkasData := [{ terms := [{ row := 5, weight := 1 }, { row := 22, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 21, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 24, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 26, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 23, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 21, weight := 1 }, { row := 23, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 19, weight := 1 }, { row := 25, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 21, weight := 1 }, { row := 23, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 18, weight := 2 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 21, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 23, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 23, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 23, weight := 1 }, { row := 28, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 23, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 25, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 22, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 2 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 25, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 21, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 21, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 20, weight := 1 }, { row := 21, weight := 1 }, { row := 30, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }, { row := 29, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 21, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 22, weight := 1 }, { row := 23, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 18, weight := 1 }, { row := 21, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 18, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 11, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 11, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 4, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 9, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 10, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 11, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 11, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 19, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 12, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 16, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 15, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 16, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 15, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 15, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 15, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 15, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 16, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 22, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 22, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 19, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 13, weight := 1 }, { row := 15, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 21, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 21, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 13, weight := 1 }, { row := 14, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 8, weight := 1 }, { row := 11, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 17, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 17, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 17, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 17, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 8, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 24, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 17, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 17, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 17, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 19, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 19, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 17, weight := 1 }, { row := 20, weight := 1 }, { row := 25, weight := 2 }] }, { terms := [{ row := 14, weight := 1 }, { row := 20, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 17, weight := 1 }, { row := 20, weight := 1 }, { row := 26, weight := 2 }] }, { terms := [{ row := 14, weight := 1 }, { row := 20, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 13, weight := 1 }, { row := 14, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 25, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 22, weight := 1 }, { row := 23, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 26, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 22, weight := 1 }, { row := 24, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 22, weight := 1 }, { row := 24, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 25, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 16, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 17, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 13, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 5, weight := 1 }, { row := 12, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 19, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 19, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 19, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 19, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 21, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 8, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 17, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 17, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 8, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 18, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 0, weight := 1 }, { row := 5, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 18, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 13, weight := 1 }, { row := 14, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 13, weight := 1 }, { row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 22, weight := 1 }] }]
 
+/-- Farkas receipt entries 640 through 767 for the row-03 cover: sparse rational combinations of
+active inequalities used to certify cell inclusion or exclude a branch. -/
 def farkasReceipts5 : List Certificate.AffineCover.FarkasData := [{ terms := [{ row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 13, weight := 1 }, { row := 14, weight := 1 }, { row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 13, weight := 1 }, { row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 19, weight := 1 }, { row := 27, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 8, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 1, weight := 1 }, { row := 5, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 17, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 24, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 13, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 11, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 11, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 15, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 16, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 13, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 11, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 11, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 15, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 16, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 13, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 11, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 15, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 16, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 13, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 6, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 11, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 18, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 18, weight := 2 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 13, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 6, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 6, weight := 1 }, { row := 7, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 7, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 19, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 13, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 11, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 15, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 17, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 11, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 13, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 6, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 6, weight := 1 }, { row := 7, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 7, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 22, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 17, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 18, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 17, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 17, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 15, weight := 1 }, { row := 16, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 6, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 16, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 20, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 13, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 6, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 11, weight := 1 }, { row := 13, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 6, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 11, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 16, weight := 1 }, { row := 19, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 6, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 6, weight := 1 }, { row := 7, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 7, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 11, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 6, weight := 1 }, { row := 7, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 7, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 18, weight := 1 }, { row := 19, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 16, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 16, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 6, weight := 1 }, { row := 11, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 6, weight := 1 }, { row := 7, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 7, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 24, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 6, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 6, weight := 1 }, { row := 7, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 7, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 18, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 16, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 12, weight := 1 }, { row := 18, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 12, weight := 1 }, { row := 19, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 17, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 17, weight := 2 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 17, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 15, weight := 1 }, { row := 17, weight := 2 }, { row := 18, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 18, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 20, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 20, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 20, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 22, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 23, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 20, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 18, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 22, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 22, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 20, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 16, weight := 1 }, { row := 19, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 21, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 21, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 21, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 26, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 17, weight := 1 }, { row := 18, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 16, weight := 1 }, { row := 18, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 6, weight := 1 }, { row := 24, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 6, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 6, weight := 1 }, { row := 7, weight := 1 }, { row := 25, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 7, weight := 1 }, { row := 25, weight := 1 }] }]
 
+/-- Farkas receipt entries 768 through 795 for the row-03 cover: sparse rational combinations of
+active inequalities used to certify cell inclusion or exclude a branch. -/
 def farkasReceipts6 : List Certificate.AffineCover.FarkasData := [{ terms := [{ row := 3, weight := 1 }, { row := 7, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 6, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 18, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 17, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 6, weight := 1 }, { row := 7, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 7, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 7, weight := 1 }, { row := 18, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 6, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 18, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 17, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 6, weight := 1 }, { row := 7, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 7, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 19, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 3, weight := 1 }, { row := 19, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 17, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 14, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 17, weight := 1 }, { row := 23, weight := 1 }] }, { terms := [{ row := 13, weight := 1 }, { row := 19, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 7, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 6, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 19, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 6, weight := 1 }, { row := 7, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 7, weight := 1 }, { row := 20, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 20, weight := 1 }, { row := 21, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 20, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 2, weight := 1 }, { row := 7, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }, { terms := [{ row := 7, weight := 1 }, { row := 21, weight := 1 }, { row := 22, weight := 1 }] }]
 
+/-- The concatenated Farkas receipt table indexed by the compact row-03 cover tree. -/
 def farkasReceipts : List Certificate.AffineCover.FarkasData := farkasReceipts0 ++ farkasReceipts1 ++ farkasReceipts2 ++ farkasReceipts3 ++ farkasReceipts4 ++ farkasReceipts5 ++ farkasReceipts6
 
+/-- The leaf selecting cell zero with Farkas receipts 0 through 15 for its cone inequalities. -/
 def treePart0 : CompactCellTree :=
   .cell 0 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
@@ -1640,6 +2141,8 @@ theorem treePart0_check :
     treePart0.check splitForms farkasReceipts cells ((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- The row-03 subtree selecting cells one or two according to split forms 14 and 15; receipt 60
+excludes the remaining branch. -/
 def treePart1 : CompactCellTree :=
   .split 14
     (.cell 1 [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37])
@@ -1651,6 +2154,8 @@ theorem treePart1_check :
     treePart1.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- The row-03 subtree selecting cells three through eight, with Farkas receipts excluding sign
+branches outside those cell cones. -/
 def treePart2 : CompactCellTree :=
   .split 19
     (.split 18
@@ -1688,6 +2193,8 @@ theorem treePart2_check :
     treePart2.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) = true := by
   decide +kernel
 
+/-- The row-03 subtree selecting cells nine through thirteen; repeated leaves for cell nine
+certify its inclusion from different active inequalities. -/
 def treePart3 : CompactCellTree :=
   .split 19
     (.split 7
@@ -1713,6 +2220,8 @@ theorem treePart3_check :
     treePart3.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[11]` in the row-03 length cone, with leaves
+selecting cells 2, 4, 6, 8 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart4 : CompactCellTree :=
   .split 19
     (.split 41
@@ -1742,6 +2251,8 @@ theorem treePart4_check :
     treePart4.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[11]` in the row-03 length cone, with leaves
+selecting cells 14, 15 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart5 : CompactCellTree :=
   .split 19
     (.split 14
@@ -1755,6 +2266,9 @@ theorem treePart5_check :
     treePart5.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[1] + length[11]` in the row-03 length cone, with leaves
+selecting cells 3, 4, 5, 6, 7, 8, 16, 17 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart6 : CompactCellTree :=
   .split 12
     (.split 19
@@ -1790,6 +2304,8 @@ theorem treePart6_check :
     treePart6.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[1] + length[11]` in the row-03 length cone, with leaves
+selecting cells 3, 4 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart7 : CompactCellTree :=
   .split 12
     (.absurd 264)
@@ -1805,6 +2321,8 @@ theorem treePart7_check :
     treePart7.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[11]` in the row-03 length cone, with leaves
+selecting cells 15, 18 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart8 : CompactCellTree :=
   .split 19
     (.split 8
@@ -1818,6 +2336,9 @@ theorem treePart8_check :
     treePart8.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[2] + length[3]` in the row-03 length cone, with leaves
+selecting cells 6, 8, 11, 12, 13, 17, 19 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart9 : CompactCellTree :=
   .split 8
     (.split 19
@@ -1847,6 +2368,8 @@ theorem treePart9_check :
     treePart9.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[2] + length[3]` in the row-03 length cone, with leaves
+selecting cells 4, 10 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart10 : CompactCellTree :=
   .split 8
     (.split 42
@@ -1862,6 +2385,8 @@ theorem treePart10_check :
     treePart10.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[11]` in the row-03 length cone, with leaves
+selecting cells 4, 10, 20 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart11 : CompactCellTree :=
   .split 19
     (.split 8
@@ -1883,6 +2408,8 @@ theorem treePart11_check :
     treePart11.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[6] - length[8]` in the row-03 length cone, with
+leaves selecting cells 21, 22 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart12 : CompactCellTree :=
   .split 24
     (.split 6
@@ -1896,6 +2423,9 @@ theorem treePart12_check :
     treePart12.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[1] + length[6] - length[8]` in the row-03 length cone, with
+leaves selecting cells 5, 7, 12, 13, 23, 24 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart13 : CompactCellTree :=
   .split 11
     (.split 12
@@ -1927,6 +2457,8 @@ theorem treePart13_check :
     treePart13.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 6, 8, 25, 26, 27 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart14 : CompactCellTree :=
   .split 10
     (.split 24
@@ -1950,6 +2482,8 @@ theorem treePart14_check :
     treePart14.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 12, 13, 22 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart15 : CompactCellTree :=
   .split 10
     (.split 24
@@ -1977,6 +2511,8 @@ theorem treePart15_check :
     treePart15.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[6] - length[8]` in the row-03 length cone, with
+leaves selecting cells 28, 29, 30 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart16 : CompactCellTree :=
   .split 24
     (.split 6
@@ -2004,6 +2540,8 @@ theorem treePart16_check :
     treePart16.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[11]` in the row-03 length cone, with leaves
+selecting cells 5, 6, 7, 8, 12, 13 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart17 : CompactCellTree :=
   .split 19
     (.absurd 224)
@@ -2041,6 +2579,8 @@ theorem treePart17_check :
     treePart17.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]]) = true := by
   decide +kernel
 
+/-- Contradiction leaf using Farkas receipt 333 to exclude the accumulated affine constraints in
+this row-03 branch. -/
 def treePart18 : CompactCellTree :=
   .absurd 333
 
@@ -2048,6 +2588,8 @@ theorem treePart18_check :
     treePart18.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])]) = true := by
   decide +kernel
 
+/-- Contradiction leaf using Farkas receipt 334 to exclude the accumulated affine constraints in
+this row-03 branch. -/
 def treePart19 : CompactCellTree :=
   .absurd 334
 
@@ -2055,6 +2597,9 @@ theorem treePart19_check :
     treePart19.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[5] + length[6] - length[7] - length[8]` in the row-03 length
+cone, with leaves selecting cells 31, 32, 33, 34 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart20 : CompactCellTree :=
   .split 45
     (.split 46
@@ -2076,6 +2621,8 @@ theorem treePart20_check :
     treePart20.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) ++ [aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[2] - length[3]` in the row-03 length cone, with leaves
+selecting cells 35, 36, 37, 38 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart21 : CompactCellTree :=
   .split 15
     (.split 45
@@ -2099,6 +2646,8 @@ theorem treePart21_check :
     treePart21.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) ++ [aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[3] - length[7]` in the row-03 length cone, with leaves
+selecting cells 28, 29, 39, 40, 41 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart22 : CompactCellTree :=
   .split 14
     (.split 10
@@ -2130,6 +2679,9 @@ theorem treePart22_check :
     treePart22.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] + length[5] - length[6] + length[8]` in the row-03 length
+cone, with leaves selecting cells 7, 8, 42, 43 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart23 : CompactCellTree :=
   .split 51
     (.split 12
@@ -2155,6 +2707,9 @@ theorem treePart23_check :
     treePart23.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[6] - length[8]` in the row-03 length cone, with
+leaves selecting cells 28, 29, 39, 41, 44, 45, 46 and Farkas receipts excluding inconsistent
+sign branches. -/
 def treePart24 : CompactCellTree :=
   .split 24
     (.split 27
@@ -2186,6 +2741,9 @@ theorem treePart24_check :
     treePart24.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[6] + length[8]` in the row-03 length cone, with
+leaves selecting cells 30, 47, 48, 49, 50, 51, 52 and Farkas receipts excluding inconsistent
+sign branches. -/
 def treePart25 : CompactCellTree :=
   .split 17
     (.split 45
@@ -2219,6 +2777,8 @@ theorem treePart25_check :
     treePart25.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[1]` in the row-03 length cone, with leaves
+selecting cells 13, 30, 51, 52, 53, 54 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart26 : CompactCellTree :=
   .split 18
     (.split 12
@@ -2246,6 +2806,9 @@ theorem treePart26_check :
     treePart26.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[6] + length[8]` in the row-03 length cone, with
+leaves selecting cells 8, 35, 36, 37, 38, 43 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart27 : CompactCellTree :=
   .split 16
     (.split 45
@@ -2281,6 +2844,8 @@ theorem treePart27_check :
     treePart27.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 8, 29, 40, 41, 43 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart28 : CompactCellTree :=
   .split 10
     (.split 27
@@ -2312,6 +2877,8 @@ theorem treePart28_check :
     treePart28.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Leaf selecting row-03 cell 55, with 17 Farkas receipts deriving its cone inequalities from
+the active branch constraints. -/
 def treePart29 : CompactCellTree :=
   .cell 55 [384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400]
 
@@ -2319,6 +2886,8 @@ theorem treePart29_check :
     treePart29.check splitForms farkasReceipts cells ((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[5] - length[11]` in the row-03 length cone, with
+leaves selecting cells 1, 3, 5, 7 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart30 : CompactCellTree :=
   .split 7
     (.cell 1 [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 30, 29, 34, 31, 33, 401, 32, 35, 37, 402])
@@ -2344,6 +2913,8 @@ theorem treePart30_check :
     treePart30.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[11]` in the row-03 length cone, with leaves
+selecting cells 3, 14, 21, 28, 56, 57 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart31 : CompactCellTree :=
   .split 9
     (.split 10
@@ -2377,6 +2948,8 @@ theorem treePart31_check :
     treePart31.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] + length[5] - length[11]` in the row-03 length cone, with
+leaves selecting cells 5, 7, 21, 28 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart32 : CompactCellTree :=
   .split 40
     (.split 18
@@ -2412,6 +2985,9 @@ theorem treePart32_check :
     treePart32.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[5] - length[6] + length[8]` in the row-03 length
+cone, with leaves selecting cells 7, 32, 33, 42 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart33 : CompactCellTree :=
   .split 49
     (.cell 33 [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 30, 424, 34, 35, 33, 401, 32, 37, 402])
@@ -2433,6 +3009,8 @@ theorem treePart33_check :
     treePart33.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 7, 24, 32, 34, 42 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart34 : CompactCellTree :=
   .split 10
     (.split 16
@@ -2456,6 +3034,8 @@ theorem treePart34_check :
     treePart34.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 7, 24, 28, 39, 42, 44 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart35 : CompactCellTree :=
   .split 10
     (.split 27
@@ -2483,6 +3063,8 @@ theorem treePart35_check :
     treePart35.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[2] - length[3]` in the row-03 length cone, with leaves
+selecting cells 58 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart36 : CompactCellTree :=
   .split 15
     (.cell 58 [430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446])
@@ -2492,6 +3074,8 @@ theorem treePart36_check :
     treePart36.check splitForms farkasReceipts cells ((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[5] - length[11]` in the row-03 length cone, with
+leaves selecting cells 2, 15, 25, 29 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart37 : CompactCellTree :=
   .split 5
     (.split 15
@@ -2519,6 +3103,8 @@ theorem treePart37_check :
     treePart37.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[11]` in the row-03 length cone, with leaves
+selecting cells 4, 6, 8, 15 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart38 : CompactCellTree :=
   .split 19
     (.split 18
@@ -2552,6 +3138,8 @@ theorem treePart38_check :
     treePart38.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 6, 8, 25, 29 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart39 : CompactCellTree :=
   .split 10
     (.split 24
@@ -2581,6 +3169,8 @@ theorem treePart39_check :
     treePart39.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[6] + length[8]` in the row-03 length cone, with
+leaves selecting cells 8, 36, 37, 43 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart40 : CompactCellTree :=
   .split 16
     (.split 49
@@ -2618,6 +3208,8 @@ theorem treePart40_check :
     treePart40.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 8, 27, 36, 38, 43 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart41 : CompactCellTree :=
   .split 10
     (.split 16
@@ -2649,6 +3241,8 @@ theorem treePart41_check :
     treePart41.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 8, 41, 43 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart42 : CompactCellTree :=
   .split 10
     (.split 27
@@ -2674,6 +3268,8 @@ theorem treePart42_check :
     treePart42.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 1, 0, 0, 0, 0, 1, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 8, 29, 43 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart43 : CompactCellTree :=
   .split 10
     (.split 27
@@ -2701,6 +3297,8 @@ theorem treePart43_check :
     treePart43.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 1, -1, 0, 1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Leaf selecting row-03 cell 59, with 17 Farkas receipts deriving its cone inequalities from
+the active branch constraints. -/
 def treePart44 : CompactCellTree :=
   .cell 59 [384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 400, 399]
 
@@ -2708,6 +3306,8 @@ theorem treePart44_check :
     treePart44.check splitForms farkasReceipts cells ((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[5] - length[11]` in the row-03 length cone, with
+leaves selecting cells 9, 18, 22, 30 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart45 : CompactCellTree :=
   .split 5
     (.cell 9 [38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 55, 51, 57, 53, 52, 54, 56, 471, 183, 181])
@@ -2729,6 +3329,8 @@ theorem treePart45_check :
     treePart45.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[1]` in the row-03 length cone, with leaves
+selecting cells 10, 18, 22, 30 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart46 : CompactCellTree :=
   .split 18
     (.split 9
@@ -2752,6 +3354,9 @@ theorem treePart46_check :
     treePart46.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[5] - length[6] + length[8]` in the row-03 length
+cone, with leaves selecting cells 48, 49 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart47 : CompactCellTree :=
   .split 49
     (.cell 49 [38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 57, 474, 55, 56, 52, 54, 471, 448, 183])
@@ -2765,6 +3370,9 @@ theorem treePart47_check :
     treePart47.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[6] + length[8]` in the row-03 length cone, with
+leaves selecting cells 11, 30, 48, 50, 51, 52 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart48 : CompactCellTree :=
   .split 17
     (.split 10
@@ -2800,6 +3408,8 @@ theorem treePart48_check :
     treePart48.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[1]` in the row-03 length cone, with leaves
+selecting cells 11, 30, 51, 52, 54 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart49 : CompactCellTree :=
   .split 18
     (.cell 11 [38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 55, 483, 52, 181, 54, 56, 471, 57])
@@ -2823,6 +3433,8 @@ theorem treePart49_check :
     treePart49.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[1]` in the row-03 length cone, with leaves
+selecting cells 12, 13, 22, 30, 51, 54 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart50 : CompactCellTree :=
   .split 18
     (.split 52
@@ -2850,6 +3462,9 @@ theorem treePart50_check :
     treePart50.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, -1, 0, 0, 0, -1, 1, 0, -1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[1]` in the row-03 length cone, with leaves
+selecting cells 12, 22, 30, 51, 52, 53, 54 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart51 : CompactCellTree :=
   .split 18
     (.split 54
@@ -2881,6 +3496,8 @@ theorem treePart51_check :
     treePart51.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, -1, 0, 0, 0, -1, 1, 0, -1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[5] - length[11]` in the row-03 length cone, with
+leaves selecting cells 48, 49 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart52 : CompactCellTree :=
   .split 7
     (.absurd 499)
@@ -2900,6 +3517,9 @@ theorem treePart52_check :
     treePart52.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[6] - length[8]` in the row-03 length cone, with
+leaves selecting cells 30, 49, 50, 51, 52, 54 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart53 : CompactCellTree :=
   .split 24
     (.split 27
@@ -2927,6 +3547,8 @@ theorem treePart53_check :
     treePart53.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[1] - length[5] + length[11]` in the row-03 length cone, with
+leaves selecting cells 13, 48, 49, 60 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart54 : CompactCellTree :=
   .split 52
     (.split 47
@@ -2962,6 +3584,8 @@ theorem treePart54_check :
     treePart54.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[3] + length[7]` in the row-03 length cone, with leaves
+selecting cells 58 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart55 : CompactCellTree :=
   .split 41
     (.cell 58 [430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 446, 445])
@@ -2971,6 +3595,8 @@ theorem treePart55_check :
     treePart55.check splitForms farkasReceipts cells ((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[5] - length[11]` in the row-03 length cone, with
+leaves selecting cells 2, 4, 6, 8 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart56 : CompactCellTree :=
   .split 7
     (.split 41
@@ -2998,6 +3624,8 @@ theorem treePart56_check :
     treePart56.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 4, 6, 8, 15, 17, 27 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart57 : CompactCellTree :=
   .split 10
     (.split 19
@@ -3035,6 +3663,8 @@ theorem treePart57_check :
     treePart57.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 6, 8, 25, 26, 27 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart58 : CompactCellTree :=
   .split 10
     (.split 24
@@ -3070,6 +3700,8 @@ theorem treePart58_check :
     treePart58.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 6, 8, 26, 27, 29 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart59 : CompactCellTree :=
   .split 10
     (.split 24
@@ -3101,6 +3733,9 @@ theorem treePart59_check :
     treePart59.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[5] - length[6] + length[8]` in the row-03 length
+cone, with leaves selecting cells 8, 36, 37, 43 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart60 : CompactCellTree :=
   .split 49
     (.split 41
@@ -3128,6 +3763,8 @@ theorem treePart60_check :
     treePart60.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 8, 27, 36, 38, 43 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart61 : CompactCellTree :=
   .split 10
     (.split 16
@@ -3163,6 +3800,8 @@ theorem treePart61_check :
     treePart61.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 8, 27, 41, 43 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart62 : CompactCellTree :=
   .split 10
     (.split 27
@@ -3188,6 +3827,8 @@ theorem treePart62_check :
     treePart62.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 1, 0, 0, 0, 0, 1, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 8, 29, 43 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart63 : CompactCellTree :=
   .split 10
     (.split 27
@@ -3215,6 +3856,8 @@ theorem treePart63_check :
     treePart63.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 1, -1, 0, 1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[6] + length[8]` in the row-03 length cone, with leaves
+selecting cells 1, 2, 9, 61 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart64 : CompactCellTree :=
   .split 3
     (.cell 61 [384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 400, 543, 399, 544, 545, 396, 398, 397])
@@ -3234,6 +3877,8 @@ theorem treePart64_check :
     treePart64.check splitForms farkasReceipts cells (((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Leaf selecting row-03 cell 62, with 17 Farkas receipts deriving its cone inequalities from
+the active branch constraints. -/
 def treePart65 : CompactCellTree :=
   .cell 62 [430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 444, 571, 445, 442, 443]
 
@@ -3241,6 +3886,8 @@ theorem treePart65_check :
     treePart65.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 14, 15, 18 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart66 : CompactCellTree :=
   .split 10
     (.split 6
@@ -3260,6 +3907,9 @@ theorem treePart66_check :
     treePart66.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] + length[5] - length[11]` in the row-03 length cone, with
+leaves selecting cells 21, 22, 25, 28, 29, 30 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart67 : CompactCellTree :=
   .split 13
     (.split 6
@@ -3297,6 +3947,8 @@ theorem treePart67_check :
     treePart67.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, -1, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Contradiction leaf using Farkas receipt 579 to exclude the accumulated affine constraints in
+this row-03 branch. -/
 def treePart68 : CompactCellTree :=
   .absurd 579
 
@@ -3304,6 +3956,8 @@ theorem treePart68_check :
     treePart68.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, -1, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Contradiction leaf using Farkas receipt 580 to exclude the accumulated affine constraints in
+this row-03 branch. -/
 def treePart69 : CompactCellTree :=
   .absurd 580
 
@@ -3311,6 +3965,8 @@ theorem treePart69_check :
     treePart69.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Leaf selecting row-03 cell 63, with 17 Farkas receipts deriving its cone inequalities from
+the active branch constraints. -/
 def treePart70 : CompactCellTree :=
   .cell 63 [546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 563, 581, 564, 582, 565]
 
@@ -3318,6 +3974,8 @@ theorem treePart70_check :
     treePart70.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[2] - length[7]` in the row-03 length cone, with leaves
+selecting cells 14, 15, 18 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart71 : CompactCellTree :=
   .split 6
     (.split 14
@@ -3335,6 +3993,8 @@ theorem treePart71_check :
     treePart71.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[6] - length[8]` in the row-03 length cone, with
+leaves selecting cells 21, 22, 25 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart72 : CompactCellTree :=
   .split 24
     (.split 6
@@ -3354,6 +4014,8 @@ theorem treePart72_check :
     treePart72.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[6] - length[8]` in the row-03 length cone, with
+leaves selecting cells 28, 29, 30 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart73 : CompactCellTree :=
   .split 24
     (.split 6
@@ -3381,6 +4043,8 @@ theorem treePart73_check :
     treePart73.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1])]) = true := by
   decide +kernel
 
+/-- Contradiction leaf using Farkas receipt 447 to exclude the accumulated affine constraints in
+this row-03 branch. -/
 def treePart74 : CompactCellTree :=
   .absurd 447
 
@@ -3388,6 +4052,8 @@ theorem treePart74_check :
     treePart74.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[6] + length[8]` in the row-03 length cone, with leaves
+selecting cells 3, 4, 10, 64 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart75 : CompactCellTree :=
   .split 3
     (.cell 64 [430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 446, 444, 587, 588, 589, 442, 445, 443])
@@ -3413,6 +4079,8 @@ theorem treePart75_check :
     treePart75.check splitForms farkasReceipts cells ((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Leaf selecting row-03 cell 65, with 19 Farkas receipts deriving its cone inequalities from
+the active branch constraints. -/
 def treePart76 : CompactCellTree :=
   .cell 65 [546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 595, 563, 596, 582, 564, 565]
 
@@ -3420,6 +4088,8 @@ theorem treePart76_check :
     treePart76.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[2] - length[7]` in the row-03 length cone, with leaves
+selecting cells 5, 7, 11, 12, 13, 24 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart77 : CompactCellTree :=
   .split 6
     (.split 16
@@ -3443,6 +4113,8 @@ theorem treePart77_check :
     treePart77.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[2] - length[3]` in the row-03 length cone, with leaves
+selecting cells 6, 8, 11, 12, 13, 27 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart78 : CompactCellTree :=
   .split 15
     (.split 16
@@ -3466,6 +4138,8 @@ theorem treePart78_check :
     treePart78.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Contradiction leaf using Farkas receipt 599 to exclude the accumulated affine constraints in
+this row-03 branch. -/
 def treePart79 : CompactCellTree :=
   .absurd 599
 
@@ -3473,6 +4147,8 @@ theorem treePart79_check :
     treePart79.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Leaf selecting row-03 cell 63, with 17 Farkas receipts deriving its cone inequalities from
+the active branch constraints. -/
 def treePart80 : CompactCellTree :=
   .cell 63 [430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 446, 444, 445, 442, 443]
 
@@ -3480,6 +4156,8 @@ theorem treePart80_check :
     treePart80.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[2] - length[7]` in the row-03 length cone, with leaves
+selecting cells 14, 15, 18 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart81 : CompactCellTree :=
   .split 6
     (.split 14
@@ -3503,6 +4181,8 @@ theorem treePart81_check :
     treePart81.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[2] - length[7]` in the row-03 length cone, with leaves
+selecting cells 21, 22, 25 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart82 : CompactCellTree :=
   .split 6
     (.split 14
@@ -3526,6 +4206,8 @@ theorem treePart82_check :
     treePart82.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[6] - length[8]` in the row-03 length cone, with
+leaves selecting cells 28, 29, 30 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart83 : CompactCellTree :=
   .split 24
     (.split 6
@@ -3553,6 +4235,8 @@ theorem treePart83_check :
     treePart83.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1])]) = true := by
   decide +kernel
 
+/-- Leaf selecting row-03 cell 62, with 17 Farkas receipts deriving its cone inequalities from
+the active branch constraints. -/
 def treePart84 : CompactCellTree :=
   .cell 62 [546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 581, 563, 564, 582, 565]
 
@@ -3560,6 +4244,8 @@ theorem treePart84_check :
     treePart84.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[3] - length[7]` in the row-03 length cone, with leaves
+selecting cells 21, 25, 28, 29, 40, 44 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart85 : CompactCellTree :=
   .split 14
     (.split 9
@@ -3585,6 +4271,8 @@ theorem treePart85_check :
     treePart85.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, -1, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[11]` in the row-03 length cone, with leaves
+selecting cells 22, 25, 29, 30, 40, 51 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart86 : CompactCellTree :=
   .split 9
     (.split 8
@@ -3612,6 +4300,8 @@ theorem treePart86_check :
     treePart86.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, -1, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[11]` in the row-03 length cone, with leaves
+selecting cells 14, 15, 18 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart87 : CompactCellTree :=
   .split 19
     (.split 53
@@ -3633,6 +4323,8 @@ theorem treePart87_check :
     treePart87.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, -1, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[11]` in the row-03 length cone, with leaves
+selecting cells 14, 15, 18 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart88 : CompactCellTree :=
   .split 19
     (.split 9
@@ -3656,6 +4348,8 @@ theorem treePart88_check :
     treePart88.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, -1, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Contradiction leaf using Farkas receipt 617 to exclude the accumulated affine constraints in
+this row-03 branch. -/
 def treePart89 : CompactCellTree :=
   .absurd 617
 
@@ -3663,6 +4357,8 @@ theorem treePart89_check :
     treePart89.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[5]` in the row-03 length cone, with leaves
+selecting cells 62, 63, 66 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart90 : CompactCellTree :=
   .split 23
     (.split 26
@@ -3680,6 +4376,8 @@ theorem treePart90_check :
     treePart90.check splitForms farkasReceipts cells ((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[3] - length[7]` in the row-03 length cone, with leaves
+selecting cells 33, 34, 37, 38 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart91 : CompactCellTree :=
   .split 14
     (.split 48
@@ -3705,6 +4403,9 @@ theorem treePart91_check :
     treePart91.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[6] + length[8]` in the row-03 length cone, with
+leaves selecting cells 7, 8, 32, 36, 42, 43 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart92 : CompactCellTree :=
   .split 16
     (.split 14
@@ -3734,6 +4435,8 @@ theorem treePart92_check :
     treePart92.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[3] - length[7]` in the row-03 length cone, with leaves
+selecting cells 32, 33, 36, 37 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart93 : CompactCellTree :=
   .split 14
     (.split 47
@@ -3753,6 +4456,8 @@ theorem treePart93_check :
     treePart93.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, -1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 7, 24, 39, 42 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart94 : CompactCellTree :=
   .split 10
     (.split 27
@@ -3774,6 +4479,8 @@ theorem treePart94_check :
     treePart94.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 1, 0, 0, 0, 0, 1, -1, 0, 1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 8, 41, 43 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart95 : CompactCellTree :=
   .split 10
     (.split 27
@@ -3799,6 +4506,8 @@ theorem treePart95_check :
     treePart95.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 1, 0, 0, 0, 0, 1, -1, 0, 1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 7, 8, 28, 29, 42, 43 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart96 : CompactCellTree :=
   .split 10
     (.split 27
@@ -3836,6 +4545,8 @@ theorem treePart96_check :
     treePart96.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, 1, -1, 0, 1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[2] + length[3]` in the row-03 length cone, with leaves
+selecting cells 36, 37, 48, 49 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart97 : CompactCellTree :=
   .split 8
     (.split 47
@@ -3861,6 +4572,9 @@ theorem treePart97_check :
     treePart97.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) ++ [aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[6] + length[8]` in the row-03 length cone, with
+leaves selecting cells 29, 30, 38, 40, 41, 50, 51, 52 and Farkas receipts excluding inconsistent
+sign branches. -/
 def treePart98 : CompactCellTree :=
   .split 17
     (.split 8
@@ -3894,6 +4608,8 @@ theorem treePart98_check :
     treePart98.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, -1, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[2] + length[3]` in the row-03 length cone, with leaves
+selecting cells 37, 38, 49, 50 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart99 : CompactCellTree :=
   .split 8
     (.split 48
@@ -3915,6 +4631,8 @@ theorem treePart99_check :
     treePart99.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, -1, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[2] + length[3]` in the row-03 length cone, with leaves
+selecting cells 8, 13, 43, 53 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart100 : CompactCellTree :=
   .split 8
     (.split 12
@@ -3938,6 +4656,9 @@ theorem treePart100_check :
     treePart100.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[6] - length[8]` in the row-03 length cone, with
+leaves selecting cells 29, 30, 41, 51, 52, 54 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart101 : CompactCellTree :=
   .split 24
     (.split 27
@@ -3971,6 +4692,8 @@ theorem treePart101_check :
     treePart101.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[5]` in the row-03 length cone, with leaves
+selecting cells 67, 68 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart102 : CompactCellTree :=
   .split 26
     (.cell 67 [384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 545, 398, 655, 399, 656, 400, 657, 396, 658, 659])
@@ -3982,6 +4705,8 @@ theorem treePart102_check :
     treePart102.check splitForms farkasReceipts cells (((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[3] - length[11]` in the row-03 length cone, with leaves
+selecting cells 69, 70, 71 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart103 : CompactCellTree :=
   .split 56
     (.split 15
@@ -4005,6 +4730,8 @@ theorem treePart103_check :
     treePart103.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, -1])]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[3] - length[11]` in the row-03 length cone, with leaves
+selecting cells 72, 73, 74 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart104 : CompactCellTree :=
   .split 56
     (.split 18
@@ -4028,6 +4755,8 @@ theorem treePart104_check :
     treePart104.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[5]` in the row-03 length cone, with leaves
+selecting cells 75, 76 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart105 : CompactCellTree :=
   .split 26
     (.split 56
@@ -4043,6 +4772,8 @@ theorem treePart105_check :
     treePart105.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[3] - length[11]` in the row-03 length cone, with leaves
+selecting cells 69, 70, 71, 72, 73, 74 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart106 : CompactCellTree :=
   .split 56
     (.split 26
@@ -4078,6 +4809,8 @@ theorem treePart106_check :
     treePart106.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[2] + length[3]` in the row-03 length cone, with leaves
+selecting cells 70, 71, 77, 78, 79 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart107 : CompactCellTree :=
   .split 8
     (.split 61
@@ -4107,6 +4840,8 @@ theorem treePart107_check :
     treePart107.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[2] + length[3]` in the row-03 length cone, with leaves
+selecting cells 70, 71, 79, 80 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart108 : CompactCellTree :=
   .split 8
     (.split 61
@@ -4130,6 +4865,8 @@ theorem treePart108_check :
     treePart108.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -1])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[2] + length[3]` in the row-03 length cone, with leaves
+selecting cells 73, 74, 81, 82 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart109 : CompactCellTree :=
   .split 8
     (.split 18
@@ -4155,6 +4892,8 @@ theorem treePart109_check :
     treePart109.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[0] - length[1]` in the row-03 length cone, with leaves
+selecting cells 73, 74, 82, 83 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart110 : CompactCellTree :=
   .split 18
     (.split 8
@@ -4180,6 +4919,8 @@ theorem treePart110_check :
     treePart110.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -1])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 68, 84 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart111 : CompactCellTree :=
   .split 10
     (.cell 84 [384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 398, 545, 655, 399, 656, 400, 657, 396, 658, 659])
@@ -4191,6 +4932,8 @@ theorem treePart111_check :
     treePart111.check splitForms farkasReceipts cells (((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 72, 73, 74, 85, 86, 87 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart112 : CompactCellTree :=
   .split 10
     (.split 56
@@ -4224,6 +4967,8 @@ theorem treePart112_check :
     treePart112.check splitForms farkasReceipts cells (((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, -1])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 76, 88 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart113 : CompactCellTree :=
   .split 10
     (.split 56
@@ -4239,6 +4984,8 @@ theorem treePart113_check :
     treePart113.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[3] - length[11]` in the row-03 length cone, with leaves
+selecting cells 72, 73, 74, 85, 86, 87 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart114 : CompactCellTree :=
   .split 56
     (.split 10
@@ -4274,6 +5021,8 @@ theorem treePart114_check :
     treePart114.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[2] + length[3]` in the row-03 length cone, with leaves
+selecting cells 86, 87, 89, 90 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart115 : CompactCellTree :=
   .split 8
     (.split 61
@@ -4295,6 +5044,8 @@ theorem treePart115_check :
     treePart115.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[2] + length[3]` in the row-03 length cone, with leaves
+selecting cells 86, 87, 90, 91 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart116 : CompactCellTree :=
   .split 8
     (.split 61
@@ -4318,6 +5069,8 @@ theorem treePart116_check :
     treePart116.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -1])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[2] + length[3]` in the row-03 length cone, with leaves
+selecting cells 73, 74, 81, 82, 83 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart117 : CompactCellTree :=
   .split 8
     (.split 32
@@ -4351,6 +5104,8 @@ theorem treePart117_check :
     treePart117.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1]]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[5]` in the row-03 length cone, with leaves
+selecting cells 92, 93 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart118 : CompactCellTree :=
   .split 26
     (.cell 92 [384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 545, 398, 397, 399, 734, 400, 396, 658, 659])
@@ -4362,6 +5117,8 @@ theorem treePart118_check :
     treePart118.check splitForms farkasReceipts cells (((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 1, -1, -1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[5]` in the row-03 length cone, with leaves
+selecting cells 94, 95 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart119 : CompactCellTree :=
   .split 26
     (.split 15
@@ -4377,6 +5134,9 @@ theorem treePart119_check :
     treePart119.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 1, 0, -1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[3] + length[6] + length[7] - length[8]` in the row-03 length
+cone, with leaves selecting cells 71, 74, 78, 96 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart120 : CompactCellTree :=
   .split 65
     (.split 26
@@ -4414,6 +5174,8 @@ theorem treePart120_check :
     treePart120.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 1, 0, -1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[5]` in the row-03 length cone, with leaves
+selecting cells 97, 98 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart121 : CompactCellTree :=
   .split 26
     (.split 35
@@ -4429,6 +5191,9 @@ theorem treePart121_check :
     treePart121.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[3] + length[6] - length[8]` in the row-03 length cone, with
+leaves selecting cells 71, 74, 78, 82, 94, 95, 96 and Farkas receipts excluding inconsistent
+sign branches. -/
 def treePart122 : CompactCellTree :=
   .split 35
     (.split 26
@@ -4466,6 +5231,8 @@ theorem treePart122_check :
     treePart122.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[2] + length[3]` in the row-03 length cone, with leaves
+selecting cells 71, 78, 79, 99 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart123 : CompactCellTree :=
   .split 8
     (.split 67
@@ -4487,6 +5254,8 @@ theorem treePart123_check :
     treePart123.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 1, 1, -1, 0, 0, 0]]) ++ [aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[2] + length[3]` in the row-03 length cone, with leaves
+selecting cells 74, 82, 96, 100 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart124 : CompactCellTree :=
   .split 8
     (.split 18
@@ -4518,6 +5287,8 @@ theorem treePart124_check :
     treePart124.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 1, 1, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[5]` in the row-03 length cone, with leaves
+selecting cells 80, 83 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart125 : CompactCellTree :=
   .split 26
     (.split 67
@@ -4537,6 +5308,8 @@ theorem treePart125_check :
     treePart125.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, 1, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[1] - length[5]` in the row-03 length cone, with leaves
+selecting cells 71, 74, 78, 79, 82, 96 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart126 : CompactCellTree :=
   .split 26
     (.split 58
@@ -4568,6 +5341,8 @@ theorem treePart126_check :
     treePart126.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, 1, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 93, 101 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart127 : CompactCellTree :=
   .split 10
     (.cell 101 [384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 398, 545, 397, 400, 734, 399, 396, 659, 658])
@@ -4579,6 +5354,8 @@ theorem treePart127_check :
     treePart127.check splitForms farkasReceipts cells (((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 1, -1, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 98, 102 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart128 : CompactCellTree :=
   .split 10
     (.split 8
@@ -4594,6 +5371,8 @@ theorem treePart128_check :
     treePart128.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 1, -1, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 83, 91, 100, 103, 104 and Farkas receipts excluding inconsistent sign branches. -/
 def treePart129 : CompactCellTree :=
   .split 10
     (.split 8
@@ -4625,6 +5404,9 @@ theorem treePart129_check :
     treePart129.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 1, 0, 0, 1, -1, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[3] - length[6] - length[7] + length[8]` in the row-03 length
+cone, with leaves selecting cells 74, 87, 95, 96, 105, 106 and Farkas receipts excluding
+inconsistent sign branches. -/
 def treePart130 : CompactCellTree :=
   .split 59
     (.split 10
@@ -4652,6 +5434,9 @@ theorem treePart130_check :
     treePart130.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, -1, 0, 0, 0, -1, 0, 0, 0, 1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 82, 90, 95, 96, 105, 106 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart131 : CompactCellTree :=
   .split 10
     (.split 35
@@ -4685,6 +5470,9 @@ theorem treePart131_check :
     treePart131.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, -1, 0, 0, 0, -1, 0, 0, 0, 1])]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `- length[0] + length[1]` in the row-03 length cone, with leaves
+selecting cells 83, 91, 98, 100, 102, 103 and Farkas receipts excluding inconsistent sign
+branches. -/
 def treePart132 : CompactCellTree :=
   .split 10
     (.split 64
@@ -4714,6 +5502,9 @@ theorem treePart132_check :
     treePart132.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 1]]) = true := by
   decide +kernel
 
+/-- Subtree splitting on `length[2] + length[6] - length[8]` in the row-03 length cone, with
+leaves selecting cells 98, 100, 102, 103, 104, 107 and Farkas receipts excluding inconsistent
+sign branches. -/
 def treePart133 : CompactCellTree :=
   .split 36
     (.split 10
@@ -4751,274 +5542,359 @@ theorem treePart133_check :
     treePart133.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, -1])]) ++ [AffineForm.violation (aff [0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 1, 0, 0, 1, -1, -1, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 1])]) = true := by
   decide +kernel
 
+/-- A branch of the final row-03 cover assembly, starting at split form 2
+and combining the previously verified decision subtrees. -/
+def treeAssemblyBranch0 : CompactCellTree :=
+  .split 2
+    (.split 3
+      treePart0
+      (.split 4
+        (.split 5
+          (.split 6
+            (.split 7
+              treePart1
+              treePart2)
+            (.split 8
+              treePart3
+              treePart4))
+          (.split 9
+            (.split 6
+              (.split 10
+                treePart5
+                (.split 11
+                  treePart6
+                  treePart7))
+              (.split 10
+                treePart8
+                (.split 11
+                  (.split 12
+                    treePart9
+                    treePart10)
+                  treePart11)))
+            (.split 13
+              (.split 14
+                (.split 10
+                  treePart12
+                  treePart13)
+                (.split 15
+                  treePart14
+                  treePart15))
+              (.split 10
+                treePart16
+                (.split 11
+                  (.split 12
+                    treePart17
+                    treePart18)
+                  treePart19)))))
+        (.split 6
+          (.split 16
+            (.split 17
+              (.split 14
+                treePart20
+                treePart21)
+              treePart22)
+            (.split 18
+              treePart23
+              treePart24))
+          (.split 8
+            (.split 16
+              treePart25
+              treePart26)
+            (.split 17
+              treePart27
+              treePart28)))))
+    (.split 6
+      (.split 14
+        (.split 3
+          treePart29
+          (.split 4
+            (.split 5
+              treePart30
+              (.split 19
+                treePart31
+                treePart32))
+            (.split 20
+              treePart33
+              (.split 17
+                treePart34
+                treePart35))))
+        (.split 3
+          treePart36
+          (.split 4
+            (.split 7
+              treePart37
+              (.split 9
+                treePart38
+                treePart39))
+            (.split 20
+              treePart40
+              (.split 17
+                treePart41
+                (.split 21
+                  treePart42
+                  treePart43))))))
+      (.split 8
+        (.split 3
+          treePart44
+          (.split 19
+            (.split 4
+              (.split 7
+                treePart45
+                treePart46)
+              (.split 20
+                treePart47
+                treePart48))
+            (.split 11
+              (.split 16
+                treePart49
+                (.split 22
+                  treePart50
+                  treePart51))
+              (.split 5
+                treePart52
+                (.split 10
+                  treePart53
+                  treePart54)))))
+        (.split 3
+          treePart55
+          (.split 4
+            (.split 9
+              (.split 5
+                treePart56
+                treePart57)
+              (.split 13
+                treePart58
+                treePart59))
+            (.split 20
+              treePart60
+              (.split 17
+                treePart61
+                (.split 21
+                  treePart62
+                  treePart63)))))))
+
+theorem treeAssemblyBranch0_check :
+    treeAssemblyBranch0.check splitForms farkasReceipts cells
+      ((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, -1,
+        0, 1, 0, 0, 0, 0]]) = true := by
+  simp only [treeAssemblyBranch0, CompactCellTree.check_split, Bool.and_true, splitForm2,
+    splitForm3, splitForm4, splitForm5, splitForm6, splitForm7, splitForm8, splitForm9,
+    splitForm10, splitForm11, splitForm12, splitForm13, splitForm14, splitForm15, splitForm16,
+    splitForm17, splitForm18, splitForm19, splitForm20, splitForm21, splitForm22,
+    treePart0_check, treePart1_check, treePart10_check, treePart11_check, treePart12_check,
+    treePart13_check, treePart14_check, treePart15_check, treePart16_check, treePart17_check,
+    treePart18_check, treePart19_check, treePart2_check, treePart20_check, treePart21_check,
+    treePart22_check, treePart23_check, treePart24_check, treePart25_check, treePart26_check,
+    treePart27_check, treePart28_check, treePart29_check, treePart3_check, treePart30_check,
+    treePart31_check, treePart32_check, treePart33_check, treePart34_check, treePart35_check,
+    treePart36_check, treePart37_check, treePart38_check, treePart39_check, treePart4_check,
+    treePart40_check, treePart41_check, treePart42_check, treePart43_check, treePart44_check,
+    treePart45_check, treePart46_check, treePart47_check, treePart48_check, treePart49_check,
+    treePart5_check, treePart50_check, treePart51_check, treePart52_check, treePart53_check,
+    treePart54_check, treePart55_check, treePart56_check, treePart57_check, treePart58_check,
+    treePart59_check, treePart6_check, treePart60_check, treePart61_check, treePart62_check,
+    treePart63_check, treePart7_check, treePart8_check, treePart9_check]
+
+/-- A branch of the final row-03 cover assembly, starting at split form 4
+and combining the previously verified decision subtrees. -/
+def treeAssemblyBranch1 : CompactCellTree :=
+  .split 4
+    (.split 7
+      (.split 5
+        treePart64
+        (.split 23
+          (.split 3
+            treePart65
+            (.split 9
+              treePart66
+              (.split 10
+                (.split 24
+                  treePart67
+                  treePart68)
+                treePart69)))
+          (.split 10
+            (.split 3
+              treePart70
+              (.split 9
+                treePart71
+                (.split 13
+                  treePart72
+                  treePart73)))
+            treePart74)))
+      (.split 18
+        (.split 19
+          treePart75
+          (.split 11
+            (.split 3
+              treePart76
+              (.split 14
+                treePart77
+                treePart78))
+            treePart79))
+        (.split 25
+          (.split 3
+            treePart80
+            (.split 9
+              treePart81
+              (.split 13
+                treePart82
+                treePart83)))
+          (.split 26
+            (.split 3
+              treePart84
+              (.split 24
+                (.split 27
+                  (.split 6
+                    treePart85
+                    treePart86)
+                  treePart87)
+                treePart88))
+            treePart89))))
+    (.split 3
+      treePart90
+      (.split 6
+        (.split 17
+          (.split 10
+            treePart91
+            (.split 11
+              treePart92
+              treePart93))
+          (.split 21
+            (.split 14
+              treePart94
+              treePart95)
+            treePart96))
+        (.split 16
+          (.split 18
+            treePart97
+            (.split 24
+              treePart98
+              treePart99))
+          (.split 18
+            treePart100
+            treePart101))))
+
+theorem treeAssemblyBranch1_check :
+    treeAssemblyBranch1.check splitForms farkasReceipts cells
+      ((base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) ++ [AffineForm.violation (aff
+        [0, 0, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0])]) = true := by
+  simp only [treeAssemblyBranch1, CompactCellTree.check_split, Bool.and_true, splitForm3,
+    splitForm4, splitForm5, splitForm6, splitForm7, splitForm9, splitForm10, splitForm11,
+    splitForm13, splitForm14, splitForm16, splitForm17, splitForm18, splitForm19, splitForm21,
+    splitForm23, splitForm24, splitForm25, splitForm26, splitForm27, treePart100_check,
+    treePart101_check, treePart64_check, treePart65_check, treePart66_check, treePart67_check,
+    treePart68_check, treePart69_check, treePart70_check, treePart71_check, treePart72_check,
+    treePart73_check, treePart74_check, treePart75_check, treePart76_check, treePart77_check,
+    treePart78_check, treePart79_check, treePart80_check, treePart81_check, treePart82_check,
+    treePart83_check, treePart84_check, treePart85_check, treePart86_check, treePart87_check,
+    treePart88_check, treePart89_check, treePart90_check, treePart91_check, treePart92_check,
+    treePart93_check, treePart94_check, treePart95_check, treePart96_check, treePart97_check,
+    treePart98_check, treePart99_check]
+
+/-- A branch of the final row-03 cover assembly, starting at split form 1
+and combining the previously verified decision subtrees. -/
+def treeAssemblyBranch2 : CompactCellTree :=
+  .split 1
+    treeAssemblyBranch0
+    treeAssemblyBranch1
+
+theorem treeAssemblyBranch2_check :
+    treeAssemblyBranch2.check splitForms farkasReceipts cells
+      (base ++ [aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0]]) = true := by
+  simp only [treeAssemblyBranch2, CompactCellTree.check_split, Bool.and_true, splitForm1,
+    treeAssemblyBranch0_check, treeAssemblyBranch1_check]
+
+/-- A branch of the final row-03 cover assembly, starting at split form 28
+and combining the previously verified decision subtrees. -/
+def treeAssemblyBranch3 : CompactCellTree :=
+  .split 28
+    (.split 23
+      (.split 29
+        (.split 30
+          treePart102
+          (.split 26
+            treePart103
+            treePart104))
+        (.split 31
+          (.split 8
+            treePart105
+            treePart106)
+          (.split 26
+            (.split 32
+              treePart107
+              treePart108)
+            (.split 32
+              treePart109
+              treePart110))))
+      (.split 29
+        (.split 30
+          treePart111
+          treePart112)
+        (.split 31
+          (.split 8
+            treePart113
+            treePart114)
+          (.split 10
+            (.split 32
+              treePart115
+              treePart116)
+            treePart117))))
+    (.split 23
+      (.split 33
+        (.split 34
+          treePart118
+          (.split 35
+            treePart119
+            treePart120))
+        (.split 36
+          (.split 8
+            treePart121
+            treePart122)
+          (.split 37
+            (.split 26
+              treePart123
+              treePart124)
+            (.split 8
+              treePart125
+              treePart126))))
+      (.split 34
+        (.split 33
+          treePart127
+          (.split 36
+            treePart128
+            treePart129))
+        (.split 15
+          (.split 38
+            treePart130
+            treePart131)
+          (.split 39
+            treePart132
+            treePart133))))
+
+theorem treeAssemblyBranch3_check :
+    treeAssemblyBranch3.check splitForms farkasReceipts cells
+      (base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0])]) = true :=
+        by
+  simp only [treeAssemblyBranch3, CompactCellTree.check_split, Bool.and_true, splitForm8,
+    splitForm10, splitForm15, splitForm23, splitForm26, splitForm28, splitForm29, splitForm30,
+    splitForm31, splitForm32, splitForm33, splitForm34, splitForm35, splitForm36, splitForm37,
+    splitForm38, splitForm39, treePart102_check, treePart103_check, treePart104_check,
+    treePart105_check, treePart106_check, treePart107_check, treePart108_check,
+    treePart109_check, treePart110_check, treePart111_check, treePart112_check,
+    treePart113_check, treePart114_check, treePart115_check, treePart116_check,
+    treePart117_check, treePart118_check, treePart119_check, treePart120_check,
+    treePart121_check, treePart122_check, treePart123_check, treePart124_check,
+    treePart125_check, treePart126_check, treePart127_check, treePart128_check,
+    treePart129_check, treePart130_check, treePart131_check, treePart132_check,
+    treePart133_check]
+
+/-- The complete row-03 closed-cover decision tree, assembling the 134 checked subtrees in order
+and starting with split form zero. Its leaves refer to the shared cell and Farkas-receipt
+tables. -/
 def tree : CompactCellTree :=
   .split 0
-    (.split 1
-        (.split 2
-            (.split 3
-                (treePart0)
-                (.split 4
-                    (.split 5
-                        (.split 6
-                            (.split 7
-                                (treePart1)
-                                (treePart2))
-                            (.split 8
-                                (treePart3)
-                                (treePart4)))
-                        (.split 9
-                            (.split 6
-                                (.split 10
-                                    (treePart5)
-                                    (.split 11
-                                        (treePart6)
-                                        (treePart7)))
-                                (.split 10
-                                    (treePart8)
-                                    (.split 11
-                                        (.split 12
-                                            (treePart9)
-                                            (treePart10))
-                                        (treePart11))))
-                            (.split 13
-                                (.split 14
-                                    (.split 10
-                                        (treePart12)
-                                        (treePart13))
-                                    (.split 15
-                                        (treePart14)
-                                        (treePart15)))
-                                (.split 10
-                                    (treePart16)
-                                    (.split 11
-                                        (.split 12
-                                            (treePart17)
-                                            (treePart18))
-                                        (treePart19))))))
-                    (.split 6
-                        (.split 16
-                            (.split 17
-                                (.split 14
-                                    (treePart20)
-                                    (treePart21))
-                                (treePart22))
-                            (.split 18
-                                (treePart23)
-                                (treePart24)))
-                        (.split 8
-                            (.split 16
-                                (treePart25)
-                                (treePart26))
-                            (.split 17
-                                (treePart27)
-                                (treePart28))))))
-            (.split 6
-                (.split 14
-                    (.split 3
-                        (treePart29)
-                        (.split 4
-                            (.split 5
-                                (treePart30)
-                                (.split 19
-                                    (treePart31)
-                                    (treePart32)))
-                            (.split 20
-                                (treePart33)
-                                (.split 17
-                                    (treePart34)
-                                    (treePart35)))))
-                    (.split 3
-                        (treePart36)
-                        (.split 4
-                            (.split 7
-                                (treePart37)
-                                (.split 9
-                                    (treePart38)
-                                    (treePart39)))
-                            (.split 20
-                                (treePart40)
-                                (.split 17
-                                    (treePart41)
-                                    (.split 21
-                                        (treePart42)
-                                        (treePart43)))))))
-                (.split 8
-                    (.split 3
-                        (treePart44)
-                        (.split 19
-                            (.split 4
-                                (.split 7
-                                    (treePart45)
-                                    (treePart46))
-                                (.split 20
-                                    (treePart47)
-                                    (treePart48)))
-                            (.split 11
-                                (.split 16
-                                    (treePart49)
-                                    (.split 22
-                                        (treePart50)
-                                        (treePart51)))
-                                (.split 5
-                                    (treePart52)
-                                    (.split 10
-                                        (treePart53)
-                                        (treePart54))))))
-                    (.split 3
-                        (treePart55)
-                        (.split 4
-                            (.split 9
-                                (.split 5
-                                    (treePart56)
-                                    (treePart57))
-                                (.split 13
-                                    (treePart58)
-                                    (treePart59)))
-                            (.split 20
-                                (treePart60)
-                                (.split 17
-                                    (treePart61)
-                                    (.split 21
-                                        (treePart62)
-                                        (treePart63)))))))))
-        (.split 4
-            (.split 7
-                (.split 5
-                    (treePart64)
-                    (.split 23
-                        (.split 3
-                            (treePart65)
-                            (.split 9
-                                (treePart66)
-                                (.split 10
-                                    (.split 24
-                                        (treePart67)
-                                        (treePart68))
-                                    (treePart69))))
-                        (.split 10
-                            (.split 3
-                                (treePart70)
-                                (.split 9
-                                    (treePart71)
-                                    (.split 13
-                                        (treePart72)
-                                        (treePart73))))
-                            (treePart74))))
-                (.split 18
-                    (.split 19
-                        (treePart75)
-                        (.split 11
-                            (.split 3
-                                (treePart76)
-                                (.split 14
-                                    (treePart77)
-                                    (treePart78)))
-                            (treePart79)))
-                    (.split 25
-                        (.split 3
-                            (treePart80)
-                            (.split 9
-                                (treePart81)
-                                (.split 13
-                                    (treePart82)
-                                    (treePart83))))
-                        (.split 26
-                            (.split 3
-                                (treePart84)
-                                (.split 24
-                                    (.split 27
-                                        (.split 6
-                                            (treePart85)
-                                            (treePart86))
-                                        (treePart87))
-                                    (treePart88)))
-                            (treePart89)))))
-            (.split 3
-                (treePart90)
-                (.split 6
-                    (.split 17
-                        (.split 10
-                            (treePart91)
-                            (.split 11
-                                (treePart92)
-                                (treePart93)))
-                        (.split 21
-                            (.split 14
-                                (treePart94)
-                                (treePart95))
-                            (treePart96)))
-                    (.split 16
-                        (.split 18
-                            (treePart97)
-                            (.split 24
-                                (treePart98)
-                                (treePart99)))
-                        (.split 18
-                            (treePart100)
-                            (treePart101)))))))
-    (.split 28
-        (.split 23
-            (.split 29
-                (.split 30
-                    (treePart102)
-                    (.split 26
-                        (treePart103)
-                        (treePart104)))
-                (.split 31
-                    (.split 8
-                        (treePart105)
-                        (treePart106))
-                    (.split 26
-                        (.split 32
-                            (treePart107)
-                            (treePart108))
-                        (.split 32
-                            (treePart109)
-                            (treePart110)))))
-            (.split 29
-                (.split 30
-                    (treePart111)
-                    (treePart112))
-                (.split 31
-                    (.split 8
-                        (treePart113)
-                        (treePart114))
-                    (.split 10
-                        (.split 32
-                            (treePart115)
-                            (treePart116))
-                        (treePart117)))))
-        (.split 23
-            (.split 33
-                (.split 34
-                    (treePart118)
-                    (.split 35
-                        (treePart119)
-                        (treePart120)))
-                (.split 36
-                    (.split 8
-                        (treePart121)
-                        (treePart122))
-                    (.split 37
-                        (.split 26
-                            (treePart123)
-                            (treePart124))
-                        (.split 8
-                            (treePart125)
-                            (treePart126)))))
-            (.split 34
-                (.split 33
-                    (treePart127)
-                    (.split 36
-                        (treePart128)
-                        (treePart129)))
-                (.split 15
-                    (.split 38
-                        (treePart130)
-                        (treePart131))
-                    (.split 39
-                        (treePart132)
-                        (treePart133))))))
+    treeAssemblyBranch2
+    treeAssemblyBranch3
 
 theorem cells_check :
     cells.all (fun cell => cell.certificate.checkClosed 4) = true := by
@@ -5031,7 +5907,8 @@ theorem cells_valid : ∀ cell ∈ cells, cell.certificate.ValidClosed 4 := by
 
 theorem tree_check :
     tree.check splitForms farkasReceipts cells base = true := by
-  simp only [tree, CompactCellTree.check_split, Bool.and_true, splitForm0, splitForm1, splitForm2, splitForm3, splitForm4, splitForm5, splitForm6, splitForm7, splitForm8, splitForm9, splitForm10, splitForm11, splitForm12, splitForm13, splitForm14, splitForm15, splitForm16, splitForm17, splitForm18, splitForm19, splitForm20, splitForm21, splitForm22, splitForm23, splitForm24, splitForm25, splitForm26, splitForm27, splitForm28, splitForm29, splitForm30, splitForm31, splitForm32, splitForm33, splitForm34, splitForm35, splitForm36, splitForm37, splitForm38, splitForm39, treePart0_check, treePart1_check, treePart2_check, treePart3_check, treePart4_check, treePart5_check, treePart6_check, treePart7_check, treePart8_check, treePart9_check, treePart10_check, treePart11_check, treePart12_check, treePart13_check, treePart14_check, treePart15_check, treePart16_check, treePart17_check, treePart18_check, treePart19_check, treePart20_check, treePart21_check, treePart22_check, treePart23_check, treePart24_check, treePart25_check, treePart26_check, treePart27_check, treePart28_check, treePart29_check, treePart30_check, treePart31_check, treePart32_check, treePart33_check, treePart34_check, treePart35_check, treePart36_check, treePart37_check, treePart38_check, treePart39_check, treePart40_check, treePart41_check, treePart42_check, treePart43_check, treePart44_check, treePart45_check, treePart46_check, treePart47_check, treePart48_check, treePart49_check, treePart50_check, treePart51_check, treePart52_check, treePart53_check, treePart54_check, treePart55_check, treePart56_check, treePart57_check, treePart58_check, treePart59_check, treePart60_check, treePart61_check, treePart62_check, treePart63_check, treePart64_check, treePart65_check, treePart66_check, treePart67_check, treePart68_check, treePart69_check, treePart70_check, treePart71_check, treePart72_check, treePart73_check, treePart74_check, treePart75_check, treePart76_check, treePart77_check, treePart78_check, treePart79_check, treePart80_check, treePart81_check, treePart82_check, treePart83_check, treePart84_check, treePart85_check, treePart86_check, treePart87_check, treePart88_check, treePart89_check, treePart90_check, treePart91_check, treePart92_check, treePart93_check, treePart94_check, treePart95_check, treePart96_check, treePart97_check, treePart98_check, treePart99_check, treePart100_check, treePart101_check, treePart102_check, treePart103_check, treePart104_check, treePart105_check, treePart106_check, treePart107_check, treePart108_check, treePart109_check, treePart110_check, treePart111_check, treePart112_check, treePart113_check, treePart114_check, treePart115_check, treePart116_check, treePart117_check, treePart118_check, treePart119_check, treePart120_check, treePart121_check, treePart122_check, treePart123_check, treePart124_check, treePart125_check, treePart126_check, treePart127_check, treePart128_check, treePart129_check, treePart130_check, treePart131_check, treePart132_check, treePart133_check]
+  simp only [tree, CompactCellTree.check_split, Bool.and_true, splitForm0,
+    treeAssemblyBranch2_check, treeAssemblyBranch3_check]
 
 theorem base_holds (length : Fin 12 → ℕ) :
     ExplicitPotential.FormsHold base (lengthPoint length) := by

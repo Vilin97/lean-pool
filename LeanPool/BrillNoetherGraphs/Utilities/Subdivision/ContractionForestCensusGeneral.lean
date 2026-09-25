@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotential
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotential
+public import Mathlib.Tactic
 
 /-!
 # Equal-genus contractions of an arbitrary `n`-vertex, `p`-slot core
@@ -45,6 +47,8 @@ Two more facts are needed for that (`DegenerateSpecCensus.lean` consumes both):
   the `ZeroReach` witness the interpolated layer needs, straight from the
   spanning-forest structure that already defines `rep` — no separate search.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.ContractionForestCensusGeneral
 open Utilities.Certificate

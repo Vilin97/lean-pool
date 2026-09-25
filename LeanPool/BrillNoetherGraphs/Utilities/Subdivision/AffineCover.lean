@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import Mathlib.Algebra.Order.Field.Rat
-import Mathlib.Data.List.GetD
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.Field.Rat
+public import Mathlib.Data.List.GetD
+public import Mathlib.Tactic
 
 /-!
 # Kernel-checked affine covering certificates
@@ -35,6 +37,8 @@ than prepending it.
 This layer deliberately gives no graph, subdivision, or divisor semantics to
 the cones.  Those belong in a separate local-certificate checker.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.AffineCover
 
@@ -72,7 +76,9 @@ def allFinset {α : Type*} [DecidableEq α]
 
 /-- An integral affine form in `m` variables. -/
 structure AffineForm (m : ℕ) where
+  /-- The integer constant term of the affine form. -/
   fixedValue : ℤ
+  /-- The integer coefficient of each of the `m` coordinates. -/
   coefficient : Fin m → ℤ
   deriving DecidableEq
 
@@ -181,12 +187,17 @@ def Covers {m : ℕ} (base : List (AffineForm m))
 
 /-- One sparse rational multiplier names a row of the current region. -/
 structure FarkasTerm where
+  /-- The index of the active affine row used by this sparse Farkas term. -/
   row : ℕ
+  /-- The proposed rational multiplier of the selected affine row; its admissibility is checked
+  by the validity predicate. -/
   weight : ℚ
   deriving DecidableEq, Repr
 
 /-- Passive sparse Farkas data.  Repeated row indices are permitted. -/
 structure FarkasData where
+  /-- The ordered sparse row multipliers of the proposed Farkas combination; repeated indices
+  are allowed. -/
   terms : List FarkasTerm
   deriving DecidableEq, Repr
 
@@ -194,6 +205,7 @@ namespace FarkasData
 
 variable {m : ℕ}
 
+/-- Look up an affine row, returning the zero form when the index is out of range. -/
 def rowAt (rows : List (AffineForm m)) (index : ℕ) : AffineForm m :=
   rows.getD index 0
 
@@ -371,7 +383,7 @@ private theorem integralCheck_eq_true_iff (data : FarkasData)
 
 /-- General rational checker retained as the fallback for hand-written or
 legacy certificates whose denominators have not been cleared. -/
-private def rationalCheck (data : FarkasData)
+def rationalCheck (data : FarkasData)
     (rows : List (AffineForm m)) : Bool :=
   (data.terms.all fun term =>
     decide (term.row < rows.length ∧ 0 ≤ term.weight)) &&
@@ -498,10 +510,12 @@ namespace CoverTree
 
 variable {m : ℕ}
 
+/-- Look up a cone in the cover table, returning an empty cone for an out-of-range index. -/
 def coneAt (cones : List (List (AffineForm m))) (index : ℕ) :
     List (AffineForm m) :=
   cones.getD index []
 
+/-- Look up an affine constraint in a cone, returning the zero form for an out-of-range index. -/
 def formAt (cone : List (AffineForm m)) (index : ℕ) : AffineForm m :=
   cone.getD index 0
 
@@ -525,7 +539,7 @@ def Valid (cones : List (List (AffineForm m)))
             [AffineForm.violation (formAt (coneAt cones cone) i.val)])
 
 /-- Recursive Boolean replay of a contradiction tree under active rows. -/
-private def checkActive (cones : List (List (AffineForm m)))
+def checkActive (cones : List (List (AffineForm m)))
     (active : List (AffineForm m)) : CoverTree m → Bool
   | .leaf farkas => farkas.check active
   | .empty cone =>
@@ -671,12 +685,17 @@ row, then the preceding row, and eventually the complete original local cone.
 
 /-- Passive data for one proof-carrying deletion from a cone. -/
 structure ReductionStep (m : ℕ) where
+  /-- The affine row proposed for deletion from the current cone. -/
   removed : AffineForm m
+  /-- The Farkas data intended to certify that deleting this row preserves the required
+  implication. -/
   farkas : FarkasData
   deriving DecidableEq
 
 /-- A sequence of row deletions used to reduce a local proof cone. -/
 structure ReductionChain (m : ℕ) where
+  /-- The ordered row-deletion steps of the reduction, each carrying its proposed Farkas
+  justification. -/
   steps : List (ReductionStep m)
   deriving DecidableEq
 
@@ -697,7 +716,7 @@ def resultRows : List (AffineForm m) → List (ReductionStep m) →
 
 /-- Mathematical validity of rows deleted in the exact forward order in which
 they disappear from the cone. -/
-private def ValidRows (base : List (AffineForm m)) :
+def ValidRows (base : List (AffineForm m)) :
     List (AffineForm m) → List (ReductionStep m) → Prop
   | _rows, [] => True
   | rows, step :: steps =>
@@ -711,7 +730,7 @@ def Valid (chain : ReductionChain m) (base full : List (AffineForm m)) : Prop :=
   ValidRows base full chain.steps
 
 /-- Boolean replay of row deletions from `rows` down to the claimed result. -/
-private def checkRows (base reduced : List (AffineForm m)) :
+def checkRows (base reduced : List (AffineForm m)) :
     List (AffineForm m) → List (ReductionStep m) → Bool
   | rows, [] => decide (rows = reduced)
   | rows, step :: steps =>
@@ -822,12 +841,12 @@ end ReductionChain
 namespace Examples
 
 /-- The affine form `constant + a*x`. -/
-private def form1 (fixedValue a : ℤ) : AffineForm 1 where
+def form1 (fixedValue a : ℤ) : AffineForm 1 where
   fixedValue := fixedValue
   coefficient := ![a]
 
 /-- The affine form `constant + a*x + b*y`. -/
-private def form2 (fixedValue a b : ℤ) : AffineForm 2 where
+def form2 (fixedValue a b : ℤ) : AffineForm 2 where
   fixedValue := fixedValue
   coefficient := ![a, b]
 
@@ -885,12 +904,17 @@ theorem strictPartition (x y : ℤ) :
 step checks this by contradicting `-x - 1 >= 0`; adding the two active rows
 gives the impossible constant `-2`. -/
 
+/-- The base constraint `x - 1 ≥ 0` in the one-variable implication-reduction example. -/
 def implicationReductionBase : List (AffineForm 1) :=
   [form1 (-1) 1]
 
+/-- The redundant constraint `x ≥ 0` that the example deletes using its stronger base
+constraint. -/
 def implicationReductionFull : List (AffineForm 1) :=
   [form1 0 1]
 
+/-- The single-step certificate deleting `x ≥ 0`, with unit weights on the two contradiction
+rows. -/
 def implicationReduction : ReductionChain 1 :=
   { steps := [{
       removed := form1 0 1

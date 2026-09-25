@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.ClosedAuto
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichLeafAssembly
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.ClosedVertexCut
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.ClosedAuto
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichLeafAssembly
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.ClosedVertexCut
 
 /-!
 # The row-proof tree layer, deep-embedded
@@ -110,6 +112,8 @@ root's `p` coordinate rows still sit at indices `0 … p−1` and the branch
 conditions at `p … p+k−1`.  That stability is what lets the emitter address
 context rows by a fixed index in every certificate it synthesises.
 -/
+
+@[expose] public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

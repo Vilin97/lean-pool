@@ -3,15 +3,17 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankChipStep
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
-import LeanPool.BrillNoetherGraphs.Utilities.Segments.SegmentReflection
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import LeanPool.BrillNoetherGraphs.Demazure.Submodular
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankChipStep
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Segments.SegmentReflection
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import LeanPool.BrillNoetherGraphs.Demazure.Submodular
 
 /-!
 # Endpoint transmission on banana graphs
@@ -20,6 +22,8 @@ This file proves the abstract existence/periodicity facts for transmission
 permutations from the rank slipface.  The endpoint-specific rank calculation
 and inversion count are developed separately from this generic layer.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

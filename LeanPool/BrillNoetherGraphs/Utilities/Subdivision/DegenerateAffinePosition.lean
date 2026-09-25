@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffinePosition
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateRankOne
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffinePosition
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateRankOne
 
 /-!
 # Affine-described positions on the CLOSED length orthant
@@ -35,6 +37,8 @@ Note that `decodeVertex_eq_head_of_coordinate_eq_length` is already
 boundary-safe *as a statement*; what is not boundary-safe is concluding
 "interior" from `0 < coordinate`.
 -/
+
+@[expose] public section
 
 namespace MarkedGraphs.Certificate.AffinePosition
 open Utilities.Certificate

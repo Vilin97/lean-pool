@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.MixedTorsionChains
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.OnceMarkedWedgeGenerality
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.MixedTorsionChains
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.OnceMarkedWedgeGenerality
 
 /-!
 # Balanced chains with mixed torsion orders
@@ -23,6 +25,8 @@ iterated vertex gluing of the factors in their original order; choosing this
 parenthesization avoids identifying the different nested `Sum` vertex types
 of left- and right-associated `MarkedGraph.chain` constructions.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

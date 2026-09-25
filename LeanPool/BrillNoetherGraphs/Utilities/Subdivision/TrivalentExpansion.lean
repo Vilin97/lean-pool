@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreExpansion
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocorePresentation
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreExpansion
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocorePresentation
 
 /-!
 # A genus-generic trivalent expansion
@@ -30,6 +32,8 @@ The output is packaged as `Utilities.Subdivision.CoreExpansion.ExpansionData`, s
 actual topological contraction certificate from a positive subdivision of the
 expanded cubic core onto any positive subdivision of the given core.
 -/
+
+@[expose] public section
 namespace Utilities.Subdivision.TrivalentExpansion
 open Utilities.Certificate
 

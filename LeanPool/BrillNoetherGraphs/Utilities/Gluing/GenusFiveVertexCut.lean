@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ElementaryExistence
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeRankOne
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeContraction
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutConnectivity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.PointedGenusOneRigidTransport
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ElementaryExistence
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeRankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeContraction
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.PointedGenusOneRigidTransport
 
 /-!
 # Rank one across a positive-genus articulation in genus five
@@ -19,6 +21,8 @@ order.  The genus-at-most-three factor carries its elementary critical pencil,
 the genus-four factor uses the supplied genus-four theorem, and bridge gluing
 followed by contraction of the artificial bridge loses exactly one degree.
 -/
+
+@[expose] public section
 namespace Utilities
 
 universe u

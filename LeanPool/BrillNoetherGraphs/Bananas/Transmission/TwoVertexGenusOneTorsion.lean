@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.SameFactorWedgeSubmodularity
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusOneTopology
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.SameFactorWedgeSubmodularity
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusOneTopology
 
 /-!
 # The exact order of a two-vertex bridgeless genus-one factor
@@ -14,6 +16,8 @@ A loopless genus-one graph with two vertices and no one-edge cut consists of
 two parallel edges.  Firing either vertex therefore doubles the marked
 difference, while rigidity excludes order one.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

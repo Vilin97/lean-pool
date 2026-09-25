@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.IteratedSplitRefinement
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.IteratedSplitRefinement
 
 /-!
 # Ordered path refinements
@@ -21,6 +23,8 @@ fresh slot.  No graph search, quotient, or normalization enters.  A final
 external certificate generally orders its bivalent vertices and edge
 occurrences differently from this canonical append-at-the-end convention.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.IteratedSplitRefinement
 
@@ -72,6 +76,8 @@ append-at-the-end construction. -/
 structure OrderedPathSplit
     (source : PackedSpec) (slot : Fin source.p)
     (segments : List ℕ) (target : PackedSpec) where
+  /-- The canonical split chain whose validity field certifies the prescribed ordered path
+  segments. -/
   chain : CanonicalSplitChain source target
   valid : OrderedPathSplitValid source slot segments target chain
 
@@ -223,8 +229,11 @@ end OrderedPathSplit
 /-- A canonical positive refinement followed by an arbitrary checked
 relabeling to the presentation used by an emitted certificate. -/
 structure RefinementPresentation (source : PackedSpec) (presented : CFGraph) where
+  /-- The subdivision specification reached after the canonical refinements. -/
   refined : PackedSpec
+  /-- The checked sequence of canonical splits from the source to the refined specification. -/
   chain : CanonicalSplitChain source refined
+  /-- The edge-multiplicity-preserving relabeling from the refined graph to the presented graph. -/
   relabeling : LaplacianEquiv refined.graph presented
 
 namespace RefinementPresentation

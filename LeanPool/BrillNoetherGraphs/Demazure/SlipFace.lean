@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import LeanPool.BrillNoetherGraphs.Demazure.Valley
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Int.Interval
+module
+
+public import LeanPool.BrillNoetherGraphs.Demazure.Valley
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Data.Int.Interval
 
 /-!
 # Slipfaces
@@ -15,6 +17,8 @@ This file defines slipface functions and develops their basic properties, includ
 Section 3, with some essential-set material from Section 7.1, of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
+
+@[expose] public section
 
 /-- A slipface function of shift `χ`, i.e. a function $s : \mathbb{Z}^2 \to \mathbb{N}$
 satisfying conditions (S1) to (S3) from
@@ -28,7 +32,9 @@ Lean stores the function as `func` and the shift as `χ`; the article writes thi
 $s \in \mathrm{SF}_\chi$. *Definition 3.1 (`defn:slipface`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
 structure SlipFace where
+  /-- The integer-valued function of the two slipface coordinates. -/
   func : ℤ → ℤ → ℤ
+  /-- The shift appearing in the affine asymptotes of the slipface. -/
   χ : ℤ
   a_step : ∀ a b : ℤ, func a b ≤ func (a+1) b ∧ func (a+1) b ≤ func a b + 1
   b_step : ∀ a b : ℤ, func a (b+1) ≤ func a b ∧ func a b ≤ func a (b+1) + 1
@@ -462,10 +468,14 @@ private lemma star_exists (s t : SlipFace) : ∃ p : SlipFace,
 See *Definition 3.7* (`defn:sfAlgebra`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
 noncomputable def star (s t : SlipFace) : SlipFace :=
-  Classical.choose (star_exists s t)
+  Classical.choose (show ∃ p : SlipFace,
+      (p.func = starFunction s t ∧ p.χ = s.χ + t.χ) ∧
+        p.dual.func = starFunction t.dual s.dual from by
+    exact star_exists s t)
 
 noncomputable instance : Mul SlipFace := ⟨star⟩
 
+/-- Demazure product of slipfaces, formed by minimizing over the intermediate integer. -/
 infixl:70 " ⋆ " => star
 
 lemma star_func_eq (s t : SlipFace) : (s ⋆ t).func = starFunction s t := by
@@ -543,6 +553,7 @@ lemma star_val_le (s t : SlipFace) (a b l : ℤ) : (s ⋆ t) a b ≤ s a l + t l
     exact v.min_spec l
   rwa [← hmin] at hM
 
+/-- The rightmost intermediate integer attaining the Demazure-product minimum at `(a, b)`. -/
 noncomputable def starWitness (s t : SlipFace) (a b : ℤ) : ℤ :=
   (SlipValley s t a b).M
 
@@ -963,7 +974,9 @@ private lemma rres_exists (s t : SlipFace) (a b : ℤ) : ∃ m, ∀ l,
 
 /-- The argmax witnessing the right residual value $s \triangleright t (a,b)$. -/
 noncomputable def rightResidualWitness (s t : SlipFace) (a b : ℤ) : ℤ :=
-  Classical.choose (rres_exists s t a b)
+  Classical.choose (show ∃ m : ℤ, ∀ l : ℤ,
+      t l b - s.dual l a ≤ t m b - s.dual m a from by
+    exact rres_exists s t a b)
 
 /-- The right residual function
 $$
@@ -1163,8 +1176,12 @@ private lemma lres_exists (s t : SlipFace) : ∃ p : SlipFace,
 `leftResidualFunction`. See *Definition 3.7* (`defn:sfAlgebra`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
 noncomputable def lres (s t : SlipFace) : SlipFace :=
-  Classical.choose (lres_exists s t)
+  Classical.choose (show ∃ p : SlipFace,
+      (p.func = leftResidualFunction s t ∧ p.χ = s.χ + t.χ) ∧
+        p.dual.func = rightResidualFunction t.dual s.dual from by
+    exact lres_exists s t)
 
+/-- Left residual of slipfaces, formed by maximizing the corresponding dual difference. -/
 infixl:70 " ◃ " => lres
 
 lemma lres_func_eq (s t : SlipFace) : (s ◃ t).func = leftResidualFunction s t :=
@@ -1201,6 +1218,7 @@ residual. See *Definition 3.7* (`defn:sfAlgebra`) of
 noncomputable def rres (s t : SlipFace) : SlipFace :=
   (t.dual ◃ s.dual).dual
 
+/-- Right residual of slipfaces, obtained from the left residual by duality. -/
 infixr:70 " ▹ " => rres
 
 lemma rres_func_eq (s t : SlipFace) : (s ▹ t).func = rightResidualFunction s t := by

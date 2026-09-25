@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeTorsionRestriction
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.NonrecurrenceWitness
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeTorsionRestriction
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.NonrecurrenceWitness
 
 /-!
 # Unequal periods force recurrence on an opposite-side genus-one wedge
@@ -14,6 +16,8 @@ This is the period-comparison calculation in the distinct-loop branch of
 Theorem 4.13.  The generic residue contradiction is kept in
 `NonrecurrenceWitness`; this file supplies the wedge rank witnesses.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

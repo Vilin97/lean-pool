@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaBoundarySubmodularity
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeSubmodularity
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.CycleRigidity
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedge
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeGenusOne
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaBoundarySubmodularity
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeSubmodularity
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.CycleRigidity
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedge
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeGenusOne
 
 /-!
 # The same-loop branch for a chain of two loops
@@ -16,6 +18,8 @@ import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeGenusOne
 The graph is the vertex wedge of two positive two-path cycles.  This file
 isolates the same-left-side argument in paper Proposition 3.7.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

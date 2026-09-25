@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedThree
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedThree
 
 /-!
 # A banana pair with a double chip at the short end
@@ -50,6 +52,8 @@ statement that `v` still balances, and its proof is the only place in the whole
 programme where a canonical ramp runs at **slope two** -- `headContribution q 0
 (2 * q) = 2`.  The four one-edge facts that needs are proved first.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.ConfigurationBananaDoubleChip
 

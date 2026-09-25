@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSlopeScript
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SplitRampArithmetic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSlopeScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SplitRampArithmetic
 
 /-!
 # Firing scripts with a marked point inside each slot
@@ -36,6 +38,8 @@ are stated for an arbitrary slot-value function.  What this file adds is
 
 The arithmetic lives in `SplitRampArithmetic.lean`.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.DegenerateSpec.DegSpec
 

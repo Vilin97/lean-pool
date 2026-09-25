@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Basic
+
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Basic
 
 /-!
 # Joining two graphs by a bridge
@@ -13,6 +15,8 @@ This module forms the disjoint union of two chip-firing graphs on a sum vertex
 type and adds one edge between specified vertices in the two factors. The
 construction is useful for reducing divisor questions across separating edges.
 -/
+
+@[expose] public section
 
 open Multiset Finset
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgeDemazure
-import LeanPool.BrillNoetherGraphs.Demazure.Transpositions
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgeDemazure
+public import LeanPool.BrillNoetherGraphs.Demazure.Transpositions
 
 /-!
 # Finite Demazure factorizations
@@ -14,6 +16,8 @@ Finite ASP permutations admit Demazure factorizations at every prescribed
 inversion-length cut.  This supplies the combinatorial input needed for
 unconditional opposite-side vertex-wedge transmission gluing.
 -/
+
+@[expose] public section
 
 namespace AspPerm
 

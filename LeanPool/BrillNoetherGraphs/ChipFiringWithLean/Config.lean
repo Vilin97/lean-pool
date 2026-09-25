@@ -3,10 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Basic
+
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Basic
 
 /-! # Config -/
+
+@[expose] public section
 open Multiset Finset
 
 /-!
@@ -522,6 +526,7 @@ private lemma extend_burn_list (G : CFGraph) {q : G.V} (c : Config G q) (h_ss : 
 /-- A bundled burn list: a list $L$ of vertices together with a proof that it satisfies the
 `isBurnList` conditions for configuration $c$. -/
 structure burnList (G : CFGraph) {q : G.V} (c : Config G q) where
+  /-- The ordered vertices satisfying the burning-list conditions for the configuration. -/
   (list : List G.V)
   (h_burn_list : isBurnList G c list)
 

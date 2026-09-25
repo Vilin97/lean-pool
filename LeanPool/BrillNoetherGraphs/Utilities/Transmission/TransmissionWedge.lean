@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeRankFormula
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeRankFormula
 
 /-!
 # Transmission across a vertex wedge
@@ -20,6 +22,8 @@ For a transmission row `(a,b)`, its marked twist on the wedge splits as
 equivalent to the tropical-dot-product inequality for the two factor
 profiles, indexed by the extra gluing shift `ell`.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

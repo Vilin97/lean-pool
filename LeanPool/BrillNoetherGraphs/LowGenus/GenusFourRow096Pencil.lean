@@ -3,13 +3,15 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.RampScript
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MultiBreakScript
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreSymmetry
-import LeanPool.BrillNoetherGraphs.Utilities.Segments.SegmentReflection
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCubicAtlas
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.RampScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MultiBreakScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreSymmetry
+public import LeanPool.BrillNoetherGraphs.Utilities.Segments.SegmentReflection
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCubicAtlas
 
 /-!
 # A symbolic pencil for genus-four Core 096 (skeleton)
@@ -58,6 +60,8 @@ three-slot instance of `prin_cutRamp` at the cut `{e0,e6,e7}`.
 
 This file is complete: no `sorry` remains.
 -/
+
+@[expose] public section
 
 namespace LowGenus.GenusFourRow096Pencil
 

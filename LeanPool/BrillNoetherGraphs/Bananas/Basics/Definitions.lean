@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
 
 /-!
 # Twice-marked banana graphs: definitions
@@ -15,6 +17,8 @@ of genus `g` is represented by the existing positive subdivision model with
 two core vertices and `g + 1` distinct edge slots.  Thus parallel strands are
 retained by construction, rather than identified as a simple graph.
 -/
+
+@[expose] public section
 
 namespace Bananas
 
@@ -59,12 +63,16 @@ def strandMirror {g : ℕ} (B : Banana g) (α : Fin (g + 1))
 
 /-- The two multivalent vertices of a banana. -/
 def leftEndpoint {g : ℕ} (B : Banana g) : B.graph.V := B.coreVertex 0
+/-- The right multivalent endpoint of the banana graph. -/
 def rightEndpoint {g : ℕ} (B : Banana g) : B.graph.V := B.coreVertex 1
 
 /-- A graph with an ordered pair of marked vertices. -/
 structure TwiceMarked where
+  /-- The underlying graph carrying the two marked vertices. -/
   graph : CFGraph
+  /-- The first vertex in the ordered pair of marks. -/
   u : graph.V
+  /-- The second vertex in the ordered pair of marks. -/
   v : graph.V
 
 /-- Bundle a graph and an ordered pair of its vertices as a twice-marked graph. -/

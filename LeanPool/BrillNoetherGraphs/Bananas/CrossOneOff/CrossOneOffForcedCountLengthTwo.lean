@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteRows
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteRows
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
 
 /-!
 # The length-two part of the corrected cross-one-off finite count
@@ -14,6 +16,8 @@ For strand length two, every unordered pair of indices in `Fin (g - 1)`
 selects a distinct inversion: its smaller index selects an odd row and its
 larger index selects a later even row.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

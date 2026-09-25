@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotentialRankOne
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpec
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotentialRankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpec
 
 /-!
 # `ValidClosed`: the affine certificate grammar on the CLOSED length orthant
@@ -58,6 +60,8 @@ bookkeeping: a collapsed slot contributes `α_e + β_e ≤ 0` to
 Laplacian, so the conservative bound is still conservative.  That inequality
 is `Valid`'s third conjunct, unchanged.
 -/
+
+@[expose] public section
 
 -- `Certificate` is a structure inside a namespace already ending in `Certificate`;
 -- renaming either would ripple through every consumer.  Lean v4.33 added
@@ -346,6 +350,9 @@ The direct analogue of `Certificate.subdivisionSpec`.  The contraction datum
 so it is supplied, exactly as in `Utilities.Certificate.DegenerateSpec.DegSpec`.  Note that
 `core_loopless` becomes `rep_loopless`, and that `rep_zero` is the only new
 obligation beyond the census data. -/
+/-- Turn evaluated affine segment lengths and a checked idempotent contraction representative
+into a degenerate subdivision specification, retaining the supplied looplessness and
+forest-count guarantees. -/
 def degenerateSpec (certificate : Certificate m n p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n)
     (rep : Fin n → Fin n)

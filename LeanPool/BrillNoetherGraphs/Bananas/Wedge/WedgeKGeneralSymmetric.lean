@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeKGeneralConverse
-import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixChainConclusion
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoDegreeTwo
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.MarkedIso
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.GraphIsoCuts
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeKGeneralConverse
+public import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixChainConclusion
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoDegreeTwo
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.MarkedIso
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.GraphIsoCuts
 
 /-!
 # Symmetric period comparison on a rigid genus-two wedge
@@ -18,6 +20,8 @@ on the two factors.  This file removes that bookkeeping hypothesis by
 commuting the vertex wedge and swapping the marked vertices in the other
 case.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

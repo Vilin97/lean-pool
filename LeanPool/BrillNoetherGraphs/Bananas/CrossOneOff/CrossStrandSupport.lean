@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.FarMarkAPI
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffDelta
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.FarMarkAPI
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffDelta
 
 /-!
 # The support of a cross-strand two-chip divisor
@@ -20,6 +22,8 @@ had to be added is the two multivalent vertices, which the banana normal form
 handles directly: deleting an endpoint from a semibreak divisor puts a `-1`
 endpoint coefficient into the normal form, and such a divisor has rank `-1`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

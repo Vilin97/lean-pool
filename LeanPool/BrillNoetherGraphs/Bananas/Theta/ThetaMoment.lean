@@ -3,10 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaLattice
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaLattice
 
 /-! # Theta Moment -/
+
+@[expose] public section
 
 namespace Bananas
 
@@ -16,12 +20,14 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 
 /-! Interior path moments in normalized strand coordinates.  Endpoints are
 omitted; this is the coordinate part of the theta Jacobian invariant. -/
+/-- The position-weighted sum of divisor coefficients at the interior vertices of one strand. -/
 def interiorMoment (B : Banana 2) (α : Fin 3) (D : CFDiv B.graph) : ℤ :=
   Finset.sum (Finset.range (B.length α - 1))
     (fun r => if h : r + 1 < B.length α then
       ((r + 1 : ℕ) : ℤ) * D (strandVertex B α ⟨r + 1, by omega⟩)
     else 0)
 
+/-- The differences of the second and third interior strand moments from the first. -/
 def thetaMoment (B : Banana 2) (D : CFDiv B.graph) : ℤ × ℤ :=
   (interiorMoment B 1 D - interiorMoment B 0 D,
    interiorMoment B 2 D - interiorMoment B 0 D)
@@ -31,11 +37,15 @@ marked divisors, but it is not itself the Jacobian coordinate: a principal
 divisor can have nonzero endpoint contribution.  The following asymmetric
 coordinate is the one compatible with the paper's presentation, taking
 `v_{0,0}` as basepoint. -/
+/-- The three strand moments, with the right-endpoint contribution included in the first
+coordinate. -/
 def thetaCoordinate (B : Banana 2) (D : CFDiv B.graph) : ℤ × ℤ × ℤ :=
   (interiorMoment B 0 D + (B.length 0 : ℤ) * D (rightEndpoint B),
     interiorMoment B 1 D, interiorMoment B 2 D)
 
 /-! The two-coordinate projection used by the paper's theta presentation. -/
+/-- The two Jacobian coordinates obtained by subtracting the third moment from the
+endpoint-corrected first and second moments. -/
 def thetaJacobianMoment (B : Banana 2) (D : CFDiv B.graph) : ℤ × ℤ :=
   (interiorMoment B 0 D + (B.length 0 : ℤ) * D (rightEndpoint B) -
       interiorMoment B 2 D,

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointInversions
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffDelta
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaArithmetic
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointInversions
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffDelta
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaArithmetic
 
 /-!
 # Rank characterizations of raw transmission permutations
@@ -17,6 +19,8 @@ permutation is the unique ASP permutation whose slipface is the marked rank
 surface.  Consequently its southeast and northwest quadrant cardinalities
 are exactly the two Riemann--Roch rank terms (paper Lemma `lem:tauChars`).
 -/
+
+@[expose] public section
 
 namespace Bananas
 

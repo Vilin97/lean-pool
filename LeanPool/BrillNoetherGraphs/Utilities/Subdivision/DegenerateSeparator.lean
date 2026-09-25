@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquivSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateRankOne
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquivSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateRankOne
 
 /-!
 # The strong separator and connectivity on the CLOSED length orthant
@@ -56,6 +58,8 @@ is the image `Finset` `degenerateCoreVertices d`, which is exactly the set of
 `rep`-classes; `degenerateCoreVertices_eq_image` proves it is the relabeled
 `coreVertices` of the contracted target without ever asserting injectivity.
 -/
+
+@[expose] public section
 
 -- `Certificate` is a structure inside a namespace already ending in `Certificate`;
 -- renaming either would ripple through every consumer.  Lean v4.33 added

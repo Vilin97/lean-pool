@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedThree
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedThree
 
 /-!
 # Atanasov--Ranganathan's eleventh configuration, generic in the core
@@ -94,6 +96,8 @@ the slot, and so that an arm may be the *half* of a marked slot --- which is how
 row 10 supplies `alpha = gamma` in the first place.  The one-edge arithmetic is
 `ConfigurationFive`'s, reused unchanged.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.ConfigurationEleven
 

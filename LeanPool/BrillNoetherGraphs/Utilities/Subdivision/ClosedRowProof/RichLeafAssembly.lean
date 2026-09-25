@@ -3,12 +3,16 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichLeafDivisor
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichChipPlacement
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichW5Aggregation
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichLeafDivisor
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichChipPlacement
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichW5Aggregation
 
 /-! # Rich Leaf Assembly -/
+
+@[expose] public section
 
 open MarkedGraphs.Certificate
 open Utilities.Certificate

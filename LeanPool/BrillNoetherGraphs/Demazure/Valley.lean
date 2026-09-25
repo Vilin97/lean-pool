@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import Mathlib.Data.Finset.Max
-import Mathlib.Data.Int.Basic
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Tactic.Linarith
+module
+
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Data.Int.Basic
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Tactic.Linarith
 
 /-!
 # Valleys
@@ -19,10 +21,13 @@ to keep track of the set where the minimum value is achieved, and some facts abo
 changes when the valley is modified in simple ways.
 -/
 
+@[expose] public section
+
 /-- A function on `ℤ` whose sublevel sets are finite. This is the abstraction
 used to talk about minima and rightmost minimizers.
 -/
 structure Valley where
+  /-- The integer-valued function whose finite sublevel sets define the valley. -/
   f : ℤ → ℤ
   rises : ∀ m : ℤ, {n : ℤ | f n ≤ m}.Finite
 
@@ -39,6 +44,7 @@ This namespace develops the basic API for working with a `Valley`: its minimum
 value, the rightmost index where that minimum is attained, and behavior under
 vertical shifts. -/
 
+/-- The finite sublevel set consisting of the integers where the valley is at most `m`. -/
 noncomputable def floor (m : ℤ) : Finset ℤ := Set.Finite.toFinset (v.rises m)
 
 @[simp] lemma mem_floor (m n : ℤ) : n ∈ v.floor m ↔ v.f n ≤ m := by

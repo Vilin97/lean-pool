@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionIso
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgeSameSide
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgePresentation
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionIso
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgeSameSide
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgePresentation
 
 /-!
 # Same-side transmission through a presented vertex wedge
@@ -17,6 +19,8 @@ concrete vertex wedge to any ambient graph equipped with a
 explicit mapped divisors needed when wedge decompositions are used
 recursively.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

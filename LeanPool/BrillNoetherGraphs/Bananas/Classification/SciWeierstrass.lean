@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.SignChangingInversions
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.WeierstrassPartition
-import Mathlib.Data.Set.Card.Arithmetic
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.SignChangingInversions
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.WeierstrassPartition
+public import Mathlib.Data.Set.Card.Arithmetic
 
 /-!
 # Sign-changing inversions and Weierstrass partitions
@@ -16,6 +18,8 @@ the twice-marked banana paper: the number of sign-changing inversions of a
 transmission permutation is the size of the Weierstrass partition at its
 second marked point.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

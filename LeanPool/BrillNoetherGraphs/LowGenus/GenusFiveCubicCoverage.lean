@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCanonicalClassifier
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConstructions
-import LeanPool.BrillNoetherGraphs.LowGenus.Infrastructure.CoreRelabelingClosed
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCanonicalClassifier
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConstructions
+public import LeanPool.BrillNoetherGraphs.LowGenus.Infrastructure.CoreRelabelingClosed
 
 /-!
 # Closed construction coverage of the cubic genus-five atlas
@@ -16,6 +18,8 @@ first sixteen rows are exactly the Atanasov--Ranganathan construction atlas;
 the remaining four rows are the bridge types and are deliberately left as a
 separate structural branch.
 -/
+
+@[expose] public section
 namespace AtanasovRanganathan.GenusFiveCubicCoverage
 
 open Utilities

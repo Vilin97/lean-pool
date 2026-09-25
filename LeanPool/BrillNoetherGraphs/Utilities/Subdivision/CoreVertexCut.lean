@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.OneVertexCutCheck
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.OneVertexCutCheck
 
 /-!
 # Checked core vertex cuts and subdivision lifts
@@ -21,6 +23,8 @@ to the complementary side is assigned wholly to the complementary factor;
 there is no length-dependent case split and parallel slots are retained.
 -/
 
+@[expose] public section
+
 namespace Utilities.Certificate
 
 open Finset
@@ -33,7 +37,10 @@ universe u
 /-- Proof-free articulation data on an ordered finite core.  `left` contains
 the articulation; `right` is derived rather than redundantly emitted. -/
 structure Data {n p : ℕ} (core : ExplicitPotential.Core n p) where
+  /-- The proposed articulation vertex shared by the two sides of the cut. -/
   glue : Fin n
+  /-- The chosen left vertex set; validity includes the articulation, which is also inserted
+  into the complementary right side. -/
   left : Finset (Fin n)
 
 namespace Data

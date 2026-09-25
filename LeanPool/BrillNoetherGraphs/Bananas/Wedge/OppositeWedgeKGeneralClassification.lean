@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.OppositeWedgeRigidity
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeKGeneralSymmetric
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeTorsionRestriction
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.OppositeWedgeRigidity
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeKGeneralSymmetric
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeTorsionRestriction
 
 /-!
 # The distinct-factor branch of the genus-two wedge classification
@@ -15,6 +17,8 @@ For opposite non-gluing marks, general transmission itself recovers the two
 factor torsion orders, forces them equal, and identifies the asserted wedge
 period with that common order.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

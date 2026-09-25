@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffResidueDelta
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffResidueDelta
 
 /-!
 # Remaining cross-one-off Delta families
@@ -12,6 +14,8 @@ import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffResidueDelta
 This completes the rank-difference assertions in part (3) of paper
 Corollary 2.25.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

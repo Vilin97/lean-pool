@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffBlock
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffBlock
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
 
 /-!
 # A rigorously separated inversion block for cross-one-off markings
@@ -14,6 +16,8 @@ The ordinary inversions counted here have first coordinate below `k` by an
 explicit hypothesis.  This is the period-separation condition missing from
 the printed proof of Corollary 4.31.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
 
 /-!
 # Bridging the banana transmission vocabulary to `AspPerm`
@@ -40,6 +42,8 @@ and `rank (K - (D - u)) + 1`, and Riemann-Roch turns the difference into
 `satisfiesTransmission_of_isTransmissionPermutation` is unconditional and
 constructs a `SatisfiesTransmission` witness directly.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

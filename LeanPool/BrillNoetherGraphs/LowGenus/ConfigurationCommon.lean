@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateInterpolation
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateInterpolation
 
 /-!
 # The base layer shared by every Atanasov--Ranganathan configuration
@@ -37,6 +39,8 @@ genus-six critical pencil at `(10, 15)`; because `n` and `p` are implicit and
 inferred from the `DegSpec`, no genus-five call site had to change when this
 file stopped being genus-five specific.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.ConfigurationCommon
 
@@ -168,9 +172,11 @@ target itself, and a collapsed arm may put its chip in the centre's class.
 Both are handled by moving weight *within* a class, which leaves every class
 sum -- hence the divisor -- unchanged. -/
 
+/-- The integer indicator assigning one chip at the source vertex and zero elsewhere. -/
 def indicatorWeight (vertex source : Fin n) : ℤ :=
   if vertex = source then 1 else 0
 
+/-- The degree-zero weight that removes one chip at the source and adds one at the target. -/
 def transferWeight (source target vertex : Fin n) : ℤ :=
   indicatorWeight vertex target - indicatorWeight vertex source
 

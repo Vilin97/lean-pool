@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffTransmission
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffTransmission
 
 /-!
 # The first transmission row for a same-strand one-off marking
@@ -15,6 +17,8 @@ reflection firing rewrites subtraction of the penultimate chip into banana
 normal form.  At the divisor `g • rightEndpoint`, the resulting four ranks
 give `rankDelta = 1`, hence the base transmission row `tau 0 = 0`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

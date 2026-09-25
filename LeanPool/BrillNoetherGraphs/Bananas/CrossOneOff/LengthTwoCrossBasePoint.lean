@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.LengthTwoCross
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.LengthTwoCross
 
 /-!
 # Base-point calculations for the length-two cross exception
@@ -13,6 +15,8 @@ This file develops the low-degree base-point criterion used in the corrected
 distinct-strand theorem.  It is kept separate from the dependent semibreak
 update API in `LengthTwoCross`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

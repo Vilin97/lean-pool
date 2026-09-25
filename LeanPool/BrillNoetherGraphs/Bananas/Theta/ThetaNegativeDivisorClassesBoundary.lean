@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNegativeDivisorClasses
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNegativeDivisorClasses
 
 /-!
 # Boundary negative divisor classes on theta graphs
@@ -15,6 +17,8 @@ an interior point at least two steps before the terminal endpoint.  The two
 excluded terminal-near positions are precisely the all-submodular cases of
 Corollary 3.6.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.Arith
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpecCensus
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.Arith
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpecCensus
 
 /-!
 # `leaf_sound`: the row-proof leaf, lowered to Lean
@@ -57,6 +59,8 @@ residual, and all four leaves in the proof-data source (`banana3`,
 slot.  The multi-block half of §4.3 is unexercised by every accepted proof in
 the catalog; see the note at the end of this file for what it would cost.
 -/
+
+@[expose] public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 
@@ -214,8 +218,14 @@ soundness theorem are assembled below.
 /-- The three local entailment receipts for a block: its length is
 nonnegative, and its declared rise lies between the endpoint-slope bounds. -/
 structure RichBlockCert where
+  /-- Entailment receipt asserting that the block endpoint is no earlier than its starting
+  point. -/
   monotone : Cert
+  /-- Entailment receipt for the lower realizability inequality: the declared rise is at least
+  the lower slope bound times the block length. -/
   lower : Cert
+  /-- Entailment receipt for the upper realizability inequality: the declared rise is at most
+  the upper slope bound times the block length. -/
   upper : Cert
 
 /-- Missing rich receipts fail closed because every constituent default has
@@ -227,15 +237,30 @@ are slots and inner indices are block numbers; `separationCert e i j` is the
 strict W4 receipt for the run beginning at C-index `i` and ending at `j`.
 The lowerer synthesises every receipt with the existing exact Farkas engine. -/
 structure RichAnchorPlan where
+  /-- Affine potential values indexed by core vertex for this anchor firing plan. -/
   potential : List Form
+  /-- The ordered interpolation blocks on each slot, with outer indices naming slots and inner
+  indices naming blocks. -/
   blocks : List (List Block)
+  /-- The per-slot W1 parameter α, bounding the initial named points allowed to coincide with
+  the tail endpoint. -/
   headSlack : List ℕ
+  /-- The per-slot W1 parameter ω, bounding the final named points allowed to coincide with the
+  head endpoint. -/
   tailSlack : List ℕ
+  /-- Per-slot, per-block receipts for nonnegative block length and the two rise bounds. -/
   blockCert : List (List RichBlockCert)
+  /-- Per-slot strict-positivity receipts placing the first point beyond the allowed tail slack
+  after the tail. -/
   tailSlackCert : List Cert
+  /-- Per-slot strict-positivity receipts placing the last point before the allowed head slack
+  before the head. -/
   headSlackCert : List Cert
+  /-- Strict separation receipts indexed by slot and the first and last named-point indices of a
+  W4 run. -/
   separationCert : List (List (List Cert))
 
+/-- The empty fallback plan used when an anchor index is absent from a rich witness. -/
 def RichAnchorPlan.dflt : RichAnchorPlan :=
   ⟨[], [], [], [], [], [], [], []⟩
 
@@ -243,21 +268,38 @@ def RichAnchorPlan.dflt : RichAnchorPlan :=
 the old `Witness`, so the existing single-block generated modules remain
 byte-compatible while new lowering selects the rich soundness path. -/
 structure RichWitness where
+  /-- The divisor coefficients at the original core vertices, indexed by vertex number. -/
   divisorCore : List ℤ
+  /-- Named slot chips as triples of slot index, affine position form, and signed integer
+  coefficient. -/
   chips : List (ℕ × Form × ℤ)
+  /-- One rich firing plan for each core-vertex anchor. -/
   anchors : List RichAnchorPlan
+  /-- Per-slot entailment receipts establishing nonnegative slot length from the ambient
+  context. -/
   slotCert : List Cert
 
 namespace RichWitness
 
 variable (w : RichWitness)
 
+/-- Look up the rich firing plan for an anchor, returning the empty default plan for an absent
+entry. -/
 def plan (a : ℕ) : RichAnchorPlan := w.anchors.getD a RichAnchorPlan.dflt
+/-- Read an anchor plan’s potential at a core vertex, using the zero affine form for a missing
+entry. -/
 def pot (a v : ℕ) : Form := (w.plan a).potential.getD v []
+/-- Read the ordered block list for an anchor and slot, using an empty list when it is absent. -/
 def blockList (a e : ℕ) : List Block := (w.plan a).blocks.getD e []
+/-- Read a specified interpolation block, using the default block with inconsistent slope bounds
+for a missing entry. -/
 def block (a e i : ℕ) : Block := (w.blockList a e).getD i Block.dflt
+/-- Read an anchor’s receipts for a slot and block, falling back to the default rich block
+certificate. -/
 def blockReceipt (a e i : ℕ) : RichBlockCert :=
   ((w.plan a).blockCert.getD e []).getD i RichBlockCert.dflt
+/-- Read the strict separation receipt for a run of named points, indexed by anchor, slot, and
+run endpoints. -/
 def separationReceipt (a e i j : ℕ) : Cert :=
   (((w.plan a).separationCert.getD e []).getD i []).getD j Cert.dflt
 

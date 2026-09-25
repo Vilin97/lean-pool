@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionRR
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionRR
 
 /-!
 # Canonical duality for transmission witnesses
@@ -19,6 +21,8 @@ is therefore
 It has the degree prescribed by `τ⁻¹`, and its rows are exactly those required
 for `τ⁻¹` at the swapped marks.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

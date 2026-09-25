@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointBlock
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineInversionFinite
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderExact
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointBlock
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineInversionFinite
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderExact
 
 /-!
 # Counting the endpoint inversion block
@@ -18,10 +20,13 @@ assembles the resulting quadratic-versus-linear contradiction that rules out
 `k`-general transmission for the endpoint marking.
 -/
 
+@[expose] public section
+
 namespace Bananas
 
 open Utilities
 
+/-- Encode an unordered endpoint pair by its minimum and one more than its maximum. -/
 noncomputable def endpointPairEmbedding (g : ℕ) : Sym2 (Fin g) → ℤ × ℤ :=
   Sym2.lift ⟨(fun (a b : Fin g) => (((min a.val b.val : ℕ) : ℤ),
     ((max a.val b.val + 1 : ℕ) : ℤ))), by

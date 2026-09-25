@@ -3,7 +3,9 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import LeanPool.BrillNoetherGraphs.Demazure.ReducedProducts
+module
+
+public import LeanPool.BrillNoetherGraphs.Demazure.ReducedProducts
 
 /-! # Reduction theorems
 
@@ -12,6 +14,8 @@ This file formalizes the main theorems from the introduction of
 (`thm:starGreedy`) characterizes `α ⋆ β` as a greedy maximum, and Theorem C
 (`thm:reduce`) reduces inequalities `α ⋆ β ≥ γ` to equalities of reduced products.
 It corresponds roughly to Section 6 of the paper. -/
+
+@[expose] public section
 
 namespace Reduction
 

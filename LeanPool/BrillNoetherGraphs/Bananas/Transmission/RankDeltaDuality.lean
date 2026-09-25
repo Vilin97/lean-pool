@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
 
 /-!
 # Riemann--Roch duality for the marked rank second difference
@@ -14,6 +16,8 @@ The four affine terms in graph Riemann--Roch cancel in the marked second
 difference.  Consequently `rankDelta` is invariant under the involution
 `D ↦ K + u + v - D`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

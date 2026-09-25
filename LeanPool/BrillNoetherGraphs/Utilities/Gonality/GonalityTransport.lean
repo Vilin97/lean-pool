@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.DivisorialGonality
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.UnitSubdivisionPresentation
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.DivisorialGonality
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.UnitSubdivisionPresentation
+public import Mathlib.Tactic
 
 /-!
 # Transport of divisorial gonality, and gonality over regular subdivisions
@@ -42,6 +44,8 @@ per-edge counts is the unit model of a *different* metric graph `Γ(G, ℓ)`, so
 `sdgon(G) ≤ regularSubdivisionGonality G`, possibly strictly.
 
 -/
+
+@[expose] public section
 
 namespace Utilities.Gonality
 

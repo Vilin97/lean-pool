@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffDelta
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffDelta
 
 /-!
 # The endpoint residue cases for the cross-one-off marking
@@ -18,6 +20,8 @@ at its unique boundary exception.  At the latter boundary the second
 difference is zero, not one; arithmetically that boundary is exactly the
 paper's `N = 2, b = 1` case.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

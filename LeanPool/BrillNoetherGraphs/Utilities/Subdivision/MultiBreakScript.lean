@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffinePositionMultiBreak
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffinePositionMultiBreak
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
 
 /-!
 # The multi-break interpolated script
@@ -56,6 +58,8 @@ Nothing here is row specific, and nothing here is decidable-by-`decide`: the
 only Boolean checks anywhere in the stack are the fail-closed bound checks
 already introduced by `AffinePosition`.
 -/
+
+@[expose] public section
 
 namespace MarkedGraphs.Certificate
 open Utilities.Certificate

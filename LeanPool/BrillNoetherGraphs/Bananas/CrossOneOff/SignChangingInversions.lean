@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBridge
-import LeanPool.BrillNoetherGraphs.Demazure.Transpositions
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBridge
+public import LeanPool.BrillNoetherGraphs.Demazure.Transpositions
 
 /-!
 # Sign-changing inversions
@@ -51,6 +53,8 @@ and its northwest twin) plus a Riemann-Roch telescoping sum;
 `Utilities.VertexWedgeRankFormula.vertexWedge_rank_ge_iff_profile_inequalities`;
 and `thm:bngChain` (6.16) is the induction over the chain.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

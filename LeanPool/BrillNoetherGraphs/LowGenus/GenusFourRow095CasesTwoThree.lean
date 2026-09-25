@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095
 
 /-!
 # The two `B < C` Dhar profiles for Core 095
@@ -14,6 +16,8 @@ genus-four family.  The common `a/b` profile is in `GenusFourCore095`; this
 file records the two remaining pairs of signed windows and packages their
 endpoint computations as reachability statements.
 -/
+
+@[expose] public section
 
 namespace LowGenus.GenusFourRow095
 open Utilities.Certificate
@@ -32,7 +36,10 @@ variable (length : Fin 9 → ℕ) (hLength : ∀ edge, 0 < length edge)
 `min(X, Delta) ≤ C - B`. -/
 namespace CaseTwo
 
+/-- Excess of arm length `C` over `B`, used to locate the moving chip in Case 2. -/
 abbrev Y : ℕ := C length - B length
+/-- The smaller of the two central lengths `X` and `Delta`, compared with the arm excess in Case
+2. -/
 abbrev m : ℕ := min (X length) (Delta length)
 
 variable (hNorm : length 0 ≤ length 5) (hBC : B length < C length)
@@ -386,6 +393,7 @@ end CaseTwo
 /-! Case 3: the strict short comparison range `0 < C-B < min(X,Delta)`. -/
 namespace CaseThree
 
+/-- Excess of arm length `C` over `B`, used in the Case-3 window construction. -/
 abbrev Y : ℕ := C length - B length
 
 variable (hNorm : length 0 ≤ length 5) (hBC : B length < C length)

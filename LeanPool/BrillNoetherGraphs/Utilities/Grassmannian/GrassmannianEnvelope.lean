@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.GrassmannianAsp
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.GrassmannianAsp
 
 /-!
 # The remaining negative-side Grassmannian envelope
@@ -19,6 +21,8 @@ The Young-diagram counting inequality is proved below, so the resulting
 corner envelope and once-marked dictionary are unconditional facts about the
 explicitly reconstructed ASP permutation.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
 
 /-!
 # Rank-one existence from reaching the core of a subdivision
@@ -15,6 +17,8 @@ divisor to reach every core vertex in order to have rank at least one.  This
 is the common final step shared by explicit-potential, loop-split, and local
 configuration certificates.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.CoreVertexReachability
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.CorrectedMidpointKGeneral
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaJacobian
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.CorrectedMidpointKGeneral
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaJacobian
 
 /-!
 # Slope arithmetic for torsion classes on banana graphs
@@ -17,6 +19,8 @@ has one common endpoint rise, while every unmarked strand carries a nonzero
 integral slope when that rise is nonzero.
 -/
 
+@[expose] public section
+
 namespace Bananas
 
 open Utilities
@@ -24,12 +28,14 @@ open scoped BigOperators
 open Utilities.Certificate SubdivisionGraph
 open Utilities.Certificate.SubdivisionGraph.Spec
 
+/-- Evaluate a firing script at a strand position, with value zero beyond the strand endpoint. -/
 def bananaPathValue {g : ℕ} (B : Banana g)
     (script : firingScript B.graph) (α : Fin (g + 1)) (r : ℕ) : ℤ :=
   if hr : r ≤ B.length α then
     script (strandVertex B α ⟨r, by omega⟩)
   else 0
 
+/-- The difference of consecutive firing-script values along a strand. -/
 def bananaStepSlope {g : ℕ} (B : Banana g)
     (script : firingScript B.graph) (α : Fin (g + 1)) (r : ℕ) : ℤ :=
   bananaPathValue B script α (r + 1) - bananaPathValue B script α r
@@ -61,6 +67,8 @@ theorem sum_bananaStepSlope {g : ℕ} (B : Banana g)
     bananaPathValue_eq B script α 0 (by omega),
     strandVertex_length B α, strandVertex_zero B α]
 
+/-- Express the strand slope in the stored edge orientation, reversing its order and sign when
+needed. -/
 def bananaStorageSlope {g : ℕ} (B : Banana g)
     (script : firingScript B.graph) (α : Fin (g + 1)) (r : ℕ) : ℤ :=
   if B.core.tail α = 0 then
@@ -228,11 +236,13 @@ theorem prin_rightEndpoint_eq_neg_sum_finalSlope {g : ℕ} (B : Banana g)
 
 /-! ## Extracting the initial slope from a principal divisor -/
 
+/-- The sum of a divisor's coefficients at the interior vertices of one strand. -/
 def bananaInteriorSum {g : ℕ} (B : Banana g) (α : Fin (g + 1))
     (D : CFDiv B.graph) : ℤ :=
   ∑ r : Fin (B.length α - 1),
     D (strandVertex B α ⟨r.val + 1, by omega⟩)
 
+/-- The sum of interior divisor coefficients weighted by their distance from the left endpoint. -/
 def bananaInteriorMoment {g : ℕ} (B : Banana g) (α : Fin (g + 1))
     (D : CFDiv B.graph) : ℤ :=
   ∑ r : Fin (B.length α - 1),

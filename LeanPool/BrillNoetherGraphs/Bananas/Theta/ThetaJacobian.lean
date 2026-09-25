@@ -3,10 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaResidue
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaResidue
 
 /-! # Theta Jacobian -/
+
+@[expose] public section
 
 namespace Bananas
 

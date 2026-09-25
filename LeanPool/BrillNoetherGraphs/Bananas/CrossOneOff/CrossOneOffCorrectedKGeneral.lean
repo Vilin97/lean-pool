@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffCorrectedInversion
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffPeriodSeparation
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffCorrectedInversion
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffPeriodSeparation
 
 /-!
 # Corrected long-strand cross-one-off obstruction
@@ -15,6 +17,8 @@ separation, rules out `k`-general transmission in genus at least five as soon
 as the second marked strand has length at least `g+1`.  This includes the
 boundary length `g+1` omitted by the earlier extended-simple-block argument.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

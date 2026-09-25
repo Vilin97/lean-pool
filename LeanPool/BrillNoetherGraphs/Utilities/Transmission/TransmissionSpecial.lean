@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
-import LeanPool.BrillNoetherGraphs.Demazure.SlipFace
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
+public import LeanPool.BrillNoetherGraphs.Demazure.SlipFace
 
 /-!
 # Transmission inequalities outside the special slipface locus are automatic
@@ -26,6 +28,8 @@ Thus only rows with strict slipface excess over the generic baseline need to be
 checked.  This is the Schubert-special locus on which an essential-set theorem
 should operate.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

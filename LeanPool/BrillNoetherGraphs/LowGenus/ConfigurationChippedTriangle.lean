@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedThree
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedThree
 
 /-!
 # The chipped triangle
@@ -55,6 +57,8 @@ nor the collapsed slot can supply; `c` and `v` are then the same contracted
 class, so `c` lends it the chip it is sitting on.  That transfer is `lend`, and
 it is the only allocation the picture needs.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.ConfigurationChippedTriangle
 

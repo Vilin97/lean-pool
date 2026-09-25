@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import Mathlib.Tactic
 
 /-!
 # Kernel-cheap spanning-tree connectivity certificates
@@ -20,6 +22,8 @@ cut not containing the root, a minimum-rank vertex has its parent outside that
 side, so its displayed parent edge crosses the cut.  The external program
 which chooses this data is not trusted.
 -/
+
+@[expose] public section
 
 -- The `Certificate` structure deliberately lives inside a namespace that already
 -- ends in `Certificate`; renaming either would ripple through every consumer.
@@ -41,9 +45,15 @@ def EdgeJoins (core : ExplicitPotential.Core n p) (edge : Fin p)
 
 /-- Proof-free rooted parent data for an ordered finite multigraph core. -/
 structure Certificate (core : ExplicitPotential.Core n p) where
+  /-- The proposed root of the spanning-tree parent certificate. -/
   root : Fin n
+  /-- The proposed parent of each vertex; validity requires every non-root parent link to be an
+  edge and decrease rank. -/
   parent : Fin n → Fin n
+  /-- The core slot proposed to join each non-root vertex to its parent. -/
   parentEdge : Fin n → Fin p
+  /-- The natural rank intended to decrease strictly along every non-root parent link, ruling
+  out cycles. -/
   rank : Fin n → Nat
 
 namespace Certificate
@@ -163,10 +173,12 @@ end SubdivisionGraph.Spec
 
 namespace Examples
 
+/-- The three-vertex path with ordered slots from 0 to 1 and from 1 to 2. -/
 def pathCore : ExplicitPotential.Core 3 2 where
   tail := ![0, 1]
   head := ![1, 2]
 
+/-- The valid parent certificate for the three-vertex path, rooted at 0 with ranks 0, 1, and 2. -/
 def pathCertificate : Certificate pathCore where
   root := 0
   parent := ![0, 0, 1]
@@ -179,6 +191,8 @@ example : pathCertificate.check = true := by
 theorem pathCore_connected : pathCore.Connected :=
   pathCertificate.coreConnected_of_check_eq_true (by decide)
 
+/-- An intentionally invalid path certificate with constant zero rank, rejected because non-root
+links do not decrease rank. -/
 def badRankCertificate : Certificate pathCore where
   root := 0
   parent := ![0, 0, 1]

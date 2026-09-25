@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffineCover
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffineCover
 
 /-!
 # List-backed affine-cover tree data
@@ -20,6 +22,8 @@ argument: under-fuelled data is rejected, and an accepted value is first
 converted to the already-proved `CoverTree` checker.  An emitter may use any
 easy upper bound on tree depth, such as the number of witness commands.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.AffineCover
 open Utilities.Certificate
@@ -56,7 +60,7 @@ def decode (data : CoverTreeData) (m fuel : ℕ) : Option (CoverTree m) :=
 /-- Direct propositional validity of list-backed data under the currently
 active rows.  Fuel is consumed once at every level, exactly as in
 `decodeFuel`, but no intermediate function-backed tree is constructed. -/
-private def ValidActive {m : ℕ}
+def ValidActive {m : ℕ}
     (cones : List (List (AffineForm m)))
     (active : List (AffineForm m)) : ℕ → CoverTreeData → Prop
   | 0, _ => False
@@ -81,7 +85,7 @@ private def ValidActive {m : ℕ}
 /-- Direct Boolean replay of list-backed data.  This deliberately fuses
 decoding and checking: generated trees remain ordinary lists all the way down,
 so kernel reduction never materializes a large function-backed tree. -/
-private def checkActive {m : ℕ}
+def checkActive {m : ℕ}
     (cones : List (List (AffineForm m)))
     (active : List (AffineForm m)) : ℕ → CoverTreeData → Bool
   | 0, _ => false

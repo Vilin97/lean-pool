@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.GenusFourVertexCut
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutTwoRegular
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SpanningTreeConnectivity
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.GenusFourVertexCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutTwoRegular
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SpanningTreeConnectivity
 
 /-!
 # Checked genus-four rank-one core cuts
@@ -16,6 +18,8 @@ pencil when its factor genera are `(2,2)`, or `(3,1)` with the genus-one
 side two-regular.  The checker and its soundness theorem are public and apply
 uniformly to every positive subdivision.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.CoreVertexCut.Data
 open MarkedGraphs.Certificate

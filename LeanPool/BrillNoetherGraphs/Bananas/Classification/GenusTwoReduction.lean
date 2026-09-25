@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroWitness
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankDeltaDuality
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaGeometry
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointInversions
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroWitness
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankDeltaDuality
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaGeometry
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointInversions
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
 
 /-!
 # The genus-two rank reduction
@@ -17,6 +19,8 @@ The first part of the theta analysis is independent of strand coordinates:
 a negative marked second difference on a genus-two graph with inequivalent
 marks is necessarily represented in degree two.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

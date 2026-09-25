@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteRows
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffForcedCountLengthTwo
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteRows
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffForcedCountLengthTwo
 
 /-!
 # Explicit coordinates for the corrected cross-one-off inversion count
@@ -16,6 +18,8 @@ row over `x` is `x + x / (n - 1)`; at multiples of `n - 1` there is also the
 immediately preceding row.  This is the combinatorial skeleton behind the
 count `choose (g - 1) 2 + g / (n - 1)`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 
@@ -493,6 +497,8 @@ private theorem crossOneOffAdjacentPair_mem
 abbrev CrossOneOffCountDomain (g F : ℕ) :=
   Sum (Sym2 (Fin (g - 2))) (Fin F)
 
+/-- Send a triangular or adjacent-pair counting index to its corresponding pair of natural
+numbers. -/
 noncomputable def crossOneOffCountPair (n g F : ℕ) :
     CrossOneOffCountDomain g F → ℕ × ℕ
   | Sum.inl x => crossOneOffTriangularPair n g x

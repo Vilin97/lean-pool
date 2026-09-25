@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffDelta
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.FarMarkNegativeAPI
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffDelta
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.FarMarkNegativeAPI
 
 /-!
 # Rank-zero part of the cross-strand witness in Theorem 3.9
@@ -15,6 +17,8 @@ after a path-pair slide, to a core chip plus a two-strand semibreak.  This file
 records the normal-form calculation abstractly, so the eventual case split
 does not need to unfold a concrete banana divisor.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

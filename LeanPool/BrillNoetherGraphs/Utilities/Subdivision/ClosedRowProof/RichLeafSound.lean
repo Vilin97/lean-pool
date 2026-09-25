@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichLeafChecks
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegeneratePiecewiseInterpolation
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateAffinePositionMultiBreak
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.PiecewiseBlockDecoder
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichLeafChecks
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegeneratePiecewiseInterpolation
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateAffinePositionMultiBreak
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.PiecewiseBlockDecoder
 
 /-!
 # Semantic bridge ingredients for rich row-proof leaves
@@ -24,6 +26,8 @@ finite-list decoder which supplies `PiecewiseData.covers`,
 `PiecewiseData.ownsInterval`, and `PiecewiseData.balance`, together with the
 two residual comparison lemmas documented at the end of this file.
 -/
+
+@[expose] public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RiemannRochWinnable
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RiemannRochWinnable
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
 
 /-!
 # Canonical slack pairs
@@ -18,6 +20,8 @@ remains winnable after removing the marked pair.
 The declarations use the established `MarkedGraphs` namespace for API
 compatibility.
 -/
+
+@[expose] public section
 
 namespace MarkedGraphs
 

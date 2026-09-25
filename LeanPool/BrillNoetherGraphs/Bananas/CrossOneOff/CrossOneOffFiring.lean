@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffArithmetic
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaPrefix
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.Semibreak
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffArithmetic
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaPrefix
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.Semibreak
 
 /-!
 # Firing identities for the cross-one-off marking
@@ -26,6 +28,8 @@ in the printed third case.  The three residue-specific corollaries below are
 the divisor identities needed before applying the banana normal-form rank
 calculus.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

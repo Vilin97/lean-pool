@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ClosedConstructionTail
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationChippedTriangle
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedRow
-import LeanPool.BrillNoetherGraphs.LowGenus.GuardingSet
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ClosedConstructionTail
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationChippedTriangle
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedRow
+public import LeanPool.BrillNoetherGraphs.LowGenus.GuardingSet
 
 /-!
 # The Atanasov--Ranganathan construction on row 09
@@ -58,6 +60,8 @@ The endpoint plumbing is `ConfigurationMarkedRow`'s, instantiated at the
 identically-zero mark `noMark`, which recovers the ordinary one-ramp script
 definitionally; no slot of row 09 carries a chip in its interior.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.GenusFiveRow09
 
@@ -114,6 +118,8 @@ theorem chipWeight_nonneg (v : Fin 8) : 0 ≤ chipWeight v := by
 
 theorem sum_chipWeight : ∑ v : Fin 8, chipWeight v = 4 := by decide
 
+/-- The row-09 divisor obtained by placing one chip at each of vertices 1, 2, 3, and 7 and
+passing to core equivalence classes. -/
 def rowDivisor (d : DegSpec 8 12) : CFDiv d.graph := d.coreClassDivisor chipWeight
 
 theorem rowDivisor_effective (d : DegSpec 8 12) : effective (rowDivisor d) :=
@@ -164,13 +170,18 @@ def innerE (d : DegSpec 8 12) : ℕ := min (d.length 9) (innerI d)
 def hcT4 (d : DegSpec 8 12) : ℕ :=
   chipHeight (d.length 4) (d.length 3) (d.length 9)
 
+/-- Auxiliary side height for the chipped-triangle script targeting vertex 4, using arms 4 and 3
+and slots 9 and 7. -/
 def h0T4 (d : DegSpec 8 12) : ℕ :=
   sideHeight (d.length 4) (d.length 3) (d.length 9) (d.length 7)
 
+/-- Height at target vertex 4 in the chipped-triangle script, with connecting slots 5 and 6 and
+partner slot 7. -/
 def htT4 (d : DegSpec 8 12) : ℕ :=
   targetHeight (d.length 4) (d.length 3) (d.length 9) (d.length 5) (d.length 6)
     (d.length 7)
 
+/-- Height at partner vertex 5 in the chipped-triangle script targeting vertex 4. -/
 def hvT4 (d : DegSpec 8 12) : ℕ :=
   partnerHeight (d.length 4) (d.length 3) (d.length 9) (d.length 5) (d.length 6)
     (d.length 7)
@@ -179,13 +190,18 @@ def hvT4 (d : DegSpec 8 12) : ℕ :=
 def hcT5 (d : DegSpec 8 12) : ℕ :=
   chipHeight (d.length 3) (d.length 4) (d.length 9)
 
+/-- Auxiliary side height for the chipped-triangle script targeting vertex 5, with the two arms
+exchanged. -/
 def h0T5 (d : DegSpec 8 12) : ℕ :=
   sideHeight (d.length 3) (d.length 4) (d.length 9) (d.length 5)
 
+/-- Height at target vertex 5 in the chipped-triangle script, exchanging the arms and the roles
+of slots 5 and 7. -/
 def htT5 (d : DegSpec 8 12) : ℕ :=
   targetHeight (d.length 3) (d.length 4) (d.length 9) (d.length 7) (d.length 6)
     (d.length 5)
 
+/-- Height at partner vertex 4 in the chipped-triangle script targeting vertex 5. -/
 def hvT5 (d : DegSpec 8 12) : ℕ :=
   partnerHeight (d.length 3) (d.length 4) (d.length 9) (d.length 7) (d.length 6)
     (d.length 5)
@@ -287,6 +303,8 @@ theorem profileT5 {d : DegSpec 8 12} (hCore : d.core = row09Core) :
 Each of the eight core vertices is trivalent, so `contribForm` has three terms
 per vertex; they are the twenty-four slot ends of row 09 sorted by vertex. -/
 
+/-- The sum of incident tail and head contributions at each row-09 core vertex for a prescribed
+height profile. -/
 def contribForm (d : DegSpec 8 12) (h : Fin 8 → ℕ) (v : Fin 8) : ℤ :=
   if v = 0 then
     tailContribution (d.length 0) (h 0) (h 2)
@@ -457,11 +475,15 @@ theorem allocT5_classSum {d : DegSpec 8 12} (hCore : d.core = row09Core)
 
 /-! ## The outer centre `0` -/
 
+/-- Representative of the outer target at vertex 0: move it to vertex 6 only when slot 8 is
+contracted and the shorter arm exceeds the tail plus the shorter parallel slot. -/
 def ownerOuter (d : DegSpec 8 12) : Fin 8 :=
   if d.length 8 = 0 then
     (if armMin d ≤ d.length 9 + parMin d then 0 else 6)
   else 0
 
+/-- Coefficients after firing the outer-target script and subtracting one chip at its chosen
+representative from the allocated divisor. -/
 def outerCoeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then
     zeroChip (d.length 0) + zeroChip (d.length 2) -
@@ -538,11 +560,15 @@ theorem ownerOuter_rep {d : DegSpec 8 12} (hCore : d.core = row09Core) :
 
 /-! ## The inner centre `6` -/
 
+/-- Representative of the inner target at vertex 6: across contracted slot 8 choose vertex 0
+when the shorter arm is at most the tail plus the shorter parallel slot. -/
 def ownerInner (d : DegSpec 8 12) : Fin 8 :=
   if d.length 8 = 0 then
     (if armMin d ≤ d.length 9 + parMin d then 0 else 6)
   else 6
 
+/-- Coefficients after firing the inner-target script and subtracting one chip at its chosen
+representative from the allocated divisor. -/
 def innerCoeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then
     zeroChip (d.length 0) + zeroChip (d.length 2) -
@@ -619,6 +645,8 @@ theorem ownerInner_rep {d : DegSpec 8 12} (hCore : d.core = row09Core) :
 
 /-! ## The chipped triangle at the target `4` -/
 
+/-- Expanded coefficients after applying the chipped-triangle height script targeting vertex 4
+to its allocated divisor. -/
 def t4Coeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then 0
   else if v = 1 then
@@ -711,6 +739,8 @@ theorem t4Coeff_nonneg (d : DegSpec 8 12) (v : Fin 8) : 0 ≤ t4Coeff d v := by
       + headContribution (d.length 9) (hcT4 d) 0
     exact positiveChip_add_head_nonneg (by omega)
 
+/-- Representative receiving the vertex-4 chip: use vertex 4 when the script delivers there,
+otherwise vertex 3 across contracted slot 5 without lending, and vertex 5 in the remaining case. -/
 def ownerFour (d : DegSpec 8 12) : Fin 8 :=
   if Delivers (d.length 4) (d.length 5) (d.length 6) (hcT4 d) (h0T4 d) (htT4 d)
     then 4
@@ -792,6 +822,8 @@ theorem ownerFour_rep {d : DegSpec 8 12} (hCore : d.core = row09Core) :
 
 /-! ## The chipped triangle at the target `5` -/
 
+/-- Expanded coefficients after applying the chipped-triangle height script targeting vertex 5
+to its allocated divisor. -/
 def t5Coeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then 0
   else if v = 1 then
@@ -884,6 +916,8 @@ theorem t5Coeff_nonneg (d : DegSpec 8 12) (v : Fin 8) : 0 ≤ t5Coeff d v := by
       + headContribution (d.length 9) (hcT5 d) 0
     exact positiveChip_add_head_nonneg (by omega)
 
+/-- Representative receiving the vertex-5 chip: use vertex 5 when the script delivers there,
+otherwise vertex 3 across contracted slot 7 without lending, and vertex 4 in the remaining case. -/
 def ownerFive (d : DegSpec 8 12) : Fin 8 :=
   if Delivers (d.length 3) (d.length 7) (d.length 6) (hcT5 d) (h0T5 d) (htT5 d)
     then 5

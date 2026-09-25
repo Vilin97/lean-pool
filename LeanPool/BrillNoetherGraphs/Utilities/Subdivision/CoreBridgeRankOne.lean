@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ElementaryExistence
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeRankOne
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreBridgeCut
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ElementaryExistence
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeRankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreBridgeCut
 
 /-!
 # Rank one across a checked genus-two/genus-two core bridge
@@ -20,6 +22,8 @@ on the original subdivision, uniformly in all positive slot lengths.
 This is the structural shortcut used by the first Draisma--Vargas genus-four
 type.  It is independent of that application and of any finite cone cover.
 -/
+
+@[expose] public section
 
 namespace MarkedGraphs.Certificate.CoreBridgeCut.Data
 

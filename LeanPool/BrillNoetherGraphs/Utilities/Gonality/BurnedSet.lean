@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.LegalFiring
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.LegalFiring
+public import Mathlib.Tactic
 
 /-!
 # The burned set, without Dhar's algorithm
@@ -39,6 +41,8 @@ The API below is the whole of Dhar that the tricycle campaign
 No algorithm, no termination proof, no fuel.  `maximalLegal` is `noncomputable`
 and is only ever used propositionally; never `decide` it (blueprint risk R2).
 -/
+
+@[expose] public section
 
 namespace Utilities.Gonality
 

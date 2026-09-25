@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Tricycle.Degree5
-import LeanPool.BrillNoetherGraphs.Tricycle.UpperBounds
-import LeanPool.BrillNoetherGraphs.Tricycle.RegularSubdivisionBridge
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Tricycle.Degree5
+public import LeanPool.BrillNoetherGraphs.Tricycle.UpperBounds
+public import LeanPool.BrillNoetherGraphs.Tricycle.RegularSubdivisionBridge
+public import Mathlib.Tactic
 
 /-!
 # Theorem 3.9 and the tricycle gap
@@ -36,6 +38,8 @@ systems from curves to graphs*, Conjecture 3.14(a) at `r = 1` and `k = 2`:
 `Utilities/Gonality/GonalityTransport.lean` for why the invariant is named
 `regularSubdivisionGonality` rather than `metricGonality`.
 -/
+
+@[expose] public section
 
 namespace Utilities.Tricycle
 

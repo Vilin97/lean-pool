@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotentialRankOne
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotentialRankOne
+public import Mathlib.Tactic
 
 /-!
 # The embedded core is a strong separator of a subdivision
@@ -17,6 +19,8 @@ interval has two boundary vertices, at most one boundary edge at each reached
 vertex, and the elementary path-cut property required by
 `StrongSeparator.ExpansionCell`.
 -/
+
+@[expose] public section
 
 -- `Certificate` is a structure inside a namespace already ending in `Certificate`;
 -- renaming either would ripple through every consumer.  Lean v4.33 added
@@ -321,9 +325,15 @@ theorem num_edges_interior_le_one (edge : Fin p)
 /-- A nonempty open path interval whose endpoints lie in `R` and whose
 interior is disjoint from `R`. -/
 structure ComplementInterval (R : Finset spec.Vertex) where
+  /-- The slot containing this interval of the complement of `R`. -/
   edge : Fin p
+  /-- The left path endpoint, whose corresponding subdivision vertex belongs to `R`. -/
   left : spec.PathPosition edge
+  /-- The right path endpoint, also in `R`, with all strictly intermediate path vertices outside
+  `R`. -/
   right : spec.PathPosition edge
+  /-- A path position strictly between the interval endpoints, hence representing a vertex
+  outside `R`. -/
   center : spec.PathPosition edge
   left_lt_center : left.val < center.val
   center_lt_right : center.val < right.val

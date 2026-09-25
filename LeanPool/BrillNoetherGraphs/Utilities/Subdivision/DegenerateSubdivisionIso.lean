@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpec
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpec
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
+public import Mathlib.Tactic
 
 /-!
 # Relabeling contracted subdivisions
@@ -26,6 +28,8 @@ Slot reversal is part of the datum, just as it is for the positive-length
 inside a surviving slot; the quotient-class boundary is unchanged.
 -/
 
+@[expose] public section
+
 namespace Utilities.Certificate.DegenerateSpec.DegSpec
 open Utilities.Certificate
 
@@ -40,8 +44,12 @@ subdivision presentations.  `classEquiv` is the essential extra datum beyond
 `SubdivisionGraph.Spec.Relabeling`: it names the bijection after zero slots
 have identified core vertices. -/
 structure Relabeling where
+  /-- The bijection of surviving core classes after each presentation has identified its
+  zero-slot endpoints. -/
   classEquiv : source.Class ≃ target.Class
+  /-- The bijection of source and target slot occurrences, including slots of length zero. -/
   slotEquiv : Fin p ≃ Fin p'
+  /-- Whether a source slot is mapped with its endpoint orientation reversed. -/
   reversed : Fin p → Bool
   length_eq : ∀ e : Fin p, source.length e = target.length (slotEquiv e)
   tail_eq : ∀ e : Fin p,

@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CubicCore
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionTwoEdgeCut
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.OneEdgeSplitRefinement
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CubicCore
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionTwoEdgeCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.OneEdgeSplitRefinement
 
 /-!
 # Legged cores: marked points as legs
@@ -26,6 +28,8 @@ core) and consumed by the closed-orthant machinery, which never sees a
 are exactly bivalent in the edge graph (their leg supplies the third
 incidence) and every other vertex is exactly trivalent.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.ExplicitPotential
 
@@ -141,7 +145,10 @@ end Core
 marked tropical curve.  `k` is the number of marked points; each mark is a
 leg attached at `marks i`. -/
 structure MarkedCore (n p k : ℕ) where
+  /-- The finite edge core to which the marked legs are attached. -/
   core : Core n p
+  /-- The core vertex carrying each marked leg; injectivity and valence conditions are imposed
+  by `LegStable`. -/
   marks : Fin k → Fin n
 
 namespace MarkedCore

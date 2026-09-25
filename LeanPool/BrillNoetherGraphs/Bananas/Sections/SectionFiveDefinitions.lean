@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBasics
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBasics
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
 
 /-!
 # Shared definitions for Section 5
@@ -14,6 +16,8 @@ The structures and finite rank-drop sum used by the formal statements of the
 marked-point symmetry section.
 -/
 
+@[expose] public section
+
 namespace Bananas
 
 open Utilities
@@ -21,6 +25,7 @@ open Utilities
 /-- A graph automorphism which preserves the *set* of two marked vertices.
 The definition permits either fixing the marks or interchanging them. -/
 structure MarkedPointAutomorphism (M : TwiceMarked) where
+  /-- The graph automorphism preserving the set of marked vertices. -/
   iso : CFGraphIso M.graph M.graph
   preserves_marked_set (x : M.graph.V) :
     (x = M.u ∨ x = M.v) ↔

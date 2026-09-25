@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrand
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossStrandSupport
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrandEndpointNegative
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaExceptionalArithmetic
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrand
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossStrandSupport
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrandEndpointNegative
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaExceptionalArithmetic
 
 /-!
 # Boundary submodularity on theta graphs
@@ -17,6 +19,8 @@ The interior part of paper Theorem 3.4 was already formalized in
 boundary cases.  We first work in the subdivision spec's stored path
 coordinates; normalized-coordinate wrappers are supplied below.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

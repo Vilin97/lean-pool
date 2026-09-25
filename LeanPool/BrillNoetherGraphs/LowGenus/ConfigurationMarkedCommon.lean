@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationCommon
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SplitRampScript
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationCommon
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SplitRampScript
 
 /-!
 # The endpoint layer for a marked script
@@ -35,6 +37,8 @@ place their interior chips so that one of the two rises is always zero, which
 is also the hypothesis under which the chip pays for the kink; see
 `Utilities/Subdivision/SplitRampArithmetic.lean`.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.ConfigurationMarkedCommon
 

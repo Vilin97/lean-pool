@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
 
 /-!
 # Torsion order two plus submodularity gives `2`-general transmission
@@ -26,6 +28,8 @@ submodularity needed), then combine the two consecutive instances at `b = 0`
 and `b = 1` with the periodicity `τ(n + 2) = τ(n) + 2` to bound the
 `2`-inversion count.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroVertexBridge
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroVertexBridge
 
 /-!
 # Degree-one representatives
@@ -13,6 +15,8 @@ This small interface isolates the standard step in the theta proof: a
 rank-zero, degree-one divisor class is represented by one vertex; on a
 nontrivial banana that vertex is unique.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

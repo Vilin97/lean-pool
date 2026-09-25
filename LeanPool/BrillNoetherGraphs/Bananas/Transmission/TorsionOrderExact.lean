@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInversionCount
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInversionCount
 
 /-!
 # Exact torsion order from `k`-general transmission
@@ -23,6 +25,8 @@ inversion `(a, 0)`.  Since `k`-general transmission bounds the number of
 `Inv_k(τ)`; periodicity at any further torsion witness `n` then produces a
 new inversion `(a + n, n)` whose normalization forces `k ∣ n`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroWitness
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankChipStep
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroWitness
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankChipStep
 
 /-!
 # Support complexes of rank-zero divisors
@@ -15,6 +17,8 @@ complex.  Here it is expressed directly with the existing rank API.  The main
 criterion is Lemma 3.1(2) of the paper, stated without choosing an effective
 representative.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

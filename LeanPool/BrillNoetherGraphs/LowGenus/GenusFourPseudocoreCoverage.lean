@@ -3,14 +3,16 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.LowGenusExistence
-import LeanPool.BrillNoetherGraphs.LowGenus.Infrastructure.TrivalentExpansionClosed
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.FossilTopology
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.GenusThreeCycleWedge
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreMarkerWedge
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocorePresentation
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreSubdivisionProperties
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.LowGenusExistence
+public import LeanPool.BrillNoetherGraphs.LowGenus.Infrastructure.TrivalentExpansionClosed
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.FossilTopology
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.GenusThreeCycleWedge
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreMarkerWedge
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocorePresentation
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreSubdivisionProperties
 
 /-!
 # Public genus-four reduction to six closed cubic rows
@@ -25,6 +27,8 @@ Consequently the whole genus-four critical-pencil theorem reduces directly to
 closed degree-three pencils on connected loopless cubic `6/9` cores.  No
 111-row pseudocore catalog is needed by this unmarked proof.
 -/
+
+@[expose] public section
 namespace AtanasovRanganathan.GenusFourPseudocoreCoverage
 
 open Utilities

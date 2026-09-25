@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBridge
-import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionFibreTree
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBridge
+public import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionFibreTree
 
 /-!
 # Weierstrass partitions of pointed divisors
@@ -25,6 +27,8 @@ rank--degree inequality supplies a lower bound, so the integer infimum really
 is a minimum.  The parts are weakly decreasing and vanish from row `genus G`
 onward, hence define an honest finite `YoungDiagram`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

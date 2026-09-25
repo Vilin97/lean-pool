@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.Tree
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCubicAtlas
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.Tree
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCubicAtlas
 
 /-!
 # Generated proof data for `g4row096`
@@ -26,6 +28,8 @@ Everything is `List ℤ` read with `List.getD`; the representation keeps kernel 
 The entailment certificates were synthesised by exact rational Farkas and
 re-verified over `ℤ` before emission; the kernel re-checks them anyway.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.GenusFourGeneratedRows.G4Row096
 

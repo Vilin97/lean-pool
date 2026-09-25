@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
 
 /-!
 # Definitions specific to Section 6
@@ -15,6 +17,8 @@ genus occurs.  Section 6 instead uses the opposite, upper-census property:
 every Young diagram that occurs has size at most the genus.  The paper calls
 that property a once-marked Brill--Noether general graph.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

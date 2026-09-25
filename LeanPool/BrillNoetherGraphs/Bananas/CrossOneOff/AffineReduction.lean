@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.SignChangingInversions
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.DemazureFactorization
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.SignChangingInversions
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.DemazureFactorization
 
 /-!
 # Affine simple-reflection reduction
@@ -15,6 +17,8 @@ This file supplies the affine Coxeter reduction input isolated in
 descent of the inverse permutation.  Simultaneously swapping that adjacent
 pair in every residue-period removes exactly one normalized inversion class.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

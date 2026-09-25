@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Orientability
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Orientability
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
 
 /-!
 # Legal set firings and the nested reduction chain
@@ -35,6 +37,8 @@ vertex of `U` exactly once satisfies
 A set `U` is **legal** for `D` when firing it keeps `D` effective, i.e.
 `D u ≥ outdegreeSet G U u` for all `u ∈ U`.
 -/
+
+@[expose] public section
 
 namespace Utilities.Gonality
 

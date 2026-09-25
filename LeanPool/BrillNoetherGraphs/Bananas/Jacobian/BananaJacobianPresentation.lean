@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaPrefix
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaPrefix
 
 /-!
 # The coordinate map in the banana Jacobian presentation
@@ -19,6 +21,8 @@ The remaining displayed generator `(1, ..., 1)` is the normalized
 first-neighbor form of firing the left endpoint; that finite Laplacian identity
 is kept separate from the pairwise path-prefix calculation below.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

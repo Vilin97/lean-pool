@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianQuotientCertificate
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianQuotientCertificate
 
 /-!
 # A well-founded measure for banana-coordinate reduction
@@ -21,6 +23,8 @@ kept on natural-valued nonnegative coordinates; the separate quotient
 certificate module translates a terminal vector into the displayed integer
 relation lattice.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

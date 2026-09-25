@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateInterpolation
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MultiBreakScript
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateInterpolation
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MultiBreakScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
 
 /-!
 # Multi-break firing scripts on the closed length orthant
@@ -16,6 +18,8 @@ This is the closed-face counterpart of the concrete part of
 then supplies the resulting concrete lists here. A zero-length slot has no
 steps; `BreakData.balance` consequently forces its endpoint potential to agree.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.DegenerateSpec
 open Utilities.Certificate

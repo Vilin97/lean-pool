@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaGenusTwoCornerSum
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaGenusTwoCornerSum
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
 
 /-!
 # The exact genus-two inversion formula, with its correction term
@@ -29,6 +31,8 @@ The converse half of `thm:kgtThetas` (Theorem 4.8) is then immediate: apply
 the formula to `D = w` for a vertex `w` and read the bound `inv_k ≤ g = 2`
 backwards.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffPositiveRows
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffBlock
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffPositiveRows
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffBlock
 
 /-!
 # The affine-period bound for the same-strand one-off marking
@@ -14,6 +16,8 @@ The three residue formulas of Lemma 4.23 force every positive affine period
 to lie strictly beyond `g + floor(g/(n-1))`, the exact natural-number form of
 the paper's rational cutoff `(n/(n-1))g`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

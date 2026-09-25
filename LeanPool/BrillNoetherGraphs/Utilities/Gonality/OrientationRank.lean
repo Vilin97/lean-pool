@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.LegalFiring
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.OrientationReversal
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.LegalFiring
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.OrientationReversal
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
 
 /-!
 # Orientation divisors and rank one
@@ -21,6 +23,8 @@ when its class contains, for each vertex `q`, a source-free orientation with
 `2 ≤ indeg q`. By `gioan_reversalEquiv_of_linear_equiv`, this hypothesis can
 also be expressed as reachability in the cycle--cocycle reversal system.
 -/
+
+@[expose] public section
 
 namespace Utilities.Gonality
 

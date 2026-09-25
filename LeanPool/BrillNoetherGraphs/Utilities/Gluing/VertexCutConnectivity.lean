@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutWedge
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutWedge
 
 /-!
 # Connectivity of the factors of a one-vertex cut
@@ -12,6 +14,8 @@ import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutWedge
 The two induced graphs associated with a one-vertex cut inherit connectivity
 from the ambient graph.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

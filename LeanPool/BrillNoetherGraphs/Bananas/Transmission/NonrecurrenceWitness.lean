@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
 
 /-!
 # Explicit witnesses of recurrence
@@ -13,6 +15,8 @@ The paper's recurrence arguments repeatedly exhibit two distinct nonzero
 torsion residues at which the same degree-one vertex twist is effective.
 This small generic lemma packages that final finite-residue step.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionChipDescent
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.BlockSlopeRounding
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionChipDescent
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.BlockSlopeRounding
+public import Mathlib.Tactic
 
 /-!
 # The step inequality for chip descent
@@ -19,6 +21,8 @@ costs, the same bounds hold for the coarse slopes of the rounded script.  See
 `Utilities/Subdivision/SubdivisionChipDescent.lean` for the definitions and
 the overall argument.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec
 

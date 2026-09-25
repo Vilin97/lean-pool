@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
 
 /-!
 # Wedges of chip-firing graphs
@@ -17,6 +19,8 @@ The point of this concrete presentation is that it has literal zero-extension
 maps for divisors and firing scripts.  Later vertex-gluing arguments can use
 these maps without choosing a quotient representative.
 -/
+
+@[expose] public section
 
 open Multiset Finset
 

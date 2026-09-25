@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
 
 /-!
 # Nonrecurrence and canonical rank supports
@@ -16,6 +18,8 @@ in the rank support of the canonical complementary twist.  Consequently the
 paper's nonrecurrence condition is exactly pairwise disjointness of those
 canonical supports.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

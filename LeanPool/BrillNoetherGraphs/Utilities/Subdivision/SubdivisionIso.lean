@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.OneEdgeSplitRefinement
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MovingPosition
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionExistence
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.OneEdgeSplitRefinement
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MovingPosition
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionExistence
+public import Mathlib.Tactic
 
 /-!
 # Relabeling subdivided core graphs
@@ -24,6 +26,8 @@ presentations.  Thus it applies both to automorphisms of one presentation and
 to comparisons with another presentation having a different slot order.
 -/
 
+@[expose] public section
+
 namespace Utilities.Certificate.SubdivisionGraph
 
 open ExplicitPotential
@@ -37,8 +41,11 @@ variable {n p n' p' : ℕ}
 slot is read from the image of the source head to the image of the source
 tail. -/
 structure Relabeling where
+  /-- The bijection of core vertices in the subdivision relabeling. -/
   coreEquiv : Fin n ≃ Fin n'
+  /-- The bijection of core slots, required to preserve their subdivision lengths. -/
   slotEquiv : Fin p ≃ Fin p'
+  /-- The source-slot flags specifying which endpoint order is reversed by the relabeling. -/
   reversed : Fin p → Bool
   length_eq : ∀ edge : Fin p,
     source.length edge = target.length (slotEquiv edge)

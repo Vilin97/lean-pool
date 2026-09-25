@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.EvenlyMarkedThetaKGeneral
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.EvenlyMarkedThetaKGeneral
 
 /-!
 # Mechanical API audit for two remaining statement targets
@@ -15,6 +17,8 @@ This file is intentionally disjoint from `Statements.lean` and the shared
 library.  It records the strongest reductions available from the current API;
 the remaining hypotheses are the graph-specific arithmetic/counting lemmas.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

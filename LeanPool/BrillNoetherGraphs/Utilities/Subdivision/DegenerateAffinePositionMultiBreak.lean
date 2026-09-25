@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateAffinePosition
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateMultiBreakScript
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateAffinePosition
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateMultiBreakScript
 
 /-!
 # Affine-positioned chips and break lists on a closed face
@@ -32,6 +34,8 @@ The only geometry carried by these definitions is `LengthCompatible`.  Bound
 certificates remain the existing `Code.BoundsCertified` facts, so all affine
 arithmetic is shared with the positive decoder.
 -/
+
+@[expose] public section
 
 namespace MarkedGraphs.Certificate.AffinePosition
 open Utilities.Certificate
@@ -68,7 +72,9 @@ def Code.decodeClosedVertex (d : DegSpec n p)
 
 /-- A possibly signed chip at an affine-described slot position. -/
 structure WeightedChip (m p : ℕ) where
+  /-- The affine code naming the chip’s slot and position on that slot. -/
   position : Code m p
+  /-- The signed integer multiplicity of the chip; negative coefficients are permitted. -/
   coefficient : ℤ
 
 namespace WeightedChip
@@ -123,7 +129,10 @@ end WeightedChip
 at `position`.  List order is preserved, matching the C checker's override
 semantics and `SubdivisionGraph.Spec.breakSlope`. -/
 structure Break (m p : ℕ) where
+  /-- The affine slot-position code at which this break entry begins to prescribe a slope. -/
   position : Code m p
+  /-- The integer slope in force from this break position, subject to the ordered list’s later
+  overrides. -/
   slope : ℤ
 
 /-- Ordered break data, grouped by slot.  `WellFormed` prevents a code whose

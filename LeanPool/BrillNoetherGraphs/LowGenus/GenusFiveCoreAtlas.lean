@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ConnectedCheckFast
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotential
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ConnectedCheckFast
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotential
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
 
 /-!
 # The Atanasov--Ranganathan genus-five cubic atlas
@@ -22,12 +24,15 @@ the twelfth and sixteenth scopes; both scopes are already cubic with twelve
 non-loop edges, so those commands are omitted, as the figure caption requires.
 -/
 
+@[expose] public section
+
 namespace AtanasovRanganathan.GenusFiveCoreAtlas
 
 open Utilities
 
 open Certificate.ExplicitPotential
 
+/-- An ordered genus-five core with eight vertices and twelve edge slots. -/
 abbrev Core := Certificate.ExplicitPotential.Core 8 12
 
 /-- Number of half-edge incidences at a vertex of a loopless ordered core. -/
@@ -36,9 +41,11 @@ def incidenceDegree (core : Core) (vertex : Fin 8) : Nat :=
     ((if core.tail edge = vertex then 1 else 0) +
       (if core.head edge = vertex then 1 else 0))
 
+/-- Every vertex has exactly three incident half-edges in the ordered core. -/
 def Trivalent (core : Core) : Prop :=
   ∀ vertex : Fin 8, incidenceDegree core vertex = 3
 
+/-- Every edge slot has two distinct endpoints. -/
 def Loopless (core : Core) : Prop :=
   ∀ edge : Fin 12, core.tail edge ≠ core.head edge
 

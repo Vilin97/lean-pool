@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ElementaryExistence
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankChipStep
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionBN
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ElementaryExistence
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankChipStep
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionBN
 
 /-!
 # Certifying transmission from finitely many rank corners
@@ -29,6 +31,8 @@ has a single entry, and transmission becomes an ordinary Brill--Noether
 condition `BNExists G r d`; the length of `τ` is exactly `(r+1) * (g - d + r)`,
 so `ℓ(τ) ≤ g` is the Brill--Noether inequality `ρ ≥ 0`.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

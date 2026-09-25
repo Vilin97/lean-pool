@@ -3,14 +3,16 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.Generated.GenusFourRow095FaceData
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095Positive
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ConnectedCheckFast
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedFaceDispatch
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutGenusFour
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionCoreSupport
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.Generated.GenusFourRow095FaceData
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095Positive
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ConnectedCheckFast
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedFaceDispatch
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutGenusFour
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionCoreSupport
 
 /-!
 # A readable closed-face proof for cubic genus-four row 095
@@ -27,6 +29,8 @@ are dispatched by their exact zero sets:
 The repetitive contraction witnesses are isolated as passive checked data in
 `LowGenus.Generated.GenusFourRow095FaceData`.
 -/
+
+@[expose] public section
 namespace AtanasovRanganathan.GenusFourRow095Closed
 
 open Utilities
@@ -44,6 +48,8 @@ open AtanasovRanganathan.GenusFourCubicAtlas
 
 /-! ## The exact 25-face ledger -/
 
+/-- The 25 explicitly enumerated zero-slot sets that are nonloopy forests in row 095, including
+the empty face and all valid lower-dimensional contractions. -/
 def validFaces : List (Finset (Fin 9)) :=
   [∅,
     {0}, {3}, {5}, {8}, {4},
@@ -80,10 +86,14 @@ private theorem core069_connected : core069.Connected :=
   ExplicitPotential.Core.connected_of_connectedCheckFast
     (core := core069) (by decide)
 
+/-- The vertex cut of contraction core 029 at glue vertex 3, with left vertex set `{0, 3}`; both
+pieces have genus two. -/
 def cut029 : CoreVertexCut.Data core029 where
   glue := 3
   left := {0, 3}
 
+/-- The vertex cut of contraction core 069 at glue vertex 3, with left vertex set `{0, 3, 4}`;
+both pieces have genus two. -/
 def cut069 : CoreVertexCut.Data core069 where
   glue := 3
   left := {0, 3, 4}

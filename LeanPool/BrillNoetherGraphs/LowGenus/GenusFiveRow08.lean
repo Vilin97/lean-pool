@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow08ChamberOne
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow08ChamberTwo
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow08ChamberThree
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow08ChamberOne
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow08ChamberTwo
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow08ChamberThree
 
 /-!
 # AR row 08, assembled
@@ -28,6 +30,8 @@ needs three chamber proofs and one orbit transport.
 three-way disjunction, and `ClosedOrbit.closedConstruction_of_chamber` turns one
 chamber proof per disjunct into the statement on the whole closed orthant.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.GenusFiveRow08
 

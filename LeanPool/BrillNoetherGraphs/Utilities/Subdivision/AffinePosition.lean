@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotentialRankOne
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MovingPosition
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotentialRankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MovingPosition
 
 /-!
 # Affine-described positions on a subdivided slot
@@ -18,6 +20,8 @@ lies in its slot are required literally in its local cone.  Cone soundness
 then supplies the bounds needed to construct a typed path position.
 -/
 
+@[expose] public section
+
 namespace MarkedGraphs.Certificate.AffinePosition
 open Utilities.Certificate
 
@@ -29,8 +33,13 @@ open SubdivisionGraph
 /-- Passive name for a point on a slot.  `fromHead = true` reads `offset`
 from the head, so its tail-oriented coordinate is `length - offset`. -/
 structure Code (m p : ℕ) where
+  /-- The core slot containing the affine-coded position. -/
   edge : Fin p
+  /-- Whether the offset is measured from the slot's head; otherwise it is measured from the
+  tail. -/
   fromHead : Bool
+  /-- The affine expression for the distance from the selected endpoint, with bounds checked
+  separately. -/
   offset : ExplicitPotential.AffineForm m
 
 namespace Code

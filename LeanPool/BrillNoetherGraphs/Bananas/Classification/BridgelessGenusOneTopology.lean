@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoTopology
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoTopology
 
 /-!
 # Bridgeless genus-one topology
@@ -13,6 +15,8 @@ The intrinsic genus-one factors in the genus-two wedge normal form are
 two-regular.  This is the numerical cycle property needed by an explicit
 cycle-presentation construction.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

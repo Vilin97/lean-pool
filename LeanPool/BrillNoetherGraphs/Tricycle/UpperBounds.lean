@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Tricycle.Core
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.GonalityTransport
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.BurnedSet
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankDeterminingSet
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Tricycle.Core
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.GonalityTransport
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.BurnedSet
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankDeterminingSet
+public import Mathlib.Tactic
 
 /-!
 # The tricycle upper bounds
@@ -34,6 +36,8 @@ is a single explicit firing set, checked by `decide`.
 
 The firing sets and residual divisors are checked directly by the Lean kernel.
 -/
+
+@[expose] public section
 
 namespace Utilities.Tricycle
 

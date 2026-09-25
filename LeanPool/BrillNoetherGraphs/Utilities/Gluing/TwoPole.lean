@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.EdgeAddition
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeGraph
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.EdgeAddition
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeGraph
 
 /-!
 # Two-pole joins
@@ -24,6 +26,8 @@ four pole chips.  In genus two plus genus two, Riemann--Roch therefore says
 that the two degree-four candidates have exactly the same rank.
 -/
 
+@[expose] public section
+
 open Finset
 
 namespace Utilities
@@ -34,7 +38,9 @@ universe u v
 coincide; the two cross-edges of a join are nevertheless loopless because
 they run between the two summands. -/
 structure TwoPole (G : CFGraph.{u}) where
+  /-- The first attachment pole, used for the bridge retained in the lower-genus presentation. -/
   first : G.V
+  /-- The second attachment pole, used for the additional cross-edge in the two-pole join. -/
   second : G.V
 
 namespace TwoPole

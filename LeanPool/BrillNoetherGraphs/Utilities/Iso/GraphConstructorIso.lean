@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeGraph
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgePresentation
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeGraph
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgePresentation
 
 /-!
 # Functoriality of basic graph constructors
@@ -15,6 +17,8 @@ factors, including the distinguished attachment vertices.  The wedge proof
 uses its presentation interface so that the dependent subtype of unmarked
 right vertices never has to be relabelled directly.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

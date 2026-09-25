@@ -3,14 +3,18 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.SameFactorWedgeRight
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderExact
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeTorsionRestriction
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.SameFactorWedgeRight
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderExact
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeTorsionRestriction
 
 /-!
 # The period in the same-factor wedge exception
 -/
+
+@[expose] public section
 
 namespace Bananas
 

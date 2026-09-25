@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Tactic
 
 /-!
 # Rounding chips to the ends of a block of unit steps
@@ -27,6 +29,8 @@ bounds `|δ|` by the total distance the chips travel.
 
 All of this is finite-sum integer arithmetic; no graph theory is involved.
 -/
+
+@[expose] public section
 
 namespace Utilities.BlockSlopeRounding
 

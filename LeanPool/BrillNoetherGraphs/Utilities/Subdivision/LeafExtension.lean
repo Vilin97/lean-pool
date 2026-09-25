@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.DivisorialGonality
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.RankOne
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.DivisorialGonality
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.RankOne
 
 /-!
 # Divisor rank under adjoining a leaf
@@ -20,6 +22,8 @@ The resulting rank-one interface shows that adjoining or pruning a leaf does
 not change divisorial gonality.
 -/
 
+@[expose] public section
+
 namespace Utilities.Certificate
 
 open Multiset Finset
@@ -31,7 +35,8 @@ namespace LeafExtension
 
 variable (H : CFGraph.{u}) (root : H.V)
 
-private def liftEdge (edge : H.V × H.V) : Option H.V × Option H.V :=
+/-- Lift both endpoints of an old edge into the graph with an added leaf. -/
+def liftEdge (edge : H.V × H.V) : Option H.V × Option H.V :=
   (some edge.1, some edge.2)
 
 /-- Adjoin a new leaf `none` to the old vertex `some root`. -/

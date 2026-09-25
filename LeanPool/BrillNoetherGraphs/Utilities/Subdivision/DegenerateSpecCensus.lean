@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
 
 /-!
 # The `DegSpec` face datum, emitted by the contraction census
@@ -50,6 +52,8 @@ below is the resulting one-call wrapper, shaped to exactly match
 `ExplicitPotential.Certificate.bnExists_on_degenerate_subdivision_of_validClosed_of_zeroReach`'s
 conclusion.
 -/
+
+@[expose] public section
 
 -- The `Certificate` structure deliberately lives inside a namespace that already
 -- ends in `Certificate`; renaming either would ripple through every consumer.

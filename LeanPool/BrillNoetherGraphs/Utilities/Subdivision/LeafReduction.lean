@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LeafPruning
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LeafPruning
 
 /-!
 # One-step reduction across a degree-one vertex
@@ -24,6 +26,8 @@ The last theorem is deliberately a one-step interface.  A global iteration
 still needs a well-founded wrapper (for example, recursion on the number of
 vertices) and a choice of a degree-one vertex at every nonterminal step.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 

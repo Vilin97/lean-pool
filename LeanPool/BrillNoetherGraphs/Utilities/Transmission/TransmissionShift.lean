@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
-import LeanPool.BrillNoetherGraphs.Demazure.InvSet
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
+public import LeanPool.BrillNoetherGraphs.Demazure.InvSet
 
 /-!
 # Output shifts of ASP permutations and transmission witnesses
@@ -21,6 +23,8 @@ therefore becomes one for `outputShift τ c` by adding `c` chips at the first
 marked point.  This is the useful normalization convention because both the
 slipface inequality and the prescribed degree move by the same integer `c`.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

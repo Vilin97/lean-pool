@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas
+
+public import LeanPool.BrillNoetherGraphs.Bananas
 
 /-!
 # Easy-access reference: *Twice-Marked Banana Graphs*
@@ -50,6 +52,8 @@ restatement of an existing proof. Further paper-specific reference sources are
 `Bananas/FORMALIZATION_NOTES.md`.
 -/
 
+@[expose] public section
+
 /-!
 ## Standalone mathematical vocabulary
 
@@ -79,10 +83,13 @@ open Multiset Finset
 /-- A finite, nonempty, loopless undirected multigraph. Each edge occurrence
 is stored once, using either ordering of its endpoints. -/
 structure CFGraph where
+  /-- The finite nonempty vertex type of the loopless multigraph. -/
   V : Type u
   [instDecidableEq : DecidableEq V]
   [instFintype : Fintype V]
   [instNonempty : Nonempty V]
+  /-- The multiset of unoriented edge occurrences, each stored once as an ordered endpoint pair;
+  repeated pairs represent parallel edges. -/
   edges : Multiset (V × V)
   loopless : ∀ x, (x, x) ∉ edges
 
@@ -209,6 +216,8 @@ def BNExists (G : CFGraph) (r d : ℤ) : Prop :=
 
 /-- A graph isomorphism is a vertex equivalence preserving multiplicities. -/
 structure CFGraphIso (G : CFGraph.{u}) (H : CFGraph.{v}) where
+  /-- The bijection of vertices whose edge-multiplicity preservation makes this a graph
+  isomorphism. -/
   vertexEquiv : G.V ≃ H.V
   map_num_edges : ∀ x y : G.V,
     numEdges H (vertexEquiv x) (vertexEquiv y) = numEdges G x y
@@ -272,8 +281,12 @@ def wedgeAddDivisor (G : CFGraph.{u}) (H : CFGraph.{v})
 
 /-- A graph with ordered outside marks. -/
 structure MarkedGraph where
+  /-- The underlying graph on which the two ordered outside marks lie. -/
   graph : CFGraph.{0}
+  /-- The left outside mark, retained as the left mark when another factor is glued on the
+  right. -/
   left : graph.V
+  /-- The right outside mark, identified with the next factor's left mark in a chain. -/
   right : graph.V
 
 namespace MarkedGraph
@@ -316,8 +329,11 @@ two multivalent vertices `0` and `1`.  Each strand records which multivalent
 vertex is its tail and which is its head (a storage orientation only; the
 graph below is undirected), together with its positive length. -/
 structure Banana (g : ℕ) where
+  /-- The chosen tail pole of each of the `g + 1` banana strands. -/
   tail : Fin (g + 1) → Fin 2
+  /-- The chosen head pole of each banana strand, required to differ from its tail. -/
   head : Fin (g + 1) → Fin 2
+  /-- The number of edges in each subdivided banana strand, required to be positive. -/
   length : Fin (g + 1) → ℕ
   core_loopless : ∀ α, tail α ≠ head α
   length_pos : ∀ α, 0 < length α
@@ -433,6 +449,7 @@ def strandMirror {g : ℕ} (B : Banana g) (α : Fin (g + 1))
 
 /-- The two multivalent vertices. -/
 def leftEndpoint {g : ℕ} (B : Banana g) : B.graph.V := B.coreVertex 0
+/-- The multivalent banana endpoint corresponding to core pole 1. -/
 def rightEndpoint {g : ℕ} (B : Banana g) : B.graph.V := B.coreVertex 1
 
 namespace TwoPathCycle
@@ -452,8 +469,12 @@ end TwoPathCycle
 
 /-- A graph with two ordered marked vertices. -/
 structure TwiceMarked where
+  /-- The underlying graph carrying the two ordered marks used for rank differences and
+  transmission. -/
   graph : CFGraph
+  /-- The first marked vertex, used for the first one-chip subtraction in the rank difference. -/
   u : graph.V
+  /-- The second marked vertex, used for the second one-chip subtraction in the rank difference. -/
   v : graph.V
 
 /-- Mark two vertices. -/
@@ -535,7 +556,9 @@ def EvenlyMarkedTheta (B : Banana 2) (α β : Fin 3)
 
 /-- One factor in a mixed-torsion chain. -/
 structure KGeneralChainFactor where
+  /-- The connected marked graph forming this factor of the mixed-torsion chain. -/
   marked : MarkedGraph
+  /-- The period parameter for the factor's certified general transmission property. -/
   period : ℕ
   connected : graphConnected marked.graph
   kGeneral : KGeneralTransmission
@@ -725,6 +748,8 @@ def ThetaTransmissionSubTwoCase
     (B : Banana 2) (u : B.graph.V) (X : CFDiv B.graph) : Prop :=
   linearEquiv B.graph X (2 • oneChip u)
 
+/-- The theta-graph case where `X` is equivalent to a chip at `u` plus a chip at some `w`, and
+the degree-zero differences from `w` to either mark are nonprincipal. -/
 def ThetaTransmissionSubOneCase
     (B : Banana 2) (u v : B.graph.V) (X : CFDiv B.graph) : Prop :=
   ∃ w : B.graph.V,
@@ -732,6 +757,8 @@ def ThetaTransmissionSubOneCase
     ¬ linearEquiv B.graph (oneChip w - oneChip u) 0 ∧
     ¬ linearEquiv B.graph (oneChip w - oneChip v) 0
 
+/-- The theta-graph case where `X` is equivalent to a chip at `v` plus a chip at `w`, and
+neither marked two-chip divisor with `w` is canonical. -/
 def ThetaTransmissionAddOneCase
     (B : Banana 2) (u v : B.graph.V) (X : CFDiv B.graph) : Prop :=
   ∃ w : B.graph.V,
@@ -741,6 +768,8 @@ def ThetaTransmissionAddOneCase
     ¬ linearEquiv B.graph
       (oneChip v + oneChip w) (canonicalDivisor B.graph)
 
+/-- The theta-graph case where `X` is equivalent to the canonical divisor shifted by a chip from
+`u` to `v`. -/
 def ThetaTransmissionAddTwoCase
     (B : Banana 2) (u v : B.graph.V) (X : CFDiv B.graph) : Prop :=
   linearEquiv B.graph X
@@ -852,6 +881,8 @@ noncomputable def invTauCorrection (M : TwiceMarked) (D : CFDiv M.graph) : ℤ :
 /-- Southeast and northwest quadrant index sets. -/
 def southeastSet (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | n ≤ k ∧ τ k < m }
 
+/-- The northwest quadrant of an integer function at thresholds `(m, n)`: indices below `n`
+whose image is at least `m`. -/
 def northwestSet (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | k < n ∧ m ≤ τ k }
 
 /-- Set-theoretic inverse of an integer function. -/
@@ -874,10 +905,14 @@ def transmissionDualDivisor {G : CFGraph} (u v : G.V) (D : CFDiv G) : CFDiv G :=
 def sciSet (τ : ℤ → ℤ) : Set (ℤ × ℤ) :=
   { p | p.1 < p.2 ∧ 0 < τ p.1 ∧ τ p.2 ≤ 0 }
 
+/-- The natural cardinality of inversion pairs crossing zero in the images: the earlier image is
+positive and the later image is nonpositive. -/
 noncomputable def sci (τ : ℤ → ℤ) : ℕ := (sciSet τ).ncard
 
 /-- Mark-preserving and mark-swapping graph automorphisms. -/
 structure MarkedPointAutomorphism (M : TwiceMarked) where
+  /-- The graph automorphism whose vertex bijection preserves the set of the two marked
+  vertices. -/
   iso : CFGraphIso M.graph M.graph
   preserves_marked_set (x : M.graph.V) :
     (x = M.u ∨ x = M.v) ↔
@@ -907,19 +942,27 @@ def HasInversionLowerBound (M : TwiceMarked) (k q : ℕ) : Prop :=
 /-- Arithmetic functions used by the one-off and cross-one-off blocks. -/
 def crossOneOffCutoff (g n : ℕ) : ℕ := g + g / (n - 1)
 
+/-- The cross one-off length condition requiring `n₀` to be at least `g + 1 + g / (n₁ - 1)`,
+with natural-number division. -/
 def CrossOneOffLongEnough (g n₀ n₁ : ℕ) : Prop :=
   g + 1 + g / (n₁ - 1) ≤ n₀
 
+/-- The one-off row value at index `b`, computed separately for residues zero, `n - 1`, and all
+remaining residues modulo `n`. -/
 def oneOffRow (g n b : ℕ) : ℕ :=
   if b % n = 0 then b / n
   else if b % n = n - 1 then g + b / n + 1
   else g + 2 * (b / n) + 1 - b
 
+/-- The cross one-off row value at index `b`, with its extra unit in the zero-residue and
+interior-residue cases. -/
 def crossOneOffRow (g n b : ℕ) : ℕ :=
   if b % n = 0 then b / n + 1
   else if b % n = n - 1 then g + b / n + 1
   else g + 2 * (b / n) + 2 - b
 
+/-- The corrected forced-count formula: `choose g 2` at period two, and `choose (g - 1) 2 + g /
+(n - 1)` otherwise. -/
 def correctedCrossOneOffForcedCount (g n : ℕ) : ℕ :=
   if n = 2 then Nat.choose g 2
   else Nat.choose (g - 1) 2 + g / (n - 1)

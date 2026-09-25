@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixDefinitions
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionFibreTree
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeRankFormula
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixDefinitions
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionFibreTree
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeRankFormula
 
 /-!
 # Once-marked Brill--Noether generality under vertex gluing
@@ -22,6 +24,8 @@ The construction is independent of the transmission-permutation identity of
 Proposition 6.10.  It uses only the exact vertex-wedge rank formula and the
 all-row definition `OnceMarkedCensusContains`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

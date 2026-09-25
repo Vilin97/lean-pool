@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RiemannRochWinnable
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RiemannRochWinnable
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
 
 /-!
 # Rank-determining sets
@@ -131,6 +133,8 @@ The proof that *is* used is the discrete strong-separator lemma of
 J. van Dobben de Bruyn and D. Gijswijt, *Treewidth is a lower bound on graph
 gonality*, Lemma 2.6, formalized in `Subdivision/StrongSeparator.lean`.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

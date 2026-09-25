@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ElementaryExistence
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ElementaryExistence
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
 
 /-!
 # Brill--Noether existence through genus five from the two critical pencils
@@ -26,6 +28,8 @@ The library's `BNExists G r d` uses the equivalent convenient convention
 `brillNoetherConjecture` uses the same convention with the Brill--Noether
 inequality exposed as an implication.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

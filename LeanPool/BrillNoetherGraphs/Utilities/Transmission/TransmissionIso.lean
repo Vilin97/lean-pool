@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
-import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
+public import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.Transmission
 
 /-!
 # Transmission and chip-firing graph isomorphisms
@@ -15,6 +17,8 @@ The transmission condition is equivariant for relabelings of a chip-firing
 graph.  In particular, the affine permutation is *not* changed: an
 isomorphism only transports the two marked vertices and the witness divisor.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

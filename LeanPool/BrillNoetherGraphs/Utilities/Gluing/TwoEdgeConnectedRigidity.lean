@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Segments.SeamCalculus
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeGenusOne
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Segments.SeamCalculus
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeGenusOne
 
 /-!
 # Degree-one rigidity from two-edge-connected cuts
@@ -21,6 +23,8 @@ At every other maximum except possibly `y`, the level-set inequality forces
 out-degree zero; at `y` it forces out-degree at most one.  Thus the whole cut
 has size at most one, contradicting the hypothesis.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

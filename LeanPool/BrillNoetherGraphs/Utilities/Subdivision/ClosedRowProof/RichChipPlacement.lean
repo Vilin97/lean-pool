@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichChipBridge
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichChipBridge
 
 /-!
 # Where a raw rich chip actually lands on a closed face
@@ -25,6 +27,8 @@ adding a tail term and a head term would count a chip there twice.
 `rawChipMassAt_eq_zero_of_coord_eq_zero` says the suppressed value was `0`
 anyway, so nothing is lost.
 -/
+
+@[expose] public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

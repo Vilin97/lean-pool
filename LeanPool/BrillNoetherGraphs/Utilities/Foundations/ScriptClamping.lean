@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Basic
+
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Basic
 
 /-!
 # Maximum closure and clamping of firing scripts
@@ -19,6 +21,8 @@ They use only the basic chip-firing API. The general truncation statement also
 appears in `Utilities.Gonality.LegalFiring`; here it is a short consequence of
 maximum closure, without importing the gonality development.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

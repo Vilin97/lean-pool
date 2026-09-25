@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianPresentation
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.Semibreak
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianPresentation
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.Semibreak
 
 /-!
 # A reduced-coordinate injectivity criterion for banana Jacobians
@@ -20,6 +22,8 @@ The missing step for the full injectivity half of Proposition 2.14 is now the
 concrete reducedness theorem: the paper's three conditions on the coordinates
 must be converted into the endpoint/semibreak normal form of `Semibreak.lean`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

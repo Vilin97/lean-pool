@@ -3,13 +3,17 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreSymmetry
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedFaceCensus
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSubdivisionIso
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreSymmetry
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedFaceCensus
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSubdivisionIso
 
 /-! # Core automorphisms on closed subdivision faces -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.ClosedCoreSymmetry
 open Utilities
@@ -22,6 +26,8 @@ variable {n p : ℕ} {core : ExplicitPotential.Core n p}
 
 variable (symmetry : CoreSymmetry core) (length : Fin p → ℕ)
 
+/-- Slot lengths transported by the core symmetry, so a target slot reads the length of its
+inverse image. -/
 abbrev targetLength : Fin p → ℕ := symmetry.reindexLength length
 private theorem zero_mem_map (e : Fin p) :
     symmetry.slotPerm e ∈ zeroSet (targetLength symmetry length) ↔ e ∈ zeroSet length := by

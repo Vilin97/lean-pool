@@ -3,13 +3,15 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.FarMarkNegativeAPI
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.LengthTwoCrossMonotonicity
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMCrossWitness
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMSecondCrossWitness
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrandInteriorNegative
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaExceptionalArithmetic
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.FarMarkNegativeAPI
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.LengthTwoCrossMonotonicity
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMCrossWitness
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMSecondCrossWitness
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrandInteriorNegative
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaExceptionalArithmetic
 
 /-!
 # Corrected interior classification for Theorem 3.9
@@ -28,6 +30,8 @@ remaining far-mark rank calculations are assembled.  In particular, it must
 not be replaced by the weaker `nonSubmodular_of_rank_pattern` API, whose rank
 pattern is itself a hypothesis.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

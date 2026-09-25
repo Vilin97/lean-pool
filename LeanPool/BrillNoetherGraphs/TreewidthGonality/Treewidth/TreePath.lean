@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.PartialDecomposition
+
+public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.PartialDecomposition
 
 /-!
 # Paths to a fixed node of a tree
@@ -28,6 +30,8 @@ to `s`.  The name is short for "ancestors": thinking of `s` as the root, it is
 the set of ancestors of `n`, and `Below hT s t = {n | t ∈ Anc hT s n}` is the
 subtree hanging below `t`.
 -/
+
+@[expose] public section
 
 namespace Utilities.Treewidth
 

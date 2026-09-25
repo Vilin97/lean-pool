@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInversionFiniteSum
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInversionFiniteSum
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
 
 /-!
 # Swapping the marks of a graph with general transmission
@@ -19,6 +21,8 @@ This file proves that affine inversion count is unchanged by this operation
 and consequently that `KGeneralTransmission` is independent of the ordering
 of the two marks.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

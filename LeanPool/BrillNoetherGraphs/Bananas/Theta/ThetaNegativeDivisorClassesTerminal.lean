@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNegativeDivisorClassesBoundary
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNegativeDivisorClassesBoundary
 
 /-!
 # Terminal-endpoint negative divisor classes on theta graphs
@@ -14,6 +16,8 @@ This is the reflected boundary family complementary to
 terminal endpoint and the first is an interior point at least two steps from
 the initial endpoint.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

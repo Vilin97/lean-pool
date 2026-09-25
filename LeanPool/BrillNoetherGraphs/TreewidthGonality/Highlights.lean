@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.TreewidthGonality.Gonality.TreewidthGonality
+
+public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Gonality.TreewidthGonality
 
 /-!
 # Highlights of the `TreewidthGonality` library
@@ -27,6 +29,8 @@ are unconditional; `#print axioms` on either reports exactly
 `[propext, Classical.choice, Quot.sound]`. The Seymour–Thomas half follows the
 Bellenbaum–Diestel proof.
 -/
+
+@[expose] public section
 
 namespace TreewidthGonality.Highlights
 

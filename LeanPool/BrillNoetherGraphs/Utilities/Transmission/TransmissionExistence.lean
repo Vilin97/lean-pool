@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.GrassmannianExistence
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionDuality
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionIso
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.GrassmannianExistence
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionDuality
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionIso
 
 /-!
 # Finite-length transmission existence
@@ -24,6 +26,8 @@ The predicate in this file is the general two-marked existence condition.  Its
 restriction to shifted Grassmannian permutations is exactly the once-marked
 Brill--Noether existence predicate.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

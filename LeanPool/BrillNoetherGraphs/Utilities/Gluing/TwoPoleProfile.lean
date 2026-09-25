@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoPole
-import LeanPool.BrillNoetherGraphs.Utilities.Segments.SeamCalculus
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoPole
+public import LeanPool.BrillNoetherGraphs.Utilities.Segments.SeamCalculus
 
 /-!
 # Response profiles for a two-pole join
@@ -20,6 +22,8 @@ The fluxes are not restricted to canonical divisors or to genus two.  This is
 intentional: marked residuals such as `4a - 2u`, higher-rank tests, and future
 multi-stage gluings can all use the same interface.
 -/
+
+@[expose] public section
 
 open Finset
 

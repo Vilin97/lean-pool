@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReductionTermination
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReductionTermination
 
 /-!
 # Finite left-justification of banana position coordinates
@@ -14,6 +16,8 @@ positions and at least one is zero.  This module formalizes the paper's final
 sorting pass: terminal coordinates move left of zero coordinates.  The sum of
 the reverse indices of all zeros is a strictly decreasing natural measure.
 -/
+
+@[expose] public section
 
 namespace Bananas
 
@@ -78,6 +82,8 @@ theorem bananaLeftJustifyMeasure_swap_lt {g : ℕ} (B : Banana g)
   have hValues : beta.val < alpha.val := hOrder
   omega
 
+/-- The strict decrease relation for the measure controlling left justification of strand
+positions. -/
 def bananaLeftJustifyDecreases {g : ℕ} (B : Banana g)
     (next current : ∀ alpha : Fin (g + 1), B.PathPosition alpha) : Prop :=
   bananaLeftJustifyMeasure B next < bananaLeftJustifyMeasure B current

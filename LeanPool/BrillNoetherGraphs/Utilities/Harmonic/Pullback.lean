@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Harmonic.Basic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Harmonic.Basic
 
 /-!
 # Rank and transmission transport along harmonic pullback
@@ -21,6 +23,8 @@ transmission row pulls back.  An additional effective source divisor may be
 added, so the degree can be adjusted independently; only the final
 transmission-degree equation remains to be supplied.
 -/
+
+@[expose] public section
 
 namespace MarkedGraphs
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeGraph
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeGraph
 
 /-!
 # Divisors and firing scripts on a bridge graph
@@ -13,6 +15,8 @@ Divisors and firing scripts on either factor extend by zero to the graph formed
 by joining the factors with a bridge. A script which is one on the left factor
 and zero on the right records the elementary chip transfer across the bridge.
 -/
+
+@[expose] public section
 
 open Finset
 

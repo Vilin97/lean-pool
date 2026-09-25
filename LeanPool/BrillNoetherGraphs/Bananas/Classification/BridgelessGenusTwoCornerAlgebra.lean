@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoNonrecurrence
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaGenusTwoCornerSum
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInvTauCorrection
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoNonrecurrence
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaGenusTwoCornerSum
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInvTauCorrection
 
 /-!
 # Genus-two corner algebra without a theta presentation
@@ -16,6 +18,8 @@ These are the graph-generic degree slices in the finite proof of Lemma 4.10.
 The hypotheses isolate exactly what bridgelessness supplies: every one-chip
 divisor has rank zero.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteRows
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteRows
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
 
 /-!
 # Arithmetic count for the corrected cross-one-off block
@@ -13,6 +15,8 @@ import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
 This file proves the pure finite-row count left open by
 `crossOneOff_corrected_inversion_lower_bound_of_finiteRows`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

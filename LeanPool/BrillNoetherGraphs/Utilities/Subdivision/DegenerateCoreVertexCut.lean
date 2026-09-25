@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutGenusFour
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateRepRigidity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCutGenusFour
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateRepRigidity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
 
 /-!
 # Core vertex cuts on the CLOSED length orthant
@@ -75,6 +77,8 @@ assumed away:
   explicit hypothesis `hLoopless`, exactly as `SubdivisionGraph.Spec` carries
   it as the field `core_loopless`; on a concrete row core it is `by decide`.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.DegenerateSpec.DegSpec
 open Utilities.Certificate

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.InducedSubgraph
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgePresentation
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgeSameSidePresentation
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.InducedSubgraph
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgePresentation
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgeSameSidePresentation
 
 /-!
 # A one-vertex cut is a vertex wedge
@@ -17,6 +19,8 @@ by their induced subgraphs.  This is the structural extraction lemma needed
 to turn articulation/block data into divisor and transmission theorems.
 -/
 
+@[expose] public section
+
 namespace Utilities
 
 universe u
@@ -25,8 +29,11 @@ universe u
 The no-cross condition is stated in edge-multiplicity language and therefore
 retains parallel edges automatically. -/
 structure OneVertexCut (K : CFGraph.{u}) where
+  /-- The left vertex set of the cut, meeting the right set precisely at the glue vertex. -/
   left : Finset K.V
+  /-- The right vertex set of the cut; together with the left set it covers every vertex. -/
   right : Finset K.V
+  /-- The unique overlap vertex at which the two induced subgraphs are wedged. -/
   glue : K.V
   glue_mem_left : glue ∈ left
   glue_mem_right : glue ∈ right

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.KGeneralWedgeGenerality
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeSubmodularity
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.ChainGluing
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.KGeneralWedgeGenerality
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeSubmodularity
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.ChainGluing
 
 /-!
 # Chains with mixed torsion orders
@@ -24,6 +26,8 @@ then uses that enlarged genus.  This presentation follows the left-associated
 recursion in `MarkedGraph.chain` and avoids any indexing conventions.
 -/
 
+@[expose] public section
+
 namespace Bananas
 
 open Utilities
@@ -31,7 +35,9 @@ open Utilities
 /-- One factor of a mixed-torsion chain, including precisely the hypotheses
 used by Corollary 6.16. -/
 structure KGeneralChainFactor where
+  /-- The graph and ordered boundary marks of this chain factor. -/
   marked : MarkedGraph
+  /-- The transmission period at which this marked factor is k-general. -/
   period : ℕ
   connected : _root_.graphConnected marked.graph
   kGeneral : KGeneralTransmission

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaGenusTwoCornerSum
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaGenusTwoCornerSum
 
 /-!
 # Degree-two divisors on a connected genus-two graph
@@ -14,6 +16,8 @@ the theta transmission-characterization proposition in Section 4.  Keeping
 them at an abstract graph prevents later theta proofs from unfolding concrete
 subdivision vertices during divisor algebra.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

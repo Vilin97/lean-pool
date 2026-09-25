@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationChippedTriangle
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedRow
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow08Symmetry
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationChippedTriangle
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedRow
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow08Symmetry
 
 /-!
 # AR row 08, chamber 2
@@ -38,6 +40,8 @@ marked `e4`), `be = |e7| - |e2|` (the near half of the marked `e7`),
 target `5` the same picture is read with `al ↔ be` and `p ↔ r`.
 -/
 
+@[expose] public section
+
 namespace AtanasovRanganathan.GenusFiveRow08ChamberTwo
 
 open Utilities
@@ -66,6 +70,8 @@ def markX (d : DegSpec 8 12) : ℕ := d.length 7 - d.length 2
 /-- The far half of the marked `e4`: the target `4`'s own arm. -/
 def armAl (d : DegSpec 8 12) : ℕ := d.length 4 - markY d
 
+/-- The second chamber marks slot 4 at `markY` and slot 7 at `markX`; other slots receive offset
+zero. -/
 def rowMark (d : DegSpec 8 12) (e : Fin 12) : ℕ :=
   if e = 4 then markY d else if e = 7 then markX d else 0
 
@@ -105,22 +111,32 @@ end Core
 
 /-- The chipped-triangle profile read at the target `4`. -/
 def hcT4 (d : DegSpec 8 12) : ℕ := chipHeight (armAl d) (markX d) (d.length 9)
+/-- Auxiliary side height for the configuration targeting vertex 4, using its effective arm, the
+right mark, and slots 9 and 8. -/
 def h0T4 (d : DegSpec 8 12) : ℕ :=
   sideHeight (armAl d) (markX d) (d.length 9) (d.length 8)
+/-- Height at the target vertex 4 supplied by the marked configuration, with slots 5 and 6
+bounding the target and slot 8 bounding its partner. -/
 def htT4 (d : DegSpec 8 12) : ℕ :=
   targetHeight (armAl d) (markX d) (d.length 9) (d.length 5) (d.length 6)
     (d.length 8)
+/-- Height at the partner vertex 5 in the marked configuration targeting vertex 4. -/
 def hvT4 (d : DegSpec 8 12) : ℕ :=
   partnerHeight (armAl d) (markX d) (d.length 9) (d.length 5) (d.length 6)
     (d.length 8)
 
 /-- The same picture read at the target `5`: `al ↔ be`, `p ↔ r`. -/
 def hcT5 (d : DegSpec 8 12) : ℕ := chipHeight (markX d) (armAl d) (d.length 9)
+/-- Auxiliary side height for the configuration targeting vertex 5, obtained by exchanging the
+two arms and using slots 9 and 5. -/
 def h0T5 (d : DegSpec 8 12) : ℕ :=
   sideHeight (markX d) (armAl d) (d.length 9) (d.length 5)
+/-- Height at the target vertex 5 supplied by the marked configuration after exchanging the two
+arms and the roles of slots 5 and 8. -/
 def htT5 (d : DegSpec 8 12) : ℕ :=
   targetHeight (markX d) (armAl d) (d.length 9) (d.length 8) (d.length 6)
     (d.length 5)
+/-- Height at the partner vertex 4 in the marked configuration targeting vertex 5. -/
 def hvT5 (d : DegSpec 8 12) : ℕ :=
   partnerHeight (markX d) (armAl d) (d.length 9) (d.length 8) (d.length 6)
     (d.length 5)
@@ -291,6 +307,8 @@ theorem profileT5 {d : DegSpec 8 12} (hCore : d.core = row08Core)
 
 /-! ## The endpoint ledger, vertex by vertex -/
 
+/-- Incident-slot contribution at each row-08 core vertex in chamber two, using split-ramp
+formulas on marked slots 4 and 7. -/
 def contribForm (d : DegSpec 8 12) (h : Fin 8 → ℕ) (v : Fin 8) : ℤ :=
   if v = 0 then
     tailContribution (d.length 0) (h 0) (h 1)
@@ -341,6 +359,7 @@ theorem contrib_eq {d : DegSpec 8 12} (hCore : d.core = row08Core)
 
 /-! ## The divisor -/
 
+/-- The two core-supported chips of chamber two, at vertices 2 and 3. -/
 def chipWeight (v : Fin 8) : ℤ := if v = 2 then 1 else if v = 3 then 1 else 0
 
 theorem chipWeight_nonneg (v : Fin 8) : 0 ≤ chipWeight v := by
@@ -352,6 +371,8 @@ theorem sum_chipWeight : ∑ v : Fin 8, chipWeight v = 2 := by decide
 def rowDivisor (d : DegSpec 8 12) : CFDiv d.graph :=
   markedDivisorTwo d chipWeight (rowMark d) 4 7
 
+/-- Base core weight formed from the chips at vertices 2 and 3 and the endpoint contributions of
+the marked chips on slots 4 and 7. -/
 def base (d : DegSpec 8 12) : Fin 8 → ℤ :=
   baseTwo d chipWeight (rowMark d) 4 7
 
@@ -376,12 +397,16 @@ theorem base_eq {d : DegSpec 8 12} (hCore : d.core = row08Core) (v : Fin 8) :
 
 /-! ## Chip allocations for the two triangle scripts -/
 
+/-- Allocation for the vertex-4 script: transfer across contracted slots 9 and 4, and lend a
+chip from vertex 2 to vertex 5 across slot 8 when the height comparison requires it. -/
 def allocT4 (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   base d v
     + (if d.length 9 = 0 then transferWeight 3 2 v else 0)
     + (if d.length 4 = 0 then transferWeight 1 4 v else 0)
     + (if d.length 8 = 0 ∧ hcT4 d < markX d then transferWeight 2 5 v else 0)
 
+/-- Allocation for the vertex-5 script: transfer across contracted slots 9 and 4, and lend a
+chip from vertex 2 to vertex 4 across slot 5 when the height comparison requires it. -/
 def allocT5 (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   base d v
     + (if d.length 9 = 0 then transferWeight 3 2 v else 0)
@@ -442,6 +467,8 @@ theorem allocT5_classSum {d : DegSpec 8 12} (hCore : d.core = row08Core)
 
 /-! ## The left banana pair -/
 
+/-- Expanded core coefficients after the left-banana height script, combining the base with
+endpoint contributions. `lbCoeff_eq` identifies this formula with the script computation. -/
 def lbCoeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then headContribution (d.length 3) 0 (markY d)
   else if v = 1 then
@@ -533,6 +560,7 @@ theorem lbCoeff_nonneg {d : DegSpec 8 12} (hB : d.length 3 ≤ d.length 4)
         else if d.length 7 ≤ markX d then 1 else 0)
     split_ifs <;> norm_num
 
+/-- Target representative for vertex 0, moved to vertex 3 when slot 3 is contracted. -/
 def ownerZero (d : DegSpec 8 12) : Fin 8 := if d.length 3 = 0 then 3 else 0
 
 theorem lbCoeff_owner_zero {d : DegSpec 8 12} : 1 ≤ lbCoeff d (ownerZero d) := by
@@ -554,6 +582,8 @@ theorem lbCoeff_owner_one {d : DegSpec 8 12} : 1 ≤ lbCoeff d 1 := by
 
 /-! ## The right banana pair -/
 
+/-- Expanded core coefficients after the right-banana height script, combining the base with
+endpoint contributions. `rbCoeff_eq` identifies this formula with the script computation. -/
 def rbCoeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then 0
   else if v = 1 then zeroChip (markY d)
@@ -642,8 +672,10 @@ theorem rbCoeff_nonneg {d : DegSpec 8 12} (hC : d.length 2 ≤ d.length 7)
       (hv := d.length 2) (Nat.zero_le _) (by omega)
     split_ifs <;> omega
 
+/-- Target representative for vertex 6, moved to vertex 3 when slot 2 is contracted. -/
 def ownerSix (d : DegSpec 8 12) : Fin 8 := if d.length 2 = 0 then 3 else 6
 
+/-- Target representative for vertex 7, moved to vertex 5 when slot 7 is contracted. -/
 def ownerSeven (d : DegSpec 8 12) : Fin 8 := if d.length 7 = 0 then 5 else 7
 
 theorem rbCoeff_owner_six {d : DegSpec 8 12} : 1 ≤ rbCoeff d (ownerSix d) := by
@@ -692,6 +724,8 @@ theorem rbCoeff_owner_seven {d : DegSpec 8 12} (hC : d.length 2 ≤ d.length 7) 
 
 /-! ## The chipped triangle at the target `4` -/
 
+/-- Expanded core coefficients after the vertex-4 height script, combining the target allocation
+with endpoint contributions. `t4Coeff_eq` identifies this formula with the script computation. -/
 def t4Coeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then 0
   else if v = 1 then
@@ -855,6 +889,9 @@ theorem t4Coeff_nonneg {d : DegSpec 8 12} (hB : d.length 3 ≤ d.length 4)
       · rw [if_neg h0, if_pos (by omega : d.length 7 ≤ markX d)]
         omega
 
+/-- Representative receiving the vertex-4 target chip: use vertex 4 when the configuration
+delivers there, otherwise vertex 2 across contracted slot 5 without lending, and vertex 5 in the
+remaining case. -/
 def ownerFour (d : DegSpec 8 12) : Fin 8 :=
   if Delivers (armAl d) (d.length 5) (d.length 6) (hcT4 d) (h0T4 d) (htT4 d)
     then 4
@@ -914,6 +951,8 @@ theorem t4Coeff_owner {d : DegSpec 8 12} : 1 ≤ t4Coeff d (ownerFour d) := by
 
 /-! ## The chipped triangle at the target `5` -/
 
+/-- Expanded core coefficients after the vertex-5 height script, combining the target allocation
+with endpoint contributions. `t5Coeff_eq` identifies this formula with the script computation. -/
 def t5Coeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then 0
   else if v = 1 then
@@ -1078,6 +1117,9 @@ theorem t5Coeff_nonneg {d : DegSpec 8 12} (hB : d.length 3 ≤ d.length 4)
       · rw [if_neg h0, if_pos (by omega : d.length 7 ≤ markX d)]
         omega
 
+/-- Representative receiving the vertex-5 target chip: use vertex 5 when the configuration
+delivers there, otherwise vertex 2 across contracted slot 8 without lending, and vertex 4 in the
+remaining case. -/
 def ownerFive (d : DegSpec 8 12) : Fin 8 :=
   if Delivers (markX d) (d.length 8) (d.length 6) (hcT5 d) (h0T5 d) (htT5 d)
     then 5

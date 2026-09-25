@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Tricycle.Gap
+
+public import LeanPool.BrillNoetherGraphs.Tricycle.Gap
 
 /-!
 # Highlights of the `Tricycle` library
@@ -29,6 +31,8 @@ Conjecture 3.14(a) is therefore false, already at `r = 1` and `k = 2`.
 Thus a proof for metric gonality alone does not imply the corresponding result
 for discrete divisorial gonality.
 -/
+
+@[expose] public section
 
 namespace Tricycle.Highlights
 

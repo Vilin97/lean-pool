@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedContraction
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ReorientContraction
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedContraction
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ReorientContraction
 
 /-!
 # Dispatching one exact closed face to its contracted core
@@ -16,6 +18,8 @@ the zero set of an already-given closed length vector is exactly the forest
 stored in `ContractionData`, its degenerate subdivision is equivalent to a
 positive subdivision of the displayed target core.
 -/
+
+@[expose] public section
 namespace Utilities.Certificate.ClosedFaceDispatch
 
 open Utilities

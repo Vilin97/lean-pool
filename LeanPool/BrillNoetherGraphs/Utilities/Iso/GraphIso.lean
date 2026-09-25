@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
 
 /-!
 # Chip-firing graph isomorphisms
@@ -15,6 +17,8 @@ the orientation chosen for pairs in the raw edge multiset: `numEdges` is the
 mathematical graph structure used by chip firing.
 -/
 
+@[expose] public section
+
 namespace Utilities
 
 universe u v w
@@ -22,6 +26,7 @@ universe u v w
 /-- An isomorphism of chip-firing graphs is an equivalence of their vertex
 types preserving every edge multiplicity. -/
 structure CFGraphIso (G : CFGraph.{u}) (H : CFGraph.{v}) where
+  /-- The vertex bijection that preserves every edge multiplicity. -/
   vertexEquiv : G.V ≃ H.V
   map_num_edges : ∀ x y : G.V,
     numEdges H (vertexEquiv x) (vertexEquiv y) = numEdges G x y

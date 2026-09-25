@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.Separation
+
+public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.Separation
 
 /-!
 # The Bellenbaum--Diestel induction
@@ -42,6 +44,8 @@ minimality of `X` — the same two facts the paper already uses.  The counting
 then falls out (`rerootBag_card_le`).  Mathlib has no Menger's theorem, no
 vertex separators, and no treewidth, so this is what makes the campaign finite.
 -/
+
+@[expose] public section
 
 namespace Utilities.Treewidth
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.SameFactorWedgePeriod
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.OppositeWedgeKGeneralClassification
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.SameFactorWedgePeriod
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.OppositeWedgeKGeneralClassification
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
 
 /-!
 # Mark-placement classification on a rigid genus-two wedge
@@ -14,6 +16,8 @@ import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
 This is the wedge half of Theorem 4.13.  It is deliberately intrinsic: the
 two genus-one factors are not presented as chosen cycles.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

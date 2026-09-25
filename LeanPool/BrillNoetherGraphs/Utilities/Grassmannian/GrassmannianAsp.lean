@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
-import LeanPool.BrillNoetherGraphs.Demazure.InvSet
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
+public import LeanPool.BrillNoetherGraphs.Demazure.InvSet
 
 /-!
 # Grassmannian ASP permutations from Young diagrams
@@ -24,6 +26,8 @@ The exact slipface/corner-envelope theorem is completed in
 `GrassmannianEnvelope`, using the concrete row and column formulas established
 below.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

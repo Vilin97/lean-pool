@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
 
 /-!
 # Orbit reduction at the bare core: the generic transport
@@ -24,6 +26,8 @@ along the slot permutation, such a symmetry produces a
 The declarations use the established `Utilities.Certificate.CoreOrbitReduction`
 namespace for API compatibility.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.CoreOrbitReduction
 open Utilities.Certificate

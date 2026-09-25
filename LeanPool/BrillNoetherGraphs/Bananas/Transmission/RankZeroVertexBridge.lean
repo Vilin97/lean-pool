@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoReduction
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoReduction
 
 /-!
 # Rank-zero witnesses as reduced one-chip classes
@@ -15,6 +17,8 @@ that deletion at the other mark therefore gives a *single vertex* rather
 than an arbitrary divisor.  This file records that passage in the precise
 form needed before applying the banana cut calculation.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.GenusFourPseudocore
-import Mathlib.Data.Fin.Tuple.Sort
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.GenusFourPseudocore
+public import Mathlib.Data.Fin.Tuple.Sort
 
 /-!
 # Vertex relabeling and the handshake identity for pseudocores
@@ -23,6 +25,8 @@ Three ingredients, all generic in the vertex count:
   relabeling with monotone valences (`Tuple.sort`), which is what reduces
   the classifier to one generated tree per *sorted* degree sequence.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.GenusFourPseudocore
 

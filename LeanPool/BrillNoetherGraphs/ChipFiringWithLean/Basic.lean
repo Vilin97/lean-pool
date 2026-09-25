@@ -3,13 +3,17 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import Mathlib.Algebra.CharP.Defs
-import Mathlib.Algebra.Group.Subgroup.Finite
-import Mathlib.Analysis.Normed.Ring.Lemmas
-import Mathlib.Data.Matrix.Mul
+
+public import Mathlib.Algebra.CharP.Defs
+public import Mathlib.Algebra.Group.Subgroup.Finite
+public import Mathlib.Analysis.Normed.Ring.Lemmas
+public import Mathlib.Data.Matrix.Mul
 
 /-! # Basic -/
+
+@[expose] public section
 
 
 
@@ -37,10 +41,12 @@ proof of connectivity must be provided as an additional argument.
 It is not assumed connected by default, though many of our main theorems pertain to
 connected graphs. -/
 structure CFGraph  where
+  /-- The finite nonempty type of graph vertices. -/
   V : Type u
   [instDecidableEq : DecidableEq V]
   [instFintype : Fintype V]
   [instNonempty : Nonempty V]
+  /-- The multiset of endpoint pairs encoding edges, including their multiplicities. -/
   (edges : Multiset (V × V))
   (loopless : ∀ v, (v, v) ∉ edges)
 
@@ -669,6 +675,7 @@ def qEffective {G : CFGraph} (q : G.V) (D : CFDiv G) : Prop :=
 
 /-- A divisor bundled with a proof that it is $q$-effective. -/
 structure qEffectiveDivisor (G : CFGraph) (q : G.V) where
+  /-- The underlying divisor, effective away from the distinguished vertex. -/
   (D : CFDiv G) (h_eff : qEffective q D)
 
 /-- A set of vertices is benevolent if it is possible to concentrate all debt on this set. -/

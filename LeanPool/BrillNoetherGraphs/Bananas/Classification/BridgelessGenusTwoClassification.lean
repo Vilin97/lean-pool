@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoKGeneralReduction
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaKGeneralClassification
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeKGeneralClassification
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoKGeneralReduction
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaKGeneralClassification
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeKGeneralClassification
 
 /-!
 # Theorem 4.13, bundled
@@ -35,6 +37,8 @@ right-hand side (rather than existentially discarding it, as the raw
 in `Bananas/MarkedIso.lean`; `twoEdgeCutCondition_map_iff` in
 `Bananas/GraphIsoCuts.lean`), so no new transport lemma is needed here.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

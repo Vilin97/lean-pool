@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.LowGenusExistence
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.FossilTopology
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocorePresentation
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoVertexPencilCore
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.LowGenusExistence
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.FossilTopology
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocorePresentation
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoVertexPencilCore
 
 /-!
 # A formal interface for the Atanasov--Ranganathan low-genus program
@@ -28,6 +30,8 @@ The remaining work is geometric, not arithmetic: prove the corresponding
 cores, and connect the loop, bridge, and contraction reductions to those core
 statements.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan
 

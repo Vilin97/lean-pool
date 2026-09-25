@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedCommon
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationThree
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedCommon
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationThree
 
 /-!
 # Atanasov--Ranganathan configuration 7, generic in the core
@@ -49,6 +51,8 @@ centre at a time; a row declares which of its chip-free vertices form banana
 pairs and covers the rest by other pictures.  Rows `05` and `08` pair this file
 with `ConfigurationThree`.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.ConfigurationSeven
 

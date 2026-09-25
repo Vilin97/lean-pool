@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffPeriodBound
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffPeriodBound
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
 
 /-!
 # The immediate one-off inversion bound
@@ -15,6 +17,8 @@ The selected positive-residue rows form a strictly decreasing subsequence of
 length `(n-2) * floor(g/(n-1))`, hence contribute the corresponding binomial
 number of distinct `k`-inversions.
 -/
+
+@[expose] public section
 
 namespace Bananas
 
@@ -34,6 +38,8 @@ theorem oneOffPositiveIndex_strictMono {n : ℕ} (_hn : 2 < n) :
     Nat.div_le_div_right (by omega)
   omega
 
+/-- Encode an unordered pair by the indexed smaller position and the index after the larger
+position. -/
 noncomputable def indexedPairEmbedding (index : ℕ → ℕ) (length : ℕ) :
     Sym2 (Fin length) → ℤ × ℤ :=
   Sym2.lift ⟨(fun a b =>

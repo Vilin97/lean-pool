@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CubicCore
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoPoleSubdivision
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CubicCore
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoPoleSubdivision
 
 /-!
 # Finite two-pole data for six genus-five rows
@@ -21,13 +23,16 @@ contain no rank or length hypotheses.  The source slots are exactly those in
 `GenusFiveCoreAtlas`, including the reversed connector in rows 02 and 04.
 -/
 
+@[expose] public section
+
 namespace AtanasovRanganathan.GenusFiveTwoPoleData
 
 open Utilities.Certificate
 open Utilities.Certificate.TwoPoleSubdivision
 open GenusFiveCoreAtlas
 
-private def permutation {n : ℕ} (forward inverse : Fin n → Fin n)
+/-- Bundle mutually inverse finite-index functions as a permutation. -/
+def permutation {n : ℕ} (forward inverse : Fin n → Fin n)
     (hLeft : ∀ i, inverse (forward i) = i)
     (hRight : ∀ i, forward (inverse i) = i) : Equiv.Perm (Fin n) where
   toFun := forward
@@ -35,64 +40,91 @@ private def permutation {n : ℕ} (forward inverse : Fin n → Fin n)
   left_inv := hLeft
   right_inv := hRight
 
-private def vertexIndex (perm : Equiv.Perm (Fin 8)) :
+/-- Convert a permutation of eight vertices into the displayed two-core vertex indexing. -/
+def vertexIndex (perm : Equiv.Perm (Fin 8)) :
     (Fin 4 ⊕ Fin 4) ≃ Fin 8 :=
   (@finSumFinEquiv 4 4).trans perm
 
-private def slotIndex (perm : Equiv.Perm (Fin 12)) :
+/-- Convert a permutation of twelve slots into the displayed two-core edge indexing. -/
+def slotIndex (perm : Equiv.Perm (Fin 12)) :
     ((Fin 5 ⊕ Fin 5) ⊕ Fin 2) ≃ Fin 12 :=
   ((Equiv.sumCongr (@finSumFinEquiv 5 5) (Equiv.refl (Fin 2))).trans
     (@finSumFinEquiv 10 2)).trans perm
 
 /-! ## Factor cores -/
 
+/-- The left four-vertex, five-slot component of the row-01 two-pole decomposition, with
+oriented slots `0→1, 0→1, 2→0, 1→3, 2→3` in index order. -/
 def row01LeftCore : ExplicitPotential.Core 4 5 where
   tail := ![0, 0, 2, 1, 2]
   head := ![1, 1, 0, 3, 3]
 
+/-- The right four-vertex, five-slot component of the row-01 two-pole decomposition, with
+oriented slots `1→3, 0→2, 0→1, 2→3, 2→3` in index order. -/
 def row01RightCore : ExplicitPotential.Core 4 5 where
   tail := ![1, 0, 0, 2, 2]
   head := ![3, 2, 1, 3, 3]
 
+/-- The left four-vertex, five-slot component of the row-02 two-pole decomposition, with
+oriented slots `0→1, 0→2, 1→3, 2→3, 2→3` in index order. -/
 def row02LeftCore : ExplicitPotential.Core 4 5 where
   tail := ![0, 0, 1, 2, 2]
   head := ![1, 2, 3, 3, 3]
 
+/-- The right four-vertex, five-slot component of the row-02 two-pole decomposition, with
+oriented slots `1→2, 1→2, 2→3, 3→0, 3→0` in index order. -/
 def row02RightCore : ExplicitPotential.Core 4 5 where
   tail := ![1, 1, 2, 3, 3]
   head := ![2, 2, 3, 0, 0]
 
+/-- The left four-vertex, five-slot component of the row-03 two-pole decomposition, with
+oriented slots `0→2, 2→1, 0→3, 3→1, 0→1` in index order. -/
 def row03LeftCore : ExplicitPotential.Core 4 5 where
   tail := ![0, 2, 0, 3, 0]
   head := ![2, 1, 3, 1, 1]
 
+/-- The right four-vertex, five-slot component of the row-03 two-pole decomposition, with
+oriented slots `2→0, 3→1, 0→1, 0→1, 2→3` in index order. -/
 def row03RightCore : ExplicitPotential.Core 4 5 where
   tail := ![2, 3, 0, 0, 2]
   head := ![0, 1, 1, 1, 3]
 
+/-- The left four-vertex, five-slot component of the row-04 two-pole decomposition, with
+oriented slots `0→1, 0→1, 3→2, 3→2, 2→0` in index order. -/
 def row04LeftCore : ExplicitPotential.Core 4 5 where
   tail := ![0, 0, 3, 3, 2]
   head := ![1, 1, 2, 2, 0]
 
+/-- The right four-vertex, five-slot component of the row-04 two-pole decomposition, with
+oriented slots `0→1, 0→1, 1→2, 2→3, 2→3` in index order. -/
 def row04RightCore : ExplicitPotential.Core 4 5 where
   tail := ![0, 0, 1, 2, 2]
   head := ![1, 1, 2, 3, 3]
 
+/-- The left four-vertex, five-slot component of the row-07 two-pole decomposition, with
+oriented slots `0→2, 2→1, 0→3, 3→1, 2→3` in index order. -/
 def row07LeftCore : ExplicitPotential.Core 4 5 where
   tail := ![0, 2, 0, 3, 2]
   head := ![2, 1, 3, 1, 3]
 
+/-- The right four-vertex, five-slot component of the row-07 two-pole decomposition, with
+oriented slots `2→3, 0→2, 0→2, 1→3, 1→3` in index order. -/
 def row07RightCore : ExplicitPotential.Core 4 5 where
   tail := ![2, 0, 0, 1, 1]
   head := ![3, 2, 2, 3, 3]
 
+/-- The left four-vertex, five-slot core in the row-13 two-pole decomposition; its incidence
+data are the same as `row07LeftCore`. -/
 def row13LeftCore : ExplicitPotential.Core 4 5 := row07LeftCore
 
+/-- The right four-vertex, five-slot core in the row-13 two-pole decomposition, again using
+`row07LeftCore` with the row-13 attachment data. -/
 def row13RightCore : ExplicitPotential.Core 4 5 := row07LeftCore
 
 /-! ## The two choices of first connector -/
 
-private def row01Focus0 : Data row01Core 4 5 4 5 where
+/-- The explicit two-pole decomposition for row 01 with connector slot 0 first. -/
+def row01Focus0 : Data row01Core 4 5 4 5 where
   leftCore := row01LeftCore
   rightCore := row01RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -109,7 +141,8 @@ private def row01Focus0 : Data row01Core 4 5 4 5 where
   head_first := by decide
   second_ends := by decide
 
-private def row01Focus1 : Data row01Core 4 5 4 5 where
+/-- The explicit two-pole decomposition for row 01 with connector slot 1 first. -/
+def row01Focus1 : Data row01Core 4 5 4 5 where
   leftCore := row01LeftCore
   rightCore := row01RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -130,7 +163,8 @@ private def row01Focus1 : Data row01Core 4 5 4 5 where
 def row01 (focus : Fin 2) : Data row01Core 4 5 4 5 :=
   if focus = 0 then row01Focus0 else row01Focus1
 
-private def row02Focus0 : Data row02Core 4 5 4 5 where
+/-- The explicit two-pole decomposition for row 02 with connector slot 0 first. -/
+def row02Focus0 : Data row02Core 4 5 4 5 where
   leftCore := row02RightCore
   rightCore := row02LeftCore
   vertices := vertexIndex (permutation ![0, 5, 6, 7, 1, 2, 3, 4] ![0, 4, 5, 6, 7, 1, 2, 3] (by decide) (by decide))
@@ -147,7 +181,8 @@ private def row02Focus0 : Data row02Core 4 5 4 5 where
   head_first := by decide
   second_ends := by decide
 
-private def row02Focus1 : Data row02Core 4 5 4 5 where
+/-- The explicit two-pole decomposition for row 02 with connector slot 1 first. -/
+def row02Focus1 : Data row02Core 4 5 4 5 where
   leftCore := row02LeftCore
   rightCore := row02RightCore
   vertices := vertexIndex (permutation ![1, 2, 3, 4, 0, 5, 6, 7] ![4, 0, 1, 2, 3, 5, 6, 7] (by decide) (by decide))
@@ -168,7 +203,8 @@ private def row02Focus1 : Data row02Core 4 5 4 5 where
 def row02 (focus : Fin 2) : Data row02Core 4 5 4 5 :=
   if focus = 0 then row02Focus0 else row02Focus1
 
-private def row03Focus0 : Data row03Core 4 5 4 5 where
+/-- The explicit two-pole decomposition for row 03 with connector slot 0 first. -/
+def row03Focus0 : Data row03Core 4 5 4 5 where
   leftCore := row03LeftCore
   rightCore := row03RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -185,7 +221,8 @@ private def row03Focus0 : Data row03Core 4 5 4 5 where
   head_first := by decide
   second_ends := by decide
 
-private def row03Focus1 : Data row03Core 4 5 4 5 where
+/-- The explicit two-pole decomposition for row 03 with connector slot 1 first. -/
+def row03Focus1 : Data row03Core 4 5 4 5 where
   leftCore := row03LeftCore
   rightCore := row03RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -206,7 +243,8 @@ private def row03Focus1 : Data row03Core 4 5 4 5 where
 def row03 (focus : Fin 2) : Data row03Core 4 5 4 5 :=
   if focus = 0 then row03Focus0 else row03Focus1
 
-private def row04Focus0 : Data row04Core 4 5 4 5 where
+/-- The explicit two-pole decomposition for row 04 with connector slot 0 first. -/
+def row04Focus0 : Data row04Core 4 5 4 5 where
   leftCore := row04LeftCore
   rightCore := row04RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -223,7 +261,8 @@ private def row04Focus0 : Data row04Core 4 5 4 5 where
   head_first := by decide
   second_ends := by decide
 
-private def row04Focus1 : Data row04Core 4 5 4 5 where
+/-- The explicit two-pole decomposition for row 04 with connector slot 1 first. -/
+def row04Focus1 : Data row04Core 4 5 4 5 where
   leftCore := row04RightCore
   rightCore := row04LeftCore
   vertices := vertexIndex (permutation ![4, 5, 6, 7, 0, 1, 2, 3] ![4, 5, 6, 7, 0, 1, 2, 3] (by decide) (by decide))
@@ -244,7 +283,8 @@ private def row04Focus1 : Data row04Core 4 5 4 5 where
 def row04 (focus : Fin 2) : Data row04Core 4 5 4 5 :=
   if focus = 0 then row04Focus0 else row04Focus1
 
-private def row07Focus0 : Data row07Core 4 5 4 5 where
+/-- The explicit two-pole decomposition for row 07 with connector slot 0 first. -/
+def row07Focus0 : Data row07Core 4 5 4 5 where
   leftCore := row07LeftCore
   rightCore := row07RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -261,7 +301,8 @@ private def row07Focus0 : Data row07Core 4 5 4 5 where
   head_first := by decide
   second_ends := by decide
 
-private def row07Focus1 : Data row07Core 4 5 4 5 where
+/-- The explicit two-pole decomposition for row 07 with connector slot 1 first. -/
+def row07Focus1 : Data row07Core 4 5 4 5 where
   leftCore := row07LeftCore
   rightCore := row07RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -282,7 +323,8 @@ private def row07Focus1 : Data row07Core 4 5 4 5 where
 def row07 (focus : Fin 2) : Data row07Core 4 5 4 5 :=
   if focus = 0 then row07Focus0 else row07Focus1
 
-private def row13Focus0 : Data row13Core 4 5 4 5 where
+/-- The explicit two-pole decomposition for row 13 with connector slot 0 first. -/
+def row13Focus0 : Data row13Core 4 5 4 5 where
   leftCore := row13LeftCore
   rightCore := row13RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -299,7 +341,8 @@ private def row13Focus0 : Data row13Core 4 5 4 5 where
   head_first := by decide
   second_ends := by decide
 
-private def row13Focus1 : Data row13Core 4 5 4 5 where
+/-- The explicit two-pole decomposition for row 13 with connector slot 1 first. -/
+def row13Focus1 : Data row13Core 4 5 4 5 where
   leftCore := row13LeftCore
   rightCore := row13RightCore
   vertices := vertexIndex (Equiv.refl _)

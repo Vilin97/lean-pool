@@ -3,11 +3,15 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Config
-import Mathlib.Data.DFinsupp.Multiset
+
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Config
+public import Mathlib.Data.DFinsupp.Multiset
 
 /-! # Orientation -/
+
+@[expose] public section
 open Multiset Finset
 
 /-!

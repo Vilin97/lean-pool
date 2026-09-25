@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusOneKGeneral
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameLeft
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.EqualTorsionKGeneral
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusOneKGeneral
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameLeft
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.EqualTorsionKGeneral
 
 /-!
 # General transmission on pointed rigid genus-one factors
@@ -16,6 +18,8 @@ derive all-divisor submodularity for a distinct marking.  Combined with the
 genus-one transmission theorem, this turns an exact torsion calculation on a
 cycle factor directly into `KGeneralTransmission`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

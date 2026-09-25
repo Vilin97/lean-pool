@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationThree
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationThree
 
 /-!
 # The Atanasov--Ranganathan construction on row 16
@@ -18,6 +20,8 @@ The calculation itself is core generic and lives in
 is name the row's lookup tables and check the incidence facts that file asks
 for.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.GenusFiveRow16
 

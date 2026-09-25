@@ -3,15 +3,19 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoReduction
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.DegreeOneRepresentatives
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoReduction
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.DegreeOneRepresentatives
 
 /-!
 # Normal form for a theta counterexample
 
 This connects the general rank-theoretic reduction to the strand geometry.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

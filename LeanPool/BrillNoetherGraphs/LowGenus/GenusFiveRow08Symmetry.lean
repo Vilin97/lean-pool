@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveClosedOrbit
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveClosedOrbit
 
 /-!
 # The leg-reversing symmetry of the AR row-08 core
@@ -37,6 +39,8 @@ fixed.  It reverses only the triangle edge `e6` and the four slots it swaps in
 pairs; all six endpoint laws are `decide`d.
 -/
 
+@[expose] public section
+
 namespace AtanasovRanganathan.GenusFiveRow08Symmetry
 
 open Utilities
@@ -46,8 +50,11 @@ open Certificate.ExplicitPotential
 open Utilities.Certificate.CoreOrbitReduction
 open GenusFiveCoreAtlas ClosedOrbit
 
+/-- Read an eight-vertex reindexing from a list, using vertex zero for a missing entry. -/
 def vfun (data : List (Fin 8)) : Fin 8 → Fin 8 := fun i => data.getD i.val 0
+/-- Read a twelve-slot reindexing from a list, using slot zero for a missing entry. -/
 def sfun (data : List (Fin 12)) : Fin 12 → Fin 12 := fun i => data.getD i.val 0
+/-- Read orientation-reversal flags for the twelve slots, using false for a missing flag. -/
 def bfun (data : List Bool) : Fin 12 → Bool := fun i => data.getD i.val false
 
 /-- A `CoreSymmetry` literal carrying its own inverses, so that

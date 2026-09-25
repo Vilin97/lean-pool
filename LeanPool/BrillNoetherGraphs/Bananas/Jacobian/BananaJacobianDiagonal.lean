@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianPresentation
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaTorsionSlopes
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossStrandSupport
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianPresentation
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaTorsionSlopes
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossStrandSupport
 
 /-!
 # The diagonal relation in the banana Jacobian presentation
@@ -16,6 +18,8 @@ divisor obtained by firing the common left endpoint once.  The proof uses
 normalized strand slopes, so it treats arbitrary storage orientations and
 length-one strands uniformly.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

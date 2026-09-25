@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBasics
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineInversionFinite
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointInversions
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaGeometry
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBasics
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineInversionFinite
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointInversions
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaGeometry
 
 /-!
 # Reusable transmission API checks
@@ -16,6 +18,8 @@ This file is deliberately disjoint from `Statements.lean`.  It records the
 mechanical consequences of the present contracts, and separates those from
 the geometric/non-recurrence input used by the evenly-marked theta theorem.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

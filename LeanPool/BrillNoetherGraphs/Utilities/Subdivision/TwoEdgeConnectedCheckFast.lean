@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ConnectedCheckFast
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionTwoEdgeCut
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ConnectedCheckFast
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionTwoEdgeCut
 
 /-!
 # A union-find two-edge-connectivity check for ordered cores
@@ -59,6 +61,8 @@ remains the literal reading of the definition and stays available as an
 independent cross-check.
 -/
 
+@[expose] public section
+
 namespace Utilities.Certificate
 
 open Utilities.Certificate.ContractionForestCensusGeneral
@@ -68,7 +72,7 @@ namespace ExplicitPotential.Core
 variable {n p : ℕ}
 
 /-- The slot set that survives deleting `e`. -/
-private abbrev without (e : Fin p) : Finset (Fin p) := Finset.univ.erase e
+abbrev without (e : Fin p) : Finset (Fin p) := Finset.univ.erase e
 
 /-- A slot crosses `S` exactly when its two ends disagree about membership. -/
 private theorem crosses_iff {core : ExplicitPotential.Core n p}

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.Semibreak
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.Semibreak
 
 /-!
   Components of the length-two cross-exception argument.
@@ -12,6 +14,8 @@ import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.Semibreak
   `Bananas.Semibreak` supplies the Dhar support lemma; this file records the
   midpoint, rank-difference, and dual-degree steps.
 -/
+
+@[expose] public section
 
 namespace Bananas
 
@@ -22,6 +26,7 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 
 /-! Dependent updates of the one-chip-per-strand representation. -/
 
+/-- Replace the optional interior chip on one strand, keeping the chips on every other strand. -/
 def replaceSemibreakChip {g : ℕ} (B : Banana g)
     (chips : ∀ γ : Fin (g + 1), Option (Fin (B.length γ - 1)))
     (β : Fin (g + 1)) (newChip : Option (Fin (B.length β - 1)))
@@ -185,6 +190,7 @@ theorem rank_bananaNormalForm_remove_midpoint_chip
     omega
   rw [max_eq_left htop, max_eq_left htop']
 
+/-- The drop in divisor rank when one chip is removed from the first mark. -/
 noncomputable def basePointDrop (M : TwiceMarked) (D : CFDiv M.graph) : ℤ :=
   rank M.graph D - rank M.graph (D - oneChip M.u)
 

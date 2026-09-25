@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedge
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedge
 
 /-!
 # Transmission with both marks on one side of a vertex wedge
@@ -18,6 +20,8 @@ The first result removes the nonnegative-threshold hypothesis from the exact
 vertex-wedge rank formula.  This is useful for arbitrary ASP transmission,
 whose required rank `tau.s (a + 1) b - 1` can equal `-1`.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

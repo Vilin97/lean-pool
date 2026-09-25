@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.LengthTwoTorsion
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.LengthTwoCrossMonotonicity
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderTwoGeneral
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.LengthTwoTorsion
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.LengthTwoCrossMonotonicity
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderTwoGeneral
 
 /-!
 # Corrected high-genus midpoint exceptions
@@ -21,6 +23,8 @@ midpoint (so its strand merely has even length), both points double to the
 endpoint pencil.  The marked graph therefore has exact torsion order two and
 has `2`-general transmission.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

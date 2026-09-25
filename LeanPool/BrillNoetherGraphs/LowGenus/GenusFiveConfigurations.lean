@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.AtanasovRanganathanProgram
-import LeanPool.BrillNoetherGraphs.Utilities.Segments.AtanasovRanganathanConfigurations
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedFaceCensus
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpec
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.AtanasovRanganathanProgram
+public import LeanPool.BrillNoetherGraphs.Utilities.Segments.AtanasovRanganathanConfigurations
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ContractionForestCensusGeneral
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedFaceCensus
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpec
 
 /-!
 # Genus-five Atanasov--Ranganathan configuration infrastructure
@@ -23,6 +25,8 @@ formalize the informal burning-subgraph notation `G_v`: the load-bearing data
 is the firing script and effective residual, which is both unambiguous and
 what the rank proof actually consumes.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.Configurations
 
@@ -110,9 +114,13 @@ end GenusFiveConfigurationKind
 The configuration tag is documentary; soundness comes from the accompanying
 `DharMove`, whose firing script and effective residual are kernel checked. -/
 structure DegreeFourDharPencil (G : CFGraph) where
+  /-- The effective degree-four divisor for which the pencil supplies moves to vertices outside
+  its support. -/
   divisor : CFDiv G
   divisor_effective : effective divisor
   divisor_degree : deg divisor = 4
+  /-- For each vertex outside the divisor support, a configuration label and a verified Dhar
+  move reaching that vertex. -/
   moveOffSupport : ∀ vertex : G.V, divisor vertex = 0 →
     GenusFiveConfigurationKind × DharMove G divisor vertex
 

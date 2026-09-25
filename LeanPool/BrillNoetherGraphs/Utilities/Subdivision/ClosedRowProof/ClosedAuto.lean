@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.Leaf
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreSymmetry
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSubdivisionIso
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.Leaf
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreSymmetry
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSubdivisionIso
 
 /-!
 # Core automorphisms on the closed row-proof orthant
@@ -18,6 +20,8 @@ uses reachability, rather than the literal output of `compFold`: canonical
 union-find representatives need not commute definitionally with a vertex
 permutation, but their fibres do.
 -/
+
+@[expose] public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 
@@ -38,28 +42,47 @@ decodes them only after verifying two-sided inverses and the endpoint laws.
 The inverse lists are emitted mechanically from the row's permutations. -/
 
 structure AutoData where
+  /-- Proposed images of core vertices, decoded modulo the number of vertices. -/
   vertex : List ℕ
+  /-- Proposed inverse images of core vertices; the checker verifies both inverse identities
+  after decoding. -/
   vertexInv : List ℕ
+  /-- Proposed images of slot occurrences, decoded modulo the number of slots. -/
   slot : List ℕ
+  /-- Proposed inverse images of slot occurrences; the checker verifies both inverse identities
+  after decoding. -/
   slotInv : List ℕ
+  /-- Orientation-reversal flags indexed by source slot, with missing flags interpreted as
+  false. -/
   reversed : List Bool
 
 namespace AutoData
 
+/-- Decode a proposed vertex image using zero for missing entries and reduction modulo the
+nonzero vertex count. -/
 def vertexMap (d : AutoData) (hn : 0 < n) (v : Fin n) : Fin n :=
   ⟨d.vertex.getD v.val 0 % n, Nat.mod_lt _ hn⟩
 
+/-- Decode a proposed inverse vertex image using zero for missing entries and reduction modulo
+the nonzero vertex count. -/
 def vertexInvMap (d : AutoData) (hn : 0 < n) (v : Fin n) : Fin n :=
   ⟨d.vertexInv.getD v.val 0 % n, Nat.mod_lt _ hn⟩
 
+/-- Decode a proposed slot image using zero for missing entries and reduction modulo the nonzero
+slot count. -/
 def slotMap (d : AutoData) (hp : 0 < p) (e : Fin p) : Fin p :=
   ⟨d.slot.getD e.val 0 % p, Nat.mod_lt _ hp⟩
 
+/-- Decode a proposed inverse slot image using zero for missing entries and reduction modulo the
+nonzero slot count. -/
 def slotInvMap (d : AutoData) (hp : 0 < p) (e : Fin p) : Fin p :=
   ⟨d.slotInv.getD e.val 0 % p, Nat.mod_lt _ hp⟩
 
+/-- Read the reversal flag of a source slot, defaulting to false when the list has no entry. -/
 def reverseAt (d : AutoData) (e : Fin p) : Bool := d.reversed.getD e.val false
 
+/-- Check nonempty vertex and slot sets, both inverse identities, and the two endpoint laws for
+the decoded automorphism data. -/
 def checks (d : AutoData) (core : ExplicitPotential.Core n p) : Bool :=
   if hn : 0 < n then
     if hp : 0 < p then
@@ -78,6 +101,8 @@ def checks (d : AutoData) (core : ExplicitPotential.Core n p) : Bool :=
     else false
   else false
 
+/-- Construct a core symmetry from decoded vertex and slot permutations after their inverse and
+endpoint checks succeed. -/
 def toSymmetry (d : AutoData) (core : ExplicitPotential.Core n p)
     (hn : 0 < n) (hp : 0 < p) (hcheck : d.checks core = true) :
     CoreSymmetry core := by
@@ -106,6 +131,8 @@ to `slotMap e`, equivalently the new coefficient at `j` is read at
 def pullbackForm (d : AutoData) (hp : 0 < p) (g : Form) : Form :=
   g.getD 0 0 :: List.ofFn (fun e : Fin p => g.getD (d.slotInvMap hp e).val.succ 0)
 
+/-- Pull back every inequality and equality form in the context through the decoded inverse slot
+map. -/
 def pullbackContext (d : AutoData) (hp : 0 < p) (Γ : Context) : Context :=
   ⟨Γ.ge.map (d.pullbackForm hp), Γ.eq.map (d.pullbackForm hp)⟩
 
@@ -151,6 +178,8 @@ end AutoData
 
 variable (symmetry : CoreSymmetry core) (length : Fin p → ℕ)
 
+/-- The symmetry-reindexed length vector used to transport the zero-slot contraction and its
+surviving subdivision. -/
 abbrev targetLength : Fin p → ℕ := symmetry.reindexLength length
 private theorem zero_mem_map (e : Fin p) :
     symmetry.slotPerm e ∈ zeroSet (targetLength symmetry length) ↔ e ∈ zeroSet length := by

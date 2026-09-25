@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.TreeDecomposition
+
+public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.TreeDecomposition
 
 /-!
 # Brambles and the bramble number
@@ -27,6 +29,8 @@ there is no separate nonemptiness field.
 `order` is an `sInf` over `ℕ`; `hittingSetCards_nonempty` (all of `V` is a
 hitting set) is what makes it meaningful rather than the `sInf ∅ = 0` default.
 -/
+
+@[expose] public section
 
 namespace Utilities.Treewidth
 

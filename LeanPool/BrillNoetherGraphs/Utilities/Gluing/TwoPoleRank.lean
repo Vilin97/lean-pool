@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoPoleProfile
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoPoleProfile
 
 /-!
 # Rank-one and doubled-point tests through two-pole responses
@@ -22,6 +24,8 @@ the second cross-edge without replacing it by a stronger sufficient
 condition.  They also apply to every seam phase and to arbitrary factor
 divisors, not only canonical divisors or genus-two graphs.
 -/
+
+@[expose] public section
 
 namespace Utilities
 namespace TwoPole

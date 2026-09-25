@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionFibreTree
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.OnceMarked
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionFibreTree
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
 
 /-!
 # From once-marked Brill--Noether existence to the gonality and Brill--Noether conjectures
@@ -52,6 +54,8 @@ at all: `deg (d • oneChip u) = d ≥ genus G + r` makes Riemann's inequality
 (`rank_ge_deg_sub_genus`) alone give `rank ≥ r`. `bnExists_of_onceMarkedBNExistence`
 below case-splits exactly on this sign.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

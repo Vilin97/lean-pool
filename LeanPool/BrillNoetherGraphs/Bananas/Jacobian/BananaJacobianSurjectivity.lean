@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianDiagonal
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianDiagonal
 
 /-!
 # Surjectivity of the banana coordinate map in degree zero
@@ -15,6 +17,8 @@ endpoint is represented by a multiple of one strand coordinate.  Expanding a
 degree-zero divisor as a sum of these differences then gives a coordinate
 vector whose image is linearly equivalent to that divisor.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

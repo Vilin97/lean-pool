@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.GrassmannianEnvelope
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionShift
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Grassmannian.GrassmannianEnvelope
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionShift
 
 /-!
 # Arbitrary output shifts of Grassmannian ASP permutations
@@ -15,6 +17,8 @@ transmission theory naturally uses every shift `chi`.  This file derives that
 family from the shift-zero Grassmannian constructor without reconstructing its
 inversion set a second time.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

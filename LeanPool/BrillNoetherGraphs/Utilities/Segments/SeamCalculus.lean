@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.EdgeAddition
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.EdgeAddition
 
 /-!
 # The seam displacement calculus
@@ -95,6 +97,8 @@ What the library **lacks**, and how it is handled here:
 **No `sorry`, no new axioms, no stated-but-unproved hypotheses:** every result
 below is proved outright from the library's API.
 -/
+
+@[expose] public section
 
 open Finset
 

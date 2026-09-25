@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.BananaEndpointRankCriterion
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.BananaEndpointRankCriterion
 
 /-!
 # Restricted rank and rank-determining sets
@@ -14,6 +16,8 @@ rank-one characterization used in its proof.  We use the lower-bound relation
 for restricted rank, which is the literal quantified content of `r_A(D) ≥ k`
 and avoids making a second noncomputable choice of an integer rank.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

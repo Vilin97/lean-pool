@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoEdgeConnectedRigidity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoEdgeConnectedRigidity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
 
 /-!
 # Rigidity of a subdivided cycle
@@ -16,6 +18,8 @@ slots joining two core vertices, each assigned an arbitrary positive integral
 length.  This file proves that every such subdivision has no one-edge cut and
 therefore satisfies the pointed genus-one rigidity interface.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

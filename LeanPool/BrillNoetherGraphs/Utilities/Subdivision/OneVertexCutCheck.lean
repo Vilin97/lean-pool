@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutConnectivity
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutConnectivity
 
 /-!
 # Finite checking for one-vertex cuts
@@ -12,6 +14,8 @@ import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutConnectivity
 This is a passive boundary for finite cut data emitted by an external search.
 Every condition of `OneVertexCut` is replayed by a transparent computation.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 
@@ -23,8 +27,12 @@ variable {K : CFGraph.{u}}
 
 /-- The proof-free part of a proposed one-vertex cut. -/
 structure Data (K : CFGraph.{u}) where
+  /-- The proposed left vertex set of the one-vertex cut; cut properties are imposed by `Valid`. -/
   left : Finset K.V
+  /-- The proposed right vertex set, whose coverage and overlap with the left are checked
+  separately. -/
   right : Finset K.V
+  /-- The proposed glue vertex intended to be the two sides' unique overlap. -/
   glue : K.V
 
 namespace Data

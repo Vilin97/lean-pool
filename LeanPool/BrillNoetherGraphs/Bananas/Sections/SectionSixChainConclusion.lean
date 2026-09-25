@@ -3,13 +3,15 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.VertexWedgeAssociativity
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.MixedTorsionChainBalance
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainBalanceArithmetic
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.ZeroGenusWedge
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralBNGeneral
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.ChainGluing
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.VertexWedgeAssociativity
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.MixedTorsionChainBalance
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainBalanceArithmetic
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.ZeroGenusWedge
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralBNGeneral
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.ChainGluing
 
 /-!
 # The canonical mixed-torsion chain conclusion
@@ -22,6 +24,8 @@ the transport uses both commutativity and associativity of vertex wedges.
 The generic commutativity isomorphism is recorded here; associativity is in
 `VertexWedgeAssociativity`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 
@@ -118,6 +122,7 @@ noncomputable def vertexWedgeCongrRight
 isomorphism beneath a further vertex wedge. -/
 structure MarkedChainReassocData (M F : Utilities.MarkedGraph)
     (rest : List Utilities.MarkedGraph) where
+  /-- The graph isomorphism moving the first wedge outside the remaining chain. -/
   iso : CFGraphIso
     ((M.wedge F).chain rest).graph
     (M.wedge (F.chain rest)).graph
@@ -184,6 +189,7 @@ the chain's left endpoint to the right endpoint of the outside-in presentation,
 which is the central attachment vertex. -/
 structure ReversedFactorChainIsoData
     (F : KGeneralChainFactor) (rest : List KGeneralChainFactor) where
+  /-- The graph isomorphism from the original chain to its reversed presentation. -/
   iso : CFGraphIso
     (F.marked.chain (rest.map KGeneralChainFactor.marked)).graph
     (reversedMarkedChain F rest).graph
@@ -237,6 +243,8 @@ noncomputable def reversedFactorChainIsoData
         F.marked.graph (reversedMarkedChain next rest).graph
         F.marked.right (reversedMarkedChain next rest).right F.marked.left
 
+/-- The underlying graph isomorphism reversing the factor chain and interchanging its outer
+marks. -/
 noncomputable def reversedFactorChainIso
     (F : KGeneralChainFactor) (rest : List KGeneralChainFactor) :
     CFGraphIso

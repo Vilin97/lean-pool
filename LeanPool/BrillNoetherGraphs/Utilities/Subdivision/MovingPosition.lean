@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
+public import Mathlib.Tactic
 
 /-!
 # Named positions on subdivided core edges
@@ -16,6 +18,8 @@ chips at a few elementary expressions in edge lengths: a minimum, or a
 vertices of `SubdivisionGraph.Spec`, with the elementary endpoint and
 interiority facts kept independent of any particular configuration.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 

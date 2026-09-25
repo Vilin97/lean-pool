@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SlopeScript
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SlopeScript
 
 /-!
 # Ramp firing scripts on positive subdivisions
@@ -13,6 +15,8 @@ A ramp is constant, then affine with slope `-1`, `0`, or `1` on a bounded
 window of each edge slot, then constant again.  This is the generic positive-
 length infrastructure behind the readable genus-four pencil proofs.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.SubdivisionRamp
 

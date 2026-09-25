@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReducedBridge
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianLatticeReduction
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReducedBridge
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianLatticeReduction
 
 /-!
 # Uniqueness of the paper's reduced banana coordinates
@@ -14,6 +16,8 @@ This is the uniqueness layer in Proposition 2.14.  Two preferred position
 vectors differing by the displayed lattice first give linearly equivalent
 left-reduced divisors, hence equal divisors by uniqueness of q-reduction.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffMultipleRows
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMCrossWitness
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffMultipleRows
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMCrossWitness
 
 /-!
 # Positive interior-residue rows for the same-strand one-off marking
@@ -20,6 +22,8 @@ The paper's final displayed divisor repeats `v_(0,0)` twice; the second copy
 must be the right endpoint.  With that correction the divisor has the right
 degree and its marked second difference is one.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

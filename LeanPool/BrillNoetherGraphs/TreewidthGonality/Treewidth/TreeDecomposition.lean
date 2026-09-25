@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
-import Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite
-import Mathlib.Tactic
+
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite
+public import Mathlib.Tactic
 
 /-!
 # Tree decompositions and treewidth
@@ -53,6 +55,8 @@ not change treewidth, so nothing is lost.
 * `trivialDecomposition` — the one-bag decomposition, which makes the set of
   achievable widths nonempty; `treewidth_le_card_sub_one`.
 -/
+
+@[expose] public section
 
 namespace Utilities.Treewidth
 

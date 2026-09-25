@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineReduction
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.SciWeierstrass
-import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixDefinitions
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeSubmodularity
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineReduction
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.SciWeierstrass
+public import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixDefinitions
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeSubmodularity
 
 /-!
 # Gluing a general marked graph to a graph with general transmission
@@ -18,6 +20,8 @@ factor permutations (`WedgeSubmodularity`); Proposition 6.13 bounds its
 sign-changing inversions, and Proposition 6.10 identifies those inversions
 with the size of the Weierstrass partition at the surviving mark.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

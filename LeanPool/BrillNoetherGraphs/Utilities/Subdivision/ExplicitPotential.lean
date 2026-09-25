@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffineCover
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionArithmetic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffineCover
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionArithmetic
 
 /-!
 # Explicit-potential local subdivision certificates
@@ -32,6 +34,8 @@ actual firing script on a subdivision graph.  The graph-construction layer is
 kept separate so that this file remains a small arithmetic trust boundary.
 -/
 
+@[expose] public section
+
 -- The `Certificate` structure deliberately lives inside a namespace that already
 -- ends in `Certificate`; renaming either would ripple through every consumer.
 -- Lean v4.33 added `linter.dupNamespace`, which flags exactly this shape.
@@ -57,21 +61,34 @@ def allFin {k : ℕ} (test : Fin k → Bool) : Bool :=
 
 /-- A finite loopless expanded core, with `p` ordered edge copies. -/
 structure Core (n p : ℕ) where
+  /-- The tail vertex of each ordered core edge occurrence. -/
   tail : Fin p → Fin n
+  /-- The head vertex of each ordered core edge occurrence. -/
   head : Fin p → Fin n
 
 /-- Endpoint slopes and a core potential for one removed-chip test. -/
 structure AnchorWitness (m n p : ℕ) where
+  /-- The integer tail-end slope contribution on each slot, used in the lower bound on the
+  potential rise. -/
   alpha : Fin p → ℤ
+  /-- The integer head-end slope contribution on each slot, whose negative bounds the potential
+  rise from above. -/
   beta : Fin p → ℤ
+  /-- The affine potential value at each core vertex for this removed-chip test. -/
   potential : Fin n → AffineForm m
 
 /-- Passive local data for a rank-one divisor over one length cone. -/
 structure Certificate (m n p : ℕ) where
+  /-- The ordered core incidence data underlying the local certificate. -/
   core : Core n p
+  /-- The affine length expression assigned to each core slot. -/
   segment : Fin p → AffineForm m
+  /-- The proposed integer chip weight at each core vertex. -/
   divisor : Fin n → ℤ
+  /-- The endpoint-slope and affine-potential witness for removing a chip at each anchor vertex. -/
   witness : Fin n → AnchorWitness m n p
+  /-- The affine inequalities defining the local length region; validity of the proposed
+  witnesses on this region is checked separately. -/
   cone : List (AffineForm m)
 
 variable {m n p : ℕ}

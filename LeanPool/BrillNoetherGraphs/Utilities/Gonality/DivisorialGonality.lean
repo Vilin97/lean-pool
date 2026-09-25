@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
 
 /-!
 # Divisorial gonality as a natural number
@@ -31,6 +33,8 @@ the bridges in both directions.
   `gonality_eq_divisorialGonality` (the dependency's `ℤ`-valued `gonality` is
   the coercion of this one).
 -/
+
+@[expose] public section
 
 namespace Utilities.Gonality
 

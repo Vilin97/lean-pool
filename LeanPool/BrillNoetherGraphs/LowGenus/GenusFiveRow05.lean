@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedThree
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow05Symmetry
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedThree
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow05Symmetry
 
 /-!
 # The Atanasov--Ranganathan construction on row 05
@@ -49,6 +51,8 @@ The other three chambers are the images of this one under the two leg swaps, so
 the closed orthant.
 -/
 
+@[expose] public section
+
 namespace AtanasovRanganathan.GenusFiveRow05
 
 open Utilities
@@ -70,10 +74,15 @@ The left chip sits on `e3` at distance `|e2|` from vertex `1`; the right chip
 sits on `e8` at distance `|e6|` from vertex `6`, i.e. at offset `|e8| - |e6|`
 from vertex `4`. -/
 
+/-- Offset of the left interior chip along slot 3, measured from vertex 1 and equal to the
+length of slot 2. -/
 def markL (d : DegSpec 8 12) : ℕ := d.length 2
 
+/-- Offset of the right interior chip along slot 8, measured from vertex 4 using truncated
+subtraction of the length of slot 6. -/
 def markR (d : DegSpec 8 12) : ℕ := d.length 8 - d.length 6
 
+/-- The marked offsets on slots 3 and 8; every other slot receives offset zero. -/
 def rowMark (d : DegSpec 8 12) (e : Fin 12) : ℕ :=
   if e = 3 then markL d else if e = 8 then markR d else 0
 
@@ -296,10 +305,14 @@ theorem marks_admissible {d : DegSpec 8 12} (hCore : d.core = row05Core)
 
 /-! ## Each slot as one or two ordinary arms -/
 
+/-- Tail contribution of a slot to the marked script: a positive marked offset cuts the ramp at
+height zero; otherwise use the complete slot. -/
 def slotTailForm (d : DegSpec 8 12) (h : Fin 8 → ℕ) (e : Fin 12) : ℤ :=
   if 0 < rowMark d e then tailContribution (rowMark d e) (h (d.core.tail e)) 0
   else tailContribution (d.length e) (h (d.core.tail e)) (h (d.core.head e))
 
+/-- Head contribution of a slot to the marked script, using the segment beyond an interior mark
+on slots 3 and 8 and the complete slot otherwise. -/
 def slotHeadForm (d : DegSpec 8 12) (h : Fin 8 → ℕ) (e : Fin 12) : ℤ :=
   if e = 3 ∨ e = 8 then
     (if rowMark d e < d.length e then
@@ -368,6 +381,8 @@ theorem slotHeadTerm_eq {d : DegSpec 8 12} (hCore : d.core = row05Core)
 
 /-! ## The endpoint ledger, vertex by vertex -/
 
+/-- The total incident-slot contribution at each row-05 core vertex, with the two marked slots
+evaluated by their split-ramp formulas. -/
 def contribForm (d : DegSpec 8 12) (h : Fin 8 → ℕ) (v : Fin 8) : ℤ :=
   if v = 0 then
     tailContribution (d.length 0) (h 0) (h 1) + tailContribution (d.length 1) (h 0) (h 1)
@@ -413,6 +428,8 @@ theorem contrib_eq {d : DegSpec 8 12} (hCore : d.core = row05Core)
 
 /-! ## The displayed divisor -/
 
+/-- The two core-supported chips of the row-05 divisor, one each at vertices 2 and 5; the
+remaining chips lie at the marks. -/
 def chipWeight (v : Fin 8) : ℤ := if v = 2 then 1 else if v = 5 then 1 else 0
 
 theorem chipWeight_nonneg (v : Fin 8) : 0 ≤ chipWeight v := by
@@ -511,6 +528,8 @@ configuration-3 pair moves each collapsed arm's chip onto the centre it feeds,
 which is a transfer inside a contracted class and so leaves every class sum
 alone. -/
 
+/-- Core chip allocation for the central pair: redistribute the base weight across contracted
+slots 3, 5, and 7 before applying the height script. -/
 def pairAlloc (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   baseWeight d v
     + (if d.length 3 = 0 then transferWeight 1 3 v else 0)
@@ -752,6 +771,8 @@ theorem heightRB_const (d : DegSpec 8 12) (hR : d.length 6 ≤ d.length 8) (e : 
   all_goals simp [heightRB, row05Core]
   all_goals omega
 
+/-- Expanded core coefficients after applying the right-banana height script to the base weight;
+`rbCoeff_eq` relates this formula to the endpoint contributions. -/
 def rbCoeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then 0
   else if v = 1 then zeroChip (markL d)
@@ -824,8 +845,12 @@ theorem rbCoeff_nonneg {d : DegSpec 8 12} (hR : d.length 6 ≤ d.length 8) (v : 
   · show (0 : ℤ) ≤ headContribution (d.length 6) 0 (d.length 6)
     exact headContribution_nonneg (Nat.zero_le _) (by omega)
 
+/-- Representative receiving the chip for vertex 6: choose vertex 4 when slot 8 is contracted,
+and vertex 6 otherwise. -/
 def ownerSix (d : DegSpec 8 12) : Fin 8 := if d.length 8 = 0 then 4 else 6
 
+/-- Representative receiving the chip for vertex 7: choose vertex 5 when slot 6 is contracted,
+and vertex 7 otherwise. -/
 def ownerSeven (d : DegSpec 8 12) : Fin 8 := if d.length 6 = 0 then 5 else 7
 
 theorem rbCoeff_owner_seven {d : DegSpec 8 12} (_hR : d.length 6 ≤ d.length 8) :
@@ -878,6 +903,8 @@ theorem heightT3_const (d : DegSpec 8 12) (hL : d.length 2 ≤ d.length 3)
     row05Core]
   all_goals omega
 
+/-- Expanded coefficients of the allocated central-pair divisor after the script targeting
+vertex 3; `t3Coeff_eq` identifies the endpoint-sum formula. -/
 def t3Coeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then 0
   else if v = 1 then (zeroChip (markL d) - zeroChip (d.length 3))
@@ -1060,6 +1087,8 @@ theorem heightT4_const (d : DegSpec 8 12) (hL : d.length 2 ≤ d.length 3)
     row05Core]
   all_goals omega
 
+/-- Expanded coefficients of the allocated central-pair divisor after the script targeting
+vertex 4; `t4Coeff_eq` identifies the endpoint-sum formula. -/
 def t4Coeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then 0
   else if v = 1 then (zeroChip (markL d) - zeroChip (d.length 3))
@@ -1199,6 +1228,8 @@ theorem t4Coeff_nonneg {d : DegSpec 8 12} (hL : d.length 2 ≤ d.length 3)
   · show (0 : ℤ) ≤ (0 : ℤ)
     norm_num
 
+/-- Representative for the vertex-4 target: use vertex 3 when slot 9 is contracted and the
+second arm is longer, and vertex 4 otherwise. -/
 def ownerFour (d : DegSpec 8 12) : Fin 8 :=
   if d.length 9 = 0 ∧ ¬ (armB d ≤ armA d) then 3 else 4
 

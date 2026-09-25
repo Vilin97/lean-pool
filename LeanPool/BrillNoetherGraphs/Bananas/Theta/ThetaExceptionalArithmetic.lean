@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrand
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroSupport
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrand
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroSupport
 
 /-!
 # Arithmetic form of the theta exceptional-position condition
@@ -14,6 +16,8 @@ This file separates the finite interval calculation in paper Theorem 3.4
 from its divisor-rank content.  Coordinates here are the normalized
 coordinates used by `strandVertex`, measured from core vertex `0`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

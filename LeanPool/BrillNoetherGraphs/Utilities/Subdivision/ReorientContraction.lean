@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedContraction
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedContraction
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
 
 /-!
 # Contraction up to slot reversal
@@ -26,6 +28,8 @@ The route is the one `Certificate/SubdivisionIso.lean` already supports:
 reorient the target spec, contract there, and transport back along the
 identity relabeling whose `reversed` field records the flips.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.ReorientContraction
 

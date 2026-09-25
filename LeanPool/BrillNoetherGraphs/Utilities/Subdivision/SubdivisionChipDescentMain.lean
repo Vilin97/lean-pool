@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionChipDescentStep
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionChipDescentStep
+public import Mathlib.Tactic
 
 /-!
 # Descent of winnability and rank along a regular subdivision
@@ -15,6 +17,8 @@ The vertex inequalities for the rounded script, and the descent theorems
 `Utilities/Subdivision/SubdivisionChipDescent.lean` for the definitions and
 the overall argument.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationBananaDoubleChip
-import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedRow
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow08Symmetry
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationBananaDoubleChip
+public import LeanPool.BrillNoetherGraphs.LowGenus.ConfigurationMarkedRow
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow08Symmetry
 
 /-!
 # AR row 08, chamber 3
@@ -42,6 +44,8 @@ chamber and is discharged by `GenusFiveRow08Symmetry.chamber_covers` together
 with `ClosedOrbit.closedConstruction_of_chamber`; there is no chamber-4 file.
 -/
 
+@[expose] public section
+
 namespace AtanasovRanganathan.GenusFiveRow08ChamberThree
 
 open Utilities
@@ -64,6 +68,7 @@ open ConfigurationBananaDoubleChip
 /-- The chip on `e4`, at distance `|e3|` from the tail `1`. -/
 def markY (d : DegSpec 8 12) : ℕ := d.length 3
 
+/-- The third chamber marks only slot 4, at offset `markY`; other slots receive offset zero. -/
 def rowMark (d : DegSpec 8 12) (e : Fin 12) : ℕ := if e = 4 then markY d else 0
 
 @[simp] theorem rowMark_four (d : DegSpec 8 12) : rowMark d 4 = markY d := by
@@ -100,10 +105,16 @@ def armTwo (d : DegSpec 8 12) : ℕ := min (d.length 9) (d.length 8)
 the marked slot `e4`. -/
 def armFour (d : DegSpec 8 12) : ℕ := min (d.length 6) (d.length 4 - markY d)
 
+/-- The smaller effective arm at vertices 2 and 4, used as the shared height of their pair
+configuration. -/
 def pairLow (d : DegSpec 8 12) : ℕ := min (armTwo d) (armFour d)
 
+/-- Target height at vertex 2, capped by its effective arm and by the shared height plus the
+length of connecting slot 5. -/
 def targetTwo (d : DegSpec 8 12) : ℕ := min (armTwo d) (pairLow d + d.length 5)
 
+/-- Target height at vertex 4, capped by its effective arm and by the shared height plus the
+length of connecting slot 5. -/
 def targetFour (d : DegSpec 8 12) : ℕ := min (armFour d) (pairLow d + d.length 5)
 
 /-- The shorter of the two right-banana slots. -/
@@ -234,6 +245,8 @@ theorem profileRB6 {d : DegSpec 8 12} (hCore : d.core = row08Core)
 
 /-! ## The endpoint ledger, vertex by vertex -/
 
+/-- Incident-slot contribution at each row-08 core vertex in chamber three, with the marked slot
+4 evaluated by its split-ramp formula. -/
 def contribForm (d : DegSpec 8 12) (h : Fin 8 → ℕ) (v : Fin 8) : ℤ :=
   if v = 0 then
     tailContribution (d.length 0) (h 0) (h 1)
@@ -284,6 +297,7 @@ theorem contrib_eq {d : DegSpec 8 12} (hCore : d.core = row08Core)
 
 /-! ## The divisor -/
 
+/-- Core-supported part of the third-chamber divisor: two chips at vertex 5 and one at vertex 3. -/
 def chipWeight (v : Fin 8) : ℤ := if v = 5 then 2 else if v = 3 then 1 else 0
 
 theorem chipWeight_nonneg (v : Fin 8) : 0 ≤ chipWeight v := by
@@ -296,6 +310,8 @@ inside the left-top leg. -/
 def rowDivisor (d : DegSpec 8 12) : CFDiv d.graph :=
   markedDivisorOne d chipWeight (rowMark d) 4
 
+/-- Base core weight formed from the three core chips and the endpoint contribution of the
+marked chip on slot 4. -/
 def base (d : DegSpec 8 12) : Fin 8 → ℤ :=
   baseOne d chipWeight (rowMark d) 4
 
@@ -391,6 +407,8 @@ theorem bananaAlloc_classSum {d : DegSpec 8 12} (hCore : d.core = row08Core)
 
 /-! ## The left banana pair -/
 
+/-- Expanded core coefficients after the left-banana height script, combining the base with
+endpoint contributions. `lbCoeff_eq` identifies this formula with the script computation. -/
 def lbCoeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then headContribution (d.length 3) 0 (markY d)
   else if v = 1 then
@@ -471,6 +489,7 @@ theorem lbCoeff_nonneg {d : DegSpec 8 12} (hB : d.length 3 ≤ d.length 4)
   · show (0 : ℤ) ≤ (0 : ℤ)
     norm_num
 
+/-- Target representative for vertex 0, moved to vertex 3 when slot 3 is contracted. -/
 def ownerZero (d : DegSpec 8 12) : Fin 8 := if d.length 3 = 0 then 3 else 0
 
 theorem lbCoeff_owner_zero {d : DegSpec 8 12} : 1 ≤ lbCoeff d (ownerZero d) := by
@@ -497,6 +516,8 @@ theorem pairLow_comm (d : DegSpec 8 12) :
   unfold pairLow
   omega
 
+/-- Expanded core coefficients after the vertex-2 height script, combining the pair allocation
+with endpoint contributions. `t2Coeff_eq` identifies this formula with the script computation. -/
 def t2Coeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then 0
   else if v = 1 then
@@ -616,6 +637,8 @@ theorem t2Coeff_nonneg {d : DegSpec 8 12} (hB : d.length 3 ≤ d.length 4)
   · show (0 : ℤ) ≤ (0 : ℤ)
     norm_num
 
+/-- Target representative for vertex 2, moved to vertex 4 when connecting slot 5 is contracted
+and the effective arm at vertex 2 is longer. -/
 def ownerTwo (d : DegSpec 8 12) : Fin 8 :=
   if d.length 5 = 0 ∧ ¬ (armTwo d ≤ armFour d) then 4 else 2
 
@@ -650,6 +673,8 @@ theorem t2Coeff_owner {d : DegSpec 8 12} : 1 ≤ t2Coeff d (ownerTwo d) := by
     simp only [fwd_tail, rev_tail] at hpair
     omega
 
+/-- Expanded core coefficients after the vertex-4 height script, combining the pair allocation
+with endpoint contributions. `t4Coeff_eq` identifies this formula with the script computation. -/
 def t4Coeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then 0
   else if v = 1 then
@@ -770,6 +795,8 @@ theorem t4Coeff_nonneg {d : DegSpec 8 12} (hB : d.length 3 ≤ d.length 4)
   · show (0 : ℤ) ≤ (0 : ℤ)
     norm_num
 
+/-- Target representative for vertex 4, moved to vertex 2 when connecting slot 5 is contracted
+and the effective arm at vertex 4 is longer. -/
 def ownerFour (d : DegSpec 8 12) : Fin 8 :=
   if d.length 5 = 0 ∧ ¬ (armFour d ≤ armTwo d) then 2 else 4
 
@@ -806,6 +833,8 @@ theorem t4Coeff_owner {d : DegSpec 8 12} : 1 ≤ t4Coeff d (ownerFour d) := by
 
 /-! ## The right banana pair, short-arm reading -/
 
+/-- Expanded core coefficients after the right-banana vertex-7 height script, combining the base
+with endpoint contributions. `rb7Coeff_eq` identifies this formula with the script computation. -/
 def rb7Coeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then 0
   else if v = 1 then zeroChip (markY d)
@@ -866,6 +895,7 @@ theorem rb7Coeff_nonneg {d : DegSpec 8 12} (_hB : d.length 3 ≤ d.length 4)
   · show (0 : ℤ) ≤ headContribution (d.length 7) 0 (bananaLow d)
     exact headContribution_nonneg (Nat.zero_le _) (by omega)
 
+/-- Target representative for vertex 7, moved to vertex 5 when slot 7 is contracted. -/
 def ownerSeven (d : DegSpec 8 12) : Fin 8 := if d.length 7 = 0 then 5 else 7
 
 theorem rb7Coeff_owner_seven {d : DegSpec 8 12} (hD : d.length 7 ≤ d.length 2) :
@@ -884,6 +914,9 @@ theorem rb7Coeff_owner_seven {d : DegSpec 8 12} (hD : d.length 7 ≤ d.length 2)
 
 /-! ## The right banana pair, far reading under the double chip -/
 
+/-- Expanded core coefficients after the right-banana vertex-6 height script, combining the
+adjusted allocation with endpoint contributions. `rb6Coeff_eq` identifies this formula with the
+script computation. -/
 def rb6Coeff (d : DegSpec 8 12) (v : Fin 8) : ℤ :=
   if v = 0 then 0
   else if v = 1 then zeroChip (markY d)
@@ -981,6 +1014,8 @@ theorem rb6Coeff_nonneg {d : DegSpec 8 12} (hD : d.length 7 ≤ d.length 2)
       (by intro hcon; exact absurd hcon (by norm_num))
     omega
 
+/-- Target representative for vertex 6: keep vertex 6 when both parallel banana slots have
+positive length, and use vertex 7 otherwise. -/
 def ownerSix (d : DegSpec 8 12) : Fin 8 := if 0 < bananaPar d then 6 else 7
 
 theorem rb6Coeff_owner_six {d : DegSpec 8 12} (hD : d.length 7 ≤ d.length 2) :

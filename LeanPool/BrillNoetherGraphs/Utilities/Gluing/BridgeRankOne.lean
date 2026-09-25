@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeDivisors
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeDivisors
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankOne
 
 /-!
 # Rank one across a bridge
@@ -14,6 +16,8 @@ Rank-one divisors on two factors combine to a rank-one divisor on their bridge
 sum after removing one chip at a bridge endpoint. The loss of one degree is the
 familiar bridge gluing correction.
 -/
+
+@[expose] public section
 
 namespace MarkedGraphs
 

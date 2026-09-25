@@ -3,13 +3,15 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.GraphIsoLaplacianEquiv
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionExistence
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.GraphIsoLaplacianEquiv
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionSeparator
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionExistence
+public import Mathlib.Tactic
 
 /-!
 # One-edge subdivision refinement
@@ -32,6 +34,8 @@ The fully proved part is deliberately occurrence-based:
 Matching such a presentation to its source remains an explicit data
 obligation rather than treating edge ordering as definitional equality.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.OneEdgeSplitRefinement
 
@@ -233,13 +237,20 @@ reverse. -/
 structure OneSplitData
     (source : SubdivisionGraph.Spec n p)
     (expanded : SubdivisionGraph.Spec (n + 1) (p + 1)) where
+  /-- The source edge divided into two positive segments in the expanded presentation. -/
   splitEdge : Fin p
+  /-- The positive first-segment length in the one-edge split. -/
   firstLength : ℕ
+  /-- The positive second-segment length, whose sum with the first equals the original edge
+  length. -/
   secondLength : ℕ
   firstLength_pos : 0 < firstLength
   secondLength_pos : 0 < secondLength
   length_sum : source.length splitEdge = firstLength + secondLength
+  /-- The bijection between source and expanded subdivision vertices. -/
   vertexEquiv : source.Vertex ≃ expanded.Vertex
+  /-- The bijection of unit-edge occurrences, required to match endpoints under `vertexEquiv` up
+  to reversal. -/
   stepEquiv : source.Step ≃ expanded.Step
   unitEdge_eq : ∀ step : source.Step,
     expanded.unitEdge (stepEquiv step) =

@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointBlock
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffRefinedInversion
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffCorrectedInversion
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffPeriodSeparation
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointBlock
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffRefinedInversion
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffCorrectedInversion
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffPeriodSeparation
 
 /-!
 # Explicit quadratic inversion growth on bananas
@@ -20,6 +22,8 @@ displayed number of normalized inversion classes.  The paper leaves
 verified length hypotheses for its endpoint, one-off, and cross-one-off
 families.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

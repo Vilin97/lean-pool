@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.CorrectedMidpointKGeneral
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffResidueDelta
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.CorrectedMidpointKGeneral
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffResidueDelta
 
 /-!
 # The midpoint torsion bound
@@ -20,6 +22,8 @@ existing reduced banana normal forms. Reducing at either endpoint also handles
 the reflected case without choosing an orientation. In fact the even-period
 argument only needs the first mark to be a midpoint, of any strand length.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

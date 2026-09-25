@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.CorrectedBananaTorsion
-import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixBananaCorollary
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.CorrectedBananaTorsion
+public import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixBananaCorollary
 
 /-!
 # The corrected torsion classification and Theorem 1.17
@@ -21,6 +23,8 @@ exceptional branch has exact torsion order two.  The corrected Section 6
 assembly then combines the remaining `g ≤ k` branch with the banana
 Brill--Noether obstruction.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

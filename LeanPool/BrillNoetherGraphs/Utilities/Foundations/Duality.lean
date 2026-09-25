@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
 
 /-!
 # Riemann--Roch duality for Brill--Noether existence
@@ -14,6 +16,8 @@ Graph Riemann--Roch identifies the rank condition for a divisor `D` with the
 dual rank condition for `K_G - D`.  This module records both the pointwise
 rank equivalence and the induced symmetry of `BNExists`.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Tricycle.HelperLemma
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.GonalityTransport
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Tricycle.HelperLemma
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.GonalityTransport
+public import Mathlib.Tactic
 
 /-!
 # Lemma 3.6 and Corollary 3.7
@@ -28,6 +30,8 @@ Each geometric conclusion is then a linear inequality in those twenty-two
 integers, the degree identity is one more, and `linarith` finishes.  No `Finset`
 union, no inclusion–exclusion.
 -/
+
+@[expose] public section
 
 namespace Utilities.Tricycle
 

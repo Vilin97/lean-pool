@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreMarkerCut
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreMarkerCut
 
 /-!
 # Graph properties of compatible pseudocore subdivisions
@@ -15,6 +17,8 @@ pseudocore, however, it determines all graph-theoretic properties needed by
 the low-genus normalizers: connectedness, genus, and leaflessness of every
 positive subdivision.
 -/
+
+@[expose] public section
 namespace Utilities.Certificate.PseudocoreSubdivisionProperties
 
 open Utilities

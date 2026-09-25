@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.LegalFiring
-import LeanPool.BrillNoetherGraphs.Utilities.Gonality.DivisorialGonality
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.UnderlyingSimpleGraph
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.FossilTopology
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.LegalFiring
+public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.DivisorialGonality
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.UnderlyingSimpleGraph
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.FossilTopology
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
 
 /-!
 # Highlights of the `Utilities` library
@@ -44,6 +46,8 @@ it:
 * the discrete/metric gonality gap (van Dobben de Bruyn–Smit–van der Wegen) —
   `Tricycle/`, restated in `Tricycle/Highlights.lean`.
 -/
+
+@[expose] public section
 
 namespace Utilities.Highlights
 

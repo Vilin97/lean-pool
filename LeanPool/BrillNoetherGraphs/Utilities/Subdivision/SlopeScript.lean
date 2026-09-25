@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotentialRankOne
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MovingPosition
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotentialRankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.MovingPosition
+public import Mathlib.Tactic
 
 /-!
 # Laplacians of subdivision scripts described by their unit-step slopes
@@ -27,6 +29,8 @@ unit step of slot `edge`.  Then
 
 Both statements are exact, and neither refers to the values of the script.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CubicCore
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CubicCore
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import Mathlib.Tactic
 
 /-!
 # Unordered pair multiplicities of an ordered core (light half)
@@ -18,6 +20,8 @@ the pseudocore marker layer consumes.  Rehomed from
 file) so that consumers of these three declarations do not pull in the
 occurrence-relabeling and replay machinery.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 

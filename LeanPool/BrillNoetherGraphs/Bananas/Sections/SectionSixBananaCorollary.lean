@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMFullClassification
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderExact
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralBNGeneral
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.CorrectedBananaTorsion
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMFullClassification
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderExact
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralBNGeneral
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.CorrectedBananaTorsion
 
 /-!
 # The Section 6 large-period banana obstruction
@@ -17,6 +19,8 @@ Section 6 Brill--Noether obstruction: a `k`-general transmission marking on a
 high-genus banana cannot have `k ≥ g`, since Proposition 6.1 would make the
 underlying banana Brill--Noether general.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

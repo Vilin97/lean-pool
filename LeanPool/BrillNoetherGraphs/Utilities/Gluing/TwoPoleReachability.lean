@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoPole
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ScriptClamping
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.TwoPole
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ScriptClamping
 
 /-!
 # Reaching an attachment vertex through two connector paths
@@ -16,6 +18,8 @@ convex integral path potential; the second connector is constant. This avoids
 requiring an isomorphism to a separately constructed path-join graph.
 -/
 
+@[expose] public section
+
 namespace Utilities.TwoPole
 
 universe u v w
@@ -24,7 +28,11 @@ universe u v w
 first path length is needed: the second path always has constant potential. -/
 structure ScriptGluing (A : CFGraph.{u}) (B : CFGraph.{v}) (G : CFGraph.{w})
     (p : TwoPole A) (q : TwoPole B) (L : ℕ) where
+  /-- The injective placement of the left graph's vertices into the graph carrying the glued
+  firing script. -/
   left : A.V → G.V
+  /-- The injective placement of the right graph's vertices, with image disjoint from the left
+  placement. -/
   right : B.V → G.V
   left_injective : Function.Injective left
   right_injective : Function.Injective right

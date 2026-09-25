@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiring
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroSupport
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiring
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroSupport
 
 /-!
 # Rank-difference calculation for the cross-one-off marking
@@ -16,6 +18,8 @@ endpoints on two distinct strands.  The proof packages the two remaining
 interior chips as a semibreak divisor, shifts them after deleting a marked
 point, and applies the endpoint/semibreak rank formula four times.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

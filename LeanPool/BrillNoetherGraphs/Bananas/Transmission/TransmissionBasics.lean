@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankChipStep
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankChipStep
 
 /-!
 # Basic periodicity lemmas for marked banana transmission
@@ -15,6 +17,8 @@ These lemmas are graph-independent.  They isolate the part of the paper's
 torsion-periodicity argument that follows solely from linear equivalence,
 before any banana rank computation is used.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

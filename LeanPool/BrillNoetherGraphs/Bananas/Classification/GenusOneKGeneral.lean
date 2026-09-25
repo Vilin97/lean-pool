@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusOneRankDelta
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointInversions
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineReduction
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineInversionFinite
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInvTauCorrection
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusOneRankDelta
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointInversions
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineReduction
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineInversionFinite
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInvTauCorrection
 
 /-!
 # General transmission in genus one
@@ -33,6 +35,8 @@ The shape of the argument, for a fixed divisor `D`:
 The `k = 1` case is separated out because `affineReflection` needs `2 ≤ k`.
 There every index is principal, so `τ` is again a translation.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffineCover
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.AffineCover
 
 /-!
 # Affine wall-decision cover certificates
@@ -19,6 +21,8 @@ a Farkas certificate.
 The checker is deliberately small.  Generated search code is untrusted; only
 the Boolean replay and the theorem below enter the proof.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.AffineCover
 open Utilities.Certificate
@@ -36,7 +40,7 @@ inductive DecisionTreeData (m : ℕ) where
 
 namespace DecisionTreeData
 
-private def ValidActive {m : ℕ}
+def ValidActive {m : ℕ}
     (cones : List (List (AffineForm m)))
     (active : List (AffineForm m)) : DecisionTreeData m → Prop
   | .impossible farkas => farkas.Valid active
@@ -47,7 +51,7 @@ private def ValidActive {m : ℕ}
       ValidActive cones (active ++ [form]) holds ∧
         ValidActive cones (active ++ [form.violation]) fails
 
-private def checkActive {m : ℕ}
+def checkActive {m : ℕ}
     (cones : List (List (AffineForm m)))
     (active : List (AffineForm m)) : DecisionTreeData m → Bool
   | .impossible farkas => farkas.check active

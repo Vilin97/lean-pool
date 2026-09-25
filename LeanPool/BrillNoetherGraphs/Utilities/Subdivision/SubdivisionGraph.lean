@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotential
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.RankOne
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotential
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.RankOne
+public import Mathlib.Tactic
 
 /-!
 # Subdivision graphs from finite edge slots
@@ -23,6 +25,8 @@ type of all unit steps, so every unit edge is emitted exactly once even when
 several emitted pairs coincide.
 -/
 
+@[expose] public section
+
 namespace Utilities.Certificate.SubdivisionGraph
 
 open Finset Multiset
@@ -31,7 +35,9 @@ open ExplicitPotential
 
 /-- Complete input data for subdividing a finite loopless core. -/
 structure Spec (n p : ℕ) where
+  /-- The finite nonempty loopless core whose slots are subdivided. -/
   core : ExplicitPotential.Core n p
+  /-- The positive number of unit edges replacing each core slot. -/
   length : Fin p → ℕ
   core_nonempty : 0 < n
   core_loopless : ∀ edge : Fin p, core.tail edge ≠ core.head edge

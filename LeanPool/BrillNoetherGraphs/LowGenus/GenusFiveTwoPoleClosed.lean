@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveTwoPole
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DiscreteSpecialization
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveTwoPole
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DiscreteSpecialization
 
 /-!
 # Six closed genus-five constructions from the common positive proof
@@ -15,6 +17,8 @@ The same canonical core weights are used on every face. Finite discrete
 specialization transports their rank from positive subdivisions to the
 contracted graph. No row-specific boundary construction is imported here.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.GenusFiveTwoPoleClosed
 

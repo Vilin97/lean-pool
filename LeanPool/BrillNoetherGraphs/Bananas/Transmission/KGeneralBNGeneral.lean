@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossingInversionCount
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoVertexPencilCore
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossingInversionCount
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.TwoVertexPencilCore
 
 /-!
 # Large-period general transmission implies Brill--Noether generality
@@ -21,6 +23,8 @@ inversions.  If that family has more than `g` members, two normalize to the
 same `k`-inversion.  The interval between those representatives then supplies
 at least `2k - 1` distinct `k`-inversions, contradicting the defining bound.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

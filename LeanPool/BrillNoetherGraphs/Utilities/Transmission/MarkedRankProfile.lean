@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgeSameSide
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedgeSameSide
 
 /-!
 # Marked rank profiles and attained wedge convolution
@@ -15,6 +17,8 @@ family of lower bounds: the tropical convolution of two realized profiles is
 attained at an integer phase and equals the wedge rank.  This formulation is
 suited to recursive attachments and avoids any `min` or `sInf` interface.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

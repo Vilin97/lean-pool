@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.CanonicalSlackPair
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeGenusOne
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.CanonicalSlackPair
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeGenusOne
 
 /-!
 # A rigid genus-one wedge on a genus-three graph
@@ -17,6 +19,8 @@ genus-one cycle without adding chips.
 
 The theorem uses the established `MarkedGraphs` namespace for API compatibility.
 -/
+
+@[expose] public section
 
 namespace MarkedGraphs
 

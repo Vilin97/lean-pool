@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.TreewidthGonality.Gonality.BrambleGonality
-import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.SeymourThomas
+
+public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Gonality.BrambleGonality
+public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.SeymourThomas
 
 /-!
 # `treewidth ≤ gonality`
@@ -25,6 +27,8 @@ The proof is the two-line composition of the repository's two halves:
 Both halves are unconditional, so `#print axioms` on the theorems below
 reports exactly `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 namespace Utilities.Gonality
 

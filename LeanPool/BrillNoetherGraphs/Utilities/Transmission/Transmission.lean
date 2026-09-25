@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.MarkedTwistDegree
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
-import LeanPool.BrillNoetherGraphs.Demazure.AspPerm
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.MarkedTwistDegree
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
+public import LeanPool.BrillNoetherGraphs.Demazure.AspPerm
 
 /-!
 # Graph transmission conditions
@@ -20,6 +22,8 @@ separated from the global condition.  Later essential-set reductions can then
 prove that one finite set of lattice points is complete without changing the
 basic definition of transmission.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

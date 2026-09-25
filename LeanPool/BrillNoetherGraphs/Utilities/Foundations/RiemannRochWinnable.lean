@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Duality
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Duality
 
 /-!
 # Degree-specialized Riemann--Roch and winnability
@@ -15,6 +17,8 @@ condition `rank D ≥ k` is exactly winnability of the canonical complement
 common-complement arguments, where the degree bookkeeping is fixed before the
 rank condition is applied.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

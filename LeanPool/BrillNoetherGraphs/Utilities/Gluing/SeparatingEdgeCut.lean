@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
+public import Mathlib.Tactic
 
 /-!
 # Occurrence-safe separating edges
@@ -16,6 +18,8 @@ multiplicity equation is important for multigraphs: a bridge in the
 underlying simple graph is not enough when parallel edge occurrences exist.
 -/
 
+@[expose] public section
+
 namespace Utilities
 
 open Finset
@@ -25,6 +29,8 @@ universe u
 
 /-- A finite cut whose unique crossing edge occurrence is `x-y`. -/
 structure SeparatingEdgeCut (G : CFGraph.{u}) (x y : G.V) where
+  /-- The side of the cut containing `x` and excluding `y`; the validity fields require their
+  edge to be its unique crossing occurrence. -/
   side : Finset G.V
   left_mem : x ∈ side
   right_not_mem : y ∉ side

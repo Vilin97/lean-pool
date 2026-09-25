@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import Mathlib.Data.Int.Lemmas
-import Mathlib.Tactic
+
+public import Mathlib.Data.Int.Lemmas
+public import Mathlib.Tactic
 
 /-!
 # Integer interpolation along a subdivided edge
@@ -24,6 +26,8 @@ its slopes are nondecreasing.  The sign convention is chosen for the future
 chip-firing application: at an interior path vertex, `prin` will be the next
 slope minus the previous slope.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.SubdivisionArithmetic
 

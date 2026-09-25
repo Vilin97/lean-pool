@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionEuler
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.UnderlyingSimpleGraph
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContractionEuler
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.UnderlyingSimpleGraph
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
+public import Mathlib.Tactic
 
 /-!
 # Tree fibres in equal-genus topological contractions
@@ -23,6 +25,8 @@ This is the local inequality used with the Euler accounting in
 the fibre edge multisets, equality of source and target genus forces equality
 in this bound fibre by fibre.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

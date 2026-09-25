@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichChipBridge
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichW5Aggregation
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichChipBridge
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichW5Aggregation
 
 /-!
 # The divisor denoted by a rich row-proof leaf
@@ -13,6 +15,8 @@ import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.RichW5Ag
 This module isolates the representation-independent divisor and degree
 calculation from the closed-face soundness assembly.
 -/
+
+@[expose] public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

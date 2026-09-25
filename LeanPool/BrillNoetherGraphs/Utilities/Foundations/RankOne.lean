@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
 
 /-!
 # Rank-one certificates
@@ -13,6 +15,8 @@ Rank at least one can be checked one vertex at a time. This module packages
 that reduction independently of the edge-addition machinery and gives a
 certificate interface suited to explicit chip-firing arguments.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaSameStrandLemma
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaCounterexampleNormalForm
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaExceptionalArithmetic
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaSameStrandLemma
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaCounterexampleNormalForm
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaExceptionalArithmetic
 
 /-!
 # Negative divisor classes on an interior-marked theta strand
@@ -19,6 +21,8 @@ subdivision orientation, the coordinate system consumed by the existing exact
 interval theorem.  Generic divisor-algebra wrappers keep its surjectivity
 proof away from the concrete `oneChip` elaboration blowup.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

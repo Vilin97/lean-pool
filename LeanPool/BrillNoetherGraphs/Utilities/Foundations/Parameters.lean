@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Rank
+
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Rank
 
 /-!
 # Brill--Noether parameters
@@ -17,6 +19,8 @@ The existence predicate deliberately includes the degree equality.  This makes
 duality and later arithmetic reductions insensitive to the particular divisor
 chosen as a witness.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

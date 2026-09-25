@@ -3,12 +3,14 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.Generated.GenusFourClosedRows
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCubicCoverage
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095Closed
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow097Closed
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow098Closed
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.Generated.GenusFourClosedRows
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCubicCoverage
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow095Closed
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow097Closed
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow098Closed
 
 /-!
 # The six closed cubic genus-four rows
@@ -19,6 +21,8 @@ closed-face proofs.  Rows 096, 099, and 100 use kernel-checked generated
 certificates for the boundary faces; row 096 additionally has a readable
 symbolic proof on the positive orthant.
 -/
+
+@[expose] public section
 namespace AtanasovRanganathan.GenusFourRowsClosed
 
 open Utilities

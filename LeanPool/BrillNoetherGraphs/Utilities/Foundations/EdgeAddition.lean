@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
+
+public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
 
 /-!
 # Adding an edge to a chip-firing graph
@@ -14,6 +16,8 @@ adding a single edge.  The construction keeps the vertex type definitionally
 unchanged, so divisors and firing scripts on the old and new graphs are the
 same functions.
 -/
+
+@[expose] public section
 
 open Multiset Finset
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianProposition214
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusOneKGeneral
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameLeft
-import Mathlib.Data.ZMod.Basic
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianProposition214
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusOneKGeneral
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameLeft
+public import Mathlib.Data.ZMod.Basic
 
 /-!
 # Example 1.11: the torsion order of a cycle
@@ -35,6 +37,8 @@ Combining the two pins down the torsion order at
 `(B.length 0 + B.length 1) / gcd (B.length 0) (B.length 1)`, matching
 `eg:cycle`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

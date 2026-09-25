@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCut
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CoreVertexCut
 
 /-!
 # Genus of factors cut from a subdivided core
@@ -19,6 +21,8 @@ subdivided path to that factor.  Its `L` unit edges and `L - 1` new vertices
 cancel in Euler characteristic, leaving one edge-slot contribution.  Hence
 the answer is independent of every subdivision length.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 

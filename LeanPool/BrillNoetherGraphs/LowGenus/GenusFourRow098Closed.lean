@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCubicAtlas
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateCoreVertexCut
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourCubicAtlas
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateCoreVertexCut
 
 /-!
 # Closed genus-four row 098 from its separating vertex
@@ -19,6 +21,8 @@ degenerate-cut theorem shows that it survives every nonloopy forest face.
 This gives a short structural proof on the whole closed orthant; the generated
 `g4row098.rpf` cut-vertex certificate is therefore no longer load-bearing.
 -/
+
+@[expose] public section
 namespace AtanasovRanganathan.GenusFourRow098Closed
 
 open Utilities

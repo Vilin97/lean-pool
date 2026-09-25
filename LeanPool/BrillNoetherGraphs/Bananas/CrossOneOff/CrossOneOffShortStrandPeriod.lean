@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffPeriodSeparation
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffPeriodSeparation
 
 /-!
 # Period separation for the corrected cross-one-off block, without a length
@@ -26,6 +28,8 @@ strands, then a ray/primitivity argument on the two integers
 `D := lcm(a,b) - a/gcd(a,b) - b/gcd(a,b)` and `E := L + Σ_γ L/n_γ`
 (`L := lcm` of the other lengths).
 -/
+
+@[expose] public section
 
 namespace Bananas
 

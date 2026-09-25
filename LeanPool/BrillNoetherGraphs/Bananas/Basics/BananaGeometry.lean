@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaBasics
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionTwoEdgeCut
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.CycleRigidity
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaBasics
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionTwoEdgeCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.CycleRigidity
 
 /-!
 # Global geometry of banana graphs
@@ -16,6 +18,8 @@ This file records structural facts about bananas which follow directly from
 their presentation as positive subdivisions of a two-vertex parallel-edge
 core.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

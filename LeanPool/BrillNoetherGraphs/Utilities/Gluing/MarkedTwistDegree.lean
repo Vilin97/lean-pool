@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RiemannRochWinnable
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RiemannRochWinnable
 
 /-!
 # Degree bookkeeping for twice-marked twists
@@ -14,6 +16,8 @@ Transmission inequalities repeatedly use divisors of the form
 degree identities so later formalizations do not repeatedly unfold `deg` and
 fight integer casts.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

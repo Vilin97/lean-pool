@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionExistence
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionExistence
 
 /-!
 # Compatibility between graph and Laplacian equivalences
@@ -16,6 +18,8 @@ and edge-multiplicity data.  This module gives the two presentations explicit
 conversions, so results from either layer can be used without rebuilding that
 data by hand.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

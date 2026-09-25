@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionExistence
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedge
-import LeanPool.BrillNoetherGraphs.Demazure.Submodular
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionExistence
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedge
+public import LeanPool.BrillNoetherGraphs.Demazure.Submodular
 
 /-!
 # Demazure composition across a vertex wedge
@@ -22,6 +24,8 @@ factorization of an ASP permutation into two factors within prescribed genus
 budgets.  The imported Demazure library supplies the min-plus product formula
 but currently no theorem producing this bounded finite factorization.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

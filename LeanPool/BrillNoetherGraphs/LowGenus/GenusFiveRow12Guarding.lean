@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow12
-import LeanPool.BrillNoetherGraphs.LowGenus.GuardingSet
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow12
+public import LeanPool.BrillNoetherGraphs.LowGenus.GuardingSet
 
 /-!
 # Row 12 as a guarding set
@@ -32,6 +34,8 @@ is a proof about AR's own divisor and not merely a similar one.  As of
 `rowDivisor_reaches_coreVertex` / `row12_closedConstruction` tail has been
 deleted, and `GenusFiveConstructions.row12_straightforward` points here.
 -/
+
+@[expose] public section
 
 namespace AtanasovRanganathan.GenusFiveRow12Guarding
 

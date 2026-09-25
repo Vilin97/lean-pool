@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionGraph
+public import Mathlib.Tactic
 
 /-!
 # Connectivity of positive subdivisions
@@ -22,6 +24,8 @@ unit edge crosses a cut, membership is constant along each subdivided path.
 It is therefore constant on the core by core connectedness, and then constant
 on every interior vertex as well.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate
 

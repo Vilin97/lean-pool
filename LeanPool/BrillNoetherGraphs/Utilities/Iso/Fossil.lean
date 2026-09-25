@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContraction
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.SeparatingEdgeCut
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.SeparatingEdgePath
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphContraction
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.SeparatingEdgeCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.SeparatingEdgePath
+public import Mathlib.Tactic
 
 /-!
 # The fossil of a chip-firing graph
@@ -29,6 +31,8 @@ Brill--Noether existence.  Unlike a chosen sequence of bridge contractions,
 the fossil is canonical and can therefore serve as a common target for
 constructions which differ only by attached trees.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

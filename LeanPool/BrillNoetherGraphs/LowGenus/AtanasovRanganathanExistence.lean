@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveBridgeRows
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFivePseudocoreCoverage
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRowsClosed
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveBridgeRows
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFivePseudocoreCoverage
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRowsClosed
 
 /-!
 # Brill--Noether existence through genus five
@@ -18,6 +20,8 @@ four bridge rows, all handled by one checked `(2,3)` articulation theorem.
 Semantic loops in either genus are discharged uniformly after fossilization
 by splitting off a rigid genus-one wedge factor.
 -/
+
+@[expose] public section
 namespace AtanasovRanganathan
 
 open Utilities

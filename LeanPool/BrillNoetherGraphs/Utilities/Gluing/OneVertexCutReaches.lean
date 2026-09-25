@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.InteriorScriptTransport
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutWedge
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.InteriorScriptTransport
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexCutWedge
 
 /-!
 # A one-vertex cut is the free case of the transport lemma
@@ -23,6 +25,8 @@ beyond it is the case of a larger boundary, which a `OneVertexCut` cannot
 express and which is what a chip-free component of a two-edge-connected core
 actually presents.
 -/
+
+@[expose] public section
 
 namespace Utilities.Gluing
 

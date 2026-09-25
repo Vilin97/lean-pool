@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedge
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ElementaryExistence
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedge
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.ElementaryExistence
 
 /-!
 # Genus-one rigid wedges
@@ -14,6 +16,8 @@ This module isolates the cycle-ready consequence of the exact wedge
 winnability convolution.  The rigidity condition is deliberately explicit:
 it is *not* asserted for every genus-one graph.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

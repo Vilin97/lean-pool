@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreMarkerCut
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.GraphIsoLaplacianEquiv
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.NestedOneVertexCut
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.PointedGenusOneRigidTransport
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreMarkerCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.GraphIsoLaplacianEquiv
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.NestedOneVertexCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.PointedGenusOneRigidTransport
 
 /-!
 # Wedge packages extracted from pseudocore loop markers
@@ -19,6 +21,8 @@ This file packages that length-uniform statement in the orientation used by
 the genus-five loop-aware normal-form interface: the complementary graph is
 the left (base) factor and the marker cycle is the right factor.
 -/
+
+@[expose] public section
 namespace Utilities.Certificate.PseudocoreMarkerWedge
 
 open ExplicitPotential
@@ -73,22 +77,27 @@ noncomputable def cut (marker : Fin core.loopCount)
   (data split spec marker hCore).toOneVertexCut spec
     (data_valid split spec marker hCore hCompatible)
 
+/-- The base graph remaining on the right side of the cut after separating the selected loop
+marker. -/
 noncomputable def base (marker : Fin core.loopCount)
     (hCore : spec.core = split.splitCore)
     (hCompatible : PseudocoreSplitGlue.Compatible split) : CFGraph :=
   (cut split spec marker hCore hCompatible).rightGraph
 
+/-- The left factor isolated by the selected loop-marker cut. -/
 noncomputable def factor (marker : Fin core.loopCount)
     (hCore : spec.core = split.splitCore)
     (hCompatible : PseudocoreSplitGlue.Compatible split) : CFGraph :=
   (cut split spec marker hCore hCompatible).leftGraph
 
+/-- The glue vertex in the base graph where the separated marker factor is attached. -/
 noncomputable def attachment (marker : Fin core.loopCount)
     (hCore : spec.core = split.splitCore)
     (hCompatible : PseudocoreSplitGlue.Compatible split) :
     (base split spec marker hCore hCompatible).V :=
   (cut split spec marker hCore hCompatible).rightGlue
 
+/-- The corresponding root vertex in the separated marker factor. -/
 noncomputable def root (marker : Fin core.loopCount)
     (hCore : spec.core = split.splitCore)
     (hCompatible : PseudocoreSplitGlue.Compatible split) :

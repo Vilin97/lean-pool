@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SlopeScript
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SlopeScript
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionConnectivity
 
 /-!
 # A subdivision split into two factors and two connector slots
@@ -14,6 +16,8 @@ The data are finite incidence tables. They contain no divisors or rank
 hypotheses. The first connector is oriented from the left factor to the
 right; the second may be stored in either orientation.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.TwoPoleSubdivision
 
@@ -24,6 +28,8 @@ variable {n p nA pA nB pB : ℕ}
 /-! Values of an arbitrary script along a slot, extended constantly past its
 last endpoint. This lets us reuse the existing slot-value Laplacian API. -/
 
+/-- Evaluate a firing script along a slot: coordinate zero is the tail, interior coordinates
+select subdivision vertices, and coordinates at or beyond the length use the head. -/
 def pathValue (s : Spec n p) (f : firingScript s.graph) (e : Fin p) (k : ℕ) : ℤ :=
   if hzero : k = 0 then f (s.coreVertex (s.core.tail e))
   else if hlt : k < s.length e then
@@ -61,11 +67,18 @@ theorem pathValue_slope (s : Spec n p) (f : firingScript s.graph) :
 
 /-- An orientation-aware partition of a core into two factors and two slots. -/
 structure Data (core : Core n p) (nA pA nB pB : ℕ) where
+  /-- The core incidence data of the left factor in the two-pole decomposition. -/
   leftCore : Core nA pA
+  /-- The core incidence data of the right factor in the two-pole decomposition. -/
   rightCore : Core nB pB
+  /-- The bijection partitioning the original core vertices between the left and right factors. -/
   vertices : (Fin nA ⊕ Fin nB) ≃ Fin n
+  /-- The bijection partitioning core slots into the two factors' internal slots and the two
+  connector slots. -/
   slots : ((Fin pA ⊕ Fin pB) ⊕ Fin 2) ≃ Fin p
+  /-- The two left-factor vertices incident to the corresponding connector slots. -/
   leftPole : Fin 2 → Fin nA
+  /-- The two right-factor vertices incident to the corresponding connector slots. -/
   rightPole : Fin 2 → Fin nB
   left_nonempty : 0 < nA
   right_nonempty : 0 < nB
@@ -111,10 +124,14 @@ def rightSpec : Spec nB pB where
 @[simp] theorem rightSpec_length (e : Fin pB) :
     (d.rightSpec s).length e = s.length (d.slots (.inl (.inr e))) := rfl
 
+/-- Embed the left factor's subdivision vertices into the full subdivision, preserving core
+vertices and interior slot coordinates. -/
 def left : (d.leftSpec s).Vertex → s.Vertex
   | .inl a => s.coreVertex (d.vertices (.inl a))
   | .inr ⟨e, k⟩ => s.interiorVertex (d.slots (.inl (.inl e))) k
 
+/-- Embed the right factor's subdivision vertices into the full subdivision, preserving core
+vertices and interior slot coordinates. -/
 def right : (d.rightSpec s).Vertex → s.Vertex
   | .inl b => s.coreVertex (d.vertices (.inr b))
   | .inr ⟨e, k⟩ => s.interiorVertex (d.slots (.inl (.inr e))) k
@@ -192,12 +209,16 @@ theorem disjoint (a : (d.leftSpec s).Vertex) (b : (d.rightSpec s).Vertex) :
       exact Sum.inl_ne_inr (Sum.inl.inj (d.slots.injective
         (congrArg Sigma.fst (Sum.inr.inj h))))
 
+/-- The core potential obtained by reading the left or right firing script according to the
+vertex partition. -/
 def potential (f : firingScript (d.leftSpec s).graph)
     (g : firingScript (d.rightSpec s).graph) (v : Fin n) : ℤ :=
   match d.vertices.symm v with
   | .inl a => f ((d.leftSpec s).coreVertex a)
   | .inr b => g ((d.rightSpec s).coreVertex b)
 
+/-- Slot values assembled from the two factor scripts, the supplied first-connector profile, and
+a constant value at the second left pole on the other connector. -/
 def values (f : firingScript (d.leftSpec s).graph)
     (g : firingScript (d.rightSpec s).graph) (h : ℕ → ℤ) (e : Fin p) (k : ℕ) : ℤ :=
   match d.slots.symm e with
@@ -205,6 +226,8 @@ def values (f : firingScript (d.leftSpec s).graph)
   | .inl (.inr b) => pathValue (d.rightSpec s) g b k
   | .inr i => if i = 0 then h k else f ((d.leftSpec s).coreVertex (d.leftPole 1))
 
+/-- The firing script on the full subdivision assembled from the factor core potentials and
+connector slot profiles. -/
 def script (f : firingScript (d.leftSpec s).graph)
     (g : firingScript (d.rightSpec s).graph) (h : ℕ → ℤ) : firingScript s.graph :=
   s.slotValueScript (d.potential s f g) (d.values s f g h)

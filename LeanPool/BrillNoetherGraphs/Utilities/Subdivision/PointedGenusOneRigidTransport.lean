@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeGenusOne
-import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeGenusOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
 
 /-!
 # Transport of pointed genus-one rigidity
@@ -14,6 +16,8 @@ The rigid pointed-cycle predicate is invariant under graph isomorphism.  This
 small transport lemma is useful when nested induced-subgraph cuts introduce
 extra subtype layers around an already-certified marker cycle.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

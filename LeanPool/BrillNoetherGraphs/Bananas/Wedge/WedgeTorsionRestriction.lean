@@ -3,13 +3,15 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeGenusOne
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedge
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ExactTorsionAPI
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.EqualTorsionKGeneral
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderExact
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedgeGenusOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWedge
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ExactTorsionAPI
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.EqualTorsionKGeneral
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderExact
 
 /-!
 # Restricting torsion from an opposite-side vertex wedge
@@ -20,6 +22,8 @@ witness for an opposite-side pair restricts to witnesses for the two factor
 pairs.  The proof uses the exact winnability convolution, avoiding a separate
 Jacobian-product construction.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

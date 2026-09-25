@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow097Closed
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedContraction
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ReorientContraction
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFourRow097Closed
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedContraction
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ReorientContraction
 
 /-!
 # Four readable genus-four faces of row 097
@@ -17,6 +19,8 @@ below deliberately name the small target cores directly, so this public proof
 is self-contained.
 -/
 
+@[expose] public section
+
 namespace LowGenus.GenusFourRow097Contractions
 
 open Utilities
@@ -25,25 +29,37 @@ open Utilities.Certificate.ContractionForestCensusGeneral
 open Utilities.Certificate.ClosedContraction
 open Utilities.Certificate.ReorientContraction
 
+/-- The explicit contraction target core 031 for row 097, with oriented slots `0→2, 0→3, 0→3,
+1→2, 1→3, 1→3, 2→3` in index order. -/
 def core031 : ExplicitPotential.Core 4 7 where
   tail := ![0, 0, 0, 1, 1, 1, 2]
   head := ![2, 3, 3, 2, 3, 3, 3]
 
+/-- The explicit contraction target core 032 for row 097, with oriented slots `0→2, 0→3, 0→3,
+1→2, 1→2, 1→3, 2→3` in index order. -/
 def core032 : ExplicitPotential.Core 4 7 where
   tail := ![0, 0, 0, 1, 1, 1, 2]
   head := ![2, 3, 3, 2, 2, 3, 3]
 
+/-- The explicit contraction target core 034 for row 097, with oriented slots `0→2, 0→3, 0→3,
+1→2, 1→2, 1→2, 1→3` in index order. -/
 def core034 : ExplicitPotential.Core 4 7 where
   tail := ![0, 0, 0, 1, 1, 1, 1]
   head := ![2, 3, 3, 2, 2, 2, 3]
 
+/-- The explicit contraction target core 068 for row 097, with oriented slots `0→3, 0→4, 0→4,
+1→2, 1→3, 1→4, 2→3, 2→3` in index order. -/
 def core068 : ExplicitPotential.Core 5 8 where
   tail := ![0, 0, 0, 1, 1, 1, 2, 2]
   head := ![3, 4, 4, 2, 3, 4, 3, 3]
 
+/-- Orientation correction for contraction core 031, reversing slots 4, 5, and 6. -/
 def rev031 : Fin 7 → Bool := fun e => decide (4 ≤ e.val)
+/-- Orientation correction for contraction core 032, reversing slots 5 and 6. -/
 def rev032 : Fin 7 → Bool := fun e => decide (5 ≤ e.val)
 
+/-- Certified contraction of row 097 along slots 3 and 5 to the reoriented core 031, with
+explicit surviving vertex and slot representatives. -/
 def data031 : ContractionData GenusFourRow097Closed.core
     (Core.reorient core031 rev031) where
   F := {3, 5}
@@ -60,6 +76,8 @@ def data031 : ContractionData GenusFourRow097Closed.core
   tail_eq := by decide
   head_eq := by decide
 
+/-- Certified contraction of row 097 along slots 5 and 8 to the reoriented core 032, with
+explicit surviving vertex and slot representatives. -/
 def data032 : ContractionData GenusFourRow097Closed.core
     (Core.reorient core032 rev032) where
   F := {5, 8}
@@ -76,6 +94,8 @@ def data032 : ContractionData GenusFourRow097Closed.core
   tail_eq := by decide
   head_eq := by decide
 
+/-- Certified contraction of row 097 along slots 3 and 8 to core 034, preserving the listed
+surviving vertex and slot order. -/
 def data034 : ContractionData GenusFourRow097Closed.core core034 where
   F := {3, 8}
   vtx := ![0, 2, 4, 5]
@@ -91,6 +111,8 @@ def data034 : ContractionData GenusFourRow097Closed.core core034 where
   tail_eq := by decide
   head_eq := by decide
 
+/-- Certified contraction of row 097 along slot 8 to core 068, retaining slots 0 through 7 in
+their original order. -/
 def data068 : ContractionData GenusFourRow097Closed.core core068 where
   F := {8}
   vtx := ![0, 1, 2, 4, 5]

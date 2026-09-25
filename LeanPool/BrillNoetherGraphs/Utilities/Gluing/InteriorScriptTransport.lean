@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.InducedSubgraph
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.InducedSubgraph
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.StrongSeparator
 
 /-!
 # Transporting a local Dhar move out of an induced subgraph
@@ -48,6 +50,8 @@ boundary vertex may deliver into `A` only the chips it already carries.
 
 `Utilities` only, so every `LowGenus` configuration file may use it.
 -/
+
+@[expose] public section
 
 namespace Utilities.Gluing
 

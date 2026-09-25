@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeDivisors
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedge
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeDivisors
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.VertexWedge
 
 /-!
 # Contracting a separating bridge
@@ -21,6 +23,8 @@ particular, no graph isomorphism or connectivity hypothesis is needed.
 The declarations remain in the established `MarkedGraphs` namespace for API
 compatibility.
 -/
+
+@[expose] public section
 
 open Finset
 

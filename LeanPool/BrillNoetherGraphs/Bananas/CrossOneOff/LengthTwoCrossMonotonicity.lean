@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.LengthTwoCrossBasePoint
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankDeltaDuality
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.LengthTwoCrossBasePoint
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankDeltaDuality
 
 /-!
 # Monotonicity ingredients for the length-two cross exception
@@ -27,6 +29,8 @@ evaluating `DecidableEq` on the subdivision vertex type (a nested `Sum` of
 `change` costs minutes.  With abstract divisors the same steps are instant, and
 every use downstream is a syntactic `rw`/`exact`.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

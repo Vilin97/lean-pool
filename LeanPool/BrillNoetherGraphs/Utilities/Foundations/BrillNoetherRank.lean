@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.RankOne
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
-import Mathlib.Data.Int.ConditionallyCompleteOrder
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.RankInvariance
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.RankOne
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.LaplacianEquiv
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
 
 /-!
 # The Brill--Noether rank of a finite graph
@@ -49,6 +51,8 @@ invariant `bnRank`, normalized as in Len to be `-1` when `W^r_d` is empty.
 The descent of this predicate along an odd subdivision lives in
 `Utilities/Subdivision/SubdivisionChipDescent.lean` and is not imported here.
 -/
+
+@[expose] public section
 
 namespace Utilities
 

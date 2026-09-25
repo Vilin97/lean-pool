@@ -3,13 +3,15 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.LowGenusExistence
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCubicCoverage
-import LeanPool.BrillNoetherGraphs.LowGenus.Infrastructure.TrivalentExpansionClosed
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.GenusFiveVertexCut
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreMarkerWedge
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreSubdivisionProperties
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.LowGenusExistence
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCubicCoverage
+public import LeanPool.BrillNoetherGraphs.LowGenus.Infrastructure.TrivalentExpansionClosed
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.GenusFiveVertexCut
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreMarkerWedge
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.PseudocoreSubdivisionProperties
 
 /-!
 # Structural coverage of genus-five pseudocores
@@ -20,6 +22,8 @@ genus-four pencil theorem and the generic corrected wedge construction give a
 degree-four pencil on the original subdivision.  Thus the finite cubic atlas
 only has to handle the loopless pseudocore branch.
 -/
+
+@[expose] public section
 namespace AtanasovRanganathan.GenusFivePseudocoreCoverage
 
 open Utilities

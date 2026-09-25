@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameLeft
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ExactTorsionAPI
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineReduction
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameLeft
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ExactTorsionAPI
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineReduction
 
 /-!
 # Rank differences in genus one
@@ -16,6 +18,8 @@ difference completely local in degrees `0`, `1`, and `2`.  This is the
 rank-theoretic core needed to identify genus-one transmission permutations as
 an affine translation with at most one adjacent interchange.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

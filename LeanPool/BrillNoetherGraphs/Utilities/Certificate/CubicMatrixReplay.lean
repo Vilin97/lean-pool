@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CorePairMultiplicity
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.CorePairMultiplicity
 
 /-!
 # A row-by-row replay tree for loopless regular multiplicity matrices
@@ -46,6 +48,8 @@ decoding hypothesis of the composed statements only fires on tables satisfying
 This is the generic checker side only.  Application-specific datasets, leaf
 decoders, and classifier handoff theorems belong in their application layer.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.CubicMatrixReplay
 

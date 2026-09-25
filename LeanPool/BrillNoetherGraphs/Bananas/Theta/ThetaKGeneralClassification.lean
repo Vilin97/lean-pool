@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaKGeneralCoordinates
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaKGeneralCoordinates
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
 
 /-!
 # Endpoint-safe theta form of Theorem 4.13
@@ -17,10 +19,14 @@ terms for endpoint aliases while stating exactly the three non-endpoint
 families.
 -/
 
+@[expose] public section
+
 namespace Bananas
 
 open Utilities
 
+/-- The coordinate alternatives for k-general theta markings: nonrecurrent interior marks on
+distinct strands, or an allowed boundary pair on one strand. -/
 def ThetaKGeneralCoordinates
     {k : ℕ} (B : Banana 2) (alpha beta : Fin 3)
     (i : B.PathPosition alpha) (j : B.PathPosition beta) : Prop :=

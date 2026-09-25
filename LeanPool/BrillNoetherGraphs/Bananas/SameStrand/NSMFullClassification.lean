@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMClassification
-import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrandEndpointNegative
+
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMClassification
+public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrandEndpointNegative
 
 /-!
 # Endpoint-aware classification for Theorem 3.9
@@ -16,6 +18,8 @@ when a mark is an endpoint.  This file states the corrected theorem directly
 for the two marked *vertices*.  The exceptional alternatives retain their
 coordinate descriptions only for genuinely interior marks.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

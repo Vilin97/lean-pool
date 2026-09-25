@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.AcyclicOrientation
-import Mathlib.Data.List.TakeWhile
-import Mathlib.Data.List.GetD
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.AcyclicOrientation
+public import Mathlib.Data.List.TakeWhile
+public import Mathlib.Data.List.GetD
 
 /-!
 # The orientation reversal calculus
@@ -71,6 +73,8 @@ all of them realised in this file:
   directed `2`-cycle; see its docstring for why that residue is not removable.
 
 -/
+
+@[expose] public section
 
 namespace Utilities
 

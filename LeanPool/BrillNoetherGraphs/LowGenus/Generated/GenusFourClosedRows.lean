@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.LowGenus.Generated.G4Row096
-import LeanPool.BrillNoetherGraphs.LowGenus.Generated.G4Row099
-import LeanPool.BrillNoetherGraphs.LowGenus.Generated.G4Row100
-import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
+
+public import LeanPool.BrillNoetherGraphs.LowGenus.Generated.G4Row096
+public import LeanPool.BrillNoetherGraphs.LowGenus.Generated.G4Row099
+public import LeanPool.BrillNoetherGraphs.LowGenus.Generated.G4Row100
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveConfigurations
 
 /-!
 # Generated closed-face checks for genus-four cubic rows
@@ -28,6 +30,8 @@ reduction: the same pencils survive every genus-preserving nonloopy forest
 face.  Their Farkas receipts and firing scripts are rechecked by Lean's kernel;
 no external checker is trusted.
 -/
+
+@[expose] public section
 namespace AtanasovRanganathan.GenusFourGeneratedRows
 
 open Utilities

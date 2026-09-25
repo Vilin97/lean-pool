@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
 
 /-!
 # Arithmetic ranges for the cross one-off transmission block
@@ -20,6 +22,8 @@ threshold for the corrected block.  The three numerical bounds in Lemma 4.30
 belong to three different congruence classes; in particular, its second bound
 is not asserted for every integer below the cutoff.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

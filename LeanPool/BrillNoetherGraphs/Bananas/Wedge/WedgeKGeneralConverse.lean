@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.PointedGenusOneKGeneral
-import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgePeriodRecurrence
-import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoCornerAlgebra
-import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderExact
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.PointedGenusOneKGeneral
+public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgePeriodRecurrence
+public import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoCornerAlgebra
+public import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderExact
 
 /-!
 # Period extraction from a rigid genus-two wedge
@@ -17,6 +19,8 @@ Theorem 4.13.  Once factor torsion orders have been identified, general
 transmission on a bridgeless rigid wedge forces the smaller nontrivial order
 to equal the other one.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

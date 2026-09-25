@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.GenusFourPseudocore
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Pseudocore.GenusFourPseudocore
+public import Mathlib.Tactic
 
 /-!
 # Split-metadata compatibility (light half)
@@ -16,6 +18,8 @@ multiplicities.  It is genus-generic and follows directly from `ValidAt`.
 The marker-fibre counting lemma below supports comparison of two compatible
 presentations.
 -/
+
+@[expose] public section
 
 namespace Utilities.Certificate.PseudocoreSplitGlue
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotential
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ExplicitPotential
 
 /-!
 # Doubled-anchor rows for an explicit-potential certificate
@@ -33,6 +35,8 @@ theorems that consume them — `effective_degenerateDivisor_sub_smul_one_chip`,
 `winnable_sub_smul_one_chip_degenerateCoreVertex` — stay private, where their
 only consumers are.
 -/
+
+@[expose] public section
 
 -- The established name of the certificate namespace repeats `Certificate`,
 -- which is what `ExplicitPotential.Certificate` means.  Lean v4.33 added

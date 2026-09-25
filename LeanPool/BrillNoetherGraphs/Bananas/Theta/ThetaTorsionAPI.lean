@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaGeometry
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaPrefix
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaGeometry
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaPrefix
 
 /-!
 # Verified local input for theta torsion
@@ -15,6 +17,8 @@ used in the paper's evenly-marked theta argument.  The stronger identity for
 multiples of two marks is recorded below as an explicit remaining interface;
 it is not assumed here.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

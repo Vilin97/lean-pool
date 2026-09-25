@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeGraph
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.GraphIsoLaplacianEquiv
-import LeanPool.BrillNoetherGraphs.Utilities.Foundations.InducedSubgraph
-import Mathlib.Tactic
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.BridgeGraph
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.GraphIsoLaplacianEquiv
+public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.InducedSubgraph
+public import Mathlib.Tactic
 
 /-!
 # Presentations by one separating bridge
@@ -18,6 +20,8 @@ The cross-edge equation is phrased with `numEdges`, so parallel edges inside
 either factor remain fully visible while the separating edge has multiplicity
 exactly one.
 -/
+
+@[expose] public section
 
 namespace MarkedGraphs
 
@@ -30,9 +34,14 @@ universe u
 /-- A finite presentation of `K` as two induced pieces joined by a single
 unit bridge. -/
 structure OneBridgeCut (K : CFGraph.{u}) where
+  /-- The nonempty left side of the vertex partition separated from the right side by exactly
+  one bridge occurrence. -/
   left : Finset K.V
+  /-- The nonempty right side of the disjoint vertex partition separated by the bridge. -/
   right : Finset K.V
+  /-- The bridge endpoint belonging to the left side. -/
   leftAttach : K.V
+  /-- The bridge endpoint belonging to the right side. -/
   rightAttach : K.V
   left_nonempty : left.Nonempty
   right_nonempty : right.Nonempty

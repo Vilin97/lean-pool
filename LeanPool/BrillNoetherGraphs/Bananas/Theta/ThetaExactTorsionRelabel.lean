@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaExactTorsion
-import LeanPool.BrillNoetherGraphs.Bananas.Basics.MarkedIso
-import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaExactTorsion
+public import LeanPool.BrillNoetherGraphs.Bananas.Basics.MarkedIso
+public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.SubdivisionIso
 
 /-!
 # Exact torsion order on arbitrary theta strands
@@ -16,6 +18,8 @@ reindexing the three strand occurrences.  The reindexing is orientation
 preserving and fixes the two core vertices, so normalized strand coordinates
 and the ordered pair of marks are preserved.
 -/
+
+@[expose] public section
 
 namespace Bananas
 
@@ -43,6 +47,7 @@ that `alpha` and `beta` become slots `0` and `1`. -/
 def thetaNormalizedBanana (B : Banana 2) (alpha beta : Fin 3) : Banana 2 :=
   specReindex B (Equiv.refl (Fin 2)) (thetaNormalizeSlots alpha beta) (by omega)
 
+/-- The relabeling identifying a theta banana with the normalization of its two chosen strands. -/
 def thetaNormalizationRelabeling (B : Banana 2) (alpha beta : Fin 3) :
     B.Relabeling (thetaNormalizedBanana B alpha beta) :=
   specReindexRelabeling B (Equiv.refl (Fin 2))

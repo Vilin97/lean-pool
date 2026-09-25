@@ -3,11 +3,15 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaPrefix
-import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaArithmetic
+
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaPrefix
+public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaArithmetic
 
 /-! # Theta Residue -/
+
+@[expose] public section
 
 namespace Bananas
 

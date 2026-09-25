@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteCountSol
-import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffShortStrandPeriod
+
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteCountSol
+public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffShortStrandPeriod
 
 /-!
 # Corrected both-off inversion lower bound
@@ -14,6 +16,8 @@ This is the graph-level assembly of the finite row injection and its exact
 arithmetic count.  It is Corollary 4.31 with the corrected row block and its
 explicit period-separation hypothesis.
 -/
+
+@[expose] public section
 
 namespace Bananas
 

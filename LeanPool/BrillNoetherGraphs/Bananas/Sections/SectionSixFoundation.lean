@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
+module
 
-import LeanPool.BrillNoetherGraphs.Utilities.Gluing.ChainGluing
-import LeanPool.BrillNoetherGraphs.Utilities.Transmission.DemazureFactorization
+
+public import LeanPool.BrillNoetherGraphs.Utilities.Gluing.ChainGluing
+public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.DemazureFactorization
 
 /-!
 # Unconditional transmission gluing for Section 6
@@ -17,6 +19,8 @@ nonnegative genus budgets.  This file records the resulting unconditional
 version, which is the transmission-existence backbone of the Section 6 chain
 arguments.
 -/
+
+@[expose] public section
 
 namespace Bananas
 
