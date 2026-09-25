@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Clawristotle contributors
 -/
 
-import Mathlib.Basic.Complex.Basic
-import Mathlib.GroupTheory.Sylow
-import Mathlib.RepresentationTheory.Character
+module
+
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.GroupTheory.Sylow
+public import Mathlib.RepresentationTheory.Character
 
 /-!
 # The McKay conjecture
@@ -26,6 +28,8 @@ Informal statement:
   exactly when they are isomorphic, so both sets are in bijection with the sets Irr_p'(G) and
   Irr_p'(N_G(P)) that the McKay conjecture counts.
 -/
+
+public section
 
 open CategoryTheory
 

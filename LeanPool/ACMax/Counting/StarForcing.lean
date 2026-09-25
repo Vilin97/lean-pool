@@ -3,9 +3,11 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import LeanPool.ACMax.Counting.ResidualInterface
-import LeanPool.ACMax.Counting.Moats
-import LeanPool.ACMax.Counting.XBoundAssembly
+module
+
+public import LeanPool.ACMax.Counting.ResidualInterface
+public import LeanPool.ACMax.Counting.Moats
+public import LeanPool.ACMax.Counting.XBoundAssembly
 
 /-!
 # Forcing a shared degree-three star
@@ -15,6 +17,8 @@ with minimum degree at least three and no edge joining two degree-three vertices
 forces a degree-four vertex with at least two degree-three neighbors whenever the order
 is at most `31`.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

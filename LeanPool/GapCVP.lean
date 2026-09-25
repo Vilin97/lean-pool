@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part18
+module
+
+public import LeanPool.GapCVP.Part18
 
 /-!
 # Polynomial-factor hardness of the closest vector problem

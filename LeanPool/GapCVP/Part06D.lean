@@ -4,9 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part06C
+module
+
+public import LeanPool.GapCVP.Part06C
 
 /-! # GapCVP proof, part 06, continuation 04 -/
+
+public section
 
 noncomputable section
 
@@ -486,7 +490,7 @@ open Turing GapCVP.BinaryEncoding
 open GapCVP.SourceFormulaStructuralDecoder
 
 /-- GapCVP reduction support. -/
-def sourceMixedRadixGuardedOriginalAtomOutput
+@[expose] def sourceMixedRadixGuardedOriginalAtomOutput
     (atom : List Bool → List Bool) : List Bool → List Bool :=
   atom ∘ firstFieldContents
 
@@ -500,7 +504,7 @@ noncomputable def sourceMixedRadixGuardedOriginalAtomComputable
     firstFieldContentsComputable computer
 
 /-- GapCVP reduction support. -/
-def sourceMixedRadixOriginalSourceQueryStream
+@[expose] def sourceMixedRadixOriginalSourceQueryStream
     (queries : List (List Bool)) : List Bool :=
   queries.flatMap lengthPrefixedWord
 
@@ -556,6 +560,7 @@ open GapCVP.SourceCanonicalFixedWordTuringTM GapCVP.CLStructuralPrefixWriter
 open GapCVP.CNFCappedUnaryPairArithmeticTM GapCVP.CNFFlatPhysicalBinaryAppendTM
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedClauseQuery
     (index : ℕ) (formula : ThreeCNF) : List Bool :=
   List.replicate index true ++ false :: encodeThreeCNF formula
@@ -701,6 +706,7 @@ private theorem sourceOriginalIndexedClauseSuffix_iterate_body
     formula index
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedLiteralSignOutput
     (input : List Bool) : List Bool :=
   markerConditionalOutput
@@ -722,6 +728,7 @@ noncomputable def sourceOriginalIndexedLiteralSignComputable :
   simpa only [Function.comp_def] using hphysical
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedLiteralVariableOutput
     (input : List Bool) : List Bool :=
   lengthPrefixedWord (firstFieldContents input)
@@ -736,6 +743,7 @@ private noncomputable def sourceOriginalIndexedLiteralVariableComputable :
   simpa only [Function.comp_def] using hphysical
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedPhysicalLiteralOutput
     (input : List Bool) : List Bool :=
   sourceOriginalIndexedLiteralVariableOutput input ++
@@ -764,6 +772,7 @@ noncomputable def sourceOriginalIndexedPhysicalLiteralComputable :
       List.append_assoc]
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedSecondLiteralOutput : List Bool → List Bool :=
   sourceOriginalIndexedPhysicalLiteralOutput ∘ literalSuffix
 
@@ -775,6 +784,7 @@ private noncomputable def sourceOriginalIndexedSecondLiteralComputable :
     sourceOriginalIndexedPhysicalLiteralComputable
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedThirdLiteralOutput : List Bool → List Bool :=
   sourceOriginalIndexedPhysicalLiteralOutput ∘
     (literalSuffix ∘ literalSuffix)
@@ -788,6 +798,7 @@ private noncomputable def sourceOriginalIndexedThirdLiteralComputable :
     sourceOriginalIndexedPhysicalLiteralComputable
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceOriginalIndexedPhysicalThreeClauseOutput
     (input : List Bool) : List Bool :=
   sourceOriginalIndexedPhysicalLiteralOutput input ++
@@ -894,6 +905,7 @@ open GapCVP.CNFFlatAdjacentRecordSwapTM GapCVP.CNFFlatAdjacentRecordSwapTotalCer
 open GapCVP.CNFFlatPhysicalBinaryAppendTM
 
 /-- GapCVP reduction support. -/
+@[expose]
 def sourceAnchoredGridRankSourcePair (input : List Bool) : List Bool :=
   lengthPrefixedWord (firstFieldContents (firstFieldSuffix input)) ++
     firstFieldContents input
@@ -908,7 +920,7 @@ private noncomputable def sourceAnchoredGridRankSourcePairComputable :
   exact pointwiseAppendComputable hprefix firstFieldContentsComputable
 
 /-- GapCVP reduction support. -/
-def sourceAnchoredGridRawCandidate
+@[expose] def sourceAnchoredGridRawCandidate
     (candidate : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   candidate (sourceAnchoredGridRankSourcePair input)
@@ -1075,7 +1087,7 @@ private noncomputable def sourceAnchoredGridCandidateSelectionComputable
   simpa only [Function.comp_def] using hphysical
 
 /-- GapCVP reduction support. -/
-def sourceAnchoredGridGuardedCandidate
+@[expose] def sourceAnchoredGridGuardedCandidate
     (candidate : List Bool → List Bool)
     (input : List Bool) : List Bool :=
   if sourceAnchoredGridCandidateSelector candidate input
@@ -1396,7 +1408,7 @@ open GapCVP.BinaryEncoding GapCVP.CLStructuralPrefixWriter GapCVP.CNFBoundedReco
 open GapCVP.CNFFlatPhysicalBinaryAppendTM GapCVP.CNFFiveFamilyFlatCandidateGenerationTM
 
 /-- GapCVP reduction support. -/
-def fiveFlatOriginalSourceAnchorWord
+@[expose] def fiveFlatOriginalSourceAnchorWord
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -1929,13 +1941,13 @@ def fiveFamilyRowMajorWindows (T : ℕ) : List (Window T) :=
   exact ⟨index.2, by simp only [List.mem_finRange], reconstruct⟩
 
 /-- GapCVP reduction support. -/
-def fiveFamilyRowMajorAtLeastClauses (T S : ℕ) :
+@[expose] def fiveFamilyRowMajorAtLeastClauses (T S : ℕ) :
     List (Clause T S) :=
   (fiveFamilyRowMajorTimePositionSlots T).map fun position =>
     atLeastOneClause (S := S) position.1 position.2
 
 /-- GapCVP reduction support. -/
-def fiveFamilyRowMajorAtMostClauses (T S : ℕ) :
+@[expose] def fiveFamilyRowMajorAtMostClauses (T S : ℕ) :
     List (Clause T S) :=
   (fiveFamilyRowMajorTimePositionSlots T).flatMap fun position =>
     (fiveFamilyRowMajorSymbolPairs S).map fun symbols =>
@@ -1945,18 +1957,18 @@ def fiveFamilyRowMajorAtMostClauses (T S : ℕ) :
         atLeastOneClause position.1 position.2
 
 /-- GapCVP reduction support. -/
-def fiveFamilyRowMajorInitialClauses {T S : ℕ}
+@[expose] def fiveFamilyRowMajorInitialClauses {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   (List.finRange (T + 1)).map
     (initialClause specification.input)
 
 /-- GapCVP reduction support. -/
-def fiveFamilyRowMajorAcceptanceClauses {T S : ℕ}
+@[expose] def fiveFamilyRowMajorAcceptanceClauses {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   [acceptanceClause specification.accept]
 
 /-- GapCVP reduction support. -/
-def fiveFamilyRowMajorForbiddenClauses {T S : ℕ}
+@[expose] def fiveFamilyRowMajorForbiddenClauses {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   (fiveFamilyRowMajorWindows T).flatMap fun window =>
     (fiveFamilyRowMajorWindowSymbols S).map fun symbols =>
@@ -1966,7 +1978,7 @@ def fiveFamilyRowMajorForbiddenClauses {T S : ℕ}
         atLeastOneClause window.1.1 window.1.2
 
 /-- GapCVP reduction support. -/
-def fiveFamilyRowMajorSourceClauses {T S : ℕ}
+@[expose] def fiveFamilyRowMajorSourceClauses {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   fiveFamilyRowMajorAtLeastClauses T S ++
     fiveFamilyRowMajorAtMostClauses T S ++
@@ -2234,6 +2246,7 @@ noncomputable def fiveFamilyOriginalHeadBitComputable :
       cases head <;> rfl
 
 /-- GapCVP reduction support. -/
+@[expose]
 def fiveFamilyOriginalDynamicBitWord
     (index source : List Bool → List Bool)
     (input : List Bool) : List Bool :=
@@ -2433,7 +2446,7 @@ open GapCVP.CNFFiveFamilyFlatIndexedRankArithmeticTM
 open GapCVP.CNFFiveFamilyFlatSortedLiteralFamilies
 
 /-- GapCVP reduction support. -/
-def fiveFamilyFlatRankedSourceDescriptorWord
+@[expose] def fiveFamilyFlatRankedSourceDescriptorWord
     (grid : Polynomial ℕ) (symbol : ℕ) (sign : Bool)
     (input : List Bool) : List Bool :=
   tableauSourceSignedLiteralDescriptorWord sign
@@ -2452,7 +2465,7 @@ private noncomputable def fiveFamilyFlatRankedSourceDescriptorComputable
   simpa only [Function.comp_def] using physical
 
 /-- GapCVP reduction support. -/
-def fiveFamilyFlatRankedSourceDuplicatedCodeWord
+@[expose] def fiveFamilyFlatRankedSourceDuplicatedCodeWord
     (grid : Polynomial ℕ) (symbol : ℕ) (sign : Bool)
     (input : List Bool) : List Bool :=
   duplicatedUnarySignedLiteralCodeWord sign
@@ -2472,7 +2485,7 @@ private noncomputable def fiveFamilyFlatRankedSourceDuplicatedCodeComputable
   simpa only [Function.comp_def] using physical
 
 /-- GapCVP reduction support. -/
-def fiveFlatRankedSourceDescriptorStream
+@[expose] def fiveFlatRankedSourceDescriptorStream
     (grid : Polynomial ℕ) (sign : Bool) (symbols : List ℕ)
     (input : List Bool) : List Bool :=
   symbols.flatMap fun symbol =>
@@ -2491,7 +2504,7 @@ noncomputable def fiveFamilyFlatRankedSourceDescriptorStreamComputable
           grid symbol sign) ih
 
 /-- GapCVP reduction support. -/
-def fiveFlatRankedSourceDuplicatedCodeStream
+@[expose] def fiveFlatRankedSourceDuplicatedCodeStream
     (grid : Polynomial ℕ) (sign : Bool) (symbols : List ℕ)
     (input : List Bool) : List Bool :=
   symbols.flatMap fun symbol =>
@@ -2583,7 +2596,7 @@ noncomputable def fiveFamilyFlatRowMajorAtLeastClauseRecordComputable
   exact physical
 
 /-- GapCVP reduction support. -/
-def fiveFamilyFlatSourceRowMajorIndex
+@[expose] def fiveFamilyFlatSourceRowMajorIndex
     {T : ℕ} (time : Time T) (position : Position T) : ℕ :=
   time.val * (T + 1) + position.val
 
@@ -2771,7 +2784,7 @@ open GapCVP.CNFUnaryPairIndexTotalRuntimeCert GapCVP.CNFFiveFamilyFlatCandidateG
 open GapCVP.CNFFiveFamilyFlatIndexedRankArithmeticTM
 
 /-- GapCVP reduction support. -/
-def fiveFamilyVerifierAcceptingSymbol
+@[expose] def fiveFamilyVerifierAcceptingSymbol
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier) :
     Symbol (completePhaseSymbolCount machine.tm) :=

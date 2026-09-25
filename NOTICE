@@ -32,6 +32,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/Apportionment             https://github.com/mdbrnowski/apportionmentlib
   LeanPool/ArchonFirstProofResults   https://github.com/frenzymath/Archon-FirstProof-Results
   LeanPool/BannaiBannaiStanton       https://github.com/AntoineduFresne/Bannai-Bannai-Stanton_Theorem
+  LeanPool/BlockSpectralSensitivity  https://github.com/Timeroot/BS_Lam
   LeanPool/BollobasNikiforov         https://github.com/ShengtongZhang-alt/BN
   LeanPool/BooleanIsoperimetry       https://github.com/AlexeyMilovanov/BooleanIsoperimetry
   LeanPool/BrauerGroupNew            https://github.com/Whysoserioushah/BrauerGroup
@@ -130,6 +131,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/LocalComplexGeometry      https://github.com/BochaoKong/nullstellensatz
   LeanPool/LongGapsBetweenPrimes     https://github.com/openai/LongGapsBetweenPrimes
   LeanPool/LowDimSolvClassification  https://github.com/LieLean/LowDimSolvClassification
+  LeanPool/LowWeightPauliDynamics    https://github.com/Jue-Xu/Lean4LPD
   LeanPool/MRiscX                    https://github.com/JulsDE/MRiscX
   LeanPool/MassFormula               https://github.com/0stellensatz/MassFormula
   LeanPool/MatchingLogic             https://github.com/eveil-labs/matching-logic-lean

@@ -3,13 +3,15 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Tauto
-import LeanPool.ACMax.Spectral.AlgConn
-import LeanPool.ACMax.Spectral.RayleighUpper
-import LeanPool.ACMax.Spectral.TestVector
+module
+
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Tauto
+public import LeanPool.ACMax.Spectral.AlgConn
+public import LeanPool.ACMax.Spectral.RayleighUpper
+public import LeanPool.ACMax.Spectral.TestVector
 
 /-!
 # Weighted (unbalanced) cut certificate
@@ -20,6 +22,8 @@ has squared norm `p·q·n`, and Laplacian quadratic form `n²·cut`, so
 `xᵀ L x = n²·cut ≤ 2·p·q·n = 2‖x‖²` whenever `n·cut ≤ 2·p·q`.  This handles odd `n`
 and unbalanced near-regular graphs where a balanced cut is unavailable.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

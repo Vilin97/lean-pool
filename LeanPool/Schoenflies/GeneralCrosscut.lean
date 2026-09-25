@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.CrosscutCells
-import LeanPool.Schoenflies.CrosscutAtMostTwo
-import LeanPool.Schoenflies.TwoArcs
+module
+
+public import LeanPool.Schoenflies.CrosscutCells
+public import LeanPool.Schoenflies.CrosscutAtMostTwo
+public import LeanPool.Schoenflies.TwoArcs
 
 /-!
 # The crosscut theorem for a general Jordan curve
@@ -67,6 +69,8 @@ Neither is a restatement of anything proved here.
 * `Schoenflies.IsArcBetween.not_subset_pair` — an arc is more than its two endpoints; general,
   and the only new fact about arcs this module needs.
 -/
+
+@[expose] public section
 
 open Bornology Set unitInterval
 

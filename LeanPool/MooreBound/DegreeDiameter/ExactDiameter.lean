@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wouter Cames van Batenburg, Samuel Korsky
 -/
 
-import LeanPool.MooreBound.DegreeDiameter.HalvedFlags
-import Mathlib.Data.Fin.Rev
-import Mathlib.Data.Nat.Dist
-import Mathlib.LinearAlgebra.Pi
-import Mathlib.LinearAlgebra.StdBasis
+module
+
+public import LeanPool.MooreBound.DegreeDiameter.HalvedFlags
+public import Mathlib.Data.Fin.Rev
+public import Mathlib.Data.Nat.Dist
+public import Mathlib.LinearAlgebra.Pi
+public import Mathlib.LinearAlgebra.StdBasis
 
 /-!
 # The rank-potential lower bound for the halved flag graph
@@ -27,6 +29,8 @@ odd--even route upper bound, this proves exact extended diameter `k`.
 Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
+
+@[expose] public section
 
 namespace MooreBound
 

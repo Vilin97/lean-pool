@@ -4,10 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.GapCVP.Part04B
-import LeanPool.GapCVP.StatementLifting
+module
+
+public import LeanPool.GapCVP.Part04B
+public import LeanPool.GapCVP.StatementLifting
 
 /-! # GapCVP proof, part 04, continuation 03 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -24,7 +28,8 @@ namespace CLStructuralCNFOutputMachinesUnconditional
 open Computability Turing GapCVP.BinaryEncoding GapCVP.CNFSortingDedup
 open GapCVP.CNFPolynomialRowMarkerTM
 
-private def polynomialRowMarker_scanTrace
+/-- Save the input and record its length as a unary base count. -/
+def polynomialRowMarkerScanTrace
     (polynomial : Polynomial ℕ)
     (stage : PolynomialRowMarkerStage polynomial)
     (input source base baseScratch accumulator product output : List Bool) :
@@ -54,7 +59,8 @@ private def polynomialRowMarker_scanTrace
           List.length_cons, List.replicate_succ, Nat.add_assoc, Nat.reduceAdd,
               replicate_append_bit_cons] using hfull
 
-private def polynomialRowMarker_baseTrace
+/-- Copy the unary base to scratch and add one base-sized block to the product. -/
+def polynomialRowMarkerBaseTrace
     (polynomial : Polynomial ℕ)
     (stage : PolynomialRowMarkerStage polynomial)
     (baseCount : ℕ)
@@ -83,7 +89,8 @@ private def polynomialRowMarker_baseTrace
           Nat.reduceAdd,
           replicate_append_bit_cons] using hfull
 
-private def polynomialRowMarker_restoreBaseTrace
+/-- Restore the unary base from scratch for another multiplication cycle. -/
+def polynomialRowMarkerRestoreBaseTrace
     (polynomial : Polynomial ℕ)
     (stage : PolynomialRowMarkerStage polynomial)
     (scratchCount : ℕ)
@@ -111,7 +118,8 @@ private def polynomialRowMarker_restoreBaseTrace
           Nat.reduceAdd,
           replicate_append_bit_cons] using hfull
 
-private def polynomialRowMarker_multiplyTrace
+/-- Multiply the unary accumulator by the unary input length. -/
+def polynomialRowMarkerMultiplyTrace
     (polynomial : Polynomial ℕ)
     (stage : PolynomialRowMarkerStage polynomial)
     (baseCount accumulatorCount productCount : ℕ)
@@ -140,10 +148,10 @@ private def polynomialRowMarker_multiplyTrace
           (List.replicate baseCount true) []
           (List.replicate count true)
           (List.replicate productCount true) output)
-      have hbase := polynomialRowMarker_baseTrace polynomial stage
+      have hbase := polynomialRowMarkerBaseTrace polynomial stage
         baseCount source [] (List.replicate count true)
         (List.replicate productCount true) output
-      have hrestore := polynomialRowMarker_restoreBaseTrace
+      have hrestore := polynomialRowMarkerRestoreBaseTrace
         polynomial stage baseCount source []
         (List.replicate count true)
         (List.replicate baseCount true ++
@@ -187,7 +195,8 @@ private def polynomialRowMarker_multiplyTrace
       rw [hproductCount, hbudget] at hfull
       simpa only [List.replicate_succ, Nat.succ_eq_add_one] using hfull
 
-private def polynomialRowMarker_productTrace
+/-- Transfer the completed product into the accumulator. -/
+def polynomialRowMarkerProductTrace
     (polynomial : Polynomial ℕ)
     (stage : PolynomialRowMarkerStage polynomial)
     (productCount : ℕ)
@@ -217,7 +226,8 @@ private def polynomialRowMarker_productTrace
           replicate_append_bit_cons] using
           hfull
 
-private def polynomialRowMarkerHornerCostPolynomial
+/-- Bound the machine steps for the remaining Horner evaluation stages. -/
+def polynomialRowMarkerHornerCostPolynomial
     (polynomial : Polynomial ℕ) : ℕ → Polynomial ℕ → Polynomial ℕ
   | 0, _ => 0
   | remaining + 1, accumulator =>
@@ -227,7 +237,8 @@ private def polynomialRowMarkerHornerCostPolynomial
           (Polynomial.X * accumulator +
             Polynomial.C (polynomial.coeff remaining))
 
-private def polynomialRowMarker_hornerTrace
+/-- Execute the remaining Horner stages of the marker polynomial. -/
+def polynomialRowMarkerHornerTrace
     (polynomial : Polynomial ℕ)
     (baseCount stages : ℕ)
     (stage : PolynomialRowMarkerStage polynomial)
@@ -253,9 +264,9 @@ private def polynomialRowMarker_hornerTrace
   | succ remaining ih =>
       have hindex : stage.val = remaining := by omega
       let accumulator := accumulatorPolynomial.eval baseCount
-      have hmul := polynomialRowMarker_multiplyTrace
+      have hmul := polynomialRowMarkerMultiplyTrace
         polynomial stage baseCount accumulator 0 source output
-      have hproduct := polynomialRowMarker_productTrace
+      have hproduct := polynomialRowMarkerProductTrace
         polynomial stage (baseCount * accumulator) source
         (List.replicate baseCount true) [] output
       simp only [Nat.add_zero, List.replicate_zero,
@@ -355,7 +366,8 @@ private def polynomialRowMarker_hornerTrace
         rw [hvalue, hbudget] at hfull
         simpa only [Nat.succ_eq_add_one] using hfull
 
-private def polynomialRowMarker_payloadTrace
+/-- Copy the marker count into the product and encoded output payload. -/
+def polynomialRowMarkerPayloadTrace
     (polynomial : Polynomial ℕ)
     (stage : PolynomialRowMarkerStage polynomial)
     (markerCount : ℕ)
@@ -385,7 +397,8 @@ private def polynomialRowMarker_payloadTrace
           Nat.reduceAdd,
           replicate_append_bit_cons] using hfull
 
-private def polynomialRowMarker_headerTrace
+/-- Write the unary length header for the marker payload. -/
+def polynomialRowMarkerHeaderTrace
     (polynomial : Polynomial ℕ)
     (stage : PolynomialRowMarkerStage polynomial)
     (markerCount : ℕ)
@@ -411,7 +424,8 @@ private def polynomialRowMarker_headerTrace
           Nat.reduceAdd,
           replicate_append_bit_cons] using hfull
 
-private def polynomialRowMarker_sourceTrace
+/-- Copy the saved source word into output after a separator. -/
+def polynomialRowMarkerSourceTrace
     (polynomial : Polynomial ℕ)
     (stage : PolynomialRowMarkerStage polynomial)
     (source base output : List Bool) :
@@ -437,7 +451,8 @@ private def polynomialRowMarker_sourceTrace
           List.nil_append,
           List.length_cons, Nat.add_assoc, Nat.reduceAdd] using hfull
 
-private def polynomialRowMarker_prefixTrace
+/-- Prefix the output with the unary base count and halt. -/
+def polynomialRowMarkerPrefixTrace
     (polynomial : Polynomial ℕ)
     (stage : PolynomialRowMarkerStage polynomial)
     (baseCount : ℕ)
@@ -462,13 +477,15 @@ private def polynomialRowMarker_prefixTrace
           Nat.reduceAdd,
           replicate_append_bit_cons] using hfull
 
-private def polynomialRowMarkerTotalTimePolynomial
+/-- Polynomial time bound for the complete row-marker machine. -/
+def polynomialRowMarkerTotalTimePolynomial
     (polynomial : Polynomial ℕ) : Polynomial ℕ :=
   polynomialRowMarkerHornerCostPolynomial
       polynomial (polynomial.natDegree + 1) 0 +
     3 * Polynomial.X + 2 * polynomial + 5
 
-private def polynomialRowMarker_totalTrace
+/-- Run the complete row-marker machine and produce its source-preserving output. -/
+def polynomialRowMarkerTotalTrace
     (polynomial : Polynomial ℕ)
     (input : List Bool) :
     EvalsToInTime (polynomialRowMarkerMachine polynomial).step
@@ -497,7 +514,7 @@ private def polynomialRowMarker_totalTrace
           (polynomialRowMarkerTopStage polynomial)
           [] input.reverse sourcePrefix [] [] [] []))
         (input.length + 1) := by
-    simpa [sourcePrefix] using polynomialRowMarker_scanTrace
+    simpa [sourcePrefix] using polynomialRowMarkerScanTrace
       polynomial (polynomialRowMarkerTopStage polynomial)
       input [] [] [] [] [] []
   have hhorner :
@@ -509,7 +526,7 @@ private def polynomialRowMarker_totalTrace
           [] input.reverse sourcePrefix [] markerPayload [] []))
         ((polynomialRowMarkerHornerCostPolynomial polynomial
           (polynomial.natDegree + 1) 0).eval input.length) := by
-    have h := polynomialRowMarker_hornerTrace polynomial
+    have h := polynomialRowMarkerHornerTrace polynomial
       input.length (polynomial.natDegree + 1)
       (polynomialRowMarkerTopStage polynomial) htop 0
       input.reverse []
@@ -523,7 +540,7 @@ private def polynomialRowMarker_totalTrace
           [] input.reverse sourcePrefix [] [] markerPayload
           (false :: markerPayload)))
         (markerCount + 1) := by
-    simpa [markerPayload] using polynomialRowMarker_payloadTrace
+    simpa [markerPayload] using polynomialRowMarkerPayloadTrace
       polynomial 0 markerCount input.reverse sourcePrefix [] []
   have hheader :
       EvalsToInTime (polynomialRowMarkerMachine polynomial).step
@@ -534,7 +551,7 @@ private def polynomialRowMarker_totalTrace
           [] input.reverse sourcePrefix [] [] [] markerField))
         (markerCount + 1) := by
     simpa [markerField, markerPayload, lengthPrefixedWord] using
-      polynomialRowMarker_headerTrace polynomial 0 markerCount
+      polynomialRowMarkerHeaderTrace polynomial 0 markerCount
         input.reverse sourcePrefix (false :: markerPayload)
   have hsource :
       EvalsToInTime (polynomialRowMarkerMachine polynomial).step
@@ -544,7 +561,7 @@ private def polynomialRowMarker_totalTrace
           [] [] sourcePrefix [] [] []
           (false :: (input ++ markerField))))
         (input.length + 1) := by
-    simpa using polynomialRowMarker_sourceTrace
+    simpa using polynomialRowMarkerSourceTrace
       polynomial 0 input.reverse sourcePrefix markerField
   have hprefix :
       EvalsToInTime (polynomialRowMarkerMachine polynomial).step
@@ -557,7 +574,7 @@ private def polynomialRowMarker_totalTrace
     simpa [sourcePrefix, sourcePreservingPolynomialMarkerWord,
       markerField, markerPayload, markerCount,
       lengthPrefixedWord, List.append_assoc] using
-      polynomialRowMarker_prefixTrace polynomial 0 input.length
+      polynomialRowMarkerPrefixTrace polynomial 0 input.length
         (false :: (input ++ markerField))
   have hfirst := EvalsToInTime.trans (polynomialRowMarkerMachine polynomial).step _ _ _ _ _
     hscan hhorner
@@ -585,16 +602,16 @@ def sourcePreservingPolynomialMarkerComputable
   outputAlphabet := Equiv.refl Bool
   time := polynomialRowMarkerTotalTimePolynomial polynomial
   outputsFun input := {
-    steps := (polynomialRowMarker_totalTrace polynomial input).steps
+    steps := (polynomialRowMarkerTotalTrace polynomial input).steps
     evals_in_steps := by
       simpa only [Option.bind_eq_bind, FinTM2.step, Fin.isValue, Equiv.invFun_as_coe,
           Equiv.refl_symm,
           Equiv.coe_refl, bitEncoding, id_eq, List.map_id_fun, polynomialRowMarkerMachine_init,
               Option.map_some] using
-          (polynomialRowMarker_totalTrace polynomial input).evals_in_steps
+          (polynomialRowMarkerTotalTrace polynomial input).evals_in_steps
     steps_le_m := by
       simpa only [FinTM2.step, Fin.isValue, bitEncoding, id_eq] using
-          (polynomialRowMarker_totalTrace polynomial input).steps_le_m
+          (polynomialRowMarkerTotalTrace polynomial input).steps_le_m
   }
 
 end CLStructuralCNFOutputMachinesUnconditional
@@ -744,7 +761,8 @@ abbrev liftValidStatement (tm : Turing.FinTM2) :=
     (Prod.snd : Option Bool × tm.σ → tm.σ) (fun state value => (state.1, value))
     (.load (fun state => (none, state.2)) .halt)
 
-private def fixedOutputStatement
+/-- Write a fixed fallback word with the output alphabet of the given machine. -/
+def fixedOutputStatement
     {valid : List Bool → List Bool}
     (computer : BitTM valid) :
     List Bool →
@@ -936,7 +954,7 @@ private theorem fixedOutputStatement_stepAux
             List.map_cons, List.map_nil, List.append_assoc, List.cons_append, List.nil_append]
       · simp only [Function.update, hk, ↓reduceDIte]
 
-private theorem fallbackConfiguration_step
+theorem fallbackConfigurationStep
     {valid : List Bool → List Bool}
     (computer : BitTM valid)
     (fallback : List Bool)
@@ -959,7 +977,7 @@ private theorem fallbackConfiguration_step
     exact (initialStack_input computer.tm remaining).symm
   · simp only [Function.update, hk, ↓reduceDIte, ne_eq, not_false_eq_true, initialStack_of_ne]
 
-private theorem fallbackConfiguration_finish
+theorem fallbackConfigurationFinish
     {valid : List Bool → List Bool}
     (computer : BitTM valid)
     (fallback : List Bool) :
@@ -1006,9 +1024,9 @@ noncomputable def fallbackTrace
       (remaining.length + 1) := by
   induction remaining with
   | nil =>
-      exact oneStep _ _ (fallbackConfiguration_finish computer fallback)
+      exact oneStep _ _ (fallbackConfigurationFinish computer fallback)
   | cons symbol remaining ih =>
-      have hfirst := oneStep _ _ (fallbackConfiguration_step computer fallback
+      have hfirst := oneStep _ _ (fallbackConfigurationStep computer fallback
           symbol remaining)
       have hfull := EvalsToInTime.trans (markerConditionalMachine computer fallback).step
         1 (remaining.length + 1) _ _ _ hfirst ih

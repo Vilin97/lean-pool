@@ -4,13 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import LeanPool.PDL.Discon
+module
+
+public import LeanPool.PDL.Discon
 
 /-!
 # Substitution and Helper Lemmas
 
 The lemmas here are mostly from Sections 2.1 and 2.2.
 -/
+
+@[expose] public section
 
 namespace PDL
 

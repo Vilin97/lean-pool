@@ -3,10 +3,14 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Combinatorics.SimpleGraph.Finite
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+module
+
+public import Mathlib.Combinatorics.SimpleGraph.Finite
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-! # External degrees in three-vertex stars -/
+
+@[expose] public section
 
 namespace ACMax
 
