@@ -18,4 +18,4 @@ circle-average versions of the scaled-disc Poisson integral formulas. In this Le
 those declarations are provided by `LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral2`.
 -/
 
-@[expose] public section
+public section
