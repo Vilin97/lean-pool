@@ -3,7 +3,10 @@ Copyright (c) 2026 ukiyois, OpenCode agent sessions. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ukiyois, OpenCode agent sessions
 -/
-import LeanPool.HardSphereNBC.GraphicMatroid
+module
+
+public import LeanPool.HardSphereNBC.GraphicMatroid
+
 
 /-!
   A finite formalization of the finite part of the hard-sphere NBC
@@ -19,6 +22,8 @@ import LeanPool.HardSphereNBC.GraphicMatroid
   continuous hard-sphere interpretation is obtained by replacing the finite
   weight sum with Lebesgue integration after this algebraic identity.
 -/
+
+@[expose] public section
 
 namespace HsVirial
 

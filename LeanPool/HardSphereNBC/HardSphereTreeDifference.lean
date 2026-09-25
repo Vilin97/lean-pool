@@ -3,11 +3,16 @@ Copyright (c) 2026 ukiyois, OpenCode agent sessions. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ukiyois, OpenCode agent sessions
 -/
-import LeanPool.HardSphereNBC.HardSphereTree
-import LeanPool.HardSphereNBC.HardSphereGeometry
-import Mathlib.LinearAlgebra.Matrix.Block
+module
+
+public import LeanPool.HardSphereNBC.HardSphereTree
+public import LeanPool.HardSphereNBC.HardSphereGeometry
+public import Mathlib.LinearAlgebra.Matrix.Block
+
 
 /-! ### Triangular difference maps -/
+
+@[expose] public section
 
 namespace HsVirial
 

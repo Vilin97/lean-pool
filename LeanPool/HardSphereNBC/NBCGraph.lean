@@ -3,10 +3,13 @@ Copyright (c) 2026 ukiyois, OpenCode agent sessions. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ukiyois, OpenCode agent sessions
 -/
-import LeanPool.HardSphereNBC.NBCMatroid
-import Mathlib.Combinatorics.SimpleGraph.Paths
-import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+module
+
+public import LeanPool.HardSphereNBC.NBCMatroid
+public import Mathlib.Combinatorics.SimpleGraph.Paths
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+
 
 /-!
   Concrete graph data for the NBC layer.
@@ -18,6 +21,8 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
   the final bridge is conditional on a matroid's ground, spanning, and circuit
   presentations.
  -/
+
+@[expose] public section
 
 namespace HsVirial
 

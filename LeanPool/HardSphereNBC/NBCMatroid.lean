@@ -3,10 +3,13 @@ Copyright (c) 2026 ukiyois, OpenCode agent sessions. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ukiyois, OpenCode agent sessions
 -/
-import Mathlib.Combinatorics.Matroid.Circuit
-import Mathlib.Combinatorics.Matroid.Rank.Finite
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Finset.Max
+module
+
+public import Mathlib.Combinatorics.Matroid.Circuit
+public import Mathlib.Combinatorics.Matroid.Rank.Finite
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Data.Finset.Max
+
 
 /-!
   The NBC cancellation is first proved at the level of a finite matroid.  The
@@ -15,6 +18,8 @@ import Mathlib.Data.Finset.Max
   Keeping this layer independent makes the cancellation proof auditable and
   avoids hiding it behind a library theorem.
  -/
+
+@[expose] public section
 
 namespace HsVirial
 

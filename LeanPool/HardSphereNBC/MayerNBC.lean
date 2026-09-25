@@ -3,12 +3,15 @@ Copyright (c) 2026 ukiyois, OpenCode agent sessions. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ukiyois, OpenCode agent sessions
 -/
-import LeanPool.HardSphereNBC.GraphicMatroid
-import Mathlib.Analysis.InnerProductSpace.EuclideanDist
-import Mathlib.Analysis.Normed.Ring.Int
-import Mathlib.MeasureTheory.Integral.Lebesgue.Add
-import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
-import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+module
+
+public import LeanPool.HardSphereNBC.GraphicMatroid
+public import Mathlib.Analysis.InnerProductSpace.EuclideanDist
+public import Mathlib.Analysis.Normed.Ring.Int
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+
 
 /-!
   This file is the finite Mayer/NBC bridge.  The graph part is completely
@@ -16,6 +19,8 @@ import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
   its only analytic input is measurability of the finitely many regions that
   occur in the finite tree sum.
 -/
+
+@[expose] public section
 
 namespace HsVirial
 

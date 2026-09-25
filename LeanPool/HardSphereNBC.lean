@@ -4,22 +4,25 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ukiyois, OpenCode agent sessions
 -/
 
-import LeanPool.HardSphereNBC.GraphicMatroid
-import LeanPool.HardSphereNBC.HardSphereClosePair
-import LeanPool.HardSphereNBC.HardSphereCompound
-import LeanPool.HardSphereNBC.HardSphereFork
-import LeanPool.HardSphereNBC.HardSphereForkPackingCoordinates
-import LeanPool.HardSphereNBC.HardSphereGeometry
-import LeanPool.HardSphereNBC.HardSphereMeasure
-import LeanPool.HardSphereNBC.HardSphereNBC
-import LeanPool.HardSphereNBC.HardSphereTree
-import LeanPool.HardSphereNBC.HardSphereTreeDifference
-import LeanPool.HardSphereNBC.HardSphereTreeEdges
-import LeanPool.HardSphereNBC.MayerNBC
-import LeanPool.HardSphereNBC.NBCGraph
-import LeanPool.HardSphereNBC.NBCMatroid
-import LeanPool.HardSphereNBC.NBCVolume
-import LeanPool.HardSphereNBC.Solution
+module
+
+public import LeanPool.HardSphereNBC.GraphicMatroid
+public import LeanPool.HardSphereNBC.HardSphereClosePair
+public import LeanPool.HardSphereNBC.HardSphereCompound
+public import LeanPool.HardSphereNBC.HardSphereFork
+public import LeanPool.HardSphereNBC.HardSphereForkPackingCoordinates
+public import LeanPool.HardSphereNBC.HardSphereGeometry
+public import LeanPool.HardSphereNBC.HardSphereMeasure
+public import LeanPool.HardSphereNBC.HardSphereNBC
+public import LeanPool.HardSphereNBC.HardSphereTree
+public import LeanPool.HardSphereNBC.HardSphereTreeDifference
+public import LeanPool.HardSphereNBC.HardSphereTreeEdges
+public import LeanPool.HardSphereNBC.MayerNBC
+public import LeanPool.HardSphereNBC.NBCGraph
+public import LeanPool.HardSphereNBC.NBCMatroid
+public import LeanPool.HardSphereNBC.NBCVolume
+public import LeanPool.HardSphereNBC.Solution
+
 
 /-!
 # Hard-sphere Mayer NBC identity and fork-packing volume bound
@@ -31,3 +34,5 @@ Main declarations: `PalomarHS.main_result`, `PalomarHS.nbc_region_real_volume_le
 Tags: mathematical-physics
 MSC: 05C15, 82B05
 -/
+
+@[expose] public section

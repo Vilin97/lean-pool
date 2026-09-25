@@ -3,17 +3,22 @@ Copyright (c) 2026 ukiyois, OpenCode agent sessions. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ukiyois, OpenCode agent sessions
 -/
-import LeanPool.HardSphereNBC.HardSphereCompound
-import LeanPool.HardSphereNBC.HardSphereTreeDifference
-import Mathlib.MeasureTheory.Constructions.HaarToSphere
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+module
+
+public import LeanPool.HardSphereNBC.HardSphereCompound
+public import LeanPool.HardSphereNBC.HardSphereTreeDifference
+public import Mathlib.MeasureTheory.Constructions.HaarToSphere
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+
 
 /-!
 # HardSphereClosePair
 
 Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
 -/
+
+@[expose] public section
 
 namespace HsVirial
 

@@ -3,13 +3,18 @@ Copyright (c) 2026 ukiyois, OpenCode agent sessions. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ukiyois, OpenCode agent sessions
 -/
-import LeanPool.HardSphereNBC.HardSphereClosePair
+module
+
+public import LeanPool.HardSphereNBC.HardSphereClosePair
+
 
 /-!
 # HardSphereForkPackingCoordinates
 
 Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
 -/
+
+@[expose] public section
 
 namespace HsVirial
 

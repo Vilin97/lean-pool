@@ -3,9 +3,12 @@ Copyright (c) 2026 ukiyois, OpenCode agent sessions. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ukiyois, OpenCode agent sessions
 -/
-import LeanPool.HardSphereNBC.HardSphereCompound
-import LeanPool.HardSphereNBC.HardSphereClosePair
-import LeanPool.HardSphereNBC.HardSphereForkPackingCoordinates
+module
+
+public import LeanPool.HardSphereNBC.HardSphereCompound
+public import LeanPool.HardSphereNBC.HardSphereClosePair
+public import LeanPool.HardSphereNBC.HardSphereForkPackingCoordinates
+
 
 /-!
 # Proved solution
@@ -14,6 +17,8 @@ The substantive proof development is in the `lean/` directory.  This module
 exposes the same declarations as `Challenge.lean` and connects them to the
 machine-checked flat-coordinate and fork-packing theorems.
 -/
+
+@[expose] public section
 
 namespace PalomarHS
 

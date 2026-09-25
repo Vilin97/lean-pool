@@ -3,15 +3,20 @@ Copyright (c) 2026 ukiyois, OpenCode agent sessions. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ukiyois, OpenCode agent sessions
 -/
-import LeanPool.HardSphereNBC.HardSphereNBC
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+module
+
+public import LeanPool.HardSphereNBC.HardSphereNBC
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+
 
 /-!
 # HardSphereMeasure
 
 Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
 -/
+
+@[expose] public section
 
 namespace HsVirial
 

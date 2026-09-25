@@ -3,11 +3,16 @@ Copyright (c) 2026 ukiyois, OpenCode agent sessions. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ukiyois, OpenCode agent sessions
 -/
-import LeanPool.HardSphereNBC.HardSphereFork
-import Mathlib.LinearAlgebra.Matrix.Transvection
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+module
+
+public import LeanPool.HardSphereNBC.HardSphereFork
+public import Mathlib.LinearAlgebra.Matrix.Transvection
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+
 
 /-! ### Elementary tree-coordinate shears -/
+
+@[expose] public section
 
 namespace HsVirial
 

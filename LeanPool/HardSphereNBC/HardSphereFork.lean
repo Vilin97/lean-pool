@@ -3,11 +3,16 @@ Copyright (c) 2026 ukiyois, OpenCode agent sessions. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ukiyois, OpenCode agent sessions
 -/
-import LeanPool.HardSphereNBC.HardSphereMeasure
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
-import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+module
+
+public import LeanPool.HardSphereNBC.HardSphereMeasure
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
+public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+
 
 /-! ### Concrete tree and fork regions -/
+
+@[expose] public section
 
 namespace HsVirial
 

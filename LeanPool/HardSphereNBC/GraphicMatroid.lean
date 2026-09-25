@@ -3,17 +3,22 @@ Copyright (c) 2026 ukiyois, OpenCode agent sessions. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ukiyois, OpenCode agent sessions
 -/
-import LeanPool.HardSphereNBC.NBCGraph
-import Mathlib.Combinatorics.Matroid.IndepAxioms
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
-import Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite
-import Mathlib.Combinatorics.SimpleGraph.Finite
+module
+
+public import LeanPool.HardSphereNBC.NBCGraph
+public import Mathlib.Combinatorics.Matroid.IndepAxioms
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite
+public import Mathlib.Combinatorics.SimpleGraph.Finite
+
 
 /-!
 # GraphicMatroid
 
 Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
 -/
+
+@[expose] public section
 
 namespace HsVirial
 
