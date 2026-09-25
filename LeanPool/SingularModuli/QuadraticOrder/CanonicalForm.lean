@@ -41,7 +41,7 @@ canonical forms) is developed in subsequent PRs on top of this
 scaffolding.
 -/
 
-@[expose] public section
+public section
 
 namespace QuadraticOrder
 
@@ -216,7 +216,7 @@ private lemma zSpan_smul_mem
     have hi2 : i.val < 2 := by rw [← basis_dim]; exact i.isLt
     interval_cases h : i.val
     · simp only [h, pow_zero]; exact hM_one
-    · simp only [h, pow_one]; exact hM_tau
+    · simp only [h, pow_one, basis_gen_eq_tau]; exact hM_tau
   -- Hence `c ∈ M` via `Basis.sum_repr`.
   suffices c ∈ M by exact this x hx
   have hsum := (basis (d := d)).basis.sum_repr c

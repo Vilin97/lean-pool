@@ -32,7 +32,7 @@ field/PID structure of `𝔽ₚ[X]` does the work. The downstream files
 Lean-idiomatic route; the mathematical content matches Prop 3.2.1.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 

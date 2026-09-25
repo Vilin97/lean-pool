@@ -16,7 +16,7 @@ This file counts solutions to `x² ≡ c (mod p^n)` for prime powers `p^n`.
 These are the "analytic inputs" for the ideal-counting theorems (Layer 4).
 -/
 
-@[expose] public section
+public section
 
 namespace QuadraticOrder
 

@@ -20,7 +20,7 @@ This file records a small sanity check for the defining minimal polynomial of
 `tau`.
 -/
 
-@[expose] public section
+public section
 
 /-- Sanity check: `τ` satisfies its minimal polynomial `X² - dX + (d²-d)/4 = 0`. -/
 example (d : ℤ) : (QuadraticOrder.tau (d := d)) ^ 2 - d • QuadraticOrder.tau +
