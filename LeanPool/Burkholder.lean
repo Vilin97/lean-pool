@@ -25,4 +25,4 @@ Tags: probability, martingales, burkholder-inequality
 MSC: 60G42
 -/
 
-@[expose] public section
+public section

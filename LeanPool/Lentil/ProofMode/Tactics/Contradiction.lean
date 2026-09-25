@@ -13,7 +13,7 @@ import LeanPool.Lentil.ProofMode.Tactics.Revert
 import LeanPool.Lentil.ProofMode.Tactics.Specialize
 import LeanPool.Lentil.Rules.Basic
 
-@[expose] public section
+public section
 
 namespace TLA.ProofMode
 

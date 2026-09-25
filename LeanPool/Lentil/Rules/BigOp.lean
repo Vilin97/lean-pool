@@ -15,7 +15,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 
 /-! Theorems about big operators (e.g., `⋀`, `⋁`). -/
 
-@[expose] public section
+public section
 
 open Classical LentilLib
 

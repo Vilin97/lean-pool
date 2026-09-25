@@ -10,7 +10,7 @@ public meta import LeanPool.Lentil.Expr
 public import LeanPool.Lentil.ProofMode.Tactics.Have
 import LeanPool.Lentil.Rules.Basic
 
-@[expose] public section
+public section
 
 namespace TLA.ProofMode
 

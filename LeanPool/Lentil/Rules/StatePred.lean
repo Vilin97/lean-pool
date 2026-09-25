@@ -17,7 +17,7 @@ import LeanPool.Lentil.Util
     states before/after an action, instead of being in the form of
     `|-tla-`. -/
 
-@[expose] public section
+public section
 
 open Classical
 

@@ -9,7 +9,7 @@ public import LeanPool.Lentil.ProofMode.Basic
 import Batteries.Tactic.Init
 import LeanPool.Lentil.Rules.Basic
 
-@[expose] public section
+public section
 
 namespace TLA.ProofMode
 

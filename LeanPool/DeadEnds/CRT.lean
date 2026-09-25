@@ -15,20 +15,22 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.DeadEnds.CRT
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DeadEnds
 
 /-- The modulus M = ∏_{p ∈ S} p² -/
-noncomputable def primeSquareProduct (S : Finset Nat.Primes) : ℕ :=
+@[expose] noncomputable def primeSquareProduct (S : Finset Nat.Primes) : ℕ :=
   ∏ p ∈ S, (p : ℕ) ^ 2
 
 /-- Valid residues mod M: residues r such that for all p ∈ S, r mod p² is valid -/
-noncomputable def validResiduesMod (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) : Finset ℕ :=
+@[expose] noncomputable def validResiduesMod (b : ℕ) (T : Finset ℕ)
+    (S : Finset Nat.Primes) : Finset ℕ :=
   (Finset.range (primeSquareProduct S)).filter fun r =>
     ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ r) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ (b * r + d))
 
 /-- The product of local density factors L = ∏_{p ∈ S} localDensityFactor p b T -/
+@[expose]
 noncomputable def localDensityProduct (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) : ℝ :=
   ∏ p ∈ S, localDensityFactor (p : ℕ) b T
 

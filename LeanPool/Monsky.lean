@@ -30,7 +30,7 @@ Tags: geometry, combinatorics, measure-theory
 MSC: 52C20, 05B45
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

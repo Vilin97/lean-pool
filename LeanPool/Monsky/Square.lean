@@ -15,7 +15,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.Monsky.Square`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Monsky
 
@@ -33,7 +33,7 @@ open Finset
 -/
 
 /-- The unit square as a four-vertex polygon. -/
-def unitSquare : Fin 4 → ℝ² := (fun | 0 => v 0 0 | 1 => v 1 0 | 2 => v 1 1 | 3 => v 0 1)
+@[expose] def unitSquare : Fin 4 → ℝ² := (fun | 0 => v 0 0 | 1 => v 1 0 | 2 => v 1 1 | 3 => v 0 1)
 
 
 lemma closed_unitSquare_eq : closedHull unitSquare = {x | ∀ i, 0 ≤ x i ∧ x i ≤ 1} := by
@@ -436,14 +436,14 @@ lemma segment_triangle_pairing_boundary (S : Finset Triangle)
 -- Lemmas and Theorems about the square boundary
 
 /-- The `i`-th side of the unit square, as a segment. -/
-def squareBoundaryBig : Fin 4 → Segment := fun
+@[expose] def squareBoundaryBig : Fin 4 → Segment := fun
   | 0 => (fun | 0 => v 0 0 | 1 => v 1 0)
   | 1 => (fun | 0 => v 1 0 | 1 => v 1 1)
   | 2 => (fun | 0 => v 1 1 | 1 => v 0 1)
   | 3 => (fun | 0 => v 0 1 | 1 => v 0 0)
 
 /-- The four sides of the unit square, as a set of segments. -/
-noncomputable def squareBoundaryBigSet : Finset Segment :=
+@[expose] noncomputable def squareBoundaryBigSet : Finset Segment :=
    @Finset.biUnion (Fin 4) Segment _ ⊤ (fun i ↦ {squareBoundaryBig i})
 
 
@@ -464,8 +464,10 @@ lemma square_boundary_sides_nonDegen (i : Fin 4) :
 
 
 /-- The index of the coordinate that is constant along side `i` of the square. -/
+@[expose]
 def boundaryLine : Fin 4 → Fin 2 := fun | 0 => 0 | 1 => 1 | 2 => 0 | 3 => 1
 /-- The constant coordinate value along side `i` of the unit square. -/
+@[expose]
 def bc : Fin 4 → ℝ := fun | 0 => 0 | 1 => 1 | 2 => 1 | 3 => 0
 
 @[simp]

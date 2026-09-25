@@ -14,7 +14,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.Monsky.SimplexBasic`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Monsky
 
@@ -30,7 +30,7 @@ open Finset
 
 -- Shorthand for defining an element of ℝ²
 /-- The plane vector with the two given real coordinates. -/
-def v (x y : ℝ) : ℝ² := !₂[x, y]
+@[expose] def v (x y : ℝ) : ℝ² := !₂[x, y]
 
 @[simp]
 lemma v₀_val {x y : ℝ} : (v x y) 0 = x := by simp [v]
@@ -40,9 +40,9 @@ lemma v₁_val {x y : ℝ} : (v x y) 1 = y := by simp [v]
 
 -- Definition of an n-dimensional standard simplex.
 /-- The closed standard `n`-simplex of nonnegative weights summing to one. -/
-def closedSimplex (n : ℕ) : Set (Fin n → ℝ) := {α | (∀ i, 0 ≤ α i) ∧ ∑ i, α i = 1}
+@[expose] def closedSimplex (n : ℕ) : Set (Fin n → ℝ) := {α | (∀ i, 0 ≤ α i) ∧ ∑ i, α i = 1}
 /-- The open standard `n`-simplex of positive weights summing to one. -/
-def openSimplex (n : ℕ) : Set (Fin n → ℝ) := {α | (∀ i, 0 < α i) ∧ ∑ i, α i = 1}
+@[expose] def openSimplex (n : ℕ) : Set (Fin n → ℝ) := {α | (∀ i, 0 < α i) ∧ ∑ i, α i = 1}
 
 /-
   The Fin n → ℝ² in the following definitions represents the vertices of a polygon.
@@ -53,8 +53,10 @@ def openSimplex (n : ℕ) : Set (Fin n → ℝ) := {α | (∀ i, 0 < α i) ∧ �
   Also when f i = P for all i, both the closedHull and openHull are {P i}.
 -/
 /-- The closed convex hull of a finite point family, via the closed simplex. -/
+@[expose]
 def closedHull {n : ℕ} (f : Fin n → ℝ²) : Set ℝ² := (fun α ↦ ∑ i, α i • f i) '' closedSimplex n
 /-- The open convex hull of a finite point family, via the open simplex. -/
+@[expose]
 def openHull {n : ℕ} (f : Fin n → ℝ²) : Set ℝ² := (fun α ↦ ∑ i, α i • f i) '' openSimplex n
 
 
@@ -128,6 +130,7 @@ lemma openHull_zero_dim (f : Fin 0 → ℝ²) : openHull f = ∅ := by
 
 
 /-- The point obtained as a weighted combination of a point family. -/
+@[expose]
 noncomputable def linearCombination {n : ℕ} (α : Fin n → ℝ) (f : Fin n → ℝ²)
     : ℝ² := ∑ i, α i • f i
 
@@ -199,7 +202,7 @@ lemma simplex_open_sub_fin2 {α : Fin 2 → ℝ} (h : α ∈ openSimplex 2) :
   simplex_closed_sub_fin2 (open_sub_closedSimplex h)
 
 /-- Encodes a real `x` as the pair of weights `(x, 1 - x)`. -/
-def real_to_fin_2 (x : ℝ) : (Fin 2 → ℝ) := fun | 0 => x | 1 => 1 - x
+@[expose] def real_to_fin_2 (x : ℝ) : (Fin 2 → ℝ) := fun | 0 => x | 1 => 1 - x
 
 lemma real_to_fin_2_closed {x : ℝ} (h₁ : 0 ≤ x) (h₂ : x ≤ 1)
     : real_to_fin_2 x ∈ closedSimplex 2 :=
@@ -253,7 +256,7 @@ lemma closedHull_openHull_com {n : ℕ} {P : Fin n → ℝ²} {x y : ℝ²}
 -/
 
 /-- The boundary of the convex hull of a point family: closed hull minus open hull. -/
-def boundary {n : ℕ} (P : Fin n → ℝ²) : Set ℝ² := (closedHull P) \ (openHull P)
+@[expose] def boundary {n : ℕ} (P : Fin n → ℝ²) : Set ℝ² := (closedHull P) \ (openHull P)
 
 lemma boundary_sub_closed {n : ℕ} (P : Fin n → ℝ²) : boundary P ⊆ closedHull P :=
   Set.sdiff_subset

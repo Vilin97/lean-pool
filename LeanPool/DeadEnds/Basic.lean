@@ -16,7 +16,7 @@ import Mathlib.NumberTheory.SumPrimeReciprocals
 
 /-! ## Counting functions for joint conditions -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DeadEnds
 
@@ -34,7 +34,7 @@ MATHLIB COVERAGE:
 
 /-- A positive integer `N` is a *base-`b` dead end*: `N` is square-free, yet `b * N + d`
 fails to be square-free for every digit `d ∈ {0, …, b - 1}`. -/
-def IsBaseBDeadEnd (b : ℕ) (N : ℕ) : Prop :=
+@[expose] def IsBaseBDeadEnd (b : ℕ) (N : ℕ) : Prop :=
   0 < N ∧ Squarefree N ∧ ∀ d ∈ Finset.range b, ¬Squarefree (b * N + d)
 
 instance (b N : ℕ) : Decidable (IsBaseBDeadEnd b N) := by
@@ -42,18 +42,18 @@ instance (b N : ℕ) : Decidable (IsBaseBDeadEnd b N) := by
   infer_instance
 
 /-- The number of base-`b` dead ends in `[1, X]`. -/
-def countBaseBDeadEnds (b : ℕ) (X : ℕ) : ℕ :=
+@[expose] def countBaseBDeadEnds (b : ℕ) (X : ℕ) : ℕ :=
   (Finset.filter (fun N => IsBaseBDeadEnd b N) (Finset.Icc 1 X)).card
 
 /-- The asymptotic density of base-`b` dead ends equals `D`, i.e.
 `countBaseBDeadEnds b X / X → D` as `X → ∞`. -/
-def HasAsymptoticDensity (b : ℕ) (D : ℝ) : Prop :=
+@[expose] def HasAsymptoticDensity (b : ℕ) (D : ℝ) : Prop :=
   Filter.Tendsto (fun X : ℕ => (countBaseBDeadEnds b X : ℝ) / (X : ℝ))
     Filter.atTop (nhds D)
 
 /-- The local density factor `μ_p(b, T)`: the fraction of residues `r ∈ [0, p²)` with
 `p² ∤ r` and `p² ∤ b * r + d` for every `d ∈ T`. -/
-noncomputable def localDensityFactor (p : ℕ) (b : ℕ) (T : Finset ℕ) : ℝ :=
+@[expose] noncomputable def localDensityFactor (p : ℕ) (b : ℕ) (T : Finset ℕ) : ℝ :=
   let pSq := p ^ 2
   let validResidues := (Finset.range pSq).filter fun r =>
     ¬(pSq ∣ r) ∧ ∀ d ∈ T, ¬(pSq ∣ (b * r + d))
@@ -61,17 +61,17 @@ noncomputable def localDensityFactor (p : ℕ) (b : ℕ) (T : Finset ℕ) : ℝ 
 
 /-- The joint square-free density `α(b, T) = ∏_p μ_p(b, T)`, the infinite product
 over all primes. -/
-noncomputable def jointSquarefreeDensity (b : ℕ) (T : Finset ℕ) : ℝ :=
+@[expose] noncomputable def jointSquarefreeDensity (b : ℕ) (T : Finset ℕ) : ℝ :=
   ∏' p : Nat.Primes, localDensityFactor (p : ℕ) b T
 
 /-- The explicit inclusion-exclusion formula `∑_{T ⊆ {0,…,b-1}} (-1)^{|T|} α(b, T)` for `D_b`. -/
-noncomputable def explicitDensityFormula (b : ℕ) : ℝ :=
+@[expose] noncomputable def explicitDensityFormula (b : ℕ) : ℝ :=
   ∑ T ∈ (Finset.range b).powerset,
     ((-1 : ℝ) ^ T.card) * jointSquarefreeDensity b T
 
 
 /-- Count N in [1,X] such that N is squarefree and bN+d is squarefree for all d in T -/
-def countJointSquarefree (b : ℕ) (T : Finset ℕ) (X : ℕ) : ℕ :=
+@[expose] def countJointSquarefree (b : ℕ) (T : Finset ℕ) (X : ℕ) : ℕ :=
   (Finset.Icc 1 X).filter (fun N =>
     Squarefree N ∧ ∀ d ∈ T, Squarefree (b * N + d)) |>.card
 

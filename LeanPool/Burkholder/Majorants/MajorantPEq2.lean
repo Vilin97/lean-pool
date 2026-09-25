@@ -19,7 +19,7 @@ import Mathlib.Tactic.Positivity.Finset
 Constructs the Burkholder majorant in the special case `p = 2`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
