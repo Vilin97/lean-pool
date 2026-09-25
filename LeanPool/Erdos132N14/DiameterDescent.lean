@@ -18,7 +18,7 @@ It then deletes one endpoint of the unique pair in the first class and proves
 that the realized-distance set is exactly the old set with that class erased.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132N14
 
@@ -152,13 +152,13 @@ namespace FourteenFailureExactProfile
 variable {P : Configuration (Fin 14)} (profile : FourteenFailureExactProfile P)
 
 /-- The deleted endpoint of the unique rare pair. -/
-def deletedVertex : Fin 14 := profile.rarePair.1
+@[expose] def deletedVertex : Fin 14 := profile.rarePair.1
 
 /-- The other endpoint of the unique rare pair. -/
-def retainedEndpoint : Fin 14 := profile.rarePair.2
+@[expose] def retainedEndpoint : Fin 14 := profile.rarePair.2
 
 /-- The thirteen labels left after endpoint deletion. -/
-def remaining : Finset (Fin 14) := Finset.univ.erase profile.deletedVertex
+@[expose] def remaining : Finset (Fin 14) := Finset.univ.erase profile.deletedVertex
 
 theorem rarePair_mem : profile.rarePair ∈ pairs (Finset.univ : Finset (Fin 14)) := by
   have hmem : profile.rarePair ∈

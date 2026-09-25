@@ -15,7 +15,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.DemazureOperatorsLean.DemazureAuxRelations
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace Demazure
@@ -141,7 +141,7 @@ lemma symm_invariant_swap_variables {i j : Fin n} {g : MvPolynomial (Fin n) ℂ}
 
 /- Now we prove that symmetric polynomials act as scalars -/
 /-- A quotient fraction represented by symmetric numerator and denominator polynomials. -/
-def IsSymmetric (p : PolyFraction n) : Prop := ∃p' : PolyFraction' n,
+@[expose] def IsSymmetric (p : PolyFraction n) : Prop := ∃p' : PolyFraction' n,
  mk p' = p ∧ MvPolynomial.IsSymmetric p'.numerator ∧ MvPolynomial.IsSymmetric p'.denominator
 
 lemma demaux_mul_symm (i : Fin n) (g f : PolyFraction n) (h : IsSymmetric g) :

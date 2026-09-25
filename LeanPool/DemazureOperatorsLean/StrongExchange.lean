@@ -12,7 +12,7 @@ import Mathlib.Algebra.Group.NatPowAssoc
 # LeanPool.DemazureOperatorsLean.StrongExchange
 -/
 
-@[expose] public section
+public section
 
 namespace CoxeterSystem
 noncomputable section

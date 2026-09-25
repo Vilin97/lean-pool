@@ -12,7 +12,7 @@ import LeanPool.DemazureOperatorsLean.StrongExchange
 # LeanPool.DemazureOperatorsLean.Matsumoto
 -/
 
-@[expose] public section
+public section
 
 namespace CoxeterSystem
 noncomputable section
