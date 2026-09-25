@@ -198,7 +198,7 @@ lemma norm_compContinuousMultilinearMap_ofReal {n : ℕ} {E : Fin n → Type*}
     original Schwartz function. This follows from the chain rule and the fact that
     the embedding is an isometry.
 -/
-lemma iteratedFDeriv_ofReal_norm_eq (f : TestFunction) (n : ℕ) (x : SpaceTime) :
+lemma iteratedFDeriv_ofReal_norm_eq (f : OSforGFF.TestFunction) (n : ℕ) (x : SpaceTime) :
     ‖iteratedFDeriv ℝ n (fun x ↦ (f x : ℂ)) x‖ = ‖iteratedFDeriv ℝ n f.toFun x‖ := by
   have h_comp : (fun x => (f x : ℂ)) = Complex.ofRealCLM ∘ f.toFun := rfl
   rw [h_comp]
@@ -209,7 +209,7 @@ lemma iteratedFDeriv_ofReal_norm_eq (f : TestFunction) (n : ℕ) (x : SpaceTime)
   exact norm_compContinuousMultilinearMap_ofReal (iteratedFDeriv ℝ n f.toFun x)
 
 /-- Embed a real test function as a complex-valued test function by coercing values via ℝ → ℂ. -/
-def toComplex (f : TestFunction) : TestFunctionℂ :=
+def toComplex (f : OSforGFF.TestFunction) : TestFunctionℂ :=
   SchwartzMap.mk (fun x => (f x : ℂ)) (by
     -- ℝ → ℂ coercion is smooth
     exact ContDiff.comp Complex.ofRealCLM.contDiff f.smooth'
@@ -225,27 +225,27 @@ def toComplex (f : TestFunction) : TestFunctionℂ :=
     exact hC x
   )
 
-@[simp] lemma toComplex_apply (f : TestFunction) (x : SpaceTime) :
+@[simp] lemma toComplex_apply (f : OSforGFF.TestFunction) (x : SpaceTime) :
   toComplex f x = (f x : ℂ) := by
   -- Follows from definition of toComplex
   rfl
 
-@[simp] lemma complex_testfunction_decompose_toComplex_fst (f : TestFunction) :
+@[simp] lemma complex_testfunction_decompose_toComplex_fst (f : OSforGFF.TestFunction) :
   (complexTestFunctionDecompose (toComplex f)).1 = f := by
   ext x
   simp [complexTestFunctionDecompose, toComplex_apply]
 
-@[simp] lemma complex_testfunction_decompose_toComplex_snd (f : TestFunction) :
+@[simp] lemma complex_testfunction_decompose_toComplex_snd (f : OSforGFF.TestFunction) :
   (complexTestFunctionDecompose (toComplex f)).2 = 0 := by
   ext x
   simp [complexTestFunctionDecompose, toComplex_apply]
 
-@[simp] lemma toComplex_add (f g : TestFunction) :
+@[simp] lemma toComplex_add (f g : OSforGFF.TestFunction) :
   toComplex (f + g) = toComplex f + toComplex g := by
   ext x
   simp [toComplex_apply]
 
-@[simp] lemma toComplex_smul (c : ℝ) (f : TestFunction) :
+@[simp] lemma toComplex_smul (c : ℝ) (f : OSforGFF.TestFunction) :
   toComplex (c • f) = (c : ℂ) • toComplex f := by
   ext x
   simp only [toComplex_apply, smul_apply, smul_eq_mul, Complex.ofReal_mul]
@@ -257,7 +257,7 @@ def toComplex (f : TestFunction) : TestFunctionℂ :=
     3. Derivative norms are preserved (iteratedFDeriv_ofReal_norm_eq)
     so the Schwartz seminorm bounds are satisfied.
 -/
-noncomputable def toComplexCLM : TestFunction →L[ℝ] TestFunctionℂ :=
+noncomputable def toComplexCLM : OSforGFF.TestFunction →L[ℝ] TestFunctionℂ :=
   SchwartzMap.mkCLM (𝕜 := ℝ) (𝕜' := ℝ) (G := ℂ) (σ := RingHom.id ℝ) (fun f x => (f x : ℂ))
     (fun f g x => by simp only [add_apply]; exact Complex.ofReal_add _ _)
     (fun c f x => by
@@ -271,20 +271,20 @@ noncomputable def toComplexCLM : TestFunction →L[ℝ] TestFunctionℂ :=
       rw [iteratedFDeriv_ofReal_norm_eq]
       exact SchwartzMap.le_seminorm ℝ k n f x)
 
-@[simp] lemma toComplexCLM_apply (f : TestFunction) :
+@[simp] lemma toComplexCLM_apply (f : OSforGFF.TestFunction) :
     toComplexCLM f = toComplex f := by
   ext x
   rfl
 
 @[simp] lemma distributionPairingℂ_real_toComplex
-  (ω : FieldConfiguration) (f : TestFunction) :
+  (ω : FieldConfiguration) (f : OSforGFF.TestFunction) :
   distributionPairingℂReal ω (toComplex f) = distributionPairing ω f := by
   simp [distributionPairingℂReal, distributionPairing]
 
 variable (dμ_config : ProbabilityMeasure FieldConfiguration)
 
 @[simp] lemma GJGeneratingFunctionalℂ_toComplex
-  (f : TestFunction) :
+  (f : OSforGFF.TestFunction) :
   GJGeneratingFunctionalℂ dμ_config (toComplex f) = GJGeneratingFunctional dμ_config f := by
   unfold GJGeneratingFunctionalℂ GJGeneratingFunctional
   simp [distributionPairingℂ_real_toComplex]
