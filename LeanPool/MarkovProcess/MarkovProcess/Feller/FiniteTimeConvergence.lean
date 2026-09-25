@@ -5,6 +5,7 @@ Authors: Scott Armstrong
 -/
 module
 
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.CoordinatePolynomialMeasure
 public import LeanPool.MarkovProcess.MarkovProcess.Feller.BackwardC0Convergence
 public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.CoordinateProductActiveReduction
 public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteProductCoordinateNormalForm
@@ -71,64 +72,6 @@ namespace SubMarkovKernelSemigroup
 variable {alpha : Type*} [TopologicalSpace alpha] [MeasurableSpace alpha]
   [BorelSpace alpha] [LocallyCompactSpace alpha] [T2Space alpha]
 variable {iota : Type*} {l : Filter iota}
-
-section Integrability
-
-omit [LocallyCompactSpace alpha] [T2Space alpha] in
-private theorem integrable_coordinateProductTerm
-    {n : ℕ} (term : PiContinuousMap.CoordinateProductTerm (Fin n) alpha)
-    (mu : Measure (Fin n → alpha)) [IsFiniteMeasure mu] :
-    Integrable term.toContinuousMap mu := by
-  have hprod : StronglyMeasurable (fun path : Fin n → alpha ↦
-      (term.factors.map fun p ↦ p.2 (path p.1)).prod) := by
-    induction term.factors with
-    | nil => exact stronglyMeasurable_const
-    | cons p factors ih =>
-        simp only [List.map_cons, List.prod_cons]
-        exact ((p.2.measurable.comp (measurable_pi_apply p.1)).stronglyMeasurable).mul ih
-  have hfun : (term.toContinuousMap : (Fin n → alpha) → ℝ) = fun path ↦
-      term.coefficient * (term.factors.map fun p ↦ p.2 (path p.1)).prod := by
-    funext path
-    exact PiContinuousMap.CoordinateProductTerm.toContinuousMap_apply term path
-  rw [hfun]
-  refine Integrable.of_bound (hprod.const_mul term.coefficient).aestronglyMeasurable
-    (‖term.coefficient‖ * (term.factors.map fun p ↦ ‖p.2‖).prod) ?_
-  filter_upwards [] with path
-  rw [norm_mul, List.norm_prod]
-  apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-  induction term.factors with
-  | nil =>
-      simp only [List.map_nil, List.prod_nil]
-      exact le_rfl
-  | cons p factors ih =>
-      simp only [List.map_cons, List.prod_cons]
-      have all_nonneg : ∀ fs : List (Fin n × C₀(alpha, ℝ)),
-          0 ≤ (fs.map fun q ↦ ‖q.2 (path q.1)‖).prod := by
-        intro fs
-        induction fs with
-        | nil => simp only [List.map_nil, List.prod_nil, zero_le_one]
-        | cons q fs ih_nonneg =>
-            simp only [List.map_cons, List.prod_cons]
-            exact mul_nonneg (norm_nonneg _) ih_nonneg
-      have hnonneg : 0 ≤ ((factors.map fun p ↦ p.2 (path p.1)).map norm).prod := by
-        simpa only [List.map_map, Function.comp_apply] using! all_nonneg factors
-      exact mul_le_mul (p.2.toBCF.norm_coe_le_norm (path p.1)) ih hnonneg (norm_nonneg _)
-
-omit [LocallyCompactSpace alpha] [T2Space alpha] in
-private theorem integrable_coordinatePolynomial
-    {n : ℕ} (terms : List (PiContinuousMap.CoordinateProductTerm (Fin n) alpha))
-    (mu : Measure (Fin n → alpha)) [IsFiniteMeasure mu] :
-    Integrable (PiContinuousMap.coordinatePolynomial terms) mu := by
-  induction terms with
-  | nil =>
-      simp only [PiContinuousMap.coordinatePolynomial_nil]
-      change Integrable (fun _ : Fin n → alpha ↦ (0 : ℝ)) mu
-      exact integrable_zero _ _ _
-  | cons term terms ih =>
-      rw [PiContinuousMap.coordinatePolynomial_cons]
-      exact (integrable_coordinateProductTerm term mu).add ih
-
-end Integrability
 
 section ActiveReduction
 

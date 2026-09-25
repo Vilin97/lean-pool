@@ -7,6 +7,7 @@ module
 
 public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelRestriction
 public import Mathlib.Probability.Kernel.Composition.Lemmas
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.CompProdReindex
 
 
 /-!
@@ -180,48 +181,6 @@ private theorem headTail_finCons {n : ℕ} (z : alpha × (Fin n → alpha)) :
   · funext i
     rfl
 
-private theorem compProd_map_left_equiv
-    {X A B C : Type*} [MeasurableSpace X] [MeasurableSpace A]
-    [MeasurableSpace B] [MeasurableSpace C]
-    (kappa : Kernel X A) [IsSFiniteKernel kappa]
-    (eta : Kernel (X × A) B) [IsSFiniteKernel eta]
-    (E : A ≃ᵐ C) :
-    (kappa ⊗ₖ eta).map (Prod.map E id) =
-      kappa.map E ⊗ₖ eta.comap
-        (fun z : X × C ↦ (z.1, E.symm z.2))
-        (measurable_fst.prodMk (E.symm.measurable.comp measurable_snd)) := by
-  ext x s hs
-  rw [Kernel.map_apply' _ (E.measurable.prodMap measurable_id) x hs,
-    Kernel.compProd_apply (hs.preimage (E.measurable.prodMap measurable_id)),
-    Kernel.compProd_apply hs]
-  rw [Kernel.map_apply kappa E.measurable x]
-  rw [MeasureTheory.lintegral_map]
-  · congr with a
-    rw [Kernel.comap_apply]
-    change eta (x, a) (Prod.mk (E a) ⁻¹' s) = _
-    rw [E.symm_apply_apply]
-  · exact ProbabilityTheory.Kernel.measurable_kernel_prodMk_left' hs x
-  · exact E.measurable
-
-private theorem map_compProd_prodMkLeft_right
-    {X A B C : Type*} [MeasurableSpace X] [MeasurableSpace A]
-    [MeasurableSpace B] [MeasurableSpace C]
-    (kappa : Kernel X A) [IsSFiniteKernel kappa]
-    (eta : Kernel A B) [IsSFiniteKernel eta]
-    (f : B → C) (hf : Measurable f) :
-    (kappa ⊗ₖ Kernel.prodMkLeft X eta).map
-        (fun z ↦ (z.1, f z.2)) =
-      kappa ⊗ₖ Kernel.prodMkLeft X (eta.map f) := by
-  have hpair : Measurable (fun z : A × B ↦ (z.1, f z.2)) :=
-    measurable_fst.prodMk (hf.comp measurable_snd)
-  ext x s hs
-  rw [Kernel.map_apply' _ hpair x hs,
-    Kernel.compProd_apply (hs.preimage hpair), Kernel.compProd_apply hs]
-  congr with a
-  rw [Kernel.prodMkLeft_apply', Kernel.prodMkLeft_apply',
-    Kernel.map_apply' _ hf _ (measurable_prodMk_left hs)]
-  rfl
-
 private theorem compProd_prodMkLeft_assoc
     {X A B C : Type*} [MeasurableSpace X] [MeasurableSpace A]
     [MeasurableSpace B] [MeasurableSpace C]
@@ -334,7 +293,7 @@ private theorem finiteTimeKernel_map_splitFinitePath_zero
   let : IsMarkovKernel (P (times 0)) := hP.isMarkovKernel (times 0)
   rw [hsplit, Kernel.map_comp_right _ measurable_headTail
     (E.measurable.prodMap measurable_id), finiteTimeKernel_map_headTail]
-  rw [compProd_map_left_equiv]
+  rw [Kernel.map_compProd_left_equiv]
   rw [finiteTimeKernel_one_eq_map, hfuture]
   congr 1
 
@@ -396,7 +355,7 @@ theorem finiteTimeKernel_map_splitFinitePath
               P (times 0) ⊗ₖ Kernel.prodMkLeft alpha
                 ((finiteTimeKernel P times.relativeTail).map
                   (splitFinitePath (alpha := alpha) (m := m) (n := n))) := by
-          simpa only [f] using! map_compProd_prodMkLeft_right
+          simpa only [f] using! Kernel.map_compProd_prodMkLeft_right
             (P (times 0)) (finiteTimeKernel P times.relativeTail)
             (splitFinitePath (alpha := alpha) (m := m) (n := n))
             measurable_splitFinitePath
@@ -412,7 +371,7 @@ theorem finiteTimeKernel_map_splitFinitePath
           MeasurableEquiv.prodAssoc.symm.measurable
           (E.measurable.prodMap measurable_id)]
         rw [compProd_prodMkLeft_assoc]
-        rw [compProd_map_left_equiv]
+        rw [Kernel.map_compProd_left_equiv]
         rw [initialSegment_relativeTail, relativeFinalSegment_relativeTail]
         congr 1
         have hEfun : (E : alpha × (Fin (m + 1) → alpha) →

@@ -7,6 +7,7 @@ module
 
 public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelShift
 public import Mathlib.Probability.Kernel.Composition.KernelLemmas
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.CompProdReindex
 
 
 /-!
@@ -30,24 +31,6 @@ variable {α : Type*} [MeasurableSpace α]
 private theorem measurable_removeNth {n : ℕ} (p : Fin (n + 1)) :
     Measurable (Fin.removeNth p : (Fin (n + 1) → α) → Fin n → α) :=
   FiniteOrderedTimes.measurable_restrictPath (Fin.succAboveOrderEmb p)
-
-private theorem map_compProd_prodMkLeft_right
-    {X Y Z W : Type*} [MeasurableSpace X] [MeasurableSpace Y]
-    [MeasurableSpace Z] [MeasurableSpace W]
-    (κ : Kernel X Y) (η : Kernel Y Z) [IsSFiniteKernel κ] [IsSFiniteKernel η]
-    (f : Z → W) (hf : Measurable f) :
-    (κ ⊗ₖ Kernel.prodMkLeft X η).map (fun z ↦ (z.1, f z.2)) =
-      κ ⊗ₖ Kernel.prodMkLeft X (η.map f) := by
-  have hpair : Measurable (fun z : Y × Z ↦ (z.1, f z.2)) :=
-    measurable_fst.prodMk (hf.comp measurable_snd)
-  ext x s hs
-  rw [Kernel.map_apply' _ hpair x hs,
-    Kernel.compProd_apply (hs.preimage hpair), Kernel.compProd_apply hs]
-  congr with y
-  have hsection : MeasurableSet (Prod.mk y ⁻¹' s) := measurable_prodMk_left hs
-  rw [Kernel.prodMkLeft_apply', Kernel.prodMkLeft_apply',
-    Kernel.map_apply' _ hf _ hsection]
-  rfl
 
 omit [MeasurableSpace α] in
 private theorem removeNth_zero_cons {n : ℕ} (z : α × (Fin n → α)) :
@@ -154,7 +137,7 @@ theorem finiteTimeKernel_map_removeNth (P : SubMarkovKernelSemigroup α)
             rw [FiniteOrderedTimes.restrict_apply, Fin.succAboveOrderEmb_apply,
               Fin.succ_succAbove_zero]
           rw [Kernel.map_comp_right _ hremovePair hcons,
-            map_compProd_prodMkLeft_right _ _ _ (measurable_removeNth p),
+            Kernel.map_compProd_prodMkLeft_right _ _ _ (measurable_removeNth p),
             ih times.relativeTail p, finiteTimeKernel_succ,
             Kernel.mapOfMeasurable_eq_map, relativeTail_restrict_succ, hhead]
         · exact measurable_finCons

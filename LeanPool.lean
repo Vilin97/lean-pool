@@ -4496,6 +4496,7 @@ public import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteTimeKernelContin
 public import LeanPool.MarkovProcess.MarkovProcess.Feller.Resolvent
 public import LeanPool.MarkovProcess.MarkovProcess.Feller.Semigroup
 public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.CoordinatePolynomialMeasure
 public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.CoordinateProductActiveReduction
 public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.CoordinateProductNormalization
 public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.DenseTimeFiniteSetKernelShift

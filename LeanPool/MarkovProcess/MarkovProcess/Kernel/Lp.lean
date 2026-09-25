@@ -45,7 +45,8 @@ private noncomputable instance cacheModuleLp (p : ℝ≥0∞) (μ : Measure α) 
 private noncomputable instance cacheTopologicalSpaceLp (p : ℝ≥0∞) [Fact (1 ≤ p)]
     (μ : Measure α) : TopologicalSpace (Lp ℝ p μ) := inferInstance
 
-private theorem ae_integrable_kernel_finite {μ : Measure α} {κ : Kernel α α}
+/-- A finite-exponent Lp function is integrable along almost every subinvariant kernel fiber. -/
+theorem ae_integrable_kernel_finite {μ : Measure α} {κ : Kernel α α}
     (hκ : IsSubMarkovKernel κ) (hκμ : κ ∘ₘ μ ≤ μ) {p : NNReal}
     (hp : 1 ≤ p) (f : Lp ℝ (p : ℝ≥0∞) μ) : ∀ᵐ x ∂μ, Integrable f (κ x) := by
   let : IsFiniteKernel κ := hκ.isFiniteKernel
@@ -63,7 +64,8 @@ private theorem ae_integrable_kernel_finite {μ : Measure α} {κ : Kernel α α
     (integrable_norm_rpow_iff hxMeas hp0 ENNReal.coe_ne_top).mp hxInt
   exact hxMemLp.integrable (by exact_mod_cast hp)
 
-private theorem ae_integrable_kernel_top {μ : Measure α} {κ : Kernel α α}
+/-- An essentially bounded function is integrable along almost every subinvariant kernel fiber. -/
+theorem ae_integrable_kernel_top {μ : Measure α} {κ : Kernel α α}
     (hκ : IsSubMarkovKernel κ) (hκμ : κ ∘ₘ μ ≤ μ)
     (f : Lp ℝ ∞ μ) : ∀ᵐ x ∂μ, Integrable f (κ x) := by
   have hCtop : eLpNormEssSup f μ ≠ ∞ := by
