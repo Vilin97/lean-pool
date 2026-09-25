@@ -3,17 +3,22 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.Normed.Module.RCLike.Real
-import Mathlib.Analysis.Normed.Order.Lattice
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.Tactic
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Normed.Module.RCLike.Real
+public import Mathlib.Analysis.Normed.Order.Lattice
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Tactic
+
 
 /-!
 # RealIntervals
 
 Supporting results for the classification of compact one-dimensional manifolds.
 -/
+
+@[expose] public section
 
 open Set
 
@@ -29,10 +34,7 @@ lemma ordconn_of_connected {X : Set ℝ} (conn : IsConnected X)
 -- Shouldn't this already be in mathlib?
 lemma Real.exists_isGLB {S : Set ℝ} (hne : S.Nonempty) (hbdd : BddBelow S)
     : ∃ x, IsGLB S x := by
-  use sInf S
-  rw [Real.sInf_def, ← isLUB_neg, Real.sSup_def, dite_eq_left]
-  · apply Classical.choose_spec
-  exact ⟨nonempty_neg.mpr hne, BddBelow.neg hbdd⟩
+  exact ⟨sInf S, isGLB_csInf hne hbdd⟩
 
 -- classifying real intervals
 

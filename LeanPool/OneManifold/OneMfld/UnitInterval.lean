@@ -3,15 +3,20 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Tactic
-import Mathlib.Topology.MetricSpace.Pseudo.Lemmas
-import Mathlib.Topology.Order.Compact
+module
+
+public import Mathlib.Tactic
+public import Mathlib.Topology.MetricSpace.Pseudo.Lemmas
+public import Mathlib.Topology.Order.Compact
+
 
 /-!
 # UnitInterval
 
 Supporting results for the classification of compact one-dimensional manifolds.
 -/
+
+@[expose] public section
 
 /-- The closed unit interval in the real line. -/
 def UnitInterval : Set Real := { x : Real | 0 ≤ x ∧ x ≤ 1 }

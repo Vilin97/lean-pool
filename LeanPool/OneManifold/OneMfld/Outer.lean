@@ -3,11 +3,14 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Tactic
-import LeanPool.OneManifold.OneMfld.ClosureOverlap
-import LeanPool.OneManifold.OneMfld.LocallyConnected
-import LeanPool.OneManifold.OneMfld.PartialHomeomorphHelpers
-import LeanPool.OneManifold.OneMfld.ClassifyInterval
+module
+
+public import Mathlib.Tactic
+public import LeanPool.OneManifold.OneMfld.ClosureOverlap
+public import LeanPool.OneManifold.OneMfld.LocallyConnected
+public import LeanPool.OneManifold.OneMfld.PartialHomeomorphHelpers
+public import LeanPool.OneManifold.OneMfld.ClassifyInterval
+
 
 /-! # The outer-overlap lemma
 
@@ -19,6 +22,8 @@ target, the component's closure in `M` would be trapped inside `U.source` (a com
 argument), contradicting `nonempty_closure_inter_diff`, which forces the component's
 closure to escape into `V.source \ U.source`.
 -/
+
+@[expose] public section
 
 open Set
 

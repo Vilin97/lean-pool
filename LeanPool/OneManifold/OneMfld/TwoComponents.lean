@@ -3,10 +3,13 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Tactic
-import LeanPool.OneManifold.OneMfld.Outer
-import LeanPool.OneManifold.OneMfld.TransitionMono
-import LeanPool.OneManifold.OneMfld.GlueCore
+module
+
+public import Mathlib.Tactic
+public import LeanPool.OneManifold.OneMfld.Outer
+public import LeanPool.OneManifold.OneMfld.TransitionMono
+public import LeanPool.OneManifold.OneMfld.GlueCore
+
 
 /-! # The two-component structure of a disconnected overlap
 
@@ -16,6 +19,8 @@ same end must intersect). We also generalize the end-matching theorems of `GlueC
 the full overlap to a single component `W`: the extra hypothesis is that the relevant
 interior endpoint is not in the image of the *full* overlap.
 -/
+
+@[expose] public section
 
 open Set Filter Topology
 

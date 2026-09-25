@@ -3,21 +3,26 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Data.Int.Star
-import Mathlib.Tactic
-import LeanPool.OneManifold.OneMfld.UnitInterval
-import LeanPool.OneManifold.OneMfld.FiniteIntervalCharts
-import LeanPool.OneManifold.OneMfld.IntervalCharts
-import LeanPool.OneManifold.OneMfld.NiceCharts
-import LeanPool.OneManifold.OneMfld.ClassifyOverlaps
-import LeanPool.OneManifold.OneMfld.Compactness
+module
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Data.Int.Star
+public import Mathlib.Tactic
+public import LeanPool.OneManifold.OneMfld.UnitInterval
+public import LeanPool.OneManifold.OneMfld.FiniteIntervalCharts
+public import LeanPool.OneManifold.OneMfld.IntervalCharts
+public import LeanPool.OneManifold.OneMfld.NiceCharts
+public import LeanPool.OneManifold.OneMfld.ClassifyOverlaps
+public import LeanPool.OneManifold.OneMfld.Compactness
+
 
 /-!
 # Classification
 
 Supporting results for the classification of compact one-dimensional manifolds.
 -/
+
+@[expose] public section
 
 variable
   {M : Type*}

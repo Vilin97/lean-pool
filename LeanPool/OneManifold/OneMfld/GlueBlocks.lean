@@ -3,9 +3,12 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic
-import LeanPool.OneManifold.OneMfld.UnitInterval
+module
+
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Tactic
+public import LeanPool.OneManifold.OneMfld.UnitInterval
+
 
 /-! # Building blocks for the H-H gluing
 
@@ -21,6 +24,8 @@ Two overlapping boundary charts glue to a *closed* interval, so the glued chart 
 * the frontier of `{y ≤ c}` in the unit interval;
 * reflection images of end-segments in `ℝ≥0`, used to re-orient `OChart`s.
 -/
+
+@[expose] public section
 
 open Set Topology
 

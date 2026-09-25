@@ -3,7 +3,10 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import LeanPool.OneManifold.OneMfld.Classification
+module
+
+public import LeanPool.OneManifold.OneMfld.Classification
+
 
 /-!
 # Proved solution
@@ -15,6 +18,8 @@ term of `(M ≃ₜ Circle) ⊕ (M ≃ₜ UnitInterval)`; here we only need the
 Prop-level disjunction. The Challenge's `{x : ℝ // 0 ≤ x ∧ x ≤ 1}` is
 definitionally `↥OneMfld.UnitInterval` (and Mathlib's `↥unitInterval`).
 -/
+
+@[expose] public section
 
 theorem OneMfld.homeomorph_circle_or_unitInterval
     (M : Type*) [TopologicalSpace M] [CompactSpace M] [ConnectedSpace M]

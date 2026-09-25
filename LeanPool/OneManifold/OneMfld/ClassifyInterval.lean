@@ -3,17 +3,22 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Tactic
+
 
 /-!
 # ClassifyInterval
 
 Supporting results for the classification of compact one-dimensional manifolds.
 -/
+
+@[expose] public section
 
 open Function
 open Set

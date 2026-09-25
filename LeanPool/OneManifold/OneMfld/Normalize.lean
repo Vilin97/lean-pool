@@ -3,10 +3,13 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic
-import Mathlib.Topology.OpenPartialHomeomorph.Constructions
-import LeanPool.OneManifold.OneMfld.Charts
+module
+
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Tactic
+public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
+public import LeanPool.OneManifold.OneMfld.Charts
+
 
 /-! # Normalization of interval charts
 
@@ -15,6 +18,8 @@ sources: an `HChart` can be rescaled so its target is `Iio 1`, an `OChart` so it
 is `Ioo 0 1`, and an `OChart` with target `Ioo 0 1` can be orientation-reversed
 (`x ↦ 1 - x`). H-charts cannot be flipped: the closed end at `0` is a boundary point.
 -/
+
+@[expose] public section
 
 open Set
 

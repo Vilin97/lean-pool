@@ -3,9 +3,12 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Tactic
-import LeanPool.OneManifold.OneMfld.GlueCore
-import LeanPool.OneManifold.OneMfld.Normalize
+module
+
+public import Mathlib.Tactic
+public import LeanPool.OneManifold.OneMfld.GlueCore
+public import LeanPool.OneManifold.OneMfld.Normalize
+
 
 /-! # Gluing two charts into an `ℝ≥0`-valued chart
 
@@ -18,6 +21,8 @@ its target. Pick a split value `μ ∈ Ioo q 1`, let `m := b.symm μ` be the spl
 `OpenPartialHomeomorph.piecewise` along `s := b.source ∩ b⁻¹' (Iic μ)`, `t := Iic μ`.
 All the frontier conditions come from `IsImage.frontier` and `frontier_Iic`.
 -/
+
+@[expose] public section
 
 open Set
 

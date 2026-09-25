@@ -3,9 +3,12 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Tactic
-import LeanPool.OneManifold.OneMfld.Outer
-import LeanPool.OneManifold.OneMfld.TransitionMono
+module
+
+public import Mathlib.Tactic
+public import LeanPool.OneManifold.OneMfld.Outer
+public import LeanPool.OneManifold.OneMfld.TransitionMono
+
 
 /-! # Core lemmas for gluing overlapping charts
 
@@ -20,6 +23,8 @@ Two results feed the gluing construction:
   belongs to the chart target). If both interior ends were paired with each other, the
   overlap would accumulate at two distinct points of `M` at once, contradicting `T2`.
 -/
+
+@[expose] public section
 
 open Set Filter Topology
 

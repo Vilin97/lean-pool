@@ -3,15 +3,20 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Tactic
-import LeanPool.OneManifold.OneMfld.ClassifyInterval
-import LeanPool.OneManifold.OneMfld.NiceCharts
+module
+
+public import Mathlib.Tactic
+public import LeanPool.OneManifold.OneMfld.ClassifyInterval
+public import LeanPool.OneManifold.OneMfld.NiceCharts
+
 
 /-!
 # IntervalCharts
 
 Supporting results for the classification of compact one-dimensional manifolds.
 -/
+
+@[expose] public section
 
 /-- A space charted on the half-line with interval targets. -/
 class IntervalChartedSpace (M : Type*) [TopologicalSpace M] extends ChartedSpace NNReal M where

@@ -3,17 +3,22 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Geometry.Manifold.ChartedSpace
-import Mathlib.Tactic
-import LeanPool.OneManifold.OneMfld.LocallyConnected
-import LeanPool.OneManifold.OneMfld.PartialHomeomorphHelpers
+module
+
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Geometry.Manifold.ChartedSpace
+public import Mathlib.Tactic
+public import LeanPool.OneManifold.OneMfld.LocallyConnected
+public import LeanPool.OneManifold.OneMfld.PartialHomeomorphHelpers
+
 
 /-!
 # NiceCharts
 
 Supporting results for the classification of compact one-dimensional manifolds.
 -/
+
+@[expose] public section
 
 variable
   {M : Type*}

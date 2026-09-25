@@ -3,15 +3,20 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Tactic
-import LeanPool.OneManifold.OneMfld.IntervalCharts
-import LeanPool.OneManifold.OneMfld.FinitelyCharted
+module
+
+public import Mathlib.Tactic
+public import LeanPool.OneManifold.OneMfld.IntervalCharts
+public import LeanPool.OneManifold.OneMfld.FinitelyCharted
+
 
 /-!
 # FiniteIntervalCharts
 
 Supporting results for the classification of compact one-dimensional manifolds.
 -/
+
+@[expose] public section
 
 /-- A space equipped with a finite atlas of interval charts. -/
 class FinitelyIntervalChartedSpace (M : Type*) [TopologicalSpace M] extends IntervalChartedSpace

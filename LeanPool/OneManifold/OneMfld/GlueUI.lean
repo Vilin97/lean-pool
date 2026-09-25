@@ -3,10 +3,13 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Tactic
-import Mathlib.Topology.OpenPartialHomeomorph.Constructions
-import LeanPool.OneManifold.OneMfld.GlueCore
-import LeanPool.OneManifold.OneMfld.GlueBlocks
+module
+
+public import Mathlib.Tactic
+public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
+public import LeanPool.OneManifold.OneMfld.GlueCore
+public import LeanPool.OneManifold.OneMfld.GlueBlocks
+
 
 /-! # Gluing two boundary charts onto the unit interval
 
@@ -19,6 +22,8 @@ point `m := b.symm μ` (that is, `k/(ρ+k) = μ/2` where `ρ := a m`). Glue with
 `OpenPartialHomeomorph.piecewise` along `t := {y ≤ μ/2}`; the two targets
 `[0, μ/2]` and `(μ/2, 1]` unite to the whole interval.
 -/
+
+@[expose] public section
 
 open Set
 

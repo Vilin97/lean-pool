@@ -3,9 +3,12 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Tactic
-import Mathlib.Topology.Bornology.Real
-import Mathlib.Topology.UniformSpace.Real
+module
+
+public import Mathlib.Tactic
+public import Mathlib.Topology.Bornology.Real
+public import Mathlib.Topology.UniformSpace.Real
+
 
 /-! # Monotonicity of transition maps
 
@@ -14,6 +17,8 @@ overlap, is continuous and injective on an open interval of `ℝ≥0`, hence str
 monotone or strictly antitone; and a strictly monotone map of one open interval onto
 another sends ends to ends.
 -/
+
+@[expose] public section
 
 open Set Filter Topology
 

@@ -3,13 +3,16 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Normed.Order.Lattice
-import Mathlib.Tactic
-import Mathlib.Topology.Algebra.ProperAction.Basic
-import Mathlib.Topology.GDelta.MetrizableSpace
-import Mathlib.Topology.Instances.AddCircle.Defs
-import Mathlib.Topology.Instances.ZMultiples
+module
+
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Normed.Order.Lattice
+public import Mathlib.Tactic
+public import Mathlib.Topology.Algebra.ProperAction.Basic
+public import Mathlib.Topology.GDelta.MetrizableSpace
+public import Mathlib.Topology.Instances.AddCircle.Defs
+public import Mathlib.Topology.Instances.ZMultiples
+
 
 /-! # Building blocks for the circle case
 
@@ -23,6 +26,8 @@ import Mathlib.Topology.Instances.ZMultiples
   windows, period-shift identities, the frontier of a closed arc, and the covering of
   the circle by a closed arc and its complementary open arc.
 -/
+
+@[expose] public section
 
 open Set
 

@@ -3,15 +3,20 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Tactic
-import Mathlib.Topology.Connected.Basic
-import Mathlib.Topology.OpenPartialHomeomorph.Defs
+module
+
+public import Mathlib.Tactic
+public import Mathlib.Topology.Connected.Basic
+public import Mathlib.Topology.OpenPartialHomeomorph.Defs
+
 
 /-!
 # PartialHomeomorphHelpers
 
 Supporting results for the classification of compact one-dimensional manifolds.
 -/
+
+@[expose] public section
 
 lemma partial_homeo_connected {X : Type*} {Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
   (h : OpenPartialHomeomorph X Y) (conn : IsConnected h.source) : (IsConnected h.target) := by

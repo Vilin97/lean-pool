@@ -4,33 +4,36 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
 
-import LeanPool.OneManifold.OneMfld
-import LeanPool.OneManifold.OneMfld.Charts
-import LeanPool.OneManifold.OneMfld.CircleBlocks
-import LeanPool.OneManifold.OneMfld.CircleGlue
-import LeanPool.OneManifold.OneMfld.Classification
-import LeanPool.OneManifold.OneMfld.ClassifyInterval
-import LeanPool.OneManifold.OneMfld.ClassifyOverlaps
-import LeanPool.OneManifold.OneMfld.ClosureOverlap
-import LeanPool.OneManifold.OneMfld.Compactness
-import LeanPool.OneManifold.OneMfld.FiniteIntervalCharts
-import LeanPool.OneManifold.OneMfld.FinitelyCharted
-import LeanPool.OneManifold.OneMfld.GlueBlocks
-import LeanPool.OneManifold.OneMfld.GlueCore
-import LeanPool.OneManifold.OneMfld.GlueNNReal
-import LeanPool.OneManifold.OneMfld.GlueUI
-import LeanPool.OneManifold.OneMfld.IntervalCharts
-import LeanPool.OneManifold.OneMfld.LocallyConnected
-import LeanPool.OneManifold.OneMfld.NiceCharts
-import LeanPool.OneManifold.OneMfld.Noncompact
-import LeanPool.OneManifold.OneMfld.Normalize
-import LeanPool.OneManifold.OneMfld.Outer
-import LeanPool.OneManifold.OneMfld.PartialHomeomorphHelpers
-import LeanPool.OneManifold.OneMfld.RealIntervals
-import LeanPool.OneManifold.OneMfld.TransitionMono
-import LeanPool.OneManifold.OneMfld.TwoComponents
-import LeanPool.OneManifold.OneMfld.UnitInterval
-import LeanPool.OneManifold.Solution
+module
+
+public import LeanPool.OneManifold.OneMfld
+public import LeanPool.OneManifold.OneMfld.Charts
+public import LeanPool.OneManifold.OneMfld.CircleBlocks
+public import LeanPool.OneManifold.OneMfld.CircleGlue
+public import LeanPool.OneManifold.OneMfld.Classification
+public import LeanPool.OneManifold.OneMfld.ClassifyInterval
+public import LeanPool.OneManifold.OneMfld.ClassifyOverlaps
+public import LeanPool.OneManifold.OneMfld.ClosureOverlap
+public import LeanPool.OneManifold.OneMfld.Compactness
+public import LeanPool.OneManifold.OneMfld.FiniteIntervalCharts
+public import LeanPool.OneManifold.OneMfld.FinitelyCharted
+public import LeanPool.OneManifold.OneMfld.GlueBlocks
+public import LeanPool.OneManifold.OneMfld.GlueCore
+public import LeanPool.OneManifold.OneMfld.GlueNNReal
+public import LeanPool.OneManifold.OneMfld.GlueUI
+public import LeanPool.OneManifold.OneMfld.IntervalCharts
+public import LeanPool.OneManifold.OneMfld.LocallyConnected
+public import LeanPool.OneManifold.OneMfld.NiceCharts
+public import LeanPool.OneManifold.OneMfld.Noncompact
+public import LeanPool.OneManifold.OneMfld.Normalize
+public import LeanPool.OneManifold.OneMfld.Outer
+public import LeanPool.OneManifold.OneMfld.PartialHomeomorphHelpers
+public import LeanPool.OneManifold.OneMfld.RealIntervals
+public import LeanPool.OneManifold.OneMfld.TransitionMono
+public import LeanPool.OneManifold.OneMfld.TwoComponents
+public import LeanPool.OneManifold.OneMfld.UnitInterval
+public import LeanPool.OneManifold.Solution
+
 
 /-!
 # The classification of compact 1-manifolds
@@ -42,3 +45,5 @@ Main declarations: `OneMfld.homeomorph_circle_or_unitInterval`
 Tags: topology
 MSC: 57N99, 54F65, 68V20
 -/
+
+@[expose] public section

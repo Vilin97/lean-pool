@@ -3,12 +3,15 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Tactic
-import LeanPool.OneManifold.OneMfld.Charts
-import LeanPool.OneManifold.OneMfld.Normalize
-import LeanPool.OneManifold.OneMfld.GlueBlocks
-import LeanPool.OneManifold.OneMfld.TwoComponents
-import LeanPool.OneManifold.OneMfld.CircleBlocks
+module
+
+public import Mathlib.Tactic
+public import LeanPool.OneManifold.OneMfld.Charts
+public import LeanPool.OneManifold.OneMfld.Normalize
+public import LeanPool.OneManifold.OneMfld.GlueBlocks
+public import LeanPool.OneManifold.OneMfld.TwoComponents
+public import LeanPool.OneManifold.OneMfld.CircleBlocks
+
 
 /-! # The circle chart
 
@@ -20,6 +23,8 @@ arc of `AddCircle 1` — with `OpenPartialHomeomorph.piecewise` along a closed s
 whose frontier is the two split points. The result is a chart of `M` onto the whole of
 `AddCircle 1` with source `a.source ∪ b.source`.
 -/
+
+@[expose] public section
 
 open Set
 

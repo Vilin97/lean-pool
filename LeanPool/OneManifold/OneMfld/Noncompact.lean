@@ -3,14 +3,19 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib.Analysis.Normed.Order.Lattice
-import Mathlib.Tactic
+module
+
+public import Mathlib.Analysis.Normed.Order.Lattice
+public import Mathlib.Tactic
+
 
 /-!
 # Noncompact
 
 Supporting results for the classification of compact one-dimensional manifolds.
 -/
+
+@[expose] public section
 
 open Set
 
