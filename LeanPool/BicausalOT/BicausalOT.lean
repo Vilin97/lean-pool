@@ -5,10 +5,15 @@ Authors: KT. Wu
 -/
 -- This module serves as the root of the `BicausalOT` library.
 -- Import modules here that should be built as part of the library.
-import LeanPool.BicausalOT.BicausalOT.Basic
+module
+
+public import LeanPool.BicausalOT.BicausalOT.Basic
+
 
 /-!
 # BicausalOT
 
 Supporting results for bicausal optimal transport and measurable selection.
 -/
+
+@[expose] public section

@@ -17,13 +17,18 @@ Authors: KT. Wu
   instance over the previous level (via `inferInstanceAs` on the product
   type), so all binary-product API applies definitionally to histories.
 -/
-import LeanPool.BicausalOT.BicausalOT.MultiPeriod
-import Mathlib.Topology.MetricSpace.Polish
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+module
+
+public import LeanPool.BicausalOT.BicausalOT.MultiPeriod
+public import Mathlib.Topology.MetricSpace.Polish
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+
 
 /-! ### Topological structure
 
 The product topology on histories, by recursion on the time index. -/
+
+@[expose] public section
 
 open MeasureTheory
 

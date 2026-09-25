@@ -8,13 +8,16 @@ Authors: KT. Wu
 
   Reference: Bertsekas–Shreve, Definition 7.21, Lemma 7.30, Props 7.47–7.48
 -/
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSet
-import Mathlib.Algebra.Order.Module.Field
-import Mathlib.Data.EReal.Inv
-import Mathlib.Tactic.Measurability
-import Mathlib.Topology.Algebra.InfiniteSum.Order
-import Mathlib.Topology.MetricSpace.Bounded
-import Mathlib.MeasureTheory.Measure.Prod
+module
+
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSet
+public import Mathlib.Algebra.Order.Module.Field
+public import Mathlib.Data.EReal.Inv
+public import Mathlib.Tactic.Measurability
+public import Mathlib.Topology.Algebra.InfiniteSum.Order
+public import Mathlib.Topology.MetricSpace.Bounded
+public import Mathlib.MeasureTheory.Measure.Prod
+
 
 /-! ### On BS Prop 7.48 (integration of lower semianalytic functions)
 
@@ -28,6 +31,8 @@ from scratch in `BicausalOT.DescriptiveSetTheory.Capacitability`
 universal measurability (`MeasureTheory.AnalyticSet.nullMeasurableSet`)
 and the parametrized kernel version
 (`MeasureTheory.AnalyticSet.kernel_section_gt`). -/
+
+@[expose] public section
 
 open MeasureTheory Set ENNReal
 

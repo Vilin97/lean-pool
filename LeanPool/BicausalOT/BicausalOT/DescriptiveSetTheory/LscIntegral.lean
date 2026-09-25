@@ -23,9 +23,15 @@ Authors: KT. Wu
   liminf γₙ O ≥ γ O ≥ γ K > r by the open portmanteau applied to γₙ → γ.
   No tightness and no equicontinuity are needed.
 -/
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.LintegralLsc
+module
+
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.LintegralLsc
+public import Mathlib.MeasureTheory.Measure.RegularityCompacts
+
 
 /-! ## J1: joint continuity of the pairing -/
+
+@[expose] public section
 
 open MeasureTheory Set Filter Topology
 open scoped ENNReal

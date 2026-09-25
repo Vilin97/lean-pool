@@ -29,15 +29,20 @@ Authors: KT. Wu
           (machine-checked: every audited theorem depends only on
            [propext, Classical.choice, Quot.sound])
 -/
-import LeanPool.BicausalOT.BicausalOT.Defs
-import LeanPool.BicausalOT.BicausalOT.Proposition1
-import LeanPool.BicausalOT.BicausalOT.LowerBound
-import LeanPool.BicausalOT.BicausalOT.UpperBound
-import LeanPool.BicausalOT.BicausalOT.ValueRepresentation
-import LeanPool.BicausalOT.BicausalOT.Existence
+module
+
+public import LeanPool.BicausalOT.BicausalOT.Defs
+public import LeanPool.BicausalOT.BicausalOT.Proposition1
+public import LeanPool.BicausalOT.BicausalOT.LowerBound
+public import LeanPool.BicausalOT.BicausalOT.UpperBound
+public import LeanPool.BicausalOT.BicausalOT.ValueRepresentation
+public import LeanPool.BicausalOT.BicausalOT.Existence
+
 
 /-!
 # BicausalOT
 
 Supporting results for bicausal optimal transport and measurable selection.
 -/
+
+@[expose] public section

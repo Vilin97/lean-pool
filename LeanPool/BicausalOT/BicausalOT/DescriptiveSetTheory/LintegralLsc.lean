@@ -37,16 +37,21 @@ We upgrade it to lower semicontinuous `ℝ≥0∞`-valued integrands in three st
    `γs → γ` with `∫⁻ f ∂(γs n) ≤ y < ∫⁻ f ∂γ`, contradicting step 2 combined
    with the portmanteau inequality along `γs`.
 -/
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Tactic
+
 
 /-!
 # LintegralLsc
 
 Supporting results for BicausalOT.
 -/
+
+@[expose] public section
 
 open MeasureTheory Filter Set Topology
 open scoped ENNReal

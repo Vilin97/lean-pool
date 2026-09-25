@@ -22,11 +22,16 @@ Authors: KT. Wu
   comparing F with g. The countably many selectors are glued with
   Mathlib's `Measurable.find` instantiated at `analyticMeasurableSpace`.
 -/
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Tree
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.KernelIntegral
-import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+module
+
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Tree
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.KernelIntegral
+public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+
 
 /-! ## Fiber infimum approximation -/
+
+@[expose] public section
 
 open MeasureTheory Set ENNReal
 

@@ -13,13 +13,18 @@ Authors: KT. Wu
   supplied here — is completeness (Node A + C1) of the Lévy-Prokhorov
   metric. Separability (Node B) and the `PolishSpace` assembly follow.
 -/
-import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
-import Mathlib.MeasureTheory.Measure.Tight
-import Mathlib.MeasureTheory.Measure.Prokhorov
-import Mathlib.MeasureTheory.PiSystem
-import Mathlib.MeasureTheory.Measure.GiryMonad
+module
+
+public import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
+public import Mathlib.MeasureTheory.Measure.Tight
+public import Mathlib.MeasureTheory.Measure.Prokhorov
+public import Mathlib.MeasureTheory.PiSystem
+public import Mathlib.MeasureTheory.Measure.GiryMonad
+
 
 /-! ## Node A: Lévy-Prokhorov Cauchy sequences are uniformly tight -/
+
+@[expose] public section
 
 open MeasureTheory Topology TopologicalSpace Metric Filter Set
 open scoped ENNReal NNReal
@@ -759,11 +764,11 @@ theorem countable_generatePiSystem {α : Type*} {S : Set (Set α)}
     (hS : S.Countable) : (generatePiSystem S).Countable := by
   refine ((countable_ofPred_finite_subset hS).image fun T => ⋂₀ T).mono
     fun t ht => ?_
-  induction ht with
-  | base h_s =>
+  induction ht using generatePiSystem_induction with
+  | base _ h_s =>
     exact ⟨{_}, ⟨finite_singleton _, singleton_subset_iff.mpr h_s⟩,
       sInter_singleton _⟩
-  | inter _ _ _ ih_s ih_u =>
+  | inter _ _ _ _ _ ih_s ih_u =>
     obtain ⟨T₁, ⟨hT₁fin, hT₁sub⟩, rfl⟩ := ih_s
     obtain ⟨T₂, ⟨hT₂fin, hT₂sub⟩, rfl⟩ := ih_u
     exact ⟨T₁ ∪ T₂, ⟨hT₁fin.union hT₂fin, union_subset hT₁sub hT₂sub⟩,

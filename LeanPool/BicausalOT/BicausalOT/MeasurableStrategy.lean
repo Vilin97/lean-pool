@@ -19,10 +19,15 @@ Authors: KT. Wu
   every stage, and the Bellman value representation restricts to such
   strategies without changing its value.
 -/
-import LeanPool.BicausalOT.BicausalOT.SemianalyticValue
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.EpsOptimalSelection
+module
+
+public import LeanPool.BicausalOT.BicausalOT.SemianalyticValue
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.EpsOptimalSelection
+
 
 /-! ## Fibers of the feasibility graph -/
+
+@[expose] public section
 
 open MeasureTheory Set ENNReal
 

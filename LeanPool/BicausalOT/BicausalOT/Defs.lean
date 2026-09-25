@@ -7,19 +7,24 @@ Authors: KT. Wu
   Bicausal OT — Definitions
   Couplings, feasible sets, kernel decomposition, bicausality, Bellman value.
 -/
-import Mathlib.Algebra.Order.Module.Field
-import Mathlib.Data.EReal.Inv
-import Mathlib.Tactic.Measurability
-import Mathlib.Topology.Algebra.InfiniteSum.Order
-import Mathlib.Topology.MetricSpace.Bounded
-import Mathlib.MeasureTheory.Measure.Prod
-import Mathlib.Probability.Kernel.Basic
+module
+
+public import Mathlib.Algebra.Order.Module.Field
+public import Mathlib.Data.EReal.Inv
+public import Mathlib.Tactic.Measurability
+public import Mathlib.Topology.Algebra.InfiniteSum.Order
+public import Mathlib.Topology.MetricSpace.Bounded
+public import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.Probability.Kernel.Basic
+
 
 /-!
 # Defs
 
 Supporting results for bicausal optimal transport and measurable selection.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set ENNReal
 

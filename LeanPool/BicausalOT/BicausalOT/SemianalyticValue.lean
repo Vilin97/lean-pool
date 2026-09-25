@@ -18,17 +18,22 @@ Authors: KT. Wu
   cost is added back via `IsLowerSemianalytic.add`. Induction on the
   time to go.
 -/
-import LeanPool.BicausalOT.BicausalOT.MultiPeriodTopology
-import LeanPool.BicausalOT.BicausalOT.FeasNonempty
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.LsaAlgebra
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.KernelIntegral
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ProbabilityMeasurePolish
+module
+
+public import LeanPool.BicausalOT.BicausalOT.MultiPeriodTopology
+public import LeanPool.BicausalOT.BicausalOT.FeasNonempty
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.LsaAlgebra
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.KernelIntegral
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ProbabilityMeasurePolish
+
 
 /-! ## The Polish space of probability measures with its Borel σ-algebra
 
 `ProbabilityMeasure W` carries Mathlib's Giry-subtype σ-algebra, which is
 not the Borel σ-algebra of the weak topology; the type synonym `WeakP`
 installs the Borel structure (Polish by W1). -/
+
+@[expose] public section
 
 open MeasureTheory Set ENNReal
 

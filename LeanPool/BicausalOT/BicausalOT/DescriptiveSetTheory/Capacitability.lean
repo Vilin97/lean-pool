@@ -22,14 +22,19 @@ Authors: KT. Wu
   is a recursion along increasing unions (continuity from below of outer
   measures), mirroring the `leftmostAuxG` pattern of Tree.lean.
 -/
-import Mathlib.Topology.MetricSpace.Polish
-import Mathlib.Topology.MetricSpace.PiNat
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
-import Mathlib.Probability.Kernel.MeasurableLIntegral
-import Mathlib.Tactic.Finiteness
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSet
+module
+
+public import Mathlib.Topology.MetricSpace.Polish
+public import Mathlib.Topology.MetricSpace.PiNat
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import Mathlib.Probability.Kernel.MeasurableLIntegral
+public import Mathlib.Tactic.Finiteness
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSet
+
 
 /-! ## Part I: Bounded branch sets in Baire space -/
+
+@[expose] public section
 
 open Set Topology MeasureTheory Filter
 open scoped ENNReal

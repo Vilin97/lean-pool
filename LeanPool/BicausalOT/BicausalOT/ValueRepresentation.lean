@@ -7,16 +7,21 @@ Authors: KT. Wu
   Step 4: Value Representation (equality)  ✓ FULLY VERIFIED
   Combines lower and upper bounds.
 -/
-import LeanPool.BicausalOT.BicausalOT.Defs
-import LeanPool.BicausalOT.BicausalOT.LowerBound
-import LeanPool.BicausalOT.BicausalOT.UpperBound
-import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+module
+
+public import LeanPool.BicausalOT.BicausalOT.Defs
+public import LeanPool.BicausalOT.BicausalOT.LowerBound
+public import LeanPool.BicausalOT.BicausalOT.UpperBound
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+
 
 /-!
 # ValueRepresentation
 
 Supporting results for bicausal optimal transport and measurable selection.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set ENNReal
 

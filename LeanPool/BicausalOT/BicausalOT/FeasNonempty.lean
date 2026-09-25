@@ -18,15 +18,20 @@ Authors: KT. Wu
   `bellman_value_eq'` → ValueRepresentation.lean.
   See note_FeasNonempty.md for the recommendation.
 -/
-import LeanPool.BicausalOT.BicausalOT.MultiPeriod
-import LeanPool.BicausalOT.BicausalOT.ValueRepresentation
-import Mathlib.MeasureTheory.Measure.Prod
+module
+
+public import LeanPool.BicausalOT.BicausalOT.MultiPeriod
+public import LeanPool.BicausalOT.BicausalOT.ValueRepresentation
+public import Mathlib.MeasureTheory.Measure.Prod
+
 
 /-! ### General marginal lemmas for product measures
 
 Mathlib's `Measure.map_fst_prod : (μ.prod ν).map Prod.fst = (ν univ) • μ`
 (and symmetrically `Measure.map_snd_prod`) carry a total-mass scalar; for
 probability factors the scalar is `1` and disappears. -/
+
+@[expose] public section
 
 open MeasureTheory Set ENNReal
 

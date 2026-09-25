@@ -3,8 +3,11 @@ Copyright (c) 2026 KT. Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: KT. Wu
 -/
-import Mathlib.Tactic
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Tree
+module
+
+public import Mathlib.Tactic
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Tree
+
 
 /-!
 # Solution file: the Jankov–von Neumann uniformization theorem
@@ -79,6 +82,8 @@ It is the first of the four headline declarations checked by `AxiomAudit.lean` a
 repository root, and is checked again during the build by `BicausalOT/AxiomsAudit.lean`
 (line 35); both report only `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 namespace Uniformization
 

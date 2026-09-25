@@ -10,13 +10,18 @@ Authors: KT. Wu
   - Kechris, Classical Descriptive Set Theory, §18
   - Bertsekas–Shreve, Definition 7.19–7.20
 -/
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSet
+module
+
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSet
+
 
 /-!
 # AnalyticSigmaAlgebra
 
 Supporting results for bicausal optimal transport and measurable selection.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 

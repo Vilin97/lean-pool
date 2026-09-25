@@ -13,19 +13,24 @@ Authors: KT. Wu
   measurability unprovable. Since `Measurable sel` is discarded at the
   call site (UpperBound.lean uses `_`), we drop it and prove the rest.
 -/
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSet
-import Mathlib.Algebra.Order.Module.Field
-import Mathlib.Data.EReal.Inv
-import Mathlib.Tactic.Measurability
-import Mathlib.Topology.Algebra.InfiniteSum.Order
-import Mathlib.Topology.MetricSpace.Bounded
-import Mathlib.MeasureTheory.Measure.Prod
+module
+
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSet
+public import Mathlib.Algebra.Order.Module.Field
+public import Mathlib.Data.EReal.Inv
+public import Mathlib.Tactic.Measurability
+public import Mathlib.Topology.Algebra.InfiniteSum.Order
+public import Mathlib.Topology.MetricSpace.Bounded
+public import Mathlib.MeasureTheory.Measure.Prod
+
 
 /-!
 # JankovVonNeumann
 
 Supporting results for bicausal optimal transport and measurable selection.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set ENNReal
 

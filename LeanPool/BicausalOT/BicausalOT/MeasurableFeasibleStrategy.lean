@@ -18,13 +18,18 @@ Authors: KT. Wu
   measurability would NOT suffice — that is the open PR3 direction).
   Kuratowski–Ryll-Nardzewski then selects measurably.
 -/
-import LeanPool.BicausalOT.BicausalOT.LscBellman
+module
+
+public import LeanPool.BicausalOT.BicausalOT.LscBellman
+
 
 /-!
 # MeasurableFeasibleStrategy
 
 Supporting results for bicausal optimal transport and measurable selection.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Filter Topology
 open scoped ENNReal

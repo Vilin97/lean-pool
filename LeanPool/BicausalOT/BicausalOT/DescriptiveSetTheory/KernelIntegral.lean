@@ -20,14 +20,19 @@ Authors: KT. Wu
      x ↦ (κ x ⊗ λ)((E_n)_x) is upper semianalytic.
   4. Truncation limit n → ∞ and countable rational bookkeeping.
 -/
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Capacitability
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.LowerSemianalytic
-import Mathlib.MeasureTheory.Measure.Prod
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.Probability.Kernel.Composition.Prod
-import Mathlib.MeasureTheory.Integral.Lebesgue.Sub
+module
+
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Capacitability
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.LowerSemianalytic
+public import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+public import Mathlib.Probability.Kernel.Composition.Prod
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Sub
+
 
 /-! ## Binary closure properties of analytic sets -/
+
+@[expose] public section
 
 open Set Topology MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal

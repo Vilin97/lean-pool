@@ -11,13 +11,18 @@ Authors: KT. Wu
 
   Reference: Bertsekas–Shreve, Lemma 7.30
 -/
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.KernelIntegral
+module
+
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.KernelIntegral
+
 
 /-!
 # LsaAlgebra
 
 Supporting results for bicausal optimal transport and measurable selection.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 open scoped ENNReal

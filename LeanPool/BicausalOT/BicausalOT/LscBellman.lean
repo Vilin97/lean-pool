@@ -25,12 +25,17 @@ Authors: KT. Wu
     the ε = 0, plain-Borel upgrade of Phases 2 and 4 under stronger
     hypotheses (twin track: neither result dominates the other).
 -/
-import LeanPool.BicausalOT.BicausalOT.MeasurableStrategy
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.CouplingsUHC
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.LscIntegral
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.MeasurableSelection
+module
+
+public import LeanPool.BicausalOT.BicausalOT.MeasurableStrategy
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.CouplingsUHC
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.LscIntegral
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.MeasurableSelection
+
 
 /-! ## KRN on the Polish space of probability measures -/
+
+@[expose] public section
 
 open MeasureTheory Set Filter Topology
 open scoped ENNReal

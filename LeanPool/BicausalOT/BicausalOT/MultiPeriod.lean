@@ -10,15 +10,20 @@ Authors: KT. Wu
   histories, time-to-go recursion, arbitrary function strategies.
   Target theorem: `bellman_value_eq_multi`.
 -/
-import LeanPool.BicausalOT.BicausalOT.Defs
-import LeanPool.BicausalOT.BicausalOT.UpperBound
-import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+module
+
+public import LeanPool.BicausalOT.BicausalOT.Defs
+public import LeanPool.BicausalOT.BicausalOT.UpperBound
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+
 
 /-!
 # MultiPeriod
 
 Supporting results for bicausal optimal transport and measurable selection.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set ENNReal
 

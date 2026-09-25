@@ -6,13 +6,18 @@ Authors: KT. Wu
 /-
   Step 2: Bellman Lower Bound  ✓ FULLY VERIFIED
 -/
-import LeanPool.BicausalOT.BicausalOT.Defs
+module
+
+public import LeanPool.BicausalOT.BicausalOT.Defs
+
 
 /-!
 # LowerBound
 
 Supporting results for bicausal optimal transport and measurable selection.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set ENNReal
 

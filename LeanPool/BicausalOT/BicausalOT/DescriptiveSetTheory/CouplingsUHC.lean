@@ -20,10 +20,15 @@ Authors: KT. Wu
   extract convergent subsequences whose marginals are identified by
   continuity of the pushforward (U3).
 -/
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.CouplingsCompact
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ProbabilityMeasurePolish
+module
+
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.CouplingsCompact
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ProbabilityMeasurePolish
+
 
 /-! ## U1: convergent sequences of probability measures are tight -/
+
+@[expose] public section
 
 open MeasureTheory Set Filter Topology
 

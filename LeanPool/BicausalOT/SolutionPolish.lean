@@ -3,8 +3,11 @@ Copyright (c) 2026 KT. Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: KT. Wu
 -/
-import Mathlib.Tactic
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ProbabilityMeasurePolish
+module
+
+public import Mathlib.Tactic
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ProbabilityMeasurePolish
+
 
 /-!
 # Solution file: the space of probability measures on a Polish space is Polish
@@ -55,6 +58,8 @@ library, and is one of the declarations covered by the repository's `#print axio
 (`AxiomAudit.lean` and `BicausalOT/AxiomsAudit.lean`), which reports only
 `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 KT. Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: KT. Wu
 -/
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.MeasurableSelection
+module
+
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.MeasurableSelection
+
 
 /-!
 # Solution file: the Kuratowski–Ryll-Nardzewski measurable selection theorem
@@ -34,6 +37,8 @@ and is one of the theorems covered by the repository's `#print axioms` audit
 (`AxiomAudit.lean` and `BicausalOT/AxiomsAudit.lean`), which reports only
 `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open TopologicalSpace
 

@@ -38,12 +38,17 @@ Authors: KT. Wu
   front F2's draft_FeasClosed.lean (scratch files cannot import each
   other); keep a single copy when integrating both fronts.
 -/
-import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
-import Mathlib.MeasureTheory.Measure.Prokhorov
-import Mathlib.Tactic
+module
+
+public import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
+public import Mathlib.MeasureTheory.Measure.Prokhorov
+public import Mathlib.Tactic
+
 
 /-! ## Translation between `ProbabilityMeasure.map` and `Measure.map` constraints
 (verbatim copy of front F2's lemma — dedupe at integration) -/
+
+@[expose] public section
 
 open MeasureTheory Topology
 

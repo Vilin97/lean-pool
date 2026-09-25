@@ -7,14 +7,19 @@ Authors: KT. Wu
   Step 5: Existence of optimal coupling  ✓ FULLY VERIFIED
   Uses Mathlib's LowerSemicontinuousOn.exists_isMinOn (no axiom needed).
 -/
-import LeanPool.BicausalOT.BicausalOT.Defs
-import Mathlib.Topology.Semicontinuity.Basic
+module
+
+public import LeanPool.BicausalOT.BicausalOT.Defs
+public import Mathlib.Topology.Semicontinuity.Basic
+
 
 /-!
 # Existence
 
 Supporting results for bicausal optimal transport and measurable selection.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set ENNReal
 

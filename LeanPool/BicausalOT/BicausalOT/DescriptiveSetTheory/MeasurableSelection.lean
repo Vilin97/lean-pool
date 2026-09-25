@@ -26,13 +26,18 @@ open-set measurability hypothesis applies directly.  The limit `f = lim fₙ` is
 measurable as a pointwise limit of measurable functions into a metrizable space, and
 `f a ∈ Φ a` because `Φ a` is closed.
 -/
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Normed.Order.Lattice
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Metrizable
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Normed.Order.Lattice
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Metrizable
+public import Mathlib.Tactic
+
 
 /-! ### Least-index choice over `ℕ`, classical-decidability wrapper -/
+
+@[expose] public section
 
 open Metric Set Filter Topology TopologicalSpace
 

@@ -3,9 +3,12 @@ Copyright (c) 2026 KT. Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: KT. Wu
 -/
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.Tactic
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Capacitability
+module
+
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Tactic
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Capacitability
+
 
 /-!
 # Solution file: Choquet capacitability for analytic sets, and universal measurability
@@ -61,6 +64,8 @@ namespace so that their names match the `ChallengeCapacitability` declarations n
 `lake build`; the first is additionally in the standalone `AxiomAudit.lean`), and both
 report only `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

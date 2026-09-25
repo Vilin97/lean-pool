@@ -6,14 +6,19 @@ Authors: KT. Wu
 /-
   Step 3: Upper Bound via ε-optimal selection
 -/
-import LeanPool.BicausalOT.BicausalOT.Defs
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.JankovVonNeumann
+module
+
+public import LeanPool.BicausalOT.BicausalOT.Defs
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.JankovVonNeumann
+
 
 /-!
 # UpperBound
 
 Supporting results for bicausal optimal transport and measurable selection.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set ENNReal
 

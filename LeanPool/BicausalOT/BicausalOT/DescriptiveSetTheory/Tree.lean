@@ -11,12 +11,17 @@ Authors: KT. Wu
   The infrastructure is generic: domain X (Polish), codomain ℕ → ℕ.
   The leftmost branch operates only on the codomain.
 -/
-import Mathlib.Topology.MetricSpace.Polish
-import Mathlib.Topology.MetricSpace.PiNat
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
-import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSigmaAlgebra
+module
+
+public import Mathlib.Topology.MetricSpace.Polish
+public import Mathlib.Topology.MetricSpace.PiNat
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSigmaAlgebra
+
 
 /-! ## Part I: Fibers (generic domain X, codomain ℕᴺ) -/
+
+@[expose] public section
 
 open Set Topology MeasureTheory
 
