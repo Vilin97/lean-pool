@@ -27,4 +27,4 @@ Tags: dynamical-systems, synchronization, kuramoto
 MSC: 34D06
 -/
 
-@[expose] public section
+public section

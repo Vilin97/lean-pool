@@ -28,7 +28,7 @@ We build on the algebraic identities proved in `Weighted.lean`, `Contraction.lea
 and `GradientFlow.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Real Finset
 

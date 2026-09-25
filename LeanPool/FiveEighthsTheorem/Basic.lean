@@ -39,7 +39,7 @@ The proof is the classical counting argument:
 All declarations live in the `FiveEighths` namespace.
 -/
 
-@[expose] public section
+public section
 
 namespace FiveEighths
 

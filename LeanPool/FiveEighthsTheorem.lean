@@ -18,4 +18,4 @@ Tags: group-theory, finite-groups, commuting-probability
 MSC: 20P05
 -/
 
-@[expose] public section
+public section

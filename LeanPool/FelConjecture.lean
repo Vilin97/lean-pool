@@ -18,7 +18,7 @@ Tags: number-theory, combinatorics, polynomials
 MSC: 20M14, 13D02
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

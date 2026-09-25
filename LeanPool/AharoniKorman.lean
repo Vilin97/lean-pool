@@ -20,7 +20,7 @@ Tags: order-theory, combinatorics, partial-orders
 MSC: 06A06, 06A07
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

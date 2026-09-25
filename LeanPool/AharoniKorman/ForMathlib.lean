@@ -14,4 +14,4 @@ import Mathlib.Data.Finset.Attr
 This module collects helper lemmas used by the Aharoni-Korman counterexample.
 -/
 
-@[expose] public section
+public section
