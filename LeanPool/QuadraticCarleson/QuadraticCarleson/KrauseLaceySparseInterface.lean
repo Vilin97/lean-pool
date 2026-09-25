@@ -282,14 +282,8 @@ noncomputable def quadraticHilbertTruncTestOperator
   fun f x ↦ quadraticHilbertTrunc lam ε f x
 
 private theorem L0Infinity.integrable_for_truncation
-    (f : L0Infinity) : Integrable f := by
-  have hcompact : IsCompact (tsupport f) := f.hasCompactSupport_toFun
-  have hfinite : volume (tsupport f) < ∞ := hcompact.measure_lt_top
-  rcases f.bounded_toFun with ⟨C, hC⟩
-  apply (integrableOn_iff_integrable_of_support_subset (subset_tsupport f)).mp
-  exact IntegrableOn.of_bound hfinite
-    f.measurable_toFun.aestronglyMeasurable.restrict C
-    (Filter.Eventually.of_forall hC)
+    (f : L0Infinity) : Integrable f :=
+  f.integrable
 
 private theorem integrableOn_quadraticHilbertTrunc_integrand
     (lam : ℝ) {ε : ℝ} (hε : 0 < ε) (f : L0Infinity) (x : ℝ) :

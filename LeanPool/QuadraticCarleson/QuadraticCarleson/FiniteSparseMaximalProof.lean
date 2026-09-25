@@ -26,14 +26,8 @@ open scoped ENNReal NNReal ComplexConjugate
 namespace QuadraticCarleson
 
 
-theorem L0Infinity.integrable_finiteSparseProof (f : L0Infinity) : Integrable f := by
-  have hcompact : IsCompact (tsupport f) := f.hasCompactSupport_toFun
-  have hfinite : volume (tsupport f) < ∞ := hcompact.measure_lt_top
-  rcases f.bounded_toFun with ⟨C, hC⟩
-  apply (integrableOn_iff_integrable_of_support_subset (subset_tsupport f)).mp
-  exact IntegrableOn.of_bound hfinite
-    f.measurable_toFun.aestronglyMeasurable.restrict C
-    (Filter.Eventually.of_forall hC)
+theorem L0Infinity.integrable_finiteSparseProof (f : L0Infinity) : Integrable f :=
+  f.integrable
 
 /-- A measurable bounded-set indicator as a member of the paper's test
 function class. The containing compact set is kept explicit so that no

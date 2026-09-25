@@ -63,10 +63,10 @@ private theorem interval_eq_of_mutual_carrier_subset {I J : RealInterval}
     (hIJ : I.carrier ⊆ J.carrier) (hJI : J.carrier ⊆ I.carrier) : I = J :=
   interval_eq_of_carrier_subset_of_length_le hIJ (length_le_of_carrier_subset hJI)
 
-/- A sparse family below each pairwise-disjoint child can be attached to a
+/-- A sparse family below each pairwise-disjoint child can be attached to a
 new root. The root major subset is the actual threshold-ten stopping major
 subset, so the density remains exactly `1 / 4`. -/
-private theorem isSparse_insert_root_biUnion
+theorem isSparse_insert_root_biUnion
     {S : Finset RealInterval} {f monitor : ℝ → ℂ} (I : RealInterval)
     (hf : Integrable f) (hm : Integrable monitor)
     (hlam : Set.Pairwise (↑S : Set RealInterval) fun J K ↦

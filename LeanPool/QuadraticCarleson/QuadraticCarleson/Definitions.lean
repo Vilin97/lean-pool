@@ -11,6 +11,7 @@ public import Mathlib.MeasureTheory.Group.Integral
 public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 
 /-!
@@ -78,6 +79,16 @@ structure L0Infinity where
   hasCompactSupport_toFun : HasCompactSupport toFun
 
 instance : CoeFun L0Infinity (fun _ => ℝ → ℂ) := ⟨L0Infinity.toFun⟩
+
+/-- Bounded compactly supported measurable test functions are integrable. -/
+theorem L0Infinity.integrable (f : L0Infinity) : Integrable f := by
+  have hcompact : IsCompact (tsupport f) := f.hasCompactSupport_toFun
+  have hfinite : volume (tsupport f) < ∞ := hcompact.measure_lt_top
+  rcases f.bounded_toFun with ⟨C, hC⟩
+  apply (integrableOn_iff_integrable_of_support_subset (subset_tsupport f)).mp
+  exact IntegrableOn.of_bound hfinite
+    f.measurable_toFun.aestronglyMeasurable.restrict C
+    (Filter.Eventually.of_forall hC)
 
 /-- The quadratic Hilbert-transform integral truncated at distance `ε` from
 the singularity. -/

@@ -33,23 +33,15 @@ noncomputable def badSubcollectionGenerationLp
     (S : Finset RealInterval) (f : ℝ → ℂ) (hf : Integrable f) (I₀ : RealInterval)
     (k₀ s : ℤ) (scale : RealInterval → ℤ) (N : Finset RealInterval) (n : ℕ) :
     Lp ℂ 2 (volume : Measure ℝ) :=
-  ∑ I ∈ generation N n, badPieceLp S f hf I₀ k₀ s scale I
+  badPieceGenerationLp S f hf I₀ k₀ s scale N n
 
 theorem badSubcollectionGenerationLp_ae_eq
     (S : Finset RealInterval) (f : ℝ → ℂ) (hf : Integrable f) (I₀ : RealInterval)
     (k₀ s : ℤ) (scale : RealInterval → ℤ) (N : Finset RealInterval) (n : ℕ) :
     badSubcollectionGenerationLp S f hf I₀ k₀ s scale N n =ᵐ[volume]
       krauseLaceyCollectionAction (generation N n) scale
-        (fun I ↦ badScaleInput S f I₀ k₀ (scale I + 2 - s)) := by
-  apply (Lp.coeFn_finsetSum (generation N n) (badPieceLp S f hf I₀ k₀ s scale)).trans
-  have hall : ∀ᵐ x ∂volume, ∀ I ∈ generation N n,
-      badPieceLp S f hf I₀ k₀ s scale I x =
-        krauseLaceyLocalizedPiece 1 (scale I) I
-          (badScaleInput S f I₀ k₀ (scale I + 2 - s)) x :=
-    (ae_ball_iff (Finset.countable_toSet _)).mpr fun I _ ↦ localizedPieceLp_ae_eq _ _ _ _
-  filter_upwards [hall] with x hx
-  simp only [Finset.sum_apply, krauseLaceyCollectionAction]
-  exact Finset.sum_congr rfl hx
+        (fun I ↦ badScaleInput S f I₀ k₀ (scale I + 2 - s)) :=
+  badPieceGenerationLp_ae_eq S f hf I₀ k₀ s scale N n
 
 /-- A prefix of any length inherits the genuinely proved signed-sum
 estimate, including when there are more or fewer intervals than levels. -/

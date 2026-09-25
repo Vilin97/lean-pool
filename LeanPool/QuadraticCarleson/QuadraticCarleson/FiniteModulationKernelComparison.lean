@@ -67,15 +67,6 @@ noncomputable def finiteQuadraticDyadicBlock
     (lam : ℝ) (j : ℤ) (B : ℕ) (f : ℝ → ℂ) (x : ℝ) : ℂ :=
   ∫ y, lowOscillatoryKernel lam B (fun r ↦ j + (r : ℤ)) (x - y) * f y
 
-theorem L0Infinity.integrable (f : L0Infinity) : Integrable f := by
-  have hcompact : IsCompact (tsupport f) := f.hasCompactSupport_toFun
-  have hfinite : volume (tsupport f) < ∞ := hcompact.measure_lt_top
-  rcases f.bounded_toFun with ⟨C, hC⟩
-  apply (integrableOn_iff_integrable_of_support_subset (subset_tsupport f)).mp
-  exact IntegrableOn.of_bound hfinite
-    f.measurable_toFun.aestronglyMeasurable.restrict C
-    (Filter.Eventually.of_forall hC)
-
 /-- An average at an arbitrary positive real radius is controlled by twice
 the rational-radius maximal function used in the project. -/
 theorem centeredAverage_le_two_mul_centeredHardyLittlewoodMaximal
