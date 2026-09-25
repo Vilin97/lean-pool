@@ -213,7 +213,8 @@ def foldFlatten (i j : α) (ps : List (α × α))
 
 /-! ### The fold: iterated single-pair gluing -/
 
-private noncomputable def glueListAux :
+/-- Fold a well-formed pair list using a bound on its length as structural fuel. -/
+noncomputable def glueListAux :
     (n : ℕ) → {α : Type} → (W : Fragment α) →
     (ps : List (α × α)) → PairsWF ps →
     ps.length ≤ n → Fragment (FoldSurviving α ps)
@@ -274,7 +275,8 @@ theorem glueList_cons {α : Type} (W : Fragment α)
 
 /-! ### Congruence: glueList respects fragment equivalence -/
 
-private noncomputable def glueListCongr_aux
+/-- Transport a bounded pair-list fold along an equivalence of input fragments. -/
+noncomputable def glueListCongrAux
     (n : ℕ) {α : Type} {W₁ W₂ : Fragment α}
     (he : W₁.Equiv W₂)
     (ps : List (α × α)) (h : PairsWF ps)
@@ -303,7 +305,7 @@ noncomputable def glueListCongr {α : Type}
     (he : W₁.Equiv W₂)
     (ps : List (α × α)) (h : PairsWF ps) :
     (glueList W₁ ps h).Equiv (glueList W₂ ps h) :=
-  glueListCongr_aux ps.length he ps h le_rfl
+  glueListCongrAux ps.length he ps h le_rfl
 
 /-! ### Relabelling commutes with the fold -/
 
@@ -775,7 +777,7 @@ noncomputable def glueListRelabel {α β : Type} (W : Fragment α)
     (e : α ≃ β) (ps : List (α × α)) (hp : PairsWF ps) :
     (glueList (W.relabel e) (mapPairs e ps) (mapPairs_wf e ps hp)).Equiv
       ((glueList W ps hp).relabel (foldSurvivingMapEquiv e ps)) :=
-  (nonempty_glueList_relabel_aux ps.length W e ps hp le_rfl).some
+  (show Nonempty _ from by exact nonempty_glueList_relabel_aux ps.length W e ps hp le_rfl).some
 
 /-! ### Concatenation: folding in two stages -/
 
@@ -1131,7 +1133,8 @@ noncomputable def glueListAppend (W : Fragment α)
         (liftPairs ps qs h.append_sep)
         (liftPairs_wf ps qs h.append_right h.append_sep)).relabel
         (appendFlatten ps qs h.append_sep)) :=
-  (nonempty_glueList_append_aux ps.length W ps qs h le_rfl).some
+  (show Nonempty _ from by
+    exact nonempty_glueList_append_aux ps.length W ps qs h le_rfl).some
 
 /-! ### Disjoint-union embedding: left -/
 
@@ -1656,8 +1659,9 @@ noncomputable def glueListDisjUnionLeft
       (((glueList W₁ ps hp).disjUnion
           W₂).relabel
         (inlFoldEquiv ps).symm) :=
-  (nonempty_glueList_disjUnion_left_aux
-    ps.length W₁ W₂ ps hp le_rfl).some
+  (show Nonempty _ from by
+    exact nonempty_glueList_disjUnion_left_aux
+      ps.length W₁ W₂ ps hp le_rfl).some
 
 /-- Iterated right-side gluing commutes with disjoint
 union: gluing the `inrPairs`-embedded pair list in the
@@ -2060,8 +2064,9 @@ noncomputable def glueListSwap
         (swapPairs_wf ps hp)).Equiv
       ((glueList W ps hp).relabel
         (swapFoldEquiv ps).symm) :=
-  (nonempty_glueList_swap_aux ps.length
-    W ps hp le_rfl).some
+  (show Nonempty _ from by
+    exact nonempty_glueList_swap_aux ps.length
+      W ps hp le_rfl).some
 
 /-! ### The reorder theorem -/
 
@@ -2330,7 +2335,8 @@ noncomputable def glueListPerm (W : Fragment α) {ps qs : List (α × α)}
     (glueList W ps hp).Equiv
       ((glueList W qs (hp.perm hperm)).relabel
         (foldSurvivingPermEquiv hperm).symm) :=
-  (nonempty_glueList_perm W hperm hp).some
+  (show Nonempty _ from by
+    exact nonempty_glueList_perm W hperm hp).some
 
 end Fragment
 

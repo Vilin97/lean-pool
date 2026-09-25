@@ -230,6 +230,7 @@ negate on the flip set. -/
 noncomputable def canonIsOut [LinearOrder α] {W : Fragment α} {F : EdgeSubset W}
     (κ : F.RelTransitionSystem)
     (o : κ.Orientation) (f : W.Flag) : Bool :=
+  open scoped Classical in
   if BadFlag κ o f then !o.isOut f else o.isOut f
 
 /-- On a flag of a badly oriented chain the repair reverses. -/

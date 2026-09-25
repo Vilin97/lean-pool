@@ -230,6 +230,7 @@ theorem EdgeSubset.throughSummand_eq_mixedSummand
     F.throughSummand h st hbnd o.toRel
       κ.toRelTransitionSystem.openCircuitCount =
     F.mixedSummand h o := by
+  classical
   unfold EdgeSubset.throughSummand EdgeSubset.mixedSummand
   rw [F.openCircuitCount_eq_circuitCount κ]
   rw [F.throughProduct_one st]

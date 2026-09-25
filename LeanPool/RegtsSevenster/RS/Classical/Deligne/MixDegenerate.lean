@@ -285,7 +285,7 @@ noncomputable def superLetters (r s : ℕ) :
           change Pi.single (M := fun _ : Fin s => ℂ) j (v 0) j' = 0
           exact Pi.single_eq_of_ne (M := fun _ : Fin s => ℂ)
             (fun h => hkk' (congrArg Sum.inr h.symm)) (v 0)
-  total := superSum_total r s
+  total := by exact superSum_total r s
 
 end SuperLetters
 

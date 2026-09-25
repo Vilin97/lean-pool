@@ -96,6 +96,7 @@ theorem chordPairCross_iff_xor [LinearOrder γ]
         exact hnu ⟨not_le.mp hcon, huy⟩
       exact Or.inr ⟨lt_of_le_of_ne hux' hux, hw1, hw2⟩
 
+open Classical in
 /-- The crossing indicator of one chord has the parity of the
 number of its endpoints inside the third chord. -/
 theorem chordPairCross_parity [LinearOrder γ]
@@ -126,6 +127,7 @@ theorem chordPairCross_parity [LinearOrder γ]
       · exact hw h
     rw [ite_eq_right hnX, ite_eq_right hu, ite_eq_right hw]
 
+open Classical in
 private theorem inside_sum_eq [LinearOrder γ]
     (x y u₁ w₁ u₂ w₂ : γ) :
     (({u₁, w₁, u₂, w₂} : Multiset γ).map
@@ -137,6 +139,7 @@ private theorem inside_sum_eq [LinearOrder γ]
   simp only [Multiset.insert_eq_cons, Multiset.map_cons,
     Multiset.map_singleton, Multiset.sum_cons, Multiset.sum_singleton]
 
+open Classical in
 /-- **The third-chord parity lemma**: re-pairing the same four
 points of a linear order into two chords in any two ways (the same
 multiset of endpoints, each chord recorded low-to-high, no endpoint
@@ -657,6 +660,7 @@ theorem chordCrossingCount_congr [LinearOrder α] {F : EdgeSubset W}
     (hpm : ∀ δ (hδ : δ ∈ F.boundaryFlags),
       κ'.pathMatch δ hδ = κ.pathMatch δ hδ) :
     chordCrossingCount κ' = chordCrossingCount κ := by
+  classical
   unfold chordCrossingCount
   exact congrArg Finset.card
     (Finset.filter_congr
@@ -977,6 +981,7 @@ noncomputable def RelTransitionSystem.Orientation.flipOrbit
 theorem flipOrbit_isOut_of_mem (o : κ.Orientation) {g : W.Flag}
     (hg : κ.PeriodicFlag g) {f : W.Flag} (hf : OrbitFlag κ g f) :
     (o.flipOrbit hg).isOut f = !o.isOut f := by
+  classical
   change (if OrbitFlag κ g f then !o.isOut f else o.isOut f) =
     !o.isOut f
   exact ite_eq_left hf
@@ -985,6 +990,7 @@ theorem flipOrbit_isOut_of_mem (o : κ.Orientation) {g : W.Flag}
 theorem flipOrbit_isOut_of_notMem (o : κ.Orientation) {g : W.Flag}
     (hg : κ.PeriodicFlag g) {f : W.Flag} (hf : ¬ OrbitFlag κ g f) :
     (o.flipOrbit hg).isOut f = o.isOut f := by
+  classical
   change (if OrbitFlag κ g f then !o.isOut f else o.isOut f) =
     o.isOut f
   exact ite_eq_right hf

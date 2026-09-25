@@ -414,7 +414,7 @@ private instance : Subsingleton (stdSuper 0 1 ⊗ stdSuper 0 1).odd :=
 
 /-- A product with a subsingleton first factor is its second
 factor. -/
-private def prodZeroEquiv (A M : Type) [AddCommGroup A]
+def prodZeroEquiv (A M : Type) [AddCommGroup A]
     [Module ℂ A] [AddCommGroup M] [Module ℂ M] [Subsingleton A] :
     (A × M) ≃ₗ[ℂ] M where
   toFun p := p.2
@@ -425,7 +425,7 @@ private def prodZeroEquiv (A M : Type) [AddCommGroup A]
   right_inv _ := rfl
 
 /-- The square of the scalar line, trivialized. -/
-private def lineTensorEquiv :
+def lineTensorEquiv :
     (Fin 1 → ℂ) ⊗[ℂ] (Fin 1 → ℂ) ≃ₗ[ℂ] ℂ :=
   TensorProduct.congr (LinearEquiv.funUnique (Fin 1) ℂ ℂ)
     (LinearEquiv.funUnique (Fin 1) ℂ ℂ) ≪≫ₗ TensorProduct.lid ℂ ℂ
@@ -434,6 +434,10 @@ private def lineTensorEquiv :
 even component pairs the two odd lines through `lineTensorEquiv`,
 and the odd component is trivial. -/
 def superOddSquare : stdSuper 0 1 ⊗ stdSuper 0 1 ≅ 𝟙_ SuperVect :=
+  let : Subsingleton ((stdSuper 0 1).even ⊗[ℂ] (stdSuper 0 1).even) := by
+    infer_instance
+  let : Subsingleton (stdSuper 0 1 ⊗ stdSuper 0 1).odd := by infer_instance
+  let : Subsingleton (𝟙_ SuperVect).odd := by infer_instance
   SuperVect.isoOfEquivs
     (prodZeroEquiv _ _ ≪≫ₗ lineTensorEquiv)
     (zeroLinearEquiv _ _)
@@ -578,7 +582,7 @@ noncomputable instance : MonoidalPreadditive SmallSuperVect :=
 
 /-- The even component of a unit endomorphism, at the scalar
 type. -/
-private def unitEvenMap (f : End (𝟙_ SuperVect)) : ℂ →ₗ[ℂ] ℂ :=
+def unitEvenMap (f : End (𝟙_ SuperVect)) : ℂ →ₗ[ℂ] ℂ :=
   f.evenMap
 
 /-- **The scalar unit of `SuperVect`**: endomorphisms of the

@@ -250,7 +250,7 @@ noncomputable def chainBdegZeroIso
     (fun k => chainDelta2 A M M' d (0 + k) (0 + k))
     (chainDelta A M M' d)
     (chainBdegZeroStageIso A M M')
-    (chainBdegZeroStage_compatibility A M M' d)
+    (by exact chainBdegZeroStage_compatibility A M M' d)
 
 end ZeroLine
 
@@ -313,7 +313,7 @@ noncomputable def chainBdegSuccIso
     (fun k => chainDelta2 A M M' d (p₀ + 1 + k) (q₀ + 1 + k))
     (fun k => chainDelta2 A M M' d (p₀ + (k + 1)) (q₀ + (k + 1)))
     (chainBdegSuccStageIso A M M' p₀ q₀)
-    (chainBdegSuccStage_compatibility A M M' d p₀ q₀)) ≪≫
+    (by exact chainBdegSuccStage_compatibility A M M' d p₀ q₀)) ≪≫
   chainColimitTailIso
     (fun k => chainStage2 A M M' (p₀ + k) (q₀ + k))
     (fun k => chainDelta2 A M M' d (p₀ + k) (q₀ + k))

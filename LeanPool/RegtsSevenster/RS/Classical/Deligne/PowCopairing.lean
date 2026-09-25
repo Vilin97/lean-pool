@@ -186,7 +186,6 @@ theorem modTensorAct_swap
     rw [h, Iso.inv_hom_id_assoc]
   conv_lhs => rw [whiskerLeft_modTensorπ_act_assoc,
     modTensorπ_swap]
-  conv_lhs => simp only [Category.assoc]
   conv_lhs => rw [BraidedCategory.braiding_naturality_left_assoc,
     hleg]
   conv_rhs => rw [← MonoidalCategory.whiskerLeft_comp_assoc,
