@@ -179,13 +179,6 @@ def fibFluteOdd (k : ℕ) : flute (2*k+1) := by
                 omega
   exact ⟨aOdd k, pos, hd, period, div⟩
 
-/-- The Fibonacci-maximal odd flute has underlying sequence `aOdd`. -/
-lemma fibFluteOdd_a (k i : ℕ) : (fibFluteOdd k).a i = aOdd k i := by
-  by_cases hk : k = 0
-  · subst k
-    simp [fibFluteOdd, aOdd]
-  · simp only [fibFluteOdd, hk, ↓reduceDIte]
-
 /-- The underlying sequence of the Fibonacci-maximal `(2k+2)`-flute. -/
 @[expose] def aEven (k i : ℕ) : ℕ :=
   if i ≥ 2 * k + 1 then
@@ -340,10 +333,6 @@ def fibFluteEven (k : ℕ) : flute (2*k+2) := by
                   · have h₃ : ¬ 4*k = 2*i := by omega
                     omega
   exact ⟨aEven k, pos, hd, period, div⟩
-
-/-- The Fibonacci-maximal even flute has underlying sequence `aEven`. -/
-lemma fibFluteEven_a (k i : ℕ) : (fibFluteEven k).a i = aEven k i := by
-  rfl
 
 /-- Reduction of an `(n+3)`-flute (assuming `f.a 1 = 1`) to an `(n+2)`-flute (underlying
 sequence). -/
@@ -867,3 +856,14 @@ theorem FluteBounded (n : ℕ) (hn : n > 0) (f : flute n) :
           · simp [hj, add_assoc] at hf₁; omega
       · have := key₁ i hi hij
         exact ⟨(by omega), (by omega)⟩
+
+/-- The Fibonacci-maximal odd flute has underlying sequence `aOdd`. -/
+lemma fibFluteOdd_a (k i : ℕ) : (fibFluteOdd k).a i = aOdd k i := by
+  by_cases hk : k = 0
+  · subst k
+    simp [fibFluteOdd, aOdd]
+  · simp only [fibFluteOdd, hk, ↓reduceDIte]
+
+/-- The Fibonacci-maximal even flute has underlying sequence `aEven`. -/
+lemma fibFluteEven_a (k i : ℕ) : (fibFluteEven k).a i = aEven k i := by
+  rfl
