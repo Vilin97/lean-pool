@@ -24,42 +24,55 @@ open Complexity
 
 /-! ## State-level field access -/
 
+/-- Reads the control word used by the Kuhn transition functions. -/
 def machineKuhnControl (state : List Bool) : List Bool :=
   machineKuhnStateControl state
 
+/-- Reads the active call's unary fuel from a Kuhn machine state. -/
 def machineKuhnFuel (state : List Bool) : List Bool :=
   machineKuhnCallFuel (machineKuhnControl state)
 
+/-- Reads the active call's remaining-column list from a Kuhn machine state. -/
 def machineKuhnRemaining (state : List Bool) : List Bool :=
   machineKuhnCallRemaining (machineKuhnControl state)
 
+/-- Reads the active call's current row from a Kuhn machine state. -/
 def machineKuhnRow (state : List Bool) : List Bool :=
   machineKuhnCallRow (machineKuhnControl state)
 
+/-- Reads the active call's seen-column vector from a Kuhn machine state. -/
 def machineKuhnSeen (state : List Bool) : List Bool :=
   machineKuhnCallSeen (machineKuhnControl state)
 
+/-- Reads the active call's current matching from a Kuhn machine state. -/
 def machineKuhnMate (state : List Bool) : List Bool :=
   machineKuhnCallMate (machineKuhnControl state)
 
+/-- Reads the active call's continuation stack from a Kuhn machine state. -/
 def machineKuhnStack (state : List Bool) : List Bool :=
   machineKuhnCallStack (machineKuhnControl state)
 
+/-- Reads the return success flag from a Kuhn machine state. -/
 def machineKuhnRetSuccess (state : List Bool) : List Bool :=
   machineKuhnReturnSuccess (machineKuhnControl state)
 
+/-- Reads the returned seen-column vector from a Kuhn machine state. -/
 def machineKuhnRetSeen (state : List Bool) : List Bool :=
   machineKuhnReturnSeen (machineKuhnControl state)
 
+/-- Reads the returned matching from a Kuhn machine state. -/
 def machineKuhnRetMate (state : List Bool) : List Bool :=
   machineKuhnReturnMate (machineKuhnControl state)
 
+/-- Reads the return continuation stack from a Kuhn machine state. -/
 def machineKuhnRetStack (state : List Bool) : List Bool :=
   machineKuhnReturnStack (machineKuhnControl state)
 
+/-- Reads the top continuation frame of the return stack. -/
 def machineKuhnTopFrame (state : List Bool) : List Bool :=
   machineKuhnStackHead (machineKuhnRetStack state)
 
+/-- Removes the top continuation frame from the return stack. -/
 def machineKuhnRestStack (state : List Bool) : List Bool :=
   machineKuhnStackTail (machineKuhnRetStack state)
 
@@ -110,9 +123,12 @@ theorem machineKuhnRestStack_mem_FP : machineKuhnRestStack ∈ Complexity.FP := 
 
 /-! ## Repacking with a fixed global clamp -/
 
+/-- Truncates a candidate word to the length of the bound stored in the current Kuhn state. -/
 def machineKuhnClamp (state candidate : List Bool) : List Bool :=
   candidate.take (machineKuhnStateBound state).length
 
+/-- Replaces a Kuhn state's control while clamping all data fields to its stored bound and
+preserving that bound. -/
 def machineKuhnWithControl (state control : List Bool) : List Bool :=
   machineKuhnStatePack (machineKuhnClamp state control)
     (machineKuhnClamp state (machineKuhnStateMatrix state))
@@ -144,74 +160,95 @@ theorem machineKuhnWithControl_mem_FP
 
 /-! ## Call transition -/
 
+/-- Reads the first remaining column of the active Kuhn call. -/
 def machineKuhnCurrentColumn (state : List Bool) : List Bool :=
   machineListHead (machineKuhnRemaining state)
 
+/-- Removes the current column from the active call's remaining-column list. -/
 def machineKuhnRemainingTail (state : List Bool) : List Bool :=
   machineListTail (machineKuhnRemaining state)
 
+/-- Looks up whether the current search column has already been seen. -/
 def machineKuhnSeenBit (state : List Bool) : List Bool :=
   machineBoolVectorEntryAtUnary
     (pair (machineKuhnCurrentColumn state) (machineKuhnSeen state))
 
+/-- Tests whether the input matrix supports the edge from the current row to the current column. -/
 def machineKuhnSupportBit (state : List Bool) : List Bool :=
   machineRationalSupportBitAtUnary
     (pair (machineKuhnRow state)
       (pair (machineKuhnCurrentColumn state)
         (machineKuhnStateMatrix state)))
 
+/-- Marks the current column for skipping when it was already seen or the current matrix edge is
+unsupported. -/
 def machineKuhnSkipBit (state : List Bool) : List Bool :=
   machineOrBit (machineKuhnSeenBit state)
     (machineNotBit (machineKuhnSupportBit state))
 
+/-- Sets the current column's seen bit to true. -/
 def machineKuhnSeenUpdated (state : List Bool) : List Bool :=
   machineBoolVectorUpdateAtUnary
     (pair (machineKuhnCurrentColumn state)
       (pair [true] (machineKuhnSeen state)))
 
+/-- Looks up the current column's optional matched row. -/
 def machineKuhnMateValue (state : List Bool) : List Bool :=
   machineMateVectorGetAtUnary
     (pair (machineKuhnCurrentColumn state) (machineKuhnMate state))
 
+/-- Tests whether the current column is unmatched. -/
 def machineKuhnMateIsNoneBit (state : List Bool) : List Bool :=
   machineMateValueIsNoneBit (machineKuhnMateValue state)
 
+/-- Encodes the current row as a present optional mate value. -/
 def machineKuhnSomeCurrentRow (state : List Bool) : List Bool :=
   true :: machineKuhnRow state
 
+/-- Updates the current column's mate to the current search row. -/
 def machineKuhnMateSetCurrent (state : List Bool) : List Bool :=
   machineMateVectorUpdateAtUnary
     (pair (machineKuhnCurrentColumn state)
       (pair (machineKuhnSomeCurrentRow state) (machineKuhnMate state)))
 
+/-- Clears the current column's mate before recursively relocating its matched row. -/
 def machineKuhnMateClearCurrent (state : List Bool) : List Bool :=
   machineMateVectorUpdateAtUnary
     (pair (machineKuhnCurrentColumn state)
       (pair [false] (machineKuhnMate state)))
 
+/-- Returns a failed search with the current seen bits and continuation stack. -/
 def machineKuhnFailureControl (state : List Bool) : List Bool :=
   machineKuhnControlReturn [false] (machineKuhnSeen state) []
     (machineKuhnStack state)
 
+/-- Continues the active search after dropping the skipped column, retaining fuel, seen bits,
+matching, and stack. -/
 def machineKuhnSkipControl (state : List Bool) : List Bool :=
   machineKuhnControlCall (machineKuhnFuel state)
     (machineKuhnRemainingTail state) (machineKuhnRow state)
     (machineKuhnSeen state) (machineKuhnMate state) (machineKuhnStack state)
 
+/-- Returns success after marking a free column seen and matching it to the current row. -/
 def machineKuhnFreeColumnControl (state : List Bool) : List Bool :=
   machineKuhnControlReturn [true] (machineKuhnSeenUpdated state)
     (machineKuhnMateSetCurrent state) (machineKuhnStack state)
 
+/-- Saves a search continuation containing the current fuel, remaining columns, row, matching,
+and selected column. -/
 def machineKuhnSearchFrameCurrent (state : List Bool) : List Bool :=
   pair [false]
     (machineKuhnSearchFramePack (machineKuhnFuel state)
       (machineKuhnRemainingTail state) (machineKuhnRow state)
       (machineKuhnMate state) (machineKuhnCurrentColumn state))
 
+/-- Pushes the current search continuation onto the active stack. -/
 def machineKuhnPushedSearchStack (state : List Bool) : List Bool :=
   machineKuhnStackPush (machineKuhnSearchFrameCurrent state)
     (machineKuhnStack state)
 
+/-- Recursively searches for the occupied column's former row with decremented fuel, all
+columns, updated seen bits, that column cleared, and a saved continuation. -/
 def machineKuhnOccupiedColumnControl (state : List Bool) : List Bool :=
   machineKuhnControlCall (machineKuhnFuel state).tail
     (machineKuhnStateColumns state)
@@ -219,15 +256,20 @@ def machineKuhnOccupiedColumnControl (state : List Bool) : List Bool :=
     (machineKuhnSeenUpdated state) (machineKuhnMateClearCurrent state)
     (machineKuhnPushedSearchStack state)
 
+/-- Returns an immediate match for a free column or recursively relocates an occupied column's
+mate. -/
 def machineKuhnProceedControl (state : List Bool) : List Bool :=
   machineIfHead (machineKuhnMateIsNoneBit state)
     (machineKuhnFreeColumnControl state)
     (machineKuhnOccupiedColumnControl state)
 
+/-- Skips a seen or unsupported column and otherwise processes it as free or occupied. -/
 def machineKuhnNonterminalCallControl (state : List Bool) : List Bool :=
   machineIfHead (machineKuhnSkipBit state)
     (machineKuhnSkipControl state) (machineKuhnProceedControl state)
 
+/-- Returns failure when fuel or columns are exhausted and otherwise executes the next search
+transition. -/
 def machineKuhnCallControl (state : List Bool) : List Bool :=
   machineIfEmpty (machineKuhnFuel state) (machineKuhnFailureControl state)
     (machineIfEmpty (machineKuhnRemaining state)
@@ -236,6 +278,8 @@ def machineKuhnCallControl (state : List Bool) : List Bool :=
 
 /-! ## Return transition -/
 
+/-- After a successful recursive search, matches the saved column to the saved row and returns
+success through the remaining stack. -/
 def machineKuhnSearchReturnSuccessControl (state : List Bool) : List Bool :=
   let frame := machineKuhnTopFrame state
   let mate := machineMateVectorUpdateAtUnary
@@ -245,6 +289,8 @@ def machineKuhnSearchReturnSuccessControl (state : List Bool) : List Bool :=
   machineKuhnControlReturn [true] (machineKuhnRetSeen state) mate
     (machineKuhnRestStack state)
 
+/-- After a failed recursive search, resumes the saved row and remaining columns with the saved
+matching and returned seen bits. -/
 def machineKuhnSearchReturnFailureControl (state : List Bool) : List Bool :=
   let frame := machineKuhnTopFrame state
   machineKuhnControlCall (machineKuhnSearchFrameFuel frame)
@@ -252,28 +298,37 @@ def machineKuhnSearchReturnFailureControl (state : List Bool) : List Bool :=
     (machineKuhnSearchFrameRow frame) (machineKuhnRetSeen state)
     (machineKuhnSearchFrameMate frame) (machineKuhnRestStack state)
 
+/-- Chooses the search-continuation success or failure transition using the return success bit. -/
 def machineKuhnSearchReturnControl (state : List Bool) : List Bool :=
   machineIfHead (machineKuhnRetSuccess state)
     (machineKuhnSearchReturnSuccessControl state)
     (machineKuhnSearchReturnFailureControl state)
 
+/-- Uses the returned matching after success and the build continuation's fallback matching
+after failure. -/
 def machineKuhnBuildChosenMate (state : List Bool) : List Bool :=
   let frame := machineKuhnTopFrame state
   machineIfHead (machineKuhnRetSuccess state) (machineKuhnRetMate state)
     (machineKuhnBuildFrameFallback frame)
 
+/-- Reads the remaining rows from the top build continuation. -/
 def machineKuhnBuildRows (state : List Bool) : List Bool :=
   machineKuhnBuildFrameRows (machineKuhnTopFrame state)
 
+/-- Builds the next continuation with the remaining-row tail and the selected matching as
+fallback. -/
 def machineKuhnBuildNextFrame (state : List Bool) : List Bool :=
   pair [true]
     (machineKuhnBuildFramePack (machineListTail (machineKuhnBuildRows state))
       (machineKuhnBuildChosenMate state))
 
+/-- Replaces the completed build continuation with its successor on the remaining stack. -/
 def machineKuhnBuildNextStack (state : List Bool) : List Bool :=
   machineKuhnStackPush (machineKuhnBuildNextFrame state)
     (machineKuhnRestStack state)
 
+/-- Starts searching the next build row with fuel `n + 1`, all columns, fresh seen bits, the
+selected matching, and the next build continuation. -/
 def machineKuhnBuildContinueControl (state : List Bool) : List Bool :=
   machineKuhnControlCall (true :: machineKuhnStateDimension state)
     (machineKuhnStateColumns state)
@@ -281,20 +336,26 @@ def machineKuhnBuildContinueControl (state : List Bool) : List Bool :=
     (machineKuhnStateFalseSeen state) (machineKuhnBuildChosenMate state)
     (machineKuhnBuildNextStack state)
 
+/-- Completes matching construction when no build rows remain and otherwise starts the next row
+search. -/
 def machineKuhnBuildReturnControl (state : List Bool) : List Bool :=
   machineIfEmpty (machineKuhnBuildRows state)
     (machineKuhnControlDone (machineKuhnBuildChosenMate state))
     (machineKuhnBuildContinueControl state)
 
+/-- Dispatches a nonempty return stack to its build or search continuation using the top frame
+tag. -/
 def machineKuhnNonemptyReturnControl (state : List Bool) : List Bool :=
   machineIfHead (machineKuhnFrameTag (machineKuhnTopFrame state))
     (machineKuhnBuildReturnControl state)
     (machineKuhnSearchReturnControl state)
 
+/-- Preserves a return with empty stack and otherwise processes its top continuation frame. -/
 def machineKuhnReturnControl (state : List Bool) : List Bool :=
   machineIfEmpty (machineKuhnRetStack state) (machineKuhnControl state)
     (machineKuhnNonemptyReturnControl state)
 
+/-- Preserves the control word of a completed Kuhn machine state. -/
 def machineKuhnDoneControl (state : List Bool) : List Bool :=
   machineKuhnControl state
 

@@ -24,12 +24,15 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the unary index ruler from a list-index request. -/
 def machineListIndexRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the encoded list from a list-index request. -/
 def machineListIndexData (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Drops as many encoded list entries as the length of the unary index ruler. -/
 def machineListIndexFinalState (word : List Bool) : List Bool :=
   (machineListTail)^[(machineListIndexRuler word).length]
     (machineListIndexData word)

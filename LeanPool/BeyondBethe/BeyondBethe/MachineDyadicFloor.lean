@@ -38,52 +38,70 @@ request. -/
 def machineDyadicNumeratorCode (word : List Bool) : List Bool :=
   machinePairFirst (machineDyadicRawCode word)
 
+/-- Extracts the denominator bits from the raw rational payload of a dyadic-rounding request. -/
 def machineDyadicDenominatorBits (word : List Bool) : List Bool :=
   machinePairSecond (machineDyadicRawCode word)
 
+/-- Reads the sign bit of the encoded numerator in a dyadic-rounding request. -/
 def machineDyadicNumeratorSign (word : List Bool) : List Bool :=
   machineHeadBit (machineDyadicNumeratorCode word)
 
+/-- Computes the binary absolute value of the numerator in a dyadic-rounding request. -/
 def machineDyadicNumeratorAbsBits (word : List Bool) : List Bool :=
   machineIntegerNatAbsBits (machineDyadicNumeratorCode word)
 
+/-- Builds a zero-bit word whose length equals the requested unary precision. -/
 def machineDyadicPrecisionZeroBits (word : List Bool) : List Bool :=
   List.replicate (machineDyadicPrecisionRuler word).length false
 
+/-- Scales the numerator magnitude by the requested power of two using leading low-order zero
+bits, preserving the empty zero encoding. -/
 def machineDyadicScaledAbsBits (word : List Bool) : List Bool :=
   machineIfEmpty (machineDyadicNumeratorAbsBits word) []
     (machineDyadicPrecisionZeroBits word ++
       machineDyadicNumeratorAbsBits word)
 
+/-- Divides the scaled numerator magnitude by the denominator and returns the encoded
+quotient-remainder pair. -/
 def machineDyadicDivModBits (word : List Bool) : List Bool :=
   machineBinaryDivModBits
     (pair (machineDyadicScaledAbsBits word)
       (machineDyadicDenominatorBits word))
 
+/-- Extracts the binary quotient from scaled numerator division. -/
 def machineDyadicQuotientBits (word : List Bool) : List Bool :=
   machinePairFirst (machineDyadicDivModBits word)
 
+/-- Extracts the binary remainder from scaled numerator division. -/
 def machineDyadicRemainderBits (word : List Bool) : List Bool :=
   machinePairSecond (machineDyadicDivModBits word)
 
+/-- Adds one to the binary quotient from scaled numerator division. -/
 def machineDyadicQuotientSuccBits (word : List Bool) : List Bool :=
   machineBinaryAddBits (pair (machineDyadicQuotientBits word) [true])
 
+/-- Uses the quotient magnitude for exact negative division and its successor when a nonzero
+remainder requires rounding downward. -/
 def machineDyadicNegativeFloorAbsBits (word : List Bool) : List Bool :=
   machineIfEmpty (machineDyadicRemainderBits word)
     (machineDyadicQuotientBits word)
     (machineDyadicQuotientSuccBits word)
 
+/-- Selects the adjusted negative magnitude or ordinary quotient according to the numerator
+sign. -/
 def machineDyadicFloorAbsBits (word : List Bool) : List Bool :=
   machineIfHead (machineDyadicNumeratorSign word)
     (machineDyadicNegativeFloorAbsBits word)
     (machineDyadicQuotientBits word)
 
+/-- Combines the original numerator sign and the selected floor magnitude into a canonical
+integer code. -/
 def machineDyadicFloorIntegerCode (word : List Bool) : List Bool :=
   machineCanonicalIntegerFromSignedAbs
     (pair (machineDyadicNumeratorSign word)
       (machineDyadicFloorAbsBits word))
 
+/-- Encodes the denominator `2^p` as `p` low-order zero bits followed by one. -/
 def machineDyadicPowerDenominatorBits (word : List Bool) : List Bool :=
   machineDyadicPrecisionZeroBits word ++ [true]
 
@@ -215,6 +233,8 @@ private theorem shiftedNatBits (n p : ℕ) :
   · rw [ite_eq_right (natBits_ne_nil_of_ne_zero hn),
       natBits_mul_pow_two_of_ne_zero n p hn]
 
+/-- Computes the integer floor of the scaled raw rational using binary long division, increasing
+the negative magnitude when the remainder is nonzero. -/
 def binaryRawDyadicFloorInt (p : ℕ) (q : RawRat) : ℤ :=
   let qr := binaryLongDiv (q.num.natAbs * 2 ^ p) q.den
   match q.num with
@@ -223,6 +243,7 @@ def binaryRawDyadicFloorInt (p : ℕ) (q : RawRat) : ℤ :=
       if qr.2 = 0 then -(qr.1 : ℤ)
       else -((qr.1 + 1 : ℕ) : ℤ)
 
+/-- Pairs the binary-computed floor of `2^p * q` with the positive denominator `2^p`. -/
 def binaryRawDyadicFloor (p : ℕ) (q : RawRat) : RawRat :=
   ⟨binaryRawDyadicFloorInt p q, 2 ^ p, by positivity⟩
 

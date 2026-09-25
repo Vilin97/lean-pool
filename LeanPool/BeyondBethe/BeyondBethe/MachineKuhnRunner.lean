@@ -26,26 +26,35 @@ open Complexity
 
 /-! ## Initializer -/
 
+/-- Extracts the unary matrix dimension for Kuhn initialization. -/
 def machineKuhnInitDimension (matrix : List Bool) : List Bool :=
   machineMatrixDimensionUnary matrix
 
+/-- Builds the encoded complete index range from the unary input dimension. -/
 def machineKuhnInitColumns (matrix : List Bool) : List Bool :=
   machineUnaryRangeCode (machineKuhnInitDimension matrix)
 
+/-- Builds an all-false seen-column vector of the input dimension. -/
 def machineKuhnInitFalseSeen (matrix : List Bool) : List Bool :=
   machineFalseVectorCode (machineKuhnInitDimension matrix)
 
+/-- Builds the empty column-mate vector of the input dimension. -/
 def machineKuhnInitEmptyMate (matrix : List Bool) : List Bool :=
   machineEmptyMateVectorCode (machineKuhnInitDimension matrix)
 
+/-- Builds the initial tagged build continuation with all rows after the first and an empty
+fallback matching. -/
 def machineKuhnInitBuildFrame (matrix : List Bool) : List Bool :=
   pair [true]
     (machineKuhnBuildFramePack (machineListTail (machineKuhnInitColumns matrix))
       (machineKuhnInitEmptyMate matrix))
 
+/-- Creates the initial one-frame continuation stack for the Kuhn matching builder. -/
 def machineKuhnInitStack (matrix : List Bool) : List Bool :=
   machineKuhnStackPush (machineKuhnInitBuildFrame matrix) []
 
+/-- Initializes a nonempty-dimensional search at the first row with fuel `n + 1`, all columns,
+empty seen and mate vectors, and the build continuation. -/
 def machineKuhnInitNonemptyControl (matrix : List Bool) : List Bool :=
   machineKuhnControlCall (true :: machineKuhnInitDimension matrix)
     (machineKuhnInitColumns matrix)
@@ -53,14 +62,19 @@ def machineKuhnInitNonemptyControl (matrix : List Bool) : List Bool :=
     (machineKuhnInitFalseSeen matrix) (machineKuhnInitEmptyMate matrix)
     (machineKuhnInitStack matrix)
 
+/-- Returns a completed empty matching for dimension zero and initializes the first search
+otherwise. -/
 def machineKuhnInitControl (matrix : List Bool) : List Bool :=
   machineIfEmpty (machineKuhnInitDimension matrix)
     (machineKuhnControlDone (machineKuhnInitEmptyMate matrix))
     (machineKuhnInitNonemptyControl matrix)
 
+/-- Truncates a candidate word to the length of the Kuhn input bound. -/
 def machineKuhnInputClamp (matrix candidate : List Bool) : List Bool :=
   candidate.take (machineKuhnInputBound matrix).length
 
+/-- Initializes every Kuhn state field through the common input clamp and stores the computed
+bound unchanged. -/
 def machineKuhnInit (matrix : List Bool) : List Bool :=
   machineKuhnStatePack
     (machineKuhnInputClamp matrix (machineKuhnInitControl matrix))
@@ -234,6 +248,8 @@ theorem machineKuhnInitEmptyMate_length_le_bound (matrix : List Bool) :
 
 /-! ## A generic invariant for the outer bounded iteration -/
 
+/-- Requires exact state packing, all five data fields bounded by the input-bound length, and
+the prescribed bound word. -/
 def MachineKuhnRunStateBound (matrix state : List Bool) : Prop :=
   let B := (machineKuhnInputBound matrix).length
   state = machineKuhnStatePack (machineKuhnStateControl state)
@@ -294,6 +310,8 @@ theorem machineKuhnIterate_bound (matrix : List Bool) : ∀ iterations,
       rw [Function.iterate_succ_apply']
       exact machineKuhnStep_bound ih
 
+/-- Applies the binary-multiplication width construction once more to the Kuhn input bound to
+bound the full run state. -/
 def machineKuhnRunWidth (matrix : List Bool) : List Bool :=
   machineBinaryMulWidth (machineKuhnInputBound matrix)
 
@@ -337,6 +355,8 @@ theorem machineKuhnIterate_length_le_width
     nlinarith
   omega
 
+/-- Runs the Kuhn step machine for the length of its input-bound word from the bounded initial
+state. -/
 def machineKuhnFinalState (matrix : List Bool) : List Bool :=
   (machineKuhnStep^[(machineKuhnInputBound matrix).length])
     (machineKuhnInit matrix)

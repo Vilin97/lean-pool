@@ -23,22 +23,30 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Reads the sign bit of the left encoded integer in a pair. -/
 def machineIntegerLeftSign (word : List Bool) : List Bool :=
   machineHeadBit (machinePairFirst word)
 
+/-- Reads the sign bit of the right encoded integer in a pair. -/
 def machineIntegerRightSign (word : List Bool) : List Bool :=
   machineHeadBit (machinePairSecond word)
 
+/-- Computes the binary absolute value of the left encoded integer. -/
 def machineIntegerLeftAbsBits (word : List Bool) : List Bool :=
   machineIntegerNatAbsBits (machinePairFirst word)
 
+/-- Computes the binary absolute value of the right encoded integer. -/
 def machineIntegerRightAbsBits (word : List Bool) : List Bool :=
   machineIntegerNatAbsBits (machinePairSecond word)
 
+/-- Compares the left absolute value with the right in the order used for nonnegative integer
+comparison. -/
 def machineIntegerPositiveLeBit (word : List Bool) : List Bool :=
   machineBinaryNatLeBit
     (pair (machineIntegerLeftAbsBits word) (machineIntegerRightAbsBits word))
 
+/-- Compares the right absolute value with the left in the reversed order used for negative
+integer comparison. -/
 def machineIntegerNegativeLeBit (word : List Bool) : List Bool :=
   machineBinaryNatLeBit
     (pair (machineIntegerRightAbsBits word) (machineIntegerLeftAbsBits word))

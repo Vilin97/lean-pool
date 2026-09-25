@@ -24,6 +24,7 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Normalizes the raw dyadic-floor result to obtain the rational entry encoding. -/
 def machineDyadicFloorEntryCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode (machineRawDyadicFloorCode word)
 
@@ -81,6 +82,7 @@ theorem binaryRawDyadicFloor_width_le
   refine max_le (by simpa only [w] using! hfloorSize) ?_
   omega
 
+/-- Encodes unary precision `p` followed by the rational vector to round. -/
 def dyadicFloorVectorCanonicalWord {d : ℕ}
     (p : ℕ) (v : Fin d → ℚ) : List Bool :=
   pair (List.replicate p true) (rationalFiniteVectorCode v)
@@ -116,6 +118,7 @@ theorem dyadicFloorVector_entry_code_length_le {d : ℕ}
     binaryDyadicFloor_eq_dyadicFloor, rawRatOfRat_value] at hcanonical
   exact hcanonical.trans (by nlinarith)
 
+/-- Reuses the rational transpose-vector input bound to bound the dyadic vector scan. -/
 def machineDyadicFloorVectorInputBound (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorInputBound word
 
@@ -164,12 +167,15 @@ theorem dyadicFloorVector_code_length_le_bound {d : ℕ}
 
 /-! ## Bounded encoded-list scan -/
 
+/-- Extracts the unary rounding precision from a dyadic vector request. -/
 def machineDyadicFloorVectorPrecision (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the encoded entries from a dyadic vector request. -/
 def machineDyadicFloorVectorEntries (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Rounds the next unprocessed vector entry using the precision stored in the scan payload. -/
 def machineDyadicFloorVectorCurrentEntry
     (state : List Bool) : List Bool :=
   machineDyadicFloorEntryCode
@@ -177,15 +183,19 @@ def machineDyadicFloorVectorCurrentEntry
       (machineListHead
         (machineRationalTransposeMulVectorRemaining state)))
 
+/-- Prepends the newly rounded entry to the encoded reverse-order accumulator. -/
 def machineDyadicFloorVectorCandidate (state : List Bool) : List Bool :=
   pair (machineDyadicFloorVectorCurrentEntry state)
     (machineRationalTransposeMulVectorAccumulator state)
 
+/-- Truncates the candidate entry accumulator to the length of the scan bound word. -/
 def machineDyadicFloorVectorNextAccumulator
     (state : List Bool) : List Bool :=
   (machineDyadicFloorVectorCandidate state).take
     (machineRationalTransposeMulVectorBound state).length
 
+/-- Drops the processed vector entry and stores the bounded updated accumulator while preserving
+precision and bound. -/
 def machineDyadicFloorVectorAdvance (state : List Bool) : List Bool :=
   machineRationalTransposeMulVectorPack
     (machineListTail (machineRationalTransposeMulVectorRemaining state))
@@ -193,28 +203,35 @@ def machineDyadicFloorVectorAdvance (state : List Bool) : List Bool :=
     (machineRationalTransposeMulVectorStatePayload state)
     (machineRationalTransposeMulVectorBound state)
 
+/-- Fixes a vector scan with no remaining entries and otherwise processes its next entry. -/
 def machineDyadicFloorVectorStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineRationalTransposeMulVectorRemaining state) state
     (machineDyadicFloorVectorAdvance state)
 
+/-- Initializes the vector scan with all input entries, an empty accumulator, the requested
+precision, and its input bound. -/
 def machineDyadicFloorVectorInit (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorPack
     (machineDyadicFloorVectorEntries word) []
     (machineDyadicFloorVectorPrecision word)
     (machineDyadicFloorVectorInputBound word)
 
+/-- Packs four copies of the input bound to bound the encoded vector scan state. -/
 def machineDyadicFloorVectorWidth (word : List Bool) : List Bool :=
   let bound := machineDyadicFloorVectorInputBound word
   machineRationalTransposeMulVectorPack bound bound bound bound
 
+/-- Runs the dyadic vector scan for as many steps as there are bits in the input word. -/
 def machineDyadicFloorVectorFinalState (word : List Bool) : List Bool :=
   (machineDyadicFloorVectorStep)^[word.length]
     (machineDyadicFloorVectorInit word)
 
+/-- Extracts the reversed encoded rounded entries from the final vector scan state. -/
 def machineDyadicFloorVectorReversedCode (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorAccumulator
     (machineDyadicFloorVectorFinalState word)
 
+/-- Reverses the accumulated rounded entries to recover the original vector order. -/
 def machineDyadicFloorVectorCode (word : List Bool) : List Bool :=
   machineListReverse (machineDyadicFloorVectorReversedCode word)
 
@@ -359,10 +376,13 @@ theorem machineDyadicFloorVectorCode_mem_FP :
 
 /-! ## Exact scan semantics -/
 
+/-- Takes the first `k` vector entries and applies dyadic floor at precision `p` to each. -/
 def dyadicFloorVectorPrefix {d : ℕ}
     (p : ℕ) (v : Fin d → ℚ) (k : ℕ) : List ℚ :=
   (List.ofFn v).take k |>.map (dyadicFloor p)
 
+/-- Encodes the remaining vector entries and reversed rounded prefix after `k` entries,
+retaining the canonical precision and input bound. -/
 def machineDyadicFloorVectorSemanticState {d : ℕ}
     (p : ℕ) (v : Fin d → ℚ) (k : ℕ) : List Bool :=
   let word := dyadicFloorVectorCanonicalWord p v

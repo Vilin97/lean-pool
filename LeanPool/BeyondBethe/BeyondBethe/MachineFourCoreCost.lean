@@ -23,34 +23,44 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the unary first-row index from a four-core cost query. -/
 def machineFourCoreFirstRowRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the four-core query payload following the first-row index. -/
 def machineFourCoreRest₁ (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the unary second-row index from a four-core cost query. -/
 def machineFourCoreSecondRowRuler (word : List Bool) : List Bool :=
   machinePairFirst (machineFourCoreRest₁ word)
 
+/-- Extracts the four-core query payload following both row indices. -/
 def machineFourCoreRest₂ (word : List Bool) : List Bool :=
   machinePairSecond (machineFourCoreRest₁ word)
 
+/-- Extracts the unary first-column index from a four-core cost query. -/
 def machineFourCoreFirstColumnRuler (word : List Bool) : List Bool :=
   machinePairFirst (machineFourCoreRest₂ word)
 
+/-- Extracts the four-core query payload following the first-column index. -/
 def machineFourCoreRest₃ (word : List Bool) : List Bool :=
   machinePairSecond (machineFourCoreRest₂ word)
 
+/-- Extracts the unary second-column index from a four-core cost query. -/
 def machineFourCoreSecondColumnRuler (word : List Bool) : List Bool :=
   machinePairFirst (machineFourCoreRest₃ word)
 
+/-- Extracts the optimizer matrix and potentials from the four-core query. -/
 def machineFourCoreOptimizerWord (word : List Bool) : List Bool :=
   machinePairSecond (machineFourCoreRest₃ word)
 
+/-- Packages a row index, column index, and optimizer result for transfer-cost evaluation. -/
 def machineFourCoreTransferInput
     (row column optimizer : List Bool) : List Bool :=
   pair row (pair column optimizer)
 
+/-- Computes the directed transfer-cost upper approximation at the first row and first column. -/
 def machineFourCoreRACostRawCode (word : List Bool) : List Bool :=
   machineDirectedTransferCostUpperRawCode
     (machineFourCoreTransferInput
@@ -58,6 +68,7 @@ def machineFourCoreRACostRawCode (word : List Bool) : List Bool :=
       (machineFourCoreFirstColumnRuler word)
       (machineFourCoreOptimizerWord word))
 
+/-- Computes the directed transfer-cost upper approximation at the first row and second column. -/
 def machineFourCoreRBCostRawCode (word : List Bool) : List Bool :=
   machineDirectedTransferCostUpperRawCode
     (machineFourCoreTransferInput
@@ -65,6 +76,7 @@ def machineFourCoreRBCostRawCode (word : List Bool) : List Bool :=
       (machineFourCoreSecondColumnRuler word)
       (machineFourCoreOptimizerWord word))
 
+/-- Computes the directed transfer-cost upper approximation at the second row and first column. -/
 def machineFourCoreSACostRawCode (word : List Bool) : List Bool :=
   machineDirectedTransferCostUpperRawCode
     (machineFourCoreTransferInput
@@ -72,6 +84,7 @@ def machineFourCoreSACostRawCode (word : List Bool) : List Bool :=
       (machineFourCoreFirstColumnRuler word)
       (machineFourCoreOptimizerWord word))
 
+/-- Computes the directed transfer-cost upper approximation at the second row and second column. -/
 def machineFourCoreSBCostRawCode (word : List Bool) : List Bool :=
   machineDirectedTransferCostUpperRawCode
     (machineFourCoreTransferInput
@@ -79,11 +92,13 @@ def machineFourCoreSBCostRawCode (word : List Bool) : List Bool :=
       (machineFourCoreSecondColumnRuler word)
       (machineFourCoreOptimizerWord word))
 
+/-- Adds the two directed transfer-cost approximations in the first selected row. -/
 def machineFourCoreFirstRowSumRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineFourCoreRACostRawCode word)
       (machineFourCoreRBCostRawCode word))
 
+/-- Adds the two directed transfer-cost approximations in the second selected row. -/
 def machineFourCoreSecondRowSumRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineFourCoreSACostRawCode word)
@@ -190,6 +205,7 @@ theorem machineDirectedFourCoreCostUpperRawCode_mem_FP :
   simpa only [machineDirectedFourCoreCostUpperRawCode] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
+/-- Adds the four raw directed transfer-cost approximations at the selected row-column corners. -/
 def rawDirectedFourCoreCostUpper {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (r s a b : Fin n) : RawRat :=
   ((rawDirectedTransferCostUpper X r a).add
@@ -197,6 +213,8 @@ def rawDirectedFourCoreCostUpper {n : ℕ}
     ((rawDirectedTransferCostUpper X s a).add
       (rawDirectedTransferCostUpper X s b))
 
+/-- Encodes four unary indices together with a matrix and its potentials for four-core
+evaluation. -/
 def fourCoreMachineInput {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (R C : Fin n → ℚ)
     (r s a b : Fin n) : List Bool :=

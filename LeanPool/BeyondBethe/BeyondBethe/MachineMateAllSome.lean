@@ -23,49 +23,64 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes a mate-completeness scan as remaining entries, remaining ruler, and accumulated
+success bit. -/
 def machineMateAllSomePack
     (remaining ruler ok : List Bool) : List Bool :=
   pair remaining (pair ruler ok)
 
+/-- Extracts the unprocessed mate-vector entries. -/
 def machineMateAllSomeRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the remaining iteration ruler from the mate-completeness state. -/
 def machineMateAllSomeRulerState (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the accumulated flag that all examined mate entries are present. -/
 def machineMateAllSomeOk (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Reads the presence bit of the current encoded mate entry. -/
 def machineMateAllSomeCurrentBit (state : List Bool) : List Bool :=
   machineHeadBit (machineListHead (machineMateAllSomeRemaining state))
 
+/-- Consumes one mate entry and ruler bit, conjoining its presence with the accumulated flag. -/
 def machineMateAllSomeAdvance (state : List Bool) : List Bool :=
   machineMateAllSomePack (machineListTail (machineMateAllSomeRemaining state))
     (machineMateAllSomeRulerState state).tail
     (machineAndBit (machineMateAllSomeOk state)
       (machineMateAllSomeCurrentBit state))
 
+/-- Checks the next mate entry, leaving states with an exhausted ruler fixed. -/
 def machineMateAllSomeStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineMateAllSomeRulerState state) state
     (machineMateAllSomeAdvance state)
 
+/-- Extracts the input ruler specifying how many mate entries to check. -/
 def machineMateAllSomeInputRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the encoded mate vector from the completeness-test input. -/
 def machineMateAllSomeInputMate (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Initializes mate completeness checking with the supplied vector, ruler, and a true success
+flag. -/
 def machineMateAllSomeInit (word : List Bool) : List Bool :=
   machineMateAllSomePack (machineMateAllSomeInputMate word)
     (machineMateAllSomeInputRuler word) [true]
 
+/-- Uses the binary-multiplication width constructor to bound mate-completeness states. -/
 def machineMateAllSomeWidth (word : List Bool) : List Bool :=
   machineBinaryMulWidth word
 
+/-- Runs one mate-completeness step per bit of the input ruler. -/
 def machineMateAllSomeFinalState (word : List Bool) : List Bool :=
   (machineMateAllSomeStep^[(machineMateAllSomeInputRuler word).length])
     (machineMateAllSomeInit word)
 
+/-- Extracts the final flag that every ruler-selected mate entry is present. -/
 def machineMateAllSomeBit (word : List Bool) : List Bool :=
   machineMateAllSomeOk (machineMateAllSomeFinalState word)
 
@@ -142,6 +157,7 @@ theorem machineMateAllSomeWidth_mem_FP :
     (machineMateAllSomeCurrentBit state).length = 1 := by
   exact machineHeadBit_length _
 
+/-- Bounds remaining mate entries, ruler length, and accumulated flag in a packed state. -/
 def MachineMateAllSomeStateBound (word state : List Bool) : Prop :=
   state = machineMateAllSomePack (machineMateAllSomeRemaining state)
       (machineMateAllSomeRulerState state) (machineMateAllSomeOk state) ∧
@@ -236,6 +252,8 @@ theorem machineMateAllSomeBit_mem_FP :
     machineHeadBit (mateValueCode value) = [value.isSome] := by
   cases value <;> simp [machineHeadBit, mateValueCode]
 
+/-- Encodes the semantic state after checking `k` mates, recording whether all checked entries
+are present. -/
 def mateAllSomeSemanticState (mate : List (Option ℕ)) (k : ℕ) : List Bool :=
   machineMateAllSomePack (mateVectorCode (mate.drop k))
     (List.replicate (mate.length - k) true)

@@ -21,6 +21,7 @@ guard.
 
 namespace BeyondBethe
 
+/-- The explicit certificate evaluator using the matching gain and bounded exponential guard. -/
 def machineExplicitCertificateValueRawCode : List Bool → List Bool :=
   machineCertificateValueRawCode machineExplicitMatchingGainRawCode
     machineOptimizerCertificateExpGuard

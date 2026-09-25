@@ -24,34 +24,44 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes a matrix-sum state as remaining rows, current row, raw-rational accumulator, and
+bound. -/
 def machineMatrixRawSumPack
     (rows current acc bound : List Bool) : List Bool :=
   pair rows (pair current (pair acc bound))
 
+/-- Extracts the rows still to be loaded for matrix summation. -/
 def machineMatrixRawSumRows (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the unprocessed suffix of the current summation row. -/
 def machineMatrixRawSumCurrent (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the accumulated raw-rational matrix sum. -/
 def machineMatrixRawSumAcc (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the width bound stored in the matrix-sum state. -/
 def machineMatrixRawSumBound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
+/-- Reads the next rational entry to add to the matrix sum. -/
 def machineMatrixRawSumEntry (state : List Bool) : List Bool :=
   machineListHead (machineMatrixRawSumCurrent state)
 
+/-- Adds the current entry to the raw-rational sum accumulator. -/
 def machineMatrixRawSumCandidate (state : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineMatrixRawSumAcc state)
       (machineMatrixRawSumEntry state))
 
+/-- Truncates the candidate sum encoding to the stored width bound. -/
 def machineMatrixRawSumNextAcc (state : List Bool) : List Bool :=
   (machineMatrixRawSumCandidate state).take
     (machineMatrixRawSumBound state).length
 
+/-- Consumes one entry and updates the bounded matrix-sum accumulator. -/
 def machineMatrixRawSumProcessEntry (state : List Bool) : List Bool :=
   machineMatrixRawSumPack
     (machineMatrixRawSumRows state)
@@ -59,6 +69,7 @@ def machineMatrixRawSumProcessEntry (state : List Bool) : List Bool :=
     (machineMatrixRawSumNextAcc state)
     (machineMatrixRawSumBound state)
 
+/-- Loads the next matrix row while retaining the current sum and width bound. -/
 def machineMatrixRawSumLoadRow (state : List Bool) : List Bool :=
   machineMatrixRawSumPack
     (machineListTail (machineMatrixRawSumRows state))
@@ -66,10 +77,12 @@ def machineMatrixRawSumLoadRow (state : List Bool) : List Bool :=
     (machineMatrixRawSumAcc state)
     (machineMatrixRawSumBound state)
 
+/-- Loads a further row when available, otherwise retaining the completed summation state. -/
 def machineMatrixRawSumAfterRow (state : List Bool) : List Bool :=
   machineIfEmpty (machineMatrixRawSumRows state) state
     (machineMatrixRawSumLoadRow state)
 
+/-- Adds the next matrix entry or loads another row when the current row is exhausted. -/
 def machineMatrixRawSumStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineMatrixRawSumCurrent state)
     (machineMatrixRawSumAfterRow state)

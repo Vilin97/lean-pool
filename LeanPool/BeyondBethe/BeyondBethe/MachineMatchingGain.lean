@@ -25,47 +25,60 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes a list-count state as remaining list, binary counter, and source word. -/
 def machineListCountPack
     (remaining counter source : List Bool) : List Bool :=
   pair remaining (pair counter source)
 
+/-- Extracts the unprocessed list suffix from the counting state. -/
 def machineListCountRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the binary count from the list-count state. -/
 def machineListCountCounter (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the original encoded list from the counting state. -/
 def machineListCountSource (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Pairs a false bit with the source list to provide a count-state width bound. -/
 def machineListCountInputBound (word : List Bool) : List Bool :=
   pair [false] word
 
+/-- Reads the count-state bound derived from the original list. -/
 def machineListCountBound (state : List Bool) : List Bool :=
   machineListCountInputBound (machineListCountSource state)
 
+/-- Increments the binary count and truncates it to the source-derived width bound. -/
 def machineListCountNextCounter (state : List Bool) : List Bool :=
   (machineBinaryAddBits
       (pair (machineListCountCounter state) [true])).take
     (machineListCountBound state).length
 
+/-- Consumes one encoded list entry and updates the bounded count. -/
 def machineListCountProcess (state : List Bool) : List Bool :=
   machineListCountPack
     (machineListTail (machineListCountRemaining state))
     (machineListCountNextCounter state)
     (machineListCountSource state)
 
+/-- Counts the next entry, leaving an exhausted list-count state fixed. -/
 def machineListCountStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineListCountRemaining state) state
     (machineListCountProcess state)
 
+/-- Initializes list counting with the entire input list and a zero counter. -/
 def machineListCountInit (word : List Bool) : List Bool :=
   machineListCountPack word [] word
 
+/-- Packs three copies of the source-derived bound to bound the full counting state. -/
 def machineListCountWidth (word : List Bool) : List Bool :=
   let bound := machineListCountInputBound word
   machineListCountPack bound bound bound
 
+/-- Counts encoded list entries using at most one step per input bit and returns the binary
+count. -/
 def machineEncodedListLengthBits (word : List Bool) : List Bool :=
   machineListCountCounter
     ((machineListCountStep)^[word.length] (machineListCountInit word))
@@ -139,6 +152,7 @@ theorem machineListCountWidth_mem_FP :
         (machineListCountPack remaining counter source) = source := by
   simp [machineListCountSource, machineListCountPack]
 
+/-- Bounds the remaining-list and counter lengths while preserving the original encoded list. -/
 def MachineListCountStateBound (word state : List Bool) : Prop :=
   let B := (machineListCountInputBound word).length
   state = machineListCountPack (machineListCountRemaining state)
@@ -221,6 +235,7 @@ theorem machineEncodedListLengthBits_mem_FP :
 
 /-! ## Exact counting semantics -/
 
+/-- Encodes a counting state with suffix `xs.drop k`, counter `k`, and the original list. -/
 def machineListCountSemanticState {alpha : Type*}
     (encode : alpha → List Bool) (xs : List alpha) (k : ℕ) : List Bool :=
   machineListCountPack (binaryListCode encode (xs.drop k)) k.bits
@@ -311,17 +326,23 @@ theorem machineListCount_done_iterate
 
 /-! ## Fixed-gain assembly -/
 
+/-- Encodes the computed list length as a nonnegative raw rational with denominator one. -/
 def machineListCountRawNatCode (word : List Bool) : List Bool :=
   pair (machineNaturalIntegerCode (machineEncodedListLengthBits word)) [true]
 
+/-- The raw-rational representation of the fixed matching-gain coefficient `explicitGamma`. -/
 def rawExplicitGamma : RawRat := rawRatOfRat explicitGamma
 
+/-- Multiplies the selected-pair count by `explicitGamma` and normalizes the resulting rational
+entry. -/
 def machineMatchingGainFromSelected (selectedWord : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineRawRatMulCode
       (pair (rawRatBinaryCode rawExplicitGamma)
         (machineListCountRawNatCode selectedWord)))
 
+/-- Computes the explicit matching gain from the greedy selection in the input's second
+component. -/
 def machineExplicitMatchingGainRawCode (word : List Bool) : List Bool :=
   machineMatchingGainFromSelected
     (machineGreedyMatchingSelected (machinePairSecond word))

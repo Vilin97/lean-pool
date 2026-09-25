@@ -24,6 +24,7 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Converts the encoded binary matrix dimension to a unary ruler bounded by the input length. -/
 def machineMatrixDimensionUnary (word : List Bool) : List Bool :=
   machineBoundedUnary (pair word (machineMatrixDimensionWord word))
 

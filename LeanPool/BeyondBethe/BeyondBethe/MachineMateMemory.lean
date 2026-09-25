@@ -24,19 +24,24 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes absence by a false bit and a present row by a true bit followed by its unary index. -/
 def mateValueCode : Option ℕ → List Bool
   | none => [false]
   | some row => true :: List.replicate row true
 
+/-- Encodes a list of optional row mates using the tagged mate-value encoding. -/
 def mateVectorCode (mate : List (Option ℕ)) : List Bool :=
   binaryListCode mateValueCode mate
 
+/-- Tests for an absent mate by negating its presence bit. -/
 def machineMateValueIsNoneBit (value : List Bool) : List Bool :=
   machineNotBit (machineHeadBit value)
 
+/-- Drops the presence tag to extract the unary row index of an encoded mate. -/
 def machineMateValueRowUnary (value : List Bool) : List Bool :=
   value.tail
 
+/-- Looks up a mate-vector entry at an encoded unary index. -/
 def machineMateVectorGetAtUnary (word : List Bool) : List Bool :=
   machineListIndex word
 

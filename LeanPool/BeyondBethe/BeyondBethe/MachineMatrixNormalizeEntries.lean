@@ -25,6 +25,7 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Concatenates twenty copies of the input for the matrix-normalization width estimate. -/
 def machineMatrixNormalizePadTwenty (word : List Bool) : List Bool :=
   machineRationalRowDividePadSixteen word ++
     machineRationalRowDividePadFour word
@@ -35,43 +36,55 @@ row-machine envelope used in the first implementation. -/
 def machineMatrixNormalizeInputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth (machineMatrixNormalizePadTwenty word)
 
+/-- Encodes normalization state as remaining rows, reversed output, scale, dimension, and bound. -/
 def machineMatrixNormalizePack
     (remaining accumulator scale dimension bound : List Bool) : List Bool :=
   pair remaining (pair accumulator (pair scale (pair dimension bound)))
 
+/-- Extracts the unprocessed rows from a matrix-normalization state. -/
 def machineMatrixNormalizeRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the reversed accumulated normalized rows. -/
 def machineMatrixNormalizeAccumulator (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the fixed raw-rational normalization scale. -/
 def machineMatrixNormalizeScale (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the binary dimension retained in the normalization state. -/
 def machineMatrixNormalizeDimension (state : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Extracts the stored width bound from the normalization state. -/
 def machineMatrixNormalizeBound (state : List Bool) : List Bool :=
   machinePairSecond
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Reads the first unprocessed row to normalize. -/
 def machineMatrixNormalizeCurrentRow (state : List Bool) : List Bool :=
   machineListHead (machineMatrixNormalizeRemaining state)
 
+/-- Divides every entry of the current row by the stored normalization scale. -/
 def machineMatrixNormalizeOutputRow (state : List Bool) : List Bool :=
   machineRationalRowDivide
     (pair (machineMatrixNormalizeScale state)
       (machineMatrixNormalizeCurrentRow state))
 
+/-- Prepends the normalized current row to the reversed output accumulator. -/
 def machineMatrixNormalizeCandidate (state : List Bool) : List Bool :=
   pair (machineMatrixNormalizeOutputRow state)
     (machineMatrixNormalizeAccumulator state)
 
+/-- Truncates the candidate normalized-row accumulator to the stored width bound. -/
 def machineMatrixNormalizeNextAccumulator (state : List Bool) : List Bool :=
   (machineMatrixNormalizeCandidate state).take
     (machineMatrixNormalizeBound state).length
 
+/-- Consumes one row and stores its normalized output while preserving scale, dimension, and
+bound. -/
 def machineMatrixNormalizeAdvance (state : List Bool) : List Bool :=
   machineMatrixNormalizePack
     (machineListTail (machineMatrixNormalizeRemaining state))
@@ -80,25 +93,31 @@ def machineMatrixNormalizeAdvance (state : List Bool) : List Bool :=
     (machineMatrixNormalizeDimension state)
     (machineMatrixNormalizeBound state)
 
+/-- Normalizes the next row, leaving exhausted normalization states fixed. -/
 def machineMatrixNormalizeStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineMatrixNormalizeRemaining state) state
     (machineMatrixNormalizeAdvance state)
 
+/-- Initializes normalization with the source rows, empty output, computed scale, dimension, and
+bound. -/
 def machineMatrixNormalizeInit (word : List Bool) : List Bool :=
   machineMatrixNormalizePack (machineMatrixRowsWord word) []
     (machineMatrixNormalizationScaleRawCode word)
     (machineMatrixDimensionWord word)
     (machineMatrixNormalizeInputBound word)
 
+/-- Builds an encoded width envelope for the five normalization-state components. -/
 def machineMatrixNormalizeWidth (word : List Bool) : List Bool :=
   machineMatrixNormalizePack word (machineMatrixNormalizeInputBound word)
     (machineMatrixNormalizationScaleRawCode word) word
     (machineMatrixNormalizeInputBound word)
 
+/-- Runs matrix normalization for one step per input bit. -/
 def machineMatrixNormalizeFinalState (word : List Bool) : List Bool :=
   (machineMatrixNormalizeStep)^[word.length]
     (machineMatrixNormalizeInit word)
 
+/-- Pairs the matrix dimension with normalized rows restored to their original order. -/
 def machineMatrixNormalizeEntries (word : List Bool) : List Bool :=
   let state := machineMatrixNormalizeFinalState word
   pair (machineMatrixNormalizeDimension state)
@@ -235,6 +254,7 @@ theorem machineMatrixNormalizeWidth_mem_FP :
       (machineMatrixNormalizePack a b c d e) = e := by
   simp [machineMatrixNormalizeBound, machineMatrixNormalizePack]
 
+/-- Bounds normalization state lengths and preserves the computed scale and input-derived bound. -/
 def MachineMatrixNormalizeStateBound (word state : List Bool) : Prop :=
   state = machineMatrixNormalizePack
       (machineMatrixNormalizeRemaining state)
@@ -518,10 +538,13 @@ theorem machineMatrixNormalize_outputRows_length_le_bound {n : ℕ}
 
 /-! ## Exact semantics -/
 
+/-- Divides every entry of every supplied row by the raw-rational scale. -/
 def rationalMatrixDivideRows (scale : RawRat)
     (rows : List (List ℚ)) : List (List ℚ) :=
   rows.map (rationalRowDivideValues scale)
 
+/-- Encodes normalization after `k` rows, with the remaining input rows and reversed normalized
+output. -/
 def machineMatrixNormalizeSemanticState
     (word dimension : List Bool) (scale : RawRat)
     (rows : List (List ℚ)) (k : ℕ) : List Bool :=

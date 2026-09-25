@@ -24,6 +24,8 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Returns zero in dimensions zero and one; in larger dimensions evaluates the directed
+certificate using the executable scanned optimizer matrix and its row and column potentials. -/
 def executableNormalizedCertificateAlgorithm :
     ∀ n, Matrix (Fin n) (Fin n) ℚ → ℚ
   | 0, _ => 0
@@ -34,6 +36,8 @@ def executableNormalizedCertificateAlgorithm :
         (executableScannedBetheOptimizerRowPotential (m := m + 1) B)
         (executableScannedBetheOptimizerColumnPotential (m := m + 1) B)
 
+/-- Requires a string function to return the exact raw code of the normalized certificate
+algorithm on every positive matrix of dimension at least two with entries at most one. -/
 def ExecutableNormalizedCertificateStringRealizesOnPositive
     (F : List Bool → List Bool) : Prop :=
   ∀ (m : ℕ) (B : Matrix (Fin (m + 2)) (Fin (m + 2)) ℚ),
@@ -42,6 +46,8 @@ def ExecutableNormalizedCertificateStringRealizesOnPositive
       rawRatBinaryCode
         (rawRatOfRat (executableNormalizedCertificateAlgorithm (m + 2) B))
 
+/-- Combines the executable scanned optimizer output with the executable certificate-value
+machine to produce a normalized certificate code. -/
 def machineExecutableNormalizedCertificateRawCode : List Bool → List Bool :=
   machineNormalizedCertificateFromParts
     machineExecutableScannedOptimizerOutputCode
@@ -143,6 +149,8 @@ theorem machinePositiveAlgorithmRawCode_realizes_executable_onPositive
     exact machineExecutablePositiveLargeRawCode_encode_onPositive
       hrealizes m A hA
 
+/-- Instantiates the positive-matrix algorithm machine with the executable normalized
+certificate code. -/
 def machineExecutablePositiveAlgorithmRawCode : List Bool → List Bool :=
   machinePositiveAlgorithmRawCode
     machineExecutableNormalizedCertificateRawCode

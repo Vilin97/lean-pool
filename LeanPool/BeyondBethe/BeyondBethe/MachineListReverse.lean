@@ -25,46 +25,61 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Packs the unprocessed list, reversed accumulator, and length-bound word for list reversal. -/
 def machineListReversePack
     (remaining accumulator bound : List Bool) : List Bool :=
   pair remaining (pair accumulator bound)
 
+/-- Extracts the unprocessed encoded list from a reversal state. -/
 def machineListReverseRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the reversed-prefix accumulator from a reversal state. -/
 def machineListReverseAccumulator (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the word bounding accumulator length in a reversal state. -/
 def machineListReverseBound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Prepends the next unprocessed list entry to the reversed accumulator. -/
 def machineListReverseCandidate (state : List Bool) : List Bool :=
   pair (machineListHead (machineListReverseRemaining state))
     (machineListReverseAccumulator state)
 
+/-- Truncates the candidate reversed accumulator to the length of the stored bound. -/
 def machineListReverseNextAccumulator (state : List Bool) : List Bool :=
   (machineListReverseCandidate state).take
     (machineListReverseBound state).length
 
+/-- Drops the next input entry and records the bounded reversed accumulator while preserving the
+bound. -/
 def machineListReverseAdvance (state : List Bool) : List Bool :=
   machineListReversePack
     (machineListTail (machineListReverseRemaining state))
     (machineListReverseNextAccumulator state)
     (machineListReverseBound state)
 
+/-- Fixes an exhausted reversal state and otherwise transfers one entry to the reversed
+accumulator. -/
 def machineListReverseStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineListReverseRemaining state) state
     (machineListReverseAdvance state)
 
+/-- Initializes reversal with the input list, empty accumulator, and the input word itself as
+bound. -/
 def machineListReverseInit (word : List Bool) : List Bool :=
   machineListReversePack word [] word
 
+/-- Packs three copies of the input word to bound the encoded reversal state. -/
 def machineListReverseWidth (word : List Bool) : List Bool :=
   machineListReversePack word word word
 
+/-- Iterates the reversal step once per input bit from the initial state. -/
 def machineListReverseFinalState (word : List Bool) : List Bool :=
   (machineListReverseStep)^[word.length] (machineListReverseInit word)
 
+/-- Extracts the reversed encoded list from the final reversal state. -/
 def machineListReverse (word : List Bool) : List Bool :=
   machineListReverseAccumulator (machineListReverseFinalState word)
 
@@ -129,6 +144,8 @@ theorem machineListReverseWidth_mem_FP :
     machineListReverseBound (machineListReversePack a b c) = c := by
   simp [machineListReverseBound, machineListReversePack]
 
+/-- Requires exact reversal-state packing, remaining and accumulator lengths bounded by the
+original word, and that original word as the bound. -/
 def MachineListReverseStateBound (word state : List Bool) : Prop :=
   state = machineListReversePack
       (machineListReverseRemaining state)
@@ -198,6 +215,8 @@ theorem machineListReverse_mem_FP : machineListReverse ∈ Complexity.FP := by
 
 /-! ## Exact semantics on canonical list codes -/
 
+/-- Encodes the unprocessed suffix, reversed processed prefix, and original-list bound after `k`
+reversal steps. -/
 def machineListReverseSemanticState
     {alpha : Type*} (encode : alpha → List Bool)
     (xs : List alpha) (k : ℕ) : List Bool :=

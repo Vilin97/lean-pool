@@ -27,13 +27,18 @@ open Complexity
 
 /-! ## A semantic invariant -/
 
+/-- Bounds search-frame fuel by `n + 1` and remaining columns by `n`, or build-frame remaining
+rows by `n`. -/
 def KuhnFrameDataBound (n : ℕ) : KuhnFrame n → Prop
   | .search frame => frame.fuel ≤ n + 1 ∧ frame.remaining.length ≤ n
   | .build frame => frame.rows.length ≤ n
 
+/-- Requires every frame in a continuation stack to satisfy its frame-data bounds. -/
 def KuhnStackDataBound {n : ℕ} (stack : List (KuhnFrame n)) : Prop :=
   ∀ frame ∈ stack, KuhnFrameDataBound n frame
 
+/-- Bounds active call data and every continuation frame, with stack length at most `steps + 1`;
+completed states impose no further bound. -/
 def KuhnEvalReachableBound {n : ℕ} (steps : ℕ) :
     KuhnEvalState n → Prop
   | .call fuel remaining _row _seen _mate stack =>
@@ -329,6 +334,7 @@ theorem kuhnControlCode_length_le {n steps : ℕ}
 
 /-! ## The fixed octic envelope -/
 
+/-- Provides the semantic Kuhn step budget `3 * (n * (n + (n + 1) * n)) + 2 * n`. -/
 def kuhnMachineStepBudget (n : ℕ) : ℕ :=
   3 * (n * (n + (n + 1) * n)) + 2 * n
 

@@ -22,52 +22,68 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Interprets a Boolean sign and natural magnitude as an integer. -/
 def signedMagnitudeValue (negative : Bool) (magnitude : ℕ) : ℤ :=
   if negative then -(magnitude : ℤ) else magnitude
 
+/-- Converts signed magnitude to canonical integer code, forcing the zero code for an empty
+magnitude. -/
 def machineCanonicalIntegerFromSignedAbs (word : List Bool) : List Bool :=
   machineIfEmpty (machinePairSecond word) [false]
     (machineIntegerCodeFromSignedAbs word)
 
+/-- Extracts the sign bit and absolute-value bits of an encoded integer as a pair. -/
 def machineIntegerSignedMagnitude (word : List Bool) : List Bool :=
   pair (machineHeadBit word) (machineIntegerNatAbsBits word)
 
+/-- Extracts the left operand's sign from a pair of signed-magnitude operands. -/
 def machineSignedLeftSign (word : List Bool) : List Bool :=
   machinePairFirst (machinePairFirst word)
 
+/-- Extracts the left operand's magnitude from a pair of signed-magnitude operands. -/
 def machineSignedLeftAbs (word : List Bool) : List Bool :=
   machinePairSecond (machinePairFirst word)
 
+/-- Extracts the right operand's sign from a pair of signed-magnitude operands. -/
 def machineSignedRightSign (word : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond word)
 
+/-- Extracts the right operand's magnitude from a pair of signed-magnitude operands. -/
 def machineSignedRightAbs (word : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond word)
 
+/-- Tests whether the two signed-magnitude inputs have equal sign bits. -/
 def machineSignedSameSign (word : List Bool) : List Bool :=
   machineNotBit
     (machineXorBit (machineSignedLeftSign word) (machineSignedRightSign word))
 
+/-- Adds the two input magnitudes using binary natural-number addition. -/
 def machineSignedAbsSum (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineSignedLeftAbs word) (machineSignedRightAbs word))
 
+/-- Tests whether the left input magnitude is at least the right input magnitude. -/
 def machineSignedLeftAbsGe (word : List Bool) : List Bool :=
   machineBinaryNatLeBit
     (pair (machineSignedRightAbs word) (machineSignedLeftAbs word))
 
+/-- Subtracts the right magnitude from the left using truncated binary subtraction. -/
 def machineSignedAbsLeftDiff (word : List Bool) : List Bool :=
   machineBinarySubBits
     (pair (machineSignedLeftAbs word) (machineSignedRightAbs word))
 
+/-- Subtracts the left magnitude from the right using truncated binary subtraction. -/
 def machineSignedAbsRightDiff (word : List Bool) : List Bool :=
   machineBinarySubBits
     (pair (machineSignedRightAbs word) (machineSignedLeftAbs word))
 
+/-- Selects the larger magnitude minus the smaller for addition of inputs with different signs. -/
 def machineSignedDifferentAbs (word : List Bool) : List Bool :=
   machineIfHead (machineSignedLeftAbsGe word)
     (machineSignedAbsLeftDiff word) (machineSignedAbsRightDiff word)
 
+/-- Selects the sign of the larger magnitude for different-sign addition, choosing the left sign
+on a tie. -/
 def machineSignedDifferentSign (word : List Bool) : List Bool :=
   machineIfHead (machineSignedLeftAbsGe word)
     (machineSignedLeftSign word) (machineSignedRightSign word)
@@ -86,13 +102,16 @@ def machineIntegerAddCode (word : List Bool) : List Bool :=
     (pair (machineIntegerSignedMagnitude (machinePairFirst word))
       (machineIntegerSignedMagnitude (machinePairSecond word)))
 
+/-- Multiplies the two input magnitudes using binary multiplication. -/
 def machineSignedAbsProduct (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machineSignedLeftAbs word) (machineSignedRightAbs word))
 
+/-- Computes the product sign by exclusive-or of the input signs. -/
 def machineSignedProductSign (word : List Bool) : List Bool :=
   machineXorBit (machineSignedLeftSign word) (machineSignedRightSign word)
 
+/-- Combines the product sign and magnitude into a canonical integer code. -/
 def machineSignedMagnitudeMul (word : List Bool) : List Bool :=
   machineCanonicalIntegerFromSignedAbs
     (pair (machineSignedProductSign word) (machineSignedAbsProduct word))

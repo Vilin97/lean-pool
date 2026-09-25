@@ -23,12 +23,15 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the matrix-dimension ruler from the optimizer result for greedy row matching. -/
 def machineMatchingDimensionRuler (optimizer : List Bool) : List Bool :=
   machineCertificateDimensionUnary optimizer
 
+/-- Encodes all candidate row indices in increasing order. -/
 def machineMatchingForwardRange (optimizer : List Bool) : List Bool :=
   machineUnaryRangeCode (machineMatchingDimensionRuler optimizer)
 
+/-- Reverses the candidate-row list for the greedy scan order. -/
 def machineMatchingReverseRange (optimizer : List Bool) : List Bool :=
   machineListReverse (machineMatchingForwardRange optimizer)
 
@@ -72,106 +75,133 @@ theorem machineMatchingReverseRange_mem_FP :
 def machineMatchingInnerFirstRow (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the initial selected pairs and optimizer payload from an inner matching query. -/
 def machineMatchingInnerRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the initially selected row pairs from an inner matching query. -/
 def machineMatchingInnerSelectedInput (word : List Bool) : List Bool :=
   machinePairFirst (machineMatchingInnerRest word)
 
+/-- Extracts the optimizer result from an inner matching query. -/
 def machineMatchingInnerOptimizer (word : List Bool) : List Bool :=
   machinePairSecond (machineMatchingInnerRest word)
 
+/-- Encodes an inner matching state as remaining candidates, selected pairs, and source query. -/
 def machineMatchingInnerPack
     (remaining selected source : List Bool) : List Bool :=
   pair remaining (pair selected source)
 
+/-- Extracts the unprocessed second-row candidates from the inner matching state. -/
 def machineMatchingInnerRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the currently selected row pairs from the inner matching state. -/
 def machineMatchingInnerSelected (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the original inner matching query from the state. -/
 def machineMatchingInnerSource (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Reads the first unprocessed second-row candidate. -/
 def machineMatchingInnerCurrentSecondRow (state : List Bool) : List Bool :=
   machineListHead (machineMatchingInnerRemaining state)
 
+/-- Tests whether the fixed first-row index is smaller than the current second-row index. -/
 def machineMatchingInnerFirstLessSecondBit (state : List Bool) : List Bool :=
   machineBinaryNatLtBit
     (pair (machineLengthBits
         (machineMatchingInnerFirstRow (machineMatchingInnerSource state)))
       (machineLengthBits (machineMatchingInnerCurrentSecondRow state)))
 
+/-- Packages the current row pair and optimizer result for certified eligibility testing. -/
 def machineMatchingInnerEligibilityInput (state : List Bool) : List Bool :=
   pair (machineMatchingInnerFirstRow (machineMatchingInnerSource state))
     (pair (machineMatchingInnerCurrentSecondRow state)
       (machineMatchingInnerOptimizer (machineMatchingInnerSource state)))
 
+/-- Tests certified eligibility of the current row pair. -/
 def machineMatchingInnerEligibleBit (state : List Bool) : List Bool :=
   machineCertifiedRowPairEligibilityBit
     (machineMatchingInnerEligibilityInput state)
 
+/-- Packages the current row pair and selected pairs for a disjointness test. -/
 def machineMatchingInnerDisjointInput (state : List Bool) : List Bool :=
   pair (machineMatchingInnerFirstRow (machineMatchingInnerSource state))
     (pair (machineMatchingInnerCurrentSecondRow state)
       (machineMatchingInnerSelected state))
 
+/-- Tests whether the current row pair is disjoint from all selected pairs. -/
 def machineMatchingInnerDisjointBit (state : List Bool) : List Bool :=
   machineRowPairDisjointBit (machineMatchingInnerDisjointInput state)
 
+/-- Selects a candidate only when its rows are ordered, it is certified eligible, and it is
+disjoint. -/
 def machineMatchingInnerSelectBit (state : List Bool) : List Bool :=
   machineAndBit (machineMatchingInnerFirstLessSecondBit state)
     (machineAndBit (machineMatchingInnerEligibleBit state)
       (machineMatchingInnerDisjointBit state))
 
+/-- Prepends the current row pair to the encoded selected-pair list. -/
 def machineMatchingInnerSelectedCandidate (state : List Bool) : List Bool :=
   pair (pair (machineMatchingInnerFirstRow (machineMatchingInnerSource state))
       (machineMatchingInnerCurrentSecondRow state))
     (machineMatchingInnerSelected state)
 
+/-- Bounds inner matching state by twice expanding the query paired with its reverse row range. -/
 def machineMatchingInnerInputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth (machineBinaryMulWidth
     (pair word (machineMatchingReverseRange
       (machineMatchingInnerOptimizer word))))
 
+/-- Reads the inner state bound derived from the stored source query. -/
 def machineMatchingInnerBound (state : List Bool) : List Bool :=
   machineMatchingInnerInputBound (machineMatchingInnerSource state)
 
+/-- Truncates the candidate selected-pair list to the inner state bound. -/
 def machineMatchingInnerSelectedCandidateClamped
     (state : List Bool) : List Bool :=
   (machineMatchingInnerSelectedCandidate state).take
     (machineMatchingInnerBound state).length
 
+/-- Uses the bounded candidate list when the selection test succeeds, retaining the old list
+otherwise. -/
 def machineMatchingInnerNextSelected (state : List Bool) : List Bool :=
   machineIfHead (machineMatchingInnerSelectBit state)
     (machineMatchingInnerSelectedCandidateClamped state)
     (machineMatchingInnerSelected state)
 
+/-- Consumes one second-row candidate and conditionally updates the selected pairs. -/
 def machineMatchingInnerProcess (state : List Bool) : List Bool :=
   machineMatchingInnerPack
     (machineListTail (machineMatchingInnerRemaining state))
     (machineMatchingInnerNextSelected state)
     (machineMatchingInnerSource state)
 
+/-- Processes the next second-row candidate, leaving an exhausted inner scan fixed. -/
 def machineMatchingInnerStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineMatchingInnerRemaining state) state
     (machineMatchingInnerProcess state)
 
+/-- Initializes the inner scan with reverse-ordered candidates and the supplied selected pairs. -/
 def machineMatchingInnerInit (word : List Bool) : List Bool :=
   machineMatchingInnerPack
     (machineMatchingReverseRange (machineMatchingInnerOptimizer word))
     (machineMatchingInnerSelectedInput word) word
 
+/-- Packs three copies of the inner bound to bound the complete encoded state. -/
 def machineMatchingInnerWidth (word : List Bool) : List Bool :=
   let bound := machineMatchingInnerInputBound word
   machineMatchingInnerPack bound bound bound
 
+/-- Runs the inner matching scan once per row of the optimizer matrix. -/
 def machineMatchingInnerFinalState (word : List Bool) : List Bool :=
   (machineMatchingInnerStep)^[(machineMatchingDimensionRuler
       (machineMatchingInnerOptimizer word)).length]
     (machineMatchingInnerInit word)
 
+/-- Extracts the selected-pair list after the complete inner scan. -/
 def machineMatchingInnerOutputSelected (word : List Bool) : List Bool :=
   machineMatchingInnerSelected (machineMatchingInnerFinalState word)
 
@@ -329,6 +359,7 @@ theorem machineMatchingInnerWidth_mem_FP : machineMatchingInnerWidth ∈ FP :=
         (machineMatchingInnerPack remaining selected source) = source := by
   simp [machineMatchingInnerSource, machineMatchingInnerPack]
 
+/-- Bounds the inner scan's remaining and selected lists while preserving its source query. -/
 def MachineMatchingInnerStateBound (word state : List Bool) : Prop :=
   let B := (machineMatchingInnerInputBound word).length
   state = machineMatchingInnerPack (machineMatchingInnerRemaining state)
@@ -453,6 +484,8 @@ theorem machineMatchingInnerOutputSelected_mem_FP :
 
 /-! ## Canonical one-step facts -/
 
+/-- Encodes the fixed first row, initial selected pairs, matrix, and potentials for an inner
+scan. -/
 def matchingInnerMachineInput {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (R C : Fin n → ℚ)
     (i : Fin n) (selected : List (Fin n × Fin n)) : List Bool :=
@@ -941,58 +974,75 @@ theorem machineMatchingInnerIterate_semantics {n : ℕ}
 
 /-! ## The outer scan over first rows -/
 
+/-- Encodes an outer matching state as remaining first rows, selected pairs, and optimizer
+source. -/
 def machineMatchingOuterPack
     (remaining selected source : List Bool) : List Bool :=
   pair remaining (pair selected source)
 
+/-- Extracts the unprocessed first-row candidates from the outer matching state. -/
 def machineMatchingOuterRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the selected row pairs from the outer matching state. -/
 def machineMatchingOuterSelected (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the optimizer result stored in the outer matching state. -/
 def machineMatchingOuterSource (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Reads the first unprocessed first-row candidate. -/
 def machineMatchingOuterCurrentFirstRow (state : List Bool) : List Bool :=
   machineListHead (machineMatchingOuterRemaining state)
 
+/-- Builds an inner scan query from the current first row, selected pairs, and optimizer result. -/
 def machineMatchingOuterInnerInput (state : List Bool) : List Bool :=
   pair (machineMatchingOuterCurrentFirstRow state)
     (pair (machineMatchingOuterSelected state)
       (machineMatchingOuterSource state))
 
+/-- Runs the inner scan to obtain the next untruncated selected-pair list. -/
 def machineMatchingOuterNextSelectedRaw (state : List Bool) : List Bool :=
   machineMatchingInnerOutputSelected (machineMatchingOuterInnerInput state)
 
+/-- Bounds the outer scan by three width expansions of the optimizer paired with its reverse row
+range. -/
 def machineMatchingOuterInputBound (optimizer : List Bool) : List Bool :=
   machineBinaryMulWidth (machineBinaryMulWidth (machineBinaryMulWidth
     (pair optimizer (machineMatchingReverseRange optimizer))))
 
+/-- Reads the outer state bound derived from the stored optimizer result. -/
 def machineMatchingOuterBound (state : List Bool) : List Bool :=
   machineMatchingOuterInputBound (machineMatchingOuterSource state)
 
+/-- Truncates the inner scan's selected-pair result to the outer state bound. -/
 def machineMatchingOuterNextSelected (state : List Bool) : List Bool :=
   (machineMatchingOuterNextSelectedRaw state).take
     (machineMatchingOuterBound state).length
 
+/-- Consumes one first-row candidate and stores the bounded result of its inner scan. -/
 def machineMatchingOuterProcess (state : List Bool) : List Bool :=
   machineMatchingOuterPack
     (machineListTail (machineMatchingOuterRemaining state))
     (machineMatchingOuterNextSelected state)
     (machineMatchingOuterSource state)
 
+/-- Processes the next first row, leaving an exhausted outer scan fixed. -/
 def machineMatchingOuterStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineMatchingOuterRemaining state) state
     (machineMatchingOuterProcess state)
 
+/-- Initializes the outer scan with reverse-ordered row candidates and no selected pairs. -/
 def machineMatchingOuterInit (optimizer : List Bool) : List Bool :=
   machineMatchingOuterPack (machineMatchingReverseRange optimizer) [] optimizer
 
+/-- Packs three copies of the outer bound to bound the complete encoded state. -/
 def machineMatchingOuterWidth (optimizer : List Bool) : List Bool :=
   let bound := machineMatchingOuterInputBound optimizer
   machineMatchingOuterPack bound bound bound
 
+/-- Runs the outer matching scan once per row of the optimizer matrix. -/
 def machineMatchingOuterFinalState (optimizer : List Bool) : List Bool :=
   (machineMatchingOuterStep)^[(machineMatchingDimensionRuler optimizer).length]
     (machineMatchingOuterInit optimizer)
@@ -1092,6 +1142,7 @@ theorem machineMatchingOuterWidth_mem_FP :
         (machineMatchingOuterPack remaining selected source) = source := by
   simp [machineMatchingOuterSource, machineMatchingOuterPack]
 
+/-- Bounds the outer scan's remaining and selected lists while preserving the optimizer source. -/
 def MachineMatchingOuterStateBound (optimizer state : List Bool) : Prop :=
   let B := (machineMatchingOuterInputBound optimizer).length
   state = machineMatchingOuterPack (machineMatchingOuterRemaining state)
@@ -1199,12 +1250,15 @@ theorem machineGreedyMatchingSelected_mem_FP :
 
 /-! ## Exact outer-scan semantics -/
 
+/-- Scans second-row candidates in reverse order for a fixed first row and current selected
+pairs. -/
 def certifiedGreedyOuterStep {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ)
     (selected : List (Fin n × Fin n)) (i : Fin n) :
     List (Fin n × Fin n) :=
   certifiedGreedyOrderedScan X i selected (List.finRange n).reverse
 
+/-- Folds the certified outer matching step over the supplied list of first-row candidates. -/
 def certifiedGreedyOuterScan {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ)
     (selected : List (Fin n × Fin n)) (is : List (Fin n)) :
@@ -1370,6 +1424,8 @@ theorem certifiedGreedyOuterScan_take_succ {n : ℕ}
           (is.take k ++ [is[k]]) := congrArg _ htake
     _ = _ := by rw [List.foldl_append]; rfl
 
+/-- Encodes the outer scan after `k` first rows with its remaining rows and greedily selected
+pairs. -/
 def machineMatchingOuterSemanticState {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (R C : Fin n → ℚ)
     (is : List (Fin n)) (k : ℕ) : List Bool :=
@@ -1462,6 +1518,7 @@ theorem machineMatchingOuterIterate_semantics {n : ℕ}
 
 /-! ## Identification with the mathematical greedy matching -/
 
+/-- Extracts the two ordered endpoints of a typed row pair. -/
 def rowPairEndpoints {n : ℕ} (q : RowPair n) : Fin n × Fin n :=
   (rowPairRow q 0, rowPairRow q 1)
 
@@ -1558,6 +1615,7 @@ theorem certifiedGreedyOrderedStep_map_endpoints {n : ℕ}
       rw [ite_eq_right h, ite_eq_right htyped]
   · simp [certifiedGreedyOrderedStep, certifiedGreedyTypedStep, hij]
 
+/-- Folds the typed greedy selection step over a list of second-row candidates. -/
 def certifiedGreedyTypedInnerScan {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (i : Fin n)
     (selected : List (RowPair n)) (js : List (Fin n)) : List (RowPair n) :=
@@ -1577,11 +1635,13 @@ theorem certifiedGreedyOrderedScan_map_endpoints {n : ℕ}
         certifiedGreedyOrderedStep_map_endpoints]
       exact ih (certifiedGreedyTypedStep X i selected j)
 
+/-- Runs the typed inner scan over all second rows in reverse order. -/
 def certifiedGreedyTypedOuterStep {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ)
     (selected : List (RowPair n)) (i : Fin n) : List (RowPair n) :=
   certifiedGreedyTypedInnerScan X i selected (List.finRange n).reverse
 
+/-- Folds the typed outer scan over the supplied first-row candidates. -/
 def certifiedGreedyTypedOuterScan {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ)
     (selected : List (RowPair n)) (is : List (Fin n)) : List (RowPair n) :=
@@ -1604,18 +1664,23 @@ theorem certifiedGreedyOuterScan_map_endpoints {n : ℕ}
       rw [certifiedGreedyOrderedScan_map_endpoints]
       exact ih (certifiedGreedyTypedOuterStep X selected i)
 
+/-- Constructs a typed row pair when the first index is smaller, returning none otherwise. -/
 def canonicalRowPairCandidate {n : ℕ} (i j : Fin n) : Option (RowPair n) :=
   if hij : i < j then some (rowPairOfLT i j hij) else none
 
+/-- Tests whether a typed row pair has a certified core pair at the explicit scale, threshold,
+and precision. -/
 def certifiedRowPairEligibleBit {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (q : RowPair n) : Bool :=
   decide (HasCertifiedCorePair (explicitRegularizationScale n) X
     explicitKappa (directedPairCostPrecision n) q)
 
+/-- Prepends a row pair when it is disjoint from every pair already selected. -/
 def greedyRowListStep {n : ℕ}
     (selected : List (RowPair n)) (q : RowPair n) : List (RowPair n) :=
   if ∀ r ∈ selected, Disjoint q.1 r.1 then q :: selected else selected
 
+/-- Adds a certified eligible row pair to the greedy list when disjointness permits. -/
 def certifiedGreedyEdgeStep {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ)
     (selected : List (RowPair n)) (q : RowPair n) : List (RowPair n) :=
@@ -1723,6 +1788,7 @@ theorem explicitThresholdRowPairsList_eq_certifiedFilter {n : ℕ}
   · simp [explicitCertifiedRowWeight, certifiedConstantRowWeight,
       certifiedRowPairEligibleBit, explicitGamma, h]
 
+/-- Inserts a row pair into a finite matching when it is disjoint from every selected pair. -/
 def greedyRowFinsetStep {n : ℕ}
     (selected : Finset (RowPair n)) (q : RowPair n) : Finset (RowPair n) :=
   if ∀ r ∈ selected, Disjoint q.1 r.1 then insert q selected else selected

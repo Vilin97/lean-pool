@@ -29,31 +29,40 @@ open Complexity
 
 /-! ## A normalized recovered-matrix entry -/
 
+/-- Extracts the unary row ruler from an executable affine matrix-entry request. -/
 def machineExecutableMatrixEntryRow (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the payload following the row ruler of an executable matrix-entry request. -/
 def machineExecutableMatrixEntryRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the unary column ruler from an executable matrix-entry request. -/
 def machineExecutableMatrixEntryColumn (word : List Bool) : List Bool :=
   machinePairFirst (machineExecutableMatrixEntryRest word)
 
+/-- Extracts the base dimension and point payload following the requested matrix indices. -/
 def machineExecutableMatrixEntryPayload (word : List Bool) : List Bool :=
   machinePairSecond (machineExecutableMatrixEntryRest word)
 
+/-- Extracts the base-dimension ruler from an executable matrix-entry payload. -/
 def machineExecutableMatrixEntryBaseDimension
     (word : List Bool) : List Bool :=
   machinePairFirst (machineExecutableMatrixEntryPayload word)
 
+/-- Extracts the encoded free-coordinate point from an executable matrix-entry payload. -/
 def machineExecutableMatrixEntryPoint (word : List Bool) : List Bool :=
   machinePairSecond (machineExecutableMatrixEntryPayload word)
 
+/-- Reorders the base dimension, row, column, and point into the input layout expected by the
+affine-entry machine. -/
 def machineExecutableMatrixEntryRawInput (word : List Bool) : List Bool :=
   pair (machineExecutableMatrixEntryBaseDimension word)
     (pair (machineExecutableMatrixEntryRow word)
       (pair (machineExecutableMatrixEntryColumn word)
         (machineExecutableMatrixEntryPoint word)))
 
+/-- Evaluates the requested affine matrix entry and normalizes its raw rational code. -/
 def machineExecutableMatrixEntryCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineBetheAffineEntryRawCode
@@ -131,18 +140,24 @@ theorem machineExecutableMatrixEntryCode_mem_FP :
 
 /-! ## Uniform matrix-output program -/
 
+/-- Removes one element from the matrix dimension ruler to obtain the optimizer base dimension. -/
 def machineExecutableOptimizerBaseDimensionUnary
     (word : List Bool) : List Bool :=
   (machineMatrixDimensionUnary word).tail
 
+/-- Runs the explicit Bethe optimizer point machine on the input matrix word. -/
 def machineExecutableOptimizerPointCode
     (word : List Bool) : List Bool :=
   machineExplicitBetheOptimizerPointCode word
 
+/-- Drops the final encoded coordinate from the optimizer point to obtain the base point used
+for affine matrix reconstruction. -/
 def machineExecutableOptimizerBasePointCode
     (word : List Bool) : List Bool :=
   machineBinaryListInit (machineExecutableOptimizerPointCode word)
 
+/-- Packages the affine dimension ruler and optimizer base-point vector for matrix
+reconstruction. -/
 def machineExecutableOptimizerMatrixPayload
     (word : List Bool) : List Bool :=
   pair (machineExecutableOptimizerBaseDimensionUnary word)
@@ -157,23 +172,28 @@ def machineExecutableOptimizerMatrixSeed
     (pair [] (pair (rawRatBinaryCode (rawRatOfRat 0))
       (pair word (machineExecutableOptimizerBasePointCode word))))
 
+/-- Bounds reconstructed matrix entries by twice expanding a seed padded with 1024 bits. -/
 def machineExecutableOptimizerMatrixBound
     (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 2
     (machineExecutableOptimizerMatrixSeed word ++
       List.replicate 1024 false)
 
+/-- Packages the matrix-order ruler, entry bound, and reconstruction payload for matrix
+generation. -/
 def machineExecutableOptimizerMatrixGeneratorInput
     (word : List Bool) : List Bool :=
   pair (machineMatrixDimensionUnary word)
     (pair (machineExecutableOptimizerMatrixBound word)
       (machineExecutableOptimizerMatrixPayload word))
 
+/-- Generates the encoded rows of the optimizer's reconstructed matrix. -/
 def machineExecutableOptimizerMatrixRowsCode
     (word : List Bool) : List Bool :=
   machineUnaryMatrixGeneratorRowsCode machineExecutableMatrixEntryCode
     (machineExecutableOptimizerMatrixGeneratorInput word)
 
+/-- Pairs the binary matrix dimension with the generated matrix rows. -/
 def machineExecutableOptimizerMatrixCode
     (word : List Bool) : List Bool :=
   pair (machineMatrixDimensionWord word)
@@ -459,34 +479,45 @@ column, and then the immutable directed-objective seed. -/
 def machineExecutablePotentialIndex (word : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond word)
 
+/-- Extracts the objective-evaluation payload from a potential-entry query. -/
 def machineExecutablePotentialPayload (word : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond word)
 
+/-- Builds a gradient-entry query from supplied row and column extractors and the common
+payload. -/
 def machineExecutablePotentialGradientInput
     (row column : List Bool → List Bool) (word : List Bool) : List Bool :=
   pair (row word)
     (pair (column word) (machineExecutablePotentialPayload word))
 
+/-- Queries the negative gradient at the requested row and column zero for row-potential
+recovery. -/
 def machineExecutableRowPotentialGradientInput
     (word : List Bool) : List Bool :=
   machineExecutablePotentialGradientInput machineExecutablePotentialIndex
     (fun _ => []) word
 
+/-- Queries the negative gradient at row zero and the requested column for column-potential
+recovery. -/
 def machineExecutableColumnPotentialGradientInput
     (word : List Bool) : List Bool :=
   machineExecutablePotentialGradientInput (fun _ => [])
     machineExecutablePotentialIndex word
 
+/-- Queries the negative gradient at matrix entry `(0, 0)`. -/
 def machineExecutableOriginGradientInput
     (word : List Bool) : List Bool :=
   machineExecutablePotentialGradientInput (fun _ => []) (fun _ => []) word
 
+/-- Computes the encoded constant `2 + tau` from the potential-evaluation payload. -/
 def machineExecutableTwoPlusTauRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (rawRatBinaryCode rawOptimizerTwo)
       (machineDirectedObjectiveSumTau
         (machineExecutablePotentialPayload word)))
 
+/-- Computes the raw row potential as `2 + tau` minus the directed gradient value in column
+zero. -/
 def machineExecutableRowPotentialRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair
@@ -495,6 +526,7 @@ def machineExecutableRowPotentialRawCode (word : List Bool) : List Bool :=
           (machineExecutableRowPotentialGradientInput word)))
       (machineExecutableTwoPlusTauRawCode word))
 
+/-- Computes the raw column potential as the origin gradient minus the gradient in row zero. -/
 def machineExecutableColumnPotentialRawCode (word : List Bool) : List Bool :=
   machineRawRatSubCode
     (pair
@@ -503,10 +535,12 @@ def machineExecutableColumnPotentialRawCode (word : List Bool) : List Bool :=
       (machineDirectedNegativeGradientEntryRawCode
         (machineExecutableColumnPotentialGradientInput word)))
 
+/-- Normalizes a raw row potential into a rational vector-entry code. -/
 def machineExecutableRowPotentialEntryCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineExecutableRowPotentialRawCode word)
 
+/-- Normalizes a raw column potential into a rational vector-entry code. -/
 def machineExecutableColumnPotentialEntryCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineExecutableColumnPotentialRawCode word)
@@ -699,10 +733,13 @@ theorem machineExecutableColumnPotentialEntryCode_mem_FP :
 
 /-! ## Canonical directed-gradient seed -/
 
+/-- Normalizes the optimizer's regularization parameter into a rational entry code. -/
 def machineExecutableOptimizerTauCanonicalCode
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode (machineOptimizerTauRawCode word)
 
+/-- Packages dimension, precision, regularization, source matrix, and base point for gradient
+evaluation. -/
 def machineExecutableOptimizerGradientSeed
     (word : List Bool) : List Bool :=
   pair (machineExecutableOptimizerBaseDimensionUnary word)
@@ -772,34 +809,41 @@ theorem machineExecutableOptimizerGradientSeed_mem_FP :
 
 /-! ## Bounded repeated-row generators for the potential vectors -/
 
+/-- Bounds potential entries by six width expansions of a gradient seed padded with 4096 bits. -/
 def machineExecutableOptimizerPotentialBound
     (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 6
     (machineExecutableOptimizerGradientSeed word ++
       List.replicate 4096 false)
 
+/-- Packages the matrix-order ruler, potential-width bound, and gradient seed for potential
+generation. -/
 def machineExecutableOptimizerPotentialGeneratorInput
     (word : List Bool) : List Bool :=
   pair (machineMatrixDimensionUnary word)
     (pair (machineExecutableOptimizerPotentialBound word)
       (machineExecutableOptimizerGradientSeed word))
 
+/-- Generates encoded rows using the row-potential entry evaluator. -/
 def machineExecutableOptimizerRowPotentialRowsCode
     (word : List Bool) : List Bool :=
   machineUnaryMatrixGeneratorRowsCode
     machineExecutableRowPotentialEntryCode
     (machineExecutableOptimizerPotentialGeneratorInput word)
 
+/-- Generates encoded rows using the column-potential entry evaluator. -/
 def machineExecutableOptimizerColumnPotentialRowsCode
     (word : List Bool) : List Bool :=
   machineUnaryMatrixGeneratorRowsCode
     machineExecutableColumnPotentialEntryCode
     (machineExecutableOptimizerPotentialGeneratorInput word)
 
+/-- Extracts the first generated row as the encoded vector of row potentials. -/
 def machineExecutableOptimizerRowPotentialCode
     (word : List Bool) : List Bool :=
   machineListHead (machineExecutableOptimizerRowPotentialRowsCode word)
 
+/-- Extracts the first generated row as the encoded vector of column potentials. -/
 def machineExecutableOptimizerColumnPotentialCode
     (word : List Bool) : List Bool :=
   machineListHead (machineExecutableOptimizerColumnPotentialRowsCode word)
@@ -850,6 +894,8 @@ theorem machineExecutableOptimizerColumnPotentialCode_mem_FP :
 
 /-! ## Ordinary bit bounds for the potential output -/
 
+/-- The raw row potential `2 + tau - G(i,0)` obtained from the directed negative-gradient
+approximation. -/
 def rawExecutableRowPotential {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ) (i : Fin (m + 1)) : RawRat :=
@@ -857,6 +903,8 @@ def rawExecutableRowPotential {m : ℕ}
       (betheAffineMatrixQ y i 0) p).neg.add
     (rawOptimizerTwo.add (rawRatOfRat tau))
 
+/-- The raw column potential `G(0,0) - G(0,j)` obtained from the directed negative-gradient
+approximation. -/
 def rawExecutableColumnPotential {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ) (j : Fin (m + 1)) : RawRat :=
@@ -1214,6 +1262,8 @@ theorem executableColumnPotential_rowsCode_fits_bound {m : ℕ}
 
 /-! ## Complete optimizer output word -/
 
+/-- Collects the scanned optimizer's matrix, row potentials, and column potentials into one
+output. -/
 def executableScannedOptimizerOutput {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) :
     RationalOptimizerOutput (m + 1) where
@@ -1221,6 +1271,7 @@ def executableScannedOptimizerOutput {m : ℕ}
   rowPotential := executableScannedBetheOptimizerRowPotential A
   columnPotential := executableScannedBetheOptimizerColumnPotential A
 
+/-- Encodes the executable scanned optimizer's matrix and both potential vectors. -/
 def machineExecutableScannedOptimizerOutputCode
     (word : List Bool) : List Bool :=
   pair (machineExecutableOptimizerMatrixCode word)
@@ -1252,6 +1303,8 @@ def executableLargeOptimizerOutput (m : ℕ)
     RationalOptimizerOutput (m + 2) :=
   executableScannedOptimizerOutput (m := m + 1) B
 
+/-- Requires a string function to encode the specified optimizer output on positive matrices of
+order at least two. -/
 def ExecutableLargeOptimizerStringRealizes
     (F : List Bool → List Bool) : Prop :=
   ∀ (m : ℕ) (B : Matrix (Fin (m + 2)) (Fin (m + 2)) ℚ),

@@ -25,6 +25,8 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Adds one to a negative integer payload to recover the magnitude represented by
+`Int.negSucc`. -/
 def machineIntegerNegativeAbsBits (word : List Bool) : List Bool :=
   machineBinaryAddBits (pair word.tail [true])
 
@@ -32,6 +34,7 @@ def machineIntegerNegativeAbsBits (word : List Bool) : List Bool :=
 def machineIntegerNatAbsBits (word : List Bool) : List Bool :=
   machineIfHead word (machineIntegerNegativeAbsBits word) word.tail
 
+/-- Subtracts one from a magnitude to obtain the payload for `Int.negSucc`. -/
 def machineIntegerNegativePayloadBits (absBits : List Bool) : List Bool :=
   machineBinarySubBits (pair absBits [true])
 

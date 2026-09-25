@@ -23,53 +23,69 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes factorial state as accumulated product, next factor, and width bound. -/
 def machineFactorialPack (acc next bound : List Bool) : List Bool :=
   pair acc (pair next bound)
 
+/-- Extracts the accumulated product from a factorial state. -/
 def machineFactorialAcc (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the next factor from a factorial state. -/
 def machineFactorialNext (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the width-bound ruler stored in a factorial state. -/
 def machineFactorialBound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Increments the next factorial factor in binary. -/
 def machineFactorialSuccessor (state : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineFactorialNext state) (1 : ℕ).bits)
 
+/-- Multiplies the accumulated product by the next factorial factor. -/
 def machineFactorialCandidate (state : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machineFactorialAcc state) (machineFactorialNext state))
 
+/-- Truncates the candidate factorial product to the stored width bound. -/
 def machineFactorialNextAcc (state : List Bool) : List Bool :=
   (machineFactorialCandidate state).take (machineFactorialBound state).length
 
+/-- Truncates the incremented factorial counter to the stored width bound. -/
 def machineFactorialNextCounter (state : List Bool) : List Bool :=
   (machineFactorialSuccessor state).take (machineFactorialBound state).length
 
+/-- Updates the bounded factorial product and counter while retaining the width ruler. -/
 def machineFactorialStep (state : List Bool) : List Bool :=
   machineFactorialPack (machineFactorialNextAcc state)
     (machineFactorialNextCounter state) (machineFactorialBound state)
 
+/-- Uses the binary-multiplication width constructor to bound factorial state components. -/
 def machineFactorialInputBound (ruler : List Bool) : List Bool :=
   machineBinaryMulWidth ruler
 
+/-- Initializes the factorial accumulator and next factor to one with the input-derived width
+bound. -/
 def machineFactorialInit (ruler : List Bool) : List Bool :=
   machineFactorialPack (1 : ℕ).bits (1 : ℕ).bits
     (machineFactorialInputBound ruler)
 
+/-- Packs three copies of the input bound to bound the encoded factorial state. -/
 def machineFactorialWidth (ruler : List Bool) : List Bool :=
   let bound := machineFactorialInputBound ruler
   machineFactorialPack bound bound bound
 
+/-- Runs one factorial step per bit of the unary input ruler. -/
 def machineFactorialFinalState (ruler : List Bool) : List Bool :=
   (machineFactorialStep)^[ruler.length] (machineFactorialInit ruler)
 
+/-- Extracts the factorial accumulator after all ruler-specified iterations. -/
 def machineFactorialBits (ruler : List Bool) : List Bool :=
   machineFactorialAcc (machineFactorialFinalState ruler)
 
+/-- Encodes the final factorial accumulator as a nonnegative raw rational with denominator one. -/
 def machineFactorialRawRatCode (ruler : List Bool) : List Bool :=
   pair (false :: machineFactorialBits ruler) (1 : ℕ).bits
 
@@ -146,6 +162,8 @@ theorem machineFactorialWidth_mem_FP :
     machineFactorialBound (machineFactorialPack acc next bound) = bound := by
   simp [machineFactorialBound, machineFactorialPack]
 
+/-- Bounds all three components of a canonically packed factorial state by the input-derived
+width. -/
 def MachineFactorialStateBound (ruler state : List Bool) : Prop :=
   let B := (machineFactorialInputBound ruler).length
   state = machineFactorialPack (machineFactorialAcc state)
@@ -258,6 +276,8 @@ theorem factorial_counter_bits_length_le_bound {n k : ℕ}
   rw [hlength]
   exact hbits.trans <| by nlinarith
 
+/-- Encodes the semantic state after `k` factorial steps, with product `k!` and next factor `k +
+1`. -/
 def machineFactorialSemanticState (n k : ℕ) : List Bool :=
   machineFactorialPack k.factorial.bits (k + 1).bits
     (machineFactorialInputBound (List.replicate n true))

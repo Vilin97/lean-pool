@@ -26,12 +26,15 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the encoded rational increment from the matrix-addition input. -/
 def machineMatrixAddDeltaInputDelta (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the encoded matrix from the matrix-addition input. -/
 def machineMatrixAddDeltaInputMatrix (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Concatenates twenty copies of the input for the matrix-addition width estimate. -/
 def machineMatrixAddDeltaPadTwenty (word : List Bool) : List Bool :=
   machineRationalRowAddPadSixteen word ++
     machineRationalRowAddPadFour word
@@ -42,43 +45,56 @@ row-machine envelope used in the first implementation. -/
 def machineMatrixAddDeltaInputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth (machineMatrixAddDeltaPadTwenty word)
 
+/-- Encodes matrix-addition state as remaining rows, reversed output, increment, dimension, and
+bound. -/
 def machineMatrixAddDeltaPack
     (remaining accumulator delta dimension bound : List Bool) : List Bool :=
   pair remaining (pair accumulator (pair delta (pair dimension bound)))
 
+/-- Extracts the unprocessed rows from a matrix-addition state. -/
 def machineMatrixAddDeltaRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the reversed accumulated output rows from a matrix-addition state. -/
 def machineMatrixAddDeltaAccumulator (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the fixed rational increment from the matrix-addition state. -/
 def machineMatrixAddDeltaDelta (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the binary matrix dimension from the matrix-addition state. -/
 def machineMatrixAddDeltaDimension (state : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Extracts the stored width bound from the matrix-addition state. -/
 def machineMatrixAddDeltaBound (state : List Bool) : List Bool :=
   machinePairSecond
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Reads the first unprocessed row of the matrix. -/
 def machineMatrixAddDeltaCurrentRow (state : List Bool) : List Bool :=
   machineListHead (machineMatrixAddDeltaRemaining state)
 
+/-- Adds the fixed rational increment to each entry of the current row. -/
 def machineMatrixAddDeltaOutputRow (state : List Bool) : List Bool :=
   machineRationalRowAdd
     (pair (machineMatrixAddDeltaDelta state)
       (machineMatrixAddDeltaCurrentRow state))
 
+/-- Prepends the incremented row to the reversed output accumulator. -/
 def machineMatrixAddDeltaCandidate (state : List Bool) : List Bool :=
   pair (machineMatrixAddDeltaOutputRow state)
     (machineMatrixAddDeltaAccumulator state)
 
+/-- Truncates the candidate row accumulator to the stored width bound. -/
 def machineMatrixAddDeltaNextAccumulator (state : List Bool) : List Bool :=
   (machineMatrixAddDeltaCandidate state).take
     (machineMatrixAddDeltaBound state).length
 
+/-- Consumes one row and stores its incremented output, preserving the increment, dimension, and
+bound. -/
 def machineMatrixAddDeltaAdvance (state : List Bool) : List Bool :=
   machineMatrixAddDeltaPack
     (machineListTail (machineMatrixAddDeltaRemaining state))
@@ -87,10 +103,13 @@ def machineMatrixAddDeltaAdvance (state : List Bool) : List Bool :=
     (machineMatrixAddDeltaDimension state)
     (machineMatrixAddDeltaBound state)
 
+/-- Processes the next matrix row, leaving exhausted matrix-addition states fixed. -/
 def machineMatrixAddDeltaStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineMatrixAddDeltaRemaining state) state
     (machineMatrixAddDeltaAdvance state)
 
+/-- Initializes matrix addition with the source rows, empty output, increment, dimension, and
+input bound. -/
 def machineMatrixAddDeltaInit (word : List Bool) : List Bool :=
   machineMatrixAddDeltaPack
     (machineMatrixRowsWord (machineMatrixAddDeltaInputMatrix word)) []
@@ -98,15 +117,19 @@ def machineMatrixAddDeltaInit (word : List Bool) : List Bool :=
     (machineMatrixDimensionWord (machineMatrixAddDeltaInputMatrix word))
     (machineMatrixAddDeltaInputBound word)
 
+/-- Builds an encoded width envelope for the five components of a matrix-addition state. -/
 def machineMatrixAddDeltaWidth (word : List Bool) : List Bool :=
   machineMatrixAddDeltaPack word (machineMatrixAddDeltaInputBound word)
     (machineMatrixAddDeltaInputDelta word) word
     (machineMatrixAddDeltaInputBound word)
 
+/-- Runs matrix addition for one step per input bit. -/
 def machineMatrixAddDeltaFinalState (word : List Bool) : List Bool :=
   (machineMatrixAddDeltaStep)^[word.length]
     (machineMatrixAddDeltaInit word)
 
+/-- Pairs the matrix dimension with the accumulated output rows restored to their original
+order. -/
 def machineMatrixAddDeltaEntries (word : List Bool) : List Bool :=
   let state := machineMatrixAddDeltaFinalState word
   pair (machineMatrixAddDeltaDimension state)
@@ -261,6 +284,7 @@ theorem machineMatrixAddDeltaWidth_mem_FP :
       (machineMatrixAddDeltaPack a b c d e) = e := by
   simp [machineMatrixAddDeltaBound, machineMatrixAddDeltaPack]
 
+/-- Bounds matrix-addition state lengths and preserves the input increment and width bound. -/
 def MachineMatrixAddDeltaStateBound (word state : List Bool) : Prop :=
   state = machineMatrixAddDeltaPack
       (machineMatrixAddDeltaRemaining state)
@@ -540,15 +564,19 @@ theorem machineMatrixAddDelta_outputRows_length_le_bound {n : ℕ}
 
 /-! ## Exact semantics -/
 
+/-- Adds the raw-rational increment to every entry of every supplied row. -/
 def rationalMatrixAddRows (delta : RawRat)
     (rows : List (List ℚ)) : List (List ℚ) :=
   rows.map (rationalRowAddValues delta)
 
+/-- Encodes a square rational matrix together with the raw-rational increment to add. -/
 def machineMatrixAddDeltaCanonicalInput {n : ℕ}
     (delta : RawRat) (A : Matrix (Fin n) (Fin n) ℚ) : List Bool :=
   pair (rawRatBinaryCode delta)
     (rationalMatrixBinaryEncoding.encode ⟨n, A⟩)
 
+/-- Encodes matrix addition after `k` rows, with untouched remaining rows and reversed processed
+output. -/
 def machineMatrixAddDeltaSemanticState
     (word dimension : List Bool) (delta : RawRat)
     (rows : List (List ℚ)) (k : ℕ) : List Bool :=
@@ -750,6 +778,7 @@ theorem machineMatrixAddDeltaFinalState_encode {n : ℕ}
     binaryListCode]
   rw [htakeAll, machineMatrixAddDelta_done_iterate]
 
+/-- Adds `delta.value` to every entry of a square rational matrix. -/
 def rationalMatrixAddDeltaSemantic {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℚ) (delta : RawRat) :
     Matrix (Fin n) (Fin n) ℚ :=

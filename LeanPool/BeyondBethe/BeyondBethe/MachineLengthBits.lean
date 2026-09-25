@@ -22,11 +22,14 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Increments a binary accumulator by one for the word-length counter. -/
 def machineLengthBitsStep (acc : List Bool) : List Bool :=
   machineBinaryAddBits (pair acc [true])
 
+/-- Uses the original input word as the width bound for its binary length counter. -/
 def machineLengthBitsWidth (word : List Bool) : List Bool := word
 
+/-- Computes the binary word length by iterating increment from zero once per input bit. -/
 def machineLengthBits (word : List Bool) : List Bool :=
   (machineLengthBitsStep)^[word.length] []
 

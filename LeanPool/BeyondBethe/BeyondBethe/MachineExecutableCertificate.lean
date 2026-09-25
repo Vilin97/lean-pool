@@ -83,6 +83,8 @@ def ExecutableCertificateEvaluatorStringRealizesOnPositiveNormalized
             (executableScannedBetheOptimizerRowPotential (m := m + 1) B)
             (executableScannedBetheOptimizerColumnPotential (m := m + 1) B)))
 
+/-- Instantiates the certificate-value machine with the explicit matching-gain code and
+executable exponential guard. -/
 def machineExecutableCertificateValueRawCode : List Bool → List Bool :=
   machineCertificateValueRawCode machineExplicitMatchingGainRawCode
     machineOptimizerCertificateExpGuard

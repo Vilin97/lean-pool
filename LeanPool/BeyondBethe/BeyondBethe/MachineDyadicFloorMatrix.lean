@@ -21,6 +21,7 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes unary precision `p` followed by the rows of the rational square matrix to round. -/
 def dyadicFloorMatrixCanonicalWord {d : ℕ}
     (p : ℕ) (A : Matrix (Fin d) (Fin d) ℚ) : List Bool :=
   pair (List.replicate p true) (rationalSquareMatrixRowsCode A)
@@ -59,6 +60,7 @@ theorem dyadicFloorMatrix_entry_code_length_le {d : ℕ}
     binaryDyadicFloor_eq_dyadicFloor, rawRatOfRat_value] at hcanonical
   exact hcanonical.trans (by nlinarith)
 
+/-- Reuses the rational transpose-vector input bound to bound the dyadic matrix scan. -/
 def machineDyadicFloorMatrixInputBound (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorInputBound word
 
@@ -170,27 +172,35 @@ theorem dyadicFloorMatrix_code_length_le_bound {d : ℕ}
 
 /-! ## Bounded outer row scan -/
 
+/-- Extracts the unary rounding precision from a dyadic matrix request. -/
 def machineDyadicFloorMatrixPrecision (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the encoded matrix rows from a dyadic matrix request. -/
 def machineDyadicFloorMatrixRows (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Rounds every entry of the next unprocessed matrix row using the precision stored in the scan
+payload. -/
 def machineDyadicFloorMatrixCurrentRow (state : List Bool) : List Bool :=
   machineDyadicFloorVectorCode
     (pair (machineRationalTransposeMulVectorStatePayload state)
       (machineListHead
         (machineRationalTransposeMulVectorRemaining state)))
 
+/-- Prepends the newly rounded row to the encoded reverse-order accumulator. -/
 def machineDyadicFloorMatrixCandidate (state : List Bool) : List Bool :=
   pair (machineDyadicFloorMatrixCurrentRow state)
     (machineRationalTransposeMulVectorAccumulator state)
 
+/-- Truncates the candidate row accumulator to the length of the scan bound word. -/
 def machineDyadicFloorMatrixNextAccumulator
     (state : List Bool) : List Bool :=
   (machineDyadicFloorMatrixCandidate state).take
     (machineRationalTransposeMulVectorBound state).length
 
+/-- Drops the processed matrix row and stores the bounded updated accumulator while preserving
+precision and bound. -/
 def machineDyadicFloorMatrixAdvance (state : List Bool) : List Bool :=
   machineRationalTransposeMulVectorPack
     (machineListTail (machineRationalTransposeMulVectorRemaining state))
@@ -198,28 +208,35 @@ def machineDyadicFloorMatrixAdvance (state : List Bool) : List Bool :=
     (machineRationalTransposeMulVectorStatePayload state)
     (machineRationalTransposeMulVectorBound state)
 
+/-- Fixes a matrix scan with no remaining rows and otherwise processes its next row. -/
 def machineDyadicFloorMatrixStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineRationalTransposeMulVectorRemaining state) state
     (machineDyadicFloorMatrixAdvance state)
 
+/-- Initializes the matrix scan with all input rows, an empty accumulator, the requested
+precision, and its input bound. -/
 def machineDyadicFloorMatrixInit (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorPack
     (machineDyadicFloorMatrixRows word) []
     (machineDyadicFloorMatrixPrecision word)
     (machineDyadicFloorMatrixInputBound word)
 
+/-- Packs four copies of the input bound to bound the encoded matrix scan state. -/
 def machineDyadicFloorMatrixWidth (word : List Bool) : List Bool :=
   let bound := machineDyadicFloorMatrixInputBound word
   machineRationalTransposeMulVectorPack bound bound bound bound
 
+/-- Runs the dyadic matrix scan for as many steps as there are bits in the input word. -/
 def machineDyadicFloorMatrixFinalState (word : List Bool) : List Bool :=
   (machineDyadicFloorMatrixStep)^[word.length]
     (machineDyadicFloorMatrixInit word)
 
+/-- Extracts the reversed encoded rounded rows from the final matrix scan state. -/
 def machineDyadicFloorMatrixReversedCode (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorAccumulator
     (machineDyadicFloorMatrixFinalState word)
 
+/-- Reverses the accumulated rounded rows to recover the original matrix row order. -/
 def machineDyadicFloorMatrixCode (word : List Bool) : List Bool :=
   machineListReverse (machineDyadicFloorMatrixReversedCode word)
 
@@ -364,11 +381,15 @@ theorem machineDyadicFloorMatrixCode_mem_FP :
 
 /-! ## Exact scan semantics -/
 
+/-- Takes the first `k` rational matrix rows and applies dyadic floor at precision `p` to every
+entry. -/
 def dyadicFloorMatrixRowsPrefix {d : ℕ}
     (p : ℕ) (A : Matrix (Fin d) (Fin d) ℚ) (k : ℕ) : List (List ℚ) :=
   (rationalMatrixRows A).take k |>.map
     (List.map (dyadicFloor p))
 
+/-- Encodes the remaining matrix rows and reversed rounded prefix after `k` rows, retaining the
+canonical precision and input bound. -/
 def machineDyadicFloorMatrixSemanticState {d : ℕ}
     (p : ℕ) (A : Matrix (Fin d) (Fin d) ℚ) (k : ℕ) : List Bool :=
   let word := dyadicFloorMatrixCanonicalWord p A

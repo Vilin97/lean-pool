@@ -28,50 +28,67 @@ open Complexity
 
 /-! ## Forward scan -/
 
+/-- Extracts the unary target-index ruler from a list-update request. -/
 def machineListUpdateRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the replacement-and-list payload from a list-update request. -/
 def machineListUpdatePayload (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the encoded replacement entry from a list-update request. -/
 def machineListUpdateReplacement (word : List Bool) : List Bool :=
   machinePairFirst (machineListUpdatePayload word)
 
+/-- Extracts the encoded list to update. -/
 def machineListUpdateData (word : List Bool) : List Bool :=
   machinePairSecond (machineListUpdatePayload word)
 
+/-- Applies the binary-multiplication width construction twice to bound the list-update
+computation. -/
 def machineListUpdateInputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth (machineBinaryMulWidth word)
 
+/-- Packs the remaining index ruler, reversed prefix, current suffix, replacement, and bound for
+the update scan. -/
 def machineListUpdateScanPack
     (remaining pref current replacement bound : List Bool) : List Bool :=
   pair remaining (pair pref (pair current (pair replacement bound)))
 
+/-- Extracts the unconsumed unary index ruler from an update scan state. -/
 def machineListUpdateScanRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the reversed processed prefix from an update scan state. -/
 def machineListUpdateScanPrefix (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the current unprocessed list suffix from an update scan state. -/
 def machineListUpdateScanCurrent (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the replacement entry stored in an update scan state. -/
 def machineListUpdateScanReplacement (state : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Extracts the bound word stored in an update scan state. -/
 def machineListUpdateScanBound (state : List Bool) : List Bool :=
   machinePairSecond
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Prepends the current suffix head to the reversed processed prefix. -/
 def machineListUpdateScanPrefixCandidate (state : List Bool) : List Bool :=
   pair (machineListHead (machineListUpdateScanCurrent state))
     (machineListUpdateScanPrefix state)
 
+/-- Truncates the updated reversed prefix to the length of the scan bound. -/
 def machineListUpdateScanNextPrefix (state : List Bool) : List Bool :=
   (machineListUpdateScanPrefixCandidate state).take
     (machineListUpdateScanBound state).length
 
+/-- Consumes one index-ruler bit and one list entry, extending the bounded reversed prefix while
+retaining replacement and bound. -/
 def machineListUpdateScanAdvance (state : List Bool) : List Bool :=
   machineListUpdateScanPack
     (machineListUpdateScanRemaining state).tail
@@ -80,20 +97,26 @@ def machineListUpdateScanAdvance (state : List Bool) : List Bool :=
     (machineListUpdateScanReplacement state)
     (machineListUpdateScanBound state)
 
+/-- Fixes an update scan when either the index ruler or current suffix is exhausted and
+otherwise advances once. -/
 def machineListUpdateScanStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineListUpdateScanRemaining state) state
     (machineIfEmpty (machineListUpdateScanCurrent state) state
       (machineListUpdateScanAdvance state))
 
+/-- Initializes the update scan with the requested index, empty prefix, input list, replacement,
+and computed bound. -/
 def machineListUpdateScanInit (word : List Bool) : List Bool :=
   machineListUpdateScanPack (machineListUpdateRuler word) []
     (machineListUpdateData word) (machineListUpdateReplacement word)
     (machineListUpdateInputBound word)
 
+/-- Packs five copies of the input bound to bound the encoded update-scan state. -/
 def machineListUpdateScanWidth (word : List Bool) : List Bool :=
   let bound := machineListUpdateInputBound word
   machineListUpdateScanPack bound bound bound bound bound
 
+/-- Runs the update scan for the length of the requested unary index ruler. -/
 def machineListUpdateScanFinalState (word : List Bool) : List Bool :=
   (machineListUpdateScanStep)^[(machineListUpdateRuler word).length]
     (machineListUpdateScanInit word)
@@ -250,6 +273,8 @@ theorem machineListUpdate_word_length_le_bound (word : List Bool) :
     List.length_replicate, List.length_append]
   nlinarith
 
+/-- Requires exact update-scan packing and bounds all five field lengths by the computed
+input-bound length. -/
 def MachineListUpdateScanStateBound
     (word state : List Bool) : Prop :=
   let B := (machineListUpdateInputBound word).length
@@ -348,6 +373,8 @@ theorem machineListUpdateScanFinalState_mem_FP :
 
 /-! ## Reverse-prefix rebuild -/
 
+/-- Builds the updated suffix by replacing its head and truncating to the stored bound; an
+exhausted suffix gives the empty word. -/
 def machineListUpdateSeed (word : List Bool) : List Bool :=
   let scan := machineListUpdateScanFinalState word
   machineIfEmpty (machineListUpdateScanCurrent scan) []
@@ -355,46 +382,58 @@ def machineListUpdateSeed (word : List Bool) : List Bool :=
       (machineListTail (machineListUpdateScanCurrent scan))).take
         (machineListUpdateScanBound scan).length)
 
+/-- Packs the reversed prefix, current output, and bound for rebuilding the updated list. -/
 def machineListUpdateRebuildPack
     (pref output bound : List Bool) : List Bool :=
   pair pref (pair output bound)
 
+/-- Extracts the remaining reversed prefix from a list-update rebuild state. -/
 def machineListUpdateRebuildPrefix (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the reconstructed output list from a list-update rebuild state. -/
 def machineListUpdateRebuildOutput (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the stored width bound from a list-update rebuild state. -/
 def machineListUpdateRebuildBound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Prepends the next saved prefix entry to the reconstructed output list. -/
 def machineListUpdateRebuildCandidate (state : List Bool) : List Bool :=
   pair (machineListHead (machineListUpdateRebuildPrefix state))
     (machineListUpdateRebuildOutput state)
 
+/-- Truncates the rebuilt candidate list to the stored width bound. -/
 def machineListUpdateRebuildNextOutput (state : List Bool) : List Bool :=
   (machineListUpdateRebuildCandidate state).take
     (machineListUpdateRebuildBound state).length
 
+/-- Consumes one saved prefix entry and updates the bounded reconstructed list. -/
 def machineListUpdateRebuildAdvance (state : List Bool) : List Bool :=
   machineListUpdateRebuildPack
     (machineListTail (machineListUpdateRebuildPrefix state))
     (machineListUpdateRebuildNextOutput state)
     (machineListUpdateRebuildBound state)
 
+/-- Rebuilds one prefix entry, leaving states with no saved prefix fixed. -/
 def machineListUpdateRebuildStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineListUpdateRebuildPrefix state) state
     (machineListUpdateRebuildAdvance state)
 
+/-- Starts reconstruction from the scanned reversed prefix, updated suffix seed, and stored
+bound. -/
 def machineListUpdateRebuildInit (word : List Bool) : List Bool :=
   let scan := machineListUpdateScanFinalState word
   machineListUpdateRebuildPack (machineListUpdateScanPrefix scan)
     (machineListUpdateSeed word) (machineListUpdateScanBound scan)
 
+/-- Packs three copies of the input-derived bound to bound a rebuild state. -/
 def machineListUpdateRebuildWidth (word : List Bool) : List Bool :=
   let bound := machineListUpdateInputBound word
   machineListUpdateRebuildPack bound bound bound
 
+/-- Runs the rebuild step for the number of iterations specified by the update ruler. -/
 def machineListUpdateRebuildFinalState (word : List Bool) : List Bool :=
   (machineListUpdateRebuildStep)^[(machineListUpdateRuler word).length]
     (machineListUpdateRebuildInit word)
@@ -492,6 +531,7 @@ theorem machineListUpdateRebuildWidth_mem_FP :
       (machineListUpdateRebuildPack a b c) = c := by
   simp [machineListUpdateRebuildBound, machineListUpdateRebuildPack]
 
+/-- Bounds all components of a canonically packed list-update rebuild state. -/
 def MachineListUpdateRebuildStateBound
     (word state : List Bool) : Prop :=
   let B := (machineListUpdateInputBound word).length
@@ -643,12 +683,15 @@ theorem binaryListCode_element_length_le
         omega
       · exact (ih hx).trans (by simp [binaryListCode])
 
+/-- Encodes a unary update index, replacement entry, and original list. -/
 def machineListUpdateCanonicalInput
     {α : Type*} (encode : α → List Bool)
     (xs : List α) (replacement : α) (index : ℕ) : List Bool :=
   pair (List.replicate index true)
     (pair (encode replacement) (binaryListCode encode xs))
 
+/-- Encodes the scan after `k` entries, with the reversed prefix, remaining suffix, and residual
+index. -/
 def machineListUpdateScanSemanticState
     {α : Type*} (encode : α → List Bool)
     (xs : List α) (replacement : α) (index k : ℕ) : List Bool :=
@@ -830,6 +873,8 @@ theorem machineListUpdateSeed_semantics
     have hlen := congrArg List.length hnil
     simp [binaryListCode] at hlen
 
+/-- Encodes reconstruction after `k` saved-prefix entries have been restored before the updated
+suffix. -/
 def machineListUpdateRebuildSemanticState
     {α : Type*} (encode : α → List Bool)
     (xs : List α) (replacement : α) (index k : ℕ) : List Bool :=

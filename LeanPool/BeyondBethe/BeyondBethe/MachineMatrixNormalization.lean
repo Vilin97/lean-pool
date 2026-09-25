@@ -19,12 +19,14 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Raises the raw-rational matrix normalization scale to the matrix dimension. -/
 def machineMatrixNormalizationScalePowerRawCode
     (word : List Bool) : List Bool :=
   machineRawRatPowerCode
     (pair (machineMatrixDimensionUnary word)
       (machineMatrixNormalizationScaleRawCode word))
 
+/-- Normalizes the encoded dimension-th power of the matrix normalization scale. -/
 def machineMatrixNormalizationScalePowerOutputCode
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode

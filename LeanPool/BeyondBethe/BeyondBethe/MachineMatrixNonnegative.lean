@@ -24,28 +24,35 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes a nonnegativity scan as remaining rows, current row, and accumulated success flag. -/
 def machineMatrixNonnegativePack
     (rows current ok : List Bool) : List Bool :=
   pair rows (pair current ok)
 
+/-- Extracts the rows still to be loaded by the nonnegativity scan. -/
 def machineMatrixNonnegativeRows (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the unprocessed suffix of the current row. -/
 def machineMatrixNonnegativeCurrent (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the accumulated nonnegativity flag. -/
 def machineMatrixNonnegativeOk (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Reads the next rational entry of the current row. -/
 def machineMatrixNonnegativeEntry (state : List Bool) : List Bool :=
   machineListHead (machineMatrixNonnegativeCurrent state)
 
+/-- Tests whether the current encoded rational matrix entry is at least zero. -/
 def machineMatrixNonnegativeEntryBit (state : List Bool) : List Bool :=
   machineHeadBit
     (machineRawRatLeBit
       (pair (rawRatBinaryCode RawRat.zero)
         (machineMatrixNonnegativeEntry state)))
 
+/-- Consumes one entry and conjoins its nonnegativity test with the accumulated flag. -/
 def machineMatrixNonnegativeProcessEntry (state : List Bool) : List Bool :=
   machineMatrixNonnegativePack
     (machineMatrixNonnegativeRows state)
@@ -53,27 +60,33 @@ def machineMatrixNonnegativeProcessEntry (state : List Bool) : List Bool :=
     (machineAndBit (machineMatrixNonnegativeOk state)
       (machineMatrixNonnegativeEntryBit state))
 
+/-- Loads the next row while preserving the accumulated nonnegativity flag. -/
 def machineMatrixNonnegativeLoadRow (state : List Bool) : List Bool :=
   machineMatrixNonnegativePack
     (machineListTail (machineMatrixNonnegativeRows state))
     (machineListHead (machineMatrixNonnegativeRows state))
     (machineMatrixNonnegativeOk state)
 
+/-- Loads another row when available, otherwise retaining the completed scan state. -/
 def machineMatrixNonnegativeAfterRow (state : List Bool) : List Bool :=
   machineIfEmpty (machineMatrixNonnegativeRows state) state
     (machineMatrixNonnegativeLoadRow state)
 
+/-- Checks the next entry or loads a new row when the current row is exhausted. -/
 def machineMatrixNonnegativeStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineMatrixNonnegativeCurrent state)
     (machineMatrixNonnegativeAfterRow state)
     (machineMatrixNonnegativeProcessEntry state)
 
+/-- Initializes the nonnegativity scan with all matrix rows and a true success flag. -/
 def machineMatrixNonnegativeInit (word : List Bool) : List Bool :=
   machineMatrixNonnegativePack (machineMatrixRowsWord word) [] [true]
 
+/-- Builds a width envelope for remaining rows, current row, and the one-bit success flag. -/
 def machineMatrixNonnegativeWidth (word : List Bool) : List Bool :=
   machineMatrixNonnegativePack word word [true]
 
+/-- Runs the matrix nonnegativity scan for one step per input bit. -/
 def machineMatrixNonnegativeFinalState (word : List Bool) : List Bool :=
   (machineMatrixNonnegativeStep)^[word.length]
     (machineMatrixNonnegativeInit word)
@@ -169,6 +182,7 @@ theorem machineMatrixNonnegativeWidth_mem_FP :
         (machineMatrixNonnegativePack rows current ok) = ok := by
   simp [machineMatrixNonnegativeOk, machineMatrixNonnegativePack]
 
+/-- Bounds the remaining-row and current-row lengths and the one-bit success flag. -/
 def MachineMatrixNonnegativeStateBound
     (word state : List Bool) : Prop :=
   state = machineMatrixNonnegativePack
@@ -274,6 +288,7 @@ theorem machineMatrixNonnegativeBit_mem_FP :
 
 /-! ## Exact semantics on canonical nested-list encodings -/
 
+/-- The Boolean test that a rational number is nonnegative. -/
 def rationalNonnegativeBit (q : ℚ) : Bool := decide (0 ≤ q)
 
 theorem machineIfEmpty_of_ne_nil_matrix
@@ -348,9 +363,11 @@ theorem binaryListCode_cons_ne_nil {α : Type*}
       machineMatrixNonnegativePack [] [] [ok] := by
   simp [machineMatrixNonnegativeStep, machineMatrixNonnegativeAfterRow]
 
+/-- Tests whether every entry of a rational row is nonnegative. -/
 def matrixNonnegativeRowBit (row : List ℚ) : Bool :=
   row.all rationalNonnegativeBit
 
+/-- Tests whether every entry of every supplied rational row is nonnegative. -/
 def matrixNonnegativeRowsBit (rows : List (List ℚ)) : Bool :=
   rows.all matrixNonnegativeRowBit
 
@@ -370,6 +387,7 @@ theorem machineMatrixNonnegativeProcessRow_encode
         machineMatrixNonnegativeStep_entry_encode, ih]
       simp [matrixNonnegativeRowBit, Bool.and_assoc]
 
+/-- Counts one row-loading step plus one test per entry across all rows. -/
 def matrixNonnegativeRowsWork : List (List ℚ) → ℕ
   | [] => 0
   | row :: rows => 1 + row.length + matrixNonnegativeRowsWork rows
