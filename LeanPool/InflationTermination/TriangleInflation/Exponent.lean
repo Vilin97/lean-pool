@@ -3,8 +3,10 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Fan
+
+public import LeanPool.InflationTermination.TriangleInflation.Fan
 
 /-!
 # Rejecting-order exponent for the family `P_ε`
@@ -17,6 +19,8 @@ Scope: the asymptotic `liminf`/`limsup` statement of Proposition 5.13 is not for
 is the finiteness of `t_min` (which the paper quotes from the asymptotic completeness of the
 Navascués–Wolfe hierarchy). Only the explicit finite bounds are stated.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation
 

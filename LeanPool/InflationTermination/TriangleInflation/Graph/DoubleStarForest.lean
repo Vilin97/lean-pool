@@ -3,8 +3,10 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Graph.DoubleStar
+
+public import LeanPool.InflationTermination.TriangleInflation.Graph.DoubleStar
 
 /-!
 # Double-star forests carry the reconstruction data
@@ -14,6 +16,8 @@ The graph-theoretic step of the double-star reconstruction (AUDIT-NOTES A3, Theo
 (`exists_dsStruct`), and hence order-two Navascués–Wolfe feasibility characterizes
 compatibility on such scenarios (`doubleStar_terminates`). Everything here is proved.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

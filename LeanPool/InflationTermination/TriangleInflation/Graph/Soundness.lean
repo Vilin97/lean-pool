@@ -3,10 +3,12 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import LeanPool.InflationTermination.TriangleInflation.Graph.Flips
-import LeanPool.InflationTermination.TriangleInflation.Defect
+
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Flips
+public import LeanPool.InflationTermination.TriangleInflation.Defect
 
 /-!
 # Nesting, soundness, and source-disjoint independence
@@ -28,6 +30,8 @@ vertex blocks) and has been removed; the vertex-block form is
 `blockMarg_union_of_sourceDisjoint` in `DoubleStar.lean`. `compatible_gExpFeasible` is proved
 in `RootSink.lean` from the root-sink lemma.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

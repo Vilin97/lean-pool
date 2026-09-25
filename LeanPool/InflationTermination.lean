@@ -3,39 +3,41 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.PalomarSolutions.TriangleInflation
-import LeanPool.InflationTermination.PalomarSolutions.TriangleInflationClassification
-import LeanPool.InflationTermination.TriangleInflation
-import LeanPool.InflationTermination.TriangleInflation.ConvexOrder
-import LeanPool.InflationTermination.TriangleInflation.Defect
-import LeanPool.InflationTermination.TriangleInflation.DefectLaw
-import LeanPool.InflationTermination.TriangleInflation.Defs
-import LeanPool.InflationTermination.TriangleInflation.Exponent
-import LeanPool.InflationTermination.TriangleInflation.Fan
-import LeanPool.InflationTermination.TriangleInflation.Finner
-import LeanPool.InflationTermination.TriangleInflation.FinnerMeasure
-import LeanPool.InflationTermination.TriangleInflation.Graph
-import LeanPool.InflationTermination.TriangleInflation.Graph.Classification
-import LeanPool.InflationTermination.TriangleInflation.Graph.ClassificationTheorem
-import LeanPool.InflationTermination.TriangleInflation.Graph.CycleObstruction
-import LeanPool.InflationTermination.TriangleInflation.Graph.CycleWitness
-import LeanPool.InflationTermination.TriangleInflation.Graph.Cycles
-import LeanPool.InflationTermination.TriangleInflation.Graph.Defs
-import LeanPool.InflationTermination.TriangleInflation.Graph.DoubleStar
-import LeanPool.InflationTermination.TriangleInflation.Graph.DoubleStarForest
-import LeanPool.InflationTermination.TriangleInflation.Graph.FivePath
-import LeanPool.InflationTermination.TriangleInflation.Graph.FivePathWitness
-import LeanPool.InflationTermination.TriangleInflation.Graph.Flips
-import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
-import LeanPool.InflationTermination.TriangleInflation.Graph.RootSink
-import LeanPool.InflationTermination.TriangleInflation.Graph.Soundness
-import LeanPool.InflationTermination.TriangleInflation.Graph.SquareWitness
-import LeanPool.InflationTermination.TriangleInflation.Graph.Transport
-import LeanPool.InflationTermination.TriangleInflation.Graph.Triangle
-import LeanPool.InflationTermination.TriangleInflation.Graph.TriangleWitness
-import LeanPool.InflationTermination.TriangleInflation.Main
-import LeanPool.InflationTermination.TriangleInflation.Rate
+
+public import LeanPool.InflationTermination.PalomarSolutions.TriangleInflation
+public import LeanPool.InflationTermination.PalomarSolutions.TriangleInflationClassification
+public import LeanPool.InflationTermination.TriangleInflation
+public import LeanPool.InflationTermination.TriangleInflation.ConvexOrder
+public import LeanPool.InflationTermination.TriangleInflation.Defect
+public import LeanPool.InflationTermination.TriangleInflation.DefectLaw
+public import LeanPool.InflationTermination.TriangleInflation.Defs
+public import LeanPool.InflationTermination.TriangleInflation.Exponent
+public import LeanPool.InflationTermination.TriangleInflation.Fan
+public import LeanPool.InflationTermination.TriangleInflation.Finner
+public import LeanPool.InflationTermination.TriangleInflation.FinnerMeasure
+public import LeanPool.InflationTermination.TriangleInflation.Graph
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Classification
+public import LeanPool.InflationTermination.TriangleInflation.Graph.ClassificationTheorem
+public import LeanPool.InflationTermination.TriangleInflation.Graph.CycleObstruction
+public import LeanPool.InflationTermination.TriangleInflation.Graph.CycleWitness
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Cycles
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Defs
+public import LeanPool.InflationTermination.TriangleInflation.Graph.DoubleStar
+public import LeanPool.InflationTermination.TriangleInflation.Graph.DoubleStarForest
+public import LeanPool.InflationTermination.TriangleInflation.Graph.FivePath
+public import LeanPool.InflationTermination.TriangleInflation.Graph.FivePathWitness
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Flips
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
+public import LeanPool.InflationTermination.TriangleInflation.Graph.RootSink
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Soundness
+public import LeanPool.InflationTermination.TriangleInflation.Graph.SquareWitness
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Transport
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Triangle
+public import LeanPool.InflationTermination.TriangleInflation.Graph.TriangleWitness
+public import LeanPool.InflationTermination.TriangleInflation.Main
+public import LeanPool.InflationTermination.TriangleInflation.Rate
 
 /-!
 # Inflation termination for classical pair-source networks

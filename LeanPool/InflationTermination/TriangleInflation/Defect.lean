@@ -3,8 +3,10 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Finner
+
+public import LeanPool.InflationTermination.TriangleInflation.Finner
 
 /-!
 # The defect cube
@@ -15,6 +17,8 @@ Lemma 5.6 (`lem:symmetry`) and Lemma 5.9 (`lem:diag`), together with the general
 independence lemma for functions of disjoint coordinate sets under a product weight that
 those proofs use. Proofs are deferred.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation
 

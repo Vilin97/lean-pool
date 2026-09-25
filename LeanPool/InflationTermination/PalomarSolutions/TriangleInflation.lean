@@ -3,8 +3,10 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation
+
+public import LeanPool.InflationTermination.TriangleInflation
 
 /-!
 # Solution to `Palomar.TriangleInflation.Challenge`
@@ -20,6 +22,8 @@ puts its recompiled Challenge first on `LEAN_PATH` and Lean resolves every modul
 that root directory there, so a Solution under `Palomar.*` is never found
 (PalomarSubmission#108).
 -/
+
+@[expose] public section
 
 namespace TriangleInflation
 

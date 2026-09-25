@@ -3,8 +3,10 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
+
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
 
 /-!
 # The five-path witness at every order
@@ -13,6 +15,8 @@ AUDIT-NOTES A4 / Theorem `thm:fivepath`: the order-`t` witness `fivePath_witness
 five-path target with `h = 1/(16t²)`, built as the inflated law of a complex-weighted
 pair-source model, and its recursively expressible form. Everything here is proved.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import Mathlib.Algebra.Order.Chebyshev
-import Mathlib.Analysis.Real.Sqrt
-import LeanPool.InflationTermination.TriangleInflation.Rate
+
+public import Mathlib.Algebra.Order.Chebyshev
+public import Mathlib.Analysis.Real.Sqrt
+public import LeanPool.InflationTermination.TriangleInflation.Rate
 
 /-!
 # The convex-order distance rate for the triangle
@@ -35,6 +37,8 @@ The total-variation corollaries convert with Cauchy–Schwarz on the eight atoms
 Nothing here restates or weakens `Rate.lean`; `rate_triangle` is kept as the formalization
 of the manuscript's Corollary 6.1 as written, and the theorems below are the improvement.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation
 

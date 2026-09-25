@@ -3,8 +3,10 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Defs
+
+public import LeanPool.InflationTermination.TriangleInflation.Defs
 
 /-!
 # The Finner inequality and the explicit violation
@@ -16,6 +18,8 @@ deferred.
 This file also collects the basic normalization facts about the weight functions of
 `Defs.lean`, which the later files use.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Graph.Classification
-import LeanPool.InflationTermination.TriangleInflation.Graph.DoubleStarForest
-import LeanPool.InflationTermination.TriangleInflation.Graph.FivePathWitness
-import LeanPool.InflationTermination.TriangleInflation.Graph.CycleObstruction
+
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Classification
+public import LeanPool.InflationTermination.TriangleInflation.Graph.DoubleStarForest
+public import LeanPool.InflationTermination.TriangleInflation.Graph.FivePathWitness
+public import LeanPool.InflationTermination.TriangleInflation.Graph.CycleObstruction
 
 /-!
 # The classification theorem (A7)
@@ -20,6 +22,8 @@ connected component is a double-star (`classification_NW_lib`, `classification_A
 assembled from the cycle and five-path witnesses, transport, exhaustion, and local flips.
 Everything here is proved.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

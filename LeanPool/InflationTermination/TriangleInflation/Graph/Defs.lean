@@ -3,12 +3,14 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import Mathlib.Combinatorics.SimpleGraph.Finite
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
-import Mathlib.Combinatorics.SimpleGraph.Metric
-import Mathlib.Data.List.Chain
-import LeanPool.InflationTermination.TriangleInflation.Defs
+
+public import Mathlib.Combinatorics.SimpleGraph.Finite
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
+public import Mathlib.Combinatorics.SimpleGraph.Metric
+public import Mathlib.Data.List.Chain
+public import LeanPool.InflationTermination.TriangleInflation.Defs
 
 /-!
 # Inflation for pair-source graphs: definitions
@@ -68,6 +70,8 @@ yet proved).
   than relying on the junk value. `fivePathCorr` does rely on it, and every statement about
   it assumes the conditioning cell is positive.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

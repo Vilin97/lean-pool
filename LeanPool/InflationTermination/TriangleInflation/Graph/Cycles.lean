@@ -3,9 +3,11 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import LeanPool.InflationTermination.TriangleInflation.Graph.FivePath
+
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.InflationTermination.TriangleInflation.Graph.FivePath
 
 /-!
 # Cycles (A5)
@@ -17,6 +19,8 @@ See AUDIT-NOTES A5 and the packet sources `B4-cycles-and-stronger-hierarchies.md
 The Walsh section is general Boolean-cube Fourier analysis (orthogonality, inversion,
 uniqueness) and is reusable by the other pair-source files.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

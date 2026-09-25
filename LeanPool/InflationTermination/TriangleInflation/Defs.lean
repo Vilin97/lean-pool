@@ -3,12 +3,14 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Tactic.DeriveFintype
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.BigOperators.Field
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Tactic.DeriveFintype
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Tactic
 
 /-!
 # Inflation for the classical triangle: definitions
@@ -59,6 +61,8 @@ only; the statements live in `Finner.lean`, `Defect.lean`, `Main.lean`, `Fan.lea
 * **Truncated subtraction.** Exponents `t - 1` are `ℕ` subtraction; every statement using them
   carries the hypothesis `1 ≤ t`, where the two agree.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation
 

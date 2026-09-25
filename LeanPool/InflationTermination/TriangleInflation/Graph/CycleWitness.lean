@@ -3,9 +3,11 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Graph.Cycles
-import LeanPool.InflationTermination.TriangleInflation.Graph.Soundness
+
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Cycles
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Soundness
 
 /-!
 # The order-`t` cycle witness (A5)
@@ -13,6 +15,8 @@ import LeanPool.InflationTermination.TriangleInflation.Graph.Soundness
 The auxiliary-sign construction of AUDIT-NOTES A5 and Lemma `lem:cyclewitness` of
 `papers/inflation-nontermination/paper/sections/15-cycles.tex`.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import LeanPool.InflationTermination.TriangleInflation.Graph.Cycles
+
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Cycles
 
 /-!
 # Linear-in-t witnesses (B2)
@@ -25,6 +27,8 @@ Not proved here (moved to `InflationGraphOpen/Linear.lean`): `triangle_linear_wi
 pushforward of the density along the copied-observation map together with the symmetry, the
 diagonal law and the injectable/ancestral prescriptions.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
+
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
 
 /-!
 # Transport and exhaustion (A6)
@@ -21,6 +23,8 @@ namespace carries their machinery, and the `Exhaustion` namespace the graph theo
 `exhaustion`. Both namespaces are nested so that their generic names cannot collide with the
 rest of the library.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

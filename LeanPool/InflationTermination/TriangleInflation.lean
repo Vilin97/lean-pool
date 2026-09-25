@@ -3,18 +3,20 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Defs
-import LeanPool.InflationTermination.TriangleInflation.Finner
-import LeanPool.InflationTermination.TriangleInflation.FinnerMeasure
-import LeanPool.InflationTermination.TriangleInflation.Defect
-import LeanPool.InflationTermination.TriangleInflation.DefectLaw
-import LeanPool.InflationTermination.TriangleInflation.Main
-import LeanPool.InflationTermination.TriangleInflation.Fan
-import LeanPool.InflationTermination.TriangleInflation.Exponent
-import LeanPool.InflationTermination.TriangleInflation.Rate
-import LeanPool.InflationTermination.TriangleInflation.ConvexOrder
-import LeanPool.InflationTermination.TriangleInflation.Graph
+
+public import LeanPool.InflationTermination.TriangleInflation.Defs
+public import LeanPool.InflationTermination.TriangleInflation.Finner
+public import LeanPool.InflationTermination.TriangleInflation.FinnerMeasure
+public import LeanPool.InflationTermination.TriangleInflation.Defect
+public import LeanPool.InflationTermination.TriangleInflation.DefectLaw
+public import LeanPool.InflationTermination.TriangleInflation.Main
+public import LeanPool.InflationTermination.TriangleInflation.Fan
+public import LeanPool.InflationTermination.TriangleInflation.Exponent
+public import LeanPool.InflationTermination.TriangleInflation.Rate
+public import LeanPool.InflationTermination.TriangleInflation.ConvexOrder
+public import LeanPool.InflationTermination.TriangleInflation.Graph
 
 /-!
 # Inflation for classical pair-source networks

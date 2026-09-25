@@ -3,8 +3,10 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Main
+
+public import LeanPool.InflationTermination.TriangleInflation.Main
 
 /-!
 # Finite-order fan inequalities
@@ -13,6 +15,8 @@ Statements for paper Section 5.4: Theorem 5.11 (`thm:fan`) with its pointwise ce
 (eq:fan-pointwise) and rejecting-order corollary (eq:fan-order), and Proposition 5.12
 (`prop:Rp`). Proofs are deferred.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation
 

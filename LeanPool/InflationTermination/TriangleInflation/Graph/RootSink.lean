@@ -3,9 +3,11 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import LeanPool.InflationTermination.TriangleInflation.Graph.Soundness
+
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Soundness
 
 /-!
 # The root-sink expressibility lemma (A2)
@@ -23,6 +25,8 @@ content is `Expressible.isAISet` together with `gExpFeasible_iff_gAIFeasible`). 
 consequences `flip_gExpFeasible` and `compatible_gExpFeasible` are proved at the end of this
 file from the root-sink lemma. Everything in this file is proved.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Graph.Cycles
-import LeanPool.InflationTermination.TriangleInflation.Graph.CycleWitness
+
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Cycles
+public import LeanPool.InflationTermination.TriangleInflation.Graph.CycleWitness
 
 /-!
 # Cycle witnesses at every order, incompatibility and distance
@@ -16,6 +18,8 @@ the distance bound `q/10 ≤ d_TV` (`cycle_distance`), the last two through the 
 parity rigidity `CycleModelAux.quant_rigidity` (Lemma `lem:quantrigidity`). Everything here
 is proved.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import LeanPool.InflationTermination.TriangleInflation.Graph.Triangle
+
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Triangle
 
 /-!
 # Double-star reconstruction (A3)
@@ -33,6 +35,8 @@ double-star forest carries the combinatorial data `DSStruct`.  That step, `exist
 and the theorem `doubleStar_terminates` assembled from it, live in
 `InflationGraphOpen/DoubleStar.lean`; everything in this file is proved.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Exponent
+
+public import LeanPool.InflationTermination.TriangleInflation.Exponent
 
 /-!
 # The distance rate of the Navascués–Wolfe hierarchy
@@ -18,6 +20,8 @@ the compatible set, are out of scope here; only the order-`n` Euclidean estimate
 is stated, in the form "some compatible law is that close", which is what the paper's proof
 produces and what the corollaries are derived from.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
+
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
 
 /-!
 # The triangle witness at q = Θ(1/t)
@@ -14,6 +16,8 @@ AUDIT-NOTES B2(ii) / Theorem `thm:trianglelinear`: with the corrected density of
 the ancestral-independence feasible set of the triangle module at every order `t` for `q =
 1/(16t)` (`triangle_linear_witness`). Everything here is proved.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

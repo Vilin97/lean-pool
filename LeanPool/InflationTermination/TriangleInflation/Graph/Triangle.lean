@@ -3,9 +3,11 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import LeanPool.InflationTermination.TriangleInflation.Graph.RootSink
+
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.InflationTermination.TriangleInflation.Graph.RootSink
 
 /-!
 # The triangle specialization
@@ -13,6 +15,8 @@ import LeanPool.InflationTermination.TriangleInflation.Graph.RootSink
 Statements split from the original `Statements.lean` skeleton (one file per proving task).
 See AUDIT-NOTES for the mathematics.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

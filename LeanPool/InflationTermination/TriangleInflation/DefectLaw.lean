@@ -3,8 +3,10 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Defect
+
+public import LeanPool.InflationTermination.TriangleInflation.Defect
 
 /-!
 # The defect cube: laws of triangles, symmetry, and the diagonal
@@ -22,6 +24,8 @@ splits the root bits read by `Δ_{ijk}` into four disjoint blocks — the shared
 `(i,j,k)`, and for each of the three observations its private bit together with the `t-1`
 remaining cells of its line — and assembles the four marginals into `Q(ε,r)`.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation
 

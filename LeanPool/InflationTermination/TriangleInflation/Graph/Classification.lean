@@ -3,9 +3,11 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import LeanPool.InflationTermination.TriangleInflation.Graph.Transport
+
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Transport
 
 /-!
 # The classification theorem (A7)
@@ -18,6 +20,8 @@ directory, together with the bridging lemmas of the first three sections: connec
 named cycle and path scenarios, the fact that a target passing the order-`t` test is a law,
 the total variation cost of a local flip, and the passage to a connected component.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 

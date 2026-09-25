@@ -3,8 +3,10 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.DefectLaw
+
+public import LeanPool.InflationTermination.TriangleInflation.DefectLaw
 
 /-!
 # Nontermination
@@ -18,6 +20,8 @@ Definition 2.5, and Lemma 5.10 (`lem:expressible`) of Section 5.3) is not
 formalized; see the header of `Defs.lean`. The paper's `Q(ε,r) ∈ I^exp_t ⊆ I^AI_t ⊆ I^NW_t`
 is formalized here as its two weaker halves, membership in `I^AI_t` and in `I^NW_t`.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation
 

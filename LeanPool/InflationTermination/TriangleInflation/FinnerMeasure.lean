@@ -3,11 +3,13 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.Probability.ProbabilityMassFunction.Integrals
-import LeanPool.InflationTermination.TriangleInflation.Main
-import LeanPool.InflationTermination.TriangleInflation.Exponent
+
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.Probability.ProbabilityMassFunction.Integrals
+public import LeanPool.InflationTermination.TriangleInflation.Main
+public import LeanPool.InflationTermination.TriangleInflation.Exponent
 
 /-!
 # Finner's inequality for arbitrary latent alphabets
@@ -56,6 +58,8 @@ determinism, no regularity beyond measurability is assumed.
 The membership half of the paper (the inflation witnesses) is untouched: it is a statement
 about finite inflation hierarchies and carries no latent-alphabet hypothesis.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation
 

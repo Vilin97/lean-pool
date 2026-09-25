@@ -3,9 +3,11 @@ Copyright (c) 2026 William Blair. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: William Blair
 -/
+module
 
-import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
-import LeanPool.InflationTermination.TriangleInflation.Graph.CycleWitness
+
+public import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
+public import LeanPool.InflationTermination.TriangleInflation.Graph.CycleWitness
 
 /-!
 # The square witness at q = Θ(1/t)
@@ -21,6 +23,8 @@ that kind. So each prescribed pushforward of the new witness equals the correspo
 pushforward of `parWit`, and the obligations are inherited from `parWit_diag`,
 `parWit_injectable` and `parWit_ai`, which hold for every real `q`.
 -/
+
+@[expose] public section
 
 namespace TriangleInflation.Graph
 
