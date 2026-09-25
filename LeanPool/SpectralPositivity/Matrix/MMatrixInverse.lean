@@ -51,7 +51,7 @@ This file provides both forms:
 * `graphops-qft` consumes the strict version for resolvent positivity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

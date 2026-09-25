@@ -27,7 +27,7 @@ This file sets up the basic theory of clubs (closed and unbounded sets) and stat
 * `isClub_sInter`: The intersection of fewer than `o.cof` clubs in `o` is a club in `o`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

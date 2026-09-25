@@ -13,7 +13,7 @@ cover cost as an attained infimum, and Fact 2.1 (level fractions of an
 upset are nondecreasing).
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -26,41 +26,43 @@ def generate (F : Finset (Finset α)) : Finset (Finset α) :=
   univ.filter fun T => ∃ S ∈ F, S ⊆ T
 
 /-- `G` covers `F` when every member of `F` contains a member of `G`. -/
+@[expose]
 def Covers (G F : Finset (Finset α)) : Prop := F ⊆ generate G
 
 /-- The expectation polynomial of a finite family at parameter `p`. -/
-def expectation (p : ℝ) (G : Finset (Finset α)) : ℝ :=
+@[expose] def expectation (p : ℝ) (G : Finset (Finset α)) : ℝ :=
   ∑ S ∈ G, p ^ S.card
 
 /-- The infimum expectation among all covers of `H`. -/
-noncomputable def coverCost (p : ℝ) (H : Finset (Finset α)) : ℝ :=
+@[expose] noncomputable def coverCost (p : ℝ) (H : Finset (Finset α)) : ℝ :=
   sInf ((fun G : Finset (Finset α) => expectation p G) '' {G | Covers G H})
 
 /-- The `p`-biased product measure of a single finite set. -/
-def measure (p : ℝ) (S : Finset α) : ℝ :=
+@[expose] def measure (p : ℝ) (S : Finset α) : ℝ :=
   p ^ S.card * (1 - p) ^ (Fintype.card α - S.card)
 
 /-- The `p`-biased measure of a finite family of sets. -/
-def measureFamily (p : ℝ) (F : Finset (Finset α)) : ℝ :=
+@[expose] def measureFamily (p : ℝ) (F : Finset (Finset α)) : ℝ :=
   ∑ S ∈ F, measure p S
 
 /-- The least parameter where the upward closure of `F` has measure at least one half. -/
-noncomputable def threshold (F : Finset (Finset α)) : ℝ :=
+@[expose] noncomputable def threshold (F : Finset (Finset α)) : ℝ :=
   sInf {p : ℝ | p ∈ Set.Icc 0 1 ∧ 1 / 2 ≤ measureFamily p (generate F)}
 
 /-- The largest parameter where the covering cost of `F` is at most one half. -/
-noncomputable def expectationThreshold (F : Finset (Finset α)) : ℝ :=
+@[expose] noncomputable def expectationThreshold (F : Finset (Finset α)) : ℝ :=
   sSup {p : ℝ | p ∈ Set.Icc 0 1 ∧ coverCost p F ≤ 1 / 2}
 
 /-- A family is `ℓ`-bounded when each of its members has cardinality at most `ℓ`. -/
+@[expose]
 def IsBounded (F : Finset (Finset α)) (ℓ : ℕ) : Prop :=
   ∀ S ∈ F, S.card ≤ ℓ
 
 /-- The explicit constant in the formalized Tran–Vu covering theorem. -/
-def coveringConstant : ℝ := 1000
+@[expose] def coveringConstant : ℝ := 1000
 
 /-- The level supplied by the quantitative covering theorem. -/
-noncomputable def coveringLevel (p : ℝ) (N ℓ : ℕ) : ℕ :=
+@[expose] noncomputable def coveringLevel (p : ℝ) (N ℓ : ℕ) : ℕ :=
   ⌊coveringConstant * p * N * Real.logb 2 (ℓ + 1 : ℝ)⌋₊
 
 lemma mem_generate {F : Finset (Finset α)} {T : Finset α} :

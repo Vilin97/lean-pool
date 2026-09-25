@@ -19,7 +19,7 @@ Tags: set-theory, cardinal-arithmetic, club-guessing
 MSC: 03E04, 03E10, 03E55
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview
