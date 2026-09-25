@@ -6578,6 +6578,7 @@ public import LeanPool.OneManifold.OneMfld.Noncompact
 public import LeanPool.OneManifold.OneMfld.Normalize
 public import LeanPool.OneManifold.OneMfld.Outer
 public import LeanPool.OneManifold.OneMfld.PartialHomeomorphHelpers
+public import LeanPool.OneManifold.OneMfld.RealIntervals
 public import LeanPool.OneManifold.OneMfld.TransitionMono
 public import LeanPool.OneManifold.OneMfld.TwoComponents
 public import LeanPool.OneManifold.OneMfld.UnitInterval
