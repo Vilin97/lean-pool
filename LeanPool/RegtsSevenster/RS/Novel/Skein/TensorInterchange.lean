@@ -775,8 +775,9 @@ noncomputable def interchangeNormalRight
     (tensorFragment G₁ G₂)).trans
     ((Equiv.relabelCongr C_total surv_c).trans
       ((Equiv.relabelTrans _ _ _).trans
-        (Equiv.relabelEq _ (by exact interchange_survivor_relabel_eq _
-          (fun x => by cases x <;> rfl)))))
+        (Equiv.relabelEq _ (by
+          exact interchange_survivor_relabel_eq _
+            (fun x => by cases x <;> rfl)))))
 
 /-! ### Final assembly -/
 
