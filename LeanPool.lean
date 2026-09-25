@@ -288,7 +288,6 @@ public import LeanPool.BeyondBethe.BeyondBethe.GoodRowScore
 public import LeanPool.BeyondBethe.BeyondBethe.GreedyRowMatching
 public import LeanPool.BeyondBethe.BeyondBethe.KuhnMatching
 public import LeanPool.BeyondBethe.BeyondBethe.KuhnSmallStep
-public import LeanPool.BeyondBethe.BeyondBethe.MachineArithmeticTests
 public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheAffineEntry
 public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheAffineLineSum
 public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheEpigraphOracle
@@ -381,12 +380,10 @@ public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerInteriorScale
 public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerMatrixBitBound
 public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerRoundingSchedule
 public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerStateBound
-public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerTests
 public import LeanPool.BeyondBethe.BeyondBethe.MachineOutputEncoding
 public import LeanPool.BeyondBethe.BeyondBethe.MachinePerfectMatching
 public import LeanPool.BeyondBethe.BeyondBethe.MachinePositiveAlgorithm
 public import LeanPool.BeyondBethe.BeyondBethe.MachineRAMBridge
-public import LeanPool.BeyondBethe.BeyondBethe.MachineRAMSmoke
 public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalArithmetic
 public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalBallInit
 public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare

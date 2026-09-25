@@ -238,7 +238,6 @@ public import LeanPool.BeyondBethe.BeyondBethe.MachineFinalScalars
 public import LeanPool.BeyondBethe.BeyondBethe.MachineRAMBridge
 public import LeanPool.BeyondBethe.BeyondBethe.MachineBitAssembly
 public import LeanPool.BeyondBethe.BeyondBethe.MachineTrimHighZeros
-public import LeanPool.BeyondBethe.BeyondBethe.MachineRAMSmoke
 public import LeanPool.BeyondBethe.BeyondBethe.BinaryDirectedElementary
 public import LeanPool.BeyondBethe.BeyondBethe.RationalFeasibility
 public import LeanPool.BeyondBethe.BeyondBethe.RoundedFeasibility
