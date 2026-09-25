@@ -11,7 +11,8 @@ public import LeanPool.DavisKahan.DavisKahan.Geometry.Angle.OperatorAngleComplex
 /-!
 # Real operator angles through complexification
 
-The complex operator-angle calculus is complete.  This file specializes it to real Hilbert subspaces by applying that calculus to their
+The complex operator-angle calculus is complete.  This file specializes it to real Hilbert
+subspaces by applying that calculus to their
 canonical complexifications.  It avoids a second Halmos decomposition and
 keeps every norm, gap, acuteness threshold, and projection identity tied to
 the original real subspaces.

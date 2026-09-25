@@ -41,7 +41,8 @@ a separate and genuinely optional decision.
 ## Where the `ℝ≥0∞` arithmetic lives
 
 Phase C stated every lemma here over `gaugeReal`/`Mem` but *proved* it through the
-historical record, so that retyping the tree cost no proof work.  Phase D paid that debt: every proof below now runs on the canonical laws
+historical record, so that retyping the tree cost no proof work.  Phase D paid that debt: every
+proof below now runs on the canonical laws
 directly, and this file no longer imports the adapter.
 
 The design point is where the bill landed.  Turning an `ℝ≥0∞` law into an `ℝ` one needs

@@ -188,7 +188,7 @@ Stated separately because it is the only genuinely quantitative step of
 `pair_mul_eq_inner_comp`: everything around it is bookkeeping about which measure dominates
 which. -/
 private theorem integral_norm_mul_sub_mul_le {α : Type*} [MeasurableSpace α]
-    {μ ν₁ ν₂ : Measure α}  (h₁ : μ ≤ ν₁) (h₂ : μ ≤ ν₂)
+    {μ ν₁ ν₂ : Measure α} (h₁ : μ ≤ ν₁) (h₂ : μ ≤ ν₂)
     {u v F G : α → ℂ} {cu cG δ₁ δ₂ : ℝ}
     (hcu : ∀ x, ‖u x‖ ≤ cu) (hcG : ∀ x, ‖G x‖ ≤ cG) (hcu0 : 0 ≤ cu) (hcG0 : 0 ≤ cG)
     (huv : Integrable (fun x => u x * v x - F x * G x) μ)

@@ -736,7 +736,8 @@ private theorem diagonal_plane_coercivity_bounds
         + ⟪V.reflection (S v - (((a + b) / 2 : ℝ) : 𝕜) • v),
             V.reflection (U.reflection w)⟫_𝕜
       = 2 * ⟪v, U.reflection (T w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜)
-    : ((b - a) / 2 ≤ (1 - 2 * ν) * r₁ - RCLike.re G) ∧ ((b - a) / 2 * ‖w₂‖ ^ 2 ≤ (1 - 2 * ν) * r₂ + ‖w₂‖ ^ 2 * RCLike.re G) := by
+    : ((b - a) / 2 ≤ (1 - 2 * ν) * r₁ - RCLike.re G) ∧
+      ((b - a) / 2 * ‖w₂‖ ^ 2 ≤ (1 - 2 * ν) * r₂ + ‖w₂‖ ^ 2 * RCLike.re G) := by
   have hI1 : (b - a) / 2 ≤ (1 - 2 * ν) * r₁ - RCLike.re G := by
     have hAAxx := hAA x x
     rw [← hzdef, hE1, hE2] at hAAxx

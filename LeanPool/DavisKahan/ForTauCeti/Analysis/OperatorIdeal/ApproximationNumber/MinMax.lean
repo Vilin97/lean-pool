@@ -506,7 +506,7 @@ counterexample, and the two signatures now agree.
 `hidem` and `hsa` are used in exactly one place: they make `1 - P` a star
 projection, hence a contraction, which is what turns the band bound
 `δ * ‖x - P x‖` into `δ * ‖x‖`. -/
-theorem approximationNumber_le_of_spectral_band 
+theorem approximationNumber_le_of_spectral_band
     {T : E₁ →L[𝕜] F₁} {P : E₁ →L[𝕜] E₁} {r : ℕ} {δ : ℝ}
     (hδ : 0 ≤ δ) (hidem : IsIdempotentElem P) (hsa : IsSelfAdjoint P)
     (hrank : P.rank ≤ (r : Cardinal))

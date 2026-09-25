@@ -166,7 +166,8 @@ theorem directedSinAngleOperatorC_sq_add_directedCosAngleOperatorC_sq
     directedSinAngleOperatorC U V * directedSinAngleOperatorC U V +
       directedCosAngleOperatorC U V * directedCosAngleOperatorC U V = U.starProjection := by
   rw [directedSinAngleOperatorC, directedCosAngleOperatorC,
-    ContinuousLinearMap.modulus_mul_self_eq_star_mul_self, ContinuousLinearMap.modulus_mul_self_eq_star_mul_self,
+    ContinuousLinearMap.modulus_mul_self_eq_star_mul_self,
+    ContinuousLinearMap.modulus_mul_self_eq_star_mul_self,
     adjoint_cross_mul_cross, adjoint_cross_mul_cross]
   calc U.starProjection ∘L Vᗮ.starProjection ∘L U.starProjection +
         U.starProjection ∘L V.starProjection ∘L U.starProjection

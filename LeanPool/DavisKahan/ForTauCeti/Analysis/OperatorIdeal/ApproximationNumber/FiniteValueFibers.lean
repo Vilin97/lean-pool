@@ -7,7 +7,7 @@ module
 
 public import Mathlib.Data.Finset.Max
 public import Mathlib.Data.Fintype.EquivFin
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Tactic.Common
 
 /-!

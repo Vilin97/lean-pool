@@ -23,7 +23,8 @@ block.
 ## Two spellings of the same configurations
 
 This module states the ordered configurations as **operator-form bounds** —
-`TauCeti.LinearPMap.SemiboundedBelow`/`TauCeti.LinearPMap.SemiboundedAbove` — and the interval/exterior configuration
+`TauCeti.LinearPMap.SemiboundedBelow`/`TauCeti.LinearPMap.SemiboundedAbove` — and the
+interval/exterior configuration
 over `LinearPMap.realSpectrum`.  `SpectralIntervalExteriorGap` and
 `SpectralSylvesterGap` (`SinTheta/Unbounded/IntervalExterior.lean`,
 `Sylvester/Unbounded/AllGap.lean`) instead state all three configurations as
@@ -199,7 +200,7 @@ submodules but distinct *types*, so the restrictions are not interchangeable by
 omit [CompleteSpace E] in
 /-- The gap survives renaming the right-hand reducing subspace. -/
 theorem FormBoundedSylvesterGap.reducingRestriction_congr_right
-    {G : Type v} [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
+    {G : Type v} [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
     {X : E →ₗ.[𝕜] E} {A : G →ₗ.[𝕜] G} {p q : Submodule 𝕜 G}
     [p.HasOrthogonalProjection] [q.HasOrthogonalProjection]
      [CompleteSpace q]
@@ -215,7 +216,7 @@ theorem FormBoundedSylvesterGap.reducingRestriction_congr_right
 omit [CompleteSpace E] in
 /-- The gap survives renaming the left-hand reducing subspace. -/
 theorem FormBoundedSylvesterGap.reducingRestriction_congr_left
-    {G : Type v} [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] 
+    {G : Type v} [NormedAddCommGroup G] [InnerProductSpace 𝕜 G]
     {X : E →ₗ.[𝕜] E} {A : G →ₗ.[𝕜] G} {p q : Submodule 𝕜 G}
     [p.HasOrthogonalProjection] [q.HasOrthogonalProjection]
      [CompleteSpace q]

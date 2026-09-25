@@ -336,7 +336,7 @@ theorem halmosTrivialPart_sup_genericPart
 omit [CompleteSpace H] in
 /-- The elementary and generic Halmos pieces are disjoint. -/
 theorem halmosTrivialPart_disjoint_genericPart
-    (U V : Submodule 𝕜 H) 
+    (U V : Submodule 𝕜 H)
      :
     Disjoint (halmosTrivialPart U V) (halmosGenericPart U V) :=
   (halmosTrivialPart U V).orthogonal_disjoint
@@ -345,7 +345,7 @@ omit [CompleteSpace H] in
 /-- Any elementary subspace contained in the trivial part meets the generic
 part only at zero. -/
 theorem halmosGenericPart_inf_eq_bot_of_le_trivial
-    (U V K : Submodule 𝕜 H) 
+    (U V K : Submodule 𝕜 H)
      (hK : K ≤ halmosTrivialPart U V) :
     halmosGenericPart U V ⊓ K = ⊥ := by
   rw [Submodule.eq_bot_iff]

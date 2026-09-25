@@ -417,7 +417,7 @@ theorem sharp_riccati_norm_bound
     {X : E0 →L[ℂ] E1} (hX : SolvesRiccati H X)
     (hXc : ‖X‖ < 1) :
     d * ‖X‖ ≤ ‖H.B01‖ * (1 - ‖X‖ ^ 2) := by
-  apply sharp_riccati_bound_of_epsilon
+  apply sharp_riccati_bound_of_epsilon (a := ‖H.A0‖)
     (norm_nonneg H.B01) (norm_nonneg X) hXc
   intro ε hε
   obtain ⟨x, y, s, hxnorm, hynorm, hsnear, hsle, hXx, hdef⟩ :=

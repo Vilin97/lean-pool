@@ -7,7 +7,7 @@ module
 
 public import Mathlib.Data.Finsupp.Order
 public import Mathlib.Data.Finsupp.Basic
-public import Mathlib.Data.NNReal.Basic
+public import Mathlib.Basic.NNReal.Basic
 public import Mathlib.Algebra.BigOperators.Finsupp.Basic
 public import Mathlib.Topology.Algebra.InfiniteSum.ENNReal
 public import LeanPool.DavisKahan.ForTauCeti.Analysis.Convex.Majorization

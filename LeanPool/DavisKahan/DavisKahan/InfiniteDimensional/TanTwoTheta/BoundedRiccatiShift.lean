@@ -11,7 +11,8 @@ public import LeanPool.DavisKahan.DavisKahan.Riccati.BoundedSharpEstimates
 # BoundedRiccatiShift (promoted)
 
 **Promoted 2026-07-30 under lane `EXP-PROMOTE-T2T` slice 2.**  This module held
-the shift bridge converting ordered spectral separation into the shifted diagonal form bounds the estimate assumes.
+the shift bridge converting ordered spectral separation into the shifted diagonal form bounds
+the estimate assumes.
 
 Those declarations now live in their source-facing home,
 `DavisKahan/Riccati/BoundedSharpEstimates.lean`, beside the rest of the sharp

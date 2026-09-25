@@ -28,7 +28,8 @@ theory but a statement of where the theory lives.
 
 * `TauCeti.DavisKahan.Angle.tanAngleOperatorC`: the literal `tan Θ`.
 * `TauCeti.DavisKahan.Angle.directedTanAngleOperatorC_nonneg`.
-* `TauCeti.DavisKahan.Angle.directedCosAngleOperatorC_mul_directedTanAngleOperatorC`: `cos Θ · tan Θ = sin Θ` under
+* `TauCeti.DavisKahan.Angle.directedCosAngleOperatorC_mul_directedTanAngleOperatorC`: `cos Θ ·
+  tan Θ = sin Θ` under
   uniform transversality.
 * `TauCeti.DavisKahan.Angle.tanTwoAngleOperatorC`: the literal ambient
   `tan 2Θ`, the object of the second conclusion of the Section 2 `tan 2θ`

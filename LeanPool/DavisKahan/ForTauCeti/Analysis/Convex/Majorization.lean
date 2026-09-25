@@ -8,7 +8,7 @@ module
 public import Mathlib.Analysis.Convex.Basic
 public import Mathlib.Algebra.BigOperators.Fin
 public import Mathlib.Algebra.Order.Field.Basic
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Tactic.FieldSimp
 public import Mathlib.Data.Fin.Tuple.Sort
 public import Mathlib.Tactic.Linarith
