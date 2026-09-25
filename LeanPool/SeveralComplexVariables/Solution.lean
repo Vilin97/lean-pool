@@ -11,9 +11,9 @@ public import LeanPool.SeveralComplexVariables.SeveralComplexVariables
 # Several complex variables: principal statements (`Solution.lean`)
 
 This file states the principal results of the `SeveralComplexVariables` library in terms of Mathlib
-alone. It follows the project's catalogue of main theorems, `SCVMainTheorems.md`: the number in each
-docstring is the item of that catalogue, and the sections A–K are its sections. The subject is
-classical function theory on open subsets of finite-dimensional complex normed spaces `E`, in
+alone. Its numbering follows the [upstream theorem catalogue][scvCatalogue] at the imported
+revision: the number in each docstring is the item of that catalogue, and A–K are its sections.
+The subject is classical function theory on open subsets of finite-dimensional complex normed spaces `E`, in
 particular of `ℂ^ι = ι → ℂ` for a finite index type `ι`, with values in a complex Banach space `F`.
 
 ## Conventions
@@ -36,17 +36,27 @@ distinguished polynomials, and the comparison of polynomials over the germ ring 
 are algebraic steps towards items 44 and 45. An item with several assertions is represented by its
 principal assertion. The sources are the texts of Boas, Fritzsche–Grauert, Hörmander,
 Jakóbczak–Jarnicki, Korevaar–Wiegerinck, Range, Scheidemann, Shabat and Suwa listed in
-`formalization.yaml`; none of the results is new. The proofs use only the axioms `propext`,
-`Quot.sound` and `Classical.choice`.
+the [upstream bibliography][scvBibliography]; none of the results is new. The proofs use only
+the axioms `propext`, `Quot.sound` and `Classical.choice`.
 
 ## Related formalizations
 
-The development builds on Mathlib. Two results were formalized independently, and earlier, by
-Bochao Kong in the Palomar registry: the analytic Weierstrass preparation theorem (item 41; entry
-PALOMAR-2026-08-29-000010) and Rückert's basis theorem, that the ring of analytic germs is
-Noetherian (item 44; entry PALOMAR-2026-08-30-000001, which also contains the local analytic
-Nullstellensatz, not treated here). Neither is used here. Mathlib's Weierstrass preparation
-theorem concerns formal power series over complete local rings and is likewise not used.
+The development builds on Mathlib. Lean Pool already contains Bochao Kong's analytic Weierstrass
+preparation theorem with germ uniqueness as
+`ClassicalComplexWPT.classicalComplexWeierstrassPreparation`, and coordinate-origin germ
+Noetherianity as `LocalComplexGeometry.holomorphicGerm_isNoetherian`. These overlap items 41 and
+44 here. At coordinate origins, both developments model analytic germs as the subring of
+Mathlib's `Filter.Germ` consisting of germs with an analytic representative.
+
+This import retains its independent analytic division and preparation arguments, including
+quotient estimates, and transports the local statements to arbitrary finite-dimensional complex
+normed spaces and base points. Its further results include germ unique factorization and relative
+primality, Hartogs extension, Cartan–Thullen equivalences, and Bochner's tube theorem. These
+additional results supply the project's broader scope. The local analytic Nullstellensatz in
+`LeanPool.LocalComplexGeometry` is not treated here.
+
+[scvCatalogue]: https://github.com/bjbraams/lean-scv/blob/caef1ae776ff79933718312357980d46628d3702/SCVMainTheorems.md
+[scvBibliography]: https://github.com/bjbraams/lean-scv/blob/caef1ae776ff79933718312357980d46628d3702/formalization.yaml
 -/
 
 @[expose] public section

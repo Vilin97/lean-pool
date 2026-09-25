@@ -17,7 +17,7 @@ bounded Osgood then gives joint analyticity on that cylinder, retaining the enti
 the second factor.
 
 This is the initial cylinder in the proof of Hartogs' theorem in [Boas][Boas2013] (2013),
-Section 2.4. No joint continuity or boundedness is assumed.
+Section 2.7, Theorem 8. No joint continuity or boundedness is assumed.
 
 ## Main results
 

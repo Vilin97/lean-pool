@@ -208,8 +208,10 @@ proved. Runge pairs and domains use approximation on compact sets; polynomial hu
 Reinhardt and circular examples are included.
 
 The Oka–Weil theorem, the Levi sufficiency problem, and abstract envelopes of holomorphy remain
-outside this library's scope. `SCVMainTheorems.md` gives the precise mathematical catalogue;
-`SeveralComplexVariablesCoverage.md` records the development ledger.
+outside this library's scope. The [upstream theorem catalogue][scvCatalogue] records the precise
+mathematical statements at the imported revision.
+
+[scvCatalogue]: https://github.com/bjbraams/lean-scv/blob/caef1ae776ff79933718312357980d46628d3702/SCVMainTheorems.md
 -/
 
 /- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/

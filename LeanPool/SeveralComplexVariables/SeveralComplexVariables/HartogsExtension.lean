@@ -20,7 +20,7 @@ Extension across general compact holes is deduced from the product-space theorem
 `CompactHole`, proved by Ehrenpreis' method, by a choice of linear coordinates. Separate
 analyticity is treated in `SeparateAnalytic`.
 
-References: [Boas][Boas2013] (2013), Section 2.7; [Scheidemann][Scheidemann2005] (2005),
+References: [Boas][Boas2013] (2013), Section 2.4; [Scheidemann][Scheidemann2005] (2005),
 Exercise 2.1.7 and Section 2.3; [Jakóbczak–Jarnicki][JakobczakJarnicki2021] (2021), Corollary
 2.1.2.
 

@@ -22,7 +22,7 @@ thin cylinder whose fiber disc is close to the given point. Hartogs' fiber exten
 which rests on Hartogs' growth lemma for roots of the fiber Taylor coefficients, then gives a
 local bound at the given point. The locally bounded Osgood theorem completes the induction step.
 
-References: [Boas][Boas2013] (2013), Section 2.4; [Hörmander][Hormander1973] (1973), Theorem
+References: [Boas][Boas2013] (2013), Section 2.7, Theorem 6; [Hörmander][Hormander1973] (1973), Theorem
 2.2.8; [Jakóbczak–Jarnicki][JakobczakJarnicki2021] (2021), Theorem 1.5.1.
 
 ## Main definitions

@@ -20,7 +20,8 @@ Hartogs' lemma makes this bound uniform near each base point, so the fiber Taylo
 dominated by a geometric series near every point of the larger cylinder.
 
 This is the continuation step in the proof of Hartogs' separate-analyticity theorem. Reference:
-[Hörmander][Hormander1973] (1973), proof of Theorem 2.2.8; [Boas][Boas2013] (2013), Section 2.4.
+[Hörmander][Hormander1973] (1973), proof of Theorem 2.2.8; [Boas][Boas2013] (2013), Section 2.7,
+proof of Theorem 6.
 
 ## Main results
 
