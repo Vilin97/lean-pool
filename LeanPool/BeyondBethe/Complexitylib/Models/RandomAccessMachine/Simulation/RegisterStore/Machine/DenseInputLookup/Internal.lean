@@ -866,6 +866,44 @@ private theorem parked_of_hasBinaryNat {tape : Tape} {value : ℕ}
     (hvalue : tape.HasBinaryNat value) : TM.Parked tape :=
   ⟨by rw [hvalue.2.1], hvalue.2.hasBinaryContent.cells_ne_start⟩
 
+/-- Resetting the scan counter preserves the lookup result and its untouched tape frame. -/
+private theorem denseInputLookupResult_of_reset_counter {n : ℕ}
+    (query counter result scratch : Fin n)
+    (hqc : query ≠ counter) (hqr : query ≠ result) (hcr : counter ≠ result)
+    (hcs : counter ≠ scratch) (hrs : result ≠ scratch)
+    (input : List Bool) (address : ℕ) (initialWork work : Fin n → Tape)
+    (hresult : (work result).HasBinaryNat (Complexity.RAM.initRegs input address))
+    (hother : ∀ i, i ≠ counter → i ≠ result →
+      work i = Function.update initialWork counter (denseInputNatTape address) i)
+    (hparked : ∀ i, TM.Parked (work i)) :
+    DenseInputLookupResult query counter result scratch input address initialWork
+      (Function.update work counter ((Tape.init []).move Dir3.right)) := by
+  let copiedWork := Function.update initialWork counter (denseInputNatTape address)
+  have hblankNat : ((Tape.init []).move Dir3.right).HasBinaryNat 0 := by
+    simpa using Tape.init_move_right_hasBinaryNat 0
+  constructor
+  · rw [Function.update_of_ne hqc]
+    rw [hother query hqc hqr]
+    simp [copiedWork, Function.update_of_ne hqc]
+  · rw [Function.update_self]
+    exact hblankNat
+  · rw [Function.update_of_ne hcr.symm]
+    exact hresult
+  · rw [Function.update_of_ne hcs.symm]
+    rw [hother scratch hcs.symm hrs.symm]
+    simp [copiedWork, Function.update_of_ne hcs.symm]
+  · intro i
+    by_cases hi : i = counter
+    · subst i
+      rw [Function.update_self]
+      exact parked_of_hasBinaryNat hblankNat
+    · rw [Function.update_of_ne hi]
+      exact hparked i
+  · intro i _ hic hir _
+    rw [Function.update_of_ne hic]
+    rw [hother i hic hir]
+    simp [copiedWork, Function.update_of_ne hic]
+
 theorem denseInputLookupTM_hoareTime_internal {n : ℕ}
     (query counter result scratch : Fin n)
     (hqc : query ≠ counter) (hqr : query ≠ result)
@@ -1021,34 +1059,11 @@ theorem denseInputLookupTM_hoareTime_internal {n : ℕ}
     obtain ⟨done, time, htime, hreach, hhalt, hdoneInput,
         hdoneWork, hdoneOutput⟩ :=
       hrun inp work out ⟨rfl, rfl, rfl⟩
-    have hblankNat :
-        ((Tape.init []).move Dir3.right).HasBinaryNat 0 := by
-      simpa using Tape.init_move_right_hasBinaryNat 0
     have hdoneResult : DenseInputLookupResult query counter result scratch
         input address initialWork done.work := by
       rw [hdoneWork]
-      constructor
-      · rw [Function.update_of_ne hqc]
-        rw [hother query hqc hqr]
-        simp [copiedWork, Function.update_of_ne hqc]
-      · rw [Function.update_self]
-        exact hblankNat
-      · rw [Function.update_of_ne hcr.symm]
-        exact hresult
-      · rw [Function.update_of_ne hcs.symm]
-        rw [hother scratch hcs.symm hrs.symm]
-        simp [copiedWork, Function.update_of_ne hcs.symm]
-      · intro i
-        by_cases hi : i = counter
-        · subst i
-          rw [Function.update_self]
-          exact parked_of_hasBinaryNat hblankNat
-        · rw [Function.update_of_ne hi]
-          exact hparked i
-      · intro i _ hic hir _
-        rw [Function.update_of_ne hic]
-        rw [hother i hic hir]
-        simp [copiedWork, Function.update_of_ne hic]
+      exact denseInputLookupResult_of_reset_counter query counter result scratch
+        hqc hqr hcr hcs hrs input address initialWork work hresult hother hparked
     exact ⟨done, time, htime, hreach, hhalt,
       hdoneInput.trans hinp, hdoneResult, hdoneOutput.trans hout⟩
   have hrewindTransition : ∀ inp work out, rewoundPost inp work out →

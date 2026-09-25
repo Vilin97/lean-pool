@@ -189,6 +189,24 @@ private theorem phaseTransition_of_parked
   TM.phaseTransition_eq_self_of_reads_ne_start hinput.read_ne_start
     (fun i => (hwork i).read_ne_start) houtput.read_ne_start
 
+/-- Both indirect lookups preserve the source count used by the final store update. -/
+private theorem indirectLoaded_resultCount
+    (tapes : BinaryInstructionTapes n) (store : Store) (addressRegister : ℕ)
+    (initialWork addressWork loadedWork : Fin n → Tape)
+    (hinitial : EntryLookupStaticReady tapes.lhsLookup store initialWork)
+    (haddressResult : EntryLookupStaticResult tapes.lhsLookup store addressRegister
+      initialWork addressWork)
+    (hloadedResult : EntryLookupRestoreResult tapes.indirectLoadLookup store
+      (RegisterStore.read store addressRegister) addressWork loadedWork) :
+    (loadedWork tapes.update.resultCount).HasBinaryNat store.length := by
+  rw [show loadedWork tapes.update.resultCount =
+      addressWork tapes.update.resultCount by
+    simpa using! hloadedResult.countSource]
+  rw [show addressWork tapes.update.resultCount =
+      initialWork tapes.update.resultCount by
+    simpa using! haddressResult.countSource]
+  simpa using! hinitial.countSource
+
 /-- Exact semantic and time contract for one indirect sparse-register load. -/
 theorem indirectLoadInstructionTM_hoareTime_frame_internal
     (tapes : BinaryInstructionTapes n) (store : Store)
@@ -322,15 +340,8 @@ theorem indirectLoadInstructionTM_hoareTime_frame_internal
     have hresultCountNe :
         tapes.update.resultCount ≠ tapes.update.entry.query :=
       tapes.update.ne (by decide)
-    have hresultCount :
-        (loadedWork tapes.update.resultCount).HasBinaryNat store.length := by
-      rw [show loadedWork tapes.update.resultCount =
-          addressWork tapes.update.resultCount by
-        simpa using! hloadedResult.countSource]
-      rw [show addressWork tapes.update.resultCount =
-          initialWork tapes.update.resultCount by
-        simpa using! haddressResult.countSource]
-      simpa using! hinitial.countSource
+    have hresultCount := indirectLoaded_resultCount tapes store addressRegister
+      initialWork addressWork loadedWork hinitial haddressResult hloadedResult
     have hrun := entryUpdateTM_hoareTime_frame tapes.update store destination
       (RegisterStore.read store (RegisterStore.read store addressRegister))
       emittedBits updateWork inp₀ out₀ hcanonical hscanner

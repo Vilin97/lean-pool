@@ -107,6 +107,65 @@ private theorem entryReplaceReadyWork_eq
   · simp only [entryReplaceReadyWork, hia, ite_false]
     exact hframe i hia
 
+/-- Cleanup restores the original scan frame and leaves the replacement tape unchanged. -/
+private theorem entryReplaceCleanup_preserves_frame
+    (tapes : EntryReplaceTapes n) (entry : Entry) (rest queryBits : List Bool)
+    (initialWork matchedWork finalWork : Fin n → Tape)
+    (hmatch : ReadableEntryMatch tapes.entry entry rest queryBits initialWork matchedWork)
+    (hready : EntryScanReady tapes.entry rest queryBits
+      (entryReplaceReadyWork tapes entry matchedWork) finalWork) :
+    EntryScanReady tapes.entry rest queryBits initialWork finalWork ∧
+      finalWork tapes.replacement = matchedWork tapes.replacement := by
+  let readyWork := entryReplaceReadyWork tapes entry matchedWork
+  have hreadyGlobal :
+      EntryScanReady tapes.entry rest queryBits initialWork finalWork := by
+    refine ⟨hready.source, hready.address, hready.addressStart,
+      hready.value, hready.valueStart, hready.addressCounter,
+      hready.addressWidth, hready.valueCounter, hready.valueWidth,
+      hready.query, hready.queryStart, hready.result, hready.resultStart,
+      hready.parked, ?_⟩
+    intro i hsource haddress hvalue haddressCounter haddressWidth
+      hvalueCounter hvalueWidth hquery hresult
+    have hbase : readyWork i = matchedWork i := by
+      simp [readyWork, entryReplaceReadyWork, haddress]
+    exact (hready.frame i hsource haddress hvalue haddressCounter
+      haddressWidth hvalueCounter hvalueWidth hquery hresult).trans
+      (hbase.trans (hmatch.frame i hsource haddress hvalue haddressCounter
+        haddressWidth hvalueCounter hvalueWidth hquery hresult))
+  refine ⟨hreadyGlobal, ?_⟩
+  have hreplacementReady : readyWork tapes.replacement =
+      matchedWork tapes.replacement := by
+    have hne : tapes.replacement ≠ tapes.entry.address :=
+      tapes.replacement_ne 1
+    change (if tapes.replacement = tapes.entry.address then
+        { head := entry.1.bits.length + 1,
+          cells := (matchedWork tapes.replacement).cells }
+      else matchedWork tapes.replacement) = matchedWork tapes.replacement
+    rw [ite_eq_right hne]
+  exact (hready.frame tapes.replacement
+    (tapes.replacement_ne 0) (tapes.replacement_ne 1)
+    (tapes.replacement_ne 2) (tapes.replacement_ne 3)
+    (tapes.replacement_ne 4) (tapes.replacement_ne 5)
+    (tapes.replacement_ne 6) (tapes.replacement_ne 7)
+    (tapes.replacement_ne 8)).trans hreplacementReady
+
+/-- A framed work family is parked when both modified tapes have binary suffixes. -/
+private theorem parked_of_two_binary_suffixes
+    (first second : Fin n) (base work : Fin n → Tape) (firstBits secondBits : List Bool)
+    (hfirst : (work first).HasBinarySuffix firstBits)
+    (hsecond : (work second).HasBinarySuffix secondBits)
+    (hframe : ∀ i, i ≠ first → i ≠ second → work i = base i)
+    (hbase : ∀ i, TM.Parked (base i)) : ∀ i, TM.Parked (work i) := by
+  intro i
+  by_cases hia : i = first
+  · subst i
+    exact parked_of_binarySuffix hfirst
+  · by_cases hir : i = second
+    · subst i
+      exact parked_of_binarySuffix hsecond
+    · rw [hframe i hia hir]
+      exact hbase i
+
 theorem entryReplaceCleanupTM_hoareTime_frame_internal
     (tapes : EntryReplaceTapes n) (entry : Entry) (newValue : ℕ)
     (rest queryBits emitted : List Bool)
@@ -155,16 +214,10 @@ theorem entryReplaceCleanupTM_hoareTime_frame_internal
     exact hinput
   have hencodedOutputParked : TM.Parked encoded.output :=
     parked_of_binaryPrefix hencodedOutput
-  have hencodedWorkParked : ∀ i, TM.Parked (encoded.work i) := by
-    intro i
-    by_cases hia : i = tapes.entry.address
-    · subst i
-      exact parked_of_binarySuffix haddressSuffix
-    · by_cases hir : i = tapes.replacement
-      · subst i
-        exact parked_of_binarySuffix hreplacementSuffix
-      · rw [hencodedFrame i hia hir]
-        exact hmatch.parked i
+  have hencodedWorkParked : ∀ i, TM.Parked (encoded.work i) :=
+    parked_of_two_binary_suffixes tapes.entry.address tapes.replacement
+      matchedWork encoded.work _ _ haddressSuffix hreplacementSuffix
+      hencodedFrame hmatch.parked
   have hreplacementContent :
       (encoded.work tapes.replacement).HasBinaryContent newValue.bits := by
     have hcells : (encoded.work tapes.replacement).cells =
@@ -313,39 +366,12 @@ theorem entryReplaceCleanupTM_hoareTime_frame_internal
     exact (TM.phase2Wrap_halted_iff (rewindEntryEncodeTM tapes.encodeTapes)
     (TM.seqTM (TM.rewindWorkTM tapes.replacement)
       (entryMissCleanupTM tapes.entry)) tailFinal).mpr htailHalt
-  · have hreadyGlobal :
-        EntryScanReady tapes.entry rest queryBits initialWork cleaned.work := by
-      refine ⟨hready.source, hready.address, hready.addressStart,
-        hready.value, hready.valueStart, hready.addressCounter,
-        hready.addressWidth, hready.valueCounter, hready.valueWidth,
-        hready.query, hready.queryStart, hready.result, hready.resultStart,
-        hready.parked, ?_⟩
-      intro i hsource haddress hvalue haddressCounter haddressWidth
-        hvalueCounter hvalueWidth hquery hresult
-      have hbase : readyWork i = matchedWork i := by
-        simp [readyWork, entryReplaceReadyWork, haddress]
-      exact (hready.frame i hsource haddress hvalue haddressCounter
-        haddressWidth hvalueCounter hvalueWidth hquery hresult).trans
-        (hbase.trans (hmatch.frame i hsource haddress hvalue haddressCounter
-          haddressWidth hvalueCounter hvalueWidth hquery hresult))
-    refine ⟨?_, hreadyGlobal, ?_, ?_⟩
+  · obtain ⟨hreadyGlobal, hreplacementFinal⟩ :=
+      entryReplaceCleanup_preserves_frame tapes entry rest queryBits
+        initialWork matchedWork cleaned.work hmatch hready
+    refine ⟨?_, hreadyGlobal, hreplacementFinal, ?_⟩
     · change cleaned.input = inp₀
       exact hcleanedInput.trans (hrewoundInput.trans hencodedInput)
-    · have hreplacementReady : readyWork tapes.replacement =
-          matchedWork tapes.replacement := by
-        have hne : tapes.replacement ≠ tapes.entry.address :=
-          tapes.replacement_ne 1
-        change (if tapes.replacement = tapes.entry.address then
-            { head := entry.1.bits.length + 1,
-              cells := (matchedWork tapes.replacement).cells }
-          else matchedWork tapes.replacement) = matchedWork tapes.replacement
-        rw [ite_eq_right hne]
-      exact (hready.frame tapes.replacement
-        (tapes.replacement_ne 0) (tapes.replacement_ne 1)
-        (tapes.replacement_ne 2) (tapes.replacement_ne 3)
-        (tapes.replacement_ne 4) (tapes.replacement_ne 5)
-        (tapes.replacement_ne 6) (tapes.replacement_ne 7)
-        (tapes.replacement_ne 8)).trans hreplacementReady
     · change cleaned.output.HasBinaryPrefix
         (emitted ++ Entry.encode (entry.1, newValue))
       rw [hcleanedOutput, hrewoundOutput]
