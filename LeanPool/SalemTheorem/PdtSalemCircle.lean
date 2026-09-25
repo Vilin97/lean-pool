@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
 module
-
 public import Mathlib.Algebra.Polynomial.Roots
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
@@ -55,7 +54,7 @@ count, `3 ≤ m + p` alone drives the phase climb); the trichotomy
 carries both `1 ≤ m` and `3 ≤ m + p`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDT
 namespace SalemCircle
@@ -66,11 +65,11 @@ open Polynomial Complex Set
 /-! ### The fixed objects -/
 
 /-- The circle parametrization `E t = exp(t·I)`. -/
-def E (t : ℝ) : ℂ := Complex.exp (t * Complex.I)
+@[expose] def E (t : ℝ) : ℂ := Complex.exp (t * Complex.I)
 
 /-- `P = (X − C α)·∏_{r ∈ roots} (X − C r)`: monic, degree
 `roots.card + 1`, roots `α` and the inside conjugates. -/
-def P (alpha : ℝ) (roots : Multiset ℂ) : Polynomial ℂ :=
+@[expose] def P (alpha : ℝ) (roots : Multiset ℂ) : Polynomial ℂ :=
   (X - C (alpha : ℂ)) * (roots.map fun r => X - C r).prod
 
 /-- `Q = (1 − C α·X)·∏_{r ∈ roots} (1 − C r·X)`: the mirrored product,
@@ -79,7 +78,7 @@ def Q (alpha : ℝ) (roots : Multiset ℂ) : Polynomial ℂ :=
   (1 - C (alpha : ℂ) * X) * (roots.map fun r => 1 - C r * X).prod
 
 /-- The Salem family `R_m = X^m·P + Q`. -/
-def R (alpha : ℝ) (roots : Multiset ℂ) (m : ℕ) : Polynomial ℂ :=
+@[expose] def R (alpha : ℝ) (roots : Multiset ℂ) (m : ℕ) : Polynomial ℂ :=
   X ^ m * P alpha roots + Q alpha roots
 
 /-- The reduced product on the circle: `Q(E t) = conj (V t)` and
@@ -99,7 +98,7 @@ def A (alpha : ℝ) (roots : Multiset ℂ) (t : ℝ) : ℝ :=
 
 /-- The half-angle phase of `R_m` on the circle:
 `R_m(E t) = 2·N t·cos(ψ t)·E((m+p)·t/2)`. -/
-def psi (alpha : ℝ) (roots : Multiset ℂ) (m : ℕ) (t : ℝ) : ℝ :=
+@[expose] def psi (alpha : ℝ) (roots : Multiset ℂ) (m : ℕ) (t : ℝ) : ℝ :=
   ((m + roots.card + 1 : ℕ) : ℝ) * t / 2 + A alpha roots t
 
 /-! ### Scalar evaluations and the self-inversive pairing -/

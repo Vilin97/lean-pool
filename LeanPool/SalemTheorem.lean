@@ -5,7 +5,6 @@ Authors: Stephanie Alexander
 -/
 module
 
-
 public import LeanPool.SalemTheorem.PdtPisotLadder
 public import LeanPool.SalemTheorem.PdtSalemArith
 public import LeanPool.SalemTheorem.PdtSalemCircle

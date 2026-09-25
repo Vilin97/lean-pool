@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
 module
-
 public import Mathlib.Tactic
 public import LeanPool.SalemTheorem.PdtSalemCircle
 public import LeanPool.SalemTheorem.PdtSalemArith
@@ -61,7 +60,7 @@ Main results:
 The reduction lemma is proved without conjugation-closure.
 -/
 
-@[expose] public section
+public section
 
 namespace PDT
 namespace SalemQuadUnit
@@ -157,7 +156,7 @@ lemma exists_root_between (f : ℝ → ℝ) (a b : ℝ) (hab : a < b)
 
 /-- **Salem's second construction, Chebyshev-free**: the integer family
 `B = (X² − rX + 1)·(X^{2m} + 1) + eps·X^{m+1}`, `eps = ±1`. -/
-def Bfam (r eps : ℤ) (m : ℕ) : Polynomial ℤ :=
+@[expose] def Bfam (r eps : ℤ) (m : ℕ) : Polynomial ℤ :=
   (X ^ 2 - C r * X + 1) * (X ^ (2 * m) + 1) + C eps * X ^ (m + 1)
 
 lemma quad_monic (r : ℤ) : (X ^ 2 - C r * X + 1 : Polynomial ℤ).Monic := by

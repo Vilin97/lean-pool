@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
 module
-
 public import Mathlib.Tactic
 public import LeanPool.SalemTheorem.PdtSalemCircle
 public import LeanPool.SalemTheorem.PdtSalemArith
@@ -40,7 +39,7 @@ port of `PdtSalemArith.salem_certificate` with the family
 `Rz = X^m·Pz − Qz`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDT
 namespace SalemMinus

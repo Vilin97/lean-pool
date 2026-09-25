@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
 module
-
 public import Mathlib.Tactic
 public import LeanPool.SalemTheorem.PdtPisotLadder
 public import LeanPool.SalemTheorem.PdtSalemCircle
@@ -55,7 +54,7 @@ Structure:
 hypothesis although it follows from the integer coefficients.
 -/
 
-@[expose] public section
+public section
 
 namespace PDT
 namespace SalemEndgame
@@ -66,7 +65,7 @@ open Filter Set Polynomial
 /-- A Salem number: a real algebraic integer `tau > 1` whose other
 conjugates all lie in the closed unit disk, at least one ON the unit
 circle, with `1/tau` among them. -/
-def IsSalem (tau : ℝ) : Prop :=
+@[expose] def IsSalem (tau : ℝ) : Prop :=
   1 < tau ∧ IsIntegral ℤ tau ∧
   (∀ z : ℂ, (Polynomial.aeval z) (minpoly ℚ tau) = 0 → z ≠ (tau : ℂ) → ‖z‖ ≤ 1) ∧
   (∃ z : ℂ, (Polynomial.aeval z) (minpoly ℚ tau) = 0 ∧ ‖z‖ = 1) ∧

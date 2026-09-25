@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
 module
-
 public import Mathlib.Analysis.Complex.Polynomial.Basic
 public import Mathlib.Tactic
 public import LeanPool.SalemTheorem.PdtSalemCircle
@@ -44,7 +43,7 @@ image constrained, so the reverse-polynomial identification is decoupled
 `Qz = Pz.reverse`).
 -/
 
-@[expose] public section
+public section
 
 namespace PDT
 namespace SalemArith

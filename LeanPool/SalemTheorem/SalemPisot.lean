@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
 module
-
 public import Mathlib.Tactic
 public import LeanPool.SalemTheorem.PdtPisotLadder
 public import LeanPool.SalemTheorem.PdtSalemCircle
@@ -59,7 +58,7 @@ here as `1 < α`, `IsIntegral ℤ α`, and
   as `(X² − rX + 1)(X^{2m} + 1) ± X^{m+1}` (`m ≥ 1`).
 -/
 
-@[expose] public section
+public section
 
 namespace PDT
 namespace SalemPisot

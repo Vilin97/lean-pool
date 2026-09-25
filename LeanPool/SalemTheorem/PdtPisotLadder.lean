@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
 module
-
 public import Mathlib.Algebra.Order.Ring.Star
 public import Mathlib.Algebra.Order.Star.Real
 public import Mathlib.Analysis.Polynomial.Basic
@@ -47,7 +46,7 @@ is mathematically redundant (it follows from `hc : 1 < c` and
 `pisot_ladder_pos_eventually`, where it is essential.
 -/
 
-@[expose] public section
+public section
 
 namespace PDT
 namespace PisotLadder
