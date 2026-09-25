@@ -83,7 +83,7 @@ instance : CoeFun L0Infinity (fun _ => ℝ → ℂ) := ⟨L0Infinity.toFun⟩
 /-- Bounded compactly supported measurable test functions are integrable. -/
 theorem L0Infinity.integrable (f : L0Infinity) : Integrable f := by
   have hcompact : IsCompact (tsupport f) := f.hasCompactSupport_toFun
-  have hfinite : volume (tsupport f) < ∞ := hcompact.measure_lt_top
+  have hfinite : volume (tsupport f) < ⊤ := hcompact.measure_lt_top
   rcases f.bounded_toFun with ⟨C, hC⟩
   apply (integrableOn_iff_integrable_of_support_subset (subset_tsupport f)).mp
   exact IntegrableOn.of_bound hfinite
