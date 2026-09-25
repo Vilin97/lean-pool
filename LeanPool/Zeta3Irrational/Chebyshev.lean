@@ -492,7 +492,7 @@ theorem eventually_psi_le_mul :
   have hsmall := h_logsq.bound (c := 1 / 50) (by norm_num)
   filter_upwards [hsmall, eventually_ge_atTop (30 : ℝ), eventually_ge_atTop (5 : ℝ),
     eventually_ge_atTop (3 : ℝ)] with x hxsmall hx30 hx5 hx3
-  have hxpos : 0 < x := by linarith
+  have hxpos : 0 < x := lt_of_lt_of_le (by norm_num) hx30
   have hlog_nonneg : 0 ≤ log x := log_nonneg (by linarith)
   have hlog1 : 1 ≤ log x := by
     rw [le_log_iff_exp_le hxpos]
@@ -501,7 +501,7 @@ theorem eventually_psi_le_mul :
     rw [le_log_iff_exp_le (by norm_num : (0 : ℝ) < 6)]
     exact le_trans Real.exp_one_lt_three.le (by norm_num)
   have hrem_small : 5 * (log x) ^ 2 + 180 ≤ (1 / 50 : ℝ) * x := by
-    have hnonneg : 0 ≤ 5 * (log x) ^ 2 + 180 := by nlinarith [sq_nonneg (log x)]
+    have hnonneg : 0 ≤ 5 * (log x) ^ 2 + 180 := by positivity
     simpa [Real.norm_eq_abs, abs_of_nonneg hnonneg, abs_of_nonneg hxpos.le] using hxsmall
   have hfloor_le :
       (⌊log (x / 5) / log 6⌋₊ : ℝ) ≤ log (x / 5) / log 6 := by
@@ -516,23 +516,23 @@ theorem eventually_psi_le_mul :
     · exact div_le_self hxpos.le (by norm_num : (1 : ℝ) ≤ 5)
   have hmiddle :
       (⌊log (x / 5) / log 6⌋₊ : ℝ) * (5 * log x - 5) ≤ 5 * (log x) ^ 2 := by
-    have hfactor_nonneg : 0 ≤ 5 * log x - 5 := by nlinarith
+    have hfactor_nonneg : 0 ≤ 5 * log x - 5 := by linarith only [hlog1]
     have hdiv_le_log : log (x / 5) / log 6 ≤ log x :=
-      div_le_of_le_mul₀ (by linarith) hlog_nonneg
-        (by nlinarith [hlog_div_le, hlog6, hlog_nonneg])
+      div_le_of_le_mul₀ (by linarith only [hlog6]) hlog_nonneg
+        (hlog_div_le.trans (le_mul_of_one_le_right hlog_nonneg hlog6))
     calc
       (⌊log (x / 5) / log 6⌋₊ : ℝ) * (5 * log x - 5)
           ≤ (log (x / 5) / log 6) * (5 * log x - 5) :=
             mul_le_mul_of_nonneg_right hfloor_le hfactor_nonneg
       _ ≤ log x * (5 * log x - 5) := by
         exact mul_le_mul_of_nonneg_right hdiv_le_log hfactor_nonneg
-      _ ≤ 5 * (log x) ^ 2 := by nlinarith
+      _ ≤ 5 * (log x) ^ 2 := by nlinarith only [hlog_nonneg]
   calc
     ψ x ≤ 6 * a * x / 5 + (⌊log (x / 5) / log 6⌋₊ : ℝ) * (5 * log x - 5) + 180 :=
       psi_upper_coarse x hx30
     _ ≤ (111 / 100 : ℝ) * x + (5 * (log x) ^ 2 + 180) := by
-      have ha : 6 * a / 5 ≤ (111 / 100 : ℝ) := by nlinarith [a_bound.2]
-      nlinarith
+      have ha : 6 * a / 5 ≤ (111 / 100 : ℝ) := by linarith only [a_bound.2]
+      linarith only [mul_le_mul_of_nonneg_right ha hxpos.le, hmiddle]
     _ ≤ (111 / 100 : ℝ) * x + (1 / 50 : ℝ) * x := by gcongr
     _ = (113 / 100 : ℝ) * x := by ring
 
