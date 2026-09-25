@@ -102,19 +102,22 @@ section AnalyticAction
 
 variable {F : LocalField.{u, v} K} {π : F.valuationSubring}
 
-private noncomputable local instance
+/-- The coefficient ring carries the discrete uniformity for formal evaluation. -/
+noncomputable local instance
     standardLubinTatePrimitiveActionCoefficientUniformSpace :
     UniformSpace F.valuationSubring :=
   ⊥
 
-private noncomputable local instance
+/-- The finite-level valuation ring is equipped with its maximal adic ideal. -/
+noncomputable local instance
     standardLubinTatePrimitiveActionTargetWithIdeal
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
     WithIdeal
       (standardLubinTateLevelCompleteDVF hπ n).valuationSubring where
   i := (standardLubinTateLevelCompleteDVF hπ n).maximalIdeal
 
-private noncomputable local instance
+/-- The finite-level valuation ring is complete for the maximal-ideal topology. -/
+noncomputable local instance
     standardLubinTatePrimitiveActionTargetCompleteSpace
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
     CompleteSpace
@@ -123,7 +126,8 @@ private noncomputable local instance
   have hadic : IsAdic target.maximalIdeal := rfl
   exact (hadic.isAdicComplete_iff.mp target.isAdicComplete).1
 
-private noncomputable local instance
+/-- The finite-level valuation ring has a Hausdorff maximal-ideal topology. -/
+noncomputable local instance
     standardLubinTatePrimitiveActionTargetT2Space
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
     T2Space
@@ -132,7 +136,8 @@ private noncomputable local instance
   have hadic : IsAdic target.maximalIdeal := rfl
   exact (hadic.isAdicComplete_iff.mp target.isAdicComplete).2
 
-private noncomputable local instance
+/-- The coefficient homomorphism supplies the finite-level valuation-ring algebra. -/
+noncomputable local instance
     standardLubinTatePrimitiveActionAlgebra
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
     Algebra F.valuationSubring

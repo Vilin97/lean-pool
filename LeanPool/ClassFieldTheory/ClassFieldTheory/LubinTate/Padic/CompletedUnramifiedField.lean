@@ -230,12 +230,11 @@ noncomputable instance padicCompletedUnramifiedFieldAlgebra
     (algebraMap (padicCompletedUnramifiedWittRing p)
       (padicCompletedUnramifiedField p)).comp
       (padicIntToCompletedUnramifiedWittRing p)
-  have hg : Function.Injective g :=
-    (IsFractionRing.injective
+  exact (IsFractionRing.lift (g := g) (by
+    exact (IsFractionRing.injective
       (padicCompletedUnramifiedWittRing p)
       (padicCompletedUnramifiedField p)).comp
-      (padicIntToCompletedUnramifiedWittRing_injective p)
-  exact (IsFractionRing.lift hg).toAlgebra
+      (padicIntToCompletedUnramifiedWittRing_injective p))).toAlgebra
 
 /-- The canonical field embedding agrees with the original Witt-ring map
 on p-adic integers. -/

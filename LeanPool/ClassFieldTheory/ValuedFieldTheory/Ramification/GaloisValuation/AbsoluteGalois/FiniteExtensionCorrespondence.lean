@@ -760,7 +760,8 @@ theorem quotientOpenSubgroupEquivGalOfNormalFiniteExtension_mk'
 
 /-- Rebase automorphisms over an embedded finite extension from `L` to its
 field range `i(L)`. -/
-private def automorphismsOverFieldRangeEquiv
+/-- Identify automorphisms over a field with automorphisms fixing its embedded image. -/
+def automorphismsOverFieldRangeEquiv
     (i : L →ₐ[K] AlgebraicClosure K) [Algebra L (AlgebraicClosure K)]
     (hmap : ∀ x, algebraMap L (AlgebraicClosure K) x = i x) :
     (AlgebraicClosure K ≃ₐ[L] AlgebraicClosure K) ≃*

@@ -125,8 +125,7 @@ theorem
   dsimp only
   let hnK : ((n : ℕ) : K) ≠ 0 := by
     exact_mod_cast n.ne_zero
-  let nUnit : Kˣ :=
-    Units.mk0 ((n : ℕ) : K) hnK
+  let nUnit : Kˣ := Units.mk0 ((n : ℕ) : K) hnK
   let S₀ :=
     (S ∪ IdeleGroup.sufficientlyLargeFiniteSet (K := K)) ∪
       chosenUnitFiniteSupport (K := K) nUnit
@@ -232,9 +231,7 @@ theorem
           Set (HeightOneSpectrum (𝓞 K))) ⊆
         (S₀ : Set (HeightOneSpectrum (𝓞 K))) := by
     intro w hw
-    exact
-      Finset.mem_union_left _
-        (Finset.mem_union_right _ hw)
+    exact Finset.mem_union_left _ (Finset.mem_union_right _ hw)
   have hS₀ :
       IdeleGroup.supportedAt
             (K := K) (S₀ : Set (HeightOneSpectrum (𝓞 K))) ⊔
@@ -342,8 +339,7 @@ theorem
       (K := K) (L := E)
   let hnK : ((n : ℕ) : K) ≠ 0 := by
     exact_mod_cast n.ne_zero
-  let nUnit : Kˣ :=
-    Units.mk0 ((n : ℕ) : K) hnK
+  let nUnit : Kˣ := Units.mk0 ((n : ℕ) : K) hnK
   let S₀ :=
     (S ∪ IdeleGroup.sufficientlyLargeFiniteSet (K := K)) ∪
       chosenUnitFiniteSupport (K := K) nUnit

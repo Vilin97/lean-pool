@@ -219,7 +219,7 @@ noncomputable def tateH0IsoHerbrandH0 :
       apply (HerbrandH0.mk_eq_one_iff _).2
       refine ⟨a.toMul, ?_⟩
       dsimp [eK, fixedCyclesAddEquiv, S, M]
-      exact (repNorm_toMul (G := G) (A := A) a).symm
+      exact (by exact (repNorm_toMul (G := G) (A := A) a).symm)
     · intro hx
       change q x = 0 at hx
       have hx' : HerbrandH0.mk x.toMul = 1 := by
@@ -265,9 +265,10 @@ def normKernelCyclesAddEquiv :
         change tateNorm G A a.toMul = 1
         have hx := x.2
         change (Rep.ofMulDistribMulAction G A).ρ.norm a = 0 at hx
-        exact (repNorm_toMul (G := G) (A := A) a).symm.trans <| by
-          rw [hx]
-          rfl⟩
+        exact (by
+          exact (repNorm_toMul (G := G) (A := A) a).symm.trans <| by
+            rw [hx]
+            rfl)⟩
   invFun x :=
     let a : Additive A := Additive.ofMul x.toMul.1
     ⟨a, by
@@ -299,7 +300,8 @@ private theorem normKernelCyclesAddEquiv_coe
     (x : LinearMap.ker (Rep.ofMulDistribMulAction G A).norm.toModuleCatHom.hom) :
     (normKernelCyclesAddEquiv (G := G) (A := A) x).toMul.val = x.val.toMul := rfl
 
-/-- Identify degree-minus-one Tate cohomology with the Herbrand quotient for a commutative cyclic group. -/
+/-- Identify degree-minus-one Tate cohomology with the Herbrand quotient
+for a commutative cyclic group. -/
 noncomputable def tateHMinusOneIsoHerbrandHMinusOneOfCommGroup
     {G A : Type} [CommGroup G] [Fintype G] [CommGroup A]
     [MulDistribMulAction G A]
@@ -335,8 +337,7 @@ noncomputable def tateHMinusOneIsoHerbrandHMinusOneOfCommGroup
       apply (HerbrandHMinusOne.mk_eq_one_iff σ _).2
       refine ⟨a.toMul, ?_⟩
       dsimp [eK, normKernelCyclesAddEquiv, S, M]
-      exact (repSigmaMinusOne_toMul
-        (G := G) (A := A) σ a).symm
+      exact (by exact (repSigmaMinusOne_toMul (G := G) (A := A) σ a).symm)
     · intro hx
       change q x = 0 at hx
       have hx' : HerbrandHMinusOne.mk σ x.toMul = 1 := by
@@ -350,10 +351,10 @@ noncomputable def tateHMinusOneIsoHerbrandHMinusOneOfCommGroup
       apply Additive.toMul.injective
       apply Subtype.ext
       dsimp [eK, normKernelCyclesAddEquiv, S, M]
-      have hσ := repSigmaMinusOne_toMul
-        (G := G) (A := A) σ (Additive.ofMul a)
-      rw [show Additive.toMul (Additive.ofMul a) = a by rfl] at hσ
-      exact hσ.trans ha
+      exact (by
+        have hσ := repSigmaMinusOne_toMul (G := G) (A := A) σ (Additive.ofMul a)
+        rw [show Additive.toMul (Additive.ofMul a) = a by rfl] at hσ
+        exact hσ.trans ha)
   let eQ :=
     (Submodule.Quotient.equiv (LinearMap.range S.moduleCatToCycles)
       q.ker.toIntSubmodule eK hboundary).trans

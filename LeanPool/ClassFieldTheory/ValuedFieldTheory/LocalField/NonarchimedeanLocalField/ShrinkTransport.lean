@@ -36,32 +36,32 @@ private theorem smallLocalField : Small.{0} K :=
 
 /-- The canonical valuation pulled back to the small carrier. -/
 noncomputable def shrinkLocalFieldValuation :
-    letI : Small.{0} K := smallLocalField K
+    letI : Small.{0} K := by exact smallLocalField K
     Valuation (Shrink.{0} K) (ValueGroupWithZero K) := by
-  letI : Small.{0} K := smallLocalField K
+  letI : Small.{0} K := by exact smallLocalField K
   exact (valuation K).comap (Shrink.ringEquiv K).toRingHom
 
 /-- The valuative relation on the small carrier, transported from `K`. -/
 @[instance_reducible]
 noncomputable def shrinkLocalFieldValuativeRel :
-    letI : Small.{0} K := smallLocalField K
+    letI : Small.{0} K := by exact smallLocalField K
     ValuativeRel (Shrink.{0} K) := by
-  letI : Small.{0} K := smallLocalField K
+  letI : Small.{0} K := by exact smallLocalField K
   exact ValuativeRel.ofValuation (shrinkLocalFieldValuation K)
 
 /-- The small carrier inherits local compactness from `K`. -/
 theorem shrinkLocalField_locallyCompact :
-    letI : Small.{0} K := smallLocalField K
+    letI : Small.{0} K := by exact smallLocalField K
     LocallyCompactSpace (Shrink.{0} K) := by
-  let : Small.{0} K := smallLocalField K
+  let : Small.{0} K := by exact smallLocalField K
   exact (Shrink.homeomorph K).symm.isOpenEmbedding.locallyCompactSpace
 
 /-- The pulled-back valuative relation is nontrivial. -/
 theorem shrinkLocalField_isNontrivial :
-    letI : Small.{0} K := smallLocalField K
+    letI : Small.{0} K := by exact smallLocalField K
     letI : ValuativeRel (Shrink.{0} K) := shrinkLocalFieldValuativeRel K
     ValuativeRel.IsNontrivial (Shrink.{0} K) := by
-  let : Small.{0} K := smallLocalField K
+  let : Small.{0} K := by exact smallLocalField K
   let : ValuativeRel (Shrink.{0} K) := shrinkLocalFieldValuativeRel K
   let v := shrinkLocalFieldValuation K
   let : v.Compatible := Valuation.Compatible.ofValuation v
@@ -77,13 +77,13 @@ theorem shrinkLocalField_isNontrivial :
 /-- Strict valuation comparisons are preserved by the small-carrier ring
 equivalence. -/
 theorem shrinkLocalField_valuation_lt_iff :
-    letI : Small.{0} K := smallLocalField K
+    letI : Small.{0} K := by exact smallLocalField K
     letI : ValuativeRel (Shrink.{0} K) := shrinkLocalFieldValuativeRel K
     ∀ x y : Shrink.{0} K,
       valuation (Shrink.{0} K) x < valuation (Shrink.{0} K) y ↔
         valuation K (Shrink.ringEquiv K x) <
           valuation K (Shrink.ringEquiv K y) := by
-  let : Small.{0} K := smallLocalField K
+  let : Small.{0} K := by exact smallLocalField K
   let : ValuativeRel (Shrink.{0} K) := shrinkLocalFieldValuativeRel K
   intro x y
   let v := shrinkLocalFieldValuation K
@@ -99,9 +99,9 @@ theorem shrinkLocalField_valuation_lt_iff :
 /-- The transported topology is compatible with the transported additive
 group structure. -/
 theorem shrinkLocalField_isTopologicalAddGroup :
-    letI : Small.{0} K := smallLocalField K
+    letI : Small.{0} K := by exact smallLocalField K
     IsTopologicalAddGroup (Shrink.{0} K) := by
-  let : Small.{0} K := smallLocalField K
+  let : Small.{0} K := by exact smallLocalField K
   change @IsTopologicalAddGroup (Shrink.{0} K)
     (TopologicalSpace.induced (Shrink.ringEquiv K) inferInstance) _
   exact isTopologicalAddGroup_induced (Shrink.ringEquiv K).toAddMonoidHom
@@ -109,10 +109,10 @@ theorem shrinkLocalField_isTopologicalAddGroup :
 /-- The transported topology is the valuative topology of the pulled-back
 valuation. -/
 theorem shrinkLocalField_isValuativeTopology :
-    letI : Small.{0} K := smallLocalField K
+    letI : Small.{0} K := by exact smallLocalField K
     letI : ValuativeRel (Shrink.{0} K) := shrinkLocalFieldValuativeRel K
     IsValuativeTopology (Shrink.{0} K) := by
-  let : Small.{0} K := smallLocalField K
+  let : Small.{0} K := by exact smallLocalField K
   let : ValuativeRel (Shrink.{0} K) := shrinkLocalFieldValuativeRel K
   let : IsTopologicalAddGroup (Shrink.{0} K) :=
     shrinkLocalField_isTopologicalAddGroup K
@@ -194,10 +194,10 @@ theorem shrinkLocalField_isValuativeTopology :
 /-- The small representative of a nonarchimedean local field is itself a
 nonarchimedean local field for the transported structures. -/
 theorem shrinkLocalField_isNonarchimedeanLocalField :
-    letI : Small.{0} K := smallLocalField K
+    letI : Small.{0} K := by exact smallLocalField K
     letI : ValuativeRel (Shrink.{0} K) := shrinkLocalFieldValuativeRel K
     IsNonarchimedeanLocalField (Shrink.{0} K) := by
-  let : Small.{0} K := smallLocalField K
+  let : Small.{0} K := by exact smallLocalField K
   let : ValuativeRel (Shrink.{0} K) := shrinkLocalFieldValuativeRel K
   exact {
     toIsValuativeTopology := shrinkLocalField_isValuativeTopology K

@@ -50,7 +50,7 @@ def finiteResidueFrobeniusIntermediate
 
 /-- The compatible finite Frobenius coordinates attached to one profinite
 integer. -/
-private def residueFrobeniusLimitPoint (z : ZHatMul) :
+def residueFrobeniusLimitPoint (z : ZHatMul) :
     limit (InfiniteGalois.asProfiniteGaloisGroupFunctor k Omega) where
   val := fun E => finiteResidueFrobeniusIntermediate k Omega E.unop z
   property := by

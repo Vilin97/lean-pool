@@ -142,13 +142,16 @@ local instance completionBaseSMul : SMul K w.1.Completion :=
 local instance completionAlgebra : Algebra vK.Completion w.1.Completion :=
   AbsoluteValue.completionAlgebra vK w.1 w.2
 
-private abbrev localization : IntermediateField vK.Completion w.1.Completion :=
+/-- The algebraic localization of the extension inside its completed valued field. -/
+abbrev localization : IntermediateField vK.Completion w.1.Completion :=
   AbsoluteValue.algebraicLocalization vK w.1 w.2
 
-private abbrev toLocalization : L →+* localization vK w :=
+/-- The canonical embedding of the extension into its algebraic localization. -/
+abbrev toLocalization : L →+* localization vK w :=
   AbsoluteValue.toAlgebraicLocalization vK w.1 w.2
 
-private abbrev localizationAbsoluteValue :
+/-- The absolute value on the algebraic localization induced from the completed extension. -/
+abbrev localizationAbsoluteValue :
     AbsoluteValue (localization vK w) ℝ :=
   AbsoluteValue.algebraicLocalizationAbsoluteValue vK w.1 w.2
 
@@ -179,12 +182,14 @@ theorem algebraicLocalizationDensity_localization_nonarchimedean
     AbsoluteValue.algebraicLocalizationAbsoluteValue_toAlgebraicLocalization vK w.1 w.2 (n : L)
   simpa using hrestrict.trans_le (hC n)
 
-private abbrev extensionValuationSubring
+/-- The valuation subring of the original extension for its nonarchimedean absolute value. -/
+abbrev extensionValuationSubring
     (hw : LubinTate.Valuations.NonarchimedeanAbsoluteValue w.1) :
     _root_.ValuationSubring L :=
   absoluteValueValuationSubring w.1 hw
 
-private abbrev localizationValuationSubring
+/-- The valuation subring of the algebraic localization for the induced absolute value. -/
+abbrev localizationValuationSubring
     (hw : LubinTate.Valuations.NonarchimedeanAbsoluteValue w.1) :
     _root_.ValuationSubring (localization vK w) :=
   absoluteValueValuationSubring

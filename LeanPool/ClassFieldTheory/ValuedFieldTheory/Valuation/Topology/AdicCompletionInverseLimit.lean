@@ -848,7 +848,8 @@ noncomputable instance dvrHigherUnitQuotientInverseLimit.instTopologicalSpace
   exact
     (dvrHigherUnitQuotientInverseLimitCompatibleFamiliesEquiv π).topologicalSpace
 
-private noncomputable def
+/-- The higher-unit inverse limit is homeomorphic to its compatible coordinate families. -/
+noncomputable def
     dvrHigherUnitQuotientInverseLimitRepresentationHomeomorph
     {O : Type*} [CommRing O] (π : O) :
     letI : (n : ℕ) → TopologicalSpace
@@ -944,8 +945,8 @@ def unitsToHigherUnitQuotientInverseLimit
     Oˣ →* dvrHigherUnitQuotientInverseLimit π where
   toFun u := dvrHigherUnitQuotientInverseLimitMk π
     (fun _ => QuotientGroup.mk u)
-    (fun {m n} hmn =>
-      dvrHigherUnitQuotientTransition_mk π (m := m) (n := n) hmn u)
+    (fun {m n} hmn => by
+      exact dvrHigherUnitQuotientTransition_mk π (m := m) (n := n) hmn u)
   map_one' := by ext n; rfl
   map_mul' u v := by ext n; rfl
 
@@ -1172,7 +1173,8 @@ private theorem continuous_unitHom_of_continuous_val
   refine ⟨hval, ?_⟩
   simpa only [Function.comp_def, map_inv] using hval.comp hinv
 
-private noncomputable def unitsCompatibleFamiliesHomeomorph
+/-- Identify adic units with compatible families of their discrete higher-unit quotients. -/
+noncomputable def unitsCompatibleFamiliesHomeomorph
     {O : Type*} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     {π : O} (hπ : Irreducible π) [IsAdicComplete (uniformizerPowerIdeal π 1) O] :
     letI : TopologicalSpace O := (uniformizerPowerIdeal π 1).adicTopology

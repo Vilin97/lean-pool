@@ -38,7 +38,8 @@ abbrev BinaryCoefficientFamily : Bool → Type uA
   | false => A
   | true => B
 
-private instance binaryCoefficientFamilyCommGroup :
+/-- Each member of the binary coefficient family inherits its commutative group structure. -/
+instance binaryCoefficientFamilyCommGroup :
     ∀ i, CommGroup (BinaryCoefficientFamily A B i)
   | false => inferInstance
   | true => inferInstance
@@ -51,7 +52,8 @@ noncomputable def binaryCoefficientFamilyAction :
   | false => inferInstance
   | true => inferInstance
 
-private noncomputable instance
+/-- The binary coefficient family carries the given action on each component. -/
+noncomputable instance binaryCoefficientFamilyMulDistribMulAction
     (i : Bool) :
     MulDistribMulAction G
       (BinaryCoefficientFamily A B i) :=

@@ -94,11 +94,12 @@ theorem completionExponentialValueSubgroup_eq
     exponentialValueSubgroup
         (absoluteValueExponentialValuation
           (AbsoluteValue.completionAbsoluteValue a)
-          (completionNonarchimedean a ha)) =
+          (by exact completionNonarchimedean a ha)) =
       exponentialValueSubgroup
         (absoluteValueExponentialValuation a ha) := by
   let aC := AbsoluteValue.completionAbsoluteValue a
-  let haC := completionNonarchimedean a ha
+  let haC : LubinTate.Valuations.NonarchimedeanAbsoluteValue aC := by
+      exact completionNonarchimedean a ha
   let v := absoluteValueExponentialValuation a ha
   let vC := absoluteValueExponentialValuation aC haC
   ext r
@@ -137,10 +138,10 @@ theorem completionRamificationIndex_eq
     exponentialRamificationIndex
         (absoluteValueExponentialValuation
           (AbsoluteValue.completionAbsoluteValue a)
-          (completionNonarchimedean a ha))
+          (by exact completionNonarchimedean a ha))
         (absoluteValueExponentialValuation
           (AbsoluteValue.completionAbsoluteValue b)
-          (completionNonarchimedean b hb)) =
+          (by exact completionNonarchimedean b hb)) =
       exponentialRamificationIndex
         (absoluteValueExponentialValuation a ha)
         (absoluteValueExponentialValuation b hb) := by
@@ -175,7 +176,7 @@ def completionExponentialSubringMap
       LubinTate.Valuations.exponentialValuationSubring
         (absoluteValueExponentialValuation
           (AbsoluteValue.completionAbsoluteValue a)
-          (completionNonarchimedean a ha)) :=
+          (by exact completionNonarchimedean a ha)) :=
   (algebraMap K a.Completion).restrict _ _ fun x hx => by
     rw [mem_absoluteValueExponentialSubring_iff] at hx ⊢
     change AbsoluteValue.completionAbsoluteValue a (x : a.Completion) ≤ 1
@@ -191,7 +192,7 @@ def completionExponentialSubringMap
       LubinTate.Valuations.exponentialValuationSubring
         (absoluteValueExponentialValuation
           (AbsoluteValue.completionAbsoluteValue a)
-          (completionNonarchimedean a ha))) : a.Completion) =
+          (by exact completionNonarchimedean a ha))) : a.Completion) =
       algebraMap K a.Completion (x : K) := rfl
 
 theorem completionExponentialSubringMap_isLocalHom
@@ -205,7 +206,7 @@ theorem completionExponentialSubringMap_isLocalHom
   rw [LubinTate.Valuations.associatedAbsoluteValue_isUnit_iff_eq_one
     (absoluteValueExponentialValuation_associated
       (AbsoluteValue.completionAbsoluteValue a)
-      (completionNonarchimedean a ha))] at hx
+      (by exact completionNonarchimedean a ha))] at hx
   change AbsoluteValue.completionAbsoluteValue a
       ((x : K) : a.Completion) = 1 at hx
   rw [AbsoluteValue.completionAbsoluteValue_coe] at hx
@@ -220,7 +221,8 @@ theorem completionResidueMap_surjective
       (IsLocalRing.ResidueField.map (completionExponentialSubringMap a ha)) := by
   let v := absoluteValueExponentialValuation a ha
   let aC := AbsoluteValue.completionAbsoluteValue a
-  let haC := completionNonarchimedean a ha
+  let haC : LubinTate.Valuations.NonarchimedeanAbsoluteValue aC := by
+      exact completionNonarchimedean a ha
   let vC := absoluteValueExponentialValuation aC haC
   let V := LubinTate.Valuations.exponentialValuationSubring v
   let VC := LubinTate.Valuations.exponentialValuationSubring vC
@@ -271,7 +273,7 @@ noncomputable def completionResidueEquiv
         (LubinTate.Valuations.exponentialValuationSubring
           (absoluteValueExponentialValuation
             (AbsoluteValue.completionAbsoluteValue a)
-            (completionNonarchimedean a ha))) := by
+            (by exact completionNonarchimedean a ha))) := by
   letI : IsLocalHom (completionExponentialSubringMap a ha) :=
     completionExponentialSubringMap_isLocalHom a ha
   exact ValuationTheory.DiscreteValuationField.ResidueField.ringEquivOfSurjective
@@ -321,9 +323,10 @@ theorem completionExponentialValuation_discrete
     LubinTate.Valuations.DiscreteExponentialValuation
       (absoluteValueExponentialValuation
         (AbsoluteValue.completionAbsoluteValue a)
-        (completionNonarchimedean a ha)) := by
+        (by exact completionNonarchimedean a ha)) := by
   let aC := AbsoluteValue.completionAbsoluteValue a
-  let haC := completionNonarchimedean a ha
+  let haC : LubinTate.Valuations.NonarchimedeanAbsoluteValue aC := by
+      exact completionNonarchimedean a ha
   let v := absoluteValueExponentialValuation a ha
   let vC := absoluteValueExponentialValuation aC haC
   rcases hdisc with ⟨s, hs, hvalues, pi, hpival⟩
@@ -359,8 +362,10 @@ theorem completionExponentialSubringMap_square
     let w := absoluteValueExponentialValuation b hb
     let aC := AbsoluteValue.completionAbsoluteValue a
     let bC := AbsoluteValue.completionAbsoluteValue b
-    let haC := completionNonarchimedean a ha
-    let hbC := completionNonarchimedean b hb
+    let haC : LubinTate.Valuations.NonarchimedeanAbsoluteValue aC := by
+      exact completionNonarchimedean a ha
+    let hbC : LubinTate.Valuations.NonarchimedeanAbsoluteValue bC := by
+      exact completionNonarchimedean b hb
     let vC := absoluteValueExponentialValuation aC haC
     let wC := absoluteValueExponentialValuation bC hbC
     let hvw := absoluteValueExponentialValuation_extends a b ha hb hExt
@@ -388,8 +393,10 @@ theorem completionResidueDegree_eq
     let w := absoluteValueExponentialValuation b hb
     let aC := AbsoluteValue.completionAbsoluteValue a
     let bC := AbsoluteValue.completionAbsoluteValue b
-    let haC := completionNonarchimedean a ha
-    let hbC := completionNonarchimedean b hb
+    let haC : LubinTate.Valuations.NonarchimedeanAbsoluteValue aC := by
+      exact completionNonarchimedean a ha
+    let hbC : LubinTate.Valuations.NonarchimedeanAbsoluteValue bC := by
+      exact completionNonarchimedean b hb
     let vC := absoluteValueExponentialValuation aC haC
     let wC := absoluteValueExponentialValuation bC hbC
     let hvw := absoluteValueExponentialValuation_extends a b ha hb hExt
@@ -401,8 +408,10 @@ theorem completionResidueDegree_eq
   let w := absoluteValueExponentialValuation b hb
   let aC := AbsoluteValue.completionAbsoluteValue a
   let bC := AbsoluteValue.completionAbsoluteValue b
-  let haC := completionNonarchimedean a ha
-  let hbC := completionNonarchimedean b hb
+  let haC : LubinTate.Valuations.NonarchimedeanAbsoluteValue aC := by
+      exact completionNonarchimedean a ha
+  let hbC : LubinTate.Valuations.NonarchimedeanAbsoluteValue bC := by
+      exact completionNonarchimedean b hb
   let vC := absoluteValueExponentialValuation aC haC
   let wC := absoluteValueExponentialValuation bC hbC
   let hvw := absoluteValueExponentialValuation_extends a b ha hb hExt
@@ -507,7 +516,8 @@ theorem completionExtensionInvariants_local_identity
     a w.1 ha hb w.2
   let aC := AbsoluteValue.completionAbsoluteValue a
   let bC := AbsoluteValue.completionAbsoluteValue w.1
-  let haC := completionNonarchimedean a ha
+  let haC : LubinTate.Valuations.NonarchimedeanAbsoluteValue aC := by
+      exact completionNonarchimedean a ha
   let hbC := completionNonarchimedean w.1 hb
   let vC := absoluteValueExponentialValuation aC haC
   let wC := absoluteValueExponentialValuation bC hbC

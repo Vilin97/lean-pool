@@ -91,7 +91,7 @@ def extensionNormalizedDegree (D : DegreeData G)
     (K.field.toSubgroup ⧸ D.extensionInertiaWithin K.field L hLK) →* ZHatMul :=
   QuotientGroup.lift (D.extensionInertiaWithin K.field L hLK)
     (D.normalizedDegree K).toMonoidHom
-    (D.extensionInertiaWithin_le_normalizedDegree_ker K L hLK)
+    (by exact D.extensionInertiaWithin_le_normalizedDegree_ker K L hLK)
 
 /--
 Establishes the identity `D.extensionNormalizedDegree K L hLK (QuotientGroup.mk k) =

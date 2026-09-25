@@ -45,10 +45,12 @@ open Polynomial
 variable (k : Type u) [Field k] [Fintype k]
 
 omit [Fintype k] in
-private instance finiteFieldRingCharPrime [Finite k] : Fact (ringChar k).Prime :=
+/-- The characteristic of a finite field is prime. -/
+instance finiteFieldRingCharPrime [Finite k] : Fact (ringChar k).Prime :=
   ⟨CharP.char_is_prime k (ringChar k)⟩
 
-private noncomputable instance absoluteGaloisGroupT2 :
+/-- The absolute Galois group of the residue field has a Hausdorff Krull topology. -/
+noncomputable instance absoluteGaloisGroupT2 :
     T2Space (Field.absoluteGaloisGroup k) := by
   unfold Field.absoluteGaloisGroup
   exact krullTopology_t2

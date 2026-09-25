@@ -1419,8 +1419,8 @@ def conjugateOpenSubgroupOfOpenSubgroup
   haveI : FiniteDimensional K E :=
     fixedFieldOfOpenSubgroup.instFiniteDimensional K H
   let σ' : Gal(AlgebraicClosure K/K) := σ
-  haveI : FiniteDimensional K (E.map σ'.toAlgHom) :=
-    finiteDimensional_map_algEquiv σ' E
+  haveI : FiniteDimensional K (E.map σ'.toAlgHom) := by
+    exact finiteDimensional_map_algEquiv σ' E
   exact openSubgroupOfFiniteIntermediateField K (E.map σ'.toAlgHom)
 
 /-- The subgroup underlying the conjugate open subgroup is the pointwise

@@ -54,7 +54,7 @@ private def continuousQuotientLift
         (QuotientGroup.isQuotientMap_mk (G := A) (N := N)).continuous_iff.2 hcomp }
 
 /-- Inclusion of a subgroup with its subtype topology, used locally below. -/
-private def continuousSubgroupSubtype
+def continuousSubgroupSubtype
     {A : Type*} [Group A] [TopologicalSpace A]
     (H : Subgroup A) : H →ₜ* A where
   toMonoidHom := H.subtype
@@ -62,7 +62,7 @@ private def continuousSubgroupSubtype
 
 /-- A bijective continuous homomorphism from a compact group to a Hausdorff
 group is a continuous multiplicative equivalence. -/
-private noncomputable def continuousMulEquivOfBijectiveCompactToT2
+noncomputable def continuousMulEquivOfBijectiveCompactToT2
     {A : Type*} {B : Type*} [Group A] [TopologicalSpace A]
     [Group B] [TopologicalSpace B] [CompactSpace A] [T2Space B]
     (φ : A →* B) (hφcont : Continuous φ) (hφ : Function.Bijective φ) :
@@ -351,8 +351,8 @@ def extensionNormalizedDegreeContinuous (D : DegreeData G)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal] :
     (K.field.toSubgroup ⧸ D.extensionInertiaWithin K.field L hLK) →ₜ* ZHatMul :=
   { toMonoidHom := D.extensionNormalizedDegree K L hLK
-    continuous_toFun :=
-      (continuousQuotientLift (D.extensionInertiaWithin K.field L hLK)
+    continuous_toFun := by
+      exact (continuousQuotientLift (D.extensionInertiaWithin K.field L hLK)
         (D.normalizedDegree K)
         (by
           intro x hx

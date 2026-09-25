@@ -93,7 +93,8 @@ theorem conjugateFixedElement_coe [ContinuousMul G]
       A.ρ σ⁻¹ a.1 :=
   rfl
 
-private def absoluteConjugationEquiv {G : Type*} [Group G] [TopologicalSpace G]
+/-- Conjugation permutes the elements of the absolute base subgroup. -/
+def absoluteConjugationEquiv {G : Type*} [Group G] [TopologicalSpace G]
     (σ : G) :
     (baseField G).toSubgroup ≃
       (baseField G).toSubgroup where

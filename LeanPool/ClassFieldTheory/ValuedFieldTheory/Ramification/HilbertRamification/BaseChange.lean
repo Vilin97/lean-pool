@@ -48,7 +48,8 @@ variable (hsquare : tauL.comp (algebraMap K L) =
 variable [Normal K L]
 
 include hsquare in
-private def galoisPullbackElement (sigma : L' ≃ₐ[K'] L') : L ≃ₐ[K] L := by
+/-- Restrict an automorphism through a commutative square of field embeddings. -/
+def galoisPullbackElement (sigma : L' ≃ₐ[K'] L') : L ≃ₐ[K] L := by
   letI : Algebra K K' := tauK.toAlgebra
   letI : Algebra K L' := ((algebraMap K' L').comp tauK).toAlgebra
   letI : Algebra L L' := tauL.toAlgebra
@@ -152,7 +153,8 @@ open RamificationTheory.HilbertRamification.ValuationSubring
 
 variable (A' : _root_.ValuationSubring L')
 
-private abbrev pulledValuationSubring : _root_.ValuationSubring L :=
+/-- The valuation subring pulled back along the field embedding. -/
+abbrev pulledValuationSubring : _root_.ValuationSubring L :=
   A'.comap tauL
 
 private theorem mem_nonunits_pulled_iff (x : L) :
@@ -260,14 +262,14 @@ def galoisPullbackInertiaGroupMap :
   toFun sigma := by
     let delta := galoisPullbackDecompositionGroupMap tauK tauL hsquare A'
       (sigma : decompositionGroup K' A')
-    refine ⟨delta, ?_⟩
-    rw [mem_inertiaGroup_iff_sub_mem_nonunits]
-    intro x
-    rw [mem_nonunits_pulled_iff]
-    rw [map_sub, decompositionGroupMap_commutes]
-    exact (mem_inertiaGroup_iff_sub_mem_nonunits A'
-      (sigma : decompositionGroup K' A')).mp sigma.property
-      ⟨tauL (x : L), x.property⟩
+    refine ⟨delta, by
+      rw [mem_inertiaGroup_iff_sub_mem_nonunits]
+      intro x
+      rw [mem_nonunits_pulled_iff]
+      rw [map_sub, decompositionGroupMap_commutes]
+      exact (mem_inertiaGroup_iff_sub_mem_nonunits A'
+        (sigma : decompositionGroup K' A')).mp sigma.property
+        ⟨tauL (x : L), x.property⟩⟩
   map_one' := by
     apply Subtype.ext
     exact map_one (galoisPullbackDecompositionGroupMap tauK tauL hsquare A')

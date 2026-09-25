@@ -696,7 +696,8 @@ noncomputable instance adicPositiveQuotientInverseLimit.instTopologicalSpace
   exact
     (adicPositiveQuotientInverseLimitCompatibleFamiliesEquiv I).topologicalSpace
 
-private noncomputable def
+/-- Identify the positive adic inverse limit with its compatible families of discrete coordinates. -/
+noncomputable def
     adicPositiveQuotientInverseLimitRepresentationHomeomorph
     {R : Type*} [CommRing R] (I : Ideal R) :
     letI : (n : ℕ) → TopologicalSpace (R ⧸ I ^ (n + 1)) := fun _ => ⊥

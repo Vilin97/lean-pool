@@ -132,6 +132,8 @@ private theorem padicChangedUniformizerRotation_coeff_zero_ne_zero
     (p : ℕ) [Fact p.Prime]
     (u : (padicLocalField p).valuationSubringˣ) :
     (WittVector.frobeniusRotation p
+      (a₂ := (padicValuationUnitToCompletedUnramifiedWittUnit p u :
+        padicCompletedUnramifiedWittRing p))
       (show
         ((1 : padicCompletedUnramifiedWittRing p).coeff 0) ≠ 0 by
         simp)
@@ -155,12 +157,15 @@ noncomputable def padicChangedUniformizerLinearCoefficient
   Classical.choose
     (WittVector.isUnit_of_coeff_zero_ne_zero
       (WittVector.frobeniusRotation p
+      (a₂ := (padicValuationUnitToCompletedUnramifiedWittUnit p u :
+        padicCompletedUnramifiedWittRing p))
         (show
           ((1 : padicCompletedUnramifiedWittRing p).coeff 0) ≠ 0 by
           simp)
-        (completedUnramifiedWittUnit_coeff_zero_ne_zero p
-          (padicValuationUnitToCompletedUnramifiedWittUnit p u)))
-      (padicChangedUniformizerRotation_coeff_zero_ne_zero p u))
+        (by
+          exact completedUnramifiedWittUnit_coeff_zero_ne_zero p
+            (padicValuationUnitToCompletedUnramifiedWittUnit p u)))
+      (by exact padicChangedUniformizerRotation_coeff_zero_ne_zero p u))
 
 @[simp]
 private theorem padicChangedUniformizerLinearCoefficient_coe
@@ -169,20 +174,26 @@ private theorem padicChangedUniformizerLinearCoefficient_coe
     (padicChangedUniformizerLinearCoefficient p u :
         padicCompletedUnramifiedWittRing p) =
       WittVector.frobeniusRotation p
+        (a₂ := (padicValuationUnitToCompletedUnramifiedWittUnit p u :
+          padicCompletedUnramifiedWittRing p))
         (show
           ((1 : padicCompletedUnramifiedWittRing p).coeff 0) ≠ 0 by
           simp)
-        (completedUnramifiedWittUnit_coeff_zero_ne_zero p
-          (padicValuationUnitToCompletedUnramifiedWittUnit p u)) :=
+        (by
+          exact completedUnramifiedWittUnit_coeff_zero_ne_zero p
+            (padicValuationUnitToCompletedUnramifiedWittUnit p u)) :=
   Classical.choose_spec
     (WittVector.isUnit_of_coeff_zero_ne_zero
       (WittVector.frobeniusRotation p
+      (a₂ := (padicValuationUnitToCompletedUnramifiedWittUnit p u :
+        padicCompletedUnramifiedWittRing p))
         (show
           ((1 : padicCompletedUnramifiedWittRing p).coeff 0) ≠ 0 by
           simp)
-        (completedUnramifiedWittUnit_coeff_zero_ne_zero p
-          (padicValuationUnitToCompletedUnramifiedWittUnit p u)))
-      (padicChangedUniformizerRotation_coeff_zero_ne_zero p u))
+        (by
+          exact completedUnramifiedWittUnit_coeff_zero_ne_zero p
+            (padicValuationUnitToCompletedUnramifiedWittUnit p u)))
+      (by exact padicChangedUniformizerRotation_coeff_zero_ne_zero p u))
 
 /-- The linear coefficient satisfies the semilinear equation
 `φ(ε) = ε u`. -/

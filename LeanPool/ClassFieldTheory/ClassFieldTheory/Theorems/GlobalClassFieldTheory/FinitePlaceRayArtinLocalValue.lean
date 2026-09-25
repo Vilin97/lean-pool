@@ -130,8 +130,7 @@ theorem exists_finitePlaceRayArtin_localValueDiagram
   classical
   let vK := NumberField.HeightOneSpectrum.adicAbv K v
   let hvK : vK.IsNontrivial := RayClass.adicAbv_isNontrivial v
-  let w : ExtendingAbsoluteValue vK L :=
-    _root_.chosenFinitePlaceExtension (L := L) v
+  let w : ExtendingAbsoluteValue vK L := _root_.chosenFinitePlaceExtension (L := L) v
   let hK := AbsoluteValue.extensionCompletionAlgebra (K := K) w.1
   let : SMul K w.1.Completion := hK.toSMul
   let halg : Algebra vK.Completion w.1.Completion :=
@@ -248,8 +247,7 @@ theorem exists_finitePlaceRayArtin_localValueDiagram
         exact (hemb _).symm
       _ = eC (eD δ (j y)) := congrArg eC hloc.symm
       _ = σ (eC (j y)) := by
-        have hδ : eD δ = eAut.symm σ :=
-          eD.apply_symm_apply _
+        have hδ : eD δ = eAut.symm σ := eD.apply_symm_apply _
         rw [hδ]
         change eC (eC.symm (σ (eC (j y)))) = _
         exact eC.apply_symm_apply _
