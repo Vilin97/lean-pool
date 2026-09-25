@@ -6,9 +6,7 @@ Authors: Junqi Liu, Jujian Zhang
 module
 
 public import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Algebra.Order.BigOperators.Expect
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Normed.Group.Basic
 
 /-!
 # LeanPool.Zeta3Irrational.Bound
@@ -22,11 +20,8 @@ open scoped Nat
 open BigOperators
 
 lemma max_value {x : ℝ} (x0 : 0 < x) (x1 : x < 1) : √x * √(1 - x) ≤ ((1 / 2) : ℝ) := by
-  rw [← Real.sqrt_mul, le_div_iff₀,
-    ← show √4 = 2 by rw [Real.sqrt_eq_iff_eq_sq] <;> linarith,
-    ← Real.sqrt_mul, Real.sqrt_le_one,
-    show x * (1 - x) * 4 = 1 - (2 * x - 1) ^ 2 by ring] <;>
-  nlinarith [mul_self_nonneg (2 * x - 1)]
+  nlinarith only [sq_nonneg (√x - √(1 - x)), Real.sq_sqrt x0.le,
+    Real.sq_sqrt (sub_pos.mpr x1).le]
 
 lemma max_value' {x : ℝ} (x0 : 0 < x) (x1 : x < 1) : √x * (1 - x) ≤ ((2 / 5) : ℝ) := by
   calc
@@ -46,14 +41,8 @@ lemma nonneg {x : ℝ} (_ : 0 < x) (_ : x < 1) : (0 : ℝ) ≤ √x * √(1 -x) 
 
 lemma bound_aux (x z : ℝ) (x0 : 0 < x) (x1 : x < 1) (z0 : 0 < z) (_ : z < 1) :
     2 * √(1 - x) * √(x * z) ≤ 1 - (1 - z) * x := by
-  rw [← sub_pos] at x1
-  have := mul_pos x0 z0
-  rw [show 1 - (1 - z) * x = 1 - x + x * z by ring]
-  calc
-    _ ≤ (√(1 - x) - √(x * z)) * (√(1 - x) - √(x * z)) + 2 * √(1 - x) * √(x * z) :=
-      by linarith [mul_self_nonneg (√(1 - x) - √(x * z))]
-    _ = √(1 - x) * √(1 - x) + √(x * z) * √(x * z) := by ring
-    _ = 1 - x + x * z := by rw [Real.mul_self_sqrt, Real.mul_self_sqrt] <;> linarith
+  nlinarith only [sq_nonneg (√(1 - x) - √(x * z)),
+    Real.sq_sqrt (sub_pos.mpr x1).le, Real.sq_sqrt (mul_pos x0 z0).le]
 
 lemma bound (x y z : ℝ) (x0 : 0 < x) (x1 : x < 1) (y0 : 0 < y) (y1 : y < 1)
     (z0 : 0 < z) (z1 : z < 1) :
@@ -96,41 +85,24 @@ lemma bound (x y z : ℝ) (x0 : 0 < x) (x1 : x < 1) (y0 : 0 < y) (y1 : y < 1)
         _ = _ := by
           simpa only [Real.div_sqrt] using (by ring)
     _ ≤ (1 / 2) * (1 / 2) * (1 / 2) / 4 := by
-      refine div_le_div₀ (by norm_num)
-        (mul_le_mul_of_nonneg (mul_le_mul_of_nonneg (max_value ?_ ?_) (max_value ?_ ?_) ?_ ?_)
-          (max_value ?_ ?_) (mul_nonneg ?_ ?_) ?_) (by norm_num) (by norm_num) <;>
-      linarith
+      gcongr
+      · exact max_value x0 (sub_pos.mp x1)
+      · exact max_value y0 (sub_pos.mp y1)
+      · exact max_value z0 (sub_pos.mp z1)
     _ < (1 / 30 : ℝ) := by norm_num
 
 lemma bound_aux' (x y z : ℝ) (x0 : 0 < x) (_ : x < 1) (y0 : 0 < y) (_ : y < 1)
     (z0 : 0 < z) (z1 : z < 1) :
     2 * √(1 - z) * √(x * y * z) ≤ 1 - (1 - x * y) * z := by
-  rw [← sub_pos] at z1
-  have := mul_pos x0 (mul_pos y0 z0)
-  rw [show 1 - (1 - x * y) * z = (1 - z) + x * y * z by ring]
-  calc
-    _ ≤ (√(1 - z) - √(x * y * z)) * (√(1 - z) - √(x * y * z)) +
-        2 * √(1 - z) * √(x * y * z) :=
-      by linarith [mul_self_nonneg (√(1 - z) - √(x * y * z))]
-    _ = √(1 - z) * √(1 - z) + √(x * y * z) * √(x * y * z) := by ring
-    _ = 1 - z + x * y * z := by rw [Real.mul_self_sqrt, Real.mul_self_sqrt] <;> linarith
+  nlinarith only [sq_nonneg (√(1 - z) - √(x * y * z)),
+    Real.sq_sqrt (sub_pos.mpr z1).le, Real.sq_sqrt (mul_pos (mul_pos x0 y0) z0).le]
 
 lemma bound' (x y z : ℝ) (x0 : 0 < x) (x1 : x < 1) (y0 : 0 < y) (y1 : y < 1)
     (z0 : 0 < z) (z1 : z < 1) :
     x * (1 - x) * y * (1 - y) * z * (1 - z) / (1 - (1 - x * y) * z) < (1 / 24 : ℝ) := by
-  have := mul_pos x0 z0
-  have h1 : 2 * √(1 - x) * √(x * z) ≤ 1 - (1 - z) * x := by apply bound_aux <;> assumption
-  have h2 : 2 * √(1 - y) * √((1 - z) * y) ≤ 1 - y * z := by
-    convert bound_aux y (1 - z) y0 y1 (by linarith) (by linarith) using 2
-    · rw [mul_comm]
-    · ring
   rw [← sub_pos] at x1 y1 z1
-  have : y * z < 1 := by nlinarith
-  have : 0 < √(1 - x) := Real.sqrt_pos_of_pos x1
-  have : 0 < √(x * z) := Real.sqrt_pos_of_pos (by linarith)
-  have : 0 < 1 - y * z := by linarith
-  have : 0 ≤ x.sqrt * (1 - x) := mul_nonneg (Real.sqrt_nonneg _) (by linarith)
-  have : 0 ≤ y.sqrt * (1 - y) := mul_nonneg (Real.sqrt_nonneg _) (by linarith)
+  have hx_nonneg : 0 ≤ x.sqrt * (1 - x) := mul_nonneg (Real.sqrt_nonneg _) x1.le
+  have hy_nonneg : 0 ≤ y.sqrt * (1 - y) := mul_nonneg (Real.sqrt_nonneg _) y1.le
   calc
     _ ≤ x * (1 -x) * y * (1 - y) * z * (1 - z) / (2 * √(1 - z) * √(x * y * z)) := by
       refine div_le_div₀ (by positivity) (le_refl _) (by positivity) ?_
@@ -149,10 +121,10 @@ lemma bound' (x y z : ℝ) (x0 : 0 < x) (x1 : x < 1) (y0 : 0 < y) (y1 : y < 1)
         _ = _ := by
           simpa only [Real.div_sqrt] using (by ring)
     _ ≤ (2 / 5) * (2 / 5) * (1 / 2) / 2 := by
-      refine div_le_div₀ (by norm_num)
-        (mul_le_mul_of_nonneg (mul_le_mul_of_nonneg (max_value' ?_ ?_) (max_value' ?_ ?_) ?_ ?_)
-          (max_value ?_ ?_) (mul_nonneg ?_ ?_) ?_) (by norm_num) (by norm_num) <;>
-      try nlinarith
+      gcongr
+      · exact max_value' x0 (sub_pos.mp x1)
+      · exact max_value' y0 (sub_pos.mp y1)
+      · exact max_value z0 (sub_pos.mp z1)
     _ < (1 / 24 : ℝ) := by
       norm_num
 
@@ -177,27 +149,26 @@ lemma bound'' (x y z : ℝ) (x0 : 0 < x) (x1 : x < 1) (y0 : 0 < y) (y1 : y < 1)
       have hsqrtxy : √x * √y = s := by
         change √x * √y = √(x * y)
         rw [← Real.sqrt_mul (le_of_lt x0) y]
-      nlinarith [sq_nonneg (√x - √y)]
-    nlinarith [hs_sq]
+      nlinarith only [sq_nonneg (√x - √y), hsqrtx, hsqrty, hsqrtxy]
+    nlinarith only [h_amgm, hs_sq]
   have hden_pos : 0 < 1 - (1 - x * y) * z := by
-    have hxy_lt_one : x * y < 1 := by nlinarith
-    nlinarith
+    nlinarith only [z1, mul_pos (mul_pos x0 y0) z0]
   have hden_pos_s : 0 < 1 - (1 - s ^ 2) * z := by
-    simp_all
+    rw [hs_sq]
+    exact hden_pos
   have hfrac :
       z * (1 - z) / (1 - (1 - s ^ 2) * z) ≤ 1 / (1 + s) ^ 2 := by
     rw [div_le_div_iff₀ hden_pos_s (by positivity : 0 < (1 + s) ^ 2)]
     ring_nf
-    nlinarith [sq_nonneg (1 - (1 + s) * z)]
+    nlinarith only [sq_nonneg (1 - (1 + s) * z)]
   have hratio_nonneg : 0 ≤ s * (1 - s) / (1 + s) := by positivity
   have hratio_le : s * (1 - s) / (1 + s) ≤ (2 / 11 : ℝ) := by
     rw [div_le_iff₀ (by positivity : 0 < 1 + s)]
     have hquad : 0 ≤ 11 * s ^ 2 - 9 * s + 2 := by
-      nlinarith [sq_nonneg (22 * s - 9)]
-    nlinarith
+      nlinarith only [sq_nonneg (22 * s - 9)]
+    nlinarith only [hquad]
   have hratio_sq_le : (s * (1 - s) / (1 + s)) ^ 2 ≤ (2 / 11 : ℝ) ^ 2 := by
-    nlinarith [sq_nonneg ((2 / 11 : ℝ) - s * (1 - s) / (1 + s)), hratio_nonneg,
-      hratio_le]
+    exact pow_le_pow_left₀ hratio_nonneg hratio_le 2
   have hnum_le :
       x * (1 - x) * y * (1 - y) * z * (1 - z) ≤
         s ^ 2 * (1 - s) ^ 2 * z * (1 - z) := by
