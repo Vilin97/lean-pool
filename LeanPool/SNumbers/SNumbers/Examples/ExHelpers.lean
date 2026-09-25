@@ -28,9 +28,9 @@ here so that each statement is proved once.
   attains `w` on at least `k` coordinates.
 * `exists_flat_vector` — the unweighted case `w ≡ 1`, with nonvanishing.
 
-The flatness lemmas are the geometric heart of the Gelfand-width lower bounds
-(Pietsch, *Eigenvalues and s-numbers*, §11.11): they produce, inside any
-subspace of large enough dimension, a vector that is "flat" in the sense of
+The flatness lemmas supply the geometric input to `exists_norm_ratio_ge_idEmbed`
+and `approximationNumber_idEmbed_eq` in `SNumbers.Examples.Identity`. They
+produce, inside any subspace of large enough dimension, a vector that is "flat" in the sense of
 saturating a prescribed coordinate bound on many coordinates. The proof is an
 extreme-point argument (Krein–Milman) combined with the pigeonhole lemma.
 -/

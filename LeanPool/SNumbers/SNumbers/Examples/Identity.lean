@@ -13,8 +13,10 @@ public import Mathlib.Analysis.MeanInequalities
 # Example: s-numbers of the identity embedding `ℓ^q_m → ℓ^p_m`
 
 The identity map `id : ℓ^q_m → ℓ^p_m` between finite-dimensional sequence spaces
-with **different** exponents (`p ≤ q`). Its s-numbers are a classical example
-(Pietsch, *Eigenvalues and s-numbers*, §11.11).
+with **different** exponents (`p ≤ q`). For background on s-numbers of diagonal
+operators, see Pietsch, *Operator Ideals* (1980), §11.11, starting on p. 158
+([contents](https://d-nb.info/36904729X/04)). The dimension-dependent lower bound
+below is derived from `exists_flat_vector` and `norm_ratio_of_flat`.
 
 This is the **unit-diagonal** case of the diagonal operators, and it is kept
 self-contained: it depends only on the core s-number theory and the shared
@@ -33,7 +35,7 @@ This file develops the case `1 ≤ p ≤ q < ∞`:
   (hence `sₙ(id) ≤ (m-n)^{1/p-1/q}` for every s-number, via `sₙ ≤ aₙ`);
 * `approximationNumber_idEmbed_eq` — the exact value `aₙ(id) = (m-n)^{1/p-1/q}`,
   via the geometric input `exists_norm_ratio_ge_idEmbed` (the classical
-  Gelfand-width lower bound, Pietsch §11.11): every subspace of dimension `≥ m-n`
+  Gelfand-width lower bound): every subspace of dimension `≥ m-n`
   contains a vector with `p`/`q`-norm ratio `≥ (m-n)^{1/p-1/q}`, proved from the
   flatness / extreme-point lemma `exists_flat_vector` of
   `SNumbers.Examples.ExHelpers`.
@@ -219,8 +221,7 @@ theorem approximationNumber_idEmbed_le {p q : ℝ≥0∞} [Fact (1 ≤ p)] [Fact
 /-! ## Stage 3 — the lower bound `(m-n)^{1/p-1/q} ≤ aₙ(id)`
 
 For any rank-`≤ n` operator `L`, its kernel has dimension `≥ m - n`, and
-`(id - L)` agrees with `id` there. The crux is a **classical geometric fact**
-(Pietsch, *Eigenvalues and s-numbers*, §11.11; the Gelfand-width lower bound):
+`(id - L)` agrees with `id` there. The geometric input proved below is that
 every subspace of dimension `≥ m - n` contains a vector whose `p`-norm is at
 least `(m-n)^{1/p-1/q}` times its `q`-norm. It comes from the flatness lemma
 `exists_flat_vector` (an extreme-point argument, in
@@ -288,7 +289,8 @@ private lemma norm_ratio_of_flat {p q : ℝ≥0∞} [Fact (1 ≤ p)] [Fact (1 �
 
 /-- **Geometric input.** Every subspace `V ⊆ ℓ^q_m` of dimension `≥ m - n`
 contains a nonzero `x` with `(m-n)^{1/p-1/q} · ‖x‖_q ≤ ‖x‖_p` (`= ‖id x‖`).
-The classical Gelfand-width lower bound (Pietsch §11.11). -/
+This Gelfand-width lower bound follows from `exists_flat_vector` and
+`norm_ratio_of_flat`. -/
 lemma exists_norm_ratio_ge_idEmbed {p q : ℝ≥0∞} [Fact (1 ≤ p)] [Fact (1 ≤ q)]
     (hpq : p ≤ q) (hq : q ≠ ∞) {n : ℕ} (hn : n < m)
     (V : Submodule 𝕜 (PiLp q (fun _ : Fin m => 𝕜))) (hV : m - n ≤ Module.finrank 𝕜 V) :
