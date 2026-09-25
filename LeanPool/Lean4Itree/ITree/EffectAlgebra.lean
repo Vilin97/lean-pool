@@ -17,7 +17,7 @@ and sum effects (`VoidE`, `SumE`), the `MonadIter` class of iterable monads, the
 against an effect handler into an arbitrary iterable monad.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4Itree
 

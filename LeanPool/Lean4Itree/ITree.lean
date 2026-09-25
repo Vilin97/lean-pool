@@ -19,4 +19,4 @@ coinductive definition and bisimulation (`Basic`), supporting utilities
 interpretation combinators (`EffectAlgebra`).
 -/
 
-@[expose] public section
+public section

@@ -38,7 +38,7 @@ together with `Matrix.rank_conjTranspose_mul_self` and `Matrix.rank_le_card_heig
   `DistanceGeometry.schoenberg_easy` : the necessary conditions.
 -/
 
-@[expose] public section
+public section
 
 namespace DistanceGeometry
 

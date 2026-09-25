@@ -24,7 +24,7 @@ six-chromatic witness, but it does not determine the chromatic number of the
 plane.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.MoserLatticeColorings
 
@@ -288,6 +288,7 @@ def moserRingSetoid : Setoid RingRep where
 /-- The Moser ring
 `{(a + bω₁ + cω₃ + dω₁ω₃) / 3^k : a, b, c, d ∈ ℤ, k ∈ ℕ}`,
 quotiented by equality of Euclidean embeddings. -/
+@[expose]
 def MoserRing := Quotient moserRingSetoid
 
 namespace MoserRing

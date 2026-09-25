@@ -20,4 +20,4 @@ Tags: combinatorics, graph-coloring, discrete-geometry, unit-distance-graphs, mo
 MSC: 05C15
 -/
 
-@[expose] public section
+public section
