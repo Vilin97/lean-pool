@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ClusterFactors
-import LeanPool.BeyondBethe.BeyondBethe.CapacityOrder
-import Mathlib.Analysis.MeanInequalities
+
+public import LeanPool.BeyondBethe.BeyondBethe.ClusterFactors
+public import LeanPool.BeyondBethe.BeyondBethe.CapacityOrder
+public import Mathlib.Analysis.MeanInequalities
 
 /-! # Certificate Capacity -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -16,6 +20,7 @@ namespace BeyondBethe
 
 open MvPolynomial
 
+/-- The product formula `∏ i, (u i / α i)^(α i)` for linear capacity. -/
 noncomputable def linearCapacityValue
     {ι : Type*} [Fintype ι]
     (u α : ι → ℝ) : ℝ :=
@@ -118,6 +123,8 @@ theorem linearCapacityValue_eq_capacity
     rw [heval, hmono, one_div, inv_inv] at hupper
     exact hupper
 
+/-- The product of the unit-coefficient linear capacity expressions, one for each selector
+coordinate. -/
 noncomputable def selectorCapacityValue
     {κ ι : Type*} [Fintype κ] [Fintype ι]
     (α : κ × ι → ℝ) : ℝ :=
@@ -194,6 +201,8 @@ theorem selectorCapacityValue_le_capacity
   intro z hz
   exact selectorCapacityValue_le_ratio hα hαcol hz
 
+/-- The product of the capacities of the cluster injection polynomials at the prescribed
+exponents. -/
 noncomputable def clusterProductCapacityValue
     {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) (C : RowClustering n)
     (α : C.Cluster × Fin n → ℝ) : ℝ :=

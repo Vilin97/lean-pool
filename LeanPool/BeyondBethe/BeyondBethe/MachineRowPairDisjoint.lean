@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineCertifiedPairEligibility
-import LeanPool.BeyondBethe.BeyondBethe.MachineListReverse
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineCertifiedPairEligibility
+public import LeanPool.BeyondBethe.BeyondBethe.MachineListReverse
 
 /-!
 # Disjointness from an encoded row-pair list
@@ -16,6 +18,8 @@ It iterates for the bit-length of the selected-list encoding, so malformed
 inputs remain polynomially bounded; after the encoded list is exhausted the
 step stutters.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

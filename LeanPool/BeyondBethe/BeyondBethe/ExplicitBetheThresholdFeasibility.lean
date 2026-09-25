@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.BetheThresholdFeasibility
-import LeanPool.BeyondBethe.BeyondBethe.ExplicitScheduledFeasibility
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.BetheThresholdFeasibility
+public import LeanPool.BeyondBethe.BeyondBethe.ExplicitScheduledFeasibility
+public import Mathlib.Tactic
 
 /-! # Explicit Bethe Threshold Feasibility -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -21,6 +25,8 @@ uses the same rational oracle and iteration budget as
 the two explicit zero-ball exponents rather than a matrix LCM.
 -/
 
+/-- Run the explicit ball-based feasibility routine on the bounded Bethe epigraph oracle at the
+given threshold. -/
 def runExplicitBetheThresholdFeasibility {m : ℕ}
     (τ : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (p : ℕ) (δ upper r : ℚ) :

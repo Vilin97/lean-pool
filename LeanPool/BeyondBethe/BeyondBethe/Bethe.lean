@@ -3,18 +3,23 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Birkhoff
-import LeanPool.BeyondBethe.BeyondBethe.Entropy
-import Mathlib.Analysis.Convex.Function
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.Birkhoff
+public import LeanPool.BeyondBethe.BeyondBethe.Entropy
+public import Mathlib.Analysis.Convex.Function
+public import Mathlib.Tactic
 
 /-! # Bethe -/
+
+@[expose] public section
 
 open scoped BigOperators
 
 namespace BeyondBethe
 
+/-- Every entry of the matrix is strictly positive. -/
 def Matrix.Positive
     {m n : Type*} (A : Matrix m n ℝ) : Prop :=
   ∀ i j, 0 < A i j
@@ -35,6 +40,8 @@ noncomputable def betheRowObjective
     (X i j * Real.log (A i j) + Real.negMulLog (X i j) +
       (1 - X i j) * Real.log (1 - X i j))
 
+/-- The Bethe objective, summed over all rows and columns with the matrix weights and entropy
+terms. -/
 noncomputable def betheObjective
     {n : Type*} [Fintype n] (A X : Matrix n n ℝ) : ℝ := by
   classical

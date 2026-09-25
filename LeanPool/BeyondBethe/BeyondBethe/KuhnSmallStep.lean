@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.KuhnMatching
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.KuhnMatching
+public import Mathlib.Tactic
 
 /-!
 # A small-step evaluator for the Kuhn matching algorithm
@@ -21,22 +23,31 @@ to isolate the semantic compiler-correctness argument from the subsequent
 finite-word implementation.
 -/
 
+@[expose] public section
+
 namespace BeyondBethe
 
 /-- The information needed after a recursive alternating-path search returns.
 On success the saved edge is installed.  On failure the parent row resumes at
 its saved column suffix with its original mate table. -/
 structure KuhnSearchFrame (n : ℕ) where
+  /-- The parent search fuel restored if the recursive search fails. -/
   fuel : ℕ
+  /-- The remaining parent columns to scan after a failed recursive search. -/
   remaining : List (Fin n)
+  /-- The parent row whose saved edge is installed after a successful recursive search. -/
   row : Fin n
+  /-- The original parent mate table restored after a failed recursive search. -/
   mate : ColumnMate n
+  /-- The saved column matched to the parent row after a successful recursive search. -/
   column : Fin n
 
 /-- The outer frame remembers the rows not yet inserted and the mate table to
 retain if the current root search fails. -/
 structure KuhnBuildFrame (n : ℕ) where
+  /-- The rows still to insert after the current root search returns. -/
   rows : List (Fin n)
+  /-- The mate table retained if the current root search fails. -/
   fallback : ColumnMate n
 
 inductive KuhnFrame (n : ℕ)

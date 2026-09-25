@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerBisectionSchedule
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerBisectionSchedule
 
 /-!
 # Finite-word budget for one Bethe feasibility call
@@ -15,6 +17,8 @@ outer radius, and the exact call budget.  The final binary budget is expanded
 to unary only behind a degree-eight guard built from the exact unary
 dimension and the exact canonical bit lengths of both radii.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

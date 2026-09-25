@@ -3,10 +3,14 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.PairedCertificate
+
+public import LeanPool.BeyondBethe.BeyondBethe.PairedCertificate
 
 /-! # Cluster Product -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -42,6 +46,7 @@ def IsGlobalClusterChoice
     {n : ℕ} (C : RowClustering n) (f : ClusterChoice C) : Prop :=
   Function.Bijective (clusterChoiceMap C f)
 
+/-- Cluster column choices whose combined assignment is a bijection. -/
 abbrev GlobalClusterChoice {n : ℕ} (C : RowClustering n) :=
   {f : ClusterChoice C // IsGlobalClusterChoice C f}
 

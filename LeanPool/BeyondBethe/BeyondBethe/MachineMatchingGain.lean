@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineGreedyRowMatching
-import LeanPool.BeyondBethe.BeyondBethe.MachineCertificateAssembly
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineGreedyRowMatching
+public import LeanPool.BeyondBethe.BeyondBethe.MachineCertificateAssembly
 
 /-!
 # Counting the selected pairs and assembling the fixed matching gain
@@ -16,6 +18,8 @@ count by the fixed rational gain.  The counter iterates for the bit-length of
 the input word and stutters after the encoded list is exhausted, so it is a
 total polynomial-time string function even on malformed inputs.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

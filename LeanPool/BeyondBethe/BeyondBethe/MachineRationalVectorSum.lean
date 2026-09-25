@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerCertificateBoundary
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSum
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerCertificateBoundary
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSum
 
 /-!
 # Polynomial-time rational-vector summation
@@ -16,6 +18,8 @@ as a one-row nested list.  The semantic proof below is stated first for an
 arbitrary rectangular list of rows; square matrices are not needed by the
 fold itself.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

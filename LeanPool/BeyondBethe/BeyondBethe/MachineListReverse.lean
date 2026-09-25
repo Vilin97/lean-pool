@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineListUpdate
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineListUpdate
+public import Mathlib.Tactic
 
 /-!
 # Reversal of a self-delimiting machine list
@@ -16,6 +18,8 @@ arbitrary malformed strings.  On canonical list codes its length never
 exceeds the input length, so the semantic proof below shows that the clamp is
 inactive.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ExecutableScannedBetheOptimizer
-import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
-import LeanPool.BeyondBethe.BeyondBethe.SourceStableReindex
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.ExecutableScannedBetheOptimizer
+public import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
+public import LeanPool.BeyondBethe.BeyondBethe.SourceStableReindex
+public import Mathlib.Tactic
 
 /-!
 # The executable positive-matrix routine
@@ -18,8 +20,12 @@ gap, and therefore does not identify its tie-breaking choices with those of
 the earlier semantic bisection runner.
 -/
 
+@[expose] public section
+
 namespace BeyondBethe
 
+/-- The executable positive-input approximation: exact in dimensions zero and one, otherwise a
+scaled certificate from the scanned Bethe optimizer. -/
 def executablePositiveAlgorithm :
     ∀ n, Matrix (Fin n) (Fin n) ℚ → ℚ
   | 0, A => Matrix.permanent A
@@ -121,6 +127,8 @@ theorem executablePositiveAlgorithm_succ_succ_spec
       (pow_nonneg hscale.le (m + 2))
     nlinarith
 
+/-- The executable positive-input algorithm bundled with positivity and the two permanent
+approximation bounds. -/
 def executableCertifiedPositiveRoutine :
     CertifiedPositiveRoutine (explicitCertifiedEpsilon : ℝ) where
   alg := executablePositiveAlgorithm

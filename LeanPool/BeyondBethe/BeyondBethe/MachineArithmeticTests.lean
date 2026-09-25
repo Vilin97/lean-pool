@@ -3,30 +3,34 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.RawRational
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryMul
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryCompare
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryDivision
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryGCD
-import LeanPool.BeyondBethe.BeyondBethe.MachineIntegerArithmetic
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalization
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalArithmetic
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalUnary
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
-import LeanPool.BeyondBethe.BeyondBethe.MachineDyadicFloor
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalFloor
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalLogSeries
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalExp
-import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedLog
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixNonnegative
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSum
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalMin
-import LeanPool.BeyondBethe.BeyondBethe.MachineFactorial
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalRowAdd
-import LeanPool.BeyondBethe.BeyondBethe.MachineNearbyCoordinate
+
+public import LeanPool.BeyondBethe.BeyondBethe.RawRational
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryMul
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryCompare
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryDivision
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryGCD
+public import LeanPool.BeyondBethe.BeyondBethe.MachineIntegerArithmetic
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalization
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalArithmetic
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalUnary
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDyadicFloor
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalFloor
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalLogSeries
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalExp
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedLog
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixNonnegative
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSum
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalMin
+public import LeanPool.BeyondBethe.BeyondBethe.MachineFactorial
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalRowAdd
+public import LeanPool.BeyondBethe.BeyondBethe.MachineNearbyCoordinate
 
 /-! # Machine Arithmetic Tests -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -76,6 +80,7 @@ theorem machineBinaryGcd_exhaustive_32_by_32 :
         (Nat.gcd a.val b.val).bits := by
   native_decide
 
+/-- Generate the integer `n` or `-(n+1)` according to the negative flag. -/
 def signedIntegerTest (negative : Bool) (n : ℕ) : ℤ :=
   if negative then Int.negSucc n else Int.ofNat n
 
@@ -100,12 +105,15 @@ theorem machineIntegerArithmetic_exhaustive_signed_16 :
         integerBinaryCode (-signedIntegerTest leftNegative a.val) := by
   native_decide
 
+/-- The raw-rational test value `n/(d+1)`, including zero when `n = 0`. -/
 def positiveRawRatTest (n d : ℕ) : RawRat :=
   ⟨Int.ofNat n, d + 1, by omega⟩
 
+/-- The strictly negative raw-rational test value `-(n+1)/(d+1)`. -/
 def negativeRawRatTest (n d : ℕ) : RawRat :=
   ⟨Int.negSucc n, d + 1, by omega⟩
 
+/-- Choose between the negative and nonnegative raw-rational test families using the sign flag. -/
 def signedRawRatTest (negative : Bool) (n d : ℕ) : RawRat :=
   if negative then negativeRawRatTest n d else positiveRawRatTest n d
 
@@ -211,6 +219,7 @@ theorem machineLengthBits_exhaustive_16 :
       machineLengthBits (List.replicate n.val true) = n.val.bits := by
   native_decide
 
+/-- The strictly positive raw-rational test value `(n+1)/(d+1)`. -/
 def positiveNonzeroRawRatTest (n d : ℕ) : RawRat :=
   ⟨Int.ofNat (n + 1), d + 1, by omega⟩
 

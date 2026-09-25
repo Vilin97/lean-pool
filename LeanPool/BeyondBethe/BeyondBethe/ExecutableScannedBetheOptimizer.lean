@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerBisectionSemantics
-import LeanPool.BeyondBethe.BeyondBethe.ExplicitBetheOptimizer
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerBisectionSemantics
+public import LeanPool.BeyondBethe.BeyondBethe.ExplicitBetheOptimizer
+public import Mathlib.Tactic
 
 /-!
 # Correctness of the executable row-major Bethe optimizer
@@ -18,14 +20,20 @@ paper-level optimizer, and derives the approximate logarithmic KKT equations
 without identifying its tie-breaking choices with those of any other runner.
 -/
 
+@[expose] public section
+
 namespace BeyondBethe
 
 open Complexity
 
+/-- The raw-rational coordinate floor for the scanned optimizer, determined by the dimension and
+entry bit bound. -/
 def executableScannedBetheOptimizerFloor {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) : RawRat :=
   rawExplicitOptimizerFloor (m + 1) (rationalMatrixEntryBitBound A)
 
+/-- Initialize scanned Bethe bisection with the explicit regularization, precision, floor,
+mixing weight, and inner radius. -/
 def executableScannedBetheOptimizerInitialState {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) :
     BetheBisectionState (m * m + 1) :=
@@ -35,6 +43,7 @@ def executableScannedBetheOptimizerInitialState {m : ℕ}
     (executableScannedBetheOptimizerFloor A)
     (explicitOptimizerMix A) (explicitOptimizerInnerRadius A)
 
+/-- Run scanned Bethe bisection for the prescribed explicit number of iterations. -/
 def executableScannedBetheOptimizerState {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) :
     BetheBisectionState (m * m + 1) :=
@@ -53,11 +62,13 @@ def executableScannedBetheOptimizerPoint {m : ℕ}
     Fin (m * m + 1) → ℚ :=
   (executableScannedBetheOptimizerState A).witness.getD 0
 
+/-- Recover the affine matrix from the epigraph base coordinates of the scanned optimizer point. -/
 def executableScannedBetheOptimizerMatrix {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) :
     Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ :=
   betheAffineMatrixQ (epigraphBase (executableScannedBetheOptimizerPoint A))
 
+/-- The directed lower negative-gradient matrix evaluated at the scanned optimizer matrix. -/
 def executableScannedBetheOptimizerGradient {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) :
     Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ :=
@@ -66,11 +77,15 @@ def executableScannedBetheOptimizerGradient {m : ℕ}
     (executableScannedBetheOptimizerMatrix A)
     (explicitOptimizerPrecision A)
 
+/-- The row potential obtained from the negative first-column gradient entry and the
+regularization offset. -/
 def executableScannedBetheOptimizerRowPotential {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) : Fin (m + 1) → ℚ :=
   fun i ↦ -executableScannedBetheOptimizerGradient A i 0 +
     (2 + explicitRegularizationScale (m + 1))
 
+/-- The column potential obtained from the negative first-row gradient difference relative to
+column zero. -/
 def executableScannedBetheOptimizerColumnPotential {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) : Fin (m + 1) → ℚ :=
   fun j ↦ -(executableScannedBetheOptimizerGradient A 0 j -

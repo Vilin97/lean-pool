@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ScannedBetheThresholdFeasibility
-import LeanPool.BeyondBethe.BeyondBethe.BetheBisection
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.ScannedBetheThresholdFeasibility
+public import LeanPool.BeyondBethe.BeyondBethe.BetheBisection
+public import Mathlib.Tactic
 
 /-!
 # Rational bisection for the row-major Bethe oracle
@@ -17,6 +19,8 @@ exactly.  Its proof uses only validity and acceptance of that oracle, so the
 optimization guarantee is unchanged even though the returned rational point
 need not be byte-for-byte equal to the earlier runner's point.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

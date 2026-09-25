@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineKuhnInvariant
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineKuhnInvariant
+public import Mathlib.Tactic
 
 /-!
 # A complete finite-word perfect-matching runner
@@ -15,6 +17,8 @@ word and iterates the verified transition for the length of its fixed octic
 envelope.  All definitions are total on malformed words; the correctness
 theorems concern canonical matrix encodings.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

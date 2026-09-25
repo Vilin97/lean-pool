@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalBallInit
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalEllipsoidCenterUpdate
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalBallInit
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalEllipsoidCenterUpdate
 
 /-!
 # Polynomial-time rows of the ellipsoid direction update
@@ -18,6 +20,8 @@ module constructs the `i`th row of the rank-one matrix
 The diagonal row is built by updating an encoded zero vector, while the
 rank-one row is produced by one scalar-vector multiplication.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

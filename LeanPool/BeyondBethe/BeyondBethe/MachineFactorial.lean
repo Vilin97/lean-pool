@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalLogSeries
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalLogSeries
 
 /-!
 # Unary-input factorial in the finite-word machine model
@@ -14,6 +16,8 @@ state stores the current factorial, the next multiplier, and a quadratic
 clamp.  Both evolving fields are clamped on malformed inputs; the ordinary
 binary-size proof shows that neither clamp fires on a unary ruler.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

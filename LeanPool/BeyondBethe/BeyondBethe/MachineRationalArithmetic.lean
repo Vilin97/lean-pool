@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineIntegerArithmetic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineIntegerArithmetic
 
 /-!
 # Polynomial-time rational addition and multiplication
@@ -14,6 +16,8 @@ cross-products and multiplication forms the two direct products.  Both public
 operations then invoke the separately verified gcd normalizer, so no use of
 Lean's built-in rational arithmetic is hidden in the machine implementation.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

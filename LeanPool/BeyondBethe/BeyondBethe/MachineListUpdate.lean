@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineListIndex
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineListIndex
 
 /-!
 # Indexed update of right-nested machine lists
@@ -17,6 +19,8 @@ rebuilds the prefix around the replacement.  Both passes clamp their growing
 field to an explicit quadratic word.  The semantic invariant proves that the
 clamps are inactive on every canonical in-range list update.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

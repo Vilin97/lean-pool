@@ -17,7 +17,7 @@ public import
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 namespace RAM

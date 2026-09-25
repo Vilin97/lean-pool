@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalMatrixMulVector
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorScale
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalMatrixMulVector
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorScale
 
 /-!
 # Polynomial-time componentwise subtraction of rational vectors
@@ -15,6 +17,8 @@ words.  A verified coordinate routine indexes both words, negates the second
 raw rational, adds, and normalizes.  A bounded finite-word scan maps this
 routine over all coordinates and reverses its accumulator once at the end.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

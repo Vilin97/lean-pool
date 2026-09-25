@@ -5,11 +5,11 @@ Authors: Samuel Schlesinger
 -/
 
 module
-import
+public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryScan.Internal.Ctrl
 public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryScan.Internal.Inv
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators.WorkBranch
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators.WorkBranch
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinaryPred
 public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryScanStep
@@ -19,7 +19,7 @@ public import
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

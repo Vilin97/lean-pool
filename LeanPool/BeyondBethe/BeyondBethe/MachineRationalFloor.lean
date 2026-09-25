@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineDyadicFloor
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalUnary
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDyadicFloor
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalUnary
 
 /-!
 # Polynomial-time rational floor and ceiling
@@ -16,6 +18,8 @@ natural ceiling used by later schedules is returned in ordinary binary, not
 unary: converting an unrestricted binary integer to a word of that length
 would not be a polynomial-time operation.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

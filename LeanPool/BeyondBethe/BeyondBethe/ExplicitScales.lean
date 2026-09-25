@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ExplicitBounds
-import LeanPool.BeyondBethe.BeyondBethe.CertifiedPairWeights
-import LeanPool.BeyondBethe.BeyondBethe.NumericalScales
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.ExplicitBounds
+public import LeanPool.BeyondBethe.BeyondBethe.CertifiedPairWeights
+public import LeanPool.BeyondBethe.BeyondBethe.NumericalScales
+public import Mathlib.Tactic
 
 /-! # Explicit Scales -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -20,13 +24,17 @@ This file replaces the remaining density and continuity choices in the
 structural proof by one fixed tuple of rationals.
 -/
 
+/-- The fixed rational heavy-coordinate tolerance `10^(-12)`. -/
 def explicitEta : ℚ := 1 / 10 ^ 12
 
+/-- The fixed row-error ratio `1/200000`. -/
 def explicitRowRatio : ℚ := 1 / 200000
 
+/-- The completion scale `(explicitEta/3074)^4 * explicitRowRatio`. -/
 def explicitDelta : ℚ :=
   (explicitEta / 3074) ^ 4 * explicitRowRatio
 
+/-- The transfer tolerance, equal to one hundredth of the completion scale. -/
 def explicitXi : ℚ := explicitDelta / 100
 
 /-- The greedy threshold matching retains one quarter of the structural
@@ -122,6 +130,8 @@ theorem explicitDelta_le_rowRatio :
   norm_num only [Rat.cast_mul, Rat.cast_pow, Rat.cast_div, Rat.cast_ofNat]
   exact mul_le_of_le_one_left (by exact_mod_cast explicitRowRatio_pos.le) heta
 
+/-- The explicit rational completion parameters bundled with their row, cycle, transfer, and
+gain bounds. -/
 def explicit_completionScales :
     RationalCompletionScales explicitKappa explicitXiSource explicitGamma := by
   have hlog0 : 0 < Real.log 2 := Real.log_pos (by norm_num)
@@ -337,12 +347,15 @@ theorem explicitCertifiedEpsilon_eq :
       norm_num [explicitCertifiedGamma, explicitGamma])
   linarith
 
+/-- The rational certified improvement extracted from the explicit certified completion scales. -/
 def explicitCertifiedEpsilon : ℚ :=
   rationalEpsilonPlus explicitCertifiedCompletionScales
 
 theorem explicitCertifiedEpsilon_pos : 0 < explicitCertifiedEpsilon := by
   exact rationalEpsilonPlus_pos explicitCertifiedCompletionScales
 
+/-- The explicit structural parameters together with the clean-pair gain and completion-scale
+proofs. -/
 def explicitStructuralScales : RationalStructuralScales where
   κ₀ := explicitKappa
   ξ₀ := explicitXiSource
@@ -364,6 +377,8 @@ theorem cleanPairGainGuarantee_mono_gamma
 theorem explicitGreedyGamma_pos : 0 < explicitGreedyGamma := by
   norm_num [explicitGreedyGamma, explicitGamma]
 
+/-- The explicit completion parameters equipped with the stronger gain comparison needed for
+greedy completion. -/
 def explicitGreedyCompletionScales :
     RationalCompletionScales explicitKappa explicitXiSource
       explicitGreedyGamma :=

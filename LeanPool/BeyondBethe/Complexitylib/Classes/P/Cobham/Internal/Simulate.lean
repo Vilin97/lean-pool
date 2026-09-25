@@ -7,7 +7,7 @@ Authors: Bolton Bailey
 module
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.Extract
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.StepAlgebra
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.OutputBounds
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.OutputBounds
 
 /-!
 # Running a machine inside the algebra — proof internals

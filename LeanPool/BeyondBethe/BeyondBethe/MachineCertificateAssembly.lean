@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineNearbyMatrixSum
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalExp
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineNearbyMatrixSum
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalExp
 
 /-!
 # Assembly of the directed certificate from its matching gain
@@ -16,6 +18,8 @@ it forms the complete rational certificate logarithm.  Given in addition a
 unary exponential guard, it returns the final canonical raw rational entry.
 All composition and rational-format conversions are explicit.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -47,6 +51,8 @@ theorem machineCertificateOptimizerWord_mem_FP :
     machineCertificateOptimizerWord (pair source optimizer) = optimizer :=
   machinePairSecond_pair source optimizer
 
+/-- Assemble the raw-rational logarithmic certificate from the row and column potentials,
+directed nearby-coordinate sum, structural gain, and subtracted KKT penalty. -/
 def rawCertificateLogAssembly {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (R C : Fin n → ℚ)
     (gain : ℚ) : RawRat :=
@@ -71,6 +77,8 @@ theorem rawCertificateLogAssembly_value {n : ℕ}
   rw [directedNearbyBetheLower]
   ring
 
+/-- Add the encoded potential sum and nearby-matrix contribution extracted from the optimizer
+payload. -/
 def machineCertificateNearbyRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair
@@ -79,11 +87,14 @@ def machineCertificateNearbyRawCode (word : List Bool) : List Bool :=
       (machineNearbyMatrixRawSumCode
         (machineCertificateOptimizerWord word)))
 
+/-- Add the supplied gain machine's raw-rational output to the nearby-certificate sum. -/
 def machineCertificateLogBeforePenaltyRawCode
     (gainMachine : List Bool → List Bool) (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineCertificateNearbyRawCode word) (gainMachine word))
 
+/-- Subtract the optimizer's encoded KKT penalty from the logarithmic certificate before
+normalization. -/
 def machineCertificateLogUnnormalizedRawCode
     (gainMachine : List Bool → List Bool) (word : List Bool) : List Bool :=
   machineRawRatAddCode
@@ -185,6 +196,8 @@ theorem machineCertificateLogRawCode_encode
     rawCertificateLogAssembly_value,
     explicitDirectedCertificateLog]
 
+/-- Package the exponentiation guard, normalized logarithmic certificate, and optimizer-derived
+exponential loss. -/
 def machineCertificateExpInput
     (gainMachine guardMachine : List Bool → List Bool)
     (word : List Bool) : List Bool :=
@@ -193,6 +206,7 @@ def machineCertificateExpInput
       (machineCertificateExpLossRawCode
         (machineCertificateOptimizerWord word)))
 
+/-- Evaluate the bounded rational lower exponential routine on the assembled certificate input. -/
 def machineCertificateValueRawCode
     (gainMachine guardMachine : List Bool → List Bool)
     (word : List Bool) : List Bool :=

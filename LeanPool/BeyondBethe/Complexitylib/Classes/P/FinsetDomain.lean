@@ -26,7 +26,7 @@ regardless of how the values `g s` are chosen.
 - `ite_mem_finset_mem_FP` — `fun s => if s ∈ S then g s else []` belongs to `FP`
 -/
 
-public section
+@[expose] public section
 
 namespace Complexity
 

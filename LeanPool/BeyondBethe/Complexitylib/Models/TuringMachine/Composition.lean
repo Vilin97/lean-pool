@@ -24,7 +24,7 @@ first delimiter.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

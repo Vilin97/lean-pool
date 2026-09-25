@@ -21,7 +21,7 @@ the sparse data region, returning to the core envelope before simulation.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

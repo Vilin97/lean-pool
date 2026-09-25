@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerEntryLength
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSum
-import LeanPool.BeyondBethe.BeyondBethe.CertificateMagnitude
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerEntryLength
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSum
+public import LeanPool.BeyondBethe.BeyondBethe.CertificateMagnitude
 
 /-!
 # Exact matrix entry-bit bound for the optimizer
@@ -16,6 +18,8 @@ This row-major transducer returns a unary ruler of length
 on arbitrary bitstrings; the clamp is proved inactive on every canonical
 matrix input.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

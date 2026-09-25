@@ -28,7 +28,7 @@ is the last bit seen so far, or `none` if no bit has been read.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

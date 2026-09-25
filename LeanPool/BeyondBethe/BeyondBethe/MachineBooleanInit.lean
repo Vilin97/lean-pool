@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBooleanMemory
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBooleanMemory
 
 /-!
 # Polynomially bounded Boolean storage initialization
@@ -15,18 +17,23 @@ quadratic word computed from the original input; the exact semantic bounds
 show that this clamp is inactive on canonical dimension rulers.
 -/
 
+@[expose] public section
+
 namespace BeyondBethe
 
 open Complexity
 
 /-! ## False vectors -/
 
+/-- Prepend one encoded false entry to a Boolean-vector code. -/
 def machineFalseVectorStep (acc : List Bool) : List Bool :=
   pair [false] acc
 
+/-- Use the binary-multiplication width ruler to bound the false-vector construction. -/
 def machineFalseVectorWidth (ruler : List Bool) : List Bool :=
   machineBinaryMulWidth ruler
 
+/-- Build a Boolean-vector code containing as many false entries as the ruler has bits. -/
 def machineFalseVectorCode (ruler : List Bool) : List Bool :=
   (machineFalseVectorStep)^[ruler.length] []
 
@@ -77,54 +84,69 @@ theorem machineFalseVectorCode_mem_FP :
 
 /-! ## Repeated-row matrices -/
 
+/-- Extract the row-count ruler from a repeated-row matrix request. -/
 def machineRepeatedRowMatrixRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the encoded row to repeat. -/
 def machineRepeatedRowMatrixRow (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- The binary-multiplication width ruler used to cap the repeated-row matrix accumulator. -/
 def machineRepeatedRowMatrixBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth word
 
+/-- Package the repeated row, encoded matrix accumulator, and accumulator-length ruler. -/
 def machineRepeatedRowMatrixPack
     (row acc bound : List Bool) : List Bool :=
   pair row (pair acc bound)
 
+/-- Extract the immutable row code from a matrix-construction state. -/
 def machineRepeatedRowMatrixStateRow (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extract the encoded matrix rows accumulated so far. -/
 def machineRepeatedRowMatrixStateAcc (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extract the word whose length bounds the matrix accumulator. -/
 def machineRepeatedRowMatrixStateBound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Prepend one copy of the stored row to the matrix accumulator before truncation. -/
 def machineRepeatedRowMatrixCandidate (state : List Bool) : List Bool :=
   pair (machineRepeatedRowMatrixStateRow state)
     (machineRepeatedRowMatrixStateAcc state)
 
+/-- Truncate the candidate matrix code to the stored bound word's length. -/
 def machineRepeatedRowMatrixNextAcc (state : List Bool) : List Bool :=
   (machineRepeatedRowMatrixCandidate state).take
     (machineRepeatedRowMatrixStateBound state).length
 
+/-- Replace the matrix accumulator by its bounded row-prepending update, preserving the row and
+bound. -/
 def machineRepeatedRowMatrixStep (state : List Bool) : List Bool :=
   machineRepeatedRowMatrixPack (machineRepeatedRowMatrixStateRow state)
     (machineRepeatedRowMatrixNextAcc state)
     (machineRepeatedRowMatrixStateBound state)
 
+/-- Initialize repeated-row construction with an empty matrix and its computed width bound. -/
 def machineRepeatedRowMatrixInit (word : List Bool) : List Bool :=
   machineRepeatedRowMatrixPack (machineRepeatedRowMatrixRow word) []
     (machineRepeatedRowMatrixBound word)
 
+/-- A state-width envelope formed by packing three copies of the matrix accumulator bound. -/
 def machineRepeatedRowMatrixWidth (word : List Bool) : List Bool :=
   machineRepeatedRowMatrixPack (machineRepeatedRowMatrixBound word)
     (machineRepeatedRowMatrixBound word)
     (machineRepeatedRowMatrixBound word)
 
+/-- Repeat the bounded row-prepending step for the length of the row-count ruler. -/
 def machineRepeatedRowMatrixFinalState (word : List Bool) : List Bool :=
   (machineRepeatedRowMatrixStep)^[(machineRepeatedRowMatrixRuler word).length]
     (machineRepeatedRowMatrixInit word)
 
+/-- Return the encoded matrix accumulator after the requested bounded row repetitions. -/
 def machineRepeatedRowMatrixCode (word : List Bool) : List Bool :=
   machineRepeatedRowMatrixStateAcc
     (machineRepeatedRowMatrixFinalState word)
@@ -199,6 +221,8 @@ theorem machineRepeatedRowMatrixWidth_mem_FP :
       (machineRepeatedRowMatrixPack a b c) = c := by
   simp [machineRepeatedRowMatrixStateBound, machineRepeatedRowMatrixPack]
 
+/-- The state has the expected row, accumulator, and bound layout, with every field bounded by
+the computed ruler length. -/
 def MachineRepeatedRowMatrixStateBound
     (word state : List Bool) : Prop :=
   let B := (machineRepeatedRowMatrixBound word).length
@@ -282,10 +306,14 @@ theorem machineRepeatedRowMatrixCode_mem_FP :
 
 /-! ## Exact all-false square matrices -/
 
+/-- Request an all-false square matrix using a unary row count and an encoded false row of the
+same length. -/
 def machineFalseSquareBuilderInput (n : ℕ) : List Bool :=
   pair (List.replicate n true)
     (boolVectorCode (List.replicate n false))
 
+/-- The canonical builder state containing `k` all-false rows of length `n`, with the original
+square request's bound. -/
 def machineFalseSquareBuilderState (n k : ℕ) : List Bool :=
   let word := machineFalseSquareBuilderInput n
   let row := List.replicate n false

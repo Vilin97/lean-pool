@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorSum
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalEllipsoidEncoding
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorSum
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalEllipsoidEncoding
 
 /-!
 # Polynomial-time rational `ℓ1` norms
@@ -17,6 +19,8 @@ an unreduced rational.  As in the other rational folds, a quadratic clamp
 makes the transducer polynomially bounded on malformed words, while the
 semantic invariant proves that the clamp is inactive on canonical inputs.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedNegativeGradientEntry
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedNegativeGradientEntry
 
 /-!
 # Finite-word entries of the directed affine gradient
@@ -17,6 +19,8 @@ four-corner combination
 This file evaluates those four full-gradient entries with the common verified
 entry machine and performs the three exact rational operations explicitly.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

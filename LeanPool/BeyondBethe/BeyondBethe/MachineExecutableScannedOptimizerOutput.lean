@@ -3,11 +3,13 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ExecutableScannedBetheOptimizer
-import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryMatrixGenerator
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerMatrixBitBound
-import LeanPool.BeyondBethe.BeyondBethe.OptimizerOutputEncoding
+
+public import LeanPool.BeyondBethe.BeyondBethe.ExecutableScannedBetheOptimizer
+public import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryMatrixGenerator
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerMatrixBitBound
+public import LeanPool.BeyondBethe.BeyondBethe.OptimizerOutputEncoding
 
 /-!
 # Finite-word output of the executable scanned optimizer
@@ -18,6 +20,8 @@ the complete recovered Birkhoff matrix.  Its entries are generated directly
 in row-major order and normalized before being inserted into the nested row
 encoding.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

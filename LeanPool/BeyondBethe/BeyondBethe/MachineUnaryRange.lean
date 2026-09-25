@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineMateMemory
-import LeanPool.BeyondBethe.BeyondBethe.KuhnSmallStep
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMateMemory
+public import LeanPool.BeyondBethe.BeyondBethe.KuhnSmallStep
 
 /-!
 # Constructing the unary column range
@@ -15,6 +17,8 @@ right-nested finite-word encoding from the unary dimension ruler.  The
 constructor counts down and prepends, so after `n` steps the values occur in
 the required increasing order `0,1,...,n-1`.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -35,7 +35,7 @@ The proof proceeds in three phases:
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorDot
-import Mathlib.Data.List.GetD
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorDot
+public import Mathlib.Data.List.GetD
 
 /-!
 # Polynomial-time extraction of rational matrix columns
@@ -16,6 +18,8 @@ column as a canonical rational-vector word.  It is total on arbitrary words;
 the exactness theorem only assumes that the selected column exists in every
 row.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

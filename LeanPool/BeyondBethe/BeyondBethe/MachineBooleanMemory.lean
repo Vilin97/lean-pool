@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineListUpdate
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineListUpdate
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
 
 /-!
 # Boolean vector and matrix memory
@@ -16,15 +18,20 @@ list primitives.  The final routine queries the support graph of a rational
 matrix without decoding the matrix into a Lean object.
 -/
 
+@[expose] public section
+
 namespace BeyondBethe
 
 open Complexity
 
+/-- Encode one Boolean as a singleton word. -/
 def boolElementCode (b : Bool) : List Bool := [b]
 
+/-- Encode a Boolean vector as a binary list of singleton Boolean codes. -/
 def boolVectorCode (v : List Bool) : List Bool :=
   binaryListCode boolElementCode v
 
+/-- Encode a Boolean matrix as a binary list of encoded Boolean rows. -/
 def boolMatrixCode (M : List (List Bool)) : List Bool :=
   binaryListCode boolVectorCode M
 
@@ -178,11 +185,13 @@ theorem machineBoolMatrixUpdateAtUnary_mem_FP :
 
 /-! ## Rational support queries -/
 
+/-- Test equality of two encoded raw rationals by checking both order comparisons. -/
 def machineRawRatEqBit (word : List Bool) : List Bool :=
   machineAndBit (machineRawRatLeBit word)
     (machineRawRatLeBit (pair (machinePairSecond word)
       (machinePairFirst word)))
 
+/-- Negate the raw-rational equality test. -/
 def machineRawRatNeBit (word : List Bool) : List Bool :=
   machineNotBit (machineRawRatEqBit word)
 

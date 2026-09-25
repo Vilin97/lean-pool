@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryCompare
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryMul
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryCompare
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryMul
 
 /-!
 # Polynomial-time canonical output encodings
@@ -15,6 +17,8 @@ of the signed numerator code and positive denominator.  This file realizes
 that pairing formula from the verified arithmetic primitives, and then proves
 the complete rational encoder correct.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

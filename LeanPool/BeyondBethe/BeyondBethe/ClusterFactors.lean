@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ClusterProduct
-import LeanPool.BeyondBethe.BeyondBethe.PairStability
-import Mathlib.Data.Fin.Tuple.Embedding
+
+public import LeanPool.BeyondBethe.BeyondBethe.ClusterProduct
+public import LeanPool.BeyondBethe.BeyondBethe.PairStability
+public import Mathlib.Data.Fin.Tuple.Embedding
 
 /-! # Cluster Factors -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -140,6 +144,7 @@ theorem rowClusterPolynomial_isRealStable_of_size_two
   exact injectionPolynomial_fin_two_isRealStable hcard
     (fun k j ↦ hA (C.rows ⟨c, e.symm k⟩) j)
 
+/-- Every cluster contains either one row or two rows. -/
 def IsSingletonPairClustering
     {n : ℕ} (C : RowClustering n) : Prop :=
   ∀ c, C.size c = 1 ∨ C.size c = 2

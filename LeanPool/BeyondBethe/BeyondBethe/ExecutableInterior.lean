@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.NumericalInterior
-import LeanPool.BeyondBethe.BeyondBethe.NumericalScales
-import LeanPool.BeyondBethe.BeyondBethe.DirectedElementary
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.NumericalInterior
+public import LeanPool.BeyondBethe.BeyondBethe.NumericalScales
+public import LeanPool.BeyondBethe.BeyondBethe.DirectedElementary
+public import Mathlib.Tactic
 
 /-! # Executable Interior -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -21,12 +25,15 @@ whose exponent is computed directly from the matrix encoding, the dimension,
 and the rational regularization parameter.
 -/
 
+/-- The interior-bound quantity `n*(n*B+2*n^2)/τ + n^3`. -/
 def numericalInteriorK0 (n B : ℕ) (τ : ℚ) : ℚ :=
   n * (n * B + 2 * n ^ 2) / τ + n ^ 3
 
+/-- The ceiling of twice the numerical interior-bound quantity. -/
 def numericalInteriorExponent (n B : ℕ) (τ : ℚ) : ℕ :=
   rationalCeilNat (2 * numericalInteriorK0 n B τ)
 
+/-- The dyadic interior floor with exponent given by the numerical interior bound. -/
 def numericalInteriorFloor (n B : ℕ) (τ : ℚ) : ℚ :=
   (1 / 2 : ℚ) ^ numericalInteriorExponent n B τ
 

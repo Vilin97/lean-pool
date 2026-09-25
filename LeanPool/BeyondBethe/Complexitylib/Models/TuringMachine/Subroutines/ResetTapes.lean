@@ -24,7 +24,7 @@ wipe and is left exactly as it started.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

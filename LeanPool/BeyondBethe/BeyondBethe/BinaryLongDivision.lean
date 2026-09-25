@@ -3,11 +3,15 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.Complexitylib.Mathlib.NatBits
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.Complexitylib.Mathlib.NatBits
+public import Mathlib.Tactic
 
 /-! # Binary Long Division -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

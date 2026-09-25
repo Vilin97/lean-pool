@@ -8,7 +8,7 @@ module
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Defs
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Defs
 public import LeanPool.BeyondBethe.Complexitylib.Encoding.Pairing
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # Fixed-arity inputs for Cobham's characterization

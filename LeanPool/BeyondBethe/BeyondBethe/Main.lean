@@ -3,20 +3,24 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
-import LeanPool.BeyondBethe.BeyondBethe.ExplicitPositiveRoutine
-import LeanPool.BeyondBethe.BeyondBethe.ExplicitScales
-import LeanPool.BeyondBethe.BeyondBethe.SourceAnariRezaeiList
-import LeanPool.BeyondBethe.BeyondBethe.SourceStableReindex
-import LeanPool.BeyondBethe.BeyondBethe.MachineCompletedAlgorithm
-import LeanPool.BeyondBethe.BeyondBethe.MachinePositiveAlgorithm
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerCertificateBoundary
-import LeanPool.BeyondBethe.BeyondBethe.MachineExplicitCertificate
-import LeanPool.BeyondBethe.BeyondBethe.ExecutablePositiveRoutine
-import LeanPool.BeyondBethe.BeyondBethe.MachineExecutablePositiveAlgorithm
+
+public import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
+public import LeanPool.BeyondBethe.BeyondBethe.ExplicitPositiveRoutine
+public import LeanPool.BeyondBethe.BeyondBethe.ExplicitScales
+public import LeanPool.BeyondBethe.BeyondBethe.SourceAnariRezaeiList
+public import LeanPool.BeyondBethe.BeyondBethe.SourceStableReindex
+public import LeanPool.BeyondBethe.BeyondBethe.MachineCompletedAlgorithm
+public import LeanPool.BeyondBethe.BeyondBethe.MachinePositiveAlgorithm
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerCertificateBoundary
+public import LeanPool.BeyondBethe.BeyondBethe.MachineExplicitCertificate
+public import LeanPool.BeyondBethe.BeyondBethe.ExecutablePositiveRoutine
+public import LeanPool.BeyondBethe.BeyondBethe.MachineExecutablePositiveAlgorithm
 
 /-! # Main -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

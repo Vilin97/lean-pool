@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedAffineGradientVector
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryListSnoc
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedAffineGradientVector
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryListSnoc
 
 /-!
 # Finite-word directed epigraph normals
@@ -14,6 +16,8 @@ The nonlinear oracle returns the affine-gradient vector followed by the
 height coefficient `-1`.  This file performs that final append explicitly
 and identifies the result with the canonical code of `epigraphNormal`.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerMatrixBitBound
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalPower
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalFloor
-import LeanPool.BeyondBethe.BeyondBethe.MachineCertificateExpGuard
-import LeanPool.BeyondBethe.BeyondBethe.ExplicitOptimizerScales
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerMatrixBitBound
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalPower
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalFloor
+public import LeanPool.BeyondBethe.BeyondBethe.MachineCertificateExpGuard
+public import LeanPool.BeyondBethe.BeyondBethe.ExplicitOptimizerScales
 
 /-!
 # Finite-word interior scale for the Bethe optimizer
@@ -18,6 +20,8 @@ exponent is computed in binary and expanded to unary only behind an explicit
 degree-64 guard in the source matrix length.  Thus this file does not hide an
 unrestricted binary-to-unary conversion.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

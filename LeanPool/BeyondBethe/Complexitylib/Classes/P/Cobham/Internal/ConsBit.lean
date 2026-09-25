@@ -7,7 +7,7 @@ Authors: Bolton Bailey
 module
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Defs
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.Counter
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Tape.Encoding
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Tape.Encoding
 
 /-!
 # The bit successor — proof internals
@@ -21,7 +21,7 @@ the `bit` constructor of Cobham's algebra.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

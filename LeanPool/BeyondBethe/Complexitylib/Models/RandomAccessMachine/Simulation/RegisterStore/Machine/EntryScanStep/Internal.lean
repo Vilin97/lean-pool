@@ -16,7 +16,7 @@ public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simu
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

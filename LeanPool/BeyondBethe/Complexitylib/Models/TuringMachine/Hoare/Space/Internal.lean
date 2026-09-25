@@ -17,7 +17,7 @@ from fresh-start contracts to `TM.ComputesInSpace`.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

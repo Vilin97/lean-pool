@@ -22,7 +22,7 @@ its Boolean input verbatim to its output tape in the exact linear bound
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

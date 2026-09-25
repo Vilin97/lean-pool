@@ -6,14 +6,14 @@ Authors: Samuel Schlesinger
 
 module
 public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.Lookup.Defs
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinaryCopy
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinaryCopy
 
 /-!
 # Reusable sparse-register lookup -- query preparation
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

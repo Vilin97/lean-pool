@@ -27,7 +27,7 @@ cursor and the canonical binary width counter.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

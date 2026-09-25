@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryAdd
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinaryRippleAdd
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryAdd
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinaryRippleAdd
 
 /-!
 # Correctness of the composed polynomial-time binary adder
@@ -14,6 +16,8 @@ The bounded Cobham loop in `MachineBinaryAdd` is proved here to implement the
 same ripple-carry recurrence as Complexitylib's canonical binary adder.  This
 connects the concrete `FP` construction to arithmetic addition.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

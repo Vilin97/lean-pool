@@ -18,7 +18,7 @@ correctness theorem supplies the executable machine proof and exact time bound.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

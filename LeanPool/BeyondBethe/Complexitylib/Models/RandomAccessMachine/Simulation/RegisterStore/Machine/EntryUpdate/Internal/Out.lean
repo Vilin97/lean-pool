@@ -11,7 +11,7 @@ public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simu
 public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryMissCopy
 public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryReplace
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinaryPred
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinaryPred
 public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryMatch
 
 /-!
@@ -23,7 +23,7 @@ the output head idle, so the complete controller remains a transducer.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

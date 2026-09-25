@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.AlgorithmicSpec
-import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal
+
+public import LeanPool.BeyondBethe.BeyondBethe.AlgorithmicSpec
+public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal
 
 /-!
 # Machine access to the canonical binary encodings
@@ -15,6 +17,8 @@ records both their exact behavior on well-formed inputs and the already
 verified Complexitylib machines that split them in polynomial time.  No
 semantic decoder or choice function occurs in these accessors.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -3,14 +3,18 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixNormalization
-import LeanPool.BeyondBethe.BeyondBethe.MachineSmallDimension
-import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixNormalization
+public import LeanPool.BeyondBethe.BeyondBethe.MachineSmallDimension
+public import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
 
 /-!
 # Connections between scalar machines and the completed algorithm
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

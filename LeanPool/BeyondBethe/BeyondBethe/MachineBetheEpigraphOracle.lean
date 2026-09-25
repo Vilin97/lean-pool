@@ -3,16 +3,18 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryListInit
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorCutVector
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheHeightNormal
-import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedEpigraphNormal
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheHeightCap
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalEllipsoidEncoding
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalPower
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerInteriorScale
-import LeanPool.BeyondBethe.BeyondBethe.BetheEpigraphFeasibility
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryListInit
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorCutVector
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheHeightNormal
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedEpigraphNormal
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheHeightCap
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalEllipsoidEncoding
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalPower
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerInteriorScale
+public import LeanPool.BeyondBethe.BeyondBethe.BetheEpigraphFeasibility
 
 /-!
 # A finite-word oracle for the bounded Bethe epigraph
@@ -23,6 +25,8 @@ rational ellipsoid state.  The machine performs the three oracle branches in
 their mathematical order: an exact floor scan, the exact height-cap test, and
 the directed nonlinear objective test.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -36,42 +40,55 @@ open Complexity
 def machineBetheOracleDimension (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the oracle input payload following the dimension word. -/
 def machineBetheOracleRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extract the precision ruler from a Bethe oracle input word. -/
 def machineBetheOraclePrecision (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheOracleRest word)
 
+/-- Extract the oracle payload following the precision ruler. -/
 def machineBetheOracleAfterPrecision (word : List Bool) : List Bool :=
   machinePairSecond (machineBetheOracleRest word)
 
+/-- Extract the encoded regularization parameter from a Bethe oracle input word. -/
 def machineBetheOracleTau (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheOracleAfterPrecision word)
 
+/-- Extract the oracle payload following the regularization parameter. -/
 def machineBetheOracleAfterTau (word : List Bool) : List Bool :=
   machinePairSecond (machineBetheOracleAfterPrecision word)
 
+/-- Extract the encoded affine-coordinate floor from a Bethe oracle input word. -/
 def machineBetheOracleDelta (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheOracleAfterTau word)
 
+/-- Extract the oracle payload following the coordinate floor. -/
 def machineBetheOracleAfterDelta (word : List Bool) : List Bool :=
   machinePairSecond (machineBetheOracleAfterTau word)
 
+/-- Extract the encoded epigraph height cap from a Bethe oracle input word. -/
 def machineBetheOracleUpper (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheOracleAfterDelta word)
 
+/-- Extract the matrix and ellipsoid payload following the height cap. -/
 def machineBetheOracleAfterUpper (word : List Bool) : List Bool :=
   machinePairSecond (machineBetheOracleAfterDelta word)
 
+/-- Extract the encoded rational matrix from a Bethe oracle input word. -/
 def machineBetheOracleMatrix (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheOracleAfterUpper word)
 
+/-- Extract the encoded rational ellipsoid state from a Bethe oracle input word. -/
 def machineBetheOracleEllipsoid (word : List Bool) : List Bool :=
   machinePairSecond (machineBetheOracleAfterUpper word)
 
+/-- Extract the encoded center vector of the oracle ellipsoid. -/
 def machineBetheOracleCenter (word : List Bool) : List Bool :=
   machineRationalEllipsoidCenterWord (machineBetheOracleEllipsoid word)
 
+/-- Remove the final epigraph-height coordinate from the encoded center vector. -/
 def machineBetheOracleBase (word : List Bool) : List Bool :=
   machineBinaryListInit (machineBetheOracleCenter word)
 
@@ -149,82 +166,104 @@ theorem machineBetheOracleBase_mem_FP : machineBetheOracleBase ∈ FP := by
 
 /-! ## Derived dimension and the three branch tests -/
 
+/-- Convert the oracle dimension ruler to binary. -/
 def machineBetheOracleDimensionBits (word : List Bool) : List Bool :=
   machineLengthBits (machineBetheOracleDimension word)
 
+/-- Compute the squared dimension, the number of free affine coordinates, in binary. -/
 def machineBetheOracleBaseDimensionBits (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machineBetheOracleDimensionBits word)
       (machineBetheOracleDimensionBits word))
 
+/-- Convert the free-coordinate count to a unary ruler bounded by the base-coordinate word. -/
 def machineBetheOracleBaseDimensionUnary (word : List Bool) : List Bool :=
   machineBoundedUnary
     (pair (machineBetheOracleBase word)
       (machineBetheOracleBaseDimensionBits word))
 
+/-- Encode the number of free affine coordinates as a raw rational with denominator one. -/
 def machineBetheOracleBaseDimensionRawCode (word : List Bool) : List Bool :=
   pair (machineNaturalIntegerCode
     (machineBetheOracleBaseDimensionBits word)) [true]
 
+/-- Package the dimension, floor, and center base coordinates for the floor-violation scan. -/
 def machineBetheOracleFloorScanInput (word : List Bool) : List Bool :=
   pair (machineBetheOracleDimension word)
     (pair (machineBetheOracleDelta word) (machineBetheOracleBase word))
 
+/-- Run the affine-coordinate floor scan on the oracle center. -/
 def machineBetheOracleFloorScanResult (word : List Bool) : List Bool :=
   machineBetheFloorScanResultCode (machineBetheOracleFloorScanInput word)
 
+/-- Extract the bit reporting whether the floor scan found a violation. -/
 def machineBetheOracleFloorFoundBit (word : List Bool) : List Bool :=
   machineHeadBit (machinePairFirst (machineBetheOracleFloorScanResult word))
 
+/-- Extract the reported row ruler from the floor-scan result. -/
 def machineBetheOracleFloorRow (word : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machineBetheOracleFloorScanResult word))
 
+/-- Extract the reported column ruler from the floor-scan result. -/
 def machineBetheOracleFloorColumn (word : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machineBetheOracleFloorScanResult word))
 
+/-- Package the base dimension, height cap, and center for the height-cap test. -/
 def machineBetheOracleHeightInput (word : List Bool) : List Bool :=
   pair (machineBetheOracleBaseDimensionUnary word)
     (pair (machineBetheOracleUpper word) (machineBetheOracleCenter word))
 
+/-- Test whether the center epigraph height violates the prescribed cap. -/
 def machineBetheOracleHeightViolationBit (word : List Bool) : List Bool :=
   machineBetheHeightCapViolationBit (machineBetheOracleHeightInput word)
 
+/-- Extract the center epigraph height as a raw-rational code. -/
 def machineBetheOracleHeightRawCode (word : List Bool) : List Bool :=
   machineBetheHeightCapEntryCode (machineBetheOracleHeightInput word)
 
+/-- The raw-rational constant sixteen used in the oracle error margin. -/
 def rawBetheOracleSixteen : RawRat := RawRat.ofNat 16
 
+/-- Compute the raw-rational code of one half raised to the oracle precision. -/
 def machineBetheOracleHalfPowerRawCode (word : List Bool) : List Bool :=
   machineRawRatPowerCode
     (pair (machineBetheOraclePrecision word)
       (rawRatBinaryCode rawOptimizerHalf))
 
+/-- Compute the raw-rational error scale `16 * (1/2)^p`. -/
 def machineBetheOracleScaledErrorRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawBetheOracleSixteen)
       (machineBetheOracleHalfPowerRawCode word))
 
+/-- Multiply the directed error scale by the number of free affine coordinates. -/
 def machineBetheOracleMarginRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineBetheOracleScaledErrorRawCode word)
       (machineBetheOracleBaseDimensionRawCode word))
 
+/-- Package dimension, precision, regularization, matrix, and base coordinates for objective
+evaluation. -/
 def machineBetheOracleObjectiveInput (word : List Bool) : List Bool :=
   pair (machineBetheOracleDimension word)
     (pair (machineBetheOraclePrecision word)
       (pair (machineBetheOracleTau word)
         (pair (machineBetheOracleMatrix word) (machineBetheOracleBase word))))
 
+/-- Evaluate the directed lower negative-objective sum at the oracle center base coordinates. -/
 def machineBetheOracleLowerRawCode (word : List Bool) : List Bool :=
   machineDirectedNegativeObjectiveSumRawCode
     (machineBetheOracleObjectiveInput word)
 
+/-- Add the evaluation margin to the center epigraph height. -/
 def machineBetheOracleHeightPlusMarginRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineBetheOracleHeightRawCode word)
       (machineBetheOracleMarginRawCode word))
 
+/-- Detect when the directed lower objective exceeds the center height plus the evaluation
+margin. -/
 def machineBetheOracleNonlinearViolationBit
     (word : List Bool) : List Bool :=
   machineNotBit
@@ -364,27 +403,34 @@ theorem machineBetheOracleNonlinearViolationBit_mem_FP :
 
 /-! ## Cut construction and final response -/
 
+/-- Package the dimension and violating entry indices for a floor-cut normal. -/
 def machineBetheOracleFloorNormalInput (word : List Bool) : List Bool :=
   pair (machineBetheOracleDimension word)
     (pair (machineBetheOracleFloorRow word)
       (machineBetheOracleFloorColumn word))
 
+/-- Encode a cutting response with the normal for the detected floor violation. -/
 def machineBetheOracleFloorResponse (word : List Bool) : List Bool :=
   pair [true]
     (machineBetheFloorCutVectorCode (machineBetheOracleFloorNormalInput word))
 
+/-- Encode a cutting response with the epigraph height-cap normal. -/
 def machineBetheOracleHeightResponse (word : List Bool) : List Bool :=
   pair [true]
     (machineBetheHeightNormalVectorCode (machineBetheOracleDimension word))
 
+/-- Encode a cutting response with the directed nonlinear epigraph normal. -/
 def machineBetheOracleNonlinearResponse (word : List Bool) : List Bool :=
   pair [true]
     (machineDirectedEpigraphNormalVectorCode
       (machineBetheOracleObjectiveInput word))
 
+/-- The encoded acceptance response, carrying no cut vector. -/
 def machineBetheOracleAcceptResponse (_word : List Bool) : List Bool :=
   pair [false] []
 
+/-- Choose the floor, height-cap, or nonlinear cut in that order, accepting when none is
+required. -/
 def machineBetheEpigraphOracleResponseCode (word : List Bool) : List Bool :=
   machineIfHead (machineBetheOracleFloorFoundBit word)
     (machineBetheOracleFloorResponse word)
@@ -438,6 +484,8 @@ theorem machineBetheEpigraphOracleResponseCode_mem_FP :
 
 /-! ## Canonical semantics -/
 
+/-- The canonical Bethe oracle input word containing its scalar parameters, matrix, and
+ellipsoid state. -/
 def machineBetheOracleCanonicalWord {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (p : ℕ) (delta upper : RawRat)
@@ -690,6 +738,7 @@ theorem betheOracle_baseDimension_le_baseCodeLength {m : ℕ}
     machineBetheHeightCapEntryCode_encode]
   rfl
 
+/-- The raw-rational oracle margin `16 * (1/2)^p * m^2`. -/
 def rawBetheOracleMargin (m p : ℕ) : RawRat :=
   (rawBetheOracleSixteen.mul (rawOptimizerHalf.pow p)).mul
     (RawRat.ofNat (m * m))

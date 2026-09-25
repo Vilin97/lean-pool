@@ -17,7 +17,7 @@ Turing time is therefore contained in polynomial RAM time.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

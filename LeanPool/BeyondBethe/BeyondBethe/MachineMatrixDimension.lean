@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSum
-import LeanPool.BeyondBethe.BeyondBethe.MachineBoundedUnary
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSum
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBoundedUnary
 
 /-!
 # A guarded unary dimension ruler
@@ -15,6 +17,8 @@ cannot be expanded to unary on arbitrary strings, so the entire matrix word is
 used as an explicit guard.  Canonical square-matrix encodings are long enough
 to make this guard inactive.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

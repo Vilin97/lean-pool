@@ -16,7 +16,7 @@ resource analysis for the existing 27-state `SAT.ThreeSAT.Syntax` automaton.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

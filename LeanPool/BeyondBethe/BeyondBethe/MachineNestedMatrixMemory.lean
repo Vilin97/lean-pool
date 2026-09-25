@@ -3,11 +3,15 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineListIndex
-import LeanPool.BeyondBethe.BeyondBethe.MachineListUpdate
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineListIndex
+public import LeanPool.BeyondBethe.BeyondBethe.MachineListUpdate
 
 /-! # Machine Nested Matrix Memory -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

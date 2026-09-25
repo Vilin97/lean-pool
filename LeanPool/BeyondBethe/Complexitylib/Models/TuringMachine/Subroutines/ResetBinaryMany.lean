@@ -16,7 +16,7 @@ of distinct canonical binary work tapes.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

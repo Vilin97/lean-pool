@@ -6,15 +6,15 @@ Authors: Samuel Schlesinger
 
 module
 public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.TMConfig.Sparse.ABI.Defs
-import Mathlib.Tactic.NormNum.Inv
-import Mathlib.Tactic.NormNum.Pow
+public import Mathlib.Tactic.NormNum.Inv
+public import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Capturing raw-input scratch bits in finite control -- proof internals
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

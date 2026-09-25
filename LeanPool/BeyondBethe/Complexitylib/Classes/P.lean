@@ -13,7 +13,7 @@ public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Preimage
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.UnaryLength
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.FinsetDomain
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.CopyOutput
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.CopyOutput
 
 /-!
 # P — surface layer
@@ -41,7 +41,7 @@ This file aggregates the definitions and theorems for P, FP, and PSPACE.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

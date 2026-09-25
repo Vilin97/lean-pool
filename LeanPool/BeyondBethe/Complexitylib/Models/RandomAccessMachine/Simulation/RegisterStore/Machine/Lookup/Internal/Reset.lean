@@ -7,17 +7,17 @@ Authors: Samuel Schlesinger
 module
 public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.Lookup.Internal.Bounds
-import Mathlib.Data.Rat.Cast.Order
-import Mathlib.Tactic.NormNum.Abs
-import Mathlib.Tactic.NormNum.DivMod
-import Mathlib.Tactic.NormNum.OfScientific
+public import Mathlib.Data.Rat.Cast.Order
+public import Mathlib.Tactic.NormNum.Abs
+public import Mathlib.Tactic.NormNum.DivMod
+public import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Reusable sparse-register lookup -- reset certificates
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

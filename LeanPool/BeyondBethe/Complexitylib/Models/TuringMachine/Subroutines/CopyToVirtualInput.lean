@@ -5,7 +5,7 @@ Authors: Bolton Bailey
 -/
 
 module
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.CopyWorkOutput
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.CopyWorkOutput
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.ResetTapes
 
 /-!
@@ -23,7 +23,7 @@ rewind closes the gap.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

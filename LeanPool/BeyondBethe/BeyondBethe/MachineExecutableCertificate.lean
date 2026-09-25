@@ -3,11 +3,13 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ExecutableCertificateMagnitude
-import LeanPool.BeyondBethe.BeyondBethe.MachineCertificateExpGuard
-import LeanPool.BeyondBethe.BeyondBethe.MachineExecutableScannedOptimizerOutput
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatchingGain
+
+public import LeanPool.BeyondBethe.BeyondBethe.ExecutableCertificateMagnitude
+public import LeanPool.BeyondBethe.BeyondBethe.MachineCertificateExpGuard
+public import LeanPool.BeyondBethe.BeyondBethe.MachineExecutableScannedOptimizerOutput
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatchingGain
 
 /-!
 # The certificate evaluator for the executable row-major optimizer
@@ -17,6 +19,8 @@ used elsewhere.  This file proves its contract for the concrete row-major
 optimizer output, using only the executable optimizer's proved certificate-log
 magnitude bound.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

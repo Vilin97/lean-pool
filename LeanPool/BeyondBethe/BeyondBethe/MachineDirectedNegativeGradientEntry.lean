@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedNegativeGradientCoordinate
-import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedNegativeObjectiveSum
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedNegativeGradientCoordinate
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedNegativeObjectiveSum
 
 /-!
 # Finite-word entries of the directed full gradient
@@ -17,6 +19,8 @@ the resulting scalar input to the directed gradient machine.  This keeps the
 objective and gradient implementations on one common interpretation of `A`
 and of the recovered Birkhoff matrix.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

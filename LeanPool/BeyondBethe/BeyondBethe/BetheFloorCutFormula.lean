@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.BetheEpigraph
+
+public import LeanPool.BeyondBethe.BeyondBethe.BetheEpigraph
 
 /-!
 # Coordinate formula for Bethe floor-cut normals
@@ -14,6 +16,8 @@ pulling one recovered matrix coordinate back to the flattened upper-left
 block.  This file proves that direct formula equal to `betheFloorCutNormal`,
 separately from any encoding or iteration argument.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

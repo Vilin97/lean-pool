@@ -22,7 +22,7 @@ produce at most `t` output bits.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

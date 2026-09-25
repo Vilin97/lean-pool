@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.GoodRowScore
-import LeanPool.BeyondBethe.BeyondBethe.Sequential
-import LeanPool.BeyondBethe.BeyondBethe.Slack
+
+public import LeanPool.BeyondBethe.BeyondBethe.GoodRowScore
+public import LeanPool.BeyondBethe.BeyondBethe.Sequential
+public import LeanPool.BeyondBethe.BeyondBethe.Slack
 
 /-! # Robust Cycle -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

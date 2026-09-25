@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBoundedUnary
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorSub
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBoundedUnary
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorSub
 
 /-!
 # Polynomial-time center part of the rational ellipsoid update
@@ -15,6 +17,8 @@ normal.  Every intermediate remains a finite word: the program pulls the cut
 back through the transposed basis, normalizes by its `ℓ1` norm, multiplies by
 the basis, scales by `alpha`, and subtracts from the stored center.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

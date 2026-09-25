@@ -3,14 +3,18 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Entropy
-import Mathlib.Combinatorics.Hall.Basic
-import Mathlib.Data.Fin.Rev
-import Mathlib.GroupTheory.Perm.Cycle.Factors
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.Entropy
+public import Mathlib.Combinatorics.Hall.Basic
+public import Mathlib.Data.Fin.Rev
+public import Mathlib.GroupTheory.Perm.Cycle.Factors
+public import Mathlib.Tactic
 
 /-! # Core Encoding -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -290,6 +294,7 @@ incident to exactly two edge slots.  Parallel edges are represented by equal
 values in the two row slots. -/
 structure TwoRegularBipartiteMultigraph (α : Type*) [Fintype α]
     [DecidableEq α] where
+  /-- The target column of each of the two edge slots at a row vertex. -/
   edge : α → Fin 2 → α
   columnDegree : ∀ j,
     (∑ i, ∑ k : Fin 2, if edge i k = j then 1 else 0) = 2

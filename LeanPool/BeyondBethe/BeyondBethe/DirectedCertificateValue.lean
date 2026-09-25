@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ExecutableTransfer
-import LeanPool.BeyondBethe.BeyondBethe.DirectedPairCost
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.ExecutableTransfer
+public import LeanPool.BeyondBethe.BeyondBethe.DirectedPairCost
+public import Mathlib.Tactic
 
 /-! # Directed Certificate Value -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -23,11 +27,15 @@ potentials, and logarithms of `X_ij` and `1-X_ij`; the irrational nearby
 matrix never has to be materialized.
 -/
 
+/-- A directed rational approximation to `log(1-x) + τ*x*log x` using scheduled lower
+logarithms. -/
 def directedNearbyCoordinateLower
     (τ x : ℚ) (p : ℕ) : ℚ :=
   scheduledLogLower (1 - x) p +
     τ * x * scheduledLogLower x p
 
+/-- The row and column potential sums plus the directed coordinate contributions of the nearby
+Bethe expression. -/
 def directedNearbyBetheLower {n : ℕ}
     (τ : ℚ) (X : Matrix (Fin n) (Fin n) ℚ)
     (R C : Fin n → ℚ) (p : ℕ) : ℚ :=
@@ -233,10 +241,15 @@ def directedCertificatePrecision (n : ℕ) : ℕ := n + 400
     directedCertificatePrecision n = directedPairCostPrecision n := by
   rfl
 
+/-- The KKT error allowance, equal to one thirty-second of the certified improvement. -/
 def explicitKKTError : ℚ := explicitCertifiedEpsilon / 32
 
+/-- The logarithm evaluation loss allowance, equal to one thirty-second of the certified
+improvement. -/
 def explicitLogEvaluationLoss : ℚ := explicitCertifiedEpsilon / 32
 
+/-- The exponential evaluation loss allowance, equal to one thirty-second of the certified
+improvement. -/
 def explicitExpEvaluationLoss : ℚ := explicitCertifiedEpsilon / 32
 
 theorem explicitKKTError_pos : 0 < explicitKKTError := by

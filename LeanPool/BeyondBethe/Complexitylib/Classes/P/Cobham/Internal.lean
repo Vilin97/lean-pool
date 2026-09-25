@@ -20,12 +20,12 @@ public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.Itera
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.Iterate
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.TakeLen
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.Reverse
-import LeanPool.BeyondBethe.Complexitylib.Classes.P.UnaryLength
+public import LeanPool.BeyondBethe.Complexitylib.Classes.P.UnaryLength
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.MulLen
-import LeanPool.BeyondBethe.Complexitylib.Classes.P.NormalForm
-import LeanPool.BeyondBethe.Complexitylib.Classes.P.Composition
+public import LeanPool.BeyondBethe.Complexitylib.Classes.P.NormalForm
+public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Composition
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.HeadFlag
-import LeanPool.BeyondBethe.Complexitylib.Classes.P.PairWithInput
+public import LeanPool.BeyondBethe.Complexitylib.Classes.P.PairWithInput
 
 /-!
 # Cobham's characterization of FP — proof internals

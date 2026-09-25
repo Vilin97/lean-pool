@@ -7,19 +7,19 @@ Authors: Samuel Schlesinger
 module
 public import
 LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryUpdate.Internal.Loop
-import
+public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryUpdate.Internal.Out
-import
+public import
 LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryUpdate.Internal.Time
-import Mathlib.Data.Nat.Bitwise
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators.WorkBranch
+public import Mathlib.Data.Nat.Bitwise
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators.WorkBranch
 
 /-!
 # Bounded encoded sparse-store update -- unmatched entry iteration
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

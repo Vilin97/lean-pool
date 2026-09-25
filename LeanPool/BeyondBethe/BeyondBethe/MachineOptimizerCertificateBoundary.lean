@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachinePositiveAlgorithm
-import LeanPool.BeyondBethe.BeyondBethe.OptimizerOutputEncoding
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachinePositiveAlgorithm
+public import LeanPool.BeyondBethe.BeyondBethe.OptimizerOutputEncoding
 
 /-!
 # The finite-word interface between optimization and certification
@@ -21,6 +23,8 @@ There is deliberately no decoder or noncomputable choice in this interface.
 Every well-formed optimizer output is a right-nested word built from the
 already fixed matrix and rational-entry encodings.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

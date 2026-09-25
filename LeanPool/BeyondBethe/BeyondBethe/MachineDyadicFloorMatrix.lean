@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineDyadicFloorVector
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDyadicFloorVector
 
 /-!
 # Polynomial-time coordinatewise matrix dyadic floor
@@ -12,6 +14,8 @@ import LeanPool.BeyondBethe.BeyondBethe.MachineDyadicFloorVector
 The outer scan maps the verified vector-floor machine over the encoded rows
 of a square rational matrix.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

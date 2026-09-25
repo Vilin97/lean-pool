@@ -7,7 +7,7 @@ Authors: Bolton Bailey
 module
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Defs
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Tape.Encoding
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Tape.Encoding
 
 /-!
 # Polynomial-time string reversal — proof internals
@@ -27,7 +27,7 @@ consumes the *last* bit first.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

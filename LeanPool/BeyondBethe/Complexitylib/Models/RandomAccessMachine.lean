@@ -303,7 +303,7 @@ simulator this proves `RAM.RegisterStore.Machine.RAM_P_eq_P`.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineCertificatePotentials
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixDimension
-import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedLog
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineCertificatePotentials
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixDimension
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedLog
 
 /-!
 # Dimension-dependent certificate scales as finite-word functions
@@ -16,6 +18,8 @@ regularization scale, the logarithm precision, and the linear KKT and
 exponential losses.  This file constructs all of them directly from the
 dimension prefix of the optimizer's matrix word.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

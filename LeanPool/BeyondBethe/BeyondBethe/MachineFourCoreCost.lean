@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedTransferCost
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedTransferCost
 
 /-!
 # The four-core directed cost as a finite-word function
@@ -14,6 +16,8 @@ The input is
 The output is the unreduced rational sum of the four directed transfer-cost
 endpoints used by the executable row-pair certificate.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

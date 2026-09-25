@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalDirectionUpdateMatrix
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalDirectionUpdateMatrix
 
 /-!
 # Polynomial-time rational central ellipsoid update
@@ -13,6 +15,8 @@ This module combines the verified center computation, the full rank-one
 direction matrix, and exact matrix multiplication into the canonical code of
 one complete rational ellipsoid state.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

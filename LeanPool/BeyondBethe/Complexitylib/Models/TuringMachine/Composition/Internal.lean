@@ -18,7 +18,7 @@ both function composition and preprocessing followed by a language decider.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

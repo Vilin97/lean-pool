@@ -3,11 +3,13 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineFinalScalars
-import LeanPool.BeyondBethe.BeyondBethe.MachinePerfectMatching
-import LeanPool.BeyondBethe.BeyondBethe.MachineSmoothedMatrix
-import LeanPool.BeyondBethe.BeyondBethe.ExplicitScales
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineFinalScalars
+public import LeanPool.BeyondBethe.BeyondBethe.MachinePerfectMatching
+public import LeanPool.BeyondBethe.BeyondBethe.MachineSmoothedMatrix
+public import LeanPool.BeyondBethe.BeyondBethe.ExplicitScales
 
 /-!
 # Finite-word outer wrapper for the completed permanent algorithm
@@ -19,6 +21,8 @@ word, allowing the verified rational arithmetic layer to consume its result.
 The executable development later supplies this parameter with the concrete
 regularized-Bethe optimizer and certificate machine.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

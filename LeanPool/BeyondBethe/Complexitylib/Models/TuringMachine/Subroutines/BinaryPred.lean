@@ -30,7 +30,7 @@ represent `value + 1`; they make no underflow claim.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

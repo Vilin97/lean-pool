@@ -3,14 +3,18 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ExplicitBetheOptimizer
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixDimension
-import LeanPool.BeyondBethe.BeyondBethe.RationalEncodingBounds
-import LeanPool.BeyondBethe.BeyondBethe.SourceStableReindex
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.ExplicitBetheOptimizer
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixDimension
+public import LeanPool.BeyondBethe.BeyondBethe.RationalEncodingBounds
+public import LeanPool.BeyondBethe.BeyondBethe.SourceStableReindex
+public import Mathlib.Tactic
 
 /-! # Certificate Magnitude -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -29,13 +33,16 @@ the optimizer's rational arithmetic: the certified permanent sandwich and the
 elementary input-size bounds on the permanent already give both sides.
 -/
 
+/-- The certificate magnitude budget `n * (entryBitBound + n + 1)` for a rational matrix. -/
 def explicitCertificateMagnitudeBudget {n : ℕ}
     (B : Matrix (Fin n) (Fin n) ℚ) : ℕ :=
   n * (rationalMatrixEntryBitBound B + n + 1)
 
+/-- The sum of the encoded bit lengths of the rational entries in a list. -/
 def rationalListDataCost (xs : List ℚ) : ℕ :=
   (xs.map fun q ↦ encodedBitLength ℚ q).sum
 
+/-- The total encoded bit length of all rational entries in a list of rows. -/
 def rationalRowsDataCost (rows : List (List ℚ)) : ℕ :=
   (rows.map rationalListDataCost).sum
 

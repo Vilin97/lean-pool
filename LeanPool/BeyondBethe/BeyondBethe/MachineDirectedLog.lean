@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineLengthBits
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalLogSeries
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineLengthBits
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalLogSeries
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
 
 /-!
 # Polynomial-time directed rational logarithm
@@ -17,6 +19,8 @@ unary ruler.  Leading binary positions are read from word lengths, powers of
 two are constructed directly as bitstrings, and all rational arithmetic is
 performed by the verified unreduced-rational machines.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

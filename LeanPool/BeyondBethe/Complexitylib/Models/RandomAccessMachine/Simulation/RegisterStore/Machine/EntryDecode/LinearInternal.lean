@@ -18,7 +18,7 @@ framed for compatibility with the existing sparse-store work-tape layout.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

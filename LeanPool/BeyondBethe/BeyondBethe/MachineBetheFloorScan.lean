@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorTest
-import LeanPool.BeyondBethe.BeyondBethe.MachineBoundedUnary
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorTest
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBoundedUnary
 
 /-!
 # Finite-word row-major scan of all Bethe floor constraints
@@ -16,6 +18,8 @@ done flag, and the immutable input payload.  It examines the recovered
 floor violation.  Its iteration ruler is constructed, in polynomial time,
 as exactly `(m+1)^2` unary bits on canonical inputs.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

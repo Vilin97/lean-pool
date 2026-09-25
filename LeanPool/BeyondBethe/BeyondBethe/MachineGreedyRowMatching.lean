@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRowPairDisjoint
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRowPairDisjoint
 
 /-!
 # The deterministic greedy row matcher as a finite-word function
@@ -14,6 +16,8 @@ order induced by `greedyRowMatchingList`.  Its state stores the selected
 ordered row pairs as a self-delimiting list.  Disjointness is delegated to the
 verified list scanner, avoiding a separate mutable-memory invariant.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

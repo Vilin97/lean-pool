@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineCertificateScales
-import LeanPool.BeyondBethe.BeyondBethe.MachineIntegerSignedMagnitude
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineCertificateScales
+public import LeanPool.BeyondBethe.BeyondBethe.MachineIntegerSignedMagnitude
 
 /-!
 # The input-dependent directed-logarithm schedule
@@ -15,6 +17,8 @@ terms.  This module computes that exact term count from the unary precision
 ruler and the signed dyadic exponent of `q`, expands it under a quadratic
 guard, and invokes the verified directed-logarithm machine.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

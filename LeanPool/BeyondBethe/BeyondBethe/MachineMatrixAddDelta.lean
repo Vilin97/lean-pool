@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalRowAdd
-import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalRowAdd
+public import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
+public import Mathlib.Tactic
 
 /-!
 # Entrywise addition of a rational matrix
@@ -17,6 +19,8 @@ self-delimiting row list with the verified row-addition machine.  A
 polynomial clamp is present on malformed inputs and is proved inactive on
 every canonical pair of a raw rational and a rational matrix.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

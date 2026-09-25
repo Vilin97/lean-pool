@@ -32,7 +32,7 @@ statements in the surface module carry the mathematical content.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

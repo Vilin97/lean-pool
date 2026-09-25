@@ -3,15 +3,19 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Completion
-import LeanPool.BeyondBethe.Complexitylib.Classes.P
-import LeanPool.BeyondBethe.Complexitylib.Encoding.DataEncode
-import LeanPool.BeyondBethe.Complexitylib.Encoding.Pairing
-import Mathlib.Data.List.OfFn
-import Mathlib.Data.Nat.Pairing
+
+public import LeanPool.BeyondBethe.BeyondBethe.Completion
+public import LeanPool.BeyondBethe.Complexitylib.Classes.P
+public import LeanPool.BeyondBethe.Complexitylib.Encoding.DataEncode
+public import LeanPool.BeyondBethe.Complexitylib.Encoding.Pairing
+public import Mathlib.Data.List.OfFn
+public import Mathlib.Data.Nat.Pairing
 
 /-! # Algorithmic Spec -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -90,6 +94,8 @@ instance rationalMatrixInputDataEncode : DataEncode RationalMatrixInput where
 /-- An explicit injective binary code.  We retain injectivity in the structure
 so no later complexity statement can silently identify distinct typed inputs. -/
 structure OrdinaryBinaryEncoding (α : Type*) where
+  /-- The finite binary word representing a value; injectivity is required by the encoding
+  structure. -/
   encode : α → List Bool
   injective : Function.Injective encode
 

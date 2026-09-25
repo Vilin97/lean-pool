@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineIntegerCompare
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalArithmetic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineIntegerCompare
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalArithmetic
 
 /-!
 # Polynomial-time comparison of unreduced rationals
@@ -14,6 +16,8 @@ Positive denominators allow comparison by signed cross multiplication.  The
 two cross-products are exactly the products already used by rational addition;
 the final comparison is the verified signed-integer machine.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

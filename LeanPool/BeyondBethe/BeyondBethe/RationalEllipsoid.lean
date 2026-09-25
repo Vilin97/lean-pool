@@ -3,15 +3,19 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import Mathlib.Algebra.Order.Chebyshev
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.Chebyshev
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
+public import Mathlib.LinearAlgebra.Matrix.SchurComplement
+public import Mathlib.Tactic
 
 /-! # Rational Ellipsoid -/
+
+@[expose] public section
 
 open scoped BigOperators
 

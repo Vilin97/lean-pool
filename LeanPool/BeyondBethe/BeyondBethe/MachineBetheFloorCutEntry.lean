@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.BetheFloorCutFormula
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheHeightCap
+
+public import LeanPool.BeyondBethe.BeyondBethe.BetheFloorCutFormula
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheHeightCap
 
 /-!
 # Finite-word coefficients of Bethe floor cuts
@@ -17,75 +19,97 @@ and the constant negative-one vector.  A supplied height-coordinate bit
 overrides all four cases with zero.
 -/
 
+@[expose] public section
+
 namespace BeyondBethe
 
 open Complexity
 
+/-- Extract the unary base dimension from a floor-cut coefficient query. -/
 def machineBetheFloorCutEntryDimension (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- The floor-cut query payload following the dimension word. -/
 def machineBetheFloorCutEntryRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extract the unary row index of the recovered matrix entry whose floor is being tested. -/
 def machineBetheFloorCutEntryQueryRow (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheFloorCutEntryRest word)
 
+/-- Extract the unary column index of the recovered matrix entry whose floor is being tested. -/
 def machineBetheFloorCutEntryQueryColumn (word : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machineBetheFloorCutEntryRest word))
 
+/-- Extract the unary row index of the base coordinate at which to evaluate the cut normal. -/
 def machineBetheFloorCutEntryBaseRow (word : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond (machinePairSecond
       (machineBetheFloorCutEntryRest word)))
 
+/-- Extract the unary column index of the base coordinate at which to evaluate the cut normal. -/
 def machineBetheFloorCutEntryBaseColumn (word : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond (machinePairSecond (machinePairSecond
       (machineBetheFloorCutEntryRest word))))
 
+/-- Extract the bit identifying the extra epigraph height coordinate. -/
 def machineBetheFloorCutEntryHeightBit (word : List Bool) : List Bool :=
   machinePairSecond
     (machinePairSecond (machinePairSecond (machinePairSecond
       (machineBetheFloorCutEntryRest word))))
 
+/-- Test whether the queried recovered entry lies in the final row by comparing its unary row
+index with the base dimension. -/
 def machineBetheFloorCutEntryQueryLastRowBit
     (word : List Bool) : List Bool :=
   machineHeadBit (machineUnaryRulersEqualBit
     (machineBetheFloorCutEntryQueryRow word)
     (machineBetheFloorCutEntryDimension word))
 
+/-- Test whether the queried recovered entry lies in the final column by comparing its unary
+column index with the base dimension. -/
 def machineBetheFloorCutEntryQueryLastColumnBit
     (word : List Bool) : List Bool :=
   machineHeadBit (machineUnaryRulersEqualBit
     (machineBetheFloorCutEntryQueryColumn word)
     (machineBetheFloorCutEntryDimension word))
 
+/-- Test equality of the base-coordinate row and queried recovered-entry row. -/
 def machineBetheFloorCutEntryBaseRowEqBit
     (word : List Bool) : List Bool :=
   machineHeadBit (machineUnaryRulersEqualBit
     (machineBetheFloorCutEntryBaseRow word)
     (machineBetheFloorCutEntryQueryRow word))
 
+/-- Test equality of the base-coordinate column and queried recovered-entry column. -/
 def machineBetheFloorCutEntryBaseColumnEqBit
     (word : List Bool) : List Bool :=
   machineHeadBit (machineUnaryRulersEqualBit
     (machineBetheFloorCutEntryBaseColumn word)
     (machineBetheFloorCutEntryQueryColumn word))
 
+/-- The conjunction of the row and column equality tests for the base coordinate and recovered
+entry. -/
 def machineBetheFloorCutEntryBothBaseEqBit
     (word : List Bool) : List Bool :=
   machineAndBit (machineBetheFloorCutEntryBaseRowEqBit word)
     (machineBetheFloorCutEntryBaseColumnEqBit word)
 
+/-- The canonical rational-entry encoding of zero. -/
 def machineBetheFloorCutEntryZeroCode : List Bool :=
   rationalEntryBinaryCode 0
 
+/-- The canonical rational-entry encoding of one. -/
 def machineBetheFloorCutEntryOneCode : List Bool :=
   rationalEntryBinaryCode 1
 
+/-- The canonical rational-entry encoding of negative one. -/
 def machineBetheFloorCutEntryNegOneCode : List Bool :=
   rationalEntryBinaryCode (-1)
 
+/-- Evaluate the floor-cut coefficient: negative one at an internal matching coordinate or the
+final corner, positive one on the relevant final-row or final-column slice, and zero elsewhere. -/
 def machineBetheFloorCutEntryBaseCode (word : List Bool) : List Bool :=
   machineIfHead (machineBetheFloorCutEntryQueryLastRowBit word)
     (machineIfHead (machineBetheFloorCutEntryQueryLastColumnBit word)
@@ -98,6 +122,8 @@ def machineBetheFloorCutEntryBaseCode (word : List Bool) : List Bool :=
       (machineIfHead (machineBetheFloorCutEntryBothBaseEqBit word)
         machineBetheFloorCutEntryNegOneCode machineBetheFloorCutEntryZeroCode))
 
+/-- Return zero at the epigraph height coordinate and the floor-cut base coefficient at every
+other coordinate. -/
 def machineBetheFloorCutEntryCode (word : List Bool) : List Bool :=
   machineIfHead (machineHeadBit (machineBetheFloorCutEntryHeightBit word))
     machineBetheFloorCutEntryZeroCode
@@ -214,6 +240,8 @@ theorem machineBetheFloorCutEntryCode_mem_FP :
     (machineConst_mem_FP machineBetheFloorCutEntryZeroCode)
     machineBetheFloorCutEntryBaseCode_mem_FP
 
+/-- Encode a recovered-entry index, a base-coordinate index, and the height flag using unary
+dimensions and indices. -/
 def machineBetheFloorCutEntryCanonicalWord {m : ℕ}
     (i j : Fin (m + 1)) (a b : Fin m) (isHeight : Bool) : List Bool :=
   pair (List.replicate m true)

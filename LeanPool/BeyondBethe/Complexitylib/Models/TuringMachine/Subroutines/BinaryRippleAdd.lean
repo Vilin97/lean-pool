@@ -22,7 +22,7 @@ machine instead.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

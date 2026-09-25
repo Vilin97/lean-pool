@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryAddSemantics
-import LeanPool.BeyondBethe.Complexitylib.Mathlib.NatBits
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryAddSemantics
+public import LeanPool.BeyondBethe.Complexitylib.Mathlib.NatBits
 
 /-!
 # A composed polynomial-time binary multiplier
@@ -16,6 +18,8 @@ partial product.  Each iteration uses the already verified binary adder.  A
 quadratic Cobham width bound is proved for every input string, while exact
 arithmetic correctness is proved on canonical `Nat.bits` operands.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

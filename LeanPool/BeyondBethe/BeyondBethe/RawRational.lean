@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.BinaryLongDivision
-import Mathlib.Data.Rat.Lemmas
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.BinaryLongDivision
+public import Mathlib.Data.Rat.Lemmas
+public import Mathlib.Tactic
 
 /-! # Raw Rational -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

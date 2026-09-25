@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryGridGenerator
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryGridGenerator
 
 /-!
 # A reusable finite-word generator for square rational matrices
@@ -20,6 +22,8 @@ Both accumulators are explicitly clamped on malformed inputs.  The semantic
 proof below shows that neither clamp is active on canonical inputs satisfying
 the stated output-size bound.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -3,15 +3,19 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Slack
-import Mathlib.Analysis.Convex.Jensen
-import Mathlib.Analysis.SpecialFunctions.Artanh
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Data.Fin.Rev
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.Slack
+public import Mathlib.Analysis.Convex.Jensen
+public import Mathlib.Analysis.SpecialFunctions.Artanh
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Data.Fin.Rev
+public import Mathlib.Tactic
 
 /-! # Row Stability -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

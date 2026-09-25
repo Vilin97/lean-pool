@@ -8,7 +8,7 @@ module
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Defs
 public import LeanPool.BeyondBethe.Complexitylib.Encoding.Pairing
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Registers
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Tape.Encoding
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Tape.Encoding
 
 /-!
 # Multiplying the block lengths of a pair — proof internals

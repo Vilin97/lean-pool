@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineKuhnSemantics
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixDimension
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineKuhnSemantics
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixDimension
+public import Mathlib.Tactic
 
 /-!
 # Reachable-state bounds for the encoded Kuhn evaluator
@@ -16,6 +18,8 @@ file proves that the clamp is inactive along the canonical execution.  We use
 a deliberately generous octic envelope; its only purpose is to make the
 polynomial-space estimate transparent.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

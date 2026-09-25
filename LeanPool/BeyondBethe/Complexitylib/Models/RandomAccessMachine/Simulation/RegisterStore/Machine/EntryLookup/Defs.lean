@@ -16,7 +16,7 @@ its semantic endpoint in terms of the pure sparse-store `read` operation.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

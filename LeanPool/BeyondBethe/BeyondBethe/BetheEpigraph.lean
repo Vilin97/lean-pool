@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.RationalEpigraphOracle
-import LeanPool.BeyondBethe.BeyondBethe.WeakSeparation
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.RationalEpigraphOracle
+public import LeanPool.BeyondBethe.BeyondBethe.WeakSeparation
+public import Mathlib.Tactic
 
 /-! # Bethe Epigraph -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -22,12 +26,14 @@ rational coordinates.  This file connects the already certified directed
 objective and gradient evaluations to the generic rational epigraph oracle.
 -/
 
+/-- Flatten a square matrix using the finite product equivalence on its row and column indices. -/
 def squareMatrixToVector {m : ℕ} {R : Type*}
     (Y : Matrix (Fin m) (Fin m) R) : Fin (m * m) → R :=
   fun k ↦
     let ij := finProdFinEquiv.symm k
     Y ij.1 ij.2
 
+/-- Recover a square matrix from its vector of entries using the finite product equivalence. -/
 def vectorToSquareMatrix {m : ℕ} {R : Type*}
     (y : Fin (m * m) → R) : Matrix (Fin m) (Fin m) R :=
   fun i j ↦ y (finProdFinEquiv (i, j))
@@ -392,6 +398,8 @@ theorem mem_fullMatrixEntryList (m : ℕ) (i j : Fin (m + 1)) :
   rw [List.mem_map]
   exact ⟨j, (List.mem_ofFn).2 ⟨j, rfl⟩, rfl⟩
 
+/-- Scan the supplied entry list for the first affine matrix coordinate strictly below the
+floor. -/
 def firstBetheFloorViolation {m : ℕ} (δ : ℚ)
     (y : Fin (m * m) → ℚ) :
     List (Fin (m + 1) × Fin (m + 1)) →
@@ -401,6 +409,7 @@ def firstBetheFloorViolation {m : ℕ} (δ : ℚ)
       if betheAffineMatrixQ y ij.1 ij.2 < δ then some ij
       else firstBetheFloorViolation δ y entries
 
+/-- Search every matrix entry for a violation of the prescribed affine-coordinate floor. -/
 def firstBetheFloorViolationAll {m : ℕ} (δ : ℚ)
     (y : Fin (m * m) → ℚ) : Option (Fin (m + 1) × Fin (m + 1)) :=
   firstBetheFloorViolation δ y (fullMatrixEntryList m)

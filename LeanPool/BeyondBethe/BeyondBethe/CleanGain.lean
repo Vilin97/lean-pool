@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.CleanWitness
-import LeanPool.BeyondBethe.BeyondBethe.PairFactorization
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.CleanWitness
+public import LeanPool.BeyondBethe.BeyondBethe.PairFactorization
+public import Mathlib.Tactic
 
 /-! # Clean Gain -/
+
+@[expose] public section
 
 open scoped BigOperators
 

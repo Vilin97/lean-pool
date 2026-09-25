@@ -25,7 +25,7 @@ number of cells whatever was there.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

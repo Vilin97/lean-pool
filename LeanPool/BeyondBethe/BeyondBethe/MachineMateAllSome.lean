@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineKuhnRunner
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineKuhnRunner
+public import Mathlib.Tactic
 
 /-!
 # Testing whether the final mate table is total
@@ -14,6 +16,8 @@ The Kuhn machine returns a column-to-row mate table.  This module scans its
 self-delimiting encoding and returns one bit indicating whether every column
 contains a row.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

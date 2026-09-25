@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBooleanInit
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBooleanInit
 
 /-!
 # Column-mate memory for augmenting-path matching
@@ -15,6 +17,8 @@ elements.  This representation makes the old row immediately available to a
 recursive augmenting-path search while retaining exact polynomial-time list
 lookup and update.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

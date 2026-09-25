@@ -3,15 +3,19 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.CleanConstants
-import LeanPool.BeyondBethe.BeyondBethe.NumericalWitness
-import LeanPool.BeyondBethe.BeyondBethe.GoodRowScore
-import LeanPool.BeyondBethe.BeyondBethe.DirectedElementary
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.CleanConstants
+public import LeanPool.BeyondBethe.BeyondBethe.NumericalWitness
+public import LeanPool.BeyondBethe.BeyondBethe.GoodRowScore
+public import LeanPool.BeyondBethe.BeyondBethe.DirectedElementary
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Tactic
 
 /-! # Explicit Bounds -/
+
+@[expose] public section
 
 open scoped Topology
 
@@ -623,6 +627,7 @@ theorem explicitKappa_cleanCore
 an unspecified continuity neighborhood. -/
 def explicitXiSource : ℚ := 1 / 100
 
+/-- The fixed rational structural gain parameter `1/4`. -/
 def explicitGamma : ℚ := 1 / 4
 
 theorem explicit_cleanPairGain_constants :

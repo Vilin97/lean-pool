@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ClusterFactors
-import LeanPool.BeyondBethe.BeyondBethe.Birkhoff
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.ClusterFactors
+public import LeanPool.BeyondBethe.BeyondBethe.Birkhoff
+public import Mathlib.Tactic
 
 /-! # Cluster Alpha -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -16,7 +16,7 @@ public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Hoare.Reta
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

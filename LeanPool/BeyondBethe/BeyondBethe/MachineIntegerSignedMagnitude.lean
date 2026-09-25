@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryGCD
-import LeanPool.BeyondBethe.BeyondBethe.MachineOutputEncoding
-import LeanPool.BeyondBethe.BeyondBethe.RawRational
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryGCD
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOutputEncoding
+public import LeanPool.BeyondBethe.BeyondBethe.RawRational
 
 /-!
 # Signed integers at the rational-arithmetic boundary
@@ -16,6 +18,8 @@ The project encoding follows Lean's constructors: `Int.ofNat n` is
 payload of a negative integer is one less than its absolute value.  The
 machines below perform the required conversion explicitly.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

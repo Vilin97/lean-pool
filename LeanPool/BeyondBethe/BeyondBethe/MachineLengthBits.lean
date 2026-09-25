@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryAddSemantics
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryAddSemantics
 
 /-!
 # Binary encoding of an input length
@@ -13,6 +15,8 @@ This bounded counter converts the length of a bitstring to ordinary
 little-endian binary.  It is useful whenever a later machine needs the value
 of a unary ruler without expanding an unrestricted binary integer.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

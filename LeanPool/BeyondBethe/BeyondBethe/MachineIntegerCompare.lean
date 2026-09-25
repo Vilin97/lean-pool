@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineIntegerArithmetic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineIntegerArithmetic
 
 /-!
 # Polynomial-time signed-integer comparison
@@ -14,6 +16,8 @@ payload.  We first convert both operands to true absolute values.  Equal-sign
 comparisons then reduce to natural comparison; for two negative operands the
 order of the magnitudes is reversed.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

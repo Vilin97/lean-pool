@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
-import LeanPool.BeyondBethe.BeyondBethe.ExplicitBetheOptimizer
-import LeanPool.BeyondBethe.BeyondBethe.SourceStableReindex
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
+public import LeanPool.BeyondBethe.BeyondBethe.ExplicitBetheOptimizer
+public import LeanPool.BeyondBethe.BeyondBethe.SourceStableReindex
+public import Mathlib.Tactic
 
 /-! # Explicit Positive Routine -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -21,6 +25,8 @@ regularized-Bethe optimizer, evaluates the directed rational certificate,
 and restores the degree-`n` normalization factor.
 -/
 
+/-- The explicit positive-input approximation: exact in dimensions zero and one, otherwise a
+normalization-scaled Bethe certificate. -/
 def explicitPositiveAlgorithm :
     ∀ n, Matrix (Fin n) (Fin n) ℚ → ℚ
   | 0, A => Matrix.permanent A

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineListReverse
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineListReverse
 
 /-!
 # Removing the last entry of a finite-word list
@@ -14,6 +16,8 @@ base point consists of every coordinate except the final height coordinate.
 This machine reverses the list, removes its first encoded entry, and reverses
 again.  It is total and polynomial-time on arbitrary finite words.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

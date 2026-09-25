@@ -18,7 +18,7 @@ every partial accumulator and shifted multiplicand.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

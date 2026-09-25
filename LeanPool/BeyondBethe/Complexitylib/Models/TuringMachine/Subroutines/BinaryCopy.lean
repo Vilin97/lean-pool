@@ -24,7 +24,7 @@ destination becomes an exact copy, and the zero scratch is restored literally.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

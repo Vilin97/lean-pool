@@ -23,7 +23,7 @@ public input/output marshalling layer.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

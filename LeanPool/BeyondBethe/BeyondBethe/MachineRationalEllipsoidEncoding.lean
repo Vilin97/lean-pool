@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineEncoding
-import LeanPool.BeyondBethe.BeyondBethe.MachineFPBasics
-import LeanPool.BeyondBethe.BeyondBethe.RationalFeasibility
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineEncoding
+public import LeanPool.BeyondBethe.BeyondBethe.MachineFPBasics
+public import LeanPool.BeyondBethe.BeyondBethe.RationalFeasibility
 
 /-! # Machine Rational Ellipsoid Encoding -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

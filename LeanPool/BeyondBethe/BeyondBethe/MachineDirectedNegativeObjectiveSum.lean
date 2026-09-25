@@ -3,12 +3,14 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedNegativeObjectiveCoordinate
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorScan
-import LeanPool.BeyondBethe.BeyondBethe.MachineListIndex
-import LeanPool.BeyondBethe.BeyondBethe.MachineScheduledLogWidth
-import LeanPool.BeyondBethe.BeyondBethe.MachineCertificateExpGuard
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedNegativeObjectiveCoordinate
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorScan
+public import LeanPool.BeyondBethe.BeyondBethe.MachineListIndex
+public import LeanPool.BeyondBethe.BeyondBethe.MachineScheduledLogWidth
+public import LeanPool.BeyondBethe.BeyondBethe.MachineCertificateExpGuard
 
 /-!
 # Finite-word evaluation of the complete directed Bethe objective
@@ -24,6 +26,8 @@ and accumulator are clamped by an explicit polynomial word.  The semantic
 proof below is kept separate from this global finite-word bound; on canonical
 inputs the clamp is proved inactive.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

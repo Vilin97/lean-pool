@@ -23,7 +23,7 @@ natural on a separate work tape.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

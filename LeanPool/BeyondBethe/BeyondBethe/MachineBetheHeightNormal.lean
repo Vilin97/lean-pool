@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorCutVector
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorCutVector
 
 /-!
 # Finite-word height-cap normals
@@ -13,6 +15,8 @@ The upper-height constraint has normal `(0,...,0,1)`.  We construct its
 `m^2` zero base coordinates with the common grid generator and append the
 single positive height coordinate with the verified list-snoc machine.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

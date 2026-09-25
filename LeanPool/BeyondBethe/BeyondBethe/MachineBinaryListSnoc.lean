@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineListReverse
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineListReverse
 
 /-!
 # Appending one entry to a finite-word list
@@ -15,6 +17,8 @@ list, prepends the supplied encoded entry, and reverses once more.  The two
 uses of the verified list-reversal machine make the construction total and
 polynomial-time on arbitrary finite words.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

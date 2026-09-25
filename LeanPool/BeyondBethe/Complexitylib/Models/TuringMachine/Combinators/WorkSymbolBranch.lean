@@ -18,7 +18,7 @@ branch on the readable sparse-entry equality flag.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

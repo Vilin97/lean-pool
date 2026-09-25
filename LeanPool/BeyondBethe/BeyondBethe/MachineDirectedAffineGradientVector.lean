@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedAffineGradientEntry
-import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryGridGenerator
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedAffineGradientEntry
+public import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryGridGenerator
 
 /-!
 # Finite-word directed affine-gradient vectors
@@ -15,6 +17,8 @@ four-corner gradient entry.  It also proves an explicit ordinary-binary size
 bound for the complete `m^2`-coordinate vector, so the generator's totalizing
 accumulator clamp is inactive on every canonical input.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

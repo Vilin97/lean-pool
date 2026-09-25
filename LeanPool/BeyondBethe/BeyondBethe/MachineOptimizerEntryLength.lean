@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineIntegerSignedMagnitude
-import LeanPool.BeyondBethe.BeyondBethe.MachineLengthBits
-import LeanPool.BeyondBethe.BeyondBethe.RationalEncodingBounds
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineIntegerSignedMagnitude
+public import LeanPool.BeyondBethe.BeyondBethe.MachineLengthBits
+public import LeanPool.BeyondBethe.BeyondBethe.RationalEncodingBounds
 
 /-!
 # Exact unary lengths for optimizer matrix entries
@@ -16,6 +18,8 @@ the machine-facing rational-entry word.  This module computes that quantity
 exactly from the numerator and denominator subwords.  Producing a unary ruler
 is the useful form: every later precision loop consumes its schedule in unary.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

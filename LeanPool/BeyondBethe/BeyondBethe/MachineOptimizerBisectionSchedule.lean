@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerDerivedScales
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerDerivedScales
 
 /-!
 # Initial interval and bisection schedule as finite-word functions
@@ -14,6 +16,8 @@ number of bisection calls is then the sum of the canonical encoding lengths
 of that width and of the optimizer gap, plus three.  Both schedules are
 returned in unary, so later bounded iterations can consume them directly.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

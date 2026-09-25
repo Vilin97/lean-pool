@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineFPBasics
-import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Containment
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineFPBasics
+public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Containment
 
 /-!
 # From logarithmic-cost RAM deciders to one-bit `FP` functions
@@ -16,6 +18,8 @@ requested output bit, and an outer bounded `FP` loop assembles those answers.
 This file proves the first, generic bridge without introducing a machine-time
 assumption.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

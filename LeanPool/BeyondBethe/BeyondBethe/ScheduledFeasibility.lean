@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ScheduledRoundedEllipsoidIteration
-import LeanPool.BeyondBethe.BeyondBethe.RationalFeasibility
-import LeanPool.BeyondBethe.BeyondBethe.RoundedFeasibility
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.ScheduledRoundedEllipsoidIteration
+public import LeanPool.BeyondBethe.BeyondBethe.RationalFeasibility
+public import LeanPool.BeyondBethe.BeyondBethe.RoundedFeasibility
+public import Mathlib.Tactic
 
 /-! # Scheduled Feasibility -/
+
+@[expose] public section
 
 open scoped BigOperators
 

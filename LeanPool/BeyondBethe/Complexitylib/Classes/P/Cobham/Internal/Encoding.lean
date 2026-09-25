@@ -7,7 +7,7 @@ Authors: Bolton Bailey
 module
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.Blocks
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Internal
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Internal
 
 /-!
 # Encoding machine configurations as bitstrings — proof internals

@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.NumericalNearby
-import Mathlib.Analysis.Convex.Strong
-import Mathlib.Analysis.Convex.Deriv
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.NumericalNearby
+public import Mathlib.Analysis.Convex.Strong
+public import Mathlib.Analysis.Convex.Deriv
+public import Mathlib.Tactic
 
 /-! # Strong Entropy -/
+
+@[expose] public section
 
 open scoped BigOperators
 

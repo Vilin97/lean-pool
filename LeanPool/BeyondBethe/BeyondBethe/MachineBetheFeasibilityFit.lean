@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineScheduledStateEncodingBound
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineScheduledStateEncodingBound
+public import Mathlib.Tactic
 
 /-!
 # The canonical Bethe feasibility run always fits its finite-word ruler
@@ -16,13 +18,19 @@ discharges the last side condition in the program-correctness theorem for the
 feasibility machine.
 -/
 
+@[expose] public section
+
 namespace BeyondBethe
 
+/-- The ellipsoid state-code bound obtained from the scheduled magnitude and rounding-precision
+budgets. -/
 def scheduledFeasibilityStateCodeBound (d L K T : ℕ) : ℕ :=
   rationalEllipsoidMachineCodeBound d
     (K + T * (6 + 3 * d))
     (roundedEllipsoidPrecisionSchedule d L K T + 10 + 4 * d)
 
+/-- Specialize the scheduled state-code bound to the initial ball determinant and magnitude
+budgets. -/
 def explicitBallFeasibilityStateCodeBound (d T : ℕ) (R : ℚ) : ℕ :=
   scheduledFeasibilityStateCodeBound d
     (explicitBallInitialDetExponent d R)

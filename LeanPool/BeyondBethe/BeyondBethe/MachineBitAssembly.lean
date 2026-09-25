@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryAddSemantics
-import LeanPool.BeyondBethe.BeyondBethe.MachineRAMBridge
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryAddSemantics
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRAMBridge
 
 /-!
 # Assembling a polynomial number of queried output bits
@@ -14,6 +16,8 @@ This file turns any one-bit `FP` query routine into a full output routine.  At
 iteration `k`, the state stores `k.bits`, the first `k` queried bits, and the
 unchanged original input.  A verified binary addition increments the counter.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -26,23 +30,30 @@ def machineQueriedBit (query : List Bool → List Bool)
     (counter word : List Bool) : List Bool :=
   machineHeadBit (query (pair counter word))
 
+/-- Package the binary query counter, accumulated output bits, and immutable input word. -/
 def machineBitAssemblyPack
     (counter acc word : List Bool) : List Bool :=
   pair counter (pair acc word)
 
+/-- Extract the binary query-position counter from the assembly state. -/
 def machineBitAssemblyCounter (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extract the output bits already assembled. -/
 def machineBitAssemblyAcc (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extract the immutable input supplied to each output-bit query. -/
 def machineBitAssemblyInput (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Increment the assembly state's binary query counter by one. -/
 def machineBitAssemblyNextCounter (state : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineBitAssemblyCounter state) [true])
 
+/-- Append the queried output bit at the current counter, increment the counter, and retain the
+original input. -/
 def machineBitAssemblyStep (query : List Bool → List Bool)
     (state : List Bool) : List Bool :=
   machineBitAssemblyPack
@@ -52,6 +63,7 @@ def machineBitAssemblyStep (query : List Bool → List Bool)
         (machineBitAssemblyInput state))
     (machineBitAssemblyInput state)
 
+/-- Initialize bit assembly at counter zero with an empty output accumulator. -/
 def machineBitAssemblyInit (word : List Bool) : List Bool :=
   machineBitAssemblyPack [] [] word
 
@@ -61,11 +73,13 @@ def machineBitAssemblyWidth (ruler : List Bool → List Bool)
     (word : List Bool) : List Bool :=
   machineBitAssemblyPack (ruler word) (ruler word) word
 
+/-- Run bit assembly for the number of positions specified by the ruler's length. -/
 def machineBitAssemblyFinalState
     (query ruler : List Bool → List Bool) (word : List Bool) : List Bool :=
   (machineBitAssemblyStep query)^[(ruler word).length]
     (machineBitAssemblyInit word)
 
+/-- Return the accumulated output bits after all ruler-bounded queries. -/
 def machineAssembleBits
     (query ruler : List Bool → List Bool) (word : List Bool) : List Bool :=
   machineBitAssemblyAcc (machineBitAssemblyFinalState query ruler word)

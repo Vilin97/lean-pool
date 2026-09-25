@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.NearCase
-import LeanPool.BeyondBethe.BeyondBethe.NumericalWitness
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+
+public import LeanPool.BeyondBethe.BeyondBethe.NearCase
+public import LeanPool.BeyondBethe.BeyondBethe.NumericalWitness
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-! # Greedy Row Matching -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

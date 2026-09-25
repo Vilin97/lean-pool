@@ -3,13 +3,15 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineFactorial
-import LeanPool.BeyondBethe.BeyondBethe.MachineLengthBits
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixDimension
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSupportProduct
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalMin
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalPower
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineFactorial
+public import LeanPool.BeyondBethe.BeyondBethe.MachineLengthBits
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixDimension
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSupportProduct
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalMin
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalPower
 
 /-!
 # The rational smoothing level as a finite-word function
@@ -25,6 +27,8 @@ and factorial.  All intermediate rational words remain unreduced until the
 final minimum has selected a branch, at which point the selected fraction is
 canonically normalized.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineListReverse
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSum
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalArithmetic
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineListReverse
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSum
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalArithmetic
+public import Mathlib.Tactic
 
 /-!
 # Adding every entry of a rational row by one raw rational
@@ -17,6 +19,8 @@ the numerator/denominator pair encoding required inside rational matrices.
 This is deliberately not `machineRationalDivCode`, whose public output uses a
 different one-natural encoding.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

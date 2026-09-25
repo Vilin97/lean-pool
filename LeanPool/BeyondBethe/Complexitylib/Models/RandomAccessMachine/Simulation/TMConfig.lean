@@ -18,7 +18,7 @@ information.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

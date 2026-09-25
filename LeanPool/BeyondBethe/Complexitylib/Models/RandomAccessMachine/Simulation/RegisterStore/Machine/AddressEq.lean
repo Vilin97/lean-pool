@@ -17,7 +17,7 @@ comparison used by the concrete sparse register-store scan.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

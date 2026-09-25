@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalization
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalization
 
 /-!
 # Polynomial-time signed integer arithmetic
@@ -13,6 +15,8 @@ The arithmetic core uses a pair `(sign, absolute value)`, with a one-bit sign.
 Conversion back to `integerBinaryCode` forces the sign to be nonnegative when
 the magnitude is zero, avoiding the `Int.negSucc` negative-zero pitfall.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

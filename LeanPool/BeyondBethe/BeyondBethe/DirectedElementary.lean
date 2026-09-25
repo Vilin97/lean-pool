@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.AlgorithmicSpec
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Data.Nat.Log
-import Mathlib.Data.Rat.Floor
+
+public import LeanPool.BeyondBethe.BeyondBethe.AlgorithmicSpec
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Data.Nat.Log
+public import Mathlib.Data.Rat.Floor
 
 /-! # Directed Elementary -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -18,7 +18,7 @@ This file composes the transducer certificates of every multiplication phase.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

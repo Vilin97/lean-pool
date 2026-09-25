@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineScheduledLog
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalization
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineScheduledLog
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalization
 
 /-!
 # One directed nearby-Bethe coordinate as a finite-word function
@@ -16,6 +18,8 @@ output is the unreduced rational
 
 `scheduledLogLower (1-x) p + tau*x*scheduledLogLower x p`.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

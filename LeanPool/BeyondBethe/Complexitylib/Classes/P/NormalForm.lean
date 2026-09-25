@@ -22,7 +22,7 @@ normalized bounds are valid on every input length and are monotone.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

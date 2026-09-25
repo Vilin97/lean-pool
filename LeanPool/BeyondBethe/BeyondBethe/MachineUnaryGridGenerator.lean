@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedNegativeObjectiveSum
-import LeanPool.BeyondBethe.BeyondBethe.MachineListReverse
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedNegativeObjectiveSum
+public import LeanPool.BeyondBethe.BeyondBethe.MachineListReverse
 
 /-!
 # A reusable finite-word generator for square rational grids
@@ -21,6 +23,8 @@ The generator is intentionally independent of the Bethe formulas.  It will be
 used both for the nonlinear affine-gradient vector and for complete floor-cut
 vectors, avoiding two unrelated implementations of the same grid traversal.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

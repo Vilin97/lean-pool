@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFeasibilityFit
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerRoundingSchedule
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFeasibilityFit
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerRoundingSchedule
 
 /-!
 # Finite-word state ruler for one optimizer feasibility call
@@ -15,6 +17,8 @@ ruler in order to remain polynomial-time on malformed words.  This file
 computes the proved ordinary-binary state bound from the same finite-word
 dimension, budget, magnitude, and precision schedules used by the call.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorSum
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorSum
 
 /-!
 # Finite-word access and summation for certificate potentials
@@ -13,6 +15,8 @@ This is the first component of the directed certificate evaluator.  It parses
 the canonical optimizer-output word and forms the unreduced rational sum of
 all row and column potentials.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalDirectionUpdateRow
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalMatrixMul
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalDirectionUpdateRow
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalMatrixMul
 
 /-!
 # Polynomial-time direction-update matrices
@@ -13,6 +15,8 @@ import LeanPool.BeyondBethe.BeyondBethe.MachineRationalMatrixMul
 This module maps the verified row constructor over all row indices.  The
 result is the full rational matrix used to update an ellipsoid basis.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

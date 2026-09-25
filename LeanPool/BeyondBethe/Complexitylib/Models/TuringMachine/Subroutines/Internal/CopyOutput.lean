@@ -22,7 +22,7 @@ The public theorem is stated in
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

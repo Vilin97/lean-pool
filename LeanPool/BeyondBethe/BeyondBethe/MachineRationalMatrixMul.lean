@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalMatrixMulVector
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalMatrixMulVector
 
 /-!
 # Polynomial-time rational matrix multiplication
@@ -15,6 +17,8 @@ corresponding row of `A`; the already verified transpose--vector machine
 therefore supplies the arithmetic kernel.  A bounded outer scan assembles
 the rows.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

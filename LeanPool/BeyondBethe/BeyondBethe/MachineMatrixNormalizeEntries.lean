@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalRowDivide
-import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalRowDivide
+public import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
+public import Mathlib.Tactic
 
 /-!
 # Entrywise normalization of a rational matrix
@@ -16,6 +18,8 @@ binary dimension prefix and maps the self-delimiting row list with the
 verified row-division machine.  A polynomial clamp is present on malformed
 inputs and is proved inactive on every canonical rational matrix.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

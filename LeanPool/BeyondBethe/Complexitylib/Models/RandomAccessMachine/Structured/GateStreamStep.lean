@@ -18,7 +18,7 @@ routine can be invoked again at the returned cursor.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

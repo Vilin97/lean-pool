@@ -21,7 +21,7 @@ literally throughout the run.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

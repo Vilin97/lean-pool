@@ -23,7 +23,7 @@ sequence of binary successors compiled from a hardwired natural constant.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

@@ -6,7 +6,7 @@ Authors: Bolton Bailey
 
 module
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Vec
-import LeanPool.BeyondBethe.Complexitylib.Classes.P.FinsetDomain
+public import LeanPool.BeyondBethe.Complexitylib.Classes.P.FinsetDomain
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.PairWithInput
 
 /-!

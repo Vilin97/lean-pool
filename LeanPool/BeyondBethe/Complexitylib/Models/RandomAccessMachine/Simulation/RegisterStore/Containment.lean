@@ -19,7 +19,7 @@ establish machine-model robustness of polynomial time.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

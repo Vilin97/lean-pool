@@ -3,16 +3,20 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Stable
-import Mathlib.Analysis.Complex.JensenFormula
-import Mathlib.Analysis.Analytic.Polynomial
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.Algebra.MvPolynomial.Funext
-import Mathlib.Algebra.Polynomial.Degree.SmallDegree
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.Stable
+public import Mathlib.Analysis.Complex.JensenFormula
+public import Mathlib.Analysis.Analytic.Polynomial
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.Algebra.MvPolynomial.Funext
+public import Mathlib.Algebra.Polynomial.Degree.SmallDegree
+public import Mathlib.Tactic
 
 /-! # Source Stable Closure -/
+
+@[expose] public section
 
 open Filter MeasureTheory Metric Real Set
 

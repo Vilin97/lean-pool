@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineCompletedAlgorithm
-import LeanPool.BeyondBethe.BeyondBethe.ExplicitPositiveRoutine
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineCompletedAlgorithm
+public import LeanPool.BeyondBethe.BeyondBethe.ExplicitPositiveRoutine
 
 /-!
 # Finite-word wrapper for the positive-matrix routine
@@ -14,6 +16,8 @@ This module removes normalization, scale restoration, and the exact small
 dimensions from the remaining positive-routine boundary.  The only parameter
 is a raw-output machine for the normalized optimizer-plus-certificate value.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

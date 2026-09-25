@@ -12,7 +12,7 @@ public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Stru
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

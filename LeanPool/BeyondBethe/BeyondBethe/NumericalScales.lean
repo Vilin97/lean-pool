@@ -3,11 +3,15 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.NearCase
-import Mathlib.Algebra.Order.Archimedean.Basic
+
+public import LeanPool.BeyondBethe.BeyondBethe.NearCase
+public import Mathlib.Algebra.Order.Archimedean.Basic
 
 /-! # Numerical Scales -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

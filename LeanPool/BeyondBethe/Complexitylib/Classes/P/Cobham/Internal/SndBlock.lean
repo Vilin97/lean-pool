@@ -6,8 +6,8 @@ Authors: Bolton Bailey
 
 module
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.BlockScan
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.Counter
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Tape.Encoding
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.Counter
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Tape.Encoding
 
 /-!
 # The block-suffix decoder — proof internals
@@ -22,7 +22,7 @@ Malformed input halts with empty output, matching `unpair? = none`.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

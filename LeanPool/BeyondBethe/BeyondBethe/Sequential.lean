@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Gibbs
-import LeanPool.BeyondBethe.BeyondBethe.Transfer
-import LeanPool.BeyondBethe.BeyondBethe.SequentialNormalization
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.Gibbs
+public import LeanPool.BeyondBethe.BeyondBethe.Transfer
+public import LeanPool.BeyondBethe.BeyondBethe.SequentialNormalization
+public import Mathlib.Tactic
 
 /-! # Sequential -/
+
+@[expose] public section
 
 open scoped BigOperators
 

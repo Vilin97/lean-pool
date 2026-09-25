@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Permanent
-import Mathlib.Data.List.FinRange
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.Permanent
+public import Mathlib.Data.List.FinRange
+public import Mathlib.Tactic
 
 /-! # Kuhn Matching -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -22,8 +26,10 @@ set of visited columns, so a single root search examines each column at most
 once; this detail is essential for the polynomial bound.
 -/
 
+/-- A table assigning each column either a matched row or no match. -/
 abbrev ColumnMate (n : ℕ) := Fin n → Option (Fin n)
 
+/-- The column-mate table with every column unmatched. -/
 def emptyColumnMate (n : ℕ) : ColumnMate n := fun _ ↦ none
 
 /-- A column-to-row table represents a partial matching in the positive
@@ -34,9 +40,11 @@ structure IsSupportColumnMate {n : ℕ}
   injective : ∀ {col col' row},
     mate col = some row → mate col' = some row → col = col'
 
+/-- No column in the mate table is assigned to the given row. -/
 def RowUnmatched {n : ℕ} (mate : ColumnMate n) (row : Fin n) : Prop :=
   ∀ col, mate col ≠ some row
 
+/-- Some column in the mate table is assigned to the given row. -/
 def MatchesRow {n : ℕ} (mate : ColumnMate n) (row : Fin n) : Prop :=
   ∃ col, mate col = some row
 
@@ -169,7 +177,9 @@ theorem matchesRow_update_some_iff {n : ℕ}
 /-- Result of one augmenting-path search.  `mate? = some m` records success;
 either way, `seen` contains every column examined by the search. -/
 structure KuhnSearchResult (n : ℕ) where
+  /-- The updated mate table on successful augmentation, or `none` when the search fails. -/
   mate? : Option (ColumnMate n)
+  /-- The set of columns visited by the search, retained even when augmentation fails. -/
   seen : Finset (Fin n)
 
 /-- Depth-first augmenting-path search with a shared visited-column set.
@@ -348,6 +358,7 @@ theorem kuhnSearchWork_le {n : ℕ}
       rw [hsplitAll, hsplitOne, Nat.mul_add, Nat.mul_add]
       omega
 
+/-- The work count for an augmenting-path search over the full ordered column list. -/
 def kuhnAugmentWork {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ)
     (fuel : ℕ) (row : Fin n) (seen : Finset (Fin n))
     (mate : ColumnMate n) : ℕ :=
@@ -494,6 +505,7 @@ theorem kuhnSearch_success {n : ℕ}
       mateWithoutOld recursive hrec ihRec ihRec' ihContinue =>
       exact ihContinue mate' hsupport hunmatched hresult
 
+/-- Every nonzero support neighbor of the row lies in the specified column set. -/
 def AllSupportNeighborsIn {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℚ) (row : Fin n)
     (cols : Finset (Fin n)) : Prop :=
@@ -700,6 +712,8 @@ def kuhnBuild {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) :
       let result := kuhnAugment A (n + 1) row ∅ mate
       kuhnBuild A rows (result.mate?.getD mate)
 
+/-- The cumulative augmenting-search work for the row list, retaining the previous mate table
+when a search fails. -/
 def kuhnBuildWork {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) :
     List (Fin n) → ColumnMate n → ℕ
   | [], _mate => 0
@@ -816,10 +830,12 @@ theorem kuhnBuild_support {n : ℕ}
           simpa [kuhnBuild, hresult] using
             ih mateOne hnodup.tail hsupportOne htailUnmatched
 
+/-- The mate table produced by inserting all rows in order, starting from the empty matching. -/
 def kuhnColumnMate {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℚ) : ColumnMate n :=
   kuhnBuild A (List.finRange n) (emptyColumnMate n)
 
+/-- Decide whether any column is matched to the given row. -/
 def matchedRowDecision {n : ℕ} (mate : ColumnMate n) (row : Fin n) : Bool :=
   (List.finRange n).any fun col ↦ mate col == some row
 

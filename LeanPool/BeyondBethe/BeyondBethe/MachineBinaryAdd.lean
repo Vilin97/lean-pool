@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBool
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBool
 
 /-!
 # A composed polynomial-time binary adder
@@ -15,6 +17,8 @@ most one bit from each operand and prepends one result bit to `accRev`.
 Complexitylib's proved bounded-iteration machine runs this step for the
 length of a linear ruler; the final reversal restores little-endian order.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -21,7 +21,7 @@ it is not hardwired into the finite controller.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

@@ -3,16 +3,20 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Birkhoff
-import Mathlib.Analysis.Convex.Jensen
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Fintype.Perm
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.Birkhoff
+public import Mathlib.Analysis.Convex.Jensen
+public import Mathlib.Analysis.MeanInequalities
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Data.Fintype.Perm
+public import Mathlib.Tactic
 
 /-! # Entropy -/
+
+@[expose] public section
 
 open scoped BigOperators
 

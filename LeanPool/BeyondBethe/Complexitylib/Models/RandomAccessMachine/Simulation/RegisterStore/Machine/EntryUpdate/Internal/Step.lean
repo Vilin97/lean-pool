@@ -5,7 +5,7 @@ Authors: Samuel Schlesinger
 -/
 
 module
-import
+public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryUpdate.Internal.Hit
 public import
 LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryUpdate.Internal.Miss
@@ -15,7 +15,7 @@ LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.Registe
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

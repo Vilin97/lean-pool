@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheAffineEntry
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
-import LeanPool.BeyondBethe.BeyondBethe.MachineBool
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheAffineEntry
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBool
 
 /-!
 # Exact finite-word test for a violated Bethe floor constraint
@@ -17,6 +19,8 @@ this without normalization or approximate arithmetic: compute the recovered
 entry as an unreduced rational and negate the exact comparison
 `delta <= entry`.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

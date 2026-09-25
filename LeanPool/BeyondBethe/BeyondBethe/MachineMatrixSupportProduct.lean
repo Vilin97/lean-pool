@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSum
-import LeanPool.BeyondBethe.BeyondBethe.MachineBooleanMemory
-import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixSum
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBooleanMemory
+public import LeanPool.BeyondBethe.BeyondBethe.FinalAssembly
 
 /-!
 # Row-major support product of a rational matrix
@@ -17,6 +19,8 @@ the concrete nested binary matrix encoding.  The accumulator is an unreduced
 rational; a quadratic clamp is total on malformed inputs and is proved
 inactive on canonical matrices.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

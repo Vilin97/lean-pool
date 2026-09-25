@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineDyadicFloor
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalEllipsoidUpdate
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDyadicFloor
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalEllipsoidUpdate
 
 /-!
 # Polynomial-time coordinatewise dyadic floor
@@ -15,6 +17,8 @@ Ellipsoid memory instead uses the self-delimiting numerator--denominator entry
 code.  We therefore normalize the same raw result into entry format and map
 that exact operation over a bounded encoded vector.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

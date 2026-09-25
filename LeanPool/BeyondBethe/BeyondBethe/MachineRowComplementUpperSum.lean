@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineNearbyMatrixSum
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineNearbyMatrixSum
 
 /-!
 # A directed upper logarithm sum for one matrix row
@@ -19,6 +21,8 @@ sum, the transducer is total on arbitrary strings and clamps its unreduced
 rational accumulator by an explicit degree-eight word.  The semantic proof
 shows that the clamp is inactive on every canonical in-range row query.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

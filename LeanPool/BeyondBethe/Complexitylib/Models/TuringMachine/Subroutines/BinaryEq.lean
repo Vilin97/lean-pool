@@ -16,7 +16,7 @@ binary equality routine used by RAM register-store scans.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

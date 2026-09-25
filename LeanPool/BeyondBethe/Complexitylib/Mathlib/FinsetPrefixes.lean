@@ -22,7 +22,7 @@ type in its home namespace — the sanctioned exception to the `Complexity`
 root-namespace rule. Its contents are candidates for upstreaming to Mathlib.
 -/
 
-public section
+@[expose] public section
 
 namespace Finset
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedNegativeObjectiveCoordinate
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDirectedNegativeObjectiveCoordinate
 
 /-!
 # Finite-word lower endpoint for one directed Bethe gradient coordinate
@@ -18,6 +20,8 @@ input parser and normalized complement from the objective-coordinate machine,
 so the two implementations cannot silently disagree about input layout or
 about the representation of `1-x`.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

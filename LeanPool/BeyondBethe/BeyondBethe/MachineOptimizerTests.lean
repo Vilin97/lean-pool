@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorScan
-import LeanPool.BeyondBethe.BeyondBethe.MachineExecutableScannedOptimizerOutput
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatchingGain
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorScan
+public import LeanPool.BeyondBethe.BeyondBethe.MachineExecutableScannedOptimizerOutput
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatchingGain
 
 /-!
 # Exhaustive small tests for the optimizer and certificate boundary
@@ -15,6 +17,8 @@ These tests are deliberately separate from the production dependency graph.
 They execute the finite-word programs on small finite families; correctness of
 the public theorem itself continues to use the symbolic proofs.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

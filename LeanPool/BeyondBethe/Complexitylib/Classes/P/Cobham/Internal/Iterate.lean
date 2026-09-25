@@ -5,10 +5,10 @@ Authors: Bolton Bailey
 -/
 
 module
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Registers.Horner
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Registers.InputLen
 public import LeanPool.BeyondBethe.Complexitylib.Asymptotics.PolyBound
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.IterateLayout
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Registers.Horner
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Registers.InputLen
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.PairEmit
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.NormalForm
 
@@ -42,7 +42,7 @@ running value and whose last tape `resIdx` receives each result.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

@@ -5,11 +5,11 @@ Authors: Samuel Schlesinger
 -/
 
 module
-import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.TMConfig.Sparse.ABI.Internal.Loop
-import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.TMConfig.Sparse.Internal
+public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.TMConfig.Sparse.ABI.Internal.Loop
+public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.TMConfig.Sparse.Internal
 public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.TMConfig.Sparse.ABI.Internal.Capture
-import Mathlib.Algebra.Order.Sub.Basic
+public import Mathlib.Algebra.Order.Sub.Basic
 
 /-!
 # Public-input marshalling correctness -- proof internals

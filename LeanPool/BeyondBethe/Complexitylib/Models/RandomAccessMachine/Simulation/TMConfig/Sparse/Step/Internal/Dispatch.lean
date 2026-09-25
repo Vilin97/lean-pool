@@ -5,7 +5,7 @@ Authors: Samuel Schlesinger
 -/
 
 module
-import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.TMConfig.Sparse.Step.Internal.Action
+public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.TMConfig.Sparse.Step.Internal.Action
 public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Structured.Switch
 public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.TMConfig.Sparse.Step.Internal.Load
 
@@ -14,7 +14,7 @@ public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simu
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

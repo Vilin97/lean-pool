@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalArithmetic
-import LeanPool.BeyondBethe.BeyondBethe.RawRationalBitBounds
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalArithmetic
+public import LeanPool.BeyondBethe.BeyondBethe.RawRationalBitBounds
 
 /-!
 # Polynomial-time rational negation, inversion, and division
@@ -14,6 +16,8 @@ The reciprocal machine handles zero explicitly and otherwise swaps the
 positive denominator with the absolute numerator while preserving the
 numerator sign.  Division is multiplication by this verified reciprocal.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

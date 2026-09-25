@@ -15,7 +15,7 @@ public import Std.Tactic.BVDecide.Normalize.Bool
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

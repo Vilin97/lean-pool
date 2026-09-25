@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixNonnegative
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixNonnegative
 
 /-!
 # Polynomial-time row-major rational matrix sum
@@ -15,6 +17,8 @@ quadratic clamp gives a global state envelope on malformed strings.  The
 semantic width invariant below proves that the clamp is inactive on every
 canonical matrix input.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

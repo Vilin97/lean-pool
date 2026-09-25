@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorScan
-import LeanPool.BeyondBethe.BeyondBethe.MachineListIndex
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorScan
+public import LeanPool.BeyondBethe.BeyondBethe.MachineListIndex
 
 /-!
 # Exact finite-word test for the Bethe epigraph height cap
@@ -15,6 +17,8 @@ unary ruler for the number of base coordinates, this machine retrieves that
 last entry and tests the strict violation `upper < height` by exact rational
 cross multiplication.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

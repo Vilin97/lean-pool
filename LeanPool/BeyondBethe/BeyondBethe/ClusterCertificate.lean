@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.CertificateCapacity
-import LeanPool.BeyondBethe.BeyondBethe.ClusterAlpha
-import LeanPool.BeyondBethe.BeyondBethe.Bethe
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.CertificateCapacity
+public import LeanPool.BeyondBethe.BeyondBethe.ClusterAlpha
+public import LeanPool.BeyondBethe.BeyondBethe.Bethe
+public import Mathlib.Tactic
 
 /-! # Cluster Certificate -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -183,11 +187,14 @@ theorem clusterInjectionPolynomial_eq_pair
       rw [injectionPolynomial_fin_two]
       rfl
 
+/-- The product over columns of the singleton row Bethe factors. -/
 noncomputable def singletonProductValue
     {n : ℕ} (A X : Matrix (Fin n) (Fin n) ℝ) (i : Fin n) : ℝ :=
   ∏ j, (A i j / X i j) ^ (X i j) *
     (1 - X i j) ^ (1 - X i j)
 
+/-- The pair-polynomial capacity multiplied by the complementary-mass product for the two-row
+exponents. -/
 noncomputable def pairCertificateValue
     {n : ℕ} (A X : Matrix (Fin n) (Fin n) ℝ) (r s : Fin n) : ℝ :=
   (∏ j, (1 - pairAlpha X r s j) ^ (1 - pairAlpha X r s j)) *

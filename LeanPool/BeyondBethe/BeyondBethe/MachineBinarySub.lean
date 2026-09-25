@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineTrimHighZeros
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinaryRippleSub
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineTrimHighZeros
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinaryRippleSub
 
 /-!
 # A composed polynomial-time binary subtractor
@@ -15,6 +17,8 @@ scan produces a fixed-width difference; a verified final branch maps
 underflow to zero and otherwise removes redundant high zeroes.  Thus the
 machine implements truncated subtraction on canonical natural words.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -33,19 +37,23 @@ def machineBinarySubY (state : List Bool) : List Bool :=
 def machineBinarySubBorrow (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extract the reversed output-bit accumulator from the subtraction state. -/
 def machineBinarySubAccRev (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
+/-- Return a true bit exactly when at least one operand still has an unprocessed bit. -/
 def machineBinarySubActive (state : List Bool) : List Bool :=
   machineIfEmpty (machineBinarySubX state)
     (machineIfEmpty (machineBinarySubY state) [false] [true]) [true]
 
+/-- The current difference bit, computed as the parity of the operand heads and incoming borrow. -/
 def machineBinarySubDiffBit (state : List Bool) : List Bool :=
   machineFullAdderSum
     (machineHeadBit (machineBinarySubX state))
     (machineHeadBit (machineBinarySubY state))
     (machineBinarySubBorrow state)
 
+/-- Compute the outgoing borrow from the two operand heads and incoming borrow. -/
 def machineBinarySubNextBorrow (state : List Bool) : List Bool :=
   let lhs := machineHeadBit (machineBinarySubX state)
   let rhs := machineHeadBit (machineBinarySubY state)
@@ -54,6 +62,8 @@ def machineBinarySubNextBorrow (state : List Bool) : List Bool :=
     (machineOrBit (machineAndBit (machineNotBit lhs) borrow)
       (machineAndBit rhs borrow))
 
+/-- Consume both operand heads, update the borrow, and prepend the new difference bit to the
+reversed accumulator. -/
 def machineBinarySubAdvanced (state : List Bool) : List Bool :=
   machineBinarySubPack
     (machineBinarySubX state).tail
@@ -61,25 +71,33 @@ def machineBinarySubAdvanced (state : List Bool) : List Bool :=
     (machineBinarySubNextBorrow state)
     (machineBinarySubDiffBit state ++ machineBinarySubAccRev state)
 
+/-- Advance subtraction while either operand remains; otherwise leave the state fixed. -/
 def machineBinarySubStep (state : List Bool) : List Bool :=
   machineIfHead (machineBinarySubActive state)
     (machineBinarySubAdvanced state) state
 
+/-- Initialize subtraction from the two decoded operands with no borrow and an empty
+accumulator. -/
 def machineBinarySubInit (word : List Bool) : List Bool :=
   machineBinarySubPack (machinePairFirst word) (machinePairSecond word)
     [false] []
 
+/-- Concatenate the operand words to obtain a sufficient subtraction iteration ruler. -/
 def machineBinarySubRuler (word : List Bool) : List Bool :=
   machinePairFirst word ++ machinePairSecond word
 
+/-- A false-bit width ruler of length `(word.length + 8)^2` for subtraction states. -/
 def machineBinarySubWidth (word : List Bool) : List Bool :=
   let padded := List.replicate 8 false ++ word
   List.replicate (padded.length * padded.length) false
 
+/-- Run subtraction for the sum of the two decoded operand lengths. -/
 def machineBinarySubFinalState (word : List Bool) : List Bool :=
   machineBinarySubStep^[(machineBinarySubRuler word).length]
     (machineBinarySubInit word)
 
+/-- Return zero on a final borrow; otherwise reverse the accumulated difference bits and remove
+high zeros. -/
 def machineBinarySubBits (word : List Bool) : List Bool :=
   let state := machineBinarySubFinalState word
   machineIfHead (machineBinarySubBorrow state) []
@@ -251,6 +269,8 @@ theorem machineBinarySubStep_pack_length_le
       List.length_tail]
     omega
 
+/-- The subtraction state is a packed pair of operand words, a singleton borrow bit, and a
+reversed accumulator. -/
 def MachineBinarySubWellFormed (state : List Bool) : Prop :=
   ∃ x y accRev : List Bool, ∃ borrow : Bool,
     state = machineBinarySubPack x y [borrow] accRev

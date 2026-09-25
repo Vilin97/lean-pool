@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryDivision
-import LeanPool.BeyondBethe.BeyondBethe.MachineTrimHighZeros
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryDivision
+public import LeanPool.BeyondBethe.BeyondBethe.MachineTrimHighZeros
 
 /-!
 # Polynomial-time binary gcd
@@ -15,6 +17,8 @@ The input components are canonicalized first.  Each step obtains its remainder
 from the verified long-division machine, and two iterations per bit of the
 initial second component suffice by the previously proved Euclid bound.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

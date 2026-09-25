@@ -16,7 +16,7 @@ execution, correctness, and resource proofs are all in the generic scanner layer
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.BetheBisection
-import LeanPool.BeyondBethe.BeyondBethe.DirectedCertificateValue
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.BetheBisection
+public import LeanPool.BeyondBethe.BeyondBethe.DirectedCertificateValue
+public import Mathlib.Tactic
 
 /-! # Explicit Optimizer Scales -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -20,40 +24,55 @@ the fixed structural error budget.  Their deliberately generous slack keeps
 the later objective-to-KKT calculation transparent.
 -/
 
+/-- Half the numerical interior floor at the matrix dimension, entry bit bound, and
+regularization scale. -/
 def explicitOptimizerFloor {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) : ℚ :=
   numericalInteriorFloor (m + 1) (rationalMatrixEntryBitBound A)
       (explicitRegularizationScale (m + 1)) / 2
 
+/-- The optimizer distance scale: the coordinate floor times the KKT error allowance, divided by
+48. -/
 def explicitOptimizerRho {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) : ℚ :=
   explicitOptimizerFloor A * explicitKKTError / 48
 
+/-- The optimizer objective gap: one quarter of the regularization scale times the squared
+distance scale. -/
 def explicitOptimizerGap {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) : ℚ :=
   explicitRegularizationScale (m + 1) * explicitOptimizerRho A ^ 2 / 4
 
+/-- The mixing weight capped at one half and scaled by the objective gap and regularized
+objective range. -/
 def explicitOptimizerMix {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) : ℚ :=
   min (1 / 2)
     (explicitOptimizerGap A /
       (4 * (rationalRegularizedObjectiveRange A + 1)))
 
+/-- The optimizer inner radius, equal to the mixing weight divided by twice the matrix
+dimension. -/
 def explicitOptimizerInnerRadius {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) : ℚ :=
   explicitOptimizerMix A / (2 * (m + 1))
 
+/-- The evaluation precision budget from the encoded gap and KKT allowance, with
+dimension-dependent slack. -/
 def explicitOptimizerPrecision {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) : ℕ :=
   encodedBitLength ℚ (explicitOptimizerGap A) +
     encodedBitLength ℚ explicitKKTError + 2 * (m + 1) + 10
 
+/-- The width of the explicit initial Bethe bisection interval. -/
 def explicitOptimizerInitialWidth {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) : ℚ :=
   betheBisectionInitialHigh A (explicitOptimizerMix A)
       (explicitOptimizerInnerRadius A) -
     betheNegativeObjectiveLower m
 
+/-- The bisection iteration count from the encoded initial width and target gap, with three
+extra steps. -/
 def explicitOptimizerBisectionSteps {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) : ℕ :=
   encodedBitLength ℚ (explicitOptimizerInitialWidth A) +

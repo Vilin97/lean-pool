@@ -3,21 +3,27 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Gain
-import LeanPool.BeyondBethe.BeyondBethe.PairedCertificate
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.Gain
+public import LeanPool.BeyondBethe.BeyondBethe.PairedCertificate
+public import Mathlib.Tactic
 
 /-! # Clean Witness -/
+
+@[expose] public section
 
 open scoped BigOperators
 
 namespace BeyondBethe
 
+/-- All column indices except the two distinguished columns. -/
 def outsideColumnFinset
     {ι : Type*} [Fintype ι] [DecidableEq ι] (a b : ι) : Finset ι :=
   (Finset.univ.erase a).erase b
 
+/-- The subtype of columns outside the two distinguished columns. -/
 abbrev OutsideColumn
     {ι : Type*} [Fintype ι] [DecidableEq ι] (a b : ι) :=
   {j // j ∈ outsideColumnFinset a b}
@@ -61,6 +67,8 @@ theorem pairAlpha_coreDeficit_pos
   exact ⟨sub_pos.mpr (pairAlpha_lt_one_of_positive hX hXpos hcard hrs a),
     sub_pos.mpr (pairAlpha_lt_one_of_positive hX hXpos hcard hrs b)⟩
 
+/-- The coordinate indicator of the endpoint pair associated to each clean capacity-witness
+edge. -/
 noncomputable def cleanWitnessExponent
     {ι : Type*} [Fintype ι] [DecidableEq ι] (a b : ι) :
     CapacityWitnessEdge (OutsideColumn a b) → ι → ℕ
@@ -117,6 +125,7 @@ noncomputable def cleanWitnessCoefficient
   let p := cleanWitnessEndpoints a b e
   u p.1 * v p.2 + u p.2 * v p.1
 
+/-- The weighted sum of the logarithms of the coefficients. -/
 noncomputable def expectedLogCoefficient
     {κ : Type*} [Fintype κ] (θ c : κ → ℝ) : ℝ :=
   ∑ e, θ e * Real.log (c e)

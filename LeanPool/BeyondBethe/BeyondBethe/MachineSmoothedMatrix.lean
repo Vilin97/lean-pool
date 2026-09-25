@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixAddDelta
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixNormalizeEntries
-import LeanPool.BeyondBethe.BeyondBethe.MachineSmoothingDelta
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixAddDelta
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixNormalizeEntries
+public import LeanPool.BeyondBethe.BeyondBethe.MachineSmoothingDelta
 
 /-!
 # The complete normalization-and-smoothing matrix transform
@@ -17,6 +19,8 @@ every normalized entry.  Keeping the smoothing witness in raw-fraction format
 is essential: the canonical public rational output uses a different encoding
 and cannot be fed directly to the matrix-entry arithmetic machines.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -30,7 +30,7 @@ controller. A redirected form writes the new store to a fresh work buffer.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

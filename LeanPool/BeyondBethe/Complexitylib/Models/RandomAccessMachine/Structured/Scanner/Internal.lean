@@ -14,7 +14,7 @@ public import Std.Tactic.BVDecide.Normalize.BitVec
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

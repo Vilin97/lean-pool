@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.NumericalScales
-import LeanPool.BeyondBethe.BeyondBethe.AlgorithmicSpec
-import LeanPool.BeyondBethe.BeyondBethe.Smoothing
-import LeanPool.BeyondBethe.BeyondBethe.KuhnMatching
+
+public import LeanPool.BeyondBethe.BeyondBethe.NumericalScales
+public import LeanPool.BeyondBethe.BeyondBethe.AlgorithmicSpec
+public import LeanPool.BeyondBethe.BeyondBethe.Smoothing
+public import LeanPool.BeyondBethe.BeyondBethe.KuhnMatching
 
 /-! # Final Assembly -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -59,6 +63,8 @@ def smoothedRationalMatrix {n : ℕ}
 rational matrices.  Its numerical loss is exactly the allowance in Lemma 24
 of the paper. -/
 structure CertifiedPositiveRoutine (ε : ℝ) where
+  /-- The rational matrix algorithm whose positive-input permanent bounds are certified by the
+  remaining fields. -/
   alg : ∀ n, Matrix (Fin n) (Fin n) ℚ → ℚ
   positiveOutput : ∀ {n : ℕ}, 2 ≤ n →
     ∀ A : Matrix (Fin n) (Fin n) ℚ,

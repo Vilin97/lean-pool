@@ -19,7 +19,7 @@ forward machine-model robustness theorem.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

@@ -25,7 +25,7 @@ serializing the target `Data` value with `Data.toBits`. Since both the `DataEnco
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 
@@ -107,7 +107,7 @@ instance : DataEncode ℕ where
 /-- Encode a value into a bitstring (`List Bool`) by first encoding it into `Data` and then
 serializing that with the parenthesized `Data.toBits`. This is the class-inferrable bitstring
 encoding available for any type with a `DataEncode` instance. -/
-@[expose] def DataEncode.bitstringEncode {α : Type} [DataEncode α] (a : α) : List Bool :=
+def DataEncode.bitstringEncode {α : Type} [DataEncode α] (a : α) : List Bool :=
   (DataEncode.encode a).toBits
 
 lemma DataEncode.bitstringEncode_def {α : Type} [DataEncode α] (a : α) :

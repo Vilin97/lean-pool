@@ -19,7 +19,7 @@ composite machine from `TM.unionTM` correctly decides `L₁ ∪ L₂`.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

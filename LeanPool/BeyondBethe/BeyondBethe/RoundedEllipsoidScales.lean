@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.RoundedEllipsoid
-import LeanPool.BeyondBethe.BeyondBethe.DyadicMagnitudePrecision
-import Mathlib.LinearAlgebra.Matrix.Integer
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.RoundedEllipsoid
+public import LeanPool.BeyondBethe.BeyondBethe.DyadicMagnitudePrecision
+public import Mathlib.LinearAlgebra.Matrix.Integer
+public import Mathlib.Tactic
 
 /-! # Rounded Ellipsoid Scales -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -15,7 +15,7 @@ public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutine
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineFourCoreCost
-import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryRange
-import LeanPool.BeyondBethe.BeyondBethe.MachineLengthBits
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineFourCoreCost
+public import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryRange
+public import LeanPool.BeyondBethe.BeyondBethe.MachineLengthBits
 
 /-!
 # Executable column-pair eligibility
@@ -17,6 +19,8 @@ first over the second column for a fixed first column, and then over the first
 column.  Both loops are driven by the unary matrix dimension, and all state is
 clamped on arbitrary bitstrings.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

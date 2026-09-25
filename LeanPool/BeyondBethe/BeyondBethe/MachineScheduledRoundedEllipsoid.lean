@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineDyadicFloorMatrix
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineDyadicFloorMatrix
 
 /-!
 # Polynomial-time scheduled rounded ellipsoid update
@@ -14,6 +16,8 @@ The center and basis are floored at a unary precision.  The rounded basis is
 then left-multiplied by an explicitly constructed scalar diagonal matrix,
 which realizes the prescribed inflation without another matrix mapper.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

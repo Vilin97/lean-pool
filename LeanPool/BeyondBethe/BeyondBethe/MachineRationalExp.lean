@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBoundedUnary
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalLogSeries
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBoundedUnary
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalLogSeries
 
 /-!
 # Guarded polynomial-time directed rational exponential
@@ -21,6 +23,8 @@ this machine takes an explicit unary guard.  It is polynomial-time on every
 string and agrees exactly with the directed rational exponential whenever the
 guard has length at least `M`.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

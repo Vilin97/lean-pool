@@ -6,8 +6,8 @@ Authors: Bolton Bailey
 
 module
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Defs
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.Counter
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Tape.Encoding
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.Counter
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Tape.Encoding
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.SndBlock
 
 /-!
@@ -23,7 +23,7 @@ block verbatim, then decode the next block's payload. It is the one machine the
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

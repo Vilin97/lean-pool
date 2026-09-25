@@ -31,7 +31,7 @@ This file contains the main internal data structure for the RTM, `Data`, a rose 
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

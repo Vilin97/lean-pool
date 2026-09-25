@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.RawRationalBitBounds
-import LeanPool.BeyondBethe.BeyondBethe.DyadicRounding
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.RawRationalBitBounds
+public import LeanPool.BeyondBethe.BeyondBethe.DyadicRounding
+public import Mathlib.Tactic
 
 /-! # Binary Rational Floor -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

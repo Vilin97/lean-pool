@@ -3,12 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import Mathlib.LinearAlgebra.Matrix.Permanent
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.Rat.BigOperators
+
+public import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
+public import Mathlib.LinearAlgebra.Matrix.Permanent
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Data.Rat.BigOperators
 
 /-! # Permanent -/
+
+@[expose] public section
 
 namespace Matrix
 

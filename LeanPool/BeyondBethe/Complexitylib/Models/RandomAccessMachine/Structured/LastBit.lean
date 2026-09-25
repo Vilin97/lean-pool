@@ -18,7 +18,7 @@ and resource bounds. This module adds only agreement with the existing
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

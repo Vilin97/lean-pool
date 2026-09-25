@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.BetheEpigraph
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorSum
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalTransposeMulVector
+
+public import LeanPool.BeyondBethe.BeyondBethe.BetheEpigraph
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorSum
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalTransposeMulVector
 
 /-!
 # Finite-word row and column sums for Birkhoff affine coordinates
@@ -19,41 +21,53 @@ the machine is unary and is obtained from verified binary multiplication and
 addition under the complete input word as a guard.
 -/
 
+@[expose] public section
+
 namespace BeyondBethe
 
 open Complexity
 
 /-! ## A verified flattened-coordinate lookup -/
 
+/-- Extract the row-versus-column mode word from a flattened-index request. -/
 def machineBetheFlatIndexMode (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the payload following the flattened-index mode word. -/
 def machineBetheFlatIndexRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extract the unary dimension ruler from a flattened-index request. -/
 def machineBetheFlatIndexDimension (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheFlatIndexRest word)
 
+/-- Extract the unary fixed row or column index from a flattened-index request. -/
 def machineBetheFlatIndexFixed (word : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machineBetheFlatIndexRest word))
 
+/-- Extract the unary varying index from a flattened-index request. -/
 def machineBetheFlatIndexCurrent (word : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond (machinePairSecond (machineBetheFlatIndexRest word)))
 
+/-- Extract the encoded rational vector carried by a flattened-index request. -/
 def machineBetheFlatIndexVector (word : List Bool) : List Bool :=
   machinePairSecond
     (machinePairSecond (machinePairSecond (machineBetheFlatIndexRest word)))
 
+/-- Convert the flattened-index dimension ruler to binary. -/
 def machineBetheFlatIndexDimensionBits (word : List Bool) : List Bool :=
   machineLengthBits (machineBetheFlatIndexDimension word)
 
+/-- Convert the fixed-index ruler to binary. -/
 def machineBetheFlatIndexFixedBits (word : List Bool) : List Bool :=
   machineLengthBits (machineBetheFlatIndexFixed word)
 
+/-- Convert the varying-index ruler to binary. -/
 def machineBetheFlatIndexCurrentBits (word : List Bool) : List Bool :=
   machineLengthBits (machineBetheFlatIndexCurrent word)
 
+/-- Compute the binary row-mode offset `fixed * dimension + current`. -/
 def machineBetheFlatIndexRowBits (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair
@@ -62,6 +76,7 @@ def machineBetheFlatIndexRowBits (word : List Bool) : List Bool :=
           (machineBetheFlatIndexDimensionBits word)))
       (machineBetheFlatIndexCurrentBits word))
 
+/-- Compute the binary column-mode offset `current * dimension + fixed`. -/
 def machineBetheFlatIndexColumnBits (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair
@@ -70,11 +85,13 @@ def machineBetheFlatIndexColumnBits (word : List Bool) : List Bool :=
           (machineBetheFlatIndexDimensionBits word)))
       (machineBetheFlatIndexFixedBits word))
 
+/-- Select the binary flattened offset according to the row-versus-column mode. -/
 def machineBetheFlatIndexBits (word : List Bool) : List Bool :=
   machineIfHead (machineBetheFlatIndexMode word)
     (machineBetheFlatIndexRowBits word)
     (machineBetheFlatIndexColumnBits word)
 
+/-- Convert the flattened binary index to a unary ruler bounded by the input word. -/
 def machineBetheFlatIndexRuler (word : List Bool) : List Bool :=
   machineBoundedUnary (pair word (machineBetheFlatIndexBits word))
 
@@ -183,6 +200,7 @@ theorem machineBetheFlatEntryRawCode_mem_FP :
   simpa only [machineBetheFlatEntryRawCode] using!
     machineCompose_mem_FP hinput machineListIndex_mem_FP
 
+/-- The canonical flattened-index request with mode, unary indices, and rational-vector payload. -/
 def betheFlatIndexCanonicalWord {m : ℕ} (rowMode : Bool)
     (fixed current : Fin m) (y : Fin (m * m) → ℚ) : List Bool :=
   pair [rowMode]
@@ -347,42 +365,55 @@ theorem bethe_flat_index_lt_word_length {m : ℕ} (rowMode : Bool)
 
 /-! ## A bounded exact line-sum iteration -/
 
+/-- Extract the row-versus-column mode from a line-sum request. -/
 def machineBetheLineSumMode (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the payload following the line-sum mode word. -/
 def machineBetheLineSumRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extract the unary dimension ruler from a line-sum request. -/
 def machineBetheLineSumDimension (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheLineSumRest word)
 
+/-- Extract the unary fixed row or column index from a line-sum request. -/
 def machineBetheLineSumFixed (word : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machineBetheLineSumRest word))
 
+/-- Extract the encoded rational vector from a line-sum request. -/
 def machineBetheLineSumVector (word : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machineBetheLineSumRest word))
 
+/-- Encode the remaining count, current index, accumulator, payload, and bound of a line-sum
+state. -/
 def machineBetheLineSumPack (remaining current acc payload bound : List Bool) :
     List Bool :=
   pair remaining (pair current (pair acc (pair payload bound)))
 
+/-- Extract the remaining-iteration ruler from a line-sum state. -/
 def machineBetheLineSumRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extract the current-index ruler from a line-sum state. -/
 def machineBetheLineSumCurrent (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extract the encoded raw-rational accumulator from a line-sum state. -/
 def machineBetheLineSumAccumulator (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extract the original line-sum request retained in the state. -/
 def machineBetheLineSumPayload (state : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Extract the word whose length bounds the line-sum accumulator. -/
 def machineBetheLineSumBound (state : List Bool) : List Bool :=
   machinePairSecond
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Build the flattened-entry request for the current position in the line-sum scan. -/
 def machineBetheLineSumEntryInput (state : List Bool) : List Bool :=
   let payload := machineBetheLineSumPayload state
   pair (machineBetheLineSumMode payload)
@@ -391,18 +422,22 @@ def machineBetheLineSumEntryInput (state : List Bool) : List Bool :=
         (pair (machineBetheLineSumCurrent state)
           (machineBetheLineSumVector payload))))
 
+/-- Evaluate the encoded raw-rational entry at the current scan position. -/
 def machineBetheLineSumEntry (state : List Bool) : List Bool :=
   machineBetheFlatEntryRawCode (machineBetheLineSumEntryInput state)
 
+/-- Add the current entry to the encoded line-sum accumulator. -/
 def machineBetheLineSumCandidate (state : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineBetheLineSumAccumulator state)
       (machineBetheLineSumEntry state))
 
+/-- Truncate the candidate accumulator code to the stored bound length. -/
 def machineBetheLineSumNextAccumulator (state : List Bool) : List Bool :=
   (machineBetheLineSumCandidate state).take
     (machineBetheLineSumBound state).length
 
+/-- Consume one remaining position, advance the unary index, and store the bounded updated sum. -/
 def machineBetheLineSumAdvance (state : List Bool) : List Bool :=
   machineBetheLineSumPack
     (machineBetheLineSumRemaining state).tail
@@ -411,26 +446,33 @@ def machineBetheLineSumAdvance (state : List Bool) : List Bool :=
     (machineBetheLineSumPayload state)
     (machineBetheLineSumBound state)
 
+/-- Leave a completed line-sum state unchanged, otherwise advance one position. -/
 def machineBetheLineSumStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineBetheLineSumRemaining state) state
     (machineBetheLineSumAdvance state)
 
+/-- Construct the line-sum bound word by applying the multiplication-width construction twice. -/
 def machineBetheLineSumInputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth (machineBinaryMulWidth word)
 
+/-- Initialize the line-sum scan at index zero with a zero accumulator and the full dimension
+ruler. -/
 def machineBetheLineSumInit (word : List Bool) : List Bool :=
   machineBetheLineSumPack (machineBetheLineSumDimension word) []
     (rawRatBinaryCode RawRat.zero) word
     (machineBetheLineSumInputBound word)
 
+/-- The packed width witness formed from five copies of the line-sum input bound word. -/
 def machineBetheLineSumWidth (word : List Bool) : List Bool :=
   let bound := machineBetheLineSumInputBound word
   machineBetheLineSumPack bound bound bound bound bound
 
+/-- Iterate the line-sum transition as many times as the dimension ruler length. -/
 def machineBetheLineSumFinalState (word : List Bool) : List Bool :=
   (machineBetheLineSumStep)^[(machineBetheLineSumDimension word).length]
     (machineBetheLineSumInit word)
 
+/-- Extract the raw-rational sum code from the final line-sum state. -/
 def machineBetheLineSumRawCode (word : List Bool) : List Bool :=
   machineBetheLineSumAccumulator (machineBetheLineSumFinalState word)
 
@@ -579,6 +621,8 @@ theorem machineBetheLineSumWidth_mem_FP : machineBetheLineSumWidth ∈ FP := by
     machineBetheLineSumBound (machineBetheLineSumPack a b c d e) = e := by
   simp [machineBetheLineSumBound, machineBetheLineSumPack]
 
+/-- The line-sum state invariant: canonical packing, bounded counters and payloads, and the
+fixed input bound. -/
 def MachineBetheLineSumStateBound (word state : List Bool) : Prop :=
   let B := (machineBetheLineSumInputBound word).length
   state = machineBetheLineSumPack
@@ -696,6 +740,8 @@ theorem machineBetheLineSumRawCode_mem_FP :
 
 /-! ## Exactness and absence of truncation on canonical inputs -/
 
+/-- The canonical line-sum request encoding the mode, dimension, fixed index, and rational
+vector. -/
 def machineBetheLineSumCanonicalWord {m : ℕ} (rowMode : Bool)
     (fixed : Fin m) (y : Fin (m * m) → ℚ) : List Bool :=
   pair [rowMode]
@@ -703,12 +749,14 @@ def machineBetheLineSumCanonicalWord {m : ℕ} (rowMode : Bool)
       (pair (List.replicate fixed.1 true)
         (rationalFiniteVectorCode y)))
 
+/-- List the free affine-coordinate values along the selected row or column. -/
 def betheAffineLineValues {m : ℕ} (rowMode : Bool)
     (fixed : Fin m) (y : Fin (m * m) → ℚ) : List ℚ :=
   List.ofFn fun current : Fin m ↦
     if rowMode then y (finProdFinEquiv (fixed, current))
     else y (finProdFinEquiv (current, fixed))
 
+/-- Sum the selected affine-coordinate row or column with raw-rational arithmetic. -/
 def rawBetheAffineLineSum {m : ℕ} (rowMode : Bool)
     (fixed : Fin m) (y : Fin (m * m) → ℚ) : RawRat :=
   rawRatListSum RawRat.zero (betheAffineLineValues rowMode fixed y)
@@ -852,6 +900,8 @@ theorem rawBetheAffineLinePrefix_succ {m : ℕ} (rowMode : Bool)
   simp only [rawRatListSum, List.getElem_ofFn, values,
     betheAffineLineValues]
 
+/-- The semantic scan state after `k` positions, with the prefix sum and corresponding unary
+counters. -/
 def machineBetheLineSumSemanticState {m : ℕ} (rowMode : Bool)
     (fixed : Fin m) (y : Fin (m * m) → ℚ) (k : ℕ) : List Bool :=
   let word := machineBetheLineSumCanonicalWord rowMode fixed y

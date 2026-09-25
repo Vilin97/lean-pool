@@ -22,7 +22,7 @@ quasilinear asymptotic corollaries.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

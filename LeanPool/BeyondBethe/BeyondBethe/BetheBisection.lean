@@ -3,11 +3,15 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.BetheThresholdFeasibility
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.BetheThresholdFeasibility
+public import Mathlib.Tactic
 
 /-! # Bethe Bisection -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -21,18 +25,24 @@ uses the proved implication that exhaustion can occur only below the exact
 optimum plus the explicit smoothing slack.
 -/
 
+/-- The initial lower threshold `-2 * (m + 1)^2` for the negative Bethe objective. -/
 def betheNegativeObjectiveLower (m : ℕ) : ℚ :=
   -(2 * (m + 1) ^ 2)
 
+/-- The negative-objective upper threshold obtained from the dimension and matrix entry bit
+bound. -/
 def betheNegativeObjectiveUpper {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) : ℚ :=
   (m + 1) * rationalMatrixEntryBitBound A + (m + 1)
 
+/-- The smoothing allowance: the mixing weight times the objective range, plus twice the inner
+radius. -/
 def betheSmoothingSlack {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (mix r : ℚ) : ℚ :=
   mix * rationalRegularizedObjectiveRange A + 2 * r
 
+/-- The initial upper bisection threshold, including the smoothing allowance. -/
 def betheBisectionInitialHigh {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (mix r : ℚ) : ℚ :=
@@ -57,8 +67,11 @@ theorem negativeObjective_mem_initial_interval
 
 /-- Executable state of the rational bisection. -/
 structure BetheBisectionState (d : ℕ) where
+  /-- The current lower objective threshold of the bisection interval. -/
   low : ℚ
+  /-- The current upper objective threshold of the bisection interval. -/
   high : ℚ
+  /-- The stored accepted feasibility point, if one has been found. -/
   witness : Option (Fin d → ℚ)
 
 /-- One bisection step. -/

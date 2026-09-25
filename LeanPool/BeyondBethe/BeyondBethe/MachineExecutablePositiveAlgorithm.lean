@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ExecutablePositiveRoutine
-import LeanPool.BeyondBethe.BeyondBethe.MachineExecutableCertificate
-import LeanPool.BeyondBethe.BeyondBethe.MachinePositiveAlgorithm
+
+public import LeanPool.BeyondBethe.BeyondBethe.ExecutablePositiveRoutine
+public import LeanPool.BeyondBethe.BeyondBethe.MachineExecutableCertificate
+public import LeanPool.BeyondBethe.BeyondBethe.MachinePositiveAlgorithm
 
 /-!
 # Finite-word realization of the executable positive-matrix routine
@@ -15,6 +17,8 @@ This file composes the concrete row-major optimizer, the concrete certificate
 evaluator, normalization, and scale restoration.  Correctness is required only
 on positive inputs, exactly the domain used by the smoothing reduction.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

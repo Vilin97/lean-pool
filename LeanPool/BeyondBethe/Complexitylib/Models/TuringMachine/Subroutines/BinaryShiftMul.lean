@@ -21,7 +21,7 @@ in the combined operand width.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

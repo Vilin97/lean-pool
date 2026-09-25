@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineKuhnStep
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineKuhnStep
+public import Mathlib.Tactic
 
 /-!
 # Correctness of one encoded Kuhn transition
@@ -14,6 +16,8 @@ The main theorem in this file shows that the un-clamped control computation is
 exactly `kuhnEvalStep`.  Clamp inactivity and the bounded full run are proved
 after the semantic size invariant.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

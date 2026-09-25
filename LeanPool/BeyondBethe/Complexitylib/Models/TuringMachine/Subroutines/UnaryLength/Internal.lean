@@ -19,7 +19,7 @@ exactly `|x| + 2` transitions.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

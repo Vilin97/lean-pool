@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalUnary
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalUnary
 
 /-!
 # A bounded polynomial-time rational power loop
@@ -14,6 +16,8 @@ clamp computed from the original input.  The clamp makes the total machine
 polynomial-time even on malformed strings; a separate bit-growth proof shows
 that it never truncates a well-formed unreduced power.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinarySub
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinarySub
 
 /-!
 # Bounded conversion from binary to unary
@@ -17,43 +19,58 @@ only the guarded prefix.  The guard is what later permits paper-specific
 polynomial schedules without making a false global complexity claim.
 -/
 
+@[expose] public section
+
 namespace BeyondBethe
 
 open Complexity
 
+/-- Package the remaining binary integer and accumulated unary word. -/
 def machineBoundedUnaryPack (remaining acc : List Bool) : List Bool :=
   pair remaining acc
 
+/-- Extract the remaining binary integer from a bounded unary-conversion state. -/
 def machineBoundedUnaryRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extract the unary true-bit accumulator. -/
 def machineBoundedUnaryAcc (state : List Bool) : List Bool :=
   machinePairSecond state
 
+/-- Subtract one from the remaining binary integer using truncated natural subtraction. -/
 def machineBoundedUnaryDecrement (state : List Bool) : List Bool :=
   machineBinarySubBits
     (pair (machineBoundedUnaryRemaining state) [true])
 
+/-- Decrement the remaining binary integer and prepend one true bit to the unary accumulator. -/
 def machineBoundedUnaryContinue (state : List Bool) : List Bool :=
   machineBoundedUnaryPack (machineBoundedUnaryDecrement state)
     (true :: machineBoundedUnaryAcc state)
 
+/-- Leave an empty remaining word fixed; otherwise perform one decrement-and-append conversion
+step. -/
 def machineBoundedUnaryStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineBoundedUnaryRemaining state) state
     (machineBoundedUnaryContinue state)
 
+/-- Extract the iteration ruler that limits binary-to-unary conversion. -/
 def machineBoundedUnaryRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the binary integer to convert. -/
 def machineBoundedUnaryBits (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Initialize bounded unary conversion with the input integer and an empty accumulator. -/
 def machineBoundedUnaryInit (word : List Bool) : List Bool :=
   machineBoundedUnaryPack (machineBoundedUnaryBits word) []
 
+/-- A conversion-state width envelope obtained by pairing the input word with itself. -/
 def machineBoundedUnaryWidth (word : List Bool) : List Bool :=
   pair word word
 
+/-- Run binary-to-unary conversion for the ruler's length, stopping early once the remaining
+word is empty. -/
 def machineBoundedUnaryFinalState (word : List Bool) : List Bool :=
   (machineBoundedUnaryStep)^[(machineBoundedUnaryRuler word).length]
     (machineBoundedUnaryInit word)
@@ -118,6 +135,8 @@ theorem machineBoundedUnaryWidth_mem_FP :
     machineBoundedUnaryAcc (machineBoundedUnaryPack remaining acc) = acc := by
   simp [machineBoundedUnaryAcc, machineBoundedUnaryPack]
 
+/-- The packed conversion state has a remaining binary word bounded by the input length and an
+accumulator bounded by the elapsed iteration count. -/
 def MachineBoundedUnaryStateBound
     (word : List Bool) (iterations : ℕ) (state : List Bool) : Prop :=
   state = machineBoundedUnaryPack
@@ -204,6 +223,7 @@ theorem machineBoundedUnary_mem_FP :
 
 /-! ## Exact semantics -/
 
+/-- The canonical state after `k` steps on `n`: binary remainder `n-k` and `min k n` true bits. -/
 def boundedUnaryState (n k : ℕ) : List Bool :=
   machineBoundedUnaryPack (n - k).bits
     (List.replicate (min k n) true)

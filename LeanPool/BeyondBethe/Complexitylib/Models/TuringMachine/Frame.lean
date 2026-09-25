@@ -6,8 +6,8 @@ Authors: Bolton Bailey
 
 module
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators.Internal
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Hoare
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Internal
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Hoare
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Internal
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Placement
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Registers
 

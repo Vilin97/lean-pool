@@ -3,14 +3,18 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.TransferIdentity
-import LeanPool.BeyondBethe.BeyondBethe.SourceVontobel
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
-import Mathlib.Topology.Instances.Matrix
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.TransferIdentity
+public import LeanPool.BeyondBethe.BeyondBethe.SourceVontobel
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
+public import Mathlib.Topology.Instances.Matrix
+public import Mathlib.Tactic
 
 /-! # Optimizer -/
+
+@[expose] public section
 
 open scoped BigOperators Topology
 

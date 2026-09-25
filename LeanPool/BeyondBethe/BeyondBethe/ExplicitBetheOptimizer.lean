@@ -3,11 +3,15 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ExplicitOptimizerScales
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.ExplicitOptimizerScales
+public import Mathlib.Tactic
 
 /-! # Explicit Bethe Optimizer -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -19,6 +23,7 @@ bisection.  The exact real maximizer below appears only in correctness
 proofs; the state and returned point are executable rational data.
 -/
 
+/-- Initialize Bethe bisection with the explicit regularization and optimizer scale parameters. -/
 def explicitBetheOptimizerInitialState {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) :
     BetheBisectionState (m * m + 1) :=
@@ -26,6 +31,7 @@ def explicitBetheOptimizerInitialState {m : ℕ}
     (explicitOptimizerPrecision A) (explicitOptimizerFloor A)
     (explicitOptimizerMix A) (explicitOptimizerInnerRadius A)
 
+/-- Run Bethe bisection for the explicit iteration budget from its prescribed initial state. -/
 def explicitBetheOptimizerState {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) :
     BetheBisectionState (m * m + 1) :=
@@ -41,11 +47,14 @@ def explicitBetheOptimizerPoint {m : ℕ}
     Fin (m * m + 1) → ℚ :=
   (explicitBetheOptimizerState A).witness.getD 0
 
+/-- Recover the affine matrix from the epigraph base coordinates of the explicit optimizer
+point. -/
 def explicitBetheOptimizerMatrix {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) :
     Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ :=
   betheAffineMatrixQ (epigraphBase (explicitBetheOptimizerPoint A))
 
+/-- The directed lower negative-gradient matrix evaluated at the explicit optimizer matrix. -/
 def explicitBetheOptimizerGradient {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) :
     Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ :=

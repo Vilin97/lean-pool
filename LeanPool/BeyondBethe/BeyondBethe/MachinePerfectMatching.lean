@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineMateAllSome
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMateAllSome
+public import Mathlib.Tactic
 
 /-!
 # A finite-word perfect-matching decision procedure
@@ -15,6 +17,8 @@ The result is an actual polynomial-time function on bitstrings.  On the
 canonical encoding of a square rational matrix it returns `[true]` exactly
 when the positive support contains a perfect matching.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

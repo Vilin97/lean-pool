@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.BinaryRationalFloor
-import LeanPool.BeyondBethe.BeyondBethe.BinaryRationalComparison
-import LeanPool.BeyondBethe.BeyondBethe.DirectedElementary
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.BinaryRationalFloor
+public import LeanPool.BeyondBethe.BeyondBethe.BinaryRationalComparison
+public import LeanPool.BeyondBethe.BeyondBethe.DirectedElementary
+public import Mathlib.Tactic
 
 /-! # Binary Directed Elementary -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -41,6 +45,8 @@ theorem binaryRationalLogSeriesSum_eq (x : ℚ) : ∀ N : ℕ,
         binaryRatDiv_eq_div, binaryRatPow_eq_pow, ih,
         Finset.sum_range_succ]
 
+/-- Twice the first `N` odd terms of the rational logarithm series, evaluated with binary
+arithmetic. -/
 def binaryRationalLogSeries (x : ℚ) (N : ℕ) : ℚ :=
   binaryRatMul 2 (binaryRationalLogSeriesSum x N)
 
@@ -49,6 +55,7 @@ theorem binaryRationalLogSeries_eq (x : ℚ) (N : ℕ) :
   rw [binaryRationalLogSeries, rationalLogSeries,
     binaryRatMul_eq_mul, binaryRationalLogSeriesSum_eq]
 
+/-- The rational remainder expression `2 * x^(2*N+1) / (1-x^2)` for the logarithm series. -/
 def binaryRationalLogSeriesError (x : ℚ) (N : ℕ) : ℚ :=
   binaryRatMul 2
     (binaryRatDiv (binaryRatPow x (2 * N + 1))
@@ -60,6 +67,7 @@ theorem binaryRationalLogSeriesError_eq (x : ℚ) (N : ℕ) :
     binaryRatMul_eq_mul, binaryRatDiv_eq_div, binaryRatSub_eq_sub,
     binaryRatPow_eq_pow]
 
+/-- The logarithm-series substitution `(y-1)/(y+1)`, computed with binary rational arithmetic. -/
 def binaryRationalLogUnitParameter (y : ℚ) : ℚ :=
   binaryRatDiv (binaryRatSub y 1) (binaryRatAdd y 1)
 
@@ -68,6 +76,8 @@ theorem binaryRationalLogUnitParameter_eq (y : ℚ) :
   simp [binaryRationalLogUnitParameter, rationalLogUnitParameter,
     binaryRatDiv_eq_div, binaryRatSub_eq_sub, binaryRatAdd_eq_add]
 
+/-- The lower unit-logarithm approximation obtained by evaluating the truncated odd-power
+series. -/
 def binaryDirectedLogUnitLower (y : ℚ) (N : ℕ) : ℚ :=
   binaryRationalLogSeries (binaryRationalLogUnitParameter y) N
 
@@ -76,6 +86,7 @@ theorem binaryDirectedLogUnitLower_eq (y : ℚ) (N : ℕ) :
   simp [binaryDirectedLogUnitLower, directedLogUnitLower,
     binaryRationalLogSeries_eq, binaryRationalLogUnitParameter_eq]
 
+/-- The upper unit-logarithm approximation obtained by adding the series remainder expression. -/
 def binaryDirectedLogUnitUpper (y : ℚ) (N : ℕ) : ℚ :=
   binaryRatAdd
     (binaryRationalLogSeries (binaryRationalLogUnitParameter y) N)
@@ -99,6 +110,8 @@ theorem binaryNatLog2_eq_log_two (n : ℕ) :
     rw [binaryNatLog2, hsize]
     omega
 
+/-- The power-of-two scale determined by the binary logarithms of the absolute numerator and
+denominator. -/
 def binaryRationalBinaryScale (q : ℚ) : ℚ :=
   binaryRatDiv
     (binaryRatPow 2 (binaryNatLog2 q.num.natAbs))
@@ -119,6 +132,7 @@ theorem binaryRationalBinaryExponent_eq (q : ℚ) :
   simp [binaryRationalBinaryExponent, rationalBinaryExponent,
     binaryNatLog2_eq_log_two]
 
+/-- The rational input divided by its power-of-two scale. -/
 def binaryRationalBinaryResidual (q : ℚ) : ℚ :=
   binaryRatDiv q (binaryRationalBinaryScale q)
 
@@ -127,6 +141,7 @@ theorem binaryRationalBinaryResidual_eq (q : ℚ) :
   simp [binaryRationalBinaryResidual, rationalBinaryResidual,
     binaryRatDiv_eq_div, binaryRationalBinaryScale_eq]
 
+/-- The binary residual used for logarithm approximation, inverted when it is below one. -/
 def binaryRationalLogUnit (q : ℚ) : ℚ :=
   if binaryRatLt (binaryRationalBinaryResidual q) 1 then
     binaryRatInv (binaryRationalBinaryResidual q)
@@ -139,6 +154,7 @@ theorem binaryRationalLogUnit_eq (q : ℚ) :
     binaryRationalBinaryResidual_eq, binaryRatInv_eq_inv,
     binaryRatLt_eq_true_iff]
 
+/-- The lower endpoint for multiplication of an interval by an integer, accounting for its sign. -/
 def binaryDirectedIntMulLower (k : ℤ) (lo hi : ℚ) : ℚ :=
   if 0 ≤ k then binaryRatMul k lo else binaryRatMul k hi
 
@@ -147,6 +163,7 @@ theorem binaryDirectedIntMulLower_eq (k : ℤ) (lo hi : ℚ) :
   simp [binaryDirectedIntMulLower, directedIntMulLower,
     binaryRatMul_eq_mul]
 
+/-- The upper endpoint for multiplication of an interval by an integer, accounting for its sign. -/
 def binaryDirectedIntMulUpper (k : ℤ) (lo hi : ℚ) : ℚ :=
   if 0 ≤ k then binaryRatMul k hi else binaryRatMul k lo
 
@@ -176,6 +193,8 @@ theorem binaryDirectedLogLower_eq (q : ℚ) (N : ℕ) :
     binaryRatAdd_eq_add, binaryRationalBinaryExponent_eq,
     binaryRatLt_eq_true_iff]
 
+/-- The upper logarithm approximation combining the binary exponent contribution with the
+residual contribution. -/
 def binaryDirectedLogUpper (q : ℚ) (N : ℕ) : ℚ :=
   let kPart := binaryDirectedIntMulUpper (binaryRationalBinaryExponent q)
     (binaryDirectedLogUnitLower 2 N) (binaryDirectedLogUnitUpper 2 N)
@@ -204,6 +223,7 @@ theorem binaryRationalCeilNat_eq (t : ℚ) :
     binaryRationalCeilNat t = rationalCeilNat t := by
   rw [binaryRationalCeilNat, rationalCeilNat, binaryRatCeil_eq_ceil]
 
+/-- The odd step count `2 * ceil(t + t^2/loss) + 1` used in the exponential approximation. -/
 def binaryRationalExpApproxSteps (t loss : ℚ) : ℕ :=
   2 * binaryRationalCeilNat
     (binaryRatAdd t (binaryRatDiv (binaryRatPow t 2) loss)) + 1
@@ -215,6 +235,7 @@ theorem binaryRationalExpApproxSteps_eq (t loss : ℚ) :
     binaryRationalCeilNat_eq, binaryRatAdd_eq_add,
     binaryRatDiv_eq_div, binaryRatPow_eq_pow]
 
+/-- The binomial expression `(1-t/M)^M` used to approximate `exp(-t)` from below. -/
 def binaryRationalNegativeExpLower (t loss : ℚ) : ℚ :=
   let M := binaryRationalExpApproxSteps t loss
   binaryRatPow
@@ -227,6 +248,7 @@ theorem binaryRationalNegativeExpLower_eq (t loss : ℚ) :
     binaryRationalExpApproxSteps_eq, binaryRatPow_eq_pow,
     binaryRatSub_eq_sub, binaryRatDiv_eq_div]
 
+/-- The binomial expression `(1+t/M)^M` used to approximate `exp(t)` from below. -/
 def binaryRationalPositiveExpLower (t loss : ℚ) : ℚ :=
   let M := binaryRationalExpApproxSteps t loss
   binaryRatPow
@@ -239,6 +261,8 @@ theorem binaryRationalPositiveExpLower_eq (t loss : ℚ) :
     binaryRationalExpApproxSteps_eq, binaryRatPow_eq_pow,
     binaryRatAdd_eq_add, binaryRatDiv_eq_div]
 
+/-- Select the positive- or negative-exponent binomial approximation according to the sign of
+the input. -/
 def binaryRationalExpLower (s loss : ℚ) : ℚ :=
   if binaryRatNonnegative s then binaryRationalPositiveExpLower s loss
   else binaryRationalNegativeExpLower (binaryRatNeg s) loss

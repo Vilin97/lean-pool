@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBitAssembly
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinaryRippleSub.Defs
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBitAssembly
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinaryRippleSub.Defs
 
 /-!
 # Polynomial-time canonicalization of little-endian natural words
@@ -15,6 +17,8 @@ public rational encoding uses canonical `Nat.bits`, so redundant high zeroes
 must be removed.  The implementation below is a length-bounded Cobham fold,
 not a semantic list primitive assumed to be efficient.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

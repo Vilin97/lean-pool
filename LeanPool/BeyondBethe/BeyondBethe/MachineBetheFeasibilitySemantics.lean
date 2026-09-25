@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFeasibilityLoop
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFeasibilityLoop
+public import Mathlib.Tactic
 
 /-!
 # Semantics of the finite-word Bethe feasibility loop
@@ -17,12 +19,16 @@ call word.  A later encoding-bound theorem discharges that condition for the
 public schedule.
 -/
 
+@[expose] public section
+
 namespace BeyondBethe
 
 open Complexity
 
 /-! ## Canonical calls and states -/
 
+/-- Encode the fixed oracle data with unary dimension and precision, raw-rational parameters,
+and the rational matrix code. -/
 def machineBetheFeasibilityCanonicalStaticWord {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (oraclePrecision : ℕ) (delta upper : RawRat) : List Bool :=
@@ -33,6 +39,8 @@ def machineBetheFeasibilityCanonicalStaticWord {m : ℕ}
           (pair (rawRatBinaryCode upper)
             (rationalMatrixBinaryEncoding.encode ⟨m + 1, A⟩)))))
 
+/-- Encode a feasibility call with unary iteration, state-length, and rounding bounds, followed
+by its static oracle data and initial ellipsoid. -/
 def machineBetheFeasibilityCanonicalWord {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (oraclePrecision : ℕ) (delta upper : RawRat)
@@ -46,6 +54,8 @@ def machineBetheFeasibilityCanonicalWord {m : ℕ}
             tau A oraclePrecision delta upper)
           (rationalEllipsoidStateBinaryCode initial))))
 
+/-- Encode a semantic feasibility state with its acceptance bit, original canonical call,
+current ellipsoid, and unary length bound. -/
 def machineBetheFeasibilityCanonicalState {m : ℕ}
     (accepted : Bool)
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
@@ -399,6 +409,8 @@ theorem machineBetheFeasibilityStep_cut_encode {m : ℕ}
 
 /-! ## The ruler condition and complete recursive semantics -/
 
+/-- Every scheduled cut update reached during the remaining iterations fits the supplied
+code-length bound; an accepted oracle response ends the requirement. -/
 def MachineBetheFeasibilityFits {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (oraclePrecision : ℕ) (delta upper : RawRat)

@@ -20,7 +20,7 @@ public import Mathlib.Tactic.NormNum.OfScientific
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineKuhnEncoding
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineKuhnEncoding
 
 /-!
 # One finite-word transition of the Kuhn evaluator
@@ -13,6 +15,8 @@ This is the bit-level implementation of `kuhnEvalStep`.  Every branch uses
 only pairing, list access/update, Boolean gates, and the rational support
 query already shown to lie in `FP`.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

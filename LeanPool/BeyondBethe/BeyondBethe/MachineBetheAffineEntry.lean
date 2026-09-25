@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheAffineLineSum
-import LeanPool.BeyondBethe.BeyondBethe.MachineRowPairDisjoint
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalUnary
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheAffineLineSum
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRowPairDisjoint
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalUnary
 
 /-!
 # Exact finite-word entries of the Birkhoff affine recovery
@@ -17,33 +19,43 @@ row sum, one minus a column sum, and the total sum minus `m-1`.  This file
 assembles those four cases as one uniform polynomial-time word machine.
 -/
 
+@[expose] public section
+
 namespace BeyondBethe
 
 open Complexity
 
+/-- Extract the unary dimension ruler from an affine-entry input word. -/
 def machineBetheAffineEntryDimension (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the row, column, and vector payload following the affine-entry dimension. -/
 def machineBetheAffineEntryRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extract the unary row index from an affine-entry input word. -/
 def machineBetheAffineEntryRow (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheAffineEntryRest word)
 
+/-- Extract the unary column index from an affine-entry input word. -/
 def machineBetheAffineEntryColumn (word : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machineBetheAffineEntryRest word))
 
+/-- Extract the encoded affine-coordinate vector from an affine-entry input word. -/
 def machineBetheAffineEntryVector (word : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machineBetheAffineEntryRest word))
 
+/-- Compare the row ruler with the dimension ruler to detect the last matrix row. -/
 def machineBetheAffineEntryLastRowBit (word : List Bool) : List Bool :=
   machineUnaryRulersEqualBit (machineBetheAffineEntryRow word)
     (machineBetheAffineEntryDimension word)
 
+/-- Compare the column ruler with the dimension ruler to detect the last matrix column. -/
 def machineBetheAffineEntryLastColumnBit (word : List Bool) : List Bool :=
   machineUnaryRulersEqualBit (machineBetheAffineEntryColumn word)
     (machineBetheAffineEntryDimension word)
 
+/-- Package the affine-entry data as a row-mode flattened-entry request. -/
 def machineBetheAffineEntryFlatInput (word : List Bool) : List Bool :=
   pair [true]
     (pair (machineBetheAffineEntryDimension word)
@@ -51,48 +63,59 @@ def machineBetheAffineEntryFlatInput (word : List Bool) : List Bool :=
         (pair (machineBetheAffineEntryColumn word)
           (machineBetheAffineEntryVector word))))
 
+/-- Evaluate an entry in the upper-left free block of the affine matrix. -/
 def machineBetheAffineEntryUpperLeft (word : List Bool) : List Bool :=
   machineBetheFlatEntryRawCode (machineBetheAffineEntryFlatInput word)
 
+/-- Package a row-sum request for the free affine-coordinate block. -/
 def machineBetheAffineEntryRowSumInput (word : List Bool) : List Bool :=
   pair [true]
     (pair (machineBetheAffineEntryDimension word)
       (pair (machineBetheAffineEntryRow word)
         (machineBetheAffineEntryVector word)))
 
+/-- Package a column-sum request for the free affine-coordinate block. -/
 def machineBetheAffineEntryColumnSumInput (word : List Bool) : List Bool :=
   pair [false]
     (pair (machineBetheAffineEntryDimension word)
       (pair (machineBetheAffineEntryColumn word)
         (machineBetheAffineEntryVector word)))
 
+/-- Compute the encoded raw-rational sum of the selected free-block row. -/
 def machineBetheAffineEntryRowSum (word : List Bool) : List Bool :=
   machineBetheLineSumRawCode (machineBetheAffineEntryRowSumInput word)
 
+/-- Compute the encoded raw-rational sum of the selected free-block column. -/
 def machineBetheAffineEntryColumnSum (word : List Bool) : List Bool :=
   machineBetheLineSumRawCode (machineBetheAffineEntryColumnSumInput word)
 
+/-- Subtract the second encoded raw rational from the first by negation and addition. -/
 def machineRawRatSubCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machinePairFirst word)
       (machineRawRatNegCode (machinePairSecond word)))
 
+/-- Compute a last-column entry as one minus the corresponding free-block row sum. -/
 def machineBetheAffineEntryLastColumn (word : List Bool) : List Bool :=
   machineRawRatSubCode
     (pair (rawRatBinaryCode RawRat.one)
       (machineBetheAffineEntryRowSum word))
 
+/-- Compute a last-row entry as one minus the corresponding free-block column sum. -/
 def machineBetheAffineEntryLastRow (word : List Bool) : List Bool :=
   machineRawRatSubCode
     (pair (rawRatBinaryCode RawRat.one)
       (machineBetheAffineEntryColumnSum word))
 
+/-- Compute the encoded raw-rational sum of all free affine coordinates. -/
 def machineBetheAffineEntryTotal (word : List Bool) : List Bool :=
   machineRationalVectorRawSumCode (machineBetheAffineEntryVector word)
 
+/-- Convert the unary affine dimension ruler to its binary length. -/
 def machineBetheAffineEntryDimensionBits (word : List Bool) : List Bool :=
   machineLengthBits (machineBetheAffineEntryDimension word)
 
+/-- Encode the affine dimension minus one as a signed integer. -/
 def machineBetheAffineEntryDimensionMinusOneInteger
     (word : List Bool) : List Bool :=
   machineIntegerAddCode
@@ -100,16 +123,19 @@ def machineBetheAffineEntryDimensionMinusOneInteger
       (machineBetheAffineEntryDimensionBits word))
       (integerBinaryCode (-1)))
 
+/-- Encode the affine dimension minus one as a raw rational with denominator one. -/
 def machineBetheAffineEntryDimensionMinusOneRaw
     (word : List Bool) : List Bool :=
   pair (machineBetheAffineEntryDimensionMinusOneInteger word)
     (1 : ℕ).bits
 
+/-- Compute the corner entry as the total free-coordinate sum minus `(m-1)`. -/
 def machineBetheAffineEntryCorner (word : List Bool) : List Bool :=
   machineRawRatSubCode
     (pair (machineBetheAffineEntryTotal word)
       (machineBetheAffineEntryDimensionMinusOneRaw word))
 
+/-- Select the free-block, last-row, last-column, or corner formula for an affine matrix entry. -/
 def machineBetheAffineEntryRawCode (word : List Bool) : List Bool :=
   machineIfHead (machineBetheAffineEntryLastRowBit word)
     (machineIfHead (machineBetheAffineEntryLastColumnBit word)
@@ -269,15 +295,20 @@ theorem machineBetheAffineEntryRawCode_mem_FP :
 
 /-! ## Exact semantics -/
 
+/-- The canonical affine-entry input word containing unary dimension and indices and the encoded
+rational vector. -/
 def machineBetheAffineEntryCanonicalWord {m : ℕ}
     (i j : Fin (m + 1)) (y : Fin (m * m) → ℚ) : List Bool :=
   pair (List.replicate m true)
     (pair (List.replicate i.1 true)
       (pair (List.replicate j.1 true) (rationalFiniteVectorCode y)))
 
+/-- The raw rational representing the integer `m-1`. -/
 def rawBetheDimensionMinusOne (m : ℕ) : RawRat :=
   ⟨(m : ℤ) - 1, 1, by norm_num⟩
 
+/-- The raw-rational affine matrix entry, completing the border from row sums, column sums, and
+the total free-coordinate sum. -/
 def rawBetheAffineEntry {m : ℕ} (y : Fin (m * m) → ℚ)
     (i j : Fin (m + 1)) : RawRat :=
   Fin.lastCases

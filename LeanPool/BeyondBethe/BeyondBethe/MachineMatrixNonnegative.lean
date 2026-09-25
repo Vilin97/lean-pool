@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
-import LeanPool.BeyondBethe.BeyondBethe.RawRationalBitBounds
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
+public import LeanPool.BeyondBethe.BeyondBethe.RawRationalBitBounds
 
 /-!
 # Polynomial-time matrix nonnegativity guard
@@ -15,6 +17,8 @@ each itself a right-nested list of rational entries.  This file scans that
 encoding directly.  The scan never decodes a binary dimension into unary and
 never invokes Lean's decision procedure on the typed matrix.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

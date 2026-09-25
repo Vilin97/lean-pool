@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorL1
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalVectorL1
 
 /-!
 # Polynomial-time coefficients for the rational ellipsoid update
@@ -15,6 +17,8 @@ binary word for the dimension, using only the verified unreduced rational
 arithmetic machines.  The raw formulas are kept explicit so that no field
 operation is hidden in the executable layer.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

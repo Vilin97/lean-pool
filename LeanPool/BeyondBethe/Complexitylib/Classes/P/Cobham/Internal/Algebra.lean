@@ -9,8 +9,8 @@ public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.Block
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Defs
 public import LeanPool.BeyondBethe.Complexitylib.Encoding.Pairing
 public import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic.FinCases
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Tactic.FinCases
 public import Mathlib.Tactic.Ring
 
 /-!
@@ -31,7 +31,7 @@ projections follows.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

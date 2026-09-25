@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineEncoding
-import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.Algebra
-import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.Reverse
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineEncoding
+public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.Algebra
+public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal.Reverse
 
 /-!
 # Small verified polynomial-time bitstring combinators
@@ -16,6 +18,8 @@ Turing machines and Cobham soundness theorem.  They are used to assemble the
 arithmetic and dynamic-state machines below without appealing to a semantic
 "all Lean programs are efficient" principle.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -5,13 +5,13 @@ Authors: Samuel Schlesinger
 -/
 
 module
-import
+public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.Lookup.Internal.Prepare
-import
+public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.Lookup.Internal.Restore
 public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.Lookup.Internal.Scan
-import
+public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.Lookup.Internal.Value
 
 /-!
@@ -19,7 +19,7 @@ import
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

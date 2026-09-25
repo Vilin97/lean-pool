@@ -3,11 +3,15 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ScheduledFeasibility
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.ScheduledFeasibility
+public import Mathlib.Tactic
 
 /-! # Explicit Scheduled Feasibility -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -24,20 +28,26 @@ initial state magnitude.  This file packages those two exponents into the
 fixed-precision feasibility runner used by the finite-word implementation.
 -/
 
+/-- The initial determinant exponent budget: dimension times the encoded radius length. -/
 def explicitBallInitialDetExponent (d : ℕ) (R : ℚ) : ℕ :=
   encodedBitLength ℚ R * d
 
+/-- The initial ball magnitude bound `2 + d*R`. -/
 def explicitBallInitialMagnitudeBound (d : ℕ) (R : ℚ) : ℚ :=
   2 + d * R
 
+/-- The encoded bit length of the initial ball magnitude bound. -/
 def explicitBallInitialMagnitudeExponent (d : ℕ) (R : ℚ) : ℕ :=
   encodedBitLength ℚ (explicitBallInitialMagnitudeBound d R)
 
+/-- The rounded-ellipsoid precision schedule determined by the initial ball and iteration
+budget. -/
 def explicitBallFeasibilityPrecision (d budget : ℕ) (R : ℚ) : ℕ :=
   roundedEllipsoidPrecisionSchedule d
     (explicitBallInitialDetExponent d R)
     (explicitBallInitialMagnitudeExponent d R) budget
 
+/-- Run fixed-precision rational feasibility from the radius-`R` ball centered at zero. -/
 def runExplicitBallRationalFeasibility {d : ℕ}
     (oracle : RationalCentralOracle d) (budget : ℕ) (R : ℚ) :
     RationalFeasibilityResult d :=

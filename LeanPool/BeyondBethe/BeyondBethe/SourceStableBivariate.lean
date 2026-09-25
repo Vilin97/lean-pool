@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Tactic
+
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.MeanInequalities
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Tactic
 
 /-! # Source Stable Bivariate -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

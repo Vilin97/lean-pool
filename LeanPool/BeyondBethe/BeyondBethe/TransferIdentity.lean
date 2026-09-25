@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Transfer
-import LeanPool.BeyondBethe.BeyondBethe.Slack
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.Transfer
+public import LeanPool.BeyondBethe.BeyondBethe.Slack
+public import Mathlib.Tactic
 
 /-! # Transfer Identity -/
+
+@[expose] public section
 
 open scoped BigOperators
 

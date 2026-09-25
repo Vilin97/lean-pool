@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalEllipsoidScalars
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalRowDivide
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalEllipsoidScalars
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalRowDivide
 
 /-!
 # Polynomial-time rational normalization of a cut direction
@@ -15,6 +17,8 @@ by the verified `ℓ1` fold and is passed, still as an unreduced rational word,
 to the verified row-division fold.  Thus the composition performs no decoding
 and no hidden field arithmetic.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.BetheEpigraphGeometry
-import LeanPool.BeyondBethe.BeyondBethe.ScheduledFeasibility
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.BetheEpigraphGeometry
+public import LeanPool.BeyondBethe.BeyondBethe.ScheduledFeasibility
+public import Mathlib.Tactic
 
 /-! # Bethe Threshold Feasibility -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

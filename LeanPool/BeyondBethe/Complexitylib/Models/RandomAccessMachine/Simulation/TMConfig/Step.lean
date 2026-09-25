@@ -19,7 +19,7 @@ envelope and compiled-RAM transfer are the next M6 layer.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

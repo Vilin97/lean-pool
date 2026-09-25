@@ -7,15 +7,15 @@ Authors: Samuel Schlesinger
 module
 public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.Instruction.Sim.Defs
-import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.Instruction
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.CopyWorkOutput
+public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.Instruction
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.CopyWorkOutput
 
 /-!
 # Uniform next-store buffering for control instructions
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

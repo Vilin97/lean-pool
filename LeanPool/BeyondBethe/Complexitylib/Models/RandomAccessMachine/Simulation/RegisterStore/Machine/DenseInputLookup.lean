@@ -16,7 +16,7 @@ overlay into the immutable public-input bank.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 namespace RAM

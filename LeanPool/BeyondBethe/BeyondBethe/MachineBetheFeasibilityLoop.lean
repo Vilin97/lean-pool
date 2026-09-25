@@ -3,11 +3,13 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheEpigraphOracle
-import LeanPool.BeyondBethe.BeyondBethe.MachineScheduledRoundedEllipsoid
-import LeanPool.BeyondBethe.BeyondBethe.ScannedBetheThresholdFeasibility
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheEpigraphOracle
+public import LeanPool.BeyondBethe.BeyondBethe.MachineScheduledRoundedEllipsoid
+public import LeanPool.BeyondBethe.BeyondBethe.ScannedBetheThresholdFeasibility
+public import Mathlib.Tactic
 
 /-!
 # A finite-word fixed-precision Bethe feasibility loop
@@ -17,6 +19,8 @@ new ellipsoid word is clamped to an explicit ruler stored in the call.  This
 makes the iteration polynomial-time on every malformed input.  A separate
 semantic predicate records that the clamp is inactive on the canonical run.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -34,53 +38,68 @@ The oracle-static word has layout
 def machineBetheFeasibilityBudget (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the feasibility input payload following its iteration budget. -/
 def machineBetheFeasibilityAfterBudget (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extract the state-code bound word from a feasibility input. -/
 def machineBetheFeasibilityBound (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheFeasibilityAfterBudget word)
 
+/-- Extract the feasibility payload following the state-code bound word. -/
 def machineBetheFeasibilityAfterBound (word : List Bool) : List Bool :=
   machinePairSecond (machineBetheFeasibilityAfterBudget word)
 
+/-- Extract the rounding-precision ruler from a feasibility input. -/
 def machineBetheFeasibilityRoundingPrecision
     (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheFeasibilityAfterBound word)
 
+/-- Extract the static oracle data and initial ellipsoid payload. -/
 def machineBetheFeasibilityStaticAndInitial
     (word : List Bool) : List Bool :=
   machinePairSecond (machineBetheFeasibilityAfterBound word)
 
+/-- Extract the static oracle data retained throughout the feasibility iteration. -/
 def machineBetheFeasibilityOracleStatic
     (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheFeasibilityStaticAndInitial word)
 
+/-- Extract the initial ellipsoid code from the feasibility input. -/
 def machineBetheFeasibilityInitialEllipsoid
     (word : List Bool) : List Bool :=
   machinePairSecond (machineBetheFeasibilityStaticAndInitial word)
 
 /-! ## Iteration state -/
 
+/-- Encode the acceptance flag, original input, current ellipsoid, and bound as a feasibility
+state. -/
 def machineBetheFeasibilityStatePack
     (accepted source ellipsoid bound : List Bool) : List Bool :=
   pair accepted (pair source (pair ellipsoid bound))
 
+/-- Extract the acceptance-flag word from a feasibility state. -/
 def machineBetheFeasibilityStateAccepted
     (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extract the original feasibility input retained in the state. -/
 def machineBetheFeasibilityStateSource
     (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extract the current ellipsoid code from a feasibility state. -/
 def machineBetheFeasibilityStateEllipsoid
     (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extract the stored bound word from a feasibility state. -/
 def machineBetheFeasibilityStateBound
     (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
+/-- Initialize feasibility with a false acceptance flag and the supplied initial ellipsoid and
+code bound. -/
 def machineBetheFeasibilityInit (word : List Bool) : List Bool :=
   machineBetheFeasibilityStatePack [false] word
     (machineBetheFeasibilityInitialEllipsoid word)
@@ -88,50 +107,63 @@ def machineBetheFeasibilityInit (word : List Bool) : List Bool :=
 
 /-! ## One oracle/update step -/
 
+/-- Extract the static oracle dimension ruler from a feasibility state. -/
 def machineBetheFeasibilityStaticDimension
     (state : List Bool) : List Bool :=
   machinePairFirst
     (machineBetheFeasibilityOracleStatic
       (machineBetheFeasibilityStateSource state))
 
+/-- Extract the static oracle payload following the dimension ruler. -/
 def machineBetheFeasibilityStaticRest
     (state : List Bool) : List Bool :=
   machinePairSecond
     (machineBetheFeasibilityOracleStatic
       (machineBetheFeasibilityStateSource state))
 
+/-- Extract the static oracle precision ruler from a feasibility state. -/
 def machineBetheFeasibilityStaticOraclePrecision
     (state : List Bool) : List Bool :=
   machinePairFirst (machineBetheFeasibilityStaticRest state)
 
+/-- Extract the static oracle payload following its precision ruler. -/
 def machineBetheFeasibilityStaticAfterPrecision
     (state : List Bool) : List Bool :=
   machinePairSecond (machineBetheFeasibilityStaticRest state)
 
+/-- Extract the static regularization parameter from a feasibility state. -/
 def machineBetheFeasibilityStaticTau
     (state : List Bool) : List Bool :=
   machinePairFirst (machineBetheFeasibilityStaticAfterPrecision state)
 
+/-- Extract the static oracle payload following the regularization parameter. -/
 def machineBetheFeasibilityStaticAfterTau
     (state : List Bool) : List Bool :=
   machinePairSecond (machineBetheFeasibilityStaticAfterPrecision state)
 
+/-- Extract the raw-rational floor parameter from the immutable feasibility oracle data. -/
 def machineBetheFeasibilityStaticDelta
     (state : List Bool) : List Bool :=
   machinePairFirst (machineBetheFeasibilityStaticAfterTau state)
 
+/-- The immutable oracle payload following the floor parameter, containing the upper threshold
+and matrix. -/
 def machineBetheFeasibilityStaticAfterDelta
     (state : List Bool) : List Bool :=
   machinePairSecond (machineBetheFeasibilityStaticAfterTau state)
 
+/-- Extract the raw-rational objective upper threshold from the immutable oracle data. -/
 def machineBetheFeasibilityStaticUpper
     (state : List Bool) : List Bool :=
   machinePairFirst (machineBetheFeasibilityStaticAfterDelta state)
 
+/-- Extract the encoded rational matrix from the immutable oracle data. -/
 def machineBetheFeasibilityStaticMatrix
     (state : List Bool) : List Bool :=
   machinePairSecond (machineBetheFeasibilityStaticAfterDelta state)
 
+/-- Package the static dimension, precision, regularization, floor, upper threshold, and matrix
+with the current ellipsoid for an oracle call. -/
 def machineBetheFeasibilityOracleInput
     (state : List Bool) : List Bool :=
   pair (machineBetheFeasibilityStaticDimension state)
@@ -142,21 +174,27 @@ def machineBetheFeasibilityOracleInput
             (pair (machineBetheFeasibilityStaticMatrix state)
               (machineBetheFeasibilityStateEllipsoid state))))))
 
+/-- Run the encoded bounded Bethe epigraph oracle on the current feasibility state. -/
 def machineBetheFeasibilityOracleResponse
     (state : List Bool) : List Bool :=
   machineBetheEpigraphOracleResponseCode
     (machineBetheFeasibilityOracleInput state)
 
+/-- The oracle response bit, which selects a cut when true and acceptance when false. -/
 def machineBetheFeasibilityResponseTag
     (state : List Bool) : List Bool :=
   machineHeadBit (machineRationalTaggedResultTag
     (machineBetheFeasibilityOracleResponse state))
 
+/-- Extract the payload of the tagged oracle response, used as the cut normal when a cut is
+returned. -/
 def machineBetheFeasibilityResponsePayload
     (state : List Bool) : List Bool :=
   machineRationalTaggedResultPayload
     (machineBetheFeasibilityOracleResponse state)
 
+/-- Package the stored rounding precision, current ellipsoid, and oracle cut payload for the
+scheduled update. -/
 def machineBetheFeasibilityScheduledUpdateInput
     (state : List Bool) : List Bool :=
   pair (machineBetheFeasibilityRoundingPrecision
@@ -164,16 +202,21 @@ def machineBetheFeasibilityScheduledUpdateInput
     (pair (machineBetheFeasibilityStateEllipsoid state)
       (machineBetheFeasibilityResponsePayload state))
 
+/-- Compute the scheduled rounded central-cut ellipsoid before imposing the stored code-length
+bound. -/
 def machineBetheFeasibilityUpdatedEllipsoidCandidate
     (state : List Bool) : List Bool :=
   machineScheduledRoundedEllipsoidCentralUpdateCode
     (machineBetheFeasibilityScheduledUpdateInput state)
 
+/-- Truncate the candidate ellipsoid code to the length of the state-bound word. -/
 def machineBetheFeasibilityUpdatedEllipsoid
     (state : List Bool) : List Bool :=
   (machineBetheFeasibilityUpdatedEllipsoidCandidate state).take
     (machineBetheFeasibilityStateBound state).length
 
+/-- Store an unaccepted state with the truncated updated ellipsoid, retaining the source call
+and bound. -/
 def machineBetheFeasibilityCutState
     (state : List Bool) : List Bool :=
   machineBetheFeasibilityStatePack [false]
@@ -181,6 +224,7 @@ def machineBetheFeasibilityCutState
     (machineBetheFeasibilityUpdatedEllipsoid state)
     (machineBetheFeasibilityStateBound state)
 
+/-- Mark the current state accepted while retaining its source call, ellipsoid, and bound. -/
 def machineBetheFeasibilityAcceptState
     (state : List Bool) : List Bool :=
   machineBetheFeasibilityStatePack [true]
@@ -188,6 +232,8 @@ def machineBetheFeasibilityAcceptState
     (machineBetheFeasibilityStateEllipsoid state)
     (machineBetheFeasibilityStateBound state)
 
+/-- Leave an accepted state fixed; otherwise perform the oracle's cut update or mark the current
+ellipsoid accepted. -/
 def machineBetheFeasibilityStep (state : List Bool) : List Bool :=
   machineIfHead (machineHeadBit
       (machineBetheFeasibilityStateAccepted state)) state
@@ -197,10 +243,14 @@ def machineBetheFeasibilityStep (state : List Bool) : List Bool :=
 
 /-! ## Final result -/
 
+/-- Iterate the feasibility transition from its initial state for the length of the supplied
+budget word. -/
 def machineBetheFeasibilityFinalState (word : List Bool) : List Bool :=
   (machineBetheFeasibilityStep)^[(machineBetheFeasibilityBudget word).length]
     (machineBetheFeasibilityInit word)
 
+/-- Encode an accepted center with the false tag, or the final unaccepted ellipsoid with the
+true tag. -/
 def machineBetheFeasibilityStateResultCode
     (state : List Bool) : List Bool :=
   machineIfHead (machineHeadBit
@@ -210,6 +260,7 @@ def machineBetheFeasibilityStateResultCode
         (machineBetheFeasibilityStateEllipsoid state)))
     (pair [true] (machineBetheFeasibilityStateEllipsoid state))
 
+/-- Extract the tagged feasibility result after the prescribed number of encoded transitions. -/
 def machineBetheFeasibilityResultCode (word : List Bool) : List Bool :=
   machineBetheFeasibilityStateResultCode
     (machineBetheFeasibilityFinalState word)
@@ -475,6 +526,8 @@ theorem machineBetheFeasibilityStateResultCode_mem_FP :
   simp [machineBetheFeasibilityStateBound,
     machineBetheFeasibilityStatePack]
 
+/-- The state has the canonical four-field layout, an acceptance word of length at most one, and
+source, ellipsoid, and bound words no longer than the original input. -/
 def MachineBetheFeasibilityStateBound
     (word state : List Bool) : Prop :=
   state = machineBetheFeasibilityStatePack
@@ -596,6 +649,8 @@ theorem machineBetheFeasibilityIterate_bound (word : List Bool) : ∀ k,
       rw [Function.iterate_succ_apply']
       exact machineBetheFeasibilityStep_bound ih
 
+/-- A uniform state-width envelope obtained by packing four copies of the input prefixed by one
+false bit. -/
 def machineBetheFeasibilityWidth (word : List Bool) : List Bool :=
   let envelope := [false] ++ word
   machineBetheFeasibilityStatePack envelope envelope envelope envelope

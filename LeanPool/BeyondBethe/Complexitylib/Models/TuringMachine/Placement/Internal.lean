@@ -17,7 +17,7 @@ parked frame are fixed points of that action.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

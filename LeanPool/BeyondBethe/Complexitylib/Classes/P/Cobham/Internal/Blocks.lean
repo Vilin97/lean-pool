@@ -5,7 +5,7 @@ Authors: Bolton Bailey
 -/
 
 module
-import Mathlib.Data.List.Basic
+public import Mathlib.Data.List.Basic
 
 /-!
 # Blocks, flags, and bit dispatch — proof internals

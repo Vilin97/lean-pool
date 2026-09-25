@@ -20,7 +20,7 @@ address/value decoder.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

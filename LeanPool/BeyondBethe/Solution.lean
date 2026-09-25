@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Main
-import LeanPool.BeyondBethe.BeyondBethe.PalomarComplexity
-import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham
+
+public import LeanPool.BeyondBethe.BeyondBethe.Main
+public import LeanPool.BeyondBethe.BeyondBethe.PalomarComplexity
+public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham
 
 /-!
 # Proved solution for the Palomar statement
@@ -17,6 +19,8 @@ concrete algorithm and its finite-word Turing-machine implementation from the
 fully internal theorem `BeyondBethe.theoremOne`, then applies Complexitylib's
 formal proof of Cobham's characterization of polynomial time.
 -/
+
+@[expose] public section
 
 namespace Palomar
 

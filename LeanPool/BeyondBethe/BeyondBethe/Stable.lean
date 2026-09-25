@@ -3,15 +3,19 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import Mathlib.Algebra.MvPolynomial.Eval
-import Mathlib.Algebra.MvPolynomial.Degrees
-import Mathlib.RingTheory.MvPolynomial.Homogeneous
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.MvPolynomial.Eval
+public import Mathlib.Algebra.MvPolynomial.Degrees
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Tactic
 
 /-! # Stable -/
+
+@[expose] public section
 
 open scoped BigOperators
 

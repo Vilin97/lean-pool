@@ -20,7 +20,7 @@ and indirectly appends the result in exactly twenty RAM transitions.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

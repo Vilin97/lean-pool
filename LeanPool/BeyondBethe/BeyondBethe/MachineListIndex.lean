@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixDimension
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineMatrixDimension
 
 /-!
 # Indexed access to right-nested machine lists
@@ -15,6 +17,8 @@ list tails to take.  The routine is total on arbitrary strings and its state
 only shrinks, so its global polynomial-time bound does not depend on the input
 being a well-formed list code.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

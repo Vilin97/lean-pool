@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.CapacityOrder
-import LeanPool.BeyondBethe.BeyondBethe.Entropy
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.CapacityOrder
+public import LeanPool.BeyondBethe.BeyondBethe.Entropy
+public import Mathlib.Tactic
 
 /-! # Capacity -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -250,10 +254,12 @@ theorem entropyCapacityCertificate_le_log_finitePolynomialCapacity
   rw [Real.log_exp] at hlog
   exact hlog
 
+/-- The coefficient of a monomial indexed by an element of the polynomial support. -/
 noncomputable def supportCoefficient
     {σ : Type*} (p : MvPolynomial σ ℝ) (d : p.support) : ℝ :=
   p.coeff d
 
+/-- The exponent of coordinate `j` in a supported monomial. -/
 def supportExponent
     {σ : Type*} (p : MvPolynomial σ ℝ) (d : p.support) (j : σ) : ℕ :=
   d.1 j

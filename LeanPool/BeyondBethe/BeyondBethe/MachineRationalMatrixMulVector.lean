@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalizedDirection
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalTransposeMulVector
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalizedDirection
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalTransposeMulVector
 
 /-!
 # Polynomial-time rational matrix--vector multiplication
@@ -16,6 +18,8 @@ input is a unary row index followed by the nested row code and the rational
 vector code; it extracts that row and invokes the already verified exact dot
 product machine.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

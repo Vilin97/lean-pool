@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerBisectionLoop
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerBisectionLoop
+public import Mathlib.Tactic
 
 /-!
 # Exact semantics of the dyadic optimizer bisection machine
@@ -15,6 +17,8 @@ midpoints of the row-major semantic bisection.  No numerical interpretation
 is inferred from a decoder: every intermediate word is reduced to the
 canonical project encoding of its stated rational value.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

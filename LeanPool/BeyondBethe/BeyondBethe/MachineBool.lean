@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineFPBasics
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineFPBasics
 
 /-!
 # Verified one-bit machine logic
@@ -14,29 +16,39 @@ The definitions remain total on arbitrary bitstrings by inspecting only the
 leading bit through the verified selector machine.
 -/
 
+@[expose] public section
+
 namespace BeyondBethe
 
 open Complexity
 
+/-- Negate the input word's head bit and return its singleton encoding. -/
 def machineNotBit (a : List Bool) : List Bool :=
   machineIfHead a [false] [true]
 
+/-- Negate the second bit word when the first head is true; otherwise return the second word
+unchanged. -/
 def machineXorBit (a b : List Bool) : List Bool :=
   machineIfHead a (machineNotBit b) b
 
+/-- Return the second bit word when the first head is true, and a false singleton otherwise. -/
 def machineAndBit (a b : List Bool) : List Bool :=
   machineIfHead a b [false]
 
+/-- Return a true singleton when the first head is true, and the second bit word otherwise. -/
 def machineOrBit (a b : List Bool) : List Bool :=
   machineIfHead a [true] b
 
+/-- The majority operation on three encoded bits, expressed through pairwise conjunctions. -/
 def machineMajorityBit (a b c : List Bool) : List Bool :=
   machineOrBit (machineAndBit a b)
     (machineOrBit (machineAndBit a c) (machineAndBit b c))
 
+/-- The full-adder sum bit, given by XOR of both input bits and the incoming carry. -/
 def machineFullAdderSum (a b carry : List Bool) : List Bool :=
   machineXorBit (machineXorBit a b) carry
 
+/-- The full-adder carry bit, given by the majority of both input bits and the incoming carry. -/
 def machineFullAdderCarry (a b carry : List Bool) : List Bool :=
   machineMajorityBit a b carry
 

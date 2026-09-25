@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerFeasibilitySchedule
-import LeanPool.BeyondBethe.BeyondBethe.MachineNaturalCombinators
-import LeanPool.BeyondBethe.BeyondBethe.ExplicitBetheThresholdFeasibility
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerFeasibilitySchedule
+public import LeanPool.BeyondBethe.BeyondBethe.MachineNaturalCombinators
+public import LeanPool.BeyondBethe.BeyondBethe.ExplicitBetheThresholdFeasibility
 
 /-! # Machine Optimizer Rounding Schedule -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

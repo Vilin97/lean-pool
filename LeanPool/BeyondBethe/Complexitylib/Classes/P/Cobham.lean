@@ -8,7 +8,7 @@ module
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Defs
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Vec
 public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Defs
-import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal
+public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham.Internal
 
 /-!
 # Cobham's characterization of FP — surface layer
@@ -46,7 +46,7 @@ after a rewind (`Cobham.rewindFn`). The assembly is `Cobham.simFn_eq`.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

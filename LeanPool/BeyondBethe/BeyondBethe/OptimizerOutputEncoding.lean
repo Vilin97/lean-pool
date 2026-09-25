@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.AlgorithmicSpec
+
+public import LeanPool.BeyondBethe.BeyondBethe.AlgorithmicSpec
 
 /-!
 # Canonical finite-word encoding of optimizer output
@@ -14,6 +16,8 @@ right-nested binary encoding.  It is shared by both the optimizer producer
 and the certificate consumer, so neither side depends on the other's
 correctness theorem.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

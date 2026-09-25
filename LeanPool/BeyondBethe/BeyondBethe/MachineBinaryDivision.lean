@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryCompare
-import LeanPool.BeyondBethe.BeyondBethe.BinaryLongDivision
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryCompare
+public import LeanPool.BeyondBethe.BeyondBethe.BinaryLongDivision
 
 /-!
 # Polynomial-time binary long division
@@ -15,6 +17,8 @@ most-significant-bit-first long-division recurrence.  Its state stores the
 unread bits, the fixed divisor, quotient, and remainder.  All arithmetic and
 tests are the previously verified `FP` bitstring routines.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

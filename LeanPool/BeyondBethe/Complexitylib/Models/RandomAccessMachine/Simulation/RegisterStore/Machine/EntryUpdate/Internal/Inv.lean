@@ -9,7 +9,7 @@ public import
 LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryUpdate.Internal.Ctrl
 public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryScan.Internal.Inv
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinarySucc
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutines.BinarySucc
 
 /-!
 # Bounded encoded sparse-store update — invariant internals

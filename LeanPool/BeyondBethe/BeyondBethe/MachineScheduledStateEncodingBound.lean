@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFeasibilitySemantics
-import LeanPool.BeyondBethe.BeyondBethe.RationalEncodingBounds
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFeasibilitySemantics
+public import LeanPool.BeyondBethe.BeyondBethe.RationalEncodingBounds
+public import Mathlib.Tactic
 
 /-!
 # Ordinary binary bounds for scheduled ellipsoid states
@@ -15,6 +17,8 @@ The semantic feasibility proof bounds magnitudes and denominators.  The
 finite-word loop needs the corresponding bound on its concrete, nested binary
 code.  This file supplies that elementary bridge without changing encodings.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

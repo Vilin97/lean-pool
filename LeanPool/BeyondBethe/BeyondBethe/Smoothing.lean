@@ -3,14 +3,18 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Permanent
-import Mathlib.Algebra.Order.Ring.Pow
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Data.Fintype.Perm
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.Permanent
+public import Mathlib.Algebra.Order.Ring.Pow
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Data.Fintype.Perm
+public import Mathlib.Tactic
 
 /-! # Smoothing -/
+
+@[expose] public section
 
 open scoped BigOperators
 

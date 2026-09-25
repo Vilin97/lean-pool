@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.TransferIdentity
-import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.TransferIdentity
+public import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
+public import Mathlib.Tactic
 
 /-! # Excursion Transfer -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -157,16 +161,19 @@ theorem binaryEntropy_eq_binEntropy (ρ : ℝ) :
     binaryEntropy ρ = Real.binEntropy ρ := by
   rw [binaryEntropy, Real.binEntropy_eq_negMulLog_add_negMulLog_one_sub]
 
+/-- The total rowwise transfer cost over all matrix coordinates. -/
 noncomputable def matrixTransferCost
     {ι : Type*} [Fintype ι]
     (P U : Matrix ι ι ℝ) : ℝ :=
   ∑ i, transferCostOn Finset.univ (P i) (U i)
 
+/-- The total transfer cost over the designated outside coordinates in each row. -/
 noncomputable def outsideTransferCost
     {ι : Type*} [Fintype ι]
     (outside : ι → Finset ι) (P U : Matrix ι ι ℝ) : ℝ :=
   ∑ i, transferCostOn (outside i) (P i) (U i)
 
+/-- The total transfer cost over the complements of the designated outside coordinates. -/
 noncomputable def coreTransferCost
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (outside : ι → Finset ι) (P U : Matrix ι ι ℝ) : ℝ :=

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineTrimHighZeros
-import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineTrimHighZeros
+public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine
 
 /-!
 # End-to-end smoke test for the RAM bit-graph bridge
@@ -16,6 +18,8 @@ checks the complete interface: padded RAM input, logarithmic-cost decision,
 simulation by a deterministic Turing machine, bounded bit assembly, and
 canonical high-zero trimming.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

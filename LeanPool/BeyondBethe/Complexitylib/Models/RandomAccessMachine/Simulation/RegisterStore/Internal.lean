@@ -17,7 +17,7 @@ the surface module. It is not part of the human-audited definitions layer.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

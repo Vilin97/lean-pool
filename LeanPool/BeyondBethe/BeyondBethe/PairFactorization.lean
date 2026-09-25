@@ -3,14 +3,18 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.CapacityScaling
-import LeanPool.BeyondBethe.BeyondBethe.ClusterCertificate
-import LeanPool.BeyondBethe.BeyondBethe.Gain
-import LeanPool.BeyondBethe.BeyondBethe.TransferIdentity
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.CapacityScaling
+public import LeanPool.BeyondBethe.BeyondBethe.ClusterCertificate
+public import LeanPool.BeyondBethe.BeyondBethe.Gain
+public import LeanPool.BeyondBethe.BeyondBethe.TransferIdentity
+public import Mathlib.Tactic
 
 /-! # Pair Factorization -/
+
+@[expose] public section
 
 open scoped BigOperators
 

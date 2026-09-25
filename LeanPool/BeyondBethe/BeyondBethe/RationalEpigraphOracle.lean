@@ -3,11 +3,15 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.RationalLinearOracle
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.RationalLinearOracle
+public import Mathlib.Tactic
 
 /-! # Rational Epigraph Oracle -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryRange
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryRange
 
 /-!
 # Finite-word encoding of the explicit Kuhn evaluator
@@ -14,6 +16,8 @@ right-nested lists, and the recursive continuation is an explicit
 right-nested stack.  The rational matrix and the dimension-derived constant
 words are carried unchanged beside the control word.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

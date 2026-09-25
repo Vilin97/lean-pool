@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham
+
+public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Cobham
 
 /-!
 # A source-stable statement of polynomial time for Palomar
@@ -22,6 +24,8 @@ presentation.  Together with Complexitylib's formalized Cobham theorem, this
 shows that membership still has its usual meaning: deterministic polynomial
 time on finite bitstrings.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe.PalomarComplexity
 

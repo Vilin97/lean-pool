@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalFloor
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalPower
-import LeanPool.BeyondBethe.BeyondBethe.BinaryDirectedElementary
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalFloor
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalPower
+public import LeanPool.BeyondBethe.BeyondBethe.BinaryDirectedElementary
 
 /-!
 # Polynomial-time rational logarithm-series loop
@@ -17,6 +19,8 @@ and a quartic-width guard.  The guard makes the function polynomial-time on
 arbitrary strings.  The semantic part below proves that none of the three
 guarded updates is truncated on a well-formed input.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

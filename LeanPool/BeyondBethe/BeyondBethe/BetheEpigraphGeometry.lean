@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.BetheEpigraphFeasibility
-import LeanPool.BeyondBethe.BeyondBethe.ExecutableInterior
-import LeanPool.BeyondBethe.BeyondBethe.ApproximateKKT
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.BetheEpigraphFeasibility
+public import LeanPool.BeyondBethe.BeyondBethe.ExecutableInterior
+public import LeanPool.BeyondBethe.BeyondBethe.ApproximateKKT
+public import Mathlib.Tactic
 
 /-! # Bethe Epigraph Geometry -/
+
+@[expose] public section
 
 open scoped BigOperators
 

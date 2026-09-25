@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.BinaryRationalFloor
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalArithmetic
+
+public import LeanPool.BeyondBethe.BeyondBethe.BinaryRationalFloor
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalArithmetic
 
 /-!
 # Polynomial-time dyadic floor
@@ -16,6 +18,8 @@ with denominator `2^p` has `p + 1` denominator bits.  The machine shifts the
 absolute numerator by the ruler length, performs verified long division, and
 implements Euclidean flooring explicitly for negative inputs.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

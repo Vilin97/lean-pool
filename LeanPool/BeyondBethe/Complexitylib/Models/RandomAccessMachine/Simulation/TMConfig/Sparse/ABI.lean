@@ -21,7 +21,7 @@ Boolean verdict in `R₀`.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

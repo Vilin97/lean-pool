@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorCutEntry
-import LeanPool.BeyondBethe.BeyondBethe.MachineScheduledLog
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalization
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorCutEntry
+public import LeanPool.BeyondBethe.BeyondBethe.MachineScheduledLog
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalization
 
 /-!
 # Finite-word lower endpoint for one directed Bethe objective coordinate
@@ -17,6 +19,8 @@ bitstring machine.  The complement `1-x` is normalized before it is passed
 to the logarithm routine, so the scheduled-log correctness theorem applies
 to the canonical reduced rational rather than an unreduced subtraction.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

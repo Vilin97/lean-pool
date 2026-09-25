@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineListUpdate
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineListUpdate
+public import Mathlib.Tactic
 
 /-!
 # Mutable rational-matrix memory
@@ -15,6 +17,8 @@ The replacement is already a canonical rational-entry code.  The routine
 updates the selected entry of the right-nested row-major matrix encoding and
 preserves the original binary dimension word.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

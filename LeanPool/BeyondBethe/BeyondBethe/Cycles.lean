@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.RowStability
-import LeanPool.BeyondBethe.BeyondBethe.CoreEncoding
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.RowStability
+public import LeanPool.BeyondBethe.BeyondBethe.CoreEncoding
+public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+public import Mathlib.Tactic
 
 /-! # Cycles -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -28,6 +32,7 @@ noncomputable def listSuffixScore : List ℝ → ℝ
   | [] => 0
   | a :: l => a * Real.log (a + l.sum) + listSuffixScore l
 
+/-- The sum of the suffix-error term at each position of a list. -/
 noncomputable def listSuffixErrorSum : List ℝ → ℝ
   | [] => 0
   | a :: l => suffixError a l.sum + listSuffixErrorSum l
@@ -331,6 +336,7 @@ theorem goodRow_has_exactly_two_heavyCoordinates
   rw [habCard] at htwo
   exact le_antisymm (heavyCoordinates_card_le_two hp heta) htwo
 
+/-- The rows whose entry in the given column is at least `1/2 - eta`. -/
 noncomputable def heavyRows
     {n : ℕ} (eta : ℝ) (P : Matrix (Fin n) (Fin n) ℝ)
     (j : Fin n) : Finset (Fin n) :=

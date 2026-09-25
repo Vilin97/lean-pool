@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineScheduledLogWidth
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineScheduledLogWidth
 
 /-!
 # Row-major evaluation of the nearby-Bethe coordinate sum
@@ -18,6 +20,8 @@ The concrete transducer is total on arbitrary bitstrings.  Its raw rational
 accumulator is clamped by an explicit iterated-quadratic word; the semantic
 section proves separately that this clamp is inactive on canonical inputs.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -18,7 +18,7 @@ semantics exactly: final registers, logarithmic cost, and peak register space.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

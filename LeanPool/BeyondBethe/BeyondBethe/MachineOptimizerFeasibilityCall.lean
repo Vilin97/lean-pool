@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerStateBound
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalBallInit
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerStateBound
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalBallInit
 
 /-!
 # A complete finite-word Bethe threshold call
@@ -15,6 +17,8 @@ the matrix word and a raw rational threshold.  Every numerical parameter,
 the initial ball, and the state-size ruler are produced by verified
 finite-word machines.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -16,7 +16,7 @@ LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.Registe
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 namespace RAM

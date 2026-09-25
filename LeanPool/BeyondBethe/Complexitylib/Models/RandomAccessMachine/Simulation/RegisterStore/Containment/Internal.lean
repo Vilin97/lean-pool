@@ -28,7 +28,7 @@ envelope and lifts the simulation to deterministic polynomial time.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

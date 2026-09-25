@@ -3,12 +3,16 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Cycles
-import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.Cycles
+public import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
+public import Mathlib.Tactic
 
 /-! # Good Row Score -/
+
+@[expose] public section
 
 open scoped BigOperators Topology
 open Filter
@@ -125,6 +129,7 @@ instance instDecidableCoordinateBefore
   unfold CoordinateBefore
   infer_instance
 
+/-- The probability that coordinate `a` precedes `b` in a uniformly chosen permutation. -/
 noncomputable def coordinateBeforeProbability
     {n : ℕ} (a b : Fin n) : ℝ :=
   uniformAverage fun π : Equiv.Perm (Fin n) ↦
@@ -477,8 +482,10 @@ theorem rowScore_sub_twoCoreCoarsenedEntropy_ge_Psi
   rw [rowScore, goodRowPsi]
   linarith [hentropy]
 
+/-- The three real coordinates on which the continuous good-row score is evaluated. -/
 abbrev GoodRowTriple := ℝ × (ℝ × ℝ)
 
+/-- The reference good-row triple `(1/2, 1/2, 0)`. -/
 noncomputable def goodRowCenter : GoodRowTriple := (1 / 2, (1 / 2, 0))
 
 /-- Clamp the radius to the interval on which the paper uses the good-row
@@ -601,6 +608,7 @@ theorem continuousOn_continuousGoodRowPsi_closedBall :
     hentropy.add (hhalf.mul (((hsUQ.add hsUVQ).add hsVQ).add hsVUQ))
   simpa only [continuousGoodRowPsi] using htotal.continuousWithinAt
 
+/-- The absolute deviation of the continuous good-row score from `log(2)/2`. -/
 noncomputable def goodRowDeviation (z : GoodRowTriple) : ℝ :=
   |Real.log 2 / 2 - continuousGoodRowPsi z.1 z.2.1 z.2.2|
 

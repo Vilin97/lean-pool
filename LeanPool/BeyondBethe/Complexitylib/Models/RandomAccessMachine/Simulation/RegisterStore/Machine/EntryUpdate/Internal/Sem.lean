@@ -7,7 +7,7 @@ Authors: Samuel Schlesinger
 module
 public import
 LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryUpdate.Internal.Step
-import
+public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryUpdate.Internal.End
 
 /-!
@@ -20,7 +20,7 @@ output needed to connect the concrete controller to `RegisterStore.write`.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

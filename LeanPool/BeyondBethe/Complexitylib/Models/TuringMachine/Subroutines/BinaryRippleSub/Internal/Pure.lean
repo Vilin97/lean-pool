@@ -19,7 +19,7 @@ canonical `Nat.bits` representation of the raw fixed-width value.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

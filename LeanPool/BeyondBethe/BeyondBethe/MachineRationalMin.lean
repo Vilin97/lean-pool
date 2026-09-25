@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalization
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalization
 
 /-!
 # Exact finite-word minimum of two rationals
@@ -15,6 +17,8 @@ return one of the original words; the public version then normalizes the
 selected fraction.  This is the minimum operation used in the rational
 smoothing level.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

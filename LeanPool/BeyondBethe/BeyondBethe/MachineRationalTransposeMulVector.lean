@@ -3,9 +3,11 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalMatrixColumn
-import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryRange
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalMatrixColumn
+public import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryRange
 
 /-!
 # Polynomial-time rational transpose--vector multiplication
@@ -16,6 +18,8 @@ degree-eight word bounds every intermediate accumulator even on malformed
 inputs; on canonical inputs a separate encoding estimate proves that the
 clamp never truncates.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

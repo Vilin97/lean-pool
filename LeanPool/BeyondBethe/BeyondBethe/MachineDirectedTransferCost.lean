@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRowComplementUpperSum
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRowComplementUpperSum
 
 /-!
 # One directed transfer-cost endpoint as a finite-word function
@@ -14,6 +16,8 @@ the unreduced rational endpoint `directedTransferCostUpper` at the fixed
 certificate precision and regularization scale.  The only row traversal is
 the separately verified complement-log upper sum.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

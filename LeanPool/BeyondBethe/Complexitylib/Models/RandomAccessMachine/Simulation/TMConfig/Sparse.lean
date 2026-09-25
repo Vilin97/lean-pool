@@ -17,7 +17,7 @@ input length or running-time bound.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

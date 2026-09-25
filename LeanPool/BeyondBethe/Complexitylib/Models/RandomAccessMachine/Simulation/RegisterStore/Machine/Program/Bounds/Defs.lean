@@ -6,8 +6,8 @@ Authors: Samuel Schlesinger
 
 module
 public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Defs
-import Mathlib.Tactic.NormNum.Inv
-import Mathlib.Tactic.NormNum.Pow
+public import Mathlib.Tactic.NormNum.Inv
+public import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Sparse RAM decision-machine resource-bound definitions

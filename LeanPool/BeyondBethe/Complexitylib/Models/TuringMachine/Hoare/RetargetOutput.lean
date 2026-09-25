@@ -17,7 +17,7 @@ standard parked blank tape.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

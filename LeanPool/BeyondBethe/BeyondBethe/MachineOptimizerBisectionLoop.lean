@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerFeasibilityCall
-import LeanPool.BeyondBethe.BeyondBethe.ScannedBetheBisection
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerFeasibilityCall
+public import LeanPool.BeyondBethe.BeyondBethe.ScannedBetheBisection
+public import Mathlib.Tactic
 
 /-!
 # A finite-word dyadic bisection loop for the Bethe optimizer
@@ -22,6 +24,8 @@ midpoint appends a zero bit.  Consequently the persistent state grows by at
 most one bit in each of its two mutable fields.  This gives a direct global
 polynomial state envelope for the bounded iteration.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

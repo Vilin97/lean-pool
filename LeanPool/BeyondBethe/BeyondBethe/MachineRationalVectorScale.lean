@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalizedDirection
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalNormalizedDirection
 
 /-!
 # Polynomial-time rational vector scaling
@@ -15,6 +17,8 @@ vector.  We reduce scaling to the verified row-division machine: division by
 inverse convention.  The reciprocal remains an unreduced `RawRat` word, so
 the composition performs no decoding or hidden rational arithmetic.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

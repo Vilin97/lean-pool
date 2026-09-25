@@ -13,7 +13,7 @@ public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Compositio
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

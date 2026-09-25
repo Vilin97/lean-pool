@@ -16,7 +16,7 @@ public import LeanPool.BeyondBethe.Complexitylib.Classes.P.Internal.Preimage
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

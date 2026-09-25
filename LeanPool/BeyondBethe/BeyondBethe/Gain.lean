@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.Capacity
-import LeanPool.BeyondBethe.BeyondBethe.Transfer
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
-import Mathlib.Tactic
+
+public import LeanPool.BeyondBethe.BeyondBethe.Capacity
+public import LeanPool.BeyondBethe.BeyondBethe.Transfer
+public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+public import Mathlib.Tactic
 
 /-! # Gain -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -40,6 +44,7 @@ theorem rowZeta_le_one
     exact Real.rpow_le_one (hp.nonnegative j) (hp.le_one j)
       (mul_nonneg hτ (hp.nonnegative j))
 
+/-- The total coordinate mass outside the two distinguished columns. -/
 noncomputable def outsideMassTwo
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (p : ι → ℝ) (a b : ι) : ℝ :=
@@ -198,6 +203,7 @@ theorem exp_neg_le_of_log_one_div_le
   rw [Real.exp_log hu] at hexp
   exact hexp
 
+/-- The sum of the four logarithmic transfer costs at the two distinguished rows and columns. -/
 noncomputable def fourCoreTransferCost
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (τ : ℝ) (X : Matrix ι ι ℝ) (r s a b : ι) : ℝ :=
@@ -295,6 +301,8 @@ theorem coordinate_rpow_le_transferU
 and an outside column. -/
 abbrev CapacityWitnessEdge (ι : Type*) := Unit ⊕ (ι ⊕ ι)
 
+/-- The capacity-witness edge masses: `1-ρ` on the central edge, and the scaled outside masses
+on the two side families. -/
 noncomputable def capacityWitnessMass
     {ι : Type*} (ρ δa δb : ℝ) (α : ι → ℝ) :
     CapacityWitnessEdge ι → ℝ

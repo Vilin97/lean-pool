@@ -7,11 +7,11 @@ Authors: Samuel Schlesinger
 module
 public import
 LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryUpdate.Internal.Loop
-import
+public import
   LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryUpdate.Internal.Out
-import
+public import
 LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Simulation.RegisterStore.Machine.EntryUpdate.Internal.Time
-import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators.WorkBranch
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators.WorkBranch
 
 /-!
 # Bounded encoded sparse-store update -- terminal loop case
@@ -22,7 +22,7 @@ runs the checked append and result-count successor subroutines.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

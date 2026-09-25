@@ -3,8 +3,10 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineNearbyCoordinate
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineNearbyCoordinate
 
 /-!
 # Explicit raw-width bounds for scheduled logarithms
@@ -14,6 +16,8 @@ and by one nearby-Bethe coordinate.  They are intentionally stated in terms of
 the exact arithmetic definitions, so the matrix-fold clamp can later be proved
 inactive without an abstract bit-complexity assumption.
 -/
+
+@[expose] public section
 
 namespace BeyondBethe
 

@@ -3,11 +3,15 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.ExecutableCertificate
-import LeanPool.BeyondBethe.BeyondBethe.NumericalNearby
+
+public import LeanPool.BeyondBethe.BeyondBethe.ExecutableCertificate
+public import LeanPool.BeyondBethe.BeyondBethe.NumericalNearby
 
 /-! # Executable Transfer -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
@@ -30,6 +34,8 @@ noncomputable def executableNearbyCertificateLog
   let A' := nearbyKKTMatrix (explicitRegularizationScale n : ℝ) X R C
   betheObjective A' X + (explicitCertifiedMatchingGain Xq : ℝ) - error * n
 
+/-- Exponentiate the logarithmic nearby-certificate value for the rational matrix and supplied
+potentials. -/
 noncomputable def executableNearbyCertificateValue
     {n : ℕ} (error : ℝ)
     (Xq : Matrix (Fin n) (Fin n) ℚ) (R C : Fin n → ℝ) : ℝ :=

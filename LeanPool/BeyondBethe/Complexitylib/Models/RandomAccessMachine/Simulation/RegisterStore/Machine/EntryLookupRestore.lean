@@ -18,7 +18,7 @@ source, restores the runtime entry count, and returns to the same scanner ABI.
 -/
 
 
-public section
+@[expose] public section
 
 namespace Complexity
 

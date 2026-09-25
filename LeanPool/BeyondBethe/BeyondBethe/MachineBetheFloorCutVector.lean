@@ -3,10 +3,12 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorCutEntry
-import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryGridGenerator
-import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryListSnoc
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBetheFloorCutEntry
+public import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryGridGenerator
+public import LeanPool.BeyondBethe.BeyondBethe.MachineBinaryListSnoc
 
 /-!
 # Finite-word Bethe floor-cut vectors
@@ -16,36 +18,48 @@ uses the common row-major grid generator to construct all `m^2` coefficients
 of its affine pullback, then appends the zero epigraph-height coefficient.
 -/
 
+@[expose] public section
+
 namespace BeyondBethe
 
 open Complexity
 
 /-! ## Adapter from grid-entry inputs to floor-cut-entry inputs -/
 
+/-- Extract the unary base-row index from a floor-cut grid-generator request. -/
 def machineBetheFloorCutGridBaseRow (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- The grid-generator payload following the base-row word. -/
 def machineBetheFloorCutGridRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extract the unary base-column index from a floor-cut grid-generator request. -/
 def machineBetheFloorCutGridBaseColumn (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheFloorCutGridRest word)
 
+/-- Extract the original floor-cut vector request carried by the grid generator. -/
 def machineBetheFloorCutGridPayload (word : List Bool) : List Bool :=
   machinePairSecond (machineBetheFloorCutGridRest word)
 
+/-- Extract the unary base dimension from a request for the complete floor-cut vector. -/
 def machineBetheFloorCutVectorDimension (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- The floor-cut vector request after removing its dimension word. -/
 def machineBetheFloorCutVectorRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extract the queried recovered-entry row from the floor-cut vector request. -/
 def machineBetheFloorCutVectorQueryRow (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheFloorCutVectorRest word)
 
+/-- Extract the queried recovered-entry column from the floor-cut vector request. -/
 def machineBetheFloorCutVectorQueryColumn (word : List Bool) : List Bool :=
   machinePairSecond (machineBetheFloorCutVectorRest word)
 
+/-- Combine the stored recovered-entry query with the generator's base-row and base-column
+indices, setting the height flag to false. -/
 def machineBetheFloorCutGridEntryInput (word : List Bool) : List Bool :=
   let payload := machineBetheFloorCutGridPayload word
   pair (machineBetheFloorCutVectorDimension payload)
@@ -54,6 +68,7 @@ def machineBetheFloorCutGridEntryInput (word : List Bool) : List Bool :=
         (pair (machineBetheFloorCutGridBaseRow word)
           (pair (machineBetheFloorCutGridBaseColumn word) [false]))))
 
+/-- Evaluate the encoded floor-cut coefficient at the current grid coordinate. -/
 def machineBetheFloorCutGridEntryCode (word : List Bool) : List Bool :=
   machineBetheFloorCutEntryCode (machineBetheFloorCutGridEntryInput word)
 
@@ -119,22 +134,28 @@ theorem machineBetheFloorCutGridEntryCode_mem_FP :
 
 /-! ## Complete vector machine -/
 
+/-- The twice-iterated binary-width ruler used to bound generated floor-cut entries. -/
 def machineBetheFloorCutVectorBound (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 2 word
 
+/-- Package the unary grid dimension, entry-width ruler, and original floor-cut vector request
+for grid generation. -/
 def machineBetheFloorCutVectorGeneratorInput
     (word : List Bool) : List Bool :=
   pair (machineBetheFloorCutVectorDimension word)
     (pair (machineBetheFloorCutVectorBound word) word)
 
+/-- Generate the encoded floor-cut coefficients over the square grid of base coordinates. -/
 def machineBetheFloorCutVectorBaseCode (word : List Bool) : List Bool :=
   machineUnaryGridGeneratorCode machineBetheFloorCutGridEntryCode
     (machineBetheFloorCutVectorGeneratorInput word)
 
+/-- Package a zero rational entry for appending to the generated base-coordinate vector. -/
 def machineBetheFloorCutVectorSnocInput (word : List Bool) : List Bool :=
   pair (rationalEntryBinaryCode 0)
     (machineBetheFloorCutVectorBaseCode word)
 
+/-- Append the zero height coefficient to the generated base-coordinate floor-cut vector. -/
 def machineBetheFloorCutVectorCode (word : List Bool) : List Bool :=
   machineBinaryListSnoc (machineBetheFloorCutVectorSnocInput word)
 
@@ -166,6 +187,8 @@ theorem machineBetheFloorCutVectorCode_mem_FP :
     machineCompose_mem_FP machineBetheFloorCutVectorSnocInput_mem_FP
       machineBinaryListSnoc_mem_FP
 
+/-- Encode a floor-cut vector request with unary base dimension and recovered-entry row and
+column indices. -/
 def machineBetheFloorCutVectorCanonicalWord {m : ℕ}
     (i j : Fin (m + 1)) : List Bool :=
   pair (List.replicate m true)

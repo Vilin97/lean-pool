@@ -3,13 +3,17 @@ Copyright (c) 2026 Nima Anari. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nima Anari
 -/
+module
 
-import LeanPool.BeyondBethe.BeyondBethe.MachineRationalEllipsoidEncoding
-import LeanPool.BeyondBethe.BeyondBethe.MachineRepeatPair
-import LeanPool.BeyondBethe.BeyondBethe.MachineNestedMatrixMemory
-import LeanPool.BeyondBethe.BeyondBethe.MachineLengthBits
+
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalEllipsoidEncoding
+public import LeanPool.BeyondBethe.BeyondBethe.MachineRepeatPair
+public import LeanPool.BeyondBethe.BeyondBethe.MachineNestedMatrixMemory
+public import LeanPool.BeyondBethe.BeyondBethe.MachineLengthBits
 
 /-! # Machine Rational Ball Init -/
+
+@[expose] public section
 
 namespace BeyondBethe
 
