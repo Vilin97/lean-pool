@@ -163,7 +163,7 @@ lemma integrable_compTimeReflection_covariance
     they agree pointwise as complex values.
 -/
 lemma compTimeReflection_toComplex_eq_ofReal
-  (f : TestFunction) (x : SpaceTime) :
+  (f : OSforGFF.TestFunction) (x : SpaceTime) :
   (QFT.compTimeReflection (toComplex f)) x = ((QFT.compTimeReflectionReal f) x : ℂ) := by
   simp only [QFT.compTimeReflection, QFT.compTimeReflectionReal,
     SchwartzMap.compCLM_apply, Function.comp_apply, toComplex_apply]
@@ -179,7 +179,7 @@ lemma re_integral_ofReal {α : Type*} [MeasurableSpace α] (μ : Measure α) (h 
 
 /-- Integrability of the real covariance kernel obtained from a real test function. -/
 lemma integrable_real_covariance_kernel
-  (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
+  (m : ℝ) [Fact (0 < m)] (f : OSforGFF.TestFunction) :
   Integrable (fun p : SpaceTime × SpaceTime =>
       (QFT.compTimeReflectionReal f) p.1 * freeCovariance m p.1 p.2 * f p.2)
     (volume.prod volume) := by
@@ -220,7 +220,7 @@ lemma integrable_real_covariance_kernel
 
 /-- Fubini helper: rewrite the real kernel double integral over the product measure. -/
 lemma integral_prod_real_covariance_kernel
-  (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
+  (m : ℝ) [Fact (0 < m)] (f : OSforGFF.TestFunction) :
   ∫ p : SpaceTime × SpaceTime,
       (QFT.compTimeReflectionReal f) p.1 * freeCovariance m p.1 p.2 * f p.2 ∂(volume.prod volume)
     =
@@ -231,7 +231,7 @@ lemma integral_prod_real_covariance_kernel
 
 /-- Complex Fubini helper mirroring `integral_prod_real_covariance_kernel`. -/
 lemma integral_prod_complex_covariance_kernel
-  (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
+  (m : ℝ) [Fact (0 < m)] (f : OSforGFF.TestFunction) :
   ∫ p : SpaceTime × SpaceTime,
       (QFT.compTimeReflection (toComplex f)) p.1 * (freeCovariance m p.1 p.2 : ℂ)
           * (toComplex f) p.2 ∂(volume.prod volume)
@@ -252,7 +252,7 @@ lemma integral_prod_complex_covariance_kernel
   via `integral_ofReal_eq` applied twice.
 -/
 lemma real_integral_eq_complex_re
-  (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
+  (m : ℝ) [Fact (0 < m)] (f : OSforGFF.TestFunction) :
   ∫ x, ∫ y, (QFT.compTimeReflectionReal f) x * freeCovariance m x y * f y ∂volume ∂volume
     = (∫ x, ∫ y, (QFT.compTimeReflection (toComplex f)) x * (freeCovariance m x y : ℂ)
         * (toComplex f) y ∂volume ∂volume).re := by
@@ -290,14 +290,14 @@ lemma real_integral_eq_complex_re
   This allows us to match the Parseval identity which uses starRingEnd.
 -/
 lemma toComplex_star_eq
-  (f : TestFunction) (x : SpaceTime) :
+  (f : OSforGFF.TestFunction) (x : SpaceTime) :
   starRingEnd ℂ ((toComplex f) x) = (toComplex f) x := by
   -- toComplex f x = (f x : ℂ) by definition
   simp_all
 
 /-- The time-reflected complexification of a real test function remains real-valued. -/
 lemma compTimeReflection_toComplex_star_eq
-  (f : TestFunction) (x : SpaceTime) :
+  (f : OSforGFF.TestFunction) (x : SpaceTime) :
   starRingEnd ℂ ((QFT.compTimeReflection (toComplex f)) x)
     = (QFT.compTimeReflection (toComplex f)) x := by
   -- compTimeReflection is composition with timeReflectionCLM
