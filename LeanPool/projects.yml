@@ -10135,6 +10135,9 @@ projects:
     entry_module: LeanPool.BeyondBethe
     authors:
     - Nima Anari
+    - Samuel Schlesinger
+    - Bolton Bailey
+    - Christian Reitwiessner
     source:
       url: https://github.com/nimaanari/formalization-beyond-bethe
       github_repo: nimaanari/formalization-beyond-bethe

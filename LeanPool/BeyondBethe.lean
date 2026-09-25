@@ -162,7 +162,6 @@ import LeanPool.BeyondBethe.BeyondBethe.MachineOutputEncoding
 import LeanPool.BeyondBethe.BeyondBethe.MachinePerfectMatching
 import LeanPool.BeyondBethe.BeyondBethe.MachinePositiveAlgorithm
 import LeanPool.BeyondBethe.BeyondBethe.MachineRAMBridge
-import LeanPool.BeyondBethe.BeyondBethe.MachineRAMSmoke
 import LeanPool.BeyondBethe.BeyondBethe.MachineRationalArithmetic
 import LeanPool.BeyondBethe.BeyondBethe.MachineRationalBallInit
 import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
@@ -682,7 +681,7 @@ import LeanPool.BeyondBethe.Solution
 # Beyond the Bethe approximation of the permanent
 
 Source: url:https://github.com/nimaanari/formalization-beyond-bethe
-Authors: Nima Anari
+Authors: Nima Anari, Samuel Schlesinger, Bolton Bailey, Christian Reitwiessner
 Status: verified
 Main declarations: `BeyondBethe.theoremOne`
 Tags: permanent, approximation-algorithms, computational-complexity, stable-polynomials

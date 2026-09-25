@@ -384,7 +384,6 @@ public import LeanPool.BeyondBethe.BeyondBethe.MachineOutputEncoding
 public import LeanPool.BeyondBethe.BeyondBethe.MachinePerfectMatching
 public import LeanPool.BeyondBethe.BeyondBethe.MachinePositiveAlgorithm
 public import LeanPool.BeyondBethe.BeyondBethe.MachineRAMBridge
-public import LeanPool.BeyondBethe.BeyondBethe.MachineRAMSmoke
 public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalArithmetic
 public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalBallInit
 public import LeanPool.BeyondBethe.BeyondBethe.MachineRationalCompare
