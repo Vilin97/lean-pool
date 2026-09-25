@@ -380,8 +380,7 @@ theorem finiteExtensionAffineIdealEffectiveDivisorEquiv_apply
     finiteExtensionAffineIdealEffectiveDivisorEquiv K L I v =
       multiplicity v.asIdeal
         (I : Ideal (RatFuncFiniteIntegralClosure K L)) := by
-  simpa [finiteExtensionAffineIdealEffectiveDivisorEquiv] using
-    (nonzeroIdealEffectiveDivisorEquiv_apply I v)
+  simp [finiteExtensionAffineIdealEffectiveDivisorEquiv]
 
 omit [Fintype K] in
 @[simp]
@@ -391,8 +390,7 @@ theorem finiteExtensionAffineIdealEffectiveDivisorEquiv_symm_coe
         FiniteExtensionAffineIdeal K L) :
           Ideal (RatFuncFiniteIntegralClosure K L)) =
       effectiveDivisorIdeal D := by
-  simpa [finiteExtensionAffineIdealEffectiveDivisorEquiv] using
-    (nonzeroIdealEffectiveDivisorEquiv_symm_coe D)
+  simp [finiteExtensionAffineIdealEffectiveDivisorEquiv]
 
 /-- The affine ideal degree of the ideal represented by an effective finite
 divisor is its residue-degree-weighted divisor degree. -/

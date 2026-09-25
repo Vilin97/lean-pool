@@ -402,7 +402,7 @@ theorem finitePlaceOrderTop_indexedDedekindLocalWronskian_det_lower_bound_of_pol
           intro hz
           have hneg := hpole i hi
           rw [hz] at hneg
-          simpa using hneg
+          simp at hneg
         have hbound :=
           finitePlaceOrderTop_derivation_iterate_ge_sub_nat_of_preserves
             v π hπ hπIdeal D hDIntegral (epsilonOrder (σ i)) (g i)
@@ -463,7 +463,7 @@ theorem finitePlaceOrderTop_indexedDedekindLocalWronskian_caseI_epsilon_plus_one
     intro i hi hz
     have hneg := hpole i hi
     rw [hz] at hneg
-    simpa using hneg
+    simp at hneg
   have horderInj :
       Set.InjOn (fun i => finitePlaceOrder v (g i)) (poles : Set ι) := by
     intro i hi j hj hij
@@ -592,7 +592,7 @@ theorem card_negativeFinitePlaceOrders_le_neg
     intro i hi hz
     have hneg := hpole i hi
     rw [hz] at hneg
-    simpa using hneg
+    simp at hneg
   let w : ι → ℤ := fun i => finitePlaceOrder v (g i)
   have hinj : Set.InjOn w (poles : Set ι) := by
     intro i hi j hj hij

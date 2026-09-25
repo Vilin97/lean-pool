@@ -118,11 +118,13 @@ theorem finitePlaceOrder_algebraMap_nonnegative
   rw [finitePlaceOrderTop_eq_coe v _ hmap] at htop
   exact_mod_cast htop
 
+omit [DecidableEq K] in
 private theorem polynomial_lift_finitePlaceOrder_nonnegative
     (P : K[X]) (hP : P ≠ 0)
     (q : FiniteExtensionFinitePlace K L) :
     0 ≤ finiteExtensionPrincipalDivisor K L
       (algebraMap (RatFunc K) L (algebraMap K[X] (RatFunc K) P)) (.inl q) := by
+  classical
   let S := RatFuncFiniteIntegralClosure K L
   let e := ratFuncFiniteIntegralClosureFractionRingEquiv K L
   let s : S := algebraMap K[X] S P
@@ -140,11 +142,13 @@ private theorem polynomial_lift_finitePlaceOrder_nonnegative
   rw [finiteExtensionPrincipalDivisor_inl, hrepr]
   exact finitePlaceOrder_algebraMap_nonnegative q s hs
 
+omit [DecidableEq K] in
 private theorem polynomial_lift_infinityPlaceOrder_nonpositive
     (P : K[X]) (hP : P ≠ 0)
     (q : FiniteExtensionInfinityPlace K L) :
     finiteExtensionPrincipalDivisor K L
       (algebraMap (RatFunc K) L (algebraMap K[X] (RatFunc K) P)) (.inr q) ≤ 0 := by
+  classical
   let f : RatFunc K := algebraMap K[X] (RatFunc K) P
   let x : L := algebraMap (RatFunc K) L f
   let S := RatFuncInfinityIntegralClosure K L

@@ -204,12 +204,14 @@ local instance infinityInertiaIntegralClosureIsIntegral :
       (RatFuncInfinityIntegralClosure K L) :=
   IsIntegralClosure.isIntegral_algebra (RatFuncInfinityIntegers K) L
 
+omit [DecidableEq K] in
 /-- Over an algebraically closed constant field, every prime above the place at
 infinity has residue degree (inertia degree) one. -/
 theorem finiteExtensionInfinityPlace_inertiaDeg_eq_one
     (P : (ratFuncInfinityPlace K).asIdeal.primesOver
       (RatFuncInfinityIntegralClosure K L)) :
     P.1.inertiaDeg (RatFuncInfinityIntegers K) = 1 := by
+  classical
   let hLocalAlg :=
     Localization.AtPrime.algebraOfLiesOver
       (ratFuncInfinityPlace K).asIdeal P.1

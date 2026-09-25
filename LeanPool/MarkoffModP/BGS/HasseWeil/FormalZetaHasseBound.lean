@@ -54,7 +54,7 @@ theorem abs_pointCount_sub_card_sub_one_le_of_formalPointCountZeta_rational_and_
 along any fixed positive divisible-even subsequence imply the base-field
 Hasse bound. -/
 theorem
-    abs_pointCount_sub_card_sub_one_le_of_formalPointCountZeta_rational_and_divisibleEvenError_isBigO
+  abs_pointCount_sub_card_sub_one_le_of_formalPointCountZeta_rational_and_divisibleEvenError_isBigO
     (q δ : ℕ) (pointCount : ℕ → ℕ) (P : Polynomial ℂ)
     (hq : 0 < q) (hδ : 0 < δ)
     (hP0 : P.coeff 0 = 1)

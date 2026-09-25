@@ -46,6 +46,7 @@ variable {K R L : Type*} [Field K] [CommRing R]
   [Field L] [Algebra K R] [Algebra R L] [Algebra K L]
   [IsScalarTower K R L] [IsFractionRing R L]
 
+omit [IsDedekindDomain R] [IsDiscreteValuationRing R] [IsFractionRing R L] in
 /-- Monotonicity of the local pole filtration for an arbitrary increase in
 the allowed pole order. -/
 theorem localPoleSpace_mono_of_le (π : R) {m n : ℕ} (hmn : m ≤ n) :
@@ -103,6 +104,7 @@ def localPrincipalPartLayerMap (π : R) (n : ℕ) :
   change (x : L) ∈ localPoleSpace (K := K) (L := L) π n
   exact localPoleSpace_mono_of_le (K := K) (L := L) π (Nat.zero_le n) hx
 
+omit [IsDedekindDomain R] [IsDiscreteValuationRing R] [IsFractionRing R L] in
 theorem localPrincipalPartInclusion_injective (π : R) (n : ℕ) :
     Function.Injective
       (localPrincipalPartInclusion (K := K) (L := L) π n) := by

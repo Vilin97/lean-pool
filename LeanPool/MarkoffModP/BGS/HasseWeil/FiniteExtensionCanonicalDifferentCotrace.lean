@@ -441,6 +441,7 @@ theorem finiteExtensionUnderPlace_finite_preimage_singleton
         finiteExtensionUnderPlace, Sum.inl.injEq, reduceCtorEq] at hq
     · exact Set.mem_range_self q
 
+omit [Fintype K] [DecidableEq K] in
 /-- Pullback along the exhaustive place map preserves cofinite eventual
 properties. -/
 theorem finiteExtensionUnderPlace_tendstoCofinite :
@@ -457,6 +458,7 @@ def finiteExtensionUnderPlaceChart
     (finiteExtensionUnderPlace K L
       ((finiteExtensionPlaceEquivChart K L).symm q))
 
+omit [Fintype K] [DecidableEq K] in
 /-- Every rational-function chart place has an upstairs chart place. -/
 theorem finiteExtensionUnderPlaceChart_surjective :
     Function.Surjective (finiteExtensionUnderPlaceChart K L) := by
@@ -626,6 +628,7 @@ def finiteExtensionDifferentExceptionalSet :
       multiplicity q.asIdeal
         (differentIdeal K[X] (RatFuncFiniteIntegralClosure K L)) ≠ 0})
 
+omit [Fintype K] [DecidableEq K] in
 theorem finiteExtensionDifferentExceptionalSet_finite :
     (finiteExtensionDifferentExceptionalSet K L).Finite := by
   have hdiff : differentIdeal K[X]
@@ -1162,6 +1165,7 @@ theorem finiteExtensionFiberTrace_infinite_valuation_le_exp_neg_two
   rw [hpChart]
   exact hchart
 
+omit [Fintype K] [DecidableEq K] in
 /-- The infinity place selected for the identity extension is the unique
 infinity place in the base chart. -/
 theorem ratFuncInfinityChartPlace_eq_baseChart :
@@ -1205,6 +1209,7 @@ theorem finiteExtensionFiberTrace_mem_ratFuncCanonicalInfinityAdeleFilt
     rw [hcoeff]
     exact h
 
+omit [Fintype K] [DecidableEq K] in
 /-- Principal adeles are fiber-constant. -/
 theorem finiteExtension_diagonal_mem_fiberConstant (x : L) :
     FunctionField.Chart.diagonal K L x ∈

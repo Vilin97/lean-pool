@@ -8,7 +8,8 @@ module
 
 public import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExhaustiveProductFormula
 public import Mathlib.NumberTheory.ClassNumber.FunctionField
-public import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients
+public import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Norm
 
 /-!
 # Affine ideal degrees in a finite function field
@@ -42,8 +43,9 @@ open BGS.CorvajaZannier
 
 variable (K : Type*) [Field K] [Fintype K]
 
+omit [Fintype K] in
 /-- The polynomial ring over a finite field has finite quotients. -/
-theorem ratFuncPolynomial_hasFiniteQuotients :
+theorem ratFuncPolynomial_hasFiniteQuotients [Finite K] :
     Ring.HasFiniteQuotients K[X] := by
   constructor
   intro I hI
@@ -88,19 +90,22 @@ local instance affineIdealClosureConstantTower :
     IsScalarTower K K[X] (RatFuncFiniteIntegralClosure K L) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+omit [Fintype K] in
 /-- The normalization of `K[X]` in a finite separable extension of `K(X)` has
 finite quotients. -/
-theorem ratFuncFiniteIntegralClosure_hasFiniteQuotients :
+theorem ratFuncFiniteIntegralClosure_hasFiniteQuotients [Finite K] :
     Ring.HasFiniteQuotients (RatFuncFiniteIntegralClosure K L) := by
   let : Ring.HasFiniteQuotients K[X] :=
     ratFuncPolynomial_hasFiniteQuotients K
   exact Ring.HasFiniteQuotients.of_module_finite K[X]
     (RatFuncFiniteIntegralClosure K L)
 
+omit [Fintype K] in
 /-- The affine ideal class group is finite.  This is the function-field class
 number theorem from Mathlib, stated at the normalization used by BGS. -/
-theorem finiteExtensionAffineClassGroup_finite :
+theorem finiteExtensionAffineClassGroup_finite [Finite K] :
     Finite (ClassGroup (RatFuncFiniteIntegralClosure K L)) := by
+  let : Fintype K := Fintype.ofFinite K
   let : Fintype (ClassGroup (RatFuncFiniteIntegralClosure K L)) :=
     inferInstance
   exact Fintype.finite inferInstance

@@ -82,9 +82,6 @@ theorem negativeXLogDerivative_mul
     negativeXLogDerivative (f * g) =
       negativeXLogDerivative f + negativeXLogDerivative g := by
   unfold negativeXLogDerivative
-  change -PowerSeries.X * PowerSeries.derivative (f * g) * (f * g)⁻¹ =
-    -PowerSeries.X * PowerSeries.derivative f * f⁻¹ +
-      -PowerSeries.X * PowerSeries.derivative g * g⁻¹
   rw [Derivation.leibniz,
     inverse_mul_of_constantCoeff_ne_zero f g hf hg]
   simp only [smul_eq_mul]
@@ -99,7 +96,7 @@ theorem negativeXLogDerivative_mul
       ring
 
 theorem negativeXLogDerivative_prod_linearPowerSeriesFactor
-    {I : Type*} [Fintype I] [DecidableEq I]
+    {I : Type*} [Fintype I]
     (a : I → ℂ) :
     negativeXLogDerivative (∏ i, linearPowerSeriesFactor (a i)) =
       ∑ i, negativeXLogDerivative (linearPowerSeriesFactor (a i)) := by
@@ -114,11 +111,12 @@ theorem negativeXLogDerivative_prod_linearPowerSeriesFactor
     · simp
 
 theorem coeff_negativeXLogDerivative_prod_linearPowerSeriesFactor
-    {I : Type*} [Fintype I] [DecidableEq I]
+    {I : Type*} [Fintype I]
     (a : I → ℂ) (n : ℕ) :
     PowerSeries.coeff (n + 1)
       (negativeXLogDerivative (∏ i, linearPowerSeriesFactor (a i))) =
         ∑ i, a i ^ (n + 1) := by
+  classical
   rw [negativeXLogDerivative_prod_linearPowerSeriesFactor]
   simp
 

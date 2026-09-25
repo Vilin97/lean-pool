@@ -36,7 +36,7 @@ positive divisor degree. -/
 theorem finiteExtensionPositiveDegree_planeCurveFirstCoordinate_pow
     {f : MvPolynomial (Fin 2) K} (hf : Irreducible f)
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0)
-    (m : ℕ) (hm : 0 < m) :
+    (m : ℕ) (_hm : 0 < m) :
     letI := planeCurveCoordinateRing_isDomain hf
     let hx := firstCoordinate_transcendental hf
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)

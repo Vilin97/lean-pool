@@ -390,12 +390,14 @@ def finiteExtensionGcdWeightedDegree (x y : L) : ℕ :=
     finiteExtensionGcdMultiplicity K L x y v *
       finiteExtensionPlaceDegree K L v
 
+omit [DecidableEq K] in
 /-- On a finite place, the exhaustive principal-divisor coefficient is the
 normalized order computed directly in `L`. -/
 theorem finiteExtensionPrincipalDivisor_inl_eq_finitePlaceOrder
     (x : L) (q : FiniteExtensionFinitePlace K L) :
     finiteExtensionPrincipalDivisor K L x (.inl q) =
       finitePlaceOrder q x := by
+  classical
   rw [finiteExtensionPrincipalDivisor_inl]
   have h := fractionRingAlgEquiv_finitePlaceOrder_eq
     (L := L) q ((ratFuncFiniteIntegralClosureFractionRingEquiv K L).symm x)
@@ -410,6 +412,7 @@ theorem finiteExtensionPlaceDegree_inl_pos
   · exact (finitePlaceNormalizedPrime
       (HeightOneSpectrum.under (Polynomial K) q)).property.1.irreducible.natDegree_pos
 
+omit [DecidableEq K] in
 theorem inl_mem_finiteExtensionGcdSupport_of_orders_positive
     (x y : L) (q : FiniteExtensionFinitePlace K L)
     (hxpos : 0 < finitePlaceOrder q x) :
@@ -851,3 +854,7 @@ theorem torsionPoint_card_le_planeCurveExhaustiveTorsionGcdWeightedDegree
       rfl
 
 end PlaneCurveExhaustiveFinitePlaces
+
+end
+
+end BGS.CorvajaZannier

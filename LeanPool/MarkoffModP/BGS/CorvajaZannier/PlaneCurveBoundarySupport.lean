@@ -290,7 +290,7 @@ private noncomputable def valuationSubringRingEquivOfComapEq
   invFun y := ⟨e.symm y, by
     rw [← h]
     change e (e.symm (y : E)) ∈ W
-    simpa using y.2⟩
+    simp⟩
   left_inv x := Subtype.ext (e.symm_apply_apply x)
   right_inv y := Subtype.ext (e.apply_symm_apply y)
   map_mul' x y := Subtype.ext (map_mul e (x : F) (y : F))

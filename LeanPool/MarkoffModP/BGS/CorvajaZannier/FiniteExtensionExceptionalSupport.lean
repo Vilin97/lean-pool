@@ -100,9 +100,11 @@ private theorem finitePlaceOrder_one
   rw [finitePlaceOrderTop_eq_coe w (1 : F) one_ne_zero] at h
   exact_mod_cast h
 
+omit [DecidableEq K] in
 /-- The exhaustive principal divisor of one is zero. -/
 theorem finiteExtensionPrincipalDivisor_one :
     finiteExtensionPrincipalDivisor K L (1 : L) = 0 := by
+  classical
   ext w
   cases w with
   | inl q =>
@@ -115,12 +117,14 @@ theorem finiteExtensionPrincipalDivisor_one :
         (w := primeOverHeightOne (ratFuncInfinityPlace K) P)
         (F := FractionRing (RatFuncInfinityIntegralClosure K L))
 
+omit [DecidableEq K] in
 /-- Exhaustive principal divisors turn a nonzero product into a sum. -/
 theorem finiteExtensionPrincipalDivisor_mul
     (x y : L) (hx : x ≠ 0) (hy : y ≠ 0) :
     finiteExtensionPrincipalDivisor K L (x * y) =
       finiteExtensionPrincipalDivisor K L x +
         finiteExtensionPrincipalDivisor K L y := by
+  classical
   ext w
   cases w with
   | inl q =>
@@ -159,33 +163,39 @@ theorem finiteExtensionPrincipalDivisor_mul
       simpa only [finiteExtensionPrincipalDivisor_inr, map_mul,
         finitePrincipalDivisor_apply, Finsupp.add_apply] using h
 
+omit [DecidableEq K] in
 /-- Exhaustive principal divisors turn a nonzero power into a multiple. -/
 theorem finiteExtensionPrincipalDivisor_pow
     (x : L) (hx : x ≠ 0) (m : ℕ) :
     finiteExtensionPrincipalDivisor K L (x ^ m) =
       m • finiteExtensionPrincipalDivisor K L x := by
+  classical
   induction m with
   | zero => simp [finiteExtensionPrincipalDivisor_one K L]
   | succ m ih =>
       rw [pow_succ, finiteExtensionPrincipalDivisor_mul K L
         (x ^ m) x (pow_ne_zero _ hx) hx, ih, succ_nsmul]
 
+omit [DecidableEq K] in
 /-- Exhaustive principal divisors turn a nonzero inverse into a negative. -/
 theorem finiteExtensionPrincipalDivisor_inv
     (x : L) (hx : x ≠ 0) :
     finiteExtensionPrincipalDivisor K L x⁻¹ =
       -finiteExtensionPrincipalDivisor K L x := by
+  classical
   have hmul := finiteExtensionPrincipalDivisor_mul K L x⁻¹ x
     (inv_ne_zero hx) hx
   rw [inv_mul_cancel₀ hx, finiteExtensionPrincipalDivisor_one K L] at hmul
   exact eq_neg_of_add_eq_zero_left hmul.symm
 
+omit [DecidableEq K] in
 /-- Exhaustive principal divisors turn a quotient into a difference. -/
 theorem finiteExtensionPrincipalDivisor_div
     (x y : L) (hx : x ≠ 0) (hy : y ≠ 0) :
     finiteExtensionPrincipalDivisor K L (x / y) =
       finiteExtensionPrincipalDivisor K L x -
         finiteExtensionPrincipalDivisor K L y := by
+  classical
   rw [div_eq_mul_inv, finiteExtensionPrincipalDivisor_mul K L x y⁻¹ hx
     (inv_ne_zero hy), finiteExtensionPrincipalDivisor_inv K L y hy, sub_eq_add_neg]
 
@@ -194,8 +204,9 @@ the `ordGrid` term in the global Wronskian summation. -/
 def finiteExtensionAuxiliaryGridProduct (u v : L) (h k : ℕ) : L :=
   ∏ rs : Fin (k + 1) × Fin h, u ^ (rs.1 : ℕ) * v ^ (rs.2 : ℕ)
 
+omit [DecidableEq K] in
 private theorem finiteExtensionPrincipalDivisor_finset_prod
-    {ι : Type*} [DecidableEq ι] (s : Finset ι) (g : ι → L)
+    {ι : Type*} (s : Finset ι) (g : ι → L)
     (hg : ∀ i ∈ s, g i ≠ 0) :
     finiteExtensionPrincipalDivisor K L (∏ i ∈ s, g i) =
       ∑ i ∈ s, finiteExtensionPrincipalDivisor K L (g i) := by
@@ -210,6 +221,7 @@ private theorem finiteExtensionPrincipalDivisor_finset_prod
         finiteExtensionPrincipalDivisor_mul K L _ _ hga
           (Finset.prod_ne_zero_iff.mpr hgs), ih hgs]
 
+omit [DecidableEq K] in
 /-- Exact principal-divisor formula for the auxiliary grid product. -/
 theorem finiteExtensionPrincipalDivisor_auxiliaryGridProduct
     (u v : L) (hu : u ≠ 0) (hv : v ≠ 0) (h k : ℕ) :

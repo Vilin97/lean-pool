@@ -164,6 +164,7 @@ theorem mem_dual_one_iff_different_multiplicity_le_count
   exact forall_congr' fun q ↦ by
     rw [count_dual_one_eq_neg_different_multiplicity A K₀ q]
 
+omit [Algebra.IsIntegral A B] in
 theorem trace_mem_algebraMap_range_of_different_multiplicity_le_count
     {z : L} (hz : z ≠ 0)
     (hcount : ∀ q : HeightOneSpectrum B,
@@ -216,6 +217,7 @@ theorem finite_badDifferentCount_set (hdiff : differentIdeal A B ≠ ⊥) (y : L
   simp
 
 omit [IsIntegralClosure B A L] in
+omit [IsIntegrallyClosed A] in
 theorem exists_base_multiplier_clearing_different_counts
     [IsDedekindDomain A]
     (hdiff : differentIdeal A B ≠ ⊥)

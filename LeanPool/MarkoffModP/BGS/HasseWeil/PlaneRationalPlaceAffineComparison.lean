@@ -11,7 +11,8 @@ public import LeanPool.MarkoffModP.BGS.HasseWeil.OnePointLeadingCoefficient
 public import LeanPool.MarkoffModP.BGS.HasseWeil.RatFuncParameterPole
 public import LeanPool.MarkoffModP.BGS.HasseWeil.GeneralSquareFieldStepanovCount
 public import Mathlib.Algebra.Polynomial.RingDivision
-public import Mathlib.NumberTheory.RamificationInertia.Basic
+public import Mathlib.LinearAlgebra.Dimension.Localization
+public import Mathlib.RingTheory.RamificationInertia.Basic
 
 /-!
 # Rational normalization places and affine exceptional fibers
@@ -33,7 +34,7 @@ characteristic.
 
 @[expose] public section
 
-open scoped Polynomial
+open scoped Polynomial BigOperators
 
 namespace BGS.HasseWeil
 
@@ -264,22 +265,22 @@ theorem rationalBasePlace_primesOver_card_le_finrank
       (P.1.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L)) :=
     Set.Finite.fintype (IsDedekindDomain.primesOver_finite P.1.asIdeal
       (RatFuncFiniteIntegralClosure K L))
-  let e : P.1.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L) ≃
-      ↥(IsDedekindDomain.primesOverFinset P.1.asIdeal
-        (RatFuncFiniteIntegralClosure K L)) :=
-    Set.equivOfEq
-      (IsDedekindDomain.coe_primesOverFinset P.1.ne_bot
-        (RatFuncFiniteIntegralClosure K L)).symm
   calc
-    Fintype.card
-        (P.1.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L)) =
-        Fintype.card ↥(IsDedekindDomain.primesOverFinset P.1.asIdeal
-          (RatFuncFiniteIntegralClosure K L)) := Fintype.card_congr e
-    _ = (IsDedekindDomain.primesOverFinset P.1.asIdeal
-          (RatFuncFiniteIntegralClosure K L)).card := Fintype.card_coe _
-    _ ≤ Module.finrank (RatFunc K) L :=
-      Ideal.card_primesOverFinset_le_finrank
-        (RatFuncFiniteIntegralClosure K L) (RatFunc K) L P.1.ne_bot
+    Fintype.card (P.1.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L)) =
+        ∑ _Q : P.1.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L), 1 := by
+      simp
+    _ ≤ ∑ Q : P.1.asIdeal.primesOver (RatFuncFiniteIntegralClosure K L),
+        Q.1.ramificationIdx K[X] * Q.1.inertiaDeg K[X] := by
+      apply Finset.sum_le_sum
+      intro Q _
+      exact Nat.one_le_of_lt (Nat.mul_pos
+        (Ideal.ramificationIdx_pos Q.1 K[X]) (Ideal.inertiaDeg_pos Q.1 K[X]))
+    _ = Module.finrank K[X] (RatFuncFiniteIntegralClosure K L) :=
+      Ideal.sum_ramification_inertia_eq_finrank P.1.asIdeal
+        (RatFuncFiniteIntegralClosure K L)
+    _ = Module.finrank (RatFunc K) L :=
+      (IsFractionRing.finrank_eq K[X] (RatFunc K)
+        (RatFuncFiniteIntegralClosure K L) L).symm
 
 /-- The first-coordinate value of the rational base place below a rational
 finite extension place. -/

@@ -456,15 +456,19 @@ noncomputable def
   let g : RatFunc C →ₐ[C] M :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgHom
       K F hExact
-  exact { eC with commutes' := by
-    intro r
-    have hX : f RatFunc.X = g RatFunc.X := by
-      apply Subtype.ext
-      have hfX := originalMultiplicationCanonicalRatFunc_X K F hExact
-      have hgX := congrArg Subtype.val (functionFieldNormalClosureConstantBaseRatFuncAlgEquiv_X K F)
-      exact hfX.trans hgX.symm
-    have hfg : f = g := originalCompositum_ratFunc_algHom_ext (C := C) (M := M) f g hX
-    exact DFunLike.congr_fun hfg r }
+  exact
+    { eC with
+      commutes' := by
+        intro r
+        have hX : f RatFunc.X = g RatFunc.X := by
+          apply Subtype.ext
+          have hfX := originalMultiplicationCanonicalRatFunc_X K F hExact
+          have hgX := congrArg Subtype.val
+            (functionFieldNormalClosureConstantBaseRatFuncAlgEquiv_X K F)
+          exact hfX.trans hgX.symm
+        have hfg : f = g :=
+          originalCompositum_ratFunc_algHom_ext (C := C) (M := M) f g hX
+        exact DFunLike.congr_fun hfg r }
 
 end CanonicalConstantPresentation
 

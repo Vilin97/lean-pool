@@ -91,6 +91,7 @@ def localPoleLeadingResidueMap (π : R) (n : ℕ) :
     (algebraMap R L (π ^ n))
     (by exact localPoleSpace_regular (K := K) (L := L) π n)
 
+omit [IsDedekindDomain R] [IsDiscreteValuationRing R] in
 private theorem localPoleNormalizedLift_eq
     (π : R) (n : ℕ)
     (x : localPoleSpace (K := K) (L := L) π n) (r : R)

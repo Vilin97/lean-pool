@@ -280,7 +280,8 @@ subfield by a determinant-one matrix when the residue field is perfect.
 
 Unlike the constant-field version, this theorem does not require an algebra
 map from the coefficient field to the DVR. -/
-theorem exists_det_one_frobeniusSubfield_dedekindColumnMatrix_negativeOrdersPairwiseDistinct_of_perfect_residue
+theorem
+  exists_det_one_frobeniusSubfield_columnMatrix_negativeOrdersPairwiseDistinct_of_perfect_residue
     {k : ℕ} (v : HeightOneSpectrum R)
     [PerfectField v.asIdeal.ResidueField]
     (a : ℤ) (f : Fin k → L)
@@ -370,7 +371,7 @@ theorem exists_frobeniusSubfield_dedekindCaseI_columnMatrix_and_q_wronskian_boun
         finitePlaceOrderTop v
           (indexedDedekindLocalWronskian D epsilonOrder f).det := by
   obtain ⟨A, hAdet, hdistinct, hlower⟩ :=
-    exists_det_one_frobeniusSubfield_dedekindColumnMatrix_negativeOrdersPairwiseDistinct_of_perfect_residue
+    exists_det_one_frobeniusSubfield_columnMatrix_negativeOrdersPairwiseDistinct_of_perfect_residue
       (p := p) v a f hf
   let g := indexedDedekindLocalColumnCombination f A
   have hdet :
@@ -436,7 +437,7 @@ theorem exists_frobeniusSubfield_dedekindLocalAuxiliaryFamily_caseI_columnMatrix
     intro i
     rw [hfirstOrder i]
   obtain ⟨A, hAdet, hdistinct, hlower⟩ :=
-    exists_det_one_frobeniusSubfield_dedekindColumnMatrix_negativeOrdersPairwiseDistinct_of_perfect_residue
+    exists_det_one_frobeniusSubfield_columnMatrix_negativeOrdersPairwiseDistinct_of_perfect_residue
       (p := p) v (finitePlaceOrder v rho) first hfirstLower
   refine ⟨A, hAdet, ?_, ?_, ?_⟩
   · intro x y hx hy hxy
@@ -470,7 +471,8 @@ theorem exists_frobeniusSubfield_dedekindLocalAuxiliaryFamily_caseI_columnMatrix
 fields supply every leading-term cancellation, the determinant-one column
 operation preserves the Wronskian, and the exact `q * ord(rho)` lower bound
 follows. -/
-theorem exists_frobeniusSubfield_dedekindLocalAuxiliaryFamily_caseI_q_wronskian_bound_of_perfect_residue
+theorem
+  exists_frobeniusSubfield_dedekindLocalAuxiliaryFamily_caseI_q_wronskian_bound_of_perfect_residue
     (v : HeightOneSpectrum R)
     [PerfectField v.asIdeal.ResidueField]
     (D : Derivation (frobeniusSubfield L p) L L)
@@ -583,10 +585,10 @@ theorem exists_frobeniusSubfield_dedekindAuxiliaryFamily_caseI_q_wronskian_bound
             (auxiliaryFamily u w h k)).det := by
   simpa only [dedekindCaseITransformedLocalAuxiliaryFamily,
     dedekindLocalAuxiliaryFamily_div_eq_auxiliaryFamily] using
-    (exists_frobeniusSubfield_dedekindLocalAuxiliaryFamily_caseI_q_wronskian_bound_of_perfect_residue
+    exists_frobeniusSubfield_dedekindLocalAuxiliaryFamily_caseI_q_wronskian_bound_of_perfect_residue
       (p := p) v D hDIntegral u w ((1 - u) / (1 - w)) h k epsilonOrder
       epsilon q hrhoNe huOrder hrhoOrder hgridRegular hepsilonInjective
-      hepsilonMax hk hepsilonQ)
+      hepsilonMax hk hepsilonQ
 
 end
 

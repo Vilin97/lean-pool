@@ -1167,9 +1167,11 @@ section FiniteConstants
 
 variable [Fintype K]
 
+omit [DecidableEq K] [Fintype K] in
 omit [DecidableEq (RatFunc K)] in
-private theorem ratFuncFinitePlaceResidueField_finite
+private theorem ratFuncFinitePlaceResidueField_finite [Finite K]
     (p : HeightOneSpectrum K[X]) : Finite p.asIdeal.ResidueField := by
+  classical
   let r := finitePlaceNormalizedPrime p
   have hr0 : (r : K[X]) ≠ 0 := r.property.1.ne_zero
   have hrmonic : (r : K[X]).Monic :=
@@ -1185,9 +1187,11 @@ private theorem ratFuncFinitePlaceResidueField_finite
   let : Finite (K[X] ⧸ p.asIdeal) := Module.finite_of_finite K
   infer_instance
 
+omit [DecidableEq K] [Fintype K] in
 omit [DecidableEq (RatFunc K)] in
-private theorem finitePlaceResidueField_finite
+private theorem finitePlaceResidueField_finite [Finite K]
     (P : FiniteExtensionFinitePlace K M) : Finite P.asIdeal.ResidueField := by
+  classical
   let p := HeightOneSpectrum.under K[X] P
   let : Finite p.asIdeal.ResidueField :=
     ratFuncFinitePlaceResidueField_finite K p
@@ -1200,8 +1204,10 @@ private theorem finitePlaceResidueField_finite
     inferInstance
   exact Module.finite_of_finite p.asIdeal.ResidueField
 
-private theorem infinityPlaceResidueField_finite
+omit [DecidableEq K] [Fintype K] in
+private theorem infinityPlaceResidueField_finite [Finite K]
     (P : FiniteExtensionInfinityPlace K M) : Finite P.1.ResidueField := by
+  classical
   let : Algebra K (RatFuncInfinityIntegers K) :=
     (ratFuncInfinityConstantRingHom K).toAlgebra
   let : IsScalarTower K (RatFuncInfinityIntegers K) (RatFunc K) :=
@@ -1220,12 +1226,14 @@ private theorem infinityPlaceResidueField_finite
   let : Module.Finite p.ResidueField P.1.ResidueField := inferInstance
   exact Module.finite_of_finite p.ResidueField
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] [Fintype K] in
 /-- The inertia-group cardinality is the ramification index at a finite
 place. -/
-theorem finitePlaceInertiaGroup_card_eq_ramificationIdx
+theorem finitePlaceInertiaGroup_card_eq_ramificationIdx [Finite K]
     (P : FiniteExtensionFinitePlace K L) :
     Nat.card (finitePlaceInertiaGroup K M L P) =
       finitePlaceRelativeRamificationIdx K M L P := by
+  classical
   let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
   let := finiteIntegralClosureGalAction K M L
@@ -1243,13 +1251,15 @@ theorem finitePlaceInertiaGroup_card_eq_ramificationIdx
   rw [Ideal.card_inertia_eq_ramificationIdxIn p.asIdeal P.asIdeal]
   exact Ideal.ramificationIdxIn_eq_ramificationIdx p.asIdeal P.asIdeal Gal(L/M)
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] [Fintype K] in
 /-- The decomposition-group cardinality is ramification index times inertia
 degree at a finite place. -/
-theorem finitePlaceDecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg
+theorem finitePlaceDecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg [Finite K]
     (P : FiniteExtensionFinitePlace K L) :
     Nat.card (finitePlaceDecompositionGroup K M L P) =
       finitePlaceRelativeRamificationIdx K M L P *
         finitePlaceRelativeInertiaDeg K M L P := by
+  classical
   let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
   let := finiteIntegralClosureGalAction K M L
@@ -1269,11 +1279,13 @@ theorem finitePlaceDecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg
     Ideal.ramificationIdxIn_eq_ramificationIdx p.asIdeal P.asIdeal Gal(L/M),
     Ideal.inertiaDegIn_eq_inertiaDeg p.asIdeal P.asIdeal Gal(L/M)]
 
+omit [DecidableEq K] [Fintype K] in
 /-- The inertia-group cardinality is the ramification index above infinity. -/
-theorem infinityPlaceInertiaGroup_card_eq_ramificationIdx
+theorem infinityPlaceInertiaGroup_card_eq_ramificationIdx [Finite K]
     (P : FiniteExtensionInfinityPlace K L) :
     Nat.card (infinityPlaceInertiaGroup K M L P) =
       infinityPlaceRelativeRamificationIdx K M L P := by
+  classical
   let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
   let := infinityIntegralClosureGalAction K M L
@@ -1291,13 +1303,15 @@ theorem infinityPlaceInertiaGroup_card_eq_ramificationIdx
   rw [Ideal.card_inertia_eq_ramificationIdxIn p.1 P.1]
   exact Ideal.ramificationIdxIn_eq_ramificationIdx p.1 P.1 Gal(L/M)
 
+omit [DecidableEq K] [Fintype K] in
 /-- The decomposition-group cardinality is ramification index times inertia
 degree above infinity. -/
-theorem infinityPlaceDecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg
+theorem infinityPlaceDecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg [Finite K]
     (P : FiniteExtensionInfinityPlace K L) :
     Nat.card (infinityPlaceDecompositionGroup K M L P) =
       infinityPlaceRelativeRamificationIdx K M L P *
         infinityPlaceRelativeInertiaDeg K M L P := by
+  classical
   let : Module.Finite M L :=
     Module.Finite.of_restrictScalars_finite (RatFunc K) M L
   let := infinityIntegralClosureGalAction K M L

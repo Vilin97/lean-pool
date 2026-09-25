@@ -293,7 +293,8 @@ theorem finitePlaceOrderTop_indexedDedekindLocalWronskian_det_nonnegative_of_int
 omit [Algebra C R] [IsScalarTower C R L] in
 /-- The indexed determinant estimate after a determinant-one constant column
 operation, assuming only that the derivation preserves the DVR. -/
-theorem finitePlaceOrderTop_indexedDedekindLocalWronskian_det_lower_bound_after_columnCombination_of_preserves
+theorem
+  finitePlaceOrderTop_dedekindLocalWronskian_det_lower_bound_after_columnCombination_of_preserves
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (v : HeightOneSpectrum R) (π : R) (hπ : Irreducible π)
     (hπIdeal : v.asIdeal = Ideal.span {π})

@@ -456,7 +456,8 @@ omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 application, `C = L^p`).  The proof restricts scalars to `K` before invoking
 the local DVR theorem, while the displayed Wronskian is still the original
 `C`-derivation Wronskian because restriction does not change its function. -/
-theorem finiteExtensionFinitePlace_auxiliaryFamily_caseIII_source_lower_bound_of_restrictScalars_preserves
+theorem
+  finiteExtensionFinitePlace_auxiliaryFamily_caseIII_source_lower_bound_of_restrictScalars_preserves
     (q : PlaneCurveExtensionFinitePlace K L)
     (D : Derivation C L L)
     (hDIntegral : ∀ r : FiniteExtensionFinitePlaceLocalRing K L q,
@@ -497,7 +498,8 @@ theorem finiteExtensionFinitePlace_auxiliaryFamily_caseIII_source_lower_bound_of
 omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- Case (iv) after the same honest restriction of constants from `C` to
 the ground field `K`. -/
-theorem finiteExtensionFinitePlace_auxiliaryFamily_caseIV_source_lower_bound_of_restrictScalars_preserves
+theorem
+  finiteExtensionFinitePlace_auxiliaryFamily_caseIV_source_lower_bound_of_restrictScalars_preserves
     (q : PlaneCurveExtensionFinitePlace K L)
     (D : Derivation C L L)
     (hDIntegral : ∀ r : FiniteExtensionFinitePlaceLocalRing K L q,

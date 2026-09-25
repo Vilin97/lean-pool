@@ -260,7 +260,7 @@ theorem finiteExtensionRiemannSpace_infinityPlace_increment
       change (1 : WithTop ℤ) ≤
         finiteExtensionInfinityPlaceLocalOrderTop (K := K) (L := L) P (a * x.1) at haxOrder
       by_cases hx0 : x.1 = 0
-      · simpa [hx0] using S.zero_mem
+      · simp [hx0]
       · have hxQ :
             0 ≤ finiteExtensionPrincipalDivisor K L x.1 Q + D Q := by
           rw [finiteExtensionInfinityPlaceLocalOrderTop_mul,

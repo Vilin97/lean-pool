@@ -33,6 +33,7 @@ noncomputable section
 variable (K : Type*) [Field K] [Fintype K] [DecidableEq K]
   [DecidableEq (RatFunc K)]
 
+omit [Fintype K] [DecidableEq K] in
 /-- At every base chart place, maximality of the canonical `-2∞`
 differential supplies a one-component adele at the first filtration step on
 which the differential is nonzero. -/

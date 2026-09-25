@@ -424,12 +424,14 @@ local instance onePointCancellationInfinityConstantTowerToField :
   rw [IsScalarTower.algebraMap_apply K (RatFunc K) L]
   rfl
 
+omit [DecidableEq K] in
 omit [Fintype K] in
 private theorem finiteExtensionPrincipalDivisor_inr_eq_finitePlaceOrder
     (x : L) (P : FiniteExtensionInfinityPlace K L) :
     finiteExtensionPrincipalDivisor K L x (.inr P) =
       finitePlaceOrder
         (primeOverHeightOne (ratFuncInfinityPlace K) P) x := by
+  classical
   rw [finiteExtensionPrincipalDivisor_inr]
   symm
   simpa [ratFuncInfinityIntegralClosureFractionRingEquiv] using

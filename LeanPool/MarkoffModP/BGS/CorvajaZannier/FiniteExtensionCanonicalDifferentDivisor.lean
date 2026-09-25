@@ -305,7 +305,7 @@ theorem finiteExtensionCanonicalDifferentDivisor_degree_of_ramification_sum
   ring
 
 /-- The canonical different divisor has weighted degree equal to the finite
-different degree plus the infinity different degree minus twice `[L : K(X)]`.-/
+different degree plus the infinity different degree minus twice `[L : K(X)]`. -/
 theorem finiteExtensionCanonicalDifferentDivisor_degree :
     finiteExtensionDivisorDegree K L
         (finiteExtensionCanonicalDifferentDivisor K L

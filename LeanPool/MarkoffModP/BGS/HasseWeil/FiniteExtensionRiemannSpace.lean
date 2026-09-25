@@ -204,7 +204,7 @@ theorem algebraMap_mem_finiteExtensionRiemannSpace_of_effective
     algebraMap K L c ∈ finiteExtensionRiemannSpace K L D := by
   by_cases hc : c = 0
   · subst c
-    simpa using (finiteExtensionRiemannSpace K L D).zero_mem
+    simp
   · rw [mem_finiteExtensionRiemannSpace]
     refine Or.inr ⟨?_, ?_⟩
     · simpa only [map_zero] using (algebraMap K L).injective.ne hc

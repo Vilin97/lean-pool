@@ -101,12 +101,14 @@ local instance residueInfinityIntegralClosureConstantTower :
 
 variable [IsAlgClosed K]
 
+omit [DecidableEq K] in
 omit [DecidableEq (RatFunc K)] in
 /-- Constants surject onto the residue field of every finite place of a finite
 separable extension of `K(X)`, when `K` is algebraically closed. -/
 theorem finiteExtensionFinitePlace_constantResidue_surjective
     (q : FiniteExtensionFinitePlace K L) :
     Function.Surjective (algebraMap K q.asIdeal.ResidueField) := by
+  classical
   let p := HeightOneSpectrum.under K[X] q
   let : q.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
   let hLocalAlg :=

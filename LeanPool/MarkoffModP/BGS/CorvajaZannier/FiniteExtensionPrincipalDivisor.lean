@@ -159,18 +159,22 @@ def finiteExtensionPrincipalDivisor (x : L) :
   (finiteExtensionFinitePrincipalDivisor K L x).sumElim
     (finiteExtensionInfinityPrincipalDivisor K L x)
 
+omit [DecidableEq K] in
 @[simp] theorem finiteExtensionPrincipalDivisor_inl
     (x : L) (q : FiniteExtensionFinitePlace K L) :
     finiteExtensionPrincipalDivisor K L x (.inl q) =
       finitePlaceOrder q
         ((ratFuncFiniteIntegralClosureFractionRingEquiv K L).symm x) := by
+  classical
   simp [finiteExtensionPrincipalDivisor]
 
+omit [DecidableEq K] in
 @[simp] theorem finiteExtensionPrincipalDivisor_inr
     (x : L) (P : FiniteExtensionInfinityPlace K L) :
     finiteExtensionPrincipalDivisor K L x (.inr P) =
       finitePlaceOrder (primeOverHeightOne (ratFuncInfinityPlace K) P)
         ((ratFuncInfinityIntegralClosureFractionRingEquiv K L).symm x) := by
+  classical
   simp [finiteExtensionPrincipalDivisor]
 
 def finiteExtensionFiniteResidueWeightedDivisor (x : L) :
@@ -178,6 +182,7 @@ def finiteExtensionFiniteResidueWeightedDivisor (x : L) :
   (finiteExtensionFinitePrincipalDivisor K L x).sum (fun q n =>
     Finsupp.single q ((q.asIdeal.inertiaDeg K[X] : ℤ) * n))
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 @[simp] theorem finiteExtensionFiniteResidueWeightedDivisor_apply
     (x : L) (q : FiniteExtensionFinitePlace K L) :
     finiteExtensionFiniteResidueWeightedDivisor K L x q =
@@ -210,6 +215,7 @@ def finiteExtensionFiniteDivisorBelow (x : L) :
   (finiteExtensionFiniteResidueWeightedDivisor K L x).mapDomain
     (HeightOneSpectrum.under K[X])
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 theorem finiteExtensionFiniteDivisorBelow_apply
     (x : L) (p : HeightOneSpectrum K[X]) :
     finiteExtensionFiniteDivisorBelow K L x p =
@@ -267,10 +273,12 @@ theorem finiteExtensionFiniteDivisorBelow_apply
   rw [hplace]
   rfl
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 theorem finiteExtensionFiniteDivisorBelow_eq_normDivisor
     (x : L) (hx : x ≠ 0) :
     finiteExtensionFiniteDivisorBelow K L x =
       ratFuncFiniteDivisor (Algebra.norm (RatFunc K) x) := by
+  classical
   ext p
   rw [finiteExtensionFiniteDivisorBelow_apply K L x p,
     finitePrimesAbove_weightedOrder_eq_normOrder K L p x hx,
@@ -283,6 +291,7 @@ def finiteExtensionFiniteDirectDegreeSum (x : L) : ℤ :=
     n * (q.asIdeal.inertiaDeg K[X] : ℤ) *
       (ratFuncFinitePlaceDegree (HeightOneSpectrum.under K[X] q) : ℤ))
 
+omit [DecidableEq (RatFunc K)] in
 theorem finiteExtensionFiniteDirectDegreeSum_eq_grouped
     (x : L) (hx : x ≠ 0) :
     finiteExtensionFiniteDirectDegreeSum K L x =
@@ -853,10 +862,12 @@ theorem ratFuncFinitePlaceDegree_eq_one (p : HeightOneSpectrum K[X]) :
   rw [ratFuncFinitePlaceDegree]
   exact Polynomial.natDegree_eq_of_degree_eq_some hrdegree
 
+omit [DecidableEq K] in
 omit [DecidableEq (RatFunc K)] in
 theorem finiteExtensionFinitePlace_inertiaDeg_eq_one
     (q : FiniteExtensionFinitePlace K L) :
     q.asIdeal.inertiaDeg K[X] = 1 := by
+  classical
   let p := HeightOneSpectrum.under K[X] q
   let : q.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
   let hLocalAlg :=
@@ -894,11 +905,13 @@ section AlgebraicallyClosedFamilies
 
 variable {A : Type*} [Fintype A]
 
+omit [DecidableEq K] in
 /-- Ordinary (unweighted) product formula on the common family place type. -/
 theorem finiteExtensionFamilyOrder_sum_eq_zero
     (f : A → L) (a : A) (ha : f a ≠ 0) :
     ∑ v : FiniteExtensionFamilyPlace K L f,
       finiteExtensionFamilyOrder K L f a v = 0 := by
+  classical
   have hweighted := finiteExtensionFamilyWeightedOrder_sum_eq_zero K L f a ha
   simpa only [finiteExtensionFamilyWeightedOrder,
     finiteExtensionPlaceDegree_eq_one K L,

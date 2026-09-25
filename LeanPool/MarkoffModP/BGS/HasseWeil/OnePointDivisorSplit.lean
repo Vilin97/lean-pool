@@ -65,7 +65,7 @@ theorem single_add_finiteExtensionDivisorAway
   by_cases hv : v = P
   · subst v
     simp
-  · simp [finiteExtensionDivisorAway, hv]
+  · simp [finiteExtensionDivisorAway]
 
 omit [Fintype K] [DecidableEq K] [FiniteDimensional (RatFunc K) L]
   [Algebra.IsSeparable (RatFunc K) L] in

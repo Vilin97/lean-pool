@@ -96,7 +96,7 @@ theorem mem_heightOneSpectrum_of_one_le_finitePlaceOrder_algebraMap
     (horder : (1 : ℤ) ≤ finitePlaceOrder v (algebraMap R L r)) :
     r ∈ v.asIdeal := by
   by_cases hr : r = 0
-  · simpa [hr]
+  · simp [hr]
   · have hrMap : algebraMap R L r ≠ 0 :=
       by simpa using (IsFractionRing.injective R L).ne hr
     have hvaluation :=
@@ -313,7 +313,7 @@ theorem finiteExtensionRiemannSpace_finitePlace_increment
       change (1 : WithTop ℤ) ≤
         finiteExtensionFinitePlaceLocalOrderTop (K := K) (L := L) q (a * x.1) at haxOrder
       by_cases hx0 : x.1 = 0
-      · simpa [hx0] using S.zero_mem
+      · simp [hx0]
       · have hxQ :
             0 ≤ finiteExtensionPrincipalDivisor K L x.1 Q + D Q := by
           rw [finiteExtensionFinitePlaceLocalOrderTop_mul,

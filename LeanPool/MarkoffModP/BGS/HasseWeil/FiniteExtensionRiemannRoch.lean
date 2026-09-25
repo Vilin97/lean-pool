@@ -191,6 +191,8 @@ def finiteExtensionInfinityIntegralClosureRingEquiv :
   map_mul' _ _ := rfl
   map_add' _ _ := rfl
 
+omit [Fintype K] [DecidableEq K] [FiniteDimensional (RatFunc K) L]
+  [Algebra.IsSeparable (RatFunc K) L] in
 @[simp]
 theorem finiteExtensionInfinityIntegralClosureRingEquiv_apply_coe
     (x : RatFuncInfinityIntegralClosure K L) :
@@ -278,6 +280,7 @@ noncomputable def finiteExtensionInfinityResidueAlgEquiv
   change P.1 = (P.1.comap e.symm).comap e
   exact (Ideal.comap_of_equiv e.toRingEquiv).symm
 
+omit [Fintype K] in
 /-- The exhaustive place degree agrees with the Riemann--Roch chart degree. -/
 theorem finiteExtensionPlaceDegree_eq_chart
     (v : FiniteExtensionPlace K L) :
@@ -409,6 +412,7 @@ private theorem valuation_eq_of_isEquiv_of_surjective
   · rw [hformula x hx, hm1, one_mul,
       WithZero.exp_log ((Valuation.ne_zero_iff v).2 hx)]
 
+omit [Fintype K] [DecidableEq K] in
 /-- The normalized infinity valuation is unchanged by the identity-on-`L`
 integral-closure transport. -/
 theorem finiteExtensionInfinityPlaceValuation_eq_chart

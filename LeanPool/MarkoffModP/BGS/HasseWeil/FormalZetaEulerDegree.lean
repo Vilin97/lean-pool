@@ -47,7 +47,8 @@ theorem exists_formalPointCountZeta_rational_with_natDegree_lt_of_effectiveDivis
 
 /-- Before proving the divisor index is one, the same composition gives an
 indexed numerator of degree `< N + 2d`. -/
-theorem exists_formalPointCountZeta_indexed_rational_with_natDegree_lt_of_effectiveDivisor_recurrences
+theorem
+  exists_formalPointCountZeta_indexed_rational_with_natDegree_lt_of_effectiveDivisor_recurrences
     (A pointCount : ℕ → ℕ) (q d N : ℕ) (hd : 0 < d)
     (hA0 : A 0 = 1)
     (hEuler : HasEffectiveDivisorPointCountRecurrence A pointCount)

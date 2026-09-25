@@ -53,7 +53,8 @@ theorem exists_element_locally_generating_ideal
       simpa [ha_zero] using ha
     have hmult := congrArg (multiplicity v.asIdeal) hprod_eq
     rw [multiplicity_mul v.prime
-      (FiniteMultiplicity.of_prime_left v.prime hprod), multiplicity_self (FiniteMultiplicity.of_prime_left v.prime v.ne_bot)] at hmult
+      (FiniteMultiplicity.of_prime_left v.prime hprod),
+      multiplicity_self (FiniteMultiplicity.of_prime_left v.prime v.ne_bot)] at hmult
     omega
   have hspan0 : Ideal.span {a} ≠ ⊥ := by
     simpa [Ideal.span_singleton_eq_bot] using ha0
@@ -63,7 +64,8 @@ theorem exists_element_locally_generating_ideal
     exact le_sup_right
   have hsup := v.multiplicity_sup hprod hspan0
   rw [ha, multiplicity_mul v.prime
-    (FiniteMultiplicity.of_prime_left v.prime hprod), multiplicity_self (FiniteMultiplicity.of_prime_left v.prime v.ne_bot)] at hsup
+    (FiniteMultiplicity.of_prime_left v.prime hprod),
+    multiplicity_self (FiniteMultiplicity.of_prime_left v.prime v.ne_bot)] at hsup
   have hmult : multiplicity v.asIdeal (Ideal.span {a}) =
       multiplicity v.asIdeal I := by
     by_cases hle : multiplicity v.asIdeal (Ideal.span {a}) ≤

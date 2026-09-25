@@ -51,7 +51,7 @@ abbrev FunctionFieldNormalClosureConstantField :=
 /-- Restriction of a `K(t)`-automorphism of the normal closure to its algebraic
 constant field. -/
 def functionFieldNormalClosureConstantRestriction :
-    Gal((FunctionFieldNormalClosure K L) / (RatFunc K)) →*
+    Gal(FunctionFieldNormalClosure K L/RatFunc K) →*
       Gal((FunctionFieldNormalClosureConstantField K L) / K) where
   toFun g := (g.restrictScalars K).algebraicClosure
   map_one' := by
@@ -64,7 +64,7 @@ def functionFieldNormalClosureConstantRestriction :
 omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)]
   [FiniteDimensional (RatFunc K) L] in
 theorem functionFieldNormalClosureConstantRestriction_apply
-    (g : Gal((FunctionFieldNormalClosure K L) / (RatFunc K)))
+    (g : Gal(FunctionFieldNormalClosure K L/RatFunc K))
     (c : FunctionFieldNormalClosureConstantField K L) :
     functionFieldNormalClosureConstantRestriction K L g c =
       ⟨g c.1, by
@@ -76,7 +76,7 @@ omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)]
 /-- The kernel consists exactly of automorphisms fixing every algebraic
 constant. -/
 theorem mem_functionFieldNormalClosureConstantRestriction_ker_iff
-    (g : Gal((FunctionFieldNormalClosure K L) / (RatFunc K))) :
+    (g : Gal(FunctionFieldNormalClosure K L/RatFunc K)) :
     g ∈ (functionFieldNormalClosureConstantRestriction K L).ker ↔
       ∀ c : FunctionFieldNormalClosureConstantField K L, g c.1 = c.1 := by
   rw [MonoidHom.mem_ker]

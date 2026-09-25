@@ -129,11 +129,13 @@ theorem functionFieldConstantQuotientAlgHom_injective
     Function.Injective (functionFieldConstantQuotientAlgHom K N Q) :=
   (functionFieldConstantQuotientAlgHom K N Q).injective
 
+omit [DecidableEq K] in
 omit [DecidableEq (RatFunc K)] in
 /-- The residue field of a rational-function finite place is finite over a
 finite constant field. -/
-theorem ratFuncFinitePlaceResidueField_finite [Fintype K]
+theorem ratFuncFinitePlaceResidueField_finite [Finite K]
     (p : HeightOneSpectrum K[X]) : Finite p.asIdeal.ResidueField := by
+  classical
   let r := finitePlaceNormalizedPrime p
   have hr0 : (r : K[X]) ≠ 0 := r.property.1.ne_zero
   have hrmonic : (r : K[X]).Monic :=
@@ -149,11 +151,13 @@ theorem ratFuncFinitePlaceResidueField_finite [Fintype K]
   let : Finite (K[X] ⧸ p.asIdeal) := Module.finite_of_finite K
   infer_instance
 
+omit [DecidableEq K] in
 omit [DecidableEq (RatFunc K)] in
 /-- Every finite-place residue field of a finite separable function field is
 finite over a finite constant field. -/
-theorem finiteExtensionFinitePlaceResidueField_finite [Fintype K]
+theorem finiteExtensionFinitePlaceResidueField_finite [Finite K]
     (P : FiniteExtensionFinitePlace K N) : Finite P.asIdeal.ResidueField := by
+  classical
   let p := HeightOneSpectrum.under K[X] P
   let : Finite p.asIdeal.ResidueField :=
     ratFuncFinitePlaceResidueField_finite K p
@@ -166,10 +170,12 @@ theorem finiteExtensionFinitePlaceResidueField_finite [Fintype K]
     inferInstance
   exact Module.finite_of_finite p.asIdeal.ResidueField
 
+omit [DecidableEq K] in
 /-- Over a finite base field, the algebraic constant field of a finite
 separable function field is finite-dimensional. -/
-noncomputable instance functionFieldConstantField_finiteDimensional [Fintype K] :
+noncomputable instance functionFieldConstantField_finiteDimensional [Finite K] :
     FiniteDimensional K (FunctionFieldConstantField K N) := by
+  classical
   let p : HeightOneSpectrum K[X] := Polynomial.idealX K
   obtain ⟨Q, hQprime, hQcomap⟩ :=
     Ideal.exists_ideal_over_prime_of_isIntegral_of_isDomain
@@ -200,16 +206,20 @@ noncomputable instance functionFieldConstantField_finiteDimensional [Fintype K] 
     (functionFieldConstantQuotientAlgHom K N q).toLinearMap
     (functionFieldConstantQuotientAlgHom_injective K N q)
 
+omit [DecidableEq K] in
 /-- The algebraic constant field is a finite type when the original constants
 are finite. -/
-noncomputable instance functionFieldConstantField_finite [Fintype K] :
-    Finite (FunctionFieldConstantField K N) :=
-  Module.finite_of_finite K
+noncomputable instance functionFieldConstantField_finite [Finite K] :
+    Finite (FunctionFieldConstantField K N) := by
+  classical
+  exact Module.finite_of_finite K
 
+omit [DecidableEq K] in
 /-- The algebraic constant field is Galois over the finite base field. -/
-noncomputable instance functionFieldConstantField_isGalois [Fintype K] :
-    IsGalois K (FunctionFieldConstantField K N) :=
-  inferInstance
+noncomputable instance functionFieldConstantField_isGalois [Finite K] :
+    IsGalois K (FunctionFieldConstantField K N) := by
+  classical
+  exact inferInstance
 
 end
 

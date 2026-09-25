@@ -246,7 +246,7 @@ private local instance effectiveDivisorInfinityClosureDedekind :
 
 local instance effectiveDivisorInfinityPlaceFinite :
     Finite (FiniteExtensionInfinityPlace K L) := by
-  letI := Set.Finite.fintype
+  let := Set.Finite.fintype
     (IsDedekindDomain.primesOver_finite
       (ratFuncInfinityPlace K).asIdeal
       (RatFuncInfinityIntegralClosure K L))

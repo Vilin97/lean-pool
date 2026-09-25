@@ -67,6 +67,8 @@ def rationalPlaceUnder :
   | .inl Q => .inl (rationalFinitePlaceUnder K M L Q)
   | .inr Q => .inr (rationalInfinityPlaceUnder K M L Q)
 
+omit [FiniteDimensional (RatFunc K) M] [Algebra.IsSeparable (RatFunc K) M]
+  [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 /-- The relative residue degree of a rational finite place is one. -/
 theorem rationalFinitePlace_relativeInertiaDeg_eq_one
     (Q : FiniteExtensionRationalFinitePlace K L) :
@@ -79,6 +81,8 @@ theorem rationalFinitePlace_relativeInertiaDeg_eq_one
       (.inl (finitePlaceUnder K M L Q.1)), by
         simpa only [Nat.mul_comm] using hmul⟩
 
+omit [FiniteDimensional (RatFunc K) M] [Algebra.IsSeparable (RatFunc K) M]
+  [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 /-- The relative residue degree of a rational place above infinity is one. -/
 theorem rationalInfinityPlace_relativeInertiaDeg_eq_one
     (Q : FiniteExtensionRationalInfinityPlace K L) :

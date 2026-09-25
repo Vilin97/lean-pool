@@ -131,9 +131,8 @@ sum of fixed-point counts over any fiber of `π` is exactly `|ker π|`.
 In Stichtenoth's fixed-field argument, `π` is the constant-field Frobenius
 quotient and the fiber is a Frobenius coset. -/
 theorem sum_card_fixedBy_quotientFiber_eq_card_ker
-    {G C X : Type*} [Group G] [Group C] [Fintype G] [Fintype C]
-    [DecidableEq C]
-    [MulAction G X] [Fintype X] [MulAction.IsPretransitive G X]
+    {G C X : Type*} [Group G] [Group C] [Finite G]
+    [MulAction G X] [Finite X] [MulAction.IsPretransitive G X]
     [Nonempty X]
     (π : G →* C)
     (hstab : ∀ x : X, Function.Surjective
@@ -142,6 +141,9 @@ theorem sum_card_fixedBy_quotientFiber_eq_card_ker
     letI : Fintype (π ⁻¹' ({c} : Set C)) := Fintype.ofFinite _
     (∑ g : π ⁻¹' ({c} : Set C),
       Nat.card (MulAction.fixedBy X g.1)) = Nat.card π.ker := by
+  classical
+  let : Fintype G := Fintype.ofFinite G
+  let : Fintype X := Fintype.ofFinite X
   let : Fintype (π ⁻¹' ({c} : Set C)) := Fintype.ofFinite _
   let (x : X) : Fintype
       ((π.comp (MulAction.stabilizer G x).subtype) ⁻¹' ({c} : Set C)) :=
@@ -183,8 +185,8 @@ For a function-field cover, the family is the finite set of rational base
 places and `X i` is the corresponding restriction fiber of top places. -/
 theorem sum_card_fixedBy_quotientFiber_fibers_eq_card_mul_card_ker
     {ι G C : Type*} [Fintype ι] [Group G] [Group C]
-    [Fintype G] [Fintype C] [DecidableEq C]
-    (X : ι → Type*) [∀ i, MulAction G (X i)] [∀ i, Fintype (X i)]
+    [Finite G]
+    (X : ι → Type*) [∀ i, MulAction G (X i)] [∀ i, Finite (X i)]
     [∀ i, MulAction.IsPretransitive G (X i)] [∀ i, Nonempty (X i)]
     (π : G →* C)
     (hstab : ∀ i (x : X i), Function.Surjective
@@ -263,9 +265,8 @@ theorem natCard_fixedBy_eq_sum_natCard_invariantFiberFixedBy
 stabilizer-surjectivity by the exact decomposition-group order identity used
 in the function-field argument. -/
 theorem sum_card_fixedBy_quotientFiber_eq_card_ker_of_stabilizer_card
-    {G C X : Type*} [Group G] [Group C] [Fintype G] [Fintype C]
-    [DecidableEq C]
-    [MulAction G X] [Fintype X] [MulAction.IsPretransitive G X]
+    {G C X : Type*} [Group G] [Group C] [Finite G] [Finite C]
+    [MulAction G X] [Finite X] [MulAction.IsPretransitive G X]
     [Nonempty X]
     (π : G →* C)
     (hcard : ∀ x : X,

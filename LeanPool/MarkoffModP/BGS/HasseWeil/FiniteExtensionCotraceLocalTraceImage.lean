@@ -203,7 +203,7 @@ theorem exists_element_with_counts_over_and_exact_at
         simpa [hprecision, target, hideal] using h
       have hnle : n q ≤ (Int.toNat (n q) : ℤ) := by
         by_cases hn : 0 ≤ n q
-        · simpa [Int.toNat_of_nonneg hn]
+        · simp [Int.toNat_of_nonneg hn]
         · rw [Int.toNat_of_nonpos (le_of_not_ge hn)]
           exact le_of_not_ge hn
       exact hnle.trans

@@ -304,7 +304,6 @@ theorem planeCurveClosedPoint_localization_isDiscreteValuationRing
     Algebra.FormallySmooth.of_isLocalization q.primeCompl
   let : Algebra.FormallySmooth K S :=
     Algebra.FormallySmooth.comp K Ad S
-
   let P := planeCurvePartialYSubmersivePresentation f
   let I := ((Set.range P.map)ᶜ : Set (Unit ⊕ Fin 2))
   let bAd : Basis I Ad Ω[Ad⁄K] := P.basisKaehler
@@ -321,7 +320,6 @@ theorem planeCurveClosedPoint_localization_isDiscreteValuationRing
       (TensorProduct S k (KaehlerDifferential K S)) = 1 := by
     rw [Module.finrank_eq_card_basis bk, hcardI]
     exact planeCurvePartialYSubmersivePresentation_dimension f
-
   let eResidue := atPrimeResidueAlgEquiv K A S m.asIdeal
   let : Finite k := Finite.of_injective eResidue.symm eResidue.symm.injective
   let : Algebra.IsSeparable K k := inferInstance
@@ -353,7 +351,6 @@ theorem planeCurveClosedPoint_localization_isDiscreteValuationRing
   have hcotangent : Module.finrank k (IsLocalRing.CotangentSpace S) ≤ 1 := by
     rw [← htarget]
     exact cotangentMap.finrank_le_finrank_of_injective hcotangentMap
-
   have hnotField : ¬ IsField S :=
     IsLocalization.AtPrime.not_isField A hm0 S
   have hprincipal : (IsLocalRing.maximalIdeal S).IsPrincipal :=
@@ -426,7 +423,6 @@ theorem squareExtensionClosedPoint_localization_isDiscreteValuationRing
     Algebra.FormallySmooth.of_isLocalization q.primeCompl
   let : Algebra.FormallySmooth K S :=
     Algebra.FormallySmooth.comp K Ad S
-
   let P := planeCurvePartialYSubmersivePresentation f
   let I := ((Set.range P.map)ᶜ : Set (Unit ⊕ Fin 2))
   let bAd : Basis I Ad Ω[Ad⁄K] := P.basisKaehler
@@ -443,7 +439,6 @@ theorem squareExtensionClosedPoint_localization_isDiscreteValuationRing
       (TensorProduct S k (KaehlerDifferential K S)) = 1 := by
     rw [Module.finrank_eq_card_basis bk, hcardI]
     exact planeCurvePartialYSubmersivePresentation_dimension f
-
   obtain ⟨z, hz⟩ := m.2
   let zf : SquareExtensionClosedPointFiber K p f m :=
     ⟨z, Subtype.ext hz⟩
@@ -480,7 +475,6 @@ theorem squareExtensionClosedPoint_localization_isDiscreteValuationRing
   have hcotangent : Module.finrank k (IsLocalRing.CotangentSpace S) ≤ 1 := by
     rw [← htarget]
     exact cotangentMap.finrank_le_finrank_of_injective hcotangentMap
-
   have hm0 : m.1.asIdeal ≠ ⊥ :=
     squareExtensionClosedPoint_asIdeal_ne_bot_of_partialY
       K p hf m hsmooth
@@ -727,7 +721,6 @@ theorem squareExtensionClosedPointExhaustiveFinitePlace_placeDegree_eq_residueDe
   let : Algebra K R :=
     RingHom.toAlgebra ((algebraMap B R).comp (algebraMap K B))
   let : IsScalarTower K B R := IsScalarTower.of_algebraMap_eq' rfl
-
   let : IsDiscreteValuationRing (Localization.AtPrime m.1.asIdeal) :=
     squareExtensionClosedPoint_localization_isDiscreteValuationRing K p hf m hsmooth
   have hresidue := residue_finrank_eq_of_regular_dominating_valuation K A B E
@@ -981,7 +974,6 @@ theorem affinePointExhaustiveFinitePlace_degree_eq_one_of_partialY
   let : Algebra K R :=
     RingHom.toAlgebra ((algebraMap B R).comp (algebraMap K B))
   let : IsScalarTower K B R := IsScalarTower.of_algebraMap_eq' rfl
-
   let eCenter := affinePlaneCurvePoint_residueAlgEquiv K z
   let : Finite m.asIdeal.ResidueField :=
     Finite.of_injective eCenter eCenter.injective
@@ -1011,7 +1003,6 @@ theorem affinePointExhaustiveFinitePlace_degree_eq_one_of_partialY
   let : IsDiscreteValuationRing (Localization.AtPrime m.asIdeal) :=
     planeCurveClosedPoint_localization_isDiscreteValuationRing
       K hf m hm0 hsmooth
-
   have hresidue := residue_finrank_eq_of_regular_dominating_valuation K A B E
     m q.asIdeal R hm0
     (affinePointExhaustiveFinitePlace_spec hf hpartialFirst hpartialSecond z).1
