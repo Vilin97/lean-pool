@@ -55,8 +55,8 @@ lemma gaussian_complex_pairing_abs_sq_integrable
     (gaussianFreeFieldFree m).toMeasure := by
   classical
   -- Split the complex test function into real and imaginary parts
-  set φRe : TestFunction := (complexTestFunctionDecompose φ).1
-  set φIm : TestFunction := (complexTestFunctionDecompose φ).2
+  set φRe : OSforGFF.TestFunction := (complexTestFunctionDecompose φ).1
+  set φIm : OSforGFF.TestFunction := (complexTestFunctionDecompose φ).2
   -- Use the proven theorem from GFFbridge (derives from gff_pairing_is_gaussian)
   have hRe_mem :
       MemLp (distributionPairingCLM φRe) (2 : ENNReal)
@@ -110,10 +110,10 @@ theorem gaussian_pairing_product_integrable_free_2point
   -- gaussian_complex_pairing_abs_sq_integrable)
   classical
   -- Decompose φ and ψ into real and imaginary parts
-  set φRe : TestFunction := (complexTestFunctionDecompose φ).1
-  set φIm : TestFunction := (complexTestFunctionDecompose φ).2
-  set ψRe : TestFunction := (complexTestFunctionDecompose ψ).1
-  set ψIm : TestFunction := (complexTestFunctionDecompose ψ).2
+  set φRe : OSforGFF.TestFunction := (complexTestFunctionDecompose φ).1
+  set φIm : OSforGFF.TestFunction := (complexTestFunctionDecompose φ).2
+  set ψRe : OSforGFF.TestFunction := (complexTestFunctionDecompose ψ).1
+  set ψIm : OSforGFF.TestFunction := (complexTestFunctionDecompose ψ).2
   -- For each real component, we have L² integrability from the proven theorem
   have hφRe_mem : MemLp (distributionPairingCLM φRe) (2 : ENNReal) (gaussianFreeFieldFree
     m).toMeasure :=
