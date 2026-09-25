@@ -6,4 +6,3 @@ Authors: Jim Fowler, Dennis Sweeney
 module
 
 public import LeanPool.OneManifold.OneMfld.Classification
-
