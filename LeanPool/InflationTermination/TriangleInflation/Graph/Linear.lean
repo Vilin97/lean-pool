@@ -22,10 +22,9 @@ density for `tq ≤ 1/16` (`triW_ge`), through the division-free form `triW_core
 packet's `1 − cos ∑θ_g ≤ 3 ∑ (1 − cos θ_g)`; the complete moment table `triW_moment`; the
 normalization `triW_sum` and hence `triDensity_isLaw`; and `triParity_isLaw`.
 
-Not proved here (moved to `InflationGraphOpen/Linear.lean`): `triangle_linear_witness` and
-`square_linear_witness`, which need the
-pushforward of the density along the copied-observation map together with the symmetry, the
-diagonal law and the injectable/ancestral prescriptions.
+`Graph/TriangleWitness.lean` and `Graph/SquareWitness.lean` complete `triangle_linear_witness`
+and `square_linear_witness` using the pushforward of this density along the copied-observation
+map together with symmetry, the diagonal law and the injectable/ancestral prescriptions.
 -/
 
 @[expose] public section
@@ -69,51 +68,14 @@ omit [DecidableEq ι] in
 theorem walsh_orthogonality (w v : ι → Bool) :
     ∑ S : Finset ι, walsh S w * walsh S v =
       if w = v then (2 : ℝ) ^ (Fintype.card ι) else 0 := by
-  classical
-  have hrw : ∀ S : Finset ι, walsh S w * walsh S v = ∏ i ∈ S, (sgn (w i) * sgn (v i)) := by
-    intro S; rw [walsh, walsh, ← Finset.prod_mul_distrib]
-  simp only [hrw]
-  rw [sum_prod_subsets]
-  by_cases h : w = v
-  · subst h
-    rw [ite_eq_left rfl]
-    simp only [sgn_mul_self]
-    norm_num [Finset.prod_const, Finset.card_univ]
-  · rw [ite_eq_right h]
-    obtain ⟨i, hi⟩ : ∃ i, w i ≠ v i := by
-      by_contra hc
-      exact h (funext (fun i => not_not.1 (fun hne => hc ⟨i, hne⟩)))
-    refine Finset.prod_eq_zero (Finset.mem_univ i) ?_
-    rw [sgn_mul_sgn, ite_eq_right hi]; ring
+  simpa only [walsh, Finset.prod_mul_distrib] using sum_prod_sgn_mul w v
 
 /-- A weight function on `ι → Bool` is determined by its Walsh moments. -/
 theorem funext_of_walsh_moments (P Q : (ι → Bool) → ℝ)
     (h : ∀ S : Finset ι, ∑ w, walsh S w * P w = ∑ w, walsh S w * Q w) : P = Q := by
-  funext v
-  have hzero : ∀ S : Finset ι, ∑ w, walsh S w * (P w - Q w) = 0 := by
-    intro S
-    have := h S
-    simp only [mul_sub]
-    rw [Finset.sum_sub_distrib, this, sub_self]
-  have key : (2 : ℝ) ^ (Fintype.card ι) * (P v - Q v)
-      = ∑ S : Finset ι, walsh S v * ∑ w, walsh S w * (P w - Q w) := by
-    have : ∀ S : Finset ι, walsh S v * ∑ w, walsh S w * (P w - Q w)
-        = ∑ w, (walsh S w * walsh S v) * (P w - Q w) := by
-      intro S; rw [Finset.mul_sum]; exact Finset.sum_congr rfl (by intros; ring)
-    simp only [this]
-    rw [Finset.sum_comm]
-    have : ∀ w : ι → Bool, ∑ S : Finset ι, walsh S w * walsh S v * (P w - Q w)
-        = (if w = v then (2 : ℝ) ^ (Fintype.card ι) else 0) * (P w - Q w) := by
-      intro w; rw [← Finset.sum_mul, walsh_orthogonality]
-    simp only [this]
-    simp only [ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
-  simp only [hzero, mul_zero, Finset.sum_const_zero] at key
-  have h2 : (0:ℝ) < (2 : ℝ) ^ (Fintype.card ι) := by positivity
-  have : P v - Q v = 0 := by
-    rcases mul_eq_zero.1 key with h' | h'
-    · exact absurd h' (ne_of_gt h2)
-    · exact h'
-  linarith
+  apply eq_of_walsh_moments_eq P Q
+  intro S
+  simpa only [walsh, mul_comm] using h S
 
 /-- The generating identity behind the moment table: pairing the Walsh character `χ_S`
 against a product weight replaces the coordinate sum `k v true + k v false` by the

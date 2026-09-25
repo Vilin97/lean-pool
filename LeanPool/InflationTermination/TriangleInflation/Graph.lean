@@ -45,9 +45,9 @@ corrected Fourier density with its positivity and moment table and the triangle 
 and the classification theorem itself (`classification_NW_lib`, `classification_AI`,
 `classification_exp`).
 
-Every module here is proved and is imported by the library root. The one statement of the
-pair-source sections that is not yet proved, the square witness at `q = 1/(16t)`
-(`square_linear_witness`), is not part of this repository at all: the verification gate
-refuses an open proof outside the two Challenges. The Coverage table in `README.md` records
-which paper statements each proved declaration covers.
+Every module here is proved and is imported by the library root. `Graph/SquareWitness.lean`
+proves the square witness `square_linear_witness` at `q = 1/(16t)`, complementing the triangle
+witness at the same parameter. The classification uses finite latent alphabets and graphs
+without isolated vertices. The [pinned upstream coverage table](https://github.com/williamjblair/inflation-termination/blob/2aa1f05ce932fdeef3896c83d287abd77cd8befb/README.md#what-is-formalized)
+records the remaining scope of the imported statements.
 -/

@@ -10259,10 +10259,11 @@ projects:
 
   - slug: inflation-termination
     title: Inflation termination for classical pair-source networks
-    summary: 'Classifies binary pair-source networks whose inflation hierarchy terminates:
-      precisely forests of double stars, where order two suffices. Includes triangle
-      nontermination, quantitative obstructions, finite and measurable Finner inequalities,
-      and graph witnesses.'
+    summary: 'For finite binary pair-source networks without isolated vertices, classifies
+      when the inflation hierarchy characterizes compatibility with finite latent alphabets:
+      precisely forests of double stars, where order two suffices. Also proves triangle
+      nontermination for arbitrary measurable latent probability spaces, quantitative
+      obstructions, finite and measurable Finner inequalities, and graph witnesses.'
     branch: causal inference and probability
     entry_module: LeanPool.InflationTermination
     authors:
@@ -10278,11 +10279,12 @@ projects:
     - TriangleInflation.Graph.classification_NW
     main_results:
     - declaration: TriangleInflation.Graph.classification_NW
-      informal: A finite order of the Navascués–Wolfe hierarchy characterizes compatibility
-        exactly for double-star forests, and order two suffices there.
-    - declaration: TriangleInflation.no_finite_characterizing_order
-      informal: At every positive inflation order, a triangle law passes the test but
-        has no compatible latent-variable model.
+      informal: For finite binary pair-source graphs without isolated vertices, some
+        finite order of the Navascués–Wolfe hierarchy characterizes compatibility with
+        finite latent alphabets exactly for double-star forests; order two suffices there.
+    - declaration: TriangleInflation.no_finite_characterizing_orderM
+      informal: At every positive inflation order, a triangle law passes both the AI
+        and NW tests but has no compatible model over any measurable latent probability spaces.
     tags:
     - causal-inference
     - probability
