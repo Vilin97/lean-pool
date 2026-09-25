@@ -1,0 +1,213 @@
+/-
+Copyright (c) 2026 Scott Armstrong, Vlad Vicol. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Armstrong, Vlad Vicol
+-/
+module
+
+public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientOriginCellInstanceWholeFinite
+public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.PressureGradientOriginCellInstanceTimeHolder
+
+/-!
+# Compact-time integrability of the centered source majorant
+
+The centered tensor-source bound in `eq:pressure-gradient-morrey` is finite
+and integrable on compact time windows of any local box. This is the source
+contribution to the time obligations in `prop:bootstrap`; the pressure and
+force-potential contributions are separate.
+-/
+
+@[expose] public section
+
+section
+
+/-!
+# Local velocity moments throughout the solution domain
+
+The cylinder integrability of the velocity cube extends to every compact
+space-time subset of the solution domain. This supplies the time integrals
+on arbitrary compact windows in `prop:bootstrap`, without restricting time
+to the origin unit cylinder.
+-/
+
+open MeasureTheory Set Filter
+open scoped ENNReal NNReal Topology
+open CKN.Foundation.Parabolic
+
+noncomputable section
+namespace CKN.Core.Step4
+
+/-- The velocity cube of a suitable solution is locally integrable at every
+point of its open space-time domain. -/
+theorem origin_velocity_cube_locallyIntegrableOn_of_sws
+    {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
+    {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
+    {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}
+    (hsol : IsSuitableWeakSolutionIntegrable Ω I q u Du p f) :
+    LocallyIntegrableOn (fun w => vec3EuclideanNorm (u w) ^ (3 : ℕ)) (spaceTimeSet Ω I) volume := by
+  intro z hz
+  obtain ⟨ε, hε, hεsub⟩ := Metric.mem_nhds_iff.mp
+    ((isOpen_spaceTimeSet Ω I hsol.1 hsol.2.1).mem_nhds hz)
+  let R := ε / 4
+  have hR : 0 < R := by dsimp [R]; positivity
+  have h2R : 0 < 2 * R := by positivity
+  have hsub : closure (parabolicCylinder z.1 (z.2 + R ^ 2) (2 * R)) ⊆ spaceTimeSet Ω I := by
+    intro w hw
+    rw [closure_parabolicCylinder h2R] at hw
+    apply hεsub
+    rw [Metric.mem_ball, dist_eq_parabolicDist]
+    change max (vec3EuclideanNorm (w.1 - z.1)) (Real.sqrt |w.2 - z.2|) < ε
+    apply max_lt
+    · have hspace := hw.1
+      change vec3EuclideanNorm (w.1 - z.1) ≤ 2 * R at hspace
+      dsimp [R] at hspace
+      linarith only [hspace, hε]
+    · apply (Real.sqrt_lt' hε).mpr
+      have htime : |w.2 - z.2| ≤ 3 * R ^ 2 := by
+        rw [abs_le]
+        constructor <;> nlinarith only [hw.2.1, hw.2.2]
+      have hlt : 3 * R ^ 2 < ε ^ 2 := by
+        dsimp [R]
+        nlinarith only [sq_pos_of_pos hε]
+      exact htime.trans_lt hlt
+  refine ⟨parabolicCylinder z.1 (z.2 + R ^ 2) (2 * R),
+    mem_nhdsWithin_of_mem_nhds ?_, tsai_integrable_velocity_cube_on_cylinder (z := (z.1, z.2 + R ^
+      2)) hsol h2R hsub⟩
+  apply mem_interior_iff_mem_nhds.mp
+  rw [interior_parabolicCylinder]
+  refine ⟨?_, ?_, ?_⟩
+  · rw [mem_vec3Ball, sub_self, vec3EuclideanNorm_zero]
+    exact h2R
+  · nlinarith only [sq_pos_of_pos hR]
+  · linarith only [sq_pos_of_pos hR]
+
+/-- The velocity cube is integrable on any local box, including compact
+time windows anywhere in the solution interval. -/
+theorem origin_velocity_cube_integrable_on_local_box
+    {Ω B : Set Vec3} {I J : Set ℝ} {q : ℝ}
+    {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
+    {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}
+    (hsol : IsSuitableWeakSolutionIntegrable Ω I q u Du p f) (hbox : localBox Ω I B J) :
+    IntegrableOn (fun w => vec3EuclideanNorm (u w) ^ (3 : ℕ)) (spaceTimeSet B J) volume := by
+  have hcompact : IsCompact (parabolicHomeomorph ⁻¹' (closure B ×ˢ closure J)) :=
+    parabolicHomeomorph.isCompact_preimage.mpr (hbox.2.1.prod hbox.2.2.2.2.1)
+  have hsub : parabolicHomeomorph ⁻¹' (closure B ×ˢ closure J) ⊆ spaceTimeSet Ω I := by
+    intro w hw
+    exact ⟨hbox.2.2.1 hw.1, hbox.2.2.2.2.2 hw.2⟩
+  have hh := (origin_velocity_cube_locallyIntegrableOn_of_sws hsol).integrableOn_compact_subset
+    hsub hcompact
+  exact hh.mono_set (fun w hw => ⟨subset_closure hw.1, subset_closure hw.2⟩)
+
+end CKN.Core.Step4
+end
+
+end
+
+open MeasureTheory Set Filter
+open scoped ENNReal NNReal Topology
+open CKN.Foundation.Parabolic
+
+noncomputable section
+namespace CKN.Core.Step4
+
+/-- The two-term bound for the sum of the centered tensor-source norms. -/
+def originCenteredSourceMajorant (x : Vec3) (ρ : ℝ)
+    (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3) (s : ℝ) : ℝ≥0∞ :=
+  let U := eLpNorm (fun y => vec3EuclideanNorm (u (y, s)))
+    (ENNReal.ofReal (3 : ℝ)) (volume.restrict (vec3Ball x ρ))
+  let D := eLpNorm (fun y => ‖Du (y, s)‖)
+    (ENNReal.ofReal (2 : ℝ)) (volume.restrict (vec3Ball x ρ))
+  9 * (8 : ℝ≥0∞) ^ (1 / 3 : ℝ) *
+    (D * U + (ENNReal.ofReal (cutoffGradientConstant / ρ) *
+      volume (vec3Ball x ρ) ^ (1 / 6 : ℝ)) * (U * U))
+
+private theorem integrable_toReal_of_power
+    {μ : Measure ℝ} {K : ℝ → ℝ≥0∞} {P : ℝ}
+    (hP : 1 ≤ P) (hμ : μ univ < ⊤) (hm : AEMeasurable K μ)
+    (hfin : (∫⁻ s, K s ^ P ∂μ) < ⊤) :
+    (∀ᵐ s ∂μ, K s ≠ ⊤) ∧ Integrable (fun s => (K s).toReal) μ := by
+  have hle : (∫⁻ s, K s ∂μ) ≤ ∫⁻ s, 1 + K s ^ P ∂μ := by
+    apply lintegral_mono
+    intro s
+    by_cases hs : K s ≤ 1
+    · exact hs.trans le_self_add
+    · have hh := ENNReal.rpow_le_rpow_of_exponent_le (le_of_not_ge hs) hP
+      simpa only [ENNReal.rpow_one] using hh.trans le_add_self
+  rw [lintegral_add_left measurable_const, lintegral_const, one_mul] at hle
+  have htop := hle.trans_lt (ENNReal.add_lt_top.mpr ⟨hμ, hfin⟩)
+  exact ⟨(ae_lt_top' hm htop.ne).mono (fun _ h => h.ne),
+    integrable_toReal_of_lintegral_ne_top hm htop.ne⟩
+
+/-- On any local ball-times-window box, suitability gives measurable,
+finite and integrable centered-source majorant without a decay hypothesis. -/
+theorem origin_centered_source_majorant_obligations_on_local_box
+    {Ω : Set Vec3} {I J : Set ℝ} {q ρ : ℝ} {x : Vec3}
+    {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
+    {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3}
+    (hsol : IsSuitableWeakSolutionIntegrable Ω I q u Du p f)
+    (hbox : localBox Ω I (vec3Ball x ρ) J) :
+    AEMeasurable (originCenteredSourceMajorant x ρ u Du) (volume.restrict J) ∧
+      (∀ᵐ s ∂volume.restrict J, originCenteredSourceMajorant x ρ u Du s ≠ ⊤) ∧
+      Integrable (fun s => (originCenteredSourceMajorant x ρ u Du s).toReal) (volume.restrict J)
+        := by
+  let U := fun s => eLpNorm (fun y => vec3EuclideanNorm (u (y, s)))
+    (ENNReal.ofReal (3 : ℝ)) (volume.restrict (vec3Ball x ρ))
+  let D := fun s => eLpNorm (fun y => ‖Du (y, s)‖)
+    (ENNReal.ofReal (2 : ℝ)) (volume.restrict (vec3Ball x ρ))
+  have hdata := hsol.2.2.2.2.2.1 (vec3Ball x ρ) J hbox
+  have hcont : Continuous (vec3EuclideanNorm : Vec3 → ℝ) := by
+    unfold vec3EuclideanNorm
+    fun_prop
+  have hum : AEMeasurable (fun w : Vec3 × ℝ => vec3EuclideanNorm (u w))
+      (volume.restrict (vec3Ball x ρ ×ˢ J)) :=
+    (hcont.comp_aestronglyMeasurable hdata.1).aemeasurable
+  have hdm : AEMeasurable (fun w : Vec3 × ℝ => ‖Du w‖)
+      (volume.restrict (vec3Ball x ρ ×ˢ J)) := hdata.2.1.norm.aemeasurable
+  have hUm : AEMeasurable U (volume.restrict J) :=
+    origin_time_slice_norm_aemeasurable (g := fun w => vec3EuclideanNorm (u w)) (by norm_num) hum
+  have hDm : AEMeasurable D (volume.restrict J) :=
+    origin_time_slice_norm_aemeasurable (g := fun w => ‖Du w‖) (by norm_num) hdm
+  have hU : (∫⁻ s in J, U s ^ (3 : ℝ)) < ⊤ := by
+    rw [origin_time_slice_norm_power_eq (by norm_num) hum]
+    have hh := (origin_velocity_cube_integrable_on_local_box hsol hbox).hasFiniteIntegral
+    change (∫⁻ w : Vec3 × ℝ in vec3Ball x ρ ×ˢ J,
+      ‖vec3EuclideanNorm (u w) ^ (3 : ℕ)‖ₑ) < ⊤ at hh
+    simp only [Real.enorm_eq_ofReal_abs, abs_pow,
+      abs_of_nonneg (vec3EuclideanNorm_nonneg _),
+      ENNReal.ofReal_pow (vec3EuclideanNorm_nonneg _) 3] at hh
+    simpa only [abs_of_nonneg (vec3EuclideanNorm_nonneg _), ENNReal.rpow_ofNat] using hh
+  have hD : (∫⁻ s in J, D s ^ (2 : ℝ)) < ⊤ := by
+    rw [origin_time_slice_norm_power_eq (by norm_num) hdm]
+    have hh := (lintegral_mono (fun w : ParabolicPoint =>
+      show ‖Du w‖ₑ ^ (2 : ℝ) ≤ ‖u w‖ₑ ^ (2 : ℝ) + ‖Du w‖ₑ ^ (2 : ℝ) from le_add_self)).trans_lt
+      hdata.2.2.2.2.2.1
+    change (∫⁻ w : Vec3 × ℝ in vec3Ball x ρ ×ˢ J, ‖Du w‖ₑ ^ (2 : ℝ)) < ⊤ at hh
+    simpa only [abs_of_nonneg (norm_nonneg _), ofReal_norm] using hh
+  have hJ : (volume.restrict J) univ < ⊤ := by
+    rw [Measure.restrict_apply_univ]
+    exact (measure_mono subset_closure).trans_lt hbox.2.2.2.2.1.measure_lt_top
+  have hB : volume (vec3Ball x ρ) < ⊤ :=
+    (measure_mono subset_closure).trans_lt hbox.2.1.measure_lt_top
+  have hm : AEMeasurable (originCenteredSourceMajorant x ρ u Du) (volume.restrict J) :=
+    aemeasurable_const.mul ((hDm.mul hUm).add (aemeasurable_const.mul (hUm.mul hUm)))
+  have hbound := origin_time_two_product_majorant_bound
+    (9 * (8 : ℝ≥0∞) ^ (1 / 3 : ℝ))
+    (ENNReal.ofReal (cutoffGradientConstant / ρ) * volume (vec3Ball x ρ) ^ (1 / 6 : ℝ))
+    hUm hDm (Eventually.of_forall (fun s => le_refl (originCenteredSourceMajorant x ρ u Du s)))
+  have hfin : (∫⁻ s in J, originCenteredSourceMajorant x ρ u Du s ^ (6 / 5 : ℝ)) < ⊤ := by
+    apply hbound.trans_lt
+    have hp {a : ℝ≥0∞} {b : ℝ} (ha : a < ⊤) (hb : 0 ≤ b) : a ^ b < ⊤ :=
+      ENNReal.rpow_lt_top_of_nonneg hb ha.ne
+    apply ENNReal.mul_lt_top
+    · exact ENNReal.mul_lt_top
+        (hp (ENNReal.mul_lt_top (by norm_num) (hp (by norm_num) (by norm_num))) (by norm_num))
+        (hp (by norm_num) (by norm_num))
+    · apply ENNReal.add_lt_top.mpr
+      constructor
+      · exact ENNReal.mul_lt_top (hp hU (by norm_num)) (hp hD (by norm_num))
+      · exact ENNReal.mul_lt_top
+          (hp (ENNReal.mul_lt_top ENNReal.ofReal_lt_top (hp hB (by norm_num))) (by norm_num))
+          (ENNReal.mul_lt_top (hp hU (by norm_num)) (hp hJ (by norm_num)))
+  exact ⟨hm, integrable_toReal_of_power (by norm_num) hJ hm hfin⟩
+
+end CKN.Core.Step4
