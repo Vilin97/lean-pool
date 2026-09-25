@@ -22,7 +22,7 @@ public import LeanPool.ScottishBook155.LimitCardinal
 
 namespace ScottishBook155
 
-local notation "RI" => RecursionIndex.{0}
+local notation "RI" => RecursionIndexZero
 
 /-- A coherent chain on a closed initial segment, with the cardinal bounds
 needed to enumerate every target stage. -/

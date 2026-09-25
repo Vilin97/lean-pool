@@ -23,7 +23,7 @@ namespace ScottishBook155
 
 noncomputable section
 
-local notation "RI" => RecursionIndex.{0}
+local notation "RI" => RecursionIndexZero
 
 private structure Requirement where
   stage : RI

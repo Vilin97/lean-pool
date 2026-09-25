@@ -23,7 +23,7 @@ the schedule gives surjectivity of the final map.
 
 namespace ScottishBook155
 
-local notation "RI" => RecursionIndex.{0}
+local notation "RI" => RecursionIndexZero
 
 /-- The exact output required from the transfinite recursion. -/
 structure ScheduledProtectedChain where

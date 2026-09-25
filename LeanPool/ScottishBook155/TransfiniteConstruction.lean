@@ -24,7 +24,7 @@ scheduled chain supplies the unconditional witness for `Claim14`.
 
 namespace ScottishBook155
 
-local notation "RI" => RecursionIndex.{0}
+local notation "RI" => RecursionIndexZero
 
 @[simp]
 theorem successorSegmentWithTop_apply_top (j : RI) :

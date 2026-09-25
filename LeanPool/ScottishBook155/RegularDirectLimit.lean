@@ -23,7 +23,7 @@ namespace ScottishBook155
 
 open Filter
 
-local notation "RI" => RecursionIndex.{0}
+local notation "RI" => RecursionIndexZero
 
 /-- A countable family of recursion indices has a strict upper bound. -/
 theorem recursionIndex_nat_bounded (a : ℕ → RI) :

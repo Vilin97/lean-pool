@@ -58,6 +58,9 @@ theorem aleph0_lt_recursionCardinal :
 /-- A same-universe well-ordered type of recursion indices. -/
 abbrev RecursionIndex := recursionCardinal.ord.ToType
 
+/-- The recursion index type in the base universe. -/
+abbrev RecursionIndexZero := RecursionIndex.{0}
+
 noncomputable instance recursionIndexNonempty :
     Nonempty (RecursionIndex.{u}) := by
   apply Cardinal.mk_ne_zero_iff.mp

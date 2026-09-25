@@ -18,7 +18,7 @@ public import LeanPool.ScottishBook155.ProtectedChainTransport
 
 namespace ScottishBook155
 
-local notation "RI" => RecursionIndex.{0}
+local notation "RI" => RecursionIndexZero
 
 /-- A family of closed prefixes which literally restrict to one another. -/
 structure CompatiblePrefixFamily (j : RI) where

@@ -16,7 +16,7 @@ public import LeanPool.ScottishBook155.ScheduledSuccessor
 
 namespace ScottishBook155
 
-local notation "RI" => RecursionIndex.{0}
+local notation "RI" => RecursionIndexZero
 
 /-- A protected stage together with the uniform cardinal bounds and the
 enumeration used by bookkeeping. -/
