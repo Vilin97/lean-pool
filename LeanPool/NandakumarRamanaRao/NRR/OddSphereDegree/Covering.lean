@@ -121,7 +121,9 @@ private local instance antipodalIsCancelSMul (n : ℕ) : IsCancelSMul DeckGroup 
     fin_cases a <;> simp_all +decide
   right_cancel' := by
     intro a b c h
-    fin_cases a <;> fin_cases b <;> simp_all? +decide [antipodalSMul_def] <;>
+    fin_cases a <;> fin_cases b <;> simp_all +decide only
+        [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, Function.Embedding.coeFn_mk, antipodalSMul_def,
+          ↓reduceIte, Fin.mk_one] <;>
       first
         | exact absurd h (ne_neg_of_mem_unit_sphere ℝ c)
         | exact absurd h.symm (ne_neg_of_mem_unit_sphere ℝ c)

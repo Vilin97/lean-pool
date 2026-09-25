@@ -54,7 +54,8 @@ theorem exists_separating_unit {D : Set Plane} (hconv : Convex ℝ D)
     (hcomp : IsCompact D) (hne : D.Nonempty) {x : Plane} (hx : x ∉ D) :
     ∃ u : Plane, ‖u‖ = 1 ∧ ∀ y ∈ D, ⟪y, u⟫ ≤ ⟪x, u⟫ := by
   obtain ⟨ p, hp, h ⟩ := hcomp.exists_infDist_eq_dist hne x;
-  refine ⟨ ‖x - p‖⁻¹ • ( x - p ), ?_, ?_ ⟩ <;> simp_all? +decide [ norm_smul, dist_eq_norm' ];
+  refine ⟨ ‖x - p‖⁻¹ • ( x - p ), ?_, ?_ ⟩ <;> simp_all +decide only
+      [dist_eq_norm', norm_smul, norm_inv, norm_norm];
   · rw [ inv_mul_cancel₀ ( norm_ne_zero_iff.mpr ( sub_ne_zero.mpr ( by aesop ) ) ) ];
   · -- By the variational inequality for the metric projection, we have ⟪x - p, y - p⟫ ≤ 0 for all y
     -- ∈ D.
@@ -64,7 +65,7 @@ theorem exists_separating_unit {D : Set Plane} (hconv : Convex ℝ D)
       · rw [ norm_sub_rev ];
       · rw [ Metric.infDist_eq_iInf ];
         simp +decide only [dist_eq_norm];
-    simp_all +decide [ inner_sub_left, inner_sub_right, inner_smul_right ];
+    simp_all? +decide [ inner_sub_left, inner_sub_right, inner_smul_right ];
     intro y hy; rw [ mul_le_mul_iff_right₀ ( inv_pos.mpr ( norm_pos_iff.mpr ( sub_ne_zero.mpr <| by
       aesop ) ) ) ]; simp_all +decide [ real_inner_comm ];
     nlinarith [ h_var y hy, norm_nonneg ( x - p ), norm_sub_sq_real x p,
@@ -181,7 +182,7 @@ theorem eventually_not_mem_of_not_mem
     {x : Plane} (hx : x ∉ (C₀.body : Set Plane)) :
     ∀ᶠ a in l, x ∉ ((C a).body : Set Plane) := by
   obtain ⟨d, hd_pos, hd⟩ : ∃ d > 0, Metric.infDist x (C₀.body : Set Plane) = d := by
-    refine ⟨ ?_, ?_, rfl ⟩;
+    refine ⟨Metric.infDist x (C₀.body : Set Plane), ?_, rfl⟩;
     contrapose! hx;
     exact C₀.isCompact.isClosed.closure_subset_iff.mpr ( Set.Subset.refl _ ) (
       Metric.mem_closure_iff.mpr fun ε εpos => by

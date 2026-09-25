@@ -50,7 +50,9 @@ theorem cell_inter_subset_bisector (s : Fin n → E2) (w : Fin n → ℝ) {i j :
     cell s w i ∩ cell s w j ⊆
       {x : E2 | ⟪sepNormal s i j, x⟫ = sepOffset s w i j} := by
   intro x hx;
-  simp_all? +decide [ cell, powerDist, sepNormal, sepOffset ];
+  simp_all +decide only
+      [cell, powerDist, tsub_le_iff_right, Set.mem_inter_iff, Set.mem_ofPred_eq, sepNormal,
+        sepOffset];
   have := hx.1 j; have := hx.2 i; norm_num [ EuclideanSpace.norm_eq, Real.sq_sqrt <| add_nonneg
     ( sq_nonneg _ ) ( sq_nonneg _ ) ] at *;
   norm_num [ two_smul, inner ]; linarith!;

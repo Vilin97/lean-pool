@@ -154,7 +154,9 @@ theorem card_topCatSphere_zero :
     refine ⟨ ⟨ EuclideanSpace.single 0 1, ?_ ⟩, ⟨ -EuclideanSpace.single 0 1, ?_ ⟩, ?_, ?_ ⟩ <;>
       norm_num [ Set.ext_iff ];
     · exact ne_of_apply_ne ( fun x => x 0 ) ( by norm_num );
-    · intro a ha; rw [ EuclideanSpace.norm_eq ] at ha; simp_all? +decide [ Fin.eq_zero ];
+    · intro a ha; rw [ EuclideanSpace.norm_eq ] at ha; simp_all +decide only
+        [Nat.reduceAdd, Finset.univ_unique, Fin.eq_zero, Fin.isValue, Real.norm_eq_abs, sq_abs,
+          Finset.sum_const, Finset.card_singleton, one_smul, Real.sqrt_eq_one, sq_eq_one_iff];
       exact Or.imp ( fun h => by
         ext i; fin_cases i; aesop ) ( fun h => by
         ext i; fin_cases i; aesop ) ha;

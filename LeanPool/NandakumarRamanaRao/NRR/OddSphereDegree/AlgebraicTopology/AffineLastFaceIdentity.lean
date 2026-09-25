@@ -90,10 +90,10 @@ theorem affineSubdiv_face_last_eq_boundary_subdiv_of_faceData {n : ℕ}
       = SphereOddDegree.FiniteSimplex.map (S := ℝ) ι (affineSubdivMap n ρ y) := by
   classical
   ext j;
-  simp? +decide [ *, affineSubdivMap_apply, FunOnFinite.linearMap_apply_apply,
-    SphereOddDegree.FiniteSimplex.map_coe ];
+  simp +decide only
+      [affineSubdivMap_apply, FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply, hy];
   rw [ Fin.sum_univ_castSucc ];
-  simp +decide [ ← hy, prefixBarycenter_castSucc_eq_map_of_prefix π ι ρ hιρ ];
+  simp? +decide [ ← hy, prefixBarycenter_castSucc_eq_map_of_prefix π ι ρ hιρ ];
   simp +decide [ Finset.sum_filter, Finset.mul_sum _ _ _, mul_comm,
     FunOnFinite.linearMap_apply_apply ];
   rw [ Finset.sum_comm ];

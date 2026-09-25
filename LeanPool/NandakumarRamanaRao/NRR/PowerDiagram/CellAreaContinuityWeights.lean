@@ -88,7 +88,9 @@ theorem bodyCellSet_eq_finiteHalfspaceIntersection_offDiag
         (fun j : {j : Fin n // j ≠ i} => sepNormal s i j.1)
         (fun j : {j : Fin n // j ≠ i} => sepOffset s w i j.1) := by
   convert Set.ext _;
-  intro x; simp? +decide [ finiteHalfspaceIntersection ];
+  intro x; simp +decide only
+      [bodyCellSet_def, Set.mem_inter_iff, mem_coe, mem_cell, finiteHalfspaceIntersection, ne_eq,
+        Set.mem_iInter, mem_lowerClosedHalfspace, Subtype.forall, and_congr_right_iff];
   intro hx; constructor <;> intro h <;> intro j <;> by_cases hj : j = i <;> simp_all +decide [
     powerDist_le_iff_halfspace ];
 

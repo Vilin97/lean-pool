@@ -85,7 +85,7 @@ noncomputable def affineSubdivContinuousMap (n : ℕ)
 /-- Coordinate realization of Mathlib's intrinsic simplex. -/
 noncomputable def intrinsicSimplexCoordinates (n : ℕ) :
     Convexity.StdSimplex ℝ (Fin (n + 1)) ≃ₜ Delta n where
-  toFun x := ⟨x.weights, x.nonneg, by simp [Finsupp.sum_fintype]⟩
+  toFun x := ⟨x.weights, x.nonneg, by simp⟩
   invFun x :=
     { weights := Finsupp.equivFunOnFinite.symm x.1
       nonneg := x.2.1

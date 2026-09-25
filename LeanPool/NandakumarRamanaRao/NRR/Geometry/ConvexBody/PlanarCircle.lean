@@ -88,7 +88,9 @@ theorem continuous_circleVec : Continuous circleVec := by
   apply (PiLp.homeomorph 2 (fun _ : Fin 2 => ℝ)).symm.continuous.comp
   rw [continuous_pi_iff]
   intro i
-  fin_cases i <;> simp? <;> fun_prop
+  fin_cases i <;> simp only
+      [Nat.succ_eq_add_one, Nat.reduceAdd, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+        Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_fin_one] <;> fun_prop
 
 /-- The angle parameterization is `2π`-periodic. -/
 theorem circleVec_periodic : Function.Periodic circleVec (2 * Real.pi) := by

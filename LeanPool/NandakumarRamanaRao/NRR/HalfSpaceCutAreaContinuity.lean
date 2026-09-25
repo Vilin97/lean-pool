@@ -76,7 +76,8 @@ theorem continuous_cutAreaLower_fixedNormal
     · exact ContinuousOn.integrableOn_compact K.isCompact ( continuousOn_const );
     · refine MeasureTheory.ae_restrict_of_ae ?_;
       refine MeasureTheory.measure_mono_null (t := {x : Plane | ⟪u, x⟫ = c₀}) ?_ ?_
-      · intro x hx; contrapose! hx; simp_all? +decide [ ContinuousAt ];
+      · intro x hx; contrapose! hx; simp_all +decide only
+          [ne_eq, Set.mem_ofPred_eq, ContinuousAt, Set.mem_compl_iff, not_not];
         cases lt_or_gt_of_ne hx <;> split_ifs <;> norm_num at *;
         · exact tendsto_const_nhds.congr' ( by
             filter_upwards [ lt_mem_nhds ‹_› ] with y hy; split_ifs <;> linarith );
@@ -86,7 +87,7 @@ theorem continuous_cutAreaLower_fixedNormal
             filter_upwards [ Iio_mem_nhds ‹_› ] with y hy; split_ifs <;> linarith [ hy.out ] );
       · exact NRR.Halfspace.hyperplane_null hu c₀;
   convert h_int_cont using 1;
-  ext c; simp? +decide [ ConvexBody.cutAreaLower ];
+  ext c; simp +decide only [cutAreaLower];
   erw [ MeasureTheory.integral_indicator ( show MeasurableSet ( lowerClosedHalfspace u c ) from
     lowerClosedHalfspace_isClosed u c |> IsClosed.measurableSet ) ]; norm_num [
     lowerClosedHalfspace ];

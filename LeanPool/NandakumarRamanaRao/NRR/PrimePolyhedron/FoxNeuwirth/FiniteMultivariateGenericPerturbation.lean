@@ -52,7 +52,7 @@ theorem exists_common_eval_ne_zero
     (P : I → MvPolynomial J Real) (hP : ∀ i, P i ≠ 0) :
     ∃ b : J → Real, ∀ i, MvPolynomial.eval b (P i) ≠ 0 := by
   classical
-  letI := Fintype.ofFinite I
+  let := Fintype.ofFinite I
   let Q : MvPolynomial J Real := ∏ i, P i
   have hQ : Q ≠ 0 := by
     exact Finset.prod_ne_zero_iff.mpr fun i _ => hP i

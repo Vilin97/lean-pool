@@ -49,10 +49,10 @@ namespace SphereOddDegree
 antipodal: the one-dimensional unit sphere is the two-point set `{±e}`. -/
 theorem sphere_zero_eq_or_neg (x y : Sphere 0) : x = y ∨ x = -y := by
   rcases x with ⟨x, hx⟩; rcases y with ⟨y, hy⟩
-  simp_all? +decide
+  simp_all +decide only [Nat.reduceAdd, Subtype.mk.injEq]
   rw [mem_sphere_zero_iff_norm] at hx hy
   norm_num [EuclideanSpace.norm_eq] at hx hy
-  simp_all +decide [Fin.eq_zero, Subtype.ext_iff]
+  simp_all? +decide [Fin.eq_zero, Subtype.ext_iff]
   cases hx <;> cases hy <;> simp_all +decide
   · exact Or.inl (by ext i; fin_cases i; aesop)
   · exact Or.inr (by ext i; fin_cases i; aesop)
@@ -65,7 +65,7 @@ instance : Subsingleton (RP 0) := by
   refine ⟨fun a b => ?_⟩
   obtain ⟨x, rfl⟩ := RP.exists_rep a
   obtain ⟨y, rfl⟩ := RP.exists_rep b
-  simp? +decide
+  simp +decide only [proj_apply, Quotient.eq']
   exact sphere_zero_eq_or_neg x y
 
 /-- `RP⁰` is nonempty (it is the image of the nonempty `Sphere 0`). -/

@@ -111,8 +111,8 @@ theorem dist_vertex_step_le (n : ℕ) (V : Fin (n + 1) → E)
       ≤ (l.val : ℝ) / (l.val + 1) * Metric.diam (Set.range V) := by
   have h_step : V (π i) - (stepVertices n V π l) = (l.val + 1 : ℝ)⁻¹ • ∑ j ∈ Finset.Iic l, (V (π
     i) - V (π j)) := by
-    simp? [stepVertices]
-    simp [smul_sub, ← Nat.cast_smul_eq_nsmul ℝ]
+    simp only [stepVertices, sum_sub_distrib, sum_const, Fin.card_Iic]
+    simp? [smul_sub, ← Nat.cast_smul_eq_nsmul ℝ]
     rw [inv_smul_smul₀ (Nat.cast_add_one_ne_zero _)]
   have h_norm : ‖∑ j ∈ Finset.Iic l, (V (π i) - V (π j))‖ ≤ l.val * Metric.diam (Set.range V) := by
     have h_bound : ∀ j ∈ (Finset.Iic l).erase i, ‖V (π i) - V (π j)‖ ≤ Metric.diam (Set.range V)

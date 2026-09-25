@@ -114,8 +114,11 @@ theorem continuous_finiteHalfspaceIntersectionArea_pi [Finite ι]
   have h_dominated : ∀ᵐ x ∂volume, ContinuousAt (fun f : ι → ℝ => (K.finiteHalfspaceIntersection
     u f).indicator (fun _ => (1 : ℝ)) x) f₀ := by
     refine MeasureTheory.measure_mono_null (t := ⋃ i, {x : Plane | ⟪u i, x⟫ = f₀ i}) ?_ ?_
-    · intro x hx; contrapose! hx; simp_all? +decide [ ContinuousAt ];
-      by_cases hxK : x ∈ (K : Set Plane) <;> simp_all +decide [
+    · intro x hx; contrapose! hx; simp_all +decide only
+        [ne_eq, Set.mem_iUnion, Set.mem_ofPred_eq, not_exists, ContinuousAt,
+          tendsto_indicator_const_apply_iff_eventually, Set.mem_compl_iff, Filter.not_eventually,
+          Filter.not_frequently, not_not];
+      by_cases hxK : x ∈ (K : Set Plane) <;> simp_all? +decide [
         NRR.Geometry.ConvexBody.finiteHalfspaceIntersection ];
       by_cases h : ∀ i, ⟪u i, x⟫ ≤ f₀ i <;> simp_all +decide;
       · exact fun i => Filter.eventually_of_mem ( IsOpen.mem_nhds ( isOpen_lt ( continuous_const
@@ -133,7 +136,9 @@ theorem continuous_finiteHalfspaceIntersectionArea_pi [Finite ι]
     · exact K.isCompact.measurableSet;
   have h_dominated : ∀ᵐ x ∂volume, ∀ f : ι → ℝ, |(K.finiteHalfspaceIntersection u f).indicator
     (fun _ => (1 : ℝ)) x| ≤ (K : Set Plane).indicator (fun _ => (1 : ℝ)) x := by
-    filter_upwards [ ] with x f; by_cases hx : x ∈ K.carrier <;> simp? +decide [ hx ];
+    filter_upwards [ ] with x f; by_cases hx : x ∈ K.carrier <;> simp +decide only
+        [hx, Set.indicator_of_mem, not_false_eq_true, Set.indicator_of_notMem, abs_nonpos_iff,
+          Set.indicator_apply_eq_zero, one_ne_zero, imp_false];
     · by_cases h : x ∈ K.finiteHalfspaceIntersection u f <;> simp +decide [ h ];
     · exact fun h => hx h.1;
   have h_cont : ContinuousAt (fun f : ι → ℝ => ∫ x, (K.finiteHalfspaceIntersection u

@@ -111,9 +111,9 @@ theorem prefixVertex_internal_swap_reindex {n : ℕ}
           prefixVertex (n + 1)
             ((Equiv.swap (Fin.castSucc i) (Fin.succ i)).trans π) k (e t) := by
   classical
-  rcases lt_trichotomy k.val i.val with ( hk_lt | hk_eq | hk_gt ) <;> simp_all? +decide [
-    prefixVertex ];
-  · refine ⟨ Equiv.refl ?_, ?_ ⟩; simp +decide [ Equiv.swap_apply_def ];
+  rcases lt_trichotomy k.val i.val with ( hk_lt | hk_eq | hk_gt ) <;> simp_all +decide only
+      [ne_eq, prefixVertex, Equiv.trans_apply, EmbeddingLike.apply_eq_iff_eq];
+  · refine ⟨ Equiv.refl (Fin (k.val + 1)), ?_ ⟩; simp +decide [ Equiv.swap_apply_def ];
     grind;
   · exact False.elim <| hk <| Fin.ext hk_eq;
   · use Equiv.swap ⟨i.val, by omega⟩ ⟨i.val + 1, by omega⟩;

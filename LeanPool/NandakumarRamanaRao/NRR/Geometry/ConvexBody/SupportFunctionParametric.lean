@@ -95,7 +95,7 @@ theorem abs_supportFunction_sub_le_hausdorffDist_mul_norm
       have := L.isCompact.exists_infDist_eq_dist ( L.nonempty ) x; aesop;
     have h_inner_le : inner ℝ (x - y) u ≤ ‖x - y‖ * ‖u‖ := by
       exact real_inner_le_norm _ _;
-    simp_all? +decide [ dist_eq_norm, inner_sub_left ];
+    simp_all +decide only [mem_coe, dist_eq_norm, inner_sub_left, tsub_le_iff_right, ge_iff_le];
     exact h_inner_le.trans ( add_le_add ( mul_le_mul_of_nonneg_right ( h_dist_le x hx ) (
       norm_nonneg u ) ) ( L.inner_le_supportFunction hy ) );
   · obtain ⟨ x, hx, hx' ⟩ := L.exists_supportPoint u;
@@ -115,7 +115,8 @@ theorem abs_supportFunction_sub_le_hausdorffDist_mul_norm
     -- Using the triangle inequality and the definition of the support function, we have:
     have h_triangle : inner ℝ x u - inner ℝ y u ≤ ‖x - y‖ * ‖u‖ := by
       simpa [ inner_sub_left ] using abs_le.mp ( abs_real_inner_le_norm ( x - y ) u ) |>.2;
-    simp_all? +decide [ dist_eq_norm, Metric.hausdorffDist_comm ];
+    simp_all +decide only
+        [mem_coe, Metric.hausdorffDist_comm, dist_eq_norm, tsub_le_iff_right, ge_iff_le];
     exact h_triangle.trans ( add_le_add ( mul_le_mul_of_nonneg_right h_dist ( norm_nonneg u ) )
       ( ConvexBody.inner_le_supportFunction K hy ) )
 
