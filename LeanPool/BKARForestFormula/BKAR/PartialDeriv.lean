@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Pi
-import LeanPool.BKARForestFormula.BKAR.Interpolation
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Pi
+public import LeanPool.BKARForestFormula.BKAR.Interpolation
 
 /-! # Coordinate partial derivatives on the edge-coupling space
 
@@ -17,6 +19,8 @@ derivative `partialDeriv`, iterated mixed partials along a list of edges
 appearing in the integrand of the BKAR forest interpolation formula (see
 `BKAR.Formula`).
 -/
+
+@[expose] public section
 
 namespace BKAR
 

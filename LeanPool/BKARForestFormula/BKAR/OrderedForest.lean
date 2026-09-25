@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.OrderedExpansion
+module
+
+public import LeanPool.BKARForestFormula.BKAR.OrderedExpansion
 
 /-! # Ordered forest growth certificates
 
@@ -14,6 +16,8 @@ the first step and tail growth and the basic bookkeeping (edge sets,
 cardinalities) used throughout the ordered expansion of the BKAR forest
 interpolation formula (see `BKAR.Formula`).
 -/
+
+@[expose] public section
 
 namespace BKAR
 

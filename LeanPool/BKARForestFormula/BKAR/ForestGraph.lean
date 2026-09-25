@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
-import LeanPool.BKARForestFormula.BKAR.Forest
+module
+
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
+public import LeanPool.BKARForestFormula.BKAR.Forest
 
 /-! # Forests and Mathlib simple graphs
 
@@ -16,6 +18,8 @@ elsewhere: existence and uniqueness of simple paths in an acyclic edge set,
 and stability of acyclicity under adding an edge between distinct
 components.
 -/
+
+@[expose] public section
 
 noncomputable section
 

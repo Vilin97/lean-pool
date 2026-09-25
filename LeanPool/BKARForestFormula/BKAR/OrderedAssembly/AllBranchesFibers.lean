@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesTelescoping
+module
+
+public import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesTelescoping
 
 /-! # Fibers of the boundary tree sum
 
@@ -15,6 +17,8 @@ whose node has no active edges.  The root fibers assemble into the
 support/order form of the BKAR forest interpolation formula (see
 `BKAR.Formula`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

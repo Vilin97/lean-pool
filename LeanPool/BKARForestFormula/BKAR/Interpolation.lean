@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Basic.Real.Basic
-import LeanPool.BKARForestFormula.BKAR.Forest
+module
+
+public import Mathlib.Basic.Real.Basic
+public import LeanPool.BKARForestFormula.BKAR.Forest
 
 /-! # Path-minimum forest interpolation
 
@@ -19,6 +21,8 @@ minimum `pathMin`, the one-parameter family `interpWithFill` driving the
 inductive proof, and one-edge extensions `EdgeExtension` with their
 parameter transport.
 -/
+
+@[expose] public section
 
 namespace BKAR
 

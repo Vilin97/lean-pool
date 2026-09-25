@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.CubePartition.Orders
+module
+
+public import LeanPool.BKARForestFormula.BKAR.CubePartition.Orders
 
 /-! # Branch integrals and ordered contributions from the empty forest
 
@@ -14,6 +16,8 @@ the enumerations of the final edge set.  This links the recursion's
 bookkeeping to the per-order sector integrals of the BKAR forest
 interpolation formula (see `BKAR.Formula`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

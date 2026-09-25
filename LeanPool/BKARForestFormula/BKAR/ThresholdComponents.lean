@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Order.Partition.Finpartition
-import LeanPool.BKARForestFormula.BKAR.ForestGraph
-import LeanPool.BKARForestFormula.BKAR.Threshold
+module
+
+public import Mathlib.Order.Partition.Finpartition
+public import LeanPool.BKARForestFormula.BKAR.ForestGraph
+public import LeanPool.BKARForestFormula.BKAR.Threshold
 
 /-!
 # Threshold components for BKAR interpolation
@@ -17,6 +19,8 @@ formula (see `BKAR.Formula`): at threshold `s`, two
 vertices lie in the same partition cell exactly when they are connected by
 forest edges whose parameters are at least `s`.
 -/
+
+@[expose] public section
 
 namespace BKAR
 

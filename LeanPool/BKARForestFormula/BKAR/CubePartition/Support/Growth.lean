@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.CubePartition.Branches
+module
+
+public import LeanPool.BKARForestFormula.BKAR.CubePartition.Branches
 
 /-! # Growth-order bookkeeping for terminal branches
 
@@ -14,6 +16,8 @@ first edge, and `growthOrderTail` packages this decomposition.  These facts
 index the regrouping of branch contributions by support and order in the
 BKAR forest interpolation formula (see `BKAR.Formula`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

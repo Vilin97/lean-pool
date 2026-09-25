@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.CubePartition.Orders
-import LeanPool.BKARForestFormula.BKAR.Smoothness
+module
+
+public import LeanPool.BKARForestFormula.BKAR.CubePartition.Orders
+public import LeanPool.BKARForestFormula.BKAR.Smoothness
 
 /-! # Continuity of sector parametrizations
 
@@ -14,6 +16,8 @@ continuity after appending one edge, and interval-integrability of the
 mixed-partial integrand along the appended coordinate.  Analytic input for
 converting nested simplex integrals into sector set integrals.
 -/
+
+@[expose] public section
 
 namespace BKAR
 

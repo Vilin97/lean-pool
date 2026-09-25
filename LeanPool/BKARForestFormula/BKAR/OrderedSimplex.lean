@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.OrderedForest
+module
+
+public import LeanPool.BKARForestFormula.BKAR.OrderedForest
 
 /-! # Nested integrals over ordered simplices
 
@@ -14,6 +16,8 @@ These nested one-dimensional integrals are the raw form in which the
 ordered expansion of the BKAR forest interpolation formula (see
 `BKAR.Formula`) first produces its remainder terms.
 -/
+
+@[expose] public section
 
 noncomputable section
 

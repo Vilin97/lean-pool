@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesFiberBridge.Core
+module
+
+public import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesFiberBridge.Core
 
 /-! # The fiber bridge: order sums and low-rank cases
 
@@ -12,6 +14,8 @@ fiber contribution equals the ordered contribution of the grown forest
 when `followOrder` succeeds and vanishes otherwise, with the empty,
 singleton, and pair supports worked out explicitly.
 -/
+
+@[expose] public section
 
 noncomputable section
 

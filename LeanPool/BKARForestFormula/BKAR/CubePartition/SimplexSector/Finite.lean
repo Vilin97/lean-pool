@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.CubePartition.SimplexSector
+module
+
+public import LeanPool.BKARForestFormula.BKAR.CubePartition.SimplexSector
 
 /-! # Simplex-sector conversion: arbitrary order
 
@@ -16,6 +18,8 @@ closed finite ordered simplex, and concludes that under the global
 smoothness hypothesis every recursive ordered contribution equals the
 corresponding closed ordered cube-sector contribution.
 -/
+
+@[expose] public section
 
 noncomputable section
 

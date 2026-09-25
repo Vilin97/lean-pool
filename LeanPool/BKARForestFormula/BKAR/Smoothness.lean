@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.Calculus.ContDiff.Operations
-import Mathlib.Data.List.GetD
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import LeanPool.BKARForestFormula.BKAR.PartialDeriv
+module
+
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
+public import Mathlib.Data.List.GetD
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import LeanPool.BKARForestFormula.BKAR.PartialDeriv
 
 /-! # The global smoothness hypothesis
 
@@ -22,6 +24,8 @@ The classical formula requires only finitely many derivatives (`C^{|V|-1}`
 suffices); assuming `C^∞` is a deliberate strengthening of the hypothesis
 that keeps the analytic bookkeeping uniform in the induction.
 -/
+
+@[expose] public section
 
 open scoped ContDiff
 

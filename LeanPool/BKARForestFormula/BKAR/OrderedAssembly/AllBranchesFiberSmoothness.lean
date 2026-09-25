@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.CubePartition.Smoothness
-import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesFibers
+module
+
+public import LeanPool.BKARForestFormula.BKAR.CubePartition.Smoothness
+public import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesFibers
 
 /-! # Integrability of the boundary fibers
 
@@ -15,6 +17,8 @@ integrals and finite sums in the telescoping argument.  Produces the split
 form of the identity: `ρ` at the all-ones configuration equals `ρ` at zero
 plus the sum of the nonempty-support fibers.
 -/
+
+@[expose] public section
 
 noncomputable section
 

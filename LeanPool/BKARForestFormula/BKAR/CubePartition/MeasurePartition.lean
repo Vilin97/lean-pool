@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import LeanPool.BKARForestFormula.BKAR.CubePartition.CubeIntegral
+module
+
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import LeanPool.BKARForestFormula.BKAR.CubePartition.CubeIntegral
 
 /-! # Almost-everywhere disjointness of the ordered sectors
 
@@ -16,6 +18,8 @@ its sector integrals.  This justifies folding the per-order sector
 integrals of the BKAR forest interpolation formula (see `BKAR.Formula`)
 into one cube integral.
 -/
+
+@[expose] public section
 
 noncomputable section
 

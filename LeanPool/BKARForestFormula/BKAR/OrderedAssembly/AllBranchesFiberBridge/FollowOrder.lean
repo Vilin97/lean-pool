@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesFibers
+module
+
+public import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesFibers
 
 /-! # Following a prescribed order through the choice system
 
@@ -13,6 +15,8 @@ function `followOrder` attempting to realize a prescribed edge order as
 such a growth.  Every chosen growth arises this way, giving the canonical
 realization of a support/order fiber used by the fiber bridge.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Data.List.NodupEquivFin
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.MeasureTheory.Integral.Prod
-import LeanPool.BKARForestFormula.BKAR.CubePartition.MeasureSmoothness
+module
+
+public import Mathlib.Data.List.NodupEquivFin
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Mathlib.MeasureTheory.Integral.Prod
+public import LeanPool.BKARForestFormula.BKAR.CubePartition.MeasureSmoothness
 
 /-! # Simplex-sector conversion: one edge
 
@@ -17,6 +19,8 @@ over `[0, 1]` in the unique cube coordinate, identified through the
 `funUnique` measure-preserving equivalence, and hence equals the closed
 ordered cube-sector contribution.
 -/
+
+@[expose] public section
 
 noncomputable section
 

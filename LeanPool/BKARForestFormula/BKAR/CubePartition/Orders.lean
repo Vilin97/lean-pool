@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Data.List.GetD
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-import Mathlib.Data.Finset.Dedup
-import Mathlib.Data.List.Permutation
-import LeanPool.BKARForestFormula.BKAR.OrderedTerminalGrowth
+module
+
+public import Mathlib.Data.List.GetD
+public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+public import Mathlib.Data.Finset.Dedup
+public import Mathlib.Data.List.Permutation
+public import LeanPool.BKARForestFormula.BKAR.OrderedTerminalGrowth
 
 /-! # Enumerations of a finite edge set
 
@@ -20,6 +22,8 @@ corresponding edge-parameter vector.  Sums over these orders convert
 between order-by-order sector contributions and the order-free contribution
 of a forest in the BKAR forest interpolation formula (see `BKAR.Formula`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

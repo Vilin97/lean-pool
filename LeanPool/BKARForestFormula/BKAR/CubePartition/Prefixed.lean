@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.CubePartition.Branches
+module
+
+public import LeanPool.BKARForestFormula.BKAR.CubePartition.Branches
 
 /-! # Prefix decomposition of branch integrals
 
@@ -13,6 +15,8 @@ edges of prefixed ordered-simplex integrals.  This is the shape in which
 the local recursion step behind the BKAR forest interpolation formula (see
 `BKAR.Formula`) consumes the branch integral.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Data.Finset.Sort
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-import LeanPool.BKARForestFormula.BKAR.ThresholdComponents
+module
+
+public import Mathlib.Data.Finset.Sort
+public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+public import LeanPool.BKARForestFormula.BKAR.ThresholdComponents
 
 /-!
 # Finite layer-cake decomposition for BKAR threshold components
@@ -18,6 +20,8 @@ finite set of threshold levels.  The jumps between consecutive levels form
 nonnegative weights, and the weighted sum of threshold-component indicators
 recovers the BKAR interpolation value.
 -/
+
+@[expose] public section
 
 namespace BKAR
 

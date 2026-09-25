@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.Data.Fintype.Powerset
-import Mathlib.Data.Fintype.Prod
-import Mathlib.Data.Fintype.Quotient
-import Mathlib.Data.Sym.Sym2
+module
+
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.Data.Fintype.EquivFin
+public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.Data.Fintype.Prod
+public import Mathlib.Data.Fintype.Quotient
+public import Mathlib.Data.Sym.Sym2
 
 /-! # Forests on a finite vertex set
 
@@ -22,6 +24,8 @@ sets, over which the final forest sum ranges; and the working type
 `Forest V`, an acyclic edge set packaged with its path API and the one-edge
 extension characterization.
 -/
+
+@[expose] public section
 
 namespace BKAR
 

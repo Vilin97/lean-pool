@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.CubePartition.Prefixed
+module
+
+public import LeanPool.BKARForestFormula.BKAR.CubePartition.Prefixed
 
 /-! # The local recursion step
 
@@ -14,6 +16,8 @@ interpolation point splits accordingly.  Iterating this step generates the
 all-branches expansion behind the BKAR forest interpolation formula (see
 `BKAR.Formula`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

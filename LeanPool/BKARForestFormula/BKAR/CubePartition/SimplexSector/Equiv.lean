@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.CubePartition.SimplexSector.Singleton
+module
+
+public import LeanPool.BKARForestFormula.BKAR.CubePartition.SimplexSector.Singleton
 
 /-! # Ordered coordinate equivalences
 
@@ -15,6 +17,8 @@ cube sector is the preimage of the standard ordered simplex under this
 equivalence — the change of variables underlying the simplex-sector
 conversion.
 -/
+
+@[expose] public section
 
 noncomputable section
 

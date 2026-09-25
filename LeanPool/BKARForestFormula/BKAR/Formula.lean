@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.ForestIndexCube
-import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesSmoothness
+module
+
+public import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.ForestIndexCube
+public import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesSmoothness
 
 /-! # The BKAR forest interpolation formula
 
@@ -35,6 +37,8 @@ needs only `C^{|V|-1}` — a deliberate strengthening of the hypothesis.
   garden for cluster expansions*, in Constructive Physics (Palaiseau 1994),
   Lecture Notes in Physics 446, Springer, 1995.  arXiv:hep-th/9409094.
 -/
+
+@[expose] public section
 
 noncomputable section
 

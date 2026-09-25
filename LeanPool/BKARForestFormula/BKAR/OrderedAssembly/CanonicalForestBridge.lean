@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesFiberBridge
+module
+
+public import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesFiberBridge
 
 /-! # Canonical forests realizing a support
 
@@ -14,6 +16,8 @@ representative `canonicalGrownForestForSupport` obtained from the
 canonical order of the support.  Both carry the support as their edge set,
 so every abstract forest index acquires a concrete forest realizing it.
 -/
+
+@[expose] public section
 
 noncomputable section
 

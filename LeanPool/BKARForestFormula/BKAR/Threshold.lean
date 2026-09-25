@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.Interpolation
+module
+
+public import LeanPool.BKARForestFormula.BKAR.Interpolation
 
 /-!
 # Threshold subforests for BKAR interpolation
@@ -12,6 +14,8 @@ This file records the finite graph fact behind the component representation of
 BKAR interpolation points: threshold connectivity in a forest is equivalent to
 the path-min inequality along the unique forest path.
 -/
+
+@[expose] public section
 
 namespace BKAR
 

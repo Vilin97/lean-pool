@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Tactic
-import LeanPool.BKARForestFormula.BKAR
+module
+
+public import Mathlib.Tactic
+public import LeanPool.BKARForestFormula.BKAR
 
 /-!
 # BKAR forest formula — Challenge → repository bridges
@@ -35,6 +37,8 @@ byte-identical challenge statement.
 * `sum_bridge` transports the mirror sum to the repository sum along
   `indexEquiv`.
 -/
+
+@[expose] public section
 
 noncomputable section
 open MeasureTheory

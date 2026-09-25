@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.Calculus.Deriv.Prod
-import LeanPool.BKARForestFormula.BKAR.PartialDeriv
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import LeanPool.BKARForestFormula.BKAR.PartialDeriv
 
 /-! # Active edges and one-edge forest extensions
 
@@ -15,6 +17,8 @@ Defines `activeEdges`, the insertion characterization of acyclicity, and
 the direction data `activeDirection` used by the one-edge expansion step of
 the BKAR forest interpolation formula (see `BKAR.Formula`).
 -/
+
+@[expose] public section
 
 namespace BKAR
 

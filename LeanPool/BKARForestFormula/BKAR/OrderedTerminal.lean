@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.OrderedBranch
+module
+
+public import LeanPool.BKARForestFormula.BKAR.OrderedBranch
 
 /-! # One-edge growths and their branch integrals
 
@@ -13,6 +15,8 @@ identification of its branch integral with a single interval integral of
 the partial derivative along the interpolation family, when the extended
 forest has no active edges left.
 -/
+
+@[expose] public section
 
 noncomputable section
 

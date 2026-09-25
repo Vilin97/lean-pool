@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesFiberBridge.FollowOrder
+module
+
+public import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesFiberBridge.FollowOrder
 
 /-! # The fiber bridge: core identities
 
@@ -13,6 +15,8 @@ vanishes unless the order enumerates the support and follows active
 extensions, and, when `followOrder` succeeds, the root fiber equals the
 recursive ordered contribution of the grown forest.
 -/
+
+@[expose] public section
 
 noncomputable section
 

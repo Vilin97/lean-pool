@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesFiberSmoothness
+module
+
+public import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranchesFiberSmoothness
 
 /-! # Discharging the analytic side conditions
 
@@ -14,6 +16,8 @@ all-ones configuration equals the sum of all root boundary support/order
 contributions, with or without the empty sector split off as `ρ` at the
 zero configuration.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.CubeFold
+module
+
+public import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.CubeFold
 
 /-! # The cube contribution of a forest index
 
@@ -14,6 +16,8 @@ canonical grown forest and independent of the active-extension choice
 system used to realize it.  This is the right-hand side of the flagship
 form of the BKAR forest interpolation formula (see `BKAR.Formula`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

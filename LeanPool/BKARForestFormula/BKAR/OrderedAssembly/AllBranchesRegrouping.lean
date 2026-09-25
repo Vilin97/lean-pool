@@ -3,7 +3,9 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranches
+module
+
+public import LeanPool.BKARForestFormula.BKAR.OrderedAssembly.AllBranches
 
 /-! # Regrouping the all-branches expansion by support and order
 
@@ -13,6 +15,8 @@ contributions and proves the finite regrouping identities expressing the
 expansion's boundary terms as sums over supports and their enumerating
 orders.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-import LeanPool.BKARForestFormula.BKAR.CubePartition.Orders
-import LeanPool.BKARForestFormula.BKAR.Smoothness
+module
+
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+public import LeanPool.BKARForestFormula.BKAR.CubePartition.Orders
+public import LeanPool.BKARForestFormula.BKAR.Smoothness
 
 /-! # Symmetry of mixed partial derivatives
 
@@ -17,6 +19,8 @@ forest mixed partial `mixedPartial`.  This order-independence is what lets
 the order-by-order expansion be regrouped into the order-free integrand of
 the BKAR forest interpolation formula (see `BKAR.Formula`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff
 

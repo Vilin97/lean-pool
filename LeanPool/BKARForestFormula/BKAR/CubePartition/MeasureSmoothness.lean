@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.BKARForestFormula.BKAR.CubePartition.MeasurePartition
-import LeanPool.BKARForestFormula.BKAR.PartialDerivSymmetry
+module
+
+public import LeanPool.BKARForestFormula.BKAR.CubePartition.MeasurePartition
+public import LeanPool.BKARForestFormula.BKAR.PartialDerivSymmetry
 
 /-! # From cube contributions to ordered sector contributions
 
@@ -15,6 +17,8 @@ the BKAR forest interpolation formula (see `BKAR.Formula`) equals the
 finite sum of its closed ordered sector contributions, with sector overlaps
 null by the collision-hyperplane theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 
