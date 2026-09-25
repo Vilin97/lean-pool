@@ -17,7 +17,7 @@ one.  These are arithmetic counts on the complete block below `p ^ k`, not
 asymptotic estimates.
 -/
 
-@[expose] public section
+public section
 
 namespace OddPrimeValuationDistribution
 

@@ -33,7 +33,7 @@ All lemmas and theorems are fully proved with no `sorry` statements.
 `propext`, `Classical.choice`, `Quot.sound`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -133,14 +133,17 @@ lemma powerfulPart_ge_of_prime_sq_dvd {m p : ℕ} (hm : m ≠ 0) (hp : p.Prime)
 /-! ## Pell sequence for x² - 8y² = 1 -/
 
 /-- Joint recurrence for Pell solutions `(X_j, Y_j)` with `X_j² - 8·Y_j² = 1`. -/
+@[expose]
 def pellXY : ℕ → ℤ × ℤ
   | 0 => (1, 0)
   | j + 1 => let (x, y) := pellXY j; (3 * x + 8 * y, x + 3 * y)
 
 /-- X component of Pell solutions for `x² - 8y² = 1`. -/
+@[expose]
 def pellX (j : ℕ) : ℤ := (pellXY j).1
 
 /-- Y component of Pell solutions for `x² - 8y² = 1`. -/
+@[expose]
 def pellY (j : ℕ) : ℤ := (pellXY j).2
 
 @[simp] lemma pellX_zero : pellX 0 = 1 := rfl

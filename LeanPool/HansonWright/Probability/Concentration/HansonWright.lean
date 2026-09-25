@@ -49,7 +49,7 @@ two-scale Chernoff bound.
   using the maximum coordinate least global-MGF sub-Gaussian scale.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool
 
@@ -154,6 +154,7 @@ def randomQuadraticForm {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
   fun ω => quadraticForm A fun i => X i ω
 
 /-- The coordinate random vector as an element of Euclidean space. -/
+@[expose]
 def randomVector {n : ℕ} (X : Fin n → Ω → ℝ) : Ω → EuclideanSpace ℝ (Fin n) :=
   fun ω => WithLp.toLp 2 fun i => X i ω
 
@@ -225,6 +226,7 @@ def cutMatrix {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) (s : Finset (Fin n)) :
   fun i j => if i ∈ s ∧ j ∉ s then A i j else 0
 
 /-- Coordinate projection onto a finite set of coordinates. -/
+@[expose]
 def coordinateMask {n : ℕ} (s : Finset (Fin n))
     (x : EuclideanSpace ℝ (Fin n)) : EuclideanSpace ℝ (Fin n) :=
   WithLp.toLp 2 fun i => if i ∈ s then x i else 0
@@ -236,6 +238,7 @@ lemma coordinateMask_apply {n : ℕ} (s : Finset (Fin n))
 
 /-- Embed a tuple indexed by a finite set into Euclidean space, filling other coordinates by
 zero. -/
+@[expose]
 def subtypeMask {n : ℕ} (s : Finset (Fin n)) (x : s → ℝ) :
     EuclideanSpace ℝ (Fin n) :=
   WithLp.toLp 2 fun i => if h : i ∈ s then x ⟨i, h⟩ else 0

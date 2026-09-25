@@ -19,7 +19,7 @@ the carry threshold gives a two-state transfer matrix and its scalar
 second-order recurrence.
 -/
 
-@[expose] public section
+public section
 
 namespace OddPrimeValuationDistribution
 
@@ -27,18 +27,18 @@ open Polynomial
 open scoped BigOperators
 
 /-- Convert an odd-base word to natural digits. -/
-def oddCarryWordDigits {half length : ℕ}
+@[expose] def oddCarryWordDigits {half length : ℕ}
     (word : List.Vector (Fin (oddBase half)) length) : List ℕ :=
   word.toList.map Fin.val
 
 /-- Odd-base carry-count enumerator from an arbitrary incoming carry. -/
-noncomputable def oddCarryPolynomialFrom
+@[expose] noncomputable def oddCarryPolynomialFrom
     (half carry length : ℕ) : Polynomial ℕ :=
   ∑ word : List.Vector (Fin (oddBase half)) length,
     X ^ oddDoubleCarryCountAux half (oddCarryWordDigits word) carry
 
 /-- Odd-base carry-count enumerator from incoming carry zero. -/
-noncomputable def oddCarryPolynomial (half length : ℕ) : Polynomial ℕ :=
+@[expose] noncomputable def oddCarryPolynomial (half length : ℕ) : Polynomial ℕ :=
   oddCarryPolynomialFrom half 0 length
 
 /-- Peeling the least significant digit from an odd-base word. -/

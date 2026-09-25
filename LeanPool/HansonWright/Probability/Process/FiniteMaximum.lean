@@ -24,7 +24,7 @@ This module introduces no new definitions.
 * `expected_max_subGaussian`: expected maximum of a finite sub-Gaussian family.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool
 

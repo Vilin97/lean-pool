@@ -27,7 +27,7 @@ parts of the paper.
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -257,6 +257,7 @@ lemma ThueBound.special_two (hd : 4 ≤ d) :
 end
 
 /-- We define `section4Sum i` to be `a i + b i + c i`. -/
+@[expose]
 def section4Sum (a b c : ℕ → ℝ) (i : ℕ) := a i + b i + c i
 local notation "s" => section4Sum a b c
 
@@ -392,6 +393,7 @@ lemma bound_4_point_9_upper (hε : 0 < ε) (f : ℕ → ℝ) (h45 : Bound4Point5
   linear_combination h45.lower + hε
 
 /-- Define `δₛ` to be the sum of the `δ_` values for `a, b, c`. -/
+@[expose]
 def deltaS (d : ℕ) (a b c : ℕ → ℝ) := δ_ d a + δ_ d b + δ_ d c
 local notation "δₛ" => deltaS d a b c
 

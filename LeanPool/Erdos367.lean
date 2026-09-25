@@ -29,4 +29,4 @@ Tags: number-theory, erdos-problems, powerful-numbers, abc-conjecture, pell-equa
 MSC: 11D09, 11N25, 11D45
 -/
 
-@[expose] public section
+public section

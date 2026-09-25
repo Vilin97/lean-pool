@@ -22,14 +22,14 @@ the base is prime, the carry count is exactly the prime-adic valuation of the
 central binomial coefficient.
 -/
 
-@[expose] public section
+public section
 
 namespace OddPrimeValuationDistribution
 
 open Nat
 
 /-- The odd base represented by its lower half-size. -/
-def oddBase (half : ℕ) : ℕ := 2 * half + 1
+@[expose] def oddBase (half : ℕ) : ℕ := 2 * half + 1
 
 /-- Outgoing carry while doubling one digit in the odd base
 `2 * half + 1`. -/
@@ -38,7 +38,7 @@ def oddDoubleCarryStep (half carry digit : ℕ) : ℕ :=
 
 /-- Number of outgoing carries while doubling a little-endian word in an odd
 base. -/
-def oddDoubleCarryCountAux (half : ℕ) : List ℕ → ℕ → ℕ
+@[expose] def oddDoubleCarryCountAux (half : ℕ) : List ℕ → ℕ → ℕ
   | [], _carry => 0
   | digit :: digits, carry =>
       let nextCarry := oddDoubleCarryStep half carry digit

@@ -28,7 +28,7 @@ consecutive integers — as an **explicit hypothesis** (`RadLB`).
   `B2 (F k n) ≤ C' * n ^ (2 + ε)` for all `n ≥ 1`.
 -/
 
-@[expose] public section
+public section
 
 namespace GeneralK
 

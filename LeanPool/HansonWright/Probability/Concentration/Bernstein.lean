@@ -34,7 +34,7 @@ real random variables.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool
 

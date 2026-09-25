@@ -32,7 +32,7 @@ This module extends Mathlib's existing moment-generating and tilted-measure defi
 * `ProbabilityTheory.cgf_deriv_two`: second derivative of the cumulant generating function.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool
 
