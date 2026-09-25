@@ -11,7 +11,7 @@ public import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
 # LeanPool.FormalizationOfBoundedArithmetic.BasicSingleSorted
 -/
 
-@[expose] public section
+public section
 
 open FirstOrder FirstOrder.Language
 
@@ -65,6 +65,7 @@ class BASICModelExt (num : Type u) extends BASICModel num where
 variable {M} [BASICModel M]
 
 /-- Interpret natural-number literals in a BASIC model by iterating successor. -/
+@[expose]
 def natToM : Nat -> M
 | 0 => 0
 | 1 => 1

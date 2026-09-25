@@ -14,7 +14,7 @@ import LeanPool.FormalizationOfBoundedArithmetic.Register
 # LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
 -/
 
-@[expose] public section
+public section
 
 universe u v u'
 
@@ -43,7 +43,7 @@ inductive ZambellaRel : Nat -> Type u
 deriving DecidableEq
 
 /-- The two-sorted language for bounded arithmetic. -/
-def zambella : Language :=
+@[expose] def zambella : Language :=
 { Functions := ZambellaFunc,
   Relations := ZambellaRel
 }
@@ -189,6 +189,7 @@ lemma realize_leq_to_leq {M} [h : zambella.Structure M] {a} {env : a → M}
 namespace Term
 
 /-- Formula asserting that a term denotes a number. -/
+@[expose]
 def IsNum (t : zambella.Term (a ⊕ Fin 0)) : zambella.Formula a :=
   Relations.boundedFormula₁ ZambellaRel.isnum t
 
@@ -209,7 +210,7 @@ def _root_.FirstOrder.Term.in {a : Type u} {n}
 @[inherit_doc] scoped[FirstOrder.Language] infixl:88 " ∈' " => Term.in
 
 /-- The not-mem relation of two terms as a bounded formula -/
-@[delta0_simps]
+@[expose, delta0_simps]
 def _root_.FirstOrder.Term.notin {a : Type u} {n}
     (t1 t2 : zambella.Term (a ⊕ (Fin n))) : zambella.BoundedFormula a n :=
   ∼(t1 ∈' t2)

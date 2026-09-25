@@ -15,7 +15,7 @@ import Mathlib.Data.Rat.Floor
 # LeanPool.FormalizationOfBoundedArithmetic.SimpRules
 -/
 
-@[expose] public section
+public section
 
 attribute [delta0_simps]
   Sum.elim_inl

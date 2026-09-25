@@ -13,7 +13,7 @@ import LeanPool.FormalizationOfBoundedArithmetic.Register
 # LeanPool.FormalizationOfBoundedArithmetic.Complexity
 -/
 
-@[expose] public section
+public section
 
 open FirstOrder Language
 

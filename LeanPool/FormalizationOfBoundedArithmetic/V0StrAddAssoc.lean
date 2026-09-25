@@ -20,7 +20,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 # LeanPool.FormalizationOfBoundedArithmetic.V0StrAddAssoc
 -/
 
-@[expose] public section
+public section
 
 variable {num str : Type} [M : V0ExtModel num str]
 open FirstOrder Language

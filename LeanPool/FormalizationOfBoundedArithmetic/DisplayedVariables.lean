@@ -15,7 +15,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 # LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
 -/
 
-@[expose] public section
+public section
 
 /-- Names used for displayed free variables in formulas. -/
 inductive FvName | x | y | z | X
@@ -140,15 +140,19 @@ variable {α : Type u} {L : FirstOrder.Language}
 /-- The selected variable named `X`. -/
 @[delta0_simps] def X.name [h : HasVar .X α] := h.fv
 /-- The first-order term for the displayed variable named `x`. -/
-@[delta0_simps] def x {k} [h : HasVar .x α] : L.Term (α ⊕ Fin k) := L.var <| Sum.inl h.fv
+@[expose, delta0_simps]
+def x {k} [h : HasVar .x α] : L.Term (α ⊕ Fin k) := L.var <| Sum.inl h.fv
 /-- The first-order term for the displayed variable named `y`. -/
-@[delta0_simps] def y {k} [h : HasVar .y α] : L.Term (α ⊕ Fin k) := L.var <| Sum.inl h.fv
+@[expose, delta0_simps]
+def y {k} [h : HasVar .y α] : L.Term (α ⊕ Fin k) := L.var <| Sum.inl h.fv
 /-- The first-order term for the displayed variable named `z`. -/
-@[delta0_simps] def z {k} [h : HasVar .z α] : L.Term (α ⊕ Fin k) := L.var <| Sum.inl h.fv
+@[expose, delta0_simps]
+def z {k} [h : HasVar .z α] : L.Term (α ⊕ Fin k) := L.var <| Sum.inl h.fv
 /-- The first-order term for the displayed variable named `X`. -/
 @[delta0_simps] def X {k} [h : HasVar .X α] : L.Term (α ⊕ Fin k) := L.var <| Sum.inl h.fv
 
 /-- Display a one-variable formula as a formula over an explicit sum context. -/
+@[expose]
 def FirstOrder.Language.Formula.display1
   {n1 : FvName}
   (phi : L.Formula (Vars1 n1))
@@ -167,6 +171,7 @@ def FirstOrder.Language.Formula.display1
   }
 
 /-- Display a two-variable formula by isolating the named left variable. -/
+@[expose]
 def FirstOrder.Language.Formula.display2
   (name : FvName)
   {other : FvName}
@@ -185,6 +190,7 @@ def FirstOrder.Language.Formula.display2
   }
 
 /-- Display a three-variable formula by isolating the named left variable. -/
+@[expose]
 def FirstOrder.Language.Formula.display3
   (name : FvName)
   {other1 other2 : FvName}
@@ -207,6 +213,7 @@ def FirstOrder.Language.Formula.display3
   }
 
 /-- Display a four-variable formula by isolating the named left variable. -/
+@[expose]
 def FirstOrder.Language.Formula.display4
   (name : FvName)
   {o1 o2 o3 : FvName}
@@ -231,6 +238,7 @@ def FirstOrder.Language.Formula.display4
   }
 
 /-- Reassociate displayed variables from `x | (y,z)` to `(x,y) | z`. -/
+@[expose]
 def FirstOrder.Language.Formula.displaySwapleft
   {n1 n2 n3 : FvName}
   (phi : L.Formula (Vars1 n1 ⊕ Vars2 n2 n3))
@@ -260,6 +268,7 @@ def FirstOrder.Language.Formula.displaySwapleft
   }
 
 /-- Reassociate displayed variables from `x | (y,z)` to `(x | y) | z`. -/
+@[expose]
 def FirstOrder.Language.Formula.displaySwapleft'
   {n1 n2 n3 : FvName}
   (phi : L.Formula (Vars1 n1 ⊕ Vars2 n2 n3))
@@ -293,6 +302,7 @@ private lemma displayedVariablesDelimiter2 : True := by
 
 -- Vars2 .x .y -> Vars2 .y .x
 /-- Swap the two variables in a two-variable displayed formula. -/
+@[expose]
 def FirstOrder.Language.Formula.rotate21
   {n1 n2 : FvName}
   (phi : L.Formula (Vars2 n1 n2))
@@ -313,6 +323,7 @@ def FirstOrder.Language.Formula.rotate21
 
 -- Vars3 .x .y .z -> Vars3 .y .x. .z
 /-- Swap the first two variables in a three-variable displayed formula. -/
+@[expose]
 def FirstOrder.Language.Formula.rotate213
   (n1 n2 n3 : FvName)
   (phi : L.Formula (Vars3 n1 n2 n3))
@@ -335,6 +346,7 @@ def FirstOrder.Language.Formula.rotate213
 
 -- Vars3 .x .y .z -> Vars3 .y .x. .z
 /-- Rotate the variables in a three-variable displayed formula. -/
+@[expose]
 def FirstOrder.Language.Formula.rotate231
   (n1 n2 n3 : FvName)
   (phi : L.Formula (Vars3 n1 n2 n3))
@@ -361,6 +373,7 @@ private lemma displayedVariablesDelimiter3 : True := by
 variable {β}
 
 /-- Flip the two sides of the free-variable sum in a bounded formula. -/
+@[expose]
 def FirstOrder.Language.BoundedFormula.flip {n}
     (phi : L.BoundedFormula (α ⊕ β) n) : L.BoundedFormula (β ⊕ α) n :=
   phi.relabelEquiv {
@@ -371,6 +384,7 @@ def FirstOrder.Language.BoundedFormula.flip {n}
   }
 
 /-- Flip the two sides of the free-variable sum in a formula. -/
+@[expose]
 def FirstOrder.Language.Formula.flip (phi : L.Formula (α ⊕ β)) : L.Formula (β ⊕ α) :=
   phi.relabelEquiv {
     toFun := Sum.swap (α := α) (β := β)
@@ -383,6 +397,7 @@ def FirstOrder.Language.Formula.flip (phi : L.Formula (α ⊕ β)) : L.Formula (
 --   : phi.flip.Realize v <-> phi.Realize (v ∘ )
 
 /-- Embed a formula into a sum context by putting all variables on the left. -/
+@[expose]
 def FirstOrder.Language.Formula.mkInl (phi : L.Formula α) : L.Formula (α ⊕ Empty) :=
   phi.relabelEquiv {
     toFun := Sum.inl

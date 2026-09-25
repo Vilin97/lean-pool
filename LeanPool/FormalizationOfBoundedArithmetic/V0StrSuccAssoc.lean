@@ -14,7 +14,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 # LeanPool.FormalizationOfBoundedArithmetic.V0StrSuccAssoc
 -/
 
-@[expose] public section
+public section
 
 -- This file proves:
 -- ∀ {X Y : str}, X + succ Y = succ (X + Y)
