@@ -147,6 +147,37 @@ theorem upper_unitDescendant_Lambda_integrable_abs_pow
   exact integrable_abs_pow_of_map_eq_map_aemeasurable
     (hP.aemeasurable_LambdaSqCoeffField_finite_one U hs) hX0_aemeas hmap hX0_abs_int
 
+/-- Membership of a `some` index in a finite family with an extra `none`
+entry is membership of the original index in the original family. -/
+theorem section52_mem_of_some_mem_insert_image_some
+    {ι : Type*} [DecidableEq ι] {s : Finset ι} {i : ι}
+    (hi : some i ∈ insert none (s.image some)) :
+    i ∈ s := by
+  classical
+  have hsome : some i ∈ s.image some := by
+    rcases Finset.mem_insert.mp hi with hnone | hsome
+    · cases hnone
+    · exact hsome
+  rcases Finset.mem_image.mp hsome with ⟨j, hj, hji⟩
+  exact (Option.some.inj hji) ▸ hj
+
+/-- An attached-sum upper bound transfers to the corresponding ordinary finite
+sum while replacing its initial summand by a larger one. -/
+theorem section52_le_add_finsetSum_of_le_add_attachSum
+    {ι : Type*} {s : Finset ι} {F : {i // i ∈ s} → ℝ} {G : ι → ℝ}
+    {x a b : ℝ}
+    (hsplit : x ≤ a + ∑ i ∈ s.attach, F i)
+    (hsmall : a ≤ b) (hFG : ∀ i, F i = G i.1) :
+    x ≤ b + ∑ i ∈ s, G i := by
+  have hsum : ∑ i ∈ s.attach, F i = ∑ i ∈ s, G i := by
+    calc
+      ∑ i ∈ s.attach, F i = ∑ i ∈ s.attach, G i.1 :=
+        Finset.sum_congr rfl (fun i _ => hFG i)
+      _ = ∑ i ∈ s, G i := Finset.sum_attach s G
+  calc
+    x ≤ b + ∑ i ∈ s.attach, F i := hsplit.trans (add_le_add_right hsmall _)
+    _ = b + ∑ i ∈ s, G i := congrArg (b + ·) hsum
+
 theorem upperFactorPowerIntegrableAtScale_from_P4
     {d : ℕ} [NeZero d] {P : Ch04.RestrictionCoeffLaw d}
     (hP : Ch04.RestrictionLawCarrier P) (hStruct : Ch04.RestrictionStructuralLaw P)
@@ -236,38 +267,20 @@ theorem upperFactorPowerIntegrableAtScale_from_P4
     | none =>
         exact add_nonneg (hsmall_nonneg a) hbase_nonneg
     | some n =>
-        have hn : n ∈ section52LargeScaleSet m := by
-          have hsome : some n ∈ (section52LargeScaleSet m).image some := by
-            simpa [I] using ho
-          rcases Finset.mem_image.mp hsome with ⟨k, hk, hkn⟩
-          exact Option.some.inj hkn ▸ hk
+        have hn : n ∈ section52LargeScaleSet m :=
+          section52_mem_of_some_mem_insert_image_some ho
         exact hlarge_nonneg n hn a
-  have hsmall_aemeas : AEMeasurable small P := by
-    have hsum :
-        AEMeasurable
-          (fun a : RegCoeffField d =>
-            ∑ U ∈ D, Ch04.LambdaSqCoeffField U s (.finite 1) a) P := by
-      let F : TriadicCube d → RegCoeffField d → ℝ :=
-        fun U a => Ch04.LambdaSqCoeffField U s (.finite 1) a
-      have h :
-          AEMeasurable (D.sum fun U => F U) P :=
-        Finset.aemeasurable_sum D fun U _hU =>
-          hP.aemeasurable_LambdaSqCoeffField_finite_one U hs
-      convert h using 1
-      ext a
-      simp [F]
-    exact aemeasurable_const.mul hsum
+  have hsmall_aemeas : AEMeasurable small P :=
+    aemeasurable_const.mul (Finset.aemeasurable_fun_sum D fun U _ =>
+      hP.aemeasurable_LambdaSqCoeffField_finite_one U hs)
   have hG_aemeas : ∀ o ∈ I, AEMeasurable (G o) P := by
     intro o ho
     cases o with
     | none =>
         exact hsmall_aemeas.add aemeasurable_const
     | some n =>
-        have hn : n ∈ section52LargeScaleSet m := by
-          have hsome : some n ∈ (section52LargeScaleSet m).image some := by
-            simpa [I] using ho
-          rcases Finset.mem_image.mp hsome with ⟨k, hk, hkn⟩
-          exact Option.some.inj hkn ▸ hk
+        have hn : n ∈ section52LargeScaleSet m :=
+          section52_mem_of_some_mem_insert_image_some ho
         simpa [G, large, s, scalarization, base, hn] using!
           upperLargeScalePositiveExcess_aemeasurable_source
             hP hStruct (r := s) hn
@@ -311,11 +324,8 @@ theorem upperFactorPowerIntegrableAtScale_from_P4
     | none =>
         simpa [G] using hnone_int
     | some n =>
-        have hn : n ∈ section52LargeScaleSet m := by
-          have hsome : some n ∈ (section52LargeScaleSet m).image some := by
-            simpa [I] using ho
-          rcases Finset.mem_image.mp hsome with ⟨k, hk, hkn⟩
-          exact Option.some.inj hkn ▸ hk
+        have hn : n ∈ section52LargeScaleSet m :=
+          section52_mem_of_some_mem_insert_image_some ho
         have hInt :=
           upperLargeScalePositiveExcess_integrable_abs_pow_source
             hP hStruct (sSource := s) (r := s) (ξ := ξ)
@@ -331,103 +341,31 @@ theorem upperFactorPowerIntegrableAtScale_from_P4
     have hsplit :=
       LambdaSqCoeffField_originCube_finite_one_le_upperSmallSqrtTail_sq_div_add_largeScale_sum
         (d := d) m hs a
-    have hsmall :=
-      upperSmallTailTerm_le_sameExponent_unitDescendantSum
-        (d := d) m hs a
-    have hlarge :=
-      upperLargeScaleRaw_sum_le_base_add_positiveExcess_sum
-        (d := d) m hs hbase_nonneg a
+    have hsmall := upperSmallTailTerm_le_sameExponent_unitDescendantSum (d := d) m hs a
+    have hlarge := upperLargeScaleRaw_sum_le_base_add_positiveExcess_sum
+      (d := d) m hs hbase_nonneg a
     have hX_nonneg : 0 ≤ X a :=
       Ch04.LambdaSqCoeffField_finite_nonneg (originCube d (m : ℤ)) a hs
         (by norm_num : (1 : ℝ) ≤ 1)
+    have hsmall_le :
+        upperSmallSqrtTailCoeffField (d := d) m s a ^ 2 /
+          section52SmallTailWeight s m ≤ small a := by
+      simpa [small, cSmall, D, V, s] using hsmall
+    have hlarge_sum :
+        (∑ n ∈ section52LargeScaleSet m,
+          section52LargeScaleWeight s m n *
+            Ch04.maxDescendantBMatrixNormCoeffFieldAtScale
+              (originCube d (m : ℤ)) n a) ≤
+          base + ∑ n ∈ section52LargeScaleSet m, large n a := by
+      refine section52_le_add_finsetSum_of_le_add_attachSum
+        (G := fun n => large n a) hlarge le_rfl ?_
+      intro n
+      simp [large, n.2]
     calc
       max (X a - 0) 0 = X a := by simp [X, hX_nonneg]
-      _ ≤
-          upperSmallSqrtTailCoeffField (d := d) m s a ^ 2 /
-              section52SmallTailWeight s m +
-            (∑ n ∈ section52LargeScaleSet m,
-              section52LargeScaleWeight s m n *
-                Ch04.maxDescendantBMatrixNormCoeffFieldAtScale
-                  (originCube d (m : ℤ)) n a) := by
-            simpa [X, s] using hsplit
-      _ ≤ small a +
-            (∑ n ∈ section52LargeScaleSet m,
-              section52LargeScaleWeight s m n *
-                Ch04.maxDescendantBMatrixNormCoeffFieldAtScale
-                  (originCube d (m : ℤ)) n a) := by
-            have hsmall_le :
-                upperSmallSqrtTailCoeffField (d := d) m s a ^ 2 /
-                    section52SmallTailWeight s m ≤ small a := by
-              simpa [small, cSmall, D, V, s] using hsmall
-            nlinarith
-      _ ≤ small a +
-            (base + ∑ n ∈ section52LargeScaleSet m, large n a) := by
-            have hlarge_sum :
-                (∑ n ∈ section52LargeScaleSet m,
-                  section52LargeScaleWeight s m n *
-                    Ch04.maxDescendantBMatrixNormCoeffFieldAtScale
-                      (originCube d (m : ℤ)) n a) ≤
-                  base + ∑ n ∈ section52LargeScaleSet m, large n a := by
-              have hlarge_attach :
-                  (∑ n ∈ section52LargeScaleSet m,
-                    section52LargeScaleWeight s m n *
-                      Ch04.maxDescendantBMatrixNormCoeffFieldAtScale
-                        (originCube d (m : ℤ)) n a) ≤
-                    base +
-                      (section52LargeScaleSet m).attach.sum
-                        (fun n =>
-                          section52LargeScaleWeight s m n *
-                            (descendantsAtScale (originCube d (m : ℤ)) n).sup'
-                              (descendantsAtScale_nonempty (originCube d (m : ℤ))
-                                (section52LargeScaleSet_mem_le_m n.2))
-                              (fun Q =>
-                                max
-                                  (Ch02.matrixNorm
-                                      (coarseBlockMatrix (cubeSet Q) a.toFun).upperLeft -
-                                    Ch02.matrixNorm (base • (1 : Mat d)))
-                                  0)) := by
-                simpa [s, scalarization, base] using hlarge
-              have hattach :
-                  (section52LargeScaleSet m).attach.sum
-                        (fun n =>
-                          section52LargeScaleWeight s m n *
-                            (descendantsAtScale (originCube d (m : ℤ)) n).sup'
-                              (descendantsAtScale_nonempty (originCube d (m : ℤ))
-                                (section52LargeScaleSet_mem_le_m n.2))
-                              (fun Q =>
-                                max
-                                  (Ch02.matrixNorm
-                                      (coarseBlockMatrix (cubeSet Q) a.toFun).upperLeft -
-                                    Ch02.matrixNorm (base • (1 : Mat d)))
-                                  0)) =
-                    ∑ n ∈ section52LargeScaleSet m, large n a := by
-                calc
-                  (section52LargeScaleSet m).attach.sum
-                      (fun n =>
-                        section52LargeScaleWeight s m n *
-                          (descendantsAtScale (originCube d (m : ℤ)) n).sup'
-                            (descendantsAtScale_nonempty (originCube d (m : ℤ))
-                              (section52LargeScaleSet_mem_le_m n.2))
-                            (fun Q =>
-                              max
-                                (Ch02.matrixNorm
-                                    (coarseBlockMatrix (cubeSet Q) a.toFun).upperLeft -
-                                  Ch02.matrixNorm (base • (1 : Mat d)))
-                                0)) =
-                    (section52LargeScaleSet m).attach.sum
-                      (fun n => large n a) := by
-                        refine Finset.sum_congr rfl ?_
-                        intro n _hn
-                        simp [large, n.2]
-                  _ = ∑ n ∈ section52LargeScaleSet m, large n a :=
-                    Finset.sum_attach (section52LargeScaleSet m)
-                      (fun n => large n a)
-              simpa [hattach] using hlarge_attach
-            nlinarith
-      _ = (small a + base) + ∑ n ∈ section52LargeScaleSet m, large n a := by
-            ring
-      _ = ∑ o ∈ I, G o a := by
-            simp [I, G]
+      _ ≤ small a + (base + ∑ n ∈ section52LargeScaleSet m, large n a) :=
+        hsplit.trans (add_le_add hsmall_le hlarge_sum)
+      _ = ∑ o ∈ I, G o a := by simp [I, G, add_assoc]
   have hAbsInt :
       Integrable (fun a : RegCoeffField d => |max (X a - 0) 0| ^ ξ) P :=
     section52_integrable_abs_positiveExcess_pow_of_ae_finset_sum_bound

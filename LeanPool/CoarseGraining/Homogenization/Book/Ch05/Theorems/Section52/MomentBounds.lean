@@ -27,18 +27,6 @@ noncomputable section
 Final positive-excess and multiscale ellipticity moment bounds.
 -/
 
-private theorem section52_mem_of_some_mem_insert_image_some
-    {ι : Type*} [DecidableEq ι] {s : Finset ι} {i : ι}
-    (hi : some i ∈ insert none (s.image some)) :
-    i ∈ s := by
-  classical
-  have hsome : some i ∈ s.image some := by
-    rcases Finset.mem_insert.mp hi with hnone | hsome
-    · cases hnone
-    · exact hsome
-  rcases Finset.mem_image.mp hsome with ⟨j, hj, hji⟩
-  exact (Option.some.inj hji) ▸ hj
-
 private theorem section52_sum_insert_image_some
     {ι α : Type*} [DecidableEq ι] [AddCommMonoid α]
     (s : Finset ι) (x0 : α) (f : ι → α) :
@@ -315,23 +303,6 @@ theorem section52_annealedMomentRoot_positiveExcess_le_one_add_finset_scaled
       (initial := initial) (finalCoeff := finalCoeff) (G := H) (coeff := C)
       hξ hInitial_nonneg hH_nonneg hH_aemeas hH_int hExcess_int
       hPointI hRootI hCoeffI
-
-/-- An attached-sum upper bound transfers to the corresponding ordinary finite
-sum while replacing its initial summand by a larger one. -/
-private theorem section52_le_add_finsetSum_of_le_add_attachSum
-    {ι : Type*} {s : Finset ι} {F : {i // i ∈ s} → ℝ} {G : ι → ℝ}
-    {x a b : ℝ}
-    (hsplit : x ≤ a + ∑ i ∈ s.attach, F i)
-    (hsmall : a ≤ b) (hFG : ∀ i, F i = G i.1) :
-    x ≤ b + ∑ i ∈ s, G i := by
-  have hsum : ∑ i ∈ s.attach, F i = ∑ i ∈ s, G i := by
-    calc
-      ∑ i ∈ s.attach, F i = ∑ i ∈ s.attach, G i.1 :=
-        Finset.sum_congr rfl (fun i _ => hFG i)
-      _ = ∑ i ∈ s, G i := Finset.sum_attach s G
-  calc
-    x ≤ b + ∑ i ∈ s.attach, F i := hsplit.trans (add_le_add_right hsmall _)
-    _ = b + ∑ i ∈ s, G i := congrArg (b + ·) hsum
 
 theorem upperPositiveExcessMomentAtScale_integrable_and_le_raw_twoExponentCoeff
     {d : ℕ} [NeZero d] {P : Ch04.RestrictionCoeffLaw d}

@@ -652,6 +652,20 @@ private theorem rpow_descendantsAverage_le_descendantsAverage_rpow
     _ ≤ ∑ R ∈ D, w R • (fun x : ℝ => x ^ ζ) (F R) := hJensen
     _ = descendantsAverage Q j (fun R => Real.rpow (F R) ζ) := hright
 
+private theorem integrable_rpow_of_memLp_nonneg
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {f : Ω → ℝ} {ζ : ℝ}
+    (hζ_pos : 0 < ζ) (hf : MemLp f (ENNReal.ofReal ζ) P) (hnonneg : ∀ a, 0 ≤ f a) :
+    Integrable (fun a => Real.rpow (f a) ζ) P := by
+  have hζ_ne_zero : ENNReal.ofReal ζ ≠ 0 := by
+    simp [ENNReal.ofReal_eq_zero, not_le.mpr hζ_pos]
+  have hζ_ne_top : ENNReal.ofReal ζ ≠ ⊤ := by simp
+  have hint : Integrable (fun a => ‖f a‖ ^ (ENNReal.ofReal ζ).toReal) P :=
+    hf.integrable_norm_rpow hζ_ne_zero hζ_ne_top
+  refine hint.congr ?_
+  filter_upwards with a
+  rw [ENNReal.toReal_ofReal hζ_pos.le, Real.norm_of_nonneg (hnonneg a),
+    Real.rpow_eq_pow]
+
 theorem integral_rpow_descendantsAverage_restrictionResponseJObservableCubeSet_originCube_le_originCube_of_stationary
     {d : ℕ} [NeZero d] {P : Ch04.RestrictionCoeffLaw d}
     (hP : Ch04.RestrictionLawCarrier P) (hstat : Ch04.RestrictionStationaryLaw P)
@@ -687,22 +701,11 @@ theorem integral_rpow_descendantsAverage_restrictionResponseJObservableCubeSet_o
         hP hstat hStruct hP4 hk_nonneg hkm p q
   have hchild_int :
       Integrable (fun a : RegCoeffField d => Real.rpow (childAvg a) ζ) P := by
-    have hζ_ne_zero : ENNReal.ofReal ζ ≠ 0 := by
-      simp [ENNReal.ofReal_eq_zero, not_le.mpr hζ_pos]
-    have hζ_ne_top : ENNReal.ofReal ζ ≠ ⊤ := by simp
-    have hint :
-        Integrable
-          (fun a : RegCoeffField d => ‖childAvg a‖ ^ (ENNReal.ofReal ζ).toReal) P :=
-      hchild_mem.integrable_norm_rpow hζ_ne_zero hζ_ne_top
-    refine hint.congr ?_
-    filter_upwards with a
-    have hnonneg : 0 ≤ childAvg a := by
-      dsimp [childAvg]
-      exact descendantsAverage_nonneg Q j
-        (fun R => Ch04.restrictionResponseJObservableCubeSet R p q a)
-        (fun R hR => Ch04.restrictionResponseJObservableCubeSet_nonneg R p q a)
-    rw [ENNReal.toReal_ofReal hζ_pos.le, Real.norm_of_nonneg hnonneg,
-      Real.rpow_eq_pow]
+    apply integrable_rpow_of_memLp_nonneg hζ_pos hchild_mem
+    intro a
+    exact descendantsAverage_nonneg Q j
+      (fun R => Ch04.restrictionResponseJObservableCubeSet R p q a)
+      (fun R hR => Ch04.restrictionResponseJObservableCubeSet_nonneg R p q a)
   have horigin_int :
       Integrable
         (fun a : RegCoeffField d =>
@@ -722,19 +725,8 @@ theorem integral_rpow_descendantsAverage_restrictionResponseJObservableCubeSet_o
       simpa [J, hknat] using hbase
     have hJ_memζ : MemLp J (ENNReal.ofReal ζ) P :=
       hJ_mem2.mono_exponent hζ_le_two
-    have hζ_ne_zero : ENNReal.ofReal ζ ≠ 0 := by
-      simp [ENNReal.ofReal_eq_zero, not_le.mpr hζ_pos]
-    have hζ_ne_top : ENNReal.ofReal ζ ≠ ⊤ := by
-      simp
-    have hint :
-        Integrable (fun a : RegCoeffField d => ‖J a‖ ^ (ENNReal.ofReal ζ).toReal) P :=
-      hJ_memζ.integrable_norm_rpow hζ_ne_zero hζ_ne_top
-    refine hint.congr ?_
-    filter_upwards with a
-    have hJ_nonneg : 0 ≤ J a := by
-      simpa [J] using Ch04.restrictionResponseJObservableCubeSet_nonneg (originCube d k) p q a
-    rw [ENNReal.toReal_ofReal hζ_pos.le, Real.norm_of_nonneg hJ_nonneg,
-      Real.rpow_eq_pow]
+    exact integrable_rpow_of_memLp_nonneg hζ_pos hJ_memζ
+      (fun a => Ch04.restrictionResponseJObservableCubeSet_nonneg (originCube d k) p q a)
   have hpoint :
       (fun a : RegCoeffField d => Real.rpow (childAvg a) ζ) ≤ᵐ[P]
         fun a => descendantsAverage Q j
@@ -763,21 +755,8 @@ theorem integral_rpow_descendantsAverage_restrictionResponseJObservableCubeSet_o
       simpa [ζ] using
         memLp_zeta_restrictionResponseJObservableCubeSet_cubeSet_from_P4_of_stationary
           hP hstat hStruct hP4 R (by simpa [hRscale] using hk_nonneg) p q
-    have hζ_ne_zero : ENNReal.ofReal ζ ≠ 0 := by
-      simp [ENNReal.ofReal_eq_zero, not_le.mpr hζ_pos]
-    have hζ_ne_top : ENNReal.ofReal ζ ≠ ⊤ := by simp
-    have hint :
-        Integrable
-          (fun a : RegCoeffField d =>
-            ‖Ch04.restrictionResponseJObservableCubeSet R p q a‖ ^
-              (ENNReal.ofReal ζ).toReal) P :=
-      hR_mem.integrable_norm_rpow hζ_ne_zero hζ_ne_top
-    refine hint.congr ?_
-    filter_upwards with a
-    have hnonneg : 0 ≤ Ch04.restrictionResponseJObservableCubeSet R p q a :=
-      Ch04.restrictionResponseJObservableCubeSet_nonneg R p q a
-    rw [ENNReal.toReal_ofReal hζ_pos.le, Real.norm_of_nonneg hnonneg,
-      Real.rpow_eq_pow]
+    exact integrable_rpow_of_memLp_nonneg hζ_pos hR_mem
+      (fun a => Ch04.restrictionResponseJObservableCubeSet_nonneg R p q a)
   have hmono :
       ∫ a, Real.rpow (childAvg a) ζ ∂P ≤
         ∫ a,
@@ -808,21 +787,8 @@ theorem integral_rpow_descendantsAverage_restrictionResponseJObservableCubeSet_o
         simpa [ζ] using
           memLp_zeta_restrictionResponseJObservableCubeSet_cubeSet_from_P4_of_stationary
             hP hstat hStruct hP4 R (by simpa [hRscale] using hk_nonneg) p q
-      have hζ_ne_zero : ENNReal.ofReal ζ ≠ 0 := by
-        simp [ENNReal.ofReal_eq_zero, not_le.mpr hζ_pos]
-      have hζ_ne_top : ENNReal.ofReal ζ ≠ ⊤ := by simp
-      have hint :
-          Integrable
-            (fun a : RegCoeffField d =>
-              ‖Ch04.restrictionResponseJObservableCubeSet R p q a‖ ^
-                (ENNReal.ofReal ζ).toReal) P :=
-        hR_mem.integrable_norm_rpow hζ_ne_zero hζ_ne_top
-      refine hint.congr ?_
-      filter_upwards with a
-      have hnonneg : 0 ≤ Ch04.restrictionResponseJObservableCubeSet R p q a :=
-        Ch04.restrictionResponseJObservableCubeSet_nonneg R p q a
-      rw [ENNReal.toReal_ofReal hζ_pos.le, Real.norm_of_nonneg hnonneg,
-        Real.rpow_eq_pow]
+      exact integrable_rpow_of_memLp_nonneg hζ_pos hR_mem
+        (fun a => Ch04.restrictionResponseJObservableCubeSet_nonneg R p q a)
     calc
       ∫ a,
           descendantsAverage Q j

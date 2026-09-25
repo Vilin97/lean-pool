@@ -455,6 +455,97 @@ private theorem linear_product_absorb_into_centering_and_pairedSquares
             _ = C * ε⁻¹ * (σ * G + σ⁻¹ * F) := by ring
         exact add_le_add hleft1 hleft2
 
+private theorem linear_integral_product_absorb
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {gradWeak fluxWeak : Ω → ℝ}
+    {gradCoeff fluxCoeff productCoeff Kgrad Kflux Kprod ε σ center u v : ℝ}
+    (hε : 0 < ε) (hε_le : ε ≤ 1) (hσ_pos : 0 < σ) (hcenter_nonneg : 0 ≤ center)
+    (hu : 0 ≤ u) (hv : 0 ≤ v)
+    (hgrad_nonneg_ae : 0 ≤ᵐ[P] gradWeak) (hflux_nonneg_ae : 0 ≤ᵐ[P] fluxWeak)
+    (hGradSq' : Integrable (fun a => (gradWeak a) ^ 2) P)
+    (hFluxSq' : Integrable (fun a => (fluxWeak a) ^ 2) P)
+    (hGradCoeff_nonneg : 0 ≤ gradCoeff) (hFluxCoeff_nonneg : 0 ≤ fluxCoeff)
+    (hGradCoeff_le : gradCoeff ≤ 2 * Kgrad) (hFluxCoeff_le : fluxCoeff ≤ 2 * Kflux)
+    (hProductCoeff_le : productCoeff ≤ Kprod)
+    (hKgrad_nonneg : 0 ≤ Kgrad) (hKflux_nonneg : 0 ≤ Kflux) (hKprod_nonneg : 0 ≤ Kprod)
+    (hp_center : σ * u ^ 2 ≤ center) (hq_center : σ⁻¹ * v ^ 2 ≤ center) :
+    (1 / 2 : ℝ) * v * (gradCoeff * ∫ a, gradWeak a ∂P) +
+      (1 / 2 : ℝ) * u * (fluxCoeff * ∫ a, fluxWeak a ∂P) +
+      productCoeff * (Real.sqrt (∫ a, (gradWeak a) ^ 2 ∂P) *
+        Real.sqrt (∫ a, (fluxWeak a) ^ 2 ∂P)) ≤
+      (Kgrad ^ 2 + Kflux ^ 2 + Kprod + 2) * ε * center +
+        (Kgrad ^ 2 + Kflux ^ 2 + Kprod + 2) * ε⁻¹ *
+          (σ * (∫ a, (gradWeak a) ^ 2 ∂P) + σ⁻¹ * (∫ a, (fluxWeak a) ^ 2 ∂P)) := by
+  let G := ∫ a, (gradWeak a) ^ 2 ∂P
+  let F := ∫ a, (fluxWeak a) ^ 2 ∂P
+  let C : ℝ := Kgrad ^ 2 + Kflux ^ 2 + Kprod + 2
+  have hG_nonneg : 0 ≤ G := by
+    dsimp [G]
+    exact integral_nonneg fun a => sq_nonneg _
+  have hF_nonneg : 0 ≤ F := by
+    dsimp [F]
+    exact integral_nonneg fun a => sq_nonneg _
+  have hIntGrad_le : ∫ a, gradWeak a ∂P ≤ Real.sqrt G := by
+    simpa [G] using
+      integral_le_sqrt_integral_sq_of_ae_nonneg
+        (μ := P) (X := gradWeak) hGradSq' hgrad_nonneg_ae
+  have hIntFlux_le : ∫ a, fluxWeak a ∂P ≤ Real.sqrt F := by
+    simpa [F] using
+      integral_le_sqrt_integral_sq_of_ae_nonneg
+        (μ := P) (X := fluxWeak) hFluxSq' hflux_nonneg_ae
+  have hAbsorb_pair := linear_product_absorb_into_centering_and_pairedSquares
+      (ε := ε) (σ := σ) (center := center)
+      (G := G) (F := F) (Kg := Kgrad) (Kf := Kflux) (Kp := Kprod)
+      (u := u) (v := v)
+      hε hε_le hσ_pos hcenter_nonneg hG_nonneg hF_nonneg
+      hKgrad_nonneg hKflux_nonneg hKprod_nonneg hp_center hq_center
+  have hAbsorb := hAbsorb_pair.2
+  have hGradTerm_le :
+      (1 / 2 : ℝ) * v * (gradCoeff * ∫ a, gradWeak a ∂P) ≤
+        Kgrad * v * Real.sqrt G := by
+    have hint_nonneg : 0 ≤ ∫ a, gradWeak a ∂P :=
+      integral_nonneg_of_ae hgrad_nonneg_ae
+    have hsqrt_nonneg : 0 ≤ Real.sqrt G := Real.sqrt_nonneg _
+    calc
+      (1 / 2 : ℝ) * v * (gradCoeff * ∫ a, gradWeak a ∂P)
+          = (gradCoeff / 2) * v * (∫ a, gradWeak a ∂P) := by ring
+      _ ≤ (gradCoeff / 2) * v * Real.sqrt G := by
+        gcongr
+      _ ≤ Kgrad * v * Real.sqrt G := by
+        have hhalf : gradCoeff / 2 ≤ Kgrad := by linarith [hGradCoeff_le]
+        gcongr
+  have hFluxTerm_le :
+      (1 / 2 : ℝ) * u * (fluxCoeff * ∫ a, fluxWeak a ∂P) ≤
+        Kflux * u * Real.sqrt F := by
+    have hint_nonneg : 0 ≤ ∫ a, fluxWeak a ∂P :=
+      integral_nonneg_of_ae hflux_nonneg_ae
+    have hsqrt_nonneg : 0 ≤ Real.sqrt F := Real.sqrt_nonneg _
+    calc
+      (1 / 2 : ℝ) * u * (fluxCoeff * ∫ a, fluxWeak a ∂P)
+          = (fluxCoeff / 2) * u * (∫ a, fluxWeak a ∂P) := by ring
+      _ ≤ (fluxCoeff / 2) * u * Real.sqrt F := by
+        gcongr
+      _ ≤ Kflux * u * Real.sqrt F := by
+        have hhalf : fluxCoeff / 2 ≤ Kflux := by linarith [hFluxCoeff_le]
+        gcongr
+  have hProductTerm_le :
+      productCoeff * (Real.sqrt G * Real.sqrt F) ≤
+        Kprod * (Real.sqrt G * Real.sqrt F) := by
+    exact mul_le_mul_of_nonneg_right hProductCoeff_le
+      (mul_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _))
+  calc
+    (1 / 2 : ℝ) * v * (gradCoeff * ∫ a, gradWeak a ∂P) +
+        (1 / 2 : ℝ) * u * (fluxCoeff * ∫ a, fluxWeak a ∂P) +
+          productCoeff * (Real.sqrt G * Real.sqrt F)
+        ≤
+      Kgrad * v * Real.sqrt G +
+        Kflux * u * Real.sqrt F +
+          Kprod * (Real.sqrt G * Real.sqrt F) :=
+        add_le_add (add_le_add hGradTerm_le hFluxTerm_le) hProductTerm_le
+    _ ≤
+      C * ε * center +
+        C * ε⁻¹ * (σ * G + σ⁻¹ * F) := hAbsorb
+
 /-- The linear weak-norm terms and the cutoff-product Cauchy term in the first
 Section 5.3 expected RHS are absorbed by the special-vector centering term and
 the paired weak-norm square expectations. -/
@@ -588,12 +679,6 @@ theorem linearProductTerms_special_le_centering_add_pairedWeakNormSquares
   have hσ_pos : 0 < σ := by
     simpa [σ] using sigmaHatAtScale_pos_of_P4 hP hStruct hP4 m
   have hcenter_nonneg : 0 ≤ (Real.sqrt θ - 1) ^ 2 := sq_nonneg _
-  have hG_nonneg : 0 ≤ G := by
-    dsimp [G]
-    exact integral_nonneg fun a => sq_nonneg _
-  have hF_nonneg : 0 ≤ F := by
-    dsimp [F]
-    exact integral_nonneg fun a => sq_nonneg _
   have hgrad_nonneg_ae : 0 ≤ᵐ[P] gradWeak := by
     simpa [gradWeak, Q, s, p_e, q_e, p0_e] using
       JUpperBoundWeakNorms.canonicalScalarResponseGradientWeakNormCubeSet_nonneg_ae
@@ -606,14 +691,6 @@ theorem linearProductTerms_special_le_centering_add_pairedWeakNormSquares
     simpa [gradWeak, Q, s, p_e, q_e, p0_e, β] using hGradSq
   have hFluxSq' : Integrable (fun a : RegCoeffField d => (fluxWeak a) ^ 2) P := by
     simpa [fluxWeak, Q, t, p_e, q_e, q0_e, β] using hFluxSq
-  have hIntGrad_le : ∫ a, gradWeak a ∂P ≤ Real.sqrt G := by
-    simpa [G] using
-      integral_le_sqrt_integral_sq_of_ae_nonneg
-        (μ := P) (X := gradWeak) hGradSq' hgrad_nonneg_ae
-  have hIntFlux_le : ∫ a, fluxWeak a ∂P ≤ Real.sqrt F := by
-    simpa [F] using
-      integral_le_sqrt_integral_sq_of_ae_nonneg
-        (μ := P) (X := fluxWeak) hFluxSq' hflux_nonneg_ae
   have hGradCoeff_nonneg : 0 ≤ gradCoeff := by
     dsimp [gradCoeff]
     exact mul_nonneg (Nat.cast_nonneg _)
@@ -674,58 +751,10 @@ theorem linearProductTerms_special_le_centering_add_pairedWeakNormSquares
     simpa [σ, θ, p_e, q_e, p0_e] using
       sigmaHatAtScale_mul_norm_specialPCentering_sq_le_of_vecNormSq_eq_one
         hP hStruct hP4 m e he
-  have hAbsorb_pair := linear_product_absorb_into_centering_and_pairedSquares
-      (ε := ε) (σ := σ) (center := (Real.sqrt θ - 1) ^ 2)
-      (G := G) (F := F) (Kg := Kgrad) (Kf := Kflux) (Kp := Kprod)
-      (u := ‖p0_e‖) (v := ‖q0_e‖)
-      hε hε_le hσ_pos hcenter_nonneg hG_nonneg hF_nonneg
-      hKgrad_nonneg hKflux_nonneg hKprod_nonneg hp_center hq_center
-  have hAbsorb := hAbsorb_pair.2
-  have hGradTerm_le :
-      (1 / 2 : ℝ) * ‖q0_e‖ * (gradCoeff * ∫ a, gradWeak a ∂P) ≤
-        Kgrad * ‖q0_e‖ * Real.sqrt G := by
-    have hint_nonneg : 0 ≤ ∫ a, gradWeak a ∂P :=
-      integral_nonneg_of_ae hgrad_nonneg_ae
-    have hsqrt_nonneg : 0 ≤ Real.sqrt G := Real.sqrt_nonneg _
-    calc
-      (1 / 2 : ℝ) * ‖q0_e‖ * (gradCoeff * ∫ a, gradWeak a ∂P)
-          = (gradCoeff / 2) * ‖q0_e‖ * (∫ a, gradWeak a ∂P) := by ring
-      _ ≤ (gradCoeff / 2) * ‖q0_e‖ * Real.sqrt G := by
-        gcongr
-      _ ≤ Kgrad * ‖q0_e‖ * Real.sqrt G := by
-        have hhalf : gradCoeff / 2 ≤ Kgrad := by linarith [hGradCoeff_le]
-        gcongr
-  have hFluxTerm_le :
-      (1 / 2 : ℝ) * ‖p0_e‖ * (fluxCoeff * ∫ a, fluxWeak a ∂P) ≤
-        Kflux * ‖p0_e‖ * Real.sqrt F := by
-    have hint_nonneg : 0 ≤ ∫ a, fluxWeak a ∂P :=
-      integral_nonneg_of_ae hflux_nonneg_ae
-    have hsqrt_nonneg : 0 ≤ Real.sqrt F := Real.sqrt_nonneg _
-    calc
-      (1 / 2 : ℝ) * ‖p0_e‖ * (fluxCoeff * ∫ a, fluxWeak a ∂P)
-          = (fluxCoeff / 2) * ‖p0_e‖ * (∫ a, fluxWeak a ∂P) := by ring
-      _ ≤ (fluxCoeff / 2) * ‖p0_e‖ * Real.sqrt F := by
-        gcongr
-      _ ≤ Kflux * ‖p0_e‖ * Real.sqrt F := by
-        have hhalf : fluxCoeff / 2 ≤ Kflux := by linarith [hFluxCoeff_le]
-        gcongr
-  have hProductTerm_le :
-      productCoeff * (Real.sqrt G * Real.sqrt F) ≤
-        Kprod * (Real.sqrt G * Real.sqrt F) := by
-    exact mul_le_mul_of_nonneg_right hProductCoeff_le
-      (mul_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _))
-  calc
-    (1 / 2 : ℝ) * ‖q0_e‖ * (gradCoeff * ∫ a, gradWeak a ∂P) +
-        (1 / 2 : ℝ) * ‖p0_e‖ * (fluxCoeff * ∫ a, fluxWeak a ∂P) +
-          productCoeff * (Real.sqrt G * Real.sqrt F)
-        ≤
-      Kgrad * ‖q0_e‖ * Real.sqrt G +
-        Kflux * ‖p0_e‖ * Real.sqrt F +
-          Kprod * (Real.sqrt G * Real.sqrt F) :=
-        add_le_add (add_le_add hGradTerm_le hFluxTerm_le) hProductTerm_le
-    _ ≤
-      C * ε * (Real.sqrt θ - 1) ^ 2 +
-        C * ε⁻¹ * (σ * G + σ⁻¹ * F) := hAbsorb
+  exact linear_integral_product_absorb hε hε_le hσ_pos hcenter_nonneg
+    (norm_nonneg _) (norm_nonneg _) hgrad_nonneg_ae hflux_nonneg_ae hGradSq' hFluxSq'
+    hGradCoeff_nonneg hFluxCoeff_nonneg hGradCoeff_le hFluxCoeff_le hProductCoeff_le
+    hKgrad_nonneg hKflux_nonneg hKprod_nonneg hp_center hq_center
 
 /-- Almost-sure paired square version of the beta-shifted weak-norm maximizer
 input.  This is kept pointwise so subsequent expectation estimates can expand

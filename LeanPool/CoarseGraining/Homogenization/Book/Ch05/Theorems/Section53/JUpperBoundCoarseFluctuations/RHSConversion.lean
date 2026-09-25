@@ -358,6 +358,21 @@ private theorem sum_Icc_betaWeight_le_five_beta_inv
     _ ≤ (1 - Real.rpow (3 : ℝ) (-β))⁻¹ := hgeom
     _ ≤ 5 * β⁻¹ := hgeom_five
 
+private theorem aemeasurable_weighted_descendants_norm_sqrt
+    {d : ℕ} {P : Ch04.RestrictionCoeffLaw d} {S : Finset ℤ} {Q : TriadicCube d}
+    {j : ℤ → ℕ} {w : ℤ → ℝ} {V : TriadicCube d → RegCoeffField d → Vec d} {v : Vec d}
+    (hV : ∀ R, AEMeasurable (V R) P) :
+    AEMeasurable (fun a => ∑ n ∈ S, w n *
+      Real.sqrt (descendantsAverage Q (j n) (fun R => vecNormSq (V R a - v)))) P := by
+  classical
+  refine S.aemeasurable_fun_sum (μ := P) ?_
+  intro n _hn
+  exact aemeasurable_const.mul
+    ((Ch04.aemeasurable_descendantsAverage
+      (P := P) (Q := Q) (j := j n)
+      (F := fun R a => vecNormSq (V R a - v))
+      (fun R _hR => aemeasurable_vecNormSq_sub_const (hV R) v)).sqrt)
+
 /-- Expectation-level conversion for the paired high-scale average terms in the
 weak-norm maximizer RHS.  This is the full-block fluctuation part of the
 paired square estimate; the fluctuation observable is the squared Euclidean
@@ -499,82 +514,23 @@ theorem integral_paired_highScaleAverageTerms_special_le_fullBlockSumAtScale
           hstat hStruct (m : ℤ) hn_nonneg hnm hRscale hOrigin).const_mul (2 * θ)
     exact hdesc.const_mul (w n)
   have hY_int : Integrable Y P := by
-    have hsum :
-        Integrable
-          (fun a : RegCoeffField d =>
-            ∑ n ∈ S, w n *
-              descendantsAverage (originCube d (m : ℤ))
-                (Int.toNat ((m : ℤ) - n))
-                (fun R =>
-                  2 * θ *
-            fullBlockNormalizedFluctuationOperatorNormSqAtScale
-                      hP hStruct (m : ℤ) R a)) P :=
-      MeasureTheory.integrable_finsetSum S hTermInt
-    simpa [Y] using hsum.const_mul (∑ n ∈ S, w n)
+    exact (MeasureTheory.integrable_finsetSum S hTermInt).const_mul (∑ n ∈ S, w n)
   have hGradAvgAE :
       AEMeasurable
         (fun a : RegCoeffField d =>
           WeakNormsMaximizer.gradientAverageTermAtScale
             (m : ℤ) (k : ℤ) s p_e q_e p0_e a) P := by
     dsimp [WeakNormsMaximizer.gradientAverageTermAtScale]
-    change AEMeasurable
-      (fun a : RegCoeffField d =>
-        ∑ n ∈ S,
-          Real.rpow (3 : ℝ) (-s * (Int.toNat ((m : ℤ) - n) : ℝ)) *
-            Real.sqrt
-              (descendantsAverage (originCube d (m : ℤ))
-                (Int.toNat ((m : ℤ) - n))
-                (fun R =>
-                  vecNormSq
-                    (Ch04.canonicalScalarResponseGradientAverageCubeSet
-                      R R p_e q_e a.toFun - p0_e)))) P
-    refine S.aemeasurable_fun_sum (μ := P) ?_
-    intro n _hn
-    exact
-      aemeasurable_const.mul
-        ((Ch04.aemeasurable_descendantsAverage
-          (P := P) (Q := originCube d (m : ℤ))
-          (j := Int.toNat ((m : ℤ) - n))
-          (F := fun R a =>
-            vecNormSq
-              (Ch04.canonicalScalarResponseGradientAverageCubeSet
-                R R p_e q_e a.toFun - p0_e))
-          (fun R _hR =>
-            aemeasurable_vecNormSq_sub_const
-              (hP.aemeasurable_canonicalScalarResponseGradientAverage_cubeSet
-                R R p_e q_e) p0_e)).sqrt)
+    exact aemeasurable_weighted_descendants_norm_sqrt
+      (fun R => hP.aemeasurable_canonicalScalarResponseGradientAverage_cubeSet R R p_e q_e)
   have hFluxAvgAE :
       AEMeasurable
         (fun a : RegCoeffField d =>
           WeakNormsMaximizer.fluxAverageTermAtScale
             (m : ℤ) (k : ℤ) t p_e q_e q0_e a) P := by
     dsimp [WeakNormsMaximizer.fluxAverageTermAtScale]
-    change AEMeasurable
-      (fun a : RegCoeffField d =>
-        ∑ n ∈ S,
-          Real.rpow (3 : ℝ) (-t * (Int.toNat ((m : ℤ) - n) : ℝ)) *
-            Real.sqrt
-              (descendantsAverage (originCube d (m : ℤ))
-                (Int.toNat ((m : ℤ) - n))
-                (fun R =>
-                  vecNormSq
-                    (Ch04.canonicalScalarResponseFluxAverageCubeSet
-                      R R p_e q_e a.toFun - q0_e)))) P
-    refine S.aemeasurable_fun_sum (μ := P) ?_
-    intro n _hn
-    exact
-      aemeasurable_const.mul
-        ((Ch04.aemeasurable_descendantsAverage
-          (P := P) (Q := originCube d (m : ℤ))
-          (j := Int.toNat ((m : ℤ) - n))
-          (F := fun R a =>
-            vecNormSq
-              (Ch04.canonicalScalarResponseFluxAverageCubeSet
-                R R p_e q_e a.toFun - q0_e))
-          (fun R _hR =>
-            aemeasurable_vecNormSq_sub_const
-              (hP.aemeasurable_canonicalScalarResponseFluxAverage_cubeSet
-                R R p_e q_e) q0_e)).sqrt)
+    exact aemeasurable_weighted_descendants_norm_sqrt
+      (fun R => hP.aemeasurable_canonicalScalarResponseFluxAverage_cubeSet R R p_e q_e)
   have hXAE : AEMeasurable X P := by
     simpa [X, pow_two] using!
       (aemeasurable_const.mul (hGradAvgAE.mul hGradAvgAE)).add
@@ -622,11 +578,7 @@ theorem integral_paired_highScaleAverageTerms_special_le_fullBlockSumAtScale
       ∫ a, X a ∂P ≤
         (∑ n ∈ S, w n) *
           (2 * θ * coarseFluctuationFullBlockSumAtScale hP hStruct hP4 k m) := by
-    calc
-      ∫ a, X a ∂P ≤ ∫ a, Y a ∂P := hmono
-      _ =
-          (∑ n ∈ S, w n) *
-            (2 * θ * coarseFluctuationFullBlockSumAtScale hP hStruct hP4 k m) := hY_eq
+    simpa only [hY_eq] using hmono
   refine ⟨by simpa [X, S, w, σ, θ, s, t, p_e, q_e, p0_e, q0_e, β] using hX_int, ?_⟩
   simpa [X, S, w, σ, θ, s, t, p_e, q_e, p0_e, q0_e, β] using hmain
 
