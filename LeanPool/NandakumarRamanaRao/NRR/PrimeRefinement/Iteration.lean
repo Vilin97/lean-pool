@@ -14,10 +14,9 @@ public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.PerimeterObservable
 /-!
 # Iteration of the prime-refinement lemma
 
-Assuming `PrimeRefinementTheorem`, this module performs the complete formal iteration over a list
-of prime factors, flattens the resulting nested power partitions, and derives the arbitrary-number
-fair-partition theorem.  The construction is parameterized by the prime-refinement separator
-theorem.
+The model-independent separator theorem drives one recursive construction over prime factors.
+It flattens the resulting nested power partitions and derives the arbitrary-number fair-partition
+theorem. The fixed Fox--Neuwirth interface specializes that same construction.
 -/
 
 @[expose] public section
@@ -114,12 +113,12 @@ structure IteratedRefinement
     ∀ C : BodySpace K A, ∀ y : SignedInterval,
       output.Zero C y → IteratedPartitionWitness ps A hA φ C y
 
-namespace IteratedRefinement
+namespace FlexibleIteratedRefinement
 
-/-- Build the full iterated refinement from the prime-refinement separator theorem. -/
+/-- Build the full iterated refinement from the model-independent separator theorem. -/
 noncomputable def build
     {K : Geometry.ConvexBody Plane}
-    (H : PrimeRefinementTheorem) :
+    (H : FlexiblePrimeRefinementTheorem) :
     (ps : List PrimeFactor) →
     (A : ℝ) → (hA : 0 < A) → (hAK : A ≤ K.area) →
     (φ : NiceMV (BodySpace K (primeDescendArea A ps))) →
@@ -147,23 +146,21 @@ noncomputable def build
         ⟨BodySpace.parentAt K hAK⟩
       let S := Classical.choice (H p.1 p.2 K A hA inner.output)
       exact
-        { output := S.toNiceMV
+        { output := S.certificate.toNiceMV
           decode := by
             intro C y hy
-            have hlift := S.zero_lifts_to_all_children hy
+            have hlift := S.certificate.zero_lifts_to_all_children hy
             let x := hlift.choose
             have hx : ∀ i : Fin p.1,
                 inner.output.Zero
-                  (EMP.VariableBody.child
-                    (foxNeuwirthTopCellModel p.2).sites hA p.2.pos (C, x) i) y := by
+                  (EMP.VariableBody.child S.model.sites hA p.2.pos (C, x) i) y := by
               intro i
               change inner.output.Zero
-                (EMP.VariableBody.child
-                  (foxNeuwirthTopCellModel p.2).sites hA p.2.pos
-                    (C, hlift.choose) i) y
+                (EMP.VariableBody.child S.model.sites hA p.2.pos
+                  (C, hlift.choose) i) y
               exact hlift.choose_spec i
             let W := EMP.VariableBody.witness
-              (foxNeuwirthTopCellModel p.2).sites hA p.2.pos (C, x)
+              S.model.sites hA p.2.pos (C, x)
             let R : ∀ i : Fin p.1,
                 IteratedPartitionWitness ps (A / (p.1 : ℝ)) hpA φ (W.child i) y :=
               fun i => inner.decode (W.child i) y (by
@@ -217,12 +214,27 @@ noncomputable def build
                       (W.child i).body.area = C.body.area / (p.1 : ℝ) := by
                     simpa [W, EMP.VariableBody.witness] using
                       EMP.VariableBody.child_area_eq
-                        (foxNeuwirthTopCellModel p.2).sites hA p.2.pos (C, x) i
+                        S.model.sites hA p.2.pos (C, x) i
                   simp [primeDescendArea, hchildArea]
                 leaf_zero := by
                   rintro ⟨i, j⟩
                   exact (R i).leaf_zero j }
         }
+
+
+end FlexibleIteratedRefinement
+
+namespace IteratedRefinement
+
+/-- Specialize the shared model-independent iteration to the fixed Fox--Neuwirth model. -/
+noncomputable def build
+    {K : Geometry.ConvexBody Plane}
+    (H : PrimeRefinementTheorem)
+    (ps : List PrimeFactor)
+    (A : ℝ) (hA : 0 < A) (hAK : A ≤ K.area)
+    (φ : NiceMV (BodySpace K (primeDescendArea A ps))) :
+    IteratedRefinement ps A hA φ :=
+  FlexibleIteratedRefinement.build H.toFlexible ps A hA hAK φ
 
 end IteratedRefinement
 
@@ -276,9 +288,9 @@ theorem partition_hasEqualPerimeter
 
 end IteratedPartitionWitness
 
-/-- **Arbitrary-number AAK theorem from the prime-refinement separator theorem.** -/
-theorem exists_fair_partition_of_primeRefinement
-    (H : PrimeRefinementTheorem)
+/-- **Arbitrary-number AAK theorem from the model-independent separator theorem.** -/
+theorem exists_fair_partition_of_flexiblePrimeRefinement
+    (H : FlexiblePrimeRefinementTheorem)
     (K : Geometry.ConvexBody Plane) (n : ℕ) (hn : 0 < n) :
     ∃ P : ConvexPartition K n, P.IsFair := by
   have hKpos : 0 < K.area := (SolidConvexBody.ofConvexBody K).area_pos
@@ -289,7 +301,7 @@ theorem exists_fair_partition_of_primeRefinement
   have hbase : 0 < primeDescendArea K.area ps :=
     primeDescendArea_pos hKpos ps
   let φ := perimeterNiceMV K (primeDescendArea K.area ps) hbase
-  let R := IteratedRefinement.build H ps K.area hKpos le_rfl φ
+  let R := FlexibleIteratedRefinement.build H ps K.area hKpos le_rfl φ
   let C : BodySpace K K.area := BodySpace.full K
   obtain ⟨y, hy⟩ := R.output.exists_zero C
   let W := R.decode C y hy
@@ -308,6 +320,13 @@ theorem exists_fair_partition_of_primeRefinement
   refine ⟨PI.toConvexPartition, ?_⟩
   exact ⟨PI.toConvexPartition_isEqualArea hPIarea,
     PI.toConvexPartition_hasEqualPerimeter hPIperimeter⟩
+
+/-- **Arbitrary-number AAK theorem from the prime-refinement separator theorem.** -/
+theorem exists_fair_partition_of_primeRefinement
+    (H : PrimeRefinementTheorem)
+    (K : Geometry.ConvexBody Plane) (n : ℕ) (hn : 0 < n) :
+    ∃ P : ConvexPartition K n, P.IsFair :=
+  exists_fair_partition_of_flexiblePrimeRefinement H.toFlexible K n hn
 
 /-- Public implication form of the Avvakumov--Akopyan--Karasev theorem.  The conclusion for every
 positive number of pieces follows formally from the single prime-refinement separator theorem. -/

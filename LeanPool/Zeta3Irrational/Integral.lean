@@ -831,7 +831,8 @@ lemma integrableOn_J_rr (r : ℕ) : MeasureTheory.IntegrableOn
         · positivity
         · exact fun_of_J_nonneg r r x hx
       · simp only [hx, ↓reduceIte]
-    simp_all
+    rw [h1, h]
+    exact ENNReal.ofReal_lt_top
 
 theorem J_rr (r : ℕ) :
     J r r =
@@ -1019,7 +1020,8 @@ lemma integrableOn_J_rs' (r s : ℕ) (h : r > s) : MeasureTheory.IntegrableOn
         · positivity
         · exact fun_of_J_nonneg r s x hx
       · simp only [hx, ↓reduceIte]
-    simp_all
+    rw [h1, h₀]
+    exact ENNReal.ofReal_lt_top
 
 lemma J_rs' (r s : ℕ) (h : r > s) :
     J r s = (∑ k ∈ Finset.Ioc s r, 1 / (k : ℝ) ^ 2) / (r - s) := by
@@ -1103,7 +1105,9 @@ lemma integrableOn_J_rs (r s : ℕ) : MeasureTheory.IntegrableOn
           · simp only [hx, ↓reduceIte]
         have h₀ := J_ENN_rs s r h2
         rw [J_ENN_rs_symm s r] at h₀
-        simp_all
+        simp only [JENN] at h₀
+        rw [h1, h₀]
+        exact ENNReal.ofReal_lt_top
 
 lemma J_eq_toReal_J_ENN (r s : ℕ) : J r s = (JENN r s).toReal := by
   rw [J, JENN, MeasureTheory.integral_eq_lintegral_of_nonneg_ae]
