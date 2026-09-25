@@ -85,7 +85,8 @@ noncomputable def offSupportOscillatoryConstant : ℝ :=
   (27 * (∫ v : ℝ, |iteratedDeriv 2 baseBump v|) +
     810 * (∫ v : ℝ, |deriv baseBump v|) + 7776) / (4 * Real.pi) ^ 2
 
-private noncomputable def oscillatoryCoeff (modulation : ℝ) : ℂ :=
+/-- The constant factor in the derivative of the quadratic oscillatory phase. -/
+noncomputable def oscillatoryCoeff (modulation : ℝ) : ℂ :=
   ((-(4 * Real.pi * modulation) : ℝ) : ℂ) * Complex.I
 
 private noncomputable def ibpAmplitude0
@@ -102,7 +103,8 @@ private noncomputable def ibpAmplitude1
   (p' u : ℂ) / (oscillatoryCoeff modulation ^ 2 * ((x - u : ℝ) : ℂ) ^ 3) +
     2 * (p u : ℂ) / (oscillatoryCoeff modulation ^ 2 * ((x - u : ℝ) : ℂ) ^ 4)
 
-private noncomputable def ibpAmplitude1Deriv
+/-- The amplitude after differentiating twice in the two-fold integration-by-parts identity. -/
+noncomputable def ibpAmplitude1Deriv
     (modulation x : ℝ) (p p' p'' : ℝ → ℝ) (u : ℝ) : ℂ :=
   (p'' u : ℂ) / (oscillatoryCoeff modulation ^ 2 * ((x - u : ℝ) : ℂ) ^ 3) +
     5 * (p' u : ℂ) / (oscillatoryCoeff modulation ^ 2 * ((x - u : ℝ) : ℂ) ^ 4) +

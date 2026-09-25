@@ -271,7 +271,7 @@ inductive DyadicNode where
   | root (q : ℤ)
   | left (parent : DyadicNode)
   | right (parent : DyadicNode)
-  deriving DecidableEq, Encodable
+  deriving DecidableEq
 
 /-- Depth of a dyadic node. -/
 def DyadicNode.depth : DyadicNode → ℕ
@@ -322,6 +322,10 @@ theorem DyadicNode.depth_index_injective :
             mul_left_cancel₀ (by norm_num : (2 : ℤ) ≠ 0) hmul
           have hparent : p = r := ih (Prod.ext (Nat.add_right_cancel h.1) hindex)
           simp [hparent]
+
+/-- Encode a dyadic node by its depth and integer address. -/
+noncomputable instance : Encodable DyadicNode :=
+  Encodable.ofInj (fun p : DyadicNode ↦ (p.depth, p.index)) DyadicNode.depth_index_injective
 
 /-- The half-open interval represented by a node. -/
 def DyadicNode.interval (L : ℝ) (p : DyadicNode) : Set ℝ :=
@@ -487,7 +491,12 @@ structure DyadicCell where
   depth : ℕ
   /-- The global integer index locating the cell at its dyadic depth. -/
   index : ℤ
-  deriving DecidableEq, Encodable
+  deriving DecidableEq
+
+/-- Encode a dyadic cell by its depth and integer address. -/
+instance : Encodable DyadicCell :=
+  Encodable.ofLeftInverse (fun c : DyadicCell ↦ (c.depth, c.index))
+    (fun p : ℕ × ℤ ↦ ⟨p.1, p.2⟩) (by intro c; cases c; rfl)
 
 /-- The dyadic interval represented by the cell at root length `L`. -/
 def DyadicCell.interval (L : ℝ) (c : DyadicCell) : Set ℝ :=
