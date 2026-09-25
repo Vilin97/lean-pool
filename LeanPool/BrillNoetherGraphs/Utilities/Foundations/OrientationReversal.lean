@@ -1508,8 +1508,9 @@ equivalent orientation divisors are connected by cycle and cocycle reversals.
 Reference: E. Gioan, *Enumerating degree sequences in digraphs and a cycle–cocycle reversing
 system*, European J. Combin. 28 (2007) 1351–1366, where the cycle–cocycle reversing system
 is introduced and its classes are identified with the classes of `D(𝒪)` modulo linear
-equivalence. It is the lemma behind An–Baker–Kuperberg–Shokrieh, Theorem 1.2
-(every degree-`g-1` class is `D(𝒪)` for some orientation).
+equivalence. For the related existence of an orientation divisor in every degree-`g-1`
+class, see An–Baker–Kuperberg–Shokrieh, Theorem 4.10 of
+[arXiv:1304.4259v2](https://arxiv.org/pdf/1304.4259v2).
 
 **The proof, in two halves.** `linearEquiv` hands over a firing script `σ` with
 `ordiv 𝒪₂ − ordiv 𝒪₁ = prin σ`, i.e. a potential `ψ = −σ` with

@@ -10182,10 +10182,13 @@ projects:
     - Highlights.gonality_drops_under_regular_subdivision
     main_results:
     - declaration: Highlights.brill_noether_existence_through_five
-      informal: Every finite connected graph of genus at most five satisfies the stated Brill–Noether
-        existence theorem.
+      informal: Every finite connected loopless multigraph of genus g at most five has,
+        for integers r and d, a divisor of degree d and rank at least r whenever
+        (r + 1) * (g - d + r) ≤ g.
     - declaration: Highlights.treewidth_le_gonality
-      informal: The treewidth of a finite connected graph is at most its divisorial gonality.
+      informal: On a finite connected loopless multigraph, for every natural number k,
+        any degree-k divisor of rank at least one bounds the treewidth by k; this is the
+        witness formulation of the treewidth lower bound for divisorial gonality.
     - declaration: Highlights.gonality_drops_under_regular_subdivision
       informal: There is a graph whose divisorial gonality strictly decreases under a regular subdivision.
     tags:
