@@ -3,17 +3,19 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.IntegralClosure.GoingDown
-import Mathlib.RingTheory.KrullDimension.Polynomial
-import Mathlib.RingTheory.NoetherNormalization
-import Mathlib.RingTheory.PicardGroup
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic
+
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.IntegralClosure.GoingDown
+public import Mathlib.RingTheory.KrullDimension.Polynomial
+public import Mathlib.RingTheory.NoetherNormalization
+public import Mathlib.RingTheory.PicardGroup
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.RingTheory.TotallySplit
+public import Mathlib.Tactic
 
 /-!
 # Dimension theory of finitely generated domains over a field
@@ -39,6 +41,8 @@ arbitrary field `K`. Throughout, `A` is a domain which is a finitely generated `
   `ringKrullDim_quotient_add_one_of_mem_minimalPrimes_sup`, `finite_minimalPrimes_sup`,
   `exists_minimalPrimes_le`).
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

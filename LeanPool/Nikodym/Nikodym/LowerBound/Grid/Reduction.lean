@@ -3,9 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.PolynomialSpaces
-import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.PolynomialSpaces
+public import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
 
 /-!
 # Bounded reduction modulo a power of a grid ideal
@@ -36,6 +38,8 @@ For the finite grid `F ⊆ K` we also define the grid polynomial
 `Fintype.card F` and vanishes on `ι (F)`, and deduce `Nikodym.LowerBound.Z_grid_mem_pointIdeal`:
 the grid polynomials `Z i` lie in the point ideal of every grid point.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.RingTheory.MvPolynomial.Ideal
-import LeanPool.Nikodym.Nikodym.LowerBound.PolynomialSpaces
+
+public import Mathlib.RingTheory.MvPolynomial.Ideal
+public import LeanPool.Nikodym.Nikodym.LowerBound.PolynomialSpaces
 
 /-!
 # Point ideals and finite jet quotients
@@ -34,6 +36,8 @@ The main results are
 
 No localizations appear: everything is phrased with global quotients of `P_d`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

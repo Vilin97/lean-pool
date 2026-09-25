@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Fin.Tuple.NatAntidiagonal
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Fin.Tuple.NatAntidiagonal
+public import Mathlib.Tactic
 
 /-!
 # Weighted shadow inequality
@@ -15,6 +17,8 @@ Blueprint node H02: for a divisor-closed set `S` of exponent vectors in `N` vari
 `(t + 1) h(t + 1) ≤ (t + N) h(t)`, counted in `ℕ` by double counting weighted covering relations
 `α ↦ α + eᵢ`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

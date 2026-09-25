@@ -3,9 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
-import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
+public import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
 
 /-!
 # Parametrized lines and their prime ideals
@@ -33,6 +35,8 @@ The finite field `F` enters only through the coordinate lift `Nikodym.LowerBound
 `exists_eq_add_smul_of_lineIdeal_liftPt_le`: if the `K`-line through `liftPt b` with direction
 `liftPt v` passes through `liftPt x`, then `x = b + a • v` for some `a : F`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

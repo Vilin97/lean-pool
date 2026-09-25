@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.HilbertPolynomial
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.PolyAsymptotics
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.HilbertPolynomial
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.PolyAsymptotics
 
 /-!
 # Degree and leading term of the affine Hilbert polynomial
@@ -33,6 +35,8 @@ Main declarations:
   `leadingCoeff_affineHilbertPoly_of_bounds`, `degree_pos_of_bounds`,
   `hilbert_le_degree_mul_choose_of_bounds`, and their `_of_eventually_bounds` versions.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.Construction.Scaffold
+
+public import LeanPool.Nikodym.Nikodym.Construction.Scaffold
 
 /-!
 # Mixed-radix digits and the decoding inequality
@@ -24,6 +26,8 @@ This file implements blueprint nodes D01 and D02 of
 
 Throughout, `n` denotes `Fintype.card ι`.
 -/
+
+@[expose] public section
 
 namespace Nikodym
 

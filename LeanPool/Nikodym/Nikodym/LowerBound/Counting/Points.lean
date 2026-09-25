@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Grid.Jets
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
-import LeanPool.Nikodym.Nikodym.LowerBound.PrivateFamily
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Grid.Jets
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
+public import LeanPool.Nikodym.Nikodym.LowerBound.PrivateFamily
 
 /-!
 # Affine point count from grid jets
@@ -33,6 +35,8 @@ Write `N` for the number of grid points `x ∈ F^d` lying on `I`, i.e. with `I �
 The blueprint suggests comparing leading coefficients of polynomials in `r`; we instead pass to
 the limit `r → ∞` of `N ≤ Δ (q + (d q + k) / r) ^ k`, which is shorter in Mathlib.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.Ring.Nat
-import Mathlib.Order.Basic
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Ring.Nat
+public import Mathlib.Order.Basic
+public import Mathlib.Tactic
 
 /-!
 # Natural-number multiplicity choice
@@ -16,6 +18,8 @@ and `a ≤ r`. If also `(a + 1) * M ≤ q * L`, then `r ≤ q`.
 
 In the induction, `a = 8 d ^ 2`, `C = a + 1`, and `M = Δ q ^ k`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

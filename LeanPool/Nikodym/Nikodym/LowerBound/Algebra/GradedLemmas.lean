@@ -3,9 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
-import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
+public import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
 
 /-!
 # Graded lemmas for homogeneous ideals of polynomial rings
@@ -32,6 +34,8 @@ the standard grading `MvPolynomial.homogeneousSubmodule σ K` (made a local inst
   of positive degree lies in the ideal of the variables, a proper homogeneous ideal lies in it,
   and a homogeneous ideal containing `X i - c` (`c ≠ 0`) is the unit ideal.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

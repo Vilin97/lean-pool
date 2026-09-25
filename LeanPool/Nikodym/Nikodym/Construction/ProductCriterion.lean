@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.Definition
+
+public import LeanPool.Nikodym.Nikodym.Definition
 
 /-!
 # Product-complement criterion
@@ -13,6 +15,8 @@ Blueprint node P01: if a product set `P = ∏ Pⱼ ⊆ F^h` (`h ≥ 2`) has a ta
 point of `P`, then the complement `univ \ P` is a Nikodym set. The file also records the
 cardinality identity `|univ \ P| = q^h - |P|` in `ℕ` and in `ℝ`.
 -/
+
+@[expose] public section
 
 namespace Nikodym
 

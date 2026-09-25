@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.NormalizationSetting
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.NormalizationSetting
 
 /-!
 # Homogeneity of the norm (node A07′)
@@ -35,6 +37,8 @@ instance arguments `[Algebra (FractionRing S) (FractionRing R)]` and
   automorphisms `scaleQuotEquiv` of `R` and `scaleEquiv` of `S`, extended to the fraction fields
   by `IsFractionRing.ringEquivOfRingEquiv`, and `Algebra.norm_eq_of_equiv_equiv`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

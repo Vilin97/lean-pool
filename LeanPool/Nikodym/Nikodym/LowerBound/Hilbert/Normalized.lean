@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.StandardMonomials
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.StandardMonomials
 
 /-!
 # Normalized cumulative Hilbert inequality
@@ -33,6 +35,8 @@ The combinatorial core is stated for an arbitrary divisor-closed set `S : Set (F
 The main theorem `hilbert_mul_choose_le` then follows from `hilbert_eq_sum_layerCard` (node H01)
 with `S = standardSet I`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

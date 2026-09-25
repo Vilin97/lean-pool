@@ -3,11 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Grid.Reduction
-import LeanPool.Nikodym.Nikodym.LowerBound.Grid.CRT
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
-import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Basic
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Grid.Reduction
+public import LeanPool.Nikodym.Nikodym.LowerBound.Grid.CRT
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
+public import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Basic
 
 /-!
 # Joint grid jet interpolation on a quotient
@@ -36,6 +38,8 @@ total degree at most `U`, and `J ^ r ≤ 𝔪_{ι x} ^ r` (G02) shows that the j
 The blueprint assumes `r ≥ 1`; none of the statements here needs it (for `r = 0` all jet spaces are
 zero), so the hypothesis is omitted.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

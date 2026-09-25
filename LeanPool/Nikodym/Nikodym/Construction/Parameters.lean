@@ -3,11 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Algebra.Ring.IsFormallyReal
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Tactic
 
 /-!
 # Integer parameters of the construction
@@ -19,6 +21,8 @@ For `n ≥ 1` and `q ≥ 1` we set `M = ⌊q^{1/n}⌋₊`, `Qᵢ = ⌊q^{1/(n 2�
 natural-number power inequalities that follow from the floor definition. Q02 records the
 threshold `q ≥ 2^{n 2^{h-1}}`, which forces `M, Qᵢ ≥ 2` and the matching real lower bounds.
 -/
+
+@[expose] public section
 
 noncomputable section
 

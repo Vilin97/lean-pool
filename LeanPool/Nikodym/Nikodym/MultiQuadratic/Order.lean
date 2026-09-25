@@ -3,13 +3,15 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.MvPolynomial.CommRing
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Data.Int.Order.Units
-import Mathlib.RingTheory.Ideal.Maps
-import Mathlib.RingTheory.Ideal.Quotient.Defs
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.MvPolynomial.CommRing
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Data.Int.Order.Units
+public import Mathlib.RingTheory.Ideal.Maps
+public import Mathlib.RingTheory.Ideal.Quotient.Defs
+public import Mathlib.Tactic
 
 /-!
 # The multiquadratic order
@@ -18,6 +20,8 @@ Blueprint node K02: the ring `𝒪_r = ℤ[X₁,…,Xₘ] / (Xⱼ² - rⱼ)`, mo
 sign embeddings `emb`, and conjugations `conj`. Linear independence of square roots is not
 used here.
 -/
+
+@[expose] public section
 
 open MvPolynomial Finset
 open scoped symmDiff

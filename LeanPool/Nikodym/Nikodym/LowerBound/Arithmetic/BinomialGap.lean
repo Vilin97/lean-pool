@@ -3,12 +3,14 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Analysis.Normed.Field.Lemmas
-import Mathlib.Data.Nat.Factorial.BigOperators
-import Mathlib.Data.Rat.Star
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Analysis.Normed.Field.Lemmas
+public import Mathlib.Data.Nat.Factorial.BigOperators
+public import Mathlib.Data.Rat.Star
+public import Mathlib.Tactic
 
 /-!
 # Integer binomial gap estimate
@@ -18,6 +20,8 @@ Blueprint node C02: with `2 ≤ d`, `2 ≤ q` and `8 * d ^ 2 ≤ r ≤ q`, writi
 `U - T ≤ d * q`, and `r * Nat.choose (U + d) d ≤ (r + 4 * d ^ 2) * Nat.choose (T + d) d`.
 For `1 ≤ k ≤ d` one also has `Nat.choose (T + k) k ≤ q ^ k * Nat.choose (r + k - 1) k`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

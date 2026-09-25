@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LinearNormalization
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LinearNormalization
 
 /-!
 # The shared setting of nodes A06′, A07′, A08, A04′
@@ -29,6 +31,8 @@ as a convention so that the files can be developed independently:
 
 This file only provides the notion of a *homogeneous element* of `R` used by A06′ and A07′.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

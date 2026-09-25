@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Grid.Reduction
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Grid.Reduction
 
 /-!
 # Chinese remainder theorem for powers of point ideals
@@ -24,6 +26,8 @@ Nikodym exponent.
 * `Nikodym.LowerBound.liftGrid_injective`: `x ↦ ι ∘ x` is injective on grid points, and the grid
   version `exists_grid_jets_eq` of the interpolation statement.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

@@ -3,15 +3,18 @@ Copyright (c) 2026 The Nikodym contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ting-Wei Chao, Zach Hunter, Cosmin Pohoata, Hung-Hsun Hans Yu, Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.Construction.Arith
-import LeanPool.Nikodym.Nikodym.Construction.Count
-import LeanPool.Nikodym.Nikodym.Construction.Digits
-import LeanPool.Nikodym.Nikodym.Construction.Fibers
-import LeanPool.Nikodym.Nikodym.Construction.Main
-import LeanPool.Nikodym.Nikodym.Construction.Parameters
-import LeanPool.Nikodym.Nikodym.Construction.ProductCriterion
-import LeanPool.Nikodym.Nikodym.Construction.Scaffold
-import LeanPool.Nikodym.Nikodym.Construction.Tangent
+
+public import LeanPool.Nikodym.Nikodym.Construction.Arith
+public import LeanPool.Nikodym.Nikodym.Construction.Count
+public import LeanPool.Nikodym.Nikodym.Construction.Digits
+public import LeanPool.Nikodym.Nikodym.Construction.Fibers
+public import LeanPool.Nikodym.Nikodym.Construction.Main
+public import LeanPool.Nikodym.Nikodym.Construction.Parameters
+public import LeanPool.Nikodym.Nikodym.Construction.ProductCriterion
+public import LeanPool.Nikodym.Nikodym.Construction.Scaffold
+public import LeanPool.Nikodym.Nikodym.Construction.Tangent
 
 /-! Supporting modules for The sharp finite-field Nikodym exponent. -/
+

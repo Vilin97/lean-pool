@@ -3,82 +3,84 @@ Copyright (c) 2026 The Nikodym contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ting-Wei Chao, Zach Hunter, Cosmin Pohoata, Hung-Hsun Hans Yu, Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.Construction.Arith
-import LeanPool.Nikodym.Nikodym.Construction.Count
-import LeanPool.Nikodym.Nikodym.Construction.Digits
-import LeanPool.Nikodym.Nikodym.Construction.Fibers
-import LeanPool.Nikodym.Nikodym.Construction.Main
-import LeanPool.Nikodym.Nikodym.Construction.Parameters
-import LeanPool.Nikodym.Nikodym.Construction.ProductCriterion
-import LeanPool.Nikodym.Nikodym.Construction.Scaffold
-import LeanPool.Nikodym.Nikodym.Construction.Tangent
-import LeanPool.Nikodym.Nikodym.Construction
-import LeanPool.Nikodym.Nikodym.Definition
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Assembly
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.BaseChange
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.BaseChangePrime
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.ComponentDegree
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Degree
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Dimension
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.DimensionExtra
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.FreeFiber
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.GradedLemmas
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.GradedNorm
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.HilbertPolynomial
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Homogenization
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.HypersurfaceDegree
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LinearNormalization
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LocalParameters
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.NormalizationSetting
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.PolyAsymptotics
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.ProperCut
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Transfer
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra
-import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic.BinomialGap
-import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic.Multiplicity
-import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic.WeightedSelection
-import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic
-import LeanPool.Nikodym.Nikodym.LowerBound.CarrierBound
-import LeanPool.Nikodym.Nikodym.LowerBound.Counting.Components
-import LeanPool.Nikodym.Nikodym.LowerBound.Counting.Curves
-import LeanPool.Nikodym.Nikodym.LowerBound.Counting.Points
-import LeanPool.Nikodym.Nikodym.LowerBound.Counting
-import LeanPool.Nikodym.Nikodym.LowerBound.Grid.CRT
-import LeanPool.Nikodym.Nikodym.LowerBound.Grid.Jets
-import LeanPool.Nikodym.Nikodym.LowerBound.Grid.OmittedConditions
-import LeanPool.Nikodym.Nikodym.LowerBound.Grid.Reduction
-import LeanPool.Nikodym.Nikodym.LowerBound.Grid
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.DegreeUpper
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Gap
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Normalized
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Shadow
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.StandardMonomials
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert
-import LeanPool.Nikodym.Nikodym.LowerBound.InterpolationCut
-import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
-import LeanPool.Nikodym.Nikodym.LowerBound.Jets.LowerBound
-import LeanPool.Nikodym.Nikodym.LowerBound.Jets
-import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Basic
-import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Jets
-import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Vanishing
-import LeanPool.Nikodym.Nikodym.LowerBound.Lines
-import LeanPool.Nikodym.Nikodym.LowerBound.Main
-import LeanPool.Nikodym.Nikodym.LowerBound.PolynomialSpaces
-import LeanPool.Nikodym.Nikodym.LowerBound.PrivateFamily
-import LeanPool.Nikodym.Nikodym.LowerBound
-import LeanPool.Nikodym.Nikodym.Main
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Basis
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Kummer
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Legendre
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Norm
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Order
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Scaffold
-import LeanPool.Nikodym.Nikodym.MultiQuadratic
-import LeanPool.Nikodym.Nikodym
-import LeanPool.Nikodym.Solution
+
+public import LeanPool.Nikodym.Nikodym
+public import LeanPool.Nikodym.Nikodym.Construction
+public import LeanPool.Nikodym.Nikodym.Construction.Arith
+public import LeanPool.Nikodym.Nikodym.Construction.Count
+public import LeanPool.Nikodym.Nikodym.Construction.Digits
+public import LeanPool.Nikodym.Nikodym.Construction.Fibers
+public import LeanPool.Nikodym.Nikodym.Construction.Main
+public import LeanPool.Nikodym.Nikodym.Construction.Parameters
+public import LeanPool.Nikodym.Nikodym.Construction.ProductCriterion
+public import LeanPool.Nikodym.Nikodym.Construction.Scaffold
+public import LeanPool.Nikodym.Nikodym.Construction.Tangent
+public import LeanPool.Nikodym.Nikodym.Definition
+public import LeanPool.Nikodym.Nikodym.LowerBound
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Assembly
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.BaseChange
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.BaseChangePrime
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.ComponentDegree
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Degree
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Dimension
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.DimensionExtra
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.FreeFiber
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.GradedLemmas
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.GradedNorm
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.HilbertPolynomial
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Homogenization
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.HypersurfaceDegree
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LinearNormalization
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LocalParameters
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.NormalizationSetting
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.PolyAsymptotics
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.ProperCut
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Transfer
+public import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic
+public import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic.BinomialGap
+public import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic.Multiplicity
+public import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic.WeightedSelection
+public import LeanPool.Nikodym.Nikodym.LowerBound.CarrierBound
+public import LeanPool.Nikodym.Nikodym.LowerBound.Counting
+public import LeanPool.Nikodym.Nikodym.LowerBound.Counting.Components
+public import LeanPool.Nikodym.Nikodym.LowerBound.Counting.Curves
+public import LeanPool.Nikodym.Nikodym.LowerBound.Counting.Points
+public import LeanPool.Nikodym.Nikodym.LowerBound.Grid
+public import LeanPool.Nikodym.Nikodym.LowerBound.Grid.CRT
+public import LeanPool.Nikodym.Nikodym.LowerBound.Grid.Jets
+public import LeanPool.Nikodym.Nikodym.LowerBound.Grid.OmittedConditions
+public import LeanPool.Nikodym.Nikodym.LowerBound.Grid.Reduction
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.DegreeUpper
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Gap
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Normalized
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Shadow
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.StandardMonomials
+public import LeanPool.Nikodym.Nikodym.LowerBound.InterpolationCut
+public import LeanPool.Nikodym.Nikodym.LowerBound.Jets
+public import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
+public import LeanPool.Nikodym.Nikodym.LowerBound.Jets.LowerBound
+public import LeanPool.Nikodym.Nikodym.LowerBound.Lines
+public import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Basic
+public import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Jets
+public import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Vanishing
+public import LeanPool.Nikodym.Nikodym.LowerBound.Main
+public import LeanPool.Nikodym.Nikodym.LowerBound.PolynomialSpaces
+public import LeanPool.Nikodym.Nikodym.LowerBound.PrivateFamily
+public import LeanPool.Nikodym.Nikodym.Main
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Basis
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Kummer
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Legendre
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Norm
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Order
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Scaffold
+public import LeanPool.Nikodym.Solution
 
 /-!
 # The sharp finite-field Nikodym exponent

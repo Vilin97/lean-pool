@@ -3,9 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.Definition
-import LeanPool.Nikodym.Nikodym.LowerBound.CarrierBound
+
+public import LeanPool.Nikodym.Nikodym.Definition
+public import LeanPool.Nikodym.Nikodym.LowerBound.CarrierBound
 
 /-!
 # The Nikodym lower bound, conditional on the algebraic interface
@@ -28,6 +30,8 @@ Let `F` be a finite field with `q` elements, `d ≥ 2`, `N ⊆ F^d` a Nikodym se
 The unconditional statements `Nikodym.card_compl_pow_mul_card_le` and `Nikodym.card_ge_pow_sub`
 in `Nikodym.Main` follow from these once an `AlgebraInterface F d` is constructed.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

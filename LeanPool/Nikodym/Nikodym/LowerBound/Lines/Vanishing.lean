@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Jets
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Jets
 
 /-!
 # The q−1 nonzero roots force a line identity
@@ -17,6 +19,8 @@ A univariate polynomial of degree strictly less than `r (q - 1)` which is divisi
 degree at most `r (q - 1) - 1` that satisfies the non-private jet conditions along a line
 restricts identically to zero on that line.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

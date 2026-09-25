@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Dimension
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
-import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Dimension
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
+public import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
 
 /-!
 # Tangent cone ideal and local parameters
@@ -31,6 +33,8 @@ and prove
   Nakayama step showing that `𝔪` is a minimal prime over `I ⊔ (y)`, followed by Krull's height
   theorem in `P ⧸ I` and the closed-point height formula of A01.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

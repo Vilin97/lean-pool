@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.Main
+
+public import LeanPool.Nikodym.Nikodym.Main
 
 /-!
 # Proved solution
@@ -25,6 +27,8 @@ proofs use only the axioms `propext`, `Classical.choice`, and `Quot.sound`.
 The `example`s below are a readable local witness of the same facts: they type-check only if
 the proved theorems have the advertised types.
 -/
+
+@[expose] public section
 
 namespace Nikodym
 

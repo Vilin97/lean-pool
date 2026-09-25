@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Basic
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Basic
 
 /-!
 # Jet vanishing restricts to divisibility on a line
@@ -16,6 +18,8 @@ If a line `T ↦ b + T v` lies on an ideal `I` (that is, `I ≤ λ_{b,v}`) and a
 `g` lies in the jet ideal `I ⊔ 𝔪_{b+av} ^ r`, then `(T - a)^r` divides the univariate
 restriction `res_{b,v} g`. The finite-field form substitutes the coordinate lift `liftPt`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.NumberTheory.PrimeCounting
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.NumberTheory.PrimeCounting
+public import Mathlib.Tactic
 
 /-!
 # Exponent arithmetic
@@ -15,6 +17,8 @@ import Mathlib.Tactic
 Blueprint node M01: real-power bookkeeping used to assemble the final upper bound, and the
 supply of `2m` pairwise distinct odd primes indexed as pairs `(ℓⱼ, ℓ'ⱼ)`.
 -/
+
+@[expose] public section
 
 namespace Nikodym
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.DegreeUpper
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Degree
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.ProperCut
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Transfer
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.DegreeUpper
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Degree
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.ProperCut
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Transfer
 
 /-!
 # The algebraic interface, unconditionally
@@ -25,6 +27,8 @@ structure `Nikodym.LowerBound.AlgebraInterface K d` for every field `K` and ever
 
 The main result is `Nikodym.LowerBound.algebraInterface K d`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

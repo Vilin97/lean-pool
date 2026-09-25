@@ -3,9 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Dimension
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Dimension
 
 /-!
 # Base change of polynomial ideals: quotient dimension and primality
@@ -36,6 +38,8 @@ This file implements the base-change items **TR3** and **TR4** of the algebra ba
 The auxiliary coefficient projections live in the namespace `Nikodym.LowerBound.BaseChangePrime`
 and are private to this file; the public versions belong to `Algebra/BaseChange.lean` (TR0/TR1).
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

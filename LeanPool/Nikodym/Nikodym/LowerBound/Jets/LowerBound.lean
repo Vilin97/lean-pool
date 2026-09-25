@@ -3,9 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LinearNormalization
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LocalParameters
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LinearNormalization
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LocalParameters
 
 /-!
 # The local jet minimum
@@ -32,6 +34,8 @@ injectivity. So the polynomials of total degree `≤ r - 1` in `s` variables emb
 
 The hypothesis `[Infinite K]` is removed by base change in the assembly (node TR).
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

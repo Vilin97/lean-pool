@@ -3,9 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.Construction.Fibers
-import LeanPool.Nikodym.Nikodym.Construction.ProductCriterion
+
+public import LeanPool.Nikodym.Nikodym.Construction.Fibers
+public import LeanPool.Nikodym.Nikodym.Construction.ProductCriterion
 
 /-!
 # Tangent lines on the product set
@@ -37,6 +39,8 @@ Throughout, `n` and `q` are the integer parameters of Q01, related to the types 
 Q02 threshold `2 ^ (n 2 ^ k) ≤ q` implies `1 ≤ q`). Declarations involving `Finset.image`
 carry a `[DecidableEq F]` assumption (consumers may use `classical`).
 -/
+
+@[expose] public section
 
 namespace Nikodym
 

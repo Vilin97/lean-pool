@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Basic
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Basic
 
 /-!
 # Private families of lines indexed by their anchors
@@ -32,6 +34,8 @@ The main results are
 
 The number `L` of lines of the blueprint is `Fintype.card E`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

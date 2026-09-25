@@ -3,11 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic
+
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Tactic
 
 /-!
 # Finite field Nikodym sets
@@ -17,6 +19,8 @@ import Mathlib.Tactic
 A finite field variant of the Nikodym problem considers subsets of `𝔽_qⁿ` such that through
 every point of `𝔽_qⁿ` there is a line meeting the complement of the set in at most that point.
 -/
+
+@[expose] public section
 
 namespace Nikodym
 

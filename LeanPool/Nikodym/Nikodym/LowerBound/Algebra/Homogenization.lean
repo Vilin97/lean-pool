@@ -3,11 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.RingTheory.GradedAlgebra.Radical
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.GradedLemmas
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Dimension
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
+
+public import Mathlib.RingTheory.GradedAlgebra.Radical
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.GradedLemmas
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Dimension
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
 
 /-!
 # The homogenization bridge
@@ -32,6 +34,8 @@ the index `0` is the homogenizing variable `X₀` and `Fin.succ i` is the variab
 * `ker_dehom`, `comap_dehom_eq`, and `quotDim_homogenization : quotDim (homogenization I) =
   quotDim I + 1` for a prime `I`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

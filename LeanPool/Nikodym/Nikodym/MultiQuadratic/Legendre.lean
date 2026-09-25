@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Order
+
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Order
 
 /-!
 # Legendre choice and reduction of the multiquadratic order
@@ -13,6 +15,8 @@ Blueprint nodes L01 and L02: at least one of `ℓ`, `ℓ'`, `ℓℓ'` is a squar
 of odd prime cardinality, and a choice of square roots of the `rⱼ` induces a reduction map
 `𝒪_r → F`.
 -/
+
+@[expose] public section
 
 open MvPolynomial
 

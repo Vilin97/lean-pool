@@ -3,9 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.PrivateFamily
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.PrivateFamily
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
 
 /-!
 # The curve base case
@@ -28,6 +30,8 @@ most one containing a line ideal is that line ideal), proved unconditionally in
 `Nikodym.LowerBound.Algebra.Interface`; no `AlgebraInterface` hypothesis is needed. The
 combinatorial input is the injectivity of `e ↦ P.lineIdeal e` (node F05).
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

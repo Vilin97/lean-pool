@@ -3,9 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Order
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Kummer
+
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Order
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Kummer
 
 /-!
 # The monomial basis of the multiquadratic order
@@ -22,6 +24,8 @@ always passed as three separate arguments:
 * K04: `sum_emb_eq` and `exists_int_sum_emb` (the trace `∑ ε, σ_ε x` is `2 ^ m` times the
   constant coordinate, in particular an integer).
 -/
+
+@[expose] public section
 
 open Finset
 open scoped symmDiff

@@ -3,11 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Analysis.Polynomial.Basic
-import Mathlib.Data.Rat.Star
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Analysis.Polynomial.Basic
+public import Mathlib.Data.Rat.Star
+public import Mathlib.Tactic
 
 /-!
 # Elementary asymptotics of rational polynomials along `ℕ`
@@ -30,6 +32,8 @@ Main declarations (all in the `Polynomial` namespace, as named in the design doc
 * Conveniences `Polynomial.natDegree_comp_X_sub_C`, `Polynomial.leadingCoeff_comp_X_sub_C`,
   `Polynomial.eval_comp_X_sub_C`, `Polynomial.eval_comp_X_sub_C_natCast`.
 -/
+
+@[expose] public section
 
 namespace Polynomial
 

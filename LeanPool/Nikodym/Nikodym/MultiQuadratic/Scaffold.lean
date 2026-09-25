@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.Construction.Scaffold
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Norm
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Legendre
+
+public import LeanPool.Nikodym.Nikodym.Construction.Scaffold
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Norm
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Legendre
 
 /-!
 # Scaffold instance for the multiquadratic order
@@ -19,6 +21,8 @@ reduction map form a `Nikodym.Scaffold` with `K₀ = ∏ⱼ rⱼ` and `K₁ = 1`
 monotone in `K₀`, so the same data is a scaffold with the larger constant `∏ⱼ ℓⱼ ℓ'ⱼ` whenever
 `rⱼ ∣ ℓⱼ ℓ'ⱼ`.
 -/
+
+@[expose] public section
 
 namespace Nikodym
 

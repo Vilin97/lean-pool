@@ -3,9 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.Construction.Fibers
-import LeanPool.Nikodym.Nikodym.Construction.Tangent
+
+public import LeanPool.Nikodym.Nikodym.Construction.Fibers
+public import LeanPool.Nikodym.Nikodym.Construction.Tangent
 
 /-!
 # Counting: the size of the product set
@@ -29,6 +31,8 @@ digit radius is `ρ = 1 / (100 (k+1) √n)` and the trace-fiber radius is `T = �
   `|F| = q ≥ 2^(n 2^k)` and `10 ≤ M`, there is a Nikodym set `N ⊆ F^(k+1)` with
   `q^(k+1) - |N| ≥ E01const n k K₀ · q^((k+1) - 2⁻¹^k - 3(k+1)/n)`.
 -/
+
+@[expose] public section
 
 open Finset Real
 

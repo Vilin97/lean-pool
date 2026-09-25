@@ -3,12 +3,14 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.RingTheory.KrullDimension.Polynomial
-import Mathlib.RingTheory.KrullDimension.NonZeroDivisors
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
-import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
-import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Basic
+
+public import Mathlib.RingTheory.KrullDimension.Polynomial
+public import Mathlib.RingTheory.KrullDimension.NonZeroDivisors
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
+public import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
+public import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Basic
 
 /-!
 # The algebraic interface of the lower-bound proof
@@ -41,6 +43,8 @@ one containing a line ideal is that line ideal) is proved here unconditionally f
 `quotDim_lt_of_lt`; the corresponding field of `AlgebraInterface` is therefore redundant and is
 kept only for compatibility with the blueprint node list.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

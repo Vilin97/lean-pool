@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.NormalizationSetting
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.NormalizationSetting
 
 /-!
 # Homogeneous rational basis and conductor
@@ -51,6 +53,8 @@ The fraction-field part is proved first for an arbitrary pair of domains `S → 
   `lake build` (with the `maxSynthPendingDepth` option of the lakefile) needs more heartbeats than
   a bare `lake env lean`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

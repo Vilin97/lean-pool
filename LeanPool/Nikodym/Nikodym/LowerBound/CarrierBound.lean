@@ -3,12 +3,14 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Counting.Points
-import LeanPool.Nikodym.Nikodym.LowerBound.InterpolationCut
-import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic.Multiplicity
-import LeanPool.Nikodym.Nikodym.LowerBound.Counting.Components
-import LeanPool.Nikodym.Nikodym.LowerBound.Counting.Curves
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Counting.Points
+public import LeanPool.Nikodym.Nikodym.LowerBound.InterpolationCut
+public import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic.Multiplicity
+public import LeanPool.Nikodym.Nikodym.LowerBound.Counting.Components
+public import LeanPool.Nikodym.Nikodym.LowerBound.Counting.Curves
 
 /-!
 # The integer-power carrier theorem
@@ -34,6 +36,8 @@ gives the bound after the exact integer computation of Section 5 of the blueprin
 
 All arithmetic is in `ℕ`; no real roots enter.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

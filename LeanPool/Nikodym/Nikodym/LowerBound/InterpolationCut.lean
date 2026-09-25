@@ -3,11 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Grid.OmittedConditions
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Gap
-import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Vanishing
-import LeanPool.Nikodym.Nikodym.LowerBound.PrivateFamily
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Grid.OmittedConditions
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Gap
+public import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Vanishing
+public import LeanPool.Nikodym.Nikodym.LowerBound.PrivateFamily
 
 /-!
 # A proper low-degree polynomial containing a private family
@@ -33,6 +35,8 @@ inequality `H_I(U) < H_I(T) + ∑_{b ∈ B₀} j_{I, ι b}(r)` of G04 strict, wh
 The blueprint hypothesis `k ≤ d` is automatic (`quotDim_le`) and `2 ≤ q` follows from
 `32 ≤ 8 d² ≤ r ≤ q`; neither is assumed.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

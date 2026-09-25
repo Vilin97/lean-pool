@@ -3,9 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Basis
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Legendre
+
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Basis
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Legendre
 
 /-!
 # The conjugate norm and the small-kernel property
@@ -20,6 +22,8 @@ a field of prime cardinality, an element of the kernel with `∏ ε, |emb r ε x
 As in `Nikodym.MultiQuadratic.Basis`, the K01 hypotheses `hr1`, `hsq`, `hcop` are passed as
 three separate arguments.
 -/
+
+@[expose] public section
 
 open Finset
 

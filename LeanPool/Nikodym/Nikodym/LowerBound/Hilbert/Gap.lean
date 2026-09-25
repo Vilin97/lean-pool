@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Normalized
-import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic.BinomialGap
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Normalized
+public import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic.BinomialGap
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
 
 /-!
 # Hilbert gap with all denominators cleared
@@ -28,6 +30,8 @@ an additive natural-number inequality. It combines the normalized cumulative Hil
 The intermediate step `hilbert_gap_aux`, `r * H_I(U) ≤ r * H_I(T) + 4 d² * H_I(T)`, holds for
 every ideal `I` and needs no algebraic input.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

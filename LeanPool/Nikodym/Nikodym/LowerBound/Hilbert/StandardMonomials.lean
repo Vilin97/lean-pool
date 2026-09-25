@@ -3,12 +3,14 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.RingTheory.MvPolynomial.MonomialOrder.DegLex
-import Mathlib.RingTheory.MvPolynomial.MonomialOrder
-import Mathlib.RingTheory.MvPolynomial.Basic
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Shadow
+
+public import Mathlib.RingTheory.MvPolynomial.MonomialOrder.DegLex
+public import Mathlib.RingTheory.MvPolynomial.MonomialOrder
+public import Mathlib.RingTheory.MvPolynomial.Basic
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Shadow
 
 /-!
 # Standard monomials and the Hilbert function
@@ -42,6 +44,8 @@ The main results are
 No Gröbner basis algorithm is used: leading-term cancellation against an arbitrary element of `I`
 with the same leading exponent suffices.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

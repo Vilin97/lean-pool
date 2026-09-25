@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
-import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
+public import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
 
 /-!
 # Base change of polynomial ideals along a field extension
@@ -32,6 +34,8 @@ For a field extension `K ⊆ K'` (an arbitrary `[Algebra K K']` between fields) 
 
 All statements are generic in `[Algebra K K']`; they are applied with `K' = RatFunc K` in TR7.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

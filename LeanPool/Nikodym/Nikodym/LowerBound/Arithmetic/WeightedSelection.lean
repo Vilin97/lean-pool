@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Tactic
 
 /-!
 # Weighted component selection
@@ -14,6 +16,8 @@ import Mathlib.Tactic
 Blueprint node C07: from `∑ L i > 0`, `Δ i > 0`, and `∑ Δ i ≤ D`, there is an index with
 `L i > 0` and `(∑ L) * Δ i ≤ L i * D`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

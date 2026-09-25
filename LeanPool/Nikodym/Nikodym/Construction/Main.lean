@@ -3,11 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.Construction.Count
-import LeanPool.Nikodym.Nikodym.Construction.Arith
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Scaffold
-import LeanPool.Nikodym.Nikodym.MultiQuadratic.Legendre
+
+public import LeanPool.Nikodym.Nikodym.Construction.Count
+public import LeanPool.Nikodym.Nikodym.Construction.Arith
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Scaffold
+public import LeanPool.Nikodym.Nikodym.MultiQuadratic.Legendre
 
 /-!
 # The upper bound: assembly
@@ -29,6 +31,8 @@ The route is that of the blueprint: with `d = k + 1`, choose `m` with `3 (k+1) /
 roots `sⱼ` in `F`; K06 gives a scaffold of rank `n` with constant `K₀`; E02 gives the Nikodym set;
 M01(c) converts the exponent.
 -/
+
+@[expose] public section
 
 namespace Nikodym
 

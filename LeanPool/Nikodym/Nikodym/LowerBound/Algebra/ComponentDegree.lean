@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.HypersurfaceDegree
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LinearNormalization
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.PolyAsymptotics
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.HypersurfaceDegree
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LinearNormalization
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.PolyAsymptotics
 
 /-!
 # Degree sum over the components of a hypersurface section
@@ -34,6 +36,8 @@ inclusion–exclusion identity B02(i) `homHilbert_inf_add_homHilbert_sup` lives 
   containing `Q₀ ⊔ (G)`, with eventual Hilbert polynomials `p₀` (degree `≤ n + 1`) and `p Q`
   (degree `≤ n`), then `∑_{Q ∈ 𝒬} (p Q).coeff n ≤ e * (n + 1) * p₀.coeff (n + 1)`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

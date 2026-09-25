@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.RingTheory.GradedAlgebra.Radical
-import Mathlib.Algebra.Module.Submodule.Union
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.DimensionExtra
+
+public import Mathlib.RingTheory.GradedAlgebra.Radical
+public import Mathlib.Algebra.Module.Submodule.Union
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.DimensionExtra
 
 /-!
 # Linear Noether normalization of a standard graded algebra
@@ -53,6 +55,8 @@ instance argument together with the hypothesis
 (`finite_of_pow_idealOfVars_le'`), or install it with `letI` in the statement
 (`finite_of_pow_idealOfVars_le`).
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

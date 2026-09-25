@@ -3,11 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.Definition
-import LeanPool.Nikodym.Nikodym.LowerBound.Main
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Assembly
-import LeanPool.Nikodym.Nikodym.Construction.Main
+
+public import LeanPool.Nikodym.Nikodym.Definition
+public import LeanPool.Nikodym.Nikodym.LowerBound.Main
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Assembly
+public import LeanPool.Nikodym.Nikodym.Construction.Main
 
 /-!
 # The sharp Nikodym exponent: target statements
@@ -31,6 +33,8 @@ Let `F` be a finite field with `q` elements, `d ≥ 2`, and `N ⊆ F^d` a Nikody
   all sufficiently large primes `q`, there is a Nikodym set `N ⊆ F_q^d` with
   `|N| ≤ q ^ d - q ^ (d - 2 ^ (1 - d) - ε)`.
 -/
+
+@[expose] public section
 
 open Real
 

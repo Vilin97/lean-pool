@@ -3,11 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Data.Int.Star
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Data.Int.Star
+public import Mathlib.Tactic
 
 /-!
 # The scaffold interface
@@ -29,6 +31,8 @@ This file implements blueprint nodes S01, S02 and S03 of
 
 Throughout, `n` denotes `Fintype.card ι`.
 -/
+
+@[expose] public section
 
 namespace Nikodym
 

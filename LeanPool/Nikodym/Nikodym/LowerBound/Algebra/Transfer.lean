@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.BaseChange
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.BaseChangePrime
-import LeanPool.Nikodym.Nikodym.LowerBound.Jets.LowerBound
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.BaseChange
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.BaseChangePrime
+public import LeanPool.Nikodym.Nikodym.LowerBound.Jets.LowerBound
 
 /-!
 # Transfer of the algebraic interface along `K ⊆ RatFunc K`
@@ -33,6 +35,8 @@ This file implements the items **TR5** and **TR7** of the base-change node **TR*
   (`toFinset_minimalPrimes_sup_map_ratFunc`), so that the degree sum is transported by
   `Finset.sum_image`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

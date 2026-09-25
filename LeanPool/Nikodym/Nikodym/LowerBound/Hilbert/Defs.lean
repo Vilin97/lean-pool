@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.PolynomialSpaces
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.PolynomialSpaces
 
 /-!
 # Affine restriction spaces and the Hilbert function
@@ -27,6 +29,8 @@ representative lemmas `exists_repr_of_mem_restrictionSpace` and `exists_notMem_o
 Only the finite-dimensional image is ever given a `finrank`; the full coordinate ring `P_d ⧸ I`
 need not be finite-dimensional.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

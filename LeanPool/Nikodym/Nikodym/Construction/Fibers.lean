@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Combinatorics.Pigeonhole
-import LeanPool.Nikodym.Nikodym.Construction.Digits
-import LeanPool.Nikodym.Nikodym.Construction.Parameters
+
+public import Mathlib.Combinatorics.Pigeonhole
+public import LeanPool.Nikodym.Nikodym.Construction.Digits
+public import LeanPool.Nikodym.Nikodym.Construction.Parameters
 
 /-!
 # Fibers: the trace fiber and the energy fiber
@@ -33,6 +35,8 @@ This file implements blueprint nodes C01 and C02 of `docs/nikodym_construction_l
 Throughout, `n` denotes `Fintype.card ι` in Layer S/D statements; in Layer C, `n` and `q` are the
 integer parameters of Q01 and the number of embeddings is written `Fintype.card ι`.
 -/
+
+@[expose] public section
 
 namespace Nikodym
 

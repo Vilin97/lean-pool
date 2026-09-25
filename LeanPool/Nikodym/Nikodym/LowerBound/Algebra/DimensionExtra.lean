@@ -3,9 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Dimension
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Dimension
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
 
 /-!
 # Dimension of a quotient through its primes
@@ -18,6 +20,8 @@ is bounded by the dimensions of the quotients `R ⧸ p` over the primes `p ⊇ J
 * `quotDim_le_of_forall_isPrime`: the same for `quotDim` on `MvPolynomial (Fin d) K`, for a proper
   ideal `J`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

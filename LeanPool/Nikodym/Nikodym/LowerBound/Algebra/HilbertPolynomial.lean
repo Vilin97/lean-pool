@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.NumberTheory.Bernoulli
-import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Normalized
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
+
+public import Mathlib.NumberTheory.Bernoulli
+public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Normalized
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
 
 /-!
 # Eventual polynomiality of the affine Hilbert function
@@ -34,6 +36,8 @@ number of standard exponents of degree at most `t`, i.e. the partial sum of the 
   Hilbert function of any ideal is eventually polynomial, and `affineHilbertPoly I` is that
   polynomial.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Grid.Jets
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Grid.Jets
 
 /-!
 # Omitting conditions leaves a nonzero restriction
@@ -35,6 +37,8 @@ representative `g ∈ P_{d, ≤ T} \ I` (F02), and its jets vanish outside `B₀
 The blueprint also assumes `r ≥ 1` and `T ≤ U`; neither is needed for the statement, so both are
 omitted.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

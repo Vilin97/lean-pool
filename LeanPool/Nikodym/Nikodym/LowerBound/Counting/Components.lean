@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.PrivateFamily
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
-import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic.WeightedSelection
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.PrivateFamily
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
+public import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic.WeightedSelection
 
 /-!
 # Assigning lines among proper-cut components
@@ -32,6 +34,8 @@ Main declarations:
 * `PrivateFamily.exists_component_family`: the same, packaged for the induction of node C09 with
   the private subfamily `P.restrict s` of `#s` lines lying on `J`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

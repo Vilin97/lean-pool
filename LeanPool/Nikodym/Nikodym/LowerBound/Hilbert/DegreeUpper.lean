@@ -3,12 +3,14 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.MvPolynomial.Funext
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.FreeFiber
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.GradedNorm
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Homogenization
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LinearNormalization
+
+public import Mathlib.Algebra.MvPolynomial.Funext
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.FreeFiber
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.GradedNorm
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Homogenization
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LinearNormalization
 
 /-!
 # Uniform Hilbert bounds from the generic rank (node A08-core)
@@ -46,6 +48,8 @@ The packaged statement consumed by node A04′ is `exists_hilbert_bounds`.
 * The lower bound is stated as a sum over `i` with `e i ≤ t`; for `t ≥ max e` this is the full sum
   `∑ i, (t - e i + k).choose k`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

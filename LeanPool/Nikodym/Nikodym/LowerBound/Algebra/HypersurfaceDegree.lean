@@ -3,8 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.GradedLemmas
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.GradedLemmas
 
 /-!
 # Hypersurface section of a homogeneous prime
@@ -26,6 +28,8 @@ for the factor map restricted to `V_t` then gives the identity.
 * `Nikodym.LowerBound.ker_factor_inf_map_eq_map_mulLeft`: the kernel computation.
 * `Nikodym.LowerBound.homHilbert_sup_span_singleton_add`: the identity above (blueprint B01).
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

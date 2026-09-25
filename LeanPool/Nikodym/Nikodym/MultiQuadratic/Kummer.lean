@@ -3,15 +3,17 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Data.Int.Star
-import Mathlib.Data.Nat.Squarefree
-import Mathlib.NumberTheory.Real.Irrational
-import Mathlib.RingTheory.Algebraic.Integral
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.RCLike.Basic
+public import Mathlib.Data.Int.Star
+public import Mathlib.Data.Nat.Squarefree
+public import Mathlib.NumberTheory.Real.Irrational
+public import Mathlib.RingTheory.Algebraic.Integral
+public import Mathlib.Tactic
 
 /-!
 # Kummer independence of square roots (blueprint K01)
@@ -33,6 +35,8 @@ statements `linearIndependent_sqrt_prod`, `linearIndependent_sqrt_prod_int` and
 * `Nikodym.MultiQuad.linearIndependent_sqrt_prod_int`: the same over `ℤ`.
 * `Nikodym.MultiQuad.sum_intCast_mul_sqrt_prod_eq_zero`: the coefficient form over `ℤ`.
 -/
+
+@[expose] public section
 
 open Finset
 

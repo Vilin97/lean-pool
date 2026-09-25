@@ -3,12 +3,14 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Tactic
 
 /-!
 # Degree-bounded polynomial spaces
@@ -32,6 +34,8 @@ rest of the development:
 Finite-dimensionality of `restrictTotalDegree (Fin d) K t` is already a Mathlib instance; we
 restate it as `Nikodym.LowerBound.instModuleFiniteRestrictTotalDegree` for discoverability.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 

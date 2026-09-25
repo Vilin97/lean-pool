@@ -3,10 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.ComponentDegree
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Homogenization
-import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.HilbertPolynomial
+
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.ComponentDegree
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Homogenization
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.HilbertPolynomial
 
 /-!
 # The affine proper cut
@@ -45,6 +47,8 @@ over `I + (g)` the homogenization `homogenization J` is a homogeneous prime of q
 = affineHilbertPoly J`, via `map_dehom_homogenization` and `homHilbert_homogenization`) gives
 `∑_J deg J / n! ≤ e · (n + 1) · deg I / (n + 1)!`, i.e. `∑_J deg J ≤ e · deg I ≤ T · deg I`.
 -/
+
+@[expose] public section
 
 namespace Nikodym.LowerBound
 
