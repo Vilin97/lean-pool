@@ -10256,7 +10256,6 @@ projects:
       - '11E12'
       - '11E08'
       - '11E88'
-
   - slug: nikodym
     title: The sharp finite-field Nikodym exponent
     summary: Proves a lower bound for Nikodym sets over arbitrary finite fields and a matching exponent
