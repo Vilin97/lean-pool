@@ -48,11 +48,11 @@ lemma is_open_positiveTimeSet : IsOpen positiveTimeSet :=
   isOpen_lt continuous_const (PiLp.continuous_apply 2 (fun _ => ℝ) (0 : Fin STDimension))
 
 /-- Submodule of **real-valued** test functions supported in the positive time region -/
-def PositiveTimeTestFunctions.submodule : Submodule ℝ TestFunction where
-  carrier := { f : TestFunction | tsupport f ⊆ positiveTimeSet }
+def PositiveTimeTestFunctions.submodule : Submodule ℝ OSforGFF.TestFunction where
+  carrier := { f : OSforGFF.TestFunction | tsupport f ⊆ positiveTimeSet }
   zero_mem' := by
     simp only [Set.mem_ofPred_eq]
-    suffices h : tsupport (0 : TestFunction) = ∅ by rw [h]; apply Set.empty_subset
+    suffices h : tsupport (0 : OSforGFF.TestFunction) = ∅ by rw [h]; apply Set.empty_subset
     rw [tsupport_eq_empty_iff]; rfl
   add_mem' := fun {f g} hf hg => Set.Subset.trans (tsupport_add f g) (Set.union_subset hf hg)
   smul_mem' c f hf := (tsupport_smul_subset_right (fun _ : SpaceTime => c) f).trans hf
