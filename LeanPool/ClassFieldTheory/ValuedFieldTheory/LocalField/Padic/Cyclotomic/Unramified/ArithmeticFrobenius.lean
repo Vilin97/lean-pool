@@ -387,12 +387,12 @@ noncomputable def padicCyclotomicUnramifiedGalResidueAlgEquiv
   letI : Algebra k ell := padicCyclotomicUnramifiedResidueAlgebra vK vL hExt
   let eW := padicCyclotomicUnramifiedGalIntegerRingEquiv vK vL hExt hhens σ
   let eell : ell ≃+* ell := IsLocalRing.ResidueField.mapEquiv eW
-  apply AlgEquiv.ofRingEquiv
-  apply padicCyclotomicUnramified_residueMapEquiv_commutes i eW
-  intro y
-  apply Subtype.ext
-  change σ (algebraMap K L (y : K)) = algebraMap K L (y : K)
-  exact σ.commutes (y : K)
+  exact AlgEquiv.ofRingEquiv (f := eell) (by
+    apply padicCyclotomicUnramified_residueMapEquiv_commutes i eW
+    intro y
+    apply Subtype.ext
+    change σ (algebraMap K L (y : K)) = algebraMap K L (y : K)
+    exact σ.commutes (y : K))
 
 @[simp]
 theorem padicCyclotomicUnramified_galResidueAlgEquiv_residue
@@ -553,8 +553,8 @@ theorem padicCyclotomicUnramified_residue_adjoin_galois_generated_by_frobenius
     (hk : Fintype.card k = p ^ r) (hpn : p.Coprime n)
     {ζ : Ω} (hζ : IsPrimitiveRoot ζ n) :
     let ell := IntermediateField.adjoin k ({ζ} : Set Ω)
-    let hζint : IsIntegral k ζ :=
-      padicCyclotomicUnramified_primitiveRoot_isIntegral
+    let hζint : IsIntegral k ζ := by
+      exact padicCyclotomicUnramified_primitiveRoot_isIntegral
         (padicCyclotomicUnramified_order_pos hpn) hζ
     letI : FiniteDimensional k ell :=
       IntermediateField.adjoin.finiteDimensional hζint
@@ -1697,8 +1697,8 @@ theorem padicCyclotomicUnramified
     (hk : Fintype.card (padicCyclotomicUnramifiedResidueField vK) = p ^ r)
     (hpn : p.Coprime n) {ζ : L} (hζ : IsPrimitiveRoot ζ n)
     (hζgen : Algebra.adjoin K ({ζ} : Set L) = ⊤) :
-    letI : FiniteDimensional K L :=
-      padicCyclotomicUnramified_finiteDimensional_of_primitiveRoot_adjoin_eq_top
+    letI : FiniteDimensional K L := by
+      exact padicCyclotomicUnramified_finiteDimensional_of_primitiveRoot_adjoin_eq_top
         (padicCyclotomicUnramified_order_pos hpn) hζ hζgen
     let V := LubinTate.Valuations.exponentialValuationSubring vK
     let W := LubinTate.Valuations.exponentialValuationSubring vL

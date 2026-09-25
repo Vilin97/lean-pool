@@ -76,7 +76,7 @@ local instance localSeparableClosureScalarTower :
 
 /-- A Chevalley extension of the local valuation to the chosen algebraic
 closure.  This is the valuation choice `w | v` made in the finite local reciprocity construction. -/
-private noncomputable def localAbsoluteValuationSubring :
+noncomputable def localAbsoluteValuationSubring :
     ValuationSubring (AlgebraicClosure K) :=
   Classical.choose
     (ValuationTheory.DiscreteValuationField.Valuation.exists_extension_valuationSubring
@@ -191,7 +191,7 @@ theorem localSeparableDecompositionGroup_eq_top :
 
 /-- When the decomposition subgroup is top, the valuation ring on the
 decomposition field is the original local valuation ring. -/
-private noncomputable def localBaseValuationSubringEquivDecompositionField :
+noncomputable def localBaseValuationSubringEquivDecompositionField :
     (localCompleteDVF K).valuationSubring ≃+*
       decompositionFieldValuationSubring K
         (localSeparableValuationSubring K) := by
@@ -401,7 +401,7 @@ noncomputable def localSeparableResidueAlgAction :
     residueAlgActionOfEqTop K
       (localSeparableValuationSubring K)
       (localSeparableDecompositionGroup_eq_top K)
-  continuous_toFun := localSeparableResidueAlgAction_continuous K
+  continuous_toFun := by exact localSeparableResidueAlgAction_continuous K
 
 /-- Every automorphism of the selected residue extension lifts to the separable Galois group. -/
 theorem localSeparableResidueAlgAction_surjective :

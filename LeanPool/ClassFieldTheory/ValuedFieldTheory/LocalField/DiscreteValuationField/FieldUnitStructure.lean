@@ -32,7 +32,7 @@ namespace LocalField
 
 variable {K : Type u} [Field K]
 
-open CompleteDVF.higherPrincipalUnitGroup renaming
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
   fieldUnitsContinuousMulEquivUniformizerRootsPrincipalUnitsOfWithZeroValuation →
     fieldUnitsEquivUniformizerRootsPrincipalUnits in
 /-- The local-field structure theory, the mixed-characteristic field-unit structure theorem.  In
@@ -80,7 +80,7 @@ noncomputable def chosenFieldUnitsStructureMixedCharacteristic
         (ZMod (F.residueCharacteristic ^ a) ×
           (Fin d → ℤ_[F.residueCharacteristic]))) e⟩
 
-open CompleteDVF.higherPrincipalUnitGroup renaming
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
   adicPrincipalUnitsContinuousAddEquivUnderlyingOfWithZeroValuation →
     adicPrincipalUnitsContinuousAddEquivUnderlyingOfWithZeroValuation in
 /-- The exact principal-unit factor in the equal-characteristic field-unit structure theorem,
@@ -123,7 +123,7 @@ noncomputable def chosenFirstPrincipalUnitStructureEqualCharacteristic
     I.symm.trans E
   exact LocalFieldTheory.DiscreteValuationField.continuousMulEquivOfAdditiveTarget eAdd
 
-open CompleteDVF.higherPrincipalUnitGroup renaming
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
   fieldUnitsContinuousMulEquivUniformizerRootsPrincipalUnitsOfWithZeroValuation →
     fieldUnitsEquivUniformizerRootsPrincipalUnits in
 /-- The local-field structure theory, the equal-characteristic field-unit structure theorem.  In

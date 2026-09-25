@@ -61,7 +61,8 @@ private theorem addMonoidEnd_sum_apply
       change f i x + (∑ j ∈ s, f j) x = f i x + ∑ j ∈ s, f j x
       rw [ih]
 
-private instance equalCharacteristicLaurentCharP
+/-- The residue Laurent-series field has the local field's residue characteristic. -/
+instance equalCharacteristicLaurentCharP
     (F : LocalField.{u, v} K)
     :
     CharP F.residueField⸨X⸩ F.residueCharacteristic :=

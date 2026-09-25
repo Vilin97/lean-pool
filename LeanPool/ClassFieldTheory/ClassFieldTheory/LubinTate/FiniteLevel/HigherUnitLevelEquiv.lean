@@ -1394,13 +1394,10 @@ noncomputable def standardLubinTateHigherUnitChangedLevelAlgEquiv
     IntermediateField.restrictAlgEquiv (le_sup_left : L ≤ M)
   let changedEquiv : L' ≃ₐ[K] changedLevel :=
     IntermediateField.restrictAlgEquiv (le_sup_right : L' ≤ M)
-  have heq : changedLevel = oldLevel := by
-    exact
-      standardLubinTateHigherUnit_restrict_changedLevel_eq_originalLevel
-        hπ u n hu
-  exact
-    changedEquiv.trans
-      ((IntermediateField.equivOfEq heq).trans oldEquiv.symm)
+  exact changedEquiv.trans
+    ((IntermediateField.equivOfEq (by
+      exact standardLubinTateHigherUnit_restrict_changedLevel_eq_originalLevel
+        hπ u n hu)).trans oldEquiv.symm)
 
 /-- A unit factor congruent to one at depth `n + 1` is a norm from the
 original standard level. -/

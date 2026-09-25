@@ -25,18 +25,23 @@ open LocalFieldTheory.DiscreteValuationField
 open LocalFieldTheory.DiscreteValuationField.Examples.Qp
 open SameUniformizer
 
-private structure PadicChangedUniformizerApproximation
+/-- A finite correction stage with zero constant term and the prescribed linear coefficient. -/
+structure PadicChangedUniformizerApproximation
     (p : ℕ) [Fact p.Prime]
     (u : (padicLocalField p).valuationSubringˣ) where
+  /-- The power series at this correction stage. -/
   series : PowerSeries (padicCompletedUnramifiedWittRing p)
+  /-- Every correction preserves the zero constant term. -/
   constantCoeff_eq_zero :
     PowerSeries.constantCoeff series = 0
+  /-- Every correction preserves the selected linear coefficient. -/
   coeff_one_eq :
     PowerSeries.coeff 1 series =
       (padicChangedUniformizerLinearCoefficient p u :
         padicCompletedUnramifiedWittRing p)
 
-private noncomputable def padicChangedUniformizerApproximation
+/-- Successive higher-degree corrections to the linear changed-uniformizer series. -/
+noncomputable def padicChangedUniformizerApproximation
     (p : ℕ) [Fact p.Prime]
     (u : (padicLocalField p).valuationSubringˣ) :
     ℕ → PadicChangedUniformizerApproximation p u

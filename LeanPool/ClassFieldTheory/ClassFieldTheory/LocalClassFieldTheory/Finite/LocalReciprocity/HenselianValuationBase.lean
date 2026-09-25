@@ -36,18 +36,15 @@ section
 variable (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
   [IsNonarchimedeanLocalField K]
 
-private abbrev G := Gal(SeparableClosure K/K)
-
-private abbrev A : Rep ℤ (G K) :=
-  galoisAmbientUnitsRep K (SeparableClosure K)
-
 /-- `Kˣ` is the coefficient group fixed by the distinguished base subgroup
 of the absolute separable Galois group. -/
 def baseFieldUnitsEquiv :
-    Additive Kˣ ≃+ ambientFixedAddSubgroup (A K) (baseField (G K)) :=
+    Additive Kˣ ≃+ ambientFixedAddSubgroup
+      (galoisAmbientUnitsRep K (SeparableClosure K)) (baseField Gal(SeparableClosure K/K)) :=
   (baseUnitsEquivGaloisAmbientFixed K (SeparableClosure K)).trans
     (AddEquiv.addSubgroupCongr
-      (congrArg (ambientFixedAddSubgroup (A K))
+      (congrArg
+        (ambientFixedAddSubgroup (galoisAmbientUnitsRep K (SeparableClosure K)))
         (closedFixingSubgroup_bot_eq_baseField K (SeparableClosure K))))
 
 omit [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K] in
@@ -69,7 +66,8 @@ theorem baseFieldUnitsEquiv_val (x : Kˣ) :
 /-- The normalized valuation `v_K : Kˣ → ℤ`, embedded in `ℤ̂` and written on
 the actual fixed coefficient group. -/
 def localBaseValuation :
-    ambientFixedAddSubgroup (A K) (baseField (G K)) →+ ZHat :=
+    ambientFixedAddSubgroup (galoisAmbientUnitsRep K (SeparableClosure K))
+      (baseField Gal(SeparableClosure K/K)) →+ ZHat :=
   (Int.castRingHom ZHat).toAddMonoidHom.comp
     ((LocalFieldTheory.IsNonarchimedeanLocalField.valuationMap K).comp
       (baseFieldUnitsEquiv K).symm.toAddMonoidHom)

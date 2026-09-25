@@ -327,7 +327,23 @@ actual integral closure over the Witt valuation ring. -/
 noncomputable def padicCompletedLevelCompleteDVF
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     CompleteDVF.{0, 0} (padicCompletedLevelField p n) :=
-  Classical.choose (padicCompletedLevelCompleteDVFData_exists p n)
+  Classical.choose (show
+    ∃ target : CompleteDVF.{0, 0} (padicCompletedLevelField p n),
+      ∃ hExt :
+          (padicCompletedUnramifiedCompleteDVF p).valuation.HasExtension
+            target.valuation,
+        letI :
+            (padicCompletedUnramifiedCompleteDVF p).valuation.HasExtension
+              target.valuation := hExt
+        IsIntegralClosure target.valuationSubring
+            (padicCompletedUnramifiedCompleteDVF p).valuationSubring
+            (padicCompletedLevelField p n) ∧
+          degree (padicCompletedUnramifiedCompleteDVF p).toDVF target.toDVF =
+            ramificationIndex
+                (padicCompletedUnramifiedCompleteDVF p).toDVF target.toDVF *
+              residueDegree
+                (padicCompletedUnramifiedCompleteDVF p).toDVF target.toDVF from by
+    exact padicCompletedLevelCompleteDVFData_exists p n)
 
 /-- The selected completed-level valuation extends the completed-unramified
 base valuation. -/
@@ -469,20 +485,23 @@ theorem padicCompletedPrimitiveRootInteger_mem_maximalIdeal
     (IsLocalRing.maximalIdeal.isMaximal
       target.valuationSubring).isPrime.mem_of_pow_mem _ hlambdaPow'
 
-private noncomputable local instance (priority := 50)
+/-- The discrete uniformity on Witt coefficients used for convergent power-series evaluation. -/
+noncomputable local instance (priority := 50)
     padicCompletedLevelWittUniformSpace
     (p : ℕ) [Fact p.Prime] :
     UniformSpace (padicCompletedUnramifiedWittRing p) :=
   ⊥
 
-private noncomputable local instance
+/-- The completed level carries the adic topology of its maximal ideal. -/
+noncomputable local instance
     padicCompletedLevelTargetWithIdeal
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     WithIdeal
       (padicCompletedLevelCompleteDVF p n).valuationSubring where
   i := (padicCompletedLevelCompleteDVF p n).maximalIdeal
 
-private noncomputable local instance
+/-- The completed-level valuation ring is complete for its maximal-ideal topology. -/
+noncomputable local instance
     padicCompletedLevelTargetCompleteSpace
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     CompleteSpace
@@ -491,7 +510,8 @@ private noncomputable local instance
   have hadic : IsAdic target.maximalIdeal := rfl
   exact (hadic.isAdicComplete_iff.mp target.isAdicComplete).1
 
-private noncomputable local instance
+/-- The completed-level maximal-ideal topology is Hausdorff. -/
+noncomputable local instance
     padicCompletedLevelTargetT2Space
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     T2Space
@@ -541,7 +561,8 @@ theorem padicCompletedLevelWittCoefficientHom_continuous
     Continuous (padicCompletedLevelWittCoefficientHom p n) :=
   continuous_of_discreteTopology
 
-private noncomputable local instance
+/-- The Witt algebra structure on the completed level is induced by its coefficient map. -/
+noncomputable local instance
     padicCompletedLevelWittAlgebra
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     Algebra (padicCompletedUnramifiedWittRing p)

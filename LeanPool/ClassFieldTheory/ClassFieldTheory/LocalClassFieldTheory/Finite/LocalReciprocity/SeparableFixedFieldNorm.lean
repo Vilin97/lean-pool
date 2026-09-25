@@ -152,8 +152,8 @@ def baseFixingCosetEquivAlgHom
         (closedFixingSubgroup K Ω E) (fixingSubgroupLeBase K Ω E)) ≃
       (E →ₐ[K] Ω) :=
   Equiv.ofBijective (baseFixingCosetToAlgHom K Ω E)
-    ⟨baseFixingCosetToAlgHom_injective K Ω E,
-      baseFixingCosetToAlgHom_surjective K Ω E⟩
+    (by exact ⟨baseFixingCosetToAlgHom_injective K Ω E,
+      baseFixingCosetToAlgHom_surjective K Ω E⟩)
 
 /-- Provides the instance `baseFixingExtensionQuotient_finite_of_isSeparable`. -/
 noncomputable instance baseFixingExtensionQuotient_finite_of_isSeparable

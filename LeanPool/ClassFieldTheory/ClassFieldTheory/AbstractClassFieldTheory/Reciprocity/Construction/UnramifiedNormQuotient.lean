@@ -184,7 +184,8 @@ private theorem valueModulo_eq_zero_iff
         ((QuotientAddGroup.mk' (nsmulWithin v.valueGroup n)) (n • w)) = 0
     rw [hq, map_zero]
 
-private def unramifiedValuationHom
+/-- The normalized valuation reduced modulo the finite extension degree. -/
+def unramifiedValuationHom
     (v : ValuationData D A) (K : FiniteAbstractField G)
     (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
@@ -236,7 +237,7 @@ def unramifiedNormQuotientValuation
       ZMod ((FiniteAbstractFieldExtension.ofInclusion L K hLK).degree : ℕ) :=
   finiteNormQuotientLift A K.field L hLK
     (v.unramifiedValuationHom K L hLK)
-    (v.finiteNormSubgroup_le_unramifiedValuationHom_ker K L hLK hUnramified)
+    (by exact v.finiteNormSubgroup_le_unramifiedValuationHom_ker K L hLK hUnramified)
 
 /--
 Establishes the identity `v.unramifiedNormQuotientValuation K L hLK hUnramified (finiteNormClass A

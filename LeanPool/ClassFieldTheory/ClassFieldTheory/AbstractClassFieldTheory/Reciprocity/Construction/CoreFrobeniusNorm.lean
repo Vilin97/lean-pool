@@ -92,7 +92,7 @@ theorem maximalUnramifiedExtension_finite (D : DegreeData G)
 
 /-- The actual quotient `G(\widetilde L/\widetilde K)` is the kernel of
 `d_K` inside `G(\widetilde L/K)`. -/
-private noncomputable def inertiaCosetToDegreeKernel (D : DegreeData G)
+noncomputable def inertiaCosetToDegreeKernel (D : DegreeData G)
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal] :
@@ -170,7 +170,7 @@ noncomputable def inertiaQuotientDegreeKernelEquiv (D : DegreeData G)
           (D.maximalUnramifiedField_mono hLK)) ≃
       (D.extensionNormalizedDegreeContinuous K L hLK).toMonoidHom.ker :=
   Equiv.ofBijective (D.inertiaCosetToDegreeKernel K L hLK)
-    (D.inertiaCosetToDegreeKernel_bijective K L hLK)
+    (by exact D.inertiaCosetToDegreeKernel_bijective K L hLK)
 
 end DegreeData
 
@@ -480,7 +480,7 @@ namespace DegreeData
 
 /-- Quotient projection identifies the actual cosets `G_K/G_Σ` with
 the cosets of `Γ` in `G(\widetilde L/K)`. -/
-private noncomputable def frobeniusFixedCosetToClosureCoset
+noncomputable def frobeniusFixedCosetToClosureCoset
     (D : DegreeData G) [IsTopologicalGroup G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
@@ -527,7 +527,7 @@ private theorem frobeniusFixedCosetToClosureCoset_bijective
       QuotientGroup.mk q
     rw [hk]
 
-/-- Defines `frobeniusFixedCosetClosureEquiv`. -/
+/-- Projection identifies fixed-field cosets with cosets of the Frobenius closure. -/
 noncomputable def frobeniusFixedCosetClosureEquiv
     (D : DegreeData G) [IsTopologicalGroup G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
@@ -541,7 +541,7 @@ noncomputable def frobeniusFixedCosetClosureEquiv
         (D.frobeniusClosure K L hLK σ).toSubgroup) :=
   Equiv.ofBijective
     (D.frobeniusFixedCosetToClosureCoset K L hLK σ)
-    (D.frobeniusFixedCosetToClosureCoset_bijective K L hLK σ)
+    (by exact D.frobeniusFixedCosetToClosureCoset_bijective K L hLK σ)
 
 /-- The procyclic degree isomorphism says that `Γ` meets the inertia kernel trivially. -/
 private theorem frobeniusClosure_inf_degreeKernel (D : DegreeData G)
@@ -580,7 +580,7 @@ private theorem frobeniusClosure_inf_degreeKernel (D : DegreeData G)
 
 /-- Candidate enumeration of the cosets of `Γ`: an inertia element followed
 by one of the first `n=d_K(σ)` powers of a degree-one Frobenius. -/
-private def kernelPowerCosetMap (D : DegreeData G) [IsTopologicalGroup G]
+def kernelPowerCosetMap (D : DegreeData G) [IsTopologicalGroup G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal]
@@ -764,11 +764,11 @@ noncomputable def kernelPowerCosetEquiv (D : DegreeData G)
       ((K.field.toSubgroup ⧸ D.extensionInertiaWithin K.field L hLK) ⧸
         (D.frobeniusClosure K L hLK σ).toSubgroup) :=
   Equiv.ofBijective (D.kernelPowerCosetMap K L hLK φ σ)
-    (D.kernelPowerCosetMap_bijective K L hLK φ σ hφ)
+    (by exact D.kernelPowerCosetMap_bijective K L hLK φ σ hφ)
 
 /-- Explicit version of the coset decomposition, with representatives in
 the order `φ^i · τ`; this is the order occurring in `φ_n ∘ N`. -/
-private noncomputable def frobeniusNormIdentityCosetMap (D : DegreeData G)
+noncomputable def frobeniusNormIdentityCosetMap (D : DegreeData G)
     [IsTopologicalGroup G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
@@ -870,7 +870,7 @@ private theorem frobeniusNormIdentityCosetMap_bijective (D : DegreeData G)
       _ = eSigma q := hp
   exact ⟨hinj, hsurj⟩
 
-/-- Defines `frobeniusNormIdentityCosetEquiv`. -/
+/-- Inertia cosets and bounded Frobenius powers parametrize the fixed-field cosets. -/
 noncomputable def frobeniusNormIdentityCosetEquiv (D : DegreeData G)
     [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
     [TotallyDisconnectedSpace G]
@@ -890,7 +890,7 @@ noncomputable def frobeniusNormIdentityCosetEquiv (D : DegreeData G)
         extensionSubgroup K.field (D.frobeniusFixedField K L hLK σ)
           (D.frobeniusFixedField_le K L hLK σ)) :=
   Equiv.ofBijective (D.frobeniusNormIdentityCosetMap K L hLK φ σ)
-    (D.frobeniusNormIdentityCosetMap_bijective K L hLK φ σ hφ)
+    (by exact D.frobeniusNormIdentityCosetMap_bijective K L hLK φ σ hφ)
 
 end DegreeData
 

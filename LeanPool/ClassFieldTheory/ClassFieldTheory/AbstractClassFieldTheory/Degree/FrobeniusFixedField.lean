@@ -143,7 +143,7 @@ a continuous map from a profinite procyclic group to `ℤ̂` which sends a
 topological generator to `1` is injective. -/
 private theorem injective_of_topologicallyGenerates_zHat_one
     {A : Type*} [CommGroup A] [TopologicalSpace A]
-    [IsTopologicalGroup A] [CompactSpace A] [T2Space A]
+    [IsTopologicalGroup A] [CompactSpace A]
     [TotallyDisconnectedSpace A]
     (f : A →ₜ* ZHatMul) (x : A)
     (hxgen : TopologicallyGenerates ({x} : Set A))
@@ -698,7 +698,7 @@ theorem frobeniusClosureDegree_range (D : DegreeData G)
 degree image:
 the relative residue degree of the fixed field `Σ` over `K` is `d_K(σ)`. -/
 theorem frobeniusClosureDegree_range_index (D : DegreeData G)
-    [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
+    [IsTopologicalGroup G] [CompactSpace G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal]
@@ -712,7 +712,7 @@ theorem frobeniusClosureDegree_range_index (D : DegreeData G)
 
 /-- The value of `d_K` on `Γ`, regarded in the subgroup `n ℤ̂`. -/
 def frobeniusClosureDegreeInMulNatRange (D : DegreeData G)
-    [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
+    [IsTopologicalGroup G] [CompactSpace G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal]
@@ -851,7 +851,7 @@ theorem fixedFieldNormalizedDegree_surjective (D : DegreeData G)
 
 /-- The closed cyclic group `Γ` is totally disconnected. -/
 theorem frobeniusClosure_totallyDisconnectedSpace (D : DegreeData G)
-    [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
+    [IsTopologicalGroup G] [CompactSpace G]
     [TotallyDisconnectedSpace G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
@@ -872,7 +872,7 @@ theorem frobeniusClosure_totallyDisconnectedSpace (D : DegreeData G)
 `Γ = closure ⟨σ⟩` has finite index in `G(\widetilde L|K)`, hence its
 fixed field `Σ` is finite over `K`. -/
 theorem frobeniusFixedField_finiteIndex (D : DegreeData G)
-    [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
+    [IsTopologicalGroup G] [CompactSpace G]
     (K : FiniteResidueAbstractField D) (L : ClosedSubgroup G)
     (hLK : L.toSubgroup ≤ K.field.toSubgroup)
     [hLnormal : (extensionSubgroup K.field L hLK).Normal]

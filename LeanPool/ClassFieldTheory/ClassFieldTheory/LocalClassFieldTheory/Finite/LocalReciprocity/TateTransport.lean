@@ -75,9 +75,8 @@ def normHomCompSubResEquivIso
   let Ares : Rep R Q :=
     Rep.res e.toMonoidHom A
   let i : ModuleCat.of R Ares.V ≅ ModuleCat.of R A.V := Iso.refl _
-  refine ShortComplex.isoMk i i i ?_ ?_
-  · simpa [Ares, i] using (res_norm_eq e A).symm
-  · rfl
+  exact ShortComplex.isoMk i i i
+    (by simpa [Ares, i] using (res_norm_eq e A).symm) (by rfl)
 
 /-- Reindexing along a group isomorphism preserves the cyclic `H⁻¹`
 short complex. -/
@@ -89,9 +88,8 @@ def subCompNormHomResEquivIso
   let Ares : Rep R Q :=
     Rep.res e.toMonoidHom A
   let i : ModuleCat.of R Ares.V ≅ ModuleCat.of R A.V := Iso.refl _
-  refine ShortComplex.isoMk i i i ?_ ?_
-  · rfl
-  · simpa [Ares, i] using (res_norm_eq e A).symm
+  exact ShortComplex.isoMk i i i
+    (by rfl) (by simpa [Ares, i] using (res_norm_eq e A).symm)
 
 /-- Homology-level group-reindexing comparison in degree zero. -/
 def normHomCompSubHomologyResEquivIso
