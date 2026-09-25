@@ -154,7 +154,7 @@ theorem brownianPurePowerIntegral_zero
   have hpure :
       (∫ t, iteratedKernelPurePower 0 f t ∂iteratedKernelMeasure 0) = 1 := by
     rw [integral_congr_ae (coeFn_iteratedKernelPurePower 0 f)]
-    simp [iteratedKernelPurePowerFun]
+    simp [iteratedKernelPurePowerFun, iteratedKernelMeasure, Measure.real]
   apply Lp.ext
   filter_upwards [integralCLM_zeroOrder hB (iteratedKernelPurePower 0 f),
     Lp.coeFn_const 2 P (1 : ℝ)] with w hintegral hone

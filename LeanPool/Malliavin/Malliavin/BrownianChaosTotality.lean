@@ -53,7 +53,7 @@ private theorem chainIntegralLp_mem_iSup_brownianHomogeneousChaos
       let f : IteratedKernel 0 := Lp.const 2 (iteratedKernelMeasure 0) (1 : ℝ)
       have hfint : ∫ t, f t ∂iteratedKernelMeasure 0 = 1 := by
         rw [integral_congr_ae (Lp.coeFn_const 2 (iteratedKernelMeasure 0) (1 : ℝ))]
-        simp
+        simp [iteratedKernelMeasure, Measure.real]
       have hvalue : integralCLM hB 0 f = chainIntegralLp hB a.u a.v := by
         apply Lp.ext
         filter_upwards [integralCLM_zeroOrder hB f,
