@@ -22,6 +22,14 @@ namespace Submonoid
 
 variable {α : Type*} [CommRing α] [IsDomain α]
 
+/-- Closure under squaring forces every member of a prime-or-unit submonoid to be a unit. -/
+theorem le_isUnit_of_prime_or_unit {S : Submonoid α}
+    (hS : ∀ s ∈ S, Prime s ∨ IsUnit s) : S ≤ IsUnit.submonoid α := by
+  intro s hs
+  rcases hS (s * s) (S.mul_mem hs hs) with hprime | hunit
+  · exact ((prime_irreducible hprime).isUnit_or_isUnit rfl).elim id id
+  · exact isUnit_of_mul_isUnit_left hunit
+
 theorem zero_notMem_of_prime_or_unit {S : Submonoid α}
     (hS : ∀ s ∈ S, Prime s ∨ IsUnit s) : (0 : α) ∉ S := by
   intro h0
