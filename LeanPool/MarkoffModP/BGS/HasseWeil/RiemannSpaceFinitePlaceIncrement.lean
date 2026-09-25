@@ -50,6 +50,7 @@ theorem localNormalizedLift_spec (x : T) :
     a * x.1 = algebraMap R L (localNormalizedLift T a hregular x) :=
   Classical.choose_spec (hregular x)
 
+omit [IsDedekindDomain R] [IsDiscreteValuationRing R] [Algebra K R] [IsScalarTower K R L] in
 theorem localNormalizedLift_add (x y : T) :
     localNormalizedLift T a hregular (x + y) =
       localNormalizedLift T a hregular x + localNormalizedLift T a hregular y := by
@@ -61,6 +62,7 @@ theorem localNormalizedLift_add (x y : T) :
   simp only [Submodule.coe_add]
   ring
 
+omit [IsDedekindDomain R] [IsDiscreteValuationRing R] in
 theorem localNormalizedLift_smul (c : K) (x : T) :
     localNormalizedLift T a hregular (c • x) =
       c • localNormalizedLift T a hregular x := by

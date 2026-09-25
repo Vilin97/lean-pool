@@ -330,6 +330,7 @@ def finiteExtensionInfinityDirectDegreeSum (x : L) : ℤ :=
   (finiteExtensionInfinityPrincipalDivisor K L x).sum (fun P n =>
     n * (P.1.inertiaDeg (RatFuncInfinityIntegers K) : ℤ))
 
+omit [DecidableEq K] in
 theorem finiteExtensionInfinityDirectDegreeSum_eq_grouped (x : L) :
     finiteExtensionInfinityDirectDegreeSum K L x =
       finiteExtensionInfinityOrderSum K L x := by

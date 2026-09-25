@@ -190,7 +190,7 @@ private theorem oddDivisorCount_map_assignment
       simp only [List.map_cons, RankinNeighborProfile.oddDivisorCount,
         List.prod_cons]
       rw [ih htail]
-      simp only [ite_mul, one_mul] at hhead
+      simp [RankinOddFactor.Matches] at hhead
       rw [hhead.1, hhead.2.1]
 
 private theorem odd_prime_not_mem_both_neighbors
@@ -556,7 +556,7 @@ private theorem oddCoarseEulerProduct_map_assignment
         RankinNeighborProfile.oddCoarseEulerProduct,
         List.prod_cons]
       rw [ih htail]
-      simp only [ite_mul, one_mul] at hhead
+      simp [RankinOddFactor.Matches] at hhead
       rw [hhead.1, hhead.2.1]
 
 private theorem jointOddPrimeList_coarse_product_minus

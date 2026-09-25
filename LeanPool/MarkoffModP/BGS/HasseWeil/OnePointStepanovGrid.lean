@@ -126,6 +126,7 @@ theorem finiteExtensionPrincipalDivisor_sum_eq_zero_or_gt
             K L (f i) (∑ j ∈ S, f j) hi0 hrest0 hsum P
           exact (lt_min hiOrder hrestOrder).trans_le hlower
 
+omit [Fintype K] [DecidableEq K] in
 /-- A unique least-order term controls a finite sum. -/
 theorem finiteExtensionPrincipalDivisor_sum_eq_of_unique_min
     {ι : Type*} (P : FiniteExtensionPlace K L)

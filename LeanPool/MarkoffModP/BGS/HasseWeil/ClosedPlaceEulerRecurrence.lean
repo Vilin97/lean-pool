@@ -37,10 +37,12 @@ section FiniteWeightedFamily
 
 variable {I : Type*} [Fintype I] [DecidableEq I]
 
-private abbrev WeightedEffectiveDivisor (w : I → ℕ) (n : ℕ) :=
+/-- Natural-valued divisors of a prescribed weighted degree. -/
+abbrev WeightedEffectiveDivisor (w : I → ℕ) (n : ℕ) :=
   {D : I →₀ ℕ // Finsupp.weight w D = n}
 
-@[reducible] private noncomputable def weightedEffectiveDivisorFintype
+/-- A finite enumeration of weighted effective divisors when every weight is nonzero. -/
+@[reducible] noncomputable def weightedEffectiveDivisorFintype
     (w : I → ℕ) (hw : ∀ i, w i ≠ 0) (n : ℕ) :
     Fintype (WeightedEffectiveDivisor w n) :=
   Set.Finite.fintype (Finsupp.finite_of_nat_weight_eq w hw n)

@@ -57,6 +57,7 @@ noncomputable def maximalIdealInFractionEmbeddingRange
     (m : MaximalSpectrum A) : Ideal (algebraMap A L).range :=
   m.asIdeal.map (fractionEmbeddingRangeEquiv (A := A) (L := L)).toRingHom
 
+omit [IsDomain A] in
 private theorem maximalIdealInFractionEmbeddingRange_ne_top
     (m : MaximalSpectrum A) :
     maximalIdealInFractionEmbeddingRange (A := A) (L := L) m ≠ ⊤ := by
@@ -88,6 +89,7 @@ noncomputable def dominatingValuationSubring (m : MaximalSpectrum A) :
     (maximalIdealInFractionEmbeddingRange (A := A) (L := L) m)
     (by exact maximalIdealInFractionEmbeddingRange_ne_top m))
 
+omit [IsDomain A] in
 theorem range_le_dominatingValuationSubring (m : MaximalSpectrum A) :
     (algebraMap A L).range ≤
       (dominatingValuationSubring (A := A) (L := L) m).toSubring :=
@@ -95,6 +97,7 @@ theorem range_le_dominatingValuationSubring (m : MaximalSpectrum A) :
     (maximalIdealInFractionEmbeddingRange (A := A) (L := L) m)
     (by exact maximalIdealInFractionEmbeddingRange_ne_top m))).1
 
+omit [IsDomain A] in
 theorem algebraMap_mem_dominatingValuationSubring_nonunits_of_mem
     (m : MaximalSpectrum A) (r : A) (hr : r ∈ m.asIdeal) :
     algebraMap A L r ∈

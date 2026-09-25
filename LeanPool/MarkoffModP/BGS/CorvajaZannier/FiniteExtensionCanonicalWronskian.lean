@@ -89,6 +89,7 @@ local instance canonicalWronskianFiniteIntegralClosureIsTorsionFree :
 
 /-! ## The finite different and the discriminant degree -/
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 private theorem finiteExtensionFinitePrincipalDivisor_algebraMap_apply
     (d : RatFuncFiniteIntegralClosure K L) (hd : d ≠ 0)
     (q : FiniteExtensionFinitePlace K L) :

@@ -85,8 +85,7 @@ theorem secondCoordinateCriticalResultant_natDegree_le
         Polynomial.natDegree_mul_le
       _ ≤ firstDegree + 0 :=
         Nat.add_le_add (hFcoeff (i + 1)) (by
-          simp using
-            (Polynomial.natDegree_natCast (R := K) (i + 1)).le)
+          simp)
       _ = firstDegree := Nat.add_zero _
   have hresultant :=
     BGS.CorvajaZannier.natDegree_resultant_le_of_degree_le

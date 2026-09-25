@@ -573,7 +573,9 @@ abbrev FrobeniusTwistFinitePlaceFiberFixedBy
     (exactConstantExtensionFrobeniusTwist
       C (RatFunc C) N S hExact g)
 
-private theorem sigma_value_injective
+/-- A sigma-family value map is injective when fibers are injective and their indices
+can be recovered injectively from the values. -/
+theorem sigma_value_injective
     {I A B : Type*} {V : I → Type*}
     (index : I → A) (hindex : Function.Injective index)
     (value : ∀ i, V i → B) (under : B → A)

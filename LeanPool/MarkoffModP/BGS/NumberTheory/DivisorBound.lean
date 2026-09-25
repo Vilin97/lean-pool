@@ -38,7 +38,7 @@ private lemma exists_pow_succ_le_constant_mul_two_pow (k : ℕ) :
   by_cases ha : N ≤ a + 1
   · have hreal := hN (a + 1) ha
     simp only [Real.norm_eq_abs, one_mul, abs_pow] at hreal
-    simp only [ge_iff_le] at hreal
+    simp at hreal
     have hnat : (a + 1) ^ k ≤ 2 ^ (a + 1) := by exact_mod_cast hreal
     calc
       (a + 1) ^ k ≤ 2 ^ (a + 1) := hnat

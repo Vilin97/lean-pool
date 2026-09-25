@@ -198,6 +198,7 @@ private theorem probe_finiteExtensionInfinityPlace_X_gt_one
       simpa using
         (algebraMap (RatFunc K) L).injective.ne RatFunc.X_ne_zero)).mpr hxinverse
 
+omit [DecidableEq K] in
 private theorem probeFiniteExtensionPlaceValuation_injective :
     Function.Injective (probeFiniteExtensionPlaceValuation K L) := by
   intro w₁ w₂ h
@@ -428,6 +429,7 @@ private noncomputable def valuationCenterPlace
   ⟨valuationCenterIdeal (S := S) V hbase,
     valuationCenterIdeal_isPrime (S := S) V hbase, hne⟩
 
+omit [IsDomain R] in
 private theorem valuationSubringAt_valuationCenterPlace_le
     (V : ValuationSubring F)
     (hbase : ∀ r : R, algebraMap R F r ∈ V)

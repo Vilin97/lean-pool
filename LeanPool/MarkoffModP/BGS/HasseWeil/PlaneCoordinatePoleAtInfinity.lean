@@ -220,6 +220,7 @@ theorem finiteExtensionPrincipalDivisor_planeCurveFirstCoordinate_inl_nonnegativ
   rw [← planeCurveFirstCoordinateRatFuncAlgebra_X f hx]
   exact principalDivisor_algebraMap_X_inl_nonnegative K L q
 
+omit [Fintype K] in
 /-- Consequently, the pole divisor of the first plane coordinate vanishes at
 every finite place. -/
 theorem finiteExtensionPoleDivisor_planeCurveFirstCoordinate_inl_eq_zero
@@ -255,6 +256,7 @@ theorem finiteExtensionPoleDivisor_planeCurveFirstCoordinate_inl_eq_zero
     (finiteExtensionPrincipalDivisor_planeCurveFirstCoordinate_inl_nonnegative
       hf hpartialSecond q))]
 
+omit [Fintype K] in
 /-- Every place above infinity occurs with positive coefficient in the pole
 divisor of the first plane coordinate. -/
 theorem finiteExtensionPoleDivisor_planeCurveFirstCoordinate_inr_positive

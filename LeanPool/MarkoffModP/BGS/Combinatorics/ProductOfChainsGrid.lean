@@ -184,7 +184,7 @@ theorem gridDecode_encode_x
         rw [Nat.sub_sub_self hy]
         omega
       have hsum : ¬x + y ≤ y + (n - y) := by omega
-      simp [gridDecodeX, gridPosition, gridKey, hmn, 
+      simp [gridDecodeX, gridPosition, gridKey, hmn,
         min_eq_right hreverse,  hsum, Nat.sub_sub_self hy]
       omega
 
@@ -214,7 +214,7 @@ theorem gridDecode_encode_y
           ¬x + y - (n - y) ≤ n - (n - y) := by
         rw [Nat.sub_sub_self hy]
         omega
-      simp [gridDecodeY, gridPosition, gridKey, hmn, 
+      simp [gridDecodeY, gridPosition, gridKey, hmn,
         min_eq_right hreverse,  Nat.sub_sub_self hy]
       omega
 

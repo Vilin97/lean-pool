@@ -67,6 +67,8 @@ def finiteExtensionEffectiveDivisorSplitEquiv :
         FiniteExtensionEffectiveInfinityDivisor K L :=
   Finsupp.sumFinsuppEquivProdFinsupp
 
+omit [Fintype K] [DecidableEq K] [FiniteDimensional (RatFunc K) L]
+  [Algebra.IsSeparable (RatFunc K) L] in
 @[simp]
 theorem finiteExtensionEffectiveDivisorSplitEquiv_finite_apply
     (D : FiniteExtensionEffectiveDivisor K L)
@@ -74,6 +76,8 @@ theorem finiteExtensionEffectiveDivisorSplitEquiv_finite_apply
     (finiteExtensionEffectiveDivisorSplitEquiv K L D).1 P = D (.inl P) :=
   rfl
 
+omit [Fintype K] [DecidableEq K] [FiniteDimensional (RatFunc K) L]
+  [Algebra.IsSeparable (RatFunc K) L] in
 @[simp]
 theorem finiteExtensionEffectiveDivisorSplitEquiv_infinity_apply
     (D : FiniteExtensionEffectiveDivisor K L)
@@ -81,6 +85,8 @@ theorem finiteExtensionEffectiveDivisorSplitEquiv_infinity_apply
     (finiteExtensionEffectiveDivisorSplitEquiv K L D).2 P = D (.inr P) :=
   rfl
 
+omit [Fintype K] [DecidableEq K] [FiniteDimensional (RatFunc K) L]
+  [Algebra.IsSeparable (RatFunc K) L] in
 @[simp]
 theorem finiteExtensionEffectiveDivisorSplitEquiv_symm_inl
     (D : (FiniteExtensionFinitePlace K L →₀ ℕ) ×
@@ -89,6 +95,8 @@ theorem finiteExtensionEffectiveDivisorSplitEquiv_symm_inl
     (finiteExtensionEffectiveDivisorSplitEquiv K L).symm D (.inl P) = D.1 P :=
   rfl
 
+omit [Fintype K] [DecidableEq K] [FiniteDimensional (RatFunc K) L]
+  [Algebra.IsSeparable (RatFunc K) L] in
 @[simp]
 theorem finiteExtensionEffectiveDivisorSplitEquiv_symm_inr
     (D : (FiniteExtensionFinitePlace K L →₀ ℕ) ×
@@ -97,6 +105,7 @@ theorem finiteExtensionEffectiveDivisorSplitEquiv_symm_inr
     (finiteExtensionEffectiveDivisorSplitEquiv K L).symm D (.inr P) = D.2 P :=
   rfl
 
+omit [Fintype K] in
 /-- The existing finite-divisor degree is the restriction of exhaustive
 place degree to the finite branch. -/
 theorem finiteExtensionEffectiveFiniteDivisorDegree_eq_placeDegree
@@ -136,6 +145,8 @@ def finiteExtensionEffectiveDivisorToDivisor
     (D : FiniteExtensionEffectiveDivisor K L) : FiniteExtensionDivisor K L :=
   D.mapRange (fun n : ℕ => (n : ℤ)) (by simp)
 
+omit [Fintype K] [DecidableEq K] [FiniteDimensional (RatFunc K) L]
+  [Algebra.IsSeparable (RatFunc K) L] in
 @[simp]
 theorem finiteExtensionEffectiveDivisorToDivisor_apply
     (D : FiniteExtensionEffectiveDivisor K L)
@@ -149,6 +160,7 @@ theorem finiteExtensionEffectiveDivisorToDivisor_effective
     0 ≤ finiteExtensionEffectiveDivisorToDivisor K L D P := by
   simp
 
+omit [Fintype K] [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 /-- Natural degree casts to the integer degree of the associated exhaustive
 divisor. -/
 theorem finiteExtensionEffectiveDivisorDegree_cast
@@ -236,6 +248,7 @@ local instance effectiveDivisorInfinityPlaceFinite :
       (RatFuncInfinityIntegralClosure K L))
   infer_instance
 
+omit [Fintype K] in
 /-- Every infinity coefficient is bounded by the weighted degree. -/
 theorem finiteExtensionEffectiveInfinityDivisor_apply_le_degree
     (D : FiniteExtensionEffectiveInfinityDivisor K L)

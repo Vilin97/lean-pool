@@ -88,12 +88,10 @@ theorem hasBidegreeAtMost_planeSwapAlgEquiv
   have hd := hdegree n hn
   have hzero :
       Finsupp.mapDomain (Equiv.swap (0 : Fin 2) 1) n 0 = n 1 := by
-    simp using Finsupp.mapDomain_apply
-      (Equiv.swap (0 : Fin 2) 1).injective n (1 : Fin 2)
+    simp
   have hone :
       Finsupp.mapDomain (Equiv.swap (0 : Fin 2) 1) n 1 = n 0 := by
-    simp using Finsupp.mapDomain_apply
-      (Equiv.swap (0 : Fin 2) 1).injective n (0 : Fin 2)
+    simp
   simpa [hzero, hone] using And.intro hd.2 hd.1
 
 theorem map_planeSwapAlgEquiv

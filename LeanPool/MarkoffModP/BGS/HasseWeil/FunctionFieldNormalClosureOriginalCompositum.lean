@@ -268,10 +268,6 @@ noncomputable def functionFieldNormalClosureConstantBaseToOriginalCompositum
   map_add' _ _ := rfl
   commutes' _ := rfl
 
-@[reducible] private noncomputable def originalCompositumRatFuncSelfAlgebra
-    (C : Type*) [Field C] : Algebra C (RatFunc C) :=
-  RatFunc.instAlgebraOfPolynomial C C
-
 private theorem originalCompositum_ratFunc_algHom_ext
     {C M : Type*} [Field C] [Field M] [Algebra C M]
     (f g : RatFunc C →ₐ[C] M) (hX : f RatFunc.X = g RatFunc.X) : f = g := by
@@ -300,7 +296,7 @@ rational-function equivalence. -/
     functionFieldNormalClosureConstantFieldRatFuncAlgebraForOriginalCompositum :
     Algebra (FunctionFieldNormalClosureConstantField K F)
       (RatFunc (FunctionFieldNormalClosureConstantField K F)) :=
-  originalCompositumRatFuncSelfAlgebra (FunctionFieldNormalClosureConstantField K F)
+  ratFuncSelfAlgebra (FunctionFieldNormalClosureConstantField K F)
 
 /-- The `C(t)`-algebra structure on `CF`, transported through the canonical
 equivalence `C(t) ≃ C K(t)` inside the normal closure. -/
@@ -448,7 +444,7 @@ noncomputable def
         ratFuncExactConstantExtensionAlgebra K C F hExact
       E ≃ₐ[RatFunc C] M := by
   intro model1 model2 hExact C E M model3 model4 model5
-  letI : Algebra C (RatFunc C) := originalCompositumRatFuncSelfAlgebra C
+  letI : Algebra C (RatFunc C) := ratFuncSelfAlgebra C
   letI : Algebra K[X] F :=
     RingHom.toAlgebra
       ((algebraMap (RatFunc K) F).comp
@@ -460,15 +456,15 @@ noncomputable def
   let g : RatFunc C →ₐ[C] M :=
     functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgHom
       K F hExact
-  have hX : f RatFunc.X = g RatFunc.X := by
-    apply Subtype.ext
-    have hfX := originalMultiplicationCanonicalRatFunc_X K F hExact
-    have hgX := congrArg Subtype.val (functionFieldNormalClosureConstantBaseRatFuncAlgEquiv_X K F)
-    exact hfX.trans hgX.symm
-  have hfg : f = g := originalCompositum_ratFunc_algHom_ext (C := C) (M := M) f g hX
-  refine { eC with commutes' := ?_ }
-  intro r
-  exact DFunLike.congr_fun hfg r
+  exact { eC with commutes' := by
+    intro r
+    have hX : f RatFunc.X = g RatFunc.X := by
+      apply Subtype.ext
+      have hfX := originalMultiplicationCanonicalRatFunc_X K F hExact
+      have hgX := congrArg Subtype.val (functionFieldNormalClosureConstantBaseRatFuncAlgEquiv_X K F)
+      exact hfX.trans hgX.symm
+    have hfg : f = g := originalCompositum_ratFunc_algHom_ext (C := C) (M := M) f g hX
+    exact DFunLike.congr_fun hfg r }
 
 end CanonicalConstantPresentation
 

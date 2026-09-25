@@ -62,13 +62,13 @@ theorem valuation_eq_of_isEquiv_of_surjective
     rw [← exp_lt_exp, ← hπw]
     have hvlt : v π < v 1 := by
       rw [hπv, map_one]
-      simp using (WithZero.exp_lt_exp.mpr (show (-1 : ℤ) < 0 by omega))
+      simp
     simpa using h.lt_iff_lt.mp hvlt
   have hb : b < 0 := by
     rw [← exp_lt_exp, ← hρv]
     have hwlt : w ρ < w 1 := by
       rw [hρw, map_one]
-      simp using (WithZero.exp_lt_exp.mpr (show (-1 : ℤ) < 0 by omega))
+      simp
     simpa using h.lt_iff_lt.mpr hwlt
   have hwEq : w π = w (ρ ^ (-a)) := by
     rw [hπw, map_zpow₀, hρw, ← exp_zsmul]

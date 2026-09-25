@@ -1047,6 +1047,7 @@ private theorem exists_centered_coordinate_hom
     simp [h]
 
 
+omit [Fintype K] in
 /-- A good rational finite place admits a coordinate-ring map into its
 valuation ring.  The map is the canonical inclusion in the function field,
 and the inverse image of the local maximal ideal is exactly the maximal ideal

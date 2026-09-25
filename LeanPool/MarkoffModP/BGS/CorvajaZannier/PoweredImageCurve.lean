@@ -315,8 +315,7 @@ theorem ratFuncSpecialization_comp_polynomial_algebraMap
       Polynomial.eval₂RingHom (algebraMap K L) u := by
   apply Polynomial.ringHom_ext
   · intro c
-    simp only [RingHom.coe_comp, Function.comp_apply, RatFunc.algebraMap_C, Polynomial.coe_eval₂RingHom,
-      Polynomial.eval₂_C]
+    simp [ratFuncSpecialization]
     rw [← RatFunc.algebraMap_eq_C,
       (RatFunc.algEquivOfTranscendental u hu).commutes]
     rfl

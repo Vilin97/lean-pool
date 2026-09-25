@@ -115,8 +115,8 @@ private theorem key_injective_on_antichain
       simpa [hxback, hyback] using hdecode
     by_contra hne
     exact
-      (hantichain (by simp using x.2)
-        (by simp using y.2) hne) hle
+      (hantichain (by simp)
+        (by simp) hne) hle
   · have hle : y.1 ≤ x.1 := by
       have hdecode :=
         decomposition.decode_mono kx iy ix hyx
@@ -129,8 +129,8 @@ private theorem key_injective_on_antichain
       simpa [hxback, hyback] using hdecode
     by_contra hne
     exact
-      (hantichain (by simp using y.2)
-        (by simp using x.2) (Ne.symm hne)) hle
+      (hantichain (by simp)
+        (by simp) (Ne.symm hne)) hle
 
 /-- Every antichain injects into the central rank of a finite ranked poset
 equipped with an explicit symmetric-chain decomposition. -/

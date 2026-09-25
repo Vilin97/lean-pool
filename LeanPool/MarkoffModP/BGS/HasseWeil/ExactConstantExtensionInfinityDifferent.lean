@@ -267,6 +267,7 @@ noncomputable def exactConstantExtensionInfinityNormalizationBaseChangeRingEquiv
         (rationalBase_algebraMap_eq C S N hExact) z.1)
   exact integralClosureRingEquivOfIntegralTower A R₁ L
 
+omit [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N] in
 /-- The infinity-normalization base-change equivalence preserves the ambient
 function-field element. -/
 theorem exactConstantExtensionInfinityNormalizationBaseChangeRingEquiv_coe

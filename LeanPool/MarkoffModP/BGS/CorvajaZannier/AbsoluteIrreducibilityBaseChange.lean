@@ -218,7 +218,7 @@ theorem irreducible_map_of_irreducible_map_isAlgClosed
           simpa only [θ, MvPolynomial.eval₂Hom_X'] using hqGE
         exact left_ne_zero_of_mul_eq_one hprod
       have hcoeffFormula : gE.coeff mg = x (gVar mg) := by
-        simp [gE, G, 
+        simp [gE, G,
           MvPolynomial.coeff_monomial, hmgMem, θ]
       rw [hcoeffFormula]
       exact hxG
@@ -241,7 +241,7 @@ theorem irreducible_map_of_irreducible_map_isAlgClosed
           simpa only [θ, MvPolynomial.eval₂Hom_X'] using hqHE
         exact left_ne_zero_of_mul_eq_one hprod
       have hcoeffFormula : hE'.coeff mh = x (hVar mh) := by
-        simp [hE', H, 
+        simp [hE', H,
           MvPolynomial.coeff_monomial, hmhMem, θ]
       rw [hcoeffFormula]
       exact hxH

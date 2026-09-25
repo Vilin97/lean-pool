@@ -89,6 +89,9 @@ local instance compatibilityOldNormalizationConstantAlgebra :
     ((algebraMap C[X] (integralClosure C[X] N)).comp
       (algebraMap C C[X]))
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)]
+  [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N]
+  [FiniteDimensional C S] [IsGalois C S] in
 /-- The two normalization equivalences used by the residue and polynomial
 models have the same underlying map. -/
 private theorem finiteFieldConstantExtensionIntegralClosureAlgEquiv_apply_eq_polynomial
@@ -117,6 +120,8 @@ variable (hExact : algebraicClosure C N =
 
 include hExact
 
+omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [Algebra.IsSeparable (RatFunc C) N] in
 /-- The exact constant extension is finite over the original rational
 function field.  This is the finite-dimensional input needed to compare its
 `C[X]`- and `S[X]`-normalizations. -/
@@ -153,6 +158,9 @@ theorem finiteDimensional_exactConstantExtension_over_baseRatFunc :
     Module.Finite.equiv e
   exact Module.Finite.trans N (ExactConstantExtension C N S)
 
+omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] in
 /-- Polynomial coefficient extension is compatible with the two canonical
 rational-function embeddings into the exact constant extension. -/
 theorem exactConstantExtension_ratFunc_polynomialCompatibility
@@ -724,6 +732,11 @@ local instance compatibilityConstantIntermediateTopTower :
       (algebraMap (RatFunc C) L (algebraMap C (RatFunc C) c))
   exact IsScalarTower.algebraMap_apply (RatFunc C) L N _
 
+omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [FiniteDimensional C S] [IsGalois C S]
+  [FiniteDimensional (RatFunc C) L] [Algebra.IsSeparable (RatFunc C) L]
+  [FiniteDimensional L N] [IsGalois L N] in
 /-- The rational-function base, an intermediate field, and the exact
 constant extension form the tower used by the relative Galois action. -/
 private theorem exactConstantExtensionCompatibility_ratFuncBaseTower :

@@ -102,6 +102,7 @@ theorem algebraMap_mem_pow_of_mem_under_pow
       (q.under A).asIdeal ≤ q.asIdeal.comap (algebraMap A B) from le_rfl)) n) hmap
 
 omit [IsIntegralClosure B A L] in
+omit [IsIntegrallyClosed A] in
 theorem natCast_le_count_spanSingleton_algebraMap_of_mem_under_pow
     (q : HeightOneSpectrum B) (c : A) (n : ℕ) (hc0 : c ≠ 0)
     (hc : c ∈ (q.under A).asIdeal ^ n) :
@@ -150,6 +151,7 @@ theorem count_dual_one_eq_neg_different_multiplicity
   rw [hdual, FractionalIdeal.count_inv,
     FractionalIdeal.count_coeIdeal_eq_multiplicity (K := L) _ hdiff]
 
+omit [Algebra.IsIntegral A B] in
 theorem mem_dual_one_iff_different_multiplicity_le_count
     {x : L} (hx : x ≠ 0) :
     x ∈ FractionalIdeal.dual A K₀ (1 : FractionalIdeal B⁰ L) ↔
@@ -176,6 +178,8 @@ theorem trace_mem_algebraMap_range_of_different_multiplicity_le_count
     (by exact one_ne_zero)).mp hzdual (1 : L) (by simp)
   simpa [Algebra.traceForm_apply] using htrace
 
+omit [Algebra A L] [IsScalarTower A B L] [IsIntegralClosure B A L] [IsIntegrallyClosed A]
+  [Algebra.IsIntegral A B] in
 theorem finite_badDifferentCount_set (hdiff : differentIdeal A B ≠ ⊥) (y : L) :
     Set.Finite {q : HeightOneSpectrum B |
       ¬ (-(multiplicity q.asIdeal (differentIdeal A B) : ℤ) ≤
@@ -211,6 +215,7 @@ theorem finite_badDifferentCount_set (hdiff : differentIdeal A B ≠ ⊥) (y : L
     (K := L) (differentIdeal A B) hdiff, hqdiff, hqy]
   simp
 
+omit [IsIntegralClosure B A L] in
 theorem exists_base_multiplier_clearing_different_counts
     [IsDedekindDomain A]
     (hdiff : differentIdeal A B ≠ ⊥)

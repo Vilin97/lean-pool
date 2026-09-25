@@ -39,6 +39,11 @@ noncomputable def ratFuncEquivOfAdjoinEqTop
     ratFuncEquivOfAdjoinEqTop x hx hgen RatFunc.X = x := by
   simp [ratFuncEquivOfAdjoinEqTop]
 
+/-- The canonical constant-field algebra on its rational function field. -/
+@[reducible] noncomputable def ratFuncSelfAlgebra
+    (C : Type*) [Field C] : Algebra C (RatFunc C) :=
+  RatFunc.instAlgebraOfPolynomial C C
+
 variable (K L : Type*) [Field K] [Field L]
   [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)]
   [Algebra (RatFunc K) L]
@@ -48,8 +53,7 @@ variable (K L : Type*) [Field K] [Field L]
 local instance functionFieldNormalClosureConstantFieldRatFuncAlgebra :
     Algebra (FunctionFieldNormalClosureConstantField K L)
       (RatFunc (FunctionFieldNormalClosureConstantField K L)) :=
-  RatFunc.instAlgebraOfPolynomial (FunctionFieldNormalClosureConstantField K L)
-    (FunctionFieldNormalClosureConstantField K L)
+  ratFuncSelfAlgebra (FunctionFieldNormalClosureConstantField K L)
 
 /-- The kernel fixed field is canonically the rational function field over
 the exact constant field, with the original parameter corresponding to `X`.

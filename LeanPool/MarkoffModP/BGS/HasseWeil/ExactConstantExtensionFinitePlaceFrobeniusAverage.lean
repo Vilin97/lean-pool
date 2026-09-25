@@ -197,12 +197,13 @@ theorem exactConstantExtensionFinitePlace_frobeniusFiber_fixedPoint_sum
     letI : Module L (ExactConstantExtension C N S) := Algebra.toModule
     letI : IsScalarTower (RatFunc C) L
         (ExactConstantExtension C N S) :=
-      exactConstantExtensionFrobeniusAverage_ratFuncBaseTower C S N L
+      by exact exactConstantExtensionFrobeniusAverage_ratFuncBaseTower C S N L
     letI : IsGalois L (ExactConstantExtension C N S) :=
       exactConstantExtension_isGalois C L N S hExact
     letI : FiniteDimensional L (ExactConstantExtension C N S) :=
-      finiteDimensional_exactConstantExtension_over_intermediate
-        (C := C) (S := S) (N := N) (L := L) hExact
+      by
+        exact finiteDimensional_exactConstantExtension_over_intermediate
+          (C := C) (S := S) (N := N) (L := L) hExact
     letI : FiniteDimensional (RatFunc C)
         (ExactConstantExtension C N S) :=
       finiteDimensional_exactConstantExtension_over_baseRatFunc

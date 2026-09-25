@@ -238,12 +238,14 @@ theorem finiteExtensionPoleDivisor_ratFuncX_support :
   classical
   ext v
   cases v with
-  | inl q => simp [finiteExtensionPoleDivisor_ratFuncX_inl_eq_zero]
+  | inl q =>
+      rw [Finsupp.mem_support_iff, finiteExtensionPoleDivisor_ratFuncX_inl_eq_zero]
+      simp
   | inr P =>
       have he : 0 < P.1.ramificationIdx (RatFuncInfinityIntegers K) :=
         P.1.ramificationIdx_pos (RatFuncInfinityIntegers K)
-      simp [finiteExtensionPoleDivisor_ratFuncX_inr_eq_ramificationIdx,
-        Nat.ne_of_gt he]
+      rw [Finsupp.mem_support_iff, finiteExtensionPoleDivisor_ratFuncX_inr_eq_ramificationIdx]
+      simp [Nat.ne_of_gt he]
 
 /-- The negative support of the principal divisor of the rational parameter
 consists exactly of the places above infinity. -/

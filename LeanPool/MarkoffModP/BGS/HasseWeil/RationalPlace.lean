@@ -188,6 +188,7 @@ def rationalFinitePlaceToBaseFiber
       by exact rationalFinitePlace_baseDegree_eq_one K L Q⟩,
     ⟨Q.1.asIdeal, Q.1.isPrime, ⟨rfl⟩⟩⟩
 
+omit [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 theorem rationalFinitePlaceToBaseFiber_injective :
     Function.Injective (rationalFinitePlaceToBaseFiber K L) := by
   intro Q R hQR

@@ -66,7 +66,7 @@ theorem evenSign_eq_one_of_smul_eq
         eq_zero_of_neg_eq htwo (congrArg Point.x3 fixedPoint)
       have hsecond : x.1.1.x2 = 0 := by
         have hmarkoff := x.1.2
-        simp only [ne_eq] at hmarkoff
+        simp [IsMarkoff, markoffPolynomial, hfirst, hthird] at hmarkoff
         exact hmarkoff
       exfalso
       apply x.2
@@ -79,7 +79,7 @@ theorem evenSign_eq_one_of_smul_eq
         eq_zero_of_neg_eq htwo (congrArg Point.x3 fixedPoint)
       have hfirst : x.1.1.x1 = 0 := by
         have hmarkoff := x.1.2
-        simp only [ne_eq] at hmarkoff
+        simp [IsMarkoff, markoffPolynomial, hsecond, hthird] at hmarkoff
         exact hmarkoff
       exfalso
       apply x.2

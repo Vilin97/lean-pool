@@ -98,7 +98,9 @@ theorem indexedAuxiliaryWronskian_det_eq_derivationWronskian_det
         Matrix.reindex e.symm e.symm
           (BGS.Algebra.derivationWronskian D g) := by
     ext i j
-    simp only [Matrix.reindex_apply, Equiv.symm_symm, Matrix.submatrix_apply]
+    simp [indexedDedekindLocalWronskian,
+      auxiliaryFamilyDerivativeOrder, BGS.Algebra.derivationWronskian,
+      Matrix.reindex_apply, Matrix.submatrix, g, e]
     exact (Module.End.pow_apply D.toLinearMap _ (f j)).symm
   rw [hmatrix, Matrix.det_reindex_self]
 

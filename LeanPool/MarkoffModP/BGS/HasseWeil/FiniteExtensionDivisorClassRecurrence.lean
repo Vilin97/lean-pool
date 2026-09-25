@@ -85,6 +85,7 @@ theorem finiteExtensionDivisorClassMap_principal
       FiniteExtensionDivisor K L ⧸ finiteExtensionPrincipalDivisorSubgroup K L) = 0
   exact QuotientAddGroup.eq_zero_iff _ |>.2 ⟨x, hx, rfl⟩
 
+omit [Fintype K] in
 private theorem finiteExtensionPrincipalDivisorSubgroup_le_degreeKernel :
     finiteExtensionPrincipalDivisorSubgroup K L ≤
       (finiteExtensionDivisorDegreeHom K L).ker := by
@@ -97,7 +98,7 @@ def finiteExtensionDivisorClassDegree :
     FiniteExtensionDivisorClass K L →+ ℤ :=
   QuotientAddGroup.lift (finiteExtensionPrincipalDivisorSubgroup K L)
     (finiteExtensionDivisorDegreeHom K L)
-    (finiteExtensionPrincipalDivisorSubgroup_le_degreeKernel K L)
+    (by exact finiteExtensionPrincipalDivisorSubgroup_le_degreeKernel K L)
 
 @[simp]
 theorem finiteExtensionDivisorClassDegree_mk
@@ -214,7 +215,9 @@ def finiteExtensionEffectiveDivisorClassFiberEquiv
       (finiteExtensionEffectiveDivisorEquivEffectiveIntegralDivisor K L).symm
         ⟨E.1, E.2.1⟩
     have hDcast : finiteExtensionEffectiveDivisorToDivisor K L D = E.1 :=
-      finiteExtensionEffectiveDivisorToDivisor_of_symm K L ⟨E.1, E.2.1⟩
+      congrArg Subtype.val
+        ((finiteExtensionEffectiveDivisorEquivEffectiveIntegralDivisor K L).apply_symm_apply
+          ⟨E.1, E.2.1⟩)
     have hdegreeInt : finiteExtensionDivisorDegree K L E.1 = (n : ℤ) := by
       obtain ⟨x, hx, hE⟩ := E.2.2
       rw [hE, finiteExtensionDivisorDegree_add,

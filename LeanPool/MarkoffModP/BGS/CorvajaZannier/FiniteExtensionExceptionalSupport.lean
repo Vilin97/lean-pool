@@ -583,6 +583,7 @@ def finiteExtensionFamilyMemberSupport (f : A → L) (a : A) :
   exact (finiteExtensionPrincipalDivisor K L (f a)).support.attach.map
     (finiteExtensionFamilyMemberSupportEmbedding K L f a)
 
+omit [DecidableEq K] in
 @[simp]
 theorem mem_finiteExtensionFamilyMemberSupport_iff
     (f : A → L) (a : A) (w : FiniteExtensionFamilyPlace K L f) :

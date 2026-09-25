@@ -80,7 +80,7 @@ theorem powerBasis_discr_smul_eq_diagonal_det_sq_mul
       (P.map (algebraMap K L)).mulVec (fun i => pbz.basis (e i)) := by
     funext i
     rw [show pbx.basis i = pbx.gen ^ (i : ℕ) by
-      simp only [PowerBasis.coe_basis] using congrFun (PowerBasis.coe_basis pbx) i]
+      simp only [PowerBasis.coe_basis]]
     rw [show P.map (algebraMap K L) =
         Matrix.diagonal (fun i : Fin pbx.dim =>
           algebraMap K L (r ^ (i : ℕ))) by
@@ -89,8 +89,7 @@ theorem powerBasis_discr_smul_eq_diagonal_det_sq_mul
       split <;> simp_all]
     rw [Matrix.mulVec_diagonal]
     rw [show pbz.basis (e i) = pbz.gen ^ ((e i : Fin pbz.dim) : ℕ) by
-      simp only [PowerBasis.coe_basis] using
-        congrFun (PowerBasis.coe_basis pbz) (e i)]
+      simp only [PowerBasis.coe_basis]]
     rw [hgenX, hgenZ]
     have hei : ((e i : Fin pbz.dim) : ℕ) = (i : ℕ) := by simp [e]
     rw [hei]
@@ -175,7 +174,7 @@ theorem finitePlaceOrder_algebraMap_unit_eq_zero
     finitePlaceOrder v (algebraMap R F (u : R)) = 0 := by
   have h := finitePlaceOrderTop_algebraMap_unit (A := R) (K := F) v u
   have hu : algebraMap R F (u : R) ≠ 0 :=
-    by simp using (IsFractionRing.injective R F).ne u.ne_zero
+    by simp
   rw [finitePlaceOrderTop_eq_coe v _ hu] at h
   exact_mod_cast h
 
@@ -625,6 +624,7 @@ section PlaneCurveFiniteDifferentBound
 variable {K : Type*} [Field K] [Fintype K] [DecidableEq K]
   [DecidableEq (RatFunc K)]
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- At each finite first-coordinate prime, the residue-weighted different is
 bounded by the order of the discriminant of the original plane equation. -/
 theorem planeCurve_finiteDifferentDivisorBelow_apply_le_discrOrder

@@ -66,6 +66,7 @@ theorem liftedTorsionPointNormalizationBranch_liesOver
     (S := B) (torsionPointMaximalIdeal f firstOrder secondOrder z).asIdeal
   exact (Classical.choose_spec hex).2
 
+omit [IsDomain (PlaneCurveCoordinateRing f)] in
 /-- Chosen branches above distinct torsion points are distinct because their
 contractions to the affine coordinate ring are distinct. -/
 theorem liftedTorsionPointNormalizationBranch_injective

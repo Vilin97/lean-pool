@@ -60,6 +60,7 @@ theorem finiteExtensionPoleDivisor_apply (x : L)
     Finsupp.filter_apply]
   split <;> simp_all
 
+omit [Fintype K] [DecidableEq K] in
 /-- A pole divisor is effective. -/
 theorem finiteExtensionPoleDivisor_effective (x : L) :
     ∀ v, 0 ≤ finiteExtensionPoleDivisor K L x v := by
@@ -67,6 +68,7 @@ theorem finiteExtensionPoleDivisor_effective (x : L) :
   rw [finiteExtensionPoleDivisor_apply]
   split <;> omega
 
+omit [Fintype K] [DecidableEq K] in
 /-- Adding the pole divisor to the principal divisor is effective. -/
 theorem finiteExtensionPrincipal_add_poleDivisor_effective (x : L) :
     ∀ v, 0 ≤ finiteExtensionPrincipalDivisor K L x v +
@@ -114,6 +116,7 @@ theorem finiteExtensionDivisorDegree_poleDivisor
             ring
     _ = (finiteExtensionHeight K L x : ℤ) := by omega
 
+omit [Fintype K] [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 /-- Divisor degree commutes with natural scaling. -/
 theorem finiteExtensionDivisorDegree_nsmul
     (n : ℕ) (D : FiniteExtensionDivisor K L) :

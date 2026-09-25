@@ -144,7 +144,7 @@ def constantOpenGlueDataOfCommonTargetMap
         CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f',
         constantOpenGlueDataAux]
       simp only [dite_eq_right hij, dite_eq_right (Ne.symm hij)]
-      simp only [dite_eq_ite, Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+      simp
       congr 1
       simp only [← Category.assoc]
       rw [h i]

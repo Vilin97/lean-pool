@@ -75,6 +75,7 @@ theorem functionFieldNormalClosureConstantCompositum_fixingSubgroup :
     rintro _ ⟨c, rfl⟩
     exact (functionFieldNormalClosureConstantToBase K L c).property
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- The kernel fixed field is the compositum `K(t)C` inside the normal
 closure. -/
 theorem functionFieldNormalClosureConstantBase_eq_compositum :

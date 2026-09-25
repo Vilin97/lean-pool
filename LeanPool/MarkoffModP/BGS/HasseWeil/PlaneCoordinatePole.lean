@@ -35,6 +35,7 @@ noncomputable section
 variable {K : Type*} [Field K] [Fintype K] [DecidableEq K]
   [DecidableEq (RatFunc K)]
 
+omit [Fintype K] in
 /-- In the first-coordinate `RatFunc` model, the pole height of the first
 coordinate is the degree of the plane equation in the second variable. -/
 theorem finiteExtensionHeight_planeCurveFirstCoordinate

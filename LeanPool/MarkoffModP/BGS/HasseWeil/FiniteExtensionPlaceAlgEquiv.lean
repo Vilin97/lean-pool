@@ -362,6 +362,7 @@ noncomputable def finiteExtensionInfinityPlaceResidueFieldAlgEquivOfAlgEquiv
       change P.1 = (P.1.comap eInf.symm).comap eInf
       exact (Ideal.comap_of_equiv eInf.toRingEquiv).symm)
 
+omit [FiniteDimensional (RatFunc K) L] [FiniteDimensional (RatFunc K) M] in
 /-- Corresponding infinity places have the same absolute degree. -/
 @[simp]
 theorem finiteExtensionInfinityPlaceEquivOfAlgEquiv_degree

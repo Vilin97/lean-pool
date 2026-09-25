@@ -98,7 +98,7 @@ theorem ambientDerivation_preserves_localizationAtPrime_of_preserves
           (algebraMap R (Localization.AtPrime q) 1) := by
             rw [show invD * algebraMap R (Localization.AtPrime q) d =
               algebraMap R (Localization.AtPrime q) 1 by
-                simp [invD, dSub] using hspec]
+                simp [invD, dSub]]
       _ = 1 := by simp
   refine ⟨z', ?_⟩
   apply mul_right_cancel₀ hdU

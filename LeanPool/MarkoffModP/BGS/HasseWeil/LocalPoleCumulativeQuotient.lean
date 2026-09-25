@@ -48,7 +48,7 @@ def localPolePrincipalPartMap (π : R) (n : ℕ) :
     (localNormalizedLiftLinearMap
       (localPoleSpace (K := K) (L := L) π n)
       (algebraMap R L (π ^ n))
-      (cumulativeLocalPoleSpace_regular (K := K) (L := L) π n))
+      (by exact cumulativeLocalPoleSpace_regular (K := K) (L := L) π n))
 
 theorem localPolePrincipalPartMap_surjective
     (π : R) (hπ : π ≠ 0) (n : ℕ) :

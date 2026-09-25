@@ -134,10 +134,9 @@ noncomputable def finiteFieldConstantExtensionIntegralClosureAlgEquiv
         (integralClosure C[X] N)).symm.toRingEquiv.trans e with
       commutes' := fun s => by
         apply Subtype.ext
-        simp only [AlgEquiv.symm_toRingEquiv, RingEquiv.symm_mk, AlgEquiv.toEquiv_eq_coe,
-          AlgEquiv.symm_toEquiv_eq_symm, RingEquiv.toEquiv_eq_coe, Algebra.TensorProduct.algebraMap_apply,
-          Algebra.algebraMap_self, RingHom.id_apply, Equiv.toFun_as_coe, EquivLike.coe_coe, RingEquiv.coe_trans,
-          RingEquiv.coe_mk, Function.comp_apply, polynomialTensorCancel_symm_tmul, SetLike.coe_eq_coe]
+        simp [e, finiteFieldPolynomialIntegralClosureBaseChangeAlgEquiv,
+          polynomialIntegralClosureBaseChangeAlgEquiv,
+          TensorProduct.toIntegralClosure]
         change s ⊗ₜ[C] (1 : N) =
           algebraMap S[X] (S ⊗[C] N) (Polynomial.C s)
         change s ⊗ₜ[C] (1 : N) =

@@ -231,6 +231,7 @@ theorem finiteExtensionGcdWeightedDegree_neg_neg
   rw [hdivx, hdivy]
 
 omit [DecidableEq (RatFunc K)] in
+omit [Fintype K] in
 /-- The torsion gcd used by the endpoint is exactly the `1-u`, `1-v` gcd
 used by the canonical Wronskian estimate. -/
 theorem planeCurveExhaustiveTorsionGcdWeightedDegree_eq_one_sub
@@ -289,6 +290,7 @@ theorem planeCurveExhaustiveTorsionGcdWeightedDegree_eq_one_sub
   exact finiteExtensionGcdWeightedDegree_neg_neg
     (K := K) (L := L) (1 - x ^ m) (1 - y ^ n) hxm hyn
 
+omit [Fintype K] in
 /-- With the coordinates swapped, the one-minus gcd is bounded by the exact
 powered height of the first coordinate. -/
 theorem finiteExtensionGcdWeightedDegree_one_sub_planeCurvePowers_swapped_le

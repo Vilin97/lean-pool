@@ -73,7 +73,7 @@ theorem exists_frobeniusSubfield_regular_unit_sub_mul_mem_of_perfect_residue
     rw [map_sub, map_mul, hbMap]
     dsimp [ratio]
     rw [← map_mul]
-    simp only [Units.inv_mul_cancel_right]
+    simp
     change algebraMap R κ (u : R) - algebraMap R κ (u : R) = 0
     exact sub_self _
   have hbFrob : algebraMap R L b ∈ frobeniusSubfield L p := by

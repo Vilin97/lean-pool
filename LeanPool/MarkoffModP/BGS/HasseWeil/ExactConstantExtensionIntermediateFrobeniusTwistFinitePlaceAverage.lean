@@ -118,7 +118,7 @@ omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFun
   [IsScalarTower (RatFunc C) L N] [IsGalois L N] in
 /-- The exact constant extension is finite-dimensional over every
 intermediate function field `L`. -/
-private theorem finiteDimensional_exactConstantExtension_over_intermediateBase
+theorem finiteDimensional_exactConstantExtension_over_intermediateBase
     (hExact : algebraicClosure C N =
       (⊥ : IntermediateField C N)) :
     letI : Field (ExactConstantExtension C N S) :=
@@ -151,7 +151,7 @@ omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFun
   [FiniteDimensional L N] [IsGalois L N] in
 /-- Compatibility of the rational-function and intermediate-base algebra
 maps on the exact constant extension. -/
-private theorem exactConstantExtensionIntermediate_ratFuncBaseTower :
+theorem exactConstantExtensionIntermediate_ratFuncBaseTower :
     letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
       exactConstantExtensionBaseAlgebra C (RatFunc C) N S
     letI : SMul (RatFunc C) (ExactConstantExtension C N S) :=
@@ -202,7 +202,7 @@ noncomputable def intermediateFrobeniusTwistFieldRatFuncAlgebra
 
 /-- The induced rational-function algebra is compatible with the inclusion
 of the twist field into the exact constant extension. -/
-private theorem intermediateFrobeniusTwistField_ratFunc_tower
+theorem intermediateFrobeniusTwistField_ratFunc_tower
     (g : N ≃ₐ[L] N) :
     letI : Field (ExactConstantExtension C N S) :=
       exactConstantExtensionField C N S hExact
@@ -1226,7 +1226,7 @@ noncomputable def
 
 /-- Restriction through an intermediate Frobenius-twist field agrees with
 direct restriction to `L`. -/
-private theorem finitePlaceUnder_intermediateFrobeniusTwist_under
+theorem finitePlaceUnder_intermediateFrobeniusTwist_under
     (g : N ≃ₐ[L] N) :
     let T := ExactConstantExtension C N S
     let : Field T := exactConstantExtensionField C N S hExact

@@ -98,8 +98,7 @@ theorem splitFiberPoint_mem (w s : Fˣ) (hw : (w : F) ^ 2 ≠ 1) :
     rw [splitFiberProduct, splitTorusTrace_sq_sub_four]
     have hdifference := splitEigenvalueDifference_ne_zero w hw
     field_simp
-    simp only [Units.val_inv_eq_inv_val, ne_eq, Units.ne_zero, not_false_eq_true, mul_inv_cancel_right₀, mul_zero,
-      mul_eq_zero, OfNat.ofNat_ne_zero, pow_eq_zero_iff]
+    simp [splitTorusTrace]
     right
     field_simp
     ring

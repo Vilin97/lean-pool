@@ -36,11 +36,11 @@ theorem coeff_diagonalScale {F : Type*} [Field F]
       f.coeff m * (z.1 : F) ^ m 0 * (z.2 : F) ^ m 1 := by
   classical
   by_cases hm : m ∈ f.support
-  · simp [diagonalScale, 
+  · simp [diagonalScale,
       MvPolynomial.coeff_monomial, hm]
   · have hcoeff : f.coeff m = 0 :=
       MvPolynomial.notMem_support_iff.mp hm
-    simp [diagonalScale, 
+    simp [diagonalScale,
       MvPolynomial.coeff_monomial, hm, hcoeff]
 
 theorem support_diagonalScale {F : Type*} [Field F]

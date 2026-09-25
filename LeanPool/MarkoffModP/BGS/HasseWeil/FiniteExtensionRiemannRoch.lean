@@ -184,8 +184,8 @@ private theorem isIntegral_infinityBase_iff (x : L) :
 def finiteExtensionInfinityIntegralClosureRingEquiv :
     RatFuncInfinityIntegralClosure K L ≃+*
       FunctionField.Chart.infiniteIntegers K L where
-  toFun x := ⟨x.1, (isIntegral_infinityBase_iff K L x.1).mp x.2⟩
-  invFun x := ⟨x.1, (isIntegral_infinityBase_iff K L x.1).mpr x.2⟩
+  toFun x := ⟨x.1, by exact (isIntegral_infinityBase_iff K L x.1).mp x.2⟩
+  invFun x := ⟨x.1, by exact (isIntegral_infinityBase_iff K L x.1).mpr x.2⟩
   left_inv _ := rfl
   right_inv _ := rfl
   map_mul' _ _ := rfl

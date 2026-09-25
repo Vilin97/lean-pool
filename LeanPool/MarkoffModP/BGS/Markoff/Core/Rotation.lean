@@ -87,7 +87,7 @@ def movingCoordinates (x : Point R) : Fin 2 → R :=
 /-- The fundamental rotation is the action of `rho(3 * x.x1)` on the moving coordinates. -/
 theorem rho_mulVec_movingCoordinates (x : Point R) :
     rho (3 * x.x1) *ᵥ movingCoordinates x = movingCoordinates (rotate1 x) := by
-  simp [movingCoordinates, rotate1] using rho_mulVec (3 * x.x1) x.x2 x.x3
+  simp [movingCoordinates, rotate1]
 
 /-- The normalized trace parameter for the fundamental rotation is `3 * x.x1`. -/
 theorem rho_trace_fundamentalRotation (x : Point R) : (rho (3 * x.x1)).trace = 3 * x.x1 := by
@@ -101,10 +101,8 @@ theorem rotate1_eq_rho (x : Point R) :
         (rho (3 * x.x1) *ᵥ movingCoordinates x) 1⟩ := by
   ext
   · rfl
-  · simp [rotate1, movingCoordinates] using
-      congrFun (rho_mulVec_movingCoordinates x).symm 0
-  · simp [rotate1, movingCoordinates] using
-      congrFun (rho_mulVec_movingCoordinates x).symm 1
+  · simp [rotate1, movingCoordinates]
+  · simp [rotate1, movingCoordinates]
 
 end
 

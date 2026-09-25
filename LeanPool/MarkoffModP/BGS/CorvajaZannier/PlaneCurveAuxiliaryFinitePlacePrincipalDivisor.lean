@@ -45,6 +45,7 @@ local instance auxiliaryFinitePlaceBridgeIntegralClosureIsDedekindDomain :
   IsIntegralClosure.isDedekindDomain K[X] (RatFunc K) L
     (FunctionField.ringOfIntegers K L)
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- The actual localized finite-place order is exactly the coefficient in
 the exhaustive finite principal divisor. -/
 theorem finiteExtensionFinitePlaceLocalOrder_eq_principalDivisor
