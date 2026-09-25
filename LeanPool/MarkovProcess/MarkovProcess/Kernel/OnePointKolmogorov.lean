@@ -232,10 +232,11 @@ noncomputable def exhaustionMetricSpace (rho : X → ℝ) (hrho_cont : Continuou
     (hrho_pos : ∀ x, 0 < rho x) (hrho_lipschitz : LipschitzWith 1 rho)
     (hrho_compact : ∀ epsilon > 0, IsCompact {x | epsilon ≤ rho x}) :
     MetricSpace (OnePoint X) :=
-  MetricSpace.ofDistTopology (exhaustionDist rho) (exhaustionDist_self rho hrho_pos)
-    (exhaustionDist_comm rho) (exhaustionDist_triangle rho hrho_pos hrho_lipschitz)
-    (isOpen_iff_exhaustionDist hrho_cont hrho_pos hrho_compact)
-    (exhaustionDist_eq_zero rho hrho_pos)
+  MetricSpace.ofDistTopology (exhaustionDist rho) (by exact exhaustionDist_self rho hrho_pos)
+    (by exact exhaustionDist_comm rho)
+    (by exact exhaustionDist_triangle rho hrho_pos hrho_lipschitz)
+    (by exact isOpen_iff_exhaustionDist hrho_cont hrho_pos hrho_compact)
+    (by exact exhaustionDist_eq_zero rho hrho_pos)
 
 /-- The exhaustion metric has definitionally the canonical one-point topology. -/
 theorem exhaustionMetricSpace_toTopologicalSpace (rho : X → ℝ) (hrho_cont : Continuous rho)

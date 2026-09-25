@@ -58,7 +58,7 @@ noncomputable def parameterizedFiniteTimeKernel
           Kernel.prodMkLeft (Theta × alpha)
             (parameterizedFiniteTimeKernel P times.relativeTail))
         (fun z ↦ @Fin.cons n (fun _ : Fin (n + 1) ↦ alpha) z.1.2 z.2)
-        measurable_finCons_snd
+        (by exact measurable_finCons_snd)
 
 @[simp]
 theorem parameterizedFiniteTimeKernel_zero
@@ -78,7 +78,7 @@ theorem parameterizedFiniteTimeKernel_succ
           Kernel.prodMkLeft (Theta × alpha)
             (P.parameterizedFiniteTimeKernel times.relativeTail))
         (fun z ↦ @Fin.cons n (fun _ : Fin (n + 1) ↦ alpha) z.1.2 z.2)
-        measurable_finCons_snd :=
+        (by exact measurable_finCons_snd) :=
   rfl
 
 theorem isMarkovKernel_parameterizedFiniteTimeKernel
