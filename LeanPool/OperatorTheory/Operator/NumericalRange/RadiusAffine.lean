@@ -3,13 +3,15 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.Convex.Function
-import Mathlib.Analysis.Normed.Group.Bounded
-import Mathlib.Topology.MetricSpace.Bounded
-import Mathlib.Topology.Order.Compact
-import LeanPool.OperatorTheory.Operator.NumericalRange.Affine
-import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusAdjoint
+
+public import Mathlib.Analysis.Convex.Function
+public import Mathlib.Analysis.Normed.Group.Bounded
+public import Mathlib.Topology.MetricSpace.Bounded
+public import Mathlib.Topology.Order.Compact
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Affine
+public import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusAdjoint
 
 /-!
 # Scalar translations of the numerical radius
@@ -19,6 +21,8 @@ numerical radius.  Consequently scalar translation changes numerical radius
 by at most the modulus of the scalar, and centered numerical radii are
 Lipschitz in the center.
 -/
+
+@[expose] public section
 
 open Filter
 open ContinuousLinearMap

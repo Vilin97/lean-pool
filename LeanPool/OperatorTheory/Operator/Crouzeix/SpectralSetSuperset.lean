@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.NormalPolynomialBound
-import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralSetMonotone
-import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusAffine
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.NormalPolynomialBound
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralSetMonotone
+public import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusAffine
 
 /-!
 # Compact supersets of the closed numerical range
@@ -15,6 +17,8 @@ The Crouzeix--Palencia estimate, and its normal-operator constant-one
 improvement, persist on every compact set containing the closed numerical
 range.
 -/
+
+@[expose] public section
 
 open Set
 open scoped InnerProductSpace

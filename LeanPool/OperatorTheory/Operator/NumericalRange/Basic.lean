@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Basic
+
+public import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
 # Numerical range — definition and membership API (L1.1)
@@ -25,6 +27,8 @@ while `σ(A) = {i}`, breaking the spectrum inclusion that later layers need.
 
 No completeness assumption on `E` is needed.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

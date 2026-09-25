@@ -3,11 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCauchyFromResolventMass
-import LeanPool.OperatorTheory.Operator.Crouzeix.ResolventContourHomotopy
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureMass
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadialAssembly
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCauchyFromResolventMass
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ResolventContourHomotopy
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureMass
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadialAssembly
 
 /-!
 # L4.2 assembly from the boundary double-layer probability measure
@@ -42,6 +44,8 @@ frontier-sup normalization.
   -- oriented numerical-range support also supplies that basepoint
   normalization, so no separate winding premise remains.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set
 open scoped InnerProductSpace Interval Real

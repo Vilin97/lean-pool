@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionAssembly
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPhaseInduction
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadial
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionAssembly
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPhaseInduction
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadial
 
 /-!
 # L4.2 assembly with automatic scalar Plemelj convergence
@@ -20,6 +22,8 @@ capstone.
 The remaining inputs are the genuinely sharp phase contraction, polynomial
 approximation, and reproduction of the polynomial auxiliary contour.
 -/
+
+@[expose] public section
 
 open Complex Filter Set
 open scoped InnerProductSpace Interval Real

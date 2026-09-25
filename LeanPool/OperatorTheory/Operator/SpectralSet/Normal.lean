@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
+public import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
 
 /-!
 # Polynomials in a normal element — the sup-norm bound
@@ -23,6 +25,8 @@ spectral radius, and `σ(p(a)) = p(σ(a)) ⊆ p(K)` by the spectral mapping theo
 Consumers: unitaries with `K` the closed unit disk (`Crouzeix/VonNeumann.lean`), and normal
 operators on a Hilbert space with `K = closure W(A)` (`Crouzeix/Palencia.lean`).
 -/
+
+@[expose] public section
 
 open Polynomial
 

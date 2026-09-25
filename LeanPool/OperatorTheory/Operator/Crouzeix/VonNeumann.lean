@@ -3,13 +3,15 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.CStarAlgebra.Spectrum
-import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandFormula
-import LeanPool.OperatorTheory.Operator.Dilation.Schaeffer
-import LeanPool.OperatorTheory.Operator.SpectralSet.Basic
+
+public import Mathlib.Analysis.CStarAlgebra.Spectrum
+public import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
+public import Mathlib.Analysis.Normed.Algebra.GelfandFormula
+public import LeanPool.OperatorTheory.Operator.Dilation.Schaeffer
+public import LeanPool.OperatorTheory.Operator.SpectralSet.Basic
 
 /-!
 # Von Neumann's inequality (L4.1)
@@ -42,6 +44,8 @@ an inner-product-preserving `V : E →L[ℂ] H` and a unitary `U` on `H` with
 
 Requires `[CompleteSpace E]` (adjoints, the C*-algebra structure on `E →L[ℂ] E`).
 -/
+
+@[expose] public section
 
 open Polynomial ContinuousLinearMap
 open scoped InnerProductSpace

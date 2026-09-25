@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasure
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasure
 
 /-!
 # The boundary double-layer probability measure on a circle
@@ -28,6 +30,8 @@ polynomial through the general boundary-measure theorem.
 * `crouzeixBoundaryPhaseContractive_ball_of_boundaryDoubleLayerDensity` --
   sharp phase contractivity on every positive-radius disk.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set
 open scoped ComplexConjugate Interval Real

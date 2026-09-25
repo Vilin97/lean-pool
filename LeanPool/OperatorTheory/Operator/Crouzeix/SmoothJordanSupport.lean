@@ -3,12 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
-import Mathlib.Analysis.Calculus.Deriv.Shift
-import Mathlib.Analysis.LocallyConvex.Separation
-import Mathlib.Topology.Order.IntermediateValue
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Shift
+public import Mathlib.Analysis.LocallyConvex.Separation
+public import Mathlib.Topology.Order.IntermediateValue
 
 /-!
 # Supporting normals of smooth convex Jordan domains
@@ -43,6 +45,8 @@ therefore fixes the normal sign on the full frontier.
 * `SmoothJordanDomain.canonicalOrientation` -- a canonical choice between a
   trace and its reversal that has the supporting-normal sign.
 -/
+
+@[expose] public section
 
 open Complex Set
 open scoped Real
@@ -352,7 +356,8 @@ theorem SmoothJordanDomain.deriv_reverseOrientation_boundaryParam
       -deriv Omega.boundaryParam (2 * Real.pi - t) := by
   exact deriv_comp_const_sub Omega.boundaryParam (2 * Real.pi) t
 
-private noncomputable def SmoothJordanDomain.orientationPointSupport
+/-- A chosen interior point used to distinguish the two boundary orientations. -/
+noncomputable def SmoothJordanDomain.orientationPointSupport
     (Omega : SmoothJordanDomain) : ℂ :=
   Classical.choose Omega.carrier_nonempty
 

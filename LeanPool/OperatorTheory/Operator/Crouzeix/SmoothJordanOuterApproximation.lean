@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanMergelyanAssembly
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanMergelyanAssembly
 
 /-!
 # From local smooth outer approximation to a nested exhaustion
@@ -22,6 +24,8 @@ bounded by `1/(n+1)`.  The first bound gives strict nesting; the second makes
 the intersection exactly `K`.
 -/
 
+@[expose] public section
+
 open Complex Metric Set
 open scoped InnerProductSpace
 
@@ -32,7 +36,8 @@ def HasSmoothJordanOuterApproximation (K : Set ℂ) : Prop :=
     K ⊆ Omega.carrier ∧
       closure Omega.carrier ⊆ Metric.thickening ε K
 
-private noncomputable def chooseSmoothJordanOuter
+/-- Choose a smooth Jordan domain approximating a set at a prescribed positive scale. -/
+noncomputable def chooseSmoothJordanOuter
     {K : Set ℂ} (houter : HasSmoothJordanOuterApproximation K)
     (ε : ℝ) (hε : 0 < ε) : SmoothJordanDomain :=
   Classical.choose (houter ε hε)
@@ -50,10 +55,12 @@ private theorem closure_chooseSmoothJordanOuter_subset_thickening
       Metric.thickening ε K :=
   (Classical.choose_spec (houter ε hε)).2
 
-private abbrev ContainingSmoothJordanDomain (K : Set ℂ) :=
+/-- A smooth Jordan domain whose interior contains the target set. -/
+abbrev ContainingSmoothJordanDomain (K : Set ℂ) :=
   { Omega : SmoothJordanDomain // K ⊆ Omega.carrier }
 
-private noncomputable def smoothJordanNestingRadius
+/-- A positive thickening radius for a compact set inside the current Jordan domain. -/
+noncomputable def smoothJordanNestingRadius
     {K : Set ℂ} (hK : IsCompact K)
     (Omega : ContainingSmoothJordanDomain K) : ℝ :=
   Classical.choose
@@ -82,7 +89,8 @@ private theorem smoothApproxRadius_pos_outer (n : ℕ) :
   unfold smoothApproxRadius
   positivity
 
-private noncomputable def smoothJordanOuterStepRadius
+/-- The smaller of the nesting radius and the next approximation scale. -/
+noncomputable def smoothJordanOuterStepRadius
     {K : Set ℂ} (hK : IsCompact K) (n : ℕ)
     (Omega : ContainingSmoothJordanDomain K) : ℝ :=
   min (smoothJordanNestingRadius hK Omega) (smoothApproxRadius (n + 1))
@@ -108,17 +116,19 @@ private theorem smoothJordanOuterStepRadius_le_schedule
       smoothApproxRadius (n + 1) :=
   min_le_right _ _
 
-private noncomputable def nextSmoothJordanOuter
+/-- The next containing Jordan domain, chosen inside the current domain and scale. -/
+noncomputable def nextSmoothJordanOuter
     {K : Set ℂ} (hK : IsCompact K)
     (houter : HasSmoothJordanOuterApproximation K) (n : ℕ)
     (Omega : ContainingSmoothJordanDomain K) :
     ContainingSmoothJordanDomain K :=
   ⟨chooseSmoothJordanOuter houter
       (smoothJordanOuterStepRadius hK n Omega)
-      (smoothJordanOuterStepRadius_pos hK n Omega),
-    target_subset_chooseSmoothJordanOuter houter
-      (smoothJordanOuterStepRadius hK n Omega)
-      (smoothJordanOuterStepRadius_pos hK n Omega)⟩
+      (by exact smoothJordanOuterStepRadius_pos hK n Omega),
+    by
+      exact target_subset_chooseSmoothJordanOuter houter
+        (smoothJordanOuterStepRadius hK n Omega)
+        (smoothJordanOuterStepRadius_pos hK n Omega)⟩
 
 private theorem closure_nextSmoothJordanOuter_subset_carrier
     {K : Set ℂ} (hK : IsCompact K)
@@ -128,7 +138,7 @@ private theorem closure_nextSmoothJordanOuter_subset_carrier
       Omega.val.carrier := by
   apply (closure_chooseSmoothJordanOuter_subset_thickening houter
     (smoothJordanOuterStepRadius hK n Omega)
-    (smoothJordanOuterStepRadius_pos hK n Omega)).trans
+    (by exact smoothJordanOuterStepRadius_pos hK n Omega)).trans
   apply (Metric.thickening_subset_cthickening_of_le
     (smoothJordanOuterStepRadius_le_nesting hK n Omega) K).trans
   exact cthickening_smoothJordanNestingRadius_subset hK Omega
@@ -141,27 +151,30 @@ private theorem closure_nextSmoothJordanOuter_subset_schedule
       convexThickeningApprox K (n + 1) := by
   apply (closure_chooseSmoothJordanOuter_subset_thickening houter
     (smoothJordanOuterStepRadius hK n Omega)
-    (smoothJordanOuterStepRadius_pos hK n Omega)).trans
+    (by exact smoothJordanOuterStepRadius_pos hK n Omega)).trans
   unfold convexThickeningApprox
   exact Metric.thickening_mono
     (smoothJordanOuterStepRadius_le_schedule hK n Omega) K
 
-private noncomputable def firstSmoothJordanOuter
+/-- The initial Jordan domain at the first approximation scale. -/
+noncomputable def firstSmoothJordanOuter
     {K : Set ℂ} (houter : HasSmoothJordanOuterApproximation K) :
     ContainingSmoothJordanDomain K :=
   ⟨chooseSmoothJordanOuter houter (smoothApproxRadius 0)
-      (smoothApproxRadius_pos_outer 0),
-    target_subset_chooseSmoothJordanOuter houter (smoothApproxRadius 0)
-      (smoothApproxRadius_pos_outer 0)⟩
+      (by exact smoothApproxRadius_pos_outer 0),
+    by
+      exact target_subset_chooseSmoothJordanOuter houter (smoothApproxRadius 0)
+        (smoothApproxRadius_pos_outer 0)⟩
 
 private theorem closure_firstSmoothJordanOuter_subset_schedule
     {K : Set ℂ} (houter : HasSmoothJordanOuterApproximation K) :
     closure (firstSmoothJordanOuter houter).val.carrier ⊆
       convexThickeningApprox K 0 := by
   exact closure_chooseSmoothJordanOuter_subset_thickening houter
-    (smoothApproxRadius 0) (smoothApproxRadius_pos_outer 0)
+    (smoothApproxRadius 0) (by exact smoothApproxRadius_pos_outer 0)
 
-private noncomputable def nestedSmoothJordanOuterStage
+/-- The recursively chosen sequence of nested smooth Jordan outer approximations. -/
+noncomputable def nestedSmoothJordanOuterStage
     {K : Set ℂ} (hK : IsCompact K)
     (houter : HasSmoothJordanOuterApproximation K) :
     ℕ → ContainingSmoothJordanDomain K :=
@@ -201,8 +214,8 @@ noncomputable def StrictNestedSmoothJordanExhaustion.ofOuterApproximation
     exact (closure_nestedSmoothJordanOuterStage_subset_schedule
       hK houter n).trans
         (Metric.thickening_subset_cthickening (smoothApproxRadius n) K)
-  closure_succ_subset n :=
-    closure_nestedSmoothJordanOuterStage_succ_subset hK houter n
+  closure_succ_subset n := by
+    exact closure_nestedSmoothJordanOuterStage_succ_subset hK houter n
   iInter_closure := by
     apply Set.Subset.antisymm
     · intro z hz

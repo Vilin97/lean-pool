@@ -3,13 +3,15 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
+
 /-
 Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.OperatorTheory.Operator.Dilation.Schaeffer
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
+public import LeanPool.OperatorTheory.Operator.Dilation.Schaeffer
+public import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
 
 /-!
 # Operator theory (Solution)
@@ -18,6 +20,8 @@ Redeclare-bridge: every definition and theorem from
 `CrouzeixPalenciaChallenge.lean` is restated in the `PalomarCrouzeixPalencia`
 namespace and closed by delegating to the proof library.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace Polynomial
 

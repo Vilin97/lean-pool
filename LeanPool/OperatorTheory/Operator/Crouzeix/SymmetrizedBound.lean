@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerBound
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerBound
 
 /-!
 # Assembly of the symmetrized double-layer bound
@@ -27,6 +29,8 @@ itself.
   factor-two norm estimate from a normalized positive double-layer
   representation.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped InnerProductSpace Interval Real

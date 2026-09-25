@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.Normed.Operator.Mul
-import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
+
+public import Mathlib.Analysis.Normed.Operator.Mul
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
 
 /-!
 # Algebraic estimates for the numerical radius
@@ -15,6 +17,8 @@ with the operator norm gives uniform product estimates.  This file records
 those estimates and their immediate commutator and anticommutator
 consequences.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

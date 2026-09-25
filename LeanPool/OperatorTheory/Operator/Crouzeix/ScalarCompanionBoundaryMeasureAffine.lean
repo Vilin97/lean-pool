@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasure
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasure
 
 /-!
 # Complex-affine invariance of the boundary double-layer density
@@ -34,6 +36,8 @@ domain.
   -- sharp phase contractivity on the image from the original probability
   density.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set
 open scoped Interval Real

@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
-import LeanPool.OperatorTheory.Operator.Crouzeix.CompactThickeningApprox
-import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaApproximation
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CompactThickeningApprox
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaApproximation
 
 /-!
 # Crouzeix--Palencia assembly along compact exhaustions
@@ -23,6 +25,8 @@ compact exhaustion of the closed numerical range.
 * `crouzeix_palencia_of_compactThickening_auxiliary_bounds` -- the canonical
   specialization to closed thickenings of the closed numerical range.
 -/
+
+@[expose] public section
 
 open Filter Set
 open scoped InnerProductSpace

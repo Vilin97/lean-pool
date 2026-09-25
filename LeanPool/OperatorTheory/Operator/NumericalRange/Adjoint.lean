@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
+
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
 
 /-!
 # Numerical range of the adjoint (L2.3)
@@ -18,6 +20,8 @@ range.
 
 * `numericalRange_adjoint` — `W(A†) = conj '' W(A)`.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 open ContinuousLinearMap

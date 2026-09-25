@@ -3,12 +3,15 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ContourIntegral
-import Mathlib.Analysis.Normed.Algebra.GelfandFormula
-import Mathlib.Analysis.Normed.Ring.Units
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.Topology.Sets.Compacts
+
+public import Mathlib.Topology.Algebra.Polynomial
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ContourIntegral
+public import Mathlib.Analysis.Normed.Algebra.GelfandFormula
+public import Mathlib.Analysis.Normed.Ring.Units
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.Topology.Sets.Compacts
 
 /-!
 # Operator-valued Cauchy formula on a centered circle
@@ -44,6 +47,8 @@ needed for the full Crouzeix--Palencia capstone.
 * `normalized_circleIntegral_eval_smul_resolvent_eq_aeval` -- the polynomial
   operator Cauchy formula.
 -/
+
+@[expose] public section
 
 open Complex Set spectrum TopologicalSpace
 open scoped Real Interval

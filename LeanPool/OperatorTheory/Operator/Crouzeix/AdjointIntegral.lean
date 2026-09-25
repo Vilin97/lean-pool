@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ContourIntegral
-import Mathlib.Analysis.InnerProductSpace.Adjoint
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ContourIntegral
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 /-!
 # Adjoint of operator-valued integrals
@@ -27,6 +29,8 @@ theorem and records the resulting contour formula.
 * `ContinuousLinearMap.intervalIntegral_smul_add_adjoint` -- complex-weighted
   symmetrization of an operator kernel and its adjoint.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped InnerProductSpace Interval

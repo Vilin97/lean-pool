@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.AdjointIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AdjointIntegral
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
 
 /-!
 # Symmetrized polynomial auxiliary operator
@@ -22,6 +24,8 @@ supply it without changing the algebraic interface.
   -- the normalized symmetrized auxiliary operator is the polynomial-weighted
   integral of the resolvent double-layer kernel.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set
 open scoped InnerProductSpace Interval Real

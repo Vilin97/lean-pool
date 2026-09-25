@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
-import LeanPool.OperatorTheory.Operator.Crouzeix.BoundaryMaximum
-import LeanPool.OperatorTheory.Operator.Crouzeix.CompactThickeningApprox
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
+public import LeanPool.OperatorTheory.Operator.Crouzeix.BoundaryMaximum
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CompactThickeningApprox
 
 /-!
 # Polynomial sup-norms on approximating boundaries
@@ -29,6 +31,8 @@ smooth-boundary estimate is passed through the compact exhaustion.
 * `tendsto_polynomialSupNorm_frontier_convexThickeningApprox_atTop` proves
   convergence of the boundary norms to the target norm.
 -/
+
+@[expose] public section
 
 open Filter Polynomial Set
 

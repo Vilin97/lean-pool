@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanion
-import Mathlib.Analysis.Complex.AbsMax
-import Mathlib.Topology.ExtendFrom
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanion
+public import Mathlib.Analysis.Complex.AbsMax
+public import Mathlib.Topology.ExtendFrom
 
 /-!
 # Boundary reduction for the scalar Crouzeix companion
@@ -37,6 +39,8 @@ closure and the frontier estimate remain explicit hypotheses.
 * `norm_crouzeixPolynomialScalarCompanion_le_of_boundary_tendsto` -- the same
   sharp reduction stated directly in terms of Plemelj boundary limits.
 -/
+
+@[expose] public section
 
 open Complex Filter Set
 

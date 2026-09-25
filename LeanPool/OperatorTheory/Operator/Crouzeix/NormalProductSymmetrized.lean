@@ -3,12 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRunge
-import LeanPool.OperatorTheory.Operator.Crouzeix.NormalProduct
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
-import LeanPool.OperatorTheory.Operator.NumericalRange.Convex
-import LeanPool.OperatorTheory.Operator.NumericalRange.Nonempty
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRunge
+public import LeanPool.OperatorTheory.Operator.Crouzeix.NormalProduct
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Convex
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Nonempty
 
 /-!
 # Universal circle symmetrization implies the normal auxiliary product bound
@@ -88,6 +90,8 @@ auxiliary product estimate.
 * `norm_aeval_mul_auxiliary_ball_center_le_of_isStarNormal_of_symmetrization`
   specializes the sharp estimate to a star-normal operator.
 -/
+
+@[expose] public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Pointwise

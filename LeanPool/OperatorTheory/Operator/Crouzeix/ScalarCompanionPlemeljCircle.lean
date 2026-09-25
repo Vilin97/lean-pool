@@ -3,11 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSupport
-import LeanPool.OperatorTheory.Operator.Crouzeix.ProductBase
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionCircle
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemelj
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSupport
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ProductBase
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionCircle
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemelj
 
 /-!
 # The regularized Plemelj identity on a circle
@@ -44,6 +46,8 @@ companion exactly.
 * `exists_tendsto_polynomial_companions_ball_center` -- an exactly contractive
   constant polynomial sequence converging to the auxiliary operator.
 -/
+
+@[expose] public section
 
 open Complex ComplexConjugate Filter Polynomial Set
 open scoped Interval Real

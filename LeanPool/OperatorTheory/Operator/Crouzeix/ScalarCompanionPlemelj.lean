@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundary
-import Mathlib.Algebra.Polynomial.FieldDivision
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundary
+public import Mathlib.Algebra.Polynomial.FieldDivision
 
 /-!
 # Regularized Plemelj reduction for the scalar companion
@@ -44,6 +46,8 @@ asserted here; those are the remaining analytic inputs.
 * `norm_crouzeixPolynomialScalarCompanion_le_of_regularized_boundary` -- the
   sharp interior reduction in terms of the explicit regularized values.
 -/
+
+@[expose] public section
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Real

@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanOuterApproximation
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanOuterApproximation
 
 /-!
 # Reducing smooth outer approximation to the full-dimensional case
@@ -15,6 +17,8 @@ invoking that case, replace the target by its closed half-scale thickening.
 This thickening is still compact and convex, has nonempty interior, and a
 second half-scale thickening fits inside the requested original scale.
 -/
+
+@[expose] public section
 
 open Complex Metric Set
 open scoped InnerProductSpace

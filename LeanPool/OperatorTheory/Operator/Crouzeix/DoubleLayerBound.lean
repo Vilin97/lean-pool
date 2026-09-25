@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.PositiveKernelBound
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerIntegral
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PositiveKernelBound
 
 /-!
 # The normalized positive-kernel bound for the double layer
@@ -26,6 +28,8 @@ identified the concrete double-layer kernel.
   kernel of mass `4 * pi • 1`, normalized by `(2 * pi)⁻¹`, integrates every
   scalar weight bounded by `M` to an operator of norm at most `2 * M`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped InnerProductSpace Interval Real

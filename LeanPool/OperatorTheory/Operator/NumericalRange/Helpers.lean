@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
+
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
 
 /-!
 # Recovered helper lemmas for the numerical range
@@ -12,6 +14,8 @@ import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
 These lemmas reconstruct identities lost during the accidental deletion.
 They support the recovered convexity and spectrum-inclusion proofs.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

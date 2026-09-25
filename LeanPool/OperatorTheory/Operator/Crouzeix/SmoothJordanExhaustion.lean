@@ -3,13 +3,15 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ResolventContourHomotopy
-import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSmoothApproximation
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCauchyFromResolventMass
-import LeanPool.OperatorTheory.Operator.Crouzeix.ResolventCauchyKernel
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureMass
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadialAssembly
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ResolventContourHomotopy
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSmoothApproximation
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCauchyFromResolventMass
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ResolventCauchyKernel
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureMass
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadialAssembly
 
 /-!
 # Crouzeix--Palencia assembly over smooth Jordan exhaustions
@@ -20,6 +22,8 @@ particular metric thickening.  This module isolates that invariant interface,
 derives contour mass and winding from oriented numerical-range support, and
 packages scalar-companion approximation into the sharp exhaustion limit.
 -/
+
+@[expose] public section
 
 open Complex Filter MeasureTheory Set
 open scoped InnerProductSpace Interval Real

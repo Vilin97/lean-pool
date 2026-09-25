@@ -3,7 +3,9 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import LeanPool.OperatorTheory.Operator
+module
+
+public import LeanPool.OperatorTheory.Operator
 
 /-!
 Manifest-driven boundary for the landed operator-theory surface.
@@ -12,6 +14,8 @@ Every declaration below has an explicit type and delegates to the production
 declaration. A changed source signature therefore breaks elaboration, while
 the manifest separately audits the production declaration's axioms.
 -/
+
+@[expose] public section
 
 open Complex ContinuousLinearMap Metric Polynomial Set
 open scoped ENNReal InnerProductSpace Interval Real

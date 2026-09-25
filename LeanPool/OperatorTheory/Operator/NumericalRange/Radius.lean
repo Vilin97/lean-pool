@@ -3,15 +3,17 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.LinearMap
-import Mathlib.Analysis.Normed.Module.Normalize
-import Mathlib.Algebra.Order.Algebra
-import Mathlib.Analysis.Normed.Group.Basic
-import Mathlib.Data.EReal.Operations
-import Mathlib.Topology.Algebra.InfiniteSum.Order
-import Mathlib.Topology.MetricSpace.Bounded
-import LeanPool.OperatorTheory.Operator.NumericalRange.Bounded
+
+public import Mathlib.Analysis.InnerProductSpace.LinearMap
+public import Mathlib.Analysis.Normed.Module.Normalize
+public import Mathlib.Algebra.Order.Algebra
+public import Mathlib.Analysis.Normed.Group.Basic
+public import Mathlib.Data.EReal.Operations
+public import Mathlib.Topology.Algebra.InfiniteSum.Order
+public import Mathlib.Topology.MetricSpace.Bounded
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Bounded
 
 /-!
 # The numerical radius
@@ -26,6 +28,8 @@ homogenizes the unit-vector definition of the numerical range, then applies
 the complex polarization identity to the quadratic form
 `x ↦ ⟪x, A x⟫_ℂ`.
 -/
+
+@[expose] public section
 
 open Complex
 open scoped InnerProductSpace

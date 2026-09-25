@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffineDisk
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleSymmetrized
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AffineDisk
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleSymmetrized
 
 /-!
 # Affine-disk Crouzeix--Palencia inequality
@@ -18,6 +20,8 @@ an arbitrary enclosing disk by the usual affine normalization.
 * `norm_aeval_le_one_add_sqrt_two_mul_polynomialSupNorm_closedBall_of_norm_sub_smul_one_lt`
   -- the unconditional polynomial bound on an arbitrary open operator-norm disk.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace Polynomial
 

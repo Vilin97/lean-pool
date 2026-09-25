@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanExhaustion
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemeljCircle
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanExhaustion
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemeljCircle
 
 /-!
 # The Crouzeix--Palencia bound for disk numerical ranges
@@ -16,6 +18,8 @@ the closed numerical range is a disk.  On a disk the canonical closed scalar
 companion is the constant `star (p(c))`, so constant polynomials give exact
 approximation at every stage.
 -/
+
+@[expose] public section
 
 open Complex Filter MeasureTheory Metric Set
 open scoped InnerProductSpace Interval Real

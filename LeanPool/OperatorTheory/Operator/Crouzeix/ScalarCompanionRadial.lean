@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemeljBound
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionDecay
-import Mathlib.Analysis.Convex.Topology
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemeljBound
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionDecay
+public import Mathlib.Analysis.Convex.Topology
 
 /-!
 # Inward-chord control for the scalar companion
@@ -71,6 +73,8 @@ value.
 * `norm_companionClosedExtension_le_of_boundaryPhaseTransform_radial`
   -- the sharp phase inequality controls that extension on the closure.
 -/
+
+@[expose] public section
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Real

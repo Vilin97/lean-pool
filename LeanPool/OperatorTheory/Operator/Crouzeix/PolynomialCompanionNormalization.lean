@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialSupNormZero
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialSupNormZero
 
 /-!
 # Normalize approximate polynomial companions
@@ -34,6 +36,8 @@ polynomial on an infinite compact control set.
   uniform approximation of a contractive scalar companion with exact
   normalization.
 -/
+
+@[expose] public section
 
 open Filter
 

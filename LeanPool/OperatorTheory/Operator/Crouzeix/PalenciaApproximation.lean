@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.Palencia
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.Palencia
 
 /-!
 # Crouzeix--Palencia assembly from approximate auxiliary bounds
@@ -23,6 +25,8 @@ that error after applying the algebraic Crouzeix--Palencia balance estimate.
   `crouzeix_palencia_of_tendsto_auxiliary_bounds` -- sequence-limit forms
   suited to a smooth exhaustion.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped InnerProductSpace

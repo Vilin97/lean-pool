@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.GeneralSymmetrized
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanion
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.GeneralSymmetrized
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanion
 
 /-!
 # Quantitative decay of the scalar companion
@@ -34,6 +36,8 @@ assert boundary continuity or the sharp companion contraction.
 * `tendsto_crouzeixPolynomialScalarCompanion_cocompact` -- the exterior
   companion tends to zero at infinity.
 -/
+
+@[expose] public section
 
 open Complex Filter Set
 open scoped Interval Real

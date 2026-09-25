@@ -3,18 +3,20 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleKernel
-import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayer
-import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedBound
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
-import LeanPool.OperatorTheory.Operator.NumericalRange.Bounded
-import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedAuxiliary
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleProduct
-import LeanPool.OperatorTheory.Operator.Crouzeix.Palencia
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleAuxiliary
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleKernel
+public import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayer
+public import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerIntegral
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedBound
+public import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Bounded
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedAuxiliary
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleProduct
+public import LeanPool.OperatorTheory.Operator.Crouzeix.Palencia
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleAuxiliary
 
 /-!
 # Circle-model symmetrized Crouzeix–Palencia bound (L4.2d assembly)
@@ -52,6 +54,8 @@ corollary, and the representation is the polynomial double-layer identity of
   **disk-model Crouzeix–Palencia inequality**: for `‖A‖ < R` and every polynomial `p`,
   `‖p(A)‖ ≤ (1 + √2) * sup_{|z| ≤ R} ‖p(z)‖` (auxiliary-operator value from `CircleAuxiliary.lean`).
 -/
+
+@[expose] public section
 
 open Complex Polynomial spectrum
 open scoped InnerProductSpace

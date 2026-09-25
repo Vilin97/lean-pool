@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
 
 /-!
 # Compact metric-thickening approximations
@@ -25,6 +27,8 @@ assembly.
 * `frontier_convexThickeningApprox_subset_compactThickeningApprox` -- the
   open-stage frontier lies in the compact control set at the same radius.
 -/
+
+@[expose] public section
 
 open Metric Set
 

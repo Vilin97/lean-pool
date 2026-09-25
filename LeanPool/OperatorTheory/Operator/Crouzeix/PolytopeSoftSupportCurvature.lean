@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupport
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupport
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 /-!
 # Curvature of finite soft support functions
@@ -17,6 +19,8 @@ this radius is nonnegative.  The proof separates into two elementary finite
 inequalities: each exponent is bounded by the log partition, and weighted
 Cauchy--Schwarz makes the velocity variance nonnegative.
 -/
+
+@[expose] public section
 
 open Complex Set
 open scoped ContDiff

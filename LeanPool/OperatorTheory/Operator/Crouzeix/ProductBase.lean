@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ProductContour
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ProductContour
+public import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
 
 /-!
 # Constant-polynomial base case for the auxiliary product bound
@@ -29,6 +31,8 @@ the polynomial sup norm on every nonempty set.
 * `norm_aeval_mul_auxiliary_le_polynomialNorm_sq_of_natDegree_eq_zero`
   -- the sharp L4.2e base case.
 -/
+
+@[expose] public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Interval Real

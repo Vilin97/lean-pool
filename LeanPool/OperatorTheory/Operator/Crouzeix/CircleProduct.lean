@@ -3,11 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffinePolynomial
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleAuxiliary
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
-import Mathlib.Analysis.Normed.Module.Ball.Pointwise
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AffinePolynomial
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleAuxiliary
+public import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+public import Mathlib.Analysis.Normed.Module.Ball.Pointwise
 
 /-!
 # Circle-model support for the Crouzeix--Palencia product bound
@@ -32,6 +34,8 @@ assembly proved here.
 * `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_le` -- the sharp
   product estimate for the actual centered-disk auxiliary operator.
 -/
+
+@[expose] public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Pointwise

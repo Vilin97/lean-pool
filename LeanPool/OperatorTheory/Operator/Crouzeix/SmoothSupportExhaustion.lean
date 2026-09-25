@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
 
 /-!
 # Smooth Jordan exhaustions from rounded support envelopes
@@ -16,6 +18,8 @@ planar set.  This file exposes that geometric consequence and packages the
 resulting strict nested exhaustion, including the canonical specialization to
 the closed numerical range of an operator.
 -/
+
+@[expose] public section
 
 open Complex Metric Set
 open scoped InnerProductSpace

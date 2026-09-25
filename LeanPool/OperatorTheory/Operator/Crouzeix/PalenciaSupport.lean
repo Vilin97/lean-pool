@@ -3,13 +3,15 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
-import LeanPool.OperatorTheory.Operator.SpectralSet.Basic
-import Mathlib.Algebra.Algebra.Spectrum.Basic
-import Mathlib.Algebra.Polynomial.FieldDivision
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Normed.Operator.Basic
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
+public import LeanPool.OperatorTheory.Operator.SpectralSet.Basic
+public import Mathlib.Algebra.Algebra.Spectrum.Basic
+public import Mathlib.Algebra.Polynomial.FieldDivision
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Normed.Operator.Basic
 
 /-!
 # Algebraic support for the Crouzeix--Palencia product bound
@@ -45,6 +47,8 @@ the product estimate.
 * `polynomial_auxiliary_bounds_of_normalized` -- transfers both sharp bounds
   from unit sup norm to every polynomial with positive sup norm.
 -/
+
+@[expose] public section
 
 open Polynomial
 

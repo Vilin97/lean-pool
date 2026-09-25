@@ -3,12 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.Convex.Strict
-import Mathlib.Analysis.Normed.Module.Ball.Pointwise
-import Mathlib.Analysis.Normed.Module.RCLike.Real
-import Mathlib.Analysis.Normed.Module.Convex
-import Mathlib.MeasureTheory.Integral.CircleIntegral
+
+public import Mathlib.Analysis.Convex.Strict
+public import Mathlib.Analysis.Normed.Module.Ball.Pointwise
+public import Mathlib.Analysis.Normed.Module.RCLike.Real
+public import Mathlib.Analysis.Normed.Module.Convex
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
 
 /-!
 # Smooth Jordan domains containing compact planar sets
@@ -28,6 +30,8 @@ convex sets, `Ball.Pointwise` identifies closures of metric thickenings,
 `RCLike.Real` identifies the frontier of a complex ball, and `CircleIntegral`
 supplies the smooth regular circle parametrization API.
 -/
+
+@[expose] public section
 
 open Complex Metric Set
 open scoped ContDiff
@@ -164,7 +168,7 @@ stage.  This is the fully verified model case for the general L4.2b package. -/
 noncomputable def smoothClosedBallApproximation (c : ℂ) (R : ℝ) (hR : 0 ≤ R) :
     SmoothConvexApproximation (Metric.closedBall c R) where
   domain n := SmoothJordanDomain.ball c (smoothApproxRadius n + R)
-    (add_pos_of_pos_of_nonneg (smoothApproxRadius_pos n) hR)
+    (by exact add_pos_of_pos_of_nonneg (smoothApproxRadius_pos n) hR)
   subset_domain n := by
     change Metric.closedBall c R ⊆ Metric.ball c (smoothApproxRadius n + R)
     apply Metric.closedBall_subset_ball
@@ -172,7 +176,7 @@ noncomputable def smoothClosedBallApproximation (c : ℂ) (R : ℝ) (hR : 0 ≤ 
   iInter_domain := by
     have heq : ∀ n,
         (SmoothJordanDomain.ball c (smoothApproxRadius n + R)
-          (add_pos_of_pos_of_nonneg (smoothApproxRadius_pos n) hR)).carrier =
+          (by exact add_pos_of_pos_of_nonneg (smoothApproxRadius_pos n) hR)).carrier =
           convexThickeningApprox (Metric.closedBall c R) n := by
       intro n
       change Metric.ball c (smoothApproxRadius n + R) =

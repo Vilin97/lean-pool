@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelWinding
-import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
-import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelWinding
+public import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
+public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
 
 /-!
 # Affine homotopy invariance of the resolvent contour mass
@@ -18,6 +20,8 @@ the spectral inclusion `spectrum A ⊆ closure (numericalRange A)` provide that
 resolvent-set condition.  Oriented scalar winding then computes the common
 mass as `2 * pi * I • 1`.
 -/
+
+@[expose] public section
 
 open Complex Filter MeasureTheory Metric Set spectrum
 open scoped InnerProductSpace Interval Pointwise Real

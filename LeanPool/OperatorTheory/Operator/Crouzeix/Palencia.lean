@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
-import LeanPool.OperatorTheory.Operator.SpectralSet.Normal
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
+public import LeanPool.OperatorTheory.Operator.SpectralSet.Normal
 
 /-!
 # Crouzeix--Palencia assembly from auxiliary-operator bounds
@@ -56,6 +58,8 @@ formalized below; their distinct analytic hypotheses remain explicit.
   package to the contour operator constructed in `AuxOperator.lean`.
 * `crouzeix_palencia_of_isStarNormal` -- the sharper normal-operator branch.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

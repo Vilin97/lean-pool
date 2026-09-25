@@ -3,107 +3,110 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.AdjointIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffineAuxiliary
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffineCrouzeix
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffineDisk
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffinePolynomial
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffineProduct
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffineSpectralSet
-import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
-import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
-import LeanPool.OperatorTheory.Operator.Crouzeix.BoundaryApproximation
-import LeanPool.OperatorTheory.Operator.Crouzeix.BoundaryMaximum
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleAuxiliary
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleKernel
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleProduct
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleSymmetrized
-import LeanPool.OperatorTheory.Operator.Crouzeix.ClosedBallPalencia
-import LeanPool.OperatorTheory.Operator.Crouzeix.CompactThickeningApprox
-import LeanPool.OperatorTheory.Operator.Crouzeix.ContourIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRunge
-import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRungeClosure
-import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRungeFinite
-import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRungeIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.DiskMergelyan
-import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayer
-import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerBound
-import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.GeneralSymmetrized
-import LeanPool.OperatorTheory.Operator.Crouzeix.NormalPolynomialBound
-import LeanPool.OperatorTheory.Operator.Crouzeix.NormalProduct
-import LeanPool.OperatorTheory.Operator.Crouzeix.NormalProductSymmetrized
-import LeanPool.OperatorTheory.Operator.Crouzeix.Palencia
-import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaApproximation
-import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaExhaustion
-import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSmoothApproximation
-import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSupport
-import LeanPool.OperatorTheory.Operator.Crouzeix.PlanarDualDirection
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialBound
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCauchyFromResolventMass
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCauchyMass
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCompanionConvergence
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCompanionNormalization
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialSupNormZero
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupport
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupportCurvature
-import LeanPool.OperatorTheory.Operator.Crouzeix.PositiveIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.PositiveKernelBound
-import LeanPool.OperatorTheory.Operator.Crouzeix.ProductBase
-import LeanPool.OperatorTheory.Operator.Crouzeix.ProductContour
-import LeanPool.OperatorTheory.Operator.Crouzeix.ProductNormalization
-import LeanPool.OperatorTheory.Operator.Crouzeix.ProductSymmetrizedAlignment
-import LeanPool.OperatorTheory.Operator.Crouzeix.ResolventCauchyKernel
-import LeanPool.OperatorTheory.Operator.Crouzeix.ResolventContourHomotopy
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelConstancy
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelWinding
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanion
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionAssembly
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundary
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasure
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureAffine
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureAssembly
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureCircle
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureMass
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionCircle
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionDecay
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPhaseInduction
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemelj
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemeljBound
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemeljCircle
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadial
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadialAssembly
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanAffine
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanCauchy
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanCauchyFormula
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanCompact
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanExhaustion
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanInflation
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanMergelyan
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanMergelyanAssembly
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanOuterApproximation
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanOuterApproximationReduction
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanPolytopeReduction
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanSimilarity
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanSupport
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurve
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurveGlobal
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurveRange
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelope
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelopeApproximation
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelopeTight
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportExhaustion
-import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralAuxiliary
-import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralAuxiliaryCenter
-import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralCauchy
-import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralSetMonotone
-import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralSetSuperset
-import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedAuxiliary
-import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedBound
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AdjointIntegral
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AffineAuxiliary
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AffineCrouzeix
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AffineDisk
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AffinePolynomial
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AffineProduct
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AffineSpectralSet
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
+public import LeanPool.OperatorTheory.Operator.Crouzeix.BoundaryApproximation
+public import LeanPool.OperatorTheory.Operator.Crouzeix.BoundaryMaximum
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleAuxiliary
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleKernel
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleProduct
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleSymmetrized
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ClosedBallPalencia
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CompactThickeningApprox
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ContourIntegral
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRunge
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRungeClosure
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRungeFinite
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRungeIntegral
+public import LeanPool.OperatorTheory.Operator.Crouzeix.DiskMergelyan
+public import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayer
+public import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerBound
+public import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerIntegral
+public import LeanPool.OperatorTheory.Operator.Crouzeix.GeneralSymmetrized
+public import LeanPool.OperatorTheory.Operator.Crouzeix.NormalPolynomialBound
+public import LeanPool.OperatorTheory.Operator.Crouzeix.NormalProduct
+public import LeanPool.OperatorTheory.Operator.Crouzeix.NormalProductSymmetrized
+public import LeanPool.OperatorTheory.Operator.Crouzeix.Palencia
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaApproximation
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaExhaustion
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSmoothApproximation
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSupport
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PlanarDualDirection
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialBound
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCauchyFromResolventMass
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCauchyMass
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCompanionConvergence
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCompanionNormalization
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialSupNormZero
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupport
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupportCurvature
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PositiveIntegral
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PositiveKernelBound
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ProductBase
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ProductContour
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ProductNormalization
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ProductSymmetrizedAlignment
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ResolventCauchyKernel
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ResolventContourHomotopy
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelConstancy
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelWinding
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanion
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionAssembly
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundary
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasure
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureAffine
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureAssembly
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureCircle
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureMass
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionCircle
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionDecay
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPhaseInduction
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemelj
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemeljBound
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemeljCircle
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadial
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadialAssembly
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanAffine
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanCauchy
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanCauchyFormula
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanCompact
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanExhaustion
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanInflation
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanMergelyan
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanMergelyanAssembly
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanOuterApproximation
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanOuterApproximationReduction
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanPolytopeReduction
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanSimilarity
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanSupport
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurve
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurveGlobal
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurveRange
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelope
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelopeApproximation
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelopeTight
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportExhaustion
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralAuxiliary
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralAuxiliaryCenter
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralCauchy
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralSetMonotone
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralSetSuperset
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedAuxiliary
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedBound
+public import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
 
 /-! Supporting modules for Unitary dilation and the Crouzeix–Palencia bound. -/
+

@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanAffine
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanPolytopeReduction
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanAffine
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanPolytopeReduction
 
 /-!
 # Similarity transport and normalization of the planar geometry problem
@@ -20,6 +22,8 @@ normalized: it is enough to treat finite convex hulls containing a closed unit
 disk.  An interior point supplies a small disk, and a homothety expands it to
 unit radius.
 -/
+
+@[expose] public section
 
 open Complex Metric Set
 open scoped InnerProductSpace

@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelope
-import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelope
+public import Mathlib.Analysis.SpecialFunctions.Complex.Arg
 
 /-!
 # Real dual directions in the complex plane
@@ -17,6 +19,8 @@ argument of that coefficient vector.  This elementary identification lets
 abstract separating hyperplanes be converted to the angle-indexed support
 halfspaces used by the smooth support-curve construction.
 -/
+
+@[expose] public section
 
 open Complex
 

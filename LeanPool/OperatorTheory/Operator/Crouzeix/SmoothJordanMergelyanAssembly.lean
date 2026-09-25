@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanMergelyan
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanMergelyan
 
 /-!
 # Crouzeix--Palencia assembly from smooth Jordan geometry
@@ -15,6 +17,8 @@ assemblies.  What remains is purely geometric: construct a strictly nested
 smooth Jordan exhaustion, or realize the explicit convex thickenings by such
 domains.
 -/
+
+@[expose] public section
 
 open Complex Set
 open scoped InnerProductSpace

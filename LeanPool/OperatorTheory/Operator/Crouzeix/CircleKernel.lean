@@ -3,12 +3,15 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.Normed.Algebra.GelfandFormula
-import Mathlib.MeasureTheory.Integral.CircleIntegral
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
+
+public import Mathlib.Topology.Algebra.Polynomial
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.Normed.Algebra.GelfandFormula
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
 
 /-!
 # The double-layer circle kernel: continuity and integrability (L4.2d support)
@@ -31,6 +34,8 @@ side conditions consumed by the positive-kernel contractivity bound (`PositiveKe
 
 Requires `[CompleteSpace E]` (spectrum, adjoints).
 -/
+
+@[expose] public section
 
 open Complex Polynomial spectrum
 open scoped InnerProductSpace

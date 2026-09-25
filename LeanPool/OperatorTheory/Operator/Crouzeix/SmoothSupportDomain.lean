@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurveRange
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelopeTight
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurveRange
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelopeTight
 
 /-!
 # Smooth Jordan domains from rounded finite support functions
@@ -16,6 +18,8 @@ uses arbitrarily tight scale choices to discharge the remaining planar outer
 approximation problem, culminating in the exact polynomial
 Crouzeix--Palencia theorem.
 -/
+
+@[expose] public section
 
 open Complex Metric Set
 open scoped ContDiff InnerProductSpace

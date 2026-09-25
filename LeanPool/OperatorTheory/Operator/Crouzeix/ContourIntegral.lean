@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.MeasureTheory.Integral.CircleIntegral
+
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
 
 /-!
 # Parameterized contour integrals (L4.2a)
@@ -34,6 +36,8 @@ contours of the Crouzeix–Palencia argument — become available.
   integrates to the boundary difference, hence to `0` along a closed curve (Cauchy's theorem
   for integrands with a primitive).
 -/
+
+@[expose] public section
 
 open scoped Real Interval
 open MeasureTheory Set

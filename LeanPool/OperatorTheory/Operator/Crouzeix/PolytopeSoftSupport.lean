@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanPolytopeReduction
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanPolytopeReduction
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # Smooth support functions for finite planar polytopes
@@ -20,6 +22,8 @@ value and exceeds any common upper bound by at most `delta * log(card)`.
 These estimates are the quantitative input for constructing a smooth convex
 support curve around a polygon.
 -/
+
+@[expose] public section
 
 open Complex Set
 open scoped ContDiff

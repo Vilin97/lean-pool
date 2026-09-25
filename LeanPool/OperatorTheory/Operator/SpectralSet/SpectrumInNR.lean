@@ -3,12 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Algebra.Algebra.Spectrum.Basic
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
-import Mathlib.Analysis.Normed.Operator.Banach
-import LeanPool.OperatorTheory.Operator.NumericalRange.Helpers
+
+public import Mathlib.Algebra.Algebra.Spectrum.Basic
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
+public import Mathlib.Analysis.Normed.Operator.Banach
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Helpers
 
 /-!
 # Spectrum inside the closure of the numerical range (L2.2)
@@ -34,6 +36,8 @@ production, with one rewrite direction fixed, by agent-alpha-2.
 
 Requires `[CompleteSpace E]` (adjoints and the spectrum of `E →L[ℂ] E`).
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 open ContinuousLinearMap

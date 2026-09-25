@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
-import Mathlib.Analysis.Convex.ContinuousLinearEquiv
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
+public import Mathlib.Analysis.Convex.ContinuousLinearEquiv
 
 /-!
 # Affine transport of smooth Jordan domains
@@ -20,6 +22,8 @@ This file does not assert that ellipses approximate an arbitrary convex body.
 Its role is the reusable affine geometry needed by such approximation
 arguments.
 -/
+
+@[expose] public section
 
 open Complex Metric Set
 open scoped ContDiff

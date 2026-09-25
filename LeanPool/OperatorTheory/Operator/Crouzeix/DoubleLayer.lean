@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.MeasureTheory.Integral.CircleIntegral
-import Mathlib.Analysis.InnerProductSpace.Positive
-import LeanPool.OperatorTheory.Operator.NumericalRange.Helpers
+
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
+public import Mathlib.Analysis.InnerProductSpace.Positive
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Helpers
 
 /-!
 # Double-layer positivity of the resolvent kernel (L4.2d)
@@ -36,6 +38,8 @@ Route: for `y = R_A(σ) x` one has `x = σ • y - A y`, hence
 * `isPositive_add_adjoint_smul_resolvent_circleMap` -- the circle kernel in
   positive-operator form.
 -/
+
+@[expose] public section
 
 open Complex
 open scoped InnerProductSpace

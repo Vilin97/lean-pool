@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
+public import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
 
 /-!
 # Polynomial sup-norms on decreasing compact sets
@@ -33,6 +35,8 @@ and nested, hence would have a point in their common intersection.
   approximation principle to the explicit open thickenings from
   `SmoothApprox.lean`.
 -/
+
+@[expose] public section
 
 open Filter Polynomial Set
 

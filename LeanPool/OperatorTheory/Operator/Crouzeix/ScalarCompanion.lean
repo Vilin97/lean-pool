@@ -3,9 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
-import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+
+public import Mathlib.Analysis.Complex.CauchyIntegral
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
+public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
 
 /-!
 # The scalar Crouzeix--Palencia companion
@@ -43,6 +46,8 @@ Plemelj boundary-value argument.
 * `hasDerivAt_crouzeixPolynomialScalarCompanion` and
   `analyticOn_crouzeixPolynomialScalarCompanion` -- their interior forms.
 -/
+
+@[expose] public section
 
 open Complex Filter MeasureTheory Set spectrum
 open scoped Interval Real

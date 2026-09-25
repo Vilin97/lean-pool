@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupportCurvature
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupportCurvature
 
 /-!
 # Convex envelopes of planar support functions
@@ -16,6 +18,8 @@ the smooth support-curve construction.  For rounded finite-polytope supports,
 the original convex hull lies in that interior with the explicit rounding
 margin.
 -/
+
+@[expose] public section
 
 open Complex Metric Set
 open scoped ComplexConjugate

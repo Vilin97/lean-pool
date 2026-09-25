@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ProductContour
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ProductContour
 
 /-!
 # Polynomial Cauchy representation from resolvent mass
@@ -26,6 +28,8 @@ polynomial representation required by the Crouzeix--Palencia assembly.
 * `polynomial_aeval_eq_normalized_contourIntegral_of_resolvent_mass` --
   resolvent mass implies the normalized polynomial operator Cauchy formula.
 -/
+
+@[expose] public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Interval Real

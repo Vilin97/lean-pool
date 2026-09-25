@@ -3,12 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasure
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanSupport
-import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.DerivIntegrable
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasure
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanSupport
+public import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.DerivIntegrable
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 
 /-!
 # Automatic mass of the boundary double-layer density
@@ -36,6 +38,8 @@ fundamental theorem then gives the mass identity.
 * `crouzeixBoundaryPhaseContractive_of_oriented_carrier_point` -- the same
   geometry gives sharp boundary-phase contractivity for every polynomial.
 -/
+
+@[expose] public section
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Real

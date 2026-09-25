@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSupport
-import Mathlib.Topology.Algebra.Polynomial
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSupport
+public import Mathlib.Topology.Algebra.Polynomial
 
 /-!
 # The separated Crouzeix--Palencia product contour
@@ -51,6 +53,8 @@ not by itself a reduction to two attainable norm estimates.
 * `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_le_main_add_remainder`
   -- the corresponding two-term norm reduction.
 -/
+
+@[expose] public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Interval Real

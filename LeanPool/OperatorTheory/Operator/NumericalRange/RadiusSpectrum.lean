@@ -3,11 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.Normed.Algebra.Spectrum
-import LeanPool.OperatorTheory.Operator.NumericalRange.Affine
-import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
-import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
+
+public import Mathlib.Analysis.Normed.Algebra.Spectrum
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Affine
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
+public import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
 
 /-!
 # Spectral consequences of the numerical radius
@@ -16,6 +18,8 @@ The spectrum of a bounded operator lies in the closed numerical-range disk.
 Equivalently, every spectral value has modulus at most the numerical radius,
 and the spectral radius is bounded by the numerical radius.
 -/
+
+@[expose] public section
 
 open Set
 open scoped ENNReal InnerProductSpace NNReal

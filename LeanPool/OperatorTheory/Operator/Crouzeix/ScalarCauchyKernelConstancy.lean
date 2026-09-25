@@ -3,11 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemelj
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.LocallyConvex.Separation
-import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemelj
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.LocallyConvex.Separation
+public import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
 
 /-!
 # Constancy of the scalar Cauchy kernel on a convex carrier
@@ -35,6 +37,8 @@ need only be checked at one point of each carrier.
 * `crouzeixScalarCauchyKernel_eq_zero_of_not_mem_closure_carrier` -- the
   corresponding exterior winding normalization.
 -/
+
+@[expose] public section
 
 open Complex Set
 open scoped Interval Real

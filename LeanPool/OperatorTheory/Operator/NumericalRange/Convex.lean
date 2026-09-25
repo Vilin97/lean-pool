@@ -3,11 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Continuous
-import Mathlib.Topology.Order.IntermediateValue
-import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
-import LeanPool.OperatorTheory.Operator.NumericalRange.Helpers
+
+public import Mathlib.Analysis.InnerProductSpace.Continuous
+public import Mathlib.Topology.Order.IntermediateValue
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Helpers
 
 /-!
 # Convexity of the numerical range
@@ -15,6 +17,8 @@ import LeanPool.OperatorTheory.Operator.NumericalRange.Helpers
 This file proves the Toeplitz--Hausdorff theorem: the numerical range of a
 bounded linear operator on a complex inner product space is convex over `ℝ`.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

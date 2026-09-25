@@ -3,11 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSupport
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.Topology.DiscreteSubset
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSupport
+public import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.Topology.DiscreteSubset
 
 /-!
 # The zero case for polynomial sup norms on infinite compact sets
@@ -31,6 +33,8 @@ principal geometric specialization.
   auxiliary bounds imply the corresponding bounds for every polynomial on a
   nondegenerate closed disk, including the zero sup-norm case.
 -/
+
+@[expose] public section
 
 open Polynomial ContinuousLinearMap
 

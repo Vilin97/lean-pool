@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
+
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
 
 /-!
 # Set-theoretic characterization of numerical radius
@@ -12,6 +14,8 @@ import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
 The inequality `w(A) ≤ r` is equivalent to containment of the numerical
 range, or its closure, in the closed disk of radius `r` about zero.
 -/
+
+@[expose] public section
 
 open Set
 open scoped InnerProductSpace

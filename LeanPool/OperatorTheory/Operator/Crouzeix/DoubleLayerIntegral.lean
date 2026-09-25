@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.AdjointIntegral
-import Mathlib.Algebra.Algebra.Spectrum.Basic
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AdjointIntegral
+public import Mathlib.Algebra.Algebra.Spectrum.Basic
 
 /-!
 # Normalization of the integrated double-layer kernel
@@ -35,6 +37,8 @@ no such boundary-value assertion is hidden in the normalization argument.
   the double-layer kernel has total mass `4 * pi • 1` whenever the underlying
   resolvent contour has Cauchy integral `2 * pi * i • 1`.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set
 open scoped InnerProductSpace Interval Real

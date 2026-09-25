@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffineAuxiliary
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffineDisk
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AffineAuxiliary
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AffineDisk
 
 /-!
 # Affine-disk support for the Crouzeix--Palencia product bound
@@ -23,6 +25,8 @@ its center.
 * `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le` -- the unconditional
   arbitrary-center disk estimate under strict operator-norm enclosure.
 -/
+
+@[expose] public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace

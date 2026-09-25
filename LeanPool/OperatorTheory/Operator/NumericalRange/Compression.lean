@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.Normed.Operator.Mul
-import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
+
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.Normed.Operator.Mul
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
 
 /-!
 # Numerical ranges of isometric compressions
@@ -15,6 +17,8 @@ If `V : F → E` is an isometry, the compression `V† A V` has numerical range
 contained in that of `A`.  Numerical radius is therefore monotone under
 isometric compression.
 -/
+
+@[expose] public section
 
 open ContinuousLinearMap
 open scoped InnerProductSpace InnerProduct

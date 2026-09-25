@@ -3,11 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffinePolynomial
-import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleAuxiliary
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AffinePolynomial
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleAuxiliary
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
 
 /-!
 # Affine transport of the polynomial auxiliary operator
@@ -26,6 +28,8 @@ contour is unchanged under these three simultaneous operations.
 * `crouzeixPolynomialAuxiliaryOperator_ball_center_eq_eval_center_smul_one` -- the resulting
   scalar auxiliary identity on an arbitrary enclosing disk.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory
 open scoped InnerProductSpace Interval Real

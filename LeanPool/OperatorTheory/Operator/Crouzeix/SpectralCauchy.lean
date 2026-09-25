@@ -3,11 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.Complex.CauchyIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleSymmetrized
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffinePolynomial
+
+public import Mathlib.Analysis.Calculus.Deriv.Polynomial
+public import Mathlib.Analysis.Complex.CauchyIntegral
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
+public import LeanPool.OperatorTheory.Operator.Crouzeix.CircleSymmetrized
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AffinePolynomial
 
 /-!
 # Circle Cauchy formulas under spectral enclosure (L4.2 support)
@@ -49,6 +52,8 @@ operator-norm enclosure of `CircleSymmetrized.lean`.
 The product side of the Crouzeix–Palencia argument is *not* upgraded here: the disk product bound
 of `CircleProduct.lean` uses von Neumann's inequality, which needs `‖A‖ ≤ r`.
 -/
+
+@[expose] public section
 
 open Complex Polynomial spectrum
 open scoped InnerProductSpace

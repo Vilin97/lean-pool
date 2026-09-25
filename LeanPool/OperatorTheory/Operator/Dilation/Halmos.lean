@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Commute
-import Mathlib.Analysis.CStarAlgebra.Unitary.Span
-import Mathlib.Analysis.InnerProductSpace.ProdL2
-import Mathlib.Analysis.InnerProductSpace.StarOrder
+module
+
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Commute
+public import Mathlib.Analysis.CStarAlgebra.Unitary.Span
+public import Mathlib.Analysis.InnerProductSpace.ProdL2
+public import Mathlib.Analysis.InnerProductSpace.StarOrder
 
 /-!
 # Halmos one-step unitary dilation
@@ -16,6 +18,8 @@ the Hilbert direct sum of two copies of the space.  The construction below packa
 two-by-two argument through continuous functional calculus: the off-diagonal self-adjoint
 contraction `(x, y) ↦ (T y, T† x)` gives a unitary after adjoining its defect square root.
 -/
+
+@[expose] public section
 
 open ContinuousLinearMap
 open scoped InnerProductSpace

@@ -3,11 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.Normed.Module.Ball.Pointwise
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffinePolynomial
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
-import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
+
+public import Mathlib.Analysis.Normed.Module.Ball.Pointwise
+public import LeanPool.OperatorTheory.Operator.Crouzeix.AffinePolynomial
+public import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+public import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
 
 /-!
 # Affine disk normalization
@@ -26,6 +28,8 @@ while the polynomial is precomposed with `z ↦ R * z + c`.
 * `isPolynomialSpectralSet_closedBall_of_norm_sub_smul_one_le` — the corresponding spectral-set
   package.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace Pointwise Polynomial
 

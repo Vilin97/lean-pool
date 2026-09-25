@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRungeFinite
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Topology.UniformSpace.UniformConvergence
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRungeFinite
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Topology.UniformSpace.UniformConvergence
 
 /-!
 # Closure of convex Runge kernel approximations
@@ -17,6 +19,8 @@ This file diagonalizes those iterated limits.  Combined with finite exterior
 Cauchy-kernel approximation, it turns uniform approximation by quadrature
 sums into uniform approximation by one polynomial sequence.
 -/
+
+@[expose] public section
 
 open Filter Polynomial Set
 open scoped Topology

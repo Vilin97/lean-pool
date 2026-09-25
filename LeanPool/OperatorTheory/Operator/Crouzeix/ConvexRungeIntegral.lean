@@ -3,15 +3,17 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRungeClosure
-import Mathlib.Analysis.Convex.Integral
-import Mathlib.Analysis.Convex.Combination
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.Topology.ContinuousMap.Compact
-import Mathlib.Topology.Sequences
-import Mathlib.Topology.Sets.Compacts
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRungeClosure
+public import Mathlib.Analysis.Convex.Integral
+public import Mathlib.Analysis.Convex.Combination
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Mathlib.Topology.ContinuousMap.Compact
+public import Mathlib.Topology.Sequences
+public import Mathlib.Topology.Sets.Compacts
 
 /-!
 # Polynomial approximation of continuous exterior Cauchy integrals
@@ -22,6 +24,8 @@ continuous functions on the compact set.  Closed-convex-hull approximation
 gives finite sampled kernel sums, and a diagonal choice of their polynomial
 approximants converges uniformly to the full integral.
 -/
+
+@[expose] public section
 
 open Complex Filter MeasureTheory Set
 open scoped Topology Interval

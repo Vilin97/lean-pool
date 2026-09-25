@@ -3,11 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.Complex.Polynomial.Basic
-import Mathlib.Analysis.LocallyConvex.Separation
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Topology.UniformSpace.UniformConvergence
+
+public import Mathlib.Analysis.Complex.Polynomial.Basic
+public import Mathlib.Analysis.LocallyConvex.Separation
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import Mathlib.Topology.UniformSpace.UniformConvergence
 
 /-!
 # Polynomial approximation of exterior Cauchy kernels on convex sets
@@ -21,6 +23,8 @@ contraction, and its geometric series gives the approximating polynomials.
 underlying affine separator directly for downstream polynomial-hull and
 functional-calculus arguments.
 -/
+
+@[expose] public section
 
 open Complex Filter Metric Set
 open scoped Topology

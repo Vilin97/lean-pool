@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurveGlobal
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurveGlobal
 
 /-!
 # Exact frontier range of rounded support curves
@@ -14,6 +16,8 @@ calculus: every frontier point of a bounded rounded support envelope is hit by
 the support curve.  The key local fact is that an active support inequality
 recovers both normal and tangent coordinates of the contact point.
 -/
+
+@[expose] public section
 
 open Complex Metric Set
 open scoped ContDiff

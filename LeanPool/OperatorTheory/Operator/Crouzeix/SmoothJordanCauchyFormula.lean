@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanCauchy
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelWinding
-import Mathlib.Analysis.Complex.RemovableSingularity
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanCauchy
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelWinding
+public import Mathlib.Analysis.Complex.RemovableSingularity
 
 /-!
 # Cauchy's integral formula on smooth convex Jordan domains
@@ -17,6 +19,8 @@ first stated using the raw scalar contour mass, then normalized under winding
 one.  Oriented and canonical-orientation corollaries expose the forms needed
 by polynomial approximation on smooth convex domains.
 -/
+
+@[expose] public section
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Topology

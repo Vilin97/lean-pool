@@ -3,12 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.l2Space
-import Mathlib.Analysis.InnerProductSpace.ProdL2
-import Mathlib.Algebra.Star.Unitary
-import LeanPool.OperatorTheory.Operator.Dilation.Halmos
+
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.InnerProductSpace.l2Space
+public import Mathlib.Analysis.InnerProductSpace.ProdL2
+public import Mathlib.Algebra.Star.Unitary
+public import LeanPool.OperatorTheory.Operator.Dilation.Halmos
 
 /-!
 # The Schäffer unitary power dilation
@@ -20,6 +22,8 @@ The negative sites stay zero, so the system component at site zero evolves as
 `Tⁿ`.  The boundary theorem packages this unitary, its isometric embedding, and
 the resulting power-compression identity.
 -/
+
+@[expose] public section
 
 open scoped ENNReal InnerProductSpace
 
@@ -57,7 +61,7 @@ theorem adjoint_schaefferEmbedding_apply (f : SchaefferSpace E) :
   simp only [schaefferEmbedding_apply, lp.inner_single_right]
 
 /-- Reindex a square-summable family along an equivalence. -/
-private noncomputable def lpReindexForward {ι ι' : Type*} (e : ι ≃ ι')
+noncomputable def lpReindexForward {ι ι' : Type*} (e : ι ≃ ι')
     (f : lp (fun _ : ι => E) 2) : lp (fun _ : ι' => E) 2 :=
   ⟨fun j => f (e.symm j), by
     change Memℓp (fun j : ι' => f (e.symm j)) 2
@@ -89,7 +93,7 @@ private theorem norm_lpReindexForward {ι ι' : Type*} (e : ι ≃ ι')
           (by norm_num : 0 < (2 : ℝ≥0∞).toReal) f
 
 /-- Reindexing a square-summable family along an equivalence is a linear isometry equivalence. -/
-private noncomputable def lpReindex {ι ι' : Type*} (e : ι ≃ ι') :
+noncomputable def lpReindex {ι ι' : Type*} (e : ι ≃ ι') :
     lp (fun _ : ι => E) 2 ≃ₗᵢ[ℂ] lp (fun _ : ι' => E) 2 where
   toFun := lpReindexForward e
   invFun := lpReindexForward e.symm
@@ -107,7 +111,7 @@ private noncomputable def lpReindex {ι ι' : Type*} (e : ι ≃ ι') :
   map_smul' _ _ := by
     apply lp.ext
     rfl
-  norm_map' := norm_lpReindexForward e
+  norm_map' := by exact norm_lpReindexForward e
 
 /-- The right bilateral shift, as a linear isometry equivalence of the dilation space. -/
 noncomputable def schaefferBilateralShiftEquiv :
@@ -119,7 +123,8 @@ omit [CompleteSpace E] in
 theorem schaefferBilateralShiftEquiv_apply (f : SchaefferSpace E) (j : ℤ) :
     schaefferBilateralShiftEquiv f j = f (j - 1) := rfl
 
-private noncomputable def schaefferBilateralShiftUnitary :
+/-- The bilateral shift as an element of the unitary group. -/
+noncomputable def schaefferBilateralShiftUnitary :
     unitary (SchaefferSpace E →L[ℂ] SchaefferSpace E) :=
   Unitary.linearIsometryEquiv.symm schaefferBilateralShiftEquiv
 
@@ -147,7 +152,8 @@ abbrev SchaefferNetworkFiber (E : Type u) := WithLp 2 (E × E)
 abbrev SchaefferNetworkSpace (E : Type u) [NormedAddCommGroup E] :=
   lp (fun _ : ℤ => SchaefferNetworkFiber E) 2
 
-private noncomputable def schaefferFiberEmbedding :
+/-- Insert the system space into the system component of one network site. -/
+noncomputable def schaefferFiberEmbedding :
     E →L[ℂ] SchaefferNetworkFiber E :=
   (WithLp.prodContinuousLinearEquiv 2 ℂ E E).symm.toContinuousLinearMap.comp
     (ContinuousLinearMap.inl ℂ E E)

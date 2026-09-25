@@ -3,8 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupportCurvature
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupportCurvature
 
 /-!
 # Smooth planar curves from support functions
@@ -21,6 +23,8 @@ speed and outward-normal formulas.  These local identities are independent of
 the later global argument identifying the curve with the frontier of its
 support envelope.
 -/
+
+@[expose] public section
 
 open Complex Set
 open scoped ContDiff

@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.Normed.Operator.Basic
-import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
+
+public import Mathlib.Analysis.Normed.Operator.Basic
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
 
 /-!
 # Boundedness of the numerical range (L1.2)
@@ -25,6 +27,8 @@ contained in the closed disk of radius `‖A‖`: for a unit vector `x`, Cauchy�
 No completeness assumption on `E` is needed. (Recreated in run-003; the original file was not
 recovered after the accidental deletion.)
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace
 

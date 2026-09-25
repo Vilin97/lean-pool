@@ -3,9 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRunge
-import Mathlib.Topology.Algebra.IsUniformGroup.Basic
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRunge
+public import Mathlib.Topology.Algebra.IsUniformGroup.Basic
 
 /-!
 # Finite exterior-kernel sums on convex compact sets
@@ -15,6 +17,8 @@ This file synchronizes the exterior Cauchy-kernel approximants from
 compact-uniform limit of a single sequence of complex polynomials.  This is
 the finite-quadrature closure step used in constructive Runge arguments.
 -/
+
+@[expose] public section
 
 open Complex Filter Set
 open scoped Topology

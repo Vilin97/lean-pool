@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Topology.Algebra.Group.Basic
-import Mathlib.Topology.Algebra.GroupWithZero
-import LeanPool.OperatorTheory.Operator.NumericalRange.Affine
+
+public import Mathlib.Topology.Algebra.Group.Basic
+public import Mathlib.Topology.Algebra.GroupWithZero
+public import LeanPool.OperatorTheory.Operator.NumericalRange.Affine
 
 /-!
 # Affine covariance of the closed numerical range
@@ -15,6 +17,8 @@ The raw numerical-range covariance extends to the standard affine form
 `A ↦ aA + bI`.  When `a` is nonzero this affine map is a homeomorphism, so it
 also commutes exactly with closure.
 -/
+
+@[expose] public section
 
 open Set
 open scoped InnerProductSpace

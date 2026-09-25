@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import LeanPool.OperatorTheory.Operator.Crouzeix.BoundaryApproximation
-import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSmoothApproximation
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemeljBound
+
+public import LeanPool.OperatorTheory.Operator.Crouzeix.BoundaryApproximation
+public import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSmoothApproximation
+public import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemeljBound
 
 /-!
 # Assembly from the scalar Plemelj companion
@@ -29,6 +31,8 @@ of the original auxiliary contour.
 * `crouzeix_palencia_of_convexThickening_cauchy_support_boundaryPhase_approximation`
   feeds those packages through the smooth-thickening fourth-power capstone.
 -/
+
+@[expose] public section
 
 open Complex Filter Set
 open scoped InnerProductSpace Interval Real

@@ -3,10 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Positive
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+public import Mathlib.Analysis.InnerProductSpace.Positive
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 /-!
 # Positivity of operator-valued Bochner integrals
@@ -27,6 +29,8 @@ has a positive Bochner integral.
 * `ContinuousLinearMap.intervalIntegral_mono_ae` -- the corresponding result
   on positively oriented intervals.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped InnerProductSpace
