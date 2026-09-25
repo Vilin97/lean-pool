@@ -1034,6 +1034,166 @@ private theorem canonicalSplitVertexEquiv_pathVertex_split_second
       dsimp [offset]
       omega
 
+/-- Unit steps on the divided slot preserve their ordered endpoints in both new segments. -/
+private theorem canonicalSplit_unitEdge_eq_split
+    (source : SubdivisionGraph.Spec n p) (split : Fin p)
+    (first second : ℕ) (hFirst : 0 < first) (hSecond : 0 < second)
+    (hLength : source.length split = first + second)
+    (offset : Fin (source.length split)) :
+    (splitSpec source split first second hFirst hSecond).unitEdge
+      (canonicalSplitStepEquiv source split first second hFirst hSecond hLength ⟨split, offset⟩) =
+      (canonicalSplitVertexEquiv source split first second hFirst hSecond hLength
+        (source.unitEdge ⟨split, offset⟩).1,
+       canonicalSplitVertexEquiv source split first second hFirst hSecond hLength
+        (source.unitEdge ⟨split, offset⟩).2) := by
+  change (splitSpec source split first second hFirst hSecond).unitEdge
+    (canonicalSplitStepMap source split first second hFirst hSecond hLength
+      ⟨split, offset⟩) = _
+  by_cases hBefore : offset.val < first
+  · let targetOffset : Fin
+        ((splitSpec source split first second hFirst hSecond).length
+          (oldSlot source split)) :=
+      ⟨offset.val, by
+        simp [splitSpec, splitLength, oldSlot, hBefore]⟩
+    have hMapped : canonicalSplitStepMap source split first second hFirst hSecond hLength
+        ⟨split, offset⟩ = ⟨oldSlot source split, targetOffset⟩ := by
+      rw [canonicalSplitStepMap_split source split first second hFirst hSecond hLength,
+        dif_pos hBefore]
+    rw [hMapped]
+    change
+      ((splitSpec source split first second hFirst hSecond).stepLeft
+          (oldSlot source split) targetOffset,
+        (splitSpec source split first second hFirst hSecond).stepRight
+          (oldSlot source split) targetOffset) = _
+    have hTargetLeft :
+        (splitSpec source split first second hFirst hSecond).stepLeftPosition
+            (oldSlot source split) targetOffset =
+          ⟨(source.stepLeftPosition split offset).val, by
+            simp only [SubdivisionGraph.Spec.stepLeftPosition, Fin.val_mk]
+            simp only [splitSpec, oldSlot, splitLength, Fin.lastCases_castSucc, ↓reduceIte,
+              Order.lt_add_one_iff]
+            omega⟩ := by
+      apply Fin.ext
+      rfl
+    have hTargetRight :
+        (splitSpec source split first second hFirst hSecond).stepRightPosition
+            (oldSlot source split) targetOffset =
+          ⟨(source.stepRightPosition split offset).val, by
+            simp only [SubdivisionGraph.Spec.stepRightPosition, Fin.val_mk]
+            simp only [splitSpec, oldSlot, splitLength, Fin.lastCases_castSucc, ↓reduceIte,
+              Order.lt_add_one_iff, Order.add_one_le_iff]
+            omega⟩ := by
+      apply Fin.ext
+      rfl
+    rw [← (splitSpec source split first second hFirst hSecond).pathVertex_stepLeftPosition
+        (oldSlot source split) targetOffset,
+      ← (splitSpec source split first second hFirst hSecond).pathVertex_stepRightPosition
+        (oldSlot source split) targetOffset,
+      hTargetLeft, hTargetRight,
+      ← canonicalSplitVertexEquiv_pathVertex_split_first source split first second
+        hFirst hSecond hLength (source.stepLeftPosition split offset) (by
+          change offset.val ≤ first
+          exact Nat.le_of_lt hBefore),
+      ← canonicalSplitVertexEquiv_pathVertex_split_first source split first second
+        hFirst hSecond hLength (source.stepRightPosition split offset) (by
+          change offset.val + 1 ≤ first
+          omega),
+      source.pathVertex_stepLeftPosition,
+      source.pathVertex_stepRightPosition]
+    rfl
+  · rw [canonicalSplitStepMap_split source split first second hFirst hSecond hLength,
+      dif_neg hBefore]
+    have hFirstLe : first ≤ offset.val := Nat.le_of_not_gt hBefore
+    have hOffsetLt : offset.val < first + second := by
+      rw [← hLength]
+      exact offset.isLt
+    let targetOffset : Fin
+        ((splitSpec source split first second hFirst hSecond).length
+          (secondSlot source)) :=
+      ⟨offset.val - first, by
+        simp only [splitSpec, secondSlot, splitLength, Fin.lastCases_last]
+        omega⟩
+    have hOffsetDecomp : first + targetOffset.val = offset.val := by
+      dsimp [targetOffset]
+      omega
+    have hLeftBound : first + targetOffset.val < source.length split := by
+      rw [hOffsetDecomp]
+      exact offset.isLt
+    have hRightBound : first + targetOffset.val + 1 < source.length split + 1 := by
+      rw [hOffsetDecomp]
+      omega
+    have hLeftPosition : source.stepLeftPosition split offset =
+        ⟨first + targetOffset.val, by
+          exact Nat.lt_succ_of_lt hLeftBound⟩ := by
+      apply Fin.ext
+      change offset.val = first + targetOffset.val
+      exact hOffsetDecomp.symm
+    have hRightPosition : source.stepRightPosition split offset =
+        ⟨first + targetOffset.val + 1, by
+          exact hRightBound⟩ := by
+      apply Fin.ext
+      change offset.val + 1 = first + targetOffset.val + 1
+      omega
+    change (splitSpec source split first second hFirst hSecond).unitEdge
+      ⟨secondSlot source, targetOffset⟩ = _
+    change
+      ((splitSpec source split first second hFirst hSecond).stepLeft
+          (secondSlot source) targetOffset,
+        (splitSpec source split first second hFirst hSecond).stepRight
+          (secondSlot source) targetOffset) = _
+    let targetLeftPosition : Fin (second + 1) :=
+      ⟨targetOffset.val, by
+        have := targetOffset.isLt
+        simp only [splitSpec, secondSlot, splitLength, Fin.lastCases_last] at this
+        omega⟩
+    let targetRightPosition : Fin (second + 1) :=
+      ⟨targetOffset.val + 1, by
+        have := targetOffset.isLt
+        simp only [splitSpec, secondSlot, splitLength, Fin.lastCases_last] at this
+        omega⟩
+    have hTargetLeft :
+        (splitSpec source split first second hFirst hSecond).stepLeftPosition
+            (secondSlot source) targetOffset =
+          ⟨targetLeftPosition.val, by
+            simp only [splitSpec, secondSlot, splitLength, Fin.lastCases_last,
+              Order.lt_add_one_iff]
+            have := targetLeftPosition.isLt
+            omega⟩ := by
+      apply Fin.ext
+      rfl
+    have hTargetRight :
+        (splitSpec source split first second hFirst hSecond).stepRightPosition
+            (secondSlot source) targetOffset =
+          ⟨targetRightPosition.val, by
+            simp only [splitSpec, secondSlot, splitLength, Fin.lastCases_last,
+              Order.lt_add_one_iff]
+            have := targetRightPosition.isLt
+            omega⟩ := by
+      apply Fin.ext
+      rfl
+    have hRightPosition' :
+        (⟨first + targetRightPosition.val, by
+          dsimp [targetRightPosition]
+          omega⟩ : source.PathPosition split) =
+        source.stepRightPosition split offset := by
+      apply Fin.ext
+      change first + targetRightPosition.val = offset.val + 1
+      dsimp [targetRightPosition]
+      omega
+    rw [← (splitSpec source split first second hFirst hSecond).pathVertex_stepLeftPosition
+        (secondSlot source) targetOffset,
+      ← (splitSpec source split first second hFirst hSecond).pathVertex_stepRightPosition
+        (secondSlot source) targetOffset,
+      hTargetLeft, hTargetRight,
+      ← canonicalSplitVertexEquiv_pathVertex_split_second source split first second
+        hFirst hSecond hLength targetLeftPosition,
+      ← canonicalSplitVertexEquiv_pathVertex_split_second source split first second
+        hFirst hSecond hLength targetRightPosition,
+      ← hLeftPosition, hRightPosition',
+      source.pathVertex_stepLeftPosition,
+      source.pathVertex_stepRightPosition]
+    rfl
+
 /-- Each emitted unit step has exactly the same ordered endpoints after the
 canonical split.  Unlike a slotwise relabeling, no orientation reversal is
 needed: only the slot containing a position changes. -/
@@ -1051,153 +1211,7 @@ theorem canonicalSplit_unitEdge_eq
   rcases step with ⟨edge, offset⟩
   by_cases hEdge : edge = split
   · subst edge
-    change (splitSpec source split first second hFirst hSecond).unitEdge
-      (canonicalSplitStepMap source split first second hFirst hSecond hLength
-        ⟨split, offset⟩) = _
-    by_cases hBefore : offset.val < first
-    · let targetOffset : Fin
-          ((splitSpec source split first second hFirst hSecond).length
-            (oldSlot source split)) :=
-        ⟨offset.val, by
-          simp [splitSpec, splitLength, oldSlot, hBefore]⟩
-      have hMapped : canonicalSplitStepMap source split first second hFirst hSecond hLength
-          ⟨split, offset⟩ = ⟨oldSlot source split, targetOffset⟩ := by
-        rw [canonicalSplitStepMap_split source split first second hFirst hSecond hLength,
-          dif_pos hBefore]
-      rw [hMapped]
-      change
-        ((splitSpec source split first second hFirst hSecond).stepLeft
-            (oldSlot source split) targetOffset,
-          (splitSpec source split first second hFirst hSecond).stepRight
-            (oldSlot source split) targetOffset) = _
-      have hTargetLeft :
-          (splitSpec source split first second hFirst hSecond).stepLeftPosition
-              (oldSlot source split) targetOffset =
-            ⟨(source.stepLeftPosition split offset).val, by
-              simp only [SubdivisionGraph.Spec.stepLeftPosition, Fin.val_mk]
-              simp only [splitSpec, oldSlot, splitLength, Fin.lastCases_castSucc, ↓reduceIte,
-                Order.lt_add_one_iff]
-              omega⟩ := by
-        apply Fin.ext
-        rfl
-      have hTargetRight :
-          (splitSpec source split first second hFirst hSecond).stepRightPosition
-              (oldSlot source split) targetOffset =
-            ⟨(source.stepRightPosition split offset).val, by
-              simp only [SubdivisionGraph.Spec.stepRightPosition, Fin.val_mk]
-              simp only [splitSpec, oldSlot, splitLength, Fin.lastCases_castSucc, ↓reduceIte,
-                Order.lt_add_one_iff, Order.add_one_le_iff]
-              omega⟩ := by
-        apply Fin.ext
-        rfl
-      rw [← (splitSpec source split first second hFirst hSecond).pathVertex_stepLeftPosition
-          (oldSlot source split) targetOffset,
-        ← (splitSpec source split first second hFirst hSecond).pathVertex_stepRightPosition
-          (oldSlot source split) targetOffset,
-        hTargetLeft, hTargetRight,
-        ← canonicalSplitVertexEquiv_pathVertex_split_first source split first second
-          hFirst hSecond hLength (source.stepLeftPosition split offset) (by
-            change offset.val ≤ first
-            exact Nat.le_of_lt hBefore),
-        ← canonicalSplitVertexEquiv_pathVertex_split_first source split first second
-          hFirst hSecond hLength (source.stepRightPosition split offset) (by
-            change offset.val + 1 ≤ first
-            omega),
-        source.pathVertex_stepLeftPosition,
-        source.pathVertex_stepRightPosition]
-      rfl
-    · rw [canonicalSplitStepMap_split source split first second hFirst hSecond hLength,
-        dif_neg hBefore]
-      have hFirstLe : first ≤ offset.val := Nat.le_of_not_gt hBefore
-      have hOffsetLt : offset.val < first + second := by
-        rw [← hLength]
-        exact offset.isLt
-      let targetOffset : Fin
-          ((splitSpec source split first second hFirst hSecond).length
-            (secondSlot source)) :=
-        ⟨offset.val - first, by
-          simp only [splitSpec, secondSlot, splitLength, Fin.lastCases_last]
-          omega⟩
-      have hOffsetDecomp : first + targetOffset.val = offset.val := by
-        dsimp [targetOffset]
-        omega
-      have hLeftBound : first + targetOffset.val < source.length split := by
-        rw [hOffsetDecomp]
-        exact offset.isLt
-      have hRightBound : first + targetOffset.val + 1 < source.length split + 1 := by
-        rw [hOffsetDecomp]
-        omega
-      have hLeftPosition : source.stepLeftPosition split offset =
-          ⟨first + targetOffset.val, by
-            exact Nat.lt_succ_of_lt hLeftBound⟩ := by
-        apply Fin.ext
-        change offset.val = first + targetOffset.val
-        exact hOffsetDecomp.symm
-      have hRightPosition : source.stepRightPosition split offset =
-          ⟨first + targetOffset.val + 1, by
-            exact hRightBound⟩ := by
-        apply Fin.ext
-        change offset.val + 1 = first + targetOffset.val + 1
-        omega
-      change (splitSpec source split first second hFirst hSecond).unitEdge
-        ⟨secondSlot source, targetOffset⟩ = _
-      change
-        ((splitSpec source split first second hFirst hSecond).stepLeft
-            (secondSlot source) targetOffset,
-          (splitSpec source split first second hFirst hSecond).stepRight
-            (secondSlot source) targetOffset) = _
-      let targetLeftPosition : Fin (second + 1) :=
-        ⟨targetOffset.val, by
-          have := targetOffset.isLt
-          simp only [splitSpec, secondSlot, splitLength, Fin.lastCases_last] at this
-          omega⟩
-      let targetRightPosition : Fin (second + 1) :=
-        ⟨targetOffset.val + 1, by
-          have := targetOffset.isLt
-          simp only [splitSpec, secondSlot, splitLength, Fin.lastCases_last] at this
-          omega⟩
-      have hTargetLeft :
-          (splitSpec source split first second hFirst hSecond).stepLeftPosition
-              (secondSlot source) targetOffset =
-            ⟨targetLeftPosition.val, by
-              simp only [splitSpec, secondSlot, splitLength, Fin.lastCases_last,
-                Order.lt_add_one_iff]
-              have := targetLeftPosition.isLt
-              omega⟩ := by
-        apply Fin.ext
-        rfl
-      have hTargetRight :
-          (splitSpec source split first second hFirst hSecond).stepRightPosition
-              (secondSlot source) targetOffset =
-            ⟨targetRightPosition.val, by
-              simp only [splitSpec, secondSlot, splitLength, Fin.lastCases_last,
-                Order.lt_add_one_iff]
-              have := targetRightPosition.isLt
-              omega⟩ := by
-        apply Fin.ext
-        rfl
-      have hRightPosition' :
-          (⟨first + targetRightPosition.val, by
-            dsimp [targetRightPosition]
-            omega⟩ : source.PathPosition split) =
-          source.stepRightPosition split offset := by
-        apply Fin.ext
-        change first + targetRightPosition.val = offset.val + 1
-        dsimp [targetRightPosition]
-        omega
-      rw [← (splitSpec source split first second hFirst hSecond).pathVertex_stepLeftPosition
-          (secondSlot source) targetOffset,
-        ← (splitSpec source split first second hFirst hSecond).pathVertex_stepRightPosition
-          (secondSlot source) targetOffset,
-        hTargetLeft, hTargetRight,
-        ← canonicalSplitVertexEquiv_pathVertex_split_second source split first second
-          hFirst hSecond hLength targetLeftPosition,
-        ← canonicalSplitVertexEquiv_pathVertex_split_second source split first second
-          hFirst hSecond hLength targetRightPosition,
-        ← hLeftPosition, hRightPosition',
-        source.pathVertex_stepLeftPosition,
-        source.pathVertex_stepRightPosition]
-      rfl
+    exact canonicalSplit_unitEdge_eq_split source split first second hFirst hSecond hLength offset
   · change (splitSpec source split first second hFirst hSecond).unitEdge
       (canonicalSplitStepMap source split first second hFirst hSecond hLength
         ⟨edge, offset⟩) = _
