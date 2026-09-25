@@ -420,7 +420,7 @@ The result extends to real test functions via embedding.
 /-- For real test functions, `star (toComplex f) = compTimeReflection (toComplex f)`.
     This is because conjugation is identity for real-valued functions.
 -/
-lemma star_toComplex_eq_compTimeReflection (f : TestFunction) :
+lemma star_toComplex_eq_compTimeReflection (f : OSforGFF.TestFunction) :
     star (toComplex f) = compTimeReflection (toComplex f) := by
   ext x
   -- star f is defined as starTestFunction f
@@ -433,14 +433,15 @@ lemma star_toComplex_eq_compTimeReflection (f : TestFunction) :
 /-- The rpInnerProduct of a real test function equals the complex bilinear form
     with compTimeReflection.
 -/
-lemma rpInnerProduct_toComplex_eq (m : ℝ) (f : TestFunction) :
+lemma rpInnerProduct_toComplex_eq (m : ℝ) (f : OSforGFF.TestFunction) :
     rpInnerProduct m (toComplex f) =
       freeCovarianceℂBilinear m (compTimeReflection (toComplex f)) (toComplex f) := by
   unfold rpInnerProduct
   rw [star_toComplex_eq_compTimeReflection]
 
 /-- For real test functions, the reflection positivity inner product is non-negative. -/
-theorem freeCovariance_reflection_positive_bilinear_real (m : ℝ) [Fact (0 < m)] (f : TestFunction)
+theorem freeCovariance_reflection_positive_bilinear_real (m : ℝ) [Fact (0 < m)]
+    (f : OSforGFF.TestFunction)
     (hf_supp : ∀ x : SpaceTime, x 0 ≤ 0 → f x = 0) :
   0 ≤ ∫ x, ∫ y, (QFT.compTimeReflectionReal f) x * freeCovariance m x y * f y := by
   -- Use the complex theorem for toComplex f
@@ -457,7 +458,7 @@ theorem freeCovariance_reflection_positive_bilinear_real (m : ℝ) [Fact (0 < m)
   simp_all
 
 /-- Alias for `freeCovariance_reflection_positive_bilinear_real` to match expected name. -/
-theorem freeCovariance_reflection_positive_real (m : ℝ) [Fact (0 < m)] (f : TestFunction)
+theorem freeCovariance_reflection_positive_real (m : ℝ) [Fact (0 < m)] (f : OSforGFF.TestFunction)
     (hf_supp : ∀ x : SpaceTime, x 0 ≤ 0 → f x = 0) :
   0 ≤ ∫ x, ∫ y, (QFT.compTimeReflectionReal f) x * freeCovariance m x y * f y :=
   freeCovariance_reflection_positive_bilinear_real m f hf_supp
