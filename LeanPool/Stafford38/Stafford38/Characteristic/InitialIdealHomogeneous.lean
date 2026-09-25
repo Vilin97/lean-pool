@@ -41,10 +41,12 @@ universe u
 variable (k : Type u) [Field k]
 variable {n : ℕ}
 
-private abbrev OrderHomogeneous (N : ℕ) :=
+/-- The submodule of symbols homogeneous of the given momentum order. -/
+abbrev OrderHomogeneous (N : ℕ) :=
   MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n) N
 
-private abbrev orderDecomposition :=
+/-- The decomposition of the symbol ring by homogeneous momentum order. -/
+abbrev orderDecomposition :=
   MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n)
 
 /-- The grading of the symbol algebra by momentum order. -/

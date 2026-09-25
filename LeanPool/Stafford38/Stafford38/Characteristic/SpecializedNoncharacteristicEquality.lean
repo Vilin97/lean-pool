@@ -50,14 +50,17 @@ universe u
 
 variable (k : Type u) [Field k]
 
-private abbrev CanonicalIdeal (n N : ℕ)
+/-- The canonical right ideal defining the distinguished coordinate quotient. -/
+abbrev CanonicalIdeal (n N : ℕ)
     (d : PresentedWeyl k (n + 1)) :=
   presentedCanonicalRightIdeal (k := k) n N d
 
-private abbrev AxisCoordinate (n : ℕ) : SymbolRing k (n + 1) :=
+/-- The symbol of the distinguished base coordinate. -/
+abbrev AxisCoordinate (n : ℕ) : SymbolRing k (n + 1) :=
   MvPolynomial.X (.inl (0 : Fin (n + 1)))
 
-private abbrev AxisZeroLocus (n : ℕ) :
+/-- The closed axis cut out by the distinguished coordinate symbol. -/
+abbrev AxisZeroLocus (n : ℕ) :
     Set (PrimeSpectrum (SymbolRing k (n + 1))) :=
   PrimeSpectrum.zeroLocus ({AxisCoordinate k n} :
     Set (SymbolRing k (n + 1)))

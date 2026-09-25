@@ -41,7 +41,8 @@ universe u
 variable (k : Type u) [Field k]
 variable {n : ℕ}
 
-private abbrev orderDecomposition :=
+/-- The decomposition of the symbol ring by homogeneous momentum order. -/
+abbrev orderDecomposition :=
   MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n)
 
 /-- The graded algebra structure on symbols induced by the order weights. -/
