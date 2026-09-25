@@ -35,7 +35,7 @@ normalized inner product `⟪key/‖key‖, q⟫` with high probability. It is b
    so `m = O(‖q‖²/(ε²δ))` sign-bits suffice for additive error `ε` with probability `1−δ`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Real
 open scoped ENNReal NNReal RealInnerProductSpace

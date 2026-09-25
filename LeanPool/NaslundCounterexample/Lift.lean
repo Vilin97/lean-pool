@@ -28,7 +28,7 @@ lifted polynomials therefore has all four coordinates of `s' - s` in `{0, 1}`, s
 property gives `s = s'`; what is left is a square difference inside `B`, which `B` does not have.
 -/
 
-@[expose] public section
+public section
 
 namespace NaslundCounterexample
 

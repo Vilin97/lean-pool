@@ -16,7 +16,7 @@ matching theorem. It is extracted from the independently frozen Paper III develo
 separate from the theorem-facing API.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -36,7 +36,7 @@ theorem mem_cliqueEdgesV {t : Finset V} {e : Sym2 V} :
 
 
 /-- The number of edges of `E` at `v`. -/
-def edeg (E : Finset (Sym2 V)) (v : V) : ℕ := (E.filter (fun e => v ∈ e)).card
+@[expose] def edeg (E : Finset (Sym2 V)) (v : V) : ℕ := (E.filter (fun e => v ∈ e)).card
 
 
 /-- `N_E(x, S)`: the neighbours of `x` inside `S`. -/
@@ -44,7 +44,7 @@ def nbhdIn (E : Finset (Sym2 V)) (x : V) (S : Finset V) : Finset V :=
   S.filter (fun y => s(x, y) ∈ E)
 
 /-- `d_E(x, S) = |N_E(x, S)|`. -/
-def degTo (E : Finset (Sym2 V)) (x : V) (S : Finset V) : ℕ := (nbhdIn E x S).card
+@[expose] def degTo (E : Finset (Sym2 V)) (x : V) (S : Finset V) : ℕ := (nbhdIn E x S).card
 
 theorem mem_nbhdIn {E : Finset (Sym2 V)} {x y : V} {S : Finset V} :
     y ∈ nbhdIn E x S ↔ y ∈ S ∧ s(x, y) ∈ E := by
@@ -56,7 +56,7 @@ theorem nbhdIn_subset (E : Finset (Sym2 V)) (x : V) (S : Finset V) : nbhdIn E x 
 
 
 /-- `E[S]`: the edges of `E` with both ends in `S`. -/
-def edgesIn (E : Finset (Sym2 V)) (S : Finset V) : Finset (Sym2 V) :=
+@[expose] def edgesIn (E : Finset (Sym2 V)) (S : Finset V) : Finset (Sym2 V) :=
   E.filter (fun e => e ∈ S.sym2)
 
 /-- `E[S, T]`: the edges of `E` with one end in `S` and the other in `T`. -/
@@ -89,12 +89,12 @@ theorem edgesIn_subset (E : Finset (Sym2 V)) (S : Finset V) : edgesIn E S ⊆ E 
 
 
 /-- `d_E({x,y}, W) = |N_E(x,W) ∩ N_E(y,W)|`, the codegree of the pair `x, y` inside `W`. -/
-def codegTo (E : Finset (Sym2 V)) (x y : V) (W : Finset V) : ℕ :=
+@[expose] def codegTo (E : Finset (Sym2 V)) (x y : V) (W : Finset V) : ℕ :=
   (nbhdIn E x W ∩ nbhdIn E y W).card
 
 
 /-- The edges of a triangle family. -/
-def famEdges (P : Finset (Finset V)) : Finset (Sym2 V) := P.biUnion cliqueEdges
+@[expose] def famEdges (P : Finset (Finset V)) : Finset (Sym2 V) := P.biUnion cliqueEdges
 
 
 /-- A `Finset (Finset V)` is a **matching** avoiding `x`: every member is a `2`-element set, the

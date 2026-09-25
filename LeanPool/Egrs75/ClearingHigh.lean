@@ -17,7 +17,7 @@ top oversized base-`q` digit), a fresh `LowDigits p` window number drawn from
 clearing dichotomy; the low case is the μ-measure machine in `MuFinish`.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.Probe
 

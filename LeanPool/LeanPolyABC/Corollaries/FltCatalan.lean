@@ -16,7 +16,7 @@ import Mathlib.Data.Sym.Sym2.Init
 # LeanPool.LeanPolyABC.Corollaries.FltCatalan
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

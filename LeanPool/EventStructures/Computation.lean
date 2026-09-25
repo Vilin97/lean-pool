@@ -17,7 +17,7 @@ configurations, and linearisations, and relates computations to the
 configurations they reach.
 -/
 
-@[expose] public section
+public section
 
 namespace EventStructures
 
@@ -40,11 +40,11 @@ def emptyConf : Conf es :=
   starting at the empty configuration and ending at `c`.
   Equivalently, a computation records a causal execution up to
   trace equivalence of the underlying path. -/
-def Computation (c : Conf es) : Type _ :=
+@[expose] def Computation (c : Conf es) : Type _ :=
   Path.Async es (emptyConf es) c
 
 /-- The type of all computations, paired with their target configuration. -/
-def Computations : Type _ := Σ c : Conf es, Computation es c
+@[expose] def Computations : Type _ := Σ c : Conf es, Computation es c
 
 /-- A list of events `t` is a linearisation of configuration `c`
   if it is trace-equivalent to the trace of some path from the
@@ -60,7 +60,7 @@ lemma computation_is_linearisation {c : Conf es} (comp : Computation es c) :
   refine ⟨Path.trace es p, ⟨p, TraceEquiv.refl _⟩⟩
 
 /-- Configurations that are reachable by a computation. -/
-def ReachableConf : Type _ := {c : Conf es // Nonempty (Computation es c)}
+@[expose] def ReachableConf : Type _ := {c : Conf es // Nonempty (Computation es c)}
 
 /-- Every computation targets a reachable configuration. -/
 def computationToReachable : Computations es → ReachableConf es :=

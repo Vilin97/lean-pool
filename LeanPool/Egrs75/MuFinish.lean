@@ -64,7 +64,7 @@ NOT an open-problem solve: the r ≥ 3 generalization is Erdős #376 (OPEN) and 
 not attempted.  Recon: ~/Knowledge/Construct/recon/erdos_376.md.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.MuFinish
 
@@ -228,7 +228,7 @@ theorem egrs_move {p q : ℕ} (hp : p.Prime) (_hq : q.Prime)
       have hsgk : StrictGoodAt q k (n + U) := by
         unfold StrictGoodAt
         rw [hlow k hki]; exact hkstrict
-      have hi'le : leastGoodAbove hq3 hbad' ≤ k := Nat.find_min' _ ⟨htb', hsgk⟩
+      have hi'le : leastGoodAbove hq3 hbad' ≤ k := leastGoodAbove_le hq3 hbad' htb' hsgk
       exact muVal_lt_of hq3 hbad (Or.inr ⟨hbad', Or.inl (by omega)⟩)
   · -- ════════════ SUBTRACT branch (S ≤ T; tail strip, block frozen) ════════════
     have hppos : 1 ≤ p ^ m := Nat.one_le_pow _ _ (by omega)
@@ -261,7 +261,7 @@ theorem egrs_move {p q : ℕ} (hp : p.Prime) (_hq : q.Prime)
       have hsgi : StrictGoodAt q i (n - S) := by
         unfold StrictGoodAt
         rwa [hfrozen i (le_refl i)]
-      have hi'le : leastGoodAbove hq3 hbad' ≤ i := Nat.find_min' _ ⟨htb', hsgi⟩
+      have hi'le : leastGoodAbove hq3 hbad' ≤ i := leastGoodAbove_le hq3 hbad' htb' hsgi
       rcases Nat.eq_or_lt_of_le hi'le with heq' | hlt'
       · -- index and digit frozen: μ unchanged, n strictly drops
         right
@@ -420,7 +420,7 @@ theorem align_finish_mu {p q : ℕ} (hp : p.Prime) (hq : q.Prime)
       unfold StrictGoodAt
       rw [hdiv2, Nat.mul_mod_left]
       omega
-    have hple : leastGoodAbove hq3 hbads ≤ e + 2 := Nat.find_min' _ ⟨htb, hsg⟩
+    have hple : leastGoodAbove hq3 hbads ≤ e + 2 := leastGoodAbove_le hq3 hbads htb hsg
     have hsfl : ∀ (hbad : 0 < badCountQ q (p ^ α)),
         N < p ^ α / q ^ (leastGoodAbove hq3 hbad) * q ^ (leastGoodAbove hq3 hbad) := by
       intro hbad

@@ -70,7 +70,7 @@ and the high/low base-`q` machinery; does NOT modify any existing clean file.  F
 the KNOWN 1975 theorem; three primes is Erdős #376 (OPEN) — not attempted.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.ClearingP3
 

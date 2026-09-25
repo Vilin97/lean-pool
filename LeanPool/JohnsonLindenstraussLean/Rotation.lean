@@ -35,7 +35,7 @@ Combining this with the deterministic identity `‖jlMap A x‖² = (1/k)·∑�
 the projected squared norm `∑ᵢ (jlMap A w i)²` of any fixed `w ≠ 0` (`jlMap_concentration`).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Real
 

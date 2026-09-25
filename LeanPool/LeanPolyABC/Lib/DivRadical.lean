@@ -13,7 +13,7 @@ import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicative
 # LeanPool.LeanPolyABC.Lib.DivRadical
 -/
 
-@[expose] public section
+public section
 
 /-
 On `a.divRadical = a / radical a`. The purpose of this file is to prove our "main lemma" that

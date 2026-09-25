@@ -11,7 +11,7 @@ public import Mathlib.Data.Fintype.Basic
 
 /-! # Directed walks, unsplittable loads, and Goemans' cost conjecture -/
 
-@[expose] public section
+public section
 
 namespace GoemansFlow
 
@@ -21,7 +21,7 @@ variable {W E : Type}
 
 /-- `IsWalk tail head x l y`: the list of arcs `l`, read left to right, is a walk from
 vertex `x` to vertex `y`.  Repeated vertices and arcs are permitted. -/
-def IsWalk (tail head : E → W) : W → List E → W → Prop
+@[expose] def IsWalk (tail head : E → W) : W → List E → W → Prop
   | x, [], y => x = y
   | x, e :: l, y => tail e = x ∧ IsWalk tail head (head e) l y
 
@@ -32,7 +32,7 @@ def IsWalk (tail head : E → W) : W → List E → W → Prop
     IsWalk tail head x (e :: l) y ↔ (tail e = x ∧ IsWalk tail head (head e) l y) := Iff.rfl
 
 /-- Boolean decision procedure for `IsWalk` (kernel-friendly). -/
-def walkBool [DecidableEq W] (tail head : E → W) : W → List E → W → Bool
+@[expose] def walkBool [DecidableEq W] (tail head : E → W) : W → List E → W → Bool
   | x, [], y => decide (x = y)
   | x, e :: l, y => decide (tail e = x) && walkBool tail head (head e) l y
 
@@ -50,7 +50,7 @@ end Walks
 
 /-- Load induced on arc `a` by routing `P` with demands `d`, counting every traversal.
 For arc-simple paths this is the sum of demands of commodities whose path contains `a`. -/
-def unsplittableLoad {R K E : Type} [AddCommMonoid R] [Fintype K] [DecidableEq E]
+@[expose] def unsplittableLoad {R K E : Type} [AddCommMonoid R] [Fintype K] [DecidableEq E]
     (d : K → R) (P : K → List E) (a : E) : R :=
   ∑ k : K, (P k).count a • d k
 
@@ -70,6 +70,7 @@ A refutation of this restricted form also refutes the conjecture over general di
 The conclusion allows arbitrary walks; the counterexample proves that every admissible
 walk is a simple path. The coefficient ring is generic, with the rational case matching
 the source's setting. -/
+@[expose]
 def GoemansCostConjectureFull (R : Type) [CommRing R] [LinearOrder R] :
     Prop :=
   ∀ (W E K : Type) [Fintype W] [DecidableEq W] [Fintype E] [DecidableEq E] [Fintype K]

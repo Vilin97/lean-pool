@@ -13,7 +13,7 @@ import LeanPool.LeanPolyABC.MasonStothers
 # LeanPool.LeanPolyABC.Corollaries.Davenport
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

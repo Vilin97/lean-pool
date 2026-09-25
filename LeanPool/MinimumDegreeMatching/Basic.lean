@@ -30,7 +30,7 @@ reduced to it by adjoining a universal apex vertex and deleting that vertex from
 perfect matching. Both public formulations therefore share one proof of the degree criterion.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

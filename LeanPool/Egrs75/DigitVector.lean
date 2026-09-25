@@ -40,7 +40,7 @@ hypothesis.  Formalizes the KNOWN theorem EGRS75 (Math. Comp. 29 (1975), the rep
 Lemma p.84, case `κ₁ = κ₂ = 1/2`).  Three primes is Erdős #376 (OPEN); not attempted.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.RepairDV
 
@@ -51,7 +51,7 @@ open Egrs75.LeafInduction
 /-! ## Local notation and the "oversized digit" predicate -/
 
 /-- The base-`q` "oversized" test: a digit `d` is oversized iff `(q-1)/2 < d`. -/
-@[reducible] def bigQ (q d : ℕ) : Bool := decide ((q - 1) / 2 < d)
+@[reducible, expose] def bigQ (q d : ℕ) : Bool := decide ((q - 1) / 2 < d)
 
 /-- `badCountQ` unfolded as a filter-length over the base-`q` digit list. -/
 theorem badCountQ_eq (q n : ℕ) :
@@ -135,7 +135,7 @@ containing the bad digit at `j`; high block = digits `> j`, all good). -/
 /-- The (decidable, finite, nonempty) set of oversized base-`q` digit positions of `n`,
 as indices into the digit list.  `i` is oversized iff `(q-1)/2 < n / q^i % q`
 (= the `i`-th base-`q` digit) and `i < length`. -/
-def badIndexSet (q n : ℕ) : Finset ℕ :=
+@[expose] def badIndexSet (q n : ℕ) : Finset ℕ :=
   (Finset.range (Nat.digits q n).length).filter (fun i => bigQ q ((Nat.digits q n).getD i 0))
 
 /-- If the bad count is positive, the bad-index set is nonempty. -/

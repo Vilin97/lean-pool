@@ -16,7 +16,7 @@ have a minimal conflict with some event outside the configuration), and the
 notion of a computation being compatible with a log.
 -/
 
-@[expose] public section
+public section
 
 namespace EventStructures
 
@@ -75,7 +75,7 @@ lemma log_has_conflict_outside {c : Conf es} {e : es.Event} (he : e ∈ log es c
     1. All events in l are in σ's target configuration
     2. Events in σ are consistent with events in l
     3. If an event in σ conflicts with any event, it must be in l -/
-@[simp]
+@[expose, simp]
 def compatibleWithLog (σ : Computations es) (l : Set es.Event) : Prop :=
   (∀ e ∈ l, e ∈ σ.1.1) ∧
   (∀ e ∈ σ.1.1, ∀ e' ∈ l, ¬ (e # e')) ∧
@@ -100,7 +100,7 @@ lemma compatibleWithLog_conflict_in_log {σ : Computations es} {l : Set es.Event
   h.2.2 e he e' hconf
 
 /-- The type of all computations compatible with a given log. -/
-def CompatibleComputations (l : Set es.Event) : Type _ :=
+@[expose] def CompatibleComputations (l : Set es.Event) : Type _ :=
   {σ : Computations es // σ ⊨ l}
 
 /-- Extract the underlying computation from a compatible computation. -/

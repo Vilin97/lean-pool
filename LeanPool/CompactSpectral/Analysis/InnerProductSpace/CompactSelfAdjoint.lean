@@ -19,4 +19,4 @@ import Mathlib.Tactic.Positivity.Finset
 This module bundles the spectral theory of compact self-adjoint operators.
 -/
 
-@[expose] public section
+public section

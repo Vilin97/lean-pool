@@ -17,7 +17,7 @@ relation and a congruence for concatenation, and builds the trace monoid as the
 quotient of lists of events by trace equivalence.
 -/
 
-@[expose] public section
+public section
 
 namespace EventStructures
 
@@ -105,32 +105,41 @@ instance traceEquivSetoid : Setoid (List es.Event) where
   iseqv := ⟨@traceEquiv_refl es, @traceEquiv_symm es, @traceEquiv_trans es⟩
 
 /-- The trace monoid: lists of events quotiented by trace equivalence. -/
-def TraceMonoid : Type := Quotient (traceEquivSetoid es)
+@[expose] def TraceMonoid : Type := Quotient (traceEquivSetoid es)
 
 namespace Monoid
 
 /-- Lift a list to the trace monoid. -/
-def mk (t : List es.Event) : TraceMonoid es := Quotient.mk (traceEquivSetoid es) t
+@[expose] def mk (t : List es.Event) : TraceMonoid es := Quotient.mk (traceEquivSetoid es) t
 
 /-- Multiplication in the trace monoid (concatenation of traces). -/
 instance : Mul (TraceMonoid es) where
   mul := Quotient.lift₂ (fun t₁ t₂ => mk es (t₁ ++ t₂))
-    (fun _ _ _ _ h₁ h₂ => Quotient.sound (traceEquiv_append es h₁ h₂))
+    (by
+      intro _ _ _ _ h₁ h₂
+      exact Quotient.sound (traceEquiv_append es h₁ h₂))
 
 /-- Identity element in the trace monoid (empty trace). -/
 instance : One (TraceMonoid es) where
   one := mk es []
 
+@[simp] theorem mk_mul (t₁ t₂ : List es.Event) :
+    mk es t₁ * mk es t₂ = mk es (t₁ ++ t₂) := by rfl
+
+@[simp] theorem mk_one : (1 : TraceMonoid es) = mk es [] := by rfl
+
 /-- Left identity law for trace monoid. -/
 lemma one_mul (x : TraceMonoid es) : 1 * x = x := by
   obtain ⟨t, rfl⟩ := Quotient.exists_rep x
-  change mk es ([] ++ t) = mk es t
+  change mk es [] * mk es t = mk es t
+  rw [mk_mul]
   simp
 
 /-- Right identity law for trace monoid. -/
 lemma mul_one (x : TraceMonoid es) : x * 1 = x := by
   obtain ⟨t, rfl⟩ := Quotient.exists_rep x
-  change mk es (t ++ []) = mk es t
+  change mk es t * mk es [] = mk es t
+  rw [mk_mul]
   simp
 
 /-- Associativity law for trace monoid. -/
@@ -138,8 +147,9 @@ lemma mul_assoc (x y z : TraceMonoid es) : (x * y) * z = x * (y * z) := by
   obtain ⟨t₁, rfl⟩ := Quotient.exists_rep x
   obtain ⟨t₂, rfl⟩ := Quotient.exists_rep y
   obtain ⟨t₃, rfl⟩ := Quotient.exists_rep z
-  change mk es ((t₁ ++ t₂) ++ t₃) = mk es (t₁ ++ (t₂ ++ t₃))
-  simp
+  change (mk es t₁ * mk es t₂) * mk es t₃ =
+    mk es t₁ * (mk es t₂ * mk es t₃)
+  simp only [mk_mul, List.append_assoc]
 
 /-- The trace monoid is a monoid. -/
 instance : Monoid (TraceMonoid es) where

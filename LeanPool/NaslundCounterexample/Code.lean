@@ -22,7 +22,7 @@ together with the three facts about squares in `F_3` it is used with. Everything
 check over `Fin 4 → ZMod 3` and `ZMod 3`, decided by the kernel.
 -/
 
-@[expose] public section
+public section
 
 namespace NaslundCounterexample
 

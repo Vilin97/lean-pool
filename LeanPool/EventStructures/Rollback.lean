@@ -19,7 +19,7 @@ and causal safety, and—given a finite representation—correctness (the origin
 configuration is reachable from the rollback) and minimality.
 -/
 
-@[expose] public section
+public section
 
 namespace EventStructures
 
@@ -80,7 +80,7 @@ lemma rollback_future_isConf {c : Conf es} {e : es.Event} :
   exact ⟨c.2.2 hxc hy, fun hyf => hxf (le_trans hyf hy)⟩
 
 /-- The canonical rollback configuration: remove all events causally after `e`. -/
-def rollbackFuture (c : Conf es) (e : es.Event) : Conf es :=
+@[expose] def rollbackFuture (c : Conf es) (e : es.Event) : Conf es :=
   ⟨c.1 \ es.future e, rollback_future_isConf (es := es) (c := c)⟩
 
 @[simp] lemma rollbackFuture_val (c : Conf es) (e : es.Event) :

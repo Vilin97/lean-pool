@@ -26,7 +26,7 @@ Tags: spectral-theory, functional-analysis, compact-operators
 MSC: 47A75, 47B07
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Compact self-adjoint spectral theory
