@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectionWeakEquation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCoerciveH1
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectionWeakEquation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCoerciveH1
 
 /-!
 # Centered-cube Neumann energy and duality
@@ -14,6 +16,8 @@ This file supplies the `q = 2` energy endpoint and the canonical mean-zero
 adjoint used by the below-two Neumann Calderón--Zygmund argument.  Coercivity
 and solvability are discharged internally from the centered-cube geometry.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

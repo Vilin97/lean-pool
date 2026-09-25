@@ -3,10 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.AxisCubeNormalizedLp
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.AxisCubeNormalizedLp
 
 /-! # Closed Ball Normalized L2 -/
+
+@[expose] public section
 
 namespace Homogenization
 

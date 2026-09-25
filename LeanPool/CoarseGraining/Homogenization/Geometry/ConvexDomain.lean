@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeBoundaryPush
-import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
-import Mathlib.Analysis.Normed.Module.Convex
-import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
-import Mathlib.Topology.MetricSpace.Bounded
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeBoundaryPush
+public import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
+public import Mathlib.Analysis.Normed.Module.Convex
+public import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
+public import Mathlib.Topology.MetricSpace.Bounded
 
 /-! # Convex Domain -/
+
+@[expose] public section
 
 namespace Homogenization
 

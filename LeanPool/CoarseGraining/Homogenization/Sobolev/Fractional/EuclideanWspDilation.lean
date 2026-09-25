@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Dilation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Dilation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
 
 /-!
 # Triadic dilation covariance for finite-p Euclidean fractional norms
@@ -14,6 +16,8 @@ The pullback from `dilateCube k Q` to `Q` is composition with the literal
 map `x ↦ 3^k • x`.  Normalized volume is invariant, while the fractional
 seminorm and the full power norm acquire the physical factor `3^(-k s)`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

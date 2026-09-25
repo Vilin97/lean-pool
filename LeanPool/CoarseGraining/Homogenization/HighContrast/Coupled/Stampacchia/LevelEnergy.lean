@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.WeakForm
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Pointwise
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.Basic
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.MatchedTrace
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
-import Mathlib.Algebra.Order.Chebyshev
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.WeakForm
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Pointwise
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.Basic
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.MatchedTrace
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
+public import Mathlib.Algebra.Order.Chebyshev
 
 /-!
 # The coupled level-energy estimate
@@ -30,6 +32,8 @@ inequality (`symmForm_young`, `t = 1`) and the coefficient bounds
 `E_k ≤ 2M²|A_k|`; then `s ≥ 1` and a Cauchy–Schwarz on the `2d`
 coordinate norms give the `√`-shaped conclusion.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

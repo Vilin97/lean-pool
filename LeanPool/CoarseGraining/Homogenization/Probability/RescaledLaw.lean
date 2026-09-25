@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.WeakOrlicz
-import LeanPool.CoarseGraining.Homogenization.Probability.LocalObservable
-import Mathlib.Analysis.Calculus.ContDiff.Operations
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.WeakOrlicz
+public import LeanPool.CoarseGraining.Homogenization.Probability.LocalObservable
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-! # Rescaled Law -/
+
+@[expose] public section
 
 open scoped Pointwise
 

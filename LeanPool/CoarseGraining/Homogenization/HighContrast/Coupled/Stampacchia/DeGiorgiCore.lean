@@ -3,14 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.Iteration
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.LevelRecursion
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.Admissibility
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.Basic
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.MatchedTrace
-import LeanPool.CoarseGraining.Homogenization.Sobolev.MatchedPair
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.Iteration
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.LevelRecursion
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.Admissibility
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.Basic
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.MatchedTrace
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.MatchedPair
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding
 
 /-!
 # The generic one-sided De Giorgi core
@@ -26,6 +28,8 @@ inequality (`F4`), Chebyshev (`real_chebyshev_level`), the squared level recursi
 (`sq_level_recursion_of_le`), the admissibility algebra (`deGiorgi_admissible`)
 and the iteration engine (`deGiorgi_levelVolume_tendsto_zero`).
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

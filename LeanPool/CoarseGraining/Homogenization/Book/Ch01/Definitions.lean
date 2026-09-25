@@ -3,18 +3,22 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.Full
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDomination
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.FieldSpaces
-import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedConvexDomain
-import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedDomainCube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.NegativeSobolev
-import LeanPool.CoarseGraining.Homogenization.Sobolev.NormalizedLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Normalized
+
+public import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.Full
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDomination
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.FieldSpaces
+public import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedConvexDomain
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedDomainCube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.NegativeSobolev
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.NormalizedLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Normalized
 
 /-! # Definitions -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

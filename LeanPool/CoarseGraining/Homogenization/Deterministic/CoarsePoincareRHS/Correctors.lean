@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
-import LeanPool.CoarseGraining.Homogenization.Multiscale.CubeAverage
-import LeanPool.CoarseGraining.Homogenization.PDE.EnergyIdentities
-import LeanPool.CoarseGraining.Homogenization.PDE.Harmonic
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalCubeBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Realization
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.CubeAverage
+public import LeanPool.CoarseGraining.Homogenization.PDE.EnergyIdentities
+public import LeanPool.CoarseGraining.Homogenization.PDE.Harmonic
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalCubeBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Realization
 
 /-! # Correctors -/
+
+@[expose] public section
 
 namespace Homogenization
 

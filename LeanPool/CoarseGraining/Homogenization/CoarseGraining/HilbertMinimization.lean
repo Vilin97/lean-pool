@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
-import Mathlib.Topology.Algebra.Module.ClosedSubmodule
+
+public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
+public import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
+public import Mathlib.Topology.Algebra.Module.ClosedSubmodule
 
 /-! # Hilbert Minimization -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicInteriorHessian
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.LimitFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.FiniteMeasureDowngrade
-import LeanPool.CoarseGraining.Homogenization.Sobolev.MatchedPair.ScaledPoincare
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectionLimit
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicInteriorHessian
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.LimitFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.FiniteMeasureDowngrade
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.MatchedPair.ScaledPoincare
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectionLimit
 
 /-! # Harmonic Gradient Two Dim -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
-import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedNorms
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Definitions
-import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
-import Mathlib.MeasureTheory.SpecificCodomains.Pi
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedNorms
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
+public import Mathlib.MeasureTheory.SpecificCodomains.Pi
 
 /-! # Basic Lemmas -/
+
+@[expose] public section
 
 namespace Homogenization
 

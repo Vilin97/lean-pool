@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Localization
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Descendants
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockMatrixProperties
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeOpenBridge
-import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeBoundaryPush
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Localization
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Descendants
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockMatrixProperties
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeOpenBridge
+public import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeBoundaryPush
 
 /-! # Subadditivity -/
+
+@[expose] public section
 
 namespace Homogenization
 

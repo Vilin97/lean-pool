@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.TestPair
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.TestPair
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
 
 /-!
 # Local block energy: integrability workhorses
@@ -20,6 +22,8 @@ weak-form expansion is either
 Both are `L¹` on the finite-measure cube; the two lemmas below package the
 Hölder/`L∞` bookkeeping so the downstream files never touch it directly.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

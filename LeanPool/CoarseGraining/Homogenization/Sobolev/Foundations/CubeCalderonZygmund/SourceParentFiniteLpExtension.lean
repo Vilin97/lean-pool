@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.InteriorLocalInputs
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ScaledCubeGeometry
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.InteriorLocalInputs
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ScaledCubeGeometry
 
 /-!
 # Source-supported finite-`L^p` data on a centered parent cube
@@ -15,6 +17,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22
 This module packages extension by zero from an origin cube into its centered
 parent, retaining both the finite-exponent and energy memberships.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

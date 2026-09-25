@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
-import LeanPool.CoarseGraining.Homogenization.PDE.DirichletRHS
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.AxisCubeHarmonicCovariance
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Realization
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
+public import LeanPool.CoarseGraining.Homogenization.PDE.DirichletRHS
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.AxisCubeHarmonicCovariance
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Realization
 
 /-! # H10Adjoint -/
+
+@[expose] public section
 
 namespace Homogenization
 

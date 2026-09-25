@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionWeightedTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionScalarFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Cube
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionWeightedTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionScalarFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Cube
 
 /-!
 # Square-weighted tails of reflected scalars
@@ -15,6 +17,8 @@ Scalar odd reflection preserves square-weighted level tails up to the exact
 `3^d` parent-volume factor.  The proof embeds the scalar into one coordinate
 of the existing reflected-vector API; the zero-dimensional case is direct.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

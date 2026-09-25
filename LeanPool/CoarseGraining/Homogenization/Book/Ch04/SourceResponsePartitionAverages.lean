@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageFluctuations
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageLowMoments
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageMoments
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceResponseObservables
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageFluctuations
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageLowMoments
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageMoments
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceResponseObservables
 
 /-!
 # Exact-source ResponseJ partition averages
@@ -16,6 +18,8 @@ This module specializes the one-origin source partition endpoint to the scalar
 response observable.  Its locality and translation covariance are derived
 from the exact-source response API.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

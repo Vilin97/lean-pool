@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Definitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Definitions
-import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionSharpKernel
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Regularity
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCubeTranslation
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionSharpKernel
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Regularity
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCubeTranslation
 
 /-! # Definitions -/
+
+@[expose] public section
 
 open scoped BigOperators ENNReal Pointwise
 

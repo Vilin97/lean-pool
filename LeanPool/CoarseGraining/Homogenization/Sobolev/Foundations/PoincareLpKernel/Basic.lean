@@ -3,16 +3,20 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
-import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareSegment
-import Mathlib.MeasureTheory.Constructions.HaarToSphere
-import Mathlib.MeasureTheory.Function.L1Space.Integrable
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
+public import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareSegment
+public import Mathlib.MeasureTheory.Constructions.HaarToSphere
+public import Mathlib.MeasureTheory.Function.L1Space.Integrable
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-! # Basic -/
+
+@[expose] public section
 
 namespace Homogenization
 

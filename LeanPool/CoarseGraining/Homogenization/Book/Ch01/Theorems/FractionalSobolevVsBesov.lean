@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Definitions
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.BesovLeGagliardo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.GagliardoLeBesov
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CongruenceAE
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.BesovLeGagliardo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.GagliardoLeBesov
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CongruenceAE
 
 /-!
 # Legacy fractional Sobolev versus Besov seminorms (CG Lemma 1.3)
@@ -42,6 +44,8 @@ statement is a.e.-invariant, and a measurable representative is transported
 through `CongruenceAE`).  The `BddAbove` side condition of the infinite-scale
 Besov seminorm is *derived*, not assumed.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

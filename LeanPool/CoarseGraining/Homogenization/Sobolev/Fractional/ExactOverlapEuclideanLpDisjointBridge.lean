@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.PositiveOverlapBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePAveraging
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.PositiveOverlapBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePAveraging
 
 /-!
 # Disjoint-to-exact-overlap finite-`p` bridge
@@ -15,6 +17,8 @@ coarse-graining forcing argument in the disjoint lane.  It compares the
 resulting parent disjoint series to the canonical exact overlap series; it
 does not assert localization of the overlap seminorm itself.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

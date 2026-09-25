@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GlobalLocalization
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.WeakHessianEuclidean
-import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
-import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+
+public import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GlobalLocalization
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.WeakHessianEuclidean
+public import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
+public import Mathlib.MeasureTheory.SpecificCodomains.WithLp
 
 /-! # Weak Hessian Row L2Energy -/
+
+@[expose] public section
 
 namespace Homogenization
 

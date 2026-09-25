@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel.SegmentChangeOfVariables
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.MeasureTheory.Measure.WithDensity
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel.SegmentChangeOfVariables
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Mathlib.MeasureTheory.Measure.WithDensity
 
 /-! # Time Collapse -/
+
+@[expose] public section
 
 namespace Homogenization
 

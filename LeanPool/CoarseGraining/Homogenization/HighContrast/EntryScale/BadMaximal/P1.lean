@@ -3,16 +3,20 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Continuity
-import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.Triangle
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.MomentConsequences.P2
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Continuity
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+public import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.Triangle
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.MomentConsequences.P2
 
 /-! # P1 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal

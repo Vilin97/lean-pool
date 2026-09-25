@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapLp
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardOverlapComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare.W12NormalizedPartition
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapLp
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardOverlapComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare.W12NormalizedPartition
 
 /-!
 # Local normalized `W^{1,2}` Poincare estimate on triadic cubes
@@ -15,6 +17,8 @@ The overlap-cube `H^1` estimate is used only at the middle child of a
 triadic cube.  There its overlap is the original cube, so the estimate has a
 dimension-only constant and the exact normalized open-cube Sobolev carrier.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

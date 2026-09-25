@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Definitions
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.Basic
-import Mathlib.MeasureTheory.Function.StronglyMeasurable.AEStronglyMeasurable
-import Mathlib.MeasureTheory.MeasurableSpace.MeasurablyGenerated
-import Mathlib.MeasureTheory.OuterMeasure.AE
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Definitions
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.Basic
+public import Mathlib.MeasureTheory.Function.StronglyMeasurable.AEStronglyMeasurable
+public import Mathlib.MeasureTheory.MeasurableSpace.MeasurablyGenerated
+public import Mathlib.MeasureTheory.OuterMeasure.AE
 
 /-! # Representatives -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Internal

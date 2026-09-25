@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Stability
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Recombination
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Stability
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Recombination
 
 /-!
 # One-core resampling stability
@@ -28,6 +30,8 @@ comparison replaced by the resampling comparison: instead of comparing `a` with
 We factor out the corridor-independent core as the general lemma
 `abs_coarseObservable_sub_le_of_minimizer`.
 -/
+
+@[expose] public section
 
 open Homogenization
 open MeasureTheory

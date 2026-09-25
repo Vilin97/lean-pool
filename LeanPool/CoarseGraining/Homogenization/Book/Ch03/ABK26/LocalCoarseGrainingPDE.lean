@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingDefinitions
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.Duality
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesComponentwise
-import LeanPool.CoarseGraining.Homogenization.PDE.EnergyIdentities
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ZeroExtensionGraph
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.Duality
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesComponentwise
+public import LeanPool.CoarseGraining.Homogenization.PDE.EnergyIdentities
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ZeroExtensionGraph
 
 /-!
 # Local coarse-graining PDE bridges
@@ -18,6 +20,8 @@ assumption to the internal carriers used by local coarse-graining estimates.
 The public statements retain `CoeffOn`; pointwise coefficient representatives
 are confined to the private bridge to the legacy weak-solution predicate.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

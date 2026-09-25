@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCubeTranslation
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalOriginCubeBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalTranslation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCubeTranslation
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalOriginCubeBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalTranslation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
 
 /-! # Potential Solenoidal Cube Bridge -/
+
+@[expose] public section
 
 namespace Homogenization
 

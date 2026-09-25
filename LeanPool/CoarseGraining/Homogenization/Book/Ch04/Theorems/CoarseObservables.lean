@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DeterministicIdentities
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.CoeffFamily
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Mu
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.CoarseObservableMeasurability.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DeterministicIdentities
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.CoeffFamily
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Mu
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.CoarseObservableMeasurability.Basic
 
 /-! # Coarse Observables -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

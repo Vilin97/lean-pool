@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CenteredCubeHsRegularity
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CenteredCubeHsRegularity
 
 /-!
 # The exact `p = 2` Euclidean fractional full-norm bridge
@@ -15,6 +17,8 @@ cube with the established physical centered-cube Euclidean `H^s` seminorm.
 Their full norms differ only by the elementary comparison between
 `sqrt (A^2 + B^2)` and `A + B`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

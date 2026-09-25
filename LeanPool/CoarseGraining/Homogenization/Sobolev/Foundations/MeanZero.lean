@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.Domain
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.Domain
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra
 
 /-! # Mean Zero -/
+
+@[expose] public section
 
 namespace Homogenization
 

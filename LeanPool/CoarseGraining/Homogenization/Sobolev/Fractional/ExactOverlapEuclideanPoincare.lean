@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapDefinitions
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapEuclidean
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
+
+public import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapEuclidean
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
 
 /-!
 # Fractional Poincare estimate from the exact overlap norm
@@ -17,6 +19,8 @@ the normalized `L²` fluctuation on the root cube.  Combining this observation
 coordinatewise with the Hilbert-valued `L²` triangle inequality proves the
 fractional Poincare estimate directly, without importing a Sobolev embedding.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

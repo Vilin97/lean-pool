@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.PeriodicGeneralComparison
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.PeriodicGeneralComparison
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 /-!
 # A concrete periodic scalar coefficient field
@@ -17,6 +19,8 @@ periodic, isotropic, adjoint-invariant, and uniformly elliptic (`λ = 2`,
 `PeriodicConcreteComparison` (and, through it, `PeriodicSmoothComparison`) to
 instantiate the periodic comparison corollary.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Examples

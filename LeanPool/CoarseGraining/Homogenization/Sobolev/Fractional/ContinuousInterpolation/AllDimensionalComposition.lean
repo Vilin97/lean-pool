@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.PositiveDimensionalComposition
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.MeasurableRepresentative
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ZeroDimensionalClosure
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.PositiveDimensionalComposition
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.MeasurableRepresentative
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ZeroDimensionalClosure
 
 /-!
 # All-dimensional composition of sampled continuous K and Euclidean energies
@@ -15,6 +17,8 @@ This module removes the positive-dimension and measurability hypotheses from
 the energy comparisons.  Dimension zero is closed exactly, while positive
 dimensions use the chosen measurable representative.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

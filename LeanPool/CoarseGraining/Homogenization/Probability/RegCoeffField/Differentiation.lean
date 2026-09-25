@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Sigma
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.EllipticSet
-import Mathlib.MeasureTheory.Covering.DensityTheorem
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.Analysis.Convex.Integral
-import Mathlib.MeasureTheory.SpecificCodomains.Pi
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Sigma
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.EllipticSet
+public import Mathlib.MeasureTheory.Covering.DensityTheorem
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import Mathlib.Analysis.Convex.Integral
+public import Mathlib.MeasureTheory.SpecificCodomains.Pi
 
 /-!
 # Ball averages of carrier fields and Lebesgue differentiation
@@ -42,6 +44,8 @@ spatial a.e. ellipticity in terms of rational-ball averages:
 
 Reference: the paper (Armstrong–Kuusi–Loher, to appear).
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Corridor-width optimization (rpow algebra)
@@ -27,6 +29,8 @@ The `rpow` algebra (`exists_optimal_width`) is separated from the numeric
 regime combination (`scalar_opt`) so each declaration elaborates at default
 heartbeats.  No probability appears.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

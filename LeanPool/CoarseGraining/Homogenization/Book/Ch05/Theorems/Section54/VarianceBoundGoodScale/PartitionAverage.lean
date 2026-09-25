@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.FiniteNet
-import Mathlib.LinearAlgebra.Matrix.Bilinear
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.FiniteNet
+public import Mathlib.LinearAlgebra.Matrix.Bilinear
 
 /-! # Partition Average -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

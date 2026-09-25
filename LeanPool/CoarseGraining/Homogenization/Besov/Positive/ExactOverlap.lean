@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Multiscale.OverlapLp
+
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.OverlapLp
 
 /-!
 # Exact overlapping positive-order Besov kernel
@@ -14,6 +16,8 @@ definition.  A natural depth `j` represents the manuscript scale
 `n = Q.scale - j`; thus all `n ∈ (-∞, Q.scale]` occur exactly once.  The
 overlapping centers are `ScalarOverlap.centersAtDepth Q j`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

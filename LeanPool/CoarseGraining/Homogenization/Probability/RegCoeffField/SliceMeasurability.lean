@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Differentiation
-import LeanPool.CoarseGraining.Homogenization.Probability.LocalEllipticitySlices
-import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeBoundaryPush
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Differentiation
+public import LeanPool.CoarseGraining.Homogenization.Probability.LocalEllipticitySlices
+public import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeBoundaryPush
 
 /-!
 # Genuine `LocalSigmaR`-measurability of the AEE quantitative-slice event
@@ -35,6 +37,8 @@ consumer's cube.
 
 Reference: the paper (Armstrong–Kuusi–Loher, to appear).
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

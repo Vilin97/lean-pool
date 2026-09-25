@@ -3,19 +3,23 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Adapters
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Existence
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.FirstVariation
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientUniqueness
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientLinearity
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Quadraticity
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixExtraction
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixPositivity
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.BasicVariationalIdentities
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledMu
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.BlockCoarseMatrix
+
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Adapters
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Existence
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.FirstVariation
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientUniqueness
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientLinearity
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Quadraticity
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixExtraction
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixPositivity
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.BasicVariationalIdentities
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledMu
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.BlockCoarseMatrix
 
 /-! # Ch02 -/
+
+@[expose] public section

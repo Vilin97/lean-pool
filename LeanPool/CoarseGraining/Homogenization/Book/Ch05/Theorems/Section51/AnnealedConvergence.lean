@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.ExponentAbsorption
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.ExponentAbsorption
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay
 
 /-! # Annealed Convergence -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

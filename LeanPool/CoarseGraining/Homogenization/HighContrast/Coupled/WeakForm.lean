@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.Sandwich
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Hodge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.OriginCubeBridge
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.MatrixIdentities
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.Sandwich
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Hodge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.OriginCubeBridge
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.MatrixIdentities
 
 /-!
 # Coupled representation: weak-form definition and algebraic scaffolding
@@ -19,6 +21,8 @@ existence package in `Coupled/Representation.lean`.
 All coefficients act on `Vec d = Fin d → ℝ`; no `EuclideanSpace`.  The file is
 deliberately factored into small named lemmas.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

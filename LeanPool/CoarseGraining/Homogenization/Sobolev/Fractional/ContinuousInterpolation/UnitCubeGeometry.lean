@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
-import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeMeasureBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.UnitCubeEuclideanL2
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
+public import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeMeasureBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.UnitCubeEuclideanL2
 
 /-!
 # Geometry of the unit centered cube for continuous interpolation
@@ -16,6 +18,8 @@ the exact continuous interpolation theorem.  The analytic domain is the open
 centered unit cube; the normalized measure retains the canonical half-open
 cube carrier.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

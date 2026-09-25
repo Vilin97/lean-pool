@@ -3,12 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Algebra.Module.BigOperators
-import Mathlib.Algebra.Module.NatInt
-import Mathlib.Data.Real.Basic
+
+public import Mathlib.Algebra.GroupWithZero.Action.Units
+public import Mathlib.Algebra.Module.BigOperators
+public import Mathlib.Algebra.Module.NatInt
+public import Mathlib.Data.Real.Basic
 
 /-! # Finite Average -/
+
+@[expose] public section
 
 namespace Homogenization
 

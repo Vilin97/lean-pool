@@ -3,20 +3,24 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticityDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BasicVariationalIdentities
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixOperatorNorm
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixPositivity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.Existence
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup.UniformBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ.ChangeOfQ
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ.ScaleBounds
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Adapters
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
-import Mathlib.Analysis.Complex.ExponentialBounds
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticityDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BasicVariationalIdentities
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixOperatorNorm
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixPositivity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.Existence
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup.UniformBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ.ChangeOfQ
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ.ScaleBounds
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Adapters
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
+public import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-! # Basic -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

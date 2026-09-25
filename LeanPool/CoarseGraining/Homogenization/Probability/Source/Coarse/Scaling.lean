@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Laws
-import LeanPool.CoarseGraining.Homogenization.Probability.RescaledLaw
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Laws
+public import LeanPool.CoarseGraining.Homogenization.Probability.RescaledLaw
 
 /-!
 # Triadic scaling of the exact coarse source carrier
@@ -14,6 +16,8 @@ This module keeps the source-side rescaling kernel independent of the regular
 carrier.  The normalized action is the pullback `a ↦ (x ↦ a (3^k x))`; hence a
 local observable on `U` pulls back to information on `3^k U`.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Source.Coarse
 

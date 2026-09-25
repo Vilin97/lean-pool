@@ -3,20 +3,24 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockCoarseMatrixDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledResponse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MagicIdentities
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixPositivity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SubadditivityScaling
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledMu
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.BasicAdjoint
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.SigmaAdjoint
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticWrappers
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.Basics
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockCoarseMatrixDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledResponse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MagicIdentities
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixPositivity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SubadditivityScaling
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledMu
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.BasicAdjoint
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.SigmaAdjoint
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticWrappers
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.Basics
 
 /-! # Block Coarse Matrix -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,16 +3,20 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CircDomination
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.CaccioppoliBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Projection
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectionLimit
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.VectorProduct
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.NoteConstants
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesQTwo
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CircDomination
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.CaccioppoliBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Projection
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectionLimit
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.VectorProduct
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.NoteConstants
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesQTwo
 
 /-! # Projection Tests -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

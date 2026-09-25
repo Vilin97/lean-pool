@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ConvexApproxGagliardoSmoothing
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.PointwiseBounds
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ConvexApproxGagliardoSmoothing
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.PointwiseBounds
 
 /-!
 # Finite-`p` bounds for diagonal Gagliardo smoothing
@@ -13,6 +15,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.
 This module begins the measure-transport layer needed to turn the diagonal
 Jensen estimate into an unconditional fractional-kernel bound.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

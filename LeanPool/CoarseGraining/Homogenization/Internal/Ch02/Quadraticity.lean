@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.QuadraticityDefinitions
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientLinearity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas.BasicVariation
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.QuadraticityDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientLinearity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas.BasicVariation
 
 /-! # Quadraticity -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Internal

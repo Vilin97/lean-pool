@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Dilation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Translation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInterior
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCubeTranslation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientIterationGeometry
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Dilation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Translation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInterior
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCubeTranslation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientIterationGeometry
 
 /-! # Axis Cube Harmonic Covariance -/
+
+@[expose] public section
 
 namespace Homogenization
 

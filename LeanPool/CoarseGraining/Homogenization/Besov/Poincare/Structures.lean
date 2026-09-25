@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.GlobalComparison
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.Field.GeomSum
-import Mathlib.Analysis.MeanInequalities
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.GlobalComparison
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.Field.GeomSum
+public import Mathlib.Analysis.MeanInequalities
 
 /-! # Structures -/
+
+@[expose] public section
 
 namespace Homogenization
 

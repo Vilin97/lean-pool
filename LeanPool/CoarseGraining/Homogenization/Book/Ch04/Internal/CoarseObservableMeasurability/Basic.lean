@@ -3,17 +3,21 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockMatrixProperties
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Translation
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
-import LeanPool.CoarseGraining.Homogenization.Geometry.ScaleColoring
-import LeanPool.CoarseGraining.Homogenization.Probability.LocalObservable
-import Mathlib.Analysis.Matrix.Normed
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.MeasureTheory.SpecificCodomains.Pi
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockMatrixProperties
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Translation
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
+public import LeanPool.CoarseGraining.Homogenization.Geometry.ScaleColoring
+public import LeanPool.CoarseGraining.Homogenization.Probability.LocalObservable
+public import Mathlib.Analysis.Matrix.Normed
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Mathlib.MeasureTheory.SpecificCodomains.Pi
 
 /-! # Basic -/
+
+@[expose] public section
 
 open scoped Matrix.Norms.Elementwise
 

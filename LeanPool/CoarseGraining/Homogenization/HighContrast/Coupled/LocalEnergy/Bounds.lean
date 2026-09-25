@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Identity
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Identity
 
 /-!
 # Local block energy: the bulk and cutoff estimates
@@ -19,6 +21,8 @@ absorbed against the energy density, following `e.local.block.bulk` and
 
 where `M² = Θ|p|² + |q|²`.  No `EuclideanSpace`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

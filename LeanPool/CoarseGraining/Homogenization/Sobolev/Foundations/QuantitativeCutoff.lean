@@ -3,16 +3,20 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Ball
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Cube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.DerivativeBounds
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Profile
-import LeanPool.CoarseGraining.Homogenization.Sobolev.WeakDerivatives
-import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Ball
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Cube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.DerivativeBounds
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Profile
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.WeakDerivatives
+public import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
 
 /-! # Quantitative Cutoff -/
+
+@[expose] public section
 
 noncomputable section
 

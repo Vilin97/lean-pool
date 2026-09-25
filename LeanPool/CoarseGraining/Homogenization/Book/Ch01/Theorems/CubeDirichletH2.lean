@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Definitions
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2
 
 /-!
 # Legacy Chapter 1 Dirichlet compatibility facade
@@ -18,6 +20,8 @@ Its former final fractional facade has not passed the continuum `K`/`Hˢ` gate,
 so none of these declarations is a source-facing formulation of the
 manuscript's classical-input statements.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

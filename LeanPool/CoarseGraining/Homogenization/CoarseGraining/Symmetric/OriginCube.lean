@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.DeterministicCoarseData
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.Bracketing
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.CompletedSquare
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.DeterministicCoarseData
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.Bracketing
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.CompletedSquare
 
 /-! # Origin Cube -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScalePairTwoBranch
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentUnion
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentBoundsTop
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScalePairTwoBranch
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentUnion
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentBoundsTop
 
 /-! # Bad Scale Pair Collapse -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

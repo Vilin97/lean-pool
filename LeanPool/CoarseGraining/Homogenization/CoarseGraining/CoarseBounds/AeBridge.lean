@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Definitions
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Definitions
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 
 /-! # Ae Bridge -/
+
+@[expose] public section
 
 namespace Homogenization
 

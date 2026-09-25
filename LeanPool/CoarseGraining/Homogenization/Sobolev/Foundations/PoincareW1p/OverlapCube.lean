@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Dilation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Translation
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Dilation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Translation
 
 /-! # Overlap Cube -/
+
+@[expose] public section
 
 namespace Homogenization
 

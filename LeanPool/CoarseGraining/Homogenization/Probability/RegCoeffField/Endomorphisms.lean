@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.EllipticSet
-import LeanPool.CoarseGraining.Homogenization.Probability.RandomField
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.EllipticSet
+public import LeanPool.CoarseGraining.Homogenization.Probability.RandomField
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-!
 # Carrier endomorphisms
@@ -32,6 +34,8 @@ at that declaration).
 
 Reference: the paper (Armstrong–Kuusi–Loher, to appear).
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

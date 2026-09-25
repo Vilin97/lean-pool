@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalCZ
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalCZ
 
 /-!
 # Full-norm fractional Calderón--Zygmund estimate on centered cubes
@@ -14,6 +16,8 @@ combine into the source-facing inhomogeneous fractional-Sobolev estimate.
 The combination is carried out at the powered full norm, so its constant is
 uniform in the cube, fractional order, and coefficient scale.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

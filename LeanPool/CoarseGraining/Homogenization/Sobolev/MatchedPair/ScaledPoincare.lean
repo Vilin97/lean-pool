@@ -3,16 +3,20 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Dilation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Translation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareZeroTrace
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.MeanZero
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Dilation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Translation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareZeroTrace
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.MeanZero
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.Basic
 
 /-! # Scaled Poincare -/
+
+@[expose] public section
 
 namespace Homogenization
 

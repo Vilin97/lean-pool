@@ -3,18 +3,22 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Definitions
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Euclidean
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Seminorms
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.Basic
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.MeasureTheory.Measure.OpenPos
-import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Euclidean
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Seminorms
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.MeasureTheory.Measure.OpenPos
+public import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
 
 /-! # Mean Square Deviation -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

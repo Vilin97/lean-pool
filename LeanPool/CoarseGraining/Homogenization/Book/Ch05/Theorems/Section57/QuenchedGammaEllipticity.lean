@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Definitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.P4Integrability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.PositiveExcessLowerAndIntegrability.UnitDescendantSup
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.BlockResponseConcentration
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.P4Integrability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.PositiveExcessLowerAndIntegrability.UnitDescendantSup
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.BlockResponseConcentration
 
 /-! # Quenched Gamma Ellipticity -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpBelowTwo
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpBelowTwo
 
 /-!
 # Finite-exponent gradient membership for fractional divergence data
@@ -13,6 +15,8 @@ This file packages the supplied-solution Calderón--Zygmund estimate as a
 literal normalized-cube `L^q` membership witness for the given `H¹₀`
 gradient.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

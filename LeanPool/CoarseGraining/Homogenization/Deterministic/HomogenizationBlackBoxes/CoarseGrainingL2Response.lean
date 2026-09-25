@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.NoteConstants
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.NoteConstants
 
 /-! # Coarse Graining L2Response -/
+
+@[expose] public section
 
 namespace Homogenization
 

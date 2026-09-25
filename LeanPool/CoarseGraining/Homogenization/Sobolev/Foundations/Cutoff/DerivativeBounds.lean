@@ -3,20 +3,24 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.Basic
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Euclidean
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Profile
-import LeanPool.CoarseGraining.Homogenization.Sobolev.WeakDerivatives
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Analysis.Calculus.ContDiff.Bounds
-import Mathlib.Analysis.Calculus.ContDiff.Operations
-import Mathlib.Analysis.Calculus.Deriv.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Pow
-import Mathlib.Analysis.Calculus.FDeriv.Add
-import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.Basic
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Euclidean
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Profile
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.WeakDerivatives
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.Bounds
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Pow
+public import Mathlib.Analysis.Calculus.FDeriv.Add
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
 
 /-! # Derivative Bounds -/
+
+@[expose] public section
 
 noncomputable section
 

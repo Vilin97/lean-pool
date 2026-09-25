@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
 
 /-!
 # Euclidean fractional Sobolev core
@@ -13,6 +15,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
 The exact Chapter 3 Euclidean `W^(s,p)` kernel and full power norm on a
 triadic cube.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

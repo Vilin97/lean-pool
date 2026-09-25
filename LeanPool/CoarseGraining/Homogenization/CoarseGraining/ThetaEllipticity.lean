@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.EllipticBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Block
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Law
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.EllipticBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Block
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Law
 
 /-! # Theta Ellipticity -/
+
+@[expose] public section
 
 namespace Homogenization
 

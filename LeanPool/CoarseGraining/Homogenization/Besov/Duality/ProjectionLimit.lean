@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.WrapperComparison
-import LeanPool.CoarseGraining.Homogenization.Multiscale.ProjectionConvergence
-import Mathlib.MeasureTheory.Function.ContinuousMapDense
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Measure.MeasureSpace
-import Mathlib.Order.Filter.AtTopBot.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.WrapperComparison
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.ProjectionConvergence
+public import Mathlib.MeasureTheory.Function.ContinuousMapDense
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Measure.MeasureSpace
+public import Mathlib.Order.Filter.AtTopBot.Basic
 
 /-! # Projection Limit -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.ParentTruncatedHomogenizationError
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.AEEq
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.Finite
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.ParentTruncatedHomogenizationError
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.AEEq
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.Finite
 
 /-! # Local Coarse Graining Response -/
+
+@[expose] public section
 
 open scoped BigOperators ENNReal MatrixOrder Matrix.Norms.Frobenius
 

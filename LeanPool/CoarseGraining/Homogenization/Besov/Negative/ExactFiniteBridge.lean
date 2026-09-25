@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectionLimit
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCirc
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactDual
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectionLimit
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCirc
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactDual
 
 /-!
 # Finite projected-pairing bridges for the exact Chapter 1 kernels
@@ -17,6 +19,8 @@ ordinary descendant-block means, and parent-to-block integrability transport.
 They deliberately do not identify the extended exact aggregations with the
 legacy real-valued partial norms.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

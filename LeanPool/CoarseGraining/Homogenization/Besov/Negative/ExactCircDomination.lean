@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDominationFinite
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDominationQOne
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDominationTop
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDominationFinite
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDominationQOne
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDominationTop
 
 /-!
 # Exact circ domination of the dual negative Besov kernels
@@ -16,6 +18,8 @@ dual-to-circ comparison.  It also records that the depth-zero circ weight in
 the full-norm bounds is literally the manuscript factor `3^(s m)`, with
 `m = Q.scale`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

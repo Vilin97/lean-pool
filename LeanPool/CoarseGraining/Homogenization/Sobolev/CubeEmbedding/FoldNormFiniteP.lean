@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldNorm
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldNorm
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
 
 /-!
 # Finite-`p` norm transport under the even fold
@@ -14,6 +16,8 @@ This module upgrades the exact `L²` transport in `FoldNorm` to every finite
 exponent used by the `W^{1,p}` development.  The measure transport itself
 remains `lintegral_foldComp`; only the outer `p`-th root is new here.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

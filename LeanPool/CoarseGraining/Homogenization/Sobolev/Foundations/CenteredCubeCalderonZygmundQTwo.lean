@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.EuclideanNormalized
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.EuclideanNormalized
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.EuclideanNormalized
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.EuclideanNormalized
 
 /-!
 # The common centered-cube Calderón--Zygmund `q = 2` constant
@@ -15,6 +17,8 @@ classical inputs.  It deliberately concerns only centered triadic cubes and
 the presently formalized `q = 2` case.  The same dimension-only constant is
 used for its Dirichlet and mean-zero Neumann branches.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

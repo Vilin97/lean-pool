@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePAveraging
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.OverlapCubeVectorNormalized
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePAveraging
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.OverlapCubeVectorNormalized
 
 /-!
 # Finite-`p` overlap Poincaré assembly at one depth
@@ -14,6 +16,8 @@ This module assembles the normalized vector overlap-cube Poincaré estimate
 over one retained depth.  All constants are chosen before the cube, depth,
 and vector field.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

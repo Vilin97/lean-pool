@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.OverlapCount
-import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.OverlapCount
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 
 /-!
 # Overlap-counting integral bound (U3)
@@ -14,6 +16,8 @@ Summing set-lintegrals over the enlarged cubes of a depth-`j` center family
 costs at most the bounded-overlap constant `3^d` times one set-lintegral over
 the parent product cube.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Gagliardo

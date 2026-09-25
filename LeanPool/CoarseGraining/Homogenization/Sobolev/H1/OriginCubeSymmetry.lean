@@ -3,16 +3,20 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.OriginCubeSymmetry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
-import Mathlib.Analysis.Calculus.FDeriv.Equiv
-import Mathlib.Dynamics.Ergodic.MeasurePreserving
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.Topology.Algebra.Module.Equiv
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.OriginCubeSymmetry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
+public import Mathlib.Analysis.Calculus.FDeriv.Equiv
+public import Mathlib.Dynamics.Ergodic.MeasurePreserving
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.Topology.Algebra.Module.Equiv
 
 /-! # Origin Cube Symmetry -/
+
+@[expose] public section
 
 namespace Homogenization
 
@@ -185,7 +189,10 @@ theorem setIntegral_comp_signFlipVecContinuousLinearEquiv_openCubeSet_originCube
       ∂MeasureTheory.volume =
       ∫ x in openCubeSet (originCube d n), f x ∂MeasureTheory.volume := by
   let U := openCubeSet (originCube d n)
-  let hμ := measurePreserving_signFlipVecContinuousLinearEquiv_restrict_openCubeSet_originCube i n
+  have hμ : MeasureTheory.MeasurePreserving (signFlipVecContinuousLinearEquiv i)
+      (MeasureTheory.volume.restrict (openCubeSet (originCube d n)))
+      (MeasureTheory.volume.restrict (openCubeSet (originCube d n))) := by
+    exact measurePreserving_signFlipVecContinuousLinearEquiv_restrict_openCubeSet_originCube i n
   simpa [U] using
     (hμ.integral_comp (signFlipVecContinuousLinearEquiv i).toHomeomorph.measurableEmbedding f)
 
@@ -195,7 +202,10 @@ theorem setIntegral_comp_swapVecContinuousLinearEquiv_openCubeSet_originCube
       ∂MeasureTheory.volume =
       ∫ x in openCubeSet (originCube d n), f x ∂MeasureTheory.volume := by
   let U := openCubeSet (originCube d n)
-  let hμ := measurePreserving_swapVecContinuousLinearEquiv_restrict_openCubeSet_originCube i j n
+  have hμ : MeasureTheory.MeasurePreserving (swapVecContinuousLinearEquiv i j)
+      (MeasureTheory.volume.restrict (openCubeSet (originCube d n)))
+      (MeasureTheory.volume.restrict (openCubeSet (originCube d n))) := by
+    exact measurePreserving_swapVecContinuousLinearEquiv_restrict_openCubeSet_originCube i j n
   simpa [U] using
     (hμ.integral_comp (swapVecContinuousLinearEquiv i j).toHomeomorph.measurableEmbedding f)
 
@@ -323,7 +333,10 @@ noncomputable def signFlipOnOpenCubeSetOriginCube {d : ℕ} {n : ℤ}
     H1Function (openCubeSet (originCube d n)) := by
   let U : Set (Vec d) := openCubeSet (originCube d n)
   let T : Vec d → Vec d := signFlipVecContinuousLinearEquiv i
-  let hμ := measurePreserving_signFlipVecContinuousLinearEquiv_restrict_openCubeSet_originCube i n
+  have hμ : MeasureTheory.MeasurePreserving (signFlipVecContinuousLinearEquiv i)
+      (MeasureTheory.volume.restrict (openCubeSet (originCube d n)))
+      (MeasureTheory.volume.restrict (openCubeSet (originCube d n))) := by
+    exact measurePreserving_signFlipVecContinuousLinearEquiv_restrict_openCubeSet_originCube i n
   refine
     { toFun := fun x => u (T x)
       grad := fun x => signFlipVecContinuousLinearEquiv i (u.grad (T x))
@@ -421,7 +434,10 @@ noncomputable def swapOnOpenCubeSetOriginCube {d : ℕ} {n : ℤ}
     H1Function (openCubeSet (originCube d n)) := by
   let U : Set (Vec d) := openCubeSet (originCube d n)
   let T : Vec d → Vec d := swapVecContinuousLinearEquiv i j
-  let hμ := measurePreserving_swapVecContinuousLinearEquiv_restrict_openCubeSet_originCube i j n
+  have hμ : MeasureTheory.MeasurePreserving (swapVecContinuousLinearEquiv i j)
+      (MeasureTheory.volume.restrict (openCubeSet (originCube d n)))
+      (MeasureTheory.volume.restrict (openCubeSet (originCube d n))) := by
+    exact measurePreserving_swapVecContinuousLinearEquiv_restrict_openCubeSet_originCube i j n
   refine
     { toFun := fun x => u (matVecMul (Matrix.swap ℝ i j) x)
       grad := fun x => matVecMul (Matrix.swap ℝ i j) (u.grad (matVecMul (Matrix.swap ℝ i j) x))
@@ -516,7 +532,10 @@ noncomputable def signFlipOnOpenCubeSetOriginCube {d : ℕ} {n : ℤ}
     H10Function (openCubeSet (originCube d n)) := by
   let U : Set (Vec d) := openCubeSet (originCube d n)
   let T : Vec d → Vec d := signFlipVecContinuousLinearEquiv i
-  let hμ := measurePreserving_signFlipVecContinuousLinearEquiv_restrict_openCubeSet_originCube i n
+  have hμ : MeasureTheory.MeasurePreserving (signFlipVecContinuousLinearEquiv i)
+      (MeasureTheory.volume.restrict (openCubeSet (originCube d n)))
+      (MeasureTheory.volume.restrict (openCubeSet (originCube d n))) := by
+    exact measurePreserving_signFlipVecContinuousLinearEquiv_restrict_openCubeSet_originCube i n
   refine
     { toH1Function := u.toH1Function.signFlipOnOpenCubeSetOriginCube i
       approx := fun m x => u.approx m (T x)
@@ -692,7 +711,10 @@ noncomputable def swapOnOpenCubeSetOriginCube {d : ℕ} {n : ℤ}
     H10Function (openCubeSet (originCube d n)) := by
   let U : Set (Vec d) := openCubeSet (originCube d n)
   let T : Vec d → Vec d := swapVecContinuousLinearEquiv i j
-  let hμ := measurePreserving_swapVecContinuousLinearEquiv_restrict_openCubeSet_originCube i j n
+  have hμ : MeasureTheory.MeasurePreserving (swapVecContinuousLinearEquiv i j)
+      (MeasureTheory.volume.restrict (openCubeSet (originCube d n)))
+      (MeasureTheory.volume.restrict (openCubeSet (originCube d n))) := by
+    exact measurePreserving_swapVecContinuousLinearEquiv_restrict_openCubeSet_originCube i j n
   refine
     { toH1Function := u.toH1Function.swapOnOpenCubeSetOriginCube i j
       approx := fun m x => u.approx m (T x)

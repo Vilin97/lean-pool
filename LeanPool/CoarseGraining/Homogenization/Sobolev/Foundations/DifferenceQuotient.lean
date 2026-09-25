@@ -3,16 +3,20 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.EuclideanL2CZ
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpSmooth
-import Mathlib.Analysis.Convex.Integral
-import Mathlib.Analysis.Convex.Mul
-import Mathlib.MeasureTheory.Integral.IntervalAverage
-import Mathlib.MeasureTheory.Integral.Prod
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.EuclideanL2CZ
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpSmooth
+public import Mathlib.Analysis.Convex.Integral
+public import Mathlib.Analysis.Convex.Mul
+public import Mathlib.MeasureTheory.Integral.IntervalAverage
+public import Mathlib.MeasureTheory.Integral.Prod
 
 /-! # Difference Quotient -/
+
+@[expose] public section
 
 namespace Homogenization
 

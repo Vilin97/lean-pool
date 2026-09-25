@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingNegativeAssembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingOneCube
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingForcing
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingResponseOrder
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingAssemblyAlgebra
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingNegativeAssembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingOneCube
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingForcing
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingResponseOrder
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingAssemblyAlgebra
 
 /-!
 # Local finite-`p` coarse-graining assembly
@@ -18,6 +20,8 @@ coarse-graining theorem.  The reusable input modules deliberately keep the
 negative-series expansion, descendant restriction, response localization, and
 forcing summation separate; this file only combines those literal carriers.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

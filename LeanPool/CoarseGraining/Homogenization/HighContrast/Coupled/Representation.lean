@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.WeakForm
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CubeMinimizer
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.WeakForm
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CubeMinimizer
 
 /-!
 # Coupled representation (Proposition 3.1, existence direction)
@@ -24,6 +26,8 @@ in `Coupled/WeakForm.lean`.  This file assembles the existence package `G1`:
 
 Vectors are `Vec d = Fin d → ℝ`; no `EuclideanSpace`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidal
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.OriginCubeBridge
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidal
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.OriginCubeBridge
+public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
 
 /-! # Potential Solenoidal Origin Cube Bridge -/
+
+@[expose] public section
 
 namespace Homogenization
 

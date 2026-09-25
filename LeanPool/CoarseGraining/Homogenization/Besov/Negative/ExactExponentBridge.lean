@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCirc
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactDual
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCirc
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactDual
 
 /-!
 # Exponent and coefficient bridges for exact Besov duality
@@ -14,6 +16,8 @@ This module contains only arithmetic and parameter-carrier bridges.  In
 particular, it does not compare an extended exact seminorm with a legacy
 real-valued wrapper.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

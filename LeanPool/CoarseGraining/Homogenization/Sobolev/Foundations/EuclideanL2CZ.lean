@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
-import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 
 /-! # Euclidean L2CZ -/
+
+@[expose] public section
 
 namespace Homogenization
 

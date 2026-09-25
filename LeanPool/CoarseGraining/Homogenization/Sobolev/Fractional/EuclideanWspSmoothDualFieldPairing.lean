@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDensity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCompletedDualExtension
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpBelowTwo
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDensity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCompletedDualExtension
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpBelowTwo
 
 /-!
 # Smooth-dual pairing with actual fractional Sobolev fields
@@ -14,6 +16,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZy
 This module closes the smooth-test dual pairing against an actual fractional
 Sobolev field which also has the required `L²` representative.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

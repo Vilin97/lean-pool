@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ContinuousKRegularity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Dilation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanH2
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ContinuousKRegularity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Dilation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanH2
 
 /-!
 # Centered-cube transport for the Dirichlet divergence problem
@@ -30,6 +32,8 @@ pullback of the physical gradient.
 - `unitCubeGradientEuclideanL2Field_normalizedPullback_apply`: compatibility
   of the unit gradient carrier with centered-cube field pullback.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

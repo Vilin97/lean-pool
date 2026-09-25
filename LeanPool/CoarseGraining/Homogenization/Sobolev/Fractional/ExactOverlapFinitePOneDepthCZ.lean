@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePAveraging
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePDepthTriangle
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePGlobalBound
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePPDESplitting
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePPoincareDepth
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.OverlapCubeVectorNormalized
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePAveraging
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePDepthTriangle
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePGlobalBound
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePPDESplitting
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePPoincareDepth
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.OverlapCubeVectorNormalized
 
 /-!
 # One-depth finite-`p` Calderon--Zygmund overlap estimate
@@ -18,6 +20,8 @@ This is the one-depth analytic closure: the exact overlap energy of the
 gradient of a cube Dirichlet divergence solution is controlled by that of its
 datum, uniformly in the root scale and overlap depth.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

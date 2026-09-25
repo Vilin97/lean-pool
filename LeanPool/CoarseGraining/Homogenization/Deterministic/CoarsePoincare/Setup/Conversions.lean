@@ -3,19 +3,23 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces
-import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedNorms
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Existence
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas
-import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicCube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.HodgeCubeBridge
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedNorms
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Existence
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas
+public import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicCube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.HodgeCubeBridge
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
 
 /-! # Conversions -/
+
+@[expose] public section
 
 namespace Homogenization
 

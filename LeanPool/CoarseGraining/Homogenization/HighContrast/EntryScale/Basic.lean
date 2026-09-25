@@ -3,6 +3,8 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
+
 
 /-!
 # Basic metadata for the entry-scale assembly
@@ -11,6 +13,8 @@ This file contains only source-control metadata for the development.
 Mathematical theorem statements should be introduced only after their source
 labels and dependency role are recorded.
 -/
+
+@[expose] public section
 
 namespace Homogenization.HighContrast.EntryScale
 

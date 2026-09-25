@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CircDomination
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.CaccioppoliBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CircDomination
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.CaccioppoliBridge
 
 /-!
 # Legacy Chapter 1 Besov pairing helpers
@@ -14,6 +16,8 @@ This module contains only restricted `p = 2` totalized-real, disjoint-cube
 compatibility helpers. They are not exact source pairing theorems and are
 available only in `Book.Ch01.Legacy`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

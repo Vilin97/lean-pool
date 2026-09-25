@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.MeanZero
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidal
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.MeanZero
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidal
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
 
 /-! # Harmonic -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Restriction
-import Mathlib.Probability.Independence.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Restriction
+public import Mathlib.Probability.Independence.Basic
 
 /-!
 # Structural laws on the carrier
@@ -30,6 +32,8 @@ we record the corresponding integral/integrable transfer lemmas.
 
 Reference: the paper (Armstrong–Kuusi–Loher, to appear).
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

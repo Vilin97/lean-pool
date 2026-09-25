@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLaw
-import Mathlib.MeasureTheory.Constructions.Pi
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLaw
+public import Mathlib.MeasureTheory.Constructions.Pi
 
 /-!
 # Exact coarse-source local observables
@@ -13,6 +15,8 @@ import Mathlib.MeasureTheory.Constructions.Pi
 Locality in this file is measurability for the coarse source's integral-only
 sigma algebra.  It is intentionally separate from restriction locality.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

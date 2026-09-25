@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapScalarP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.BesovLeGagliardo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.GagliardoLeBesov
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapScalarP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.BesovLeGagliardo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.GagliardoLeBesov
 
 /-!
 # Exact scalar overlap comparison at arbitrary finite exponent
@@ -14,6 +16,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.GagliardoLeBeso
 This module transports the established finite-depth scalar overlap estimates
 to the exact diagonal overlap seminorm through its exact `p`-power identity.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

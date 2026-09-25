@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.ExistenceDefinitions
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Existence
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Adapters
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.ExistenceDefinitions
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Existence
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Adapters
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
 
 /-! # Existence -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Internal

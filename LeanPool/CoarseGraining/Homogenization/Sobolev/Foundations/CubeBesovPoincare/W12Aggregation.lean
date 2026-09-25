@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Projection
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.PositiveBesovCore
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Projection
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.PositiveBesovCore
 
 /-!
 # Finite positive Besov aggregation
@@ -14,6 +16,8 @@ This is the scale-cancellation step from a local cube Poincare estimate to a
 finite `B¹_{2,∞}` seminorm bound.  It contains no analytic input beyond the
 explicit local oscillation and normalized descendant-energy hypotheses.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

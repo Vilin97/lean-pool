@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.RootScaleControl
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.RootScaleControl
 
 /-!
 # Closure of the continuum and sampled continuous K energies
@@ -12,6 +14,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInter
 This module reinserts the root triadic sample into the lower continuum-series
 comparison, without applying any real-valued totalization to the energies.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

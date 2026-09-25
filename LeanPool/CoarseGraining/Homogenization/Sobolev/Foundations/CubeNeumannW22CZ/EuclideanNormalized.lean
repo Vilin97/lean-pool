@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.WeakHessianEuclidean
-import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedDomainCube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.NormalizedLp
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.WeakHessianEuclidean
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedDomainCube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.NormalizedLp
 
 /-! # Euclidean Normalized -/
+
+@[expose] public section
 
 namespace Homogenization
 

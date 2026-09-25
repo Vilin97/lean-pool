@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Definitions
-import LeanPool.CoarseGraining.Homogenization.Probability.LocalEllipticitySlices
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Laws
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SliceMeasurability
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Probability.LocalEllipticitySlices
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Laws
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SliceMeasurability
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 
 /-! # Restriction Law -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

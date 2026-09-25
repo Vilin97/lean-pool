@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.H1GradientUpgrade
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationWeakGradient
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.H1GradientUpgrade
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationWeakGradient
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
 
 /-!
 # Upgrading zero-trace `H¹` witnesses from finite-`p` gradients
@@ -16,6 +18,8 @@ An `H¹₀` witness whose weak gradient has finite `L^p` control belongs to
 `W^{1,p}_0` on every bounded open convex domain.  The zero-trace approximation
 is constructed internally by inwardly mollifying the global zero extension.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

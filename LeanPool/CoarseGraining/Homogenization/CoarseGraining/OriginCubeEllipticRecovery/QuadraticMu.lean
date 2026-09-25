@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.Existence
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.Existence
 
 /-!
 # Origin-cube elliptic recovery -- quadraticity of Mu on the centered cube
@@ -14,6 +16,8 @@ centered open cube packaged from recovery data, existence of coarse block
 matrices, and the HasOriginCubeResponseJ\{Block,PureFlux,PureGradient\}QuadraticDataAtScale
 structures and their construction from hasQuadraticMu.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

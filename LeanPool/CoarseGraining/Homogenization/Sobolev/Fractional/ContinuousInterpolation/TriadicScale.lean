@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousKFunctional
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousKFunctional
 
 /-!
 # Triadic scale calculus for the continuous `K`-functional
@@ -15,6 +17,8 @@ samples.  The intervals use `(t_{j+1}, t_j] ∩ (0,1)`: this makes them disjoint
 and removes the endpoint at which the open-scale representative is totalized
 to zero.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

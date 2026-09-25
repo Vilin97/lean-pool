@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Correctors
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Correctors
 
 /-!
 # Coarse Poincare with right-hand side
@@ -15,3 +17,5 @@ The recurrence and note-facing theorem files live under
 `CoarsePoincareRHSLocalRecurrence.lean` until the Caccioppoli bridge import can be
 retargeted without creating an import cycle.
 -/
+
+@[expose] public section

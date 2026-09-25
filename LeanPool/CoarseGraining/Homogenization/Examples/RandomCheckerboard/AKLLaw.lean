@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.Basic
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.AKL.Laws
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.AKL.RegQuotientAdapter
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.RestrictionBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.Basic
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.AKL.Laws
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.AKL.RegQuotientAdapter
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.RestrictionBridge
 
 /-!
 # The AKL Bernoulli checkerboard law
@@ -16,6 +18,8 @@ The Bernoulli checkerboard, viewed through AKL's a.e.-quotient carrier.  The
 regular checkerboard is only used in the forward, measurable direction supplied
 by `regularToAKL`; no quotient representative is chosen here.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Examples.RandomCheckerboard.AKL
 

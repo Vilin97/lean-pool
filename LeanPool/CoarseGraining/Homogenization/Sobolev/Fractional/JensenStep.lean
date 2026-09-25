@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
-import LeanPool.CoarseGraining.Homogenization.Multiscale.OverlapLp
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.OverlapLp
 
 /-!
 # Jensen/averaging step for the Gagliardo seminorm on overlap cubes
@@ -21,6 +23,8 @@ of differences (probability measure), the enorm of a Bochner integral is at
 most the lintegral of enorms, and `L^1(μ) ↪ L^p(μ)` on a probability measure
 (Jensen/Hölder).
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Gagliardo

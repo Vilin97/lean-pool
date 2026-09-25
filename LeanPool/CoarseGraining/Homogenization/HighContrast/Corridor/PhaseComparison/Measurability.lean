@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.Geometry
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.LawObservable
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
-import LeanPool.CoarseGraining.Homogenization.Probability.RandomFieldMeasurability
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.Geometry
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.LawObservable
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
+public import LeanPool.CoarseGraining.Homogenization.Probability.RandomFieldMeasurability
 
 /-!
 # Per-phase measurability of the corridor observable
@@ -40,6 +42,8 @@ cannot be applied against `L` directly.  Instead:
    endomorphism via `AEStronglyMeasurable.comp_measurable`
    (`aestronglyMeasurable_phaseObservable`).
 -/
+
+@[expose] public section
 
 open Homogenization
 open Homogenization.Book.Ch04 (RestrictionCoeffLaw RestrictionLawCarrier AELocallyUniformlyEllipticField

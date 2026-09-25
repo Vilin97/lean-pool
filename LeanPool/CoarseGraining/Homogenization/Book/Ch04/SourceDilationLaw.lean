@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLaw
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.RescaledLaws
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLaw
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.RescaledLaws
 
 /-!
 # Dilation of exact coarse-source Chapter 4 laws
@@ -13,6 +15,8 @@ import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Rescaled
 This is the thin Chapter 4 wrapper around the source-side normalized-law
 kernel.  Probability remains separate from the structural-law bundle.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

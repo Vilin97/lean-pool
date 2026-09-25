@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
-import LeanPool.CoarseGraining.Homogenization.PDE.NeumannRHS
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectionFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentOrthogonality
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
+public import LeanPool.CoarseGraining.Homogenization.PDE.NeumannRHS
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectionFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentOrthogonality
 
 /-!
 # Neumann divergence equations under even reflection
@@ -20,6 +22,8 @@ average makes it an admissible mean-zero Neumann test without changing that
 gradient.  This proves the reflected divergence equation without introducing
 any boundary or comparison hypothesis.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

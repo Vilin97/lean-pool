@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldNorm
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldTransport
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.WeakGradientLimit
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Box
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldNorm
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldTransport
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.WeakGradientLimit
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Box
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
 
 /-! # Extension -/
+
+@[expose] public section
 
 namespace Homogenization
 

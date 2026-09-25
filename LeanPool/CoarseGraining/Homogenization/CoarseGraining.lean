@@ -3,32 +3,36 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockMatrixProperties
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CubeMinimizer
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Definitions
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimization
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimizationMeasurability
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuAdmissibility
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuQuadratic
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecoveryBlockResponse
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuWellPosedness
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeOpenBridge
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeSymmetry
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Subadditivity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Translation
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockMatrixProperties
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CubeMinimizer
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Definitions
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimization
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimizationMeasurability
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuAdmissibility
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuQuadratic
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecoveryBlockResponse
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuWellPosedness
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeOpenBridge
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeSymmetry
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Subadditivity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Translation
 
 /-! Supporting modules for Coarse-graining theory for elliptic equations. -/
+
+@[expose] public section

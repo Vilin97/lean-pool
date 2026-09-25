@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CongruenceAE
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CongruenceAE
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
 
 /-!
 # Almost-everywhere congruence for Euclidean fractional `W^{s,p}`
@@ -14,6 +16,8 @@ The Euclidean finite-exponent fractional kernel and its associated seminorm,
 membership predicate, and full power norm depend only on the normalized-cube
 almost-everywhere representative of the field.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

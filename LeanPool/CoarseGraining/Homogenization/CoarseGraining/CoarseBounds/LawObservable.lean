@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.Sandwich
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.AeBridge
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CoarseObservables
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.Sandwich
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.AeBridge
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CoarseObservables
 
 /-! # Law Observable -/
+
+@[expose] public section
 
 namespace Homogenization
 

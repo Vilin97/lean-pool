@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Algebra.Order.Chebyshev
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.PartitionAverageConstants
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceColorClassConcentration
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverages
+
+public import Mathlib.Algebra.Order.Chebyshev
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.PartitionAverageConstants
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceColorClassConcentration
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverages
 
 /-!
 # Source-local descendant-average concentration
@@ -16,6 +18,8 @@ This module assembles source-local color-class concentration bounds into
 descendant-average bounds.  Its public statements depend only on source
 unit-range dependence; source locality supplies summand measurability.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

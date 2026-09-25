@@ -3,16 +3,20 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.PartitionAverageConstants
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLaw
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.TriadicCubeTranslation
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.PartitionAverageConstants
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLaw
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.TriadicCubeTranslation
 
 /-!
 # Source-carrier partition-average definitions
 
 The exact coarse-source counterparts of the origin-cube partition averages.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

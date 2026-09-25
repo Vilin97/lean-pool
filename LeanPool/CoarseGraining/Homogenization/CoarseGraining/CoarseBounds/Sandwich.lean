@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CubeMinimizer
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds.DiagonalSandwich
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.QuadraticMu
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.ZeroTraceAverages
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CubeMinimizer
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds.DiagonalSandwich
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.QuadraticMu
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.ZeroTraceAverages
 
 /-! # Sandwich -/
+
+@[expose] public section
 
 namespace Homogenization
 

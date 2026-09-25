@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambda
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.WeightedLayerCake
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambda
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.WeightedLayerCake
 
 /-!
 # Integration of an untruncated weighted good-`lambda` inequality
@@ -17,6 +19,8 @@ which is bounded by `R` when `1 / 2 < M`.  Reabsorption is therefore legitimate 
 finite cutoff, and monotone convergence then removes the cutoff without assuming `f` is in
 `L^p`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

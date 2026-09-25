@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceMu
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.CoarseObservableMeasurability.Basic
-import LeanPool.CoarseGraining.Homogenization.Besov.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceMu
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.CoarseObservableMeasurability.Basic
+public import LeanPool.CoarseGraining.Homogenization.Besov.Basic
 
 /-!
 # Exact-source coarse observables
@@ -15,6 +17,8 @@ The coarse block entries are finite polarizations of the exact source-local
 `Mu` observable.  This module packages those deterministic consequences in
 the coarse source local sigma algebra.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpBelowTwo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareZeroTrace
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.H10GradientUpgrade
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpBelowTwo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareZeroTrace
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.H10GradientUpgrade
 
 /-!
 # Scalar Poisson gradient estimates below the energy exponent
@@ -19,6 +21,8 @@ Calderón--Zygmund estimate at the conjugate exponent.
 Both functions in the mutual-testing step belong to `H¹₀`; no boundary
 trace of a gradient coordinate is asserted or used.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

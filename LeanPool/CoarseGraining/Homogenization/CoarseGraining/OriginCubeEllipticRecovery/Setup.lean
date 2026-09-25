@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Equalities
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecoveryBlockResponse
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Response
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Equalities
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecoveryBlockResponse
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Response
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
 
 /-!
 # Origin-cube elliptic recovery -- volume lemmas, data package, descendant family
@@ -17,6 +19,8 @@ Basic volume-of-centered-cube lemmas, the HasOpenCubeEllipticRecoveryData
 package, the canonical instance from an elliptic field, and the descendant
 recovery family used downstream.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

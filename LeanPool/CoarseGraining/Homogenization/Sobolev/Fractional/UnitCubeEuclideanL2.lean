@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedDomainCube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.NormalizedLp
-import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedDomainCube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.NormalizedLp
+public import Mathlib.MeasureTheory.SpecificCodomains.WithLp
 
 /-!
 # Euclidean `L²` fields on the unit centered cube
@@ -14,6 +16,8 @@ import Mathlib.MeasureTheory.SpecificCodomains.WithLp
 This common source-facing carrier is the Euclidean vector `L²` input used by
 the Chapter 1 analytic kernels on the unit centered cube.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

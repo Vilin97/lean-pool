@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDualNegativeBesov
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDualNegativeBesov
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative
 
 /-!
 # Legacy scalar circ versus the source negative Besov envelope
@@ -16,6 +18,8 @@ the half-open finite range `0, …, N - 1`.  This module records the literal
 finite-depth change of presentation without adding an `Lᵖ` assumption to the
 represented `L²` field.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

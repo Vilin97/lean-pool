@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Euclidean
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.DerivativeBounds
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Profile
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
-import Mathlib.Analysis.Calculus.ContDiff.Operations
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Euclidean
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.DerivativeBounds
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Profile
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! # Ball -/
+
+@[expose] public section
 
 noncomputable section
 

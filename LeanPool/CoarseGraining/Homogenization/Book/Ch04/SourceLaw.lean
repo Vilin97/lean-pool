@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Laws
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Laws
 
 /-!
 # Exact coarse-source Chapter 4 laws
@@ -13,6 +15,8 @@ This is the staging law surface for the coarse-graining source.  Its carrier
 and probability assumptions are deliberately separate from the existing
 regular/restriction Chapter 4 lane.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

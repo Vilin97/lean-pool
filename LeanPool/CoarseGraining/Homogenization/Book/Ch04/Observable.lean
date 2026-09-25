@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceObservable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceMeasurability
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceObservable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceMeasurability
 
 /-!
 # Canonical Chapter 4 source observables
@@ -15,6 +17,8 @@ for the exact coarse-source, integral-local API. The separate
 `RestrictionObservable` API remains in the pointwise-restriction engineering
 lane.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessianBelowTwo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessianAboveTwo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessianTwo
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessianBelowTwo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessianAboveTwo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessianTwo
 
 /-!
 # Finite-exponent scalar Poisson Hessian estimates
@@ -25,6 +27,8 @@ Calderón--Zygmund estimate for every finite exponent.
 The proof selects the below-energy duality theorem, the energy theorem, or the
 above-energy good-`λ` theorem according to the exponent.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

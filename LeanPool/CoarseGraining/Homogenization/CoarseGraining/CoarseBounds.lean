@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.Sandwich
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.AeBridge
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.LawObservable
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.Sandwich
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.AeBridge
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.LawObservable
 
 /-!
 # Coarse sandwich, a.e. bridge, and law-level measurability
@@ -30,3 +32,5 @@ Submodules:
 
 All matrix/vector work is on `Vec d = Fin d → ℝ` / `Mat d`; no `EuclideanSpace`.
 -/
+
+@[expose] public section

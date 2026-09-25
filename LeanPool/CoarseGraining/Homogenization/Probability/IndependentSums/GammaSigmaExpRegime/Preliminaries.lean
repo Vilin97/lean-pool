@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Analysis.SpecialFunctions.Stirling
-import Mathlib.Probability.Moments.Basic
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigma
+
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.Analysis.MeanInequalities
+public import Mathlib.Analysis.SpecialFunctions.Stirling
+public import Mathlib.Probability.Moments.Basic
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigma
 
 /-! # Preliminaries -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace IndependentSums

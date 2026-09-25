@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Stability
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.GridCoverage
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.AeBridge
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.Sandwich
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Stability
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.GridCoverage
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.AeBridge
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.Sandwich
 
 /-!
 # Grid averaging + choice
@@ -31,6 +33,8 @@ M2 pointwise-in-`a`; exchange `∫ ∂L` with the finite grid sum
 (constant `3d/ℓ`); the C4-glue `F ≤ 2M²`; `|F_σ − F|² ≤ 4M²·|F_σ − F|`; below-average
 member of the nonempty grid (`N ≥ ℓ ≥ 4 > 0`).  `M² := Θ·|p|² + |q|²`.
 -/
+
+@[expose] public section
 
 open Homogenization
 open Homogenization.Book.Ch04 (RestrictionCoeffLaw RestrictionLawCarrier)

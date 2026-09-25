@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Law
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigma
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.WeakOrlicz
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Law
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigma
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.WeakOrlicz
 
 /-! # Tails -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

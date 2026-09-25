@@ -3,22 +3,26 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SymmetricDirichletNeumannDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.PotentialSolenoidal
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.Bracketing
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.OpenBoundedConvex
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.VariationalProblems
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientUniqueness
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixExtraction
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
-import LeanPool.CoarseGraining.Homogenization.PDE.EnergyIdentities
-import LeanPool.CoarseGraining.Homogenization.PDE.DirichletRHS
-import LeanPool.CoarseGraining.Homogenization.PDE.NeumannRHS
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Realization
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SymmetricDirichletNeumannDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.PotentialSolenoidal
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.Bracketing
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.OpenBoundedConvex
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.VariationalProblems
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientUniqueness
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixExtraction
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
+public import LeanPool.CoarseGraining.Homogenization.PDE.EnergyIdentities
+public import LeanPool.CoarseGraining.Homogenization.PDE.DirichletRHS
+public import LeanPool.CoarseGraining.Homogenization.PDE.NeumannRHS
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Realization
 
 /-! # Common -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Internal

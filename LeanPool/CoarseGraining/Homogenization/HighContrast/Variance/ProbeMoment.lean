@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.ScalarBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.FiniteNet
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.ScalarBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.FiniteNet
 
 /-!
 # Per-probe second moments of the normalized fluctuation matrix
@@ -22,6 +24,8 @@ of each such probe by the centered-second-moment estimate
 * `probe_sq_integral_le` — for any probe `q` with `⟪q,q⟫ ≤ 2`, the second moment
   of `fullBlockQuadratic H q` is at most `16·Cd·Θ⁶·(3^m)^{-β}`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

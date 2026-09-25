@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedConvexDomain
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H10Graph
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedConvexDomain
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H10Graph
 
 /-!
 # Exact potential and solenoidal spaces
@@ -22,6 +24,8 @@ The two potential spaces are literal ranges of the typed Hilbert `L²` gradient
 maps.  They are deliberately not closed: closedness is a separate analytic
 theorem, not part of these definitions.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

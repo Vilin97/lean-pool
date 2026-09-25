@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse
-import Mathlib.Probability.Independence.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse
+public import Mathlib.Probability.Independence.Basic
 
 /-! # Laws -/
+
+@[expose] public section
 
 namespace Homogenization.Source.Coarse
 

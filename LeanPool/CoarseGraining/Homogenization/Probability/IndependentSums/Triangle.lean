@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.MeasureTheory.Integral.Layercake
-import Mathlib.MeasureTheory.Function.L1Space.Integrable
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiCalculus
+
+public import Mathlib.MeasureTheory.Integral.Layercake
+public import Mathlib.MeasureTheory.Function.L1Space.Integrable
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiCalculus
 
 /-! # Triangle -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace IndependentSums

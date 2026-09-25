@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.Complex.ExponentialBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.QTwo
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliLocalGradientBridge
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Correctors
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesQTwo
+
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.QTwo
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliLocalGradientBridge
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Correctors
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesQTwo
 
 /-! # Seminorm Recurrence -/
+
+@[expose] public section
 
 namespace Homogenization
 

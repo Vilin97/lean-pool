@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Algebra.Order.Field.GeomSum
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.Full
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectionLimit
+
+public import Mathlib.Algebra.Order.Field.GeomSum
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.Full
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectionLimit
 
 /-! # Global Comparison -/
+
+@[expose] public section
 
 namespace Homogenization
 

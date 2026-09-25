@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
+
+public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
+public import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
 
 /-! # Profile -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -213,7 +217,8 @@ private theorem exists_secondDeriv_bound :
 This is proved by compactness.  It is intentionally separated from the later
 project of proving a small explicit numerical bound. -/
 noncomputable def derivBound : ℝ :=
-  exists_deriv_bound.choose
+  Classical.choose (show ∃ C : ℝ, 0 ≤ C ∧
+      ∀ t : ℝ, ‖deriv smoothTransitionProfile t‖ ≤ C from by exact exists_deriv_bound)
 
 theorem derivBound_nonneg : 0 ≤ derivBound :=
   exists_deriv_bound.choose_spec.1
@@ -224,7 +229,9 @@ theorem norm_deriv_le (t : ℝ) :
 
 /-- Noncomputable global second-derivative bound for `smoothTransitionProfile`. -/
 noncomputable def secondDerivBound : ℝ :=
-  exists_secondDeriv_bound.choose
+  Classical.choose (show ∃ C : ℝ, 0 ≤ C ∧
+      ∀ t : ℝ, ‖deriv (deriv smoothTransitionProfile) t‖ ≤ C from by
+    exact exists_secondDeriv_bound)
 
 theorem secondDerivBound_nonneg : 0 ≤ secondDerivBound :=
   exists_secondDeriv_bound.choose_spec.1

@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.SmoothRepresentative
-import Mathlib.Analysis.Convex.Integral
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
-import Mathlib.Analysis.Normed.Module.Convex
-import Mathlib.MeasureTheory.Integral.Prod
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.SmoothRepresentative
+public import Mathlib.Analysis.Convex.Integral
+public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+public import Mathlib.Analysis.Normed.Module.Convex
+public import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Diagonal convex smoothing of fractional kernels
@@ -19,6 +21,8 @@ sampling both variables with the same affine map.  This module records that
 operator separately from the source-facing fractional Sobolev API.  Its
 measure estimates are the analytic input for smooth density on cubes.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

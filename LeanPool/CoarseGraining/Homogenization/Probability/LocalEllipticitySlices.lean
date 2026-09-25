@@ -3,19 +3,23 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.HilbertFinite
-import LeanPool.CoarseGraining.Homogenization.Geometry.BoundaryLayer
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
-import LeanPool.CoarseGraining.Homogenization.Probability.RandomField
-import LeanPool.CoarseGraining.Homogenization.Probability.RandomFieldMeasurability
-import LeanPool.CoarseGraining.Homogenization.Probability.SeparableHilbertMeasurability
-import Mathlib.MeasureTheory.Function.LpSpace.Complete
-import Mathlib.MeasureTheory.MeasurableSpace.Constructions
-import Mathlib.MeasureTheory.Measure.SeparableMeasure
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.HilbertFinite
+public import LeanPool.CoarseGraining.Homogenization.Geometry.BoundaryLayer
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
+public import LeanPool.CoarseGraining.Homogenization.Probability.RandomField
+public import LeanPool.CoarseGraining.Homogenization.Probability.RandomFieldMeasurability
+public import LeanPool.CoarseGraining.Homogenization.Probability.SeparableHilbertMeasurability
+public import Mathlib.MeasureTheory.Function.LpSpace.Complete
+public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+public import Mathlib.MeasureTheory.Measure.SeparableMeasure
 
 /-! # Local Ellipticity Slices -/
+
+@[expose] public section
 
 namespace Homogenization
 

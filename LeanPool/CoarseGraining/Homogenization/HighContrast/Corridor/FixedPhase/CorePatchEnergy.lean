@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Resample
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.AeBridge
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuQuadratic
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.CoeffOperator
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Resample
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.AeBridge
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuQuadratic
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.CoeffOperator
 
 /-!
 # The per-core energy split and its pi-measurability
@@ -46,6 +48,8 @@ Main definitions/results:
   identity, valid whenever the glued field is `(1, Θ)`-elliptic on `U`
   (which holds `Π`-a.e. after truncation; supplied by the caller).
 -/
+
+@[expose] public section
 
 open Homogenization
 open scoped MeasureTheory BigOperators

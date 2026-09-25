@@ -3,16 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothGraph
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspExactOverlapFullControl
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLegacyCircComparison
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactAggregationBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactFiniteBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactExponentBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.MainBounds
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.CaccioppoliVectorization
-import LeanPool.CoarseGraining.Homogenization.Besov.PositiveOverlapBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothGraph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspExactOverlapFullControl
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLegacyCircComparison
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactAggregationBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactFiniteBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactExponentBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.MainBounds
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.CaccioppoliVectorization
+public import LeanPool.CoarseGraining.Homogenization.Besov.PositiveOverlapBridge
 
 /-!
 # Source negative-Besov control of the smooth fractional dual
@@ -21,6 +23,8 @@ This module uses finite block projections.  In particular, the represented
 field is used only through its `L²` integrability, never through a spurious
 `Lᵖ` upgrade.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,9 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal.DescendantsAverage
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal.ComponentBoundsBasic
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal.LocalizedEnergyForce
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal.DescendantsAverage
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal.ComponentBoundsBasic
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal.LocalizedEnergyForce
 
 /-! # Averaged Local -/
+
+@[expose] public section

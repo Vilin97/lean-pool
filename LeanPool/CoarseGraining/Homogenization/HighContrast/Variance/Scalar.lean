@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.RpowOpt
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.FixedPhaseUniform
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.AveragingUniform
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Projection
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.RpowOpt
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.FixedPhaseUniform
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.AveragingUniform
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Projection
 
 /-!
 # Scalar block variance (`e.scalar.block.variance`)
@@ -29,6 +31,8 @@ Step (i) is the `L²`-projection split `var_le_two_integral_add_two_var`; step (
 combines the two errors at a free width `ℓ ∈ [4, 3^m]`; step (iii) is the rpow
 optimization `scalar_opt`.  The constant is fixed *before* the field quantifiers.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

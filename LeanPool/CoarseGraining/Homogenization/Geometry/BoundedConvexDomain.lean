@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedMeasurableDomain
-import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
-import Mathlib.Topology.Sets.Opens
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedMeasurableDomain
+public import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
+public import Mathlib.Topology.Sets.Opens
 
 /-!
 # Open bounded convex domain adapters
@@ -16,6 +18,8 @@ This module keeps the repository's existing set-based predicate
 it supplies the positive-volume bounded measurable domain and open-set adapters
 needed by normalized and Sobolev constructions.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

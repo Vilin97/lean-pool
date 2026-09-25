@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.KFunctional
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.KInfimum
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.KFunctional
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.KInfimum
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
 
 /-!
 # Exact continuous-to-discrete unit-cube K-functional bridge
@@ -16,6 +18,8 @@ on the origin unit cube, and compares their residual and gradient quantities.
 The resulting inequalities are internal transport facts for the finite-depth
 continuous interpolation argument.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

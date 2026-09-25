@@ -3,21 +3,25 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Definitions
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvolutionLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.WeakDerivatives
-import Mathlib.Algebra.GroupWithZero.Action.Pointwise.Set
-import Mathlib.Analysis.Convolution
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-import Mathlib.Analysis.Calculus.BumpFunction.Normed
-import Mathlib.MeasureTheory.Integral.Bochner.Set
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvolutionLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.WeakDerivatives
+public import Mathlib.Algebra.GroupWithZero.Action.Pointwise.Set
+public import Mathlib.Analysis.Convolution
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import Mathlib.Analysis.Calculus.BumpFunction.Normed
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-! # Kernel -/
+
+@[expose] public section
 
 namespace Homogenization
 

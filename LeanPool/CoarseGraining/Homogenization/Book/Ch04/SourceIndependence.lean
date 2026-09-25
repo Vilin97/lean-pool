@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceObservable
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceObservable
 
 /-!
 # Independence of exact coarse-source local random variables
@@ -13,6 +15,8 @@ This module promotes the coarse source's unit-range-dependence law to finite
 independence of its exact local sigma algebras and observables.  It is separate
 from the regular-carrier restriction-local compatibility lane.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

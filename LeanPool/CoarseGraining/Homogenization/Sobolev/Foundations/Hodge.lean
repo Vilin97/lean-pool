@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph
-import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidal
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidal
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
 
 /-! # Hodge -/
+
+@[expose] public section
 
 namespace Homogenization
 

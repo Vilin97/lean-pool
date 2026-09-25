@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactFiniteBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactFiniteBridge
 
 /-!
 # Finite aggregation transport for exact negative Besov kernels
@@ -14,6 +16,8 @@ aggregations to the extended finite and infinite aggregations used by the
 exact Chapter 1 kernels.  They retain extended-value behavior without analytic
 convergence or real-valued upper-bound hypotheses.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

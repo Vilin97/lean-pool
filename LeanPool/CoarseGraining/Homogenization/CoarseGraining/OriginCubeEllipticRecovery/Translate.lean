@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.QuadraticMu
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.QuadraticMu
 
 /-!
 # Origin-cube elliptic recovery -- translated and descendant variants
@@ -13,6 +15,8 @@ Quadraticity / coarse-block-matrix existence on translateSet variants of the
 centered open cube and on openCubeSet / cubeSet of an arbitrary TriadicCube,
 produced by transporting recovery data through translations.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

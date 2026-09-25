@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
-import LeanPool.CoarseGraining.Homogenization.Multiscale.Projection
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.MeasureTheory.Covering.DensityTheorem
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.Projection
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.MeasureTheory.Covering.DensityTheorem
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 
 /-! # Projection Convergence -/
+
+@[expose] public section
 
 namespace Homogenization
 

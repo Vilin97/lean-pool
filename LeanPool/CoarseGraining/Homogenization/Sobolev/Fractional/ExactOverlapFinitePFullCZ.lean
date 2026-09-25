@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeDivergenceRescaling
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePHomogeneity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePOneDepthCZ
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeDivergenceRescaling
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePHomogeneity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePOneDepthCZ
 
 /-!
 # Global finite-`p` exact-overlap Calderón--Zygmund estimate
@@ -15,6 +17,8 @@ The one-depth exact-overlap estimate is summed with the source scale weights,
 then rooted at the finite exponent.  The coefficient scale is removed by
 rescaling the datum before applying the one-depth result.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

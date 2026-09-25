@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Algebra.Order.Chebyshev
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.PartitionAverageConstants
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.ColorClassConcentration
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAveragesDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverages
+
+public import Mathlib.Algebra.Order.Chebyshev
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.PartitionAverageConstants
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.ColorClassConcentration
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAveragesDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverages
 
 /-! # Descendant Averages -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

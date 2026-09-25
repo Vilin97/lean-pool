@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Definitions
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.GlobalComparison
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.GlobalComparison
 
 /-!
 # Chapter 1 circ domination
@@ -14,6 +16,8 @@ The Chapter 1 public facade consists of the six exact source-regime bounds
 below.  The former totalized-real, disjoint-cube comparisons remain available
 only as compatibility results in `Book.Ch01.Legacy`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

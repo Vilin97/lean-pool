@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLp
-import Mathlib.MeasureTheory.Function.ContinuousMapDense
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLp
+public import Mathlib.MeasureTheory.Function.ContinuousMapDense
 
 /-!
 # Bounded `L² ∩ Lᵖ` approximation of cube data
@@ -14,6 +16,8 @@ Every finite-exponent cube datum admits bounded continuous approximants on the
 same normalized cube measure.  Boundedness supplies the additional `L²`
 membership required by the supplied-solution Calderón--Zygmund theorem.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

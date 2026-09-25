@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.AnnealedConvergence
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Public
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformEllipticityBridge
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.SobolevPublic
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.AnnealedConvergence
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Public
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformEllipticityBridge
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.SobolevPublic
 
 /-!
 # Main results: elliptic homogenization in the uniformly elliptic case
@@ -69,6 +71,8 @@ editor every name is clickable and hovers its own docstring):
   `Homogenization/Book/Ch05/Theorems/Section51/AnnealedConvergence.lean` and
   `Homogenization/Book/Ch05/Theorems/Public.lean`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

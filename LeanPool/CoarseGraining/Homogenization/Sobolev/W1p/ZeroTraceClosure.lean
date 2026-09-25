@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.WeakGradientClosure
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.WeakGradientClosure
 
 /-!
 # Finite-exponent zero-trace closure
@@ -14,6 +16,8 @@ This module closes the concrete `W^{1,p}_0` carrier under coordinatewise
 only input is a sequence of already bundled zero-trace approximants.
 -/
 
+@[expose] public section
+
 namespace Homogenization
 
 open MeasureTheory Filter Topology
@@ -21,7 +25,8 @@ open scoped ENNReal
 
 noncomputable section
 
-private theorem eLpNorm_sub_swap_finiteLp
+/-- Interchanging the two functions leaves the `L^p` norm of their difference unchanged. -/
+theorem eLpNorm_sub_swap_finiteLp
     {d : ℕ} {μ : Measure (Vec d)} {p : ℝ≥0∞}
     (a b : Vec d → ℝ) :
     eLpNorm (fun x => a x - b x) p μ =

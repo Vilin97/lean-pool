@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Block
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
-import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Topology.Algebra.InfiniteSum.Real
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Block
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
 
 /-! # Multiscale Ellipticity -/
+
+@[expose] public section
 
 open scoped BigOperators
 

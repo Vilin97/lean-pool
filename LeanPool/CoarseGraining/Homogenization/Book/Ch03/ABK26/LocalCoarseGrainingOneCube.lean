@@ -3,14 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingPDE
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingResponse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FinitePToLegacyQTwo
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.EllipticityControl
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.WeakSolutions
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletCorrectedWeakFluxAveraged
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.AECongruence
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingPDE
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingResponse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FinitePToLegacyQTwo
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.EllipticityControl
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.WeakSolutions
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletCorrectedWeakFluxAveraged
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.AECongruence
 
 /-!
 # One-cube local coarse-graining bridge
@@ -20,6 +22,8 @@ required by the legacy corrected weak-flux apex.  Its source-facing theorem
 will consume the strict finite-`p` regularity bridge, while the response-series
 summability remains internal to the canonical root coefficient family.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

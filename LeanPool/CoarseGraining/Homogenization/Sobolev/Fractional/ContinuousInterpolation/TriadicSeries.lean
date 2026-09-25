@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.TriadicScale
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.TriadicScale
 
 /-!
 # Triadic sample series for the continuous `K`-energy
@@ -13,6 +15,8 @@ This module assembles the disjoint triadic scale intervals into an `ENNReal`
 series.  The lower comparison is deliberately indexed from `j + 1`: the
 continuous scale integral alone cannot recover the endpoint sample at `t = 1`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

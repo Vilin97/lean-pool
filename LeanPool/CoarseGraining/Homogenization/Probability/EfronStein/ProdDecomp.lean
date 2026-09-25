@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 -/
-import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.TwoPoint
+public import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.TwoPoint
 
 /-!
 # Two-factor variance decomposition
@@ -19,6 +21,8 @@ direct Fubini computation for *bounded* observables (no `condExp`).
   and probability measures `P, Q`,
   `Var[F; P ⊗ Q] = ∫ b, Var[F(·,b); P] dQ + Var[b ↦ ∫ F(·,b) dP; Q]`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Filter ProbabilityTheory
 open scoped ProbabilityTheory ENNReal

@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CubeNeumannCZ
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CubeNeumannCZ
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare
 
 /-! # Multiscale Poincare -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

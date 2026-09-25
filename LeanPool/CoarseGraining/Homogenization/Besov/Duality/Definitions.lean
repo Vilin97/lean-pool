@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Localization
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive
-import Mathlib.Data.Real.ConjExponents
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Localization
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive
+public import Mathlib.Data.Real.ConjExponents
 
 /-! # Definitions -/
+
+@[expose] public section
 
 namespace Homogenization
 

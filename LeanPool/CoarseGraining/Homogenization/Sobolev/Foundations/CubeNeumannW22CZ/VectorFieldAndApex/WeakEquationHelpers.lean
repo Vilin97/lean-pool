@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.Definitions
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.Definitions
 
 /-! # Weak Equation Helpers -/
+
+@[expose] public section
 
 namespace Homogenization
 

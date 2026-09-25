@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.HarmonicRemainder
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardOverlapComparison
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityPositiveBridge.Contracts
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.Localization
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.HarmonicRemainder
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardOverlapComparison
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityPositiveBridge.Contracts
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.Localization
 
 /-! # Duality Positive Pairing -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

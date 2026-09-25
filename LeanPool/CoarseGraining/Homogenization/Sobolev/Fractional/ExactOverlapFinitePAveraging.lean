@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingGradient
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingGradientExplicit
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingResidual
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ConvexApproxGagliardoSmoothing
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanLpComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.CubeVector
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingGradient
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingGradientExplicit
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingResidual
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ConvexApproxGagliardoSmoothing
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanLpComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.CubeVector
 
 /-!
 # Finite-`p` synchronized overlap averaging
@@ -21,6 +23,8 @@ one-depth estimates are stated against the direct Euclidean overlap energy,
 so later Calderón--Zygmund interpolation can use them without introducing a
 separate `K`-functional carrier.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

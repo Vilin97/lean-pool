@@ -3,17 +3,21 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.Basic
-import LeanPool.CoarseGraining.Homogenization.Ambient.HilbertFinite
-import Mathlib.Analysis.InnerProductSpace.Dual
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.Basic
+public import LeanPool.CoarseGraining.Homogenization.Ambient.HilbertFinite
+public import Mathlib.Analysis.InnerProductSpace.Dual
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
+public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 
 /-! # L2Ambient -/
+
+@[expose] public section
 
 namespace Homogenization
 

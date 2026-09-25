@@ -3,19 +3,23 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledResponseDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.PotentialSolenoidal
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Existence
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.BlockMatrixField
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.FirstVariation
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientLinearity
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientUniqueness
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixExtraction
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledResponseDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.PotentialSolenoidal
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Existence
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.BlockMatrixField
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.FirstVariation
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientLinearity
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientUniqueness
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixExtraction
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
 
 /-! # Common -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Internal

@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanH2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.DefinitionsAPI
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.AssemblyPieces
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanH2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.DefinitionsAPI
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.AssemblyPieces
 
 /-!
 # Euclidean-to-coordinate Gagliardo bridge
@@ -16,6 +18,8 @@ This module fixes the exact product measure and the finite-coordinate
 numerator decomposition needed to compare the Euclidean `H^s` energy with
 the scalar ambient-distance Gagliardo energies.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.GlobalAffineLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.GlobalMollifierLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationGeometry
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.GlobalAffineLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.GlobalMollifierLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationGeometry
 
 /-!
 # Global `L^p` convergence of inward mollification
@@ -15,6 +17,8 @@ This file combines the global approximate-identity theorem with strong
 continuity under the outward affine expansion.  The result is independent of
 domain geometry and boundary conditions.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

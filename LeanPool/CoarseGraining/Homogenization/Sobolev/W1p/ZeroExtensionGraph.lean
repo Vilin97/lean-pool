@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Definitions
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.WeakGradientClosure
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.WeakGradientClosure
 
 /-!
 # Zero extension of the `H¹₀` graph
@@ -16,6 +18,8 @@ are extended by zero outside the original domain.  The argument uses the
 given `H¹₀` approximants and finite-exponent graph closure, without any cube,
 trace, dilation, or PDE input.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

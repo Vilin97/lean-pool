@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.BasicAdjoint
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.HarmonicMean
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.UpperLeftAverage
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.MuGeVecDot
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.BasicAdjoint
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.HarmonicMean
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.UpperLeftAverage
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.MuGeVecDot
 
 /-!
 # Origin-cube elliptic recovery -- deterministic coarse data output
@@ -18,6 +20,8 @@ cube, the packaged openCubeDeterministicCoarseData_of_triadicCube and its
 descendant-family variant. These are the outputs consumed by the Chapter-3
 coarse Poincare wrappers.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

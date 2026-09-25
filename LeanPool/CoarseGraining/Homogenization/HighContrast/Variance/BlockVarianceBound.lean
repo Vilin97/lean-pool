@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.ProbeMoment
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.BudgetAbsorption
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.ProbeMoment
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.BudgetAbsorption
 
 /-!
 # Block-variance bound (`t.block.variance`)
@@ -34,6 +36,8 @@ The finite-probe linearity is kept generic in the matrix family so that the
 heavy `fullBlockNormalizedFluctuationMatrix` definition is never unfolded during
 the summation algebra.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

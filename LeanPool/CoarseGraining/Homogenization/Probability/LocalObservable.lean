@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.RandomCoeffField
-import Mathlib.MeasureTheory.Group.Arithmetic
-import Mathlib.MeasureTheory.Measure.AEMeasurable
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.RandomCoeffField
+public import Mathlib.MeasureTheory.Group.Arithmetic
+public import Mathlib.MeasureTheory.Measure.AEMeasurable
 
 /-! # Local Observable -/
+
+@[expose] public section
 
 namespace Homogenization
 

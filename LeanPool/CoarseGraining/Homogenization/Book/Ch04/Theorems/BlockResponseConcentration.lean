@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageFluctuationsAEMeasurable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.BlockExpectations
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity.BlockLoewner
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.WrapAround
-import Mathlib.LinearAlgebra.Matrix.Bilinear
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageFluctuationsAEMeasurable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.BlockExpectations
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity.BlockLoewner
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.WrapAround
+public import Mathlib.LinearAlgebra.Matrix.Bilinear
 
 /-! # Block Response Concentration -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

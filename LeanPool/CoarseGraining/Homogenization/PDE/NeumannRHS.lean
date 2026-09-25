@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientFieldHilbert
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientFieldHilbert
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
 
 /-! # Neumann RHS -/
+
+@[expose] public section
 
 namespace Homogenization
 

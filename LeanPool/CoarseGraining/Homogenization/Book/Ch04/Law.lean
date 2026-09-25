@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLaw
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.RestrictionLaw
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLaw
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.RestrictionLaw
 
 /-!
 # Canonical Chapter 4 source laws
@@ -14,6 +16,8 @@ Unprefixed Chapter 4 law names denote the exact coarse-source, integral-local
 semantics. The separate pointwise-restriction/sup-metric engineering lane is
 exposed through the `Restriction*` names imported from `RestrictionLaw`.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

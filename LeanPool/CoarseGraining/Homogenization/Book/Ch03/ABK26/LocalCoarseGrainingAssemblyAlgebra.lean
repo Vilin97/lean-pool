@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingAggregation
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingAggregation
 
 /-!
 # Finite-`p` algebra for local coarse-graining assembly
@@ -13,6 +15,8 @@ This module records the outer finite descendant-average triangle estimate in
 the literal `ENNReal` carrier used by the local coarse-graining definitions.
 It is independent of the PDE and response inputs.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

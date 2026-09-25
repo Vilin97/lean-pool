@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.PartitionAverageConstants
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceColorClassMoments
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.MomentCalculus
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.PartitionAverageConstants
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceColorClassMoments
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.MomentCalculus
 
 /-!
 # Real-moment bounds for source descendant sums
@@ -14,6 +16,8 @@ import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Moment
 This internal assembly layer combines real-exponent Rosenthal bounds on
 source scale-color classes into a bound over all descendants.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

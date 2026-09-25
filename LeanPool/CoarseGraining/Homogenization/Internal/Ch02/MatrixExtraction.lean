@@ -3,18 +3,22 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixExtraction
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Existence
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Adapters
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecoveryBlockResponse
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticWrappers
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaStarPosDef
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.QuadraticMu
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Realization
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixExtraction
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Existence
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Adapters
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecoveryBlockResponse
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticWrappers
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaStarPosDef
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.QuadraticMu
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Realization
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
 
 /-! # Matrix Extraction -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Internal

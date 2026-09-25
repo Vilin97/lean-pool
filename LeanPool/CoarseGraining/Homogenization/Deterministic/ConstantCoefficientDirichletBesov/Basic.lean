@@ -3,20 +3,24 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Regularity
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesComponentwise
-import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
-import LeanPool.CoarseGraining.Homogenization.PDE.DirichletRHS
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.Regularity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.WeakDerivativeTestClosure
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianGradientH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.AnalyticInput
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalCubeBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Realization
-import Mathlib.Algebra.Order.Chebyshev
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Regularity
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesComponentwise
+public import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
+public import LeanPool.CoarseGraining.Homogenization.PDE.DirichletRHS
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.Regularity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.WeakDerivativeTestClosure
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianGradientH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.AnalyticInput
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalCubeBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Realization
+public import Mathlib.Algebra.Order.Chebyshev
 
 /-! # Basic -/
+
+@[expose] public section
 
 namespace Homogenization
 

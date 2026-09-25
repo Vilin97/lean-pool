@@ -3,1597 +3,1599 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization
-import LeanPool.CoarseGraining.Homogenization.Ambient.Basic
-import LeanPool.CoarseGraining.Homogenization.Ambient.BlockMatrix
-import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
-import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientFieldHilbert
-import LeanPool.CoarseGraining.Homogenization.Ambient.Euclidean
-import LeanPool.CoarseGraining.Homogenization.Ambient.HilbertFinite
-import LeanPool.CoarseGraining.Homogenization.Ambient.MatrixOrderBridge
-import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
-import LeanPool.CoarseGraining.Homogenization.Besov.Basic
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.CaccioppoliBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.CaccioppoliVectorization
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.Definitions
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.Elementary
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.Full
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.GlobalComparison
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapCaccioppoliBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapDefinitions
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapFull
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.Averages
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.Integrability
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.MainBounds
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.Projections
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectionLimit
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.WrapperComparison
-import LeanPool.CoarseGraining.Homogenization.Besov.Localization
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactAggregationBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCirc
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDomination
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDominationFinite
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDominationQOne
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDominationTop
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactDual
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactExponentBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactFiniteBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Bounds
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Descendants
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.HarmonicGradient
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.HarmonicGradient.Definitions
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.HarmonicGradient.Descendants
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.HarmonicGradient.FullCirc
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.HarmonicGradient.LocalEstimate
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.HarmonicGradient.LocalMultiscale
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Projection
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Structures
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlap
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapEuclidean
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapEuclideanLp
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapEuclideanLpCoordinateBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapScalarP
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.Full
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.Overlap
-import LeanPool.CoarseGraining.Homogenization.Besov.PositiveOverlapBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.ProjectionCharacterization
-import LeanPool.CoarseGraining.Homogenization.Book
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Definitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.FieldSpaces
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.BesovPairing
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CircDomination
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.ClassicalInputsExact
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CubeDirichletH2
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CubeNeumannCZ
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CutoffProduct
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.DualToCircLoss.FiniteLoss
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.DualToCircLoss.ProjectionTests
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.FractionalSobolevVsBesov
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.GradientToFunction
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.HodgeConverse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.HodgeProjectionL2
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.MeanSquareDeviation
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.MultiscalePoincare
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.NegativeBesovLocalize
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.NormScaling
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.Poincare
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.PositiveBesovLocalize
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.PositiveBesovSeminormLocalize
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.PotentialSolenoidal
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.RadiusIteration
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Block
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.CoeffRestriction
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Definitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Dilation
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.DoubledResponse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.HomogenizationError
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Interfaces
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Matrices
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.MultiscaleEllipticity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.ParentTruncatedHomogenizationError
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Response
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Setup
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Symmetric
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BasicVariationalIdentities
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BasicVariationalIdentitiesDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockCoarseMatrix
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockCoarseMatrixDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockMatrixField
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockMatrixFieldDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.CoarseGrainingEstimates
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.CoarseGrainingEstimatesDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DeterministicIdentities
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.Dilation
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledMu
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledMuDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledResponse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledResponseDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.Existence
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.ExistenceDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.FirstVariation
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.FirstVariationDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.GradientLinearity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.GradientLinearityDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.GradientUniqueness
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.GradientUniquenessDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.AEEq
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.EllipticityControl
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.Finite
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.InfinityOne
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.Public
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.ResponseBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.Translation
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationErrorDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MagicIdentities
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MagicIdentitiesDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixExtraction
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixExtractionProofs
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixOperatorNorm
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixPositivity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Finite.ChangeExponentDiscount
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Finite.DiscountBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Finite.OneCubeBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Finite.Properties
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Finite.Series
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Finite.SmallTail
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Infinity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Localization
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Public
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Representatives
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticityDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.Quadraticity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.QuadraticityDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SolutionIntegrability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SubadditivityScaling
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SubadditivityScalingDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SymmetricDirichletNeumann
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SymmetricDirichletNeumannDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.WrapAround
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FinitePToLegacyQTwo
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonBridges
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonCZ
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonLocalization
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGraining
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingAggregation
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingAssemblyAlgebra
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingDescendantWsp
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingForcing
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingNegativeAssembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingOneCube
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingPDE
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingResponse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingResponseOrder
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.NegativeBesov
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Definitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoli
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoli.Interface
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliDilationTransport
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.Bridges
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.EnergySplit
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.FinalBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.Prefactors
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.PublicRHSMonotonicity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.PublicRHSScalar
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.Setup
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.Theory
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.ZeroTraceValue
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScalarEnvelopes
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZero
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZeroBridge
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZeroBudgetEnvelopes
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZeroCore
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZeroRHS
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZeroRHS.Monotonicity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZeroScalarBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliStandardScalar
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseFluxResponseRHS
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarsePoincare
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarsePoincare.Finite
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarsePoincare.Infinity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarsePoincare.NegativeBesov
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarsePoincareRHS
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.Duality
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.DualityPositivePairing
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.BoundaryGradient
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.Corrector
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.DirichletSplit
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.HarmonicRemainder
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.HarmonicRemainderSplit
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.Neumann
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.Theory
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.FluxResponse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.GeneralCoarseGrainingL2TwoExponent
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.HomogenizationBlackBoxes
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.Inhomogeneous
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.CoarseFluxResponseRHS
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.CoarseGrainingL2
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.CoeffField
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.EndPoints
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.Energy
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.H1Casts
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.H1Transport
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.WeakSolutionConstructors
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.WeakSolutions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.SobolevPublic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.WeakFluxRHS
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.WeakFluxRHS.Selection.AveragedTail
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.WeakFluxRHS.Selection.Budgets
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.WeakFluxRHS.Selection.Constructed
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.WeakFluxRHS.Selection.CorrectorEnergy
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.AnnealedDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.AnnealedObjects
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.CoeffFamily
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Definitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.BlockEnergyAverage
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.CarrierMinimizerFamily
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.CarrierMuFamily
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.MuFamily
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.CoarseObservableMeasurability.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.CoarseObservableMeasurability.Mu
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.FixedCompetitorEnergyMeasurability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.FixedCompetitorEnergyMeasurability.BlockEnergyAverage
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.FixedCompetitorEnergyMeasurability.Integrals
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.FixedCompetitorEnergyMeasurability.LipschitzBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.FixedCompetitorEnergyMeasurability.Measurability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.FixedCompetitorEnergyMeasurability.MuObservable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.PartitionAverageMomentHelpers
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.ScalarizationWitnesses
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Law
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Measurability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.MuLocalityGate
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Observable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.PartitionAverageConstants
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.RestrictionLaw
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.RestrictionObservable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Source
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceCanonicalMeasurability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceCoarseObservables
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceColorClassConcentration
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceColorClassIndependence
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceColorClassMoments
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceDescendantAverages
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceDescendantMoments
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceDilationLaw
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceEllipticity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceIndependence
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLaw
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLocalCoefficient
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceMeasurability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceMu
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceObservable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageFluctuations
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageLowMoments
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageMoments
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceResponseObservables
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceResponsePartitionAverages
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceStationaryExpectations
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Tails
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity.BlockLoewner
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity.LawCarrierAEBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity.LawCarrierAnnealedMatrix
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity.LawCarrierFullBlock
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.BlockExpectations
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.BlockResponseConcentration
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalAverages
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalSolutions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalSolutions.AverageIdentities
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalSolutions.Definitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalSolutions.Measurability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CoarseObservables
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.ColorClassConcentration
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Concentration
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.ConcentrationAEMeasurable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.DescendantAverages
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.DescendantAveragesAEMeasurable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.DilationLaw
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.DilationResponse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Expectations
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.IndependenceDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.LocalCoefficient
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.MomentFactorBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.MomentFactorBounds.Apex
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.MomentFactorBounds.FactorBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.MomentFactorBounds.Helpers
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Mu
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageFluctuations
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageFluctuationsAEMeasurable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageMoments
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageMoments.CenteredAverage
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageMoments.Integrability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageMoments.OnCube
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageMoments.Rosenthal
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageMoments.Theory
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverages
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAveragesDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.RestrictionIndependence
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Scalarization
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.ScalarizationDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.StationaryExpectations
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.WidetildeTheta
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.TriadicCubeTranslation
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Definitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Public
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.AnnealedConvergence
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.EntryScale
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.ExponentAbsorption
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.ShiftedP4
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.SmallWidetildeEntry
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.CenteredResponses
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.Coefficients
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.Coefficients.Constants
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.Coefficients.RootCoeff
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.FluctuationBridge
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.GeometrySeries
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.GeometrySeries.DescendantCardinality
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.GeometrySeries.SmallTailTerm
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.GeometrySeries.TwoExponentBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.MomentBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.P4Integrability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.PointwiseSplits
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.PositiveExcessLowerAndIntegrability.LowerVariants
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.PositiveExcessLowerAndIntegrability.PowIntegrable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.PositiveExcessLowerAndIntegrability.UnitDescendantSup
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.PositiveExcessUpper
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.ScalarAlgebra
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.ScalarPreliminaries
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.Weights
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.WidetildeTheta
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.Common
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.AdditivityDefects
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.Assembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.CoarseAverages
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.CutoffOscillationUniform
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.EllipticityMoments
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.FinalRHS
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.FluctuationIntegrability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.HighScaleAverages
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.LinearProductAbsorption
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.LowScaleExpectation
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.LowScaleTails
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.PairedSquares
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.PairedWeakNormSquares
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.PositiveExcessDefectSquare
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.PositiveExcessResponseDefect
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.RHSConversion
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.ResponseMomentIntegrability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.ScalarLoss
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.SpecialVectors
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.WeakNormInput
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.WeakNormSquareIntegrability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.YoungRHS
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Additivity.AnalyticInequalities
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Additivity.CrossTerm
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Additivity.Densities
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Additivity.ParentRestriction
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Averages
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.CanonicalFields
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.CutoffOscillation
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.DeterministicAssembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.EnergyDensities
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.AEBound
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.Assembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.ExpectedRHSComparison
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.ManuscriptPointwiseBound
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.ManuscriptRHS
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.NormalizedCutoff
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.PointwiseBound
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.RHS
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.YoungRHS
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.FiveTermSplit
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.LinearTerms
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Product.Bound
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Product.Bridge
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Product.Identity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.WeightedChildren
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.AssemblyCore
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.AssemblyFinal
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.EnergyDefect
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.LowScales
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.RawIdentities
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.Splitting
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.Common
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.GoodScale
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.GoodScale.Assembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.GoodScale.ScalarBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.GoodScale.SpecialVectorAlgebra
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.Assembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.BetaBridge
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.CenteredResponses
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.CoarseFluctuationInput
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.CoarseFullBlock
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.CoarseRHSPrep
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.GoodScaleInputs
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.RHSCompression
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.RealAlgebra
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.ResponseMoment
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.ScaleErrors
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.TauSum
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.Pigeonhole
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.Pigeonhole.Assembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.Pigeonhole.RealAlgebra
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.Pigeonhole.ScalarChain
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.Assembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.BudgetAbsorption
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.FinalAbsorption
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.FiniteNet
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.GeometricSum
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.MatrixVariance
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.NormalizedBlocks
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.PartitionAverage
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ProbeMomentCompression
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ProbeVariance
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.QuadraticProbeBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.RefinedAssembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.RefinedProbeMoments
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.RefinedScalarVariance
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ScalarL2
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ScalarReduction
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ScalarVariance
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ScaleAbsorption
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ScaleCompression
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.AnnealedConvergence
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.AnnealedImprovement
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.DilatedP4
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedOneStepContraction
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta.Final
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta.ScalarPreliminaries
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta.TwoStep
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta.Uniform
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.HarmonicMean
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay.Final
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay.Iteration
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay.IterationConstants
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay.IterationCore
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay.Recurrence
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay.ScalarRecursion
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.FinalAssembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.FluctuationSumEstimate
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.MatrixAverageCompression
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.MatrixAverageEstimate
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.MatrixAverageGeometric
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.MatrixAveragePackaging
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.TraceAverageEstimate
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.TraceAveragePackaging
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.TraceBudgetAlgebra
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.WeightedGeometricSummation
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastJBound
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastJBound.Estimate
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastJBound.Preliminaries
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.ArbitraryIntegrability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.ErrorBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.MatrixTools
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.NormalizedStatements
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.TraceBudget
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.Triangle
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.AbsoluteBadScaleTail
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.AbsoluteMinimalScale
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.AbsoluteScaleCompression
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.AbsoluteScaleCompressionFinal
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.AnnealedJLimit
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.AnnealedLimit
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadEventSummability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadPairNoLog
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadPairSelection
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentBoundsBottom
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentBoundsCrudeBottom
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentBoundsHigh
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentBoundsTop
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentRows
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentSummation
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentUnion
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleEntrySplit
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleMinimal
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleMinimalQuantitative
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScalePairCollapse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScalePairTwoBranch
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScalePrefactorGap
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScalePrefactorGapQuantitative
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleSplit
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailAssembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailCollapse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailDenominator
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailExponent
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailFinal
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailFinalQuantitative
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailJoint
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailRaw
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailRawCrude
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailSelected
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailTwoBranch
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleThresholds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleUnion
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadTailUnion
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.DeterministicThresholds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.EllipticityFromMinimalScale
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.EntryScaleCompression
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ExponentCompetition
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ExponentialKernel
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.FiniteBasis
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.FiniteSupTail
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.FirstQuenchedEstimate
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.FirstQuenchedEstimateCompressed
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationAssembly
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationAssemblyEndpoint
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationAssemblyOptimized
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationAssemblyRHS
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationErrorClosed
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationErrorControl
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationErrorFiniteQ
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationErrorLowerEnvelope
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationErrorMinimalScale
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationErrorQuenched
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationQuenched
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.KernelUnion
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LimitNormalization
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LocalizedFiniteBasis
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LocalizedMax
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LocalizedMaxTail
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LocalizedUnitEllipticity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LocalizedUnitEllipticityMinimal
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.MinimalScaleTail
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.NormalizedResponseEllipticity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ProbeEnvelope
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ProbeMax
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.QuenchedGammaEllipticity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.QuenchedLocalizedEstimate
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ScaleCompression
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ScaleCompressionFinal
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ScaleCompressionThreshold
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ScaleGeometry
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.SmallBottomBand
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.SmallBottomTail
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformBadScaleMinimalQuantitative
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformBadScaleTail
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformBadScaleTailCollapse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformBadScaleTailFinal
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformCrudeBottom
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformEllipticityBridge
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformEllipticityEndpoint
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformEndpointDenominator
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformEndpointSynchronized
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformHighBottom
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformHighTop
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformHomogenizationQuenched
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformScaleCompressionFinal
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UnitEllipticityMinimalExpLogSq
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UnitJTail
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.WeightedExponentialKernel
-import LeanPool.CoarseGraining.Homogenization.Book.MainResults
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.BasicAdjoint
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.EllipticWrappers
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.SigmaAdjoint
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.EllipticBounds
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.MatrixIdentities
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.Properties
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.Structures
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockMatrixProperties
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Equalities
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Equalities.Helpers
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Equalities.LowerImageNamespace
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Equalities.MainEqualities
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Foundations
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Foundations.BasicIdentities
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Foundations.IntegrabilityFamily
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Foundations.PairHalfAdmissible
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Foundations.PairStates
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Perturbation
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Perturbation.BlockEnergyFirstVariation
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Perturbation.Integrand
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Perturbation.PairHalfScalar
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Perturbation.ResponseJMuAdjoint
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Perturbation.VolumeAverage
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.AeBridge
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.LawObservable
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.Sandwich
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CubeMinimizer
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Definitions
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimization
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimizationMeasurability
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.Basics
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.BlockSubadditivity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.BCoarseAveraged
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.BCoarseCanonical
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.MagicIdentities
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.OriginCube
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaCoarsePosDef
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaLeBCoarse
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaStarInvAveraged
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaStarLeSigma
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaStarPosDef
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticWrappers
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.HarmonicMean
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.Identities
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.UpperLeftAverage
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.StarredSubadditivity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuAdmissibility
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.AEEOperator
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.AEEOperator.CanonicalCubeSet
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.AEEOperator.CoeffOperatorData
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.CoeffOperator
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.HilbertOperator
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuQuadratic
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery.CorrectionSpaceBasic
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery.CorrectionSpaceEnergy
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery.CorrectionSpaceSolenoidal
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery.RecoveryPackages
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery.Setup
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecoveryBlockResponse
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuWellPosedness
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.DeterministicCoarseData
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.Existence
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.MuGeVecDot
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.QuadraticMu
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.Setup
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.Subadditivity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.Translate
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeOpenBridge
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeSymmetry
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability.CauchySchwarz
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability.Integral
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas.BasicVariation
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas.CanonicalBasic
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas.CanonicalFormulas
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas.CoarseFormulas
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.ConvexAverageFormulas
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Existence
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Foundations
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Foundations.Algebra
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Foundations.Ellipticity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Foundations.Maximizer
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Homogeneity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds.Basic
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds.DiagonalSandwich
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Subadditivity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.AverageFormulas
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.Basic
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.Bracketing
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.CoarseMatrices
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.CompletedSquare
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.OpenBoundedConvex
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.OriginCube
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.Response
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.VariationalProblems
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Translation
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Basic
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Boundary
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Boundary.ExplicitHeight
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Boundary.NoteRhs
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Boundary.NoteRhs.Basic
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Boundary.NoteRhs.StandardSplit
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CrossTerm
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CrossTerm.ExplicitHeight
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CrossTerm.Localized
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CrossTerm.Scalar
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.CenteredProduct
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.CenteredProductFullDual
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.Geometry
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.LocalPairing
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.OneCube
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.PositiveSeminorms
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.PositiveSeminorms.Bounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.PositiveSeminorms.Definitions
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.SplitPairing
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.SplitPairing.Centered
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.SplitPairing.Scalar
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.SplitPairing.Vector
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.SplitPairing.VectorFullDual
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.VectorProduct
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.CenteredLocalCoefficient
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.CutoffSizes
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.DescendantSummation
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.DescendantSummation.Averages
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.DescendantSummation.ExactRhs
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.DescendantSummation.Gradient
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.DescendantSummationFullDual
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.ExactRhs
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.Flux
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalConstantBranch
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalEstimate
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalEstimate.Cutoff
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalEstimate.SingleCube
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalEstimate.Split
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalEstimateFullDual
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalPatchCutoff
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalizedEnergyProfile
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.QuantitativeCutoff
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.QuantitativeCutoff.Basic
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.QuantitativeCutoff.NormalizedAndGradient
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.SingleCubeRhs
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Height
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Interior
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.RadiusIteration
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.RadiusIteration.Standard
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.Boundary
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.FinalWrappers
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicCanonicalGradient
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicCanonicalGradient.Definitions
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicCanonicalGradient.Specializations
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicCoefficientBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.CoefficientBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.CorePositiveFactors
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.Endpoints
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.CenteredFactors
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.CenteredFactors.Besov
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.CenteredFactors.BufferedAlpha
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.CenteredFactors.LocalAlpha
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.CenteredFronts
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.Constructor
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.LocalPatchConstructor
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.LocalPatchConstructor.ConstantBranch
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.LocalPatchConstructor.Factors
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.FaithfulDescendant
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.LocalPatchNoteRawBridge
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.LocalPatchNoteRawBridge.BoundarySplit
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.LocalPatchNoteRawBridge.CoefficientBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.NoteRawBridge
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.NoteRawBridge.BoundarySplit
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.NoteRawBridge.CoefficientLocalization
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.PositiveFactors
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.SolutionInputs
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.Setup.CoefficientBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.Setup.SolutionInputs
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicGradientControls
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicQuantitativeCutoff
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicQuantitativeCutoff.BoundaryCanonical
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicQuantitativeCutoff.InteriorCanonical
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicQuantitativeCutoff.Standard
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicScalarControls
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.Interior
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.LocalPatchWeakTesting
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.Localization
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.Canonical
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.LocalPatch
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.Setup
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.Setup.Canonical
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.Setup.ConstantCoeff
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.Setup.ScaleBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.Standard
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.RadiusInputs
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.RadiusInputs.Profiles
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.RadiusInputs.Setup
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.WeakTesting
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.TriadicScale
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliCutoffProduct
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliEnergyBridge
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliLocalBridge
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliLocalGradientBridge
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliSingleCubeToRaw
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.EnergyForm
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.PrivateLemmas
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHS
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantAbsorption
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApex
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexComponent
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexEnergy
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletBV
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletBVForce
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletCorrectedWeakFlux
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletCorrectedWeakFluxAveraged
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletEnergy
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletEstimates
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletHomogeneous
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletScalarAdequacy
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletTail
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletWeakFluxScalarAdequacy
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantEnvelope
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSCorrections
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSScalarAbsorption
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.Response
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.QOne
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.QTwo
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup.Conversions
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup.EnergyControls
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup.HarmonicAndData
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup.UniformBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AbsorbedErrors
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal.ComponentBoundsBasic
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal.DescendantsAverage
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal.LocalizedEnergyForce
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Compatibility
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Constants
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Correctors
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.DepthWeightAlgebra
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Energy
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.FinalTheorems
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.FinalTheorems.ExpandedAndElliptic
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.FinalTheorems.NoteStepAndConstants
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.FinalTheorems.ZeroDirichletEnergy
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.ForceLocalization
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.GlobalBaseBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.GlobalIteration
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.GlobalQuantities
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalCorrector
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalNoteTerms
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalNoteTerms.Bounded
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalNoteTerms.Intrinsic
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalNoteTerms.Stepping
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalStep
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalStep.DiscountNext
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalStep.HarmonicStepping
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalizedIteration
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.NoteConstants
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Regularity
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.SeminormRecurrence
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.TerminalBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHSLocalRecurrence
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingGradient
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingGradientExplicit
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingResidual
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingResidualExplicit
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingScale
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.Basic
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CenteredCubeHsRegularity
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CenteredCubeScaleTransport
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ConcreteAveraging
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ContinuousKFullRegularity
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ContinuousKRegularity
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CubeVectorH1
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.DirichletBridge
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.DiscreteConvolution
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ExactOverlapEuclideanRegularity
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.KAveraging
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.KFunctional
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapCenters
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapFluctuation
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapGeometry
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapLp
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapPoincare
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.PartitionDerivatives
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.PartitionGeometry
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.PartitionWeights
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.PositiveNorm
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.PublicTheorems
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardOverlapComparison
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionBoundary
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionBoundaryGap
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionBoundaryNeighbor
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionBoundaryNeighborCount
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionIncrementEnergy
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionResidual
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionSharpKernel
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionSummation
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionVector
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2RHSCoefficientLocalization
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2RHSComparison
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2Response
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2WeakFlux
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.Duality
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityExponentLoss
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityPositiveBridge
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityPositiveBridge.Contracts
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityPositiveBridge.CoordinateStandard
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityPositiveBridge.SharpLoss
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.HarmonicApproximation
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantities
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Ellipticity
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Ellipticity.Descendants
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Ellipticity.QOneRoot
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Ellipticity.ScaleBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ.ChangeOfQ
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ.Descendants
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ.ScaleBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ.Series
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation.Basic
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation.CoefficientBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation.Geometric
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation.GeometricOne
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation.Geometry
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.HomogenizationError
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Response
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Theta
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedApex
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedComponentBounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedComponents
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedGlobalIteration
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedNoteApex
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedNoteConstants
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedRecurrences
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AveragedStepping
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.CorrectorEnergy
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.CorrectorEnergyAveraged
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.CorrectorEnergyPoincare
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.FluxStepping
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.FullStepping
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.GlobalAbsorbed
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.GlobalIteration
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.NeumannCorrector
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.WeakSolutionBridge
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.AECongruence
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.Bounds
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.Definitions
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.HodgeZero
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.Localization
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesComponentwise
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesPositiveQTwo
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesQTwo
-import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.DiracBridge
-import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.MField
-import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.PeriodicConcreteComparison
-import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.PeriodicGeneralComparison
-import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.PeriodicSmoothComparison
-import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.AKLLaw
-import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.Basic
-import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.CarrierLaw
-import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.SourceLaw
-import LeanPool.CoarseGraining.Homogenization.Geometry.BoundaryLayer
-import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedConvexDomain
-import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedMeasurableDomain
-import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeColoring
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
-import LeanPool.CoarseGraining.Homogenization.Geometry.Domain
-import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeBoundaryPush
-import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeMeasureBridge
-import LeanPool.CoarseGraining.Homogenization.Geometry.OverlapCenters
-import LeanPool.CoarseGraining.Homogenization.Geometry.OverlapCube
-import LeanPool.CoarseGraining.Homogenization.Geometry.ScaleColoring
-import LeanPool.CoarseGraining.Homogenization.Geometry.SignedPermutation
-import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCube
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCubeTranslation
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CarrierObservable
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.ClampedObservable
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CorePatchEnergy
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CutoffData
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.EfronSteinAE
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.EfronSteinPhase
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.MeasurableObservable
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.PerCoreEnergy
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Recombination
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Resample
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Variance
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.VarianceFinal
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.Geometry
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Averaging
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.GridCoverage
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Measurability
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Stability
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.IterationLemma
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Bounds
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Cutoff
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Identity
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Integrability
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Pointwise
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.TestPair
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Median
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Representation
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.Admissibility
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.DeGiorgiCore
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.Iteration
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.LevelEnergy
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.LevelRecursion
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.WeakForm
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.BadMaximal.P1
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.Basic
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra.P1
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra.P2
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra.P3
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra.P4
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.Inputs
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.MomentConsequences.P1
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.MomentConsequences.P2
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.AveragingUniform
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.BlockVarianceBound
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.FixedPhaseUniform
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Polarize
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.ProbeMoment
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Projection
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.RpowOpt
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Scalar
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.ScalarBounds
-import LeanPool.CoarseGraining.Homogenization.Internal
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Adapters
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.BasicVariationalIdentities
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.BlockCoarseMatrix
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.BlockMatrixField
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.CoarseGrainingEstimates
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledMu
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse.Common
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse.FirstVariation
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse.MaximizerAlgebra
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse.ResponseSpace
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse.ScalarMaximizers
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse.Theory
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Existence
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.FirstVariation
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientLinearity
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientUniqueness
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MagicIdentities
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixExtraction
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixPositivity
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Quadraticity
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SubadditivityScaling
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann.Common
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann.Dirichlet
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann.Neumann
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann.Theory
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann.ZeroDim
-import LeanPool.CoarseGraining.Homogenization.Meta.AxiomsAudit
-import LeanPool.CoarseGraining.Homogenization.Multiscale.CubeAverage
-import LeanPool.CoarseGraining.Homogenization.Multiscale.FiniteAverage
-import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedDomainCube
-import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedNorms
-import LeanPool.CoarseGraining.Homogenization.Multiscale.OverlapLp
-import LeanPool.CoarseGraining.Homogenization.Multiscale.Projection
-import LeanPool.CoarseGraining.Homogenization.Multiscale.ProjectionConvergence
-import LeanPool.CoarseGraining.Homogenization.Multiscale.ProjectionLp
-import LeanPool.CoarseGraining.Homogenization.PDE.DirichletRHS
-import LeanPool.CoarseGraining.Homogenization.PDE.EnergyIdentities
-import LeanPool.CoarseGraining.Homogenization.PDE.Harmonic
-import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicCube
-import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicHilbert
-import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicTranslation
-import LeanPool.CoarseGraining.Homogenization.PDE.NeumannRHS
-import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein
-import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.Fin
-import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.ProdDecomp
-import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.Transfer
-import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.TwoPoint
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigma
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigma.Basic
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigma.Operations
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaConcentration
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaConcentration.LargeRegime
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaConcentration.Preliminaries
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaConcentration.SmallRegime
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaExpRegime
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaExpRegime.FiniteSums
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaExpRegime.OneVariable
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaExpRegime.Preliminaries
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.IndependentCopy
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.MomentCalculus
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiCalculus
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiConcentration
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiConcentration.Concentration
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiConcentration.TailKernel
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiConcentration.Truncation
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma.Calculus
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma.Endpoint
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma.Parameters
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma.TailAndLogControl
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.BennettFunction
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.BennettKernel
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.CenteredTruncation
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.Corollaries
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.Endpoint
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.ProductDifference
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.ScalarBennett
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.Symmetric
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.Symmetrization
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.Truncation
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Triangle
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.WeakOrlicz
-import LeanPool.CoarseGraining.Homogenization.Probability.LocalEllipticitySlices
-import LeanPool.CoarseGraining.Homogenization.Probability.LocalEllipticitySlices.SymmetricL2
-import LeanPool.CoarseGraining.Homogenization.Probability.LocalObservable
-import LeanPool.CoarseGraining.Homogenization.Probability.OriginCubeSymmetry
-import LeanPool.CoarseGraining.Homogenization.Probability.RandomCoeffField
-import LeanPool.CoarseGraining.Homogenization.Probability.RandomField
-import LeanPool.CoarseGraining.Homogenization.Probability.RandomFieldMeasurability
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Differentiation
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.EllipticSet
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.EllipticSupport
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Endomorphisms
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Laws
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Restriction
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.RestrictionBridge
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Sigma
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SliceMeasurability
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SmoothSigma
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SmoothSliceMeasurability
-import LeanPool.CoarseGraining.Homogenization.Probability.RescaledLaw
-import LeanPool.CoarseGraining.Homogenization.Probability.Scalarization
-import LeanPool.CoarseGraining.Homogenization.Probability.SeparableHilbertMeasurability
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.AKL
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.AKL.Laws
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.AKL.RegQuotientAdapter
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Laws
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.RegIntegralAdapter
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.RescaledLaws
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Scaling
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Semantics
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.Extension
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FaceReflection
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FaceReflectionLines
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FaceReflectionMain
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.Fold
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldExtensionFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldNorm
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldNormFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldTransport
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.GagliardoNirenbergSobolev
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.GagliardoNirenbergSobolevFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.Limit
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.LimitFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.OneDimIBP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.PeelFubini
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpCoordinate
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AffineAverage
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CenteredCubeCalderonZygmundQTwo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH10
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Dilation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Translation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveMeanZero
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveSmooth
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare.W12Aggregation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare.W12Embedding
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare.W12LocalPoincare
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare.W12NormalizedPartition
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.AxisCubeHarmonicCovariance
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.AxisCubeHarmonicGain
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.AxisCubeNormalizedLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ClosedBallNormalizedL2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.CubeTranslationFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.DirichletEndpoint
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.DirichletNeumannEndpoint
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpArbitrary
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpBelowTwo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpDataDensity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpDuality
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpGradientLimit
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpLimitBound
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpLimitEquation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpLpData
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpSolutionSequence
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpSolutionStability
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpW10pLimit
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GlobalLocalization
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GlobalParentGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GlobalStoppingFamily
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambda
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaIntegration
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaLargeScale
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaParameters
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaStopping
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaTailControl
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaVitaliAssembly
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaVitaliSum
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.H10Adjoint
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.H1CutoffIntegrationByParts
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicDerivative
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientFirstGain
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientGainIteration
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientIterationGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientOneDim
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientTwoDim
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicInteriorHessian
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.InteriorHessianRowTailTransfer
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.InteriorLocalInputs
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.InteriorOneLevelTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.InteriorParentGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalComparisonBridges
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalHarmonicReplacement
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalScaledDatumEnergy
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalWeakRestriction
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalWeightedTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalWeightedTailRestrict
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.EnergyDuality
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.FiniteLpAboveTwo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.FiniteLpBelowTwo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectedGlobalEnergy
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectedOneLevelTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectionFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectionWeakEquation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.NeumannEndpoint
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.OneBallScaleFactor
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.OneBallTailAlgebra
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.OneStoppingBallComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.OneStoppingBallTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedGlobalEnergy
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedHessianRowOneLevelTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedLocalInputs
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedOneLevelTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedParentHessianRowIdentification
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedParentInteriorHessian
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionHessianRowCellH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionHessianRowWeightedTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionScalarWeightedTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionWeightedTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarDivergenceGradientW1p
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonGradientBelowTwo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessian
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessianAboveTwo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessianBelowTwo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessianTwo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.SourceParentFiniteLpExtension
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.StoppingCubeGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.StoppingEnergyTransfer
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.StoppingRadius
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.W10pWeakTestClosure
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.WeakHessianFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.WeakHessianRowL2Energy
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.WeakPoissonDerivative
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.WeightedLayerCake
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCoerciveH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ArbitraryCubeEndpoint
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.Definitions
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.EnergyBound
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.EuclideanNormalized
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.OddReflection
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.OriginCubeEndpoint
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.PoissonTranslation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionDivergenceRhs
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionHessianRowFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionL2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionParentH1Graph
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionScalarFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionWeakEquation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.Regularity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.SolverEnergy
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.Definitions
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.EuclideanNormalized
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.FoldedAndWeakScalar
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.MemL2AndPairings
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.Regularity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.VectorFieldAndApex
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.VectorFieldAndApex.BlockFold
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.VectorFieldAndApex.BlockGlobalAndApex
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.VectorFieldAndApex.ReflectedEqCellSlab
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.VectorFieldAndApex.WeakEquationHelpers
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInterior
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.Apex
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ArbitraryCubeEndpoint
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.CubeTranslationTransport
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.CutoffBoundaryError
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.CutoffTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.DiffQuotientLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.EnergyHalf
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.EnergyIntegrand
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.FaceVanishCollar
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.GradientAverage
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianBesovDepth
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianBesovSummation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianGradientH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianRestrictionSum
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianTranslation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.InnerCubeAndHessian
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.IntegralIdentity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.LimitHessian
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.LimitHessianPointwise
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.LimitPairing
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.Localizations
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.NeumannInterior
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.OpenInnerFunctional
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.OriginCubeEndpoint
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.PoissonTranslation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.PositiveBesovCore
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.QuantCutoffLowerH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.QuotientHessianRiesz
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentApprox
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentEnergyFactor
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentExactEnergy
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentH1Graph
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentInterior
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentL2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentOrthogonality
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentPotential
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentSmoothApprox
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentSmoothBound
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentTestFold
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentTestWeakIdentity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionWeakEquation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ScaledCoerciveDepth
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ScaledCubeGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.SmoothLimit
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.SmoothPointwise
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.SmoothTestBoundEstimate
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.SqCutoffH10
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.SummationByParts
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.TestSubmodule
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.WeakDerivativeTestClosure
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.AnalyticInput
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.BesovEstimate
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.DualTestNorm
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.EndpointDuality
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.FullVectorPoincare
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.FullVectorPoincareL2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.ProjectedVectorPoincare
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.Solver
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.CubePairings
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Derivatives
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Folding
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Folding.BlockDecomposition
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Folding.BlockIntegrals
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Folding.Geometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Homeomorphism
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Reflections
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Ball
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Box
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Cube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.DerivativeBounds
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Euclidean
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.OpenSet
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Profile
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.DifferenceQuotient
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.DifferenceQuotientH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.EuclideanL2CZ
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H10Graph
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph.CoerciveHilbert
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph.Graph
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph.Preliminaries
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Hodge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.HodgeCubeBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.MeanZero
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpIntegral
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel.Basic
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel.RieszPowerMean
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel.SegmentChangeOfVariables
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel.TimeCollapse
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpSmooth
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareSegment
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.ConvexApproxTendsto
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Core
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Dilation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.OverlapCube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.OverlapCubeVectorNormalized
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Seminorms
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.SmoothCase
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Translation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareZeroTrace
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.QuantitativeCutoff
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.WeakHessianEuclidean
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.ZeroTraceAverages
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.AssemblyPieces
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.BesovLeGagliardo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeDivergenceRescaling
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanH2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanL2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalCZ
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalCZFullNorm
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalGradientMemLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ClassicalDualComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CongruenceAE
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Constants
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.AllDimensionalComposition
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ContinuousDiscreteKBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ContinuousDiscreteKSeriesBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ContinuumSampleClosure
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.DiscreteKOverlapEnergy
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.EuclideanGagliardoCoordinateBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.EuclideanHsMeasurability
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.FullNormEquivalence
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.KInfimum
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.MeasurableRepresentative
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.OverlapCoordinateBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.OverlapGagliardoBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.PositiveDimensionalComposition
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.RootScaleControl
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.SeminormComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.TriadicScale
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.TriadicSeries
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ZeroDimensionalClosure
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousKFunctional
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ConvexApproxGagliardoLpBound
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ConvexApproxGagliardoSmoothing
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.DefinitionsAPI
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ENNRealBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanGagliardoCoordinateBridgeP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanH2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCompletedDualExtension
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCompletedDualGraph
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCongruence
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspDilation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspExactOverlapFullControl
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLegacyCircComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLocalization
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLpMembership
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspNegativeLocalization
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspPowerTwoBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDensity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDual
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDualBesovBound
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDualFieldPairing
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDualNegativeBesov
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothGraph
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothMembership
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspTranslation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanFullComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanLpComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanLpDisjointBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanPoincare
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePAveraging
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePDepthTriangle
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePFullCZ
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePGlobalBound
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePHomogeneity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePOneDepthCZ
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePPDESplitting
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePPoincareDepth
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapScalarComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapScalarPComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.GagliardoLeBesov
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.JensenStep
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.OverlapCount
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.OverlapIntegral
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.PairCapture
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ShellGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.TailSummation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.UnitCubeEuclideanL2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra.H10Function
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra.H1Function
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra.Membership
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Definitions
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.LocalizedZeroTrace
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.OriginCubeBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.OriginCubeSymmetry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Translation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
-import LeanPool.CoarseGraining.Homogenization.Sobolev.MatchedPair
-import LeanPool.CoarseGraining.Homogenization.Sobolev.MatchedPair.Core
-import LeanPool.CoarseGraining.Homogenization.Sobolev.MatchedPair.ScaledPoincare
-import LeanPool.CoarseGraining.Homogenization.Sobolev.NegativeSobolev
-import LeanPool.CoarseGraining.Homogenization.Sobolev.NormalizedLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidal
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalCubeBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalExact
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2OriginCubeBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Realization
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalOriginCubeBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalOriginCubeSymmetry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalTranslation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.SmoothCompactSupport
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.Approx
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.Basic
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.ChainRule
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.H10Limit
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.LevelSets
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.MatchedTrace
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.WeakGradientLimit
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.Continuity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.Convergence
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.Kernel
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.PointwiseBounds
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.SmoothRepresentative
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.WeakDerivComp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.WeakDerivSmoothing
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvolutionLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.CubeVector
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Definitions
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Dilation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.FiniteMeasureDowngrade
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.GlobalAffineLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.GlobalMollifierLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.H10GradientUpgrade
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.H1GradientUpgrade
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationWeakGradient
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Normalized
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Translation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.WeakGradientClosure
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ZeroExtensionGraph
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ZeroTraceClosure
-import LeanPool.CoarseGraining.Homogenization.Sobolev.WeakDerivatives
+
+public import LeanPool.CoarseGraining.Homogenization
+public import LeanPool.CoarseGraining.Homogenization.Ambient.Basic
+public import LeanPool.CoarseGraining.Homogenization.Ambient.BlockMatrix
+public import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
+public import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientFieldHilbert
+public import LeanPool.CoarseGraining.Homogenization.Ambient.Euclidean
+public import LeanPool.CoarseGraining.Homogenization.Ambient.HilbertFinite
+public import LeanPool.CoarseGraining.Homogenization.Ambient.MatrixOrderBridge
+public import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
+public import LeanPool.CoarseGraining.Homogenization.Besov.Basic
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.CaccioppoliBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.CaccioppoliVectorization
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.Elementary
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.Full
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.GlobalComparison
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapCaccioppoliBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapFull
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.Averages
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.Integrability
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.MainBounds
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.Projections
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectionLimit
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.WrapperComparison
+public import LeanPool.CoarseGraining.Homogenization.Besov.Localization
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactAggregationBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCirc
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDomination
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDominationFinite
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDominationQOne
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactCircDominationTop
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactDual
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactExponentBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactFiniteBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Bounds
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Descendants
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.HarmonicGradient
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.HarmonicGradient.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.HarmonicGradient.Descendants
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.HarmonicGradient.FullCirc
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.HarmonicGradient.LocalEstimate
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.HarmonicGradient.LocalMultiscale
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Projection
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Structures
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlap
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapEuclidean
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapEuclideanLp
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapEuclideanLpCoordinateBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapScalarP
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.Full
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.Overlap
+public import LeanPool.CoarseGraining.Homogenization.Besov.PositiveOverlapBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.ProjectionCharacterization
+public import LeanPool.CoarseGraining.Homogenization.Book
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.FieldSpaces
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.BesovPairing
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CircDomination
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.ClassicalInputsExact
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CubeDirichletH2
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CubeNeumannCZ
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.CutoffProduct
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.DualToCircLoss.FiniteLoss
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.DualToCircLoss.ProjectionTests
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.FractionalSobolevVsBesov
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.GradientToFunction
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.HodgeConverse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.HodgeProjectionL2
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.MeanSquareDeviation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.MultiscalePoincare
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.NegativeBesovLocalize
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.NormScaling
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.Poincare
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.PositiveBesovLocalize
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.PositiveBesovSeminormLocalize
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.PotentialSolenoidal
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.RadiusIteration
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Block
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.CoeffRestriction
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Dilation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.DoubledResponse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.HomogenizationError
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Interfaces
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Matrices
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.MultiscaleEllipticity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.ParentTruncatedHomogenizationError
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Response
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Setup
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Symmetric
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BasicVariationalIdentities
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BasicVariationalIdentitiesDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockCoarseMatrix
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockCoarseMatrixDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockMatrixField
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockMatrixFieldDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.CoarseGrainingEstimates
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.CoarseGrainingEstimatesDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DeterministicIdentities
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.Dilation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledMu
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledMuDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledResponse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledResponseDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.Existence
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.ExistenceDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.FirstVariation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.FirstVariationDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.GradientLinearity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.GradientLinearityDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.GradientUniqueness
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.GradientUniquenessDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.AEEq
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.EllipticityControl
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.Finite
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.InfinityOne
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.Public
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.ResponseBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.Translation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationErrorDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MagicIdentities
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MagicIdentitiesDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixExtraction
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixExtractionProofs
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixOperatorNorm
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixPositivity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Finite.ChangeExponentDiscount
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Finite.DiscountBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Finite.OneCubeBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Finite.Properties
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Finite.Series
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Finite.SmallTail
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Infinity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Localization
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Public
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity.Representatives
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticityDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.Quadraticity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.QuadraticityDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SolutionIntegrability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SubadditivityScaling
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SubadditivityScalingDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SymmetricDirichletNeumann
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SymmetricDirichletNeumannDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.WrapAround
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FinitePToLegacyQTwo
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonBridges
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonCZ
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonLocalization
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGraining
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingAggregation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingAssemblyAlgebra
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingDescendantWsp
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingForcing
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingNegativeAssembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingOneCube
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingPDE
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingResponse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingResponseOrder
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.NegativeBesov
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoli
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoli.Interface
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliDilationTransport
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.Bridges
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.EnergySplit
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.FinalBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.Prefactors
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.PublicRHSMonotonicity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.PublicRHSScalar
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.Setup
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.Theory
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliRHS.ZeroTraceValue
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScalarEnvelopes
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZero
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZeroBridge
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZeroBudgetEnvelopes
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZeroCore
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZeroRHS
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZeroRHS.Monotonicity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliScaleZeroScalarBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoliStandardScalar
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseFluxResponseRHS
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarsePoincare
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarsePoincare.Finite
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarsePoincare.Infinity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarsePoincare.NegativeBesov
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarsePoincareRHS
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.Duality
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.DualityPositivePairing
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.BoundaryGradient
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.Corrector
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.DirichletSplit
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.HarmonicRemainder
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.HarmonicRemainderSplit
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.Neumann
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.EnergyRHS.Theory
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.FluxResponse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.GeneralCoarseGrainingL2TwoExponent
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.HomogenizationBlackBoxes
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.Inhomogeneous
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.CoarseFluxResponseRHS
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.CoarseGrainingL2
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.CoeffField
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.EndPoints
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.Energy
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.H1Casts
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.H1Transport
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.WeakSolutionConstructors
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.WeakSolutions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.SobolevPublic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.WeakFluxRHS
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.WeakFluxRHS.Selection.AveragedTail
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.WeakFluxRHS.Selection.Budgets
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.WeakFluxRHS.Selection.Constructed
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.WeakFluxRHS.Selection.CorrectorEnergy
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.AnnealedDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.AnnealedObjects
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.CoeffFamily
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.BlockEnergyAverage
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.CarrierMinimizerFamily
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.CarrierMuFamily
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.MuFamily
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.CoarseObservableMeasurability.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.CoarseObservableMeasurability.Mu
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.FixedCompetitorEnergyMeasurability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.FixedCompetitorEnergyMeasurability.BlockEnergyAverage
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.FixedCompetitorEnergyMeasurability.Integrals
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.FixedCompetitorEnergyMeasurability.LipschitzBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.FixedCompetitorEnergyMeasurability.Measurability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.FixedCompetitorEnergyMeasurability.MuObservable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.PartitionAverageMomentHelpers
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.ScalarizationWitnesses
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Law
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Measurability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.MuLocalityGate
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Observable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.PartitionAverageConstants
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.RestrictionLaw
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.RestrictionObservable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Source
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceCanonicalMeasurability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceCoarseObservables
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceColorClassConcentration
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceColorClassIndependence
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceColorClassMoments
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceDescendantAverages
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceDescendantMoments
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceDilationLaw
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceEllipticity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceIndependence
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLaw
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLocalCoefficient
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceMeasurability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceMu
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceObservable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageFluctuations
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageLowMoments
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageMoments
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceResponseObservables
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceResponsePartitionAverages
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceStationaryExpectations
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Tails
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity.BlockLoewner
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity.LawCarrierAEBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity.LawCarrierAnnealedMatrix
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity.LawCarrierFullBlock
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.BlockExpectations
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.BlockResponseConcentration
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalAverages
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalSolutions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalSolutions.AverageIdentities
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalSolutions.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalSolutions.Measurability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CoarseObservables
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.ColorClassConcentration
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Concentration
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.ConcentrationAEMeasurable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.DescendantAverages
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.DescendantAveragesAEMeasurable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.DilationLaw
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.DilationResponse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Expectations
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.IndependenceDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.LocalCoefficient
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.MomentFactorBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.MomentFactorBounds.Apex
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.MomentFactorBounds.FactorBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.MomentFactorBounds.Helpers
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Mu
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageFluctuations
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageFluctuationsAEMeasurable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageMoments
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageMoments.CenteredAverage
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageMoments.Integrability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageMoments.OnCube
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageMoments.Rosenthal
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageMoments.Theory
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverages
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAveragesDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.RestrictionIndependence
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Scalarization
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.ScalarizationDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.StationaryExpectations
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.WidetildeTheta
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.TriadicCubeTranslation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Public
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.AnnealedConvergence
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.EntryScale
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.ExponentAbsorption
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.ShiftedP4
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51.SmallWidetildeEntry
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.CenteredResponses
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.Coefficients
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.Coefficients.Constants
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.Coefficients.RootCoeff
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.FluctuationBridge
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.GeometrySeries
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.GeometrySeries.DescendantCardinality
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.GeometrySeries.SmallTailTerm
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.GeometrySeries.TwoExponentBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.MomentBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.P4Integrability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.PointwiseSplits
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.PositiveExcessLowerAndIntegrability.LowerVariants
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.PositiveExcessLowerAndIntegrability.PowIntegrable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.PositiveExcessLowerAndIntegrability.UnitDescendantSup
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.PositiveExcessUpper
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.ScalarAlgebra
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.ScalarPreliminaries
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.Weights
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.WidetildeTheta
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.Common
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.AdditivityDefects
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.Assembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.CoarseAverages
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.CutoffOscillationUniform
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.EllipticityMoments
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.FinalRHS
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.FluctuationIntegrability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.HighScaleAverages
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.LinearProductAbsorption
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.LowScaleExpectation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.LowScaleTails
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.PairedSquares
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.PairedWeakNormSquares
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.PositiveExcessDefectSquare
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.PositiveExcessResponseDefect
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.RHSConversion
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.ResponseMomentIntegrability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.ScalarLoss
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.SpecialVectors
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.WeakNormInput
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.WeakNormSquareIntegrability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.YoungRHS
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Additivity.AnalyticInequalities
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Additivity.CrossTerm
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Additivity.Densities
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Additivity.ParentRestriction
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Averages
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.CanonicalFields
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.CutoffOscillation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.DeterministicAssembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.EnergyDensities
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.AEBound
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.Assembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.ExpectedRHSComparison
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.ManuscriptPointwiseBound
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.ManuscriptRHS
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.NormalizedCutoff
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.PointwiseBound
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.RHS
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Expectation.YoungRHS
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.FiveTermSplit
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.LinearTerms
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Product.Bound
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Product.Bridge
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.Product.Identity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundWeakNorms.WeightedChildren
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.AssemblyCore
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.AssemblyFinal
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.EnergyDefect
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.LowScales
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.RawIdentities
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.WeakNormsMaximizer.Splitting
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.Common
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.GoodScale
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.GoodScale.Assembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.GoodScale.ScalarBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.GoodScale.SpecialVectorAlgebra
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.Assembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.BetaBridge
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.CenteredResponses
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.CoarseFluctuationInput
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.CoarseFullBlock
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.CoarseRHSPrep
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.GoodScaleInputs
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.RHSCompression
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.RealAlgebra
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.ResponseMoment
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.ScaleErrors
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.OneStepContraction.TauSum
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.Pigeonhole
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.Pigeonhole.Assembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.Pigeonhole.RealAlgebra
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.Pigeonhole.ScalarChain
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.Assembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.BudgetAbsorption
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.FinalAbsorption
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.FiniteNet
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.GeometricSum
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.MatrixVariance
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.NormalizedBlocks
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.PartitionAverage
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ProbeMomentCompression
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ProbeVariance
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.QuadraticProbeBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.RefinedAssembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.RefinedProbeMoments
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.RefinedScalarVariance
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ScalarL2
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ScalarReduction
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ScalarVariance
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ScaleAbsorption
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ScaleCompression
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.AnnealedConvergence
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.AnnealedImprovement
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.DilatedP4
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedOneStepContraction
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta.Final
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta.ScalarPreliminaries
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta.TwoStep
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta.Uniform
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.HarmonicMean
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay.Final
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay.Iteration
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay.IterationConstants
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay.IterationCore
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay.Recurrence
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAlgebraicDecay.ScalarRecursion
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.FinalAssembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.FluctuationSumEstimate
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.MatrixAverageCompression
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.MatrixAverageEstimate
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.MatrixAverageGeometric
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.MatrixAveragePackaging
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.TraceAverageEstimate
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.TraceAveragePackaging
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.TraceBudgetAlgebra
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastAssembly.WeightedGeometricSummation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastJBound
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastJBound.Estimate
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.SmallContrastJBound.Preliminaries
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.ArbitraryIntegrability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.ErrorBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.MatrixTools
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.NormalizedStatements
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.TraceBudget
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56.VarianceEstimateQuadratic.Triangle
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.AbsoluteBadScaleTail
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.AbsoluteMinimalScale
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.AbsoluteScaleCompression
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.AbsoluteScaleCompressionFinal
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.AnnealedJLimit
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.AnnealedLimit
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadEventSummability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadPairNoLog
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadPairSelection
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentBoundsBottom
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentBoundsCrudeBottom
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentBoundsHigh
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentBoundsTop
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentRows
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentSummation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleComponentUnion
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleEntrySplit
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleMinimal
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleMinimalQuantitative
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScalePairCollapse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScalePairTwoBranch
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScalePrefactorGap
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScalePrefactorGapQuantitative
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleSplit
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailAssembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailCollapse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailDenominator
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailExponent
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailFinal
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailFinalQuantitative
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailJoint
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailRaw
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailRawCrude
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailSelected
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleTailTwoBranch
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleThresholds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadScaleUnion
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.BadTailUnion
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.DeterministicThresholds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.EllipticityFromMinimalScale
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.EntryScaleCompression
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ExponentCompetition
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ExponentialKernel
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.FiniteBasis
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.FiniteSupTail
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.FirstQuenchedEstimate
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.FirstQuenchedEstimateCompressed
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationAssembly
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationAssemblyEndpoint
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationAssemblyOptimized
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationAssemblyRHS
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationErrorClosed
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationErrorControl
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationErrorFiniteQ
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationErrorLowerEnvelope
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationErrorMinimalScale
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationErrorQuenched
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.HomogenizationQuenched
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.KernelUnion
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LimitNormalization
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LocalizedFiniteBasis
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LocalizedMax
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LocalizedMaxTail
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LocalizedUnitEllipticity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LocalizedUnitEllipticityMinimal
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.MinimalScaleTail
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.NormalizedResponseEllipticity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ProbeEnvelope
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ProbeMax
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.QuenchedGammaEllipticity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.QuenchedLocalizedEstimate
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ScaleCompression
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ScaleCompressionFinal
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ScaleCompressionThreshold
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.ScaleGeometry
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.SmallBottomBand
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.SmallBottomTail
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformBadScaleMinimalQuantitative
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformBadScaleTail
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformBadScaleTailCollapse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformBadScaleTailFinal
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformCrudeBottom
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformEllipticityBridge
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformEllipticityEndpoint
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformEndpointDenominator
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformEndpointSynchronized
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformHighBottom
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformHighTop
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformHomogenizationQuenched
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UniformScaleCompressionFinal
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UnitEllipticityMinimalExpLogSq
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.UnitJTail
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.WeightedExponentialKernel
+public import LeanPool.CoarseGraining.Homogenization.Book.MainResults
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.BasicAdjoint
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.EllipticWrappers
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.SigmaAdjoint
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.EllipticBounds
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.MatrixIdentities
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.Properties
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.Structures
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockMatrixProperties
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Equalities
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Equalities.Helpers
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Equalities.LowerImageNamespace
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Equalities.MainEqualities
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Foundations
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Foundations.BasicIdentities
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Foundations.IntegrabilityFamily
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Foundations.PairHalfAdmissible
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Foundations.PairStates
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Perturbation
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Perturbation.BlockEnergyFirstVariation
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Perturbation.Integrand
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Perturbation.PairHalfScalar
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Perturbation.ResponseJMuAdjoint
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockResponse.Perturbation.VolumeAverage
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.AeBridge
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.LawObservable
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.Sandwich
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CubeMinimizer
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Definitions
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimization
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimizationMeasurability
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.Basics
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.BlockSubadditivity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.BCoarseAveraged
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.BCoarseCanonical
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.MagicIdentities
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.OriginCube
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaCoarsePosDef
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaLeBCoarse
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaStarInvAveraged
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaStarLeSigma
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaStarPosDef
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticWrappers
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.HarmonicMean
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.Identities
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.UpperLeftAverage
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.StarredSubadditivity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuAdmissibility
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.AEEOperator
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.AEEOperator.CanonicalCubeSet
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.AEEOperator.CoeffOperatorData
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.CoeffOperator
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.HilbertOperator
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuQuadratic
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery.CorrectionSpaceBasic
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery.CorrectionSpaceEnergy
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery.CorrectionSpaceSolenoidal
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery.RecoveryPackages
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery.Setup
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecoveryBlockResponse
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuWellPosedness
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.DeterministicCoarseData
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.Existence
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.MuGeVecDot
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.QuadraticMu
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.Setup
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.Subadditivity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery.Translate
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeOpenBridge
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeSymmetry
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability.CauchySchwarz
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability.Integral
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas.BasicVariation
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas.CanonicalBasic
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas.CanonicalFormulas
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas.CoarseFormulas
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.ConvexAverageFormulas
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Existence
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Foundations
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Foundations.Algebra
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Foundations.Ellipticity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Foundations.Maximizer
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Homogeneity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds.Basic
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds.DiagonalSandwich
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Subadditivity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.AverageFormulas
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.Basic
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.Bracketing
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.CoarseMatrices
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.CompletedSquare
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.OpenBoundedConvex
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.OriginCube
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.Response
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.VariationalProblems
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Translation
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Basic
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Boundary
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Boundary.ExplicitHeight
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Boundary.NoteRhs
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Boundary.NoteRhs.Basic
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Boundary.NoteRhs.StandardSplit
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CrossTerm
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CrossTerm.ExplicitHeight
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CrossTerm.Localized
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CrossTerm.Scalar
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.CenteredProduct
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.CenteredProductFullDual
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.Geometry
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.LocalPairing
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.OneCube
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.PositiveSeminorms
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.PositiveSeminorms.Bounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.PositiveSeminorms.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.SplitPairing
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.SplitPairing.Centered
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.SplitPairing.Scalar
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.SplitPairing.Vector
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.SplitPairing.VectorFullDual
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.VectorProduct
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.CenteredLocalCoefficient
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.CutoffSizes
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.DescendantSummation
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.DescendantSummation.Averages
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.DescendantSummation.ExactRhs
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.DescendantSummation.Gradient
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.DescendantSummationFullDual
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.ExactRhs
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.Flux
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalConstantBranch
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalEstimate
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalEstimate.Cutoff
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalEstimate.SingleCube
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalEstimate.Split
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalEstimateFullDual
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalPatchCutoff
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.LocalizedEnergyProfile
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.QuantitativeCutoff
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.QuantitativeCutoff.Basic
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.QuantitativeCutoff.NormalizedAndGradient
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.SingleCubeRhs
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Height
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Interior
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.RadiusIteration
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.RadiusIteration.Standard
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.Boundary
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.FinalWrappers
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicCanonicalGradient
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicCanonicalGradient.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicCanonicalGradient.Specializations
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicCoefficientBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.CoefficientBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.CorePositiveFactors
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.Endpoints
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.CenteredFactors
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.CenteredFactors.Besov
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.CenteredFactors.BufferedAlpha
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.CenteredFactors.LocalAlpha
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.CenteredFronts
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.Constructor
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.LocalPatchConstructor
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.LocalPatchConstructor.ConstantBranch
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.ExactSmallCube.LocalPatchConstructor.Factors
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.FaithfulDescendant
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.LocalPatchNoteRawBridge
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.LocalPatchNoteRawBridge.BoundarySplit
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.LocalPatchNoteRawBridge.CoefficientBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.NoteRawBridge
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.NoteRawBridge.BoundarySplit
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.NoteRawBridge.CoefficientLocalization
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.PositiveFactors
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.InputSpecializations.SolutionInputs
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.Setup.CoefficientBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicFinal.Setup.SolutionInputs
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicGradientControls
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicQuantitativeCutoff
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicQuantitativeCutoff.BoundaryCanonical
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicQuantitativeCutoff.InteriorCanonical
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicQuantitativeCutoff.Standard
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.HarmonicScalarControls
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.Interior
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.LocalPatchWeakTesting
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.Localization
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.Canonical
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.LocalPatch
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.Setup
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.Setup.Canonical
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.Setup.ConstantCoeff
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.Setup.ScaleBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.QuantitativeCutoffInputs.Standard
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.RadiusInputs
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.RadiusInputs.Profiles
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.RadiusInputs.Setup
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.SingleCubeToRaw.WeakTesting
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.TriadicScale
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliCutoffProduct
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliEnergyBridge
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliLocalBridge
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliLocalGradientBridge
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliSingleCubeToRaw
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.EnergyForm
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.PrivateLemmas
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHS
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantAbsorption
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApex
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexComponent
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexEnergy
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletBV
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletBVForce
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletCorrectedWeakFlux
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletCorrectedWeakFluxAveraged
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletEnergy
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletEstimates
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletHomogeneous
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletScalarAdequacy
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletTail
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantApexZeroDirichletWeakFluxScalarAdequacy
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantEnvelope
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSCorrections
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSScalarAbsorption
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.Response
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.QOne
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.QTwo
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup.Conversions
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup.EnergyControls
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup.HarmonicAndData
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup.UniformBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AbsorbedErrors
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal.ComponentBoundsBasic
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal.DescendantsAverage
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.AveragedLocal.LocalizedEnergyForce
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Compatibility
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Constants
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Correctors
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.DepthWeightAlgebra
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Energy
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.FinalTheorems
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.FinalTheorems.ExpandedAndElliptic
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.FinalTheorems.NoteStepAndConstants
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.FinalTheorems.ZeroDirichletEnergy
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.ForceLocalization
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.GlobalBaseBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.GlobalIteration
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.GlobalQuantities
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalCorrector
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalNoteTerms
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalNoteTerms.Bounded
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalNoteTerms.Intrinsic
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalNoteTerms.Stepping
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalStep
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalStep.DiscountNext
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalStep.HarmonicStepping
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.LocalizedIteration
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.NoteConstants
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.Regularity
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.SeminormRecurrence
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.TerminalBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHSLocalRecurrence
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingGradient
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingGradientExplicit
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingResidual
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingResidualExplicit
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.AveragingScale
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.Basic
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CenteredCubeHsRegularity
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CenteredCubeScaleTransport
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ConcreteAveraging
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ContinuousKFullRegularity
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ContinuousKRegularity
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CubeVectorH1
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.DirichletBridge
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.DiscreteConvolution
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ExactOverlapEuclideanRegularity
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.KAveraging
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.KFunctional
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapCenters
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapFluctuation
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapGeometry
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapLp
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapPoincare
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.PartitionDerivatives
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.PartitionGeometry
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.PartitionWeights
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.PositiveNorm
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.PublicTheorems
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardOverlapComparison
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionBoundary
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionBoundaryGap
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionBoundaryNeighbor
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionBoundaryNeighborCount
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionIncrementEnergy
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionResidual
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionSharpKernel
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionSummation
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.StandardProjectionVector
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2RHSCoefficientLocalization
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2RHSComparison
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2Response
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2WeakFlux
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.Duality
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityExponentLoss
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityPositiveBridge
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityPositiveBridge.Contracts
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityPositiveBridge.CoordinateStandard
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityPositiveBridge.SharpLoss
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.HarmonicApproximation
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantities
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Ellipticity
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Ellipticity.Descendants
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Ellipticity.QOneRoot
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Ellipticity.ScaleBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ.ChangeOfQ
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ.Descendants
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ.ScaleBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.EllipticityFiniteQ.Series
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation.Basic
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation.CoefficientBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation.Geometric
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation.GeometricOne
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation.Geometry
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.HomogenizationError
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Response
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Theta
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedApex
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedComponentBounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedComponents
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedGlobalIteration
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedNoteApex
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedNoteConstants
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AbsorbedRecurrences
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.AveragedStepping
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.CorrectorEnergy
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.CorrectorEnergyAveraged
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.CorrectorEnergyPoincare
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.FluxStepping
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.FullStepping
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.GlobalAbsorbed
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.GlobalIteration
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.NeumannCorrector
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS.WeakSolutionBridge
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.AECongruence
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.Bounds
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.HodgeZero
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.Localization
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesComponentwise
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesPositiveQTwo
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesQTwo
+public import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.DiracBridge
+public import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.MField
+public import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.PeriodicConcreteComparison
+public import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.PeriodicGeneralComparison
+public import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.PeriodicSmoothComparison
+public import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.AKLLaw
+public import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.Basic
+public import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.CarrierLaw
+public import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.SourceLaw
+public import LeanPool.CoarseGraining.Homogenization.Geometry.BoundaryLayer
+public import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedConvexDomain
+public import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedMeasurableDomain
+public import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeColoring
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
+public import LeanPool.CoarseGraining.Homogenization.Geometry.Domain
+public import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeBoundaryPush
+public import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeMeasureBridge
+public import LeanPool.CoarseGraining.Homogenization.Geometry.OverlapCenters
+public import LeanPool.CoarseGraining.Homogenization.Geometry.OverlapCube
+public import LeanPool.CoarseGraining.Homogenization.Geometry.ScaleColoring
+public import LeanPool.CoarseGraining.Homogenization.Geometry.SignedPermutation
+public import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCube
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCubeTranslation
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CarrierObservable
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.ClampedObservable
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CorePatchEnergy
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CutoffData
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.EfronSteinAE
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.EfronSteinPhase
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.MeasurableObservable
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.PerCoreEnergy
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Recombination
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Resample
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Variance
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.VarianceFinal
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.Geometry
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Averaging
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.GridCoverage
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Measurability
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Stability
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.IterationLemma
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Bounds
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Cutoff
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Identity
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Integrability
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Pointwise
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.TestPair
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Median
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Representation
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.Admissibility
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.DeGiorgiCore
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.Iteration
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.LevelEnergy
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.LevelRecursion
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.WeakForm
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.BadMaximal.P1
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.Basic
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra.P1
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra.P2
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra.P3
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra.P4
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.Inputs
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.MomentConsequences.P1
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.MomentConsequences.P2
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.AveragingUniform
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.BlockVarianceBound
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.FixedPhaseUniform
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Polarize
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.ProbeMoment
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Projection
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.RpowOpt
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Scalar
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.ScalarBounds
+public import LeanPool.CoarseGraining.Homogenization.Internal
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Adapters
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.BasicVariationalIdentities
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.BlockCoarseMatrix
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.BlockMatrixField
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.CoarseGrainingEstimates
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledMu
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse.Common
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse.FirstVariation
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse.MaximizerAlgebra
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse.ResponseSpace
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse.ScalarMaximizers
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.DoubledResponse.Theory
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Existence
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.FirstVariation
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientLinearity
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.GradientUniqueness
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MagicIdentities
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixExtraction
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixPositivity
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Quadraticity
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SubadditivityScaling
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann.Common
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann.Dirichlet
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann.Neumann
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann.Theory
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.SymmetricDirichletNeumann.ZeroDim
+public import LeanPool.CoarseGraining.Homogenization.Meta.AxiomsAudit
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.CubeAverage
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.FiniteAverage
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedDomainCube
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedNorms
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.OverlapLp
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.Projection
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.ProjectionConvergence
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.ProjectionLp
+public import LeanPool.CoarseGraining.Homogenization.PDE.DirichletRHS
+public import LeanPool.CoarseGraining.Homogenization.PDE.EnergyIdentities
+public import LeanPool.CoarseGraining.Homogenization.PDE.Harmonic
+public import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicCube
+public import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicHilbert
+public import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicTranslation
+public import LeanPool.CoarseGraining.Homogenization.PDE.NeumannRHS
+public import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein
+public import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.Fin
+public import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.ProdDecomp
+public import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.Transfer
+public import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.TwoPoint
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigma
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigma.Basic
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigma.Operations
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaConcentration
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaConcentration.LargeRegime
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaConcentration.Preliminaries
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaConcentration.SmallRegime
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaExpRegime
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaExpRegime.FiniteSums
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaExpRegime.OneVariable
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaExpRegime.Preliminaries
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.IndependentCopy
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.MomentCalculus
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiCalculus
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiConcentration
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiConcentration.Concentration
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiConcentration.TailKernel
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiConcentration.Truncation
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma.Calculus
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma.Endpoint
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma.Parameters
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma.TailAndLogControl
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.BennettFunction
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.BennettKernel
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.CenteredTruncation
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.Corollaries
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.Endpoint
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.ProductDifference
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.ScalarBennett
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.Symmetric
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.Symmetrization
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.Truncation
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Triangle
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.WeakOrlicz
+public import LeanPool.CoarseGraining.Homogenization.Probability.LocalEllipticitySlices
+public import LeanPool.CoarseGraining.Homogenization.Probability.LocalEllipticitySlices.SymmetricL2
+public import LeanPool.CoarseGraining.Homogenization.Probability.LocalObservable
+public import LeanPool.CoarseGraining.Homogenization.Probability.OriginCubeSymmetry
+public import LeanPool.CoarseGraining.Homogenization.Probability.RandomCoeffField
+public import LeanPool.CoarseGraining.Homogenization.Probability.RandomField
+public import LeanPool.CoarseGraining.Homogenization.Probability.RandomFieldMeasurability
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Differentiation
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.EllipticSet
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.EllipticSupport
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Endomorphisms
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Laws
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Restriction
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.RestrictionBridge
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Sigma
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SliceMeasurability
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SmoothSigma
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SmoothSliceMeasurability
+public import LeanPool.CoarseGraining.Homogenization.Probability.RescaledLaw
+public import LeanPool.CoarseGraining.Homogenization.Probability.Scalarization
+public import LeanPool.CoarseGraining.Homogenization.Probability.SeparableHilbertMeasurability
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.AKL
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.AKL.Laws
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.AKL.RegQuotientAdapter
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Laws
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.RegIntegralAdapter
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.RescaledLaws
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Scaling
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Semantics
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.Extension
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FaceReflection
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FaceReflectionLines
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FaceReflectionMain
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.Fold
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldExtensionFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldNorm
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldNormFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldTransport
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.GagliardoNirenbergSobolev
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.GagliardoNirenbergSobolevFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.Limit
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.LimitFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.OneDimIBP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.PeelFubini
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpCoordinate
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AffineAverage
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CenteredCubeCalderonZygmundQTwo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH10
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Dilation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Translation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveMeanZero
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveSmooth
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare.W12Aggregation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare.W12Embedding
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare.W12LocalPoincare
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare.W12NormalizedPartition
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.AxisCubeHarmonicCovariance
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.AxisCubeHarmonicGain
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.AxisCubeNormalizedLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ClosedBallNormalizedL2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.CubeTranslationFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.DirichletEndpoint
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.DirichletNeumannEndpoint
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpArbitrary
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpBelowTwo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpDataDensity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpDuality
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpGradientLimit
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpLimitBound
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpLimitEquation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpLpData
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpSolutionSequence
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpSolutionStability
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpW10pLimit
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GlobalLocalization
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GlobalParentGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GlobalStoppingFamily
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambda
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaIntegration
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaLargeScale
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaParameters
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaStopping
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaTailControl
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaVitaliAssembly
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaVitaliSum
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.H10Adjoint
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.H1CutoffIntegrationByParts
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicDerivative
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientFirstGain
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientGainIteration
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientIterationGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientOneDim
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientTwoDim
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicInteriorHessian
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.InteriorHessianRowTailTransfer
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.InteriorLocalInputs
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.InteriorOneLevelTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.InteriorParentGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalComparisonBridges
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalHarmonicReplacement
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalScaledDatumEnergy
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalWeakRestriction
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalWeightedTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalWeightedTailRestrict
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.EnergyDuality
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.FiniteLpAboveTwo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.FiniteLpBelowTwo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectedGlobalEnergy
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectedOneLevelTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectionFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectionWeakEquation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.NeumannEndpoint
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.OneBallScaleFactor
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.OneBallTailAlgebra
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.OneStoppingBallComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.OneStoppingBallTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedGlobalEnergy
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedHessianRowOneLevelTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedLocalInputs
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedOneLevelTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedParentHessianRowIdentification
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedParentInteriorHessian
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionHessianRowCellH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionHessianRowWeightedTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionScalarWeightedTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionWeightedTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarDivergenceGradientW1p
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonGradientBelowTwo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessian
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessianAboveTwo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessianBelowTwo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessianTwo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.SourceParentFiniteLpExtension
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.StoppingCubeGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.StoppingEnergyTransfer
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.StoppingRadius
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.W10pWeakTestClosure
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.WeakHessianFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.WeakHessianRowL2Energy
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.WeakPoissonDerivative
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.WeightedLayerCake
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCoerciveH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ArbitraryCubeEndpoint
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.EnergyBound
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.EuclideanNormalized
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.OddReflection
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.OriginCubeEndpoint
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.PoissonTranslation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionDivergenceRhs
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionHessianRowFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionL2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionParentH1Graph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionScalarFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionWeakEquation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.Regularity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.SolverEnergy
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.EuclideanNormalized
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.FoldedAndWeakScalar
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.MemL2AndPairings
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.Regularity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.VectorFieldAndApex
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.VectorFieldAndApex.BlockFold
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.VectorFieldAndApex.BlockGlobalAndApex
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.VectorFieldAndApex.ReflectedEqCellSlab
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.VectorFieldAndApex.WeakEquationHelpers
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInterior
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.Apex
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ArbitraryCubeEndpoint
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.CubeTranslationTransport
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.CutoffBoundaryError
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.CutoffTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.DiffQuotientLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.EnergyHalf
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.EnergyIntegrand
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.FaceVanishCollar
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.GradientAverage
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianBesovDepth
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianBesovSummation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianGradientH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianRestrictionSum
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianTranslation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.InnerCubeAndHessian
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.IntegralIdentity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.LimitHessian
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.LimitHessianPointwise
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.LimitPairing
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.Localizations
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.NeumannInterior
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.OpenInnerFunctional
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.OriginCubeEndpoint
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.PoissonTranslation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.PositiveBesovCore
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.QuantCutoffLowerH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.QuotientHessianRiesz
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentApprox
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentEnergyFactor
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentExactEnergy
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentH1Graph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentInterior
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentL2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentOrthogonality
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentPotential
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentSmoothApprox
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentSmoothBound
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentTestFold
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionParentTestWeakIdentity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ReflectionWeakEquation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ScaledCoerciveDepth
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.ScaledCubeGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.SmoothLimit
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.SmoothPointwise
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.SmoothTestBoundEstimate
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.SqCutoffH10
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.SummationByParts
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.TestSubmodule
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.WeakDerivativeTestClosure
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.AnalyticInput
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.BesovEstimate
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.DualTestNorm
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.EndpointDuality
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.FullVectorPoincare
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.FullVectorPoincareL2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.ProjectedVectorPoincare
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.Solver
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.CubePairings
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Derivatives
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Folding
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Folding.BlockDecomposition
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Folding.BlockIntegrals
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Folding.Geometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Homeomorphism
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Reflections
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Ball
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Box
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Cube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.DerivativeBounds
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Euclidean
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.OpenSet
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Profile
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.DifferenceQuotient
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.DifferenceQuotientH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.EuclideanL2CZ
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H10Graph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph.CoerciveHilbert
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph.Graph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph.Preliminaries
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Hodge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.HodgeCubeBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.MeanZero
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpIntegral
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel.Basic
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel.RieszPowerMean
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel.SegmentChangeOfVariables
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel.TimeCollapse
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpSmooth
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareSegment
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.ConvexApproxTendsto
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Core
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Dilation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.OverlapCube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.OverlapCubeVectorNormalized
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Seminorms
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.SmoothCase
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Translation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareZeroTrace
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.QuantitativeCutoff
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.WeakHessianEuclidean
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.ZeroTraceAverages
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.AssemblyPieces
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.BesovLeGagliardo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeDivergenceRescaling
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanH2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanL2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalCZ
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalCZFullNorm
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalGradientMemLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ClassicalDualComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CongruenceAE
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Constants
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.AllDimensionalComposition
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ContinuousDiscreteKBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ContinuousDiscreteKSeriesBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ContinuumSampleClosure
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.DiscreteKOverlapEnergy
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.EuclideanGagliardoCoordinateBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.EuclideanHsMeasurability
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.FullNormEquivalence
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.KInfimum
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.MeasurableRepresentative
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.OverlapCoordinateBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.OverlapGagliardoBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.PositiveDimensionalComposition
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.RootScaleControl
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.SeminormComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.TriadicScale
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.TriadicSeries
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ZeroDimensionalClosure
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousKFunctional
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ConvexApproxGagliardoLpBound
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ConvexApproxGagliardoSmoothing
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.DefinitionsAPI
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ENNRealBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanGagliardoCoordinateBridgeP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanH2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCompletedDualExtension
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCompletedDualGraph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCongruence
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspDilation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspExactOverlapFullControl
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLegacyCircComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLocalization
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLpMembership
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspNegativeLocalization
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspPowerTwoBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDensity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDual
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDualBesovBound
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDualFieldPairing
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDualNegativeBesov
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothGraph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothMembership
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspTranslation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanFullComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanLpComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanLpDisjointBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanPoincare
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePAveraging
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePDepthTriangle
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePFullCZ
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePGlobalBound
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePHomogeneity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePOneDepthCZ
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePPDESplitting
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePPoincareDepth
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapScalarComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapScalarPComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.GagliardoLeBesov
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.JensenStep
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.OverlapCount
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.OverlapIntegral
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.PairCapture
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ShellGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.TailSummation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.UnitCubeEuclideanL2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra.H10Function
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra.H1Function
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra.Membership
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.LocalizedZeroTrace
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.OriginCubeBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.OriginCubeSymmetry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Translation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.MatchedPair
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.MatchedPair.Core
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.MatchedPair.ScaledPoincare
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.NegativeSobolev
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.NormalizedLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidal
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalCubeBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalExact
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2OriginCubeBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Realization
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalOriginCubeBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalOriginCubeSymmetry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalTranslation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.SmoothCompactSupport
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.Approx
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.Basic
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.ChainRule
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.H10Limit
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.LevelSets
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.MatchedTrace
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.WeakGradientLimit
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.Continuity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.Convergence
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.Kernel
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.PointwiseBounds
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.SmoothRepresentative
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.WeakDerivComp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.WeakDerivSmoothing
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvolutionLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.CubeVector
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Dilation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.FiniteMeasureDowngrade
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.GlobalAffineLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.GlobalMollifierLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.H10GradientUpgrade
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.H1GradientUpgrade
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationWeakGradient
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Normalized
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Translation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.WeakGradientClosure
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ZeroExtensionGraph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ZeroTraceClosure
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.WeakDerivatives
 
 /-!
 # Coarse-graining theory for elliptic equations
@@ -1606,4 +1608,6 @@ Tags: elliptic-pde, stochastic-homogenization, probability, functional-analysis
 MSC: 35B27, 60H25
 -/
 
-import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
+public import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
+
+@[expose] public section

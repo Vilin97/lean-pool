@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SmoothSigma
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SmoothSigma
 
 /-!
 # Coarse-to-regular integral adapter
@@ -14,6 +16,8 @@ This module compares the source coarse integral sigma algebra with the smooth
 integral sigma algebra on regular coefficient fields.  It deliberately does
 not equip the adapter with measurability into the canonical regular carrier.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Source.Coarse
 

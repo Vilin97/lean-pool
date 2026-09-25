@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.CutoffBoundaryError
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Reflections
-import Mathlib.Analysis.Calculus.MeanValue
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.CutoffBoundaryError
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Reflections
+public import Mathlib.Analysis.Calculus.MeanValue
 
 /-! # Face Vanish Collar -/
+
+@[expose] public section
 
 namespace Homogenization
 

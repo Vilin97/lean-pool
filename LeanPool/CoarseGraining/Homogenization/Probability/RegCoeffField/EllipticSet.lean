@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Sigma
-import Mathlib.Analysis.Convex.Basic
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.Topology.Instances.Matrix
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Sigma
+public import Mathlib.Analysis.Convex.Basic
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Mathlib.Topology.Instances.Matrix
 
 /-!
 # The elliptic-matrix locus is closed, convex and measurable
@@ -32,6 +34,8 @@ genuine pi type so that closed matrix sets are measurable for the carrier's
 
 Reference: the paper (Armstrong–Kuusi–Loher, to appear).
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

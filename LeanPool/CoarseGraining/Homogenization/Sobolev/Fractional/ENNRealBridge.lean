@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.Overlap
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.Overlap
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
 
 /-!
 # ℝ≥0∞ bridge for the overlap Besov pieces
@@ -19,6 +21,8 @@ Bridge lemmas toward the Gagliardo side are stated as junk-value-safe
 inequalities (`≤`), which hold without integrability hypotheses; equalities
 hold under `MemLp` and are provided where needed.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Gagliardo

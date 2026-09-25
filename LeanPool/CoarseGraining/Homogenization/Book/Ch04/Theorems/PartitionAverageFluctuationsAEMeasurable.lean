@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.DescendantAveragesAEMeasurable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageFluctuations
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.DescendantAveragesAEMeasurable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAverageFluctuations
 
 /-! # Partition Average Fluctuations AEMeasurable -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

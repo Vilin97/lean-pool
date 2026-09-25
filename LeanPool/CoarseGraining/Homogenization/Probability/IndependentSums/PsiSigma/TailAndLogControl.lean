@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Log.Monotone
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Triangle
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiConcentration
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Monotone
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Triangle
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiConcentration
 
 /-! # Tail And Log Control -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace IndependentSums

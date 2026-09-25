@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpSolutionSequence
-import Mathlib.MeasureTheory.Function.LpSpace.Complete
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpSolutionSequence
+public import Mathlib.MeasureTheory.Function.LpSpace.Complete
 
 /-!
 # Internal gradient limits for finite-`L^p` cube data
@@ -14,6 +16,8 @@ This module only completes the canonical finite-data gradients.  In
 particular, it deliberately contains neither a limiting scalar solution nor a
 zero-trace assertion.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

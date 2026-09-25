@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Averaging
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Averaging
 
 /-!
 # Uniform-constant grid-phase averaging
@@ -14,6 +16,8 @@ import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseCompari
 `576·d`, so the same reproduction trick used in `FixedPhaseUniform` pulls it
 outside the field quantifiers, giving `∃ Cd, ∀ params`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

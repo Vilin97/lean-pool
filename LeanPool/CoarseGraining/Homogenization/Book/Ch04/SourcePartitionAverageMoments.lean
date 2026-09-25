@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceDescendantMoments
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceStationaryExpectations
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceDescendantMoments
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourcePartitionAverageDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceStationaryExpectations
 
 /-!
 # One-origin real-moment partition-average bounds
@@ -14,6 +16,8 @@ import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceStationaryExpectat
 This module derives the real-exponent partition-average moment estimate on the
 exact coarse source carrier from one local origin observable.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

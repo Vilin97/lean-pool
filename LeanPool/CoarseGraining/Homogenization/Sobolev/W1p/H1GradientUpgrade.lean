@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.WeakGradientClosure
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.WeakGradientClosure
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
 
 /-!
 # Upgrading `H¹` witnesses from higher-integrable gradients
@@ -17,6 +19,8 @@ coordinates belong to a finite `L^p` space is also a `W^{1,p}` witness.  The
 value membership is obtained from mixed-exponent convex smoothing and the
 finite-`p` Poincare estimate; it is not an additional hypothesis.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

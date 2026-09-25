@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Dilation
-import Mathlib.MeasureTheory.Function.ContinuousMapDense
-import Mathlib.MeasureTheory.Function.UniformIntegrable
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Dilation
+public import Mathlib.MeasureTheory.Function.ContinuousMapDense
+public import Mathlib.MeasureTheory.Function.UniformIntegrable
 
 /-!
 # Global affine expansion in finite `Lᵖ`
@@ -14,6 +16,8 @@ import Mathlib.MeasureTheory.Function.UniformIntegrable
 This file isolates the volume transport and strong finite-`Lᵖ` continuity of
 the outward affine map used by inward mollification.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

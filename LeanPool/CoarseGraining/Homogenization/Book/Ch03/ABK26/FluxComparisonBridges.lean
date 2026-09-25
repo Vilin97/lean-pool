@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.H1Transport
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLp
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.H1Transport
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLp
 
 /-!
 # Structural bridges for the Chapter 3 flux-comparison estimate
@@ -17,6 +19,8 @@ solenoidal predicates used by the deterministic testing layer.  It contains
 only algebraic and measure-normalization bridges; no quantitative estimate is
 proved here.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

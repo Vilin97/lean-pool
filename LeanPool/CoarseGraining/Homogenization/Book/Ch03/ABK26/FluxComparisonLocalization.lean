@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonBridges
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspNegativeLocalization
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonBridges
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspNegativeLocalization
 
 /-!
 # Root-to-descendant localization for the Chapter 3 flux defect
@@ -13,6 +15,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspNeg
 This is the exact localization step which identifies the generic smooth-dual
 negative-norm descendant average with the source-facing flux-defect average.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Sigma
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Sigma
 
 /-!
 # Smooth integral sigma algebras on regular coefficient fields
@@ -14,6 +16,8 @@ by source-facing integral-local probability APIs.  It intentionally installs no
 ambient measurable-space instance and remains separate from pointwise and
 restriction-local constructions.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

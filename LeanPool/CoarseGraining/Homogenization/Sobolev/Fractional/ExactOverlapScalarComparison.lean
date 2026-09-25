@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlap
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.BesovLeGagliardo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.GagliardoLeBesov
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlap
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.BesovLeGagliardo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.GagliardoLeBesov
 
 /-!
 # Exact scalar overlap Besov–Gagliardo comparison
@@ -20,6 +22,8 @@ The only analytic input used by the identification is concrete parent-cube
 `L²` membership.  It supplies both the root integrability and every enlarged
 overlap-cube integrability certificate required by the exact kernel.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

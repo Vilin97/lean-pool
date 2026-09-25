@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.WeakOrlicz
+
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.WeakOrlicz
 
 /-! # Psi Calculus -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace IndependentSums

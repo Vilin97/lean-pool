@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra.Membership
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.Approx
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.OpenSet
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra.Membership
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.Approx
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.OpenSet
 
 /-! # Basic -/
+
+@[expose] public section
 
 namespace Homogenization
 

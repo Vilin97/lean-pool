@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCongruence
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.AECongruence
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCongruence
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces.AECongruence
 
 /-!
 # ABK26 running-scale negative Besov seminorm
@@ -15,6 +17,8 @@ by the Chapter 3 local coarse-graining statement.  Its summation variable is
 the descendant depth `j`; the physical source scale is consequently
 `Q.scale - j` at every summand.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

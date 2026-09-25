@@ -3,23 +3,27 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixOperatorNorm
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAveragesDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.StationaryExpectations
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.ScalarPreliminaries
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.GoodScale.ScalarBounds
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.Inputs
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra.P1
+
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import Mathlib.Tactic.Abel
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixOperatorNorm
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.PartitionAveragesDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.StationaryExpectations
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.ScalarPreliminaries
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.GoodScale.ScalarBounds
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.Inputs
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra.P1
 
 /-! # P2 -/
+
+@[expose] public section
 
 open scoped BigOperators Matrix.Norms.Elementwise
 open scoped Matrix.Norms.L2Operator

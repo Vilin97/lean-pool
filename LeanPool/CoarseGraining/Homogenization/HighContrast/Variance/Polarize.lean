@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Scalar
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.AnnealedDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity.BlockLoewner
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.NormalizedBlocks
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Scalar
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.AnnealedDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.AnnealedSubadditivity.BlockLoewner
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.NormalizedBlocks
 
 /-!
 # Centered second moments of the block matrix
@@ -24,6 +26,8 @@ entrywise annealed matrix.
 * `centered_quadratic_second_moment` — for arbitrary `w`,
   `𝔼[(w·(A_m − Ā_m)w)²] = Var[w·A_m w] ≤ Cd·(Θ|w.1|²+|w.2|²)²·min{1, Θ²3^{-βm}}`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

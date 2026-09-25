@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.FractionalSobolevVsBesov
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.EndPoints
-import LeanPool.CoarseGraining.Homogenization.Besov.PositiveOverlapBridge
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.PositiveSeminorms.Definitions
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityPositiveBridge.CoordinateStandard
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.FractionalSobolevVsBesov
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.PublicInternalBridges.EndPoints
+public import LeanPool.CoarseGraining.Homogenization.Besov.PositiveOverlapBridge
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.PositiveSeminorms.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.DualityPositiveBridge.CoordinateStandard
 
 /-!
 # Legacy Sobolev/dual-Besov compatibility wrappers for the Chapter 3 comparison
@@ -21,6 +23,8 @@ by the already-proved deterministic comparison theorem. The positive lane is
 the legacy ambient-sup-distance, finite-truncation / real-`sSup` overlap
 presentation, not the exact Euclidean / `ENNReal` manuscript API.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

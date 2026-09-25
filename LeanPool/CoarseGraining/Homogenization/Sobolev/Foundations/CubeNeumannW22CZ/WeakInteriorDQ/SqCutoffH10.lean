@@ -3,20 +3,24 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInterior
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.DifferenceQuotientH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph.Preliminaries
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.QuantitativeCutoff
-import Mathlib.Analysis.Normed.Lp.SmoothApprox
-import Mathlib.Analysis.Normed.Operator.Extend
-import Mathlib.Geometry.Manifold.PartitionOfUnity
-import Mathlib.MeasureTheory.Function.UniformIntegrable
-import Mathlib.Order.Filter.Finite
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.Localizations
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInterior
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.DifferenceQuotientH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph.Preliminaries
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.QuantitativeCutoff
+public import Mathlib.Analysis.Normed.Lp.SmoothApprox
+public import Mathlib.Analysis.Normed.Operator.Extend
+public import Mathlib.Geometry.Manifold.PartitionOfUnity
+public import Mathlib.MeasureTheory.Function.UniformIntegrable
+public import Mathlib.Order.Filter.Finite
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.Localizations
 
 /-! # Sq Cutoff H10 -/
+
+@[expose] public section
 
 namespace Homogenization
 

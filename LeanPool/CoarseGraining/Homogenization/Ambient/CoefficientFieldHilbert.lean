@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
-import LeanPool.CoarseGraining.Homogenization.Ambient.HilbertFinite
-import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
-import Mathlib.MeasureTheory.Group.Arithmetic
-import Mathlib.Topology.Instances.Matrix
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
+public import LeanPool.CoarseGraining.Homogenization.Ambient.HilbertFinite
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
+public import Mathlib.MeasureTheory.Group.Arithmetic
+public import Mathlib.Topology.Instances.Matrix
 
 /-! # Coefficient Field Hilbert -/
+
+@[expose] public section
 
 namespace Homogenization
 
@@ -255,7 +259,8 @@ theorem coeFn_toContinuousLinearMap (M : PointwiseHilbertVecOperatorField U)
 
 end PointwiseHilbertVecOperatorField
 
-private noncomputable def matToHilbertOperatorLinear (d : ℕ) :
+/-- The linear map sending a matrix to its operator on the finite Hilbert space. -/
+noncomputable def matToHilbertOperatorLinear (d : ℕ) :
     Mat d →ₗ[ℝ] (HilbertVec d →L[ℝ] HilbertVec d) where
   toFun := HilbertVec.applyMat
   map_add' := by
@@ -273,7 +278,8 @@ private noncomputable def matToHilbertOperatorLinear (d : ℕ) :
     intro i
     simp [HilbertVec.applyMat_apply, matVecMul, Finset.mul_sum, mul_assoc]
 
-private noncomputable def matToHilbertOperator (d : ℕ) :
+/-- The continuous linear map sending a matrix to its Hilbert-space operator. -/
+noncomputable def matToHilbertOperator (d : ℕ) :
     Mat d →L[ℝ] (HilbertVec d →L[ℝ] HilbertVec d) :=
   ⟨matToHilbertOperatorLinear d,
     (matToHilbertOperatorLinear d).continuous_of_finiteDimensional⟩

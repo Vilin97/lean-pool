@@ -3,16 +3,20 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Tails
-import Mathlib.Order.Filter.Finite
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaConcentration
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaExpRegime
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiConcentration
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Tails
+public import Mathlib.Order.Filter.Finite
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaConcentration
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.GammaSigmaExpRegime
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiConcentration
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.PsiSigma
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal
 
 /-! # Concentration -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

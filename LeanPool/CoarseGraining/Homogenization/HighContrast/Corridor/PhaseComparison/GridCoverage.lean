@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.Geometry
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.Geometry
 
 /-!
 # Discrete uniform-grid corridor coverage count
@@ -28,6 +30,8 @@ continuum corridor-coverage estimate `e.corridor.coverage`:
 Only `4 ≤ ℓ` and `ℓ ≤ N` are used; the constant `3` is not sharp (any
 `C·N/ℓ` is acceptable, absorbed into `C_d` downstream).
 -/
+
+@[expose] public section
 
 open Homogenization
 open scoped MeasureTheory

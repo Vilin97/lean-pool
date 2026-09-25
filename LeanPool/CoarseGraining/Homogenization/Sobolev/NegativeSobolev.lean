@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedConvexDomain
-import LeanPool.CoarseGraining.Homogenization.Sobolev.SmoothCompactSupport
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Normalized
-import Mathlib.MeasureTheory.Function.L1Space.Integrable
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedConvexDomain
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.SmoothCompactSupport
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Normalized
+public import Mathlib.MeasureTheory.Function.L1Space.Integrable
 
 /-!
 # Normalized negative Sobolev seminorms
@@ -17,6 +19,8 @@ RULING-0001.  The first test carrier is literally Mathlib's smooth compactly
 supported test-function space; the second uses genuine weak `W^{1,p}`
 witnesses with zero normalized average.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 
@@ -97,14 +101,14 @@ noncomputable def normalizedPairing (p : ENNReal) (hp_one : 1 < p)
     (g : Vec d → ℝ) (hg : MeasureTheory.MemLp g p (domain hU hne).normalizedVolume) : ℝ :=
   (domain hU hne).pairing f g
     (((domain hU hne).integrable_normalizedVolume_iff _).mp
-      (pairing_integrable hU hne p hp_one f hf g hg))
+      (by exact pairing_integrable hU hne p hp_one f hf g hg))
 
 /-- The normalized pairing against a literal smooth compactly supported test. -/
 noncomputable def smoothPairing (p : ENNReal) (hp_one : 1 < p)
     (f : Vec d → ℝ)
     (hf : MeasureTheory.MemLp f (ENNReal.conjExponent p) (domain hU hne).normalizedVolume)
     (φ : SmoothTestFunction hU) : ℝ :=
-  normalizedPairing hU hne p hp_one f hf φ (smoothTest_memLp_normalized hU hne p φ)
+  normalizedPairing hU hne p hp_one f hf φ (by exact smoothTest_memLp_normalized hU hne p φ)
 
 /-- The normalized pairing against a genuine mean-zero weak test. -/
 noncomputable def meanZeroPairing (p : ENNReal) (hp_one : 1 < p)
@@ -112,7 +116,7 @@ noncomputable def meanZeroPairing (p : ENNReal) (hp_one : 1 < p)
     (hf : MeasureTheory.MemLp f (ENNReal.conjExponent p) (domain hU hne).normalizedVolume)
     (φ : MeanZeroW1pTestFunction hU hne p) : ℝ :=
   normalizedPairing hU hne p hp_one f hf φ.toW1pFunction.toFun
-    (meanZeroTest_memLp_normalized hU hne p φ)
+    (by exact meanZeroTest_memLp_normalized hU hne p φ)
 
 /-- The signed Chapter 1 zero-boundary negative Sobolev seminorm. -/
 noncomputable def smoothNegativeSobolevSeminorm (p : ENNReal) (hp_one : 1 < p)
@@ -206,7 +210,8 @@ private noncomputable def negW1pFunction {p : ENNReal} (u : W1pFunction U p) :
               apply MeasureTheory.integral_congr_ae
               exact Filter.Eventually.of_forall fun x => by ring }
 
-private noncomputable def zeroW1pFunction (p : ENNReal) : W1pFunction U p :=
+/-- The zero Sobolev function with its zero weak gradient. -/
+noncomputable def zeroW1pFunction (p : ENNReal) : W1pFunction U p :=
   { toFun := 0
     grad := 0
     memLp := by simp

@@ -3,10 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Seminorms
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.Seminorms
 
 /-! # Smooth Case -/
+
+@[expose] public section
 
 namespace Homogenization
 
@@ -15,7 +19,8 @@ open scoped ENNReal
 namespace W1pFunction
 
 variable {d : ℕ} {U : Set (Vec d)} {p : ENNReal}
-private noncomputable def smoothPoincareLpBase
+/-- The volume and bounding-radius factor in the smooth Poincaré estimate. -/
+noncomputable def smoothPoincareLpBase
     (hU : IsOpenBoundedConvexDomain U) : ℝ :=
   ((MeasureTheory.volume U).toReal⁻¹ *
       (((2 * Classical.choose hU.isBoundedDomain) ^ d) / (d : ℝ))) *

@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeSymmetry
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Translation
-import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicCube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalCubeBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalOriginCubeBridge
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeSymmetry
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Translation
+public import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicCube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalCubeBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalOriginCubeBridge
 
 /-! # Origin Cube Open Bridge -/
+
+@[expose] public section
 
 namespace Homogenization
 

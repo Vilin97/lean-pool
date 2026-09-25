@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.LocalEllipticitySlices
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.LocalEllipticitySlices
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse
 
 /-!
 # Deterministic ellipticity slices for the exact coarse source
@@ -15,6 +17,8 @@ Euclidean balls.  This file converts that carrier membership fact into the
 countable AEE ellipticity slices used on a fixed triadic cube without invoking
 any probabilistic assumptions.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

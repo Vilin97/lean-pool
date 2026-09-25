@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeOpenBridge
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuAdmissibility
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeEllipticRecovery
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeOpenBridge
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuAdmissibility
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
 
 /-! # Cube Minimizer -/
+
+@[expose] public section
 
 namespace Homogenization
 

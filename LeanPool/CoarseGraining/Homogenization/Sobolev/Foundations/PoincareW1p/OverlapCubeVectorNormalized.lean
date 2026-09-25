@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapDefinitions
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapLp
-import LeanPool.CoarseGraining.Homogenization.Multiscale.OverlapLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpCoordinate
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.OverlapCube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.CubeVector
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.OverlapLp
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.OverlapLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpCoordinate
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.OverlapCube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.CubeVector
 
 /-!
 # Vector finite-`p` Poincare estimates on overlap cubes
@@ -17,6 +19,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.CubeVector
 The scalar overlap-cube estimate is transported here to the normalized vector
 carrier used by the finite-`p` Calderon--Zygmund layer.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

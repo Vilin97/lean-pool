@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousKFunctional
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanH2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousKFunctional
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanH2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
 
 /-!
 # Measurable representatives of unit-cube Euclidean `L²` fields
@@ -15,6 +17,8 @@ The public `UnitCubeEuclideanL2Field` carrier stores an a.e. `L²` witness,
 not a chosen measurable representative.  This module obtains one internally
 from that witness without changing the carrier.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpBelowTwo
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpBelowTwo
 
 /-!
 # Stability of finite-exponent cube divergence solutions
@@ -14,6 +16,8 @@ difference of two zero-trace solutions.  This file packages that subtraction
 step, retaining the same exponent-only constant and the exact inverse
 coefficient scaling.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

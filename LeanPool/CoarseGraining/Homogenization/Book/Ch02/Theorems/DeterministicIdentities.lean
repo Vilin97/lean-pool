@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockCoarseMatrix
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledMu
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledResponse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeOpenBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockCoarseMatrix
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledMu
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledResponse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.OriginCubeOpenBridge
 
 /-!
 # Deterministic identities for Chapter 2 observables
@@ -18,6 +20,8 @@ scalar response, doubled `mu`, and block response observables.  Chapter 4 may
 turn these identities into law-relative measurability statements; it should not
 reprove the deterministic algebra.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.MainBounds
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactAggregationBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactExponentBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.PositiveOverlapBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.MainBounds
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactAggregationBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactExponentBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.PositiveOverlapBridge
 
 /-!
 # Exact finite-interior dual-to-circ comparison
@@ -16,6 +18,8 @@ This module proves the Chapter 1 comparison for `1 < q < ∞` directly on the
 exact extended-valued kernels.  All local integrability, finite truncation, and
 projection-limit inputs are derived from the two parent `MemLp` certificates.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedOneLevelTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaIntegration
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaParameters
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanL2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.SmoothCompactSupport
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedOneLevelTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaIntegration
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.GoodLambdaParameters
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanL2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.SmoothCompactSupport
 
 /-!
 # Finite-exponent cube Calderón--Zygmund interface
@@ -19,6 +21,8 @@ constant-coefficient cube Calderón--Zygmund argument.  The one-level
 good-`λ` input remains internal to this module while the source-facing
 declarations below keep the manuscript's supplied-solution interfaces exact.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

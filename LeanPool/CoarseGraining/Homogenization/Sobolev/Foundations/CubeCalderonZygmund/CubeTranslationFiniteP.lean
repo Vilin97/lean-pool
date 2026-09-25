@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.PDE.DirichletRHS
-import LeanPool.CoarseGraining.Homogenization.PDE.NeumannRHS
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Translation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.CubeTranslationTransport
+
+public import LeanPool.CoarseGraining.Homogenization.PDE.DirichletRHS
+public import LeanPool.CoarseGraining.Homogenization.PDE.NeumannRHS
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Translation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.CubeTranslationTransport
 
 /-! # Cube Translation Finite P -/
+
+@[expose] public section
 
 namespace Homogenization
 

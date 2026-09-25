@@ -3,24 +3,30 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
-import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeBoundaryPush
-import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeMeasureBridge
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.Order.Filter.AtTopBot.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
+public import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeBoundaryPush
+public import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeMeasureBridge
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.Order.Filter.AtTopBot.Basic
 
 /-! # Origin Cube Bridge -/
+
+@[expose] public section
 
 namespace Homogenization
 
 open scoped Topology
 
-private def diagonalShift {d : ℕ} (ε : ℝ) : Vec d :=
+/-- The vector with the same displacement in every coordinate. -/
+def diagonalShift {d : ℕ} (ε : ℝ) : Vec d :=
   fun _ => ε
 
-private theorem volume_cubeSet_originCube_lt_top {d : ℕ} (n : ℤ) :
+/-- The half-open centered cube has finite volume. -/
+theorem volume_cubeSet_originCube_lt_top {d : ℕ} (n : ℤ) :
     MeasureTheory.volume (cubeSet (originCube d n)) < ⊤ := by
   rw [lt_top_iff_ne_top]
   intro htop
@@ -29,13 +35,15 @@ private theorem volume_cubeSet_originCube_lt_top {d : ℕ} (n : ℤ) :
   rw [volume_cubeSet_toReal] at hzero
   exact (ne_of_gt (cubeVolume_pos (originCube d n))) hzero
 
-private theorem volume_openCubeSet_originCube_lt_top {d : ℕ} (n : ℤ) :
+/-- The open centered cube has finite volume. -/
+theorem volume_openCubeSet_originCube_lt_top {d : ℕ} (n : ℤ) :
     MeasureTheory.volume (openCubeSet (originCube d n)) < ⊤ := by
   exact lt_of_le_of_lt
     (MeasureTheory.measure_mono (openCubeSet_subset_cubeSet (originCube d n)))
     (volume_cubeSet_originCube_lt_top (d := d) n)
 
-private theorem dist_sub_diagonalShift_le {d : ℕ} (x : Vec d) {ε : ℝ} (hε : 0 ≤ ε) :
+/-- A nonnegative common coordinate shift moves a point by at most that amount in the sup metric. -/
+theorem dist_sub_diagonalShift_le {d : ℕ} (x : Vec d) {ε : ℝ} (hε : 0 ≤ ε) :
     dist (x - diagonalShift (d := d) ε) x ≤ ε := by
   rw [dist_pi_le_iff hε]
   intro i
@@ -69,7 +77,8 @@ private theorem tendsto_precomp_sub_diagonalShift {d : ℕ} (x : Vec d) (ε₀ :
   intro i
   simpa [diagonalShift] using tendsto_const_nhds.sub hε
 
-private theorem tendsto_setIntegral_mul_precomp_subRight_of_memL2On
+/-- Integrals against inward translates of a continuous compactly supported test function converge to the unshifted integral for an L² function. -/
+theorem tendsto_setIntegral_mul_precomp_subRight_of_memL2On
     {d : ℕ} {U : Set (Vec d)} [MeasureTheory.IsFiniteMeasure (MeasureTheory.volume.restrict U)]
     {f ψ : Vec d → ℝ} (hfL2 : MemL2On U f) (hψ_cont : Continuous ψ)
     (hψ_compact : HasCompactSupport ψ) (ε₀ : ℝ) :
@@ -133,7 +142,7 @@ noncomputable def toCubeSetOriginCube {d : ℕ} [NeZero d] {n : ℤ}
     H1Function (cubeSet (originCube d n)) := by
   let Uo : Set (Vec d) := openCubeSet (originCube d n)
   let Uc : Set (Vec d) := cubeSet (originCube d n)
-  haveI : Fact (MeasureTheory.volume Uc < ⊤) := ⟨volume_cubeSet_originCube_lt_top (d := d) n⟩
+  haveI : Fact (MeasureTheory.volume Uc < ⊤) := ⟨by exact volume_cubeSet_originCube_lt_top (d := d) n⟩
   haveI : MeasureTheory.IsFiniteMeasure (MeasureTheory.volume.restrict Uc) := inferInstance
   have hu_memL2 : MemL2On Uc u.toFun := by
     simpa [MemL2On, Uo, Uc,

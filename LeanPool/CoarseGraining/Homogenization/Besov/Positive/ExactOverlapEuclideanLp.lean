@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
-import LeanPool.CoarseGraining.Homogenization.Multiscale.OverlapLp
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.OverlapLp
 
 /-!
 # Exact finite-`p` Euclidean overlap Besov seminorm
@@ -14,6 +16,8 @@ The canonical positive overlap seminorm for vector fields uses Euclidean local
 oscillations about `ScalarOverlap.cubeAverageVec`, with a single outer
 `1 / p` root after summing all physical scales.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

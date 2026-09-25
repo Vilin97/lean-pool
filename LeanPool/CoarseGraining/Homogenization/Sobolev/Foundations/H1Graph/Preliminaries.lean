@@ -3,16 +3,20 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1
-import Mathlib.Analysis.InnerProductSpace.Dual
-import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-import Mathlib.Analysis.InnerProductSpace.ProdL2
-import Mathlib.Analysis.InnerProductSpace.Subspace
-import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
-import Mathlib.Topology.Algebra.Module.ClosedSubmodule
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1
+public import Mathlib.Analysis.InnerProductSpace.Dual
+public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
+public import Mathlib.Analysis.InnerProductSpace.ProdL2
+public import Mathlib.Analysis.InnerProductSpace.Subspace
+public import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
+public import Mathlib.Topology.Algebra.Module.ClosedSubmodule
 
 /-! # Preliminaries -/
+
+@[expose] public section
 
 namespace Homogenization
 
@@ -61,11 +65,11 @@ private theorem deriv_memScalarL2 (φ : H1WeakTestFunction U) (i : Fin d) :
 
 /-- The scalar `L²(U)` class of a test function. -/
 noncomputable def toScalarL2 (φ : H1WeakTestFunction U) : ScalarL2 U :=
-  Homogenization.toScalarL2 φ.memScalarL2
+  Homogenization.toScalarL2 (by exact φ.memScalarL2)
 
 /-- The scalar `L²(U)` class of the `i`th derivative of a test function. -/
 noncomputable def derivToScalarL2 (φ : H1WeakTestFunction U) (i : Fin d) : ScalarL2 U :=
-  Homogenization.toScalarL2 (φ.deriv_memScalarL2 i)
+  Homogenization.toScalarL2 (by exact φ.deriv_memScalarL2 i)
 
 @[simp] theorem coeFn_toScalarL2 (φ : H1WeakTestFunction U) :
     φ.toScalarL2 =ᵐ[volumeMeasureOn U] φ :=

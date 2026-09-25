@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Measurability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CoarseObservables
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SolutionIntegrability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.CarrierMinimizerFamily
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalSolutions.AverageIdentities
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Measurability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CoarseObservables
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SolutionIntegrability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.CarrierMinimizerFamily
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalSolutions.AverageIdentities
 
 /-! # Measurability -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

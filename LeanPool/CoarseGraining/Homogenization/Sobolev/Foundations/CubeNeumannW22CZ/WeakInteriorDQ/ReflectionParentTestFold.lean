@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.FaceVanishCollar
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Folding
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.FaceVanishCollar
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Folding
 
 /-! # Reflection Parent Test Fold -/
+
+@[expose] public section
 
 namespace Homogenization
 

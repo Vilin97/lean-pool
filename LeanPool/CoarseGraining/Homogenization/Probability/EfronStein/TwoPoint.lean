@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 -/
-import Mathlib.Probability.Moments.Variance
-import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.Probability.Moments.Variance
+public import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Two-point variance identity and a Jensen bound
@@ -24,6 +26,8 @@ Building blocks for the Efron–Stein inequality.
 Everything is stated for *bounded* observables, which makes all integrability
 side conditions immediate; no `L²`-generality is attempted.
 -/
+
+@[expose] public section
 
 open MeasureTheory Filter ProbabilityTheory
 open scoped ProbabilityTheory ENNReal

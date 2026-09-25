@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.GlobalAffineLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvolutionLp
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.GlobalAffineLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.InwardMollificationGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvolutionLp
 
 /-!
 # Weak gradient of inward mollification
@@ -17,6 +19,8 @@ zero extension of its weak gradient.  The proof first establishes the global
 convolution identity by closing the identities for the supported smooth
 approximants built into `H10Function`, and then applies the affine chain rule.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

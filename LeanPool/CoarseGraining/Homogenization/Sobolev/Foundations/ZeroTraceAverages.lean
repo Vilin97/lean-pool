@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
-import LeanPool.CoarseGraining.Homogenization.Multiscale.CubeAverage
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra.H10Function
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.MeanZero
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidal
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.CubeAverage
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra.H10Function
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.MeanZero
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidal
 
 /-! # Zero Trace Averages -/
+
+@[expose] public section
 
 namespace Homogenization
 

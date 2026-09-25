@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
-import LeanPool.CoarseGraining.Homogenization.Ambient.Basic
+
+public import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
+public import LeanPool.CoarseGraining.Homogenization.Ambient.Basic
 
 /-! # Gagliardo Nirenberg Sobolev -/
+
+@[expose] public section
 
 namespace Homogenization
 

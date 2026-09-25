@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.MainBounds
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactAggregationBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactExponentBridge
-import LeanPool.CoarseGraining.Homogenization.Besov.PositiveOverlapBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectedPairing.MainBounds
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactAggregationBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.Negative.ExactExponentBridge
+public import LeanPool.CoarseGraining.Homogenization.Besov.PositiveOverlapBridge
 
 /-!
 # Exact circ domination at the negative `q = 1` endpoint
@@ -17,6 +19,8 @@ negative Besov kernel and the exact concrete circ kernel in the `q = 1`
 branch.  All local integrability and finite-truncation premises are derived
 inside the proof from the single parent `MemLp` certificate.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

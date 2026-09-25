@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Response
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Existence
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.HodgeCubeBridge
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Response
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Existence
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.HodgeCubeBridge
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
 
 /-! # Private Lemmas -/
+
+@[expose] public section
 
 namespace Homogenization
 

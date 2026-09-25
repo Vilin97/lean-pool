@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimization
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
-import Mathlib.Analysis.InnerProductSpace.LinearMap
-import Mathlib.Analysis.InnerProductSpace.Symmetric
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimization
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
+public import Mathlib.Analysis.InnerProductSpace.LinearMap
+public import Mathlib.Analysis.InnerProductSpace.Symmetric
 
 /-! # Mu Well Posedness -/
+
+@[expose] public section
 
 namespace Homogenization
 

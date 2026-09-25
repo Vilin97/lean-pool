@@ -3,14 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Real.Basic
-import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.Basic
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Data.Real.Basic
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.Basic
 
 /-!
 # Source labels and external analytic inputs
@@ -20,6 +22,8 @@ analytic source material.  It deliberately records metadata, not theorem
 surfaces: precise Lean statements should be added only after the corresponding
 provenance has been audited against the source.
 -/
+
+@[expose] public section
 
 namespace Homogenization.HighContrast.EntryScale
 

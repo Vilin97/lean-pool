@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-! # Coercive H1Dilation -/
+
+@[expose] public section
 
 namespace Homogenization
 

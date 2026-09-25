@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceObservable
-import Mathlib.MeasureTheory.Function.StronglyMeasurable.AEStronglyMeasurable
-import Mathlib.Topology.Metrizable.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceObservable
+public import Mathlib.MeasureTheory.Function.StronglyMeasurable.AEStronglyMeasurable
+public import Mathlib.Topology.Metrizable.Basic
 
 /-!
 # Measurability of exact coarse-source local random variables
@@ -14,6 +16,8 @@ import Mathlib.Topology.Metrizable.Basic
 All promotions stay on the exact coarse source carrier.  In particular, no
 regular-carrier or restriction-sigma bridge is used here.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

@@ -3,23 +3,27 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
-import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
-import LeanPool.CoarseGraining.Homogenization.Geometry.SignedPermutation
-import LeanPool.CoarseGraining.Homogenization.Probability.Scalarization
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Analysis.Calculus.ContDiff.Operations
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.LinearAlgebra.Matrix.Symmetric
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.Probability.Independence.Basic
-import Mathlib.Topology.Algebra.Support
-import Mathlib.Topology.MetricSpace.Bounded
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
+public import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
+public import LeanPool.CoarseGraining.Homogenization.Geometry.SignedPermutation
+public import LeanPool.CoarseGraining.Homogenization.Probability.Scalarization
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.LinearAlgebra.Matrix.Symmetric
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+public import Mathlib.Probability.Independence.Basic
+public import Mathlib.Topology.Algebra.Support
+public import Mathlib.Topology.MetricSpace.Bounded
 
 /-! # Random Field -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockMatrixProperties
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.CoeffOperator
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AffineAverage
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2OriginCubeBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockMatrixProperties
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.CoeffOperator
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AffineAverage
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2OriginCubeBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
 
 /-! # Setup -/
+
+@[expose] public section
 
 namespace Homogenization
 

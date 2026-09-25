@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpGradientLimit
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareZeroTrace
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.H10GradientUpgrade
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ZeroTraceClosure
-import Mathlib.Order.Filter.AtTopBot.Prod
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpGradientLimit
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareZeroTrace
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.H10GradientUpgrade
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ZeroTraceClosure
+public import Mathlib.Order.Filter.AtTopBot.Prod
 
 /-!
 # Canonical zero-trace finite-`L^p` solution limits
@@ -19,6 +21,8 @@ already constructed gradient convergence into scalar-value Cauchy control.
 Completeness of `L^p` then supplies the scalar representative paired with the
 canonical limiting gradient.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.DiracBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.DiracBridge
 
 /-!
 # Periodic deterministic comparison corollary
@@ -21,6 +23,8 @@ theorem against the proof below.  See `Audit/README.md` for the comparator map.
 (this file)* → explicit field (`PeriodicConcreteComparison`, `Audit/PeriodicConcrete`)
 → classical data (`PeriodicSmoothComparison`, `Audit/PeriodicSmooth`).
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Examples

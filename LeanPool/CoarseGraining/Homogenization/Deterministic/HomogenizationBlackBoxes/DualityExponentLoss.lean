@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.Duality
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.TerminalBounds
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.Full
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.DualToCircLoss.FiniteLoss
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.NegativeBesovLocalize
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.Duality
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS.TerminalBounds
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.Full
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.DualToCircLoss.FiniteLoss
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Theorems.NegativeBesovLocalize
 
 /-! # Duality Exponent Loss -/
+
+@[expose] public section
 
 namespace Homogenization
 

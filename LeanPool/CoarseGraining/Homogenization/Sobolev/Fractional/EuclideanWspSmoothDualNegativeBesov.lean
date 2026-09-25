@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.NegativeBesov
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.NegativeBesov
 
 /-!
 # Scalar-coordinate envelopes for the source negative Besov seminorm
@@ -14,6 +16,8 @@ from the scalar circ quantities used by the projection duality argument.  It
 only records the elementary coordinate envelope: each scalar coordinate of a
 vector field has no larger running-scale block-average envelope.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

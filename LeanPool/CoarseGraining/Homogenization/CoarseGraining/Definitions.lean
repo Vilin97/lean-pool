@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.BlockMatrix
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism
-import Mathlib.LinearAlgebra.QuadraticForm.Basic
-import Mathlib.Tactic.Linarith
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.BlockMatrix
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism
+public import Mathlib.LinearAlgebra.QuadraticForm.Basic
+public import Mathlib.Tactic.Linarith
 
 /-! # Definitions -/
+
+@[expose] public section
 
 namespace Homogenization
 

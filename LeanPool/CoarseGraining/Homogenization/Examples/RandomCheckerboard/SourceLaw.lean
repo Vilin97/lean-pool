@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLaw
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.RescaledLaws
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.RegIntegralAdapter
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.RestrictionBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceLaw
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.RescaledLaws
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.RegIntegralAdapter
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.RestrictionBridge
 
 /-!
 # Exact-source law for the refined Bernoulli checkerboard
@@ -19,6 +21,8 @@ Here we use the dimension-safe refinement `d + 1`; after triadic rescaling,
 Euclidean unit separation forces the two observations to use disjoint families
 of Bernoulli coins.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Examples.RandomCheckerboard.Source
 

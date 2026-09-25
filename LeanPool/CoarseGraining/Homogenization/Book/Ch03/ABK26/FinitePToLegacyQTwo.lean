@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingForcing
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingForcing
 
 /-!
 # Strict finite-`p` to legacy `q = 2` Besov regularity
@@ -14,6 +16,8 @@ This adapter transports the source finite-`p` carrier to the legacy signed
 The quantitative strict-gap summation is owned by
 `LocalCoarseGrainingForcing`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

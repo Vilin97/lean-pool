@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.GagliardoNirenbergSobolev
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.GagliardoNirenbergSobolev
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
 
 /-!
 # Finite-`p` Gagliardo--Nirenberg--Sobolev on `Vec d`
@@ -14,6 +16,8 @@ This is the ambient compact-support form of the finite-exponent Sobolev
 inequality.  The cube localization layer can use it without committing to a
 particular formula for the critical exponent.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

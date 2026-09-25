@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.BlockMatrix
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidal
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.OriginCubeSymmetry
-import Mathlib.LinearAlgebra.Matrix.Swap
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.BlockMatrix
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidal
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.OriginCubeSymmetry
+public import Mathlib.LinearAlgebra.Matrix.Swap
 
 /-! # Potential Solenoidal Origin Cube Symmetry -/
+
+@[expose] public section
 
 namespace Homogenization
 

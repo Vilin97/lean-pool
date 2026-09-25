@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
-import Mathlib.MeasureTheory.Function.L1Space.Integrable
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
+
+public import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
+public import Mathlib.MeasureTheory.Function.L1Space.Integrable
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Finite real-exponent moment calculus
@@ -14,6 +16,8 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 This module collects source-neutral real-exponent `L^p` aggregation bounds for
 finite families of real random variables.
 -/
+
+@[expose] public section
 
 namespace Homogenization.IndependentSums
 

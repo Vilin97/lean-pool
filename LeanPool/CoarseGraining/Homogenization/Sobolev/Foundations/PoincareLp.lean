@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpIntegral
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpSmooth
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpIntegral
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpSmooth
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-! # Poincare Lp -/
+
+@[expose] public section
 
 namespace Homogenization
 

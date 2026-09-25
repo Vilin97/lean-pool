@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixExtraction
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixExtraction
 
 /-! # Subadditivity Scaling Definitions -/
+
+@[expose] public section
 
 open scoped BigOperators
 

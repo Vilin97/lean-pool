@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceObservable
-import LeanPool.CoarseGraining.Homogenization.Probability.RandomField
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceObservable
+public import LeanPool.CoarseGraining.Homogenization.Probability.RandomField
 
 /-!
 # Source-local coefficient observables
@@ -13,6 +15,8 @@ import LeanPool.CoarseGraining.Homogenization.Probability.RandomField
 This module provides the exact coarse-source local version of the smooth
 coefficient-field test, independently of the regular-carrier observable lane.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

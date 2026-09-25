@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.Euclidean
-import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
-import Mathlib.Analysis.Calculus.ContDiff.Operations
-import Mathlib.Data.Real.Pointwise
-import Mathlib.Topology.MetricSpace.Pseudo.Pi
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.Euclidean
+public import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
+public import Mathlib.Data.Real.Pointwise
+public import Mathlib.Topology.MetricSpace.Pseudo.Pi
 
 /-! # Euclidean -/
+
+@[expose] public section
 
 noncomputable section
 

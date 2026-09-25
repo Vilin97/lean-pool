@@ -3,14 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
-import Mathlib.Analysis.Normed.Lp.SmoothApprox
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.MeasureTheory.Function.AEEqFun
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-import Mathlib.MeasureTheory.Group.Arithmetic
-import Mathlib.Topology.Instances.Matrix
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+public import Mathlib.Analysis.Normed.Lp.SmoothApprox
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Mathlib.MeasureTheory.Function.AEEqFun
+public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
+public import Mathlib.MeasureTheory.Group.Arithmetic
+public import Mathlib.Topology.Instances.Matrix
 
 /-!
 # The AKL a.e.-quotient coefficient-field kernel
@@ -20,11 +23,19 @@ fields modulo equality almost everywhere.  This module gives its fixed-`Θ`
 carrier and its integral-only local sigma-algebras.
 -/
 
+@[expose] public section
+
 namespace Homogenization.Source.AKL
 
 open MeasureTheory
 
 noncomputable section
+
+local instance matMeasurableSpace {d : ℕ} : MeasurableSpace (Mat d) :=
+  inferInstanceAs (MeasurableSpace (Fin d → Fin d → ℝ))
+
+local instance matBorelSpace {d : ℕ} : BorelSpace (Mat d) :=
+  inferInstanceAs (BorelSpace (Fin d → Fin d → ℝ))
 
 abbrev Field (d : ℕ) := Vec d →ₘ[volume] Mat d
 

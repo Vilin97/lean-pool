@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingResponse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.EllipticityControl
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingResponse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationError.EllipticityControl
 
 /-!
 # Order lowering for the local coarse-graining response
@@ -14,6 +16,8 @@ The frozen local theorem uses a `q = 2` response at the local order and the
 parent-truncated response at a smaller order.  This module supplies that
 order-lowering step before the existing exact descendant localization.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

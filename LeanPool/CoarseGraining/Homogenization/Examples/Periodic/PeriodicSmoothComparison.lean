@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.PeriodicConcreteComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.FaceVanishCollar
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CubeVectorH1
+
+public import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.PeriodicConcreteComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.FaceVanishCollar
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CubeVectorH1
 
 /-!
 # Classical flux periodic comparison corollary
@@ -29,6 +31,8 @@ theorem against the proof below.  See `Audit/README.md` for the comparator map.
 (`PeriodicConcreteComparison`, `Audit/PeriodicConcrete`) → *classical data (this
 file)*.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Examples

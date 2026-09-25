@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
 
 /-!
 # Finite-measure downgrades from `H¹` to `W^{1,p}`
@@ -16,6 +18,8 @@ an `H1Function` also provide `W^{1,p}` data at every finite exponent `p ≤ 2`.
 The analogous conversion for `H10Function` preserves its smooth, compactly
 supported approximating sequence and therefore its zero-trace witness.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

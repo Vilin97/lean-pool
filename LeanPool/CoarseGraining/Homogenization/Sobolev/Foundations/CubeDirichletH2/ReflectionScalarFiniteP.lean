@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionL2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
-import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeMeasureBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionL2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
+public import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeMeasureBridge
 
 /-!
 # Finite-`p` scalar transport under Dirichlet odd reflection
@@ -17,6 +19,8 @@ maps, this gives exact finite-`p` transport from a cube to its full reflection
 block and exact preservation of normalized finite-`p` norms between centered
 origin cubes.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

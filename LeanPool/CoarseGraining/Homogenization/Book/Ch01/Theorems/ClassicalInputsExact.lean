@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Definitions
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ExactOverlapEuclideanRegularity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CenteredCubeCalderonZygmundQTwo
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.FullNormEquivalence
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch01.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ExactOverlapEuclideanRegularity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CenteredCubeCalderonZygmundQTwo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.FullNormEquivalence
 
 /-!
 # Exact Chapter 1 classical inputs
@@ -18,6 +20,8 @@ with the literal continuous `K`-functional kernel and its approved additive
 full-norm equivalence with the exact fractional Sobolev carrier.  It does not
 replace the older discrete/legacy Chapter 1 facade.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

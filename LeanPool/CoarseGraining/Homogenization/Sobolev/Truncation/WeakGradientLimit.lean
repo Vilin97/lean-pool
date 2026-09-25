@@ -3,17 +3,21 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Definitions
-import LeanPool.CoarseGraining.Homogenization.Sobolev.WeakDerivatives
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.SmoothLimit
-import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
-import Mathlib.MeasureTheory.Integral.Lebesgue.DominatedConvergence
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.WeakDerivatives
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.SmoothLimit
+public import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
+public import Mathlib.MeasureTheory.Integral.Lebesgue.DominatedConvergence
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-! # Weak Gradient Limit -/
+
+@[expose] public section
 
 namespace Homogenization
 

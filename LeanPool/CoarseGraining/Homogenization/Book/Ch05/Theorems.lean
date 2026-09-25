@@ -3,17 +3,21 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Public
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section51
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section56
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Public
 
 /-! # Theorems -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

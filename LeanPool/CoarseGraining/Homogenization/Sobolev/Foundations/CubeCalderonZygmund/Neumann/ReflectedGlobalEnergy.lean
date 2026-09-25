@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectionWeakEquation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedGlobalEnergy
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.Neumann.ReflectionWeakEquation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedGlobalEnergy
 
 /-!
 # Global energy for centered-Neumann even reflection
@@ -15,6 +17,8 @@ extensions as the Dirichlet argument, but the solution gradient and datum are
 transported by the coordinate-fold even reflection.  This file identifies the
 actual global energy of those extensions with its source-cube expression.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

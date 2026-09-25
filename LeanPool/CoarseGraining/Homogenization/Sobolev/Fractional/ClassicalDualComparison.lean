@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.SobolevPublic
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.CaccioppoliBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.SobolevPublic
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.CaccioppoliBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
 
 /-!
 # Classical fractional dual comparison
@@ -15,6 +17,8 @@ Scalar Euclidean Gagliardo tests with a scale-weighted normalized L² term
 embed into the legacy partition Besov test space. All real-valued suprema
 below are proved bounded for the L² fields to which the comparison applies.
 -/
+
+@[expose] public section
 
 namespace Homogenization.ClassicalSobolev34
 

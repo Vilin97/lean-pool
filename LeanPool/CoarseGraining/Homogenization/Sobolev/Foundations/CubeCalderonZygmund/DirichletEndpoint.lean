@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.CubeTranslationFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpLpData
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.CubeTranslationFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpLpData
 
 /-!
 # Arbitrary-cube Dirichlet Calderón--Zygmund endpoint
@@ -14,6 +16,8 @@ This file translates the centered finite-exponent estimate to an arbitrary
 triadic cube and exposes it on the project's raw `Vec` norm.  The datum needs
 only the stated finite-`Lᵖ` membership; no auxiliary `L²` premise is exported.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

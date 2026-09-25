@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.ParentTruncatedHomogenizationError
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapEuclideanLp
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.ParentTruncatedHomogenizationError
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapEuclideanLp
 
 /-!
 # Exact local finite-`p` coarse-graining carriers
@@ -15,6 +17,8 @@ This file owns the source-facing local finite-`p` coarse-graining definitions
 from the ABK26 statement.  It reuses the canonical running-scale negative
 Besov seminorm, overlap positive Besov seminorm, and parent-truncated errors.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

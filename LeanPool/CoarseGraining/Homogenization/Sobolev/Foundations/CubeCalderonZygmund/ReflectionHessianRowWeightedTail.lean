@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionWeightedTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionHessianRowFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Cube
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionWeightedTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionHessianRowFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Cube
 
 /-!
 # Square-weighted tails of reflected Hessian rows
@@ -16,6 +18,8 @@ norm as the ordinary odd reflection of the source row.  Consequently its
 square-weighted level tail on an origin-cube parent is exactly the existing
 odd-vector tail, with no new measure decomposition.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

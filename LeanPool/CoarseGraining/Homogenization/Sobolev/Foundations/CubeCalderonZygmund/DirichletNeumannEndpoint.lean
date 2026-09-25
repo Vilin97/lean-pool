@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.DirichletEndpoint
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.NeumannEndpoint
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.DirichletEndpoint
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.NeumannEndpoint
 
 /-!
 # Dirichlet and Neumann Calderón--Zygmund endpoint
@@ -13,6 +15,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZy
 This file combines the arbitrary-cube Dirichlet and mean-zero Neumann
 estimates under one positive real constant.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

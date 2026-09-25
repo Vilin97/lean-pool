@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicDerivative
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicDerivative
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding
 
 /-! # Harmonic Gradient First Gain -/
+
+@[expose] public section
 
 namespace Homogenization
 

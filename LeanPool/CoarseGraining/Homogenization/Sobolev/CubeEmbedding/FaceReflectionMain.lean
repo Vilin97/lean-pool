@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FaceReflection
-import Mathlib.MeasureTheory.Integral.Bochner.Set
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FaceReflection
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-! # Face Reflection Main -/
+
+@[expose] public section
 
 namespace Homogenization
 

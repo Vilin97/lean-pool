@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
-import Mathlib.MeasureTheory.Measure.Prod
-import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
-import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedNorms
+
+public import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
+public import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedNorms
 
 /-!
 # Fractional Sobolev (Gagliardo) seminorms on triadic cubes
@@ -35,6 +37,8 @@ Design notes:
   namespace are reserved for the comparison proof files.  Everything else
   goes through the exported API.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Gagliardo

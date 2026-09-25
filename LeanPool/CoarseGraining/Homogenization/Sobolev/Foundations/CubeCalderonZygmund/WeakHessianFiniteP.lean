@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.WeakHessianEuclidean
-import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.WeakHessianEuclidean
+public import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
 
 /-!
 # Finite-`p` aggregation for weak Hessians
@@ -15,6 +17,8 @@ This file packages rowwise Euclidean `L^p` control of a weak Hessian into the
 project's Hilbert matrix carrier.  The norm estimate retains the exact finite
 exponent and bounds the matrix norm by the finite sum of its row norms.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

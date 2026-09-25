@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalGradientMemLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLpMembership
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePFullCZ
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalGradientMemLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLpMembership
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePFullCZ
 
 /-!
 # Fractional Calderón--Zygmund estimate on centered cubes
@@ -14,6 +16,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFin
 This module packages the supplied zero-trace cube solution with the literal
 Euclidean fractional-Sobolev field carried by its gradient.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

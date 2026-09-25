@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CenteredCubeHsRegularity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanPoincare
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CenteredCubeHsRegularity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanPoincare
 
 /-!
 # Exact Euclidean overlap full-norm comparison on centered cubes
@@ -31,6 +33,8 @@ public API has no integrability, measurability, or certificate binder.
   one finite constant, fixed before scale and field, controls both full-norm
   comparison directions.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

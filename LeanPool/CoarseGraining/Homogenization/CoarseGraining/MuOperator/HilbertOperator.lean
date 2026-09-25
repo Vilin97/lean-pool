@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuQuadratic
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuWellPosedness
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimizationMeasurability
-import Mathlib.MeasureTheory.Group.Arithmetic
-import Mathlib.Topology.Instances.Matrix
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuQuadratic
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuWellPosedness
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimizationMeasurability
+public import Mathlib.MeasureTheory.Group.Arithmetic
+public import Mathlib.Topology.Instances.Matrix
 
 /-! # Hilbert Operator -/
+
+@[expose] public section
 
 namespace Homogenization
 

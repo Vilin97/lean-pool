@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.NegativeBesov
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.CoeffRestriction
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
-import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanL2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDual
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.NegativeBesov
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.CoeffRestriction
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
+public import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanL2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDual
 
 /-!
 # Exact carriers for the Chapter 3 flux-comparison estimate
@@ -19,6 +21,8 @@ Armstrong--Kuusi--Loher flux-defect duality statement.  In particular, the
 coefficient argument remains the public a.e. `CoeffOn` object; pointwise
 representatives are used only privately to establish the `L²` certificates.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

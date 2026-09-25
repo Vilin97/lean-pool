@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.GagliardoNirenbergSobolev
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.Limit
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.GagliardoNirenbergSobolev
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.Limit
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
 
 /-! # Cube Embedding -/
+
+@[expose] public section
 
 namespace Homogenization
 

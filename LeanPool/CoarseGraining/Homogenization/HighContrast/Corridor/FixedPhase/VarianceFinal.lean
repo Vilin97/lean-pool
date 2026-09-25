@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Variance
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Recombination
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.AeBridge
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CarrierObservable
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Variance
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Recombination
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.AeBridge
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CarrierObservable
 
 /-!
 # The fixed-phase variance (Proposition 4.3), final assembly
@@ -38,6 +40,8 @@ The chain is `efronStein_phaseObservable` → integrable per-core terms (bounded
 a.s. by the uniform `B`-term + AESM) → sum/integral exchange (`integral_prod`,
 `integral_finset_sum`) → `∫∫ Σ ≤ B`-term.
 -/
+
+@[expose] public section
 
 open Homogenization MeasureTheory ProbabilityTheory
 open scoped MeasureTheory ProbabilityTheory BigOperators

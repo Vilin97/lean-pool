@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.NormalizedLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Definitions
-import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.NormalizedLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Definitions
+public import Mathlib.MeasureTheory.SpecificCodomains.WithLp
 
 /-!
 # Generic normalized `W^{1,p}` implementation kernel
@@ -17,6 +19,8 @@ kernel, not the Chapter 1 source-facing carrier: Chapter 1 exposes these
 operations only after restricting to its nonempty bounded open convex-domain
 facade.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

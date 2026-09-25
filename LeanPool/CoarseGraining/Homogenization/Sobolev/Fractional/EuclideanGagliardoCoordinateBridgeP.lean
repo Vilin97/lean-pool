@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpCoordinate
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpCoordinate
 
 /-!
 # Finite-`p` Euclidean-to-coordinate Gagliardo bridge
@@ -17,6 +19,8 @@ kernel by the project's ambient distance, and then compare that Hilbert-vector
 kernel with its scalar coordinates.  Every displayed constant is independent
 of the fractional order `s ∈ (0,1)`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

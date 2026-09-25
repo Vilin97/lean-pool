@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.SeminormComparison
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.SeminormComparison
 
 /-!
 # Additive full-norm equivalence for continuous interpolation
@@ -14,6 +16,8 @@ norm plus either the continuum interpolation seminorm or the exact Euclidean fra
 Sobolev seminorm.  The two resulting extended-valued full norms are equivalent with one
 finite constant depending only on the fractional order and the dimension.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

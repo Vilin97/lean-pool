@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.Euclidean
-import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedMeasurableDomain
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.Euclidean
+public import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedMeasurableDomain
 
 /-!
 # Normalized `L^p` quantities on bounded measurable domains
@@ -16,6 +18,8 @@ meaning of the manuscript notation `fint_U`.  Extended norms are kept in
 The ambient `Vec d` norm remains untouched: the Euclidean vector lane below
 uses the explicit function `euclideanNorm`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

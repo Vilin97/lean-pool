@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingAggregation
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingDescendantWsp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanLpDisjointBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingAggregation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingDescendantWsp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanLpDisjointBridge
 
 /-!
 # Finite-`p` forcing aggregation for local coarse graining
@@ -15,6 +17,8 @@ This module isolates the source forcing term before it is combined with the
 PDE or response estimates.  Its physical-scale index is written as `n - j`:
 thus `j` is exactly the source depth below the prescribed scale `n`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

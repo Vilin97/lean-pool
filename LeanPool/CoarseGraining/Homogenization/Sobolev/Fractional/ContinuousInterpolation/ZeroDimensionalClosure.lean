@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.RootScaleControl
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.EuclideanGagliardoCoordinateBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.RootScaleControl
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.EuclideanGagliardoCoordinateBridge
 
 /-!
 # Zero-dimensional closure of the continuous interpolation quantities
@@ -14,6 +16,8 @@ All vector fields and gradient matrices in dimension zero are forced to vanish. 
 records the resulting exact zero identities for the normalized `L²`, continuous `K`, sampled
 series, and Euclidean fractional quantities.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

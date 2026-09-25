@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SubadditivityScalingDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixPositivity
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixExtraction
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Subadditivity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Homogeneity
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SubadditivityScalingDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixPositivity
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixExtraction
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Subadditivity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Homogeneity
 
 /-! # Subadditivity Scaling -/
+
+@[expose] public section
 
 open scoped BigOperators
 

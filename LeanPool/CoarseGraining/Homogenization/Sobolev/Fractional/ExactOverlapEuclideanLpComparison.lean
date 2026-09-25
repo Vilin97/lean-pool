@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapEuclideanLpCoordinateBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanGagliardoCoordinateBridgeP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapScalarPComparison
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.AssemblyPieces
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCongruence
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlapEuclideanLpCoordinateBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanGagliardoCoordinateBridgeP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapScalarPComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.AssemblyPieces
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCongruence
 
 /-!
 # Finite-`p` direct Euclidean overlap versus fractional Sobolev seminorm
@@ -17,6 +19,8 @@ This is the source-facing comparison for the canonical vector-valued overlap
 seminorm.  The proof keeps its direct Euclidean local oscillations intact and
 uses scalar coordinates only internally.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanL2
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.EuclideanHsMeasurability
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
-import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
-import Mathlib.MeasureTheory.Measure.Prod
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanL2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.EuclideanHsMeasurability
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
+public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+public import Mathlib.MeasureTheory.Measure.Prod
 
 /-!
 # Exact Euclidean fractional `H^s` on centered triadic cubes
@@ -33,6 +35,8 @@ It then transports that energy to the centered unit cube under
   `(3 ^ m) ^ (-s)` seminorm scaling.
 - `memCenteredCubeEuclideanHs_iff_pullbackToUnit`: exact membership transport.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

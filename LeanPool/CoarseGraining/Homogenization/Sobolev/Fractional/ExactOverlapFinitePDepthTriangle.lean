@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePAveraging
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePAveraging
 
 /-!
 # Finite-`p` exact-overlap depth triangle inequality
@@ -14,6 +16,8 @@ addition with the usual two-term finite-`p` constant.  The proof keeps the
 average identity and the local Minkowski step on each overlap cube, before
 summing, so no center-cardinality loss is introduced.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

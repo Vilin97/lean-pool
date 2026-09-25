@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability.CauchySchwarz
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability.Integral
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability.CauchySchwarz
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability.Integral
 
 /-!
 # Quadratic stability (Lemma 4.1)
@@ -22,3 +24,5 @@ preparation):
   (integral stability of the two quadratic minima, constant `6K`) — see
   `QuadraticStability/Integral.lean`.
 -/
+
+@[expose] public section

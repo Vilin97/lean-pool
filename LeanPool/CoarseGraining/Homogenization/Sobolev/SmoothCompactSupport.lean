@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
-import Mathlib.Analysis.Distribution.TestFunction
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
+public import Mathlib.Analysis.Distribution.TestFunction
 
 /-!
 # Smooth compactly supported test functions
@@ -15,6 +17,8 @@ This is a thin adapter over Mathlib's genuine test-function carrier
 the project's weak Sobolev witnesses, without introducing a second test-space
 structure or any regularity hypothesis on `Ω`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

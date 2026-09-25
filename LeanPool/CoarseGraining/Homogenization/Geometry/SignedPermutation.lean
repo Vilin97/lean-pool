@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 
 /-! # Signed Permutation -/
+
+@[expose] public section
 
 namespace Homogenization
 
@@ -184,8 +188,8 @@ noncomputable def signedPermutationHomeomorph {d : ℕ} (R : Mat d)
       right_inv := by
         intro x
         rw [matVecMul_mul, hR.mul_transpose_self, matVecMul_one] }
-  continuous_toFun := continuous_matVecMul R
-  continuous_invFun := continuous_matVecMul (matTranspose R)
+  continuous_toFun := by exact continuous_matVecMul R
+  continuous_invFun := by exact continuous_matVecMul (matTranspose R)
 
 theorem measurePreserving_matVecMul_signedPermutation {d : ℕ} {R : Mat d}
     (hR : IsSignedPermutationMatrix R) :

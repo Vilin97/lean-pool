@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SliceMeasurability
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SliceMeasurability
 
 /-!
 # Measurability of fixed-constant elliptic support events on the carrier
@@ -29,6 +31,8 @@ These are the measurable witness sets through which pushforward and Dirac laws
 of honest fields verify `UniformEllipticityBounds` and `ThetaEllipticLaw`
 (the paper, Armstrong–Kuusi–Loher, to appear).
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaStarPosDef
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.CompletedSquare
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.EllipticConsequences.SigmaStarPosDef
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Symmetric.CompletedSquare
 
 /-! # Open Bounded Convex -/
+
+@[expose] public section
 
 namespace Homogenization
 

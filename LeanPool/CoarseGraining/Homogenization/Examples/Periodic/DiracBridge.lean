@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.MainResults
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.Duality
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.EllipticSupport
+
+public import LeanPool.CoarseGraining.Homogenization.Book.MainResults
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.Duality
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.EllipticSupport
 
 /-!
 # Dirac-law bridge for deterministic periodic examples
@@ -26,6 +28,8 @@ endomorphisms (`Measure.map_dirac'`); unit-range dependence is formal because
 uniform-ellipticity support event is the genuinely measurable fixed-constant
 event of `RegCoeffField/EllipticSupport.lean`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Examples

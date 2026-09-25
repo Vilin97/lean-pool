@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Foundations.Algebra
-import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Euclidean
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Foundations.Algebra
+public import LeanPool.CoarseGraining.Homogenization.Geometry.Translation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Euclidean
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-! # Norm Scaling -/
+
+@[expose] public section
 
 open scoped Pointwise ENNReal
 

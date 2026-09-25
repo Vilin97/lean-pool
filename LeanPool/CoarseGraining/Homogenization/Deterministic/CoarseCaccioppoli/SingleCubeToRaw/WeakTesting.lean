@@ -3,17 +3,21 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Foundations
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.QuantitativeCutoff
-import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
-import LeanPool.CoarseGraining.Homogenization.PDE.Harmonic
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.LocalizedZeroTrace
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.Foundations
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.QuantitativeCutoff
+public import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
+public import LeanPool.CoarseGraining.Homogenization.PDE.Harmonic
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.LocalizedZeroTrace
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
 
 /-! # Weak Testing -/
+
+@[expose] public section
 
 namespace Homogenization
 

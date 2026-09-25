@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Reflections
-import Mathlib.MeasureTheory.Group.Measure
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Reflections
+public import Mathlib.MeasureTheory.Group.Measure
 
 /-! # Homeomorphism -/
+
+@[expose] public section
 
 namespace Homogenization
 

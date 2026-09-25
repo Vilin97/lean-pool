@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedMeasurableDomain
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
-import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedNorms
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedMeasurableDomain
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedNorms
 
 /-!
 # Triadic cubes as bounded measurable domains
@@ -16,6 +18,8 @@ This module packages the operational half-open carrier of a triadic cube as a
 almost-everywhere equal to this carrier; no equality of the two sets is used or
 claimed here.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

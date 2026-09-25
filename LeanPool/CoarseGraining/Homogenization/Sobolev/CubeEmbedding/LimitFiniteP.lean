@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldExtensionFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.GagliardoNirenbergSobolevFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
-import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-import Mathlib.MeasureTheory.Function.LpSpace.Complete
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldExtensionFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.GagliardoNirenbergSobolevFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
+public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
+public import Mathlib.MeasureTheory.Function.LpSpace.Complete
 
 /-!
 # Finite-`p` coordinate GNS input for cube localization
@@ -17,6 +19,8 @@ This module records the coordinate form of the ambient finite-`p`
 Gagliardo--Nirenberg--Sobolev theorem.  It is the analytic estimate applied to
 compactly supported smooth folded approximants in the cube localization step.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

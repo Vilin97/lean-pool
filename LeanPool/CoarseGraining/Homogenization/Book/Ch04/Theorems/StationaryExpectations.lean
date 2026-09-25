@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Expectations
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Scalarization
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.TriadicCubeTranslation
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixOperatorNorm
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Translation
-import LeanPool.CoarseGraining.Homogenization.Probability.LocalObservable
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Expectations
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.Scalarization
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.TriadicCubeTranslation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixOperatorNorm
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Translation
+public import LeanPool.CoarseGraining.Homogenization.Probability.LocalObservable
 
 /-! # Stationary Expectations -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.Fin
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.RestrictionIndependence
-import Mathlib.Probability.Independence.Basic
-import Mathlib.MeasureTheory.Integral.Prod
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.Fin
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.RestrictionIndependence
+public import Mathlib.Probability.Independence.Basic
+public import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Efron–Stein transfer to coefficient-field laws
@@ -33,6 +35,8 @@ independent copy of `P` re-drawn only on `C i`.
 
 Reference: the paper (Armstrong–Kuusi–Loher, to appear).
 -/
+
+@[expose] public section
 
 open scoped MeasureTheory ProbabilityTheory BigOperators
 

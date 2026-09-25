@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Multiscale.Projection
-import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.Projection
+public import LeanPool.CoarseGraining.Homogenization.IntegralLpSeminorm
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 
 /-! # Normalized Norms -/
+
+@[expose] public section
 
 namespace Homogenization
 

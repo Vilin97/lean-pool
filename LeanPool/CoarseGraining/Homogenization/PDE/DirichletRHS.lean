@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
-import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientFieldHilbert
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareZeroTrace
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Hodge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientField
+public import LeanPool.CoarseGraining.Homogenization.Ambient.CoefficientFieldHilbert
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareZeroTrace
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Hodge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
 
 /-! # Dirichlet RHS -/
+
+@[expose] public section
 
 namespace Homogenization
 

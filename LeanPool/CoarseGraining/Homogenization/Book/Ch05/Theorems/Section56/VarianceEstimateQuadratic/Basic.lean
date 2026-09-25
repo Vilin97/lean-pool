@@ -3,16 +3,20 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.BlockExpectations
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.WrapAround
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.FluctuationIntegrability
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.NormalizedBlocks
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ScaleCompression
-import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.Tactic.NoncommRing
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.BlockExpectations
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.WrapAround
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.FluctuationIntegrability
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.NormalizedBlocks
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section54.VarianceBoundGoodScale.ScaleCompression
+public import Mathlib.Analysis.Matrix.PosDef
+public import Mathlib.Tactic.NoncommRing
 
 /-! # Basic -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

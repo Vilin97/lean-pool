@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalExact
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.LocalizedZeroTrace
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalExact
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.LocalizedZeroTrace
 
 /-! # Field Spaces -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

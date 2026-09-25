@@ -3,16 +3,20 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientIterationGeometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicInteriorHessian
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicDerivative
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.LimitFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.MatchedPair.ScaledPoincare
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpCoordinate
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientOneDim
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientIterationGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicInteriorHessian
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicDerivative
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.LimitFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.MatchedPair.ScaledPoincare
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpCoordinate
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.HarmonicGradientOneDim
 
 /-! # Harmonic Gradient Gain Iteration -/
+
+@[expose] public section
 
 namespace Homogenization
 

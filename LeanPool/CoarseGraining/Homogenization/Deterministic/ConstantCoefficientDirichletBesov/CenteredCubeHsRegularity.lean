@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlap
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CenteredCubeScaleTransport
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ContinuousKFullRegularity
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlap
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CenteredCubeScaleTransport
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.ContinuousKFullRegularity
 
 /-!
 # Exact centered-cube Euclidean `H^s` Dirichlet regularity
@@ -31,6 +33,8 @@ scale by the same factor.
 - `exists_centeredCubeDirichletEuclideanHsFullENormRegularity`: the all-scale
   exact Euclidean `H^s` Dirichlet estimate.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

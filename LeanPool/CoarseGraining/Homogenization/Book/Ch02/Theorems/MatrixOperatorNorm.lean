@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.MultiscaleEllipticity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Subadditivity
-import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.LinearAlgebra.Matrix.Reindex
-import Mathlib.LinearAlgebra.Matrix.PosDef
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.MultiscaleEllipticity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Subadditivity
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+public import Mathlib.LinearAlgebra.Matrix.Reindex
+public import Mathlib.LinearAlgebra.Matrix.PosDef
 
 /-! # Matrix Operator Norm -/
+
+@[expose] public section
 
 open scoped BigOperators Matrix.Norms.L2Operator
 

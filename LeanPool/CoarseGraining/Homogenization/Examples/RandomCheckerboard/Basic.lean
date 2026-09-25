@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.EllipticSupport
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Restriction
-import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
-import Mathlib.Probability.Independence.InfinitePi
-import Mathlib.Probability.ProbabilityMassFunction.Constructions
+
+public import LeanPool.CoarseGraining.Homogenization.Ambient.ScalarMatrix
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.EllipticSupport
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Restriction
+public import LeanPool.CoarseGraining.Homogenization.Geometry.ConvexDomain
+public import Mathlib.Probability.Independence.InfinitePi
+public import Mathlib.Probability.ProbabilityMassFunction.Constructions
 
 /-!
 # Bernoulli checkerboard: the honest carrier-valued sample map
@@ -37,6 +39,8 @@ checkerboard law (`CarrierLaw.lean`).
 
 Reference: the paper (Armstrong–Kuusi–Loher, to appear).
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Examples

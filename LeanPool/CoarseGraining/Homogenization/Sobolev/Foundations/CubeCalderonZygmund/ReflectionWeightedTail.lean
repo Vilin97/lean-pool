@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalWeightedTail
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionFiniteP
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.LocalWeightedTail
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionFiniteP
 
 /-!
 # Square-weighted tails under Dirichlet odd reflection
@@ -15,6 +17,8 @@ The global good-`λ` argument works with the squared-density measure
 field on a centered parent cube are exactly `3^d` copies of the corresponding
 tail on the source cube.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

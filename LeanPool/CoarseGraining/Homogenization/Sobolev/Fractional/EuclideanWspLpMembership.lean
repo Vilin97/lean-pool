@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCongruence
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCongruence
 
 /-!
 # Finite-seminorm membership for Euclidean fractional Sobolev fields
@@ -13,6 +15,8 @@ This file packages the product-measure measurability needed to turn a
 normalized-cube `L^p` field with finite Euclidean fractional seminorm into a
 literal `MemCubeEuclideanWsp` witness.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlap
-import LeanPool.CoarseGraining.Homogenization.Ambient.Euclidean
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.ExactOverlap
+public import LeanPool.CoarseGraining.Homogenization.Ambient.Euclidean
 
 /-!
 # Exact Euclidean-valued overlapping positive-order Besov kernel
@@ -16,6 +18,8 @@ the root mean are aggregated over coordinates with the Euclidean `ℓ²` norm.
 All quantities remain `ENNReal`-valued, so no finiteness assumption is hidden
 in the definition.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

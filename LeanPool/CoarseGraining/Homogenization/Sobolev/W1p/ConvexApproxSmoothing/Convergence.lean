@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.Calculus.FDeriv.Measurable
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.PointwiseBounds
-import Mathlib.MeasureTheory.Function.ContinuousMapDense
+
+public import Mathlib.Analysis.Calculus.FDeriv.Measurable
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.PointwiseBounds
+public import Mathlib.MeasureTheory.Function.ContinuousMapDense
 
 /-! # Convergence -/
+
+@[expose] public section
 
 namespace Homogenization
 

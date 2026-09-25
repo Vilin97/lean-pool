@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.OverlapCenters
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.OverlapCenters
 
 /-!
 # Shell geometry for the fractional Sobolev versus Besov comparison
@@ -19,6 +21,8 @@ provides the geometric inputs for both directions of the comparison:
 The bounded-overlap count (G2) and the pair-capture lemma (G3) build on these
 in the companion files.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Gagliardo

@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceEllipticity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceObservable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.CarrierMinimizerFamily
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalSolutions.Definitions
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SmoothSliceMeasurability
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.RegIntegralAdapter
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceEllipticity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceObservable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.CarrierMinimizerFamily
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.CanonicalSolutions.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SmoothSliceMeasurability
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.RegIntegralAdapter
 
 /-!
 # Exact-source locality of canonical doubled-`Mu` solutions
@@ -19,6 +21,8 @@ The least-slice partition therefore assembles the canonical totalized
 minimizer and its fixed-test energy pairing pointwise from source-local slice
 pieces.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

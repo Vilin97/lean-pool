@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingDefinitions
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLocalization
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLocalization
 
 /-!
 # Finite-`p` local coarse-graining aggregation algebra
@@ -13,6 +15,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLoc
 This file contains the elementary `ENNReal` power identities used to assemble
 the finite-`p` local coarse-graining estimate.  It has no PDE content.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

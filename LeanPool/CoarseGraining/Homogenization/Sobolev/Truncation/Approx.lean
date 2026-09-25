@@ -3,17 +3,21 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.ChainRule
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.WeakGradientLimit
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.Convergence
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.WeakDerivSmoothing
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.SmoothRepresentative
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
-import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.ChainRule
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation.WeakGradientLimit
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.Convergence
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.WeakDerivSmoothing
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.SmoothRepresentative
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.BasicLemmas
+public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-! # Approx -/
+
+@[expose] public section
 
 namespace Homogenization
 

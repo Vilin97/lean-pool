@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CenteredCubeHsRegularity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanFullComparison
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CenteredCubeHsRegularity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanFullComparison
 
 /-!
 # Exact overlap-Besov regularity for the centered-cube Dirichlet problem
@@ -16,6 +18,8 @@ exact overlap-Besov/physical-Sobolev full-norm equivalence with the all-scale
 constant-coefficient Dirichlet estimate.  All comparison, endpoint, scale,
 and representative inputs remain proof-internal.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

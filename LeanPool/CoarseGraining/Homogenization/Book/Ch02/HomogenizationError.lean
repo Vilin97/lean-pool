@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.DoubledResponse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.MultiscaleEllipticity
-import Mathlib.Analysis.Matrix.Order
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.DoubledResponse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.MultiscaleEllipticity
+public import Mathlib.Analysis.Matrix.Order
 
 /-! # Homogenization Error -/
+
+@[expose] public section
 
 open scoped BigOperators MatrixOrder
 

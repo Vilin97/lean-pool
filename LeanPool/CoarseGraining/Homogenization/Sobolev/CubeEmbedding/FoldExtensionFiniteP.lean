@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.Extension
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldNormFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.ConvexApproxTendsto
-import Mathlib.MeasureTheory.Function.LpSpace.Complete
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.Extension
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.FoldNormFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p.ConvexApproxTendsto
+public import Mathlib.MeasureTheory.Function.LpSpace.Complete
 
 /-!
 # Finite-`p` even-fold extension on an axis box
@@ -17,6 +19,8 @@ approximants are cut off outside the tripled box, transported by the fold, and
 closed using finite-exponent Hölder pairings against compactly supported test
 functions.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

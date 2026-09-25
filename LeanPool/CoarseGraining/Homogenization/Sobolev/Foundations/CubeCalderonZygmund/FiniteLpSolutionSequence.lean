@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpDataDensity
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpSolutionStability
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpDataDensity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLpSolutionStability
 
 /-!
 # Canonical finite-`L^p` approximating solutions on centered cubes
@@ -16,6 +18,8 @@ solutions.  It stops before selecting a limit: the later arbitrary-data
 assembly is responsible for both the high-exponent zero-trace bridge and the
 weak-equation limit passage.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

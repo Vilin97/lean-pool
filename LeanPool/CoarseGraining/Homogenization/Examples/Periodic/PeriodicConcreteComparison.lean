@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.MField
+
+public import LeanPool.CoarseGraining.Homogenization.Examples.Periodic.MField
 
 /-!
 # Concrete periodic comparison corollary
@@ -22,6 +24,8 @@ theorem against the proof below.  See `Audit/README.md` for the comparator map.
 (`PeriodicGeneralComparison`, `Audit/PeriodicGeneral`) → *explicit field (this
 file)* → classical data (`PeriodicSmoothComparison`, `Audit/PeriodicSmooth`).
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Examples

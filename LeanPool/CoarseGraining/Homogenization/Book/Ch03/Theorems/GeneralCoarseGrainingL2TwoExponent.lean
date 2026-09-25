@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.Duality
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantEnvelope
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2Response
-import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2RHSCoefficientLocalization
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.Duality
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse.RHSConstantEnvelope
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2Response
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes.CoarseGrainingL2RHSCoefficientLocalization
 
 /-! # General Coarse Graining L2Two Exponent -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

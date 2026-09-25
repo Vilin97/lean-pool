@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInterior
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.AnalyticInput
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.Solver
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInterior
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.AnalyticInput
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson.Solver
 
 /-! # Hessian Gradient H1 -/
+
+@[expose] public section
 
 namespace Homogenization
 

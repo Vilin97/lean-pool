@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Sigma
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.AKL
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.Sigma
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.AKL
 
 /-!
 # Regular-to-AKL quotient adapter
@@ -14,6 +16,8 @@ This module supplies the one-way bridge from regular coefficient fields with a
 fixed a.e. ellipticity bound to the AKL a.e.-quotient carrier.  It deliberately
 does not choose representatives in the reverse direction.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Source.AKL
 

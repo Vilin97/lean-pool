@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.WeakHessianEuclidean
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra.H1Function
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.UnitCubeEuclideanL2
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.WeakHessianEuclidean
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1.Algebra.H1Function
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.UnitCubeEuclideanL2
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.MeasureTheory.SpecificCodomains.WithLp
 
 /-!
 # The continuous centered-cube `K`-functional
@@ -18,6 +20,8 @@ constant-coefficient Dirichlet argument.  The unit centered open cube is used
 for the coordinatewise `H¹` competitors; normalized volume is realized by its
 a.e.-equal half-open cube.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

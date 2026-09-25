@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.Overlap
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.PositiveNorm
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.Overlap
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.PositiveNorm
 
 /-!
 # Coordinate bridges for the overlapping positive Besov seminorm
@@ -15,6 +17,8 @@ historically duplicated presentations of the same overlap geometry. This file id
 presentations and compares their finite `p = q = 2` truncations. No full real-valued `sSup`
 seminorm occurs here.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

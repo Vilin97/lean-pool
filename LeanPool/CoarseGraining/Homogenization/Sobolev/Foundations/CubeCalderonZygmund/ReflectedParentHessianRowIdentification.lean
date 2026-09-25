@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionHessianRowCellH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedParentInteriorHessian
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectionHessianRowCellH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ReflectedParentInteriorHessian
 
 /-!
 # Identifying the reflected-parent weak Hessian
@@ -17,6 +19,8 @@ The proof uses weak-derivative uniqueness on each open reflection cell and the
 fact that the finitely many cells cover the centered parent modulo reflecting
 faces of measure zero.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,20 +3,24 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuQuadratic
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.CoeffOperator
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery.CorrectionSpaceEnergy
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.CoarseObservableMeasurability.Mu
-import LeanPool.CoarseGraining.Homogenization.Probability.LocalEllipticitySlices
-import LeanPool.CoarseGraining.Homogenization.Probability.LocalObservable
-import LeanPool.CoarseGraining.Homogenization.Probability.RandomFieldMeasurability
-import Mathlib.Analysis.Normed.Lp.SmoothApprox
-import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
-import Mathlib.Geometry.Manifold.PartitionOfUnity
-import Mathlib.MeasureTheory.Function.UniformIntegrable
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuQuadratic
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.CoeffOperator
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecovery.CorrectionSpaceEnergy
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.CoarseObservableMeasurability.Mu
+public import LeanPool.CoarseGraining.Homogenization.Probability.LocalEllipticitySlices
+public import LeanPool.CoarseGraining.Homogenization.Probability.LocalObservable
+public import LeanPool.CoarseGraining.Homogenization.Probability.RandomFieldMeasurability
+public import Mathlib.Analysis.Normed.Lp.SmoothApprox
+public import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
+public import Mathlib.Geometry.Manifold.PartitionOfUnity
+public import Mathlib.MeasureTheory.Function.UniformIntegrable
 
 /-! # Measurability -/
+
+@[expose] public section
 
 namespace Homogenization
 

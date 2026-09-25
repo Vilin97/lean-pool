@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.UnitCubeEuclideanL2
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.UnitCubeEuclideanL2
 
 /-!
 # Finite `L^p` exponents and Euclidean cube fields
@@ -13,6 +15,8 @@ This module provides the exact finite-exponent carrier used by the Chapter 3
 analytic kernels, together with restriction of a Euclidean `L^p` field to a
 subcube while retaining its same pointwise representative.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

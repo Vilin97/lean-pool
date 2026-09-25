@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LimitNormalization
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.ConcentrationAEMeasurable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.MomentFactorBounds.FactorBounds
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section57.LimitNormalization
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.ConcentrationAEMeasurable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.MomentFactorBounds.FactorBounds
 
 /-! # Unit JTail -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

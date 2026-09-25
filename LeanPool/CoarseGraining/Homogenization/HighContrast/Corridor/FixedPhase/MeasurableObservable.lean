@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CorePatchEnergy
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CubeMinimizer
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.AEEOperator.CanonicalCubeSet
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CorePatchEnergy
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CubeMinimizer
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.AEEOperator.CanonicalCubeSet
 
 /-!
 # The product-measurable observable and its a.e. identity
@@ -39,6 +41,8 @@ The genuine spatial measurability of the underlying field — required for the
 `IsEllipticFieldOn` hypotheses of links 1 and 3 — is exactly the measurability
 conjunct of `ThetaEllipticLaw` (amended 2026-07-22).
 -/
+
+@[expose] public section
 
 open Homogenization
 open scoped MeasureTheory BigOperators

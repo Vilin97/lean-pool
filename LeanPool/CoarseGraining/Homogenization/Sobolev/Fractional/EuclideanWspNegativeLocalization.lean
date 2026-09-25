@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLocalization
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDual
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLocalization
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDual
 
 /-!
 # Descendant localization preliminaries for the smooth negative fractional norm
@@ -14,6 +16,8 @@ This module records the exact normalized-pairing partition and the canonical
 restriction of a globally smooth test field.  They are the two analytic inputs
 needed for negative-norm localization by finite Hoelder duality.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.TriadicSeries
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.TriadicSeries
 
 /-!
 # Root-scale control for the sampled continuous K energy
@@ -13,6 +15,8 @@ The continuum scale integral omits the endpoint `t = 1`. This module controls th
 triadic sample directly with the zero `H¹` competitor and separates it exactly from the shifted
 sampled energy.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

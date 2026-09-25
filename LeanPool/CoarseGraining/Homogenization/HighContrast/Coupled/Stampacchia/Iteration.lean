@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.IterationLemma
-import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.IterationLemma
+public import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
 
 /-!
 # Generic De Giorgi iteration (level-volume decay)
@@ -24,6 +26,8 @@ The statement is fully abstract in the nonnegative "level-volume" function
 `Y_n = L^{-d} a(k_n)`) reduces the recursion to the toolbox lemma
 `iteration_geometric_decay_tendsto_zero`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

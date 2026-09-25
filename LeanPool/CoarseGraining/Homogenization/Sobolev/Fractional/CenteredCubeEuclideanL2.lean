@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCubeTranslation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Dilation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.UnitCubeEuclideanL2
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCubeTranslation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Dilation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.UnitCubeEuclideanL2
 
 /-!
 # Euclidean `L²` fields on centered triadic cubes
@@ -27,6 +29,8 @@ exactly.
 - `centeredCubeDilationMeasurePreserving`: normalized-volume preservation.
 - `normalizedEuclideanLpENorm_pullbackToUnit`: exact normalized norm invariance.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

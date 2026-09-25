@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.DefinitionsAPI
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.DefinitionsAPI
 
 /-!
 # Triadic translation covariance for finite-p Euclidean fractional norms
@@ -14,6 +16,8 @@ The translation is represented by the lattice vector attached to
 `translateCube`.  All identities preserve the normalized measures exactly.
 -/
 
+@[expose] public section
+
 namespace Homogenization
 
 open MeasureTheory
@@ -21,7 +25,8 @@ open scoped ENNReal
 
 noncomputable section
 
-private noncomputable def euclideanWspTranslationEquiv {d : ℕ}
+/-- Translation by the lattice shift, as a measurable equivalence of Euclidean space. -/
+noncomputable def euclideanWspTranslationEquiv {d : ℕ}
     (shift : Fin d → ℤ) (Q : TriadicCube d) : Vec d ≃ᵐ Vec d :=
   MeasurableEquiv.addRight (Gagliardo.cubeShiftVector shift Q)
 

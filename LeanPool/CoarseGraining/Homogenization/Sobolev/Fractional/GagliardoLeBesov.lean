@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.PairCapture
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.AssemblyPieces
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ENNRealBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Constants
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.OverlapIntegral
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.PairCapture
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.AssemblyPieces
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ENNRealBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Constants
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.OverlapIntegral
 
 /-!
 # Gagliardo-to-Besov direction of the fractional comparison
@@ -24,6 +26,8 @@ matching depth (G3, `exists_centersAtDepth_pair_mem`), splits the difference
 through the cube average (triangle inequality plus `L^p` bookkeeping), and
 resums the shells into the depth seminorms.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Gagliardo
@@ -365,7 +369,8 @@ private theorem ofReal_oscillation_rpow_eq {S : TriadicCube d} {p : ℝ≥0∞}
       (ScalarOverlap.normalizedCubeMeasure S)) ^ p.toReal ≠ ∞ :=
     ENNReal.rpow_ne_top_of_nonneg ENNReal.toReal_nonneg hsub.eLpNorm_ne_top
   unfold cubeBesovOverlapOscillation ScalarOverlap.cubeLpNorm
-  rw [ENNReal.toReal_rpow, ENNReal.ofReal_toReal hfin]
+  rw [Gagliardo.integralLpSeminorm_eq_eLpNorm _ _ _ hsub.aestronglyMeasurable,
+    ENNReal.toReal_rpow, ENNReal.ofReal_toReal hfin]
 
 /-- The plain volume integral of the oscillation power equals the volume times
 the `ofReal` of the normalized oscillation power. -/

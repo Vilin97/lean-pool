@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.ClampedObservable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.CarrierMuFamily
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SliceMeasurability
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.ClampedObservable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Internal.AEESliceAssembly.CarrierMuFamily
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SliceMeasurability
 
 /-!
 # The carrier-measurable clamped observable
@@ -43,6 +45,8 @@ construction**:
 
 Reference: the paper (Armstrong–Kuusi–Loher, to appear).
 -/
+
+@[expose] public section
 
 open Homogenization
 open scoped MeasureTheory BigOperators

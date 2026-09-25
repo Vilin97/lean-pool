@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.PDE.Harmonic
-import LeanPool.CoarseGraining.Homogenization.Probability.Scalarization
-import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+
+public import LeanPool.CoarseGraining.Homogenization.PDE.Harmonic
+public import LeanPool.CoarseGraining.Homogenization.Probability.Scalarization
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
 /-! # Structures -/
+
+@[expose] public section
 
 namespace Homogenization
 

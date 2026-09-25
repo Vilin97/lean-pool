@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Scaling
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Scaling
 
 /-!
 # Triadically rescaled exact coarse-source laws
@@ -12,6 +14,8 @@ import LeanPool.CoarseGraining.Homogenization.Probability.Source.Coarse.Scaling
 The normalized source law is the pushforward by the exact carrier rescaling
 `a ↦ (x ↦ a (3^k x))`.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Source.Coarse
 

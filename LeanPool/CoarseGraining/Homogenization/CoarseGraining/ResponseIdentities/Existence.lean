@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimization
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
-import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicCube
-import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicHilbert
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.HilbertMinimization
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ResponseIdentities.AverageFormulas
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
+public import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicCube
+public import LeanPool.CoarseGraining.Homogenization.PDE.HarmonicHilbert
 
 /-! # Existence -/
+
+@[expose] public section
 
 namespace Homogenization
 

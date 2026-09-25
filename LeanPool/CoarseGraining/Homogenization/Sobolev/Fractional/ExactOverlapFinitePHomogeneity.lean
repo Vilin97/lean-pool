@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePAveraging
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapDefinitions
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePAveraging
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapDefinitions
 
 /-!
 # Scalar homogeneity of exact overlap depth energies
@@ -13,6 +15,8 @@ import LeanPool.CoarseGraining.Homogenization.Besov.Duality.OverlapDefinitions
 The normalized overlap average and the resulting one-depth energy commute
 exactly with multiplication by a real scalar.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

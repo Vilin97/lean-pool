@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionScalarFiniteP
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.ReflectionScalarFiniteP
 
 /-!
 # Finite-`p` transport for mixed-parity Dirichlet reflections
@@ -16,6 +18,8 @@ cell parity from `S` to `S * s_i`. Differentiating once more in coordinate
 pointwise formulas and their exact finite-`p` norm transport. No weak
 derivative assertion is made here.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

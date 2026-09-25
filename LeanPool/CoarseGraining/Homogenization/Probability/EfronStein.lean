@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 -/
-import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.TwoPoint
-import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.ProdDecomp
-import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.Fin
+public import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.TwoPoint
+public import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.ProdDecomp
+public import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.Fin
 
 /-!
 # Efron–Stein inequality on finite products
@@ -27,3 +29,5 @@ Supporting public lemmas:
 * `Homogenization.variance_prod_eq` — two-factor (law-of-total-variance) split;
 * `Homogenization.efronStein_fin` — the `Fin n` version proved by induction.
 -/
+
+@[expose] public section

@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Reflections
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Homeomorphism
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Derivatives
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.CubePairings
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.Definitions
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Reflections
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Homeomorphism
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.Derivatives
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection.CubePairings
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.Definitions
 
 /-! # Folded And Weak Scalar -/
+
+@[expose] public section
 
 namespace Homogenization
 

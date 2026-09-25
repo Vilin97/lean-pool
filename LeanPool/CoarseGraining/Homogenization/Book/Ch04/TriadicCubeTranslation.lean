@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.SignedPermutation
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCubeTranslation
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.SignedPermutation
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCubeTranslation
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
 
 /-! # Triadic Cube Translation -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

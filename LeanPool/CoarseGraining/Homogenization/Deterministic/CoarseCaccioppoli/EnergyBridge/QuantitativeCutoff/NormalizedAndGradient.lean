@@ -3,17 +3,21 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.CutoffSizes
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Basic
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.Geometry
-import LeanPool.CoarseGraining.Homogenization.Sobolev.H1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.QuantitativeCutoff
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.QuantitativeCutoff.Basic
-import Mathlib.Analysis.Calculus.ContDiff.Bounds
-import Mathlib.Analysis.Calculus.FDeriv.CompCLM
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.CutoffSizes
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.Basic
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.CutoffProduct.Geometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.H1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.QuantitativeCutoff
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli.EnergyBridge.QuantitativeCutoff.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.Bounds
+public import Mathlib.Analysis.Calculus.FDeriv.CompCLM
 
 /-! # Normalized And Gradient -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,17 +3,21 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
-import LeanPool.CoarseGraining.Homogenization.Multiscale.Projection
-import LeanPool.CoarseGraining.Homogenization.PDE.EnergyIdentities
-import LeanPool.CoarseGraining.Homogenization.PDE.Harmonic
-import LeanPool.CoarseGraining.Homogenization.PDE.NeumannRHS
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.ZeroTraceAverages
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalCubeBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMetric
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.Projection
+public import LeanPool.CoarseGraining.Homogenization.PDE.EnergyIdentities
+public import LeanPool.CoarseGraining.Homogenization.PDE.Harmonic
+public import LeanPool.CoarseGraining.Homogenization.PDE.NeumannRHS
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.ZeroTraceAverages
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalCubeBridge
 
 /-! # Neumann Corrector -/
+
+@[expose] public section
 
 namespace Homogenization
 

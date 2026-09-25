@@ -3,10 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.ProjectionCharacterization
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.ProjectionCharacterization
 
 /-! # Localization -/
+
+@[expose] public section
 
 namespace Homogenization
 
@@ -35,7 +39,7 @@ theorem cubeLpNorm_congr_on_cubeSet {d : ℕ} (Q : TriadicCube d) (p : ℝ≥0�
     {u v : Vec d → ℝ} (h : ∀ x ∈ cubeSet Q, u x = v x) :
     cubeLpNorm Q p u = cubeLpNorm Q p v := by
   unfold cubeLpNorm
-  rw [MeasureTheory.eLpNorm_congr_ae]
+  rw [Gagliardo.integralLpSeminorm_congr_ae]
   rw [normalizedCubeMeasure, Filter.EventuallyEq]
   exact ae_smul_measure
     ((MeasureTheory.ae_restrict_iff' (measurableSet_cubeSet Q)).2 <|
@@ -100,7 +104,7 @@ theorem cubeLpNorm_cubeProjectionResidual_eq_cubeProjectionResidual_depth_zero_o
     cubeLpNorm R p (cubeProjectionResidual Q j u) =
       cubeLpNorm R p (cubeProjectionResidual R 0 u) := by
   unfold cubeLpNorm
-  rw [MeasureTheory.eLpNorm_congr_ae
+  rw [Gagliardo.integralLpSeminorm_congr_ae
     (cubeProjectionResidual_ae_eq_cubeProjectionResidual_depth_zero_of_mem_descendantsAtDepth
       (Q := Q) (R := R) (j := j) u hR)]
 

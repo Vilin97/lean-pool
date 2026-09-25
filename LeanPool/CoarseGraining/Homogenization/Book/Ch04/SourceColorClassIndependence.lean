@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceIndependence
-import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
-import LeanPool.CoarseGraining.Homogenization.Geometry.ScaleColoring
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceIndependence
+public import LeanPool.CoarseGraining.Homogenization.Geometry.CubeMeasure
+public import LeanPool.CoarseGraining.Homogenization.Geometry.ScaleColoring
 
 /-!
 # Independence of source-local observables on a scale-color class
@@ -16,6 +18,8 @@ specialization.  Its metric bridge is kept local: the coloring separates cubes
 in the ambient sup metric, while source P2 is formulated with the Euclidean
 metric.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

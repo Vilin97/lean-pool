@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Measurability
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CubeMinimizer
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability.Integral
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds.DiagonalSandwich
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Measurability
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CubeMinimizer
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.QuadraticStability.Integral
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds.DiagonalSandwich
 
 /-!
 # Per-phase stability of the corridor observable
@@ -32,6 +34,8 @@ The core B′3 assembly is packaged as `abs_phaseObservable_sub_le_of_minimizer`
 (M2) is the existential wrapper.  The `Z`-as-input form is what the grid-averaging
 step M3 needs, since a single `a`-minimizer serves every phase `σ`.
 -/
+
+@[expose] public section
 
 open Homogenization
 open MeasureTheory

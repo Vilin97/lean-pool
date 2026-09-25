@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ShellGeometry
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ShellGeometry
 
 /-!
 # Pair capture by overlapping centers (G3)
@@ -20,6 +22,8 @@ then clamps the cell of the first point one step towards the center of the
 window so that the resulting overlapping cube both stays inside `Q` and
 captures the second point.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Gagliardo

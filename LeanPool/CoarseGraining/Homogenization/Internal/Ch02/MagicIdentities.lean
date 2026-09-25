@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MagicIdentitiesDefinitions
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixExtraction
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.SigmaAdjoint
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.Basics
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MagicIdentitiesDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.MatrixExtraction
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.AdjointSymmetry.SigmaAdjoint
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.Basics
 
 /-! # Magic Identities -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Internal

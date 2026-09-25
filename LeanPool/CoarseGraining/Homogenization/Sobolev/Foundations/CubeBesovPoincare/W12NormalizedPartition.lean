@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectionLimit
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.MultiscaleEllipticity
-import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedConvexDomain
-import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedDomainCube
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Normalized
+
+public import LeanPool.CoarseGraining.Homogenization.Besov.Duality.ProjectionLimit
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.MultiscaleEllipticity
+public import LeanPool.CoarseGraining.Homogenization.Geometry.BoundedConvexDomain
+public import LeanPool.CoarseGraining.Homogenization.Multiscale.NormalizedDomainCube
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Normalized
 
 /-!
 # Normalized `W^{1,2}` data on triadic cubes
@@ -18,6 +20,8 @@ This small bridge keeps the source-facing open-cube Sobolev carrier while
 identifying its normalized volume with the cube normalization used by the
 disjoint Besov hierarchy.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

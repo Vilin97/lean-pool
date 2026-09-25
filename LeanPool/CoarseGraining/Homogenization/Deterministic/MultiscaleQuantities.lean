@@ -3,15 +3,19 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Definitions
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCube
-import Mathlib.Analysis.Matrix.Normed
-import Mathlib.Analysis.Matrix.Order
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Topology.Algebra.InfiniteSum.Real
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicCube
+public import Mathlib.Analysis.Matrix.Normed
+public import Mathlib.Analysis.Matrix.Order
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
 
 /-! # Multiscale Quantities -/
+
+@[expose] public section
 
 open scoped BigOperators
 open scoped MatrixOrder

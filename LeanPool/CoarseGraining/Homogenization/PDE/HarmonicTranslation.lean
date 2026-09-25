@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.PDE.Harmonic
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalTranslation
+
+public import LeanPool.CoarseGraining.Homogenization.PDE.Harmonic
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalTranslation
 
 /-!
 # Translation of harmonic functions
@@ -13,6 +15,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalTransla
 This file contains the PDE-level translation API for `AHarmonicFunction`.  It is
 used by both coarse-graining response identities and cube/open-cube transport.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCompletedDualGraph
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDual
-import Mathlib.Analysis.Normed.Operator.Extend
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCompletedDualGraph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDual
+public import Mathlib.Analysis.Normed.Operator.Extend
 
 /-!
 # Finite smooth-dual extension to the completed fractional-Sobolev graph
@@ -15,6 +17,8 @@ On the finite locus of the smooth negative fractional-Sobolev dual norm, the
 normalized pairing extends canonically from smooth tests to the completed
 two-component graph.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

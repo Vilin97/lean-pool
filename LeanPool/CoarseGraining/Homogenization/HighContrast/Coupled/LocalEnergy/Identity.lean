@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Integrability
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Pointwise
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Representation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Integrability
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Pointwise
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Representation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
 
 /-!
 # Local block energy: the test identity
@@ -28,6 +30,8 @@ of the bulk density, the cutoff density and the weak-form defect
 `(a∇v·∇φ + aᵀ∇v*·∇φ*) − q·∇φ`; integrating and cancelling the defect via the
 weak form yields the identity.  No `EuclideanSpace`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

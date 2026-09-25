@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessian
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.CubeVector
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CubeVectorH1
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.ScalarPoissonHessian
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.CubeVector
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CubeVectorH1
 
 /-!
 # Paired-witness scalar divergence gradient endpoint
@@ -17,6 +19,8 @@ Poisson Hessian estimate.  The `H¹` witness supplies the `L²` divergence and
 the integration-by-parts identity; the `W^{1,q}` witness supplies the finite
 exponent control.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

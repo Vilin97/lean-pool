@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockMatrixFieldDefinitions
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.EllipticBounds
-import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.BlockMatrixFieldDefinitions
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.BlockFormalism.EllipticBounds
+public import LeanPool.CoarseGraining.Homogenization.Internal.Ch02.Representatives
 
 /-! # Block Matrix Field -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Internal

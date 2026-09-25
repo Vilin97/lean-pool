@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CutoffData
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Representation
-import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeMeasureBridge
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CutoffData
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Representation
+public import LeanPool.CoarseGraining.Homogenization.Geometry.OriginCubeMeasureBridge
 
 /-!
 # The per-core minimizer energy bound
@@ -30,6 +32,8 @@ estimates `(3ℓ)^d` and `d·(16/ℓ)²·(3ℓ)^d` and the power identity
 open-cube integrals through the null-boundary bridge
 `cubeSet_originCube_ae_eq_openCubeSet`.
 -/
+
+@[expose] public section
 
 open Homogenization MeasureTheory
 open scoped BigOperators

@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.EuclideanNormalized
-import Mathlib.MeasureTheory.SpecificCodomains.WithLp
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2.EuclideanNormalized
+public import Mathlib.MeasureTheory.SpecificCodomains.WithLp
 
 /-!
 # Scalar Poisson Hessian estimate at the energy exponent
@@ -14,6 +16,8 @@ The centered-cube Dirichlet `H²` endpoint supplies a weak Hessian with a
 dimension-only normalized Frobenius estimate.  This file restates that endpoint
 for the project's Hilbert matrix realization.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

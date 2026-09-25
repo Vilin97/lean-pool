@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.MeanInequalitiesPow
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.AllDimensionalComposition
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ContinuumSampleClosure
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.EuclideanHsMeasurability
+
+public import Mathlib.Analysis.MeanInequalitiesPow
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.AllDimensionalComposition
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ContinuumSampleClosure
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.EuclideanHsMeasurability
 
 /-!
 # Convention-neutral comparison of continuous interpolation seminorms
@@ -15,6 +17,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInter
 This module takes half-powers of the all-dimensional energy comparisons. It keeps the
 directional seminorm bounds separate for use by the approved source-facing full norm.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

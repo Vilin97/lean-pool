@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.Basic
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.DilationLaw
-import LeanPool.CoarseGraining.Homogenization.Book.MainResults
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
+
+public import LeanPool.CoarseGraining.Homogenization.Examples.RandomCheckerboard.Basic
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems.DilationLaw
+public import LeanPool.CoarseGraining.Homogenization.Book.MainResults
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.ThetaEllipticity
 
 /-!
 # The Bernoulli checkerboard carrier law and its instances
@@ -28,6 +30,8 @@ instance stack on the carrier:
 * the triadically scaled family (`scaledLaw`, `checkerboardSetup`) and the
   public quenched-comparison corollary.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Examples

@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SliceMeasurability
-import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SmoothSigma
-import Mathlib.Geometry.Manifold.PartitionOfUnity
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Metrizable
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.Topology.MetricSpace.HausdorffDistance
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SliceMeasurability
+public import LeanPool.CoarseGraining.Homogenization.Probability.RegCoeffField.SmoothSigma
+public import Mathlib.Geometry.Manifold.PartitionOfUnity
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Metrizable
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.Topology.MetricSpace.HausdorffDistance
 
 /-!
 # Smooth-local measurability of quantitative ellipticity slices
@@ -19,6 +21,8 @@ cube approximate the ball indicator.  Dominated convergence then transfers the
 ball-average presentation of the quantitative ellipticity slice to the smooth
 local sigma algebra.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

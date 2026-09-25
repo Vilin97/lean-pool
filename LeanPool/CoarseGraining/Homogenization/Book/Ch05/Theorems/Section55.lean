@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta.Final
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedOneStepContraction
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.AnnealedImprovement
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.AnnealedConvergence
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedWidetildeTheta.Final
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.ShiftedOneStepContraction
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.AnnealedImprovement
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.AnnealedConvergence
 
 /-! # Section55 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

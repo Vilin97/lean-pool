@@ -3,11 +3,13 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.WeakHessianFiniteP
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianGradientH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.H1GradientUpgrade
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Normalized
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.WeakHessianFiniteP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ.WeakInteriorDQ.HessianGradientH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.H1GradientUpgrade
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.Normalized
 
 /-!
 # Vector-valued `W^{1,p}` functions on cubes
@@ -17,6 +19,8 @@ This file packages a vector field coordinatewise as genuine scalar
 stored weak gradients.  All `L^p` statements use normalized cube measure, but
 the carrier itself contains no cube-scale-dependent quantity.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CubeVectorH1
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLp
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov.CubeVectorH1
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLp
 
 /-!
 # Coefficient rescaling for centered-cube divergence solutions
@@ -13,6 +15,8 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZy
 This file converts the normalized weak formulation with a positive scalar
 coefficient into the raw cube Dirichlet divergence problem with rescaled data.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

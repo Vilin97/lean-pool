@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ContinuousDiscreteKSeriesBridge
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ContinuousDiscreteKSeriesBridge
 
 /-!
 # Positive-dimensional composition of exact finite-energy bridges
@@ -13,6 +15,8 @@ This module composes the finite-energy arrows in the positive-dimensional,
 measurable-representative lane.  It does not introduce a source-facing full
 norm comparison.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # The De Giorgi admissibility algebra
@@ -15,6 +17,8 @@ With `α = q/2`, `β = α − 1`, `B = 4^α`, `Crec = C_F²·E₀²`, `K = Cd·L
 `q = 2d/(d−2)`), the powers of `L` and `E₀` cancel and the admissibility
 condition reduces to a choice of `Cd ≥ C_F·B^{1/(2β)}`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Cutoff
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.MeanZero
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.LocalEnergy.Cutoff
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.MeanZero
 
 /-!
 # Local block energy: the centered potentials and the test pair
@@ -17,6 +19,8 @@ the smooth test pair `(η²u, η²u*)` built from the library's smooth×`H¹` pr
 `MemH10 (η²u + η²u*)` is obtained from `η²·(v+v*−p·x) ∈ H¹₀` via
 `H10Function.mulContDiffMemLpTop`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

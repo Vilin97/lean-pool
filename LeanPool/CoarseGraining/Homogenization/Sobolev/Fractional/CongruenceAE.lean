@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.Full
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.Full
 
 /-!
 # Almost-everywhere congruence for the fractional Sobolev and Besov seminorms
@@ -24,6 +26,8 @@ congruence lemmas once, against the canonical hypothesis
 These discharge the `congr_ae` item of the frozen API surface and enable the
 measurability-free public wrapper of CG Lemma 1.3.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Gagliardo

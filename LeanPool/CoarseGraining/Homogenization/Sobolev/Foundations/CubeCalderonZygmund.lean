@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.DirichletNeumannEndpoint
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.DirichletNeumannEndpoint
 
 /-!
 # Calderón--Zygmund estimates on cubes
@@ -12,3 +14,5 @@ import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZy
 This module exposes the public Dirichlet and mean-zero Neumann finite-exponent
 Calderón--Zygmund estimates on triadic cubes.
 -/
+
+@[expose] public section

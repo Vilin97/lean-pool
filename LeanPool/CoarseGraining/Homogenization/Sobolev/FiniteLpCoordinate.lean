@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
 
 /-!
 # Finite-`p` coordinate bounds for direct Euclidean fields
@@ -13,6 +15,8 @@ These inequalities compare the project-vector coordinate functions with the
 Euclidean Hilbert realization `HilbertVec.ofVec`, while leaving the project's
 ambient product norm unchanged.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

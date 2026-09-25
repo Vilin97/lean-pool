@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Polarize
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Averaging
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.Sandwich
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Variance.Polarize
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.PhaseComparison.Averaging
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.CoarseBounds.Sandwich
 
 /-!
 # Scalar normalization bounds for the fluctuation bridge
@@ -29,6 +31,8 @@ The `b` and `c` values are read off the isotropic annealed block matrix
 basis pairings equal `b` and `c⁻¹`, integrated against the a.s. `C1′` sandwich
 (`mean_zero_coarse_blockQuadratic`).
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

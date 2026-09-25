@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationErrorDefinitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledResponse
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixPositivity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SubadditivityScaling
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.HomogenizationErrorDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DoubledResponse
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MatrixPositivity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.MultiscaleEllipticity
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.SubadditivityScaling
 
 /-! # Basic -/
+
+@[expose] public section
 
 open scoped BigOperators MatrixOrder Matrix.Norms.Frobenius
 

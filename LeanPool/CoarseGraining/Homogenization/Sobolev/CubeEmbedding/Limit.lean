@@ -3,14 +3,18 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.Extension
-import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.GagliardoNirenbergSobolev
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
-import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-import Mathlib.MeasureTheory.Function.LpSpace.Complete
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.Extension
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding.GagliardoNirenbergSobolev
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
+public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
+public import Mathlib.MeasureTheory.Function.LpSpace.Complete
 
 /-! # Limit -/
+
+@[expose] public section
 
 namespace Homogenization
 

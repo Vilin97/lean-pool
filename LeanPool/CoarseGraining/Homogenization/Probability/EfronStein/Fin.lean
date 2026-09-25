@@ -3,12 +3,14 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
+
 
 /-
 Copyright (c) 2026. All rights reserved.
 -/
-import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.ProdDecomp
-import Mathlib.MeasureTheory.Constructions.Pi
+public import LeanPool.CoarseGraining.Homogenization.Probability.EfronStein.ProdDecomp
+public import Mathlib.MeasureTheory.Constructions.Pi
 
 /-!
 # Efron–Stein on finite products indexed by `Fin n`
@@ -16,6 +18,8 @@ import Mathlib.MeasureTheory.Constructions.Pi
 Elementary induction on the number of coordinates, splitting off coordinate `0`
 via `MeasurableEquiv.piFinSuccAbove`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Filter Fin Function ProbabilityTheory
 open scoped ProbabilityTheory ENNReal BigOperators

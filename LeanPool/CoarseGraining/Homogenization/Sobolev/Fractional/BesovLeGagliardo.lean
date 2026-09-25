@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ENNRealBridge
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.JensenStep
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.TailSummation
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.OverlapIntegral
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.AssemblyPieces
-import LeanPool.CoarseGraining.Homogenization.Besov.Positive.Full
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ENNRealBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.JensenStep
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.TailSummation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.OverlapIntegral
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.AssemblyPieces
+public import LeanPool.CoarseGraining.Homogenization.Besov.Positive.Full
 
 /-!
 # Besov-to-Gagliardo comparison: the partial overlap Besov seminorm is
@@ -28,6 +30,8 @@ backwards geometric tail (`TailSummation`) and the bounded-overlap count
 (`OverlapIntegral`) convert the depth sum into the Gagliardo kernel integral
 (`AssemblyPieces`).
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Gagliardo

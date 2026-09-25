@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.Geometry
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Definitions
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.Geometry
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.Definitions
 
 /-!
 # The `G`-factorization of the fixed-phase observable
@@ -36,6 +38,8 @@ The cores are pairwise disjoint (`disjoint_coreBox`, from the `2`-separation
 `areUnitSeparated_coreBox`), which makes the indicator-sum reconstruction
 well-defined.
 -/
+
+@[expose] public section
 
 open Homogenization
 open scoped BigOperators

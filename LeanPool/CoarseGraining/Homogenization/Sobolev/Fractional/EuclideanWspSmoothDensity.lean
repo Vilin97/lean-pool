@@ -3,13 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ConvexApproxGagliardoLpBound
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDual
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpCoordinate
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLp
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.Convergence
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ConvexApproxGagliardoLpBound
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDual
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpCoordinate
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund.FiniteLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.ConvexApproxSmoothing.Convergence
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Smooth density for Euclidean fractional Sobolev fields
@@ -17,6 +19,8 @@ import Mathlib.MeasureTheory.Integral.DominatedConvergence
 This module is the source-facing smooth-density layer for the Euclidean
 fractional full norm on a triadic cube.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Probability.LocalObservable
+
+public import LeanPool.CoarseGraining.Homogenization.Probability.LocalObservable
 
 /-!
 # Corridor geometry
@@ -27,6 +29,8 @@ records:
 * the corridor-modified coefficient field `corridorField` and its algebra;
 * the independence bridge to the unit-range dependence machinery.
 -/
+
+@[expose] public section
 
 open Homogenization
 open scoped MeasureTheory

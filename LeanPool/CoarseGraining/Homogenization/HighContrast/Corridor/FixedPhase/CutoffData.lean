@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Box
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Resample
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff.Box
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.Resample
 
 /-!
 # The per-core cutoff datum
@@ -24,6 +26,8 @@ is finite because the gradient is supported in the (closed, bounded) enlargement
 `Set.Icc (coreLo − ℓ) (coreHi + ℓ)`: off that enlargement `η` vanishes on an open
 set, so its Fréchet derivative is zero there.
 -/
+
+@[expose] public section
 
 open Homogenization MeasureTheory
 open scoped BigOperators

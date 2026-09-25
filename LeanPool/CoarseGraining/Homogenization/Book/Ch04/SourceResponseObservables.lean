@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DeterministicIdentities
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceMu
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Theorems.DeterministicIdentities
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.SourceMu
 
 /-!
 # Exact-source scalar response observables
@@ -15,6 +17,8 @@ into one exact-source local `Mu` observable and a constant.  The local Chapter
 2 coefficient realization below is built directly from source-carrier
 ellipticity on the cube.
 -/
+
+@[expose] public section
 
 namespace Homogenization.Book.Ch04
 

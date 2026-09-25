@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.Identities
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.CoeffOperator
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecoveryBlockResponse
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.HodgeCubeBridge
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MagicIdentities.MuOrdering.Identities
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuOperator.CoeffOperator
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.MuRecoveryBlockResponse
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.HodgeCubeBridge
 
 /-! # Sigma Star Pos Def -/
+
+@[expose] public section
 
 namespace Homogenization
 

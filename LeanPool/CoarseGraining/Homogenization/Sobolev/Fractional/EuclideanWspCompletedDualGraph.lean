@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothGraph
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothGraph
 
 /-!
 # Completed two-component graph for cube Euclidean fractional Sobolev tests
@@ -16,6 +18,8 @@ graph, and the closure of the graph; it makes no claim about a completed dual
 pairing.
 -/
 
+@[expose] public section
+
 namespace Homogenization
 
 open MeasureTheory Set
@@ -23,7 +27,7 @@ open scoped ENNReal
 
 noncomputable section
 
-private instance instCubeEuclideanWspGraphFactOneLe (p : FiniteLpExponent) :
+instance instCubeEuclideanWspGraphFactOneLe (p : FiniteLpExponent) :
     Fact (1 ≤ p.exponent) :=
   ⟨p.one_lt.le⟩
 
@@ -34,12 +38,12 @@ noncomputable abbrev CubeEuclideanWspGraphComponent {d : ℕ} (Q : TriadicCube d
   | true => Lp (HilbertVec d) p.exponent
     (Gagliardo.gagliardoCubeMeasure Q)
 
-private instance instCubeEuclideanWspGraphComponentNormedAddCommGroup {d : ℕ}
+instance instCubeEuclideanWspGraphComponentNormedAddCommGroup {d : ℕ}
     (Q : TriadicCube d) (p : FiniteLpExponent) [Fact (1 ≤ p.exponent)]
     (b : Bool) : NormedAddCommGroup (CubeEuclideanWspGraphComponent Q p b) := by
   cases b <;> infer_instance
 
-private instance instCubeEuclideanWspGraphComponentNormedSpace {d : ℕ}
+instance instCubeEuclideanWspGraphComponentNormedSpace {d : ℕ}
     (Q : TriadicCube d) (p : FiniteLpExponent) [Fact (1 ≤ p.exponent)]
     (b : Bool) : NormedSpace ℝ (CubeEuclideanWspGraphComponent Q p b) := by
   cases b <;> infer_instance
@@ -68,14 +72,16 @@ noncomputable def cubeEuclideanWspGraphFieldScale {d : ℕ} (Q : TriadicCube d)
 
 namespace CubeEuclideanWspSmoothTest
 
-private noncomputable def graphFieldComponent {d : ℕ} {Q : TriadicCube d}
+/-- The field component of a smooth test as a normalized cube `L^p` element. -/
+noncomputable def graphFieldComponent {d : ℕ} {Q : TriadicCube d}
     {s : FractionalOrder} {p : FiniteLpExponent}
     (h : CubeEuclideanWspSmoothTest Q s p) :
     CubeEuclideanWspGraphComponent Q p false :=
   h.toCubeEuclideanWspField.euclideanMemLp.toLp
     (fun x => HilbertVec.ofVec (h.toField x))
 
-private noncomputable def graphKernelComponent {d : ℕ} {Q : TriadicCube d}
+/-- The fractional kernel component of a smooth test as a product-space `L^p` element. -/
+noncomputable def graphKernelComponent {d : ℕ} {Q : TriadicCube d}
     {s : FractionalOrder} {p : FiniteLpExponent}
     (h : CubeEuclideanWspSmoothTest Q s p) :
     CubeEuclideanWspGraphComponent Q p true :=

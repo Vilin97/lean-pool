@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.Endpoint
+
+public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
+public import LeanPool.CoarseGraining.Homogenization.Probability.IndependentSums.Rosenthal.Endpoint
 
 /-! # Corollaries -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace IndependentSums

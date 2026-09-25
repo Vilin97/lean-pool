@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.AnnealedDefinitions
-import LeanPool.CoarseGraining.Homogenization.Probability.Scalarization
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.AnnealedDefinitions
+public import LeanPool.CoarseGraining.Homogenization.Probability.Scalarization
 
 /-! # Scalarization Witnesses -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

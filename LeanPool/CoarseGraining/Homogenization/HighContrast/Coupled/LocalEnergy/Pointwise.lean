@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.CoarseGraining.SharpBlockBounds.Basic
 
 /-!
 # Local block energy: pointwise algebra
@@ -25,6 +27,8 @@ with no square roots.  Combined with the coefficient bounds
 `q · s⁻¹ q ≤ |q|²`, `(a p) · s⁻¹ (a p) ≤ Θ |p|²`, and the flux corollary
 `‖a e‖² ≤ 2Θ (e · s e)` this drives the bulk and cutoff estimates.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

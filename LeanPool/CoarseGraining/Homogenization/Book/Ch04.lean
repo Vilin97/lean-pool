@@ -3,15 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Definitions
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Law
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.MuLocalityGate
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Observable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.RestrictionLaw
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.RestrictionObservable
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Source
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Law
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.MuLocalityGate
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Observable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.RestrictionLaw
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.RestrictionObservable
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Source
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.Theorems
 
 /-!
 # Chapter 4
@@ -28,3 +30,5 @@ inside private declarations. The `Source` umbrella faithfully imports the
 current Chapter 4 source modules, while the restriction lane remains available
 through its explicit modules and endpoints.
 -/
+
+@[expose] public section

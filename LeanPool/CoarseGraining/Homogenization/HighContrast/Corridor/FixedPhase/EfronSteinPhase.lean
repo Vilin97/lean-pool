@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.ClampedObservable
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CarrierObservable
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.EfronSteinAE
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.ClampedObservable
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.CarrierObservable
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.EfronSteinAE
 
 /-!
 # The Efron–Stein bound for the fixed-phase observable
@@ -26,6 +28,8 @@ All a.e. reasoning is confined to the single truncation-congruence layer:
 (`clampedPhaseObservable_restrict_eq_of_field`), instantiated at `b = a` and at
 `b = patchCore k a a'` under `ThetaEllipticLaw` for both draws.
 -/
+
+@[expose] public section
 
 open Homogenization
 open scoped MeasureTheory ProbabilityTheory BigOperators

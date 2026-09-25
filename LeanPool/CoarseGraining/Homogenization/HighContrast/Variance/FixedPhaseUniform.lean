@@ -3,8 +3,10 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.VarianceFinal
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Corridor.FixedPhase.VarianceFinal
 
 /-!
 # Uniform-constant fixed-phase variance
@@ -20,6 +22,8 @@ of `m, Θ, ℓ, σ, P` under a single `B`).  We therefore reproduce the assembly
 `fixed_phase_variance` with the `obtain B` hoisted above the `∀`, yielding the
 `∃ Cd, ∀ params` form directly.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

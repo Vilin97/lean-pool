@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingPDE
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLocalization
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLpMembership
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingPDE
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLocalization
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLpMembership
 
 /-!
 # Descendant localization of the source fractional-Sobolev carrier
@@ -16,6 +18,8 @@ provides its literal restriction to every triadic descendant, so one-cube
 estimates can construct their regularity witnesses locally without adding a
 new hypothesis to the local coarse-graining theorem.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

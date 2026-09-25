@@ -3,22 +3,26 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Data.Finset.Lattice.Fold
-import Mathlib.Data.NNReal.Basic
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-import Mathlib.MeasureTheory.Integral.Lebesgue.Add
-import Mathlib.Order.Interval.Finset.Nat
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.GeometrySeries.DescendantCardinality
-import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup.HarmonicAndData
-import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra
-import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.MomentConsequences.P1
+
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+public import Mathlib.Data.Finset.Lattice.Fold
+public import Mathlib.Data.NNReal.Basic
+public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+public import Mathlib.Order.Interval.Finset.Nat
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.GeometrySeries.DescendantCardinality
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare.Setup.HarmonicAndData
+public import LeanPool.CoarseGraining.Homogenization.Geometry.TriadicPartition
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.DeterministicAlgebra
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.EntryScale.MomentConsequences.P1
 
 /-! # P2 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open scoped Topology

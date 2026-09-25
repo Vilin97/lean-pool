@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch04.RestrictionObservable
-import Mathlib.MeasureTheory.Function.StronglyMeasurable.AEStronglyMeasurable
-import Mathlib.Topology.Metrizable.Basic
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch04.RestrictionObservable
+public import Mathlib.MeasureTheory.Function.StronglyMeasurable.AEStronglyMeasurable
+public import Mathlib.Topology.Metrizable.Basic
 
 /-! # Measurability -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

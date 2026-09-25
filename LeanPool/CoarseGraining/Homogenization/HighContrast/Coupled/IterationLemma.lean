@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecificLimits.Basic
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
 # Fast geometric-decay iteration lemma
@@ -18,6 +20,8 @@ nonnegative sequence `Y` starting below `1` satisfies a superlinear recursion
 All exponents are real (`Real.rpow`).  No `sorry`, no axioms, no heartbeat
 overrides.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

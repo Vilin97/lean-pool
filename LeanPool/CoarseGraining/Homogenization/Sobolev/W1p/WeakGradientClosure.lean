@@ -3,9 +3,11 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
-import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p.BasicLemmas
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
 
 /-!
 # Finite-exponent closure of weak gradients
@@ -15,6 +17,8 @@ coordinate weak-gradient representation.  It is deliberately independent of
 any zero-trace approximation: that additional closure property is supplied by
 the next layer.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

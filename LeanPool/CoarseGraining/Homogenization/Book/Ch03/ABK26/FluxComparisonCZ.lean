@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonLocalization
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalCZFullNorm
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDualFieldPairing
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.FluxComparisonLocalization
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalCZFullNorm
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDualFieldPairing
 
 /-!
 # Fractional Calderón--Zygmund flux comparison on centered cubes
@@ -17,6 +19,8 @@ manuscript hypotheses: the Dirichlet adjoint solve, fractional
 Calderón--Zygmund estimate, smooth-dual passage, and descendant localization
 are all internal proof steps.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

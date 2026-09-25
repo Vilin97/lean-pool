@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
-import Mathlib.Analysis.Calculus.ContDiff.Defs
-import Mathlib.Analysis.Calculus.ContDiff.Operations
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Smooth full-dual surface for Euclidean fractional Sobolev fields
@@ -14,6 +16,8 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 The smooth-test supremum is retained as a `SmoothDualENorm`; no completion or
 density assertion is made in this module.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 

@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.DilatedP4
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.MomentBounds
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.WidetildeTheta
-import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.EllipticityMoments
+
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section55.DilatedP4
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.MomentBounds
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section52.WidetildeTheta
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch05.Theorems.Section53.JUpperBoundCoarseFluctuations.EllipticityMoments
 
 /-! # Shifted Widetilde Theta -/
+
+@[expose] public section
 
 namespace Homogenization
 namespace Book

@@ -3,12 +3,16 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces
-import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Descendants
-import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces
+public import LeanPool.CoarseGraining.Homogenization.Besov.Poincare.Descendants
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic.Foundation
 
 /-! # Weak Norm Interfaces QTwo -/
+
+@[expose] public section
 
 namespace Homogenization
 

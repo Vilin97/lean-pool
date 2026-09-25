@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong, Tuomo Kuusi
 -/
+module
 
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.LevelEnergy
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.DeGiorgiCore
-import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Median
+
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.LevelEnergy
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Stampacchia.DeGiorgiCore
+public import LeanPool.CoarseGraining.Homogenization.HighContrast.Coupled.Median
 
 /-!
 # The coupled Stampacchia estimate (Proposition 3.3)
@@ -28,6 +30,8 @@ The proof:
   `−m`) — after transporting the core from `axisCube` to `openCubeSet` through the
   set identity `openCubeSet (originCube d m) = axisCube (fun _ => −½·3^m) (3^m)`.
 -/
+
+@[expose] public section
 
 namespace Homogenization
 
