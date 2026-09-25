@@ -745,6 +745,190 @@ theorem denseExecuteInstructionTM_load_hoareTime_frame
     DenseOverlay.Snapshot.stepInstr, nextStore, cleanupValues, address,
     value] using! hall
 
+/-- The dense-store endpoint supplies every frame and cleanup invariant for buffering. -/
+private theorem denseStore_buffered_result
+    (tapes : ControlInstructionTapes n) (input : List Bool)
+    (overlay : Store) (pcValue addressRegister source : ℕ)
+    (initialWork : Fin (n + 1) → Tape)
+    (hready : InstructionExecutionReady tapes overlay pcValue initialWork) :
+    ∀ work, DenseIndirectStoreInstructionResult tapes.data input overlay
+        addressRegister source (fun i => initialWork (Fin.castSucc i)) work →
+      work tapes.pc = initialWork (Fin.castSucc tapes.pc) ∧
+      (work tapes.data.update.resultCount).HasBinaryNat
+        (DenseOverlay.write overlay (DenseOverlay.read input overlay addressRegister)
+          (DenseOverlay.read input overlay source)).length ∧
+      (work tapes.data.update.entry.source).HasBinaryContent
+        (overlay.flatMap Entry.encode) ∧
+      (∀ slot,
+        (work (tapes.data.idx (instructionCleanupParentSlot slot))).HasBinaryNat
+          (denseInstructionCleanupValue input (.store addressRegister source) overlay slot)) ∧
+      (work tapes.data.update.remaining).HasBinaryNat 0 ∧
+      EntryScanReady tapes.data.update.entry []
+        (denseInstructionCleanupValue input (.store addressRegister source) overlay 0).bits
+        work work ∧
+      (work tapes.data.shift).HasBinaryNat 0 ∧
+      (work tapes.data.tmp).HasBinaryNat 0 ∧
+      (work tapes.data.dbl).HasBinaryNat 0 ∧
+      ∀ i, TM.Parked (work i) := by
+  let baseWork : Fin n → Tape := fun i => initialWork (Fin.castSucc i)
+  let instruction : Instr := .store addressRegister source
+  let address := DenseOverlay.read input overlay addressRegister
+  let value := DenseOverlay.read input overlay source
+  let nextStore := DenseOverlay.write overlay address value
+  let cleanupValues := denseInstructionCleanupValue input instruction overlay
+  intro work hsemantic
+  obtain ⟨operandsWork, queryWork, updateWork, hoperands, hqueryWork,
+    hupdateWork, htagged⟩ := hsemantic
+  obtain ⟨lhsWork, hlhs, hrhsResult⟩ := hoperands
+  obtain ⟨taggedWork, htagValue, htagFrame, houtcome,
+    hsourceCells⟩ := htagged
+  have hpcOutcome : work tapes.pc = taggedWork tapes.pc :=
+    houtcome.frame tapes.pc (fun slot => by
+      exact tapes.pc_ne ⟨slot, by omega⟩)
+  have hpcTag : taggedWork tapes.pc = updateWork tapes.pc :=
+    htagFrame tapes.pc (tapes.pc_ne 10)
+  have hpcReplacement :
+      tapes.pc ≠ tapes.data.update.replacement := tapes.pc_ne 10
+  have hpcUpdate : updateWork tapes.pc = queryWork tapes.pc := by
+    rw [hupdateWork, Function.update_of_ne hpcReplacement]
+  have hpcQuery :
+      tapes.pc ≠ tapes.data.update.entry.query := tapes.pc_ne 7
+  have hpcQueryWork : queryWork tapes.pc = operandsWork tapes.pc := by
+    rw [hqueryWork, Function.update_of_ne hpcQuery]
+  have hpcRhs : operandsWork tapes.pc = lhsWork tapes.pc :=
+    hrhsResult.frame tapes.pc (fun slot => by
+      exact tapes.pc_ne (BinaryInstructionTapes.rhsLookupSlot slot))
+  have hpcLhs : lhsWork tapes.pc = baseWork tapes.pc :=
+    hlhs.frame tapes.pc (fun slot => by
+      exact tapes.pc_ne (BinaryInstructionTapes.lhsLookupSlot slot))
+  have hsourceContent :
+      (work tapes.data.update.entry.source).HasBinaryContent
+        (overlay.flatMap Entry.encode) := by
+    have hcells : (work tapes.data.update.entry.source).cells =
+        (baseWork tapes.data.update.entry.source).cells := by
+      calc
+        (work tapes.data.update.entry.source).cells =
+            (updateWork tapes.data.update.entry.source).cells :=
+          hsourceCells
+        _ = (queryWork tapes.data.update.entry.source).cells := by
+          congr 1
+          rw [hupdateWork]
+          exact Function.update_of_ne
+            (tapes.data.update.ne (by decide)) _ _
+        _ = (operandsWork tapes.data.update.entry.source).cells := by
+          congr 1
+          rw [hqueryWork]
+          exact Function.update_of_ne
+            (tapes.data.update.ne (by decide)) _ _
+        _ = (lhsWork tapes.data.update.entry.source).cells :=
+          hrhsResult.sourceCells
+        _ = (baseWork tapes.data.update.entry.source).cells :=
+          hlhs.sourceCells
+    unfold Tape.HasBinaryContent
+    rw [hcells]
+    exact hready.sourceContent
+  have hcleanup : ∀ slot,
+      (work (tapes.data.idx (instructionCleanupParentSlot slot))).HasBinaryNat
+        (cleanupValues slot) := by
+    intro slot
+    fin_cases slot
+    · exact ⟨houtcome.ready.queryStart, by
+        simpa [instruction, cleanupValues, denseInstructionCleanupValue,
+          instructionCleanupParentSlot, address] using!
+          houtcome.ready.query⟩
+    · change (work tapes.data.update.replacement).HasBinaryNat _
+      rw [houtcome.replacement]
+      simpa [instruction, cleanupValues, denseInstructionCleanupValue,
+        value] using! htagValue
+    · simpa [instruction, cleanupValues, denseInstructionCleanupValue,
+        instructionCleanupParentSlot, address] using! houtcome.found
+    · change (work tapes.data.lhs).HasBinaryNat _
+      rw [houtcome.frame tapes.data.lhs (fun role =>
+          (tapes.data.update_ne_lhs role).symm),
+        htagFrame tapes.data.lhs
+          (tapes.data.update_ne_lhs 10).symm,
+        show updateWork tapes.data.lhs = queryWork tapes.data.lhs by
+          rw [hupdateWork]
+          exact Function.update_of_ne
+            (tapes.data.update_ne_lhs 10).symm _ _,
+        show queryWork tapes.data.lhs = operandsWork tapes.data.lhs by
+          rw [hqueryWork]
+          exact Function.update_of_ne
+            (tapes.data.update_ne_lhs 7).symm _ _,
+        hrhsResult.frame tapes.data.lhs (fun role =>
+          (tapes.data.rhsLookup_ne_lhs role).symm)]
+      simpa [instruction, cleanupValues, denseInstructionCleanupValue,
+        address] using! hlhs.destination
+    · change (work tapes.data.rhs).HasBinaryNat _
+      rw [houtcome.frame tapes.data.rhs (fun role =>
+          (tapes.data.update_ne_rhs role).symm),
+        htagFrame tapes.data.rhs
+          (tapes.data.update_ne_rhs 10).symm,
+        show updateWork tapes.data.rhs = queryWork tapes.data.rhs by
+          rw [hupdateWork]
+          exact Function.update_of_ne
+            (tapes.data.update_ne_rhs 10).symm _ _,
+        show queryWork tapes.data.rhs = operandsWork tapes.data.rhs by
+          rw [hqueryWork]
+          exact Function.update_of_ne
+            (tapes.data.update_ne_rhs 7).symm _ _]
+      simpa [instruction, cleanupValues, denseInstructionCleanupValue,
+        value] using! hrhsResult.destination
+  have hshift : (work tapes.data.shift).HasBinaryNat 0 := by
+    have hreplacementNe :
+        tapes.data.shift ≠ tapes.data.update.replacement :=
+      (tapes.data.update_ne_shift 10).symm
+    have hqueryNe :
+        tapes.data.shift ≠ tapes.data.update.entry.query :=
+      (tapes.data.update_ne_shift 7).symm
+    rw [houtcome.frame tapes.data.shift (fun slot =>
+          (tapes.data.update_ne_shift slot).symm),
+      htagFrame tapes.data.shift hreplacementNe,
+      hupdateWork, Function.update_of_ne hreplacementNe,
+      hqueryWork, Function.update_of_ne hqueryNe]
+    simpa using! hrhsResult.querySource
+  have htmp' : (work tapes.data.tmp).HasBinaryNat 0 := by
+    have hreplacementNe :
+        tapes.data.tmp ≠ tapes.data.update.replacement :=
+      (tapes.data.update_ne_tmp 10).symm
+    have hqueryNe : tapes.data.tmp ≠
+        tapes.data.update.entry.query :=
+      (tapes.data.update_ne_tmp 7).symm
+    rw [houtcome.frame tapes.data.tmp (fun slot =>
+          (tapes.data.update_ne_tmp slot).symm),
+      htagFrame tapes.data.tmp hreplacementNe,
+      hupdateWork, Function.update_of_ne hreplacementNe,
+      hqueryWork, Function.update_of_ne hqueryNe,
+      hrhsResult.frame tapes.data.tmp (fun slot =>
+        (tapes.data.rhsLookup_ne_tmp slot).symm),
+      hlhs.frame tapes.data.tmp (fun slot =>
+        (tapes.data.lhsLookup_ne_tmp slot).symm)]
+    exact hready.tmp
+  have hdbl' : (work tapes.data.dbl).HasBinaryNat 0 := by
+    have hreplacementNe :
+        tapes.data.dbl ≠ tapes.data.update.replacement :=
+      (tapes.data.update_ne_dbl 10).symm
+    have hqueryNe : tapes.data.dbl ≠
+        tapes.data.update.entry.query :=
+      (tapes.data.update_ne_dbl 7).symm
+    rw [houtcome.frame tapes.data.dbl (fun slot =>
+          (tapes.data.update_ne_dbl slot).symm),
+      htagFrame tapes.data.dbl hreplacementNe,
+      hupdateWork, Function.update_of_ne hreplacementNe,
+      hqueryWork, Function.update_of_ne hqueryNe,
+      hrhsResult.frame tapes.data.dbl (fun slot =>
+        (tapes.data.rhsLookup_ne_dbl slot).symm),
+      hlhs.frame tapes.data.dbl (fun slot =>
+        (tapes.data.lhsLookup_ne_dbl slot).symm)]
+    exact hready.dbl
+  refine ⟨hpcOutcome.trans (hpcTag.trans (hpcUpdate.trans
+    (hpcQueryWork.trans (hpcRhs.trans hpcLhs)))), ?_, hsourceContent,
+    hcleanup, ?_, ?_, hshift, htmp', hdbl', houtcome.ready.parked⟩
+  · simpa [nextStore, DenseOverlay.write] using! houtcome.resultCount
+  · simpa using! houtcome.remaining
+  · simpa [instruction, cleanupValues, denseInstructionCleanupValue,
+      address] using! houtcome.ready
+
 /-- A dense indirect store produces the generic buffered endpoint and advances
 the program counter. -/
 theorem denseExecuteInstructionTM_store_hoareTime_frame
@@ -816,159 +1000,9 @@ theorem denseExecuteInstructionTM_store_hoareTime_frame
       (work tapes.data.shift).HasBinaryNat 0 ∧
       (work tapes.data.tmp).HasBinaryNat 0 ∧
       (work tapes.data.dbl).HasBinaryNat 0 ∧
-      ∀ i, TM.Parked (work i) := by
-    intro work hsemantic
-    obtain ⟨operandsWork, queryWork, updateWork, hoperands, hqueryWork,
-      hupdateWork, htagged⟩ := hsemantic
-    obtain ⟨lhsWork, hlhs, hrhsResult⟩ := hoperands
-    obtain ⟨taggedWork, htagValue, htagFrame, houtcome,
-      hsourceCells⟩ := htagged
-    have hpcOutcome : work tapes.pc = taggedWork tapes.pc :=
-      houtcome.frame tapes.pc (fun slot => by
-        exact tapes.pc_ne ⟨slot, by omega⟩)
-    have hpcTag : taggedWork tapes.pc = updateWork tapes.pc :=
-      htagFrame tapes.pc (tapes.pc_ne 10)
-    have hpcReplacement :
-        tapes.pc ≠ tapes.data.update.replacement := tapes.pc_ne 10
-    have hpcUpdate : updateWork tapes.pc = queryWork tapes.pc := by
-      rw [hupdateWork, Function.update_of_ne hpcReplacement]
-    have hpcQuery :
-        tapes.pc ≠ tapes.data.update.entry.query := tapes.pc_ne 7
-    have hpcQueryWork : queryWork tapes.pc = operandsWork tapes.pc := by
-      rw [hqueryWork, Function.update_of_ne hpcQuery]
-    have hpcRhs : operandsWork tapes.pc = lhsWork tapes.pc :=
-      hrhsResult.frame tapes.pc (fun slot => by
-        exact tapes.pc_ne (BinaryInstructionTapes.rhsLookupSlot slot))
-    have hpcLhs : lhsWork tapes.pc = baseWork tapes.pc :=
-      hlhs.frame tapes.pc (fun slot => by
-        exact tapes.pc_ne (BinaryInstructionTapes.lhsLookupSlot slot))
-    have hsourceContent :
-        (work tapes.data.update.entry.source).HasBinaryContent
-          (overlay.flatMap Entry.encode) := by
-      have hcells : (work tapes.data.update.entry.source).cells =
-          (baseWork tapes.data.update.entry.source).cells := by
-        calc
-          (work tapes.data.update.entry.source).cells =
-              (updateWork tapes.data.update.entry.source).cells :=
-            hsourceCells
-          _ = (queryWork tapes.data.update.entry.source).cells := by
-            congr 1
-            rw [hupdateWork]
-            exact Function.update_of_ne
-              (tapes.data.update.ne (by decide)) _ _
-          _ = (operandsWork tapes.data.update.entry.source).cells := by
-            congr 1
-            rw [hqueryWork]
-            exact Function.update_of_ne
-              (tapes.data.update.ne (by decide)) _ _
-          _ = (lhsWork tapes.data.update.entry.source).cells :=
-            hrhsResult.sourceCells
-          _ = (baseWork tapes.data.update.entry.source).cells :=
-            hlhs.sourceCells
-      unfold Tape.HasBinaryContent
-      rw [hcells]
-      exact hready.sourceContent
-    have hcleanup : ∀ slot,
-        (work (tapes.data.idx (instructionCleanupParentSlot slot))).HasBinaryNat
-          (cleanupValues slot) := by
-      intro slot
-      fin_cases slot
-      · exact ⟨houtcome.ready.queryStart, by
-          simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-            instructionCleanupParentSlot, address] using!
-            houtcome.ready.query⟩
-      · change (work tapes.data.update.replacement).HasBinaryNat _
-        rw [houtcome.replacement]
-        simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-          value] using! htagValue
-      · simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-          instructionCleanupParentSlot, address] using! houtcome.found
-      · change (work tapes.data.lhs).HasBinaryNat _
-        rw [houtcome.frame tapes.data.lhs (fun role =>
-            (tapes.data.update_ne_lhs role).symm),
-          htagFrame tapes.data.lhs
-            (tapes.data.update_ne_lhs 10).symm,
-          show updateWork tapes.data.lhs = queryWork tapes.data.lhs by
-            rw [hupdateWork]
-            exact Function.update_of_ne
-              (tapes.data.update_ne_lhs 10).symm _ _,
-          show queryWork tapes.data.lhs = operandsWork tapes.data.lhs by
-            rw [hqueryWork]
-            exact Function.update_of_ne
-              (tapes.data.update_ne_lhs 7).symm _ _,
-          hrhsResult.frame tapes.data.lhs (fun role =>
-            (tapes.data.rhsLookup_ne_lhs role).symm)]
-        simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-          address] using! hlhs.destination
-      · change (work tapes.data.rhs).HasBinaryNat _
-        rw [houtcome.frame tapes.data.rhs (fun role =>
-            (tapes.data.update_ne_rhs role).symm),
-          htagFrame tapes.data.rhs
-            (tapes.data.update_ne_rhs 10).symm,
-          show updateWork tapes.data.rhs = queryWork tapes.data.rhs by
-            rw [hupdateWork]
-            exact Function.update_of_ne
-              (tapes.data.update_ne_rhs 10).symm _ _,
-          show queryWork tapes.data.rhs = operandsWork tapes.data.rhs by
-            rw [hqueryWork]
-            exact Function.update_of_ne
-              (tapes.data.update_ne_rhs 7).symm _ _]
-        simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-          value] using! hrhsResult.destination
-    have hshift : (work tapes.data.shift).HasBinaryNat 0 := by
-      have hreplacementNe :
-          tapes.data.shift ≠ tapes.data.update.replacement :=
-        (tapes.data.update_ne_shift 10).symm
-      have hqueryNe :
-          tapes.data.shift ≠ tapes.data.update.entry.query :=
-        (tapes.data.update_ne_shift 7).symm
-      rw [houtcome.frame tapes.data.shift (fun slot =>
-            (tapes.data.update_ne_shift slot).symm),
-        htagFrame tapes.data.shift hreplacementNe,
-        hupdateWork, Function.update_of_ne hreplacementNe,
-        hqueryWork, Function.update_of_ne hqueryNe]
-      simpa using! hrhsResult.querySource
-    have htmp' : (work tapes.data.tmp).HasBinaryNat 0 := by
-      have hreplacementNe :
-          tapes.data.tmp ≠ tapes.data.update.replacement :=
-        (tapes.data.update_ne_tmp 10).symm
-      have hqueryNe : tapes.data.tmp ≠
-          tapes.data.update.entry.query :=
-        (tapes.data.update_ne_tmp 7).symm
-      rw [houtcome.frame tapes.data.tmp (fun slot =>
-            (tapes.data.update_ne_tmp slot).symm),
-        htagFrame tapes.data.tmp hreplacementNe,
-        hupdateWork, Function.update_of_ne hreplacementNe,
-        hqueryWork, Function.update_of_ne hqueryNe,
-        hrhsResult.frame tapes.data.tmp (fun slot =>
-          (tapes.data.rhsLookup_ne_tmp slot).symm),
-        hlhs.frame tapes.data.tmp (fun slot =>
-          (tapes.data.lhsLookup_ne_tmp slot).symm)]
-      exact hready.tmp
-    have hdbl' : (work tapes.data.dbl).HasBinaryNat 0 := by
-      have hreplacementNe :
-          tapes.data.dbl ≠ tapes.data.update.replacement :=
-        (tapes.data.update_ne_dbl 10).symm
-      have hqueryNe : tapes.data.dbl ≠
-          tapes.data.update.entry.query :=
-        (tapes.data.update_ne_dbl 7).symm
-      rw [houtcome.frame tapes.data.dbl (fun slot =>
-            (tapes.data.update_ne_dbl slot).symm),
-        htagFrame tapes.data.dbl hreplacementNe,
-        hupdateWork, Function.update_of_ne hreplacementNe,
-        hqueryWork, Function.update_of_ne hqueryNe,
-        hrhsResult.frame tapes.data.dbl (fun slot =>
-          (tapes.data.rhsLookup_ne_dbl slot).symm),
-        hlhs.frame tapes.data.dbl (fun slot =>
-          (tapes.data.lhsLookup_ne_dbl slot).symm)]
-      exact hready.dbl
-    refine ⟨hpcOutcome.trans (hpcTag.trans (hpcUpdate.trans
-      (hpcQueryWork.trans (hpcRhs.trans hpcLhs)))), ?_, hsourceContent,
-      hcleanup, ?_, ?_, hshift, htmp', hdbl', houtcome.ready.parked⟩
-    · simpa [nextStore, DenseOverlay.write] using! houtcome.resultCount
-    · simpa using! houtcome.remaining
-    · simpa [instruction, cleanupValues, denseInstructionCleanupValue,
-        address] using! houtcome.ready
+      ∀ i, TM.Parked (work i) :=
+    denseStore_buffered_result tapes input overlay pcValue addressRegister source
+      initialWork hready
   have hdata := retargetBufferedDataKernel_hoareTime_frame_internal tapes
     overlay nextStore cleanupValues 0 pcValue initialWork inp₀
     (denseIndirectStoreInstructionTM tapes.data addressRegister source)

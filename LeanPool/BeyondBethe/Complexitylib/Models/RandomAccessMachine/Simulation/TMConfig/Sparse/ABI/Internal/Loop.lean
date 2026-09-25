@@ -24,6 +24,47 @@ namespace TMConfig
 namespace Sparse
 
 
+/-- The final subtraction decrements the cursor while retaining constants and destination data. -/
+private theorem marshalLoop_final_controls (n : ℕ) (destinationStored : Structured.Store)
+    (cursor value : ℕ)
+    (hstoredState : destinationStored stateReg = cursor)
+    (hstoredZero : destinationStored (zeroReg n) = 0)
+    (hstoredOne : destinationStored (oneReg n) = 1)
+    (hstoredCount : destinationStored (tapeCountReg n) = n + 2)
+    (hstoredBase : destinationStored (stateScratchReg n) = cellBase n)
+    (hstoredDestination : destinationStored (cellReg n (inputTape n) cursor) = value + 1) :
+    let final := (Structured.Basic.sub stateReg stateReg (oneReg n)).exec destinationStored
+    final stateReg = cursor - 1 ∧ final (zeroReg n) = 0 ∧ final (oneReg n) = 1 ∧
+      final (tapeCountReg n) = n + 2 ∧ final (stateScratchReg n) = cellBase n ∧
+      0 < final (cellReg n (inputTape n) cursor) := by
+  let final := (Structured.Basic.sub stateReg stateReg (oneReg n)).exec destinationStored
+  have hfinalState : final stateReg = cursor - 1 := by
+    simp [final, Structured.Basic.exec, hstoredState, hstoredOne]
+  have hfinalZero : final (zeroReg n) = 0 := by
+    simp only [final, Structured.Basic.exec]
+    rw [Function.update_of_ne (by simp [zeroReg, stateReg])]
+    exact hstoredZero
+  have hfinalOne : final (oneReg n) = 1 := by
+    simp only [final, Structured.Basic.exec]
+    rw [Function.update_of_ne (by simp [oneReg, stateReg])]
+    exact hstoredOne
+  have hfinalCount : final (tapeCountReg n) = n + 2 := by
+    simp only [final, Structured.Basic.exec]
+    rw [Function.update_of_ne (by simp [tapeCountReg, stateReg])]
+    exact hstoredCount
+  have hfinalBase : final (stateScratchReg n) = cellBase n := by
+    simp only [final, Structured.Basic.exec]
+    rw [Function.update_of_ne (by simp [stateScratchReg, stateReg])]
+    exact hstoredBase
+  have hfinalDestination : 0 <
+      final (cellReg n (inputTape n) (cursor)) := by
+    simp only [final, Structured.Basic.exec]
+    rw [Function.update_of_ne]
+    · rw [hstoredDestination]
+      omega
+    · simp [stateReg, cellReg, inputTape, cellBase]
+  exact ⟨hfinalState, hfinalZero, hfinalOne, hfinalCount, hfinalBase, hfinalDestination⟩
+
 /-- The backward-copy body always decrements its cursor and restores all four
 loop constants, even when the cursor itself visits one of their registers. -/
 theorem marshalLoopOps_control_internal (n : ℕ) (store : Structured.Store)
@@ -221,37 +262,13 @@ theorem marshalLoopOps_control_internal (n : ℕ) (store : Structured.Store)
         based (valueReg n) + 1 := by
     simp only [destinationStored, Structured.Basic.exec]
     rw [hdestinationAddress', Function.update_self, haddressedValue]
-  have hfinalState : final stateReg = store stateReg - 1 := by
-    simp [final, Structured.Basic.exec, hstoredState, hstoredOne]
-  have hfinalZero : final (zeroReg n) = 0 := by
-    simp only [final, Structured.Basic.exec]
-    rw [Function.update_of_ne (by simp [zeroReg, stateReg])]
-    exact hstoredZero
-  have hfinalOne : final (oneReg n) = 1 := by
-    simp only [final, Structured.Basic.exec]
-    rw [Function.update_of_ne (by simp [oneReg, stateReg])]
-    exact hstoredOne
-  have hfinalCount : final (tapeCountReg n) = n + 2 := by
-    simp only [final, Structured.Basic.exec]
-    rw [Function.update_of_ne (by simp [tapeCountReg, stateReg])]
-    exact hstoredCount
-  have hfinalBase : final (stateScratchReg n) = cellBase n := by
-    simp only [final, Structured.Basic.exec]
-    rw [Function.update_of_ne (by simp [stateScratchReg, stateReg])]
-    exact hstoredBase
-  have hfinalDestination : 0 <
-      final (cellReg n (inputTape n) (store stateReg)) := by
-    simp only [final, Structured.Basic.exec]
-    rw [Function.update_of_ne]
-    · rw [hstoredDestination]
-      omega
-    · simp [stateReg, cellReg, inputTape, cellBase]
+  have hfinalResult := marshalLoop_final_controls n destinationStored (store stateReg)
+    (based (valueReg n)) hstoredState hstoredZero hstoredOne hstoredCount
+    hstoredBase hstoredDestination
   simpa [marshalLoopOps, sourceAddressed, sourceLoaded, sourceCleared,
     zeroed, oned, counted, based, encoded, multiplied, destinationAddressed,
     destinationStored, final] using!
-    And.intro hfinalState (And.intro hfinalZero
-      (And.intro hfinalOne
-        (And.intro hfinalCount (And.intro hfinalBase hfinalDestination))))
+    hfinalResult
 
 /-- One backward-copy body has an exact structured execution. -/
 theorem marshalLoopOps_exec_internal (n : ℕ) (store : Structured.Store) :
@@ -260,6 +277,47 @@ theorem marshalLoopOps_exec_internal (n : ℕ) (store : Structured.Store) :
         (Structured.Basic.execList (marshalLoopOps n) store)
         (marshalLoopOps n).length cost space :=
   Structured.Internal.exec_basics_exists (marshalLoopOps n) store
+
+/-- Data-region registers are disjoint from the cursor and all loop scratch registers. -/
+private theorem dataReg_ne_loopControls (n reg : ℕ) (hdata : cellBase n ≤ reg) :
+    reg ≠ stateReg ∧ reg ≠ addressReg n ∧ reg ≠ valueReg n ∧
+      reg ≠ zeroReg n ∧ reg ≠ oneReg n ∧ reg ≠ tapeCountReg n ∧
+      reg ≠ stateScratchReg n := by
+  have hregState : reg ≠ stateReg := by
+    intro heq
+    rw [heq] at hdata
+    simp [stateReg, cellBase] at hdata
+  have hregAddress : reg ≠ addressReg n := by
+    intro heq
+    rw [heq] at hdata
+    simp [addressReg, cellBase] at hdata
+    omega
+  have hregValue : reg ≠ valueReg n := by
+    intro heq
+    rw [heq] at hdata
+    simp [valueReg, cellBase] at hdata
+    omega
+  have hregZero : reg ≠ zeroReg n := by
+    intro heq
+    rw [heq] at hdata
+    simp [zeroReg, cellBase] at hdata
+    omega
+  have hregOne : reg ≠ oneReg n := by
+    intro heq
+    rw [heq] at hdata
+    simp [oneReg, cellBase] at hdata
+    omega
+  have hregCount : reg ≠ tapeCountReg n := by
+    intro heq
+    rw [heq] at hdata
+    simp [tapeCountReg, cellBase] at hdata
+    omega
+  have hregBase : reg ≠ stateScratchReg n := by
+    intro heq
+    rw [heq] at hdata
+    simp [stateScratchReg, cellBase] at hdata
+    omega
+  exact ⟨hregState, hregAddress, hregValue, hregZero, hregOne, hregCount, hregBase⟩
 
 /-- Away from the six captured scratch positions, one loop body clears the raw
 source cell and writes its Boolean value, shifted to the sparse symbol code, to
@@ -399,40 +457,8 @@ theorem marshalLoopOps_data_internal (n : ℕ) (store : Structured.Store)
     simp only [destinationAddressed, Structured.Basic.exec]
     rw [Function.update_of_ne (by simp [valueReg, addressReg])]
     exact hmultipliedValue
-  have hregState : reg ≠ stateReg := by
-    intro heq
-    rw [heq] at hdata
-    simp [stateReg, cellBase] at hdata
-  have hregAddress : reg ≠ addressReg n := by
-    intro heq
-    rw [heq] at hdata
-    simp [addressReg, cellBase] at hdata
-    omega
-  have hregValue : reg ≠ valueReg n := by
-    intro heq
-    rw [heq] at hdata
-    simp [valueReg, cellBase] at hdata
-    omega
-  have hregZero : reg ≠ zeroReg n := by
-    intro heq
-    rw [heq] at hdata
-    simp [zeroReg, cellBase] at hdata
-    omega
-  have hregOne : reg ≠ oneReg n := by
-    intro heq
-    rw [heq] at hdata
-    simp [oneReg, cellBase] at hdata
-    omega
-  have hregCount : reg ≠ tapeCountReg n := by
-    intro heq
-    rw [heq] at hdata
-    simp [tapeCountReg, cellBase] at hdata
-    omega
-  have hregBase : reg ≠ stateScratchReg n := by
-    intro heq
-    rw [heq] at hdata
-    simp [stateScratchReg, cellBase] at hdata
-    omega
+  obtain ⟨hregState, hregAddress, hregValue, hregZero, hregOne, hregCount, hregBase⟩ :=
+    dataReg_ne_loopControls n reg hdata
   have hloadedData : sourceLoaded reg = store reg := by
     simp only [sourceLoaded, Structured.Basic.exec]
     rw [Function.update_of_ne hregValue]
