@@ -484,9 +484,9 @@ noncomputable def padicPrincipalData
     rfl
   have htop : directTopology = standardTopology :=
     hdirect.trans (padicPrincipalUnitDirectTopology_eq_standard p)
-  let P := fun T : TopologicalSpace U => by
+  let P : TopologicalSpace U → Type := fun T =>
     letI : TopologicalSpace U := T
-    exact Σ a : ℕ,
+    Σ a : ℕ,
       Multiplicative
           (ZMod (F.residueCharacteristic ^ a) ×
             (Fin d → ℤ_[F.residueCharacteristic])) ≃ₜ* U

@@ -576,7 +576,7 @@ variable {G : Type u} [Group G] [TopologicalSpace G]
 
 /-- A fixed choice of right-coset representatives for the intermediate
 subgroup in `G(L/K)`. -/
-private noncomputable def chosenTransferNormNaturalityRightTransversal
+noncomputable def chosenTransferNormNaturalityRightTransversal
     (K K' L : ClosedSubgroup G)
     (hLK' : L.toSubgroup ≤ K'.toSubgroup)
     (hK'K : K'.toSubgroup ≤ K.toSubgroup)

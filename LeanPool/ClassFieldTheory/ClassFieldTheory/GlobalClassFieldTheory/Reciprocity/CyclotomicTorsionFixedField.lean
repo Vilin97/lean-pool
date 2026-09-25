@@ -54,7 +54,9 @@ open scoped IsMulCommutative
 open KummerTheory
 open ClassFormation
 
-private noncomputable def rationalCyclotomicTorsionRestrictionEquiv :
+/-- Restriction identifies the torsion quotient of the cyclotomic Galois group with the
+Galois group of its torsion fixed field, with their Krull topologies. -/
+noncomputable def rationalCyclotomicTorsionRestrictionEquiv :
     (rationalCyclotomicField ≃ₐ[ℚ]
         rationalCyclotomicField) ⧸
         rationalCyclotomicTorsionClosure.toSubgroup ≃ₜ*

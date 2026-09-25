@@ -42,14 +42,11 @@ section
 variable (K L : Type) [Field K] [Field L] [Algebra K L]
   [FiniteDimensional K L] [IsGalois K L]
 
-private abbrev G (K : Type) [Field K] :=
-  intrinsicAbsoluteGalois K
+local notation "G" => intrinsicAbsoluteGalois
 
-private abbrev A (K : Type) [Field K] : Rep ℤ (G K) :=
-  intrinsicAbsoluteUnits K
+local notation "A" => intrinsicAbsoluteUnits
 
-private abbrev B (K : Type) [Field K] : ClosedSubgroup (G K) :=
-  intrinsicAbstractBase K
+local notation "B" => intrinsicAbstractBase
 
 private noncomputable instance intrinsicAbsoluteGaloisT2 : T2Space (G K) :=
   krullTopology_t2

@@ -63,7 +63,9 @@ theorem smallHilbertClassField_ideleClassNorm_range_of_isSmall
         (K := K)
 
 open scoped Classical in
-private noncomputable def arithmeticHilbertClassGroupEquivOfNormRange
+/-- Arithmetic reciprocity identifies the Galois group with the ordinary ideal class group
+when the extension has the small Hilbert norm subgroup. -/
+noncomputable def arithmeticHilbertClassGroupEquivOfNormRange
     (E : FiniteAbelianExtension K)
     (hNorm : (_root_.ideleClassNorm K E).range =
       GlobalClassFieldTheory.GlobalClassFields.smallHilbertClassFieldNormSubgroup

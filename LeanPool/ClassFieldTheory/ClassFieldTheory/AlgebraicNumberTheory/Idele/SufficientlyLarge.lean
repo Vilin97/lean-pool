@@ -41,7 +41,7 @@ variable {K : Type*} [Field K] [NumberField K]
 namespace IdeleGroup
 
 /-- A chosen idele representing an ordinary ideal class. -/
-private def classRepresentative (c : ClassGroup (𝓞 K)) :
+def classRepresentative (c : ClassGroup (𝓞 K)) :
     IdeleGroup K :=
   Classical.choose (idealClass_surjective (K := K) c)
 
@@ -53,7 +53,7 @@ private theorem idealClass_classRepresentative
 
 /-- A finite set outside which the chosen representative of `c` is
 integral. -/
-private def classRepresentativeSupport (c : ClassGroup (𝓞 K)) :
+def classRepresentativeSupport (c : ClassGroup (𝓞 K)) :
     Finset (HeightOneSpectrum (𝓞 K)) :=
   Classical.choose
     (exists_finset_supportedAt

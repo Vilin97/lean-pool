@@ -84,7 +84,9 @@ variable
     (L : FiniteAbelianSubextension K.field)
 
 open scoped Classical in
-private noncomputable abbrev smallHilbertTowerMiddleFiniteAbstractField :
+/-- The middle field in the small Hilbert tower, as a finite abstract field
+over the rational base. -/
+noncomputable abbrev smallHilbertTowerMiddleFiniteAbstractField :
     FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ) :=
   { field := L.field
@@ -432,7 +434,8 @@ private noncomputable def
   exact hB ▸ raw
 
 open scoped Classical in
-private noncomputable def rebaseFiniteGaloisSubextension
+/-- Transport a finite Galois subextension along equality of its base subgroups. -/
+noncomputable def rebaseFiniteGaloisSubextension
     {G : Type} [Group G] [TopologicalSpace G]
     {B B' : ClosedSubgroup G} (h : B = B')
     (P : FiniteGaloisSubextension B) :

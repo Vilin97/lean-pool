@@ -167,7 +167,9 @@ private theorem localHilbertRightPowerClassHom_mk
       maximalLocalKummerPairingRightHom K n hnK hmu a b :=
   rfl
 
-private noncomputable def localHilbertPowerClassLeftHom
+/-- The local Hilbert symbol as a homomorphism in the first variable with the second variable
+descended to its power-class quotient. -/
+noncomputable def localHilbertPowerClassLeftHom
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty) :
     Kˣ →*
@@ -230,8 +232,7 @@ noncomputable def localHilbertPairing
   QuotientGroup.lift
     (powMonoidHom (n : ℕ) : Kˣ →* Kˣ).range
     (localHilbertPowerClassLeftHom K n hnK hmu)
-    (powMonoidHom_range_le_localHilbertPowerClassLeftHom_ker
-      K n hnK hmu)
+    (by exact powMonoidHom_range_le_localHilbertPowerClassLeftHom_ker K n hnK hmu)
 
 /-- Evaluation of the descended pairing agrees with the original local
 Hilbert symbol on representatives. -/

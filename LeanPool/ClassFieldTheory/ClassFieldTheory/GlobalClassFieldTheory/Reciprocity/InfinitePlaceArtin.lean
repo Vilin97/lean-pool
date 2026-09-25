@@ -48,7 +48,8 @@ section Galois
 variable [IsGalois K L]
 
 open scoped Classical in
-private noncomputable def ramifiedInfinitePlaceConjugation
+/-- The Galois automorphism acting as complex conjugation at a ramified infinite place. -/
+noncomputable def ramifiedInfinitePlaceConjugation
     (w : InfinitePlace L) (hRamified : w.IsRamified K) :
     L ≃ₐ[K] L :=
   Classical.choose

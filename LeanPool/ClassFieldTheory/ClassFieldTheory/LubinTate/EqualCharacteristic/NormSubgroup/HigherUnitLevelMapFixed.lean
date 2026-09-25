@@ -90,7 +90,7 @@ noncomputable def equalCharacteristicLubinTateLevelFieldToCompletedRingHom
     (F : LocalField K) [CharP K F.residueCharacteristic] (n : ℕ) :
     equalCharacteristicLubinTateLevelField F n →+*
       equalCharacteristicCompletedLevelField F n :=
-  higherUnitLevelMapRingHom F n
+  (equalCharacteristicLubinTateLevelFieldToCompleted F n).toRingHom
 
 /-- States the theorem `equalCharacteristicLubinTateLevelFieldToCompletedRingHom_algebraMap`. -/
 @[simp]

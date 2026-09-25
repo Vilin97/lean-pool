@@ -294,13 +294,11 @@ def bigToSmallHilbertKernelEquivNarrowClassKernel :
   toFun q :=
     ⟨bigHilbertClassFieldQuotientEquivNarrowClassGroup
         (K := K) q.1,
-      bigHilbertQuotientEquiv_mem_narrowClassKernel
-        (K := K) q⟩
+      by exact bigHilbertQuotientEquiv_mem_narrowClassKernel (K := K) q⟩
   invFun c :=
     ⟨(bigHilbertClassFieldQuotientEquivNarrowClassGroup
         (K := K)).symm c.1,
-      bigHilbertQuotientEquiv_symm_mem_bigToSmallKernel
-        (K := K) c⟩
+      by exact bigHilbertQuotientEquiv_symm_mem_bigToSmallKernel (K := K) c⟩
   left_inv q := by
     apply Subtype.ext
     exact
@@ -333,7 +331,7 @@ def realSignToNarrowClassKernel :
       MonoidHom.ker (RayClass.narrowToClassGroup (K := K)) where
   toFun s :=
     ⟨RayClass.signToNarrow (K := K) s,
-      signToNarrow_mem_narrowClassKernel (K := K) s⟩
+      by exact signToNarrow_mem_narrowClassKernel (K := K) s⟩
   map_one' := by
     apply Subtype.ext
     exact map_one (RayClass.signToNarrow (K := K))

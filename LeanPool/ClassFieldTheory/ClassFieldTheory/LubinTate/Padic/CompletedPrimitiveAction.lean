@@ -38,7 +38,8 @@ namespace LubinTate
 open LocalFieldTheory.DiscreteValuationField
 open LocalFieldTheory.DiscreteValuationField.Examples.Qp
 
-private noncomputable local instance
+/-- The maximal ideal supplies the adic topology on the completed primitive-action target. -/
+noncomputable local instance
     padicCompletedActionTargetWithIdeal
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     WithIdeal

@@ -128,8 +128,7 @@ def canonicalUnramifiedNormQuotientValuation
       ZMod (E.degree : ℕ) :=
   finiteNormQuotientLift A E.base.field E.field.field E.below
     (v.canonicalUnramifiedValuationHom E)
-    (v.finiteNormSubgroup_le_canonicalUnramifiedValuationHom_ker
-      E hUnramified)
+    (by exact v.finiteNormSubgroup_le_canonicalUnramifiedValuationHom_ker E hUnramified)
 
 /-- Valuation sends a finite norm class to its canonical unramified quotient value. -/
 @[simp]

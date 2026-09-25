@@ -649,7 +649,7 @@ private theorem finiteReciprocityCandidate_add_of_mul
 
 /-- The finite reciprocity equivalence with the semigroup-additivity input isolated.  The
 final theorem discharges this input directly from reciprocity multiplicativity. -/
-private def finiteReciprocityHom_of_mul
+def finiteReciprocityHom_of_mul
     (D : DegreeData G) (A : Rep ℤ G) (v : ValuationData D A)
     [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
     (K : FiniteAbstractField G) (L : ClosedSubgroup G)
@@ -665,9 +665,9 @@ private def finiteReciprocityHom_of_mul
     Additive (K.field.toSubgroup ⧸ extensionSubgroup K.field L hLK) →+
       FiniteNormQuotient A K.field L hLK where
   toFun := D.finiteReciprocityCandidate A v K L hLK
-  map_zero' := D.finiteReciprocityCandidate_zero A v K L hLK
-  map_add' := D.finiteReciprocityCandidate_add_of_mul
-    A v K L hLK hmul
+  map_zero' := by exact D.finiteReciprocityCandidate_zero A v K L hLK
+  map_add' := by
+    exact D.finiteReciprocityCandidate_add_of_mul A v K L hLK hmul
 
 /-- Evaluation of the conditional finite reciprocity homomorphism using any
 Frobenius lift of the specified finite automorphism. -/

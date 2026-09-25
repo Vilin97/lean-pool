@@ -152,8 +152,7 @@ def frobeniusPowerOfDegreeOne (D : DegreeData G)
     (hφ : D.frobeniusExponent K L hLK φ = 1)
     (n : ℕ) (hn : 0 < n) : D.FrobeniusElements K L hLK :=
   ⟨φ.1 ^ n,
-    ⟨n, hn, D.extensionNormalizedDegree_pow_of_degreeOne
-      K L hLK φ hφ n⟩⟩
+    ⟨n, hn, by exact D.extensionNormalizedDegree_pow_of_degreeOne K L hLK φ hφ n⟩⟩
 
 /-- The degree-one Frobenius power has the stated ambient coercion. -/
 @[simp]

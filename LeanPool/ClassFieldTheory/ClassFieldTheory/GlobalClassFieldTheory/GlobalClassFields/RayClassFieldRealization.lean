@@ -624,7 +624,7 @@ open scoped Classical in
 /-- Inversion of ray classes is a homomorphism because idèle classes
 commute. This form does not require a commutative-group instance on the
 quotient presentation. -/
-private def rayClassGroupInvHom (m : RayClass.Modulus K) :
+def rayClassGroupInvHom (m : RayClass.Modulus K) :
     RayClass.RayClassGroup m →* RayClass.RayClassGroup m where
   toFun := Inv.inv
   map_one' := inv_one

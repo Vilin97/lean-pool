@@ -367,10 +367,8 @@ private theorem commutator_topologicalClosure_eq
 abelianization agree as multiplicative groups. -/
 noncomputable def topologicalAbelianizationFiniteEquiv :
     Abelianization (Gal(L/K)) ≃* TopologicalAbelianization (Gal(L/K)) := by
-  let h : Subgroup.topologicalClosure (commutator (Gal(L/K))) =
-      commutator (Gal(L/K)) :=
-    commutator_topologicalClosure_eq (Gal(L/K))
-  exact QuotientGroup.quotientMulEquivOfEq h.symm
+  exact QuotientGroup.quotientMulEquivOfEq (by
+    exact (commutator_topologicalClosure_eq (Gal(L/K))).symm)
 
 /-- Finite local reciprocity as a homeomorphic group isomorphism from the
 norm quotient to the topological abelianization of the Krull Galois group. -/

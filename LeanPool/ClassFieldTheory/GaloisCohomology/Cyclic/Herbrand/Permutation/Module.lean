@@ -1404,9 +1404,9 @@ theorem herbrandQuotient_eq_of_finiteIndex_stableSubgroup
       finiteIndexStableSubgroup_ambientHerbrandQuotientDefined
         B hstable σ hgen hB
     @herbrandQuotient G A _ _ _ _
-        σ hA.1 hA.2 =
+        σ =
       @herbrandQuotient G B _ _ _ _
-        σ hB.1 hB.2 := by
+        σ := by
   let subgroupAction :=
     stableSubgroupMulDistribMulAction
       B hstable
@@ -1457,19 +1457,19 @@ theorem herbrandQuotient_eq_of_finiteIndex_stableSubgroup
       (G := G) (A := A ⧸ B) σ hgen
   change
     @herbrandQuotient G A _ _ _ _
-        σ hA.1 hA.2 =
+        σ =
       @herbrandQuotient G B _ _ _ _
-        σ hB.1 hB.2
+        σ
   calc
     @herbrandQuotient G A _ _ _ _
-          σ hA.1 hA.2 =
+          σ =
         @herbrandQuotient G B _ _ _ _
-            σ hB.1 hB.2 *
+            σ *
           @herbrandQuotient G (A ⧸ B)
-            _ _ _ _ σ hQ.1 hQ.2 :=
+            _ _ _ _ σ :=
       hmult
     _ = @herbrandQuotient G B _ _ _ _
-          σ hB.1 hB.2 := by
+          σ := by
       rw [hquotient, mul_one]
 
 end FiniteIndexStableSubgroupFiniteness

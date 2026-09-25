@@ -45,7 +45,8 @@ theorem rationalInfinitePlace_isReal
   exact Rat.isReal_infinitePlace
 
 open scoped Classical in
-private noncomputable def rationalPositiveArchimedeanLocalComponent
+/-- A positive real unit viewed in an archimedean completion of the rational field. -/
+noncomputable def rationalPositiveArchimedeanLocalComponent
     (v : InfinitePlace ℚ) :
     ℝ≥0ˣ →* v.Completionˣ :=
   (Units.mapEquiv
@@ -54,7 +55,8 @@ private noncomputable def rationalPositiveArchimedeanLocalComponent
     (Units.map NNReal.toRealHom.toMonoidHom)
 
 open scoped Classical in
-private noncomputable def rationalPositiveArchimedeanInfinitePart :
+/-- The positive real unit embedded diagonally in the infinite ideles of the rational field. -/
+noncomputable def rationalPositiveArchimedeanInfinitePart :
     ℝ≥0ˣ →* InfiniteIdeleGroup ℚ :=
   ContinuousMulEquiv.piUnits.symm.toMonoidHom.comp
     (MonoidHom.pi rationalPositiveArchimedeanLocalComponent)

@@ -624,7 +624,7 @@ theorem rationalCyclotomicPrimeArithmeticFrobenius_galEquivZMod
 open scoped Classical in
 /-- The selected rational ray class field is the actual cyclotomic field
 of the same modulus, as an equivalence of fields over `ℚ`. -/
-private noncomputable def rationalRayClassFieldCyclotomicRingEquiv
+noncomputable def rationalRayClassFieldCyclotomicRingEquiv
     :
     rayClassField ℚ (RayClass.rationalModulus m) ≃+*
       CyclotomicField m ℚ := by

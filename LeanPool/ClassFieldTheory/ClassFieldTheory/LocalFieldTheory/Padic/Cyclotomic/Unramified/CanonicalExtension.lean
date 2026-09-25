@@ -646,14 +646,8 @@ noncomputable def padicCyclotomicUnramifiedPadicFiniteExtensionValuationSubringE
         (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p).valuationSubring
         L).toSubring :=
     by
-      let : IsIntegralClosure T
-          (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF
-            p).valuation.valuationSubring L := by
-        change IsIntegralClosure target.valuationSubring
-          (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF
-            p).valuationSubring L
-        infer_instance
       exact padicCyclotomicUnramified_valuationSubring_eq_integralClosure
+        (K := ℚ_[p]) (L := L)
         (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF
           p).valuation.valuationSubring T
   exact

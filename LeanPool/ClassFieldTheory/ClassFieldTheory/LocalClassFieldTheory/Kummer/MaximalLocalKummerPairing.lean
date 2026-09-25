@@ -53,7 +53,9 @@ noncomputable def maximalLocalKummerNormResidueAutomorphism
       (K := K) (Omega := SeparableClosure K) n hmu Delta.1
   exact abelianLocalArtinMonoidHom K E
 
-private noncomputable def maximalLocalKummerPairingSource
+/-- The local Artin action evaluated against Kummer characters, before descending roots of unity
+from the maximal Kummer extension to the base field. -/
+noncomputable def maximalLocalKummerPairingSource
     (n : ℕ+) (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty) (a : Kˣ) :
     Kˣ →* nthRootsSubgroup (maximalLocalKummerExtension K n) (n : ℕ) := by

@@ -226,7 +226,7 @@ def finiteUnramifiedDegreeHom
         (L.toFiniteAbstractExtension.degree : ℕ)
         L.toFiniteAbstractExtension.degree.property).comp
         (D.normalizedDegree K)).toMonoidHom)
-      (finiteUnramifiedDegreeHom_killsExtension D K L hUnramified)).comp
+      (by exact finiteUnramifiedDegreeHom_killsExtension D K L hUnramified)).comp
     L.extensionQuotientMulEquiv.toMonoidHom
 
 /--

@@ -215,8 +215,10 @@ noncomputable def equalCharacteristicLubinTateTruncatedConstantCoeff
     equalCharacteristicLubinTateTruncatedRing F n →+* F.residueField :=
   equalCharacteristicLubinTateTruncatedRingLift F n
     (PowerSeries.constantCoeff (R := F.residueField))
-    fun _ ha => RingHom.mem_ker.mp
-      (equalCharacteristicLubinTateTruncationIdeal_le_constantCoeff_ker F n ha)
+    (by
+      intro _ ha
+      exact RingHom.mem_ker.mp
+        (equalCharacteristicLubinTateTruncationIdeal_le_constantCoeff_ker F n ha))
 
 /-- The descended constant-coefficient map evaluates any truncated representative. -/
 @[simp]

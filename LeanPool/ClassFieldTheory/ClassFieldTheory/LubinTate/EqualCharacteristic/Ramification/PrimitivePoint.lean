@@ -367,7 +367,29 @@ noncomputable def equalCharacteristicLubinTateLevelCompleteDVF
     ValuationTheory.DiscreteValuationField.CompleteDVF.{0, 0}
       (equalCharacteristicLubinTateLevelField F n) :=
   Classical.choose
-    (equalCharacteristicLubinTateLevelCompleteDVFData_exists F n)
+    (show
+      ∃ target :
+          ValuationTheory.DiscreteValuationField.CompleteDVF.{0, 0}
+            (equalCharacteristicLubinTateLevelField F n),
+        ∃ hExt :
+            (equalCharacteristicLubinTateBaseCompleteDVF F).valuation.HasExtension
+              target.valuation,
+          letI :
+              (equalCharacteristicLubinTateBaseCompleteDVF F).valuation.HasExtension
+                target.valuation := hExt
+          IsIntegralClosure target.valuationSubring
+              (equalCharacteristicLubinTateBaseCompleteDVF F).valuationSubring
+              (equalCharacteristicLubinTateLevelField F n) ∧
+            ValuationTheory.DiscreteValuationField.ValuedExtension.degree
+                (equalCharacteristicLubinTateBaseCompleteDVF F).toDVF
+                target.toDVF =
+              ValuationTheory.DiscreteValuationField.ValuedExtension.ramificationIndex
+                  (equalCharacteristicLubinTateBaseCompleteDVF F).toDVF
+                  target.toDVF *
+                ValuationTheory.DiscreteValuationField.ValuedExtension.residueDegree
+                  (equalCharacteristicLubinTateBaseCompleteDVF F).toDVF
+                  target.toDVF from by
+      exact equalCharacteristicLubinTateLevelCompleteDVFData_exists F n)
 
 /-- The chosen level valuation extends the canonical Laurent-series base
 valuation. -/
@@ -756,8 +778,7 @@ theorem equalCharacteristicLubinTateBaseUniformizer_orbitProduct
       ∏ sigma : Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩),
         valuationSubringAutOfUniqueExtension
           (base := base.toDVF) (target := target.toDVF)
-          (equalCharacteristicLubinTateLevelCompleteDVF_hasUniqueDVFValuationExtension_zero
-            F n)
+          (equalCharacteristicLubinTateLevelCompleteDVF_hasUniqueDVFValuationExtension F n)
           sigma (-equalCharacteristicLubinTatePrimitivePointInteger F n) := by
   classical
   dsimp only

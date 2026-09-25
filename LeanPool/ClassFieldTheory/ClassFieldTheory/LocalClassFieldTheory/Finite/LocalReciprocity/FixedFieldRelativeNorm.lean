@@ -169,8 +169,8 @@ def abstractFixedFieldCosetEquivAlgHom
       (abstractRelativeFixedField k Ω hLK →ₐ[
         abstractFixedField k Ω K] Ω) :=
   Equiv.ofBijective (abstractFixedFieldCosetToAlgHom k Ω K L hLK)
-    ⟨abstractFixedFieldCosetToAlgHom_injective k Ω K L hLK,
-      abstractFixedFieldCosetToAlgHom_surjective k Ω K L hLK⟩
+    ⟨by exact abstractFixedFieldCosetToAlgHom_injective k Ω K L hLK,
+      by exact abstractFixedFieldCosetToAlgHom_surjective k Ω K L hLK⟩
 
 omit [IsSepClosed Ω] in
 /-- States the theorem `relativeCosetAction_abstractFixedFieldUnit_val`. -/

@@ -120,8 +120,8 @@ noncomputable def finitePlacePrimeResidueEquivLocalResidue
       finitePlaceLocalArtinCompletionIsNonarchimedeanLocalField v
     (𝓞 K ⧸ v.asIdeal) ≃+* 𝓀[C] := by
   let a := HeightOneSpectrum.adicAbv K v
-  let ha : LubinTate.Valuations.NonarchimedeanAbsoluteValue a :=
-    finitePlaceAdicAbv_nonarchimedeanAbsoluteValue K v
+  have ha : LubinTate.Valuations.NonarchimedeanAbsoluteValue a := by
+    exact finitePlaceAdicAbv_nonarchimedeanAbsoluteValue K v
   let C := a.Completion
   letI : ValuativeRel C :=
     finitePlaceLocalArtinCompletionValuativeRel v

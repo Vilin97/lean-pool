@@ -110,7 +110,9 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicPrincipalLevelIsAbelianGalois
 
 open scoped Classical in
-private noncomputable def rationalCyclotomicPrincipalHeightOneArtinInput
+/-- The local Artin automorphism of a prime-power cyclotomic level evaluated
+on a principal idele. -/
+noncomputable def rationalCyclotomicPrincipalHeightOneArtinInput
     (p : Nat.Primes) (k : ℕ) (x : ℚˣ)
     (v : HeightOneSpectrum (𝓞 ℚ)) :
     KummerTheory.rationalCyclotomicLevel
@@ -142,7 +144,8 @@ private theorem rationalCyclotomicPrincipalHeightOneArtinInput_spec
   rfl
 
 open scoped Classical in
-private noncomputable def rationalCyclotomicPrincipalHeightOneCharacter
+/-- The cyclotomic coordinate of the local Artin value of a principal idele at a finite place. -/
+noncomputable def rationalCyclotomicPrincipalHeightOneCharacter
     (p : Nat.Primes) (k : ℕ) (x : ℚˣ)
     (v : HeightOneSpectrum (𝓞 ℚ)) :
     (ZMod (p.1 ^ k))ˣ :=

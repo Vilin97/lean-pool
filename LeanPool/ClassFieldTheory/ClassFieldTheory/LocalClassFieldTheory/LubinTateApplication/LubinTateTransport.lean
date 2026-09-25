@@ -159,7 +159,7 @@ noncomputable def equalCharacteristicUniformizerRatioIntegerUnit
     𝒪[K]ˣ :=
   integerUnitOfValuationMapZero K
     (ϖ / inverseIntegerRingUniformizerFieldUnit K)
-    (equalCharacteristicUniformizerRatio_valuationMap K ϖ hϖ)
+    (by exact equalCharacteristicUniformizerRatio_valuationMap K ϖ hϖ)
 
 /-- The uniformizer-ratio integer unit maps to the prescribed ratio of field units. -/
 @[simp]

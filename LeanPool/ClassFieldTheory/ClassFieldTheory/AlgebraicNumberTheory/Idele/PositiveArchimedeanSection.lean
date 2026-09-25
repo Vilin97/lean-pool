@@ -36,7 +36,7 @@ variable {K : Type u} [Field K] [NumberField K]
 open scoped Classical in
 /-- A positive real unit placed in an archimedean completion.  At a complex
 place it is first regarded as a complex unit. -/
-private noncomputable def positiveArchimedeanLocalComponent
+noncomputable def positiveArchimedeanLocalComponent
     (v : InfinitePlace K) :
     ℝ≥0ˣ →* v.Completionˣ := by
   by_cases hv : v.IsReal
@@ -56,7 +56,7 @@ private noncomputable def positiveArchimedeanLocalComponent
 
 open scoped Classical in
 /-- The positive local archimedean component, with its natural continuity. -/
-private noncomputable def positiveArchimedeanLocalComponentContinuous
+noncomputable def positiveArchimedeanLocalComponentContinuous
     (v : InfinitePlace K) :
     ℝ≥0ˣ →ₜ* v.Completionˣ where
   __ := positiveArchimedeanLocalComponent v
@@ -239,7 +239,7 @@ private theorem positiveArchimedeanLocalComponent_mem_positive
 open scoped Classical in
 /-- The positive root needed to compensate for the multiplicity of the
 chosen infinite place. -/
-private noncomputable def positiveArchimedeanRoot :
+noncomputable def positiveArchimedeanRoot :
     ℝ≥0ˣ →* ℝ≥0ˣ :=
   Units.map
     (NNReal.rpowMonoidHom
@@ -247,7 +247,7 @@ private noncomputable def positiveArchimedeanRoot :
 
 open scoped Classical in
 /-- The positive root map used in the archimedean section is continuous. -/
-private noncomputable def positiveArchimedeanRootContinuous :
+noncomputable def positiveArchimedeanRootContinuous :
     ℝ≥0ˣ →ₜ* ℝ≥0ˣ where
   __ := positiveArchimedeanRoot (K := K)
   continuous_toFun :=

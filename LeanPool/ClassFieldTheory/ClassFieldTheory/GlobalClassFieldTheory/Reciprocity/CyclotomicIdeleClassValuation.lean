@@ -60,7 +60,7 @@ attribute [local instance] cyclotomicValuationIdeleClassCommGroup
 defining normal subgroup is contained in the kernel.  Keeping the quotient-map
 argument here avoids repeating the same large continuity elaboration for the
 rational and number-field cyclotomic values. -/
-private noncomputable def ideleClassContinuousQuotientLift
+noncomputable def ideleClassContinuousQuotientLift
     {A B : Type*} [Group A] [TopologicalSpace A]
     [Group B] [TopologicalSpace B]
     (N : Subgroup A) [N.Normal] (f : A →ₜ* B)

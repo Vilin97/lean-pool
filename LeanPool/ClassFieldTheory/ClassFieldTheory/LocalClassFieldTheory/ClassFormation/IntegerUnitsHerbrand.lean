@@ -117,7 +117,7 @@ theorem integerUnits_herbrandQuotient_eq_one_of_chosenNormalBasis
     ∃ hU : HerbrandQuotientDefined (Gal(L/K)) 𝒪[L]ˣ g,
       @herbrandQuotient (Gal(L/K)) 𝒪[L]ˣ _ _ _
         (galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L)
-        g hU.1 hU.2 = 1 := by
+        g = 1 := by
   let := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction K L n V hV
   let := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
   let := chosenNormalBasisIntegerUnitsQuotMulDistribMulAction K L n V hV
@@ -182,7 +182,7 @@ theorem exists_integerUnits_herbrandQuotient_eq_one_of_large_chosenNormalBasisLe
         ∃ hU : HerbrandQuotientDefined (Gal(L/K)) 𝒪[L]ˣ g,
           @herbrandQuotient (Gal(L/K)) 𝒪[L]ˣ _ _ _
             (galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L)
-            g hU.1 hU.2 = 1 := by
+            g = 1 := by
   rcases exists_finite_chosenNormalBasisIntegerUnitsQuotient
       (K := K) (L := L) with ⟨c, hc⟩
   refine ⟨c, ?_⟩

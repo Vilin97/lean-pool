@@ -851,8 +851,10 @@ noncomputable def relativeAdeleBaseChangeRingEquiv :
             (K := K) (L := L) y w]
       rw [(relativeFiniteTensorPiRingEquiv
         (K := K) (L := L)).apply_symm_apply]
-  map_add' := relativeAdeleToAdele_map_add
-  map_mul' := relativeAdeleToAdele_map_mul
+  map_add' := by
+    exact relativeAdeleToAdele_map_add
+  map_mul' := by
+    exact relativeAdeleToAdele_map_mul
 
 /-- Finite-coordinate formula for scalar extension of a pure relative
 adele tensor. -/

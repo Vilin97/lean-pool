@@ -269,7 +269,8 @@ theorem finiteNormSubgroup_map_conjugateFixed
           exact
             (conjugateFixedAddEquiv A L s).apply_symm_apply b]
 
-private noncomputable def rebaseFiniteAbelianSubextension
+/-- Transport a finite abelian subextension along equality of its base subgroups. -/
+noncomputable def rebaseFiniteAbelianSubextension
     {K K' : ClosedSubgroup G} (h : K = K')
     (L : FiniteAbelianSubextension K) :
     FiniteAbelianSubextension K' :=
@@ -284,7 +285,8 @@ private theorem rebaseFiniteAbelianSubextension_field
   cases h
   rfl
 
-private noncomputable def rebaseFixedCodomainHom
+/-- Transport an additive homomorphism to the fixed subgroup along equality of base subgroups. -/
+noncomputable def rebaseFixedCodomainHom
     (A : Rep ℤ G)
     {X : Type*} [AddGroup X]
     {K K' : ClosedSubgroup G} (h : K = K')

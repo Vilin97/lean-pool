@@ -1358,7 +1358,7 @@ noncomputable def abstractFixedFieldGlobalNormResidueEquiv :
 
 /-- The abstract finite norm-residue equivalence with its dependent source
 instance fixed to the public finite norm quotient. -/
-private noncomputable def abstractFixedFieldFiniteNormResidueGaloisEquiv :
+noncomputable def abstractFixedFieldFiniteNormResidueGaloisEquiv :
     FiniteNormQuotient rationalIdeleClassRepresentation
         K.field L.field L.below ≃+
       Additive
@@ -1426,7 +1426,7 @@ noncomputable def ambientFixedGlobalNormResidueAddMonoidHom :
 
 /-- The ordinary idele class group of the lower fixed field, transported
 to the fixed part of the rational absolute idele-class representation. -/
-private noncomputable def abstractFixedFieldIdeleClassToAmbientFixedMonoidHom :
+noncomputable def abstractFixedFieldIdeleClassToAmbientFixedMonoidHom :
     let F :=
       abstractFixedField ℚ (SeparableClosure ℚ) K.field
     IdeleClassGroup F →*

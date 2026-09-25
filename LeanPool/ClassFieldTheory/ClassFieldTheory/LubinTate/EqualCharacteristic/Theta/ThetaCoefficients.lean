@@ -133,13 +133,13 @@ noncomputable def chosenEqualCharacteristicSemilinearCoefficient
     (n : ℕ) → AlgebraicClosure k
   | 0 => chosenEqualCharacteristicSemilinearLeadingCoefficient u
   | n + 1 =>
+      let a := algebraMap k (AlgebraicClosure k) (PowerSeries.coeff 0 u)
+      let c := ∑ j : Fin (n + 1),
+        algebraMap k (AlgebraicClosure k) (PowerSeries.coeff (j + 1) u) *
+          chosenEqualCharacteristicSemilinearCoefficient u hu (n - j)
       Classical.choose
-        (exists_frobenius_eq_mul_add k
-          (algebraMap k (AlgebraicClosure k) (PowerSeries.coeff 0 u))
-          (∑ j : Fin (n + 1),
-            algebraMap k (AlgebraicClosure k)
-                (PowerSeries.coeff (j + 1) u) *
-              chosenEqualCharacteristicSemilinearCoefficient u hu (n - j)))
+        (show ∃ x : AlgebraicClosure k, x ^ Nat.card k = a * x + c from by
+          exact exists_frobenius_eq_mul_add k a c)
 termination_by n => n
 decreasing_by
   all_goals exact Nat.lt_succ_of_le (Nat.sub_le _ _)

@@ -764,7 +764,35 @@ noncomputable def lubinTateUniformizerDiagonalAutomorphism
     (n : ℕ) (u : (standardLocalField K).valuationSubringˣ) :
     Gal((lubinTateUniformizerDiagonalCompositumField K hπ n u)/K) :=
   Classical.choose
-    (exists_lubinTateUniformizerDiagonalAutomorphism K hπ n u)
+    (show
+      let T := standardLubinTateLevelField hπ n
+      letI : FiniteDimensional K T :=
+        standardLubinTateLevelField_finiteDimensional hπ n
+      let σT : Gal(T/K) :=
+        (standardLubinTateUnitParameterEquivGal
+          (standardLocalField K) hπ n
+          (standardLubinTateUnitParameterClass
+            (standardLocalField K) n u))⁻¹
+      let d := orderOf σT
+      let hd : 0 < d := orderOf_pos σT
+      let U := localFiniteUnramifiedField K d hd
+      let C := U ⊔ T
+      let hUC : U ≤ C := le_sup_left
+      let hTC : T ≤ C := le_sup_right
+      let A := U.restrict hUC
+      let B := T.restrict hTC
+      let eU : U ≃ₐ[K] A := IntermediateField.restrictAlgEquiv hUC
+      let eT : T ≃ₐ[K] B := IntermediateField.restrictAlgEquiv hTC
+      letI : IsGalois K A := IsGalois.of_algEquiv eU
+      letI : IsGalois K B := IsGalois.of_algEquiv eT
+      let φ :=
+        arithmeticFrobeniusOfUnramifiedValuation K U
+      let σA : Gal(A/K) := (eU.symm.trans φ).trans eU
+      let σB : Gal(B/K) := (eT.symm.trans σT).trans eT
+      ∃ σ : Gal(C/K),
+        AlgEquiv.restrictNormalHom A σ = σA ∧
+          AlgEquiv.restrictNormalHom B σ = σB from by
+      exact exists_lubinTateUniformizerDiagonalAutomorphism K hπ n u)
 
 /-- The explicit-uniformizer diagonal automorphism restricts to arithmetic
 Frobenius on its unramified factor. -/

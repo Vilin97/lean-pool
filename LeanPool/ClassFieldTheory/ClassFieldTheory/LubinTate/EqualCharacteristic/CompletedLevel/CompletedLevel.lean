@@ -50,7 +50,8 @@ noncomputable local instance equalCharacteristicCompletedLevelBaseAlgebra
       (equalCharacteristicCompletedUnramifiedField F.residueField) :=
   laurentSeriesCoefficientAlgebra
 
-private instance equalCharacteristicCompletedLevelBaseCharP
+/-- The completed unramified base has the residue characteristic. -/
+local instance equalCharacteristicCompletedLevelBaseCharP
     (F : LocalField.{u, v} K)
     :
     CharP (equalCharacteristicCompletedUnramifiedField F.residueField)
@@ -187,7 +188,8 @@ noncomputable local instance equalCharacteristicCompletedLevelScalarTower
       (equalCharacteristicCompletedLevelField F n) :=
   IsScalarTower.of_algebraMap_eq' rfl
 
-private instance equalCharacteristicCompletedLevelCharP
+/-- The completed Lubin–Tate level has the residue characteristic. -/
+local instance equalCharacteristicCompletedLevelCharP
     (F : LocalField.{u, v} K) [CharP K F.residueCharacteristic]
     (n : ℕ) :
     CharP (equalCharacteristicCompletedLevelField F n)
@@ -309,7 +311,7 @@ noncomputable def equalCharacteristicCompletedPrimitiveRoot
     (Polynomial.rootOfSplits
       (Polynomial.SplittingField.splits
         (equalCharacteristicCompletedPrimitivePolynomial F n))
-      (equalCharacteristicCompletedPrimitivePolynomial_map_degree_ne_zero F n))
+      (by exact equalCharacteristicCompletedPrimitivePolynomial_map_degree_ne_zero F n))
 
 /-- The chosen element is a root of the base-changed primitive polynomial.
 -/

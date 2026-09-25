@@ -36,14 +36,11 @@ section
 variable (K L : Type) [Field K] [Field L] [Algebra K L]
   [FiniteDimensional K L] [IsGalois K L]
 
-private abbrev G (K : Type) [Field K] :=
-  intrinsicAbsoluteGalois K
+local notation "G" => intrinsicAbsoluteGalois
 
-private abbrev AG (K : Type) [Field K] : Rep ℤ (G K) :=
-  intrinsicAbsoluteUnits K
+local notation "AG" => intrinsicAbsoluteUnits
 
-private abbrev B (K : Type) [Field K] : ClosedSubgroup (G K) :=
-  intrinsicAbstractBase K
+local notation "B" => intrinsicAbstractBase
 
 /-! ## Conjugating two realizations -/
 
@@ -210,7 +207,8 @@ def finiteGaloisConjugateBaseElement
 
 /-! ## The two vertical maps of the abstract reciprocity naturality theorem -/
 
-private noncomputable def extensionQuotientCongr
+/-- Transport an extension quotient along equalities of the base and top subgroups. -/
+noncomputable def extensionQuotientCongr
     {Γ : Type} [Group Γ] [TopologicalSpace Γ]
     {K L K' L' : ClosedSubgroup Γ}
     (hLK : L.toSubgroup ≤ K.toSubgroup)
@@ -247,7 +245,8 @@ private theorem extensionQuotientCongr_mk
   subst hN'
   rfl
 
-private noncomputable def finiteNormQuotientCongr
+/-- Transport a finite norm quotient along equalities of its base and top subgroups. -/
+noncomputable def finiteNormQuotientCongr
     {Γ : Type} [Group Γ] [TopologicalSpace Γ]
     (A : Rep ℤ Γ) {K L K' L' : ClosedSubgroup Γ}
     (hLK : L.toSubgroup ≤ K.toSubgroup)

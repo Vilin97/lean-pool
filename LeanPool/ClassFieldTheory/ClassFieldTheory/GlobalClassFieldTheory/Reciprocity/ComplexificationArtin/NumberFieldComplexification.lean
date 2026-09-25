@@ -31,7 +31,8 @@ attribute [local instance]
   rationalComplexificationCyclotomicField_isAbelianGalois
 
 open scoped Classical in
-private def rationalComplexificationAmbientField :
+/-- The rational complexification field lifted into the rational separable closure. -/
+def rationalComplexificationAmbientField :
     IntermediateField ℚ (SeparableClosure ℚ) := by
   letI : Algebra ℚ KummerTheory.rationalCyclotomicField :=
     DivisionRing.toRatAlgebra
@@ -164,7 +165,8 @@ noncomputable def numberFieldComplexificationRestriction :
       (numberFieldComplexification F)
 
 open scoped Classical in
-private def numberFieldComplexificationBaseLayer :
+/-- The chosen copy of the base number field inside its complexification. -/
+def numberFieldComplexificationBaseLayer :
     IntermediateField ℚ (numberFieldComplexification F) :=
   (numberFieldInRationalSeparableClosure F).restrict
     (show numberFieldInRationalSeparableClosure F ≤
@@ -172,7 +174,8 @@ private def numberFieldComplexificationBaseLayer :
       le_sup_left)
 
 open scoped Classical in
-private def numberFieldComplexificationCyclotomicLayer :
+/-- The rational complexification layer inside the complexification of a number field. -/
+def numberFieldComplexificationCyclotomicLayer :
     IntermediateField ℚ (numberFieldComplexification F) :=
   rationalComplexificationAmbientField.restrict
     (show

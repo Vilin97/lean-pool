@@ -440,8 +440,8 @@ def finiteReciprocityNaturalityNormMap
     FiniteNormQuotient A K' L' hL'K' →+
       FiniteNormQuotient A K L hLK := by
   letI hL'Kfinite : Finite (K.toSubgroup ⧸
-      extensionSubgroup K L' (hL'K'.trans hK'K)) :=
-    finiteReciprocityNaturality_tower_finite K K' L' hK'K hL'K'
+      extensionSubgroup K L' (hL'K'.trans hK'K)) := by
+    exact finiteReciprocityNaturality_tower_finite K K' L' hK'K hL'K'
   letI hL'Lfinite : Finite
       (L.toSubgroup ⧸ extensionSubgroup L L' hL'L) :=
     FiniteIntermediateField.finite_extension_of_le

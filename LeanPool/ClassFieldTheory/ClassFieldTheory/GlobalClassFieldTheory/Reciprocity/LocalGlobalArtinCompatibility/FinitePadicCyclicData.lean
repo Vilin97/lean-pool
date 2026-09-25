@@ -87,7 +87,7 @@ local instance numberFieldTowerBaseSubgroupCompactSpace :
     (numberFieldTowerBaseSubgroup K L).isClosed'.isCompact
 
 /-- Inclusion of a subgroup equipped with its subtype topology. -/
-private def continuousSubgroupSubtype
+def continuousSubgroupSubtype
     {A : Type*} [Group A] [TopologicalSpace A]
     (H : Subgroup A) : H →ₜ* A where
   toMonoidHom := H.subtype

@@ -67,7 +67,9 @@ open scoped Classical in
 def rationalTwoPrime : Nat.Primes := ⟨2, Nat.prime_two⟩
 
 open scoped Classical in
-private noncomputable def rationalTwoAdicCompletionToIndexedPadic :
+/-- Identify the completion at the rational prime above two with the corresponding indexed
+p-adic field. -/
+noncomputable def rationalTwoAdicCompletionToIndexedPadic :
     (RayClass.rationalPrime rationalTwoPrime).adicCompletion ℚ ≃+*
       ℚ_[Rat.HeightOneSpectrum.primesEquiv
         (RayClass.rationalPrime rationalTwoPrime)] :=

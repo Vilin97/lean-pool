@@ -1053,7 +1053,7 @@ variable
 fields in a finite extension.  The coefficient-ring equivalence is kept
 explicit so the inverse uses that exact equivalence rather than a second
 choice. -/
-private noncomputable def relativeAdeleMapOfCompatibleEquiv
+noncomputable def relativeAdeleMapOfCompatibleEquiv
     (eK : K ≃ₐ[ℚ] K')
     (eA :
       NumberField.AdeleRing (𝓞 K) K ≃+*

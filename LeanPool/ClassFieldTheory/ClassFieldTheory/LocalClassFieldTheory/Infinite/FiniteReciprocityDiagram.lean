@@ -31,7 +31,8 @@ open LocalFieldTheory RamificationTheory
 
 variable (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
   [IsNonarchimedeanLocalField K]
-private abbrev AbsoluteFiniteIndex :=
+/-- The open normal subgroups indexing the finite quotients of the absolute abelian Galois group. -/
+abbrev AbsoluteFiniteIndex :=
   OpenNormalSubgroup (localAbsoluteAbelianProfinite K)
 
 /-- Norm quotients in the finite reciprocity diagram carry their quotient topologies from

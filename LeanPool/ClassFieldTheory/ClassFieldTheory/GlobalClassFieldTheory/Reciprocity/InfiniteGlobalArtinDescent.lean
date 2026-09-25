@@ -118,9 +118,8 @@ noncomputable def infiniteGlobalIdeleClassArtinContinuousMonoidHom :
   toMonoidHom :=
     infiniteGlobalIdeleClassArtinMonoidHom
       (K := K) (Ω := Ω)
-  continuous_toFun :=
-    infiniteGlobalIdeleClassArtinMonoidHom_continuous
-      (K := K) (Ω := Ω)
+  continuous_toFun := by
+    exact infiniteGlobalIdeleClassArtinMonoidHom_continuous (K := K) (Ω := Ω)
 
 open scoped Classical in
 /-- The descended infinite global Artin homomorphism has dense image in the

@@ -263,7 +263,7 @@ noncomputable def equalCharacteristicChangedCompletedPrimitiveRoot
     (Polynomial.rootOfSplits
       (Polynomial.SplittingField.splits
         (equalCharacteristicChangedCompletedPrimitivePolynomial F u n))
-      (equalCharacteristicChangedCompletedPrimitivePolynomial_map_degree_ne_zero F u n))
+      (by exact equalCharacteristicChangedCompletedPrimitivePolynomial_map_degree_ne_zero F u n))
 
 /-- The distinguished completed primitive element is a root of the changed polynomial. -/
 theorem equalCharacteristicChangedCompletedPrimitiveRoot_isRoot

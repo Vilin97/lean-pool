@@ -478,17 +478,16 @@ def globalPadicIdealInertiaToLocalizationDecomposition
         (globalPadicPrimeLocalizationValuationSubring p M w) := by
   intro sigma
   let V := globalPadicPrimeLocalizationValuationSubring p M w
-  refine ⟨(sigma : M ≃ₐ[ℚ] M), ?_⟩
-  ext x
-  rw [_root_.ValuationSubring.mem_pointwise_smul_iff_inv_smul_mem]
-  constructor
-  · intro hx
-    have h := globalPadicIdealInertia_maps_localization
-      p M w sigma hx
-    simpa [AlgEquiv.smul_def] using h
-  · intro hx
-    simpa [AlgEquiv.smul_def] using
-      (globalPadicIdealInertia_maps_localization p M w sigma⁻¹ hx)
+  exact ⟨(sigma : M ≃ₐ[ℚ] M), by
+    ext x
+    rw [_root_.ValuationSubring.mem_pointwise_smul_iff_inv_smul_mem]
+    constructor
+    · intro hx
+      have h := globalPadicIdealInertia_maps_localization p M w sigma hx
+      simpa [AlgEquiv.smul_def] using h
+    · intro hx
+      simpa [AlgEquiv.smul_def] using
+        (globalPadicIdealInertia_maps_localization p M w sigma⁻¹ hx)⟩
 
 omit [IsAbelianGalois ℚ M] in
 private theorem
@@ -588,8 +587,7 @@ def globalPadicIdealInertiaToLocalizationInertia
         (globalPadicPrimeLocalizationValuationSubring p M w) where
   toFun sigma :=
     ⟨globalPadicIdealInertiaToLocalizationDecomposition p M w sigma,
-      globalPadicIdealInertiaToLocalizationDecomposition_mem_inertia
-        p M w sigma⟩
+      by exact globalPadicIdealInertiaToLocalizationDecomposition_mem_inertia p M w sigma⟩
   map_one' := by
     apply Subtype.ext
     apply Subtype.ext

@@ -57,7 +57,7 @@ open scoped Classical in
 /-- Global reciprocity identifies the genuine Galois group of the
 selected big Hilbert class field with the narrow ideal class group of
 the original number field. -/
-private noncomputable def bigHilbertClassFieldReciprocityData :
+noncomputable def bigHilbertClassFieldReciprocityData :
     {e : Gal((bigHilbertClassField K)/(bigHilbertClassFieldBase K)) ≃*
         RayClass.NarrowClassGroup K //
       ∀ c : IdeleClassGroup (bigHilbertClassFieldBase K),

@@ -37,9 +37,9 @@ variable [Group G] [Fintype G] [CommGroup A] [CommGroup B] [CommGroup C]
 variable [MulDistribMulAction G A] [MulDistribMulAction G B]
   [MulDistribMulAction G C]
 
-/-- Herbrand-quotient theory the Herbrand-quotient definition: the Herbrand quotient of the actual
-low-degree multiplicative Tate quotients.  The finiteness assumptions prevent
-`Nat.card` from silently taking the value `0` on infinite quotients. -/
+/-- The ratio of the cardinalities of the low-degree multiplicative Tate quotients.
+`Nat.card` is zero on infinite types; the finite-cohomology theorems below state
+explicit hypotheses ensuring that this ratio is the classical Herbrand quotient. -/
 noncomputable def herbrandQuotient (σ : G)
     : ℚ :=
   (Nat.card (HerbrandH0 G A) : ℚ) / (Nat.card (HerbrandHMinusOne G A σ) : ℚ)

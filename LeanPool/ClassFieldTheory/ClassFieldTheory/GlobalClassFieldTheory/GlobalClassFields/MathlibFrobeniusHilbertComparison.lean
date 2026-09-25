@@ -742,8 +742,8 @@ noncomputable def smallHilbertClassFieldEquivOfIsSmall
     E ≃ₐ[K]
       GlobalClassFieldTheory.GlobalClassFields.smallHilbertClassField K := by
   let H := GlobalClassFieldTheory.GlobalClassFields.smallHilbertClassField K
-  let f := Classical.choice
-    (nonempty_algHom_to_selectedSmallHilbertClassField K E hE.1)
+  let f : E →ₐ[K] H := Classical.choice (by
+    exact nonempty_algHom_to_selectedSmallHilbertClassField K E hE.1)
   have hdim : Module.finrank K E = Module.finrank K H :=
     (smallHilbertClassField_degree_eq_classNumber_of_isSmall K E hE).trans
       (smallHilbertClassField_degree_eq_classNumber K).symm

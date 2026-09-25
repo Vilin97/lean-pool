@@ -1025,21 +1025,25 @@ private theorem rationalCyclotomicLevel_galEquivZMod_eq_unitOfCoprime
   simpa using hPowers
 
 open scoped Classical in
-private abbrev rationalCyclotomicArtinPlace (q : Nat.Primes) :
+/-- The finite place of the rational field corresponding to a prime number. -/
+abbrev rationalCyclotomicArtinPlace (q : Nat.Primes) :
     HeightOneSpectrum (𝓞 ℚ) :=
   RayClass.rationalPrime q
 
 open scoped Classical in
-private abbrev rationalCyclotomicArtinBaseAbv (q : Nat.Primes) :
+/-- The absolute value associated to the rational finite place used in the cyclotomic Artin map. -/
+abbrev rationalCyclotomicArtinBaseAbv (q : Nat.Primes) :
     AbsoluteValue ℚ ℝ :=
   HeightOneSpectrum.adicAbv ℚ (rationalCyclotomicArtinPlace q)
 
 open scoped Classical in
-private abbrev rationalCyclotomicArtinLevel (m : ℕ+) :=
+/-- The rational cyclotomic extension at a positive integral level. -/
+abbrev rationalCyclotomicArtinLevel (m : ℕ+) :=
   KummerTheory.rationalCyclotomicLevel m
 
 open scoped Classical in
-private abbrev rationalCyclotomicArtinExtension
+/-- The chosen extension of a rational finite-place absolute value to a cyclotomic level. -/
+abbrev rationalCyclotomicArtinExtension
     (m : ℕ+) (q : Nat.Primes) :
     AbsoluteValueExtension
       (rationalCyclotomicArtinBaseAbv q)
@@ -1049,7 +1053,8 @@ private abbrev rationalCyclotomicArtinExtension
     (rationalCyclotomicArtinPlace q)
 
 open scoped Classical in
-private abbrev rationalCyclotomicArtinLocalizedField
+/-- The completion of the cyclotomic level at the chosen extension of the finite place. -/
+abbrev rationalCyclotomicArtinLocalizedField
     (m : ℕ+) (q : Nat.Primes) :=
   AlgebraicNumberTheory.Valuations.LocalizedCompletion
     (rationalCyclotomicArtinBaseAbv q)
@@ -1469,12 +1474,14 @@ private abbrev rationalCyclotomicPrincipalPrimePlace
   rationalCyclotomicArtinPlace p
 
 open scoped Classical in
-private abbrev rationalCyclotomicPrincipalPrimeLevel
+/-- The rational cyclotomic level used in the principal-prime completion comparison. -/
+abbrev rationalCyclotomicPrincipalPrimeLevel
     (m : ℕ+) :=
   rationalCyclotomicArtinLevel m
 
 open scoped Classical in
-private abbrev rationalCyclotomicPrincipalPrimeExtension
+/-- The chosen absolute-value extension used in the principal-prime completion comparison. -/
+abbrev rationalCyclotomicPrincipalPrimeExtension
     (m : ℕ+) (p : Nat.Primes) :=
   rationalCyclotomicArtinExtension m p
 
@@ -2695,7 +2702,8 @@ private noncomputable def rationalCyclotomicChosenArithmeticFrobenius
       (rationalCyclotomicArtinUnramified m q hq)
 
 open scoped Classical in
-private noncomputable abbrev rationalCyclotomicArtinLocalInput
+/-- Transport a unit of the rational adic completion to the absolute-value completion. -/
+noncomputable abbrev rationalCyclotomicArtinLocalInput
     (q : Nat.Primes)
     (x : ((RayClass.rationalPrime q).adicCompletion ℚ)ˣ) :
     (rationalCyclotomicArtinBaseAbv q).Completionˣ :=

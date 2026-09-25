@@ -66,9 +66,27 @@ noncomputable def valuationSubringEquivDecompositionFieldOfEqTop
   let eFZ : F ≃ₐ[F] Z :=
     (IntermediateField.botEquiv F Omega).symm.trans
       (IntermediateField.equivOfEq hZ.symm)
-  refine
-    { toFun := fun x => ⟨eFZ (x : F), ?_⟩
-      invFun := fun z => ⟨eFZ.symm (z : Z), ?_⟩
+  exact
+    { toFun := fun x => ⟨eFZ (x : F), by
+        change ((eFZ x : Z) : Omega) ∈ A
+        have he : ((eFZ x : Z) : Omega) =
+            algebraMap F Omega (x : F) := by
+          rfl
+        rw [he]
+        have hx : (x : F) ∈ A.comap (algebraMap F Omega) := by
+          rw [hC]
+          exact x.property
+        exact hx⟩
+      invFun := fun z => ⟨eFZ.symm (z : Z), by
+        have hz : eFZ.symm (z : Z) ∈ A.comap (algebraMap F Omega) := by
+          change algebraMap F Omega (eFZ.symm (z : Z)) ∈ A
+          have he : algebraMap F Omega (eFZ.symm (z : Z)) =
+              ((z : Z) : Omega) := by
+            exact congrArg Subtype.val (eFZ.apply_symm_apply (z : Z))
+          rw [he]
+          exact z.property
+        rw [hC] at hz
+        exact hz⟩
       left_inv := fun x => by
         apply Subtype.ext
         exact eFZ.symm_apply_apply (x : F)
@@ -81,24 +99,6 @@ noncomputable def valuationSubringEquivDecompositionFieldOfEqTop
       map_mul' := fun x y => by
         apply Subtype.ext
         exact map_mul eFZ (x : F) (y : F) }
-  · change ((eFZ x : Z) : Omega) ∈ A
-    have he : ((eFZ x : Z) : Omega) =
-        algebraMap F Omega (x : F) := by
-      rfl
-    rw [he]
-    have hx : (x : F) ∈ A.comap (algebraMap F Omega) := by
-      rw [hC]
-      exact x.property
-    exact hx
-  · have hz : eFZ.symm (z : Z) ∈ A.comap (algebraMap F Omega) := by
-      change algebraMap F Omega (eFZ.symm (z : Z)) ∈ A
-      have he : algebraMap F Omega (eFZ.symm (z : Z)) =
-          ((z : Z) : Omega) := by
-        exact congrArg Subtype.val (eFZ.apply_symm_apply (z : Z))
-      rw [he]
-      exact z.property
-    rw [hC] at hz
-    exact hz
 
 /-- The corresponding equivalence between literal and intrinsic residue
 fields. -/

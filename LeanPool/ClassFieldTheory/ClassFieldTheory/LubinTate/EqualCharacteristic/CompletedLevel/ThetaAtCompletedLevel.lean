@@ -166,7 +166,7 @@ noncomputable def equalCharacteristicCompletedLevelEvaluation
     ((AlgebraicClosure F.residueField)⟦X⟧)⟦X⟧ →+*
       Valued.integer (equalCharacteristicCompletedLevelField F n) :=
   PowerSeries.eval₂Hom
-    (equalCharacteristicCompletedLevelCoefficientHom_continuous F n) ha
+    (by exact equalCharacteristicCompletedLevelCoefficientHom_continuous F n) ha
 
 /-- States the theorem `equalCharacteristicCompletedLevelEvaluation_X`. -/
 @[simp]
