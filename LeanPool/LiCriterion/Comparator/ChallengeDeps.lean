@@ -15,26 +15,19 @@ Authors: Nicholas Bulka
 public import Mathlib.NumberTheory.LSeries.RiemannZeta
 
 /-!
-ChallengeDeps.lean — the solution-side mirror of the Li-criterion definitions
-(see comparator/README.md).
+This module defines the vocabulary of the two proved statements in
+`LeanPool.LiCriterion.Comparator.Solution`, using Mathlib alone. Mathlib's `RiemannHypothesis`
+supplies the RH side; the xi function and its analytic coefficients are defined below.
 
-Everything the challenge statement in `Challenge.lean` mentions that is not already in Mathlib is
-defined directly in that file. This module repeats those definitions from Mathlib alone so that
-`Solution.lean` can import them without importing the sorried Challenge module. Mathlib's
-`RiemannHypothesis` supplies the RH side. This module imports nothing from the LiCriterion
-development.
+The definitions have the same bodies as their counterparts in `Lc/LiCriterion/Basic.lean`,
+so the solution can delegate to the library by definitional unfolding. Their separate
+`LiChallenge` namespace lets the solution import both copies without name clashes.
 
-Every `def` below is character-for-character the one in the LiCriterion development
-(`Lc/LiCriterion/Basic.lean`: `riemannXi` §1371, `phi` §463, `logDeriv` §474, `taylorCoeff`
-§603), so that `Solution.lean` can delegate to the library by definitional unfolding in the
-kernel. The copies live in the `LiChallenge` namespace so that `Solution.lean` can import both
-this module and the LiCriterion development without name clashes (the library's live in
-`LiCriterion`).
-
-A reader auditing what is claimed needs to read only `Challenge.lean`, which imports Mathlib
-directly. The proof lives in the LiCriterion library and is checked against the independently
-stated Challenge declarations by the comparator (statement equality + axiom audit + kernel
-replay), via `Solution.lean`.
+For the local statements and proofs, read `Comparator/Solution.lean` together with these
+definitions. The independent upstream statement and its comparator procedure are preserved at
+the pinned [Challenge](https://github.com/nicholasbulka/li-criterion-rh-equivalence-lean/blob/35df682f3b709ffe5fbcfdd452dfa964bd622b87/comparator/Challenge.lean)
+and [audit guide](https://github.com/nicholasbulka/li-criterion-rh-equivalence-lean/blob/35df682f3b709ffe5fbcfdd452dfa964bd622b87/comparator/README.md).
+Those upstream audit assets are separate from this Lean Pool import.
 -/
 
 @[expose] public section

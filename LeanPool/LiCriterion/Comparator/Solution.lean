@@ -16,8 +16,9 @@ public import LeanPool.LiCriterion.Comparator.ChallengeDeps
 public import LeanPool.LiCriterion.Lc.LiCriterion.Fidelity
 
 /-!
-Solution.lean — the UNTRUSTED comparator solution module: the statement of `Challenge.lean`,
-byte-identical, PROVED by delegating to the LiCriterion library.
+The two local headline statements, proved by delegating to the LiCriterion library.
+Their independent upstream specifications and comparator audit procedure are linked from
+`Comparator/ChallengeDeps.lean`.
 
   li_criterion
     → LiCriterion.li_criterion_rh_iff
@@ -33,8 +34,9 @@ The challenge definitions in `ChallengeDeps.lean` (`riemannXi`, `taylorCoeff`, a
 typechecks by definitional unfolding in the kernel even though the challenge copies live in the
 `LiChallenge` namespace.
 
-Nothing in this file is part of the trusted base: the comparator re-checks that the theorems below
-have exactly the statements of their `Challenge` namesakes and use only the permitted axioms.
+The upstream comparator submission checks these statements against its separate challenge
+module. In this import, the statements below and their definitions in `ChallengeDeps.lean`
+provide the local audit entry point.
 
 STATUS: unconditional.  The two order inputs of `LiCriterion.li_criterion_rh_iff`
 (`xi_hasFiniteOrder`, `xi_order_le_one`) are proved in `Lc/LiCriterion/XiGrowth.lean`, and
