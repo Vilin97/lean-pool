@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyIntrinsicSliceRegularityBridge
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyRicciC2Regularity
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyIntrinsicSliceRegularityBridge
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyRicciC2Regularity
 
 /-!
 # Deriving Hamilton--Ivey trace regularity from a C³ connection
@@ -20,6 +22,8 @@ The intrinsic slice trace regularity is derived from the actual C² Ricci tensor
 local-frame curvature argument.  C² and C³ connection regularity remain explicit inputs; neither is
 silently inferred from the current time-dependent metric type.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,9 +12,9 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatFiniteIntervalReconstruction
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatCoefficientLocalization
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatFrozenUniqueness
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatFiniteIntervalReconstruction
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatCoefficientLocalization
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatFrozenUniqueness
 
 /-!
 # A finite radius-adapted tensor-heat atlas
@@ -27,6 +29,8 @@ positive physical time interval common to every reconstructed local field.
 The final construction in this file is the genuine finite tensor sum on that
 common interval; it is not merely a family of unrelated coordinate solutions.
 -/
+
+@[expose] public section
 
 @[expose] public noncomputable section
 open Bundle FiberBundle Set

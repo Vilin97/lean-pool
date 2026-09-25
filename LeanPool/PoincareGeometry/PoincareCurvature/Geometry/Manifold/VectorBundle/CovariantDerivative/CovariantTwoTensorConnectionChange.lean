@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.VectorBundle.CovariantDerivative.ConnectionLaplacian
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.VectorBundle.CovariantDerivative.ConnectionLaplacian
 
 /-!
 # Change of the induced connection on covariant two-tensors
@@ -20,6 +22,8 @@ one-form to an affine connection.  Mathlib's `CovariantDerivative.addOneForm`
 uses `A x u X`, where `u` is the vector being differentiated and `X` is the
 direction.  The order is made explicit in the formula below.
 -/
+
+@[expose] public section
 
 @[expose] public noncomputable section
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,10 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.GeodesicCutoff
-import LeanPool.PoincareGeometry.BonnetMyers.IntrinsicAcceleration
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.SmoothDependenceContinuousDeriv
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+public import LeanPool.PoincareGeometry.BonnetMyers.GeodesicCutoff
+public import LeanPool.PoincareGeometry.BonnetMyers.IntrinsicAcceleration
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.SmoothDependenceContinuousDeriv
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
 
 /-!
 # `C¹` dependence for localized coordinate geodesic flow
@@ -28,6 +30,8 @@ map.
 The theorem deliberately stops short of that inverse-function argument and of
 any claim that a metric minimizer is smooth.
 -/
+
+@[expose] public section
 
 noncomputable section
 

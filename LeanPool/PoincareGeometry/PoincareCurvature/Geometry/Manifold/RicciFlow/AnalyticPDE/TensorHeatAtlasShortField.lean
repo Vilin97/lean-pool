@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatAtlasCutoff
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatAtlasShortTime
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatAtlasCutoff
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatAtlasShortTime
 
 /-!
 # Tensor-heat atlas fields on a genuinely short physical interval
@@ -22,6 +24,8 @@ chart-dependent normalized cylinders and reconstructs their local solutions
 on one common physical interval.  No long-cylinder solution is evaluated
 outside the portion controlled by the short-time estimates.
 -/
+
+@[expose] public section
 
 @[expose] public noncomputable section
 open Bundle FiberBundle Set

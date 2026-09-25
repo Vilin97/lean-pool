@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.RiemannianHopfRinow
-import LeanPool.PoincareGeometry.BonnetMyers.MetricGeodesic
+public import LeanPool.PoincareGeometry.BonnetMyers.RiemannianHopfRinow
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricGeodesic
 
 /-!
 # Metric minimizers for complete Riemannian manifolds
@@ -22,6 +24,8 @@ segment for the finite Riemannian metric.  The later smooth upgrade must still
 show that this metric minimizer is the locally constructed Riemannian
 geodesic; that analytic bridge is intentionally not assumed here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

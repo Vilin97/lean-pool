@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,11 +12,11 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-import Mathlib.Analysis.Calculus.VectorField
-import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.MixedTimeSpace
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+public import Mathlib.Analysis.Calculus.VectorField
+public import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.MixedTimeSpace
 
 /-!
 # Mixed time--space regularity for Lie brackets
@@ -29,6 +31,8 @@ The manifold chart transport from a jointly `C²` totalized tangent section to t
 lemmas is intentionally kept separate, so that no derivative of a manifold Lie bracket is
 postulated here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

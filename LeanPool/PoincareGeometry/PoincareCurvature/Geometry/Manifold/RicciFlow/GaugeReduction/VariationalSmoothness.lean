@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -26,15 +28,17 @@ These lemmas supply the smoothness facts that drive that recursion:
 * `contDiff_variationalField` — the variational field inherits `C^n` from `f` and `Df`;
 * `contDiff_fderiv_of_contDiff_succ` — the regularity drop `f ∈ C^{n+1} ⟹ fderiv f ∈ C^n`.
 -/
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Analysis.Calculus.ContDiff.Comp
-import Mathlib.Analysis.Calculus.FDeriv.Mul
-import Mathlib.Analysis.Calculus.FDeriv.Comp
-import Mathlib.Analysis.Calculus.FDeriv.CompCLM
-import Mathlib.Analysis.Calculus.FDeriv.Prod
-import Mathlib.Analysis.Normed.Operator.Prod
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.Comp
+public import Mathlib.Analysis.Calculus.FDeriv.Mul
+public import Mathlib.Analysis.Calculus.FDeriv.Comp
+public import Mathlib.Analysis.Calculus.FDeriv.CompCLM
+public import Mathlib.Analysis.Calculus.FDeriv.Prod
+public import Mathlib.Analysis.Normed.Operator.Prod
 
 /-! # Variational Smoothness -/
+
+@[expose] public section
 
 open scoped Topology
 open Set

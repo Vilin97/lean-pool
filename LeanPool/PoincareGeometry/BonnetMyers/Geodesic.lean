@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.Connection
-import LeanPool.PoincareGeometry.BonnetMyers.ODE
+public import LeanPool.PoincareGeometry.BonnetMyers.Connection
+public import LeanPool.PoincareGeometry.BonnetMyers.ODE
 
 /-!
 # Local coordinate geodesic data
@@ -21,6 +23,8 @@ coordinate acceleration is built from the supplied covariant derivative and
 the tangent-bundle trivialization of an extended chart.  In particular, the
 Christoffel data below is not an additional input field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

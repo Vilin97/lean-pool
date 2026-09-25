@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.DeTurckCorrectionRegularity
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.DeTurckCorrectionRegularity
 
 /-!
 # C² regularity of intrinsic Ricci from the actual connection
@@ -19,6 +21,8 @@ This file raises the local-frame regularity argument for the intrinsic Ricci ten
 derivative.  It derives regularity from the connection commutator and the genuine curvature tensor;
 no Ricci regularity or curvature-derivative identity is assumed.
 -/
+
+@[expose] public section
 
 @[expose] public noncomputable section
 

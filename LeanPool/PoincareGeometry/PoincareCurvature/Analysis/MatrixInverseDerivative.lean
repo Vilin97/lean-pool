@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,11 +12,11 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.MatrixSmoothness
-import Mathlib.Tactic
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.MatrixSmoothness
+public import Mathlib.Tactic
 
 /-!
 # Derivative of a finite matrix inverse
@@ -24,6 +26,8 @@ The inverse-metric contribution to curvature variation rests on the identity
 matrix curves by differentiating their matrix inverse relation entry by
 entry.  No derivative formula is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

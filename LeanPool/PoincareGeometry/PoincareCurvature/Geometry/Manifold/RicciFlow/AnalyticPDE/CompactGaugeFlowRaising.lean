@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.ModelManifoldGaugeFlow
-import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.TimeDependentGram
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.ModelManifoldGaugeFlow
+public import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.TimeDependentGram
 
 /-!
 # Item 2 (GAP 1) capstone — compact-manifold `C³` gauge flow from time-dependent raising data
@@ -43,6 +45,8 @@ The result `exists_gaugeFlow_Ioo_of_timeDependent_raisingData` is the general-`M
 GAP 1: on a compact boundaryless manifold, the metric-raised time-dependent gauge field flows to a
 `C³`-in-space diffeomorphism family on an open time interval around `0`, with no restricting instance.
 -/
+
+@[expose] public section
 
 open Set Filter Topology Bundle
 open scoped Topology NNReal Manifold ContDiff

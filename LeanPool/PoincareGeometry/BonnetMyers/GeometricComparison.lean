@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,9 +12,9 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.GlobalParallelTransport
-import LeanPool.PoincareGeometry.BonnetMyers.ManifoldSineTest
-import LeanPool.PoincareGeometry.BonnetMyers.Algebra
+public import LeanPool.PoincareGeometry.BonnetMyers.GlobalParallelTransport
+public import LeanPool.PoincareGeometry.BonnetMyers.ManifoldSineTest
+public import LeanPool.PoincareGeometry.BonnetMyers.Algebra
 
 /-!
 # Ricci comparison in a transported global frame
@@ -23,6 +25,8 @@ frame along a geodesic.  This module performs that conversion using the actual
 global parallel transport equivalence.  No pointwise choice of a new frame is
 silently substituted for the fields used in the variation calculation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

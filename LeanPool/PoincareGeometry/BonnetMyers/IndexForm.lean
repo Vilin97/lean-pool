@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 /-!
 # The scalar comparison test
@@ -21,6 +23,8 @@ The Bonnet--Myers index-form argument uses the Dirichlet test field
 manifold layer.  In particular, the sharp constant is not inserted as an
 axiom: it is the value of an explicitly computed interval integral.
 -/
+
+@[expose] public section
 
 noncomputable section
 

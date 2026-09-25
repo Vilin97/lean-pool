@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.ParallelFieldContinuation
-import LeanPool.PoincareGeometry.BonnetMyers.IndexForm
+public import LeanPool.PoincareGeometry.BonnetMyers.ParallelFieldContinuation
+public import LeanPool.PoincareGeometry.BonnetMyers.IndexForm
 
 /-!
 # Sine test fields along an actual global geodesic
@@ -27,6 +29,8 @@ space.
 This does not yet prove the second-variation inequality: that still requires
 an endpoint-minimizing smooth geodesic and a manifold variation theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

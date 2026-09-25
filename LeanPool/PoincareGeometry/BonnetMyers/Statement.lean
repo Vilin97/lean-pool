@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,12 +12,12 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.Torsion
-import Mathlib.Geometry.Manifold.VectorBundle.Riemannian
-import Mathlib.Geometry.Manifold.Riemannian.Basic
-import Mathlib.Geometry.Manifold.Metrizable
-import Mathlib.Topology.EMetricSpace.Diam
-import Mathlib.LinearAlgebra.Trace
+public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.Torsion
+public import Mathlib.Geometry.Manifold.VectorBundle.Riemannian
+public import Mathlib.Geometry.Manifold.Riemannian.Basic
+public import Mathlib.Geometry.Manifold.Metrizable
+public import Mathlib.Topology.EMetricSpace.Diam
+public import Mathlib.LinearAlgebra.Trace
 
 /-!+# Bonnet--Myers: independent geometric statement
 
@@ -26,6 +28,8 @@ The distance and completeness use the supplied smooth metric. No geodesic,
 second-variation, compactness, or diameter assertion is an input hypothesis.
 The constant is the classical sharp bound; sphere attainment is not selected.
 -/
+
+@[expose] public section
 
 noncomputable section
 open Bundle Manifold Set

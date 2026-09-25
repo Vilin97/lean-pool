@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.LocalDistanceRealization
-import LeanPool.PoincareGeometry.BonnetMyers.RiemannianMinimizer
+public import LeanPool.PoincareGeometry.BonnetMyers.LocalDistanceRealization
+public import LeanPool.PoincareGeometry.BonnetMyers.RiemannianMinimizer
 
 /-!
 # Local smooth connectors along an exact metric segment
@@ -22,6 +24,8 @@ smooth normal geodesics to all nearby segment points with exactly the same
 length as the corresponding metric subsegment.  This is the local geometric
 input for the remaining compatibility and smooth-upgrade argument.
 -/
+
+@[expose] public section
 
 noncomputable section
 

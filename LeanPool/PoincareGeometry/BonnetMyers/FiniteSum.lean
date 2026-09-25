@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.Statement
+public import LeanPool.PoincareGeometry.BonnetMyers.Statement
 
 /-!
 # Finite reindexing lemmas
@@ -19,6 +21,8 @@ The coordinate calculations in the transport layer use four nested finite
 sums.  These lemmas expose the two index permutations needed for the metric
 compatibility cancellation without hiding a reindexing step in automation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

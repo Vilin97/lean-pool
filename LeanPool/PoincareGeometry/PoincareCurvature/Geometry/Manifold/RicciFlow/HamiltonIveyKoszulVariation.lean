@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,10 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyConnectionVariation
-import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.MatrixInverseDerivative
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.VectorBundle.CovariantDerivative.Curvature.Bianchi
-import Mathlib.Analysis.InnerProductSpace.GramMatrix
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyConnectionVariation
+public import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.MatrixInverseDerivative
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.VectorBundle.CovariantDerivative.Curvature.Bianchi
+public import Mathlib.Analysis.InnerProductSpace.GramMatrix
 
 /-!
 # Differentiating the Levi-Civita Koszul identity
@@ -23,6 +25,8 @@ keeps the mixed regularity needed to interchange a time derivative with a
 spatial directional derivative explicit; slicewise smoothness alone does not
 silently supply that interchange.
 -/
+
+@[expose] public section
 
 noncomputable section
 

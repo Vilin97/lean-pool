@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -31,17 +33,19 @@ the initial point. Mathlib v4.29.1 provides this only at the Banach-space level
 (`PicardLindelof`), not lifted to the manifold `IsMIntegralCurveOn` API; supplying
 that neighborhood-uniform local existence lemma is the precise next increment.
 -/
-import Mathlib.Geometry.Manifold.IntegralCurve.UniformTime
-import Mathlib.Geometry.Manifold.IntegralCurve.ExistUnique
-import Mathlib.Geometry.Manifold.IntegralCurve.Transform
-import Mathlib.Topology.Compactness.Compact
-import Mathlib.Analysis.ODE.PicardLindelof
-import Mathlib.Analysis.Normed.Module.Basic
-import Mathlib.Geometry.Manifold.MFDeriv.Basic
-import Mathlib.Geometry.Manifold.MFDeriv.SpecificFunctions
-import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
+public import Mathlib.Geometry.Manifold.IntegralCurve.UniformTime
+public import Mathlib.Geometry.Manifold.IntegralCurve.ExistUnique
+public import Mathlib.Geometry.Manifold.IntegralCurve.Transform
+public import Mathlib.Topology.Compactness.Compact
+public import Mathlib.Analysis.ODE.PicardLindelof
+public import Mathlib.Analysis.Normed.Module.Basic
+public import Mathlib.Geometry.Manifold.MFDeriv.Basic
+public import Mathlib.Geometry.Manifold.MFDeriv.SpecificFunctions
+public import Mathlib.Geometry.Manifold.ContMDiffMFDeriv
 
 /-! # Manifold Flow Existence -/
+
+@[expose] public section
 
 open scoped Manifold Topology
 open Set Filter

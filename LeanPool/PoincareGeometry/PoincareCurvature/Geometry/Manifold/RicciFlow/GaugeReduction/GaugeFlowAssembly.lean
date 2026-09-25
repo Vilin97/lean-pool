@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -36,10 +38,12 @@ ODE flow on the initial condition, `hF`/`hG`) — the project's `ModelGaugeFlowO
 already proves spatial `C¹` (Fréchet) differentiability, so this is a `C¹ → C³`
 bootstrap, not a from-scratch development.
 -/
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.GaugeReduction.Diffeomorph3FlowExistence
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.GaugeReduction.ManifoldFlowExistence
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.GaugeReduction.Diffeomorph3FlowExistence
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.GaugeReduction.ManifoldFlowExistence
 
 /-! # Gauge Flow Assembly -/
+
+@[expose] public section
 open scoped Manifold Topology ContDiff
 
 namespace PoincareCurvature.GaugeFlowAssembly

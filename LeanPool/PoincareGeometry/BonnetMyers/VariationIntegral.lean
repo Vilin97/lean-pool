@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.BrokenVariation
-import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+public import LeanPool.PoincareGeometry.BonnetMyers.BrokenVariation
+public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
 
 /-!
 # Differentiation of parameter-dependent interval integrals
@@ -20,6 +22,8 @@ This file packages the compact-rectangle estimates used to differentiate the ene
 coordinate variation twice.  Joint continuity on a compact parameter-time rectangle supplies
 the uniform domination required by the interval-integral API.
 -/
+
+@[expose] public section
 
 noncomputable section
 

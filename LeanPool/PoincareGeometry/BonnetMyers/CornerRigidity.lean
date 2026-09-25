@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.DistanceRegularity
-import Mathlib.Analysis.Calculus.TangentCone.Real
+public import LeanPool.PoincareGeometry.BonnetMyers.DistanceRegularity
+public import Mathlib.Analysis.Calculus.TangentCone.Real
 
 /-!
 # One-sided derivative rigidity at a minimizing corner
@@ -21,6 +23,8 @@ right-sided exact-distance identity.  Equality in Cauchy--Schwarz then forces
 the outgoing tangent to have the same direction as the terminal radial
 tangent.  This is the analytic core of corner elimination.
 -/
+
+@[expose] public section
 
 noncomputable section
 

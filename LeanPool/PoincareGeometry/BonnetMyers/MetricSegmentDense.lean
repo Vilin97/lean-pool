@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentTwoSided
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentTwoSided
 
 /-!
 # Dense local-geodesic loci of exact metric segments
@@ -20,6 +22,8 @@ orientations.  Endpoint cases are included vacuously, while every other
 parameter is approximated from the appropriate side inside the open normal
 neighbourhood supplied at that parameter.
 -/
+
+@[expose] public section
 
 noncomputable section
 

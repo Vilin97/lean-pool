@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.SmoothDependenceCk
-import Mathlib.Analysis.SpecialFunctions.Exponential
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.SmoothDependenceCk
+public import Mathlib.Analysis.SpecialFunctions.Exponential
 
 /-!
 # The autonomous fundamental solution is the operator exponential
@@ -30,6 +32,8 @@ bounded-linear) geometric Ricci–DeTurck chart generator, whose fibre generator
 point.  Everything is proved from Mathlib's `hasDerivAt_exp_smul_const'` and the campaign's global
 integral-curve uniqueness `eq_of_isIntegralCurve_of_eq_at`; no PDE or manifold content is used.
 -/
+
+@[expose] public section
 
 @[expose] public noncomputable section
 

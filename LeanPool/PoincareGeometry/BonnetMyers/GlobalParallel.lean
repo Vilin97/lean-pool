@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,10 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.GlobalGeodesic
-import LeanPool.PoincareGeometry.BonnetMyers.GlobalIntrinsicGeodesic
-import LeanPool.PoincareGeometry.BonnetMyers.ParallelConnection
-import LeanPool.PoincareGeometry.BonnetMyers.Algebra
+public import LeanPool.PoincareGeometry.BonnetMyers.GlobalGeodesic
+public import LeanPool.PoincareGeometry.BonnetMyers.GlobalIntrinsicGeodesic
+public import LeanPool.PoincareGeometry.BonnetMyers.ParallelConnection
+public import LeanPool.PoincareGeometry.BonnetMyers.Algebra
 
 /-!
 # Parallel germs along complete geodesics
@@ -26,6 +28,8 @@ parallel germ whose base geodesic agrees with the global state germ.  The
 field is deliberately retained on its certified local curve; transporting it
 across the equality of dependent tangent fibres is a separate gluing step.
 -/
+
+@[expose] public section
 
 noncomputable section
 

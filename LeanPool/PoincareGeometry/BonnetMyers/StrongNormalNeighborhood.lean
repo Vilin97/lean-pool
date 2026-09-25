@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.GeodesicFlowRegularity
+public import LeanPool.PoincareGeometry.BonnetMyers.GeodesicFlowRegularity
 
 /-!
 # Two-point coordinate geodesic neighbourhoods
@@ -25,6 +27,8 @@ No metric-minimizing assertion is made here.  The output is a unique small
 coordinate geodesic for each nearby ordered endpoint pair, with the entire
 trajectory certified to solve the genuine coordinate equation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentLog
-import Mathlib.Analysis.InnerProductSpace.Calculus
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentLog
+public import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # Regularity of distance in normal coordinates
@@ -21,6 +23,8 @@ finite intrinsic distance from the centre is exactly the norm of the smooth
 logarithm coordinate.  This module records the resulting `C¹` regularity,
 which is the differentiable input for the remaining corner-rigidity step.
 -/
+
+@[expose] public section
 
 noncomputable section
 

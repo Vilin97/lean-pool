@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,10 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.GeodesicFlowRegularity
-import LeanPool.PoincareGeometry.BonnetMyers.IntrinsicGeodesic
-import LeanPool.PoincareGeometry.BonnetMyers.IntrinsicAcceleration
-import LeanPool.PoincareGeometry.BonnetMyers.GeodesicLength
+public import LeanPool.PoincareGeometry.BonnetMyers.GeodesicFlowRegularity
+public import LeanPool.PoincareGeometry.BonnetMyers.IntrinsicGeodesic
+public import LeanPool.PoincareGeometry.BonnetMyers.IntrinsicAcceleration
+public import LeanPool.PoincareGeometry.BonnetMyers.GeodesicLength
 
 /-!
 # A local geodesic endpoint neighbourhood
@@ -24,6 +26,8 @@ back to the manifold and packages the resulting path as an intrinsic local
 geodesic.  It deliberately proves endpoint reachability only: local metric
 minimization still requires the Gauss-lemma/length comparison bridge.
 -/
+
+@[expose] public section
 
 noncomputable section
 

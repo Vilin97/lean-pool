@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,10 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.ChartGluing
-import LeanPool.PoincareGeometry.BonnetMyers.GeodesicContinuation
-import LeanPool.PoincareGeometry.BonnetMyers.GeodesicLength
-import LeanPool.PoincareGeometry.BonnetMyers.GlobalDistance
+public import LeanPool.PoincareGeometry.BonnetMyers.ChartGluing
+public import LeanPool.PoincareGeometry.BonnetMyers.GeodesicContinuation
+public import LeanPool.PoincareGeometry.BonnetMyers.GeodesicLength
+public import LeanPool.PoincareGeometry.BonnetMyers.GlobalDistance
 
 /-!
 # Maximal intrinsic geodesic extensions
@@ -27,6 +29,8 @@ The analytic endpoint argument is kept separate from this order-theoretic
 layer.  It will supply the strict-extension hypothesis used by the final
 globalization theorem below.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,9 +12,9 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.MetricContinuation
-import LeanPool.PoincareGeometry.BonnetMyers.ODE
-import Mathlib.Analysis.Calculus.FDeriv.Extend
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricContinuation
+public import LeanPool.PoincareGeometry.BonnetMyers.ODE
+public import Mathlib.Analysis.Calculus.FDeriv.Extend
 
 /-!
 # Restarting an ODE at a finite endpoint
@@ -24,6 +26,8 @@ fresh local solution.  The proof does not hide an endpoint differentiability
 assumption: the one-sided derivative is explicitly recovered from the limit
 of the vector field using Mathlib's boundary-extension theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

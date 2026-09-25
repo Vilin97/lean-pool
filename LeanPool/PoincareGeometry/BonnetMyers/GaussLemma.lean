@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,9 +12,9 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.NormalNeighborhood
-import LeanPool.PoincareGeometry.BonnetMyers.ChartGluing
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.DistLEIntegral
+public import LeanPool.PoincareGeometry.BonnetMyers.NormalNeighborhood
+public import LeanPool.PoincareGeometry.BonnetMyers.ChartGluing
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.DistLEIntegral
 
 /-!
 # Local Gauss-lemma identities
@@ -24,6 +26,8 @@ result is the differentiated radial--variation cross term.  It is a genuine
 geometric identity, but not yet the integrated Gauss lemma or a minimizing
 statement.
 -/
+
+@[expose] public section
 
 noncomputable section
 

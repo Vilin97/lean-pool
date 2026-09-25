@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.GlobalDistance
+public import LeanPool.PoincareGeometry.BonnetMyers.GlobalDistance
 
 /-!
 # The finite metric behind the Riemannian edistance
@@ -21,6 +23,8 @@ connected manifolds in the entry, `GlobalDistance` proves that all those
 values are finite.  This file records the canonical finite metric obtained by
 that proof and the exact completeness transfer needed by a Hopf--Rinow layer.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentRegularity
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentRegularity
 
 /-!
 # Coherent normal coordinates along metric segments
@@ -20,6 +22,8 @@ normal chart around each segment parameter.  Nearby points therefore have a
 single continuous logarithm coordinate, its radial norm is the exact
 parameter gap, and the corresponding radial geodesic is distance realizing.
 -/
+
+@[expose] public section
 
 noncomputable section
 

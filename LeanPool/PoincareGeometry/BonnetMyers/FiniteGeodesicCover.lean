@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.GlobalGeodesic
+public import LeanPool.PoincareGeometry.BonnetMyers.GlobalGeodesic
 
 /-!
 # Finite local-geodesic covers
@@ -25,6 +27,8 @@ The result is deliberately a cover, not a claimed global parallel transport
 or a smooth minimizing segment.  It is the finite chartwise datum needed
 before either construction can be glued rigorously.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.ParabolicHolder
-import Mathlib.Analysis.MeanInequalities
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.ParabolicHolder
+public import Mathlib.Analysis.MeanInequalities
 
 /-!
 # Parabolic Hölder AM–GM (Young) interpolation (roadmap point 4, Item 3)
@@ -51,6 +53,8 @@ adding it does not trigger a rebuild of the downstream parabolic function-space 
 All proofs are pure norm/rpow/AM–GM algebra; no Schauder or heat-kernel content.  Axiom-clean
 (`propext` / `Classical.choice` / `Quot.sound`).
 -/
+
+@[expose] public section
 
 open Set
 open scoped Topology NNReal

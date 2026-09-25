@@ -68,6 +68,7 @@ private theorem covectorCovariantDerivative_metric_independent
     (g₁ g₂ : Bundle.RiemannianBundle TM) (cov : CovariantDerivative I E TM) :
     (letI := g₁; covectorCovariantDerivative cov) =
       (letI := g₂; covectorCovariantDerivative cov) := by
+  ext h x X u
   rfl
 
 /-- The induced two-tensor connection is independent of the tracing metric. -/
@@ -113,6 +114,8 @@ theorem connectionLaplacianWith_eq_sum_localFrame_inverseGram
             (e.localFrame b i x) (e.localFrame b j x) := by
   let chosenMetric : Bundle.RiemannianBundle TM := ⟨g.toRiemannianMetric⟩
   letI := chosenMetric
+  letI : IsContMDiffRiemannianBundle I 2 E TM :=
+    ⟨g.inner, g.contMDiff, fun _ _ _ => rfl⟩
   have htrace := connectionLaplacian_eq_sum_localFrame_inverseGram
     (I := I) (E := E) cov h e b hx
   have hmetric := covariantHessianTwoTensor_metric_independent

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatCoordinateOperator
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatCoordinateOperator
 
 /-!
 # Geometric regularity of the tensor heat coefficients
@@ -21,6 +23,8 @@ and induced connections on covariant two- and three-tensors.  In particular,
 the assembled principal, first-order, and zeroth-order coefficient fields are
 not independent analytic hypotheses.
 -/
+
+@[expose] public section
 
 noncomputable section
 open Set Filter Bundle FiberBundle

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.DeTurck
-import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.TimeDependentGram
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.DeTurck
+public import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.TimeDependentGram
 /-!
 # The intrinsic DeTurck vector field is the metric-raised gauge field
 
@@ -37,6 +39,8 @@ This is the pointwise bridge (the later-30 `NEXT`) that turns the raising capsto
 `raisedGaugeField (g t) (intrinsicDeTurckOneForm …) bas` into the flow of the genuine DeTurck vector
 field.  It is proof-bearing preparatory infrastructure only; it does not complete roadmap point 4.
 -/
+
+@[expose] public section
 
 @[expose] noncomputable section
 

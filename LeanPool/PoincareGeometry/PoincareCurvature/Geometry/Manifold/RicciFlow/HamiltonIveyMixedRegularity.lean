@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.MixedTimeSpace
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.VectorBundle.CovariantDerivative.ConnectionLaplacianChart
+public import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.MixedTimeSpace
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.VectorBundle.CovariantDerivative.ConnectionLaplacianChart
 
 /-!
 # Mixed time--space regularity for intrinsic derivatives
@@ -21,6 +23,8 @@ This file supplies the missing local bridge when the actual scalar field on spac
 The proof goes through an extended manifold chart, uses equality of mixed Euclidean derivatives,
 and transfers the result back to `mvfderiv`; it does not postulate a connection derivative.
 -/
+
+@[expose] public section
 
 @[expose] public noncomputable section
 

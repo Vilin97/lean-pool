@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,9 +12,9 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.Curvature
-import Mathlib.Analysis.InnerProductSpace.Trace
-import Mathlib.Analysis.InnerProductSpace.PiL2
+public import LeanPool.PoincareGeometry.BonnetMyers.Curvature
+public import Mathlib.Analysis.InnerProductSpace.Trace
+public import Mathlib.Analysis.InnerProductSpace.PiL2
 
 /-!
 # Finite-dimensional Ricci contraction
@@ -21,6 +23,8 @@ The index-form argument uses an orthonormal family perpendicular to the unit
 tangent of a geodesic.  This file records the finite-dimensional algebra
 behind that step.  It does not use a diameter or geodesic theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,10 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.GlobalSecondVariation
-import LeanPool.PoincareGeometry.BonnetMyers.MinimizingGeodesic
-import LeanPool.PoincareGeometry.BonnetMyers.SecondVariationGeometry
-import LeanPool.PoincareGeometry.BonnetMyers.MetricBridge
+public import LeanPool.PoincareGeometry.BonnetMyers.GlobalSecondVariation
+public import LeanPool.PoincareGeometry.BonnetMyers.MinimizingGeodesic
+public import LeanPool.PoincareGeometry.BonnetMyers.SecondVariationGeometry
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricBridge
 
 /-!
 # Global nonnegativity of the sine index form
@@ -22,6 +24,8 @@ This module glues the chartwise broken variations constructed in
 `GlobalSecondVariation` and compares their total energy with an
 endpoint-minimizing unit-speed geodesic.
 -/
+
+@[expose] public section
 
 noncomputable section
 

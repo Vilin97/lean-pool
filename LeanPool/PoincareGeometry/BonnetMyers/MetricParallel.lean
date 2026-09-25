@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,9 +12,9 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.Transport
-import LeanPool.PoincareGeometry.BonnetMyers.MetricParallelAlgebra
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.VectorBundle.CovariantDerivative.DowngradeNormFree
+public import LeanPool.PoincareGeometry.BonnetMyers.Transport
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricParallelAlgebra
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.VectorBundle.CovariantDerivative.DowngradeNormFree
 
 /-!
 # The local covariant derivative of a coordinate field
@@ -29,6 +31,8 @@ global extensions of local frame vectors in order to expose regularity to the
 ODE theorem.  It is discharged on a neighbourhood of the chart centre, and
 must not be silently replaced by a global frame identity.
 -/
+
+@[expose] public section
 
 noncomputable section
 

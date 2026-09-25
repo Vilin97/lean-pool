@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyIntrinsicSliceAssembly
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyIntrinsicSliceAssembly
 
 /-!
 # C² regularity of the actual Hamilton--Ivey curvature operator
@@ -19,6 +21,8 @@ The three-dimensional lowered curvature operator is the scalar-curvature multipl
 minus twice the actual Ricci tensor.  This module derives its C² regularity from the corresponding
 slice fields instead of assuming regularity of the operator itself.
 -/
+
+@[expose] public section
 
 noncomputable section
 

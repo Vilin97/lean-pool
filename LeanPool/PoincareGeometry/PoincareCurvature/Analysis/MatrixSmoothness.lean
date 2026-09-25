@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -13,11 +15,11 @@ reserved.
 /-
 Copyright (c) 2026 Poincaré formalization project. All rights reserved.
 -/
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.LinearAlgebra.Matrix.Adjugate
-import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
-import Mathlib.Geometry.Manifold.Algebra.LieGroup
-import Mathlib.Geometry.Manifold.Algebra.SMul
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import Mathlib.LinearAlgebra.Matrix.Adjugate
+public import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
+public import Mathlib.Geometry.Manifold.Algebra.LieGroup
+public import Mathlib.Geometry.Manifold.Algebra.SMul
 
 /-!
 # Smoothness of the matrix determinant, adjugate, and nonsingular inverse
@@ -41,6 +43,8 @@ time-dependent metric — requires exactly these facts for an *arbitrary* base m
 *arbitrary* order.  This module isolates that field-independent linear-algebra core so it can be
 reused verbatim over any base.
 -/
+
+@[expose] public section
 
 open scoped Manifold
 open Matrix

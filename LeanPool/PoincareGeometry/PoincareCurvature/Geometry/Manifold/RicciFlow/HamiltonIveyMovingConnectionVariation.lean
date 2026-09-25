@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyKoszulVariation
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyKoszulVariation
 
 /-!
 # Moving-section connection variation from Koszul data
@@ -21,6 +23,8 @@ the exact scalar bridge needed for that step.  A derivative certificate for
 the moving Koszul expression yields the vector-valued connection variation by
 metric duality.  No curvature evolution equation is assumed here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

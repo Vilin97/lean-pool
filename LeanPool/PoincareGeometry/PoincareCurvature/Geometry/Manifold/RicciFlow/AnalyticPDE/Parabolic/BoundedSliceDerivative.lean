@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,10 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.Parabolic.FiniteInitialTrace
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.Parabolic.GlobalSourceSlice
-import Mathlib.Analysis.Calculus.Deriv.Slope
-import Mathlib.Analysis.Calculus.MeanValue
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.Parabolic.FiniteInitialTrace
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.Parabolic.GlobalSourceSlice
+public import Mathlib.Analysis.Calculus.Deriv.Slope
+public import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
 # Derivatives of bounded-continuous spatial slices
@@ -24,6 +26,8 @@ bounded-continuous spatial slice is differentiable in that norm.  The generic
 lemma below records the uniform mean-value argument needed to make this
 passage without postulating Banach-valued differentiability.
 -/
+
+@[expose] public section
 
 @[expose] public noncomputable section
 

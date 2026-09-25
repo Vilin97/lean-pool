@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.NormalCornerRigidity
-import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentLog
+public import LeanPool.PoincareGeometry.BonnetMyers.NormalCornerRigidity
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentLog
 
 /-!
 # Corner alignment along exact Riemannian metric segments
@@ -22,6 +24,8 @@ a sufficiently short outgoing normal connector has tangent direction aligned
 with the incoming connector.  This is the local compatibility statement needed
 to replace a continuous metric segment by one smooth geodesic.
 -/
+
+@[expose] public section
 
 noncomputable section
 

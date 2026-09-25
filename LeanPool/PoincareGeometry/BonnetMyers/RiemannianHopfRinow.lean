@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,10 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.MetricHopfRinow
-import LeanPool.PoincareGeometry.BonnetMyers.MetricBridge
-import LeanPool.PoincareGeometry.BonnetMyers.LocalCompactness
-import Mathlib.Geometry.Manifold.Riemannian.PathELength
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricHopfRinow
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricBridge
+public import LeanPool.PoincareGeometry.BonnetMyers.LocalCompactness
+public import Mathlib.Geometry.Manifold.Riemannian.PathELength
 
 /-!
 # Intrinsic intermediates for the Riemannian metric
@@ -22,6 +24,8 @@ This is the Riemannian input to the metric Hopf--Rinow argument.  It derives
 an approximate intermediate point directly from an arbitrarily short smooth
 path and the additivity of its length; no minimizing path or geodesic is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 

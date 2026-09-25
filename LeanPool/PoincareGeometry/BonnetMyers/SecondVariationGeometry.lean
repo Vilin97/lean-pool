@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,12 +12,14 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import Mathlib.Analysis.Calculus.Taylor
-import Mathlib.Analysis.Convex.Integral
-import Mathlib.MeasureTheory.Integral.IntervalAverage
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+public import Mathlib.Analysis.Calculus.Taylor
+public import Mathlib.Analysis.Convex.Integral
+public import Mathlib.MeasureTheory.Integral.IntervalAverage
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 /-! # Second Variation Geometry -/
+
+@[expose] public section
 
 noncomputable section
 

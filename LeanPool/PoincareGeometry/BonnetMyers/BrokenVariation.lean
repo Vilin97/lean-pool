@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.CoordinateSecondVariation
+public import LeanPool.PoincareGeometry.BonnetMyers.CoordinateSecondVariation
 
 /-!
 # Broken endpoint-fixed variations
@@ -21,6 +23,8 @@ variation parameter.  Its intrinsic second acceleration is zero, so every
 piecewise second-variation endpoint term vanishes without requiring a hidden
 smoothness assumption at the joins.
 -/
+
+@[expose] public section
 
 noncomputable section
 

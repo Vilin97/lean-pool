@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,9 +12,9 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.StrongNormalNeighborhood
-import LeanPool.PoincareGeometry.BonnetMyers.GaussLemma
-import LeanPool.PoincareGeometry.BonnetMyers.GlobalIntrinsicGeodesic
+public import LeanPool.PoincareGeometry.BonnetMyers.StrongNormalNeighborhood
+public import LeanPool.PoincareGeometry.BonnetMyers.GaussLemma
+public import LeanPool.PoincareGeometry.BonnetMyers.GlobalIntrinsicGeodesic
 
 /-!
 # Gauss identities for two-point coordinate geodesics
@@ -23,6 +25,8 @@ uses one chart while the initial point varies.  This file separates those two
 roles: an ordinary second-order solution may start at an arbitrary coordinate
 `p`, while its manifold curve is read through the fixed chart at `x₀`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,10 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import Mathlib.Topology.MetricSpace.Pseudo.Lemmas
-import Mathlib.Topology.MetricSpace.Pseudo.Basic
-import Mathlib.Topology.MetricSpace.Cauchy
-import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Topology.MetricSpace.Pseudo.Lemmas
+public import Mathlib.Topology.MetricSpace.Pseudo.Basic
+public import Mathlib.Topology.MetricSpace.Cauchy
+public import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
 # Finite-speed endpoint control
@@ -25,6 +27,8 @@ that component without presupposing a global geodesic flow.  The remaining
 geometric work is to show that the tangent state has a compatible limiting
 coordinate description.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.ManifoldSineTest
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.DeTurckCorrectionRegularity
+public import LeanPool.PoincareGeometry.BonnetMyers.ManifoldSineTest
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.DeTurckCorrectionRegularity
 
 /-!
 # Curvature regularity along global parallel fields
@@ -27,6 +29,8 @@ tensor in that frame.
 This is only a regularity bridge.  It does not assert second variation or
 nonnegativity of the index form.
 -/
+
+@[expose] public section
 
 noncomputable section
 

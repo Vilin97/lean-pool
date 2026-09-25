@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.GaussLemma
-import LeanPool.PoincareGeometry.BonnetMyers.MetricBridge
+public import LeanPool.PoincareGeometry.BonnetMyers.GaussLemma
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricBridge
 
 /-!
 # Local distance realization by normal geodesics
@@ -23,6 +25,8 @@ metric ball contained in the normal neighbourhood.  Consequently every point
 has an open neighbourhood whose points are joined to the centre by smooth
 normal geodesics realizing the intrinsic Riemannian distance.
 -/
+
+@[expose] public section
 
 noncomputable section
 

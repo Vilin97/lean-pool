@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,10 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import Mathlib.Analysis.ODE.ExistUnique
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Geometry.Manifold.IsManifold.ExtChartAt
-import Mathlib.Geometry.Manifold.IntegralCurve.Basic
+public import Mathlib.Analysis.ODE.ExistUnique
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Geometry.Manifold.IsManifold.ExtChartAt
+public import Mathlib.Geometry.Manifold.IntegralCurve.Basic
 
 /-!
 # The local second-order ODE package
@@ -23,6 +25,8 @@ differential-equation step in a form that can later be instantiated with the
 coordinate Christoffel field of the constructed Levi--Civita connection.  It
 contains no geometric existence or completeness assumption.
 -/
+
+@[expose] public section
 
 noncomputable section
 

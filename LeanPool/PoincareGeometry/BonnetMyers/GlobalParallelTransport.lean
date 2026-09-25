@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.ParallelFieldContinuation
+public import LeanPool.PoincareGeometry.BonnetMyers.ParallelFieldContinuation
 
 /-!
 # Linear transport induced by global parallel fields
@@ -21,6 +23,8 @@ initial tangent fibre and every later tangent fibre.  This file builds that
 map directly from the global fields.  It is the coordinate-free bridge needed
 to evaluate a Ricci trace in the same moving frame used by the sine test.
 -/
+
+@[expose] public section
 
 noncomputable section
 

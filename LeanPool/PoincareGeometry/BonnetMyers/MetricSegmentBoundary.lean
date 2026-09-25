@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,9 +12,9 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.TwoPointCornerRigidity
-import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentRegularity
-import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentGluing
+public import LeanPool.PoincareGeometry.BonnetMyers.TwoPointCornerRigidity
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentRegularity
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentGluing
 
 /-!
 # Uniform continuation of a smooth piece of an exact metric segment
@@ -26,6 +28,8 @@ variation then aligns every sufficiently short outgoing minimizing connector,
 and local ODE uniqueness continues the original complete geodesic across the
 endpoint.
 -/
+
+@[expose] public section
 
 noncomputable section
 

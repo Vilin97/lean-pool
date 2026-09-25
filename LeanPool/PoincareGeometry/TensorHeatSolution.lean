@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,12 +12,12 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.Basic
-import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.Torsion
-import Mathlib.Geometry.Manifold.Riemannian.Basic
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.Calculus.Deriv.Basic
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatAtlasSymmetricWellPosedness
+public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.Basic
+public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.Torsion
+public import Mathlib.Geometry.Manifold.Riemannian.Basic
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.TensorHeatAtlasSymmetricWellPosedness
 
 /-!
 # Short-time heat well-posedness for symmetric covariant two-tensors
@@ -35,6 +37,8 @@ class.  It does not assert that every bare intrinsic section has such a
 coefficient representation, and uniqueness is of the atlas coefficient
 witness in the constructed classical class.
 -/
+
+@[expose] public section
 
 @[expose] public noncomputable section
 open Bundle FiberBundle Filter Set

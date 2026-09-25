@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,9 +12,9 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.Parabolic.FiniteLowerOrder
-import Mathlib.Analysis.Calculus.ContDiff.Comp
-import Mathlib.Analysis.Calculus.ContDiff.Operations
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.Parabolic.FiniteLowerOrder
+public import Mathlib.Analysis.Calculus.ContDiff.Comp
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Lower-order coefficients produced by a scalar cutoff
@@ -24,6 +26,8 @@ and a Hessian-times-value term.  Consequently every second-order linear
 operator loses its principal part in the commutator and leaves a canonical
 first-plus-zeroth-order operator.
 -/
+
+@[expose] public section
 
 @[expose] public noncomputable section
 namespace RicciFlow

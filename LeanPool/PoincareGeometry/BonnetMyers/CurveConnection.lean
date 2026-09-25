@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.IntrinsicAcceleration
-import Mathlib.Geometry.Manifold.MFDeriv.FDeriv
+public import LeanPool.PoincareGeometry.BonnetMyers.IntrinsicAcceleration
+public import Mathlib.Geometry.Manifold.MFDeriv.FDeriv
 
 /-!
 # Covariant acceleration along a curve
@@ -25,6 +27,8 @@ sections obey the metric-compatible product rule.
 The characterization makes no chart choice.  The frame computation below
 then proves the transformation law for every local coordinate description.
 -/
+
+@[expose] public section
 
 noncomputable section
 

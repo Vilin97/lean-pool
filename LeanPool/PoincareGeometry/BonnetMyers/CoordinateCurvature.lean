@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.GaussLemma
-import LeanPool.PoincareGeometry.BonnetMyers.Curvature
+public import LeanPool.PoincareGeometry.BonnetMyers.GaussLemma
+public import LeanPool.PoincareGeometry.BonnetMyers.Curvature
 
 /-!
 # Coordinate curvature along a geodesic chart
@@ -21,6 +23,8 @@ covariant-derivative curvature tensor.  It is the local differential identity
 needed to linearize the geodesic acceleration in the independent
 second-variation proof.
 -/
+
+@[expose] public section
 
 noncomputable section
 

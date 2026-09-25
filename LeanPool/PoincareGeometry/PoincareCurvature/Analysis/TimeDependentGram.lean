@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -13,9 +15,9 @@ reserved.
 /-
 Copyright (c) 2026 Poincaré formalization project. All rights reserved.
 -/
-import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.ParametrizedInner
-import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.MatrixSmoothness
-import Mathlib.Geometry.Manifold.VectorBundle.LocalFrame
+public import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.ParametrizedInner
+public import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.MatrixSmoothness
+public import Mathlib.Geometry.Manifold.VectorBundle.LocalFrame
 
 /-!
 # Joint `(t, x)` smoothness of the local-frame Gram matrix of a time-dependent metric
@@ -37,6 +39,8 @@ parameter-dependent bilinear-form apply lemma `contMDiffOn_paramBilin_apply₂` 
 `PoincareCurvature.Analysis.ParametrizedInner`, with parameter manifold `ℝ × B` and base map
 `Prod.snd`.
 -/
+
+@[expose] public section
 
 open Manifold Bundle
 open scoped Manifold Topology

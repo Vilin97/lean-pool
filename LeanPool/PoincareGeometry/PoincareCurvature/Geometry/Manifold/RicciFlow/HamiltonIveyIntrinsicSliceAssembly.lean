@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyScalarC2Regularity
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyScalarC2Regularity
 
 /-!
 # Assemble derived Hamilton--Ivey slice regularity
@@ -20,6 +22,8 @@ by the geometric evolution certificate.  It keeps the all-time C² connection hy
 by the contracted-Bianchi argument, while only requiring C³ connection regularity on the selected
 slice.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyLieBracketMixedRegularity
-import Mathlib.Geometry.Manifold.VectorField.LieBracket
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyLieBracketMixedRegularity
+public import Mathlib.Geometry.Manifold.VectorField.LieBracket
 
 /-!
 # Mixed time derivatives of manifold Lie brackets
@@ -20,6 +22,8 @@ Transport the Euclidean mixed-derivative theorem through a fixed tangent-bundle 
 The moving section is jointly C² as a map into the tangent bundle. Its time velocity
 is specified in each fixed tangent fibre. No bracket derivative is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

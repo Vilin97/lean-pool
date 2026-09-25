@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.LocalEnergy
-import LeanPool.PoincareGeometry.BonnetMyers.Transport
+public import LeanPool.PoincareGeometry.BonnetMyers.LocalEnergy
+public import LeanPool.PoincareGeometry.BonnetMyers.Transport
 
 /-!
 # Manifold-valued local geodesics
@@ -27,6 +29,8 @@ or basis parameter; the coordinate certificate is kept as an implementation
 detail of the construction.  The global continuation and chart-transition
 theorems are intentionally not claimed here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

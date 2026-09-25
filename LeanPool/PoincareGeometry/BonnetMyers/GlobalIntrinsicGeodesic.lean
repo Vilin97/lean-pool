@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.GlobalGeodesic
-import LeanPool.PoincareGeometry.BonnetMyers.CurveConnection
+public import LeanPool.PoincareGeometry.BonnetMyers.GlobalGeodesic
+public import LeanPool.PoincareGeometry.BonnetMyers.CurveConnection
 
 /-!
 # Intrinsic acceleration of global geodesic germs
@@ -22,6 +24,8 @@ chart-free covariant-acceleration predicate.  It does not assert endpoint
 minimization; it proves the independent fact that every local germ of the
 global ODE solution is an actual zero-acceleration germ.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.Parabolic.NormalizedCutoff
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.AnalyticPDE.Parabolic.NormalizedCutoff
 
 /-!
 # Compactly supported coefficient extensions
@@ -20,6 +22,8 @@ by a cutoff equal to one near a prescribed compact core.  The resulting
 all-space field agrees with the original near that core and comes with
 explicit global boundedness and Lipschitz witnesses.
 -/
+
+@[expose] public section
 
 noncomputable section
 open Set

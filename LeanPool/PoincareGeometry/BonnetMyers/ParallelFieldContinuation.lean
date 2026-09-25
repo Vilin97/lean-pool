@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,10 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.TransportContinuation
-import LeanPool.PoincareGeometry.BonnetMyers.GeodesicContinuation
-import LeanPool.PoincareGeometry.BonnetMyers.ChartGluing
-import LeanPool.PoincareGeometry.BonnetMyers.ParallelReflection
+public import LeanPool.PoincareGeometry.BonnetMyers.TransportContinuation
+public import LeanPool.PoincareGeometry.BonnetMyers.GeodesicContinuation
+public import LeanPool.PoincareGeometry.BonnetMyers.ChartGluing
+public import LeanPool.PoincareGeometry.BonnetMyers.ParallelReflection
 
 /-!
 # Maximal parallel fields along a complete geodesic
@@ -30,6 +32,8 @@ The endpoint-extension argument remains separate: it will use the bounded
 linear-transport continuation theorem from `ODEContinuation` after converting
 the field into endpoint-chart coordinates.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.Connection
+public import LeanPool.PoincareGeometry.BonnetMyers.Connection
 
 /-!
 # The actual curvature/Ricci bridge
@@ -20,6 +22,8 @@ metric.  This file only packages the audited curvature tensor into the
 continuous-linear-map shape used by the public statement and proves the local
 commutator computation.  No diameter or compactness fact is hidden here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

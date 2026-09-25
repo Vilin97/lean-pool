@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.Algebra
-import LeanPool.PoincareGeometry.BonnetMyers.IndexForm
+public import LeanPool.PoincareGeometry.BonnetMyers.Algebra
+public import LeanPool.PoincareGeometry.BonnetMyers.IndexForm
 
 /-!
 # The finite-dimensional comparison inequality
@@ -21,6 +23,8 @@ the Ricci lower bound into the negative sum of the scalar sine index forms on
 the orthogonal directions.  No geodesic, completeness, or compactness fact is
 used here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

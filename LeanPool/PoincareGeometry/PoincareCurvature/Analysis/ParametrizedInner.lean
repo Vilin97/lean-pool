@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -13,7 +15,7 @@ reserved.
 /-
 Copyright (c) 2026 Poincaré formalization project. All rights reserved.
 -/
-import Mathlib.Geometry.Manifold.VectorBundle.Riemannian
+public import Mathlib.Geometry.Manifold.VectorBundle.Riemannian
 
 /-!
 # Smoothness of a *parametrized* fibrewise bilinear form on a vector bundle
@@ -38,6 +40,8 @@ The proof is exactly the internal argument of `inner_bundle` (`ContMDiffWithinAt
 into the trivial `ℝ`-bundle, then read off the fibre component), with the metric section made an
 explicit hypothesis instead of extracted from the typeclass.
 -/
+
+@[expose] public section
 
 open Manifold Bundle
 open scoped Manifold Topology

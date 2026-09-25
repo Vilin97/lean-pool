@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,13 +12,13 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.Construction
-import LeanPool.PoincareGeometry.BonnetMyers.GlobalIndexNonnegative
-import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentSmooth
-import LeanPool.PoincareGeometry.BonnetMyers.RiemannianMinimizer
-import LeanPool.PoincareGeometry.BonnetMyers.RiemannianHopfRinow
-import LeanPool.PoincareGeometry.BonnetMyers.MetricConsequences
-import LeanPool.PoincareGeometry.BonnetMyers.GeometricIndex
+public import LeanPool.PoincareGeometry.BonnetMyers.Construction
+public import LeanPool.PoincareGeometry.BonnetMyers.GlobalIndexNonnegative
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentSmooth
+public import LeanPool.PoincareGeometry.BonnetMyers.RiemannianMinimizer
+public import LeanPool.PoincareGeometry.BonnetMyers.RiemannianHopfRinow
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricConsequences
+public import LeanPool.PoincareGeometry.BonnetMyers.GeometricIndex
 
 /-!
 # Completion of the independent Bonnet--Myers proof
@@ -26,6 +28,8 @@ global geodesic and parallel-transport layers, the chartwise second variation,
 and the Ricci comparison estimate.  It proves the public geometric statement
 without importing the superseded external wrapper.
 -/
+
+@[expose] public section
 
 noncomputable section
 

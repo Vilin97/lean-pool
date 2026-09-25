@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovDensity.Chartwise
-import LeanPool.PoincareGeometry.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovDensity.Global
-import LeanPool.PoincareGeometry.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovDensity.Transport
+public import LeanPool.PoincareGeometry.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovDensity.Chartwise
+public import LeanPool.PoincareGeometry.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovDensity.Global
+public import LeanPool.PoincareGeometry.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovDensity.Transport
 
 /-! Supporting modules for Riemannian curvature and geometric analysis toward Ricci flow. -/
+
+@[expose] public section

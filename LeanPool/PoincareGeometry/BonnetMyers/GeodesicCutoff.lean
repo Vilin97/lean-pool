@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.Geodesic
-import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import LeanPool.PoincareGeometry.BonnetMyers.Geodesic
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 
 /-!
 # Compactly supported coordinate-geodesic extensions
@@ -25,6 +27,8 @@ This module proves exactly that localization step.  It does not claim a normal
 neighbourhood or a minimizing-geodesic theorem; it supplies the analytic
 extension those later arguments require.
 -/
+
+@[expose] public section
 
 noncomputable section
 

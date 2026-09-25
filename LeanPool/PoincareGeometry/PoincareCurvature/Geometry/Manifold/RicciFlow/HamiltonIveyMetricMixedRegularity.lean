@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,10 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import Mathlib.Algebra.Group.Ext
-import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.ParametrizedInner
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyMixedRegularity
-import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyKoszulVariation
+public import Mathlib.Algebra.Group.Ext
+public import LeanPool.PoincareGeometry.PoincareCurvature.Analysis.ParametrizedInner
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyMixedRegularity
+public import LeanPool.PoincareGeometry.PoincareCurvature.Geometry.Manifold.RicciFlow.HamiltonIveyKoszulVariation
 
 /-!
 # Mixed regularity of metric pairings
@@ -23,6 +25,8 @@ Koszul formula.  The joint spacetime regularity and spatial regularity of the ve
 remain explicit hypotheses: they are genuine analytic regularity, not consequences of the
 slicewise `TimeDependentRiemannianMetric` abbreviation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

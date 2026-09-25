@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,9 +12,9 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.Geodesic
-import LeanPool.PoincareGeometry.BonnetMyers.ODEContinuation
-import LeanPool.PoincareGeometry.BonnetMyers.Transport
+public import LeanPool.PoincareGeometry.BonnetMyers.Geodesic
+public import LeanPool.PoincareGeometry.BonnetMyers.ODEContinuation
+public import LeanPool.PoincareGeometry.BonnetMyers.Transport
 
 /-!
 # Coordinate endpoint continuation for geodesics
@@ -23,6 +25,8 @@ coordinate endpoint result: the separate geometric layer must still show that
 the recharted base point and velocity have a joint limit.  Once it has, this
 file supplies the actual new chart solution and its overlap with the old one.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,10 +12,10 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.MetricHopfRinow
-import Mathlib.Topology.MetricSpace.Defs
-import Mathlib.Data.Finset.Sort
-import Mathlib.Topology.MetricSpace.Isometry
+public import LeanPool.PoincareGeometry.BonnetMyers.MetricHopfRinow
+public import Mathlib.Topology.MetricSpace.Defs
+public import Mathlib.Data.Finset.Sort
+public import Mathlib.Topology.MetricSpace.Isometry
 
 /-!
 # Coherent metric segments
@@ -25,6 +27,8 @@ therefore keep the endpoint equalities explicit and show how to refine an
 already coherent piece of a segment.  They are the finite-consistency input
 for the compact-product construction of a minimizing metric segment.
 -/
+
+@[expose] public section
 
 noncomputable section
 

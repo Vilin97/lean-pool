@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,8 +12,8 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.LocalEnergy
-import Mathlib.Geometry.Manifold.Riemannian.PathELength
+public import LeanPool.PoincareGeometry.BonnetMyers.LocalEnergy
+public import Mathlib.Geometry.Manifold.Riemannian.PathELength
 
 /-!
 # Length of a local coordinate geodesic
@@ -20,6 +22,8 @@ This file contains the first bridge from the coordinate ODE to the actual
 Riemannian path length.  The derivative is rewritten through the tangent-bundle
 trivialization; no distance or minimizing assertion is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 

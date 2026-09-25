@@ -3,6 +3,8 @@ Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
+module
+
 
 /-
 Original copyright notice:
@@ -10,7 +12,7 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Que
 reserved.
 -/
 
-import LeanPool.PoincareGeometry.BonnetMyers.CornerRigidity
+public import LeanPool.PoincareGeometry.BonnetMyers.CornerRigidity
 
 /-!
 # Corner rigidity in normal coordinates
@@ -19,6 +21,8 @@ The explicit endpoint first-variation formula is applied to a one-sided
 exact-distance curve.  Equality in the distance growth estimate forces the
 outgoing coordinate tangent to continue in the terminal radial direction.
 -/
+
+@[expose] public section
 
 noncomputable section
 
