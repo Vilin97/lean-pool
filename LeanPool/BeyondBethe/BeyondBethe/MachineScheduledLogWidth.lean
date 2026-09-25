@@ -21,19 +21,27 @@ inactive without an abstract bit-complexity assumption.
 
 namespace BeyondBethe
 
+/-- Polynomial width budget for an `N`-term raw logarithm series with input width `w`. -/
 def rawLogSeriesWidthBudget (w N : ℕ) : ℕ :=
   1 + N * ((2 * N + 1) * w + 2 * N + 4)
 
+/-- Width budget for the raw unit-logarithm lower approximation after its rational parameter
+transformation. -/
 def rawLogUnitLowerWidthBudget (w N : ℕ) : ℕ :=
   3 + rawLogSeriesWidthBudget (2 * w + 4) N
 
+/-- Width budget for the raw error term in the `N`-term logarithm approximation. -/
 def rawLogSeriesErrorWidthBudget (w N : ℕ) : ℕ :=
   6 + (2 * N + 3) * (2 * w + 4)
 
+/-- Combine lower-approximation and error widths to budget the raw unit-logarithm upper
+approximation. -/
 def rawLogUnitUpperWidthBudget (w N : ℕ) : ℕ :=
   rawLogUnitLowerWidthBudget w N +
     rawLogSeriesErrorWidthBudget w N + 1
 
+/-- Combine exponent scaling and unit-logarithm bounds into a width budget for a directed
+logarithm. -/
 def rawDirectedLogWidthBudget (w N : ℕ) : ℕ :=
   (2 * w + 2 + rawLogUnitUpperWidthBudget 2 N) +
     rawLogUnitUpperWidthBudget (2 * w + 1) N + 1
@@ -450,6 +458,8 @@ theorem rawRatWidth_complement_le (x : ℚ) :
   rw [← hvalue]
   omega
 
+/-- Budget the raw nearby-Bethe coordinate using scheduled logarithms of `x` and `1 - x` and the
+widths of `tau` and `x`. -/
 def rawNearbyCoordinateWidthBudget (tau : RawRat) (x : ℚ) (p : ℕ) : ℕ :=
   rawDirectedLogWidthBudget (rawRatWidth (rawRatOfRat (1 - x)))
       (directedLogTerms (1 - x) p) +

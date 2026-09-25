@@ -30,41 +30,53 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extract the unary dimension ruler from a square-grid generator input. -/
 def machineUnaryGridGeneratorDimension (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the paired output bound and payload from a grid-generator input. -/
 def machineUnaryGridGeneratorRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extract the output-width bound word supplied to the square-grid generator. -/
 def machineUnaryGridGeneratorInputBound (word : List Bool) : List Bool :=
   machinePairFirst (machineUnaryGridGeneratorRest word)
 
+/-- Extract the payload passed to each generated grid entry. -/
 def machineUnaryGridGeneratorInputPayload (word : List Bool) : List Bool :=
   machinePairSecond (machineUnaryGridGeneratorRest word)
 
+/-- Pack row, column, reversed accumulator, output bound, completion flag, and original input
+into a scan state. -/
 def machineUnaryGridGeneratorPack
     (row column accumulator bound done payload : List Bool) : List Bool :=
   pair row (pair column
     (pair accumulator (pair bound (pair done payload))))
 
+/-- Extract the current unary row ruler from a grid-generator state. -/
 def machineUnaryGridGeneratorRow (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extract the current unary column ruler from a grid-generator state. -/
 def machineUnaryGridGeneratorColumn (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extract the reversed encoded-entry accumulator from a grid-generator state. -/
 def machineUnaryGridGeneratorAccumulator
     (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extract the output-width bound word from a grid-generator state. -/
 def machineUnaryGridGeneratorBound (state : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Extract the completion flag word from a grid-generator state. -/
 def machineUnaryGridGeneratorDone (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond
     (machinePairSecond (machinePairSecond (machinePairSecond state))))
 
+/-- Extract the original grid-generator input stored in the state. -/
 def machineUnaryGridGeneratorPayload (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond
     (machinePairSecond (machinePairSecond (machinePairSecond state))))
@@ -105,11 +117,14 @@ def machineUnaryGridGeneratorPayload (state : List Bool) : List Bool :=
         (machineUnaryGridGeneratorPack row column accumulator bound done payload) = payload := by
   simp [machineUnaryGridGeneratorPayload, machineUnaryGridGeneratorPack]
 
+/-- Read the unary grid dimension from the original input stored in a scan state. -/
 def machineUnaryGridGeneratorStateDimension
     (state : List Bool) : List Bool :=
   machineUnaryGridGeneratorDimension
     (machineUnaryGridGeneratorPayload state)
 
+/-- Pair the current row and column rulers with the entry payload to form one entry-machine
+input. -/
 def machineUnaryGridGeneratorEntryInput
     (state : List Bool) : List Bool :=
   pair (machineUnaryGridGeneratorRow state)
@@ -117,36 +132,44 @@ def machineUnaryGridGeneratorEntryInput
       (machineUnaryGridGeneratorInputPayload
         (machineUnaryGridGeneratorPayload state)))
 
+/-- Append one true bit to the row ruler, truncating to the stored input length. -/
 def machineUnaryGridGeneratorNextRow (state : List Bool) : List Bool :=
   (machineUnaryGridGeneratorRow state ++ [true]).take
     (machineUnaryGridGeneratorPayload state).length
 
+/-- Append one true bit to the column ruler, truncating to the stored input length. -/
 def machineUnaryGridGeneratorNextColumn (state : List Bool) : List Bool :=
   (machineUnaryGridGeneratorColumn state ++ [true]).take
     (machineUnaryGridGeneratorPayload state).length
 
+/-- Test whether the next column ruler reaches the grid dimension. -/
 def machineUnaryGridGeneratorColumnCompletesBit
     (state : List Bool) : List Bool :=
   machineHeadBit (machineUnaryRulersEqualBit
     (machineUnaryGridGeneratorNextColumn state)
     (machineUnaryGridGeneratorStateDimension state))
 
+/-- Test whether the next row ruler reaches the grid dimension. -/
 def machineUnaryGridGeneratorRowCompletesBit
     (state : List Bool) : List Bool :=
   machineHeadBit (machineUnaryRulersEqualBit
     (machineUnaryGridGeneratorNextRow state)
     (machineUnaryGridGeneratorStateDimension state))
 
+/-- Prepend the generated current entry to the encoded reversed accumulator. -/
 def machineUnaryGridGeneratorCandidate
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   pair (entry (machineUnaryGridGeneratorEntryInput state))
     (machineUnaryGridGeneratorAccumulator state)
 
+/-- Truncate the candidate accumulator to the supplied output-width bound. -/
 def machineUnaryGridGeneratorNextAccumulator
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   (machineUnaryGridGeneratorCandidate entry state).take
     (machineUnaryGridGeneratorBound state).length
 
+/-- Store the current entry and set the grid completion flag while retaining the current
+indices. -/
 def machineUnaryGridGeneratorFinish
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   machineUnaryGridGeneratorPack
@@ -156,6 +179,7 @@ def machineUnaryGridGeneratorFinish
     (machineUnaryGridGeneratorBound state) [true]
     (machineUnaryGridGeneratorPayload state)
 
+/-- Store the current entry, advance the row ruler, and reset the column ruler. -/
 def machineUnaryGridGeneratorAdvanceRow
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   machineUnaryGridGeneratorPack
@@ -165,6 +189,7 @@ def machineUnaryGridGeneratorAdvanceRow
     (machineUnaryGridGeneratorDone state)
     (machineUnaryGridGeneratorPayload state)
 
+/-- Store the current entry and advance the column ruler within the current row. -/
 def machineUnaryGridGeneratorAdvanceColumn
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   machineUnaryGridGeneratorPack
@@ -175,6 +200,8 @@ def machineUnaryGridGeneratorAdvanceColumn
     (machineUnaryGridGeneratorDone state)
     (machineUnaryGridGeneratorPayload state)
 
+/-- Process a grid entry, finishing at the last cell or advancing the row or column as
+appropriate. -/
 def machineUnaryGridGeneratorProcess
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   machineIfHead (machineUnaryGridGeneratorColumnCompletesBit state)
@@ -183,50 +210,63 @@ def machineUnaryGridGeneratorProcess
       (machineUnaryGridGeneratorAdvanceRow entry state))
     (machineUnaryGridGeneratorAdvanceColumn entry state)
 
+/-- Keep completed grid states fixed and otherwise process the current grid entry. -/
 def machineUnaryGridGeneratorStep
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   machineIfHead (machineHeadBit (machineUnaryGridGeneratorDone state)) state
     (machineUnaryGridGeneratorProcess entry state)
 
+/-- Initialize the grid scan with empty index rulers and accumulator, the supplied bound, and a
+false completion flag. -/
 def machineUnaryGridGeneratorInit (word : List Bool) : List Bool :=
   machineUnaryGridGeneratorPack [] [] []
     (machineUnaryGridGeneratorInputBound word) [false] word
 
+/-- Encode the unary grid dimension length as a binary natural. -/
 def machineUnaryGridGeneratorDimensionBits
     (word : List Bool) : List Bool :=
   machineLengthBits (machineUnaryGridGeneratorDimension word)
 
+/-- Square the encoded dimension to obtain the nominal number of grid-entry steps. -/
 def machineUnaryGridGeneratorWorkBits (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machineUnaryGridGeneratorDimensionBits word)
       (machineUnaryGridGeneratorDimensionBits word))
 
+/-- Construct the quadratic input-width guard for converting the grid work count to unary. -/
 def machineUnaryGridGeneratorGuard (word : List Bool) : List Bool :=
   machineBinaryMulWidth word
 
+/-- Convert the squared dimension to a unary iteration ruler bounded by the quadratic guard. -/
 def machineUnaryGridGeneratorRuler (word : List Bool) : List Bool :=
   machineBoundedUnary
     (pair (machineUnaryGridGeneratorGuard word)
       (machineUnaryGridGeneratorWorkBits word))
 
+/-- Construct a state-width envelope by two iterated binary-width expansions of the padded
+input. -/
 def machineUnaryGridGeneratorEnvelope (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 2 (word ++ List.replicate 16 false)
 
+/-- Pack six copies of the width envelope to bound the complete grid-generator state. -/
 def machineUnaryGridGeneratorWidth (word : List Bool) : List Bool :=
   let envelope := machineUnaryGridGeneratorEnvelope word
   machineUnaryGridGeneratorPack envelope envelope envelope envelope
     envelope envelope
 
+/-- Iterate the grid step for the guarded work-ruler length from the initial state. -/
 def machineUnaryGridGeneratorFinalState
     (entry : List Bool → List Bool) (word : List Bool) : List Bool :=
   (machineUnaryGridGeneratorStep entry)^[(machineUnaryGridGeneratorRuler word).length]
     (machineUnaryGridGeneratorInit word)
 
+/-- Extract the reversed encoded-entry list after the guarded grid scan. -/
 def machineUnaryGridGeneratorReversedCode
     (entry : List Bool → List Bool) (word : List Bool) : List Bool :=
   machineUnaryGridGeneratorAccumulator
     (machineUnaryGridGeneratorFinalState entry word)
 
+/-- Reverse the accumulated encoded entries to return them in grid traversal order. -/
 def machineUnaryGridGeneratorCode
     (entry : List Bool → List Bool) (word : List Bool) : List Bool :=
   machineListReverse (machineUnaryGridGeneratorReversedCode entry word)
@@ -450,6 +490,8 @@ theorem machineUnaryGridGeneratorWidth_mem_FP :
       (machinePair_mem_FP h
         (machinePair_mem_FP h (machinePair_mem_FP h h))))
 
+/-- Require correct state packing, bounded indices and accumulator, the supplied output bound, a
+one-bit flag, and unchanged input. -/
 def MachineUnaryGridGeneratorStateBound
     (word state : List Bool) : Prop :=
   state = machineUnaryGridGeneratorPack
@@ -680,6 +722,8 @@ theorem machineUnaryGridGeneratorCode_mem_FP
 
 /-! ## Canonical inputs and exact iteration ruler -/
 
+/-- Encode a canonical grid input with dimension `m` in unary, an output bound, and an entry
+payload. -/
 def machineUnaryGridGeneratorCanonicalWord
     (m : ℕ) (bound payload : List Bool) : List Bool :=
   pair (List.replicate m true) (pair bound payload)
@@ -746,8 +790,11 @@ theorem machineUnaryGridGeneratorWork_le_guard
 /-! ## Typed row-major semantics -/
 
 structure UnaryGridSemanticState (m : ℕ) where
+  /-- Current row index of the semantic square-grid scan. -/
   row : Fin m
+  /-- Current column index of the semantic square-grid scan. -/
   column : Fin m
+  /-- Rational entries accumulated by the semantic grid scan, in reverse traversal order. -/
   accumulator : List ℚ
   /-- Whether the semantic grid scan has included its final entry. -/
   done : Bool

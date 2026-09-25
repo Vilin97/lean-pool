@@ -59,15 +59,13 @@ structure RationalCompletionScales (κ₀ ξ₀ γ₀ : ℚ) where
   ξ_lt_δ : ξ < δ
   ξ_lt_gain : ξ < 3 * γ₀ / 8
 
-/-- The completion hierarchy may be chosen rationally.  The proof uses
-rational density only inside strict margins, so no numerical approximation is
-smuggled into the theorem. -/
-theorem exists_rational_completion_scales
-    {κ₀ ξ₀ γ₀ : ℚ} (hκ₀ : 0 < κ₀) (hξ₀ : 0 < ξ₀) (hγ₀ : 0 < γ₀) :
-    Nonempty (RationalCompletionScales κ₀ ξ₀ γ₀) := by
+/-- A positive rational concentration parameter can satisfy both strict analytic margins. -/
+private theorem exists_rational_concentration_margins
+    {κ₀ : ℚ} (hκ₀ : 0 < κ₀) :
+    ∃ ηq : ℚ, 0 < ηq ∧ (ηq : ℝ) < 1 / 20 ∧
+      goodRowOmega (ηq : ℝ) < Real.log 2 / 384 ∧
+      binaryEntropy (ηq : ℝ) + (ηq : ℝ) < (κ₀ : ℝ) / 256 := by
   have hκ₀r : 0 < (κ₀ : ℝ) := by exact_mod_cast hκ₀
-  have hξ₀r : 0 < (ξ₀ : ℝ) := by exact_mod_cast hξ₀
-  have hγ₀r : 0 < (γ₀ : ℝ) := by exact_mod_cast hγ₀
   have hlog : 0 < Real.log 2 := Real.log_pos (by norm_num)
   have hωtarget : 0 < Real.log 2 / 384 := div_pos hlog (by norm_num)
   have hωevent : {x : ℝ | goodRowOmega x < Real.log 2 / 384} ∈ nhds 0 :=
@@ -96,6 +94,22 @@ theorem exists_rational_completion_scales
     exact hηa)
   have hωsmall : goodRowOmega η < Real.log 2 / 384 := hηmem.1
   have hHsmall : binaryEntropy η + η < (κ₀ : ℝ) / 256 := hηmem.2
+  exact ⟨ηq, hηq0, hηtwenty, hωsmall, hHsmall⟩
+
+/-- The completion hierarchy may be chosen rationally.  The proof uses
+rational density only inside strict margins, so no numerical approximation is
+smuggled into the theorem. -/
+theorem exists_rational_completion_scales
+    {κ₀ ξ₀ γ₀ : ℚ} (hκ₀ : 0 < κ₀) (hξ₀ : 0 < ξ₀) (hγ₀ : 0 < γ₀) :
+    Nonempty (RationalCompletionScales κ₀ ξ₀ γ₀) := by
+  have hκ₀r : 0 < (κ₀ : ℝ) := by exact_mod_cast hκ₀
+  have hξ₀r : 0 < (ξ₀ : ℝ) := by exact_mod_cast hξ₀
+  have hγ₀r : 0 < (γ₀ : ℝ) := by exact_mod_cast hγ₀
+  have hlog : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  obtain ⟨ηq, hηq0, hηtwenty, hωsmall, hHsmall⟩ :=
+    exists_rational_concentration_margins hκ₀
+  let η : ℝ := (ηq : ℝ)
+  have hη : 0 < η := by simpa only [η, Rat.cast_pos] using hηq0
   have hηtenth : η ≤ 1 / 10 := hηtwenty.le.trans (by norm_num)
   have hcycleBase : 6 / Real.log 2 * goodRowOmega η < 1 / 64 := by
     have hcoef : 0 < 6 / Real.log 2 := div_pos (by norm_num) hlog

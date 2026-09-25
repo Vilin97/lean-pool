@@ -21,23 +21,30 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Test whether the encoded matrix dimension is zero. -/
 def machineMatrixDimensionZeroBit (word : List Bool) : List Bool :=
   machineBinaryNatEqBit
     (pair (machineMatrixDimensionWord word) [])
 
+/-- Test whether the encoded matrix dimension is one. -/
 def machineMatrixDimensionOneBit (word : List Bool) : List Bool :=
   machineBinaryNatEqBit
     (pair (machineMatrixDimensionWord word) [true])
 
+/-- Extract the first encoded row from the matrix row list. -/
 def machineMatrixFirstRowCode (word : List Bool) : List Bool :=
   machineListHead (machineMatrixRowsWord word)
 
+/-- Extract the first entry code from the first encoded matrix row. -/
 def machineMatrixFirstEntryCode (word : List Bool) : List Bool :=
   machineListHead (machineMatrixFirstRowCode word)
 
+/-- Convert the first matrix entry into the rational binary output encoding. -/
 def machineMatrixFirstEntryOutput (word : List Bool) : List Bool :=
   machineRationalBinaryCode (machineMatrixFirstEntryCode word)
 
+/-- Return permanent one for dimension zero and the first entry for dimension one; return an
+empty word otherwise. -/
 def machineSmallDimensionPermanentCode (word : List Bool) : List Bool :=
   machineIfHead (machineMatrixDimensionZeroBit word)
     (rationalBinaryCode 1)

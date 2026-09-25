@@ -26,20 +26,25 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extract the raw smoothing parameter `chi` from the smoothing-and-matrix input. -/
 def machineSmoothedMatrixChiRawCode (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the matrix input code paired with the raw smoothing parameter. -/
 def machineSmoothedMatrixInputCode (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Normalize the matrix entries before computing and applying the smoothing increment. -/
 def machineSmoothedMatrixNormalizedCode (word : List Bool) : List Bool :=
   machineMatrixNormalizeEntries (machineSmoothedMatrixInputCode word)
 
+/-- Compute the raw smoothing increment from `chi` and the normalized input matrix. -/
 def machineSmoothedMatrixDeltaRawCode (word : List Bool) : List Bool :=
   machineSmoothingDeltaRawCode
     (pair (machineSmoothedMatrixChiRawCode word)
       (machineSmoothedMatrixNormalizedCode word))
 
+/-- Add the computed raw smoothing increment to every normalized matrix entry. -/
 def machineSmoothedMatrixCode (word : List Bool) : List Bool :=
   machineMatrixAddDeltaEntries
     (pair (machineSmoothedMatrixDeltaRawCode word)

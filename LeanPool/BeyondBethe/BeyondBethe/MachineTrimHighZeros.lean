@@ -24,21 +24,26 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extract the accumulator from the recursive fold state used to trim high zero bits. -/
 def machineTrimAcc (state : List Bool) : List Bool :=
   machinePairSecond (machinePairFirst state)
 
+/-- Discard a false bit when the trimming accumulator is empty; otherwise prepend it. -/
 def machineTrimFalseStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineTrimAcc state) []
     (false :: machineTrimAcc state)
 
+/-- Prepend a true bit to the trimming accumulator. -/
 def machineTrimTrueStep (state : List Bool) : List Bool :=
   true :: machineTrimAcc state
 
+/-- Run the high-zero trimming fold with output clamped to the packed input length. -/
 def machineTrimPacked (packed : List Bool) : List Bool :=
   Cobham.recFoldClamp machineTrimFalseStep machineTrimTrueStep
     packed.length []
     (machinePairFirst packed) (machinePairSecond packed)
 
+/-- Trim high zero bits by running the packed trimming fold with an empty auxiliary word. -/
 def machineTrimHighZeros (word : List Bool) : List Bool :=
   machineTrimPacked (pair [] word)
 
@@ -124,6 +129,8 @@ theorem machineTrimHighZeros_eq (word : List Bool) :
   rw [Cobham.recFoldClamp_eq_recFold word hbound,
     machineTrim_recFold_eq]
 
+/-- Assemble queried bits along the given ruler and trim high zeros to obtain a canonical binary
+word. -/
 def machineAssembleCanonicalBits
     (query ruler : List Bool → List Bool) (word : List Bool) : List Bool :=
   machineTrimHighZeros (machineAssembleBits query ruler word)

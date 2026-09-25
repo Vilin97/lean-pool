@@ -23,14 +23,17 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Represent the rounding-inflation denominator `1024 * d^4` as a raw rational. -/
 def rawRoundedInflationDenominator (d : ℕ) : RawRat :=
   (RawRat.ofNat 1024).mul
     ((rawEllipsoidDimensionSquare d).mul
       (rawEllipsoidDimensionSquare d))
 
+/-- Represent the inflation amount `1 / (1024 * d^4)` using total raw-rational division. -/
 def rawRoundedInflation (d : ℕ) : RawRat :=
   rawEllipsoidOne.div (rawRoundedInflationDenominator d)
 
+/-- Add one to the raw rounding-inflation amount to obtain the basis scale factor. -/
 def rawRoundedInflationFactor (d : ℕ) : RawRat :=
   rawEllipsoidOne.add (rawRoundedInflation d)
 
@@ -47,75 +50,93 @@ def rawRoundedInflationFactor (d : ℕ) : RawRat :=
   simp [rawRoundedInflationFactor, rawEllipsoidOne,
     RawRat.value_one, RawRat.value_ofNat]
 
+/-- Extract the unary precision ruler from a scheduled ellipsoid-rounding input. -/
 def machineScheduledRoundPrecision (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the encoded ellipsoid state from a scheduled-rounding input. -/
 def machineScheduledRoundState (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extract the binary dimension from the ellipsoid state being rounded. -/
 def machineScheduledRoundDimensionBits (word : List Bool) : List Bool :=
   machineRationalEllipsoidDimensionWord (machineScheduledRoundState word)
 
+/-- Convert the ellipsoid dimension to unary, bounded by the encoded state length. -/
 def machineScheduledRoundDimensionUnary (word : List Bool) : List Bool :=
   machineBoundedUnary
     (pair (machineScheduledRoundState word)
       (machineScheduledRoundDimensionBits word))
 
+/-- Extract the rational center-vector code from the ellipsoid state being rounded. -/
 def machineScheduledRoundCenter (word : List Bool) : List Bool :=
   machineRationalEllipsoidCenterWord (machineScheduledRoundState word)
 
+/-- Extract the rational basis-matrix code from the ellipsoid state being rounded. -/
 def machineScheduledRoundBasis (word : List Bool) : List Bool :=
   machineRationalEllipsoidBasisWord (machineScheduledRoundState word)
 
+/-- Convert a binary dimension word into its raw-rational scalar code. -/
 def machineRoundedInflationDimensionRawCode
     (word : List Bool) : List Bool :=
   machineEllipsoidDimensionRawCode word
 
+/-- Square the encoded dimension using raw-rational multiplication. -/
 def machineRoundedInflationDimensionSquareRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineRoundedInflationDimensionRawCode word)
       (machineRoundedInflationDimensionRawCode word))
 
+/-- Square the raw dimension square to encode its fourth power. -/
 def machineRoundedInflationDimensionFourthRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineRoundedInflationDimensionSquareRawCode word)
       (machineRoundedInflationDimensionSquareRawCode word))
 
+/-- Multiply the encoded fourth power of the dimension by 1024 to form the inflation
+denominator. -/
 def machineRoundedInflationDenominatorRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode (RawRat.ofNat 1024))
       (machineRoundedInflationDimensionFourthRawCode word))
 
+/-- Divide raw rational one by the encoded inflation denominator. -/
 def machineRoundedInflationRawCode (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (rawRatBinaryCode rawEllipsoidOne)
       (machineRoundedInflationDenominatorRawCode word))
 
+/-- Add raw rational one to the encoded inflation amount. -/
 def machineRoundedInflationFactorRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (rawRatBinaryCode rawEllipsoidOne)
       (machineRoundedInflationRawCode word))
 
+/-- Normalize the raw inflation factor into a rational matrix-entry code. -/
 def machineRoundedInflationFactorEntryCode
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineRoundedInflationFactorRawCode word)
 
+/-- Floor the ellipsoid center coordinates at the scheduled dyadic precision. -/
 def machineScheduledRoundCenterCode (word : List Bool) : List Bool :=
   machineDyadicFloorVectorCode
     (pair (machineScheduledRoundPrecision word)
       (machineScheduledRoundCenter word))
 
+/-- Floor the ellipsoid basis entries at the scheduled dyadic precision. -/
 def machineScheduledRoundFlooredBasisCode
     (word : List Bool) : List Bool :=
   machineDyadicFloorMatrixCode
     (pair (machineScheduledRoundPrecision word)
       (machineScheduledRoundBasis word))
 
+/-- Construct the scalar diagonal matrix whose diagonal is the normalized rounding-inflation
+factor. -/
 def machineScheduledRoundInflationDiagonalCode
     (word : List Bool) : List Bool :=
   machineDiagonalBasisRowsCode
@@ -123,6 +144,7 @@ def machineScheduledRoundInflationDiagonalCode
       (machineRoundedInflationFactorEntryCode
         (machineScheduledRoundDimensionBits word)))
 
+/-- Left-multiply the dyadically floored basis by the scalar inflation diagonal matrix. -/
 def machineScheduledRoundBasisCode (word : List Bool) : List Bool :=
   machineRationalMatrixMulCode
     (pair (machineScheduledRoundDimensionUnary word)
@@ -416,12 +438,16 @@ theorem rationalMatrixMul_inflationDiagonal {d : ℕ}
 
 /-! ## Exact central update followed by scheduled rounding -/
 
+/-- Extract the precision ruler for a central ellipsoid update followed by rounding. -/
 def machineScheduledCentralPrecision (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the paired ellipsoid state and cut used by the exact central update. -/
 def machineScheduledCentralStateAndCut (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Perform the exact rational central ellipsoid update and then round at the supplied
+precision. -/
 def machineScheduledRoundedEllipsoidCentralUpdateCode
     (word : List Bool) : List Bool :=
   machineScheduledRoundedEllipsoidCode

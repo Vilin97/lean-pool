@@ -25,15 +25,21 @@ namespace BeyondBethe
 open Complexity
 open scoped BigOperators
 
+/-- Encoding-length bound `8 + 2*K + 4*P` for a rational entry with magnitude and precision
+parameters. -/
 def rationalEntryMachineCodeBound (K P : ℕ) : ℕ :=
   8 + 2 * K + 4 * P
 
+/-- Bound a length-`d` encoded rational vector by summing entry and list-pairing costs. -/
 def rationalVectorMachineCodeBound (d K P : ℕ) : ℕ :=
   d * (2 * rationalEntryMachineCodeBound K P + 2)
 
+/-- Bound a square rational matrix encoding by summing vector-row and list-pairing costs. -/
 def rationalMatrixMachineCodeBound (d K P : ℕ) : ℕ :=
   d * (2 * rationalVectorMachineCodeBound d K P + 2)
 
+/-- Combine dimension, center, basis, and pairing costs into a rational ellipsoid-state encoding
+bound. -/
 def rationalEllipsoidMachineCodeBound (d K P : ℕ) : ℕ :=
   2 * (d + 1) +
     2 * (2 * rationalVectorMachineCodeBound d K P +

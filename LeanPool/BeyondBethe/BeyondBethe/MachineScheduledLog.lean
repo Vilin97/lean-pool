@@ -24,28 +24,36 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extract the unary precision ruler from a scheduled-logarithm input. -/
 def machineScheduledLogPrecisionRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the raw-rational argument code from a scheduled-logarithm input. -/
 def machineScheduledLogArgumentRawCode (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Encode the scheduled logarithm precision in binary from the unary ruler length. -/
 def machineScheduledLogPrecisionBits (word : List Bool) : List Bool :=
   machineLengthBits (machineScheduledLogPrecisionRuler word)
 
+/-- Compute the signed binary exponent code used in directed-logarithm reduction. -/
 def machineScheduledLogExponentIntegerCode (word : List Bool) : List Bool :=
   machineDirectedLogExponentIntegerCode word
 
+/-- Encode the absolute value of the directed logarithm exponent as a binary natural. -/
 def machineScheduledLogExponentAbsBits (word : List Bool) : List Bool :=
   machineIntegerNatAbsBits
     (machineScheduledLogExponentIntegerCode word)
 
+/-- Add the precision and absolute exponent to form the main part of the logarithm term
+schedule. -/
 def machineScheduledLogPrecisionPlusExponentBits
     (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineScheduledLogPrecisionBits word)
       (machineScheduledLogExponentAbsBits word))
 
+/-- Encode the logarithm term count as precision plus absolute exponent plus two. -/
 def machineScheduledLogTermsBits (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineScheduledLogPrecisionPlusExponentBits word)
@@ -56,16 +64,19 @@ input-dependent term count. -/
 def machineScheduledLogTermsGuard (word : List Bool) : List Bool :=
   machineBinaryMulWidth word
 
+/-- Convert the scheduled logarithm term count to a unary ruler, bounded by the quadratic guard. -/
 def machineScheduledLogTermsRuler (word : List Bool) : List Bool :=
   machineBoundedUnary
     (pair (machineScheduledLogTermsGuard word)
       (machineScheduledLogTermsBits word))
 
+/-- Compute the raw lower logarithm code using the scheduled, guarded term ruler. -/
 def machineScheduledLogLowerRawCode (word : List Bool) : List Bool :=
   machineDirectedLogLowerRawCode
     (pair (machineScheduledLogTermsRuler word)
       (machineScheduledLogArgumentRawCode word))
 
+/-- Compute the raw upper logarithm code using the scheduled, guarded term ruler. -/
 def machineScheduledLogUpperRawCode (word : List Bool) : List Bool :=
   machineDirectedLogUpperRawCode
     (pair (machineScheduledLogTermsRuler word)
@@ -230,9 +241,13 @@ theorem directedLogTerms_le_scheduledLogGuard (q : ℚ) (p : ℕ) :
     machineBoundedUnary_encode_of_le]
   exact directedLogTerms_le_scheduledLogGuard q p
 
+/-- Evaluate the raw lower logarithm approximation using the term count selected for `q` and
+precision `p`. -/
 def rawScheduledLogLower (q : ℚ) (p : ℕ) : RawRat :=
   RawRat.logLower q (directedLogTerms q p)
 
+/-- Evaluate the raw upper logarithm approximation using the term count selected for `q` and
+precision `p`. -/
 def rawScheduledLogUpper (q : ℚ) (p : ℕ) : RawRat :=
   RawRat.logUpper q (directedLogTerms q p)
 

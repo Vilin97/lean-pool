@@ -157,6 +157,78 @@ private theorem sndBlockTM_emit_loop :
       refine ⟨c', t + 1, by simp; omega, .step hstep hreach, hhalt, ?_⟩
       rwa [List.append_assoc, List.cons_append, List.nil_append] at hout
 
+/-- An incomplete final payload bit halts the second-block scanner with empty output. -/
+private theorem sndBlockTM_scan_single
+    (b : Bool) (c : Cfg 0 sndBlockTM.Q)
+    (hstate : c.state = ScanPhase.scanA)
+    (hsuf : c.input.HasBinarySuffix [b])
+    (hpre : c.output.HasBinaryPrefix []) :
+    ∃ c' t, t ≤ 2 * [b].length + 2 ∧ sndBlockTM.reachesIn t c c' ∧
+      sndBlockTM.halted c' ∧ c'.output.HasOutput (sndBlock [b]) := by
+  have houtne : c.output.read ≠ Γ.start := by rw [hpre.read_blank]; decide
+  cases b with
+  | false =>
+      -- scanA reads false → scanBfalse; next reads blank → done.
+      have hread : c.input.read = Γ.ofBool false := hsuf.read_cons
+      let c1 : Cfg 0 sndBlockTM.Q :=
+        { state := ScanPhase.scanBfalse
+          input := c.input.move Dir3.right
+          work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
+            (idleDir (c.work i).read)
+          output := c.output.writeAndMove (readBackWrite c.output.read)
+            (idleDir c.output.read) }
+      have hstep : sndBlockTM.step c = some c1 := by
+        simp [TM.step, hstate, sndBlockTM, hread, Γ.ofBool, c1]
+      have hsuf1 : c1.input.HasBinarySuffix [] := hsuf.move_right_cons
+      have hpre1 : c1.output.HasBinaryPrefix [] := by
+        rw [show c1.output = c.output from
+          Tape.writeAndMove_readBack_idle_of_ne_start _ houtne]
+        exact hpre
+      have hread1 : c1.input.read = Γ.blank := hsuf1.read_nil
+      have hout1 : c1.output.read = Γ.blank := hpre1.read_blank
+      have houtne1 : c1.output.read ≠ Γ.start := by rw [hout1]; decide
+      refine ⟨{ state := ScanPhase.done
+                input := c1.input.move (idleDir c1.input.read)
+                work := fun i => (c1.work i).writeAndMove (readBackWrite (c1.work i).read)
+                  (idleDir (c1.work i).read)
+                output := c1.output.writeAndMove (readBackWrite c1.output.read)
+                  (idleDir c1.output.read) }, 2, by simp,
+        .step hstep (.step (by simp [TM.step, sndBlockTM, hread1, c1]) .zero), rfl, ?_⟩
+      rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
+          = c1.output from by
+            rw [writeAndMove_readBack c1.output houtne1, idleDir, ite_eq_right houtne1, Tape.move]]
+      simpa [sndBlock] using! hpre1.hasOutput
+  | true =>
+      have hread : c.input.read = Γ.ofBool true := hsuf.read_cons
+      let c1 : Cfg 0 sndBlockTM.Q :=
+        { state := ScanPhase.scanBtrue
+          input := c.input.move Dir3.right
+          work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
+            (idleDir (c.work i).read)
+          output := c.output.writeAndMove (readBackWrite c.output.read)
+            (idleDir c.output.read) }
+      have hstep : sndBlockTM.step c = some c1 := by
+        simp [TM.step, hstate, sndBlockTM, hread, Γ.ofBool, c1]
+      have hsuf1 : c1.input.HasBinarySuffix [] := hsuf.move_right_cons
+      have hpre1 : c1.output.HasBinaryPrefix [] := by
+        rw [show c1.output = c.output from
+          Tape.writeAndMove_readBack_idle_of_ne_start _ houtne]
+        exact hpre
+      have hread1 : c1.input.read = Γ.blank := hsuf1.read_nil
+      have hout1 : c1.output.read = Γ.blank := hpre1.read_blank
+      have houtne1 : c1.output.read ≠ Γ.start := by rw [hout1]; decide
+      refine ⟨{ state := ScanPhase.done
+                input := c1.input.move (idleDir c1.input.read)
+                work := fun i => (c1.work i).writeAndMove (readBackWrite (c1.work i).read)
+                  (idleDir (c1.work i).read)
+                output := c1.output.writeAndMove (readBackWrite c1.output.read)
+                  (idleDir c1.output.read) }, 2, by simp,
+        .step hstep (.step (by simp [TM.step, sndBlockTM, hread1, c1]) .zero), rfl, ?_⟩
+      rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
+          = c1.output from by
+            rw [writeAndMove_readBack c1.output houtne1, idleDir, ite_eq_right houtne1, Tape.move]]
+      simpa [sndBlock] using! hpre1.hasOutput
+
 /-- The scan phase of `sndBlockTM`: from `scanA` with input cursor on `w`, the
 machine parses doubled pairs to the separator and copies the suffix, halting with
 output `sndBlock w`. `fuel` bounds the recursion by the input length. -/
@@ -206,67 +278,8 @@ private theorem sndBlockTM_scan_loop :
               = c.output from by
                 rw [writeAndMove_readBack c.output houtne, idleDir, ite_eq_right houtne, Tape.move]]
           simpa [sndBlock] using! hpre.hasOutput
-      | [false] =>
-          -- scanA reads false → scanBfalse; next reads blank → done.
-          have hread : c.input.read = Γ.ofBool false := hsuf.read_cons
-          let c1 : Cfg 0 sndBlockTM.Q :=
-            { state := ScanPhase.scanBfalse
-              input := c.input.move Dir3.right
-              work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
-                (idleDir (c.work i).read)
-              output := c.output.writeAndMove (readBackWrite c.output.read)
-                (idleDir c.output.read) }
-          have hstep : sndBlockTM.step c = some c1 := by
-            simp [TM.step, hstate, sndBlockTM, hread, Γ.ofBool, c1]
-          have hsuf1 : c1.input.HasBinarySuffix [] := hsuf.move_right_cons
-          have hpre1 : c1.output.HasBinaryPrefix [] := by
-            rw [show c1.output = c.output from
-              Tape.writeAndMove_readBack_idle_of_ne_start _ houtne]
-            exact hpre
-          have hread1 : c1.input.read = Γ.blank := hsuf1.read_nil
-          have hout1 : c1.output.read = Γ.blank := hpre1.read_blank
-          have houtne1 : c1.output.read ≠ Γ.start := by rw [hout1]; decide
-          refine ⟨{ state := ScanPhase.done
-                    input := c1.input.move (idleDir c1.input.read)
-                    work := fun i => (c1.work i).writeAndMove (readBackWrite (c1.work i).read)
-                      (idleDir (c1.work i).read)
-                    output := c1.output.writeAndMove (readBackWrite c1.output.read)
-                      (idleDir c1.output.read) }, 2, by simp,
-            .step hstep (.step (by simp [TM.step, sndBlockTM, hread1, c1]) .zero), rfl, ?_⟩
-          rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
-              = c1.output from by
-                rw [writeAndMove_readBack c1.output houtne1, idleDir, ite_eq_right houtne1, Tape.move]]
-          simpa [sndBlock] using! hpre1.hasOutput
-      | [true] =>
-          have hread : c.input.read = Γ.ofBool true := hsuf.read_cons
-          let c1 : Cfg 0 sndBlockTM.Q :=
-            { state := ScanPhase.scanBtrue
-              input := c.input.move Dir3.right
-              work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
-                (idleDir (c.work i).read)
-              output := c.output.writeAndMove (readBackWrite c.output.read)
-                (idleDir c.output.read) }
-          have hstep : sndBlockTM.step c = some c1 := by
-            simp [TM.step, hstate, sndBlockTM, hread, Γ.ofBool, c1]
-          have hsuf1 : c1.input.HasBinarySuffix [] := hsuf.move_right_cons
-          have hpre1 : c1.output.HasBinaryPrefix [] := by
-            rw [show c1.output = c.output from
-              Tape.writeAndMove_readBack_idle_of_ne_start _ houtne]
-            exact hpre
-          have hread1 : c1.input.read = Γ.blank := hsuf1.read_nil
-          have hout1 : c1.output.read = Γ.blank := hpre1.read_blank
-          have houtne1 : c1.output.read ≠ Γ.start := by rw [hout1]; decide
-          refine ⟨{ state := ScanPhase.done
-                    input := c1.input.move (idleDir c1.input.read)
-                    work := fun i => (c1.work i).writeAndMove (readBackWrite (c1.work i).read)
-                      (idleDir (c1.work i).read)
-                    output := c1.output.writeAndMove (readBackWrite c1.output.read)
-                      (idleDir c1.output.read) }, 2, by simp,
-            .step hstep (.step (by simp [TM.step, sndBlockTM, hread1, c1]) .zero), rfl, ?_⟩
-          rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
-              = c1.output from by
-                rw [writeAndMove_readBack c1.output houtne1, idleDir, ite_eq_right houtne1, Tape.move]]
-          simpa [sndBlock] using! hpre1.hasOutput
+      | [false] => exact sndBlockTM_scan_single false c hstate hsuf hpre
+      | [true] => exact sndBlockTM_scan_single true c hstate hsuf hpre
       | false :: true :: y =>
           -- separator: scanA false → scanBfalse → (reads true) → emit; copy y.
           have hreadA : c.input.read = Γ.ofBool false := hsuf.read_cons

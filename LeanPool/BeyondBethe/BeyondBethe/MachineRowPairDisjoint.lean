@@ -120,25 +120,33 @@ def machineDisjointNextConflict (state : List Bool) : List Bool :=
       (machineDisjointCurrentConflictBit state)).take
     (machineDisjointInputBound (machineDisjointSource state)).length
 
+/-- Consume the next encoded selected pair, update the accumulated conflict bit, and retain the
+original input. -/
 def machineDisjointProcess (state : List Bool) : List Bool :=
   machineDisjointPack (machineListTail (machineDisjointRemaining state))
     (machineDisjointNextConflict state) (machineDisjointSource state)
 
+/-- Keep an exhausted disjointness scan fixed; otherwise process its next selected pair. -/
 def machineDisjointStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineDisjointRemaining state) state
     (machineDisjointProcess state)
 
+/-- Initialize the disjointness scan with the encoded selected list, a false conflict bit, and
+the input word. -/
 def machineDisjointInit (word : List Bool) : List Bool :=
   machineDisjointPack (machineDisjointSelectedList word) [false] word
 
+/-- Pack three copies of the input bound to obtain a width envelope for a disjointness state. -/
 def machineDisjointWidth (word : List Bool) : List Bool :=
   let bound := machineDisjointInputBound word
   machineDisjointPack bound bound bound
 
+/-- Run the disjointness scan for the encoded selected-list length from its initial state. -/
 def machineDisjointFinalState (word : List Bool) : List Bool :=
   (machineDisjointStep)^[(machineDisjointSelectedList word).length]
     (machineDisjointInit word)
 
+/-- Extract the accumulated conflict bit after scanning the selected pairs. -/
 def machineRowPairConflictBit (word : List Bool) : List Bool :=
   machineDisjointConflict (machineDisjointFinalState word)
 
@@ -272,6 +280,8 @@ theorem machineDisjointWidth_mem_FP : machineDisjointWidth ∈ FP :=
     machineDisjointSource (machineDisjointPack remaining conflict source) =
       source := by simp [machineDisjointSource, machineDisjointPack]
 
+/-- Require a correctly packed disjointness state, bounded remaining list and conflict word, and
+unchanged source input. -/
 def MachineDisjointStateBound (word state : List Bool) : Prop :=
   let B := (machineDisjointInputBound word).length
   state = machineDisjointPack (machineDisjointRemaining state)
@@ -368,10 +378,13 @@ theorem machineRowPairDisjointBit_mem_FP : machineRowPairDisjointBit ∈ FP :=
 
 /-! ## Exact semantics -/
 
+/-- Test whether either candidate endpoint occurs in any selected ordered pair. -/
 def orderedPairsConflict {n : ℕ}
     (i j : Fin n) (selected : List (Fin n × Fin n)) : Bool :=
   selected.any fun q ↦ decide (i = q.1 ∨ i = q.2 ∨ j = q.1 ∨ j = q.2)
 
+/-- Encode two candidate endpoints in unary together with the binary list of selected ordered
+pairs. -/
 def machineDisjointInput {n : ℕ}
     (i j : Fin n) (selected : List (Fin n × Fin n)) : List Bool :=
   pair (finUnaryCode i)
@@ -412,6 +425,8 @@ def machineDisjointInput {n : ℕ}
     by_cases hjx : j = x <;> by_cases hjy : j = y <;>
     simp [hix, hiy, hjx, hjy]
 
+/-- Represent a disjointness scan after `k` pairs: retain the suffix and record conflicts with
+the consumed prefix. -/
 def machineDisjointSemanticState {n : ℕ}
     (i j : Fin n) (selected : List (Fin n × Fin n)) (k : ℕ) : List Bool :=
   machineDisjointPack

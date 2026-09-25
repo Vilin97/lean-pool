@@ -34,60 +34,74 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extract the raw `chi` code used in the smoothing-increment calculation. -/
 def machineSmoothingChiRawCode (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the matrix code used in the smoothing-increment calculation. -/
 def machineSmoothingMatrixCode (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Obtain the matrix dimension as a unary ruler for powers and factorials. -/
 def machineSmoothingDimensionRuler (word : List Bool) : List Bool :=
   machineMatrixDimensionUnary (machineSmoothingMatrixCode word)
 
+/-- Encode the unary dimension length as a nonnegative raw rational with denominator one. -/
 def machineSmoothingDimensionRawCode (word : List Bool) : List Bool :=
   pair (false :: machineLengthBits (machineSmoothingDimensionRuler word))
     (1 : ℕ).bits
 
+/-- Compute the raw product of the nonzero matrix entries for the smoothing bound. -/
 def machineSmoothingSupportRawCode (word : List Bool) : List Bool :=
   machineMatrixSupportRawCode (machineSmoothingMatrixCode word)
 
+/-- Raise the raw support product to the dimension given by the unary ruler. -/
 def machineSmoothingSupportPowerRawCode (word : List Bool) : List Bool :=
   machineRawRatPowerCode
     (pair (machineSmoothingDimensionRuler word)
       (machineSmoothingSupportRawCode word))
 
+/-- Encode the factorial of the matrix dimension as a raw rational. -/
 def machineSmoothingFactorialRawCode (word : List Bool) : List Bool :=
   machineFactorialRawRatCode (machineSmoothingDimensionRuler word)
 
+/-- Encode twice the matrix dimension as the first smoothing denominator. -/
 def machineSmoothingFirstDenominatorRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode (RawRat.ofNat 2))
       (machineSmoothingDimensionRawCode word))
 
+/-- Encode the first smoothing candidate `1 / (2*n)` by total raw-rational division. -/
 def machineSmoothingFirstRawCode (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (rawRatBinaryCode RawRat.one)
       (machineSmoothingFirstDenominatorRawCode word))
 
+/-- Multiply the raw parameter `chi` by the dimension-th power of the support product. -/
 def machineSmoothingWeightedSupportRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineSmoothingChiRawCode word)
       (machineSmoothingSupportPowerRawCode word))
 
+/-- Encode four times the dimension factorial as the second smoothing denominator. -/
 def machineSmoothingSecondDenominatorRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode (RawRat.ofNat 4))
       (machineSmoothingFactorialRawCode word))
 
+/-- Divide the weighted support power by four times the dimension factorial. -/
 def machineSmoothingSecondRawCode (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineSmoothingWeightedSupportRawCode word)
       (machineSmoothingSecondDenominatorRawCode word))
 
+/-- Select the smaller of the two raw-rational smoothing candidates. -/
 def machineSmoothingDeltaRawCode (word : List Bool) : List Bool :=
   machineRawRatMinCode
     (pair (machineSmoothingFirstRawCode word)
       (machineSmoothingSecondRawCode word))
 
+/-- Normalize the selected raw smoothing increment into the rational binary output encoding. -/
 def machineSmoothingDeltaCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode (machineSmoothingDeltaRawCode word)
 
@@ -225,15 +239,20 @@ theorem machineSmoothingDeltaCode_mem_FP :
   simp [machineSmoothingFactorialRawCode, machineSmoothingDimensionRuler,
     machineSmoothingMatrixCode]
 
+/-- The raw first smoothing candidate `1 / (2*n)`, using total division at zero. -/
 def rawRationalSmoothingFirst (n : ℕ) : RawRat :=
   RawRat.one.div ((RawRat.ofNat 2).mul (RawRat.ofNat n))
 
+/-- The raw second smoothing candidate: `chi` times the support product to power `n`, divided by
+`4*n!`. -/
 def rawRationalSmoothingSecond {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℚ) (χ : RawRat) : RawRat :=
   (χ.mul ((rawRatRowsSupportProduct RawRat.one
     (rationalMatrixRows A)).pow n)).div
       ((RawRat.ofNat 4).mul (RawRat.ofNat n.factorial))
 
+/-- Choose the raw smoothing candidate with smaller rational value, taking the first on
+equality. -/
 def rawRationalSmoothingDelta {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℚ) (χ : RawRat) : RawRat :=
   if (rawRationalSmoothingFirst n).value ≤
