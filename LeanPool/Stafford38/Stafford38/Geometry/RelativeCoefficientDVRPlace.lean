@@ -34,7 +34,8 @@ noncomputable section
 
 universe u v
 
-private abbrev SourceDVR (E : Type u) [Field E] :=
+/-- The coordinate local ring at zero used as the source discrete valuation ring. -/
+abbrev SourceDVR (E : Type u) [Field E] :=
   CoordinateZeroLocalRing E
 
 /-- Evaluation at zero on the source coordinate DVR. -/

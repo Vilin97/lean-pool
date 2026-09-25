@@ -34,7 +34,8 @@ variable {R : Type u} {E : Type v}
 variable [CommRing R]
 variable [AddCommGroup E] [Module R E]
 
-private abbrev scalarEnd (x : R) : E →ₗ[R] E := LinearMap.lsmul R E x
+/-- Scalar multiplication, viewed as a linear endomorphism. -/
+abbrev scalarEnd (x : R) : E →ₗ[R] E := LinearMap.lsmul R E x
 
 /--
 The `x`-power torsion in a Noetherian module is already the kernel of one

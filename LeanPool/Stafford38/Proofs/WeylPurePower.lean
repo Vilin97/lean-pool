@@ -36,47 +36,50 @@ noncomputable section
 
 variable {A : Type*} [Ring A] [Algebra ℚ A]
 
-private def theta (x d : A) : A := x * d
+/-- The Euler element associated with the coordinate and momentum. -/
+def eulerElement (x d : A) : A := x * d
 
 private def falling (x d : A) : ℕ → A
   | 0 => 1
-  | n + 1 => falling x d n * (theta x d - (n : A))
+  | n + 1 => falling x d n * (eulerElement x d - (n : A))
 
 private def fallingShift (x d : A) : ℕ → A
   | 0 => 1
-  | n + 1 => fallingShift x d n * (theta x d - ((n + 1 : ℕ) : A))
+  | n + 1 => fallingShift x d n * (eulerElement x d - ((n + 1 : ℕ) : A))
 
 private def rising (x d : A) : ℕ → A
   | 0 => 1
-  | n + 1 => rising x d n * (theta x d + ((n + 1 : ℕ) : A))
+  | n + 1 => rising x d n * (eulerElement x d + ((n + 1 : ℕ) : A))
 
 private def risingShift (x d : A) : ℕ → A
   | 0 => 1
-  | n + 1 => risingShift x d n * (theta x d + ((n + 2 : ℕ) : A))
+  | n + 1 => risingShift x d n * (eulerElement x d + ((n + 2 : ℕ) : A))
 
-private def fallingPoly : ℕ → Polynomial ℚ
+/-- The monic polynomial with roots `0, ..., n - 1`. -/
+def fallingPolynomial : ℕ → Polynomial ℚ
   | 0 => 1
-  | n + 1 => fallingPoly n * (Polynomial.X - Polynomial.C (n : ℚ))
+  | n + 1 => fallingPolynomial n * (Polynomial.X - Polynomial.C (n : ℚ))
 
-private def risingPoly : ℕ → Polynomial ℚ
+/-- The monic polynomial with roots `-1, ..., -n`. -/
+def risingPolynomial : ℕ → Polynomial ℚ
   | 0 => 1
-  | n + 1 => risingPoly n * (Polynomial.X + Polynomial.C ((n + 1 : ℕ) : ℚ))
+  | n + 1 => risingPolynomial n * (Polynomial.X + Polynomial.C ((n + 1 : ℕ) : ℚ))
 
 private lemma fallingPoly_eq_prod (n : ℕ) :
-    fallingPoly n = ∏ i ∈ Finset.range n,
+    fallingPolynomial n = ∏ i ∈ Finset.range n,
       (Polynomial.X - Polynomial.C (i : ℚ)) := by
   induction n with
-  | zero => simp [fallingPoly]
+  | zero => simp [fallingPolynomial]
   | succ n ih =>
-      rw [fallingPoly, ih, Finset.prod_range_succ]
+      rw [fallingPolynomial, ih, Finset.prod_range_succ]
 
 private lemma risingPoly_eq_prod (n : ℕ) :
-    risingPoly n = ∏ i ∈ Finset.range n,
+    risingPolynomial n = ∏ i ∈ Finset.range n,
       (Polynomial.X + Polynomial.C ((i + 1 : ℕ) : ℚ)) := by
   induction n with
-  | zero => simp [risingPoly]
+  | zero => simp [risingPolynomial]
   | succ n ih =>
-      rw [risingPoly, ih, Finset.prod_range_succ]
+      rw [risingPolynomial, ih, Finset.prod_range_succ]
 
 private lemma falling_factor_coprime_rising_factor (i j : ℕ) :
     IsCoprime (Polynomial.X - Polynomial.C (i : ℚ))
@@ -92,7 +95,7 @@ private lemma falling_factor_coprime_rising_factor (i j : ℕ) :
   · simp [sub_eq_add_neg]
 
 private lemma fallingPoly_isCoprime_risingPoly (n : ℕ) :
-    IsCoprime (fallingPoly n) (risingPoly n) := by
+    IsCoprime (fallingPolynomial n) (risingPolynomial n) := by
   rw [fallingPoly_eq_prod, risingPoly_eq_prod]
   apply IsCoprime.prod_left
   intro i hi
@@ -102,10 +105,10 @@ private lemma fallingPoly_isCoprime_risingPoly (n : ℕ) :
 
 private lemma x_mul_theta_sub_nat
     (x d : A) (h : d * x = x * d + 1) (n : ℕ) :
-    x * (theta x d - (n : A)) =
-      (theta x d - ((n + 1 : ℕ) : A)) * x := by
-  have hxt : x * theta x d = (theta x d - 1) * x := by
-    dsimp [theta]
+    x * (eulerElement x d - (n : A)) =
+      (eulerElement x d - ((n + 1 : ℕ) : A)) * x := by
+  have hxt : x * eulerElement x d = (eulerElement x d - 1) * x := by
+    dsimp [eulerElement]
     have h' : x * d = d * x - 1 := by
       simp [h]
     calc
@@ -121,14 +124,14 @@ private lemma x_mul_theta_sub_nat
 
 private lemma d_mul_theta_add_nat
     (x d : A) (h : d * x = x * d + 1) (n : ℕ) :
-    d * (theta x d + ((n + 1 : ℕ) : A)) =
-      (theta x d + ((n + 2 : ℕ) : A)) * d := by
-  have hdt : d * theta x d = (theta x d + 1) * d := by
-    dsimp [theta]
+    d * (eulerElement x d + ((n + 1 : ℕ) : A)) =
+      (eulerElement x d + ((n + 2 : ℕ) : A)) * d := by
+  have hdt : d * eulerElement x d = (eulerElement x d + 1) * d := by
+    dsimp [eulerElement]
     calc
       d * (x * d) = (d * x) * d := by noncomm_ring
       _ = (x * d + 1) * d := by rw [h]
-      _ = (theta x d + 1) * d := rfl
+      _ = (eulerElement x d + 1) * d := rfl
   have hn : (n : A) * d = d * (n : A) := by
     simpa using (Algebra.commutes (n : ℚ) d)
   rw [mul_add, hdt]
@@ -142,25 +145,25 @@ private lemma x_mul_falling
     x * falling x d n = fallingShift x d n * x
   | 0 => by simp [falling, fallingShift]
   | n + 1 => by
-      change x * (falling x d n * (theta x d - (n : A))) =
-        (fallingShift x d n * (theta x d - ((n + 1 : ℕ) : A))) * x
+      change x * (falling x d n * (eulerElement x d - (n : A))) =
+        (fallingShift x d n * (eulerElement x d - ((n + 1 : ℕ) : A))) * x
       calc
-        x * (falling x d n * (theta x d - (n : A))) =
-            (x * falling x d n) * (theta x d - (n : A)) := by
+        x * (falling x d n * (eulerElement x d - (n : A))) =
+            (x * falling x d n) * (eulerElement x d - (n : A)) := by
               noncomm_ring
         _ = (fallingShift x d n * x) *
-            (theta x d - (n : A)) := by rw [x_mul_falling x d h n]
+            (eulerElement x d - (n : A)) := by rw [x_mul_falling x d h n]
         _ = fallingShift x d n *
-            ((theta x d - ((n + 1 : ℕ) : A)) * x) := by
+            ((eulerElement x d - ((n + 1 : ℕ) : A)) * x) := by
               calc
-                fallingShift x d n * x * (theta x d - (n : A)) =
+                fallingShift x d n * x * (eulerElement x d - (n : A)) =
                     fallingShift x d n *
-                      (x * (theta x d - (n : A))) := by rw [mul_assoc]
+                      (x * (eulerElement x d - (n : A))) := by rw [mul_assoc]
                 _ = fallingShift x d n *
-                    ((theta x d - ((n + 1 : ℕ) : A)) * x) := by
+                    ((eulerElement x d - ((n + 1 : ℕ) : A)) * x) := by
                       rw [x_mul_theta_sub_nat x d h n]
         _ = (fallingShift x d n *
-            (theta x d - ((n + 1 : ℕ) : A))) * x := by
+            (eulerElement x d - ((n + 1 : ℕ) : A))) * x := by
               noncomm_ring
 
 private lemma d_mul_rising
@@ -168,102 +171,102 @@ private lemma d_mul_rising
     d * rising x d n = risingShift x d n * d
   | 0 => by simp [rising, risingShift]
   | n + 1 => by
-      change d * (rising x d n * (theta x d + ((n + 1 : ℕ) : A))) =
-        (risingShift x d n * (theta x d + ((n + 2 : ℕ) : A))) * d
+      change d * (rising x d n * (eulerElement x d + ((n + 1 : ℕ) : A))) =
+        (risingShift x d n * (eulerElement x d + ((n + 2 : ℕ) : A))) * d
       calc
-        d * (rising x d n * (theta x d + ((n + 1 : ℕ) : A))) =
+        d * (rising x d n * (eulerElement x d + ((n + 1 : ℕ) : A))) =
             (d * rising x d n) *
-              (theta x d + ((n + 1 : ℕ) : A)) := by noncomm_ring
+              (eulerElement x d + ((n + 1 : ℕ) : A)) := by noncomm_ring
         _ = (risingShift x d n * d) *
-            (theta x d + ((n + 1 : ℕ) : A)) := by rw [d_mul_rising x d h n]
+            (eulerElement x d + ((n + 1 : ℕ) : A)) := by rw [d_mul_rising x d h n]
         _ = risingShift x d n *
-            ((theta x d + ((n + 2 : ℕ) : A)) * d) := by
+            ((eulerElement x d + ((n + 2 : ℕ) : A)) * d) := by
               calc
                 risingShift x d n * d *
-                      (theta x d + ((n + 1 : ℕ) : A)) =
+                      (eulerElement x d + ((n + 1 : ℕ) : A)) =
                     risingShift x d n *
-                      (d * (theta x d + ((n + 1 : ℕ) : A))) := by
+                      (d * (eulerElement x d + ((n + 1 : ℕ) : A))) := by
                         rw [mul_assoc]
                 _ = risingShift x d n *
-                    ((theta x d + ((n + 2 : ℕ) : A)) * d) := by
+                    ((eulerElement x d + ((n + 2 : ℕ) : A)) * d) := by
                       rw [d_mul_theta_add_nat x d h n]
         _ = (risingShift x d n *
-            (theta x d + ((n + 2 : ℕ) : A))) * d := by
+            (eulerElement x d + ((n + 2 : ℕ) : A))) * d := by
               noncomm_ring
 
 private lemma fallingShift_mul_theta
     (x d : A) : ∀ n : ℕ,
-    fallingShift x d n * theta x d = falling x d (n + 1)
+    fallingShift x d n * eulerElement x d = falling x d (n + 1)
   | 0 => by simp [falling, fallingShift]
   | n + 1 => by
       change (fallingShift x d n *
-          (theta x d - ((n + 1 : ℕ) : A))) * theta x d =
+          (eulerElement x d - ((n + 1 : ℕ) : A))) * eulerElement x d =
         falling x d (n + 2)
       calc
         (fallingShift x d n *
-            (theta x d - ((n + 1 : ℕ) : A))) * theta x d =
-            (fallingShift x d n * theta x d) *
-              (theta x d - ((n + 1 : ℕ) : A)) := by
-                have hn : ((n + 1 : ℕ) : A) * theta x d =
-                    theta x d * ((n + 1 : ℕ) : A) := by
-                  simpa using (Algebra.commutes ((n + 1 : ℕ) : ℚ) (theta x d))
+            (eulerElement x d - ((n + 1 : ℕ) : A))) * eulerElement x d =
+            (fallingShift x d n * eulerElement x d) *
+              (eulerElement x d - ((n + 1 : ℕ) : A)) := by
+                have hn : ((n + 1 : ℕ) : A) * eulerElement x d =
+                    eulerElement x d * ((n + 1 : ℕ) : A) := by
+                  simpa using (Algebra.commutes ((n + 1 : ℕ) : ℚ) (eulerElement x d))
                 calc
                   (fallingShift x d n *
-                      (theta x d - ((n + 1 : ℕ) : A))) * theta x d =
+                      (eulerElement x d - ((n + 1 : ℕ) : A))) * eulerElement x d =
                       fallingShift x d n *
-                        ((theta x d - ((n + 1 : ℕ) : A)) * theta x d) := by
+                        ((eulerElement x d - ((n + 1 : ℕ) : A)) * eulerElement x d) := by
                           rw [mul_assoc]
                   _ = fallingShift x d n *
-                        (theta x d *
-                          (theta x d - ((n + 1 : ℕ) : A))) := by
+                        (eulerElement x d *
+                          (eulerElement x d - ((n + 1 : ℕ) : A))) := by
                           congr 1
                           rw [mul_sub, sub_mul, hn]
-                  _ = (fallingShift x d n * theta x d) *
-                        (theta x d - ((n + 1 : ℕ) : A)) := by
+                  _ = (fallingShift x d n * eulerElement x d) *
+                        (eulerElement x d - ((n + 1 : ℕ) : A)) := by
                           rw [mul_assoc]
         _ = falling x d (n + 1) *
-              (theta x d - ((n + 1 : ℕ) : A)) := by
+              (eulerElement x d - ((n + 1 : ℕ) : A)) := by
                 rw [fallingShift_mul_theta x d n]
         _ = falling x d (n + 2) := by rfl
 
 private lemma risingShift_mul_theta_add_one
     (x d : A) : ∀ n : ℕ,
-    risingShift x d n * (theta x d + 1) = rising x d (n + 1)
+    risingShift x d n * (eulerElement x d + 1) = rising x d (n + 1)
   | 0 => by simp [rising, risingShift]
   | n + 1 => by
       change (risingShift x d n *
-          (theta x d + ((n + 2 : ℕ) : A))) *
-            (theta x d + 1) = rising x d (n + 2)
+          (eulerElement x d + ((n + 2 : ℕ) : A))) *
+            (eulerElement x d + 1) = rising x d (n + 2)
       calc
         (risingShift x d n *
-            (theta x d + ((n + 2 : ℕ) : A))) *
-              (theta x d + 1) =
-            (risingShift x d n * (theta x d + 1)) *
-              (theta x d + ((n + 2 : ℕ) : A)) := by
-                have hn : ((n + 2 : ℕ) : A) * theta x d =
-                    theta x d * ((n + 2 : ℕ) : A) := by
+            (eulerElement x d + ((n + 2 : ℕ) : A))) *
+              (eulerElement x d + 1) =
+            (risingShift x d n * (eulerElement x d + 1)) *
+              (eulerElement x d + ((n + 2 : ℕ) : A)) := by
+                have hn : ((n + 2 : ℕ) : A) * eulerElement x d =
+                    eulerElement x d * ((n + 2 : ℕ) : A) := by
                   simpa only [map_natCast] using
-                    (Algebra.commutes ((n + 2 : ℕ) : ℚ) (theta x d))
+                    (Algebra.commutes ((n + 2 : ℕ) : ℚ) (eulerElement x d))
                 calc
                   (risingShift x d n *
-                      (theta x d + ((n + 2 : ℕ) : A))) *
-                        (theta x d + 1) =
+                      (eulerElement x d + ((n + 2 : ℕ) : A))) *
+                        (eulerElement x d + 1) =
                       risingShift x d n *
-                        ((theta x d + ((n + 2 : ℕ) : A)) *
-                          (theta x d + 1)) := by
+                        ((eulerElement x d + ((n + 2 : ℕ) : A)) *
+                          (eulerElement x d + 1)) := by
                             rw [mul_assoc]
                   _ = risingShift x d n *
-                        ((theta x d + 1) *
-                          (theta x d + ((n + 2 : ℕ) : A))) := by
+                        ((eulerElement x d + 1) *
+                          (eulerElement x d + ((n + 2 : ℕ) : A))) := by
                             congr 1
                             simp only [add_mul, mul_add]
                             rw [hn]
                             noncomm_ring
-                  _ = (risingShift x d n * (theta x d + 1)) *
-                        (theta x d + ((n + 2 : ℕ) : A)) := by
+                  _ = (risingShift x d n * (eulerElement x d + 1)) *
+                        (eulerElement x d + ((n + 2 : ℕ) : A)) := by
                             rw [mul_assoc]
         _ = rising x d (n + 1) *
-              (theta x d + ((n + 2 : ℕ) : A)) := by
+              (eulerElement x d + ((n + 2 : ℕ) : A)) := by
                 rw [risingShift_mul_theta_add_one x d n]
         _ = rising x d (n + 2) := by rfl
 
@@ -281,7 +284,7 @@ private lemma x_pow_mul_d_pow
           rw [x_mul_falling x d h n]
           noncomm_ring
         _ = falling x d (n + 1) := by
-          simpa [theta] using fallingShift_mul_theta x d n
+          simpa [eulerElement] using fallingShift_mul_theta x d n
 
 private lemma d_pow_mul_x_pow
     (x d : A) (h : d * x = x * d + 1) : ∀ n : ℕ,
@@ -298,18 +301,18 @@ private lemma d_pow_mul_x_pow
           noncomm_ring
         _ = rising x d (n + 1) := by
           rw [h]
-          simpa [theta] using risingShift_mul_theta_add_one x d n
+          simpa [eulerElement] using risingShift_mul_theta_add_one x d n
 
 private lemma eval_fallingPoly
     (x d : A)
     (ev : Polynomial ℚ →+* A)
-    (hev : ev Polynomial.X = theta x d)
+    (hev : ev Polynomial.X = eulerElement x d)
     (hC : ∀ q : ℚ, ev (Polynomial.C q) = (algebraMap ℚ A) q) :
-    ev (fallingPoly n) = falling x d n := by
+    ev (fallingPolynomial n) = falling x d n := by
   induction n with
-  | zero => simp [fallingPoly, falling]
+  | zero => simp [fallingPolynomial, falling]
   | succ n ih =>
-      rw [fallingPoly, map_mul, map_sub, hev, hC]
+      rw [fallingPolynomial, map_mul, map_sub, hev, hC]
       push_cast
       rw [ih]
       simp [falling]
@@ -317,42 +320,42 @@ private lemma eval_fallingPoly
 private lemma eval_risingPoly
     (x d : A)
     (ev : Polynomial ℚ →+* A)
-    (hev : ev Polynomial.X = theta x d)
+    (hev : ev Polynomial.X = eulerElement x d)
     (hC : ∀ q : ℚ, ev (Polynomial.C q) = (algebraMap ℚ A) q) :
-    ev (risingPoly n) = rising x d n := by
+    ev (risingPolynomial n) = rising x d n := by
   induction n with
-  | zero => simp [risingPoly, rising]
+  | zero => simp [risingPolynomial, rising]
   | succ n ih =>
-      rw [risingPoly, map_mul, map_add, hev, hC]
+      rw [risingPolynomial, map_mul, map_add, hev, hC]
       push_cast
       rw [ih]
       simp [rising]
 
 /-- Evaluation of a rational polynomial at the Euler element `x*d`. -/
 def eulerPolynomialEval (x d : A) : Polynomial ℚ →+* A :=
-  Polynomial.eval₂RingHom' (algebraMap ℚ A) (theta x d)
-    (fun q => Algebra.commutes q (theta x d))
+  Polynomial.eval₂RingHom' (algebraMap ℚ A) (eulerElement x d)
+    (fun q => Algebra.commutes q (eulerElement x d))
 
 @[simp]
 theorem eulerPolynomialEval_X (x d : A) :
     eulerPolynomialEval x d Polynomial.X = x * d := by
-  change Polynomial.eval₂ (algebraMap ℚ A) (theta x d) Polynomial.X = x * d
-  rw [Polynomial.eval₂_X (algebraMap ℚ A) (theta x d)]
+  change Polynomial.eval₂ (algebraMap ℚ A) (eulerElement x d) Polynomial.X = x * d
+  rw [Polynomial.eval₂_X (algebraMap ℚ A) (eulerElement x d)]
   rfl
 
 @[simp]
 theorem eulerPolynomialEval_C (x d : A) (q : ℚ) :
     eulerPolynomialEval x d (Polynomial.C q) = algebraMap ℚ A q := by
-  change Polynomial.eval₂ (algebraMap ℚ A) (theta x d) (Polynomial.C q) =
+  change Polynomial.eval₂ (algebraMap ℚ A) (eulerElement x d) (Polynomial.C q) =
     algebraMap ℚ A q
-  exact Polynomial.eval₂_C (algebraMap ℚ A) (theta x d)
+  exact Polynomial.eval₂_C (algebraMap ℚ A) (eulerElement x d)
 
 /-- Equal powers `x^n*d^n` are a rational polynomial in the Euler element. -/
 theorem exists_eulerPolynomial_x_pow_mul_d_pow
     (x d : A) (h : d * x = x * d + 1) (n : ℕ) :
     ∃ f : Polynomial ℚ,
       eulerPolynomialEval x d f = x ^ n * d ^ n := by
-  refine ⟨fallingPoly n, ?_⟩
+  refine ⟨fallingPolynomial n, ?_⟩
   rw [eval_fallingPoly x d (eulerPolynomialEval x d)
     (by rw [eulerPolynomialEval_X]; rfl) (by intro q; simp)]
   exact (x_pow_mul_d_pow x d h n).symm
@@ -362,7 +365,7 @@ theorem exists_eulerPolynomial_d_pow_mul_x_pow
     (x d : A) (h : d * x = x * d + 1) (n : ℕ) :
     ∃ f : Polynomial ℚ,
       eulerPolynomialEval x d f = d ^ n * x ^ n := by
-  refine ⟨risingPoly n, ?_⟩
+  refine ⟨risingPolynomial n, ?_⟩
   rw [eval_risingPoly x d (eulerPolynomialEval x d)
     (by rw [eulerPolynomialEval_X]; rfl) (by intro q; simp)]
   exact (d_pow_mul_x_pow x d h n).symm
@@ -372,12 +375,12 @@ coprime in the coefficient polynomial ring. -/
 theorem pure_power_weyl_certificate
     (x d : A) (h : d * x = x * d + 1) (n : ℕ)
     (a b : Polynomial ℚ)
-    (hab : a * fallingPoly n + b * risingPoly n = 1) :
+    (hab : a * fallingPolynomial n + b * risingPolynomial n = 1) :
     ∃ p q : A, 1 = p * (x ^ n) + q * (x ^ n * d ^ n) := by
-  let θ : A := theta x d
+  let θ : A := eulerElement x d
   let ev : Polynomial ℚ →+* A :=
     Polynomial.eval₂RingHom' (algebraMap ℚ A) θ (fun q => Algebra.commutes q θ)
-  have hfall : ev (fallingPoly n) = x ^ n * d ^ n := by
+  have hfall : ev (fallingPolynomial n) = x ^ n * d ^ n := by
     rw [eval_fallingPoly x d ev
       (by change Polynomial.eval₂ (algebraMap ℚ A) θ Polynomial.X = _
           exact Polynomial.eval₂_X (algebraMap ℚ A) θ)
@@ -385,7 +388,7 @@ theorem pure_power_weyl_certificate
           change Polynomial.eval₂ (algebraMap ℚ A) θ (Polynomial.C q) = _
           exact Polynomial.eval₂_C (algebraMap ℚ A) θ)]
     exact (x_pow_mul_d_pow x d h n).symm
-  have hrise : ev (risingPoly n) = d ^ n * x ^ n := by
+  have hrise : ev (risingPolynomial n) = d ^ n * x ^ n := by
     rw [eval_risingPoly x d ev
       (by change Polynomial.eval₂ (algebraMap ℚ A) θ Polynomial.X = _
           exact Polynomial.eval₂_X (algebraMap ℚ A) θ)
@@ -415,11 +418,11 @@ theorem euler_products_right_bezout_exists
     ∃ u v : A,
       (d ^ n * x ^ n) * u + (x ^ n * d ^ n) * v = 1 := by
   rcases fallingPoly_isCoprime_risingPoly n with ⟨a, b, hab⟩
-  let θ : A := theta x d
+  let θ : A := eulerElement x d
   let ev : Polynomial ℚ →+* A :=
     Polynomial.eval₂RingHom' (algebraMap ℚ A) θ
       (fun q => Algebra.commutes q θ)
-  have hfall : ev (fallingPoly n) = x ^ n * d ^ n := by
+  have hfall : ev (fallingPolynomial n) = x ^ n * d ^ n := by
     rw [eval_fallingPoly x d ev
       (by change Polynomial.eval₂ (algebraMap ℚ A) θ Polynomial.X = _
           exact Polynomial.eval₂_X (algebraMap ℚ A) θ)
@@ -427,7 +430,7 @@ theorem euler_products_right_bezout_exists
           change Polynomial.eval₂ (algebraMap ℚ A) θ (Polynomial.C q) = _
           exact Polynomial.eval₂_C (algebraMap ℚ A) θ)]
     exact (x_pow_mul_d_pow x d h n).symm
-  have hrise : ev (risingPoly n) = d ^ n * x ^ n := by
+  have hrise : ev (risingPolynomial n) = d ^ n * x ^ n := by
     rw [eval_risingPoly x d ev
       (by change Polynomial.eval₂ (algebraMap ℚ A) θ Polynomial.X = _
           exact Polynomial.eval₂_X (algebraMap ℚ A) θ)
@@ -435,8 +438,8 @@ theorem euler_products_right_bezout_exists
           change Polynomial.eval₂ (algebraMap ℚ A) θ (Polynomial.C q) = _
           exact Polynomial.eval₂_C (algebraMap ℚ A) θ)]
     exact (d_pow_mul_x_pow x d h n).symm
-  have hpoly : risingPoly n * b + fallingPoly n * a = 1 := by
-    rw [mul_comm (risingPoly n) b, mul_comm (fallingPoly n) a, add_comm]
+  have hpoly : risingPolynomial n * b + fallingPolynomial n * a = 1 := by
+    rw [mul_comm (risingPolynomial n) b, mul_comm (fallingPolynomial n) a, add_comm]
     exact hab
   have hev := congrArg ev hpoly
   rw [map_add, map_mul, map_mul, hrise, hfall, map_one] at hev
@@ -451,18 +454,18 @@ theorem euler_products_polynomial_right_bezout_exists
       (d ^ n * x ^ n) * eulerPolynomialEval x d u +
         (x ^ n * d ^ n) * eulerPolynomialEval x d v = 1 := by
   rcases fallingPoly_isCoprime_risingPoly n with ⟨a, b, hab⟩
-  have hfall : eulerPolynomialEval x d (fallingPoly n) =
+  have hfall : eulerPolynomialEval x d (fallingPolynomial n) =
       x ^ n * d ^ n := by
     rw [eval_fallingPoly x d (eulerPolynomialEval x d)
       (by rw [eulerPolynomialEval_X]; rfl) (by intro q; simp)]
     exact (x_pow_mul_d_pow x d h n).symm
-  have hrise : eulerPolynomialEval x d (risingPoly n) =
+  have hrise : eulerPolynomialEval x d (risingPolynomial n) =
       d ^ n * x ^ n := by
     rw [eval_risingPoly x d (eulerPolynomialEval x d)
       (by rw [eulerPolynomialEval_X]; rfl) (by intro q; simp)]
     exact (d_pow_mul_x_pow x d h n).symm
-  have hpoly : risingPoly n * b + fallingPoly n * a = 1 := by
-    rw [mul_comm (risingPoly n) b, mul_comm (fallingPoly n) a, add_comm]
+  have hpoly : risingPolynomial n * b + fallingPolynomial n * a = 1 := by
+    rw [mul_comm (risingPolynomial n) b, mul_comm (fallingPolynomial n) a, add_comm]
     exact hab
   have hev := congrArg (eulerPolynomialEval x d) hpoly
   rw [map_add, map_mul, map_mul, hrise, hfall, map_one] at hev

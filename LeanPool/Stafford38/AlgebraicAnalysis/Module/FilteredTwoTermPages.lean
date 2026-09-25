@@ -80,7 +80,8 @@ instance targetPageAddCommGroup (r : ℕ) (p : ℤ) : AddCommGroup (K.TargetPage
   inferInstanceAs (AddCommGroup
     (K.G p ⧸ (K.boundaries r p).comap (K.G p).subtype))
 
-private def restrictedDrop (r : ℕ) (p : ℤ) :
+/-- Apply the filtered differential to a cycle representative. -/
+def restrictedDrop (r : ℕ) (p : ℤ) :
     K.cycles r p →ₗ[k] K.G (p + r) :=
   (K.f.comp (K.cycles r p).subtype).codRestrict (K.G (p + r))
     (fun x => x.property.2)
@@ -100,7 +101,7 @@ private theorem drop_denominator (r : ℕ) (p : ℤ) :
 /-- The page differential, formed by applying `f` to a representative. -/
 def drop (r : ℕ) (p : ℤ) :
     K.SourcePage r p →ₗ[k] K.TargetPage r (p + r) :=
-  Submodule.mapQ _ _ (K.restrictedDrop r p) (K.drop_denominator r p)
+  Submodule.mapQ _ _ (K.restrictedDrop r p) (by exact K.drop_denominator r p)
 
 /-- Representative formula for the page differential. -/
 @[simp]
