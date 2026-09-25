@@ -29,6 +29,9 @@ section
 namespace GlobalClassFieldTheory.ClassFieldAxiom
 
 open scoped Classical in
+
+open _root_.RamificationTheory.HilbertRamification
+  (decompositionGroupRestriction_mem_absoluteValueDecompositionGroup_restrictScalars_iff) in
 /-- Full relative decomposition above `q` puts every
 `M`-automorphism inside the global chosen decomposition group below
 `q`. -/
@@ -137,7 +140,7 @@ theorem
         HilbertRamification.absoluteValueDecompositionGroup
           F wM.1 := by
     exact
-      (HilbertRamification.decompositionGroupRestriction_mem_absoluteValueDecompositionGroup_restrictScalars_iff
+      (decompositionGroupRestriction_mem_absoluteValueDecompositionGroup_restrictScalars_iff
           (K := F) (M := M) wM.1 tau).mpr htauM
   change
     rho ∈

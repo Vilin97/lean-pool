@@ -127,7 +127,7 @@ theorem
   have hExplicit :
       artinPrincipalUnitStepGroup K E t =
         localUpperRamificationGroup K E t :=
-    equalCharacteristicTransportedLubinTateArtinPrincipalUnitStepGroup_eq_localUpperRamificationGroup
+    transportedLubinTateArtinPrincipalUnitStep_eq_upperRamificationGroup
       K p ϖ hϖ m t ht
   calc
     artinPrincipalUnitStepGroup K M t =

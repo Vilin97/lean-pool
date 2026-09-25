@@ -150,7 +150,7 @@ theorem mem_subfield_of_mrangeRestrict_isClosed_of_forall_valuationSubring_smodE
       Units.map
         MonoidWithZeroHom.ValueGroup₀.embedding.toMonoidHom gamma
     obtain ⟨N, hN⟩ :=
-      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_exists_uniformizer_pow_lt_unit F)
+      (mrangeRestrict_exists_uniformizer_pow_lt_unit F)
         hπ gamma'
     obtain ⟨z, hz, hzcongr⟩ := happrox N
     let zInt : F.valuationSubring := ⟨(z : K), hz⟩
@@ -367,7 +367,7 @@ theorem mrangeRestrict_properSpace_of_residueField_finite
   let : NontriviallyNormedField K :=
     (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F)
   have hcompact : CompactSpace 𝒪[K] :=
-    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_integer_compactSpace_of_residueField_finite F)
+    (mrangeRestrict_integer_compactSpace_of_residueField_finite F)
   unfold mrangeRestrictNontriviallyNormedField
   unfold Valued.toNontriviallyNormedField
   change @ProperSpace K
@@ -399,7 +399,7 @@ theorem mrangeRestrict_completeSpace_of_residueField_finite
   let : NontriviallyNormedField K :=
     (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F)
   have : ProperSpace K :=
-    (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_properSpace_of_residueField_finite F)
+    (mrangeRestrict_properSpace_of_residueField_finite F)
   exact complete_of_proper
 
 end CompleteDVF

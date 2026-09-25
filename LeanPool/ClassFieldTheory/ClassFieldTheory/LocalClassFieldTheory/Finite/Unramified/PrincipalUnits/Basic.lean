@@ -126,7 +126,7 @@ theorem norm_oneAdd_sub_galoisSum_mem_next
   rw [principalUnitsMap_normOfUnramifiedValuationOfIsIntegralClosure_eq_normExtensionSide
     K L n (principalUnitOneAddOfMemPowSubgroup L hn (a : 𝒪[L]) a.2)]
   exact
-      principalUnitsNormExtensionSideOfIsIntegralClosure_oneAdd_sub_one_sub_sum_mem_maximalIdeal_pow_succ
+      principalUnitsNormExtensionSide_oneAdd_sub_one_sub_sum_mem_maximalIdeal_pow_succ
       K L n hn a
 
 end UnramifiedPrincipalUnits

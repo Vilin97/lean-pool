@@ -120,7 +120,7 @@ end UnramifiedPrincipalUnits
 `1 + rϖ_L^n`, the norm on `U_L^n/U_L^(n+1)` is the residue-field trace class
 on `U_K^n/U_K^(n+1)`. -/
 theorem
-  principalUnitsSuccQuotNormOfUnramifiedValuationOfIsIntegralClosure_oneAdd_uniformizer_pow_eq_trace
+  principalUnitsSuccQuotNorm_oneAdd_uniformizer_pow_eq_trace
     (K L : Type u)
     [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
     [Field L] [ValuativeRel L] [TopologicalSpace L] [IsNonarchimedeanLocalField L]
@@ -205,7 +205,7 @@ theorem principalUnitsSuccQuotNormOfUnramifiedValuationOfIsIntegralClosure_trace
   intro πK πL hπL eK eL
   obtain ⟨r, rfl⟩ := IsLocalRing.residue_surjective x
   have hrep :=
-    principalUnitsSuccQuotNormOfUnramifiedValuationOfIsIntegralClosure_oneAdd_uniformizer_pow_eq_trace
+    principalUnitsSuccQuotNorm_oneAdd_uniformizer_pow_eq_trace
       K L n hn r
   rw [principalUnitsSuccQuotAddEquivResidueOfIrreducible_symm_residue]
   change Additive.ofMul _ = _

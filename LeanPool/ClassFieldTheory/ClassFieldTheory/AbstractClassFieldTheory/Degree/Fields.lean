@@ -274,7 +274,7 @@ noncomputable def relativeRamificationIndexCardinal
 /-- The cardinal-valued fundamental identity for an arbitrary abstract
 extension.  The residue cardinal is lifted from the universe of `ZHat`; no
 finiteness assumption or infinite-index convention is involved. -/
-theorem degreeCardinal_eq_relativeResidueDegreeCardinal_mul_relativeRamificationIndexCardinal
+theorem degreeCardinal_eq_residueDegreeCardinal_mul_ramificationIndexCardinal
     (E : AbstractExtension G) (D : DegreeData G) :
     E.degreeCardinal =
       Cardinal.lift.{u} (E.relativeResidueDegreeCardinal D) *
@@ -442,7 +442,7 @@ theorem degreeCardinal_eq_lift_relativeResidueDegreeCardinal_of_isUnramified
     (E : AbstractExtension G) (D : DegreeData G) (hE : E.IsUnramified D) :
     E.degreeCardinal =
       Cardinal.lift.{u} (E.relativeResidueDegreeCardinal D) := by
-  rw [E.degreeCardinal_eq_relativeResidueDegreeCardinal_mul_relativeRamificationIndexCardinal D,
+  rw [E.degreeCardinal_eq_residueDegreeCardinal_mul_ramificationIndexCardinal D,
     E.relativeRamificationIndexCardinal_eq_one_of_isUnramified D hE, mul_one]
 
 /-- For a totally ramified extension, its cardinal degree is its
@@ -451,7 +451,7 @@ theorem degreeCardinal_eq_relativeRamificationIndexCardinal_of_isTotallyRamified
     (E : AbstractExtension G) (D : DegreeData G)
     (hE : E.IsTotallyRamified D) :
     E.degreeCardinal = E.relativeRamificationIndexCardinal D := by
-  rw [E.degreeCardinal_eq_relativeResidueDegreeCardinal_mul_relativeRamificationIndexCardinal D,
+  rw [E.degreeCardinal_eq_residueDegreeCardinal_mul_ramificationIndexCardinal D,
     E.relativeResidueDegreeCardinal_eq_one_of_isTotallyRamified D hE]
   simp
 
@@ -686,7 +686,7 @@ private theorem relativeDegreeCardinals_lt_aleph0 (D : DegreeData G) :
   apply (Cardinal.mul_lt_aleph0_iff_of_ne_zero
     hresidue hramification).mp
   rw [←
-    E.toAbstractExtension.degreeCardinal_eq_relativeResidueDegreeCardinal_mul_relativeRamificationIndexCardinal D]
+    E.toAbstractExtension.degreeCardinal_eq_residueDegreeCardinal_mul_ramificationIndexCardinal D]
   exact E.degreeCardinal_lt_aleph0
 
 private theorem relativeResidueDegreeCardinal_lt_aleph0

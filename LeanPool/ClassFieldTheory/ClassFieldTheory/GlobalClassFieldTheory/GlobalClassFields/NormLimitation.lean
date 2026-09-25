@@ -47,7 +47,7 @@ variable
 subgroup of the original field copy have the same image in the
 abelianization of the normal-closure Galois group. -/
 theorem
-    finiteNormalClosureMaximalAbelianSubfield_fixingSubgroup_image_eq_originalFixingSubgroup_image :
+    maximalAbelianSubfield_fixingSubgroup_image_eq_original_image :
     (finiteNormalClosureMaximalAbelianSubfield K L).fixingSubgroup.map
         (Abelianization.of :
           Gal(finiteNormalClosure K L/K) →*
@@ -109,7 +109,7 @@ theorem
           (Reciprocity.globalNormResidueAbelianizationMonoidHom K
             (finiteNormalClosure K L)) = _
       rw [
-        finiteNormalClosureMaximalAbelianSubfield_fixingSubgroup_image_eq_originalFixingSubgroup_image]
+        maximalAbelianSubfield_fixingSubgroup_image_eq_original_image]
     _ =
       (_root_.ideleClassNorm K
         (finiteNormalClosureMaximalAbelianSubfield K L)).range :=

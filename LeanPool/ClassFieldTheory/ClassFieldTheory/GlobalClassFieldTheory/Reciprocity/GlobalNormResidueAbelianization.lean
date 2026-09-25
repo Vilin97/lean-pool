@@ -219,6 +219,9 @@ theorem globalNormResidueAbelianizationEquiv_finiteNormClass
   exact (globalNormResidueAbelianizationEquiv_transport_apply K L x).trans
     (numberFieldTowerAbstractNormResidueGaloisAbelianizationEquiv_apply K L x)
 
+open _root_.GlobalClassFieldTheory.Reciprocity renaming
+  rationalCyclotomicIdeleClassValuationData → cyclotomicValuationData in
+
 /-- On the genuine finite-reciprocity class of an abstract extension
 automorphism, the finite-Galois norm-residue equivalence gives the class of
 the corresponding actual automorphism in the Galois abelianization. -/
@@ -238,8 +241,8 @@ theorem globalNormResidueAbelianizationEquiv_finiteReciprocityHom
           K L
           (rationalCyclotomicDegreeData.finiteReciprocityHom
             rationalIdeleClassRepresentation
-            rationalCyclotomicIdeleClassValuationData
-            (rationalCyclotomicIdeleClassValuationData.classFieldAxiom_implies_unramifiedUnitCohomology
+            cyclotomicValuationData
+            (cyclotomicValuationData.classFieldAxiom_implies_unramifiedUnitCohomology
                 rationalIdeleClassRepresentation_satisfiesClassFieldAxiom)
             (numberFieldTowerReciprocityFiniteAbstractField K L)
             (numberFieldTowerFiniteGaloisSubextension K L).field
@@ -261,8 +264,8 @@ theorem globalNormResidueAbelianizationEquiv_finiteReciprocityHom
   let x :=
     rationalCyclotomicDegreeData.finiteReciprocityHom
       rationalIdeleClassRepresentation
-      rationalCyclotomicIdeleClassValuationData
-      (rationalCyclotomicIdeleClassValuationData.classFieldAxiom_implies_unramifiedUnitCohomology
+      cyclotomicValuationData
+      (cyclotomicValuationData.classFieldAxiom_implies_unramifiedUnitCohomology
         rationalIdeleClassRepresentation_satisfiesClassFieldAxiom)
       (numberFieldTowerReciprocityFiniteAbstractField K L)
       (numberFieldTowerFiniteGaloisSubextension K L).field
@@ -275,14 +278,14 @@ theorem globalNormResidueAbelianizationEquiv_finiteReciprocityHom
   have hxNorm :
       rationalCyclotomicDegreeData.normResidueSymbol
           rationalIdeleClassRepresentation
-          rationalCyclotomicIdeleClassValuationData
+          cyclotomicValuationData
           rationalIdeleClassRepresentation_satisfiesClassFieldAxiom
           (numberFieldTowerReciprocityFiniteAbstractField K L)
           (numberFieldTowerFiniteGaloisSubextension K L) x =
         Additive.ofMul (Abelianization.of q) :=
     rationalCyclotomicDegreeData.normResidueSymbol_finiteReciprocityHom
       rationalIdeleClassRepresentation
-      rationalCyclotomicIdeleClassValuationData
+      cyclotomicValuationData
       rationalIdeleClassRepresentation_satisfiesClassFieldAxiom
       (numberFieldTowerReciprocityFiniteAbstractField K L)
       (numberFieldTowerFiniteGaloisSubextension K L) q
@@ -588,6 +591,9 @@ variable
     [Field E] [NumberField E] [Algebra F E]
     [FiniteDimensional F E] [IsAbelianGalois F E]
 
+open _root_.GlobalClassFieldTheory.Reciprocity renaming
+  rationalCyclotomicIdeleClassValuationData → cyclotomicValuationData in
+
 private theorem
     globalNormResidueAbelianizationEquiv_abelianSpecialization_apply
     (q :
@@ -609,12 +615,12 @@ private theorem
     numberFieldTowerExtensionSubgroup_normal F E
   let hRelativeFinite := T.finite
   let hUnramified :=
-    rationalCyclotomicIdeleClassValuationData.classFieldAxiom_implies_unramifiedUnitCohomology
+    cyclotomicValuationData.classFieldAxiom_implies_unramifiedUnitCohomology
       rationalIdeleClassRepresentation_satisfiesClassFieldAxiom
   let r :=
     rationalCyclotomicDegreeData.finiteReciprocityHom
       rationalIdeleClassRepresentation
-      rationalCyclotomicIdeleClassValuationData
+      cyclotomicValuationData
       hUnramified H T.field T.below
       (hLnormal := T.normal)
       (hLfinite := T.finite)
@@ -625,7 +631,7 @@ private theorem
         Abelianization (Gal(E/F)) :=
     Abelianization.equivOfComm
   have hr : Function.Surjective r :=
-    rationalCyclotomicIdeleClassValuationData.abstractReciprocity_finiteReciprocityHom_surjective
+    cyclotomicValuationData.abstractReciprocity_finiteReciprocityHom_surjective
       rationalIdeleClassRepresentation_satisfiesClassFieldAxiom
       hUnramified H T
   obtain ⟨x, rfl⟩ := n.surjective q

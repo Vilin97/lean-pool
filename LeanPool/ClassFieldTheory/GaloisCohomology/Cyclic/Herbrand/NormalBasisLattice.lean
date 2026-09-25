@@ -994,7 +994,7 @@ omit [FiniteDimensional K L] [IsGalois K L] in
 /-- If `π_K^b N` is integral, then `π_K^(b+1) N` lands in the maximal ideal of
 `𝒪_L`. -/
 theorem
-  chosenBaseUniformizerPowSubmodule_succ_le_maximalIdealFieldSubmodule_of_le_integerRingFieldSubmodule
+  chosenBaseUniformizerPow_succ_le_maximalIdeal_of_le_integerRing
     {N : Submodule 𝒪[K] L} {b : Nat}
     (hb : chosenBaseUniformizerPowSubmodule K L b N ≤ integerRingFieldSubmodule K L) :
     chosenBaseUniformizerPowSubmodule K L (b + 1) N ≤
@@ -1039,7 +1039,7 @@ theorem exists_chosenBaseUniformizerPowSubmodule_le_maximalIdealFieldSubmodule_o
       (K := K) (L := L) hN with
     ⟨b, hb⟩
   exact ⟨b + 1,
-    chosenBaseUniformizerPowSubmodule_succ_le_maximalIdealFieldSubmodule_of_le_integerRingFieldSubmodule
+    chosenBaseUniformizerPow_succ_le_maximalIdeal_of_le_integerRing
       (K := K) (L := L) hb⟩
 
 /-- Some uniformizer-power normal-basis lattice lies inside the maximal-ideal field submodule. -/

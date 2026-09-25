@@ -202,7 +202,7 @@ open scoped Classical in
 /-- Arithmetic reciprocity sends the arithmetic norm-residue symbol
 of an idèle class to its genuine rational ray class. -/
 theorem
-    rationalCyclotomicLevelArithmeticGaloisContinuousMulEquivRayClassGroup_arithmeticGlobalNormResidue
+    rationalCyclotomicGaloisEquivRayClassGroup_arithmeticGlobalNormResidue
     (c : IdeleClassGroup ℚ) :
     rationalCyclotomicLevelArithmeticGaloisContinuousMulEquivRayClassGroup
         m
@@ -248,7 +248,7 @@ theorem
   rw [
     (rationalCyclotomicLevelArithmeticGaloisContinuousMulEquivRayClassGroup
       m).apply_symm_apply,
-    rationalCyclotomicLevelArithmeticGaloisContinuousMulEquivRayClassGroup_arithmeticGlobalNormResidue]
+    rationalCyclotomicGaloisEquivRayClassGroup_arithmeticGlobalNormResidue]
 
 open scoped Classical in
 /-- The inverse arithmetic ray reciprocity image of the ordinary

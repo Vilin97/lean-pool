@@ -105,7 +105,7 @@ theorem
 idèle-class norm quotient is injective if and only if its finite source and
 target have the same order. -/
 theorem
-    narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient_injective_iff_card_eq_normQuotient_card :
+    rayClassToNormQuotient_injective_iff_card_eq_normQuotient_card :
     Function.Injective
         (narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient
           (K := K) (L := L)) ↔
@@ -160,7 +160,7 @@ def normQuotientEquivNarrowFiniteConductorRayClassGroup
 conductor and maximal ray-class presentations have the same actual
 idèle-class norm subgroup. -/
 theorem
-    ideleClassNorm_ranges_eq_of_narrowFiniteConductors_eq_of_rayClassGroup_cards_eq_normQuotient_cards
+    ideleClassNorm_ranges_eq_of_conductors_eq_of_rayClass_cards_eq_normQuotient_cards
     {M : Type}
     [Field M] [NumberField M] [Algebra K M]
     [FiniteDimensional K M] [IsGalois K M]
@@ -239,7 +239,7 @@ def normQuotientEquivOfNarrowFiniteConductorsEqOfRayClassGroupCardsEqNormQuotien
       (IdeleClassGroup K ⧸
         (_root_.ideleClassNorm K M).range) :=
   QuotientGroup.quotientMulEquivOfEq
-    (ideleClassNorm_ranges_eq_of_narrowFiniteConductors_eq_of_rayClassGroup_cards_eq_normQuotient_cards
+    (ideleClassNorm_ranges_eq_of_conductors_eq_of_rayClass_cards_eq_normQuotient_cards
       (K := K) (L := L) (M := M)
       hconductor hLcard hMcard)
 

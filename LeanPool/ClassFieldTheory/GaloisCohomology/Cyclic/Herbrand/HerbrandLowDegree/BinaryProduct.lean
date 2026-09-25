@@ -91,7 +91,8 @@ theorem prodEquivBinaryCoefficientFamily_smul
   funext i
   cases i <;> rfl
 
-private noncomputable def piHerbrandH0EquivProd :
+/-- Identify the degree-zero cohomology family over `Bool` with its two factors. -/
+noncomputable def piHerbrandH0EquivProd :
     (∀ i, HerbrandH0 G
       (BinaryCoefficientFamily A B i)) ≃*
         HerbrandH0 G A × HerbrandH0 G B where
@@ -105,7 +106,8 @@ private noncomputable def piHerbrandH0EquivProd :
   right_inv _ := rfl
   map_mul' _ _ := rfl
 
-private noncomputable def piHerbrandHMinusOneEquivProd
+/-- Identify the degree-minus-one cohomology family over `Bool` with its two factors. -/
+noncomputable def piHerbrandHMinusOneEquivProd
     (σ : G) :
     (∀ i, HerbrandHMinusOne G
       (BinaryCoefficientFamily A B i) σ) ≃*

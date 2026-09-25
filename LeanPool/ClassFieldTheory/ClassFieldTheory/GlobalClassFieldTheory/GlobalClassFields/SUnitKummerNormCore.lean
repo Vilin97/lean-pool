@@ -194,6 +194,9 @@ private theorem unit_mem_power_range_of_surjective
   exact congrArg Units.val hbeta
 
 open scoped Classical in
+
+open _root_.KummerTheory
+  (chosenSimpleKummerExtension_infiniteTensorNormSubgroup_eq_top_of_mem_nthPowerSubgroup) in
 /-- On the chosen Kummer norm support, the principal part of the
 local power subgroup consists exactly of powers of `S`-units. -/
 theorem
@@ -271,7 +274,7 @@ theorem
         rfl
       rw [hprincipal] at hbLocal
       simpa only [M] using
-        KummerTheory.chosenSimpleKummerExtension_infiniteTensorNormSubgroup_eq_top_of_mem_nthPowerSubgroup
+        chosenSimpleKummerExtension_infiniteTensorNormSubgroup_eq_top_of_mem_nthPowerSubgroup
           (K := K) n hnK hmu b w hbLocal
     have hAway :
         ∀ w : HeightOneSpectrum (𝓞 K), w ∉ S' →

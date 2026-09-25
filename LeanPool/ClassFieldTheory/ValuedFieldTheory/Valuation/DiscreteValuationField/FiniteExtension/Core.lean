@@ -434,7 +434,8 @@ theorem IntegralClosureFiber.unique_of_includeRight_surjective_henselianRing_ker
     HenselianDVF.HasUniqueValuationExtension.{u, v, w, x, y} base target := by
   let : Subsingleton
       (PrimeSpectrum (base.maximalIdeal.Fiber (integralClosureIntegers base target))) :=
-    (integralClosure_base_maximal_fiber_subsingleton_of_includeRight_surjective_henselianRing_ker base target)
+    (integralClosure_maximal_fiber_subsingleton_of_includeRight_surjective_henselian_ker
+      base target)
       hsurj
   exact
     (hasUniqueValuationExtension_of_integralClosure_base_maximal_fiber_subsingleton

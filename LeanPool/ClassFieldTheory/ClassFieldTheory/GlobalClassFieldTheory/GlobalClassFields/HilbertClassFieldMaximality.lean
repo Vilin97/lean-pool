@@ -70,7 +70,7 @@ private instance bigHilbertNormSubgroup_finiteIndex :
 Hilbert norm subgroup exactly when its degree is the order of the
 narrow class group. -/
 theorem
-    ideleClassNorm_range_eq_bigHilbertClassFieldNormSubgroup_iff_finrank_eq_narrowClassGroup_card
+    ideleClassNorm_range_eq_bigHilbertNormSubgroup_iff_finrank_eq_narrowClass_card
     (hunramified :
       _root_.ramifiedBaseFinitePlaces
           (K := K) (L := L) = ∅) :
@@ -206,7 +206,7 @@ def maximalFiniteUnramifiedCyclicNormQuotientEquivNarrowClassGroup
         (_root_.ideleClassNorm K L).range) ≃*
       RayClass.NarrowClassGroup K :=
   (QuotientGroup.quotientMulEquivOfEq
-      ((ideleClassNorm_range_eq_bigHilbertClassFieldNormSubgroup_iff_finrank_eq_narrowClassGroup_card
+      ((ideleClassNorm_range_eq_bigHilbertNormSubgroup_iff_finrank_eq_narrowClass_card
         (K := K) (L := L) hunramified).2 hdegree)).trans
     (bigHilbertClassFieldQuotientEquivNarrowClassGroup
       (K := K))
@@ -398,10 +398,10 @@ theorem maximalFiniteUnramifiedCyclicNormRanges_eq
   calc
     (_root_.ideleClassNorm K L).range =
         bigHilbertClassFieldNormSubgroup (K := K) :=
-      (ideleClassNorm_range_eq_bigHilbertClassFieldNormSubgroup_iff_finrank_eq_narrowClassGroup_card
+      (ideleClassNorm_range_eq_bigHilbertNormSubgroup_iff_finrank_eq_narrowClass_card
         (K := K) (L := L) hLunramifiedFinite).2 hLdegree
     _ = (_root_.ideleClassNorm K M).range :=
-      ((ideleClassNorm_range_eq_bigHilbertClassFieldNormSubgroup_iff_finrank_eq_narrowClassGroup_card
+      ((ideleClassNorm_range_eq_bigHilbertNormSubgroup_iff_finrank_eq_narrowClass_card
         (K := K) (L := M) hMunramifiedFinite).2 hMdegree).symm
 
 /-- Any two everywhere-unramified cyclic extensions attaining the

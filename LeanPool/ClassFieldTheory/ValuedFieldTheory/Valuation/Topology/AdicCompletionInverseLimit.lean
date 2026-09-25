@@ -1193,106 +1193,106 @@ noncomputable def unitsCompatibleFamiliesHomeomorph
     (dvrHigherUnitQuotientInverseLimitRepresentation π)
   let c := (dvrHigherUnitQuotientInverseLimitRepresentation π).toMonoidHom.comp
     (unitsToHigherUnitQuotientInverseLimit π)
-  refine
+  exact
     { toFun := fun u => c u
       invFun := fun q => e.symm q
-      left_inv := ?_
-      right_inv := ?_
-      continuous_toFun := ?_
-      continuous_invFun := ?_ }
-  · intro u
-    have hc : c u = e u := by
-      ext n
-      exact (dvrUnitsEquivHigherUnitQuotientInverseLimit_apply
-        hπ u n).symm
-    change e.symm (c u) = u
-    rw [hc]
-    exact e.left_inv u
-  · intro q
-    ext n
-    change (QuotientGroup.mk (e.symm q) :
-        Oˣ ⧸ higherUnitSubgroup π (n + 1)) = q.1 n
-    calc
-      (QuotientGroup.mk (e.symm q) :
-          Oˣ ⧸ higherUnitSubgroup π (n + 1)) =
-          (e (e.symm q)).1 n :=
-        (dvrUnitsEquivHigherUnitQuotientInverseLimit_apply
-          hπ (e.symm q) n).symm
-      _ = q.1 n := by simp [e.apply_symm_apply q]
-  · change Continuous fun u : Oˣ => c u
-    exact Continuous.subtype_mk
-      (continuous_pi fun n => by
-        simpa [c, unitsToHigherUnitQuotientInverseLimit] using
-          (higherUnitQuotient_mk_continuous_adic_raw π (n + 1)))
-      (by
-        intro u m n hmn
-        exact dvrHigherUnitQuotientTransition_mk π hmn u)
-  · have hval : Continuous (fun q => ((e.symm q : Oˣ) : O)) := by
-      rw [continuous_iff_continuousAt]
-      intro q
-      rw [ContinuousAt, Filter.tendsto_def]
-      intro s hs
-      rcases (Ideal.hasBasis_nhds_adic (uniformizerPowerIdeal π 1)
-          ((e.symm q : Oˣ) : O)).mem_iff.mp hs with
-        ⟨n, _hn, hns⟩
-      let cylinder : Set (compatibleGroupFamilies
-          (fun n : ℕ => Oˣ ⧸ higherUnitSubgroup π (n + 1))
-          (fun {_ _} hmn => dvrHigherUnitQuotientTransition π hmn)) :=
-        {q' | q'.1 n = q.1 n}
-      have hcont_coord :
-          Continuous fun q' : compatibleGroupFamilies
+      left_inv := by
+        intro u
+        have hc : c u = e u := by
+          ext n
+          exact (dvrUnitsEquivHigherUnitQuotientInverseLimit_apply
+            hπ u n).symm
+        change e.symm (c u) = u
+        rw [hc]
+        exact e.left_inv u
+      right_inv := by
+        intro q
+        ext n
+        change (QuotientGroup.mk (e.symm q) :
+            Oˣ ⧸ higherUnitSubgroup π (n + 1)) = q.1 n
+        calc
+          (QuotientGroup.mk (e.symm q) :
+              Oˣ ⧸ higherUnitSubgroup π (n + 1)) =
+              (e (e.symm q)).1 n :=
+            (dvrUnitsEquivHigherUnitQuotientInverseLimit_apply
+              hπ (e.symm q) n).symm
+          _ = q.1 n := by simp [e.apply_symm_apply q]
+      continuous_toFun := by
+        change Continuous fun u : Oˣ => c u
+        exact Continuous.subtype_mk
+          (continuous_pi fun n => by
+            simpa [c, unitsToHigherUnitQuotientInverseLimit] using
+              (higherUnitQuotient_mk_continuous_adic_raw π (n + 1)))
+          (by
+            intro u m n hmn
+            exact dvrHigherUnitQuotientTransition_mk π hmn u)
+      continuous_invFun := by
+        have hval : Continuous (fun q => ((e.symm q : Oˣ) : O)) := by
+          rw [continuous_iff_continuousAt]
+          intro q
+          rw [ContinuousAt, Filter.tendsto_def]
+          intro s hs
+          rcases (Ideal.hasBasis_nhds_adic (uniformizerPowerIdeal π 1)
+              ((e.symm q : Oˣ) : O)).mem_iff.mp hs with
+            ⟨n, _hn, hns⟩
+          let cylinder : Set (compatibleGroupFamilies
               (fun n : ℕ => Oˣ ⧸ higherUnitSubgroup π (n + 1))
-              (fun {_ _} hmn => dvrHigherUnitQuotientTransition π hmn) =>
-            q'.1 n := by
-        exact (continuous_apply n).comp continuous_subtype_val
-      have hcyl_open : IsOpen cylinder := by
-        exact
-          (isOpen_discrete
-            ({q.1 n} : Set (Oˣ ⧸ higherUnitSubgroup π (n + 1)))).preimage
-              hcont_coord
-      have hqmem : q ∈ cylinder := rfl
-      exact mem_of_superset (hcyl_open.mem_nhds hqmem) (by
-        intro q' hq'
-        apply hns
-        have hmk :
-            (QuotientGroup.mk (e.symm q') :
-                Oˣ ⧸ higherUnitSubgroup π (n + 1)) =
-              QuotientGroup.mk (e.symm q) := by
-          calc
-            (QuotientGroup.mk (e.symm q') :
-                Oˣ ⧸ higherUnitSubgroup π (n + 1)) =
-                (e (e.symm q')).1 n :=
-              (dvrUnitsEquivHigherUnitQuotientInverseLimit_apply
-                hπ (e.symm q') n).symm
-            _ = q'.1 n := by simp [e.apply_symm_apply q']
-            _ = q.1 n := hq'
-            _ = (e (e.symm q)).1 n := by simp [e.apply_symm_apply q]
-            _ = QuotientGroup.mk (e.symm q) :=
-              dvrUnitsEquivHigherUnitQuotientInverseLimit_apply
-                hπ (e.symm q) n
-        have hsub_succ :
-            ((e.symm q' : Oˣ) : O) - ((e.symm q : Oˣ) : O) ∈
-              uniformizerPowerIdeal π (n + 1) :=
-          (higherUnitQuotient_mk_eq_mk_iff_sub_mem
-            π (n + 1) (e.symm q) (e.symm q')).1 hmk
-        have hsub :
-            ((e.symm q' : Oˣ) : O) - ((e.symm q : Oˣ) : O) ∈
-              (uniformizerPowerIdeal π 1) ^ n := by
-          rw [dvrPowerIdeal_one_pow π n]
-          exact dvrPowerIdeal_le_of_le π (Nat.le_succ n) hsub_succ
-        refine ⟨((e.symm q' : Oˣ) : O) - ((e.symm q : Oˣ) : O), hsub, ?_⟩
-        change ((e.symm q : Oˣ) : O) +
-            (((e.symm q' : Oˣ) : O) - ((e.symm q : Oˣ) : O)) =
-          ((e.symm q' : Oˣ) : O)
-        ring)
-    have hinv : Continuous (fun q : compatibleGroupFamilies
-        (fun n : ℕ => Oˣ ⧸ higherUnitSubgroup π (n + 1))
-        (fun {_ _} hmn => dvrHigherUnitQuotientTransition π hmn) => q⁻¹) := by
-      apply Continuous.subtype_mk
-      apply continuous_pi
-      intro n
-      exact ((continuous_apply n).comp continuous_subtype_val).inv
-    exact continuous_unitHom_of_continuous_val e.symm.toMonoidHom hval hinv
+              (fun {_ _} hmn => dvrHigherUnitQuotientTransition π hmn)) :=
+            {q' | q'.1 n = q.1 n}
+          have hcont_coord :
+              Continuous fun q' : compatibleGroupFamilies
+                  (fun n : ℕ => Oˣ ⧸ higherUnitSubgroup π (n + 1))
+                  (fun {_ _} hmn => dvrHigherUnitQuotientTransition π hmn) =>
+                q'.1 n := by
+            exact (continuous_apply n).comp continuous_subtype_val
+          have hcyl_open : IsOpen cylinder := by
+            exact
+              (isOpen_discrete
+                ({q.1 n} : Set (Oˣ ⧸ higherUnitSubgroup π (n + 1)))).preimage
+                  hcont_coord
+          have hqmem : q ∈ cylinder := rfl
+          exact mem_of_superset (hcyl_open.mem_nhds hqmem) (by
+            intro q' hq'
+            apply hns
+            have hmk :
+                (QuotientGroup.mk (e.symm q') :
+                    Oˣ ⧸ higherUnitSubgroup π (n + 1)) =
+                  QuotientGroup.mk (e.symm q) := by
+              calc
+                (QuotientGroup.mk (e.symm q') :
+                    Oˣ ⧸ higherUnitSubgroup π (n + 1)) =
+                    (e (e.symm q')).1 n :=
+                  (dvrUnitsEquivHigherUnitQuotientInverseLimit_apply
+                    hπ (e.symm q') n).symm
+                _ = q'.1 n := by simp [e.apply_symm_apply q']
+                _ = q.1 n := hq'
+                _ = (e (e.symm q)).1 n := by simp [e.apply_symm_apply q]
+                _ = QuotientGroup.mk (e.symm q) :=
+                  dvrUnitsEquivHigherUnitQuotientInverseLimit_apply
+                    hπ (e.symm q) n
+            have hsub_succ :
+                ((e.symm q' : Oˣ) : O) - ((e.symm q : Oˣ) : O) ∈
+                  uniformizerPowerIdeal π (n + 1) :=
+              (higherUnitQuotient_mk_eq_mk_iff_sub_mem
+                π (n + 1) (e.symm q) (e.symm q')).1 hmk
+            have hsub :
+                ((e.symm q' : Oˣ) : O) - ((e.symm q : Oˣ) : O) ∈
+                  (uniformizerPowerIdeal π 1) ^ n := by
+              rw [dvrPowerIdeal_one_pow π n]
+              exact dvrPowerIdeal_le_of_le π (Nat.le_succ n) hsub_succ
+            refine ⟨((e.symm q' : Oˣ) : O) - ((e.symm q : Oˣ) : O), hsub, ?_⟩
+            change ((e.symm q : Oˣ) : O) +
+                (((e.symm q' : Oˣ) : O) - ((e.symm q : Oˣ) : O)) =
+              ((e.symm q' : Oˣ) : O)
+            ring)
+        have hinv : Continuous (fun q : compatibleGroupFamilies
+            (fun n : ℕ => Oˣ ⧸ higherUnitSubgroup π (n + 1))
+            (fun {_ _} hmn => dvrHigherUnitQuotientTransition π hmn) => q⁻¹) := by
+          apply Continuous.subtype_mk
+          apply continuous_pi
+          intro n
+          exact ((continuous_apply n).comp continuous_subtype_val).inv
+        exact continuous_unitHom_of_continuous_val e.symm.toMonoidHom hval hinv }
 
 /-- The unit-group inverse-limit homeomorphism with the adic source and
 prodiscrete target fixed at the type level. -/

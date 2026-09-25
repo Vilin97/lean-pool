@@ -162,7 +162,7 @@ theorem
 /-- Integral filtered local reciprocity for a transported
 equal-characteristic Lubin--Tate level. -/
 theorem
-    equalCharacteristicTransportedLubinTateArtinPrincipalUnitsImage_eq_localUpperRamificationGroup
+    transportedLubinTateArtinPrincipalUnitsImage_eq_upperRamificationGroup
     (p : ℕ) [Fact p.Prime] [hKp : CharP K p]
     (ϖ : Kˣ)
     (hϖ : valuationMap K (Additive.ofMul ϖ) = 1)

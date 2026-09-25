@@ -839,7 +839,7 @@ integralClosure_base_maximal_fiber_idempotents_lift_of_includeRight_surjective_h
 omit [base.valuation.HasExtension target.valuation] in
 /-- If the residue-fiber `includeRight` map has Henselian kernel and is
 surjective, then the fiber has at most one prime. -/
-theorem integralClosure_base_maximal_fiber_subsingleton_of_includeRight_surjective_henselianRing_ker
+theorem integralClosure_maximal_fiber_subsingleton_of_includeRight_surjective_henselian_ker
     [Algebra.IsSeparable K L]
     (hsurj :
       Function.Surjective
@@ -1452,7 +1452,7 @@ integralClosure_base_maximal_fiber_idempotents_lift_of_includeRight_surjective_h
 omit [base.toDVF.valuation.HasExtension target.toDVF.valuation] in
 /-- If the residue-fiber `includeRight` map has Henselian kernel and is
 surjective, then the fiber has at most one prime. -/
-theorem integralClosure_base_maximal_fiber_subsingleton_of_includeRight_surjective_henselianRing_ker
+theorem integralClosure_maximal_fiber_subsingleton_of_includeRight_surjective_henselian_ker
     [Algebra.IsSeparable K L]
     (hsurj :
       Function.Surjective

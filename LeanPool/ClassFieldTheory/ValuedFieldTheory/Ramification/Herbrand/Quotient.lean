@@ -242,7 +242,7 @@ theorem inverseHerbrandFunction_transportEquiv
   apply
     (herbrandFunction_strictMono (transportEquiv F e)).injective
   rw [herbrandFunction_inverseHerbrandFunction (transportEquiv F e)]
-  rw [(RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration.herbrandFunction_transportEquiv F)]
+  rw [(herbrandFunction_transportEquiv F)]
   rw [(herbrandFunction_inverseHerbrandFunction F)]
 
 /-- The quotient-image filtration, transported to any isomorphic model of

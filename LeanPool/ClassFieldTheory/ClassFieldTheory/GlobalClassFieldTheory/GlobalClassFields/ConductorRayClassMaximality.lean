@@ -238,7 +238,7 @@ theorem narrowFiniteConductorRayClassGroupEquivQuotientOfCardEq_mk
 narrow finite conductor precisely when its quotient has the full exact
 narrow finite conductor ray class number. -/
 theorem
-    subgroup_eq_narrowFiniteConductorCongruenceSubgroup_iff_rayClassGroup_card_eq_quotient_card
+    subgroup_eq_conductorCongruenceSubgroup_iff_rayClass_card_eq_quotient_card
     (H : ConductorialSubgroup K) :
     H.1 = RayClass.Modulus.congruenceSubgroup
       (RayClass.Modulus.narrowOfFinite H.narrowFiniteConductor) ↔
@@ -300,7 +300,7 @@ theorem
   calc
     H.1 = RayClass.Modulus.congruenceSubgroup
       (RayClass.Modulus.narrowOfFinite H.narrowFiniteConductor) :=
-      H.subgroup_eq_narrowFiniteConductorCongruenceSubgroup_iff_rayClassGroup_card_eq_quotient_card.2
+      H.subgroup_eq_conductorCongruenceSubgroup_iff_rayClass_card_eq_quotient_card.2
         hHcard
     _ = RayClass.Modulus.congruenceSubgroup
       (RayClass.Modulus.narrowOfFinite J.narrowFiniteConductor) :=
@@ -309,7 +309,7 @@ theorem
           (RayClass.Modulus.narrowOfFinite f))
         hconductor
     _ = J.1 :=
-      (J.subgroup_eq_narrowFiniteConductorCongruenceSubgroup_iff_rayClassGroup_card_eq_quotient_card.2
+      (J.subgroup_eq_conductorCongruenceSubgroup_iff_rayClass_card_eq_quotient_card.2
         hJcard).symm
 
 /-- The quotients by two maximal exact narrow finite conductor subgroups

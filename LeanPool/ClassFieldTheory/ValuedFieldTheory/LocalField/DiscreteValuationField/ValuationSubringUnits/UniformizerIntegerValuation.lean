@@ -117,7 +117,7 @@ noncomputable def uniformizerValueExponent
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     (x : Kˣ) : ℤ :=
   Classical.choose
-    ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.exists_uniformizerValueUnit_zpow_eq_fieldUnitValueUnit F) hπ x)
+    ((exists_uniformizerValueUnit_zpow_eq_fieldUnitValueUnit F) hπ x)
 
 /-- The chosen exponent really recovers the value of the field unit. -/
 theorem uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit
@@ -128,7 +128,7 @@ theorem uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit
         (LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x =
       (LocalFieldTheory.DiscreteValuationField.CompleteDVF.fieldUnitValueUnit F) x :=
   Classical.choose_spec
-    ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.exists_uniformizerValueUnit_zpow_eq_fieldUnitValueUnit F) hπ x)
+    ((exists_uniformizerValueUnit_zpow_eq_fieldUnitValueUnit F) hπ x)
 
 /-- The integer-valued multiplicative valuation on `Kˣ` attached to a chosen
 uniformizer of an arbitrary complete DVF.  Its value is the exponent of the
@@ -141,7 +141,7 @@ noncomputable def multiplicativeIntegerValuationOfUniformizer
   map_one := by
     apply ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_inj F)
       hπ).1
-    rw [(LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F)]
+    rw [(uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F)]
     simp
   map_mul x y := by
     apply ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_inj F)
@@ -151,7 +151,7 @@ noncomputable def multiplicativeIntegerValuationOfUniformizer
           (LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ (x
             * y) =
           (LocalFieldTheory.DiscreteValuationField.CompleteDVF.fieldUnitValueUnit F) (x * y) := by
-        rw [(LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F)]
+        rw [(uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F)]
       _ = (LocalFieldTheory.DiscreteValuationField.CompleteDVF.fieldUnitValueUnit F) x *
         (LocalFieldTheory.DiscreteValuationField.CompleteDVF.fieldUnitValueUnit F) y := by
         rw [(LocalFieldTheory.DiscreteValuationField.CompleteDVF.fieldUnitValueUnit_mul F)]
@@ -161,8 +161,8 @@ noncomputable def multiplicativeIntegerValuationOfUniformizer
             (LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit F) hπ ^
               (LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F)
               hπ y := by
-        rw [(LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F),
-          (LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F)]
+        rw [(uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F),
+          (uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F)]
       _ =
           (LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit F) hπ ^
             ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x +
@@ -179,7 +179,7 @@ theorem multiplicativeIntegerValuationOfUniformizer_val
     (F : CompleteDVF.{u, v} K)
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K))
     (x : Kˣ) :
-    ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer F) hπ).val x =
+    ((multiplicativeIntegerValuationOfUniformizer F) hπ).val x =
       (LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ x :=
   rfl
 
@@ -187,12 +187,12 @@ theorem multiplicativeIntegerValuationOfUniformizer_val
 theorem multiplicativeIntegerValuationOfUniformizer_isUniformizer
     (F : CompleteDVF.{u, v} K)
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K)) :
-    ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer F) hπ).IsUniformizer
+    ((multiplicativeIntegerValuationOfUniformizer F) hπ).IsUniformizer
       (Units.mk0 (π : K) hπ.ne_zero) := by
   change (LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueExponent F) hπ
     (Units.mk0 (π : K) hπ.ne_zero) = 1
   apply ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_inj F) hπ).1
-  rw [(LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F)]
+  rw [(uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F)]
   ext
   simp [fieldUnitValueUnit, uniformizerValueUnit]
 
@@ -201,7 +201,7 @@ valuation-subring unit group. -/
 theorem multiplicativeIntegerValuationOfUniformizer_zeroSubgroup_eq_unitGroup
     (F : CompleteDVF.{u, v} K)
     {π : F.valuationSubring} (hπ : F.valuation.IsUniformizer (π : K)) :
-    ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.multiplicativeIntegerValuationOfUniformizer F) hπ).zeroSubgroup =
+    ((multiplicativeIntegerValuationOfUniformizer F) hπ).zeroSubgroup =
       F.valuation.valuationSubring.unitGroup := by
   ext x
   rw [LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation.mem_zeroSubgroup_iff,
@@ -211,7 +211,7 @@ theorem multiplicativeIntegerValuationOfUniformizer_zeroSubgroup_eq_unitGroup
   constructor
   · intro hx
     have hvalue :=
-      (LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F) hπ x
+      (uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F) hπ x
     rw [hx, zpow_zero] at hvalue
     have hvalue' :=
       congrArg (fun γ : F.ValueGroupˣ => (γ : F.ValueGroup)) hvalue
@@ -219,7 +219,7 @@ theorem multiplicativeIntegerValuationOfUniformizer_zeroSubgroup_eq_unitGroup
   · intro hx
     apply ((LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_inj F)
       hπ).1
-    rw [(LocalFieldTheory.DiscreteValuationField.CompleteDVF.uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F)]
+    rw [(uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit F)]
     ext
     simp [fieldUnitValueUnit, hx]
 

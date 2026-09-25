@@ -821,7 +821,7 @@ theorem summable_expSeriesTermField_mul_prod_ofWithZeroValuation_scaled_of_thres
 /-- The antidiagonal Cauchy product of two local exponential series sums to
 the product of their values under the sharp ramified threshold. -/
 theorem
-  hasSum_expSeriesTermField_cauchyProduct_expSeriesField_mul_ofWithZeroValuation_scaled_of_threshold
+  hasSum_expSeriesTerm_cauchyProduct_expSeries_mul_scaled_of_threshold
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     {p : ℕ} [Fact p.Prime] (e : ℕ) (x y : K)
     (hnK : ∀ n : ℕ, (((n.factorial : ℕ) : K) ≠ 0))
@@ -943,7 +943,7 @@ theorem expSeriesField_add_eq_mul_ofWithZeroValuation_scaled_of_threshold
       (expSeriesTermField_add_eq_sum_antidiagonal
         (K := K) x y hnK n).symm
   have hsumProduct :=
-    hasSum_expSeriesTermField_cauchyProduct_expSeriesField_mul_ofWithZeroValuation_scaled_of_threshold
+    hasSum_expSeriesTerm_cauchyProduct_expSeries_mul_scaled_of_threshold
       (v := v) (p := p) e x y hnK hnval hxthreshold hythreshold
       hcomplete
   exact hsumCauchyAdd.unique hsumProduct

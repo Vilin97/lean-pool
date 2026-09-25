@@ -46,7 +46,7 @@ local instance
 
 /-- Internal finite-norm-class-zero to quotient-zero step. -/
 private theorem
-    rationalFiniteNormTransferCanonicalFiniteNormClassZero_implies_finiteNormRepresentativeQuotientZero
+    finiteNormTransferCanonicalClassZero_implies_representativeQuotientZero
     (K H L : ClosedSubgroup
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (hHK : H.toSubgroup ≤ K.toSubgroup)
@@ -159,7 +159,7 @@ private theorem
       (hKfinite := hHfinite) (hfinite := hHLfinite)
       H L hLH hLHnormal
   have hquotientZero :=
-    rationalFiniteNormTransferCanonicalFiniteNormClassZero_implies_finiteNormRepresentativeQuotientZero
+    finiteNormTransferCanonicalClassZero_implies_representativeQuotientZero
       (hKfinite := hKfinite) (hKHfinite := hKHfinite)
       (hHLfinite := hHLfinite)
       K H L hHK hLH hLHnormal c hincludeCanonical

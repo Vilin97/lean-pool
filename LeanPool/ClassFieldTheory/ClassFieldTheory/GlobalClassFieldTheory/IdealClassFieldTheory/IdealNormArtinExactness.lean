@@ -492,6 +492,9 @@ variable
     [IsAbelianGalois K L]
 
 open scoped Classical in
+
+open _root_.GlobalClassFieldTheory.IdealClassFieldTheory
+  (arithmeticIdealArtinGaloisMap_ker_eq_idealNormSubgroup) in
 /-- The arithmetic ideal Artin kernel is the join of the genuine ideal-norm
 image with the ray-principal ideal subgroup. -/
 theorem arithmeticIdealArtin_ker_eq_norm_range_sup_ray_principal
@@ -505,7 +508,7 @@ theorem arithmeticIdealArtin_ker_eq_norm_range_sup_ray_principal
         (K := K) (L := L) m).range ⊔
         RayClass.principalRayIdealSubgroup m := by
   simpa only [RayClass.idealNormSubgroup] using
-    (GlobalClassFieldTheory.IdealClassFieldTheory.arithmeticIdealArtinGaloisMap_ker_eq_idealNormSubgroup
+    (arithmeticIdealArtinGaloisMap_ker_eq_idealNormSubgroup
       (K := K) (L := L) m hm)
 
 open scoped Classical in

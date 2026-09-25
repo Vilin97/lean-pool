@@ -228,6 +228,9 @@ theorem globalNormResidueEquiv_finiteNormClass
   (globalNormResidueEquiv_transport_apply K L x).trans
     (numberFieldTowerAbstractNormResidueGaloisEquiv_apply K L x)
 
+open _root_.GlobalClassFieldTheory.Reciprocity renaming
+  rationalCyclotomicIdeleClassValuationData → cyclotomicValuationData in
+
 /-- On the genuine finite-reciprocity class of an abstract extension
 automorphism, the global norm-residue equivalence is the corresponding
 actual automorphism of `L / K`. -/
@@ -241,8 +244,8 @@ theorem globalNormResidueEquiv_finiteReciprocityHom
           K L
           (rationalCyclotomicDegreeData.finiteReciprocityHom
             rationalIdeleClassRepresentation
-            rationalCyclotomicIdeleClassValuationData
-            (rationalCyclotomicIdeleClassValuationData.classFieldAxiom_implies_unramifiedUnitCohomology
+            cyclotomicValuationData
+            (cyclotomicValuationData.classFieldAxiom_implies_unramifiedUnitCohomology
                 rationalIdeleClassRepresentation_satisfiesClassFieldAxiom)
             (numberFieldTowerReciprocityFiniteAbstractField K L)
             (numberFieldTowerFiniteGaloisSubextension K L).field
@@ -260,8 +263,8 @@ theorem globalNormResidueEquiv_finiteReciprocityHom
       (numberFieldTowerTopSubgroup_le_baseSubgroup K L) :=
     rationalCyclotomicDegreeData.finiteReciprocityHom
       rationalIdeleClassRepresentation
-      rationalCyclotomicIdeleClassValuationData
-      (rationalCyclotomicIdeleClassValuationData.classFieldAxiom_implies_unramifiedUnitCohomology
+      cyclotomicValuationData
+      (cyclotomicValuationData.classFieldAxiom_implies_unramifiedUnitCohomology
         rationalIdeleClassRepresentation_satisfiesClassFieldAxiom)
       (numberFieldTowerReciprocityFiniteAbstractField K L)
       (numberFieldTowerFiniteGaloisSubextension K L).field
@@ -284,7 +287,7 @@ theorem globalNormResidueEquiv_finiteReciprocityHom
         numberFieldTowerAbelianizedExtensionQuotientEquivGaloisGroup K L
           (rationalCyclotomicDegreeData.normResidueSymbol
             rationalIdeleClassRepresentation
-            rationalCyclotomicIdeleClassValuationData
+            cyclotomicValuationData
             rationalIdeleClassRepresentation_satisfiesClassFieldAxiom
             (numberFieldTowerReciprocityFiniteAbstractField K L)
             (numberFieldTowerFiniteGaloisSubextension K L)
@@ -297,7 +300,7 @@ theorem globalNormResidueEquiv_finiteReciprocityHom
         (numberFieldTowerAbelianizedExtensionQuotientEquivGaloisGroup K L)
         (rationalCyclotomicDegreeData.normResidueSymbol_finiteReciprocityHom
           rationalIdeleClassRepresentation
-          rationalCyclotomicIdeleClassValuationData
+          cyclotomicValuationData
           rationalIdeleClassRepresentation_satisfiesClassFieldAxiom
           (numberFieldTowerReciprocityFiniteAbstractField K L)
           (numberFieldTowerFiniteGaloisSubextension K L) q)

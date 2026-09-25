@@ -72,7 +72,7 @@ theorem
 norm conductor to the actual norm quotient is injective precisely when the
 ray class number equals the extension degree. -/
 theorem
-    narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient_injective_iff_card_eq_extensionDegree :
+    rayClassToNormQuotient_injective_iff_card_eq_extensionDegree :
     Function.Injective
         (narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient
           (K := K) (L := L)) ↔
@@ -84,7 +84,7 @@ theorem
   simpa only [
     ← Subgroup.index_eq_card,
     ClassFieldAxiom.ideleClassNorm_index_eq_finrank_cyclic K L] using
-      (narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient_injective_iff_card_eq_normQuotient_card
+      (rayClassToNormQuotient_injective_iff_card_eq_normQuotient_card
         (K := K) (L := L))
 
 /-- When the ray class number at the exact narrow finite norm conductor

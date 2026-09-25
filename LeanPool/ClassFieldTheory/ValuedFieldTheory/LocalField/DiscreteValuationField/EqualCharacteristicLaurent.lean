@@ -834,6 +834,9 @@ open scoped PowerSeries LaurentSeries Filter Topology BigOperators
 variable {K : Type u} [Field K]
 variable (F : LocalField.{u, v} K)
 
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent
+  (adicLaurentSeriesEvalHom) in
+
 /-- The image in `K` of the equal-characteristic Laurent-series evaluation.
 This is the candidate base field for the converse direction of the local-field structure
   classification. -/
@@ -843,8 +846,11 @@ noncomputable def laurentImageSubfield
     (π : F.valuationSubring)
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) :
     Subfield K :=
-  (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent.adicLaurentSeriesEvalHom
+  (adicLaurentSeriesEvalHom
     (F := F.toCompleteDVF) p hcard π hπ).fieldRange
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent
+  (adicLaurentSeriesEvalHom) in
 
 /--
 Establishes the membership statement
@@ -857,12 +863,15 @@ theorem adicLaurentSeriesEval_mem_laurentImageSubfield
     (π : F.valuationSubring)
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (x : F.residueField⸨X⸩) :
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent.adicLaurentSeriesEvalHom
+    adicLaurentSeriesEvalHom
         (F := F.toCompleteDVF) p hcard π hπ x ∈
       F.laurentImageSubfield p hcard π hπ :=
   RingHom.mem_fieldRange_self
-    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent.adicLaurentSeriesEvalHom
+    (adicLaurentSeriesEvalHom
       (F := F.toCompleteDVF) p hcard π hπ) x
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent
+  (adicLaurentSeriesEvalHom_surjective) in
 
 /-- Establishes the identity `F.laurentImageSubfield p hcard π hπ = ⊤`. -/
 theorem laurentImageSubfield_eq_top
@@ -877,10 +886,13 @@ theorem laurentImageSubfield_eq_top
     trivial
   · intro _hx
     rcases
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent.adicLaurentSeriesEvalHom_surjective
+      adicLaurentSeriesEvalHom_surjective
         (F := F.toCompleteDVF) p hcard π hπ x with
       ⟨y, hy⟩
     exact (RingHom.mem_fieldRange).2 ⟨y, hy⟩
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent
+  (adicLaurentSeriesEvalHom) in
 
 /-- The Laurent-series field is identified with its image in `K`. -/
 noncomputable def laurentSeriesEquivLaurentImageSubfield
@@ -891,7 +903,7 @@ noncomputable def laurentSeriesEquivLaurentImageSubfield
     F.residueField⸨X⸩ ≃+*
       F.laurentImageSubfield p hcard π hπ :=
   RingHom.rangeRestrictFieldEquiv
-    (_root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent.adicLaurentSeriesEvalHom
+    (adicLaurentSeriesEvalHom
       (F := F.toCompleteDVF) p hcard π hπ)
 
 /--
@@ -908,9 +920,12 @@ hπ x`.
     (x : F.residueField⸨X⸩) :
     ((F.laurentSeriesEquivLaurentImageSubfield p hcard π hπ x :
         F.laurentImageSubfield p hcard π hπ) : K) =
-      _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent.adicLaurentSeriesEvalHom
+      adicLaurentSeriesEvalHom
         (F := F.toCompleteDVF) p hcard π hπ x := by
   rfl
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent
+  (adicLaurentSeriesEvalHom_algebraMap_C) in
 
 /--
 Establishes the identity `((F.laurentSeriesEquivLaurentImageSubfield p hcard π hπ (algebraMap
@@ -930,8 +945,11 @@ theorem laurentSeriesEquivLaurentImageSubfield_algebraMap_C
       _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent.coeffHom
         (F := F.toCompleteDVF) p hcard a := by
   simpa using
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent.adicLaurentSeriesEvalHom_algebraMap_C
+    adicLaurentSeriesEvalHom_algebraMap_C
       (F := F.toCompleteDVF) p hcard π hπ a
+
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent
+  (adicLaurentSeriesEvalHom_algebraMap_X) in
 
 /--
 Establishes the identity `((F.laurentSeriesEquivLaurentImageSubfield p hcard π hπ (algebraMap
@@ -949,7 +967,7 @@ theorem laurentSeriesEquivLaurentImageSubfield_algebraMap_X
         F.laurentImageSubfield p hcard π hπ) : K) =
       (π : K) := by
   simpa using
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.EqualCharacteristicLaurent.adicLaurentSeriesEvalHom_algebraMap_X
+    adicLaurentSeriesEvalHom_algebraMap_X
       (F := F.toCompleteDVF) p hcard π hπ
 
 /-- The image base field is nontrivially normed by the norm induced from the

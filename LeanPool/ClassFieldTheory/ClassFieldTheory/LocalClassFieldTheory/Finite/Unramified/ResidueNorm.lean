@@ -180,7 +180,7 @@ theorem
 /-- In the unramified valuation case, the actual integral-closure quotient norm
 on `𝒪[L]ˣ/U_L¹` is the quotient-level finite-field residue norm model. -/
 theorem
-  integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure_eq_residueNorm_of_unramifiedValuation
+  integerUnitsModPrincipalUnitsNorm_eq_residueNorm_of_unramifiedValuation
     (K L : Type u)
     [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
     [Field L] [ValuativeRel L] [TopologicalSpace L] [IsNonarchimedeanLocalField L]
@@ -213,7 +213,7 @@ theorem
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L] :
     Function.Surjective
       (integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure K L) := by
-  rw [integerUnitsModPrincipalUnitsNormOfGaloisOfIsIntegralClosure_eq_residueNorm_of_unramifiedValuation
+  rw [integerUnitsModPrincipalUnitsNorm_eq_residueNorm_of_unramifiedValuation
     K L]
   exact integerUnitsModPrincipalUnitsResidueNorm_surjective_of_valuationExtension K L
 

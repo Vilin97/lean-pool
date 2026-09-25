@@ -256,7 +256,7 @@ theorem
     narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient
       (K := K) (L := L)
   have hfInjective : Function.Injective f :=
-    (narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient_injective_iff_card_eq_normQuotient_card
+    (rayClassToNormQuotient_injective_iff_card_eq_normQuotient_card
       (K := K) (L := L)).2 hcard
   constructor
   · intro hprime
@@ -300,7 +300,7 @@ theorem
     narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient
       (K := K) (L := L)
   have hfInjective : Function.Injective f :=
-    (narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient_injective_iff_card_eq_normQuotient_card
+    (rayClassToNormQuotient_injective_iff_card_eq_normQuotient_card
       (K := K) (L := L)).2 hcard
   have horder :=
     orderOf_injective f hfInjective
@@ -315,7 +315,7 @@ theorem
 the actual norm quotient, triviality of its ray prime class is
 equivalent to membership of the prime ideal in the ideal Artin kernel. -/
 theorem
-    narrowFiniteConductorRayPrimeClass_eq_one_iff_narrowFiniteConductorPrimeIdeal_mem_idealArtinKernel
+    rayPrimeClass_eq_one_iff_primeIdeal_mem_idealArtinKernel
     (hcard :
       Nat.card
           (RayClass.RayClassGroup
@@ -528,7 +528,7 @@ theorem
     exact
       ClassFieldAxiom.ideleClassNorm_index_eq_finrank_cyclic K L
   exact
-    narrowFiniteConductorRayPrimeClass_eq_one_iff_narrowFiniteConductorPrimeIdeal_mem_idealArtinKernel
+    rayPrimeClass_eq_one_iff_primeIdeal_mem_idealArtinKernel
       (K := K) (L := L)
       (hcard.trans hNormCard.symm) v hv
 
@@ -536,7 +536,7 @@ theorem
 narrow finite conductor, complete splitting forces the corresponding ray
 prime class to be trivial. -/
 theorem
-    finitePlaceSplitsCompletely_imp_narrowFiniteConductorRayPrimeClass_eq_one_of_card_eq_extensionDegree
+    splitsCompletely_imp_rayPrimeClass_eq_one_of_card_eq_extensionDegree
     (hcard :
       Nat.card
           (RayClass.RayClassGroup
@@ -553,7 +553,7 @@ theorem
       Function.Injective
         (narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient
           (K := K) (L := L)) :=
-    (narrowFiniteConductorRayClassGroupToIdeleClassNormQuotient_injective_iff_card_eq_extensionDegree
+    (rayClassToNormQuotient_injective_iff_card_eq_extensionDegree
       (K := K) (L := L)).2 hcard
   apply hfInjective
   rw [

@@ -489,6 +489,9 @@ private theorem unit_mem_power_range_of_ideleClassNorm_top
       simpa using congrArg Units.val hbeta
 
 open scoped Classical in
+
+open _root_.KummerTheory
+  (chosenSimpleKummerExtension_infiniteTensorNormSubgroup_eq_top_of_mem_nthPowerSubgroup) in
 /-- Equality between the power/local-unit subgroup and the everywhere-local
 norm condition for the Kummer-selected prime set.  Starting from an arbitrary
 prescribed finite set `S`, the construction first adjoins a sufficiently large
@@ -644,7 +647,7 @@ theorem
         rfl
       rw [hprincipal] at hbLocal
       simpa only [M] using
-        KummerTheory.chosenSimpleKummerExtension_infiniteTensorNormSubgroup_eq_top_of_mem_nthPowerSubgroup
+        chosenSimpleKummerExtension_infiniteTensorNormSubgroup_eq_top_of_mem_nthPowerSubgroup
           (K := K) n hnK hmu b w hbLocal
     have hAway :
         ∀ w : HeightOneSpectrum (𝓞 K), w ∉ S' ∪ T →

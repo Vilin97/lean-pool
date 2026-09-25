@@ -322,7 +322,7 @@ theorem
       (quotientMulEquivOfEq_trans_apply_mk
         ((_root_.ideleClassNorm K L).range)
         (bigHilbertClassFieldNormSubgroup (K := K))
-        ((ideleClassNorm_range_eq_bigHilbertClassFieldNormSubgroup_iff_finrank_eq_narrowClassGroup_card
+        ((ideleClassNorm_range_eq_bigHilbertNormSubgroup_iff_finrank_eq_narrowClass_card
           (K := K) (L := L) hunramified).2 hdegree)
         (bigHilbertClassFieldQuotientEquivNarrowClassGroup
           (K := K))
@@ -595,7 +595,7 @@ theorem orderOf_maximalEverywhereUnramifiedCyclicFrobeniusClass
 the small Hilbert class field is equivalent to triviality of the
 corresponding Frobenius class in the actual maximal norm quotient. -/
 theorem
-    maximalEverywhereUnramifiedCyclicFrobeniusClass_eq_one_iff_smallHilbertClassFieldSplitsCompletely
+    unramifiedCyclicFrobeniusClass_eq_one_iff_smallHilbertSplitsCompletely
     (hunramifiedFinite :
       _root_.ramifiedBaseFinitePlaces
           (K := K) (L := L) = ∅)
@@ -646,7 +646,7 @@ theorem
       FractionalIdealGroup.prime v ∈
         (toPrincipalIdeal (𝓞 K) K).range := by
   exact
-    (maximalEverywhereUnramifiedCyclicFrobeniusClass_eq_one_iff_smallHilbertClassFieldSplitsCompletely
+    (unramifiedCyclicFrobeniusClass_eq_one_iff_smallHilbertSplitsCompletely
       (K := K) (L := L) hunramifiedFinite hdegree v).trans
       (IdealClassFieldTheory.splitsCompletelyInSmallHilbertClassField_iff_principal
         v)

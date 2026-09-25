@@ -490,7 +490,7 @@ theorem
 /-- The expanded product-argument Sigma-family has sum equal to the scaled
 logarithm of `x + y + xy`. -/
 theorem
-  hasSum_formalLogOnePlusProductArgument_logDegree_monomialValue_pair_sigma_ofWithZeroValuation_scaled
+  hasSum_logProduct_logDegree_monomialValue_pair_sigma_scaled
     [Algebra ℚ K]
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     {p : ℕ} [Fact p.Prime] (e : ℕ) (x y : K)
@@ -582,7 +582,7 @@ theorem
         (logOnePlusSeriesFieldOfWithZeroValuation v
           (x + y + x * y) hnK) := by
     simpa [sigmaTerm] using
-      hasSum_formalLogOnePlusProductArgument_logDegree_monomialValue_pair_sigma_ofWithZeroValuation_scaled
+      hasSum_logProduct_logDegree_monomialValue_pair_sigma_scaled
         (v := v) (p := p) e x y hnK hnval hvx hvy hcomplete
   let swap :
       (Sigma fun _ : (Fin 2 →₀ ℕ) => ℕ) ≃

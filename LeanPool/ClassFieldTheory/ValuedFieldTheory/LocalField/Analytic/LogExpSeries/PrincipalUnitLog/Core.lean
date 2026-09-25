@@ -430,7 +430,7 @@ theorem principalUnitLogSeries_expSeries_idealQuotient_succ_eq_self_ofWithZeroVa
 composite `Exp ∘ Log` differs from the identity by an element of `m^(n+1)` on
 underlying valuation-ring units. -/
 theorem
-  principalUnitExpSeries_logSeries_sub_self_mem_maximalIdeal_pow_succ_ofWithZeroValuationScaled
+  principalUnitExpSeries_logSeries_sub_self_mem_maximalIdeal_pow_succ_scaled
     (v : _root_.Valuation K (WithZero (Multiplicative ℤ)))
     [ValuationTheory.DiscreteValuationField.Valuation.IsCompleteDiscrete v]
     {p : ℕ} [Fact p.Prime] (e n : ℕ)
@@ -558,7 +558,7 @@ theorem principalUnitExpSeries_logSeries_idealQuotient_succ_eq_self_ofWithZeroVa
       (I := F.maximalIdeal ^ (n + 1)) lhs rhs).2
       (by
         simpa [F, lhs, rhs] using
-          principalUnitExpSeries_logSeries_sub_self_mem_maximalIdeal_pow_succ_ofWithZeroValuationScaled
+          principalUnitExpSeries_logSeries_sub_self_mem_maximalIdeal_pow_succ_scaled
             (v := v) (p := p) e n (π := π) hπ hπval hn hlevel
             hnKlog hnvalLog hnKexp hnvalExp hcomplete u)
 
