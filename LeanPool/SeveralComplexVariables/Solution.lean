@@ -13,8 +13,9 @@ public import LeanPool.SeveralComplexVariables.SeveralComplexVariables
 This file states the principal results of the `SeveralComplexVariables` library in terms of Mathlib
 alone. Its numbering follows the [upstream theorem catalogue][scvCatalogue] at the imported
 revision: the number in each docstring is the item of that catalogue, and A–K are its sections.
-The subject is classical function theory on open subsets of finite-dimensional complex normed spaces `E`, in
-particular of `ℂ^ι = ι → ℂ` for a finite index type `ι`, with values in a complex Banach space `F`.
+The subject is classical function theory on open subsets of finite-dimensional complex normed
+spaces `E`, in particular of `ℂ^ι = ι → ℂ` for a finite index type `ι`, with values in a complex
+Banach space `F`.
 
 ## Conventions
 

@@ -10276,9 +10276,7 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-    - SCV.cauchy_formula_polydisc
     - SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded
-    - SCV.identity_theorem
     main_results:
     - declaration: SCV.cauchy_formula_polydisc
       informal: Holomorphic functions on a polydisc satisfy the iterated Cauchy integral formula.

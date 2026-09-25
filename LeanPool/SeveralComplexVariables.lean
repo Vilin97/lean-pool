@@ -175,7 +175,7 @@ public import LeanPool.SeveralComplexVariables.Solution
 Source: url:https://github.com/bjbraams/lean-scv
 Authors: Bastiaan J Braams
 Status: verified
-Main declarations: `SCV.cauchy_formula_polydisc`, `SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded`, `SCV.identity_theorem`
+Main declarations: `SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded`
 Tags: complex-analysis, several-complex-variables, holomorphic-functions
 MSC: 32A10, 32D05, 32E10
 -/
