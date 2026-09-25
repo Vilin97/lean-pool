@@ -214,6 +214,9 @@ theorem artinFiniteSupportApproximation_finiteComponent_of_notMem
     ite_eq_right hv]
 
 open scoped Classical in
+open _root_.GlobalClassFieldTheory.ClassFieldAxiom renaming
+  relativeIdeleNorm_range_eq_allPlaceLocalNormCondition →
+    relativeIdeleNorm_range_eq_allPlaceLocalNormCondition in
 /-- The quotient of an idele by its finite-support Artin approximation
 is an actual relative-idele norm. -/
 theorem
@@ -223,7 +226,7 @@ theorem
         (K := K) (L := L) a)⁻¹ ∈
       (RelativeIdeleGroup.norm K L).range := by
   rw [
-    _root_.GlobalClassFieldTheory.ClassFieldAxiom.relativeIdeleNorm_range_eq_allPlaceLocalNormCondition]
+    relativeIdeleNorm_range_eq_allPlaceLocalNormCondition]
   constructor
   · rw [_root_.GlobalClassFieldTheory.ClassFieldAxiom.allFinitePlaceLocalNormCondition]
     apply Subgroup.mem_iInf.mpr

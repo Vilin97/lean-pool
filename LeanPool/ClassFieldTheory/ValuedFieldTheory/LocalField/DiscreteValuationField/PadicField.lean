@@ -311,6 +311,9 @@ theorem tendsto_zero_logSeriesTermField_padic_mulValuation_of_lt_one
       (fun n => Nat.cast_ne_zero.mpr (Nat.succ_ne_zero n))
       (padic_mulValuation_logSeries_denominator p) hvx
 
+open MultiplicativeIntegerValuation renaming
+  tendsto_zero_signedLogSeriesTermField_ofWithZeroValuation_of_lt_one →
+    tendsto_zero_signedLogSeriesTermField_ofWithZeroValuation_of_lt_one in
 /-- Signed version of
 `tendsto_zero_logSeriesTermField_padic_mulValuation_of_lt_one`. -/
 theorem tendsto_zero_signedLogSeriesTermField_padic_mulValuation_of_lt_one
@@ -324,11 +327,14 @@ theorem tendsto_zero_signedLogSeriesTermField_padic_mulValuation_of_lt_one
       atTop (padicMulValuationNhds p (0 : ℚ_[p])) := by
   rw [padicMulValuationNhds_eq_valuedNhds]
   exact
-    MultiplicativeIntegerValuation.tendsto_zero_signedLogSeriesTermField_ofWithZeroValuation_of_lt_one
+    tendsto_zero_signedLogSeriesTermField_ofWithZeroValuation_of_lt_one
       (v := Padic.mulValuation (p := p)) (p := p) x
       (fun n => Nat.cast_ne_zero.mpr (Nat.succ_ne_zero n))
       (padic_mulValuation_logSeries_denominator p) hvx
 
+open MultiplicativeIntegerValuation renaming
+  tendsto_zero_expSeriesTermField_ofWithZeroValuation_of_lt_exp_neg_one →
+    tendsto_zero_expSeriesTermField_ofWithZeroValuation_of_lt_exp_neg_one in
 /-- Standard p-adic specialization of the exponential-term convergence
 estimate on the radius `v x < exp (-1)`. -/
 theorem tendsto_zero_expSeriesTermField_padic_mulValuation_of_lt_exp_neg_one
@@ -341,7 +347,7 @@ theorem tendsto_zero_expSeriesTermField_padic_mulValuation_of_lt_exp_neg_one
       atTop (padicMulValuationNhds p (0 : ℚ_[p])) := by
   rw [padicMulValuationNhds_eq_valuedNhds]
   exact
-    MultiplicativeIntegerValuation.tendsto_zero_expSeriesTermField_ofWithZeroValuation_of_lt_exp_neg_one
+    tendsto_zero_expSeriesTermField_ofWithZeroValuation_of_lt_exp_neg_one
       (v := Padic.mulValuation (p := p)) (p := p) x
       (fun n => Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero n))
       (padic_mulValuation_expSeries_denominator p) hvx

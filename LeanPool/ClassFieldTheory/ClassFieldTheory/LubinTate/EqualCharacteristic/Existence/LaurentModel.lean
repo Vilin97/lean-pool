@@ -36,6 +36,9 @@ noncomputable def equalCharacteristicLaurentUniformizer
   algebraMap F.residueField⟦X⟧ F.residueField⸨X⸩
     (PowerSeries.X : F.residueField⟦X⟧)
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank →
+    residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank in
 /-- In equal characteristic, Laurent-series evaluation at a chosen
 uniformizer is a field equivalence onto the local field. -/
 noncomputable def equalCharacteristicLaurentRingEquiv
@@ -52,7 +55,7 @@ noncomputable def equalCharacteristicLaurentRingEquiv
       (F := F.toCompleteDVF) F.residueCharacteristic (n := n)
       (by
         simpa [f, n] using
-          CompleteDVF.higherPrincipalUnitGroup.residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F)
+          residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F)
       pi hpi
   exact RingEquiv.ofBijective eval
     ⟨RingHom.injective eval,
@@ -60,9 +63,12 @@ noncomputable def equalCharacteristicLaurentRingEquiv
         (F := F.toCompleteDVF) F.residueCharacteristic (n := n)
         (by
           simpa [f, n] using
-            CompleteDVF.higherPrincipalUnitGroup.residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F)
+            residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F)
         pi hpi⟩
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank →
+    residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank in
 /-- States the theorem `equalCharacteristicLaurentRingEquiv_apply`. -/
 @[simp]
 theorem equalCharacteristicLaurentRingEquiv_apply
@@ -79,10 +85,13 @@ theorem equalCharacteristicLaurentRingEquiv_apply
             Module.finrank_pos⟩)
         (by
           simpa using
-            CompleteDVF.higherPrincipalUnitGroup.residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F)
+            residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F)
         pi hpi x := by
   rfl
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank →
+    residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank in
 /-- States the theorem `equalCharacteristicLaurentRingEquiv_algebraMap_C`. -/
 theorem equalCharacteristicLaurentRingEquiv_algebraMap_C
     (F : LocalField.{u, v} K)
@@ -100,7 +109,7 @@ theorem equalCharacteristicLaurentRingEquiv_algebraMap_C
             Module.finrank_pos⟩)
         (by
           simpa using
-            CompleteDVF.higherPrincipalUnitGroup.residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F)
+            residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F)
         a := by
   rw [equalCharacteristicLaurentRingEquiv_apply]
   exact
@@ -111,9 +120,12 @@ theorem equalCharacteristicLaurentRingEquiv_algebraMap_C
           Module.finrank_pos⟩)
       (by
         simpa using
-          CompleteDVF.higherPrincipalUnitGroup.residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F)
+          residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F)
       pi hpi a
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank →
+    residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank in
 /-- States the theorem `equalCharacteristicLaurentRingEquiv_algebraMap_X`. -/
 theorem equalCharacteristicLaurentRingEquiv_algebraMap_X
     (F : LocalField.{u, v} K)
@@ -133,7 +145,7 @@ theorem equalCharacteristicLaurentRingEquiv_algebraMap_X
           Module.finrank_pos⟩)
       (by
         simpa using
-          CompleteDVF.higherPrincipalUnitGroup.residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F)
+          residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F)
       pi hpi
 
 end EqualCharacteristic

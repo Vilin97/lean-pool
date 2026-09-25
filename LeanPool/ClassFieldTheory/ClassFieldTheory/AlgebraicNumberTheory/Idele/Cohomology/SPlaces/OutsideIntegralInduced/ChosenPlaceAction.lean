@@ -188,29 +188,29 @@ unramified. All valued-local-field and integer-ring structures here are the
 canonical instances exported by `ChosenLocalization`. -/
 theorem chosenFinitePlaceLocalizedIntegerUnits_unramifiedHerbrand_subsingleton
     (w₀ : HeightOneSpectrum (𝓞 K))
-    (g : Gal(
-      ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) w₀/ChosenFinitePlaceBaseCompletion (K := K) w₀))
-    (hg : ∀ τ : Gal(
-      ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) w₀/ChosenFinitePlaceBaseCompletion (K := K) w₀),
+    (g : Gal(ChosenFinitePlaceLocalizedCompletion (K := K) (L := L)
+      w₀/ChosenFinitePlaceBaseCompletion (K := K) w₀))
+    (hg : ∀ τ : Gal(ChosenFinitePlaceLocalizedCompletion (K := K) (L := L)
+      w₀/ChosenFinitePlaceBaseCompletion (K := K) w₀),
       τ ∈ Subgroup.zpowers g)
     (hunram : ChosenFinitePlaceIsUnramified
       (K := K) (L := L) w₀) :
     letI : MulDistribMulAction
-        (Gal(
-          ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) w₀/ChosenFinitePlaceBaseCompletion (K := K) w₀))
+        (Gal(ChosenFinitePlaceLocalizedCompletion (K := K) (L := L)
+          w₀/ChosenFinitePlaceBaseCompletion (K := K) w₀))
         𝒪[ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) w₀]ˣ :=
       galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure
         (ChosenFinitePlaceBaseCompletion (K := K) w₀)
         (ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) w₀)
     Subsingleton
         (HerbrandH0
-          (Gal(
-            ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) w₀/ChosenFinitePlaceBaseCompletion (K := K) w₀))
+          (Gal(ChosenFinitePlaceLocalizedCompletion (K := K) (L := L)
+            w₀/ChosenFinitePlaceBaseCompletion (K := K) w₀))
           𝒪[ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) w₀]ˣ) ∧
       Subsingleton
         (HerbrandHMinusOne
-          (Gal(
-            ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) w₀/ChosenFinitePlaceBaseCompletion (K := K) w₀))
+          (Gal(ChosenFinitePlaceLocalizedCompletion (K := K) (L := L)
+            w₀/ChosenFinitePlaceBaseCompletion (K := K) w₀))
           𝒪[ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) w₀]ˣ g) := by
   let vK := HeightOneSpectrum.adicAbv K w₀
   let E := ChosenFinitePlaceLocalizedCompletion

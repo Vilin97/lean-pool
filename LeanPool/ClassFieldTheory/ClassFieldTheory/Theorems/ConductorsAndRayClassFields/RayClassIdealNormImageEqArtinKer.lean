@@ -24,6 +24,9 @@ noncomputable section
 namespace ClassFieldTheory
 
 open scoped Classical in
+open GlobalClassFieldTheory.IdealClassFieldTheory renaming
+  idealArtinKernel_eq_idealNormSubgroup_of_finiteExtension →
+    idealArtinKernel_eq_idealNormSubgroup_of_finiteExtension in
 /-- For finite abelian reciprocity data, the image of genuine ideal norms
 in the ideal ray class group equals the normalized Artin kernel. -/
 theorem rayClassIdealNormImage_eq_artinKer
@@ -35,7 +38,7 @@ theorem rayClassIdealNormImage_eq_artinKer
     rayClassIdealNormImage K L D.modulus = D.artin.ker := by
   let m := GlobalClassFieldComparison.rayClassModulusToOriginal K D.modulus
   have hsource :=
-    GlobalClassFieldTheory.IdealClassFieldTheory.idealArtinKernel_eq_idealNormSubgroup_of_finiteExtension
+    idealArtinKernel_eq_idealNormSubgroup_of_finiteExtension
       (K := K) (L := L) m
       (GlobalClassFieldComparison.finiteAbelianReciprocity_modulus_isDefining K L D)
   have hquot :=

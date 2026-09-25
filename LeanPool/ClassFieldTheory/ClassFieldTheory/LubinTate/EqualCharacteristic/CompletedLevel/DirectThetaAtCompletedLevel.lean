@@ -143,7 +143,7 @@ theorem equalCharacteristicDirectThetaSourceUniformizerInteger_coe
       Valued.integer (equalCharacteristicCompletedLevelField F n)) :
         equalCharacteristicCompletedLevelField F n) =
       equalCharacteristicCompletedLevelUniformizer F n := by
-  simp [equalCharacteristicCompletedLevelUniformizerInteger,
+  simp? [equalCharacteristicCompletedLevelUniformizerInteger,
     equalCharacteristicCompletedLevelCoefficientHom,
     equalCharacteristicCompletedBaseIntegerToLevel,
     equalCharacteristicCompletedLevelUniformizer,

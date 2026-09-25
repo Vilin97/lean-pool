@@ -167,8 +167,8 @@ noncomputable def equalCharacteristicLubinTateTorsionEquivRootSet
   toFun x := ⟨x.1, by
     have hP : equalCharacteristicLubinTatePiPolynomialIterate F (n + 1) ≠ 0 := by
       apply Polynomial.ne_zero_of_natDegree_gt
-      rw [equalCharacteristicLubinTatePiPolynomialIterate_natDegree]
-      exact Nat.pow_pos Nat.card_pos
+      · rw [equalCharacteristicLubinTatePiPolynomialIterate_natDegree]
+        exact Nat.pow_pos Nat.card_pos
     rw [Polynomial.mem_rootSet_of_ne hP, Polynomial.aeval_def,
       ← equalCharacteristicSeparableBaseHom_eq_algebraMap,
       equalCharacteristicLubinTatePiPolynomialIterate_eval₂]
@@ -176,8 +176,8 @@ noncomputable def equalCharacteristicLubinTateTorsionEquivRootSet
   invFun x := ⟨x.1, by
     have hP : equalCharacteristicLubinTatePiPolynomialIterate F (n + 1) ≠ 0 := by
       apply Polynomial.ne_zero_of_natDegree_gt
-      rw [equalCharacteristicLubinTatePiPolynomialIterate_natDegree]
-      exact Nat.pow_pos Nat.card_pos
+      · rw [equalCharacteristicLubinTatePiPolynomialIterate_natDegree]
+        exact Nat.pow_pos Nat.card_pos
     have hx := (Polynomial.mem_rootSet_of_ne hP).mp x.2
     rw [Polynomial.aeval_def,
       ← equalCharacteristicSeparableBaseHom_eq_algebraMap,

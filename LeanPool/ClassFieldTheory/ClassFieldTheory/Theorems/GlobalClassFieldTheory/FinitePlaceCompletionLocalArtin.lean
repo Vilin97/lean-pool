@@ -28,6 +28,9 @@ noncomputable section
 
 namespace ClassFieldTheory
 
+open GlobalClassFieldTheory.Reciprocity renaming
+  chosenFinitePlaceArtinMonoidHom_eq_one_iff_chosenLocalNorm →
+    chosenFinitePlaceArtinMonoidHom_eq_one_iff_chosenLocalNorm in
 /-- At a finite place of an abelian number-field extension, one can choose
 an extension absolute value and a surjective local Artin map on its actual
 completion. Its kernel is precisely the determinant-norm image of the local
@@ -137,7 +140,7 @@ theorem exists_finitePlaceCompletionLocalArtin
             (K := K) (L := L) v x = 1 := hGlobal
       _ ↔ x ∈ _root_.chosenFinitePlaceLocalNormSubgroup
             (K := K) (L := L) v :=
-        GlobalClassFieldTheory.Reciprocity.chosenFinitePlaceArtinMonoidHom_eq_one_iff_chosenLocalNorm
+        chosenFinitePlaceArtinMonoidHom_eq_one_iff_chosenLocalNorm
           v x
       _ ↔ x ∈ finitePlaceTensorNormSubgroup K L v := by
         rw [← finitePlaceLocalTensorNorm_range_eq_chosenLocalNormSubgroup

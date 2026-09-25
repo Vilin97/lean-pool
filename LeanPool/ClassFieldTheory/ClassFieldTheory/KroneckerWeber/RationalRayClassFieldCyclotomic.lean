@@ -209,8 +209,8 @@ local instance rationalRayClassFieldCyclotomicRationalLevelNeZero : NeZero (m : 
 attribute [local instance] rationalRayClassFieldCyclotomicRationalLevelNeZero
 
 open scoped Classical in
-noncomputable /-- The rational cyclotomic level is a number field. -/
-local instance rationalRayClassFieldCyclotomicLevelNumberField :
+/-- The rational cyclotomic level is a number field. -/
+noncomputable local instance rationalRayClassFieldCyclotomicLevelNumberField :
     NumberField
       (KummerTheory.rationalCyclotomicLevel
         ⟨m, NeZero.pos m⟩) :=
@@ -220,8 +220,8 @@ local instance rationalRayClassFieldCyclotomicLevelNumberField :
 attribute [local instance] rationalRayClassFieldCyclotomicLevelNumberField
 
 open scoped Classical in
-noncomputable /-- The rational cyclotomic level is an abelian Galois extension of the rationals. -/
-local instance rationalRayClassFieldCyclotomicLevelAbelianGalois :
+/-- The rational cyclotomic level is an abelian Galois extension of the rationals. -/
+noncomputable local instance rationalRayClassFieldCyclotomicLevelAbelianGalois :
     IsAbelianGalois ℚ
       (KummerTheory.rationalCyclotomicLevel
         ⟨m, NeZero.pos m⟩) :=
@@ -446,8 +446,7 @@ group modulo `(m)`, transported along the exact norm-range equality. -/
 noncomputable def
     rationalCyclotomicLevelGaloisContinuousMulEquivRayClassGroup
     :
-    Gal(
-        KummerTheory.rationalCyclotomicLevel
+    Gal(KummerTheory.rationalCyclotomicLevel
           ⟨m, NeZero.pos m⟩/ℚ) ≃ₜ*
       RayClass.RayClassGroup (RayClass.rationalModulus m) :=
   galoisContinuousMulEquivRayClassGroupOfNormRangeEq
@@ -465,8 +464,7 @@ transport. -/
 theorem
     rationalCyclotomicLevelGaloisContinuousMulEquivRayClassGroup_apply
     (σ :
-      Gal(
-        KummerTheory.rationalCyclotomicLevel
+      Gal(KummerTheory.rationalCyclotomicLevel
           ⟨m, NeZero.pos m⟩/ℚ)) :
     rationalCyclotomicLevelGaloisContinuousMulEquivRayClassGroup
         m σ =

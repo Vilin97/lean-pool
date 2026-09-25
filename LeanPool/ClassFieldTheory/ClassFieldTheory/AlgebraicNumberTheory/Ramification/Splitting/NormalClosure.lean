@@ -30,7 +30,8 @@ the `K`-conjugates of `L`, then `H` has trivial normal core.
 completely already in `M`.
 -/
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 
 noncomputable section
 

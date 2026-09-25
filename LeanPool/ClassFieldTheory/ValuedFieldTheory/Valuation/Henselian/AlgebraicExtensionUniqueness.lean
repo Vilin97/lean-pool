@@ -18,6 +18,9 @@ namespace ValuationTheory.Henselian
 variable {K L : Type*} [Field K] [Field L] [Algebra K L] [Algebra.IsAlgebraic K L]
   (V : ValuationSubring K) [HenselianRing V (IsLocalRing.maximalIdeal V)]
 
+open _root_.DiscreteValuationField.Valuation renaming
+  normFormula_extension_valuationSubring_eq_integralClosure_of_mem_or_inv →
+    normFormula_valuationSubring_eq_integralClosure in
 /-- The valuation ring of any algebraic extension valuation is the actual
 integral closure of the Henselian base valuation ring. -/
 theorem valuationSubring_eq_integralClosure_of_henselianRing
@@ -30,7 +33,7 @@ theorem valuationSubring_eq_integralClosure_of_henselianRing
     rw [ValuationSubring.valuationSubring_valuation]
     exact integralClosure_mem_or_inv_of_henselianRing (L := L) V
   have h := congrArg ValuationSubring.toSubring
-    (_root_.DiscreteValuationField.Valuation.normFormula_extension_valuationSubring_eq_integralClosure_of_mem_or_inv
+    (normFormula_valuationSubring_eq_integralClosure
       V hval w)
   change w.valuationSubring.toSubring =
     (integralClosure V.valuation.valuationSubring L).toSubring at h

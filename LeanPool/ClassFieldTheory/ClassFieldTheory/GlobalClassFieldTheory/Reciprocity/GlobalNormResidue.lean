@@ -338,6 +338,9 @@ theorem globalNormResidueMonoidHom_apply
           (_root_.ideleClassNorm K L).range c))) :=
   rfl
 
+open ClassFormation.ValuationData renaming
+  normResidueSymbol_finiteNormClass_eq_maximalUnramifiedRestriction →
+    normResidueSymbol_finiteNormClass_eq_maximalUnramifiedRestriction in
 /-- For a finite extension whose compatible abstract realization is
 unramified for the cyclotomic degree datum, the actual global
 norm-residue symbol is the finite restriction of the
@@ -412,7 +415,7 @@ theorem globalNormResidueMonoidHom_eq_maximalUnramifiedRestriction
           Additive.toMul
             (numberFieldTowerAbelianizedExtensionQuotientEquivGaloisGroup
               K L z))
-        (ClassFormation.ValuationData.normResidueSymbol_finiteNormClass_eq_maximalUnramifiedRestriction
+        (normResidueSymbol_finiteNormClass_eq_maximalUnramifiedRestriction
           rationalCyclotomicIdeleClassValuationData
           rationalIdeleClassRepresentation_satisfiesClassFieldAxiom
           H E hUnramified a)

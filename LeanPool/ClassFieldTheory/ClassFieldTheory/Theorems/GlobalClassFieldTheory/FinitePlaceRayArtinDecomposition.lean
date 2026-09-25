@@ -30,6 +30,12 @@ noncomputable section
 
 namespace ClassFieldTheory
 
+open GlobalClassFieldTheory.GlobalClassFields renaming
+  rayArtin_comp_ideleClass_eq_arithmeticGlobalNormResidue →
+    rayArtin_comp_ideleClass_eq_arithmeticGlobalNormResidue in
+open GlobalClassFieldTheory.Reciprocity renaming
+  arithmeticGlobalNormResidueMonoidHom_comp_finitePlaceIdeleClass →
+    arithmeticGlobalNormResidueMonoidHom_comp_finitePlaceIdeleClass in
 /-- A Frobenius-normalized ray Artin map restricts at every finite place to
 the local norm quotient and lands in a decomposition group. The extension
 absolute value and the local-to-ray map are chosen independently of `D`'s
@@ -102,12 +108,12 @@ theorem exists_finitePlaceRayArtin_decomposition
       D.artin (ι x) =
           GlobalClassFieldTheory.Reciprocity.arithmeticGlobalNormResidueMonoidHom
             K L (IdeleGroup.finitePlaceIdeleClass v x) :=
-        GlobalClassFieldTheory.GlobalClassFields.rayArtin_comp_ideleClass_eq_arithmeticGlobalNormResidue
+        rayArtin_comp_ideleClass_eq_arithmeticGlobalNormResidue
           m a hprime (IdeleGroup.finitePlaceIdeleClass v x)
       _ = GlobalClassFieldTheory.Reciprocity.arithmeticChosenFinitePlaceArtinMonoidHom
             K L v x := by
         exact DFunLike.congr_fun
-          (GlobalClassFieldTheory.Reciprocity.arithmeticGlobalNormResidueMonoidHom_comp_finitePlaceIdeleClass
+          (arithmeticGlobalNormResidueMonoidHom_comp_finitePlaceIdeleClass
             (K := K) (L := L) v) x
   refine ⟨w, ι, ?_, ?_⟩
   · ext x

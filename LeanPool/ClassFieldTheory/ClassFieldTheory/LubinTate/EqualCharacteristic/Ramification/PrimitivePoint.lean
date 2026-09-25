@@ -1064,7 +1064,8 @@ theorem equalCharacteristicLubinTateBaseUniformizerInteger_map_addVal_eq_degree
     equalCharacteristicLubinTatePrimitivePointInteger_addVal] at hadd
   rw [nsmul_one, Nat.card_eq_fintype_card] at hadd
   calc
-    _ = (Fintype.card Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩) : ℕ∞) := hadd
+    _ = (Fintype.card Gal((equalCharacteristicLubinTateLevelField F n)/F.residueField⸨X⸩) : ℕ∞)
+      := hadd
     _ = ((Nat.card F.residueField - 1) *
         Nat.card F.residueField ^ n : ℕ) := by
       congr 1

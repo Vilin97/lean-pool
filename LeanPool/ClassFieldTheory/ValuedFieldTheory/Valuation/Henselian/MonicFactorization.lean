@@ -263,6 +263,9 @@ theorem valuation_esymm_eq_pow_card_add_of_eq_of_lt
               ((zero_lt_iff).2 ht) (zero_le : 0 ≤ t ^ m)
   exact (hstrong seq hseq).1
 
+open AlgebraicNumberTheory.Valuations renaming
+  henselFactorization_exists_coeff_mem_ideal_dvd_all_two_polynomials →
+    henselFactorization_exists_coeff_mem_ideal_dvd_all_two_polynomials in
 /-- Over a valuation ring, Gauss-primitivity is also detected by nonzero
 reduction.  The finite set of nonzero coefficients has a divisibility-minimal
 coefficient; if every coefficient reduced to zero, that nonunit would divide
@@ -291,7 +294,7 @@ theorem residue_ne_zero_of_isPrimitive_valuationSubring
     intro i
     simp
   rcases
-      AlgebraicNumberTheory.Valuations.henselFactorization_exists_coeff_mem_ideal_dvd_all_two_polynomials
+      henselFactorization_exists_coeff_mem_ideal_dvd_all_two_polynomials
         (I := IsLocalRing.maximalIdeal V) hcoeffMax hzeroCoeff hs with
     ⟨π, hπmax, _hπcoeff, hπp, _hπzero⟩
   have hC : Polynomial.C π ∣ p :=

@@ -57,7 +57,9 @@ theorem idempotentPolynomial_derivative_eval_isUnit_of_quotient_idempotent
     ⟨Ideal.Quotient.mk I
       ((Polynomial.X ^ 2 - Polynomial.X : Polynomial R).derivative.eval a0),
       ?_, ?_⟩
-  · simp only [pow_two, Polynomial.derivative_sub, Polynomial.derivative_mul, Polynomial.derivative_X, one_mul, mul_one, Polynomial.eval_sub, Polynomial.eval_add, Polynomial.eval_X, Polynomial.eval_one, map_sub, map_add, map_one]
+  · simp only [pow_two, Polynomial.derivative_mul, Polynomial.derivative_X, one_mul, mul_one,
+      Polynomial.eval_sub, Polynomial.eval_add, Polynomial.eval_X, Polynomial.eval_one, map_sub,
+      map_add, map_one]
     calc
       (Ideal.Quotient.mk I a0 + Ideal.Quotient.mk I a0 - 1) *
           (Ideal.Quotient.mk I a0 + Ideal.Quotient.mk I a0 - 1) =
@@ -67,7 +69,9 @@ theorem idempotentPolynomial_derivative_eval_isUnit_of_quotient_idempotent
       _ = 1 := by
           rw [ha0.eq]
           ring
-  · simp only [pow_two, Polynomial.derivative_sub, Polynomial.derivative_mul, Polynomial.derivative_X, one_mul, mul_one, Polynomial.eval_sub, Polynomial.eval_add, Polynomial.eval_X, Polynomial.eval_one, map_sub, map_add, map_one]
+  · simp only [pow_two, Polynomial.derivative_mul, Polynomial.derivative_X, one_mul, mul_one,
+      Polynomial.eval_sub, Polynomial.eval_add, Polynomial.eval_X, Polynomial.eval_one, map_sub,
+      map_add, map_one]
     calc
       (Ideal.Quotient.mk I a0 + Ideal.Quotient.mk I a0 - 1) *
           (Ideal.Quotient.mk I a0 + Ideal.Quotient.mk I a0 - 1) =

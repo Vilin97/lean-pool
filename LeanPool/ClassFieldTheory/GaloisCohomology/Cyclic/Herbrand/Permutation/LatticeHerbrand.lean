@@ -840,7 +840,7 @@ orders. -/
 theorem
     completePermutationLattice_herbrandQuotient_eq_stabilizerProduct
     {G ι : Type}
-    [Fintype G] [Group G] [Fintype ι] [DecidableEq ι]
+    [Fintype G] [Group G] [Fintype ι]
     (ρ : G →* Equiv.Perm ι)
     (L : Submodule ℤ (ι → ℝ)) [DiscreteTopology L]
     [IsZLattice ℝ L]
@@ -875,6 +875,7 @@ theorem
         ∏ ω : MulAction.orbitRel.Quotient G ι,
           (Fintype.card
             (permutationOrbitStabilizer ω) : ℚ) := by
+  classical
   let indexAction : MulAction G ι :=
     permutationMulAction ρ
   let ambientAction :

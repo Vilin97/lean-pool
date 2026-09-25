@@ -27,6 +27,9 @@ noncomputable section
 
 namespace ClassFieldTheory
 
+open GlobalClassFieldTheory.GlobalClassFields renaming
+  ideleClassNormChosenFinitePlaceLocalConductorExponent →
+    ideleClassNormChosenFinitePlaceLocalConductorExponent in
 /-- At any prime above `v`, the finite conductor exponent is at most one
 exactly when the residue characteristic is prime to the ramification index.
 The criterion is independent of the chosen prime above `v`. -/
@@ -98,14 +101,14 @@ theorem IsAbelianConductor.finiteExponent_le_one_iff_residueChar_not_dvd_ramific
     · exact (hd c).mp ((hc c).mpr le_rfl)
   have hCoeff :
       c.finitePart v =
-        GlobalClassFieldTheory.GlobalClassFields.ideleClassNormChosenFinitePlaceLocalConductorExponent
+        ideleClassNormChosenFinitePlaceLocalConductorExponent
           (K := K) (L := L) v := by
     rw [hcd]
     simpa only [d] using
       (abelianFullConductor_finiteExponent_eq_localConductorExponent
         (K := K) (L := L) v)
   have hChosen :
-      GlobalClassFieldTheory.GlobalClassFields.ideleClassNormChosenFinitePlaceLocalConductorExponent
+      ideleClassNormChosenFinitePlaceLocalConductorExponent
           (K := K) (L := L) v =
         LocalClassFieldTheory.localConductorExponent C E := by
     rfl

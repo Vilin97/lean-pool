@@ -676,6 +676,7 @@ theorem augmentation_foxCoefficient (i j : X) :
   (exists_rightFoxExpansion φ
     (relationWord φ hφ j)).choose_spec.2 i
 
+omit [DecidableEq X] in
 theorem augmentation_foxCoefficient_eq_repr
     (i j : X) :
     augmentation G (foxCoefficient φ hφ i j) =
@@ -837,6 +838,7 @@ theorem generator_mul_foxDeterminantLift_mem_mixed
       (commutator G)).neg_mem hneg
   simpa using this
 
+omit [DecidableEq X] in
 theorem delta_vecMul_foxMatrix :
     Matrix.vecMul
         (fun i : X =>

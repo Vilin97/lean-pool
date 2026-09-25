@@ -44,7 +44,7 @@ variable
 /-- Maximal cyclic extensions with the same exact narrow finite conductor
 have the same actual idèle-class norm subgroup. -/
 theorem
-    cyclicIdeleClassNorm_ranges_eq_of_narrowFiniteConductors_eq_of_rayClassGroup_cards_eq_extensionDegrees
+    cyclicIdeleClassNorm_ranges_eq_of_conductors_eq_of_rayClassGroup_cards_eq_extensionDegrees
     (hconductor :
       ideleClassNormNarrowFiniteConductor (K := K) (L := L) =
         ideleClassNormNarrowFiniteConductor (K := K) (L := M))
@@ -67,7 +67,7 @@ theorem
         RayClass.Modulus.congruenceSubgroup
           (RayClass.Modulus.narrowOfFinite
             (ideleClassNormNarrowFiniteConductor (K := K) (L := L))) :=
-      (ideleClassNorm_range_eq_narrowFiniteConductorCongruenceSubgroup_iff_rayClassGroup_card_eq_extensionDegree
+      (ideleClassNorm_range_eq_congruenceSubgroup_iff_rayClassGroup_card_eq_extensionDegree
         (K := K) (L := L)).2 hLcard
     _ =
         RayClass.Modulus.congruenceSubgroup
@@ -78,7 +78,7 @@ theorem
           (RayClass.Modulus.narrowOfFinite f))
         hconductor
     _ = (_root_.ideleClassNorm K M).range :=
-      ((ideleClassNorm_range_eq_narrowFiniteConductorCongruenceSubgroup_iff_rayClassGroup_card_eq_extensionDegree
+      ((ideleClassNorm_range_eq_congruenceSubgroup_iff_rayClassGroup_card_eq_extensionDegree
         (K := K) (L := M)).2 hMcard).symm
 
 /-- The actual norm quotients of two maximal cyclic extensions with the
@@ -104,7 +104,7 @@ def cyclicNormQuotientEquivOfNarrowFiniteConductorsEqOfRayClassGroupCardsEqExten
       (IdeleClassGroup K ⧸
         (_root_.ideleClassNorm K M).range) :=
   QuotientGroup.quotientMulEquivOfEq
-    (cyclicIdeleClassNorm_ranges_eq_of_narrowFiniteConductors_eq_of_rayClassGroup_cards_eq_extensionDegrees
+    (cyclicIdeleClassNorm_ranges_eq_of_conductors_eq_of_rayClassGroup_cards_eq_extensionDegrees
       (K := K) (L := L) (M := M)
       hconductor hLcard hMcard)
 
@@ -165,7 +165,7 @@ theorem
   have hnorm :
       (_root_.ideleClassNorm K L).range =
         (_root_.ideleClassNorm K M).range :=
-    cyclicIdeleClassNorm_ranges_eq_of_narrowFiniteConductors_eq_of_rayClassGroup_cards_eq_extensionDegrees
+    cyclicIdeleClassNorm_ranges_eq_of_conductors_eq_of_rayClassGroup_cards_eq_extensionDegrees
       (K := K) (L := L) (M := M)
       hconductor hLcard hMcard
   have hdegree :

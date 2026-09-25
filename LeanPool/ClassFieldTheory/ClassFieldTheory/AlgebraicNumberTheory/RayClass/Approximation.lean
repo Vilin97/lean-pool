@@ -14,7 +14,8 @@ finite places one may prescribe an arbitrary open multiplicative coset and
 move a given idele into all of those cosets by a single principal idele.
 -/
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 
 noncomputable section
 

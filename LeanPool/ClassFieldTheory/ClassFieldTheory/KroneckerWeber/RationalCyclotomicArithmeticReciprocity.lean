@@ -184,14 +184,12 @@ cyclotomic level inside the fixed rational separable closure. -/
 noncomputable def
     rationalCyclotomicLevelArithmeticGaloisContinuousMulEquivRayClassGroup
     :
-    Gal(
-        KummerTheory.rationalCyclotomicLevel
+    Gal(KummerTheory.rationalCyclotomicLevel
           ⟨m, NeZero.pos m⟩/ℚ) ≃ₜ*
       RayClass.RayClassGroup (RayClass.rationalModulus m) := by
   exact
     (commutativeGroupInversionContinuousMulEquiv
-      (Gal(
-        KummerTheory.rationalCyclotomicLevel
+      (Gal(KummerTheory.rationalCyclotomicLevel
           ⟨m, NeZero.pos m⟩/ℚ))).trans
       (rationalCyclotomicLevelGaloisContinuousMulEquivRayClassGroup m)
 

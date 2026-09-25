@@ -48,8 +48,7 @@ extension induces the canonical equivalence between their relative adele
 algebras. -/
 noncomputable def relativeAdeleCongr
     (e : L ≃ₐ[K] M) :
-    RelativeAdeleRing K L ≃ₐ[
-      NumberField.AdeleRing (𝓞 K) K]
+    RelativeAdeleRing K L ≃ₐ[NumberField.AdeleRing (𝓞 K) K]
       RelativeAdeleRing K M :=
   Algebra.TensorProduct.congr AlgEquiv.refl e
 

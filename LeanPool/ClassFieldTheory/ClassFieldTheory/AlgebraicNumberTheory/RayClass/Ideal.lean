@@ -19,7 +19,8 @@ connects it with the corresponding finite-idele higher-unit conditions, and
 develops the approximation maps used in ray-class ideal constructions.
 -/
 
-open scoped NumberField WithZero open NumberField IsDedekindDomain
+open scoped NumberField WithZero
+open NumberField IsDedekindDomain
 
 noncomputable section
 

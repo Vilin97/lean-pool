@@ -23,6 +23,9 @@ namespace Valuations
 
 universe u
 
+open DiscreteValuationField renaming
+  not_all_roots_same_valuation_of_primitive_irreducible_endpoints_nonunit →
+    not_all_roots_same_valuation_of_primitive_irreducible_endpoints_nonunit in
 /-- If the roots of a primitive irreducible polynomial all have the same
 value in a splitting field, then the nonunit-leading-coefficient branch has
 constant reduction. -/
@@ -57,7 +60,7 @@ theorem primitive_irreducible_reduction_natDegree_zero_of_leadingCoeff_nonunit_o
   have hconst : IsUnit (Q.coeff 0) := by
     by_contra hconst
     exact
-      (DiscreteValuationField.not_all_roots_same_valuation_of_primitive_irreducible_endpoints_nonunit
+      (not_all_roots_same_valuation_of_primitive_irreducible_endpoints_nonunit
         V B hQprim hQirr hsplit hlead hconst hα) hall
   have hconstBase : V.valuation (Q.coeff 0 : K) = 1 :=
     (V.valuation_eq_one_iff (Q.coeff 0)).mp hconst

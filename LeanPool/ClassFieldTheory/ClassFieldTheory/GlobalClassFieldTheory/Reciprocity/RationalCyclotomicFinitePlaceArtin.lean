@@ -104,21 +104,21 @@ private theorem mappedAbelianLocalArtin_eq_frobenius_zpow
 
 open scoped Classical in
 /-- The prime subtype supplies the primality instance used at this local factor. -/
-local instance rationalCyclotomicFinitePlaceArtinPrimeFact (q : Nat.Primes) : Fact q.1.Prime :=
+theorem rationalCyclotomicFinitePlaceArtinPrimeFact (q : Nat.Primes) : Fact q.1.Prime :=
   ⟨q.2⟩
 
 attribute [local instance] rationalCyclotomicFinitePlaceArtinPrimeFact
 
 open scoped Classical in
 /-- The positive cyclotomic level has nonzero underlying natural number. -/
-local instance rationalCyclotomicFinitePlaceArtinPositiveLevelNeZero (m : ℕ+) : NeZero (m : ℕ) :=
+theorem rationalCyclotomicFinitePlaceArtinPositiveLevelNeZero (m : ℕ+) : NeZero (m : ℕ) :=
   ⟨m.ne_zero⟩
 
 attribute [local instance] rationalCyclotomicFinitePlaceArtinPositiveLevelNeZero
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicLevelFiniteDimensional
+/-- A finite rational cyclotomic level has finite degree over the rationals. -/
+theorem rationalCyclotomicLevelFiniteDimensional
     (m : ℕ+) :
     FiniteDimensional ℚ
       (KummerTheory.rationalCyclotomicLevel m) :=
@@ -128,8 +128,8 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicLevelFiniteDimensional
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicLevelIsAbelianGalois
+/-- A rational cyclotomic level is an abelian Galois extension of the rationals. -/
+theorem rationalCyclotomicLevelIsAbelianGalois
     (m : ℕ+) :
     IsAbelianGalois ℚ
       (KummerTheory.rationalCyclotomicLevel m) := by
@@ -164,7 +164,8 @@ noncomputable local instance rationalFinitePlaceBaseNontriviallyNormedField
 attribute [local instance] rationalFinitePlaceBaseNontriviallyNormedField
 
 open scoped Classical in
-noncomputable local instance rationalFinitePlaceBaseLocallyCompactSpace
+/-- The completion of the rationals at a finite prime is locally compact. -/
+theorem rationalFinitePlaceBaseLocallyCompactSpace
     (q : Nat.Primes) :
     LocallyCompactSpace
       (HeightOneSpectrum.adicAbv ℚ
@@ -176,7 +177,8 @@ noncomputable local instance rationalFinitePlaceBaseLocallyCompactSpace
 attribute [local instance] rationalFinitePlaceBaseLocallyCompactSpace
 
 open scoped Classical in
-noncomputable local instance rationalFinitePlaceBaseIsUltrametricDist
+/-- The metric on the rational prime completion satisfies the ultrametric inequality. -/
+theorem rationalFinitePlaceBaseIsUltrametricDist
     (q : Nat.Primes) :
     IsUltrametricDist
       (HeightOneSpectrum.adicAbv ℚ
@@ -249,8 +251,8 @@ noncomputable local instance rationalFinitePlaceBaseValuationCompatible
 attribute [local instance] rationalFinitePlaceBaseValuationCompatible
 
 open scoped Classical in
-noncomputable local instance
-    rationalFinitePlaceBaseValuativeRelIsNontrivial
+/-- The valuation relation on the rational prime completion is nontrivial. -/
+theorem rationalFinitePlaceBaseValuativeRelIsNontrivial
     (q : Nat.Primes) :
     ValuativeRel.IsNontrivial
       (HeightOneSpectrum.adicAbv ℚ
@@ -265,7 +267,8 @@ noncomputable local instance
 attribute [local instance] rationalFinitePlaceBaseValuativeRelIsNontrivial
 
 open scoped Classical in
-noncomputable local instance rationalFinitePlaceBaseIsValuativeTopology
+/-- The topology of the rational prime completion is induced by its valuation relation. -/
+theorem rationalFinitePlaceBaseIsValuativeTopology
     (q : Nat.Primes) :
     IsValuativeTopology
       (HeightOneSpectrum.adicAbv ℚ
@@ -277,14 +280,16 @@ noncomputable local instance rationalFinitePlaceBaseIsValuativeTopology
 attribute [local instance] rationalFinitePlaceBaseIsValuativeTopology
 
 open scoped Classical in
-noncomputable local instance
-    rationalFinitePlaceBaseIsNonarchimedeanLocalField
+/-- The rational prime completion is a nonarchimedean local field. -/
+theorem rationalFinitePlaceBaseIsNonarchimedeanLocalField
     (q : Nat.Primes) :
     IsNonarchimedeanLocalField
       (HeightOneSpectrum.adicAbv ℚ
         (RayClass.rationalPrime q)).Completion :=
   finitePlaceLocalArtinCompletionIsNonarchimedeanLocalField
     (K := ℚ) (RayClass.rationalPrime q)
+
+attribute [local instance] rationalFinitePlaceBaseIsNonarchimedeanLocalField
 
 /-! Named compatibility witnesses used by the ramified-prime and ray-norm
 modules.  They are not installed as a duplicate module-level instance family;
@@ -1125,8 +1130,9 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinLocalizedGlobalSMul
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinLocalizedScalarTower
+/-- Rational scalar multiplication factors through the base prime completion on the localized
+cyclotomic field. -/
+theorem rationalCyclotomicArtinLocalizedScalarTower
     (m : ℕ+) (q : Nat.Primes) :
     IsScalarTower ℚ
       (rationalCyclotomicArtinBaseAbv q).Completion
@@ -1139,8 +1145,8 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinLocalizedScalarTower
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinLocalizedFiniteDimensional
+/-- The localized cyclotomic field is finite dimensional over the base prime completion. -/
+theorem rationalCyclotomicArtinLocalizedFiniteDimensional
     (m : ℕ+) (q : Nat.Primes) :
     FiniteDimensional
       (rationalCyclotomicArtinBaseAbv q).Completion
@@ -1153,8 +1159,8 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinLocalizedFiniteDimensional
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinLocalizedIsAbelianGalois
+/-- The localized cyclotomic field is abelian Galois over the base prime completion. -/
+theorem rationalCyclotomicArtinLocalizedIsAbelianGalois
     (m : ℕ+) (q : Nat.Primes) :
     IsAbelianGalois
       (rationalCyclotomicArtinBaseAbv q).Completion
@@ -1169,8 +1175,8 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinLocalizedIsAbelianGalois
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinLocalizedIsSeparable
+/-- The localized cyclotomic extension is separable over the base prime completion. -/
+theorem rationalCyclotomicArtinLocalizedIsSeparable
     (m : ℕ+) (q : Nat.Primes) :
     Algebra.IsSeparable
       (rationalCyclotomicArtinBaseAbv q).Completion
@@ -1180,8 +1186,9 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinLocalizedIsSeparable
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinLocalizedIsCyclotomic
+/-- The localized field remains cyclotomic of the selected level over the base prime completion.
+-/
+theorem rationalCyclotomicArtinLocalizedIsCyclotomic
     (m : ℕ+) (q : Nat.Primes) :
     IsCyclotomicExtension {(m : ℕ)}
       (rationalCyclotomicArtinBaseAbv q).Completion
@@ -1192,8 +1199,8 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinLocalizedIsCyclotomic
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinExtensionFiniteDimensional
+/-- The completed cyclotomic extension is finite dimensional over the base prime completion. -/
+theorem rationalCyclotomicArtinExtensionFiniteDimensional
     (m : ℕ+) (q : Nat.Primes) :
     FiniteDimensional
       (rationalCyclotomicArtinBaseAbv q).Completion
@@ -1207,8 +1214,9 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinExtensionFiniteDimensional
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinExtensionContinuousSMul
+/-- Scalar multiplication by the base prime completion is continuous on the completed extension.
+-/
+theorem rationalCyclotomicArtinExtensionContinuousSMul
     (m : ℕ+) (q : Nat.Primes) :
     ContinuousSMul
       (rationalCyclotomicArtinBaseAbv q).Completion
@@ -1222,8 +1230,8 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinExtensionContinuousSMul
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinExtensionLocallyCompact
+/-- The completion of the chosen cyclotomic prime extension is locally compact. -/
+theorem rationalCyclotomicArtinExtensionLocallyCompact
     (m : ℕ+) (q : Nat.Primes) :
     LocallyCompactSpace
       (rationalCyclotomicArtinExtension m q).1.Completion :=
@@ -1249,8 +1257,8 @@ private noncomputable def
       Isometry.of_dist_eq fun _ _ => rfl }
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinLocalizedLocallyCompact
+/-- The localized cyclotomic field is locally compact. -/
+theorem rationalCyclotomicArtinLocalizedLocallyCompact
     (m : ℕ+) (q : Nat.Primes) :
     LocallyCompactSpace
       (rationalCyclotomicArtinLocalizedField m q) :=
@@ -1260,8 +1268,8 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinLocalizedLocallyCompact
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinLocalizedIsUltrametricDist
+/-- The metric on the localized cyclotomic field satisfies the ultrametric inequality. -/
+theorem rationalCyclotomicArtinLocalizedIsUltrametricDist
     (m : ℕ+) (q : Nat.Primes) :
     IsUltrametricDist
       (rationalCyclotomicArtinLocalizedField m q) :=
@@ -1345,8 +1353,8 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinLocalizedValuationIsNontrivial
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinLocalizedValuativeRelIsNontrivial
+/-- The valuation relation on the localized cyclotomic field is nontrivial. -/
+theorem rationalCyclotomicArtinLocalizedValuativeRelIsNontrivial
     (m : ℕ+) (q : Nat.Primes) :
     ValuativeRel.IsNontrivial
       (rationalCyclotomicArtinLocalizedField m q) :=
@@ -1357,8 +1365,8 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinLocalizedValuativeRelIsNontrivial
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinLocalizedIsValuativeTopology
+/-- The localized cyclotomic topology is induced by its valuation relation. -/
+theorem rationalCyclotomicArtinLocalizedIsValuativeTopology
     (m : ℕ+) (q : Nat.Primes) :
     IsValuativeTopology
       (rationalCyclotomicArtinLocalizedField m q) :=
@@ -1368,8 +1376,8 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinLocalizedIsValuativeTopology
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinLocalizedIsNonarchimedeanLocalField
+/-- The localized cyclotomic field is a nonarchimedean local field. -/
+theorem rationalCyclotomicArtinLocalizedIsNonarchimedeanLocalField
     (m : ℕ+) (q : Nat.Primes) :
     IsNonarchimedeanLocalField
       (rationalCyclotomicArtinLocalizedField m q) :=
@@ -1394,8 +1402,8 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinLocalizedIntegerAlgebra
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinLocalizedIsIntegralClosure
+/-- The localized integer ring is the integral closure of the base completion's integer ring. -/
+theorem rationalCyclotomicArtinLocalizedIsIntegralClosure
     (m : ℕ+) (q : Nat.Primes) :
     IsIntegralClosure
       𝒪[rationalCyclotomicArtinLocalizedField m q]
@@ -1412,8 +1420,8 @@ noncomputable local instance
 attribute [local instance] rationalCyclotomicArtinLocalizedIsIntegralClosure
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinLocalizedIntegerModuleFinite
+/-- The localized integer ring is a finite module over the base completion's integer ring. -/
+theorem rationalCyclotomicArtinLocalizedIntegerModuleFinite
     (m : ℕ+) (q : Nat.Primes) :
     Module.Finite
       𝒪[(rationalCyclotomicArtinBaseAbv q).Completion]
@@ -1432,8 +1440,9 @@ This section reuses the canonical finite-place Artin tower above.  In
 particular, it introduces no parallel completion/localization instance tower. -/
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicPrincipalPrimeLevelIsCyclotomicExtension
+/-- The level with prime-power modulus is a cyclotomic extension of that order over the
+rationals. -/
+theorem rationalCyclotomicPrincipalPrimeLevelIsCyclotomicExtension
     (p : Nat.Primes) (n : ℕ) :
     IsCyclotomicExtension {p.1 ^ (n + 1)} ℚ
       (KummerTheory.rationalCyclotomicLevel
@@ -1502,8 +1511,9 @@ private noncomputable def rationalFinitePlaceCompletionAlgEquivPadic
     (rationalFinitePlaceCompletionRingEquivPadic_algebraMap p)
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicArtinLocalizedPadicScalarTower
+/-- Rational scalar multiplication on the localized cyclotomic field factors through the p-adic
+field. -/
+theorem rationalCyclotomicArtinLocalizedPadicScalarTower
     (m : ℕ+) (p : Nat.Primes) :
     IsScalarTower ℚ ℚ_[p.1]
       (rationalCyclotomicArtinLocalizedField m p) := by
@@ -1626,8 +1636,9 @@ attribute [local instance]
   rationalCyclotomicPrincipalPrimePadicLevelFiniteDimensional
 
 open scoped Classical in
-noncomputable local instance
-    rationalCyclotomicPrincipalPrimePadicLevelIsAbelianGalois
+/-- The prime-power cyclotomic p-adic level is an abelian Galois extension of the p-adic field.
+-/
+theorem rationalCyclotomicPrincipalPrimePadicLevelIsAbelianGalois
     (p : Nat.Primes) (n : ℕ) :
     IsAbelianGalois ℚ_[p.1]
       (RationalCyclotomicPrincipalPrimePadicLevel p n) :=
@@ -1800,8 +1811,7 @@ open scoped Classical in
 private theorem
     rationalCyclotomicPrincipalPrime_galEquivZMod_eq_of_action
     (p : Nat.Primes) (n : ℕ)
-    (sigma : Gal(
-      rationalCyclotomicPrincipalPrimeLevel
+    (sigma : Gal(rationalCyclotomicPrincipalPrimeLevel
         (rationalCyclotomicPrincipalPrimeModulus p n)/ℚ))
     (a : (ZMod (p.1 ^ (n + 1)))ˣ)
     (haction :
@@ -2601,8 +2611,7 @@ private noncomputable def rationalCyclotomicArtinLocalFrobeniusOf
       IsNonarchimedeanLocalField.IsUnramifiedValuedExtension
         (rationalCyclotomicArtinBaseAbv q).Completion
         (rationalCyclotomicArtinLocalizedField m q)) :
-    rationalCyclotomicArtinLocalizedField m q ≃ₐ[
-      (rationalCyclotomicArtinBaseAbv q).Completion]
+    rationalCyclotomicArtinLocalizedField m q ≃ₐ[(rationalCyclotomicArtinBaseAbv q).Completion]
       rationalCyclotomicArtinLocalizedField m q := by
   letI := hUnramified
   exact arithmeticFrobeniusOfUnramifiedValuation
@@ -2613,8 +2622,7 @@ open scoped Classical in
 private noncomputable def rationalCyclotomicArtinLocalFrobenius
     (m : ℕ+) (q : Nat.Primes)
     (hq : ¬ q.1 ∣ (m : ℕ)) :
-    rationalCyclotomicArtinLocalizedField m q ≃ₐ[
-      (rationalCyclotomicArtinBaseAbv q).Completion]
+    rationalCyclotomicArtinLocalizedField m q ≃ₐ[(rationalCyclotomicArtinBaseAbv q).Completion]
       rationalCyclotomicArtinLocalizedField m q :=
   rationalCyclotomicArtinLocalFrobeniusOf m q
     (rationalCyclotomicArtinUnramified m q hq)
@@ -2624,8 +2632,7 @@ private noncomputable def rationalCyclotomicArtinDecompositionEquiv
     (m : ℕ+) (q : Nat.Primes) :
     absoluteValueDecompositionGroup ℚ
         (rationalCyclotomicArtinExtension m q).1 ≃*
-      (rationalCyclotomicArtinLocalizedField m q ≃ₐ[
-        (rationalCyclotomicArtinBaseAbv q).Completion]
+      (rationalCyclotomicArtinLocalizedField m q ≃ₐ[(rationalCyclotomicArtinBaseAbv q).Completion]
         rationalCyclotomicArtinLocalizedField m q) :=
   decompositionGroupEquivAlgebraicLocalizationAut
     (rationalCyclotomicArtinBaseAbv q)
@@ -2636,8 +2643,7 @@ private noncomputable def rationalCyclotomicArtinDecompositionEquiv
 open scoped Classical in
 private noncomputable def rationalCyclotomicArtinLocalToGlobalMonoidHom
     (m : ℕ+) (q : Nat.Primes) :
-    (rationalCyclotomicArtinLocalizedField m q ≃ₐ[
-      (rationalCyclotomicArtinBaseAbv q).Completion]
+    (rationalCyclotomicArtinLocalizedField m q ≃ₐ[(rationalCyclotomicArtinBaseAbv q).Completion]
       rationalCyclotomicArtinLocalizedField m q) →*
         (rationalCyclotomicArtinLevel m ≃ₐ[ℚ]
           rationalCyclotomicArtinLevel m) :=
@@ -2650,8 +2656,7 @@ open scoped Classical in
 private noncomputable abbrev rationalCyclotomicArtinLocalArtin
     (m : ℕ+) (q : Nat.Primes)
     (x : ((RayClass.rationalPrime q).adicCompletion ℚ)ˣ) :
-    rationalCyclotomicArtinLocalizedField m q ≃ₐ[
-      (rationalCyclotomicArtinBaseAbv q).Completion]
+    rationalCyclotomicArtinLocalizedField m q ≃ₐ[(rationalCyclotomicArtinBaseAbv q).Completion]
       rationalCyclotomicArtinLocalizedField m q :=
   finitePlaceLocalArtinMonoidHom
     (K := ℚ) (L := rationalCyclotomicArtinLevel m)
@@ -2987,8 +2992,8 @@ private theorem rationalCyclotomicArtinFrobeniusLift_localization
           (rationalCyclotomicArtinExtension m q).2
           (rationalCyclotomicLevelPrimitiveRoot m)) :=
       congrArg
-        (fun σ : rationalCyclotomicArtinLocalizedField m q ≃ₐ[
-          (rationalCyclotomicArtinBaseAbv q).Completion]
+        (fun σ : rationalCyclotomicArtinLocalizedField m q ≃ₐ[(rationalCyclotomicArtinBaseAbv
+          q).Completion]
           rationalCyclotomicArtinLocalizedField m q =>
             σ (AbsoluteValue.toAlgebraicLocalization
               (rationalCyclotomicArtinBaseAbv q)

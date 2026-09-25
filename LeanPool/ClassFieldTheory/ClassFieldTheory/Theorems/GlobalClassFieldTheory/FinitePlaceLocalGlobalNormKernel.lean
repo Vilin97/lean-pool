@@ -33,6 +33,9 @@ noncomputable section
 
 namespace ClassFieldTheory
 
+open GlobalClassFieldTheory.Reciprocity renaming
+  chosenFinitePlaceArtinMonoidHom_eq_one_iff_chosenLocalNorm →
+    chosenFinitePlaceArtinMonoidHom_eq_one_iff_chosenLocalNorm in
 /-- A finite abelian extension has one global Artin homomorphism whose
 restriction to each finite completion has precisely the tensor-norm kernel. -/
 theorem exists_finiteAbelianGlobalArtin_finitePlaceNormKernel
@@ -75,7 +78,7 @@ theorem exists_finiteAbelianGlobalArtin_finitePlaceNormKernel
         (GlobalClassFieldTheory.Reciprocity.globalNormResidueMonoidHom_comp_finitePlaceIdeleClass
           (K := K) (L := L) v) x
     rw [hcompat]
-    rw [GlobalClassFieldTheory.Reciprocity.chosenFinitePlaceArtinMonoidHom_eq_one_iff_chosenLocalNorm,
+    rw [chosenFinitePlaceArtinMonoidHom_eq_one_iff_chosenLocalNorm,
       ← finitePlaceLocalTensorNorm_range_eq_chosenLocalNormSubgroup (K := K) (L := L) v]
     change x ∈ (localTensorNorm (K := K) (L := L) v).range ↔
       x ∈ finitePlaceTensorNormSubgroup K L v

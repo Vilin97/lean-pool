@@ -185,8 +185,8 @@ instance equalCharacteristicChangedCompletedLevelField_charP
 noncomputable def
     equalCharacteristicChangedCompletedLevelFieldEquivSplittingField
     (F : LocalField.{u, v} K) (u : F.residueField⟦X⟧ˣ) (n : ℕ) :
-    equalCharacteristicChangedCompletedLevelField F u n ≃ₐ[
-      equalCharacteristicCompletedUnramifiedField F.residueField]
+    equalCharacteristicChangedCompletedLevelField F u n
+      ≃ₐ[equalCharacteristicCompletedUnramifiedField F.residueField]
       (equalCharacteristicChangedCompletedPrimitivePolynomial F u n).SplittingField :=
   AlgEquiv.refl
 

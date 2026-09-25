@@ -185,11 +185,11 @@ theorem complexFourthRootField_map_complexConjugation :
     rw [← map_pow, hx, map_one]
   · intro hz
     refine ⟨star z, ?_, ?_⟩
-    rcases hz with ⟨n, hn, hn0, hz⟩
-    refine ⟨n, hn, hn0, ?_⟩
-    rw [← star_pow, hz, star_one]
-    change star (star z) = z
-    exact star_star z
+    · rcases hz with ⟨n, hn, hn0, hz⟩
+      refine ⟨n, hn, hn0, ?_⟩
+      rw [← star_pow, hz, star_one]
+    · change star (star z) = z
+      exact star_star z
 
 open scoped Classical in
 /-- The chosen infinite place of the rational complexification is

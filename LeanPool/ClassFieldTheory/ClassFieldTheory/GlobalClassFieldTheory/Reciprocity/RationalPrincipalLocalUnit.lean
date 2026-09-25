@@ -52,7 +52,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
     valuationSubringUnitsToFieldUnits_mem_unitGroup
 
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 
 noncomputable section
 

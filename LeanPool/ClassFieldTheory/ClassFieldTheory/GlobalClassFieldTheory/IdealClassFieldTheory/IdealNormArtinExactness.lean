@@ -430,6 +430,9 @@ theorem unramifiedPrime_idealNormDecompositionLaw
       (K := K) (L := L) m hm v hv hunram
 
 open scoped Classical in
+open GlobalClassFields renaming
+  arithmeticFinitePlacePrimeArtin_eq_one_iff_splitsCompletely_of_chosenUnramified →
+    primeArtin_eq_one_iff_splitsCompletely_of_unramified in
 /-- An unramified prime outside `m` splits completely exactly when its
 ideal class belongs to `N_{L/K} J_L^m P_K^m`. -/
 theorem
@@ -454,7 +457,7 @@ theorem
         GlobalClassFields.arithmeticFinitePlacePrimeArtin
             (K := K) (L := L) v =
           1 :=
-      (GlobalClassFields.arithmeticFinitePlacePrimeArtin_eq_one_iff_splitsCompletely_of_chosenUnramified
+      (primeArtin_eq_one_iff_splitsCompletely_of_unramified
           (K := K) (L := L) v hunram).symm
     _ ↔
         arithmeticIdealArtinGaloisMap

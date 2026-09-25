@@ -42,7 +42,7 @@ variable
 subgroup at its narrow finite conductor if and only if the conductor ray
 class group and the actual norm quotient have the same order. -/
 theorem
-    ideleClassNorm_range_eq_narrowFiniteConductorCongruenceSubgroup_iff_rayClassGroup_card_eq_normQuotient_card :
+    ideleClassNorm_range_eq_congruenceSubgroup_iff_rayClassGroup_card_eq_normQuotient_card :
     (_root_.ideleClassNorm K L).range =
         RayClass.Modulus.congruenceSubgroup
           (RayClass.Modulus.narrowOfFinite
@@ -148,7 +148,7 @@ def normQuotientEquivNarrowFiniteConductorRayClassGroup
         (RayClass.Modulus.narrowOfFinite
           (ideleClassNormNarrowFiniteConductor (K := K) (L := L))) :=
   QuotientGroup.quotientMulEquivOfEq
-    ((ideleClassNorm_range_eq_narrowFiniteConductorCongruenceSubgroup_iff_rayClassGroup_card_eq_normQuotient_card
+    ((ideleClassNorm_range_eq_congruenceSubgroup_iff_rayClassGroup_card_eq_normQuotient_card
       (K := K) (L := L)).2 hcard)
 
 /-- Two finite Galois extensions with the same exact narrow finite
@@ -187,7 +187,7 @@ theorem
         RayClass.Modulus.congruenceSubgroup
           (RayClass.Modulus.narrowOfFinite
             (ideleClassNormNarrowFiniteConductor (K := K) (L := L))) :=
-      (ideleClassNorm_range_eq_narrowFiniteConductorCongruenceSubgroup_iff_rayClassGroup_card_eq_normQuotient_card
+      (ideleClassNorm_range_eq_congruenceSubgroup_iff_rayClassGroup_card_eq_normQuotient_card
         (K := K) (L := L)).2 hLcard
     _ =
         RayClass.Modulus.congruenceSubgroup
@@ -198,7 +198,7 @@ theorem
           (RayClass.Modulus.narrowOfFinite f))
         hconductor
     _ = (_root_.ideleClassNorm K M).range :=
-      ((ideleClassNorm_range_eq_narrowFiniteConductorCongruenceSubgroup_iff_rayClassGroup_card_eq_normQuotient_card
+      ((ideleClassNorm_range_eq_congruenceSubgroup_iff_rayClassGroup_card_eq_normQuotient_card
         (K := K) (L := M)).2 hMcard).symm
 
 /-- The actual norm quotients of two maximal narrow finite conductor

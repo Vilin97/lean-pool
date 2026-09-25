@@ -33,6 +33,61 @@ noncomputable section
 
 namespace ClassFieldTheory
 
+private theorem finiteAbelianReciprocityData_prime_formula
+    (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L]
+    [Algebra K L] [FiniteDimensional K L] [IsAbelianGalois K L]
+    (D : FiniteAbelianReciprocityData K L) :
+  let m := GlobalClassFieldComparison.rayClassModulusToOriginal K D.modulus
+  let e := GlobalClassFieldComparison.rayClassGroupEquivOriginalIdele K D.modulus
+  let a : RayClass.RayClassGroup m →* (L ≃ₐ[K] L) :=
+    D.artin.comp e.symm.toMonoidHom
+  ∀ (p : HeightOneSpectrum (𝓞 K))
+        (_hp : p ∉ m.finitePart.support),
+        a (QuotientGroup.mk' m.congruenceSubgroup
+          (QuotientGroup.mk' (IdeleGroup.principalSubgroup K)
+            (IdeleGroup.finitePrimeIdele p))) =
+          GlobalClassFieldTheory.GlobalClassFields.arithmeticFinitePlacePrimeArtin
+            (K := K) (L := L) p := by
+  classical
+  let m := GlobalClassFieldComparison.rayClassModulusToOriginal K D.modulus
+  let e := GlobalClassFieldComparison.rayClassGroupEquivOriginalIdele K D.modulus
+  let a : RayClass.RayClassGroup m →* (L ≃ₐ[K] L) :=
+    D.artin.comp e.symm.toMonoidHom
+  dsimp only
+  intro p hp
+  have hpD : p ∉ D.modulus.finitePart.support := hp
+  change D.artin (e.symm (QuotientGroup.mk' m.congruenceSubgroup
+    (QuotientGroup.mk' (IdeleGroup.principalSubgroup K)
+      (IdeleGroup.finitePrimeIdele p)))) = _
+  rw [← GlobalClassFieldComparison.rayClassGroupEquivOriginalIdele_prime
+    K D.modulus p hpD]
+  have hFrob :
+      D.artin (rayClassOfFinitePrime D.modulus p hpD) =
+        GlobalClassFieldTheory.GlobalClassFields.arithmeticFinitePlacePrimeArtin
+          (K := K) (L := L) p := by
+    let w₀ := _root_.chosenFinitePlaceExtension (L := L) p
+    let w' := _root_.finitePlaceExtensionCentre (K := K) (L := L) p w₀
+    have hw : w'.asIdeal.LiesOver p.asIdeal :=
+      _root_.finitePlaceExtensionCentre_liesOver
+        (K := K) (L := L) p w₀
+    have hunram : Algebra.IsUnramifiedAt (𝓞 K) w'.asIdeal :=
+      (D.unramifiedOutsideModulus.1 p hpD) w'.asIdeal inferInstance hw
+    calc
+      D.artin (rayClassOfFinitePrime D.modulus p hpD) =
+          arithmeticFrobeniusAt (K := K) w' :=
+        D.artin_frobenius p hpD w' hw
+      _ = GlobalClassFieldTheory.GlobalClassFields.arithmeticFinitePlacePrimeArtin
+            (K := K) (L := L) p :=
+        (GlobalClassFieldComparison.arithmeticPrimeArtin_eq_arithmeticFrobeniusAt
+          (K := K) (L := L) p w' hw hunram).symm
+  simpa only [e, MulEquiv.symm_apply_apply] using hFrob
+
+open GlobalClassFieldTheory.GlobalClassFields renaming
+  rayArtin_comp_ideleClass_eq_arithmeticGlobalNormResidue →
+    rayArtin_comp_ideleClass_eq_arithmeticGlobalNormResidue in
+open GlobalClassFieldTheory.Reciprocity renaming
+  arithmeticGlobalNormResidueMonoidHom_comp_finitePlaceIdeleClass →
+    arithmeticGlobalNormResidueMonoidHom_comp_finitePlaceIdeleClass in
 /-- At every finite place, including those in the modulus, the
 Frobenius-normalized ray Artin value equals the transported inverse of the
 independently constructed local Artin value. The transport is injective and
@@ -101,41 +156,7 @@ theorem exists_finitePlaceRayArtin_localValueDiagram
   let e := GlobalClassFieldComparison.rayClassGroupEquivOriginalIdele K D.modulus
   let a : RayClass.RayClassGroup m →* (L ≃ₐ[K] L) :=
     D.artin.comp e.symm.toMonoidHom
-  have hprime :
-      ∀ (p : HeightOneSpectrum (𝓞 K))
-        (_hp : p ∉ m.finitePart.support),
-        a (QuotientGroup.mk' m.congruenceSubgroup
-          (QuotientGroup.mk' (IdeleGroup.principalSubgroup K)
-            (IdeleGroup.finitePrimeIdele p))) =
-          GlobalClassFieldTheory.GlobalClassFields.arithmeticFinitePlacePrimeArtin
-            (K := K) (L := L) p := by
-    intro p hp
-    have hpD : p ∉ D.modulus.finitePart.support := hp
-    change D.artin (e.symm (QuotientGroup.mk' m.congruenceSubgroup
-      (QuotientGroup.mk' (IdeleGroup.principalSubgroup K)
-        (IdeleGroup.finitePrimeIdele p)))) = _
-    rw [← GlobalClassFieldComparison.rayClassGroupEquivOriginalIdele_prime
-      K D.modulus p hpD]
-    have hFrob :
-        D.artin (rayClassOfFinitePrime D.modulus p hpD) =
-          GlobalClassFieldTheory.GlobalClassFields.arithmeticFinitePlacePrimeArtin
-            (K := K) (L := L) p := by
-      let w₀ := _root_.chosenFinitePlaceExtension (L := L) p
-      let w' := _root_.finitePlaceExtensionCentre (K := K) (L := L) p w₀
-      have hw : w'.asIdeal.LiesOver p.asIdeal :=
-        _root_.finitePlaceExtensionCentre_liesOver
-          (K := K) (L := L) p w₀
-      have hunram : Algebra.IsUnramifiedAt (𝓞 K) w'.asIdeal :=
-        (D.unramifiedOutsideModulus.1 p hpD) w'.asIdeal inferInstance hw
-      calc
-        D.artin (rayClassOfFinitePrime D.modulus p hpD) =
-            arithmeticFrobeniusAt (K := K) w' :=
-          D.artin_frobenius p hpD w' hw
-        _ = GlobalClassFieldTheory.GlobalClassFields.arithmeticFinitePlacePrimeArtin
-              (K := K) (L := L) p :=
-          (GlobalClassFieldComparison.arithmeticPrimeArtin_eq_arithmeticFrobeniusAt
-            (K := K) (L := L) p w' hw hunram).symm
-    simpa only [e, MulEquiv.symm_apply_apply] using hFrob
+  have hprime := finiteAbelianReciprocityData_prime_formula K L D
   let ι : (v.adicCompletion K)ˣ →* RayClassGroup D.modulus :=
     e.symm.toMonoidHom.comp
       ((QuotientGroup.mk' m.congruenceSubgroup).comp
@@ -148,12 +169,12 @@ theorem exists_finitePlaceRayArtin_localValueDiagram
       D.artin (ι x) =
           GlobalClassFieldTheory.Reciprocity.arithmeticGlobalNormResidueMonoidHom
             K L (IdeleGroup.finitePlaceIdeleClass v x) :=
-        GlobalClassFieldTheory.GlobalClassFields.rayArtin_comp_ideleClass_eq_arithmeticGlobalNormResidue
+        rayArtin_comp_ideleClass_eq_arithmeticGlobalNormResidue
           m a hprime (IdeleGroup.finitePlaceIdeleClass v x)
       _ = GlobalClassFieldTheory.Reciprocity.arithmeticChosenFinitePlaceArtinMonoidHom
             K L v x := by
         exact DFunLike.congr_fun
-          (GlobalClassFieldTheory.Reciprocity.arithmeticGlobalNormResidueMonoidHom_comp_finitePlaceIdeleClass
+          (arithmeticGlobalNormResidueMonoidHom_comp_finitePlaceIdeleClass
             (K := K) (L := L) v) x
   have hfactor (x : (v.adicCompletion K)ˣ) :
       GlobalClassFieldTheory.Reciprocity.chosenFinitePlaceArtinMonoidHom
@@ -182,12 +203,8 @@ theorem exists_finitePlaceRayArtin_localValueDiagram
         _ = (δ : L ≃ₐ[K] L) := hx
     change eD.symm (localE x) = eD.symm τ at hxD
     exact eD.symm.injective hxD
-  have hTransportInj : Function.Injective transport := by
-    intro σ τ hστ
-    have hD : eD.symm (eAut.symm σ) = eD.symm (eAut.symm τ) := by
-      apply Subtype.coe_injective
-      exact hστ
-    exact eAut.symm.injective (eD.symm.injective hD)
+  have hTransportInj : Function.Injective transport :=
+    Subtype.val_injective.comp (eD.symm.injective.comp eAut.symm.injective)
   have hTransportRange (γ : L ≃ₐ[K] L) :
       (∃ σ, transport σ = γ) ↔
         ∀ y : L, w.1 (γ y) < 1 ↔ w.1 y < 1 := by
@@ -258,13 +275,8 @@ theorem exists_finitePlaceRayArtin_localValueDiagram
     ext x
     change localArtin x = 1 ↔ x ∈ finitePlaceTensorNormSubgroup K L v
     calc
-      localArtin x = 1 ↔ transport (localArtin x) = 1 := by
-        constructor
-        · intro hx
-          rw [hx, map_one]
-        · intro hx
-          apply hTransportInj
-          simpa only [map_one] using hx
+      localArtin x = 1 ↔ transport (localArtin x) = 1 :=
+        (hTransportInj.eq_iff' (map_one transport)).symm
       _ ↔ D.artin (ι x) = 1 := by
         rw [hDiagram x, inv_eq_one]
       _ ↔ x ∈ finitePlaceTensorNormSubgroup K L v := by

@@ -20,7 +20,8 @@ absolute-value completion and mathlib's concrete adic completion gives the
 local factor comparison used in the adelic restricted-product bridge.
 -/
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 
 noncomputable section
 

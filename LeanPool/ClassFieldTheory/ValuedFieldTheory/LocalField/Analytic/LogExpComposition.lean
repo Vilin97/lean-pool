@@ -282,7 +282,7 @@ theorem hasSum_powerSeries_subst_sigma
 
 /-- Regrouping the expanded substitution by the final monomial degree gives
 the coefficient evaluation of the formal substitution itself.  Finiteness
-of every regrouped fiber is supplied by `PowerSeries.coeff_subst_finite'`.-/
+of every regrouped fiber is supplied by `PowerSeries.coeff_subst_finite'`. -/
 theorem hasSum_powerSeries_subst_coeff_mul_pow_of_sigma
     [Valued K (WithZero (Multiplicative ℤ))]
     (f g : PowerSeries K) (x z : K)

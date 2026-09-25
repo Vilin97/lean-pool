@@ -36,6 +36,9 @@ local instance bigHilbertArtinIdeleClassGroupIsMulCommutative :
 attribute [local instance] bigHilbertArtinIdeleClassGroupIsMulCommutative
 
 open scoped Classical in
+open GlobalClassFieldTheory.GlobalClassFields renaming
+  finiteUnramifiedAbelianExtension_nonempty_algHom_bigHilbertClassField →
+    finiteUnramifiedAbelianExtension_nonempty_algHom_bigHilbertClassField in
 /-- An intrinsic big Hilbert class field is equivalent over `K` to the
 selected realization. -/
 noncomputable def bigHilbertClassFieldEquivOfIsBig
@@ -43,7 +46,7 @@ noncomputable def bigHilbertClassFieldEquivOfIsBig
     E ≃ₐ[K] GlobalClassFieldTheory.GlobalClassFields.bigHilbertClassField K := by
   let H := GlobalClassFieldTheory.GlobalClassFields.bigHilbertClassField K
   let f := Classical.choice
-    (GlobalClassFieldTheory.GlobalClassFields.finiteUnramifiedAbelianExtension_nonempty_algHom_bigHilbertClassField
+    (finiteUnramifiedAbelianExtension_nonempty_algHom_bigHilbertClassField
       K E ((isUnramifiedAtFinitePlaces_iff_original K E).mp hE.1))
   have hdim : Module.finrank K E = Module.finrank K H :=
     (GlobalClassFieldComparison.bigHilbertClassField_degree_eq_narrowClassGroup_card_of_isBig K
@@ -55,6 +58,9 @@ noncomputable def bigHilbertClassFieldEquivOfIsBig
   exact AlgEquiv.ofBijective f ⟨f.injective, hsurj⟩
 
 open scoped Classical in
+open GlobalClassFieldTheory.GlobalClassFields renaming
+  bigHilbertClassField_ideleClassNorm_range_over_original →
+    bigHilbertClassField_ideleClassNorm_range_over_original in
 /-- Every intrinsic big Hilbert class field has the selected field's
 idèle-class norm subgroup. -/
 theorem bigHilbertClassField_ideleClassNorm_range_of_isBig
@@ -68,7 +74,7 @@ theorem bigHilbertClassField_ideleClassNorm_range_of_isBig
     (_root_.ideleClassNorm K E).range = (_root_.ideleClassNorm K H).range :=
       ordinaryIdeleClassNorm_range_algEquiv e
     _ = _ :=
-      GlobalClassFieldTheory.GlobalClassFields.bigHilbertClassField_ideleClassNorm_range_over_original
+      bigHilbertClassField_ideleClassNorm_range_over_original
         (K := K)
 
 open scoped Classical in
@@ -97,6 +103,9 @@ noncomputable def arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroupOfIsB
   exact (reciprocity.trans transport).trans narrow
 
 open scoped Classical in
+open GlobalClassFieldTheory.Reciprocity renaming
+  arithmeticGlobalReciprocityContinuousMulEquiv_globalNormResidue →
+    arithmeticGlobalReciprocityContinuousMulEquiv_globalNormResidue in
 /-- The intrinsic arithmetic reciprocity equivalence sends a global
 norm-residue symbol to the represented big-Hilbert norm class. -/
 theorem arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_globalNormResidue
@@ -120,7 +129,7 @@ theorem arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_globalNormResi
           (GlobalClassFieldTheory.Reciprocity.arithmeticGlobalNormResidueMonoidHom
             K E c))) = _
   have hReciprocity :=
-    GlobalClassFieldTheory.Reciprocity.arithmeticGlobalReciprocityContinuousMulEquiv_globalNormResidue
+    arithmeticGlobalReciprocityContinuousMulEquiv_globalNormResidue
       (K := K) (L := E) c
   calc
     _ = GlobalClassFieldTheory.GlobalClassFields.bigHilbertClassFieldQuotientEquivNarrowClassGroup
@@ -138,6 +147,9 @@ theorem arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_globalNormResi
     _ = _ := rfl
 
 open scoped Classical in
+open GlobalClassFieldTheory.Reciprocity renaming
+  arithmeticGlobalNormResidueMonoidHom_comp_ideleClassQuotient_eq_globalArtin →
+    arithmeticGlobalNormResidueMonoidHom_comp_ideleClassQuotient_eq_globalArtin in
 /-- The intrinsic arithmetic Artin symbol of a finite prime is represented
 by its one-place prime idèle in the narrow class group. -/
 theorem arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_prime
@@ -158,7 +170,7 @@ theorem arithmeticBigHilbertClassFieldGaloisEquivNarrowClassGroup_prime
         K E c := by
     rw [GlobalClassFieldTheory.GlobalClassFields.arithmeticFinitePlacePrimeArtin]
     exact (DFunLike.congr_fun
-      (GlobalClassFieldTheory.Reciprocity.arithmeticGlobalNormResidueMonoidHom_comp_ideleClassQuotient_eq_globalArtin
+      (arithmeticGlobalNormResidueMonoidHom_comp_ideleClassQuotient_eq_globalArtin
         (K := K) (L := E))
       (IdeleGroup.finitePrimeIdele v)).symm
   rw [hArtin]

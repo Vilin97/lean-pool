@@ -27,6 +27,105 @@ section FinitePlaces
 variable {K : Type} [Field K]
     [NumberField K]
 
+omit [NumberField K] in
+private theorem mem_fixedField_of_subgroup_generators
+    {L : Type*} [Field L] [Algebra K L] {ι : Type*}
+    (R : Subgroup Gal(L/K)) (g : ι → R)
+    (hgen : (⨆ i, Subgroup.zpowers (g i)) = ⊤) (x : L)
+    (hx : ∀ i, x ∈ IntermediateField.fixedField (Subgroup.zpowers (g i).1)) :
+    x ∈ IntermediateField.fixedField R := by
+  let H := MulAction.stabilizer R x
+  have htop : H = ⊤ := by
+    apply top_unique
+    rw [← hgen]
+    refine iSup_le fun i => Subgroup.zpowers_le.mpr ?_
+    have hi := hx i
+    rw [IntermediateField.mem_fixedField_iff] at hi
+    have hfix := hi (g i).1 (Subgroup.mem_zpowers (g i).1)
+    exact MulAction.mem_stabilizer_iff.mpr hfix
+  rw [IntermediateField.mem_fixedField_iff]
+  intro σ hσ
+  have hmem : (⟨σ, hσ⟩ : R) ∈ H := htop ▸ Subgroup.mem_top _
+  exact MulAction.mem_stabilizer_iff.mp hmem
+
+omit [NumberField K] in
+private theorem exists_unit_root_of_mem_algebraMap_range
+    {E N : Type*} [Field E] [Field N] [Algebra K E] [Algebra K N]
+    [Algebra E N] [IsScalarTower K E N]
+    (n : ℕ) (x : Kˣ) (beta : Nˣ)
+    (hbeta : beta ^ n = Units.map (algebraMap K N).toMonoidHom x)
+    (hrange : (beta : N) ∈ Set.range (algebraMap E N)) :
+    ∃ gamma : Eˣ, gamma ^ n = Units.map (algebraMap K E).toMonoidHom x := by
+  obtain ⟨gamma, hgamma⟩ := hrange
+  have hgamma_ne : gamma ≠ 0 := by
+    intro hzero
+    apply beta.ne_zero
+    rw [← hgamma, hzero, map_zero]
+  refine ⟨Units.mk0 gamma hgamma_ne, ?_⟩
+  apply Units.ext
+  apply (algebraMap E N).injective
+  change algebraMap E N (gamma ^ n) = algebraMap E N (algebraMap K E (x : K))
+  rw [map_pow, hgamma, ← IsScalarTower.algebraMap_apply K E N]
+  exact congrArg Units.val hbeta
+
+omit [NumberField K] in
+private theorem unit_root_map_tower
+    {E N : Type*} [Field E] [Field N] [Algebra K E] [Algebra K N]
+    [Algebra E N] [IsScalarTower K E N]
+    (n : ℕ) (x : Kˣ) (beta : Eˣ)
+    (hbeta : beta ^ n = Units.map (algebraMap K E).toMonoidHom x) :
+    (Units.map (algebraMap E N).toMonoidHom beta) ^ n =
+      Units.map (algebraMap K N).toMonoidHom x := by
+  rw [← map_pow, hbeta]
+  apply Units.ext
+  exact (IsScalarTower.algebraMap_apply K E N (x : K)).symm
+
+open scoped Classical in
+private theorem local_power_iff_coordinate_fixedField
+    {Omega : Type} [Field Omega] [Algebra K Omega]
+    [IsSepClosure K Omega]
+    (E : IntermediateField K Omega)
+    [FiniteDimensional K E] [IsGalois K E]
+    [IsMulCommutative Gal(E/K)]
+    (n : ℕ+)
+    (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
+    (p v : ℕ) (hp : p.Prime) (hv : 0 < v)
+    (hn : (n : ℕ) = p ^ v)
+    (r : ℕ)
+    (eG :
+      Gal(E/K) ≃*
+        (Fin r → Multiplicative (ZMod (n : ℕ))))
+    (S : Finset (HeightOneSpectrum (𝓞 K))) :
+    let S' := enlargeByFiniteKummerRadicalSupport (K := K) (L := E) n hmu S
+    let N := fullSUnitKummerExtension (K := K) (Omega := Omega) n S'
+    ∀ (i : Fin (sUnitKummerPrimeCount (K := K) E n hmu r S)) (x : Kˣ) (beta : Nˣ),
+      beta ^ (n : ℕ) = Units.map (algebraMap K N).toMonoidHom x →
+      let wi := sUnitKummerChosenBasePlaces (K := K) (Omega := Omega) E n hmu
+        p v hp hv hn r eG S i
+      Units.map (algebraMap K (wi.adicCompletion K)).toMonoidHom x ∈
+        (powMonoidHom (n : ℕ) : (wi.adicCompletion K)ˣ →* (wi.adicCompletion K)ˣ).range ↔
+      (beta : N) ∈ sUnitKummerCoordinateFixedField (K := K) (Omega := Omega) E n hmu
+        p v hp hv hn r eG S i := by
+  dsimp only
+  let S' := enlargeByFiniteKummerRadicalSupport (K := K) (L := E) n hmu S
+  let N := fullSUnitKummerExtension (K := K) (Omega := Omega) n S'
+  have hnK : ((n : ℕ) : K) ≠ 0 := by exact_mod_cast n.ne_zero
+  let : FiniteDimensional K N := fullSUnitKummerExtension_finiteDimensional
+    (K := K) (Omega := Omega) n hnK hmu S'
+  let : IsGalois K N := fullSUnitKummerExtension_isGalois
+    (K := K) (Omega := Omega) n S'
+  intro i x beta hbeta
+  let wi := sUnitKummerChosenBasePlaces (K := K) (Omega := Omega) E n hmu
+    p v hp hv hn r eG S i
+  have h :=
+    KummerTheory.finitePlaceKummerRadicand_mem_nthPowerSubgroup_iff_root_mem_decompositionFixedField
+    (K := K) (L := N) wi n hmu x beta hbeta
+  change _ ↔ (beta : N) ∈ IntermediateField.fixedField
+    (_root_.finitePlaceDecompositionGroup (K := K) (L := N) wi) at h
+  rw [sUnitKummerChosenDecompositionField_eq_coordinateFixedField
+    (K := K) (Omega := Omega) E n hmu p v hp hv hn r eG S i] at h
+  exact h
+
 open scoped Classical in
 /-- The chosen primes cut out exactly the Kummer radical of `E / K`: an
 enlarged `S`-unit is a local `n`-th power at every chosen
@@ -126,127 +225,21 @@ theorem
           sUnitKummerCoordinateFixedField
             (K := K) (Omega := Omega) E n hmu
             p v hp hv hn r eG S i := by
-      let wi :=
-        sUnitKummerChosenBasePlaces
-          (K := K) (Omega := Omega) E n hmu
-          p v hp hv hn r eG S i
-      have hwiT : wi ∈ T := by
-        change
-          wi ∈
-            Finset.univ.image
-              (sUnitKummerChosenBasePlaces
-                (K := K) (Omega := Omega) E n hmu
-                p v hp hv hn r eG S)
-        exact
-          Finset.mem_image.mpr
-            ⟨i, Finset.mem_univ i, rfl⟩
-      let wT : T := ⟨wi, hwiT⟩
-      have hlocal :
-              Units.map
-                (algebraMap K (wi.adicCompletion K)).toMonoidHom
-                (x : Kˣ) ∈
-            (powMonoidHom (n : ℕ) :
-              (wi.adicCompletion K)ˣ →*
-                (wi.adicCompletion K)ˣ).range := by
-        simpa [wT, wi] using hxLocal wT
-      have hfixed :
-          (beta : N) ∈
-            IntermediateField.fixedField
-              (HilbertRamification.absoluteValueDecompositionGroup K
-                (_root_.chosenFinitePlaceExtension
-                  (L := N) wi).1) :=
-        (KummerTheory.finitePlaceKummerRadicand_mem_nthPowerSubgroup_iff_root_mem_decompositionFixedField
-            (K := K) (L := N) wi n hmu (x : Kˣ) beta hbeta).mp
-          hlocal
-      rw [
-        ← sUnitKummerChosenDecompositionField_eq_coordinateFixedField
-          (K := K) (Omega := Omega) E n hmu
-          p v hp hv hn r eG S i]
-      simpa only [_root_.finitePlaceDecompositionGroup] using hfixed
+      apply (local_power_iff_coordinate_fixedField E n hmu p v hp hv hn r eG S
+        i (x : Kˣ) beta hbeta).mp
+      exact hxLocal ⟨sUnitKummerChosenBasePlaces (K := K) (Omega := Omega) E n hmu
+        p v hp hv hn r eG S i, Finset.mem_image.mpr ⟨i, Finset.mem_univ i, rfl⟩⟩
     let R :=
       (enlargedSUnitKummerRestrictionHom
         (K := K) (Omega := Omega) E n hmu
         (galois_pow_eq_one_of_equiv_pi_zmod
           (K := K) E n r eG) S).ker
-    let Fix : Subgroup R :=
-      MulAction.stabilizer R (beta : N)
-    have hgeneratorFix
-        (i : Fin
-          (sUnitKummerPrimeCount
-            (K := K) E n hmu r S)) :
-        sUnitKummerKernelGenerator
-            (K := K) (Omega := Omega) E n hmu
-            p v hp hv hn r eG S i ∈
-          Fix := by
-      have hbi := hbetaCoordinate i
-      change
-        (beta : N) ∈
-          IntermediateField.fixedField
-            (Subgroup.zpowers
-              ((sUnitKummerKernelGenerator
-                  (K := K) (Omega := Omega) E n hmu
-                  p v hp hv hn r eG S i :
-                    R).1)) at hbi
-      rw [IntermediateField.mem_fixedField_iff] at hbi
-      have hfix :=
-        hbi
-          ((sUnitKummerKernelGenerator
-              (K := K) (Omega := Omega) E n hmu
-              p v hp hv hn r eG S i :
-                R).1)
-          (Subgroup.mem_zpowers
-            ((sUnitKummerKernelGenerator
-                (K := K) (Omega := Omega) E n hmu
-                p v hp hv hn r eG S i :
-                  R).1))
-      rw [show Fix = MulAction.stabilizer R (beta : N) from rfl,
-        MulAction.mem_stabilizer_iff]
-      simpa only [
-        MulAction.subgroup_smul_def,
-        AlgEquiv.smul_def] using hfix
-    have hspan :
-        (⨆ i :
-            Fin
-              (sUnitKummerPrimeCount
-                (K := K) E n hmu r S),
-          Subgroup.zpowers
-            (sUnitKummerKernelGenerator
-              (K := K) (Omega := Omega) E n hmu
-              p v hp hv hn r eG S i)) ≤
-          Fix := by
-      refine iSup_le ?_
-      intro i
-      exact Subgroup.zpowers_le.mpr (hgeneratorFix i)
-    have hFixTop : Fix = ⊤ := by
-      apply top_unique
-      rw [
-        ← iSup_zpowers_sUnitKummerKernelGenerator_eq_top
-          (K := K) (Omega := Omega) E n hmu
-          p v hp hv hn r eG S]
-      exact hspan
-    have hbetaKernel :
-        (beta : N) ∈
-          IntermediateField.fixedField
-            (enlargedSUnitKummerRestrictionHom
-              (K := K) (Omega := Omega) E n hmu
-              (galois_pow_eq_one_of_equiv_pi_zmod
-                (K := K) E n r eG) S).ker := by
-      rw [IntermediateField.mem_fixedField_iff]
-      intro sigma hsigma
-      let sigmaR : R := ⟨sigma, hsigma⟩
-      have hsigmaFix : sigmaR ∈ Fix := by
-        rw [hFixTop]
-        exact Subgroup.mem_top sigmaR
-      have hfix :
-          sigmaR • (beta : N) = (beta : N) := by
-        exact
-          MulAction.mem_stabilizer_iff.mp
-            (show
-              sigmaR ∈ MulAction.stabilizer R (beta : N) by
-              simpa only [Fix] using hsigmaFix)
-      simpa only [
-        MulAction.subgroup_smul_def,
-        AlgEquiv.smul_def] using hfix
+    have hbetaKernel : (beta : N) ∈ IntermediateField.fixedField R :=
+      mem_fixedField_of_subgroup_generators R
+        (sUnitKummerKernelGenerator (K := K) (Omega := Omega) E n hmu
+          p v hp hv hn r eG S)
+        (iSup_zpowers_sUnitKummerKernelGenerator_eq_top
+          (K := K) (Omega := Omega) E n hmu p v hp hv hn r eG S) beta hbetaCoordinate
     have hbetaEmbedded :
         (beta : N) ∈
           enlargedSUnitKummerEmbeddedExtension
@@ -262,39 +255,10 @@ theorem
     change
       (beta : N) ∈ Set.range (algebraMap E N)
         at hbetaEmbedded
-    obtain ⟨gamma, hgamma⟩ := hbetaEmbedded
-    have hgamma_ne : gamma ≠ 0 := by
-      intro hgammaZero
-      apply beta.ne_zero
-      calc
-        (beta : N) = algebraMap E N gamma := hgamma.symm
-        _ = 0 := by rw [hgammaZero, map_zero]
-    let gammaUnit : Eˣ :=
-      Units.mk0 gamma hgamma_ne
-    change
-      (x : Kˣ) ∈
-        sUnitFiniteKummerRadical
-          (K := K) (L := E) n S'
-    apply
-      (mem_sUnitFiniteKummerRadical_iff
-        (K := K) (L := E) n S' (x : Kˣ)).mpr
-    refine ⟨x.property, gammaUnit, ?_⟩
-    apply Units.ext
-    apply (algebraMap E N).injective
-    change
-      algebraMap E N (gamma ^ (n : ℕ)) =
-        algebraMap E N
-          (algebraMap K E ((x : Kˣ) : K))
-    calc
-      algebraMap E N (gamma ^ (n : ℕ)) =
-          (beta : N) ^ (n : ℕ) := by
-        rw [map_pow, hgamma]
-      _ = algebraMap K N ((x : Kˣ) : K) := by
-        simpa using congrArg Units.val hbeta
-      _ =
-          algebraMap E N
-            (algebraMap K E ((x : Kˣ) : K)) := by
-        rw [IsScalarTower.algebraMap_apply K E N]
+    obtain ⟨gamma, hgamma⟩ := exists_unit_root_of_mem_algebraMap_range
+      (n : ℕ) (x : Kˣ) beta hbeta hbetaEmbedded
+    exact (mem_sUnitFiniteKummerRadical_iff (K := K) (L := E) n S' (x : Kˣ)).mpr
+      ⟨x.property, gamma, hgamma⟩
   · intro hx
     change
       (x : Kˣ) ∈
@@ -305,27 +269,9 @@ theorem
         (K := K) (L := E) n S' (x : Kˣ)).mp hx
     let betaN : Nˣ :=
       Units.map (algebraMap E N).toMonoidHom betaE
-    have hbetaN :
-        betaN ^ (n : ℕ) =
-          Units.map (algebraMap K N).toMonoidHom
-            (x : Kˣ) := by
-      calc
-        betaN ^ (n : ℕ) =
-            Units.map (algebraMap E N).toMonoidHom
-              (betaE ^ (n : ℕ)) := by
-          rw [map_pow]
-        _ =
-            Units.map (algebraMap E N).toMonoidHom
-              (Units.map (algebraMap K E).toMonoidHom
-                (x : Kˣ)) := by
-          rw [hbetaE]
-        _ =
-            Units.map (algebraMap K N).toMonoidHom
-              (x : Kˣ) := by
-          apply Units.ext
-          exact
-            (IsScalarTower.algebraMap_apply
-              K E N ((x : Kˣ) : K)).symm
+    have hbetaN : betaN ^ (n : ℕ) =
+        Units.map (algebraMap K N).toMonoidHom (x : Kˣ) :=
+      unit_root_map_tower (n : ℕ) (x : Kˣ) betaE hbetaE
     apply
       (mem_sUnitLocalPowerKernel_iff
         (K := K) n S' T x).mpr
@@ -361,37 +307,8 @@ theorem
             (K := K) (Omega := Omega) E n hmu
             p v hp hv hn r eG S i)
           hbetaEmbedded
-    have hbetaFixed :
-        (betaN : N) ∈
-          IntermediateField.fixedField
-            (HilbertRamification.absoluteValueDecompositionGroup K
-              (_root_.chosenFinitePlaceExtension
-                (L := N)
-                (sUnitKummerChosenBasePlaces
-                  (K := K) (Omega := Omega) E n hmu
-                  p v hp hv hn r eG S i)).1) := by
-      have hdecomp :
-          (betaN : N) ∈
-            IntermediateField.fixedField
-              (_root_.finitePlaceDecompositionGroup
-                (K := K) (L := N)
-                (sUnitKummerChosenBasePlaces
-                  (K := K) (Omega := Omega) E n hmu
-                  p v hp hv hn r eG S i)) := by
-        rw [
-          sUnitKummerChosenDecompositionField_eq_coordinateFixedField
-            (K := K) (Omega := Omega) E n hmu
-            p v hp hv hn r eG S i]
-        exact hbetaCoordinate
-      simpa only [_root_.finitePlaceDecompositionGroup] using hdecomp
-    have hlocal :=
-      (KummerTheory.finitePlaceKummerRadicand_mem_nthPowerSubgroup_iff_root_mem_decompositionFixedField
-          (K := K) (L := N)
-          (sUnitKummerChosenBasePlaces
-            (K := K) (Omega := Omega) E n hmu
-            p v hp hv hn r eG S i)
-          n hmu (x : Kˣ) betaN hbetaN).mpr
-        hbetaFixed
+    have hlocal := (local_power_iff_coordinate_fixedField E n hmu p v hp hv hn r eG S
+      i (x : Kˣ) betaN hbetaN).mpr hbetaCoordinate
     rw [← hwi]
     exact hlocal
 

@@ -34,8 +34,8 @@ open scoped Classical in
 noncomputable def chosenFinitePlaceLocalArithmeticFrobenius
     (v : HeightOneSpectrum (𝓞 K))
     (hunram : ChosenFinitePlaceIsUnramified (K := K) (L := L) v) :
-    ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) v ≃ₐ[
-      ChosenFinitePlaceBaseCompletion (K := K) v]
+    ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) v ≃ₐ[ChosenFinitePlaceBaseCompletion
+      (K := K) v]
       ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) v := by
   let C := ChosenFinitePlaceBaseCompletion (K := K) v
   let E := ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) v

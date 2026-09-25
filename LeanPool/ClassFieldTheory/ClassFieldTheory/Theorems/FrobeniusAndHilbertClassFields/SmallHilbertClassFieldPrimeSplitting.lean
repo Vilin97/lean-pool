@@ -25,6 +25,9 @@ namespace ClassFieldTheory
 
 open NumberField IsDedekindDomain
 
+open GlobalClassFieldComparison renaming
+  finitePrime_splitsCompletelyInSmallHilbertClassField_iff_principal_of_isSmall →
+    finitePrime_splitsCompletely_iff_principal_of_isSmall in
 /-- A finite prime splits completely in a small Hilbert class field exactly
 when its fractional ideal is principal. -/
 theorem finitePrime_splitsCompletelyInSmallHilbertClassField_iff_principal
@@ -35,7 +38,7 @@ theorem finitePrime_splitsCompletelyInSmallHilbertClassField_iff_principal
       finitePrimeFractionalIdeal v ∈
         (toPrincipalIdeal (𝓞 K) K).range := by
   exact
-    GlobalClassFieldComparison.finitePrime_splitsCompletelyInSmallHilbertClassField_iff_principal_of_isSmall
+    finitePrime_splitsCompletely_iff_principal_of_isSmall
     K E hE v
 
 end ClassFieldTheory

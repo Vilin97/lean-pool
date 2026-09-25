@@ -48,8 +48,8 @@ theorem prod_embeddings_algebraMap_powerBasisGen_eq
   rw [Fintype.prod_equiv algHomEquivSigma
     (fun σ : E →ₐ[k] Ω => σ (algebraMap L E pb.gen))
     (fun σ => σ.1 pb.gen)]
-  rw [← Finset.univ_sigma_univ, Finset.prod_sigma, ← Finset.prod_pow]
-  · refine Finset.prod_congr rfl fun σ _ => ?_
+  · rw [← Finset.univ_sigma_univ, Finset.prod_sigma, ← Finset.prod_pow]
+    refine Finset.prod_congr rfl fun σ _ => ?_
     let : Algebra L Ω := σ.toRingHom.toAlgebra
     simp_rw [Finset.prod_const]
     congr

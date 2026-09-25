@@ -18,6 +18,9 @@ noncomputable section
 
 namespace ClassFieldTheory
 
+open GlobalClassFieldTheory.GlobalClassFields renaming
+  ideleClassNormFullConductor_infinitePart_eq_realRamificationLocus →
+    ideleClassNormFullConductor_infinitePart_eq_realRamificationLocus in
 /-- A real place belongs to the public conductor precisely when it ramifies
 (complexifies) in the extension. -/
 theorem IsAbelianConductor.mem_infinitePart_iff_realRamified
@@ -36,7 +39,7 @@ theorem IsAbelianConductor.mem_infinitePart_iff_realRamified
     hc.unique (normFullConductor_isAbelianConductor K L)
   rw [heq]
   change v ∈ H.fullConductor.infinitePart ↔ _
-  rw [GlobalClassFieldTheory.GlobalClassFields.ideleClassNormFullConductor_infinitePart_eq_realRamificationLocus]
+  rw [ideleClassNormFullConductor_infinitePart_eq_realRamificationLocus]
   simp only [Finset.mem_filter, Finset.mem_univ, true_and]
 
 end ClassFieldTheory

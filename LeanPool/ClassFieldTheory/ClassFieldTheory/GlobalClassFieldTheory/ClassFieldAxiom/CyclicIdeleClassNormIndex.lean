@@ -415,7 +415,6 @@ theorem ideleClassNormQuotient_card_le_actual_tower_mul
     [Algebra K M] [Algebra M L] [Algebra K L]
     [IsScalarTower K M L]
     [FiniteDimensional K M] [FiniteDimensional M L]
-
     [Finite (RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient M L)]
     [Finite (RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient K M)] :
     Nat.card (RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient K L) ≤
@@ -638,7 +637,6 @@ theorem relativeIdeleClassNormQuotient_finite_of_actual_tower
     [Algebra K M] [Algebra M L] [Algebra K L]
     [IsScalarTower K M L]
     [FiniteDimensional K M] [FiniteDimensional M L]
-
     [Finite (RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient M L)]
     [Finite (RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient K M)] :
     Finite (RelativeIdeleGroup.Cohomology.IdeleClassNormQuotient K L) := by
@@ -848,6 +846,12 @@ theorem ideleClassNormQuotient_card_le_finrank_abelian
     (relativeIdeleClassNormQuotient_finite_and_card_le_finrank_abelian
       K L).2
 
+open _root_.GlobalClassFieldTheory.Cohomology renaming
+  ideleClass_herbrandQuotient_eq_card_of_supported_local_calculation →
+    ideleClass_herbrandQuotient_eq_card_of_supported_local_calculation in
+open _root_.GlobalClassFieldTheory.Cohomology renaming
+  chosenFinitePlaceIsUnramified_of_notMem_ideleClassHerbrandSupport →
+    chosenFinitePlaceIsUnramified_of_notMem_ideleClassHerbrandSupport in
 /-- The cardinalities of the actual Herbrand models of the low Tate groups
 for a finite cyclic extension.  The canonical Herbrand support
 gives the Herbrand quotient `|G|`; the norm-index theorem supplies the
@@ -877,14 +881,14 @@ theorem ideleClass_lowDegree_card_eq_finrank_cyclic
   let : IsCyclic (L ≃ₐ[K] L) :=
     ⟨⟨sigma, hsigma⟩⟩
   obtain ⟨hC, hCvalue⟩ :=
-    _root_.GlobalClassFieldTheory.Cohomology.ideleClass_herbrandQuotient_eq_card_of_supported_local_calculation
+    ideleClass_herbrandQuotient_eq_card_of_supported_local_calculation
       (K := K) (L := L)
       (_root_.ideleClassHerbrandSupport
         (K := K) (L := L))
       sigma hsigma
       (_root_.relativeSupportedAboveHerbrandSupport_sup_principal_eq_top
         (K := K) (L := L))
-      (_root_.GlobalClassFieldTheory.Cohomology.chosenFinitePlaceIsUnramified_of_notMem_ideleClassHerbrandSupport
+      (chosenFinitePlaceIsUnramified_of_notMem_ideleClassHerbrandSupport
         (K := K) (L := L))
   let :
       Finite

@@ -282,6 +282,9 @@ theorem mrangeRestrict_integer_completeSpace
     exact (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_isAdicComplete F)
   exact (hadic.isAdicComplete_iff.mp hcomplete).1
 
+open Valued.integer renaming
+  compactSpace_iff_completeSpace_and_isDiscreteValuationRing_and_finite_residueField →
+    compactSpace_iff_complete_discrete_finite_residue in
 /-- The valuation ring of a range-restricted complete DVF with finite residue
 field is compact.  This is the compactness input in the local-field structure theory,
 the local compactness criterion. -/
@@ -331,7 +334,7 @@ theorem mrangeRestrict_integer_compactSpace_of_residueField_finite
   have hcomplete : CompleteSpace 𝒪[K] :=
     (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict_integer_completeSpace F)
   exact
-    (Valued.integer.compactSpace_iff_completeSpace_and_isDiscreteValuationRing_and_finite_residueField
+    (compactSpace_iff_complete_discrete_finite_residue
       (K := K)
       (Γ₀ := MonoidHom.mrange F.valuation.toMonoidWithZeroHom)).2
       ⟨hcomplete, inferInstance, inferInstance⟩

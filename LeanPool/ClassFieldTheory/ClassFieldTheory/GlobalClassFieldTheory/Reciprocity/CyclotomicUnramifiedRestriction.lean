@@ -114,8 +114,7 @@ noncomputable def abstractFixedFieldCyclotomicFiniteRestrictionMonoidHom
   dsimp only
   let qFinite :
       L.toFiniteGaloisExtension.extensionQuotient ≃*
-        Gal(
-          LocalClassFieldTheory.abstractRelativeFixedField
+        Gal(LocalClassFieldTheory.abstractRelativeFixedField
             ℚ (SeparableClosure ℚ) L.below/LocalClassFieldTheory.abstractFixedField
             ℚ (SeparableClosure ℚ) H.field) :=
     L.toFiniteGaloisExtension.extensionQuotientMulEquiv.trans
@@ -145,8 +144,7 @@ theorem abstractFixedFieldCyclotomicFiniteRestrictionMonoidHom_apply
     (hUnramified :
       L.toFiniteGaloisExtension.IsUnramified
         rationalCyclotomicDegreeData)
-    (σ : Gal(
-      LocalClassFieldTheory.abstractRelativeFixedField
+    (σ : Gal(LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ)
           (rationalCyclotomicFieldInertia_le H.field)/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field)) :
@@ -265,6 +263,9 @@ theorem
       congrArg (fun q ↦ qFinite (finiteRestriction q))
         (abstractFixedFieldCyclotomicIdeleClassArtin_fixed_coordinate H a)
 
+open ClassFormation.ValuationData renaming
+  normResidueSymbol_finiteNormClass_eq_maximalUnramifiedRestriction →
+    normResidueSymbol_finiteNormClass_eq_maximalUnramifiedRestriction in
 /-- The actual fixed-field global norm-residue value on a fixed-part
 class is the finite restriction of the maximal-unramified cyclotomic
 symbol. -/
@@ -330,7 +331,7 @@ theorem
           Additive.toMul
             (abstractFixedFieldAbelianizedExtensionQuotientEquivGaloisGroup
               H L z))
-        (ClassFormation.ValuationData.normResidueSymbol_finiteNormClass_eq_maximalUnramifiedRestriction
+        (normResidueSymbol_finiteNormClass_eq_maximalUnramifiedRestriction
           rationalCyclotomicIdeleClassValuationData
           rationalIdeleClassRepresentation_satisfiesClassFieldAxiom
           H L.toFiniteGaloisExtension hUnramified a)

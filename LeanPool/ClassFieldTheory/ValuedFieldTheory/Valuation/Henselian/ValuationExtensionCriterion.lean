@@ -152,6 +152,9 @@ theorem MonicResidualCoprimeFactorLifting.leadingCoeff_unit_branch
     (fun hA ↦ Or.inl (ha'degree.symm.trans (hAdegree.symm.trans hA)))
     (fun hB ↦ Or.inr (hBdegree.symm.trans hB))
 
+open AlgebraicNumberTheory.Valuations renaming
+  primitive_irreducible_reduction_natDegree_zero_of_leadingCoeff_nonunit_of_roots_eq →
+    primitive_reduction_natDegree_zero_of_roots_eq in
 /-- the factor-lifting criterion's irreducible-factor input.  Exact monic lifting forces a
 primitive irreducible polynomial to have either full-degree or constant
 reduction, and the reduction has no coprime splitting into two nonconstant
@@ -185,7 +188,7 @@ theorem primitiveIrreducibleReductionProperty_of_monicResidualCoprimeFactorLifti
       intro a b ha hb
       exact hlift.irreducible_roots_same_valuation B hQirr hsplit ha hb
     have hdegree : qbar.natDegree = 0 :=
-      AlgebraicNumberTheory.Valuations.primitive_irreducible_reduction_natDegree_zero_of_leadingCoeff_nonunit_of_roots_eq
+      primitive_reduction_natDegree_zero_of_roots_eq
         V B Q hQprim hQirr hlead hrootsEq
     refine ⟨Or.inl hdegree, ?_⟩
     intro a b hfactor _hcoprime

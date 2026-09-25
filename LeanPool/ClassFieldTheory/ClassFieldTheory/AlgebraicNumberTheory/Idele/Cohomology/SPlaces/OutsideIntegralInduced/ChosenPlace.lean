@@ -49,8 +49,8 @@ private noncomputable def
     chosenFinitePlaceLocalizedIntegerUnitsGaloisActionProvider
     (w₀ : HeightOneSpectrum (𝓞 K)) :
     MulDistribMulAction
-      (Gal(
-        ChosenFinitePlaceLocalizedCompletion (K := K) (L := L) w₀/ChosenFinitePlaceBaseCompletion (K := K) w₀))
+      (Gal(ChosenFinitePlaceLocalizedCompletion (K := K) (L := L)
+        w₀/ChosenFinitePlaceBaseCompletion (K := K) w₀))
       𝒪[ChosenFinitePlaceLocalizedCompletion
         (K := K) (L := L) w₀]ˣ :=
   galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure

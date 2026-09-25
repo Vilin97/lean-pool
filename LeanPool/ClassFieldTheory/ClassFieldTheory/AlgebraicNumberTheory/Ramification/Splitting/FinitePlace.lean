@@ -23,7 +23,8 @@ complete splitting is equivalent both to cardinality one and to local
 degree one.
 -/
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 
 noncomputable section
 

@@ -336,10 +336,10 @@ private noncomputable abbrev
           CyclicCohomology.extensionSubgroup H.field
             (rationalCyclotomicDegreeData.fieldInertia H.field)
             (rationalCyclotomicFieldInertia_le H.field) ≃*
-      Gal(
-        abstractRelativeFixedField
+      Gal(abstractRelativeFixedField
             ℚ (SeparableClosure ℚ)
-            (rationalCyclotomicFieldInertia_le H.field)/abstractFixedField ℚ (SeparableClosure ℚ) H.field) :=
+            (rationalCyclotomicFieldInertia_le H.field)/abstractFixedField ℚ (SeparableClosure
+              ℚ) H.field) :=
   LocalClassFieldTheory.abstractExtensionQuotientEquivGaloisGroup
     ℚ (SeparableClosure ℚ) H.field
     (rationalCyclotomicDegreeData.fieldInertia H.field)
@@ -378,8 +378,7 @@ private noncomputable abbrev
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (L : FiniteAbelianSubextension H.field) :
     L.toFiniteGaloisExtension.extensionQuotient ≃*
-      Gal(
-        abstractRelativeFixedField
+      Gal(abstractRelativeFixedField
             ℚ (SeparableClosure ℚ) L.below/abstractFixedField ℚ (SeparableClosure ℚ) H.field) :=
   L.toFiniteGaloisExtension.extensionQuotientMulEquiv.trans
     (LocalClassFieldTheory.abstractExtensionQuotientEquivGaloisGroup
@@ -393,9 +392,9 @@ private theorem cyclotomicUnramifiedGeometricRestriction_apply
     (L : FiniteAbelianSubextension H.field)
     (hUnramified :
       L.toFiniteGaloisExtension.IsUnramified rationalCyclotomicDegreeData)
-    (σ : Gal(
-      abstractRelativeFixedField ℚ (SeparableClosure ℚ)
-          (rationalCyclotomicFieldInertia_le H.field)/abstractFixedField ℚ (SeparableClosure ℚ) H.field)) :
+    (σ : Gal(abstractRelativeFixedField ℚ (SeparableClosure ℚ)
+          (rationalCyclotomicFieldInertia_le H.field)/abstractFixedField ℚ (SeparableClosure ℚ)
+            H.field)) :
     abstractFixedFieldCyclotomicFiniteRestrictionMonoidHom
         H L hUnramified σ =
       (L.toFiniteGaloisExtension.extensionQuotientMulEquiv.trans

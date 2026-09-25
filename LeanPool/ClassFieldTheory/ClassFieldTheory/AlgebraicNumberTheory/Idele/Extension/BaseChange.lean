@@ -179,8 +179,7 @@ theorem norm_principalIdele (x : Lˣ) :
 /-- Galois conjugation on the scalar-extended adele algebra. -/
 def conjugation
     (σ : L ≃ₐ[K] L) :
-    RelativeAdeleRing K L ≃ₐ[
-      NumberField.AdeleRing (𝓞 K) K]
+    RelativeAdeleRing K L ≃ₐ[NumberField.AdeleRing (𝓞 K) K]
       RelativeAdeleRing K L :=
   Algebra.TensorProduct.congr AlgEquiv.refl σ
 
@@ -216,8 +215,7 @@ theorem conjugation_one
   change
     Algebra.TensorProduct.congr
         (AlgEquiv.refl :
-          NumberField.AdeleRing (𝓞 K) K ≃ₐ[
-            NumberField.AdeleRing (𝓞 K) K]
+          NumberField.AdeleRing (𝓞 K) K ≃ₐ[NumberField.AdeleRing (𝓞 K) K]
             NumberField.AdeleRing (𝓞 K) K)
         (AlgEquiv.refl : L ≃ₐ[K] L) a =
       a
@@ -231,8 +229,7 @@ theorem conjugation_mul
     conjugation K L (σ * τ) a =
       conjugation K L σ (conjugation K L τ a) := by
   let e :
-      NumberField.AdeleRing (𝓞 K) K ≃ₐ[
-        NumberField.AdeleRing (𝓞 K) K]
+      NumberField.AdeleRing (𝓞 K) K ≃ₐ[NumberField.AdeleRing (𝓞 K) K]
         NumberField.AdeleRing (𝓞 K) K :=
     AlgEquiv.refl
   have he : e.trans e = e := by
@@ -247,8 +244,7 @@ theorem conjugation_mul
         (Algebra.TensorProduct.congr e τ a)
   exact congrArg
     (fun f :
-      RelativeAdeleRing K L ≃ₐ[
-        NumberField.AdeleRing (𝓞 K) K]
+      RelativeAdeleRing K L ≃ₐ[NumberField.AdeleRing (𝓞 K) K]
         RelativeAdeleRing K L ↦ f a) h
 
 /-- The natural Galois action on relative ideles. -/

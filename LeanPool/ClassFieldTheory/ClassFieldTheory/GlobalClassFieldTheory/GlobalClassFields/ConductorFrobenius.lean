@@ -490,7 +490,7 @@ theorem
 finite conductor ray prime class is equivalent to membership of the prime
 ideal in the ideal Artin kernel. -/
 theorem
-    narrowFiniteConductorRayPrimeClass_eq_one_iff_narrowFiniteConductorPrimeIdeal_mem_idealArtinKernel_of_card_eq_extensionDegree
+    rayPrimeClass_eq_one_iff_primeIdeal_mem_idealArtinKernel_of_card_eq_extensionDegree
     (hcard :
       Nat.card
           (RayClass.RayClassGroup

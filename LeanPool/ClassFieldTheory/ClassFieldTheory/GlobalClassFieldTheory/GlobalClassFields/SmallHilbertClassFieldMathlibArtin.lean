@@ -38,6 +38,9 @@ local instance smallHilbertArtinIdeleClassGroupIsMulCommutative :
 attribute [local instance] smallHilbertArtinIdeleClassGroupIsMulCommutative
 
 open scoped Classical in
+open GlobalClassFieldTheory.GlobalClassFields renaming
+  smallHilbertClassField_ideleClassNorm_range_over_original →
+    smallHilbertClassField_ideleClassNorm_range_over_original in
 /-- All intrinsic small Hilbert class fields have the selected field's
 actual idèle-class norm subgroup. -/
 theorem smallHilbertClassField_ideleClassNorm_range_of_isSmall
@@ -51,7 +54,7 @@ theorem smallHilbertClassField_ideleClassNorm_range_of_isSmall
     (_root_.ideleClassNorm K E).range = (_root_.ideleClassNorm K H).range :=
       ordinaryIdeleClassNorm_range_algEquiv e
     _ = _ :=
-      GlobalClassFieldTheory.GlobalClassFields.smallHilbertClassField_ideleClassNorm_range_over_original
+      smallHilbertClassField_ideleClassNorm_range_over_original
         (K := K)
 
 open scoped Classical in
@@ -86,6 +89,9 @@ noncomputable def arithmeticSmallHilbertClassFieldGaloisEquivClassGroupOfIsSmall
     (smallHilbertClassField_ideleClassNorm_range_of_isSmall E hE)
 
 open scoped Classical in
+open GlobalClassFieldTheory.Reciprocity renaming
+  arithmeticGlobalReciprocityContinuousMulEquiv_globalNormResidue →
+    arithmeticGlobalReciprocityContinuousMulEquiv_globalNormResidue in
 /-- Intrinsic arithmetic reciprocity sends a global norm-residue symbol to
 its represented class in the small-Hilbert norm quotient. -/
 theorem arithmeticSmallHilbertClassFieldGaloisEquivClassGroup_globalNormResidue
@@ -109,7 +115,7 @@ theorem arithmeticSmallHilbertClassFieldGaloisEquivClassGroup_globalNormResidue
           (GlobalClassFieldTheory.Reciprocity.arithmeticGlobalNormResidueMonoidHom
             K E c))) = _
   have hReciprocity :=
-    GlobalClassFieldTheory.Reciprocity.arithmeticGlobalReciprocityContinuousMulEquiv_globalNormResidue
+    arithmeticGlobalReciprocityContinuousMulEquiv_globalNormResidue
       (K := K) (L := E) c
   calc
     _ = GlobalClassFieldTheory.GlobalClassFields.smallHilbertClassFieldQuotientEquivClassGroup
@@ -127,6 +133,9 @@ theorem arithmeticSmallHilbertClassFieldGaloisEquivClassGroup_globalNormResidue
     _ = _ := rfl
 
 open scoped Classical in
+open GlobalClassFieldTheory.Reciprocity renaming
+  arithmeticGlobalNormResidueMonoidHom_comp_ideleClassQuotient_eq_globalArtin →
+    arithmeticGlobalNormResidueMonoidHom_comp_ideleClassQuotient_eq_globalArtin in
 /-- At every finite prime, the arithmetic Artin symbol has the usual prime
 ideal class under the intrinsic Hilbert reciprocity equivalence. -/
 theorem arithmeticSmallHilbertClassFieldGaloisEquivClassGroup_prime
@@ -146,7 +155,7 @@ theorem arithmeticSmallHilbertClassFieldGaloisEquivClassGroup_prime
         K E c := by
     rw [GlobalClassFieldTheory.GlobalClassFields.arithmeticFinitePlacePrimeArtin]
     exact (DFunLike.congr_fun
-      (GlobalClassFieldTheory.Reciprocity.arithmeticGlobalNormResidueMonoidHom_comp_ideleClassQuotient_eq_globalArtin
+      (arithmeticGlobalNormResidueMonoidHom_comp_ideleClassQuotient_eq_globalArtin
         (K := K) (L := E))
       (IdeleGroup.finitePrimeIdele v)).symm
   rw [hArtin]

@@ -21,7 +21,8 @@ positive generator of an ideal prime to this modulus gives the explicit
 isomorphism with `(ZMod m)ˣ`.
 -/
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 
 noncomputable section
 

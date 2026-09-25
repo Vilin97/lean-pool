@@ -121,6 +121,171 @@ variable {D : DegreeData G} {A : Rep ℤ G}
 local infixl:65 (priority := high) " + " =>
   (fun {α : Type _} [Add α] (a b : α) => HAdd.hAdd a b)
 
+private theorem fixedRepresentation_action_eq_of_coset_eq
+    (A : Rep ℤ G) (K L : ClosedSubgroup G)
+    (hLK : L.toSubgroup ≤ K.toSubgroup)
+    (hnormal : (extensionSubgroup K L hLK).Normal)
+    (g t : K.toSubgroup ⧸ extensionSubgroup K L hLK)
+    (b : ambientFixedAddSubgroup A L)
+    (h : relativeCosetAction A K L hLK b g = relativeCosetAction A K L hLK b t) :
+    let B := extensionFixedRepresentation A K L hLK hnormal
+    let e := extensionFixedRepresentationEquiv A K L hLK hnormal
+    B.ρ g (e.symm b) = B.ρ t (e.symm b) := by
+  apply Subtype.ext
+  let e := extensionFixedRepresentationEquiv A K L hLK hnormal
+  have hg := extensionFixedRepresentation_action_coe A K L hLK hnormal g (e.symm b)
+  have ht := extensionFixedRepresentation_action_coe A K L hLK hnormal t (e.symm b)
+  exact hg.trans (h.trans ht.symm)
+
+private theorem fixedRepresentation_fixes_nsmul_of_coset_fixed
+    (A : Rep ℤ G) (K L : ClosedSubgroup G)
+    (hLK : L.toSubgroup ≤ K.toSubgroup)
+    (hnormal : (extensionSubgroup K L hLK).Normal)
+    (g : K.toSubgroup ⧸ extensionSubgroup K L hLK)
+    (b : ambientFixedAddSubgroup A L)
+    (h : relativeCosetAction A K L hLK b g = b.1) (k : ℕ) :
+    let B := extensionFixedRepresentation A K L hLK hnormal
+    let e := extensionFixedRepresentationEquiv A K L hLK hnormal
+    B.ρ g (e.symm (k • b)) = e.symm (k • b) := by
+  let B := extensionFixedRepresentation A K L hLK hnormal
+  let e := extensionFixedRepresentationEquiv A K L hLK hnormal
+  have hfix : B.ρ g (e.symm b) = e.symm b := by
+    apply Subtype.ext
+    exact (extensionFixedRepresentation_action_coe A K L hLK hnormal g _).trans h
+  simpa only [map_nsmul] using congrArg (fun z => k • z) hfix
+
+private theorem fixedSource_of_cyclic_primitive
+    (v : ValuationData D A) [IsTopologicalGroup G]
+    (K : FiniteAbstractField G) (M : FiniteGaloisSubextension K.field)
+    (S : Subgroup M.extensionQuotient)
+    (g : (M.lowerFiniteGalois S).extensionQuotient)
+    (hg : ∀ x, x ∈ Subgroup.zpowers g)
+    (tB : K.field.toSubgroup ⧸ extensionSubgroup K.field M.field M.below)
+    (bM cM : ambientFixedAddSubgroup A M.field) (k : ℕ) :
+  let M₀ := M.intermediateField S
+  let hMM₀ := M.field_le_intermediateField S
+  let N := M.lowerFiniteGalois S
+  letI : Finite (K.field.toSubgroup ⧸ extensionSubgroup K.field M.field M.below) := M.finite
+  let EM := FiniteAbstractFieldExtension.ofInclusion M.field K M.below
+  let MF := EM.field
+  let B := extensionFixedRepresentation A K.field M.field M.below M.normal
+  let B₀ := extensionFixedRepresentation A M₀ M.field hMM₀ N.normal
+  let eB := extensionFixedRepresentationEquiv A K.field M.field M.below M.normal
+  let eB₀ := extensionFixedRepresentationEquiv A M₀ M.field hMM₀ N.normal
+  let gB := M.extensionQuotientMulEquiv (M.lowerInclusionHom S g)
+  ∀ (aN : B₀.V),
+    B₀.ρ g aN - aN = eB₀.symm (bM - cM) →
+    B.ρ tB (eB.symm cM) = eB.symm cM →
+    B.ρ gB (eB.symm bM) = B.ρ tB (eB.symm bM) →
+    Commute gB tB → v.valuationAt MF bM = k • v.oneValue →
+    ∃ x : ambientFixedAddSubgroup A M₀,
+      ((v.valuationAt MF (fixedFieldInclusion A M₀ M.field hMM₀ x) :
+        v.valueGroup) : ZHat) = Int.castRingHom ZHat (k : ℤ) := by
+  dsimp only
+  intro aN haN htc hgb hcomm hvalb
+  let M₀ := M.intermediateField S
+  let hMM₀ := M.field_le_intermediateField S
+  let N := M.lowerFiniteGalois S
+  let : Finite (K.field.toSubgroup ⧸ extensionSubgroup K.field M.field M.below) := M.finite
+  let EM := FiniteAbstractFieldExtension.ofInclusion M.field K M.below
+  let MF := EM.field
+  let B := extensionFixedRepresentation A K.field M.field M.below M.normal
+  let B₀ := extensionFixedRepresentation A M₀ M.field hMM₀ N.normal
+  let eB := extensionFixedRepresentationEquiv A K.field M.field M.below M.normal
+  let eB₀ := extensionFixedRepresentationEquiv A M₀ M.field hMM₀ N.normal
+  let gB := M.extensionQuotientMulEquiv (M.lowerInclusionHom S g)
+  let aB : B.V := eB.symm (eB₀ aN)
+  let bB : B.V := eB.symm bM
+  let cB : B.V := eB.symm cM
+  have hActionPrimitive : eB (B.ρ gB aB) = eB₀ (B₀.ρ g aN) := by
+    apply Subtype.ext
+    calc
+      (eB (B.ρ gB aB)).1 =
+          relativeCosetAction A K.field M.field M.below (eB aB) gB :=
+        extensionFixedRepresentation_action_coe
+          A K.field M.field M.below M.normal gB aB
+      _ = relativeCosetAction A M₀ M.field hMM₀ (eB₀ aN) g := by
+        exact (M.relativeCosetAction_lowerInclusionHom A S (eB₀ aN) g).symm
+      _ = (eB₀ (B₀.ρ g aN)).1 := by
+        exact (extensionFixedRepresentation_action_coe
+          A M₀ M.field hMM₀ N.normal g aN).symm
+  have hprimitiveB : B.ρ gB aB - aB = eB.symm (bM - cM) := by
+    apply eB.injective
+    calc
+      eB (B.ρ gB aB - aB) =
+          eB₀ (B₀.ρ g aN) - eB₀ aN := by
+        rw [map_sub, hActionPrimitive]
+        simp [aB]
+      _ = eB₀ (B₀.ρ g aN - aN) := by
+        rw [map_sub]
+      _ = eB₀ (eB₀.symm (bM - cM)) :=
+        congrArg eB₀ haN
+      _ = bM - cM := eB₀.apply_symm_apply _
+      _ = eB (eB.symm (bM - cM)) :=
+        (eB.apply_symm_apply _).symm
+  have hbc : bB - cB = B.ρ gB aB - aB := by
+    rw [hprimitiveB]
+    exact (map_sub eB.symm bM cM).symm
+  let xB : B.V := bB + aB - B.ρ tB aB
+  have hxB : B.ρ gB xB = xB :=
+    abstractReciprocity_fixedCombination_of_commute
+      B gB tB hcomm cB bB aB htc hgb hbc
+  let xB₀ : B₀.V := eB₀.symm (eB xB)
+  have hActionX : eB₀ (B₀.ρ g xB₀) = eB (B.ρ gB xB) := by
+    apply Subtype.ext
+    calc
+      (eB₀ (B₀.ρ g xB₀)).1 =
+          relativeCosetAction A M₀ M.field hMM₀ (eB₀ xB₀) g :=
+        extensionFixedRepresentation_action_coe
+          A M₀ M.field hMM₀ N.normal g xB₀
+      _ = relativeCosetAction A K.field M.field M.below (eB xB) gB :=
+        M.relativeCosetAction_lowerInclusionHom A S (eB xB) g
+      _ = (eB (B.ρ gB xB)).1 := by
+        exact (extensionFixedRepresentation_action_coe
+          A K.field M.field M.below M.normal gB xB).symm
+  have hxB₀ : B₀.ρ g xB₀ = xB₀ := by
+    apply eB₀.injective
+    rw [hActionX, hxB]
+    rfl
+  let : Fintype N.extensionQuotient := Fintype.ofFinite _
+  let : IsCyclic N.extensionQuotient :=
+    isCyclic_iff_exists_zpowers_eq_top.mpr ⟨g, top_unique (fun x _ => hg x)⟩
+  let : CommGroup N.extensionQuotient := IsCyclic.commGroup
+  let T := Rep.FiniteCyclicGroup.normHomCompSub B₀ g
+  let xCycle : T.moduleCatLeftHomologyData.K := ⟨xB₀, by
+    change B₀.ρ g xB₀ - xB₀ = 0
+    exact sub_eq_zero.mpr hxB₀⟩
+  let x : ambientFixedAddSubgroup A M₀ :=
+    (cyclicFixedCycleEquiv A M₀ M.field hMM₀
+      N.normal N.finite g hg).symm xCycle
+  refine ⟨x, ?_⟩
+  have hxFormula : fixedFieldInclusion A M₀ M.field hMM₀ x = eB xB := by
+    apply Subtype.ext
+    rfl
+  have hActionVal :=
+    v.valuationAt_extensionFixedRepresentation_action
+      EM M.normal tB aB
+  change v.valuationAt MF (eB (B.ρ tB aB)) = v.valuationAt MF (eB aB) at hActionVal
+  have hval : v.valuationAt MF
+      (fixedFieldInclusion A M₀ M.field hMM₀ x) =
+      k • v.oneValue := by
+    rw [hxFormula]
+    have hxBFormula : eB xB = bM + eB aB - eB (B.ρ tB aB) := by
+      apply Subtype.ext
+      rfl
+    rw [hxBFormula]
+    rw [map_sub, map_add, hvalb, hActionVal]
+    abel
+  calc
+    ((v.valuationAt MF
+        (fixedFieldInclusion A M₀ M.field hMM₀ x) :
+          v.valueGroup) : ZHat) =
+        ((k • v.oneValue : v.valueGroup) : ZHat) :=
+      congrArg Subtype.val hval
+    _ = k • (1 : ZHat) := rfl
+    _ = Int.castRingHom ZHat (k : ℤ) := by
+      simp
+
 /-- The complete source-producing calculation in the cyclic totally
 ramified case of the abstract reciprocity theorem. All fields, restriction
 maps, norm identities, and action identities are constructed from the
@@ -147,12 +312,7 @@ theorem abstractReciprocity_cyclicTotallyRamified_fixedSource
     letI : Finite
         ((baseField G).toSubgroup ⧸
           extensionSubgroup (baseField G) KR.field
-            (le_baseField KR.field)) := by
-      change Finite
-        ((baseField G).toSubgroup ⧸
-          extensionSubgroup (baseField G) K.field
-            (le_baseField K.field))
-      exact K.finite
+            (le_baseField KR.field)) := K.finite
     let LG := E.toFiniteGaloisSubextension
     letI : Finite
         (KR.field.toSubgroup ⧸
@@ -196,28 +356,12 @@ theorem abstractReciprocity_cyclicTotallyRamified_fixedSource
   let L := E.toFiniteAbstractFieldExtension.field
   let KR := K.toFiniteResidueAbstractField D
   let LG := E.toFiniteGaloisSubextension
-  let hLGfinite : Finite
-      (KR.field.toSubgroup ⧸
-        extensionSubgroup KR.field LG.field LG.below) :=
-    LG.finite
-  let hLGfiniteOverK : Finite
-      (K.field.toSubgroup ⧸
-        extensionSubgroup K.field LG.field LG.below) := by
-    have h := hLGfinite
-    change Finite
-      (K.field.toSubgroup ⧸
-        extensionSubgroup K.field LG.field LG.below) at h
-    exact h
+  let hLGfinite := LG.finite
   let q := E.galoisGenerator
   let hq := E.galoisGenerator_generates
   let hLGTot := hTot
   let hKRabsolute : Finite ((baseField G).toSubgroup ⧸
-      extensionSubgroup (baseField G) KR.field (le_baseField KR.field)) := by
-    change Finite
-      ((baseField G).toSubgroup ⧸
-        extensionSubgroup (baseField G) K.field
-          (le_baseField K.field))
-    exact K.finite
+      extensionSubgroup (baseField G) KR.field (le_baseField KR.field)) := K.finite
   let σ := D.chosenDegreeOneFrobeniusLiftOfFiniteTotallyRamified
     KR LG hLGTot q
   let Sigma := D.frobeniusFixedField KR LG.field LG.below σ
@@ -228,10 +372,7 @@ theorem abstractReciprocity_cyclicTotallyRamified_fixedSource
   intro w hpiL hnorm
   let M := D.abstractReciprocityTotallyRamifiedFiniteGaloisExtension
     KR LG hLGTot q
-  let hMfinite : Finite
-      (KR.field.toSubgroup ⧸
-        extensionSubgroup KR.field M.field M.below) :=
-    M.finite
+  let hMfinite := M.finite
   let hMabsolute : Finite ((baseField G).toSubgroup ⧸
       extensionSubgroup (baseField G) M.field (le_baseField M.field)) :=
     FiniteGaloisSubextension.finite_extension_trans M.below (le_baseField K.field)
@@ -250,16 +391,13 @@ theorem abstractReciprocity_cyclicTotallyRamified_fixedSource
   let N := M.lowerFiniteGalois S
   let hMnormal : (extensionSubgroup K.field M.field M.below).Normal := M.normal
   let hNnormal : (extensionSubgroup M₀ M.field hMM₀).Normal := N.normal
-  let hNfinite : Finite
-      (M₀.toSubgroup ⧸ extensionSubgroup M₀ M.field hMM₀) :=
-    N.finite
+  let hNfinite : Finite (M₀.toSubgroup ⧸ extensionSubgroup M₀ M.field hMM₀) := N.finite
   let hMLfinite : Finite
       (E.field.toSubgroup ⧸ extensionSubgroup E.field M.field hML) :=
     FiniteGaloisSubextension.finite_extension_over_intermediate
       M.below E.below hML
   let hM₀finite : Finite
-      (K.field.toSubgroup ⧸ extensionSubgroup K.field M₀ hM₀K) :=
-    M.intermediateField_finite S
+      (K.field.toSubgroup ⧸ extensionSubgroup K.field M₀ hM₀K) := M.intermediateField_finite S
   let hM₀absolute : Finite ((baseField G).toSubgroup ⧸
       extensionSubgroup (baseField G) M₀ (le_baseField M₀)) :=
     FiniteGaloisSubextension.finite_extension_trans hM₀K (le_baseField K.field)
@@ -269,11 +407,6 @@ theorem abstractReciprocity_cyclicTotallyRamified_fixedSource
       base := M₀F
       below := hMM₀
       finiteQuotient := hNfinite }
-  let EM : FiniteAbstractFieldExtension G :=
-    { field := MF
-      base := K
-      below := M.below
-      finiteQuotient := M.finite }
   let EML : FiniteAbstractFieldExtension G :=
     { field := MF
       base := L
@@ -300,61 +433,16 @@ theorem abstractReciprocity_cyclicTotallyRamified_fixedSource
   let bM : ambientFixedAddSubgroup A M.field := k • piLM + wM
   let uM : ambientFixedAddSubgroup A M.field := cM - k • piLM
   have hbM :
-      bM = fixedFieldInclusion A E.field M.field hML (k • piL + w.1) := by
-    apply Subtype.ext
-    rfl
+      bM = fixedFieldInclusion A E.field M.field hML (k • piL + w.1) := rfl
   have hcM :
-      cM = fixedFieldInclusion A Sigma M.field hMSigma (k • piSigma) := by
-    apply Subtype.ext
-    rfl
-  have hNormL :
-      relativeNorm A M₀ M.field hMM₀
-          (fixedFieldInclusion A E.field M.field hML (k • piL + w.1)) =
-        fixedFieldInclusion A K.field M₀ hM₀K
-          (relativeNorm A K.field E.field E.below (k • piL + w.1)) := by
-    have h :=
-      D.abstractReciprocity_totallyRamified_relativeNorm_L
-        A KR LG hLGTot q (k • piL + w.1)
-    change
-      relativeNorm A M₀ M.field hMM₀
-          (fixedFieldInclusion A E.field M.field hML (k • piL + w.1)) =
-        fixedFieldInclusion A K.field M₀ hM₀K
-          (relativeNorm A K.field E.field E.below (k • piL + w.1)) at h
-    exact h
-  have hNormSigma :
-      relativeNorm A M₀ M.field hMM₀
-          (fixedFieldInclusion A Sigma M.field hMSigma (k • piSigma)) =
-        fixedFieldInclusion A K.field M₀ hM₀K
-          (relativeNorm A K.field Sigma hSigmaK (k • piSigma)) := by
-    have h :=
-      D.abstractReciprocity_totallyRamified_relativeNorm_sigma
-        A KR LG hLGTot q (k • piSigma)
-    change
-      relativeNorm A M₀ M.field hMM₀
-          (fixedFieldInclusion A Sigma M.field hMSigma (k • piSigma)) =
-        fixedFieldInclusion A K.field M₀ hM₀K
-          (relativeNorm A K.field Sigma hSigmaK (k • piSigma)) at h
-    exact h
+      cM = fixedFieldInclusion A Sigma M.field hMSigma (k • piSigma) := rfl
   have hNormBC : relativeNorm A M₀ M.field hMM₀ bM =
-      relativeNorm A M₀ M.field hMM₀ cM := by
-    calc
-      relativeNorm A M₀ M.field hMM₀ bM =
-          relativeNorm A M₀ M.field hMM₀
-            (fixedFieldInclusion A E.field M.field hML
-              (k • piL + w.1)) := congrArg _ hbM
-      _ =
-          fixedFieldInclusion A K.field M₀ hM₀K
-            (relativeNorm A K.field E.field E.below (k • piL + w.1)) :=
-        hNormL
-      _ = fixedFieldInclusion A K.field M₀ hM₀K
-          (relativeNorm A K.field Sigma hSigmaK (k • piSigma)) := by
-        exact congrArg
-          (fixedFieldInclusion A K.field M₀ hM₀K) hnorm
-      _ = relativeNorm A M₀ M.field hMM₀
-          (fixedFieldInclusion A Sigma M.field hMSigma (k • piSigma)) :=
-        hNormSigma.symm
-      _ = relativeNorm A M₀ M.field hMM₀ cM :=
-        congrArg _ hcM.symm
+      relativeNorm A M₀ M.field hMM₀ cM :=
+    (D.abstractReciprocity_totallyRamified_relativeNorm_L
+      A KR LG hLGTot q (k • piL + w.1)).trans
+      ((congrArg (fixedFieldInclusion A K.field M₀ hM₀K) hnorm).trans
+        (D.abstractReciprocity_totallyRamified_relativeNorm_sigma
+          A KR LG hLGTot q (k • piSigma)).symm)
   have hnormWU : relativeNorm A M₀ M.field hMM₀ wM =
       relativeNorm A M₀ M.field hMM₀ uM := by
     dsimp only [bM, cM, uM] at hNormBC ⊢
@@ -367,15 +455,8 @@ theorem abstractReciprocity_cyclicTotallyRamified_fixedSource
     D.abstractReciprocityTotallyRamifiedLowerGenerator_generates
       KR LG hLGTot q hq
   let hNFintype : Fintype N.extensionQuotient := Fintype.ofFinite _
-  let hNCyclic : IsCyclic N.extensionQuotient := by
-    rw [isCyclic_iff_exists_zpowers_eq_top]
-    refine ⟨g, ?_⟩
-    ext x
-    constructor
-    · intro _
-      exact Subgroup.mem_top x
-    · intro _
-      exact hg x
+  let hNCyclic : IsCyclic N.extensionQuotient :=
+    isCyclic_iff_exists_zpowers_eq_top.mpr ⟨g, top_unique (fun x _ => hg x)⟩
   let hNcomm : CommGroup N.extensionQuotient := IsCyclic.commGroup
   obtain ⟨aN, haN⟩ :=
     abstractReciprocity_exists_hMinusOne_primitive hcf
@@ -391,155 +472,28 @@ theorem abstractReciprocity_cyclicTotallyRamified_fixedSource
   let aB : B.V := eB.symm (eB₀ aN)
   let bB : B.V := eB.symm bM
   let cB : B.V := eB.symm cM
-  have haNLocal :
-      B₀.ρ g aN - aN = eB₀.symm (wM - uM) := by
-    have h := haN
-    change B₀.ρ g aN - aN = eB₀.symm (wM - uM) at h
-    exact h
-  have hActionPrimitive : eB (B.ρ gB aB) = eB₀ (B₀.ρ g aN) := by
-    apply Subtype.ext
-    calc
-      (eB (B.ρ gB aB)).1 =
-          relativeCosetAction A K.field M.field M.below (eB aB) gB :=
-        extensionFixedRepresentation_action_coe
-          A K.field M.field M.below M.normal gB aB
-      _ = relativeCosetAction A M₀ M.field hMM₀ (eB₀ aN) g := by
-        exact (M.relativeCosetAction_lowerInclusionHom A S (eB₀ aN) g).symm
-      _ = (eB₀ (B₀.ρ g aN)).1 := by
-        exact (extensionFixedRepresentation_action_coe
-          A M₀ M.field hMM₀ N.normal g aN).symm
-  have hprimitiveB : B.ρ gB aB - aB = eB.symm (wM - uM) := by
-    apply eB.injective
-    calc
-      eB (B.ρ gB aB - aB) =
-          eB₀ (B₀.ρ g aN) - eB₀ aN := by
-        rw [map_sub, hActionPrimitive]
-        simp [aB]
-      _ = eB₀ (B₀.ρ g aN - aN) := by
-        rw [map_sub]
-      _ = eB₀ (eB₀.symm (wM - uM)) :=
-        congrArg eB₀ haNLocal
-      _ = wM - uM := eB₀.apply_symm_apply _
-      _ = eB (eB.symm (wM - uM)) :=
-        (eB.apply_symm_apply _).symm
-  have hbc : bB - cB = B.ρ gB aB - aB := by
-    rw [hprimitiveB]
-    apply eB.injective
-    dsimp only [bB, cB]
-    simp only [map_sub, AddEquiv.apply_symm_apply]
-    dsimp only [bM, cM, uM]
-    abel
-  have htc : B.ρ tB cB = cB := by
-    apply eB.injective
-    apply Subtype.ext
-    calc
-      (eB (B.ρ tB cB)).1 =
-          relativeCosetAction A K.field M.field M.below cM tB :=
-        extensionFixedRepresentation_action_coe
-          A K.field M.field M.below M.normal tB cB
-      _ = cM.1 := by
-        dsimp only [cM]
-        have hActionNsmul :
-            relativeCosetAction A K.field M.field M.below
-                (k • piSigmaM) tB =
-              k • relativeCosetAction A K.field M.field M.below
-                piSigmaM tB := by
-          refine Quotient.inductionOn' tB ?_
-          intro t
-          simp only [relativeCosetAction_mk]
-          exact map_nsmul (A.ρ t.1) k piSigmaM.1
-        rw [hActionNsmul]
-        congr 1
-        have h :=
-          D.abstractReciprocityTotallyRamified_frobenius_fixes_sigma
-            A KR LG hLGTot q piSigma
-        change
-          relativeCosetAction A K.field M.field M.below
-              (fixedFieldInclusion A Sigma M.field hMSigma piSigma) tB =
-            (fixedFieldInclusion A Sigma M.field hMSigma piSigma).1 at h
-        simpa [piSigmaM] using h
-      _ = (eB cB).1 := rfl
+  have hprimitive : B₀.ρ g aN - aN = eB₀.symm (bM - cM) := by
+    have hdiff : wM - uM = bM - cM := by
+      dsimp only [wM, uM, bM]
+      abel
+    exact haN.trans (congrArg eB₀.symm hdiff)
+  have htc : B.ρ tB cB = cB :=
+    fixedRepresentation_fixes_nsmul_of_coset_fixed A K.field M.field M.below M.normal
+      tB piSigmaM (D.abstractReciprocityTotallyRamified_frobenius_fixes_sigma
+        A KR LG hLGTot q piSigma) k
   have hgb : B.ρ gB bB = B.ρ tB bB := by
-    apply eB.injective
-    apply Subtype.ext
-    calc
-      (eB (B.ρ gB bB)).1 =
-          relativeCosetAction A K.field M.field M.below bM gB :=
-        extensionFixedRepresentation_action_coe
-          A K.field M.field M.below M.normal gB bB
-      _ = relativeCosetAction A K.field M.field M.below bM tB := by
-        have h :=
-          D.abstractReciprocityTotallyRamified_actions_agree_on_L
-            A KR LG hLGTot q (k • piL + w.1)
-        change
-          relativeCosetAction A K.field M.field M.below
-              (fixedFieldInclusion A E.field M.field hML (k • piL + w.1)) gB =
-            relativeCosetAction A K.field M.field M.below
-              (fixedFieldInclusion A E.field M.field hML (k • piL + w.1)) tB at h
-        rw [hbM]
-        exact h
-      _ = (eB (B.ρ tB bB)).1 := by
-        exact (extensionFixedRepresentation_action_coe
-          A K.field M.field M.below M.normal tB bB).symm
+    apply fixedRepresentation_action_eq_of_coset_eq A K.field M.field M.below M.normal
+    rw [hbM]
+    exact D.abstractReciprocityTotallyRamified_actions_agree_on_L A KR LG hLGTot q
+      (k • piL + w.1)
   have hcomm : Commute gB tB :=
     (D.abstractReciprocityTotallyRamified_generator_commutes_frobenius
       KR LG hLGTot q).map M.extensionQuotientMulEquiv.toMonoidHom
-  let xB : B.V := bB + aB - B.ρ tB aB
-  have hxB : B.ρ gB xB = xB :=
-    abstractReciprocity_fixedCombination_of_commute
-      B gB tB hcomm cB bB aB htc hgb hbc
-  let xB₀ : B₀.V := eB₀.symm (eB xB)
-  have hActionX : eB₀ (B₀.ρ g xB₀) = eB (B.ρ gB xB) := by
-    apply Subtype.ext
-    calc
-      (eB₀ (B₀.ρ g xB₀)).1 =
-          relativeCosetAction A M₀ M.field hMM₀ (eB₀ xB₀) g :=
-        extensionFixedRepresentation_action_coe
-          A M₀ M.field hMM₀ N.normal g xB₀
-      _ = relativeCosetAction A K.field M.field M.below (eB xB) gB :=
-        M.relativeCosetAction_lowerInclusionHom A S (eB xB) g
-      _ = (eB (B.ρ gB xB)).1 := by
-        exact (extensionFixedRepresentation_action_coe
-          A K.field M.field M.below M.normal gB xB).symm
-  have hxB₀ : B₀.ρ g xB₀ = xB₀ := by
-    apply eB₀.injective
-    rw [hActionX, hxB]
-    rfl
-  let T := Rep.FiniteCyclicGroup.normHomCompSub B₀ g
-  let xCycle : T.moduleCatLeftHomologyData.K := ⟨xB₀, by
-    change B₀.ρ g xB₀ - xB₀ = 0
-    exact sub_eq_zero.mpr hxB₀⟩
-  let x : ambientFixedAddSubgroup A M₀ :=
-    (cyclicFixedCycleEquiv A M₀ M.field hMM₀
-      N.normal N.finite g hg).symm xCycle
-  refine ⟨x, ?_⟩
-  have hxFormula : fixedFieldInclusion A M₀ M.field hMM₀ x = eB xB := by
-    apply Subtype.ext
-    rfl
-  have hActionVal :=
-    v.valuationAt_extensionFixedRepresentation_action
-      EM M.normal tB aB
-  have hval : v.valuationAt MF
-      (fixedFieldInclusion A M₀ M.field hMM₀ x) =
-      k • v.oneValue := by
-    rw [hxFormula]
-    have hxBFormula : eB xB = bM + eB aB - eB (B.ρ tB aB) := by
-      apply Subtype.ext
-      rfl
-    rw [hxBFormula]
+  have hvalb : v.valuationAt MF bM = k • v.oneValue := by
     dsimp only [bM]
-    rw [map_sub, map_add, map_add, map_nsmul, hpiLM,
-      wUnitM.2, hActionVal]
-    abel
-  calc
-    ((v.valuationAt MF
-        (fixedFieldInclusion A M₀ M.field hMM₀ x) :
-          v.valueGroup) : ZHat) =
-        ((k • v.oneValue : v.valueGroup) : ZHat) :=
-      congrArg Subtype.val hval
-    _ = k • (1 : ZHat) := rfl
-    _ = Int.castRingHom ZHat (k : ℤ) := by
-      simp
+    rw [map_add, map_nsmul, hpiLM, wUnitM.2, add_zero]
+  exact v.fixedSource_of_cyclic_primitive K M S g hg tB bM cM k
+    aN hprimitive htc hgb hcomm hvalb
 
 end ValuationData
 

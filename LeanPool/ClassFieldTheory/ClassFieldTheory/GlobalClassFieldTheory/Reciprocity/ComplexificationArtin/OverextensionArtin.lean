@@ -198,8 +198,7 @@ noncomputable def
     IdeleClassGroup
         (ramifiedInfinitePlaceRealFixedField
           (K := K) (L := L) v hRamified) →*
-      Gal(
-        (infinitePlaceComplexificationOverfield
+      Gal((infinitePlaceComplexificationOverfield
           (K := K) (L := L) v)/(ramifiedInfinitePlaceRealFixedField
           (K := K) (L := L) v hRamified)) :=
   QuotientGroup.lift
@@ -314,8 +313,7 @@ private noncomputable def
         (ramifiedInfinitePlaceRealFixedField
           (K := K) (L := L) v hRamified))
     (B :=
-      Gal(
-        (infinitePlaceComplexificationOverfield
+      Gal((infinitePlaceComplexificationOverfield
           (K := K) (L := L) v)/(ramifiedInfinitePlaceRealFixedField
           (K := K) (L := L) v hRamified)))
     (_root_.ideleClassNorm
@@ -441,8 +439,7 @@ theorem
     (hRamified :
       (chosenInfinitePlaceAbove (L := L) v).IsRamified K)
     {σ τ :
-      Gal(
-        (infinitePlaceComplexificationOverfield
+      Gal((infinitePlaceComplexificationOverfield
           (K := K) (L := L) v)/(ramifiedInfinitePlaceRealFixedField
           (K := K) (L := L) v hRamified))}
     (hσ : σ ≠ 1)

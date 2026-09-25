@@ -84,8 +84,8 @@ noncomputable def rightCosetCompletionAlgEquiv
       AbsoluteValue.completionAlgebra vK
         (rightCosetExtensionEquiv vK hvK w q).1
         (rightCosetExtensionEquiv vK hvK w q).2
-    (rightCosetExtensionEquiv vK hvK w q).1.Completion ≃ₐ[
-      vK.Completion] LocalizedCompletion vK w := by
+    (rightCosetExtensionEquiv vK hvK w q).1.Completion ≃ₐ[vK.Completion] LocalizedCompletion vK
+      w := by
   letI hK :=
     AbsoluteValue.extensionCompletionAlgebra (K := K) w.1
   letI : SMul K w.1.Completion := hK.toSMul
@@ -97,8 +97,7 @@ noncomputable def rightCosetCompletionAlgEquiv
       (rightCosetExtensionEquiv vK hvK w q).1
       (rightCosetExtensionEquiv vK hvK w q).2
   let eConj :
-      (rightCosetExtensionEquiv vK hvK w q).1.Completion ≃ₐ[
-        vK.Completion] w.1.Completion :=
+      (rightCosetExtensionEquiv vK hvK w q).1.Completion ≃ₐ[vK.Completion] w.1.Completion :=
     { conjugateExtensionCompletionRingEquiv
         vK w (Quotient.out q) with
       commutes' :=

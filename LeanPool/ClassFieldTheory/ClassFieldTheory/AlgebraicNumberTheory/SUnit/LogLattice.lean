@@ -217,12 +217,10 @@ theorem reducedLog_eq_zero_iff
       exact hux.symm
     rw [hxadd]
     apply Prod.ext
-    ·
-      simpa using
+    · simpa using
         (NumberField.Units.dirichletUnitTheorem.logEmbedding_eq_zero_iff.mpr
           hu)
-    ·
-      exact reducedLog_snd_fromNumberFieldUnits
+    · exact reducedLog_snd_fromNumberFieldUnits
         (K := K) S u
 
 open scoped Classical in

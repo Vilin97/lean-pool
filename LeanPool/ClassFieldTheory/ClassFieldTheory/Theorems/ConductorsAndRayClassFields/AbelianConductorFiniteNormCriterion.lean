@@ -28,6 +28,9 @@ noncomputable section
 
 namespace ClassFieldTheory
 
+open GlobalClassFieldTheory.GlobalClassFields renaming
+  ideleClassNormLocalHigherUnitExponent_eq_localConductorExponent →
+    ideleClassNormLocalHigherUnitExponent_eq_localConductorExponent in
 /-- The conductor exponent at `v` is at most `n` exactly when the `n`-th
 higher-unit group lies in the finite-place tensor norm image. -/
 theorem IsAbelianConductor.finiteExponent_le_iff_higherUnit_le_tensorNorm
@@ -61,7 +64,7 @@ theorem IsAbelianConductor.finiteExponent_le_iff_higherUnit_le_tensorNorm
     rw [abelianFullConductor_finiteExponent_eq_localConductorExponent
       (K := K) (L := L) v]
     exact
-      (GlobalClassFieldTheory.GlobalClassFields.ideleClassNormLocalHigherUnitExponent_eq_localConductorExponent
+      (ideleClassNormLocalHigherUnitExponent_eq_localConductorExponent
         (K := K) (L := L) v).symm
   have hcoeff :
       c.finitePart v =

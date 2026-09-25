@@ -74,6 +74,313 @@ theorem universalNormDescent_endpoint_descent
     s φ.1 τ u.1 (fun i => (uᵢ i).1) hstar
   exact v.descend_maximalUnramifiedNorm_unit K L hLK φ hφ u.1 u.2 hfixed
 
+private theorem finiteUnitNormRange_of_norm_add_quotientCard_smul
+    (v : ValuationData D A) [IsTopologicalGroup G]
+    (E : ClosedSubgroup G) (K : FiniteAbstractField G)
+    (M P : FiniteIntermediateField E K.field)
+    (hPM : P.field.toSubgroup ≤ M.field.toSubgroup)
+    (SF : FiniteAbstractField G)
+    (hSP : SF.field.toSubgroup ≤ P.field.toSubgroup)
+    (hSK : SF.field.toSubgroup ≤ K.field.toSubgroup)
+    [Finite (K.field.toSubgroup ⧸ extensionSubgroup K.field SF.field hSK)]
+    (aK zK : v.unitAddSubgroup K) (yS : v.unitAddSubgroup SF)
+    (hbaseRelation : aK.1 = relativeNorm A K.field SF.field hSK yS.1 +
+      P.quotientCard • zK.1) :
+    aK.1 ∈ v.finiteIntermediateUnitNormRange E K M := by
+  let : Finite (K.field.toSubgroup ⧸ extensionSubgroup K.field P.field P.below) := P.finite
+  let hPSfinite : Finite
+      (P.field.toSubgroup ⧸ extensionSubgroup P.field SF.field hSP) :=
+    FiniteIntermediateField.finite_extension_of_le hSK P.below hSP
+  let : Finite
+      ((P.toFiniteAbstractField K).field.toSubgroup ⧸
+        extensionSubgroup (P.toFiniteAbstractField K).field SF.field hSP) := by
+    change Finite
+      (P.field.toSubgroup ⧸ extensionSubgroup P.field SF.field hSP)
+    exact hPSfinite
+  let EPS : FiniteAbstractFieldExtension G :=
+    FiniteAbstractFieldExtension.ofInclusion
+      SF.field (P.toFiniteAbstractField K) hSP
+  let yP : v.unitAddSubgroup (P.toFiniteAbstractField K) := by
+    simpa [EPS, FiniteAbstractFieldExtension.ofInclusion] using
+        v.finiteUnitNorm EPS yS
+  let EP := P.toFiniteAbstractFieldExtension K
+  let zP : v.unitAddSubgroup (P.toFiniteAbstractField K) :=
+    v.finiteUnitInclusion EP zK
+  let aP : v.unitAddSubgroup (P.toFiniteAbstractField K) := yP + zP
+  let FT : DegreeData.FiniteTower G := {
+    top := SF.field
+    middle := P.field
+    base := K.field
+    top_le_middle := hSP
+    middle_le_base := P.below
+    finiteTopQuotient := hPSfinite
+    finiteBaseQuotient := P.finite }
+  have hnDegree : (EP.degree : ℕ) = P.quotientCard := by
+    change (EP.toFiniteAbstractExtension.degree : ℕ) = P.quotientCard
+    rw [EP.toFiniteAbstractExtension.degree_coe]
+    change
+      Nat.card
+        (K.field.toSubgroup ⧸ extensionSubgroup K.field P.field P.below) = P.quotientCard
+    rfl
+  let yPraw : ambientFixedAddSubgroup A P.field :=
+    ⟨yP.1.1, by
+      intro g
+      apply yP.1.2⟩
+  let zPraw : ambientFixedAddSubgroup A P.field :=
+    ⟨zP.1.1, by
+      intro g
+      apply zP.1.2⟩
+  let aPraw : ambientFixedAddSubgroup A P.field :=
+    ⟨aP.1.1, by
+      intro g
+      apply aP.1.2⟩
+  have haPnorm : relativeNorm A K.field P.field P.below aP.1 = aK.1 := by
+    change relativeNorm A K.field P.field P.below aPraw = aK.1
+    have haPraw : aPraw = yPraw + zPraw := by
+      apply Subtype.ext
+      rfl
+    rw [haPraw, map_add]
+    have hyTower := FT.norm_trans_apply A yS.1
+    have hzNorm := relativeNorm_fixedFieldInclusion A
+      EP.toFiniteAbstractExtension zK.1
+    change relativeNorm A K.field P.field P.below
+        (fixedFieldInclusion A K.field P.field P.below zK.1) =
+      (EP.degree : ℕ) • zK.1 at hzNorm
+    change relativeNorm A K.field P.field P.below yPraw +
+      relativeNorm A K.field P.field P.below zPraw = aK.1
+    change relativeNorm A K.field P.field P.below
+        (relativeNorm A P.field SF.field hSP yS.1) +
+      relativeNorm A K.field P.field P.below
+        (fixedFieldInclusion A K.field P.field P.below zK.1) = aK.1
+    rw [hyTower]
+    rw [hzNorm, hnDegree]
+    exact hbaseRelation.symm
+  exact v.mem_finiteIntermediateUnitNormRange_of_overfield
+    E K M P hPM aP aK.1 haPnorm
+
+private theorem exists_unit_lift_of_field_le
+    (v : ValuationData D A) [IsTopologicalGroup G]
+    (B F : FiniteAbstractField G) (h : F.field.toSubgroup ≤ B.field.toSubgroup)
+    (u : v.unitAddSubgroup B) :
+    ∃ x : v.unitAddSubgroup F, x.1.1 = u.1.1 := by
+  let E : FiniteAbstractFieldExtension G :=
+    { base := B
+      field := F
+      below := h
+      finiteQuotient := FiniteIntermediateField.finite_extension_of_le
+        (le_baseField F.field) (le_baseField B.field) h }
+  exact ⟨v.finiteUnitInclusion E u, rfl⟩
+
+private theorem fixedFieldInclusion_unit_mem_infinite
+    (v : ValuationData D A) [IsTopologicalGroup G]
+    (E : ClosedSubgroup G) (K F : FiniteAbstractField G)
+    (hFE : E.toSubgroup ≤ F.field.toSubgroup)
+    (hFK : F.field.toSubgroup ≤ K.field.toSubgroup)
+    (hEK : E.toSubgroup ≤ K.field.toSubgroup)
+    (u : v.unitAddSubgroup F) :
+    fixedFieldInclusion A F.field E hFE u.1 ∈ v.infiniteUnitAddSubgroup E K hEK := by
+  let M : FiniteIntermediateField E K.field :=
+    { field := F.field
+      above := hFE
+      below := hFK
+      finite := FiniteIntermediateField.finite_extension_of_le
+        (le_baseField F.field) (le_baseField K.field) hFK }
+  have h : F = M.toFiniteAbstractField K := FiniteAbstractField.eq_of_field_eq _ _ rfl
+  refine ⟨M, h ▸ u, ?_⟩
+  apply Subtype.ext
+  change (h ▸ u : v.unitAddSubgroup (M.toFiniteAbstractField K)).1.1 = u.1.1
+  dsimp only
+
+private theorem powerTower_corrected_norm_relation
+    (v : ValuationData D A)
+    [IsTopologicalGroup G] [CompactSpace G] [T2Space G]
+    [TotallyDisconnectedSpace G]
+    (powerTower : DegreeData.FrobeniusPowerFixedFieldTower D)
+    (uS : v.unitAddSubgroup powerTower.toFrobeniusFixedFieldTower.base)
+    (uBar yBar : v.unitAddSubgroup powerTower.toFrobeniusFixedFieldTower.field)
+    (u : ambientFixedAddSubgroup A
+      (D.maximalUnramifiedField powerTower.ambient.field)) :
+  let KR := powerTower.ambientBase
+  let L := powerTower.ambient.field
+  let hLK := powerTower.ambient.below
+  letI : Finite (KR.field.toSubgroup ⧸ extensionSubgroup KR.field L hLK) :=
+    powerTower.ambient.finite
+  let φ := powerTower.frobenius
+  let n := powerTower.n
+  let σ := powerTower.baseFrobenius
+  let σn := powerTower.fieldFrobenius
+  let fixedTower := powerTower.toFrobeniusFixedFieldTower
+  let SF := fixedTower.base
+  let TF := fixedTower.field
+  let S := SF.field
+  let T := TF.field
+  let hTS := powerTower.field_le_base
+  letI : Finite (S.toSubgroup ⧸ extensionSubgroup S T hTS) :=
+    powerTower.relativeFinite
+  let hTE := D.fieldInertia_le_frobeniusFixedField KR L hLK σn
+  let hSE := D.fieldInertia_le_frobeniusFixedField KR L hLK σ
+  let E := D.maximalUnramifiedField L
+  let I := D.maximalUnramifiedField KR.field
+  let hEI := D.maximalUnramifiedField_mono hLK
+  letI : Finite (I.toSubgroup ⧸ extensionSubgroup I E hEI) :=
+    D.maximalUnramifiedExtension_finite KR.field L hLK
+  let N := relativeNorm A I E hEI
+  let J := fixedFieldInclusion A I E hEI
+  let φnyBarE := D.frobeniusPowerSum A KR.field L hLK φ.1 n
+    (fixedFieldInclusion A T E hTE yBar.1)
+  let w := fixedFieldInclusion A T E hTE uBar.1 - φnyBarE
+  relativeNorm A S T hTS uBar.1 = uS.1 → uS.1.1 = u.1 →
+    D.frobeniusQuotientAction A KR.field L hLK φ.1 (J (N w)) = J (N w) →
+    ∃ yS : v.unitAddSubgroup SF,
+      J (N u) = J (N (D.frobeniusPowerSum A KR.field L hLK φ.1 n
+        (fixedFieldInclusion A S E hSE yS.1))) + n • J (N w) := by
+  dsimp only
+  intro huBar huSval hfixedZ
+  let KR := powerTower.ambientBase
+  let L := powerTower.ambient.field
+  let hLK := powerTower.ambient.below
+  let : Finite (KR.field.toSubgroup ⧸ extensionSubgroup KR.field L hLK) :=
+    powerTower.ambient.finite
+  let φ := powerTower.frobenius
+  let hφ := powerTower.exponent_one
+  let n := powerTower.n
+  let hn := powerTower.n_pos
+  let σ := powerTower.baseFrobenius
+  let σn := powerTower.fieldFrobenius
+  let fixedTower := powerTower.toFrobeniusFixedFieldTower
+  let finiteFixedTower := powerTower.toFiniteAmbientFrobeniusFixedFieldTower
+  let SF := fixedTower.base
+  let TF := fixedTower.field
+  let S := SF.field
+  let T := TF.field
+  let hTS := powerTower.field_le_base
+  let : Finite (S.toSubgroup ⧸ extensionSubgroup S T hTS) :=
+    powerTower.relativeFinite
+  let hTE := D.fieldInertia_le_frobeniusFixedField KR L hLK σn
+  let hSE := D.fieldInertia_le_frobeniusFixedField KR L hLK σ
+  let E := D.maximalUnramifiedField L
+  let I := D.maximalUnramifiedField KR.field
+  let hEI := D.maximalUnramifiedField_mono hLK
+  let : Finite (I.toSubgroup ⧸ extensionSubgroup I E hEI) :=
+    D.maximalUnramifiedExtension_finite KR.field L hLK
+  let N := relativeNorm A I E hEI
+  let J := fixedFieldInclusion A I E hEI
+  let φnyBarE := D.frobeniusPowerSum A KR.field L hLK φ.1 n
+    (fixedFieldInclusion A T E hTE yBar.1)
+  let w := fixedFieldInclusion A T E hTE uBar.1 - φnyBarE
+  have hφσ := powerTower.frobenius_commute_base
+  have hφσn := powerTower.frobenius_commute_field
+  let powerT : ambientFixedAddSubgroup A T :=
+    ∑ i : Fin n, D.frobeniusFixedFieldAction A KR L hLK σn
+      (φ.1 ^ i.1) (Commute.pow_left hφσn i.1) yBar.1
+  let powerTUnit : v.unitAddSubgroup TF :=
+    ∑ i : Fin n, v.frobeniusFixedFieldUnitAction KR L hLK σn
+      (φ.1 ^ i.1) (Commute.pow_left hφσn i.1) yBar
+  have hpowerTUnit : powerTUnit.1 = powerT :=
+    map_sum (v.unitAddSubgroup TF).subtype _ Finset.univ
+  let wBar : v.unitAddSubgroup TF := uBar - powerTUnit
+  have hwBarIncl : fixedFieldInclusion A T E hTE wBar.1 = w := by
+    have hpIncl := D.fixedFieldPowerSum_inclusion A KR L hLK σn
+      φ.1 hφσn n yBar.1
+    apply Subtype.ext
+    have hpVal := congrArg Subtype.val hpIncl
+    change uBar.1.1 - powerTUnit.1.1 = uBar.1.1 - φnyBarE.1
+    rw [hpowerTUnit]
+    exact congrArg (fun z => uBar.1.1 - z) hpVal
+  let EST : FiniteAbstractFieldExtension G := fixedTower.extension
+  let yS : v.unitAddSubgroup SF := v.finiteUnitNorm EST yBar
+  let uSraw : ambientFixedAddSubgroup A S := uS.1
+  let ySraw : ambientFixedAddSubgroup A S := yS.1
+  let uBarraw : ambientFixedAddSubgroup A T := uBar.1
+  let wBarraw : ambientFixedAddSubgroup A T := wBar.1
+  let powerS : ambientFixedAddSubgroup A S :=
+    ∑ i : Fin n, D.frobeniusFixedFieldAction A KR L hLK σ
+      (φ.1 ^ i.1) (Commute.pow_left hφσ i.1) ySraw
+  have hpowerNorm := D.fixedFieldPowerSum_relativeNorm A KR L hLK
+    σ σn hTS φ.1 hφσ hφσn n yBar.1
+  have huBarraw : relativeNorm A S T hTS uBarraw = uSraw := huBar
+  have hySraw : relativeNorm A S T hTS yBar.1 = ySraw := rfl
+  have hpowerNormRaw : relativeNorm A S T hTS powerT = powerS := by
+    change relativeNorm A S T hTS powerT =
+      ∑ i : Fin n, D.frobeniusFixedFieldAction A KR L hLK σ
+        (φ.1 ^ i.1) (Commute.pow_left hφσ i.1)
+        (relativeNorm A S T hTS yBar.1) at hpowerNorm
+    rw [hySraw] at hpowerNorm
+    exact hpowerNorm
+  have hwBarNorm : relativeNorm A S T hTS wBarraw = uSraw - powerS := by
+    have hwBarCoe : wBarraw = uBarraw - powerT := by
+      apply Subtype.ext
+      change uBar.1.1 - powerTUnit.1.1 = uBar.1.1 - powerT.1
+      exact congrArg (fun z => uBar.1.1 - z)
+        (congrArg Subtype.val hpowerTUnit)
+    rw [hwBarCoe]
+    rw [map_sub, huBarraw]
+    exact congrArg (fun z => uSraw - z) hpowerNormRaw
+  obtain ⟨gS, hgClosure, _hgDegree, hg⟩ :=
+    D.frobeniusPowerFixedField_generator KR L hLK φ hφ n n hn hn
+  let fixedGenerator :
+      finiteFixedTower.toFrobeniusFixedFieldTower.CyclicGenerator :=
+    { element := gS
+      mapsToFrobenius := hgClosure
+      generates := hg }
+  have hcard := D.frobeniusPowerFixedField_quotientCard
+    KR L hLK φ hφ n n hn hn
+  have hdegree : (finiteFixedTower.extension.degree : ℕ) = n := by
+    calc
+      (finiteFixedTower.extension.degree : ℕ) =
+          Nat.card
+            finiteFixedTower.extension.toFiniteAbstractExtension.quotient :=
+        finiteFixedTower.extension.toFiniteAbstractExtension.degree_coe
+      _ = n := hcard
+  have hnormW := v.maximalNorm_relativeNorm_fixedTower
+    finiteFixedTower fixedGenerator n hdegree wBar
+  have hnormWraw :
+      J (N (fixedFieldInclusion A S E hSE
+        (relativeNorm A S T hTS wBarraw))) =
+      D.frobeniusPowerSum A KR.field L hLK σ.1 n
+        (J (N (fixedFieldInclusion A T E hTE wBarraw))) := hnormW
+  have hσfixedZ : D.frobeniusQuotientAction A KR.field L hLK σ.1 (J (N w)) =
+      J (N w) := by
+    let B := D.frobeniusQuotientRepresentation A KR.field L hLK
+    have hpow := rep_action_pow_fixed
+      B φ.1 (J (N w)) hfixedZ n
+    change D.frobeniusQuotientAction A KR.field L hLK
+      (φ.1 ^ n) (J (N w)) = J (N w) at hpow
+    simpa only [σ, DegreeData.FrobeniusPowerFixedFieldTower.baseFrobenius,
+      D.frobeniusPowerOfDegreeOne_coe] using hpow
+  have hpowerZ : D.frobeniusPowerSum A KR.field L hLK σ.1 n (J (N w)) =
+      n • J (N w) :=
+    D.frobeniusPowerSum_eq_nsmul_of_fixed A KR.field L hLK
+      σ.1 n (J (N w)) hσfixedZ
+  have hnormW' :
+      J (N (fixedFieldInclusion A S E hSE (uSraw - powerS))) =
+        n • J (N w) := by
+    rw [← hwBarNorm, hnormWraw]
+    have hwBarInclRaw : fixedFieldInclusion A T E hTE wBarraw = w := by
+      apply Subtype.ext
+      exact congrArg Subtype.val hwBarIncl
+    rw [hwBarInclRaw, hpowerZ]
+  have hpowerSIncl := D.fixedFieldPowerSum_inclusion A KR L hLK σ
+    φ.1 hφσ n ySraw
+  have huSIncl : fixedFieldInclusion A S E hSE uSraw = u := by
+    apply Subtype.ext
+    change uSraw.1 = u.1
+    exact huSval
+  refine ⟨yS, ?_⟩
+  have h := hnormW'
+  simp only [map_sub] at h
+  have hpowerSInclRaw : fixedFieldInclusion A S E hSE powerS =
+      D.frobeniusPowerSum A KR.field L hLK φ.1 n
+        (fixedFieldInclusion A S E hSE ySraw) := hpowerSIncl
+  rw [huSIncl, hpowerSInclRaw] at h
+  calc
+    J (N u) = n • J (N w) +
+        J (N (D.frobeniusPowerSum A KR.field L hLK φ.1 n
+          (fixedFieldInclusion A S E hSE ySraw))) :=
+      sub_eq_iff_eq_add.mp h
+    _ = _ := add_comm _ _
+
+
 /-- The universal norm-descent lemma, finite target step.  After placing the finite support in a
 common finite Galois overfield, the descended unit is a norm from every
 prescribed finite intermediate field. -/
@@ -208,66 +515,16 @@ theorem universalNormDescent_mem_finiteUnitNormRange
       fieldAbsoluteFinite := hTabsolute
       relativeFinite := hTSfinite }
   let fixedTower := powerTower.toFrobeniusFixedFieldTower
-  let finiteFixedTower :=
-    powerTower.toFiniteAmbientFrobeniusFixedFieldTower
   let SF := fixedTower.base
   let TF := fixedTower.field
-  let hSMu : S.toSubgroup ≤ Mu.field.toSubgroup := hSP.trans hPMu
-  let hSMufinite : Finite
-      (Mu.field.toSubgroup ⧸ extensionSubgroup Mu.field S hSMu) :=
-    FiniteIntermediateField.finite_extension_of_le hSK Mu.below hSMu
-  let : Finite
-      ((Mu.toFiniteAbstractField K).field.toSubgroup ⧸
-        extensionSubgroup (Mu.toFiniteAbstractField K).field S hSMu) := by
-    change Finite
-      (Mu.field.toSubgroup ⧸ extensionSubgroup Mu.field S hSMu)
-    exact hSMufinite
-  let ESMu : FiniteAbstractFieldExtension G :=
-    FiniteAbstractFieldExtension.ofInclusion
-      S (Mu.toFiniteAbstractField K) hSMu
-  have hESMuField : ESMu.field = SF :=
-    FiniteAbstractField.eq_of_field_eq _ _ rfl
-  let uS : v.unitAddSubgroup SF :=
-    hESMuField ▸ v.finiteUnitInclusion ESMu uMu
-  let hSMi (j : ιs) : S.toSubgroup ≤ (Mi j).field.toSubgroup :=
-    hSP.trans (hPMi j)
-  let hSMifinite (j : ιs) : Finite
-      ((Mi j).field.toSubgroup ⧸ extensionSubgroup (Mi j).field S (hSMi j)) :=
-    FiniteIntermediateField.finite_extension_of_le hSK (Mi j).below (hSMi j)
-  let hSMifiniteBundled (j : ιs) : Finite
-      (((Mi j).toFiniteAbstractField K).field.toSubgroup ⧸
-        extensionSubgroup ((Mi j).toFiniteAbstractField K).field S (hSMi j)) := by
-    change Finite
-      ((Mi j).field.toSubgroup ⧸
-        extensionSubgroup (Mi j).field S (hSMi j))
-    exact hSMifinite j
-  let ESMi (j : ιs) : FiniteAbstractFieldExtension G :=
-    FiniteAbstractFieldExtension.ofInclusion
-      S ((Mi j).toFiniteAbstractField K) (hSMi j)
-  have hESMiField (j : ιs) : (ESMi j).field = SF :=
-    FiniteAbstractField.eq_of_field_eq _ _ rfl
-  let uᵢS (j : ιs) : v.unitAddSubgroup SF :=
-    hESMiField j ▸ v.finiteUnitInclusion (ESMi j) (uMi j)
-  have huSval : uS.1.1 = u.1.1 := by
-    have huMuVal := congrArg Subtype.val huMu
-    change uMu.1.1 = u.1.1 at huMuVal
-    have huStransport : uS.1.1 = uMu.1.1 := by
-      dsimp only [uS]
-      cases hESMuField
-      rfl
-    calc
-      uS.1.1 = uMu.1.1 := huStransport
-      _ = u.1.1 := huMuVal
-  have huᵢSval (j : ιs) : (uᵢS j).1.1 = (uᵢ j.1).1.1 := by
-    have huMiVal := congrArg Subtype.val (huMi j)
-    change (uMi j).1.1 = (uᵢ j.1).1.1 at huMiVal
-    have huᵢStransport : (uᵢS j).1.1 = (uMi j).1.1 := by
-      dsimp only [uᵢS]
-      cases hESMiField j
-      rfl
-    calc
-      (uᵢS j).1.1 = (uMi j).1.1 := huᵢStransport
-      _ = (uᵢ j.1).1.1 := huMiVal
+  obtain ⟨uS, huStransport⟩ := v.exists_unit_lift_of_field_le
+    (Mu.toFiniteAbstractField K) SF (hSP.trans hPMu) uMu
+  have hlift (j : ιs) := v.exists_unit_lift_of_field_le
+    ((Mi j).toFiniteAbstractField K) SF (hSP.trans (hPMi j)) (uMi j)
+  choose uᵢS huᵢStransport using hlift
+  have huSval : uS.1.1 = u.1.1 := huStransport.trans (congrArg Subtype.val huMu)
+  have huᵢSval (j : ιs) : (uᵢS j).1.1 = (uᵢ j.1).1.1 :=
+    (huᵢStransport j).trans (congrArg Subtype.val (huMi j))
   have hstarVal :
       (D.frobeniusQuotientAction A K.field L hLK φ.1 u.1).1 - u.1.1 =
         ∑ i ∈ s,
@@ -296,8 +553,6 @@ theorem universalNormDescent_mem_finiteUnitNormRange
   let τs : ιs →
       (D.extensionNormalizedDegreeContinuous KR L hLK).toMonoidHom.ker :=
     fun j => τ j.1
-  have hφσ : φ.1 * σ.1 = σ.1 * φ.1 :=
-    powerTower.frobenius_commute_base
   have hφσn : φ.1 * σn.1 = σn.1 * φ.1 :=
     powerTower.frobenius_commute_field
   have hτσ (j : ιs) : (τs j).1 * (φ.1 ^ n) =
@@ -321,26 +576,10 @@ theorem universalNormDescent_mem_finiteUnitNormRange
   have hstarW := v.universalNormDescent_correctedEquation KR L hLK σ σn
     (Finset.univ : Finset ιs) φ.1 hφσn (fun j => (τs j).1) hτσn
       hσσn n rfl uBar uBarᵢ yBar hyBar
-  have huBarEmem : uBarE ∈ v.infiniteUnitAddSubgroup E K hEK := by
-    let MT := D.frobeniusFixedIntermediateField KR L hLK σn
-    have hTFMT : TF = MT.toFiniteAbstractField K :=
-      FiniteAbstractField.eq_of_field_eq _ _ rfl
-    let uBarMT : v.unitAddSubgroup (MT.toFiniteAbstractField K) :=
-      hTFMT ▸ uBar
-    refine ⟨MT, uBarMT, ?_⟩
-    apply Subtype.ext
-    change uBarMT.1.1 = uBar.1.1
-    dsimp only [uBarMT]
-  have hyBarEmem : yBarE ∈ v.infiniteUnitAddSubgroup E K hEK := by
-    let MT := D.frobeniusFixedIntermediateField KR L hLK σn
-    have hTFMT : TF = MT.toFiniteAbstractField K :=
-      FiniteAbstractField.eq_of_field_eq _ _ rfl
-    let yBarMT : v.unitAddSubgroup (MT.toFiniteAbstractField K) :=
-      hTFMT ▸ yBar
-    refine ⟨MT, yBarMT, ?_⟩
-    apply Subtype.ext
-    change yBarMT.1.1 = yBar.1.1
-    dsimp only [yBarMT]
+  have huBarEmem : uBarE ∈ v.infiniteUnitAddSubgroup E K hEK :=
+    v.fixedFieldInclusion_unit_mem_infinite E K TF hTE hTK hEK uBar
+  have hyBarEmem : yBarE ∈ v.infiniteUnitAddSubgroup E K hEK :=
+    v.fixedFieldInclusion_unit_mem_infinite E K TF hTE hTK hEK yBar
   have hφnyMem : φnyBarE ∈ v.infiniteUnitAddSubgroup E K hEK :=
     v.frobeniusPowerSum_mem_infiniteUnit_universalNormDescent K L hLK φ.1 n yBarE hyBarEmem
   have hwMem : w ∈ v.infiniteUnitAddSubgroup E K hEK :=
@@ -349,177 +588,9 @@ theorem universalNormDescent_mem_finiteUnitNormRange
     (Finset.univ : Finset ιs) φ.1 τs w uBarᵢE hstarW
   obtain ⟨zK, hzK⟩ :=
     v.descend_maximalUnramifiedNorm_unit K L hLK φ hφ w hwMem hfixedZ
-  let powerT : ambientFixedAddSubgroup A T :=
-    ∑ i : Fin n, D.frobeniusFixedFieldAction A KR L hLK σn
-      (φ.1 ^ i.1) (Commute.pow_left hφσn i.1) yBar.1
-  let powerTUnit : v.unitAddSubgroup TF :=
-    ∑ i : Fin n, v.frobeniusFixedFieldUnitAction KR L hLK σn
-      (φ.1 ^ i.1) (Commute.pow_left hφσn i.1) yBar
-  have hsumUnit (f : Fin n → v.unitAddSubgroup TF) :
-      ((∑ i, f i).1.1 : A.V) = ∑ i, (f i).1.1 := by
-    calc
-      ((∑ i, f i).1.1 : A.V) =
-          (ambientFixedAddSubgroup A TF.field).subtype
-            (∑ i, (v.unitAddSubgroup TF).subtype (f i)) := by
-        exact congrArg (ambientFixedAddSubgroup A TF.field).subtype
-          (map_sum (v.unitAddSubgroup TF).subtype f Finset.univ)
-      _ = _ :=
-        map_sum (ambientFixedAddSubgroup A TF.field).subtype
-          (fun i => (v.unitAddSubgroup TF).subtype (f i)) Finset.univ
-  have hsumAmbient (f : Fin n → ambientFixedAddSubgroup A T) :
-      ((∑ i, f i).1 : A.V) = ∑ i, (f i).1 :=
-    map_sum (ambientFixedAddSubgroup A T).subtype f Finset.univ
-  have hpowerTUnit : powerTUnit.1 = powerT := by
-    apply Subtype.ext
-    calc
-      (powerTUnit.1.1 : A.V) =
-          ∑ i : Fin n, (v.frobeniusFixedFieldUnitAction KR L hLK σn
-            (φ.1 ^ i.1) (Commute.pow_left hφσn i.1) yBar).1.1 :=
-        hsumUnit (fun i : Fin n =>
-          v.frobeniusFixedFieldUnitAction KR L hLK σn
-            (φ.1 ^ i.1) (Commute.pow_left hφσn i.1) yBar)
-      _ = ∑ i : Fin n,
-          (D.frobeniusFixedFieldAction A KR L hLK σn
-            (φ.1 ^ i.1) (Commute.pow_left hφσn i.1) yBar.1).1 := rfl
-      _ = powerT.1 :=
-        (hsumAmbient (fun i : Fin n =>
-          D.frobeniusFixedFieldAction A KR L hLK σn
-            (φ.1 ^ i.1) (Commute.pow_left hφσn i.1) yBar.1)).symm
-  let wBar : v.unitAddSubgroup TF := uBar - powerTUnit
-  have hwBarIncl : fixedFieldInclusion A T E hTE wBar.1 = w := by
-    have hpIncl := D.fixedFieldPowerSum_inclusion A KR L hLK σn
-      φ.1 hφσn n yBar.1
-    apply Subtype.ext
-    have hpVal := congrArg Subtype.val hpIncl
-    change uBar.1.1 - powerTUnit.1.1 = uBar.1.1 - φnyBarE.1
-    rw [hpowerTUnit]
-    exact congrArg (fun z => uBar.1.1 - z) hpVal
-  let EST : FiniteAbstractFieldExtension G := fixedTower.extension
-  let yS : v.unitAddSubgroup SF := v.finiteUnitNorm EST yBar
-  let uSraw : ambientFixedAddSubgroup A S :=
-    ⟨uS.1.1, by
-      intro g
-      have hg : g.1 ∈ SF.field := by
-        change g.1 ∈ D.frobeniusFixedField KR L hLK σ
-        exact g.2
-      exact uS.1.2 ⟨g.1, hg⟩⟩
-  let ySraw : ambientFixedAddSubgroup A S :=
-    ⟨yS.1.1, by
-      intro g
-      have hg : g.1 ∈ SF.field := by
-        change g.1 ∈ D.frobeniusFixedField KR L hLK σ
-        exact g.2
-      exact yS.1.2 ⟨g.1, hg⟩⟩
-  let uBarraw : ambientFixedAddSubgroup A T :=
-    ⟨uBar.1.1, by
-      intro g
-      have hg : g.1 ∈
-          (D.frobeniusFixedAbstractField KR L hLK σn).field := by
-        change g.1 ∈ D.frobeniusFixedField KR L hLK σn
-        exact g.2
-      exact uBar.1.2 ⟨g.1, hg⟩⟩
-  let wBarraw : ambientFixedAddSubgroup A T :=
-    ⟨wBar.1.1, by
-      intro g
-      have hg : g.1 ∈ TF.field := by
-        change g.1 ∈ D.frobeniusFixedField KR L hLK σn
-        exact g.2
-      exact wBar.1.2 ⟨g.1, hg⟩⟩
-  let powerS : ambientFixedAddSubgroup A S :=
-    ∑ i : Fin n, D.frobeniusFixedFieldAction A KR L hLK σ
-      (φ.1 ^ i.1) (Commute.pow_left hφσ i.1) ySraw
-  have hpowerNorm := D.fixedFieldPowerSum_relativeNorm A KR L hLK
-    σ σn hTS φ.1 hφσ hφσn n yBar.1
-  have huBarraw : relativeNorm A S T hTS uBarraw = uSraw := by
-    apply Subtype.ext
-    have h := congrArg Subtype.val huBar
-    change
-      (relativeNorm A S T hTS uBar.1).1 = uS.1.1 at h
-    change
-      (relativeNorm A S T hTS uBarraw).1 = uSraw.1
-    exact h
-  have hySraw : relativeNorm A S T hTS yBar.1 = ySraw := by
-    apply Subtype.ext
-    rfl
-  have hpowerNormRaw : relativeNorm A S T hTS powerT = powerS := by
-    simpa [powerT, powerS, S, T, σ, σn, hySraw] using hpowerNorm
-  have hwBarNorm : relativeNorm A S T hTS wBarraw = uSraw - powerS := by
-    have hwBarCoe : wBarraw = uBarraw - powerT := by
-      apply Subtype.ext
-      change uBar.1.1 - powerTUnit.1.1 = uBar.1.1 - powerT.1
-      exact congrArg (fun z => uBar.1.1 - z)
-        (congrArg Subtype.val hpowerTUnit)
-    rw [hwBarCoe]
-    rw [map_sub, huBarraw]
-    exact congrArg (fun z => uSraw - z) hpowerNormRaw
-  obtain ⟨gS, hgClosure, _hgDegree, hg⟩ :=
-    D.frobeniusPowerFixedField_generator KR L hLK φ hφ n n hn hn
-  let fixedGenerator :
-      finiteFixedTower.toFrobeniusFixedFieldTower.CyclicGenerator :=
-    { element := gS
-      mapsToFrobenius := hgClosure
-      generates := hg }
-  have hcard := D.frobeniusPowerFixedField_quotientCard
-    KR L hLK φ hφ n n hn hn
-  have hdegree : (finiteFixedTower.extension.degree : ℕ) = n := by
-    calc
-      (finiteFixedTower.extension.degree : ℕ) =
-          Nat.card
-            finiteFixedTower.extension.toFiniteAbstractExtension.quotient :=
-        finiteFixedTower.extension.toFiniteAbstractExtension.degree_coe
-      _ = n := hcard
-  have hnormW := v.maximalNorm_relativeNorm_fixedTower
-    finiteFixedTower fixedGenerator n hdegree wBar
-  have hnormWraw :
-      J (N (fixedFieldInclusion A S E hSE
-        (relativeNorm A S T hTS wBarraw))) =
-      D.frobeniusPowerSum A K.field L hLK σ.1 n
-        (J (N (fixedFieldInclusion A T E hTE wBarraw))) := by
-    change
-      J (N (fixedFieldInclusion A S E hSE
-        (relativeNorm A S T hTS wBar.1))) =
-      D.frobeniusPowerSum A K.field L hLK σ.1 n
-        (J (N (fixedFieldInclusion A T E hTE wBar.1))) at hnormW
-    exact hnormW
-  have hσfixedZ : D.frobeniusQuotientAction A K.field L hLK σ.1 (J (N w)) =
-      J (N w) := by
-    let B := D.frobeniusQuotientRepresentation A K.field L hLK
-    have hpow := rep_action_pow_fixed
-      B φ.1 (J (N w)) hfixedZ n
-    change D.frobeniusQuotientAction A K.field L hLK
-      (φ.1 ^ n) (J (N w)) = J (N w) at hpow
-    simpa only [σ, D.frobeniusPowerOfDegreeOne_coe] using hpow
-  have hpowerZ : D.frobeniusPowerSum A K.field L hLK σ.1 n (J (N w)) =
-      n • J (N w) :=
-    D.frobeniusPowerSum_eq_nsmul_of_fixed A K.field L hLK
-      σ.1 n (J (N w)) hσfixedZ
-  have hnormW' :
-      J (N (fixedFieldInclusion A S E hSE (uSraw - powerS))) =
-        n • J (N w) := by
-    rw [← hwBarNorm, hnormWraw]
-    have hwBarInclRaw : fixedFieldInclusion A T E hTE wBarraw = w := by
-      apply Subtype.ext
-      exact congrArg Subtype.val hwBarIncl
-    rw [hwBarInclRaw, hpowerZ]
-  have hpowerSIncl := D.fixedFieldPowerSum_inclusion A KR L hLK σ
-    φ.1 hφσ n ySraw
-  have huSIncl : fixedFieldInclusion A S E hSE uSraw = u.1 := by
-    apply Subtype.ext
-    change uSraw.1 = u.1.1
-    exact huSval
-  have hnormRelationE :
-      J (N u.1) =
-        J (N (D.frobeniusPowerSum A K.field L hLK φ.1 n
-          (fixedFieldInclusion A S E hSE ySraw))) + n • J (N w) := by
-    have h := hnormW'
-    simp only [map_sub] at h
-    rw [huSIncl, hpowerSIncl] at h
-    calc
-      J (N u.1) = n • J (N w) +
-          J (N (D.frobeniusPowerSum A K.field L hLK φ.1 n
-            (fixedFieldInclusion A S E hSE ySraw))) :=
-        sub_eq_iff_eq_add.mp h
-      _ = _ := add_comm _ _
+  obtain ⟨yS, hnormRelationE⟩ := v.powerTower_corrected_norm_relation
+    powerTower uS uBar yBar u.1 huBar huSval hfixedZ
+  let ySraw : ambientFixedAddSubgroup A S := yS.1
   have hlemma53 := (D.frobeniusNormIdentities A KR L hLK φ σ hφ ySraw).1
   have hbaseRelation :
       aK.1 = relativeNorm A K.field S hSK ySraw + n • zK.1 := by
@@ -527,20 +598,8 @@ theorem universalNormDescent_mem_finiteUnitNormRange
     have haKval := congrArg Subtype.val haK
     have hzKval := congrArg Subtype.val hzK
     have hrelVal := congrArg Subtype.val hnormRelationE
-    have h53 := hlemma53
-    have h53' :
-        (N (D.frobeniusPowerSum A K.field L hLK φ.1 n
-          (fixedFieldInclusion A S E hSE ySraw))).1 =
-          (relativeNorm A K.field S hSK ySraw).1 := by
-      have h53' := h53.symm
-      have hσexp : D.frobeniusExponent KR L hLK σ = n :=
-        D.frobeniusExponent_powerOfDegreeOne KR L hLK φ hφ n hn
-      rw [hσexp] at h53'
-      change
-        (N (D.frobeniusPowerSum A K.field L hLK φ.1 n
-          (fixedFieldInclusion A S E hSE ySraw))).1 =
-          (relativeNorm A K.field S hSK ySraw).1 at h53'
-      exact h53'
+    have h53' := hlemma53.symm
+    rw [D.frobeniusExponent_powerOfDegreeOne KR L hLK φ hφ n hn] at h53'
     change aK.1.1 =
       (relativeNorm A K.field S hSK ySraw).1 + n • zK.1.1
     change aK.1.1 = (N u.1).1 at haKval
@@ -549,77 +608,12 @@ theorem universalNormDescent_mem_finiteUnitNormRange
       (N (D.frobeniusPowerSum A K.field L hLK φ.1 n
         (fixedFieldInclusion A S E hSE ySraw))).1 + n • (N w).1 at hrelVal
     rw [haKval, hrelVal, ← hzKval]
-    rw [h53']
-  let hPSfinite : Finite
-      (P.field.toSubgroup ⧸ extensionSubgroup P.field S hSP) :=
-    FiniteIntermediateField.finite_extension_of_le hSK P.below hSP
-  let : Finite
-      ((P.toFiniteAbstractField K).field.toSubgroup ⧸
-        extensionSubgroup (P.toFiniteAbstractField K).field S hSP) := by
-    change Finite
-      (P.field.toSubgroup ⧸ extensionSubgroup P.field S hSP)
-    exact hPSfinite
-  let EPS : FiniteAbstractFieldExtension G :=
-    FiniteAbstractFieldExtension.ofInclusion
-      S (P.toFiniteAbstractField K) hSP
-  let yP : v.unitAddSubgroup (P.toFiniteAbstractField K) := by
-    simpa [SF, EPS, FiniteAbstractFieldExtension.ofInclusion,
-      DegreeData.frobeniusFixedAbstractField] using
-        v.finiteUnitNorm EPS yS
-  let EP := P.toFiniteAbstractFieldExtension K
-  let zP : v.unitAddSubgroup (P.toFiniteAbstractField K) :=
-    v.finiteUnitInclusion EP zK
-  let aP : v.unitAddSubgroup (P.toFiniteAbstractField K) := yP + zP
-  let FT : DegreeData.FiniteTower G := {
-    top := S
-    middle := P.field
-    base := K.field
-    top_le_middle := hSP
-    middle_le_base := P.below
-    finiteTopQuotient := hPSfinite
-    finiteBaseQuotient := P.finite }
-  have hnDegree : (EP.degree : ℕ) = n := by
-    change (EP.toFiniteAbstractExtension.degree : ℕ) = n
-    rw [EP.toFiniteAbstractExtension.degree_coe]
-    change
-      Nat.card
-        (K.field.toSubgroup ⧸ extensionSubgroup K.field P.field P.below) = n
-    rfl
-  let yPraw : ambientFixedAddSubgroup A P.field :=
-    ⟨yP.1.1, by
-      intro g
-      apply yP.1.2⟩
-  let zPraw : ambientFixedAddSubgroup A P.field :=
-    ⟨zP.1.1, by
-      intro g
-      apply zP.1.2⟩
-  let aPraw : ambientFixedAddSubgroup A P.field :=
-    ⟨aP.1.1, by
-      intro g
-      apply aP.1.2⟩
-  have haPnorm : relativeNorm A K.field P.field P.below aP.1 = aK.1 := by
-    change relativeNorm A K.field P.field P.below aPraw = aK.1
-    have haPraw : aPraw = yPraw + zPraw := by
-      apply Subtype.ext
-      rfl
-    rw [haPraw, map_add]
-    have hyTower := FT.norm_trans_apply A yS.1
-    have hzNorm := relativeNorm_fixedFieldInclusion A
-      EP.toFiniteAbstractExtension zK.1
-    change relativeNorm A K.field P.field P.below
-        (fixedFieldInclusion A K.field P.field P.below zK.1) =
-      (EP.degree : ℕ) • zK.1 at hzNorm
-    change relativeNorm A K.field P.field P.below yPraw +
-      relativeNorm A K.field P.field P.below zPraw = aK.1
-    change relativeNorm A K.field P.field P.below
-        (relativeNorm A P.field S hSP yS.1) +
-      relativeNorm A K.field P.field P.below
-        (fixedFieldInclusion A K.field P.field P.below zK.1) = aK.1
-    rw [hyTower]
-    rw [hzNorm, hnDegree]
-    exact hbaseRelation.symm
-  exact v.mem_finiteIntermediateUnitNormRange_of_overfield
-    E K M P hPM aP aK.1 haPnorm
+    exact congrArg (fun z => z + n • zK.1.1) h53'
+  let : Finite (K.field.toSubgroup ⧸ extensionSubgroup K.field SF.field hSK) := by
+    change Finite (K.field.toSubgroup ⧸ extensionSubgroup K.field S hSK)
+    exact hSfinite
+  exact v.finiteUnitNormRange_of_norm_add_quotientCard_smul E K M P hPM
+    SF hSP hSK aK zK yS hbaseRelation
 
 /-- **The universal norm-descent lemma.**  A finite Frobenius coboundary
 relation for an infinite-level unit forces its maximal-unramified norm to

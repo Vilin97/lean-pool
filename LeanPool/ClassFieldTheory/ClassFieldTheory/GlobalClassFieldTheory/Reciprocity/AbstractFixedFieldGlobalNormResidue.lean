@@ -344,6 +344,13 @@ noncomputable abbrev numberFieldEmbeddedFiniteGaloisSubextension
   normal := numberFieldEmbeddedExtensionSubgroup_normal K L j
   finite := numberFieldEmbeddedExtensionQuotient_finite K L j
 
+/-- The embedded Galois subextension has the fixing subgroup of the original top field. -/
+theorem numberFieldEmbeddedFiniteGaloisSubextension_field
+    [FiniteDimensional K L] [IsGalois K L]
+    (j : L →ₐ[ℚ] SeparableClosure ℚ) :
+    (numberFieldEmbeddedFiniteGaloisSubextension K L j).field =
+      numberFieldEmbeddedTopSubgroup K L j := rfl
+
 /-- Shared finite-dimensional data for the fixed field of the lower subgroup
 in an explicitly embedded number-field tower. -/
 noncomputable local instance
@@ -478,7 +485,7 @@ noncomputable def
     [FiniteDimensional K L] [IsGalois K L]
     (j : L →ₐ[ℚ] SeparableClosure ℚ) :
     (numberFieldEmbeddedFiniteGaloisSubextension K L j).extensionQuotient ≃*
-      Gal(L/K) := by
+      Gal(L / K) := by
   let i := numberFieldEmbeddedLowerEmbedding K L j
   letI hAlgebra : Algebra K (SeparableClosure ℚ) :=
     numberFieldEmbeddedSeparableClosureAlgebra K L j
@@ -500,7 +507,7 @@ noncomputable def
   change
     (H₀.toSubgroup ⧸
         CyclicCohomology.extensionSubgroup H₀ J₀ hJH) ≃*
-      Gal(L/K)
+      Gal(L / K)
   exact ambientEmbeddedExtensionQuotientEquivGaloisGroup ℚ K L j e
 
 /-- The original lower field is canonically equivalent to the fixed
@@ -837,13 +844,13 @@ noncomputable def
     Additive
       (Abelianization
         (numberFieldEmbeddedFiniteGaloisSubextension K L j).extensionQuotient) ≃+
-      Additive Gal(L/K) :=
+      Additive Gal(L / K) :=
   MulEquiv.toAdditive
     ((MulEquiv.abelianizationCongr
       (numberFieldEmbeddedExtensionQuotientEquivGaloisGroup K L j)).trans
         (Abelianization.equivOfComm :
-          Gal(L/K) ≃*
-            Abelianization Gal(L/K)).symm)
+          Gal(L / K) ≃*
+            Abelianization Gal(L / K)).symm)
 
 /-- The actual global norm-residue equivalence constructed from an
 explicit compatible embedding of a finite abelian number-field
@@ -853,7 +860,7 @@ noncomputable def globalNormResidueEquivOfEmbedding
     Additive
         (IdeleClassGroup K ⧸
           (_root_.ideleClassNorm K L).range) ≃+
-      Additive Gal(L/K) := by
+      Additive Gal(L / K) := by
   let eNorm :
       FiniteNormQuotient rationalIdeleClassRepresentation
           (numberFieldEmbeddedBaseSubgroup K L j)
@@ -899,11 +906,11 @@ theorem globalNormResidueEquivOfEmbedding_finiteNormClass
 compatible embedding. -/
 noncomputable def globalNormResidueMonoidHomOfEmbedding
     (j : L →ₐ[ℚ] SeparableClosure ℚ) :
-    IdeleClassGroup K →* Gal(L/K) := by
+    IdeleClassGroup K →* Gal(L / K) := by
   let e :
       (IdeleClassGroup K ⧸
           (_root_.ideleClassNorm K L).range) ≃*
-        Gal(L/K) :=
+        Gal(L / K) :=
     AddEquiv.toMultiplicative
       (globalNormResidueEquivOfEmbedding K L j)
   exact
@@ -1092,7 +1099,7 @@ theorem globalNormResidueMonoidHom_eq_ofEmbedding_standard :
       Additive
           (IdeleClassGroup K ⧸
             (_root_.ideleClassNorm K L).range) ≃+
-        Additive (Gal(L/K)) =>
+        Additive (Gal(L / K)) =>
       e (Additive.ofMul
         (QuotientGroup.mk' (_root_.ideleClassNorm K L).range c)))
     (globalNormResidueEquiv_eq_ofEmbedding_standard K L)
@@ -1285,7 +1292,7 @@ noncomputable def
         (Abelianization
           (FiniteGaloisSubextension.extensionQuotient
             L.toFiniteGaloisExtension)) ≃+
-      Additive (Gal(E/F)) := by
+      Additive (Gal(E / F)) := by
   dsimp only
   let F :=
     abstractFixedField ℚ (SeparableClosure ℚ) K.field
@@ -1294,7 +1301,7 @@ noncomputable def
       ℚ (SeparableClosure ℚ) L.below
   let e :
       L.extensionQuotient ≃*
-        Gal(E/F) :=
+        Gal(E / F) :=
     L.extensionQuotientMulEquiv.trans
       (abstractExtensionQuotientEquivGaloisGroup
         ℚ (SeparableClosure ℚ)
@@ -1320,7 +1327,7 @@ noncomputable def abstractFixedFieldGlobalNormResidueEquiv :
     Additive
         (IdeleClassGroup F ⧸
           (_root_.ideleClassNorm F E).range) ≃+
-      Additive (Gal(E/F)) := by
+      Additive (Gal(E / F)) := by
   dsimp only
   let F :=
     abstractFixedField ℚ (SeparableClosure ℚ) K.field
@@ -1350,9 +1357,9 @@ private noncomputable def abstractFixedFieldFiniteNormResidueGaloisEquiv :
     FiniteNormQuotient rationalIdeleClassRepresentation
         K.field L.field L.below ≃+
       Additive
-        (Gal(
-          (abstractRelativeFixedField
-            ℚ (SeparableClosure ℚ) L.below)/(abstractFixedField ℚ (SeparableClosure ℚ) K.field))) := by
+        (Gal((abstractRelativeFixedField
+            ℚ (SeparableClosure ℚ) L.below) /
+          (abstractFixedField ℚ (SeparableClosure ℚ) K.field))) := by
   letI : AddCommGroup
       (FiniteNormQuotient rationalIdeleClassRepresentation
         K.field L.field L.below) :=
@@ -1366,9 +1373,9 @@ private noncomputable def abstractFixedFieldFiniteNormResidueGaloisEquiv :
         (Abelianization
           L.toFiniteGaloisExtension.extensionQuotient))
       (Additive
-        (Gal(
-          (abstractRelativeFixedField
-            ℚ (SeparableClosure ℚ) L.below)/(abstractFixedField ℚ (SeparableClosure ℚ) K.field))))
+        (Gal((abstractRelativeFixedField
+            ℚ (SeparableClosure ℚ) L.below) /
+          (abstractFixedField ℚ (SeparableClosure ℚ) K.field))))
       inferInstance inferInstance inferInstance
       (rationalCyclotomicDegreeData.normResidueSymbol
         rationalIdeleClassRepresentation
@@ -1377,6 +1384,16 @@ private noncomputable def abstractFixedFieldFiniteNormResidueGaloisEquiv :
         K L.toFiniteGaloisExtension)
       (abstractFixedFieldAbelianizedExtensionQuotientEquivGaloisGroup
         K L)
+
+/-- The finite fixed-field symbol evaluates by transporting the abstract norm-residue value. -/
+private theorem abstractFixedFieldFiniteNormResidueGaloisEquiv_apply
+    (a : FiniteNormQuotient rationalIdeleClassRepresentation K.field L.field L.below) :
+    abstractFixedFieldFiniteNormResidueGaloisEquiv K L a =
+      abstractFixedFieldAbelianizedExtensionQuotientEquivGaloisGroup K L
+        (rationalCyclotomicDegreeData.normResidueSymbol
+          rationalIdeleClassRepresentation rationalCyclotomicIdeleClassValuationData
+          rationalIdeleClassRepresentation_satisfiesClassFieldAxiom
+          K L.toFiniteGaloisExtension a) := rfl
 
 /-- The abstract norm-residue symbol on the fixed part of the rational
 absolute idele-class representation, with its value transported to the
@@ -1390,7 +1407,7 @@ noncomputable def ambientFixedGlobalNormResidueAddMonoidHom :
         ℚ (SeparableClosure ℚ) L.below
     ambientFixedAddSubgroup
         rationalIdeleClassRepresentation K.field →+
-      Additive (Gal(E/F)) := by
+      Additive (Gal(E / F)) := by
   dsimp only
   let F :=
     abstractFixedField ℚ (SeparableClosure ℚ) K.field
@@ -1423,7 +1440,7 @@ noncomputable def abstractFixedFieldGlobalNormResidueMonoidHom :
     let E :=
       abstractRelativeFixedField
         ℚ (SeparableClosure ℚ) L.below
-    IdeleClassGroup F →* Gal(E/F) :=
+    IdeleClassGroup F →* Gal(E / F) :=
   (ambientFixedGlobalNormResidueAddMonoidHom K L).toMultiplicative.comp
     (abstractFixedFieldIdeleClassToAmbientFixedMonoidHom K)
 

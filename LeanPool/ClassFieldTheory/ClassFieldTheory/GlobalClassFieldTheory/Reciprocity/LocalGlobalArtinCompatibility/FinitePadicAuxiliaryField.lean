@@ -453,8 +453,7 @@ noncomputable def numberFieldTowerFinitePadicAuxiliaryAutomorphism
     let S :=
       numberFieldTowerFinitePadicCyclicFixedSubgroup
         (K := K) (L := L) p τ
-    Gal(
-      LocalClassFieldTheory.abstractRelativeFixedField
+    Gal(LocalClassFieldTheory.abstractRelativeFixedField
         ℚ (SeparableClosure ℚ) P.below/LocalClassFieldTheory.abstractFixedField
         ℚ (SeparableClosure ℚ) S) := by
   dsimp only

@@ -36,6 +36,9 @@ open LocalFieldTheory.IsNonarchimedeanLocalField
 variable (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
   [IsNonarchimedeanLocalField K]
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank →
+    residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank in
 /-- The positive residue-field degree used by the equal-characteristic
 Laurent-series model. -/
 noncomputable def equalCharacteristicResidueRank
@@ -43,19 +46,22 @@ noncomputable def equalCharacteristicResidueRank
   ⟨CompleteDVF.higherPrincipalUnitGroup.iwasawaResidueRank F,
     Nat.pos_of_ne_zero fun hrank => by
       have hcard :=
-        CompleteDVF.higherPrincipalUnitGroup.residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank
+        residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank
           F
       rw [hrank, pow_zero] at hcard
       exact
         (Finite.one_lt_card : 1 < Nat.card F.residueField).ne' hcard⟩
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank →
+    residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank in
 theorem equalCharacteristicResidueCard
     {L : Type} [Field L] (F : LocalField L) :
     Nat.card F.residueField =
       F.residueCharacteristic ^
         (equalCharacteristicResidueRank F : ℕ) := by
   simpa [equalCharacteristicResidueRank] using
-    CompleteDVF.higherPrincipalUnitGroup.residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F
+    residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F
 
 /-! ## The prescribed prime element in the target local field -/
 

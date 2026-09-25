@@ -275,8 +275,7 @@ theorem primeCyclotomicPushout_isCyclic
       primeCyclotomicPushout_isGalois
         K L p hp hdegree
     IsCyclic
-      (PrimeCyclotomicPushout K L p ≃ₐ[
-        PrimeCyclotomicBase K p]
+      (PrimeCyclotomicPushout K L p ≃ₐ[PrimeCyclotomicBase K p]
         PrimeCyclotomicPushout K L p) := by
   let : NeZero p := ⟨hp.ne_zero⟩
   let : Field (PrimeCyclotomicPushout K L p) :=
@@ -314,8 +313,7 @@ noncomputable def primeCyclotomicPushoutGalEquivPiZMod
         (PrimeCyclotomicPushout K L p) :=
       primeCyclotomicPushout_isGalois
         K L p hp hdegree
-    (PrimeCyclotomicPushout K L p ≃ₐ[
-        PrimeCyclotomicBase K p]
+    (PrimeCyclotomicPushout K L p ≃ₐ[PrimeCyclotomicBase K p]
         PrimeCyclotomicPushout K L p) ≃*
       (Fin 1 → Multiplicative (ZMod p)) := by
   letI : NeZero p := ⟨hp.ne_zero⟩
@@ -331,8 +329,7 @@ noncomputable def primeCyclotomicPushoutGalEquivPiZMod
     primeCyclotomicPushout_isGalois
       K L p hp hdegree
   let G :=
-    PrimeCyclotomicPushout K L p ≃ₐ[
-      PrimeCyclotomicBase K p]
+    PrimeCyclotomicPushout K L p ≃ₐ[PrimeCyclotomicBase K p]
       PrimeCyclotomicPushout K L p
   letI : IsCyclic G :=
     primeCyclotomicPushout_isCyclic

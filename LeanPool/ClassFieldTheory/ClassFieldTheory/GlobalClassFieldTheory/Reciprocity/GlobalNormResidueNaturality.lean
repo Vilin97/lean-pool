@@ -939,8 +939,7 @@ private noncomputable def
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (P : FiniteAbelianSubextension H.field) :
     P.toFiniteGaloisExtension.extensionQuotient ≃*
-      Gal(
-        (abstractRelativeFixedField
+      Gal((abstractRelativeFixedField
           ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
   let F := abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
@@ -979,8 +978,7 @@ private noncomputable def
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (P : FiniteAbelianSubextension H.field) :
     P.toFiniteGaloisExtension.extensionQuotient ≃*
-      Gal(
-        (abstractRelativeFixedField
+      Gal((abstractRelativeFixedField
           ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
   exact
     P.toFiniteGaloisExtension.extensionQuotientMulEquiv.trans
@@ -995,8 +993,7 @@ private noncomputable def
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (P : FiniteAbelianSubextension H.field)
     (q : P.toFiniteGaloisExtension.extensionQuotient) :
-    Gal(
-      (abstractRelativeFixedField
+    Gal((abstractRelativeFixedField
         ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) :=
   abstractFixedFieldInclusionEmbeddedExtensionQuotientEquiv H P q
 
@@ -1007,8 +1004,7 @@ private noncomputable def
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (P : FiniteAbelianSubextension H.field)
     (q : P.toFiniteGaloisExtension.extensionQuotient) :
-    Gal(
-      (abstractRelativeFixedField
+    Gal((abstractRelativeFixedField
         ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) :=
   abstractFixedFieldInclusionCanonicalExtensionQuotientEquiv H P q
 
@@ -1044,8 +1040,7 @@ private noncomputable def
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (P : FiniteAbelianSubextension H.field)
     (σ : H.field.toSubgroup) :
-    Gal(
-      (abstractRelativeFixedField
+    Gal((abstractRelativeFixedField
         ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
   let F := abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
@@ -1335,8 +1330,7 @@ private noncomputable def
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (P : FiniteAbelianSubextension H.field) :
     P.toFiniteGaloisExtension.extensionQuotient ≃*
-      Gal(
-        (abstractRelativeFixedField
+      Gal((abstractRelativeFixedField
           ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
   let F :=
     abstractFixedField ℚ (SeparableClosure ℚ) H.field
@@ -1373,8 +1367,7 @@ private noncomputable def
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (P : FiniteAbelianSubextension H.field)
     (q : P.toFiniteGaloisExtension.extensionQuotient) :
-    Gal(
-      (abstractRelativeFixedField
+    Gal((abstractRelativeFixedField
         ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)) :=
   abstractFixedFieldInclusionTransportedExtensionQuotientEquiv H P q
 
@@ -1484,9 +1477,9 @@ private noncomputable def
         (Abelianization
           P.toFiniteGaloisExtension.extensionQuotient) ≃+
       Additive
-        (Gal(
-          (abstractRelativeFixedField
-            ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) := by
+        (Gal((abstractRelativeFixedField
+            ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ)
+              H.field))) := by
   let F :=
     abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
@@ -1528,12 +1521,11 @@ private noncomputable def
         (Abelianization
           P.toFiniteGaloisExtension.extensionQuotient) ≃+
       Additive
-        (Gal(
-          (abstractRelativeFixedField
-            ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) := by
+        (Gal((abstractRelativeFixedField
+            ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ)
+              H.field))) := by
   let Q :=
-    Gal(
-      (abstractRelativeFixedField
+    Gal((abstractRelativeFixedField
         ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))
   exact
     MulEquiv.toAdditive
@@ -1550,8 +1542,7 @@ private noncomputable def
     (z : Additive
       (Abelianization P.toFiniteGaloisExtension.extensionQuotient)) :
     Additive
-      (Gal(
-        (abstractRelativeFixedField
+      (Gal((abstractRelativeFixedField
           ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :=
   abstractFixedFieldInclusionTransportedAbelianizedEquiv H P z
 
@@ -1565,8 +1556,7 @@ private noncomputable def
     (z : Additive
       (Abelianization P.toFiniteGaloisExtension.extensionQuotient)) :
     Additive
-      (Gal(
-        (abstractRelativeFixedField
+      (Gal((abstractRelativeFixedField
           ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :=
   abstractFixedFieldInclusionTransportedCanonicalAbelianizedEquiv H P z
 
@@ -1580,8 +1570,7 @@ private noncomputable def
     (z : Additive
       (Abelianization P.toFiniteGaloisExtension.extensionQuotient)) :
     Additive
-      (Gal(
-        (abstractRelativeFixedField
+      (Gal((abstractRelativeFixedField
           ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :=
   abstractFixedFieldAbelianizedExtensionQuotientEquivGaloisGroup H P z
 
@@ -1751,9 +1740,9 @@ private noncomputable def
       (IdeleClassGroup
         (abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :
     Additive
-      (Gal(
-        (abstractRelativeFixedField
-          ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) := by
+      (Gal((abstractRelativeFixedField
+          ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)))
+            := by
   let F :=
     abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
@@ -1783,9 +1772,9 @@ private noncomputable def
       (IdeleClassGroup
         (abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :
     Additive
-      (Gal(
-        (abstractRelativeFixedField
-          ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) := by
+      (Gal((abstractRelativeFixedField
+          ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field)))
+            := by
   let F :=
     abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
@@ -1827,8 +1816,7 @@ private noncomputable def
       (IdeleClassGroup
         (abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :
     Additive
-      (Gal(
-        (abstractRelativeFixedField
+      (Gal((abstractRelativeFixedField
           ℚ (SeparableClosure ℚ) P.below)/(abstractFixedField ℚ (SeparableClosure ℚ) H.field))) :=
   rationalFiniteNormResidueValue H P.toFiniteGaloisExtension
     (rationalAbstractFixedFieldIdeleClassEquivFixed H.field)
@@ -2266,7 +2254,6 @@ noncomputable local instance
 
 local instance
     numberFieldEmbeddedBaseChangeRelativeFixedFieldScalarTower
-
     (j : L' →ₐ[ℚ] SeparableClosure ℚ) :
     IsScalarTower ℚ
       (abstractFixedField ℚ (SeparableClosure ℚ)

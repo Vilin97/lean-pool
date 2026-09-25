@@ -12,7 +12,8 @@ This file proves the exact sequence from
 global unit signs through the narrow and ordinary class groups.
 -/
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 
 noncomputable section
 

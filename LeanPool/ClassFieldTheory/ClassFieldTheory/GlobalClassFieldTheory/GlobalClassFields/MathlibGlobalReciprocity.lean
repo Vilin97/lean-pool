@@ -117,6 +117,9 @@ theorem normConductorRayClassModulus_original
   · rfl
   · rfl
 
+open GlobalClassFieldTheory.GlobalClassFields renaming
+  ideleClassNorm_narrowFiniteConductor_support_eq_ramifiedBaseFinitePlaces →
+    ideleClassNorm_conductor_support_eq_ramifiedPlaces in
 /-- The actual narrow finite norm conductor, together with every real place,
 is a public modulus outside which a finite abelian extension is unramified. -/
 theorem normConductorRayClassModulus_unramifiedOutside
@@ -127,7 +130,7 @@ theorem normConductorRayClassModulus_unramifiedOutside
     IsUnramifiedOutsideModulus K L (normConductorRayClassModulus K L) := by
   classical
   have hs :=
-    GlobalClassFieldTheory.GlobalClassFields.ideleClassNorm_narrowFiniteConductor_support_eq_ramifiedBaseFinitePlaces
+    ideleClassNorm_conductor_support_eq_ramifiedPlaces
       (K := K) (L := L)
   constructor
   · intro v hv Q hQ hlie
@@ -218,6 +221,9 @@ theorem normConductorArtin_surjective
         (normConductorRayClassModulus_isDefining K L)).comp
         (rayClassGroupEquivOriginal K (normConductorRayClassModulus K L)).surjective)
 
+open GlobalClassFieldTheory.IdealClassFieldTheory renaming
+  arithmeticIdealArtinGaloisMap_primeIdeal_eq_arithmeticFinitePlacePrimeArtin →
+    arithmeticIdealArtinGaloisMap_primeIdeal_eq_arithmeticFinitePlacePrimeArtin in
 /-- At a prime away from the norm conductor, the public Artin map agrees
 with the arithmetic prime Artin element of the original idèle theory. -/
 theorem normConductorArtin_prime
@@ -247,7 +253,7 @@ theorem normConductorArtin_prime
       (K := K) (L := L) m' hm
       (RayClass.primeToModulusIdeal m' v hv') = _
   exact
-    GlobalClassFieldTheory.IdealClassFieldTheory.arithmeticIdealArtinGaloisMap_primeIdeal_eq_arithmeticFinitePlacePrimeArtin
+    arithmeticIdealArtinGaloisMap_primeIdeal_eq_arithmeticFinitePlacePrimeArtin
     (K := K) (L := L) m' hm v hv'
 
 /-- The class field selected from a closed finite-index idèle-class subgroup

@@ -736,8 +736,7 @@ theorem localSeparableValuationSubring_eq_comap_abstractFixedFieldEquiv
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : FiniteAbstractField (Gal(SeparableClosure K/K)))
-    (e : SeparableClosure (finiteFixedField K H) ≃ₐ[
-          finiteFixedField K H] SeparableClosure K) :
+    (e : SeparableClosure (finiteFixedField K H) ≃ₐ[finiteFixedField K H] SeparableClosure K) :
     letI : FiniteDimensional K
         (finiteFixedField K H) :=
       abstractFixedField_finiteDimensional
@@ -809,8 +808,7 @@ private theorem exists_abstractFixedFieldResidueEquiv
     [IsNonarchimedeanLocalField (finiteFixedField K H)]
     [Valuation.HasExtension (ValuativeRel.valuation K)
       (ValuativeRel.valuation (finiteFixedField K H))]
-    (e : SeparableClosure (finiteFixedField K H) ≃ₐ[
-      finiteFixedField K H] SeparableClosure K) :
+    (e : SeparableClosure (finiteFixedField K H) ≃ₐ[finiteFixedField K H] SeparableClosure K) :
     ∃ tau :
         decompositionResidueField (finiteFixedField K H)
             (localSeparableValuationSubring K) ≃+*
@@ -943,8 +941,7 @@ private theorem residueAbsoluteDegreeIn_eq_normalizedDegree_abstractFixedFieldEq
       (ValuativeRel.valuation (finiteFixedField K H))]
     [Fintype (decompositionResidueField (finiteFixedField K H)
       (localSeparableValuationSubring K))]
-    (e : SeparableClosure (finiteFixedField K H) ≃ₐ[
-      finiteFixedField K H] SeparableClosure K)
+    (e : SeparableClosure (finiteFixedField K H) ≃ₐ[finiteFixedField K H] SeparableClosure K)
     (sigma : Gal(SeparableClosure (finiteFixedField K H)/finiteFixedField K H))
     (htop : decompositionGroup (finiteFixedField K H)
       (localSeparableValuationSubring K) = ⊤)
@@ -1037,8 +1034,7 @@ theorem localResidueDegree_eq_normalizedDegree_abstractFixedFieldEquiv
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : FiniteAbstractField (Gal(SeparableClosure K/K)))
-    (e : SeparableClosure (finiteFixedField K H) ≃ₐ[
-          finiteFixedField K H] SeparableClosure K)
+    (e : SeparableClosure (finiteFixedField K H) ≃ₐ[finiteFixedField K H] SeparableClosure K)
     (sigma : Gal(SeparableClosure (finiteFixedField K H)/finiteFixedField K H)) :
     letI : FiniteDimensional K
         (finiteFixedField K H) :=

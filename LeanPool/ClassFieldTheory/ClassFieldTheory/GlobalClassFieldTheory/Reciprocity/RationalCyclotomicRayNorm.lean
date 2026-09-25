@@ -443,6 +443,9 @@ private theorem rationalCyclotomicRayNormAwayChosenFinitePlaceArtin_eq_one
 end PrimePowerCalculation
 
 open scoped Classical in
+open _root_.GlobalClassFieldTheory.GlobalClassFields renaming
+  finitePlaceCompletion_valuationMap_eq_zero_of_mem_localHigherUnitGroup →
+    finitePlaceCompletion_valuationMap_eq_zero_of_mem_localHigherUnitGroup in
 /-- Membership in a rational local higher-unit group forces the normalized
 cyclotomic Artin exponent to vanish.  This boundary keeps the completion and
 valuation expansion out of the full cyclotomic-coordinate calculation. -/
@@ -463,7 +466,7 @@ private theorem
             (RayClass.rationalPrime q)).symm x)) =
       0
   exact
-    _root_.GlobalClassFieldTheory.GlobalClassFields.finitePlaceCompletion_valuationMap_eq_zero_of_mem_localHigherUnitGroup
+    finitePlaceCompletion_valuationMap_eq_zero_of_mem_localHigherUnitGroup
       (K := ℚ) (RayClass.rationalPrime q) n x hx
 
 open scoped Classical in

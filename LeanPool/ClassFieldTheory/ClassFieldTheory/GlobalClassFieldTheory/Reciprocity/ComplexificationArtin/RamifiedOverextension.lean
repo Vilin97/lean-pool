@@ -344,8 +344,7 @@ noncomputable instance
     IntermediateField.subgroupEquivAlgEquiv H
   let :
       IsCyclic
-        Gal(
-          (infinitePlaceComplexificationOverfield
+        Gal((infinitePlaceComplexificationOverfield
             (K := K) (L := L) v)/(ramifiedInfinitePlaceRealFixedField
             (K := K) (L := L) v hRamified)) :=
     e.isCyclic.mp
@@ -361,8 +360,7 @@ noncomputable def ramifiedInfinitePlaceOverextensionConjugation
     (v : InfinitePlace K)
     (hRamified :
       (chosenInfinitePlaceAbove (L := L) v).IsRamified K) :
-    Gal(
-      (infinitePlaceComplexificationOverfield
+    Gal((infinitePlaceComplexificationOverfield
         (K := K) (L := L) v)/(ramifiedInfinitePlaceRealFixedField
         (K := K) (L := L) v hRamified)) :=
   IntermediateField.subgroupEquivAlgEquiv
@@ -402,8 +400,7 @@ theorem ramifiedInfinitePlaceOverextension_eq_one_or_conjugation
     (hRamified :
       (chosenInfinitePlaceAbove (L := L) v).IsRamified K)
     (σ :
-      Gal(
-        (infinitePlaceComplexificationOverfield
+      Gal((infinitePlaceComplexificationOverfield
           (K := K) (L := L) v)/(ramifiedInfinitePlaceRealFixedField
           (K := K) (L := L) v hRamified))) :
     σ = 1 ∨
@@ -469,8 +466,7 @@ noncomputable def
     (v : InfinitePlace K)
     (hRamified :
       (chosenInfinitePlaceAbove (L := L) v).IsRamified K) :
-    Gal(
-      (infinitePlaceComplexificationOverfield
+    Gal((infinitePlaceComplexificationOverfield
         (K := K) (L := L) v)/(ramifiedInfinitePlaceRealFixedField
         (K := K) (L := L) v hRamified)) →*
       Gal(rationalComplexificationCyclotomicField/ℚ) :=

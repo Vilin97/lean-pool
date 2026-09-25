@@ -27,7 +27,6 @@ private theorem publicIdealNormDomain_eq_source'
     (K L : Type)
     [Field K] [NumberField K]
     [Field L] [NumberField L] [Algebra K L]
-
     (m : RayClassModulus K) :
     rayClassPrimeToIdealNormDomain K L m =
       RayClass.primeToModulusIdeals

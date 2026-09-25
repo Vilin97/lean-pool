@@ -23,7 +23,8 @@ finite places outside a finite set split completely, then the idele
 class norm is surjective.
 -/
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 
 noncomputable section
 

@@ -204,6 +204,9 @@ theorem hasUniqueValuationExtension_of_forall_isIntegral
       (L := L) base.valuation target.valuation v'
 
 omit [FiniteDimensional K L] in
+open ValuationTheory.DiscreteValuationField.Valuation renaming
+  integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension →
+    integralClosureValuationSubring_le_of_hasExtension in
 /-- Valuation-ring form of the Henselian uniqueness frontier.
 
 If the actual integral closure of the base valuation ring in `L` has the
@@ -225,7 +228,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_loca
         ((integralClosureValuationSubringOfMemOrInv
             (L := L) base.valuation hval).inclusion
           target.valuation.valuationSubring
-          (ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+          (integralClosureValuationSubring_le_of_hasExtension
             (L := L) base.valuation target.valuation hval)))
     (hlocal :
       ∀ {Gamma' : Type y} [LinearOrderedCommGroupWithZero Gamma']
@@ -234,14 +237,14 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_loca
             ((integralClosureValuationSubringOfMemOrInv
                 (L := L) base.valuation hval).inclusion
               v'.valuationSubring
-              (ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+              (integralClosureValuationSubring_le_of_hasExtension
                 (L := L) base.valuation v' hval))) :
     HasUniqueValuationExtension.{u, v, w, x, y} (base := base) (target := target) := by
   let B :=
     integralClosureValuationSubringOfMemOrInv
       (L := L) base.valuation hval
   have htarget_le : B ≤ target.valuation.valuationSubring :=
-    ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+    integralClosureValuationSubring_le_of_hasExtension
       (L := L) base.valuation target.valuation hval
   have htarget_eq : target.valuation.valuationSubring = B := by
     let : IsLocalHom (B.inclusion target.valuation.valuationSubring htarget_le) :=
@@ -252,7 +255,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_loca
   intro Gamma' _ v' hExt
   let : base.valuation.HasExtension v' := hExt
   have hv_le : B ≤ v'.valuationSubring :=
-    ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+    integralClosureValuationSubring_le_of_hasExtension
       (L := L) base.valuation v' hval
   have hv_eq : v'.valuationSubring = B := by
     let : IsLocalHom (B.inclusion v'.valuationSubring hv_le) :=
@@ -265,6 +268,9 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_loca
   exact valuation_isEquiv_of_valuationSubring_eq target v' hSubring
 
 omit [FiniteDimensional K L] in
+open ValuationTheory.DiscreteValuationField.Valuation renaming
+  integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension →
+    integralClosureValuationSubring_le_of_hasExtension in
 /-- Center-prime form of the Henselian uniqueness frontier.
 
 If the actual integral closure of the base valuation ring is a valuation ring,
@@ -285,7 +291,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
         (integralClosureValuationSubringOfMemOrInv
           (L := L) base.valuation hval)
         target.valuation.valuationSubring
-        (ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+        (integralClosureValuationSubring_le_of_hasExtension
           (L := L) base.valuation target.valuation hval) =
         IsLocalRing.maximalIdeal
           (integralClosureValuationSubringOfMemOrInv
@@ -297,7 +303,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
             (integralClosureValuationSubringOfMemOrInv
               (L := L) base.valuation hval)
             v'.valuationSubring
-            (ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+            (integralClosureValuationSubring_le_of_hasExtension
               (L := L) base.valuation v' hval) =
             IsLocalRing.maximalIdeal
               (integralClosureValuationSubringOfMemOrInv
@@ -307,7 +313,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
     integralClosureValuationSubringOfMemOrInv
       (L := L) base.valuation hval
   have htarget_le : B ≤ target.valuation.valuationSubring :=
-    ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+    integralClosureValuationSubring_le_of_hasExtension
       (L := L) base.valuation target.valuation hval
   have htarget_eq : target.valuation.valuationSubring = B :=
     valuationSubring_eq_of_le_of_idealOfLE_eq_maximalIdeal
@@ -316,7 +322,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
   intro Gamma' _ v' hExt
   let : base.valuation.HasExtension v' := hExt
   have hv_le : B ≤ v'.valuationSubring :=
-    ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+    integralClosureValuationSubring_le_of_hasExtension
       (L := L) base.valuation v' hval
   have hv_eq : v'.valuationSubring = B :=
     valuationSubring_eq_of_le_of_idealOfLE_eq_maximalIdeal
@@ -327,6 +333,9 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
   exact valuation_isEquiv_of_valuationSubring_eq target v' hSubring
 
 omit [FiniteDimensional K L] in
+open ValuationTheory.DiscreteValuationField.Valuation renaming
+  integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension →
+    integralClosureValuationSubring_le_of_hasExtension in
 /-- Prime-uniqueness form of the Henselian uniqueness frontier.
 
 After the actual integral closure has been turned into a valuation subring, it
@@ -361,7 +370,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_unique_prim
       (K := K) (L := L) (base := base) (target := target)  hval ?_ ?_ :
         HasUniqueValuationExtension.{u, v, w, x, y} (base := base) (target := target))
   · let htarget_le : B ≤ target.valuation.valuationSubring :=
-      ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+      integralClosureValuationSubring_le_of_hasExtension
         (L := L) base.valuation target.valuation hval
     exact hunique
       (ValuationSubring.idealOfLE B target.valuation.valuationSubring htarget_le)
@@ -373,7 +382,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_unique_prim
   · intro Gamma' _ v' hExt
     let : base.valuation.HasExtension v' := hExt
     let hv_le : B ≤ v'.valuationSubring :=
-      ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+      integralClosureValuationSubring_le_of_hasExtension
         (L := L) base.valuation v' hval
     exact hunique
       (ValuationSubring.idealOfLE B v'.valuationSubring hv_le)
@@ -674,6 +683,9 @@ theorem integralClosure_mem_or_inv_of_finite_separable
   exact (integralClosure_mem_or_inv_of_isLocalRing base target)
 
 omit [FiniteDimensional K L] in
+open ValuationTheory.DiscreteValuationField.Valuation renaming
+  integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension →
+    integralClosureValuationSubring_le_of_hasExtension in
 /-- Integral-inclusion form of the Henselian uniqueness frontier.
 
 Once the actual integral closure has been shown to be a valuation ring, it is
@@ -691,7 +703,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_inte
         integralClosureValuationSubringOfMemOrInv
           (L := L) base.valuation hval
       let htarget_le : B ≤ target.valuation.valuationSubring :=
-        ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+        integralClosureValuationSubring_le_of_hasExtension
           (L := L) base.valuation target.valuation hval
       (B.inclusion target.valuation.valuationSubring htarget_le).IsIntegral)
     (hintegral :
@@ -701,7 +713,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_inte
             integralClosureValuationSubringOfMemOrInv
               (L := L) base.valuation hval
           let hv_le : B ≤ v'.valuationSubring :=
-            ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+            integralClosureValuationSubring_le_of_hasExtension
               (L := L) base.valuation v' hval
           (B.inclusion v'.valuationSubring hv_le).IsIntegral) :
     HasUniqueValuationExtension.{u, v, w, x, y} (base := base) (target := target) := by
@@ -713,7 +725,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_inte
       integralClosureValuationSubringOfMemOrInv
         (L := L) base.valuation hval
     let htarget_le : B ≤ target.valuation.valuationSubring :=
-      ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+      integralClosureValuationSubring_le_of_hasExtension
         (L := L) base.valuation target.valuation hval
     exact idealOfLE_eq_maximalIdeal_of_isIntegral B target.valuation.valuationSubring
       htarget_le (by simpa [B, htarget_le] using htargetIntegral)
@@ -723,12 +735,15 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_inte
       integralClosureValuationSubringOfMemOrInv
         (L := L) base.valuation hval
     let hv_le : B ≤ v'.valuationSubring :=
-      ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+      integralClosureValuationSubring_le_of_hasExtension
         (L := L) base.valuation v' hval
     exact idealOfLE_eq_maximalIdeal_of_isIntegral B v'.valuationSubring hv_le
       (by simpa [B, hv_le] using (@hintegral Gamma' inferInstance v' hExt))
 
 omit [FiniteDimensional K L] in
+open ValuationTheory.DiscreteValuationField.Valuation renaming
+  integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension →
+    integralClosureValuationSubring_le_of_hasExtension in
 /-- Finite-inclusion form of the Henselian uniqueness frontier.
 
 This is useful when the Henselian argument proves finite generation of the
@@ -743,7 +758,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_fini
         integralClosureValuationSubringOfMemOrInv
           (L := L) base.valuation hval
       let htarget_le : B ≤ target.valuation.valuationSubring :=
-        ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+        integralClosureValuationSubring_le_of_hasExtension
           (L := L) base.valuation target.valuation hval
       (B.inclusion target.valuation.valuationSubring htarget_le).Finite)
     (hfinite :
@@ -753,7 +768,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_fini
             integralClosureValuationSubringOfMemOrInv
               (L := L) base.valuation hval
           let hv_le : B ≤ v'.valuationSubring :=
-            ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+            integralClosureValuationSubring_le_of_hasExtension
               (L := L) base.valuation v' hval
           (B.inclusion v'.valuationSubring hv_le).Finite) :
     HasUniqueValuationExtension.{u, v, w, x, y} (base := base) (target := target) := by
@@ -765,7 +780,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_fini
       integralClosureValuationSubringOfMemOrInv
         (L := L) base.valuation hval
     let htarget_le : B ≤ target.valuation.valuationSubring :=
-      ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+      integralClosureValuationSubring_le_of_hasExtension
         (L := L) base.valuation target.valuation hval
     have htargetFinite' :
         (B.inclusion target.valuation.valuationSubring htarget_le).Finite := by
@@ -777,7 +792,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_fini
       integralClosureValuationSubringOfMemOrInv
         (L := L) base.valuation hval
     let hv_le : B ≤ v'.valuationSubring :=
-      ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+      integralClosureValuationSubring_le_of_hasExtension
         (L := L) base.valuation v' hval
     have hvFinite :
         (B.inclusion v'.valuationSubring hv_le).Finite := by
@@ -786,6 +801,9 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_fini
     exact hvFinite.to_isIntegral
 
 omit [FiniteDimensional K L] in
+open ValuationTheory.DiscreteValuationField.Valuation renaming
+  integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension →
+    integralClosureValuationSubring_le_of_hasExtension in
 /-- Elementwise center form of the Henselian uniqueness frontier.
 
 After proving that the actual integral closure is a valuation ring, it is
@@ -805,7 +823,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
         integralClosureValuationSubringOfMemOrInv
           (L := L) base.valuation hval
       let htarget_le : B ≤ target.valuation.valuationSubring :=
-        ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+        integralClosureValuationSubring_le_of_hasExtension
           (L := L) base.valuation target.valuation hval
       ∀ x : B,
         B.inclusion target.valuation.valuationSubring htarget_le x ∈
@@ -818,7 +836,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
             integralClosureValuationSubringOfMemOrInv
               (L := L) base.valuation hval
           let hv_le : B ≤ v'.valuationSubring :=
-            ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+            integralClosureValuationSubring_le_of_hasExtension
               (L := L) base.valuation v' hval
           ∀ x : B,
             B.inclusion v'.valuationSubring hv_le x ∈
@@ -833,7 +851,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
       integralClosureValuationSubringOfMemOrInv
         (L := L) base.valuation hval
     let htarget_le : B ≤ target.valuation.valuationSubring :=
-      ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+      integralClosureValuationSubring_le_of_hasExtension
         (L := L) base.valuation target.valuation hval
     exact
       idealOfLE_eq_maximalIdeal_of_mem_maximalIdeal_iff
@@ -845,7 +863,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
       integralClosureValuationSubringOfMemOrInv
         (L := L) base.valuation hval
     let hv_le : B ≤ v'.valuationSubring :=
-      ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+      integralClosureValuationSubring_le_of_hasExtension
         (L := L) base.valuation v' hval
     exact
       idealOfLE_eq_maximalIdeal_of_mem_maximalIdeal_iff
@@ -853,6 +871,9 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
         (by simpa [B, hv_le] using (@hcenterMem Gamma' inferInstance v' hExt))
 
 omit [FiniteDimensional K L] in
+open ValuationTheory.DiscreteValuationField.Valuation renaming
+  integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension →
+    integralClosureValuationSubring_le_of_hasExtension in
 /-- One-sided elementwise center form of the Henselian uniqueness frontier.
 
 For inclusions of local rings, the implication from target nonunit to source
@@ -870,7 +891,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
         integralClosureValuationSubringOfMemOrInv
           (L := L) base.valuation hval
       let htarget_le : B ≤ target.valuation.valuationSubring :=
-        ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+        integralClosureValuationSubring_le_of_hasExtension
           (L := L) base.valuation target.valuation hval
       ∀ x : B,
         x ∈ IsLocalRing.maximalIdeal B →
@@ -883,7 +904,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
             integralClosureValuationSubringOfMemOrInv
               (L := L) base.valuation hval
           let hv_le : B ≤ v'.valuationSubring :=
-            ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+            integralClosureValuationSubring_le_of_hasExtension
               (L := L) base.valuation v' hval
           ∀ x : B,
             x ∈ IsLocalRing.maximalIdeal B →
@@ -897,7 +918,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
       integralClosureValuationSubringOfMemOrInv
         (L := L) base.valuation hval
     let htarget_le : B ≤ target.valuation.valuationSubring :=
-      ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+      integralClosureValuationSubring_le_of_hasExtension
         (L := L) base.valuation target.valuation hval
     change ∀ x : B,
       B.inclusion target.valuation.valuationSubring htarget_le x ∈
@@ -916,7 +937,7 @@ theorem hasUniqueValuationExtension_of_integralClosure_mem_or_inv_of_forall_cent
       integralClosureValuationSubringOfMemOrInv
         (L := L) base.valuation hval
     let hv_le : B ≤ v'.valuationSubring :=
-      ValuationTheory.DiscreteValuationField.Valuation.integralClosureValuationSubringOfMemOrInv_le_valuationSubring_of_hasExtension
+      integralClosureValuationSubring_le_of_hasExtension
         (L := L) base.valuation v' hval
     change ∀ x : B,
       B.inclusion v'.valuationSubring hv_le x ∈
@@ -1069,6 +1090,9 @@ theorem exists_chevalley_valuationSubring_eq_target_of_hasUniqueValuationExtensi
     (K := K) (L := L) (base := base) (target := target) huniq B
 
 omit [FiniteDimensional K L] [base.valuation.HasExtension target.valuation] in
+open ValuationTheory.DiscreteValuationField.Valuation renaming
+  chevalley_exists_extension_valuation_with_pullback_integralClosure_local_data →
+    chevalley_exists_extension_valuation_with_integralClosure in
 /-- Under unique extension, the actual valuation produced by Chevalley's
 theorem can be chosen together with all construction data and is equivalent to
 the chosen target valuation.  This is the finite-extension frontier form of
@@ -1106,7 +1130,7 @@ theorem exists_chevalley_extension_valuation_eq_target_of_hasUniqueValuationExte
             target.valuation.valuationSubring = vL.valuationSubring := by
   obtain ⟨ΓL, hΓL, vL, hExt, hpullback, hIntegral, hlies, hlocal,
       hResidue⟩ :=
-    ValuationTheory.DiscreteValuationField.Valuation.chevalley_exists_extension_valuation_with_pullback_integralClosure_local_data
+    chevalley_exists_extension_valuation_with_integralClosure
       (L := L) base.valuation
   let : LinearOrderedCommGroupWithZero ΓL := hΓL
   let : base.valuation.HasExtension vL := hExt

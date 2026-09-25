@@ -1127,6 +1127,9 @@ theorem principalUnitQuotientProjectionLinear_ker
       (Additive.toMul x)).mpr
     exact hx
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  discretePrincipalUnitQuotient_nsmul_residueCharacteristic_pow_eq_zero →
+    discretePrincipalUnitQuotient_nsmul_residueCharacteristic_pow_eq_zero in
 /-- Every wrapped local-field coordinate `U^1/U^(n+1)` is a torsion
 `Z_p`-module. -/
 theorem discretePrincipalUnitQuotient_moduleIsTorsion
@@ -1147,9 +1150,12 @@ theorem discretePrincipalUnitQuotient_moduleIsTorsion
   change (exponent : ℤ_[F.residueCharacteristic]) • x = 0
   rw [Nat.cast_smul_eq_nsmul]
   exact
-    CompleteDVF.higherPrincipalUnitGroup.discretePrincipalUnitQuotient_nsmul_residueCharacteristic_pow_eq_zero
+    discretePrincipalUnitQuotient_nsmul_residueCharacteristic_pow_eq_zero
       F n x
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  card_discretePrincipalUnitQuotient_eq_residueCharacteristic_pow →
+    card_discretePrincipalUnitQuotient_eq_residueCharacteristic_pow in
 /-- The same finite coordinate is a `p`-group, with its exact cardinality
 coming from the principal-unit filtration. -/
 theorem discretePrincipalUnitQuotient_isPGroup
@@ -1171,7 +1177,7 @@ theorem discretePrincipalUnitQuotient_isPGroup
       Nat.card_congr Multiplicative.toAdd
     _ = F.residueCharacteristic ^
           ((CompleteDVF.higherPrincipalUnitGroup.principalUnitResidueDegree F : ℕ) * n) :=
-      CompleteDVF.higherPrincipalUnitGroup.card_discretePrincipalUnitQuotient_eq_residueCharacteristic_pow
+      card_discretePrincipalUnitQuotient_eq_residueCharacteristic_pow
         F n
 
 /-- Finite generation passes from a higher principal-unit group to its

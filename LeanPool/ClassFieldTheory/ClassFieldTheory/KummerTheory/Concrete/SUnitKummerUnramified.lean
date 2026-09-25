@@ -25,7 +25,8 @@ generating the full extension is used to kill the full inertia group away
 from `S`.
 -/
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification
 open HilbertRamification.Dedekind

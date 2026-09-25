@@ -216,8 +216,7 @@ instance absoluteFiniteQuotientField_isAbelianGalois
     have hab : a * b = b * a := mul_comm _ _
     exact congrArg QuotientGroup.mk hab
   refine { is_comm.comm := fun σ τ => ?_ }
-  ·
-    exact (absoluteFiniteQuotientEquiv K N).symm.injective (by
+  · exact (absoluteFiniteQuotientEquiv K N).symm.injective (by
       simp only [map_mul]
       exact hquotient_comm
         ((absoluteFiniteQuotientEquiv K N).symm σ)

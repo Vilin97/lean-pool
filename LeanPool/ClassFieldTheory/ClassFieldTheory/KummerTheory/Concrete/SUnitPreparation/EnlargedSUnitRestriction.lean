@@ -454,8 +454,7 @@ theorem enlargedSUnitKummerCyclicFixedField_isCyclic
       ((fullSUnitKummerExtension
           (K := K) (Omega := Omega) n
           (enlargeByFiniteKummerRadicalSupport
-            (K := K) (L := E) n hmu S)) ≃ₐ[
-        enlargedSUnitKummerCyclicFixedField
+            (K := K) (L := E) n hmu S)) ≃ₐ[enlargedSUnitKummerCyclicFixedField
           (K := K) (Omega := Omega) E n hmu
           hexponent S sigma]
         (fullSUnitKummerExtension

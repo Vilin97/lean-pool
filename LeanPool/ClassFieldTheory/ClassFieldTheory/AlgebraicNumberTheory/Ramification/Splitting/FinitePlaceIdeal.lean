@@ -17,7 +17,8 @@ These are the place-theoretic ingredients used in the cyclic prime-power and
 normal-closure splitting reductions.
 -/
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 
 noncomputable section
 
@@ -157,9 +158,9 @@ theorem finite_finitePlaceBelow_fibre
   · apply
       (Algebra.QuasiFinite.finite_primesOver
         (R := 𝓞 K) (S := 𝓞 L) v.asIdeal).subset
-    rintro I ⟨W, hW, rfl⟩
-    exact
-      ⟨W.isPrime, ⟨(congrArg HeightOneSpectrum.asIdeal hW).symm⟩⟩
+    · rintro I ⟨W, hW, rfl⟩
+      exact
+        ⟨W.isPrime, ⟨(congrArg HeightOneSpectrum.asIdeal hW).symm⟩⟩
   · intro W₁ _ W₂ _ h
     apply HeightOneSpectrum.ext
     exact h

@@ -39,7 +39,8 @@ open Polynomial
 
 variable (k : Type u) [Field k] [Fintype k]
 
-private instance finiteFieldRingCharPrime : Fact (ringChar k).Prime :=
+omit [Fintype k] in
+private instance finiteFieldRingCharPrime [Finite k] : Fact (ringChar k).Prime :=
   ⟨CharP.char_is_prime k (ringChar k)⟩
 
 private noncomputable instance absoluteGaloisGroupT2 :

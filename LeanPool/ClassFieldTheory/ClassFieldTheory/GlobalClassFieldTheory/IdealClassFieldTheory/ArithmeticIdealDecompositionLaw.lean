@@ -31,6 +31,9 @@ variable
     [IsAbelianGalois K L]
 
 open scoped Classical in
+open GlobalClassFields renaming
+  orderOf_arithmeticFinitePlacePrimeArtin_eq_finitePlaceLocalDegree_of_chosenUnramified →
+    orderOf_primeArtin_eq_localDegree_of_unramified in
 /-- At an unramified prime outside a defining modulus, the arithmetic
 ideal Artin symbol has order equal to the common inertia degree of the
 primes above it. -/
@@ -52,7 +55,7 @@ theorem
       Ideal.inertiaDegIn v.asIdeal (𝓞 L) := by
   rw [
     arithmeticIdealArtinGaloisMap_primeIdeal_eq_arithmeticFinitePlacePrimeArtin,
-    GlobalClassFields.orderOf_arithmeticFinitePlacePrimeArtin_eq_finitePlaceLocalDegree_of_chosenUnramified
+    orderOf_primeArtin_eq_localDegree_of_unramified
         (K := K) (L := L) v hunram]
   exact
     finitePlaceLocalDegree_eq_inertiaDegree_of_chosenUnramified

@@ -713,7 +713,8 @@ variable (H : Subgroup G) [MulDistribMulAction H B]
 /-- A subgroup of a finite group is equipped with its finite enumeration. -/
 local instance inducedCoordinatesSubgroupFintype : Fintype H := Fintype.ofFinite H
 
-local instance : NeZero H.index := ⟨by
+omit [Fintype G] in
+local instance [Finite G] : NeZero H.index := ⟨by
   rw [H.index_eq_card]
   exact Nat.card_pos.ne'⟩
 

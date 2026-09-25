@@ -281,6 +281,12 @@ theorem uniformizerValueExponent_residueCharacteristic_ne_zero
     simpa [CompleteDVF.fieldUnitValueUnit, pUnit] using hvalue'.symm
   exact (ne_of_lt F.valuation_natCast_residueCharacteristic_lt_one) hpone
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF →
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF in
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply →
+    fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply in
 /-- Uniqueness of the corrected extension: agreement on first principal
 units together with vanishing on one field unit of nonzero uniformizer
 exponent determines the logarithm on all field units. -/
@@ -298,13 +304,13 @@ theorem fieldUnitLogHomWithUniformizerValue_unique_of_killing
           (u : F.valuationSubringˣ)) = φ u)
     (hψa : ψ a = 1) :
     ψ = fieldUnitLogHomWithUniformizerValue F
-      (CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
+      (fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
         F hπ) φ
       (uniformizerLogValueKilling F
-        (CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
+        (fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
           F hπ) φ a) := by
   let d :=
-    CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F hπ
   let L := fieldUnitLogHomWithUniformizerValue F d φ
     (uniformizerLogValueKilling F d φ a)
@@ -322,7 +328,7 @@ theorem fieldUnitLogHomWithUniformizerValue_unique_of_killing
           m • Multiplicative.toAdd (ψ ϖ) := by
     have hdecomp : d z = a := d.apply_symm_apply a
     rw [← hdecomp]
-    rw [CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply]
+    rw [fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply]
     rw [ψ.map_mul, ψ.map_mul, ψ.map_zpow]
     rw [toAdd_mul, toAdd_mul, toAdd_zpow]
     rw [monoidHom_toMultiplicative_residueRoot_eq_one (K := K) F ψ z.1.1]
@@ -334,7 +340,7 @@ theorem fieldUnitLogHomWithUniformizerValue_unique_of_killing
           m • Multiplicative.toAdd (L ϖ) := by
     have hdecomp : d z = a := d.apply_symm_apply a
     rw [← hdecomp]
-    rw [CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply]
+    rw [fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply]
     rw [L.map_mul, L.map_mul, L.map_zpow]
     rw [toAdd_mul, toAdd_mul, toAdd_zpow]
     have hLprincipal :
@@ -374,6 +380,12 @@ theorem fieldUnitLogHomWithUniformizerValue_unique_of_killing
         F hπ φ (uniformizerLogValueKilling F d φ a) u).symm
   · exact hϖ
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF →
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF in
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  continuous_fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_mrangeRestrict →
+    continuous_rootsPrincipalUnitsUniformizer_symm in
 /-- The inverse of the uniformizer–residue–principal-unit decomposition field-unit decomposition
 is continuous
 also for the topology defined directly by a standard `ℤᵐ⁰`-valued valuation.
@@ -392,7 +404,7 @@ theorem continuous_fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_ofWithZero
       infer_instance
     letI : Valued K (WithZero (Multiplicative ℤ)) := Valued.mk' v
     Continuous
-      (CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
+      (fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
         F hπ).symm := by
   let F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, 0} K :=
     completeDVFOfWithZeroValuation v
@@ -414,7 +426,7 @@ theorem continuous_fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_ofWithZero
   let hcontinuousRestricted :=
     letI : Valued K
         (MonoidHom.mrange v.toMonoidWithZeroHom) := restricted
-    CompleteDVF.higherPrincipalUnitGroup.continuous_fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_mrangeRestrict
+    continuous_rootsPrincipalUnitsUniformizer_symm
       F hπ
   have htop : direct.toTopologicalSpace = restricted.toTopologicalSpace := by
     exact congrArg (fun U : UniformSpace K => U.toTopologicalSpace) huniform
@@ -439,11 +451,14 @@ theorem continuous_fieldUnitsEquivRootsPrincipalUnitsUniformizer_symm_ofWithZero
     (CompleteDVF.higherPrincipalUnitGroup.fieldUnitDecompositionFactors F)
     (unitsTopology direct.toTopologicalSpace)
     (factorsTopology direct.toTopologicalSpace)
-    (CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
+    (fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F hπ).symm
   rw [hdom, hcod]
   exact hcontinuousRestricted
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF →
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF in
 /-- The local-field structure theory, the field-unit logarithm theorem.  For a
 mixed-characteristic local
 field presented by a complete discrete `ℤᵐ⁰`-valued valuation, there is a
@@ -504,7 +519,7 @@ theorem existsUnique_continuous_log
     all_goals rfl
   rcases F.exists_uniformizer with ⟨π, hπ⟩
   let d :=
-    CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
       F.toCompleteDVF hπ
   let c : K := uniformizerLogValueKilling F.toCompleteDVF d φ pUnit
   let L : Kˣ →* Multiplicative K :=
@@ -541,7 +556,7 @@ theorem existsUnique_continuous_log
         F.toCompleteDVF hπ φ c u
     rw [show L = fieldUnitLogHomWithUniformizerValue F.toCompleteDVF d φ c from rfl]
     rw [show d =
-      CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
+      fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
         F.toCompleteDVF hπ from rfl]
     rw [hu]
     exact

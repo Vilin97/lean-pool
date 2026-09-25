@@ -297,6 +297,9 @@ theorem
       IsGalois.card_aut_eq_finrank K E
 
 open scoped Classical in
+open _root_.GlobalClassFieldTheory.Cohomology renaming
+  chosenFinitePlaceIsUnramified_of_notMem_ideleClassHerbrandSupport →
+    chosenFinitePlaceIsUnramified_of_notMem_ideleClassHerbrandSupport in
 /-- Separable-closure realization of the norm-index calculation for a
 prime-power Kummer extension presented as an intermediate field.  This
 form is useful when the extension is already constructed inside a fixed
@@ -372,7 +375,7 @@ theorem
           (K := K) (L := E) w := by
     intro w hwAway
     apply
-      _root_.GlobalClassFieldTheory.Cohomology.chosenFinitePlaceIsUnramified_of_notMem_ideleClassHerbrandSupport
+      chosenFinitePlaceIsUnramified_of_notMem_ideleClassHerbrandSupport
     intro hwSupport
     have hwS : w ∈ S := by
       simpa only [S] using hwSupport

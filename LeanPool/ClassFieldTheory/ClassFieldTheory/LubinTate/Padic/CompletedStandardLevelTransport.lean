@@ -53,8 +53,7 @@ private noncomputable local instance
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     WithIdeal
       (standardLubinTateLevelCompleteDVF
-        (padicMultiplicativeLubinTateSeries_isUniformizer p) n
-      ).valuationSubring where
+        (padicMultiplicativeLubinTateSeries_isUniformizer p) n).valuationSubring where
   i :=
     (standardLubinTateLevelCompleteDVF
       (padicMultiplicativeLubinTateSeries_isUniformizer p) n
@@ -72,8 +71,7 @@ private noncomputable local instance
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     CompleteSpace
       (standardLubinTateLevelCompleteDVF
-        (padicMultiplicativeLubinTateSeries_isUniformizer p) n
-      ).valuationSubring := by
+        (padicMultiplicativeLubinTateSeries_isUniformizer p) n).valuationSubring := by
   let source :=
     standardLubinTateLevelCompleteDVF
       (padicMultiplicativeLubinTateSeries_isUniformizer p) n
@@ -85,8 +83,7 @@ private noncomputable local instance
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     T2Space
       (standardLubinTateLevelCompleteDVF
-        (padicMultiplicativeLubinTateSeries_isUniformizer p) n
-      ).valuationSubring := by
+        (padicMultiplicativeLubinTateSeries_isUniformizer p) n).valuationSubring := by
   let source :=
     standardLubinTateLevelCompleteDVF
       (padicMultiplicativeLubinTateSeries_isUniformizer p) n
@@ -198,8 +195,7 @@ theorem padicStandardLevelIntegerEmbedding_coe
     (p : ℕ) [Fact p.Prime] (n : ℕ)
     (x :
       (standardLubinTateLevelCompleteDVF
-        (padicMultiplicativeLubinTateSeries_isUniformizer p) n
-      ).valuationSubring) :
+        (padicMultiplicativeLubinTateSeries_isUniformizer p) n).valuationSubring) :
     ((padicStandardLevelIntegerEmbedding p n x :
         (padicCompletedLevelCompleteDVF p n).valuationSubring) :
       padicCompletedLevelField p n) =
@@ -310,8 +306,7 @@ theorem padicStandardLevelIntegerEmbedding_powerSeriesEval
     (p : ℕ) [Fact p.Prime] (n : ℕ)
     (x :
       (standardLubinTateLevelCompleteDVF
-        (padicMultiplicativeLubinTateSeries_isUniformizer p) n
-      ).valuationSubring)
+        (padicMultiplicativeLubinTateSeries_isUniformizer p) n).valuationSubring)
     (hx : PowerSeries.HasEval x)
     (f : PowerSeries (padicLocalField p).valuationSubring) :
     padicStandardLevelIntegerEmbedding p n

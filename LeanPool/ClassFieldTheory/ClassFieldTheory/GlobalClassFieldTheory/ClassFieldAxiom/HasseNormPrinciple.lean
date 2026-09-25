@@ -895,7 +895,6 @@ noncomputable def baseFieldUnitAsFixedUnit
     (K L : Type)
     [Field K]
     [Field L] [Algebra K L]
-
     (x : Kˣ) :
     letI :=
       LocalClassFieldTheory.galoisGroupFieldUnitsMulDistribMulAction K L

@@ -213,8 +213,8 @@ def dedekindRamificationDecompositionQuotientInertiaEquivGalInertiaFieldOverDeco
     [Finite G] [IsGaloisGroup G K L] :
     decompositionGroup P G ⧸
         (inertiaGroup P G).subgroupOf (decompositionGroup P G) ≃*
-      (inertiaFieldOverDecompositionField (K := K) (L := L) G P ≃ₐ[
-        decompositionField (K := K) (L := L) G P]
+      (inertiaFieldOverDecompositionField (K := K) (L := L) G P ≃ₐ[decompositionField (K := K)
+        (L := L) G P]
         inertiaFieldOverDecompositionField (K := K) (L := L) G P) := by
   haveI := dedekindTower_decompositionField_finiteDimensional (K := K) (L := L) G P
   haveI := dedekindTower_decompositionField_isGalois (K := K) (L := L) G P
@@ -247,8 +247,8 @@ theorem dedekindRamification_inertiaFieldOverDecompositionField_finrank_eq_quoti
     Module.finrank (decompositionField (K := K) (L := L) G P)
         (inertiaFieldOverDecompositionField (K := K) (L := L) G P) =
         Nat.card
-          (inertiaFieldOverDecompositionField (K := K) (L := L) G P ≃ₐ[
-            decompositionField (K := K) (L := L) G P]
+          (inertiaFieldOverDecompositionField (K := K) (L := L) G P ≃ₐ[decompositionField (K :=
+            K) (L := L) G P]
             inertiaFieldOverDecompositionField (K := K) (L := L) G P) := by
       rw [← IsGalois.card_aut_eq_finrank]
     _ =
@@ -267,8 +267,8 @@ def dedekindRamificationGalInertiaFieldOverDecompositionEquivResidueGalois
     (p : Ideal A) (P : Ideal B) [P.IsPrime] [P.LiesOver p]
     [MulSemiringAction G B] [SMulCommClass G A B]
     [Finite G] [IsGaloisGroup G K L] [Algebra.IsInvariant A B G] :
-    (inertiaFieldOverDecompositionField (K := K) (L := L) G P ≃ₐ[
-        decompositionField (K := K) (L := L) G P]
+    (inertiaFieldOverDecompositionField (K := K) (L := L) G P ≃ₐ[decompositionField (K := K) (L
+      := L) G P]
         inertiaFieldOverDecompositionField (K := K) (L := L) G P) ≃*
       (B ⧸ P) ≃ₐ[A ⧸ p] B ⧸ P :=
   (dedekindRamificationDecompositionQuotientInertiaEquivGalInertiaFieldOverDecomposition
@@ -286,8 +286,8 @@ theorem dedekindInertiaField_inertiaField_properties
     IsGalois (decompositionField (K := K) (L := L) G P)
         (inertiaFieldOverDecompositionField (K := K) (L := L) G P) ∧
       Nonempty
-        ((inertiaFieldOverDecompositionField (K := K) (L := L) G P ≃ₐ[
-            decompositionField (K := K) (L := L) G P]
+        ((inertiaFieldOverDecompositionField (K := K) (L := L) G P ≃ₐ[decompositionField (K :=
+          K) (L := L) G P]
             inertiaFieldOverDecompositionField (K := K) (L := L) G P) ≃*
           (B ⧸ P) ≃ₐ[A ⧸ p] B ⧸ P) ∧
       fixingSubgroup G

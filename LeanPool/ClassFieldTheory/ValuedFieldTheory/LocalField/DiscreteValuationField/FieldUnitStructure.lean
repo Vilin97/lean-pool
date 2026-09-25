@@ -27,6 +27,9 @@ namespace LocalField
 
 variable {K : Type u} [Field K]
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  fieldUnitsContinuousMulEquivUniformizerRootsPrincipalUnitsOfWithZeroValuation →
+    fieldUnitsEquivUniformizerRootsPrincipalUnits in
 /-- The local-field structure theory, the mixed-characteristic field-unit structure theorem.  In
 mixed characteristic the
 first principal units are a finite cyclic `p`-group times
@@ -66,12 +69,15 @@ noncomputable def chosenFieldUnitsStructureMixedCharacteristic
     chosenMixedFirstPrincipalUnitStructureOfWithZeroValuation
       v hv
   exact ⟨a,
-    CompleteDVF.higherPrincipalUnitGroup.fieldUnitsContinuousMulEquivUniformizerRootsPrincipalUnitsOfWithZeroValuation
+    fieldUnitsEquivUniformizerRootsPrincipalUnits
       v hπ
       (Multiplicative
         (ZMod (F.residueCharacteristic ^ a) ×
           (Fin d → ℤ_[F.residueCharacteristic]))) e⟩
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  adicPrincipalUnitsContinuousAddEquivUnderlyingOfWithZeroValuation →
+    adicPrincipalUnitsContinuousAddEquivUnderlyingOfWithZeroValuation in
 /-- The exact principal-unit factor in the equal-characteristic field-unit structure theorem,
 reindexed from
 the prime-to-`p` degrees and residue-basis coordinates by `ℕ`. -/
@@ -98,7 +104,7 @@ noncomputable def chosenFirstPrincipalUnitStructureEqualCharacteristic
   let E :=
     (CompleteDVF.higherPrincipalUnitGroup.iwasawaGlobalAdicPrincipalUnitsContinuousAddEquiv
       F hπ).trans
-      (CompleteDVF.higherPrincipalUnitGroup.adicPrincipalUnitsContinuousAddEquivUnderlyingOfWithZeroValuation
+      (adicPrincipalUnitsContinuousAddEquivUnderlyingOfWithZeroValuation
         v)
   let I := iwasawaPadicIntProductContinuousAddEquivNat
     F.residueCharacteristic
@@ -112,6 +118,9 @@ noncomputable def chosenFirstPrincipalUnitStructureEqualCharacteristic
     I.symm.trans E
   exact LocalFieldTheory.DiscreteValuationField.continuousMulEquivOfAdditiveTarget eAdd
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  fieldUnitsContinuousMulEquivUniformizerRootsPrincipalUnitsOfWithZeroValuation →
+    fieldUnitsEquivUniformizerRootsPrincipalUnits in
 /-- The local-field structure theory, the equal-characteristic field-unit structure theorem.  In
 equal characteristic the
 Iwasawa generators identify the first principal units with a countable
@@ -135,7 +144,7 @@ noncomputable def chosenFieldUnitsStructureEqualCharacteristic
   let ePrincipal :=
     chosenFirstPrincipalUnitStructureEqualCharacteristic v
   exact
-    CompleteDVF.higherPrincipalUnitGroup.fieldUnitsContinuousMulEquivUniformizerRootsPrincipalUnitsOfWithZeroValuation
+    fieldUnitsEquivUniformizerRootsPrincipalUnits
       v hπ (Multiplicative (ℕ → ℤ_[F.residueCharacteristic])) ePrincipal
 
 end LocalField

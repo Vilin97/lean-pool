@@ -81,8 +81,7 @@ noncomputable def abstractFixedFieldCyclotomicGalEquivZHat
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)) :
     let hI :=
       rationalCyclotomicFieldInertia_le H.field
-    Gal(
-        LocalClassFieldTheory.abstractRelativeFixedField
+    Gal(LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ) hI/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field) ≃*
       Multiplicative ZHat := by
@@ -99,8 +98,7 @@ noncomputable def abstractFixedFieldCyclotomicGalEquivZHat
           CyclicCohomology.extensionSubgroup H.field
             (rationalCyclotomicDegreeData.fieldInertia H.field)
             hI ≃*
-        Gal(
-          LocalClassFieldTheory.abstractRelativeFixedField
+        Gal(LocalClassFieldTheory.abstractRelativeFixedField
             ℚ (SeparableClosure ℚ) hI/LocalClassFieldTheory.abstractFixedField
             ℚ (SeparableClosure ℚ) H.field) :=
     LocalClassFieldTheory.abstractExtensionQuotientEquivGaloisGroup
@@ -356,8 +354,7 @@ noncomputable def abstractFixedFieldCyclotomicRestriction
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)) :
     let hI :=
       rationalCyclotomicFieldInertia_le H.field
-    Gal(
-        LocalClassFieldTheory.abstractRelativeFixedField
+    Gal(LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ) hI/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field) →*
       Gal(rationalCyclotomicZHatField/ℚ) := by
@@ -374,10 +371,11 @@ noncomputable def abstractFixedFieldCyclotomicRestriction
 /-- On a quotient representative, cyclotomic restriction of the
 actual relative automorphism is ordinary restriction of the same
 ambient absolute-Galois automorphism. -/
-noncomputable local instance
-    cyclotomicAbstractFixedFieldArtin_cyclotomicZHatFieldNormal :
+theorem cyclotomicAbstractFixedFieldArtin_cyclotomicZHatFieldNormal :
     Normal ℚ rationalCyclotomicZHatField :=
   rationalCyclotomicZHatField_isNormal
+
+attribute [local instance] cyclotomicAbstractFixedFieldArtin_cyclotomicZHatFieldNormal
 
 @[simp]
 theorem abstractFixedFieldCyclotomicRestriction_extensionClass
@@ -516,8 +514,7 @@ theorem
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (τ :
-      Gal(
-        LocalClassFieldTheory.abstractRelativeFixedField
+      Gal(LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ)
           (rationalCyclotomicFieldInertia_le H.field)/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field)) :
@@ -564,8 +561,9 @@ def abstractFixedFieldCyclotomicFiniteCompositum
       ℚ (SeparableClosure ℚ) H.field ⊔
     IntermediateField.lift E.toIntermediateField
 
-noncomputable instance
-    abstractFixedFieldCyclotomicFiniteCompositum_finiteDimensional
+/-- The compositum of the fixed base with a finite cyclotomic layer has finite rational degree.
+-/
+theorem abstractFixedFieldCyclotomicFiniteCompositum_finiteDimensional
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -586,8 +584,10 @@ noncomputable instance
   exact IntermediateField.finiteDimensional_sup
     F (IntermediateField.lift E.toIntermediateField)
 
-noncomputable instance
-    abstractFixedFieldCyclotomicFiniteCompositum_numberField
+attribute [instance] abstractFixedFieldCyclotomicFiniteCompositum_finiteDimensional
+
+/-- The compositum of the fixed base with a finite cyclotomic layer is a number field. -/
+theorem abstractFixedFieldCyclotomicFiniteCompositum_numberField
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -597,6 +597,8 @@ noncomputable instance
       (abstractFixedFieldCyclotomicFiniteCompositum H E) :=
   NumberField.of_module_finite ℚ
     (abstractFixedFieldCyclotomicFiniteCompositum H E)
+
+attribute [instance] abstractFixedFieldCyclotomicFiniteCompositum_numberField
 
 /-- The lower abstract fixed field embedded into its finite
 cyclotomic compositum. -/
@@ -620,8 +622,7 @@ noncomputable def
 /-- The fixed field attached to a finite abstract field is a number
 field.  Keeping this as the single file-local instance makes it
 available while later theorem binders are elaborated. -/
-noncomputable local instance
-    abstractFixedFieldCyclotomic_numberField
+theorem abstractFixedFieldCyclotomic_numberField
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)) :
     NumberField
@@ -636,6 +637,8 @@ noncomputable local instance
     NumberField.of_module_finite ℚ
       (LocalClassFieldTheory.abstractFixedField
         ℚ (SeparableClosure ℚ) H.field)
+
+attribute [local instance] abstractFixedFieldCyclotomic_numberField
 
 /-- A finite rational cyclotomic layer embedded into its compositum
 with the abstract fixed field. -/
@@ -698,8 +701,8 @@ noncomputable instance
     (self :=
       abstractFixedFieldCyclotomicFiniteCompositumLayerAlgebra H E)
 
-instance
-    abstractFixedFieldCyclotomicFiniteCompositum_baseScalarTower
+/-- The compositum's rational scalars factor through the fixed base embedding. -/
+theorem abstractFixedFieldCyclotomicFiniteCompositum_baseScalarTower
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -713,8 +716,10 @@ instance
     (AlgHom.comp_algebraMap
       (abstractFixedFieldCyclotomicFiniteCompositumBaseEmbedding H E)).symm
 
-instance
-    abstractFixedFieldCyclotomicFiniteCompositum_layerScalarTower
+attribute [instance] abstractFixedFieldCyclotomicFiniteCompositum_baseScalarTower
+
+/-- The compositum's rational scalars factor through its finite cyclotomic layer embedding. -/
+theorem abstractFixedFieldCyclotomicFiniteCompositum_layerScalarTower
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -725,6 +730,8 @@ instance
   IsScalarTower.of_algebraMap_eq'
     (AlgHom.comp_algebraMap
       (abstractFixedFieldCyclotomicFiniteCompositumLayerEmbedding H E)).symm
+
+attribute [instance] abstractFixedFieldCyclotomicFiniteCompositum_layerScalarTower
 
 /-- Inclusion of the finite cyclotomic compositum into the actual
 maximal-unramified compositum. -/
@@ -864,8 +871,7 @@ noncomputable def
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
-    abstractFixedFieldCyclotomicFiniteCompositum H E ≃ₐ[
-      LocalClassFieldTheory.abstractFixedField
+    abstractFixedFieldCyclotomicFiniteCompositum H E ≃ₐ[LocalClassFieldTheory.abstractFixedField
         ℚ (SeparableClosure ℚ) H.field]
       abstractFixedFieldCyclotomicFiniteLayer H E :=
   AlgEquiv.ofRingEquiv
@@ -875,8 +881,8 @@ noncomputable def
           H E)).toRingEquiv)
     (fun _ => rfl)
 
-noncomputable instance
-    abstractFixedFieldCyclotomicFiniteLayer_finiteDimensional
+/-- The image of the finite cyclotomic compositum has finite degree over the fixed base. -/
+theorem abstractFixedFieldCyclotomicFiniteLayer_finiteDimensional
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -889,8 +895,10 @@ noncomputable instance
   (abstractFixedFieldCyclotomicFiniteCompositumEquivFiniteLayer
     H E).toLinearEquiv.finiteDimensional
 
-noncomputable instance
-    abstractFixedFieldCyclotomicFiniteLayer_numberField
+attribute [instance] abstractFixedFieldCyclotomicFiniteLayer_finiteDimensional
+
+/-- The finite layer inside the relative fixed field is a number field. -/
+theorem abstractFixedFieldCyclotomicFiniteLayer_numberField
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -903,8 +911,10 @@ noncomputable instance
       ℚ (SeparableClosure ℚ) H.field)
     (abstractFixedFieldCyclotomicFiniteLayer H E)
 
-noncomputable instance
-    abstractFixedFieldCyclotomicFiniteLayer_isAbelianGalois
+attribute [instance] abstractFixedFieldCyclotomicFiniteLayer_numberField
+
+/-- The finite layer inside the relative fixed field is abelian Galois over the fixed base. -/
+theorem abstractFixedFieldCyclotomicFiniteLayer_isAbelianGalois
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -931,8 +941,10 @@ noncomputable instance
             (abstractFixedFieldCyclotomicFiniteCompositumEquivFiniteLayer
               H E))))
 
-instance
-    abstractFixedFieldCyclotomicFiniteLayer_baseScalarTower
+attribute [instance] abstractFixedFieldCyclotomicFiniteLayer_isAbelianGalois
+
+/-- Rational scalars on the finite layer factor through its fixed base field. -/
+theorem abstractFixedFieldCyclotomicFiniteLayer_baseScalarTower
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -966,6 +978,8 @@ instance
         ℚ (SeparableClosure ℚ) H.field)
       (LocalClassFieldTheory.abstractRelativeFixedField
         ℚ (SeparableClosure ℚ) hI) x
+
+attribute [instance] abstractFixedFieldCyclotomicFiniteLayer_baseScalarTower
 
 /-- The finite rational layer embedded into its corresponding
 intermediate field over the abstract fixed field. -/
@@ -1012,8 +1026,8 @@ noncomputable instance
   Algebra.toSMul
     (self := abstractFixedFieldCyclotomicFiniteLayerLayerAlgebra H E)
 
-instance
-    abstractFixedFieldCyclotomicFiniteLayer_layerScalarTower
+/-- Rational scalars on the finite layer factor through its chosen cyclotomic field. -/
+theorem abstractFixedFieldCyclotomicFiniteLayer_layerScalarTower
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -1024,6 +1038,8 @@ instance
   IsScalarTower.of_algebraMap_eq'
     (AlgHom.comp_algebraMap
       (abstractFixedFieldCyclotomicFiniteLayerEmbedding H E)).symm
+
+attribute [instance] abstractFixedFieldCyclotomicFiniteLayer_layerScalarTower
 
 /-- The finite cyclotomic layer as an object of the finite-Galois
 inverse system of the actual maximal-unramified extension. -/
@@ -1065,8 +1081,7 @@ theorem abstractFixedFieldCyclotomicFiniteLayer_baseAlgebra_eq_algebra'
 
 /-- The finite Galois layer uses its canonical inclusion into the full
 relative fixed field for the upper scalar action. -/
-instance
-    abstractFixedFieldCyclotomicFiniteGaloisLayer_scalarTower
+theorem abstractFixedFieldCyclotomicFiniteGaloisLayer_scalarTower
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -1095,6 +1110,8 @@ instance
   exact
     IsScalarTower.of_algebraMap_eq'
       (AlgHom.comp_algebraMap i).symm
+
+attribute [instance] abstractFixedFieldCyclotomicFiniteGaloisLayer_scalarTower
 
 /-- The canonical inclusion of the finite cyclotomic layer into the
 full abstract-fixed-field compositum. -/
@@ -1141,8 +1158,7 @@ private theorem
         ℚ rationalCyclotomicZHatField)
     [Normal ℚ E]
     (σ :
-      Gal(
-        LocalClassFieldTheory.abstractRelativeFixedField
+      Gal(LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ)
           (rationalCyclotomicFieldInertia_le H.field)/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field))
@@ -1163,8 +1179,7 @@ private theorem
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (σ :
-      Gal(
-        LocalClassFieldTheory.abstractRelativeFixedField
+      Gal(LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ)
           (rationalCyclotomicFieldInertia_le H.field)/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field))
@@ -1197,8 +1212,7 @@ private theorem
         ℚ (SeparableClosure ℚ) H.field)
       (abstractFixedFieldCyclotomicFiniteLayer H E)]
     (σ :
-      Gal(
-        LocalClassFieldTheory.abstractRelativeFixedField
+      Gal(LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ)
           (rationalCyclotomicFieldInertia_le H.field)/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field))
@@ -1235,8 +1249,7 @@ private theorem
         ℚ (SeparableClosure ℚ) H.field)
       (abstractFixedFieldCyclotomicFiniteLayer H E)]
     (σ :
-      Gal(
-        LocalClassFieldTheory.abstractRelativeFixedField
+      Gal(LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ)
           (rationalCyclotomicFieldInertia_le H.field)/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field))
@@ -1277,8 +1290,7 @@ private theorem
         ℚ rationalCyclotomicZHatField)
     [Normal ℚ E]
     (σ :
-      Gal(
-        LocalClassFieldTheory.abstractRelativeFixedField
+      Gal(LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ)
           (rationalCyclotomicFieldInertia_le H.field)/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field))
@@ -1328,8 +1340,7 @@ private theorem
         ℚ (SeparableClosure ℚ) H.field)
       (abstractFixedFieldCyclotomicFiniteLayer H E)]
     (σ :
-      Gal(
-        LocalClassFieldTheory.abstractRelativeFixedField
+      Gal(LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ)
           (rationalCyclotomicFieldInertia_le H.field)/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field))
@@ -1389,8 +1400,7 @@ private theorem
         ℚ (SeparableClosure ℚ) H.field)
       (abstractFixedFieldCyclotomicFiniteLayer H E)]
     (σ :
-      Gal(
-        LocalClassFieldTheory.abstractRelativeFixedField
+      Gal(LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ)
           (rationalCyclotomicFieldInertia_le H.field)/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field))
@@ -1424,8 +1434,7 @@ theorem
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField)
     (σ :
-      Gal(
-        LocalClassFieldTheory.abstractRelativeFixedField
+      Gal(LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ)
           (rationalCyclotomicFieldInertia_le H.field)/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field)) :
@@ -1515,8 +1524,8 @@ noncomputable local instance
       (cyclotomicAbstractFixedFieldArtinCoordinateBase H) :=
   (cyclotomicAbstractFixedFieldArtinCoordinateBase H).algebra'
 
-noncomputable local instance
-    cyclotomicAbstractFixedFieldArtinCoordinateBaseFiniteDimensional
+/-- The fixed base field of an Artin coordinate has finite degree over the rationals. -/
+theorem cyclotomicAbstractFixedFieldArtinCoordinateBaseFiniteDimensional
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)) :
     FiniteDimensional ℚ
@@ -1524,14 +1533,18 @@ noncomputable local instance
   LocalClassFieldTheory.abstractFixedField_finiteDimensional
     ℚ (SeparableClosure ℚ) H.field H.finite
 
-noncomputable local instance
-    cyclotomicAbstractFixedFieldArtinCoordinateBaseNumberField
+attribute [local instance] cyclotomicAbstractFixedFieldArtinCoordinateBaseFiniteDimensional
+
+/-- The fixed base field of an Artin coordinate is a number field. -/
+theorem cyclotomicAbstractFixedFieldArtinCoordinateBaseNumberField
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)) :
     NumberField
       (cyclotomicAbstractFixedFieldArtinCoordinateBase H) :=
   NumberField.of_module_finite ℚ
     (cyclotomicAbstractFixedFieldArtinCoordinateBase H)
+
+attribute [local instance] cyclotomicAbstractFixedFieldArtinCoordinateBaseNumberField
 
 /-- The rational separable closure is an algebra over the base field of an Artin coordinate. -/
 noncomputable local instance
@@ -1554,8 +1567,8 @@ noncomputable local instance
       (cyclotomicAbstractFixedFieldArtinCoordinateRelative H) :=
   (cyclotomicAbstractFixedFieldArtinCoordinateRelative H).algebra'
 
-local instance
-    cyclotomicAbstractFixedFieldArtinCoordinateRelativeScalarTower
+/-- Rational scalars act on the relative coordinate field through its fixed base field. -/
+theorem cyclotomicAbstractFixedFieldArtinCoordinateRelativeScalarTower
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)) :
     IsScalarTower ℚ
@@ -1563,14 +1576,18 @@ local instance
       (cyclotomicAbstractFixedFieldArtinCoordinateRelative H) :=
   abstractFixedFieldCyclotomicCompositum_baseScalarTower H
 
-noncomputable local instance
-    cyclotomicAbstractFixedFieldArtinCoordinateRelativeIsAbelianGalois
+attribute [local instance] cyclotomicAbstractFixedFieldArtinCoordinateRelativeScalarTower
+
+/-- The relative cyclotomic coordinate field is abelian Galois over its fixed base field. -/
+theorem cyclotomicAbstractFixedFieldArtinCoordinateRelativeIsAbelianGalois
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)) :
     IsAbelianGalois
       (cyclotomicAbstractFixedFieldArtinCoordinateBase H)
       (cyclotomicAbstractFixedFieldArtinCoordinateRelative H) :=
   abstractFixedFieldCyclotomic_isAbelianGalois H
+
+attribute [local instance] cyclotomicAbstractFixedFieldArtinCoordinateRelativeIsAbelianGalois
 
 /-- A finite Galois cyclotomic coordinate carries its intermediate-field rational algebra
 structure. -/
@@ -1582,29 +1599,35 @@ noncomputable local instance
     Algebra ℚ E :=
   E.toIntermediateField.algebra'
 
-noncomputable local instance
-    cyclotomicAbstractFixedFieldArtinCoordinateNumberField
+/-- Each finite rational cyclotomic coordinate is a number field. -/
+theorem cyclotomicAbstractFixedFieldArtinCoordinateNumberField
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
     NumberField E :=
   NumberField.of_module_finite ℚ E
 
-noncomputable local instance
-    cyclotomicAbstractFixedFieldArtinCoordinateIsAbelianGalois
+attribute [local instance] cyclotomicAbstractFixedFieldArtinCoordinateNumberField
+
+/-- Each finite rational cyclotomic coordinate is abelian Galois over the rationals. -/
+theorem cyclotomicAbstractFixedFieldArtinCoordinateIsAbelianGalois
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
     IsAbelianGalois ℚ E :=
   IsAbelianGalois.of_algHom E.toIntermediateField.val
 
-local instance
-    cyclotomicAbstractFixedFieldArtinCoordinateNormal
+attribute [local instance] cyclotomicAbstractFixedFieldArtinCoordinateIsAbelianGalois
+
+/-- Each finite rational cyclotomic coordinate is normal over the rationals. -/
+theorem cyclotomicAbstractFixedFieldArtinCoordinateNormal
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
     Normal ℚ E :=
   E.isGalois.to_normal
+
+attribute [local instance] cyclotomicAbstractFixedFieldArtinCoordinateNormal
 
 /-- A finite cyclotomic coordinate layer is an algebra over the abstract fixed base field. -/
 noncomputable local instance
@@ -1631,8 +1654,8 @@ noncomputable local instance
       (cyclotomicAbstractFixedFieldArtinCoordinateLayer H E) :=
   DivisionRing.toRatAlgebra
 
-local instance
-    cyclotomicAbstractFixedFieldArtinCoordinateLayerBaseScalarTower
+/-- Rational scalars act on a finite coordinate layer through the fixed base field. -/
+theorem cyclotomicAbstractFixedFieldArtinCoordinateLayerBaseScalarTower
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -1665,8 +1688,10 @@ local instance
       (LocalClassFieldTheory.abstractRelativeFixedField
         ℚ (SeparableClosure ℚ) hI) x
 
-noncomputable local instance
-    cyclotomicAbstractFixedFieldArtinCoordinateLayerNumberField
+attribute [local instance] cyclotomicAbstractFixedFieldArtinCoordinateLayerBaseScalarTower
+
+/-- The finite Galois coordinate layer over the fixed base is a number field. -/
+theorem cyclotomicAbstractFixedFieldArtinCoordinateLayerNumberField
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -1675,6 +1700,8 @@ noncomputable local instance
     NumberField
       (abstractFixedFieldCyclotomicFiniteGaloisLayer H E) :=
   abstractFixedFieldCyclotomicFiniteLayer_numberField H E
+
+attribute [local instance] cyclotomicAbstractFixedFieldArtinCoordinateLayerNumberField
 
 /-- A finite cyclotomic coordinate layer is an algebra over the chosen cyclotomic field. -/
 noncomputable local instance
@@ -1700,8 +1727,8 @@ noncomputable local instance
       (cyclotomicAbstractFixedFieldArtinCoordinateLayer H E) :=
   abstractFixedFieldCyclotomicFiniteLayerLayerSMul H E
 
-local instance
-    cyclotomicAbstractFixedFieldArtinCoordinateLayerScalarTower
+/-- Rational scalars act on a coordinate layer through its finite cyclotomic field. -/
+theorem cyclotomicAbstractFixedFieldArtinCoordinateLayerScalarTower
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -1710,6 +1737,8 @@ local instance
     IsScalarTower ℚ E
       (cyclotomicAbstractFixedFieldArtinCoordinateLayer H E) :=
   abstractFixedFieldCyclotomicFiniteLayer_layerScalarTower H E
+
+attribute [local instance] cyclotomicAbstractFixedFieldArtinCoordinateLayerScalarTower
 
 /-- The relative cyclotomic field is an algebra over each finite coordinate layer. -/
 noncomputable local instance
@@ -1725,8 +1754,9 @@ noncomputable local instance
   IntermediateField.toAlgebra
     (cyclotomicAbstractFixedFieldArtinCoordinateLayer H E)
 
-local instance
-    cyclotomicAbstractFixedFieldArtinCoordinateLayerRelativeScalarTower
+/-- The fixed base acts on the relative coordinate field through each finite coordinate layer.
+-/
+theorem cyclotomicAbstractFixedFieldArtinCoordinateLayerRelativeScalarTower
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -1738,8 +1768,10 @@ local instance
       (cyclotomicAbstractFixedFieldArtinCoordinateRelative H) :=
   abstractFixedFieldCyclotomicFiniteGaloisLayer_scalarTower H E
 
-noncomputable local instance
-    cyclotomicAbstractFixedFieldArtinCoordinateLayerIsAbelianGalois
+attribute [local instance] cyclotomicAbstractFixedFieldArtinCoordinateLayerRelativeScalarTower
+
+/-- Each finite coordinate layer is abelian Galois over the fixed base field. -/
+theorem cyclotomicAbstractFixedFieldArtinCoordinateLayerIsAbelianGalois
     (H : FiniteAbstractField
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
     (E :
@@ -1749,6 +1781,8 @@ noncomputable local instance
       (cyclotomicAbstractFixedFieldArtinCoordinateBase H)
       (cyclotomicAbstractFixedFieldArtinCoordinateLayer H E) :=
   abstractFixedFieldCyclotomicFiniteLayer_isAbelianGalois H E
+
+attribute [local instance] cyclotomicAbstractFixedFieldArtinCoordinateLayerIsAbelianGalois
 
 /-- The full abstract Artin symbol whose finite coordinates are compared
 below.  Naming this endpoint keeps its relative fixed-field data opaque. -/
@@ -1785,7 +1819,8 @@ private noncomputable def cyclotomicAbstractFixedFieldArtinCoordinateMapData
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
-    {f : Gal(abstractFixedFieldCyclotomicFiniteGaloisLayer H E/cyclotomicAbstractFixedFieldArtinCoordinateBase H) →*
+    {f : Gal(abstractFixedFieldCyclotomicFiniteGaloisLayer H
+      E/cyclotomicAbstractFixedFieldArtinCoordinateBase H) →*
         Gal(E/ℚ) //
       f.comp
           (@globalArtinMonoidHomOfNumberField
@@ -1853,7 +1888,8 @@ private noncomputable def cyclotomicAbstractFixedFieldArtinCoordinateMap
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField) :
-    Gal(abstractFixedFieldCyclotomicFiniteGaloisLayer H E/cyclotomicAbstractFixedFieldArtinCoordinateBase H) →*
+    Gal(abstractFixedFieldCyclotomicFiniteGaloisLayer H
+      E/cyclotomicAbstractFixedFieldArtinCoordinateBase H) →*
       Gal(E/ℚ) :=
   (cyclotomicAbstractFixedFieldArtinCoordinateMapData H E).1
 
@@ -1882,7 +1918,8 @@ private theorem cyclotomicAbstractFixedFieldArtinCoordinateMap_apply
     (E :
       FiniteGaloisIntermediateField
         ℚ rationalCyclotomicZHatField)
-    (σ : Gal(abstractFixedFieldCyclotomicFiniteGaloisLayer H E/cyclotomicAbstractFixedFieldArtinCoordinateBase H)) :
+    (σ : Gal(abstractFixedFieldCyclotomicFiniteGaloisLayer H
+      E/cyclotomicAbstractFixedFieldArtinCoordinateBase H)) :
     cyclotomicAbstractFixedFieldArtinCoordinateMap H E σ =
       @IntermediateField.restrictRestrictAlgEquivMapHom
         ℚ E
@@ -2368,8 +2405,7 @@ noncomputable def abstractFixedFieldCyclotomicIdeleClassArtinMonoidHom
     IdeleClassGroup
         (LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field) →*
-      Gal(
-        LocalClassFieldTheory.abstractRelativeFixedField
+      Gal(LocalClassFieldTheory.abstractRelativeFixedField
           ℚ (SeparableClosure ℚ)
           (rationalCyclotomicFieldInertia_le H.field)/LocalClassFieldTheory.abstractFixedField
           ℚ (SeparableClosure ℚ) H.field) := by

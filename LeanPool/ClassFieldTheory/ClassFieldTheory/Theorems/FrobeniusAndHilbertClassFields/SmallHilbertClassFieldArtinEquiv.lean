@@ -27,6 +27,12 @@ namespace ClassFieldTheory
 
 open NumberField IsDedekindDomain
 
+open SmallHilbertClassFieldComparison renaming
+  arithmeticSmallHilbertClassFieldGaloisEquivClassGroupOfIsSmall →
+    smallHilbertGaloisEquivClassGroupOfIsSmall in
+open SmallHilbertClassFieldComparison renaming
+  arithmeticSmallHilbertClassFieldGaloisEquivClassGroup_prime →
+    arithmeticSmallHilbertClassFieldGaloisEquivClassGroup_prime in
 /-- The ordinary class group acts through the Frobenius-normalized Artin
 isomorphism on a small Hilbert class field. -/
 theorem smallHilbertClassField_artinEquiv
@@ -40,7 +46,7 @@ theorem smallHilbertClassField_artinEquiv
           artin (ordinaryRayClassOfFinitePrime v) =
             arithmeticFrobeniusAt (K := K) w := by
   let g :=
-    SmallHilbertClassFieldComparison.arithmeticSmallHilbertClassFieldGaloisEquivClassGroupOfIsSmall E hE
+    smallHilbertGaloisEquivClassGroupOfIsSmall E hE
   let artin : RayClassGroup (ordinaryRayClassModulus K) ≃* (E ≃ₐ[K] E) :=
     (ordinaryRayClassGroupEquivClassGroup (K := K)).trans g.symm
   refine ⟨artin, ?_⟩
@@ -60,7 +66,7 @@ theorem smallHilbertClassField_artinEquiv
       rw [← GlobalClassFieldComparison.arithmeticPrimeArtin_eq_arithmeticFrobeniusAt
         (K := K) (L := E) v w hw hunram]
       exact
-        (SmallHilbertClassFieldComparison.arithmeticSmallHilbertClassFieldGaloisEquivClassGroup_prime
+        (arithmeticSmallHilbertClassFieldGaloisEquivClassGroup_prime
         E hE v).symm
 
 end ClassFieldTheory

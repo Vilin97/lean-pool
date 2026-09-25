@@ -875,7 +875,7 @@ theorem
 /-- The power-interval form of the finite-parameter displacement criterion,
 stated using its chosen representative. -/
 theorem
-    standardLubinTateUnitParameterToGal_displacement_addVal_ge_iff_chosenRepresentative_mem_of_pow_interval
+    unitParameterToGal_displacement_addVal_ge_iff_representative_mem_of_pow_interval
     (F : LocalField.{u, v} K) {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (n : ℕ) (a : standardLubinTateUnitParameter F n) (k r : ℕ)

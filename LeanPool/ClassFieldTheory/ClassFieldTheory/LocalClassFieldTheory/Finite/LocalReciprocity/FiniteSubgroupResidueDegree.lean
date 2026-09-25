@@ -228,13 +228,13 @@ closure. -/
 noncomputable def localAbstractFixedResidueActionOverIntermediateField
     (H : ClosedSubgroup (Gal(SeparableClosure K/K))) :
     H.toSubgroup →*
-      (selectedResidueField (localSeparableValuationSubring K) ≃ₐ[
-        localAbstractFixedResidueIntermediateField K H]
+      (selectedResidueField (localSeparableValuationSubring K)
+        ≃ₐ[localAbstractFixedResidueIntermediateField K H]
         selectedResidueField (localSeparableValuationSubring K)) := by
   let F := localAbstractFixedResidueIntermediateField K H
   let rhoH : H.toSubgroup →*
-      (selectedResidueField (localSeparableValuationSubring K) ≃ₐ[
-        decompositionResidueField K (localSeparableValuationSubring K)]
+      (selectedResidueField (localSeparableValuationSubring K) ≃ₐ[decompositionResidueField K
+        (localSeparableValuationSubring K)]
         selectedResidueField (localSeparableValuationSubring K)) :=
     (localSeparableResidueAlgAction K).toMonoidHom.comp H.toSubgroup.subtype
   let rhoF : H.toSubgroup →* F.fixingSubgroup :=

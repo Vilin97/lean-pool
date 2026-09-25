@@ -259,8 +259,7 @@ theorem towerRelativeAdeleUnflatten_tmul
 /-- The flattening equivalence as an equivalence over the bottom adele
 ring.  This is the form needed for invariance of determinant norms. -/
 def towerRelativeAdeleAlgEquiv :
-    TowerRelativeAdeleRing K M L ≃ₐ[
-      NumberField.AdeleRing (𝓞 K) K]
+    TowerRelativeAdeleRing K M L ≃ₐ[NumberField.AdeleRing (𝓞 K) K]
       RelativeAdeleRing K L :=
   { towerRelativeAdeleRingEquiv K M L with
     commutes' := by

@@ -37,6 +37,9 @@ theorem henselianValuation_iff_henselFactorization
   simp only [ValuationTheory.DiscreteValuationField.HenselianValuationByFactorization,
     ValuationSubring.valuationSubring_valuation]
 
+open DiscreteValuationField.Valuation renaming
+  normFormula_extension_valuationSubring_eq_integralClosure_of_mem_or_inv →
+    normFormula_valuationSubring_eq_integralClosure in
 /-- the finite norm-formula theorem: a Henselian nonarchimedean valuation has exactly one
 extension to every algebraic extension, and the valuation ring of that
 extension is the actual integral closure of the base valuation ring.
@@ -86,7 +89,7 @@ theorem normFormula_algebraic_extension
   intro W hW
   let : V.valuation.HasExtension W.valuation := hW.1
   simpa only [ValuationSubring.valuationSubring_valuation] using
-    DiscreteValuationField.Valuation.normFormula_extension_valuationSubring_eq_integralClosure_of_mem_or_inv
+    normFormula_valuationSubring_eq_integralClosure
       (K := K) (L := L) V hval W.valuation
 
 /-- Exact extension of nonarchimedean absolute values supplies extension of
@@ -230,6 +233,9 @@ theorem normFormula_finite_normFormulaAbsoluteValue_eq_of_valuationSubring_eq_of
       hw_pow.trans hr_pow.symm
     exact (pow_left_inj₀ (w.nonneg x) (rAbs.nonneg x) hn_ne).1 hpow_eq
 
+open DiscreteValuationField.Valuation renaming
+  normFormula_extension_valuationSubring_eq_integralClosure_of_mem_or_inv →
+    normFormula_valuationSubring_eq_integralClosure in
 /-- The finite-degree part of the finite norm-formula theorem: the unique extended absolute value
 is the norm formula `|N(x)|^(1/[L:K])`. -/
 theorem normFormula_finite_extension_norm_formula
@@ -292,7 +298,7 @@ theorem normFormula_finite_extension_norm_formula
       absoluteValueValuation_hasExtension_of_extends
         v w hnonarch hwnonarch hw_ext
     have hW :=
-      DiscreteValuationField.Valuation.normFormula_extension_valuationSubring_eq_integralClosure_of_mem_or_inv
+      normFormula_valuationSubring_eq_integralClosure
         (K := K) (L := L) V hval W.valuation
     have hextendedBase : ∀ a : K, extended (algebraMap K L a) = v a :=
       normFormula_finite_normFormulaAbsoluteValue_of_henselFactorization_extends_base
@@ -301,7 +307,7 @@ theorem normFormula_finite_extension_norm_formula
       absoluteValueValuation_hasExtension_of_extends
         v extended hnonarch hextendedNonarch hextendedBase
     have hR :=
-      DiscreteValuationField.Valuation.normFormula_extension_valuationSubring_eq_integralClosure_of_mem_or_inv
+      normFormula_valuationSubring_eq_integralClosure
         (K := K) (L := L) V hval R.valuation
     have hsub : W = R := by
       simpa only [ValuationSubring.valuationSubring_valuation] using

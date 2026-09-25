@@ -121,6 +121,9 @@ theorem finitePlaceFieldPrincipalUnits_map_eq_localHigherUnitGroup
         _ = x := hyx
 
 open scoped Classical in
+open _root_.GlobalClassFieldTheory.Reciprocity renaming
+  finitePlaceLocalArtinCompletionIsNonarchimedeanLocalField →
+    finitePlaceLocalArtinCompletionIsNonarchimedeanLocalField in
 /-- A ray-class higher unit has valuation zero after transport to the
 absolute-value completion used by the finite-place Artin map.  This is the
 pointwise endpoint of
@@ -134,7 +137,7 @@ theorem finitePlaceCompletion_valuationMap_eq_zero_of_mem_localHigherUnitGroup
     letI : ValuativeRel vK.Completion :=
       _root_.GlobalClassFieldTheory.Reciprocity.finitePlaceLocalArtinCompletionValuativeRel v
     letI : IsNonarchimedeanLocalField vK.Completion :=
-      _root_.GlobalClassFieldTheory.Reciprocity.finitePlaceLocalArtinCompletionIsNonarchimedeanLocalField v
+      finitePlaceLocalArtinCompletionIsNonarchimedeanLocalField v
     IsNonarchimedeanLocalField.valuationMap vK.Completion
         (Additive.ofMul
           ((_root_.finitePlaceCompletionUnitsContinuousMulEquiv v).symm x)) =
@@ -143,7 +146,7 @@ theorem finitePlaceCompletion_valuationMap_eq_zero_of_mem_localHigherUnitGroup
   let : ValuativeRel vK.Completion :=
     _root_.GlobalClassFieldTheory.Reciprocity.finitePlaceLocalArtinCompletionValuativeRel v
   let : IsNonarchimedeanLocalField vK.Completion :=
-    _root_.GlobalClassFieldTheory.Reciprocity.finitePlaceLocalArtinCompletionIsNonarchimedeanLocalField v
+    finitePlaceLocalArtinCompletionIsNonarchimedeanLocalField v
   have hxMap :
       x ∈
         (LocalFieldTheory.fieldPrincipalUnits vK.Completion n).map
@@ -183,7 +186,7 @@ open scoped Classical in
 in the transported local norm subgroup is equivalent to containment of the
 corresponding field principal-unit group in the local norm subgroup. -/
 theorem
-    localHigherUnitGroup_le_chosenFinitePlaceLocalNormSubgroup_iff_fieldPrincipalUnits_le_localNormSubgroup
+    localHigherUnitGroup_le_normSubgroup_iff_fieldPrincipalUnits_le_normSubgroup
     (v : HeightOneSpectrum (𝓞 K)) (n : ℕ) :
     let vK := HeightOneSpectrum.adicAbv K v
     let hvK : vK.IsNontrivial :=
@@ -403,7 +406,7 @@ theorem ideleClassNormLocalHigherUnitExponent_eq_localConductorExponent
           LocalFieldTheory.localNormSubgroup
             vK.Completion E := by
     simpa [vK, hvK, hvKna, w, E] using
-      (localHigherUnitGroup_le_chosenFinitePlaceLocalNormSubgroup_iff_fieldPrincipalUnits_le_localNormSubgroup
+      (localHigherUnitGroup_le_normSubgroup_iff_fieldPrincipalUnits_le_normSubgroup
         (K := K) (L := L) v n)
   apply le_antisymm
   · apply

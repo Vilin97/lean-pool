@@ -76,8 +76,7 @@ is canonically the scalar extension
 `(𝔸_K ⊗[K] M) ⊗[K] L`.
 -/
 def pushoutTowerAdeleEquiv :
-    TowerRelativeAdeleRing K M N ≃ₐ[
-      RelativeAdeleRing K M]
+    TowerRelativeAdeleRing K M N ≃ₐ[RelativeAdeleRing K M]
       BaseChangedRelativeAdeleRing K M L := by
   letI : Algebra N (TowerRelativeAdeleRing K M N) :=
     Algebra.TensorProduct.rightAlgebra

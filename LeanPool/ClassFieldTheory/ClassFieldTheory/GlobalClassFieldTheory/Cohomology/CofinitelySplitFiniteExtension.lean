@@ -19,7 +19,8 @@ modules; this file contains only the global class-field-theoretic
 conclusion.
 -/
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 
 noncomputable section
 

@@ -157,6 +157,9 @@ theorem valuation_coeff_prod_X_sub_C_lt_coeff_zero_of_one_lt
   DiscreteValuationField.valuation_coeff_prod_X_sub_C_lt_coeff_zero_of_one_lt
     w s hs j hj
 
+open DiscreteValuationField renaming
+  not_all_roots_same_valuation_of_primitive_irreducible_endpoints_nonunit →
+    not_all_roots_same_valuation_of_primitive_irreducible_endpoints_nonunit in
 /-- In the nonmonic branch of Artin's argument, uniqueness on the splitting
 field forces every root to have value greater than one.  Vieta's formula then
 puts every positive-degree coefficient in the maximal ideal, so the
@@ -194,7 +197,7 @@ theorem primitive_irreducible_reduction_natDegree_zero_of_leadingCoeff_nonunit
   have hconst : IsUnit (Q.coeff 0) := by
     by_contra hconst
     exact
-      (DiscreteValuationField.not_all_roots_same_valuation_of_primitive_irreducible_endpoints_nonunit
+      (not_all_roots_same_valuation_of_primitive_irreducible_endpoints_nonunit
         V W hQprim hQirr hsplit hlead hconst hα) hall
   have hconstBase : V.valuation (Q.coeff 0 : K) = 1 :=
     (V.valuation_eq_one_iff (Q.coeff 0)).mp hconst

@@ -235,8 +235,8 @@ instance equalCharacteristicCompletedLevelField_isAlgebraic
 /-- Comparison with the library splitting-field model. -/
 noncomputable def equalCharacteristicCompletedLevelFieldEquivSplittingField
     (F : LocalField.{u, v} K) (n : ℕ) :
-    equalCharacteristicCompletedLevelField F n ≃ₐ[
-      equalCharacteristicCompletedUnramifiedField F.residueField]
+    equalCharacteristicCompletedLevelField F n ≃ₐ[equalCharacteristicCompletedUnramifiedField
+      F.residueField]
       (equalCharacteristicCompletedPrimitivePolynomial F n).SplittingField :=
   AlgEquiv.refl
 

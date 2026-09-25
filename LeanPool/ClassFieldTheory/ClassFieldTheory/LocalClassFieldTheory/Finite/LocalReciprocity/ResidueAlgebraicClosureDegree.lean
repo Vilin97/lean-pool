@@ -39,13 +39,16 @@ variable (k : Type u) [Field k] [Fintype k]
 variable (Omega : Type v) [Field Omega] [Algebra k Omega]
   [Algebra.IsAlgebraic k Omega] [IsAlgClosed Omega]
 
-private instance finiteResidueBaseRingCharPrime : Fact (ringChar k).Prime :=
+omit [Fintype k] in
+private instance finiteResidueBaseRingCharPrime [Finite k] : Fact (ringChar k).Prime :=
   ⟨CharP.char_is_prime k (ringChar k)⟩
 
 private instance residueAlgebraicClosureIsAlgClosure : IsAlgClosure k Omega :=
   ⟨inferInstance, inferInstance⟩
 
-private instance residueAlgebraicClosureIsGalois : IsGalois k Omega := by
+omit [Fintype k] in
+private instance residueAlgebraicClosureIsGalois [Finite k] : IsGalois k Omega := by
+  let := Fintype.ofFinite k
   infer_instance
 
 private instance residueAlgebraicClosureGaloisT2 :

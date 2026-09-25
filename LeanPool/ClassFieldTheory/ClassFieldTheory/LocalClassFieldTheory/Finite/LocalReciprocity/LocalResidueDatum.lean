@@ -389,8 +389,8 @@ private theorem localSeparableResidueAlgAction_continuous :
 /-- The continuous residue action on the chosen residue algebraic closure. -/
 noncomputable def localSeparableResidueAlgAction :
     Gal(SeparableClosure K/K) →ₜ*
-      (selectedResidueField (localSeparableValuationSubring K) ≃ₐ[
-        decompositionResidueField K (localSeparableValuationSubring K)]
+      (selectedResidueField (localSeparableValuationSubring K) ≃ₐ[decompositionResidueField K
+        (localSeparableValuationSubring K)]
           selectedResidueField (localSeparableValuationSubring K)) where
   toMonoidHom :=
     residueAlgActionOfEqTop K

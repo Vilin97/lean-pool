@@ -311,8 +311,7 @@ theorem rationalCyclotomicPrincipalFinitePlaceCharacter_at_prime_succ_formula
     rfl
   have hInput := hSpec.trans (hFactor.trans hLocal)
   have hCharacter := congrArg
-    (fun sigma : Gal(
-        KummerTheory.rationalCyclotomicLevel
+    (fun sigma : Gal(KummerTheory.rationalCyclotomicLevel
           ⟨p.1 ^ (n + 1), pow_pos p.2.pos (n + 1)⟩/ℚ) =>
       IsCyclotomicExtension.Rat.galEquivZMod
         (p.1 ^ (n + 1))

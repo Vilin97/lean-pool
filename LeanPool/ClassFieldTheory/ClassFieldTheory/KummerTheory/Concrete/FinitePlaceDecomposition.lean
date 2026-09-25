@@ -21,7 +21,8 @@ the decomposition field.  The only Kummer input is the usual fact that
 two roots with the same `n`-th power differ by an `n`-th root of unity.
 -/
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification
 open LocalClassFieldTheory

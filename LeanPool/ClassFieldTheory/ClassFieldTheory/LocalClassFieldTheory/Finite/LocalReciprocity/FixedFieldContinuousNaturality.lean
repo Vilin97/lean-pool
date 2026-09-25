@@ -801,7 +801,8 @@ noncomputable def baseNormResidueMap
     (abstractFixedField k (SeparableClosure k) T.base)ˣ →ₜ*
       Abelianization
         Gal(abstractRelativeFixedField k (SeparableClosure k)
-            (T.top_le_intermediate.trans T.intermediate_le_base)/abstractFixedField k (SeparableClosure k) T.base) := by
+            (T.top_le_intermediate.trans T.intermediate_le_base)/abstractFixedField k
+              (SeparableClosure k) T.base) := by
   letI := T.totalNormal
   letI := T.totalFinite
   letI := T.baseAbsoluteFinite

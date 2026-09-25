@@ -47,7 +47,7 @@ variable
 the congruence subgroup at its exact narrow finite conductor precisely when
 the corresponding ray class number equals the extension degree. -/
 theorem
-    ideleClassNorm_range_eq_narrowFiniteConductorCongruenceSubgroup_iff_rayClassGroup_card_eq_extensionDegree :
+    ideleClassNorm_range_eq_congruenceSubgroup_iff_rayClassGroup_card_eq_extensionDegree :
     (_root_.ideleClassNorm K L).range =
         RayClass.Modulus.congruenceSubgroup
           (RayClass.Modulus.narrowOfFinite
@@ -60,7 +60,7 @@ theorem
   simpa only [
     ← Subgroup.index_eq_card,
     ClassFieldAxiom.ideleClassNorm_index_eq_finrank_cyclic K L] using
-      (ideleClassNorm_range_eq_narrowFiniteConductorCongruenceSubgroup_iff_rayClassGroup_card_eq_normQuotient_card
+      (ideleClassNorm_range_eq_congruenceSubgroup_iff_rayClassGroup_card_eq_normQuotient_card
         (K := K) (L := L))
 
 /-- The canonical map from the ray class group at the exact narrow finite

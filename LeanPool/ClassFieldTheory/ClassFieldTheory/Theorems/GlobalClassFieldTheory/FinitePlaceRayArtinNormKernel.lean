@@ -26,6 +26,9 @@ noncomputable section
 
 namespace ClassFieldTheory
 
+open GlobalClassFieldTheory.Reciprocity renaming
+  chosenFinitePlaceArtinMonoidHom_eq_one_iff_chosenLocalNorm →
+    chosenFinitePlaceArtinMonoidHom_eq_one_iff_chosenLocalNorm in
 /-- At every finite place, including a ramified place, the ray-class Artin
 map has the local tensor-norm subgroup as its kernel after the canonical
 one-place map into the ray class group. -/
@@ -114,7 +117,7 @@ theorem exists_finitePlaceRayArtin_normKernel
         (IdeleGroup.finitePlaceIdeleClass v x) =
           GlobalClassFieldTheory.Reciprocity.chosenFinitePlaceArtinMonoidHom
             (K := K) (L := L) v x from hcompat]
-    rw [GlobalClassFieldTheory.Reciprocity.chosenFinitePlaceArtinMonoidHom_eq_one_iff_chosenLocalNorm,
+    rw [chosenFinitePlaceArtinMonoidHom_eq_one_iff_chosenLocalNorm,
       ← finitePlaceLocalTensorNorm_range_eq_chosenLocalNormSubgroup
         (K := K) (L := L) v]
     change x ∈ (localTensorNorm (K := K) (L := L) v).range ↔

@@ -580,7 +580,7 @@ private theorem smallHilbertClassFieldExplicitNormMembershipStatement_proof :
       K₀.field H N.field hHK hMH hHKnormal hMHnormal c hmembership
 
 open scoped Classical in
-private noncomputable def
+private theorem
     smallHilbertClassFieldExplicitNormMembershipData_proof :
     SmallHilbertClassFieldExplicitNormMembershipData K where
   membership := smallHilbertClassFieldExplicitNormMembershipStatement_proof K
@@ -643,7 +643,7 @@ private structure SmallHilbertClassFieldSecondNormRangeContainmentData
   containment : smallHilbertClassFieldSecondNormRangeContainment K
 
 open scoped Classical in
-private noncomputable def
+private theorem
     smallHilbertClassFieldSecondNormRangeContainmentData_proof :
     SmallHilbertClassFieldSecondNormRangeContainmentData K where
   containment := by

@@ -180,6 +180,12 @@ theorem fieldUnitLogHomWithUniformizerValue_eq_of_principal_decomposition
       (((1 : CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F), u),
         (1 : Multiplicative ℤ)) hx
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF →
+    fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF in
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply →
+    fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply in
 /-- On first principal units, the corrected field logarithm agrees with the
 given principal-unit logarithm, for the decomposition supplied by a chosen
 uniformizer. -/
@@ -191,17 +197,17 @@ theorem fieldUnitLogHomWithUniformizerValue_eq_of_completeDVF_principal
       Multiplicative A) (c : A)
     (u : (LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup F) 1) :
     fieldUnitLogHomWithUniformizerValue F
-        (CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
+        (fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
           F hπ) φ c
         (CompleteDVF.higherPrincipalUnitGroup.valuationSubringUnitFieldUnitHom F
           (u : F.valuationSubringˣ)) = φ u := by
   apply fieldUnitLogHomWithUniformizerValue_eq_of_principal_decomposition
     (F := F)
     (d :=
-      CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
+      fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
         F hπ)
     (φ := φ) (c := c) (u := u)
-  simp [CompleteDVF.higherPrincipalUnitGroup.fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply]
+  simp [fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply]
 
 /-- Continuity of the corrected logarithm on the three decomposition factors.
 The uniformizer coordinate is discrete, while continuity on the principal-unit

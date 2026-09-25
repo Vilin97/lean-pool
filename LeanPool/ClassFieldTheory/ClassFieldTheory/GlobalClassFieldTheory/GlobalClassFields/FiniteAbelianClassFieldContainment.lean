@@ -705,7 +705,6 @@ theorem ideleClassNorm_range_le_of_algHom
     [Field L₂] [NumberField L₂]
     [Algebra K L₁] [Algebra K L₂]
     [FiniteDimensional K L₁] [FiniteDimensional K L₂]
-
     (f : L₁ →ₐ[K] L₂) :
     (_root_.ideleClassNorm K L₂).range ≤
       (_root_.ideleClassNorm K L₁).range := by

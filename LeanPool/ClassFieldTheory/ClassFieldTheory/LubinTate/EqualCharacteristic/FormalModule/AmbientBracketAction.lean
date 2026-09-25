@@ -76,6 +76,9 @@ noncomputable def equalCharacteristicLubinTateAmbientPiEnd
       mul_add]
     abel
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank →
+    residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank in
 /-- The ambient `π`-endomorphism is Frobenius plus multiplication by `t`. -/
 @[simp]
 theorem equalCharacteristicLubinTateAmbientPiEnd_apply
@@ -89,7 +92,7 @@ theorem equalCharacteristicLubinTateAmbientPiEnd_apply
         (CompleteDVF.higherPrincipalUnitGroup.iwasawaResidueRank F) x +
       t * x = _
   rw [iterateFrobenius_def]
-  rw [CompleteDVF.higherPrincipalUnitGroup.residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F]
+  rw [residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F]
 
 /-- Multiplication by an embedded residue-field coefficient. -/
 noncomputable def equalCharacteristicLubinTateAmbientCoefficientEnd

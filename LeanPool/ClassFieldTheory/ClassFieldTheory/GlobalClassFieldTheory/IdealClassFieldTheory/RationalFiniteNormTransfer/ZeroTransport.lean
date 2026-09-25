@@ -40,7 +40,7 @@ local instance
   RationalFiniteNormTransferInternal.ideleClassSubgroupNormal N
 
 /-- Internal finite-norm-class-zero to quotient-zero step. -/
-private noncomputable def
+private theorem
     rationalFiniteNormTransferCanonicalFiniteNormClassZero_implies_finiteNormRepresentativeQuotientZero
     (K H L : ClosedSubgroup
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
@@ -116,7 +116,7 @@ private noncomputable def
       simpa only [b] using hincludeCanonical.symm
 
 /-- Internal evaluation of the quotient equivalence at zero. -/
-private noncomputable def
+private theorem
     rationalFiniteNormTransferFiniteNormRepresentativeQuotientZero_implies_targetZero
     (K H L : ClosedSubgroup
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
@@ -181,7 +181,7 @@ private noncomputable def
   exact htransportZero.trans e.map_zero
 
 /-- Internal quotient-target zero to absolute norm-membership step. -/
-private noncomputable def
+private theorem
     rationalFiniteNormTransferFiniteNormRepresentativeTargetZero_implies_membership
     (K H L : ClosedSubgroup
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
@@ -266,7 +266,7 @@ private noncomputable def
 
 /-- Internal replacement of the absolute finite-norm representative by the
 canonical ordinary extension representative. -/
-private noncomputable def
+private theorem
     rationalFiniteNormTransferFiniteNormRepresentativeMembership_implies_canonicalAbsoluteMembership
     (K H L : ClosedSubgroup
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))

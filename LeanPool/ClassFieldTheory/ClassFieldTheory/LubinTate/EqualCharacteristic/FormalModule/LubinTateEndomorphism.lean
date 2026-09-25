@@ -82,6 +82,9 @@ noncomputable def equalCharacteristicLubinTatePiEnd
       mul_add]
     abel
 
+open CompleteDVF.higherPrincipalUnitGroup renaming
+  residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank →
+    residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank in
 /-- The Lubin–Tate `π`-endomorphism is Frobenius plus uniformizer multiplication. -/
 @[simp]
 theorem equalCharacteristicLubinTatePiEnd_apply
@@ -96,7 +99,7 @@ theorem equalCharacteristicLubinTatePiEnd_apply
         (CompleteDVF.higherPrincipalUnitGroup.iwasawaResidueRank F) x +
       equalCharacteristicLaurentUniformizer F * x = _
   rw [iterateFrobenius_def]
-  rw [CompleteDVF.higherPrincipalUnitGroup.residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F]
+  rw [residueField_card_eq_residueCharacteristic_pow_iwasawaResidueRank F]
 
 /-- Multiplication by a residue-field coefficient, regarded as an additive
 endomorphism of the Laurent-series field. -/

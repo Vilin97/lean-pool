@@ -25,7 +25,8 @@ For a finite place `W` of `L`, `finitePlaceBelow W` is its contraction to
 closure shows that the centres are precisely the finite places above `v`.
 -/
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 
 noncomputable section
 

@@ -205,6 +205,284 @@ theorem relativeIdeleNorm_range_le_allFinitePlaceLocalNormCondition
     _root_.relativeIdeleNorm_finiteComponent_mem_chosenLocalNormSubgroup
       (K := K) (L := L) v b
 
+private theorem exists_supported_idele_same_class_local_powers
+    {K : Type} [Field K] [NumberField K]
+    (n : ℕ+) (S' T : Finset (HeightOneSpectrum (𝓞 K))) (hST : Disjoint S' T)
+    (hSurj : Function.Surjective (sUnitLocalUnitPowerMap (K := K) n S' T hST))
+    (u : IdeleGroup K)
+    (hu : u ∈ IdeleGroup.supportedAt (K := K) (S' : Set (HeightOneSpectrum (𝓞 K)))) :
+    ∃ d : IdeleGroup K,
+      d ∈ IdeleGroup.supportedAt (K := K) (S' : Set (HeightOneSpectrum (𝓞 K))) ∧
+      (∀ w : T, IdeleGroup.finiteComponent w.1 d ∈
+        (powMonoidHom (n : ℕ) : (w.1.adicCompletion K)ˣ →* (w.1.adicCompletion K)ˣ).range) ∧
+      QuotientGroup.mk' (IdeleGroup.principalSubgroup K) d =
+        QuotientGroup.mk' (IdeleGroup.principalSubgroup K) u := by
+  classical
+  have hT_not_mem_S (w : T) : w.1 ∉ S' := by
+    intro hwS
+    exact (Finset.disjoint_left.mp hST) hwS w.2
+  let uLocalUnit (w : T) :
+      (w.1.adicCompletionIntegers K)ˣ :=
+    (w.1.adicCompletionIntegers K).toSubmonoid.unitsEquivUnitsType
+      ⟨IdeleGroup.finiteComponent w.1 u,
+        (IdeleGroup.mem_supportedAt_iff
+          (K := K)
+          (S' : Set (HeightOneSpectrum (𝓞 K))) u).mp
+            hu w.1 (by simpa using hT_not_mem_S w)⟩
+  let target :
+      ∀ w : T,
+        (w.1.adicCompletionIntegers K)ˣ ⧸
+          (powMonoidHom (n : ℕ) :
+            (w.1.adicCompletionIntegers K)ˣ →*
+              (w.1.adicCompletionIntegers K)ˣ).range :=
+    fun w =>
+      QuotientGroup.mk'
+        (powMonoidHom (n : ℕ) :
+          (w.1.adicCompletionIntegers K)ˣ →*
+            (w.1.adicCompletionIntegers K)ˣ).range
+        (uLocalUnit w)
+  obtain ⟨s, hs⟩ := hSurj target
+  have hsSupported :
+      IdeleGroup.principalIdele K (s : Kˣ) ∈
+        IdeleGroup.supportedAt
+          (K := K)
+          (S' : Set (HeightOneSpectrum (𝓞 K))) :=
+    (_root_.principalIdele_mem_supportedAt_iff_sUnit
+      (L := K) S' (s : Kˣ)).2 s.2
+  let sLocalUnit (w : T) :
+      (w.1.adicCompletionIntegers K)ˣ :=
+    (w.1.adicCompletionIntegers K).toSubmonoid.unitsEquivUnitsType
+      ⟨IdeleGroup.finiteComponent w.1
+          (IdeleGroup.principalIdele K (s : Kˣ)),
+        (IdeleGroup.mem_supportedAt_iff
+          (K := K)
+          (S' : Set (HeightOneSpectrum (𝓞 K)))
+          (IdeleGroup.principalIdele K (s : Kˣ))).mp
+            hsSupported w.1 (by simpa using hT_not_mem_S w)⟩
+  let d : IdeleGroup K :=
+    u * (IdeleGroup.principalIdele K (s : Kˣ))⁻¹
+  have hdSupported :
+      d ∈
+        IdeleGroup.supportedAt
+          (K := K)
+          (S' : Set (HeightOneSpectrum (𝓞 K))) := by
+    dsimp only [d]
+    exact
+      (IdeleGroup.supportedAt
+        (K := K)
+        (S' : Set (HeightOneSpectrum (𝓞 K)))).mul_mem
+          hu
+          ((IdeleGroup.supportedAt
+            (K := K)
+            (S' : Set (HeightOneSpectrum (𝓞 K)))).inv_mem
+              hsSupported)
+  have hTpower (w : T) :
+      IdeleGroup.finiteComponent w.1 d ∈
+        (powMonoidHom (n : ℕ) :
+          (w.1.adicCompletion K)ˣ →*
+            (w.1.adicCompletion K)ˣ).range := by
+    have hw := congrFun hs w
+    change
+      QuotientGroup.mk'
+          (powMonoidHom (n : ℕ) :
+            (w.1.adicCompletionIntegers K)ˣ →*
+              (w.1.adicCompletionIntegers K)ˣ).range
+          (sLocalUnit w) =
+        QuotientGroup.mk'
+          (powMonoidHom (n : ℕ) :
+            (w.1.adicCompletionIntegers K)ˣ →*
+              (w.1.adicCompletionIntegers K)ˣ).range
+          (uLocalUnit w) at hw
+    have hIntegerPower :
+        uLocalUnit w / sLocalUnit w ∈
+          (powMonoidHom (n : ℕ) :
+            (w.1.adicCompletionIntegers K)ˣ →*
+              (w.1.adicCompletionIntegers K)ˣ).range :=
+      (QuotientGroup.eq_iff_div_mem).mp hw.symm
+    let toField :
+        (w.1.adicCompletionIntegers K)ˣ →*
+          (w.1.adicCompletion K)ˣ :=
+      Units.map
+        (w.1.adicCompletionIntegers K).subtype.toMonoidHom
+    obtain ⟨z, hz⟩ := hIntegerPower
+    have hFieldPower :
+        toField (uLocalUnit w / sLocalUnit w) ∈
+          (powMonoidHom (n : ℕ) :
+            (w.1.adicCompletion K)ˣ →*
+              (w.1.adicCompletion K)ˣ).range := by
+      refine ⟨toField z, ?_⟩
+      change
+        (toField z) ^ (n : ℕ) =
+          toField (uLocalUnit w / sLocalUnit w)
+      simpa only [powMonoidHom_apply, map_pow] using
+        congrArg toField hz
+    have huToField :
+        toField (uLocalUnit w) =
+          IdeleGroup.finiteComponent w.1 u := by
+      apply Units.ext
+      rfl
+    have hsToField :
+        toField (sLocalUnit w) =
+          IdeleGroup.finiteComponent w.1
+            (IdeleGroup.principalIdele K (s : Kˣ)) := by
+      apply Units.ext
+      rfl
+    simpa only [d, div_eq_mul_inv, map_mul, map_inv,
+      huToField, hsToField] using hFieldPower
+  refine ⟨d, hdSupported, hTpower, ?_⟩
+  have hsOne : QuotientGroup.mk' (IdeleGroup.principalSubgroup K)
+      (IdeleGroup.principalIdele K (s : Kˣ)) = 1 :=
+    (QuotientGroup.eq_one_iff _).mpr ⟨(s : Kˣ), rfl⟩
+  simp only [d, map_mul, map_inv, hsOne, inv_one]
+  exact mul_one (QuotientGroup.mk' (IdeleGroup.principalSubgroup K) u)
+
+open scoped Classical in
+private theorem ideleClassNorm_range_eq_top_of_local_power_surjectivity
+    {K M : Type} [Field K] [NumberField K] [Field M] [NumberField M]
+    [Algebra K M] [FiniteDimensional K M] [IsAbelianGalois K M]
+    [(RelativeIdeleGroup.principalSubgroup K M).Normal]
+    (n : ℕ+) (S' T : Finset (HeightOneSpectrum (𝓞 K))) (hST : Disjoint S' T)
+    (hSurj : Function.Surjective (sUnitLocalUnitPowerMap (K := K) n S' T hST))
+    (hLarge : IdeleGroup.supportedAt (K := K) (S' : Set (HeightOneSpectrum (𝓞 K))) ⊔
+      IdeleGroup.principalSubgroup K = ⊤)
+    (hSplitS : ∀ w : HeightOneSpectrum (𝓞 K), w ∈ S' →
+      _root_.FinitePlaceSplitsCompletely (K := K) (L := M) w)
+    (hInfiniteTop : ∀ w : InfinitePlace K,
+      _root_.infiniteTensorNormSubgroup (K := K) (L := M) w = ⊤)
+    (hAway : ∀ w : HeightOneSpectrum (𝓞 K), w ∉ S' ∪ T →
+      _root_.ChosenFinitePlaceIsUnramified (K := K) (L := M) w)
+    (hPower : ∀ w : HeightOneSpectrum (𝓞 K),
+      (powMonoidHom (n : ℕ) : (w.adicCompletion K)ˣ →* (w.adicCompletion K)ˣ).range ≤
+        _root_.chosenFinitePlaceLocalNormSubgroup (K := K) (L := M) w) :
+    (RelativeIdeleGroup.Cohomology.ideleClassNorm K M).range = ⊤ := by
+  classical
+  apply top_unique
+  intro c _
+  obtain ⟨a, rfl⟩ :=
+    QuotientGroup.mk'_surjective
+      (IdeleGroup.principalSubgroup K) c
+  have ha :
+      a ∈
+        IdeleGroup.supportedAt
+            (K := K)
+            (S' : Set (HeightOneSpectrum (𝓞 K))) ⊔
+          IdeleGroup.principalSubgroup K := by
+    rw [hLarge]
+    exact Subgroup.mem_top a
+  rcases Subgroup.mem_sup.mp ha with
+    ⟨u, hu, q, hq, huq⟩
+  obtain ⟨d, hdSupported, hTpower, hdClass⟩ :=
+    exists_supported_idele_same_class_local_powers n S' T hST hSurj u hu
+  have hInfinite :
+      ∀ w : InfinitePlace K,
+        IdeleGroup.infiniteComponent w d ∈
+          _root_.infiniteTensorNormSubgroup
+            (K := K) (L := M) w := by
+    intro w
+    rw [hInfiniteTop w]
+    exact Subgroup.mem_top _
+  have hFinite :
+      ∀ w : HeightOneSpectrum (𝓞 K),
+        IdeleGroup.finiteComponent w d ∈
+          (localTensorNorm
+            (K := K) (L := M) w).range := by
+    intro w
+    rw [
+      _root_.finitePlaceLocalTensorNorm_range_eq_chosenLocalNormSubgroup
+        (K := K) (L := M) w]
+    by_cases hwS : w ∈ S'
+    · rw [
+        _root_.chosenFinitePlaceLocalNormSubgroup_eq_top_of_splitsCompletely
+          (K := K) (L := M) w (hSplitS w hwS)]
+      exact Subgroup.mem_top _
+    · by_cases hwT : w ∈ T
+      · exact hPower w (hTpower ⟨w, hwT⟩)
+      · have hwAway : w ∉ S' ∪ T := by
+          intro hw
+          rcases Finset.mem_union.mp hw with hw | hw
+          · exact hwS hw
+          · exact hwT hw
+        apply
+          _root_.adicCompletionIntegerUnits_le_chosenFinitePlaceLocalNormSubgroup
+            (K := K) (L := M) w (hAway w hwAway)
+        exact
+          (IdeleGroup.mem_supportedAt_iff
+            (K := K)
+            (S' : Set (HeightOneSpectrum (𝓞 K))) d).mp
+              hdSupported w (by simpa using hwS)
+  have hdNorm :
+      d ∈ (RelativeIdeleGroup.norm K M).range :=
+    (_root_.mem_relativeIdeleNorm_range_iff_localTensorNorms
+      (K := K) (L := M) d).2
+        ⟨hInfinite, hFinite⟩
+  obtain ⟨z, hz⟩ := hdNorm
+  refine
+    ⟨QuotientGroup.mk'
+        (RelativeIdeleGroup.principalSubgroup K M) z, ?_⟩
+  rw [RelativeIdeleGroup.Cohomology.ideleClassNorm_mk, hz]
+  change
+    QuotientGroup.mk'
+        (IdeleGroup.principalSubgroup K) d =
+      QuotientGroup.mk'
+        (IdeleGroup.principalSubgroup K) a
+  have hqOne : QuotientGroup.mk' (IdeleGroup.principalSubgroup K) q = 1 :=
+    (QuotientGroup.eq_one_iff q).mpr hq
+  rw [hdClass, ← huq, map_mul, hqOne]
+  exact (mul_one (QuotientGroup.mk' (IdeleGroup.principalSubgroup K) u)).symm
+
+private theorem unit_mem_power_range_of_ideleClassNorm_top
+    {K M : Type} [Field K] [NumberField K] [Field M] [NumberField M]
+    [Algebra K M] [FiniteDimensional K M] [IsAbelianGalois K M]
+    [(RelativeIdeleGroup.principalSubgroup K M).Normal] [IsCyclic Gal(M/K)]
+    (n : ℕ+) (b : Kˣ) (beta : Mˣ)
+    (hbeta : beta ^ (n : ℕ) = Units.map (algebraMap K M).toMonoidHom b)
+    (hNormTop : (RelativeIdeleGroup.Cohomology.ideleClassNorm K M).range = ⊤) :
+    b ∈ (powMonoidHom (n : ℕ) : Kˣ →* Kˣ).range := by
+  classical
+  obtain ⟨sigma, hsigma⟩ :=
+    IsCyclic.exists_generator (α := M ≃ₐ[K] M)
+  have hLower :
+      Module.finrank K M ≤
+        (RelativeIdeleGroup.Cohomology.ideleClassNorm K M).range.index :=
+    Cohomology.finrank_le_ideleClassNorm_index
+      (K := K) (L := M) sigma hsigma
+  have hDegreeLe :
+      Module.finrank K M ≤ 1 := by
+    simpa only [hNormTop, Subgroup.index_top] using hLower
+  have hDegree :
+      Module.finrank K M = 1 :=
+    le_antisymm hDegreeLe Module.finrank_pos
+  have hAlgMap :
+      Function.Bijective (algebraMap K M) :=
+    (Algebra.finrank_eq_one_iff_bijective_algebraMap).mp
+      hDegree
+  obtain ⟨x, hx⟩ :=
+    hAlgMap.2 (beta : M)
+  have hx_ne : x ≠ 0 := by
+    intro hx_zero
+    apply beta.ne_zero
+    calc
+      (beta : M) = algebraMap K M x := hx.symm
+      _ = 0 := by rw [hx_zero, map_zero]
+  let xUnit : Kˣ :=
+    Units.mk0 x hx_ne
+  apply
+    (MonoidHom.mem_range
+      (G := Kˣ)).mpr
+  refine ⟨xUnit, ?_⟩
+  rw [powMonoidHom_apply]
+  apply Units.ext
+  apply (algebraMap K M).injective
+  change
+    algebraMap K M (x ^ (n : ℕ)) =
+      algebraMap K M (b : K)
+  calc
+    algebraMap K M (x ^ (n : ℕ)) =
+        (beta : M) ^ (n : ℕ) := by
+      rw [map_pow, hx]
+    _ = algebraMap K M (b : K) := by
+      simpa using congrArg Units.val hbeta
+
 open scoped Classical in
 /-- Equality between the power/local-unit subgroup and the everywhere-local
 norm condition for the Kummer-selected prime set.  Starting from an arbitrary
@@ -398,236 +676,15 @@ theorem
       simpa only [M] using
         KummerTheory.chosenSimpleKummerExtension_chosenFinitePlaceIsUnramified_of_valuation_eq_one
           (K := K) n hnK hmu b w hbVal hnVal
-    have hNormTop :
-        (RelativeIdeleGroup.Cohomology.ideleClassNorm K M).range = ⊤ := by
-      apply top_unique
-      intro c _
-      obtain ⟨a, rfl⟩ :=
-        QuotientGroup.mk'_surjective
-          (IdeleGroup.principalSubgroup K) c
-      have ha :
-          a ∈
-            IdeleGroup.supportedAt
-                (K := K)
-                (S' : Set (HeightOneSpectrum (𝓞 K))) ⊔
-              IdeleGroup.principalSubgroup K := by
-        rw [hLarge]
-        exact Subgroup.mem_top a
-      rcases Subgroup.mem_sup.mp ha with
-        ⟨u, hu, q, hq, huq⟩
-      have hT_not_mem_S (w : T) : w.1 ∉ S' := by
-        intro hwS
-        exact (Finset.disjoint_left.mp hST) hwS w.2
-      let uLocalUnit (w : T) :
-          (w.1.adicCompletionIntegers K)ˣ :=
-        (w.1.adicCompletionIntegers K).toSubmonoid.unitsEquivUnitsType
-          ⟨IdeleGroup.finiteComponent w.1 u,
-            (IdeleGroup.mem_supportedAt_iff
-              (K := K)
-              (S' : Set (HeightOneSpectrum (𝓞 K))) u).mp
-                hu w.1 (by simpa using hT_not_mem_S w)⟩
-      let target :
-          ∀ w : T,
-            (w.1.adicCompletionIntegers K)ˣ ⧸
-              (powMonoidHom (n : ℕ) :
-                (w.1.adicCompletionIntegers K)ˣ →*
-                  (w.1.adicCompletionIntegers K)ˣ).range :=
-        fun w =>
-          QuotientGroup.mk'
-            (powMonoidHom (n : ℕ) :
-              (w.1.adicCompletionIntegers K)ˣ →*
-                (w.1.adicCompletionIntegers K)ˣ).range
-            (uLocalUnit w)
-      obtain ⟨s, hs⟩ := hSurj target
-      have hsSupported :
-          IdeleGroup.principalIdele K (s : Kˣ) ∈
-            IdeleGroup.supportedAt
-              (K := K)
-              (S' : Set (HeightOneSpectrum (𝓞 K))) :=
-        (_root_.principalIdele_mem_supportedAt_iff_sUnit
-          (L := K) S' (s : Kˣ)).2 s.2
-      let sLocalUnit (w : T) :
-          (w.1.adicCompletionIntegers K)ˣ :=
-        (w.1.adicCompletionIntegers K).toSubmonoid.unitsEquivUnitsType
-          ⟨IdeleGroup.finiteComponent w.1
-              (IdeleGroup.principalIdele K (s : Kˣ)),
-            (IdeleGroup.mem_supportedAt_iff
-              (K := K)
-              (S' : Set (HeightOneSpectrum (𝓞 K)))
-              (IdeleGroup.principalIdele K (s : Kˣ))).mp
-                hsSupported w.1 (by simpa using hT_not_mem_S w)⟩
-      let d : IdeleGroup K :=
-        u * (IdeleGroup.principalIdele K (s : Kˣ))⁻¹
-      have hdSupported :
-          d ∈
-            IdeleGroup.supportedAt
-              (K := K)
-              (S' : Set (HeightOneSpectrum (𝓞 K))) := by
-        dsimp only [d]
-        exact
-          (IdeleGroup.supportedAt
-            (K := K)
-            (S' : Set (HeightOneSpectrum (𝓞 K)))).mul_mem
-              hu
-              ((IdeleGroup.supportedAt
-                (K := K)
-                (S' : Set (HeightOneSpectrum (𝓞 K)))).inv_mem
-                  hsSupported)
-      have hTpower (w : T) :
-          IdeleGroup.finiteComponent w.1 d ∈
-            (powMonoidHom (n : ℕ) :
-              (w.1.adicCompletion K)ˣ →*
-                (w.1.adicCompletion K)ˣ).range := by
-        have hw := congrFun hs w
-        change
-          QuotientGroup.mk'
-              (powMonoidHom (n : ℕ) :
-                (w.1.adicCompletionIntegers K)ˣ →*
-                  (w.1.adicCompletionIntegers K)ˣ).range
-              (sLocalUnit w) =
-            QuotientGroup.mk'
-              (powMonoidHom (n : ℕ) :
-                (w.1.adicCompletionIntegers K)ˣ →*
-                  (w.1.adicCompletionIntegers K)ˣ).range
-              (uLocalUnit w) at hw
-        have hIntegerPower :
-            uLocalUnit w / sLocalUnit w ∈
-              (powMonoidHom (n : ℕ) :
-                (w.1.adicCompletionIntegers K)ˣ →*
-                  (w.1.adicCompletionIntegers K)ˣ).range :=
-          (QuotientGroup.eq_iff_div_mem).mp hw.symm
-        let toField :
-            (w.1.adicCompletionIntegers K)ˣ →*
-              (w.1.adicCompletion K)ˣ :=
-          Units.map
-            (w.1.adicCompletionIntegers K).subtype.toMonoidHom
-        obtain ⟨z, hz⟩ := hIntegerPower
-        have hFieldPower :
-            toField (uLocalUnit w / sLocalUnit w) ∈
-              (powMonoidHom (n : ℕ) :
-                (w.1.adicCompletion K)ˣ →*
-                  (w.1.adicCompletion K)ˣ).range := by
-          refine ⟨toField z, ?_⟩
-          change
-            (toField z) ^ (n : ℕ) =
-              toField (uLocalUnit w / sLocalUnit w)
-          simpa only [powMonoidHom_apply, map_pow] using
-            congrArg toField hz
-        have huToField :
-            toField (uLocalUnit w) =
-              IdeleGroup.finiteComponent w.1 u := by
-          apply Units.ext
-          rfl
-        have hsToField :
-            toField (sLocalUnit w) =
-              IdeleGroup.finiteComponent w.1
-                (IdeleGroup.principalIdele K (s : Kˣ)) := by
-          apply Units.ext
-          rfl
-        simpa only [d, div_eq_mul_inv, map_mul, map_inv,
-          huToField, hsToField] using hFieldPower
-      have hInfinite :
-          ∀ w : InfinitePlace K,
-            IdeleGroup.infiniteComponent w d ∈
-              _root_.infiniteTensorNormSubgroup
-                (K := K) (L := M) w := by
-        intro w
-        rw [hInfiniteTop w]
-        exact Subgroup.mem_top _
-      have hFinite :
-          ∀ w : HeightOneSpectrum (𝓞 K),
-            IdeleGroup.finiteComponent w d ∈
-              (localTensorNorm
-                (K := K) (L := M) w).range := by
-        intro w
-        rw [
-          _root_.finitePlaceLocalTensorNorm_range_eq_chosenLocalNormSubgroup
-            (K := K) (L := M) w]
-        by_cases hwS : w ∈ S'
-        · rw [
-            _root_.chosenFinitePlaceLocalNormSubgroup_eq_top_of_splitsCompletely
-              (K := K) (L := M) w (hSplitS w hwS)]
-          exact Subgroup.mem_top _
-        · by_cases hwT : w ∈ T
-          · have hle :
-                (powMonoidHom (n : ℕ) :
-                    (w.adicCompletion K)ˣ →*
-                      (w.adicCompletion K)ˣ).range ≤
-                  _root_.chosenFinitePlaceLocalNormSubgroup
-                    (K := K) (L := M) w := by
-              simpa only [M] using
-                chosenSimpleKummerNthPowerSubgroup_le_chosenFinitePlaceLocalNormSubgroup
-                  (K := K) n hnK hmu b w
-            exact hle (hTpower ⟨w, hwT⟩)
-          · have hwAway : w ∉ S' ∪ T := by
-              intro hw
-              rcases Finset.mem_union.mp hw with hw | hw
-              · exact hwS hw
-              · exact hwT hw
-            apply
-              _root_.adicCompletionIntegerUnits_le_chosenFinitePlaceLocalNormSubgroup
-                (K := K) (L := M) w (hAway w hwAway)
-            exact
-              (IdeleGroup.mem_supportedAt_iff
-                (K := K)
-                (S' : Set (HeightOneSpectrum (𝓞 K))) d).mp
-                  hdSupported w (by simpa using hwS)
-      have hdNorm :
-          d ∈ (RelativeIdeleGroup.norm K M).range :=
-        (_root_.mem_relativeIdeleNorm_range_iff_localTensorNorms
-          (K := K) (L := M) d).2
-            ⟨hInfinite, hFinite⟩
-      obtain ⟨z, hz⟩ := hdNorm
-      refine
-        ⟨QuotientGroup.mk'
-            (RelativeIdeleGroup.principalSubgroup K M) z, ?_⟩
-      rw [RelativeIdeleGroup.Cohomology.ideleClassNorm_mk, hz]
-      change
-        QuotientGroup.mk'
-            (IdeleGroup.principalSubgroup K) d =
-          QuotientGroup.mk'
-            (IdeleGroup.principalSubgroup K) a
-      have hqOne :
-          QuotientGroup.mk'
-              (IdeleGroup.principalSubgroup K) q = 1 :=
-        (QuotientGroup.eq_one_iff q).mpr hq
-      have hsOne :
-          QuotientGroup.mk'
-              (IdeleGroup.principalSubgroup K)
-              (IdeleGroup.principalIdele K (s : Kˣ)) =
-            1 :=
-        (QuotientGroup.eq_one_iff
-          (IdeleGroup.principalIdele K (s : Kˣ))).mpr
-            ⟨(s : Kˣ), rfl⟩
-      change
-        QuotientGroup.mk'
-            (IdeleGroup.principalSubgroup K)
-            (u * (IdeleGroup.principalIdele K (s : Kˣ))⁻¹) =
-          QuotientGroup.mk'
-            (IdeleGroup.principalSubgroup K) a
-      rw [← huq, map_mul, map_inv, hsOne, map_mul, hqOne]
-      simp
+    have hNormTop : (RelativeIdeleGroup.Cohomology.ideleClassNorm K M).range = ⊤ :=
+      ideleClassNorm_range_eq_top_of_local_power_surjectivity
+        n S' T hST hSurj hLarge hSplitS hInfiniteTop hAway
+        (fun w => chosenSimpleKummerNthPowerSubgroup_le_chosenFinitePlaceLocalNormSubgroup
+          (K := K) n hnK hmu b w)
     let : IsCyclic (M ≃ₐ[K] M) := by
       simpa only [M] using
         KummerTheory.chosenSimpleKummerExtension_isCyclic
           K n hnK hmu b
-    obtain ⟨sigma, hsigma⟩ :=
-      IsCyclic.exists_generator (α := M ≃ₐ[K] M)
-    have hLower :
-        Module.finrank K M ≤
-          (RelativeIdeleGroup.Cohomology.ideleClassNorm K M).range.index :=
-      Cohomology.finrank_le_ideleClassNorm_index
-        (K := K) (L := M) sigma hsigma
-    have hDegreeLe :
-        Module.finrank K M ≤ 1 := by
-      simpa only [hNormTop, Subgroup.index_top] using hLower
-    have hDegree :
-        Module.finrank K M = 1 :=
-      le_antisymm hDegreeLe Module.finrank_pos
-    have hAlgMap :
-        Function.Bijective (algebraMap K M) :=
-      (Algebra.finrank_eq_one_iff_bijective_algebraMap).mp
-        hDegree
     let beta : Mˣ :=
       KummerTheory.chosenSimpleKummerRootUnit K n hnK b
     have hbeta :
@@ -635,34 +692,7 @@ theorem
           Units.map (algebraMap K M).toMonoidHom b := by
       simpa only [M, beta] using
         KummerTheory.chosenSimpleKummerRootUnit_pow K n hnK b
-    obtain ⟨x, hx⟩ :=
-      hAlgMap.2 (beta : M)
-    have hx_ne : x ≠ 0 := by
-      intro hx_zero
-      apply beta.ne_zero
-      calc
-        (beta : M) = algebraMap K M x := hx.symm
-        _ = 0 := by rw [hx_zero, map_zero]
-    let xUnit : Kˣ :=
-      Units.mk0 x hx_ne
-    have hbPower :
-        b ∈ (powMonoidHom (n : ℕ) : Kˣ →* Kˣ).range := by
-      apply
-        (MonoidHom.mem_range
-          (G := Kˣ)).mpr
-      refine ⟨xUnit, ?_⟩
-      rw [powMonoidHom_apply]
-      apply Units.ext
-      apply (algebraMap K M).injective
-      change
-        algebraMap K M (x ^ (n : ℕ)) =
-          algebraMap K M (b : K)
-      calc
-        algebraMap K M (x ^ (n : ℕ)) =
-            (beta : M) ^ (n : ℕ) := by
-          rw [map_pow, hx]
-        _ = algebraMap K M (b : K) := by
-          simpa using congrArg Units.val hbeta
+    have hbPower := unit_mem_power_range_of_ideleClassNorm_top n b beta hbeta hNormTop
     exact
       (mem_sUnitNthPowersInField_iff
         (K := K) n (S' ∪ T) b).2

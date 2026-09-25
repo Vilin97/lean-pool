@@ -274,8 +274,7 @@ noncomputable def ramifiedInfinitePlaceOverextensionRestriction
     (v : InfinitePlace K)
     (hRamified :
       (chosenInfinitePlaceAbove (L := L) v).IsRamified K) :
-    Gal(
-      (infinitePlaceComplexificationOverfield
+    Gal((infinitePlaceComplexificationOverfield
         (K := K) (L := L) v)/(ramifiedInfinitePlaceRealFixedField
         (K := K) (L := L) v hRamified)) →*
       Gal(L/K) :=
@@ -427,8 +426,7 @@ theorem
             (K := K) (L := L) v hRamified)
           (infinitePlaceComplexificationOverfield
             (K := K) (L := L) v)).range) ≃*
-        Gal(
-          (infinitePlaceComplexificationOverfield
+        Gal((infinitePlaceComplexificationOverfield
             (K := K) (L := L) v)/(ramifiedInfinitePlaceRealFixedField
             (K := K) (L := L) v hRamified)) :=
     AddEquiv.toMultiplicative
@@ -643,8 +641,7 @@ noncomputable def
     (v : InfinitePlace K)
     (hRamified :
       (chosenInfinitePlaceAbove (L := L) v).IsRamified K) :
-    Gal(
-      (infinitePlaceComplexificationOverfield
+    Gal((infinitePlaceComplexificationOverfield
         (K := K) (L := L) v)/(ramifiedInfinitePlaceRealFixedField
         (K := K) (L := L) v hRamified)) :=
   globalNormResidueMonoidHomOfEmbedding

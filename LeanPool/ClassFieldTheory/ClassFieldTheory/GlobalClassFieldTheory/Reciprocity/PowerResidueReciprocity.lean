@@ -723,6 +723,9 @@ private noncomputable def finitePlacePrimeIdealPowerResidueFactorResidueValue
               K v n hmu hcoprime a ha)))).1 : 𝓀[C]ˣ) : 𝓀[C])
 
 open scoped Classical in
+open AlgebraicNumberTheory.PowerResidueSymbols renaming
+  rootsOfUnityReductionEquiv_primeIdealPowerResidueSymbol →
+    rootsOfUnityReductionEquiv_primeIdealPowerResidueSymbol in
 /-- The tame symbol in a finite-place completion is the image of the
 prime-ideal power-residue symbol.  All comparisons are canonical: the only
 place hypothesis says that the place does not divide the exponent. -/
@@ -759,7 +762,7 @@ private theorem finitePlaceLocalTamePowerResidueSymbol_residueValue_eq
   rw [finitePlace_localNthRootsReduction_integralRoots]
   rw [← AlgebraicNumberTheory.PowerResidueSymbols.rootsOfUnityReductionEquiv_apply
       K v n hmu hcoprime,
-    AlgebraicNumberTheory.PowerResidueSymbols.rootsOfUnityReductionEquiv_primeIdealPowerResidueSymbol
+    rootsOfUnityReductionEquiv_primeIdealPowerResidueSymbol
       K v n hmu hcoprime a ha]
   rw [finitePlace_integerUnitsToResidueUnits_integralUnit]
   exact congrArg (fun u : 𝓀[C]ˣ => (u : 𝓀[C]))

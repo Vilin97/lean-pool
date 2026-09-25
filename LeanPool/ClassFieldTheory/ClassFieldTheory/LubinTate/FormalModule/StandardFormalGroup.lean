@@ -224,7 +224,7 @@ namespace Intertwines
 /-- An intertwiner remains an intertwiner after substituting a family of
 intertwiners. -/
 theorem subst
-    [Fintype σ] [Fintype τ]
+    [Finite σ] [Finite τ]
     {e ebar ehat : LubinTateSeries F π}
     {H : MvPowerSeries σ F.valuationSubring}
     (hH : Intertwines e ebar H)
@@ -233,6 +233,8 @@ theorem subst
     (hGsubst : MvPowerSeries.HasSubst G)
     (hG : ∀ i, Intertwines ebar ehat (G i)) :
     Intertwines e ehat (MvPowerSeries.subst G H) := by
+  let := Fintype.ofFinite σ
+  let := Fintype.ofFinite τ
   rw [Intertwines] at hH ⊢
   calc
     PowerSeries.subst (MvPowerSeries.subst G H) e.toPowerSeries =

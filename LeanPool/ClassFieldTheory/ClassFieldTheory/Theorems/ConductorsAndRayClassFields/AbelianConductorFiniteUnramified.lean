@@ -19,6 +19,9 @@ noncomputable section
 
 namespace ClassFieldTheory
 
+open GlobalClassFieldTheory.GlobalClassFields renaming
+  ideleClassNorm_narrowFiniteConductor_support_eq_ramifiedBaseFinitePlaces →
+    ideleClassNorm_conductor_support_eq_ramifiedPlaces in
 /-- A finite place has exponent zero in the public conductor exactly when
 every place above it is unramified. -/
 theorem IsAbelianConductor.finiteExponent_eq_zero_iff_unramified
@@ -43,7 +46,7 @@ theorem IsAbelianConductor.finiteExponent_eq_zero_iff_unramified
     rw [heq]
     change H.narrowFiniteConductor.support = _
     exact
-      GlobalClassFieldTheory.GlobalClassFields.ideleClassNorm_narrowFiniteConductor_support_eq_ramifiedBaseFinitePlaces
+      ideleClassNorm_conductor_support_eq_ramifiedPlaces
         (K := K) (L := L)
   calc
     c.finitePart v = 0 ↔ v ∉ c.finitePart.support :=

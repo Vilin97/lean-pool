@@ -22,7 +22,8 @@ and a finite place of `K'` lies above it, then the latter splits
 completely in `L / K'`.
 -/
 
-open scoped NumberField open NumberField IsDedekindDomain
+open scoped NumberField
+open NumberField IsDedekindDomain
 
 noncomputable section
 
@@ -149,8 +150,7 @@ generating subgroup through the finite Galois correspondence. -/
 noncomputable instance primeOrderFixedField_isCyclic
     (hdegree : 1 < Module.finrank K L) :
     IsCyclic
-      (L ≃ₐ[
-        primeOrderFixedField
+      (L ≃ₐ[primeOrderFixedField
           (K := K) (L := L) hdegree] L) := by
   let P :=
     primeOrderSubgroup
@@ -172,8 +172,7 @@ input expected by the cyclic prime-power splitting criterion. -/
 theorem primeOrderFixedField_card_aut
     (hdegree : 1 < Module.finrank K L) :
     Nat.card
-        (L ≃ₐ[
-          primeOrderFixedField
+        (L ≃ₐ[primeOrderFixedField
             (K := K) (L := L) hdegree] L) =
       fixedFieldPrime
         (K := K) (L := L) hdegree := by

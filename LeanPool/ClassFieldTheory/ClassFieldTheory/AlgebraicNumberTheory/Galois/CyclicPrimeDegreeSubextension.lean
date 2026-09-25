@@ -229,8 +229,7 @@ noncomputable instance cyclicPrimeDegreeIntermediate_base_isCyclic
 noncomputable instance cyclicPrimeDegreeIntermediate_top_isCyclic
     (hdegree : 1 < Module.finrank K L) :
     IsCyclic
-      (L ≃ₐ[
-        cyclicPrimeDegreeIntermediate
+      (L ≃ₐ[cyclicPrimeDegreeIntermediate
           (K := K) (L := L) hdegree] L) := by
   let P :=
     cyclicPrimeDegreeSubgroup

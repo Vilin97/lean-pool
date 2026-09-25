@@ -543,6 +543,12 @@ theorem abelianFullConductor_finiteExponent_eq_localConductorExponent
       (K := K) (L := L) v
 
 open scoped Classical in
+open GlobalClassFieldTheory.GlobalClassFields renaming
+  ideleClassNormLocalHigherUnitExponent_eq_localConductorExponent →
+    ideleClassNormLocalHigherUnitExponent_eq_localConductorExponent in
+open GlobalClassFieldTheory.GlobalClassFields renaming
+  ideleClassNormLocalHigherUnitExponent_eq_zero_iff_chosenFinitePlaceIsUnramified →
+    localHigherUnitExponent_eq_zero_iff_unramified in
 /-- A finite place has conductor exponent zero precisely when the chosen
 local extension is unramified. -/
 theorem abelianFullConductor_finiteExponent_eq_zero_iff_unramified
@@ -553,10 +559,10 @@ theorem abelianFullConductor_finiteExponent_eq_zero_iff_unramified
         (K := K) (L := L) v := by
   rw [abelianFullConductor_finiteExponent_eq_localConductorExponent]
   rw [←
-    GlobalClassFieldTheory.GlobalClassFields.ideleClassNormLocalHigherUnitExponent_eq_localConductorExponent
+    ideleClassNormLocalHigherUnitExponent_eq_localConductorExponent
     (K := K) (L := L) v]
   exact
-    GlobalClassFieldTheory.GlobalClassFields.ideleClassNormLocalHigherUnitExponent_eq_zero_iff_chosenFinitePlaceIsUnramified
+    localHigherUnitExponent_eq_zero_iff_unramified
       (K := K) (L := L) v
 
 open scoped Classical in
