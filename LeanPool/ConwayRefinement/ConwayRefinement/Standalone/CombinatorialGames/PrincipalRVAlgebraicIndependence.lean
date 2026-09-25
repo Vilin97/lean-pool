@@ -23,9 +23,11 @@ order type of the support of a series congruent to `b` modulo `J + K`. Its value
 additively principal ordinals `ω^α`, and `J_{ω^α} := {b : v_J(b) < ω^α}`.
 
 For each `α`, `P_α := J_{ω^(α+1)} / J_{ω^α}` is the vector space of principal RV-elements of
-degree `α`. Their direct sum is
-`P̂ := ⨁_α P_α`, graded by the natural sum of ordinals: `v_J(bc) ≤ v_J(b) ⊕ v_J(c)`
-[Ber00, Thm. 5.8], so the product of classes of degrees `α` and `β` is a class of degree `α ⊕ β`.
+degree `α`. In characteristic zero, Berarducci's multiplicativity theorem gives
+`v_J(bc) = v_J(b) ⊙ v_J(c)`, using the natural product of ordinals
+[Ber00, Thm. 9.7; LM24, Fact 2.7.1]. Since `ω^α ⊙ ω^β = ω^(α ⊕ β)`, the direct sum
+`P̂ := ⨁_α P_α` is graded by natural addition of the exponent degrees: the product of
+classes of degrees `α` and `β` has degree `α ⊕ β`.
 A *minimal homogeneous family* in `P̂` is a family of classes `B ∈ P_{deg B}` of positive
 degrees whose members of each degree `β` are linearly independent modulo
 `(P̂_+)² ∩ P_β = ∑_{i ⊕ j = β, i, j ≠ 0} P_i P_j`, the square of the ideal of positive degree in
@@ -46,7 +48,8 @@ series represent the same class exactly when their difference lies in `J_{ω^α}
 * A. Berarducci, *Factorization in generalized power series*, Trans. Amer. Math. Soc. 352 (2000)
   553–577, cited as [Ber00].
 * S. L'Innocente, V. Mantova, *A factorisation theory for generalised power series and omnific
-  integers*, Adv. Math. 442 (2024) 109513, cited as [LM24].
+  integers*, Adv. Math. 442 (2024) 109513, cited as [LM24];
+  [Fact 2.7.1 in arXiv:1710.07304v5](https://arxiv.org/html/1710.07304v5#S2.SS7).
 -/
 
 open Ordinal
