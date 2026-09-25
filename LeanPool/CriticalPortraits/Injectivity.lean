@@ -46,7 +46,7 @@ separation (`column_sep_with_gap` / `column_sep_geom_dir`).  Everything is axiom
   • The assembly `T_inj` / `T_injOn`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open scoped BigOperators

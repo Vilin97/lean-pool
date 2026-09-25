@@ -43,7 +43,7 @@ from the main parametrization proofs.
   finite-cover theorem, and the integer-valued factorization discussion.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PythagoreanPolynomialParametrization
 

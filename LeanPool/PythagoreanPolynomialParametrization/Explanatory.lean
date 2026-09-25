@@ -26,7 +26,7 @@ This file records source-level material from Frisch--Vaserstein that is not used
 the main parametrization proof.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PythagoreanPolynomialParametrization
 

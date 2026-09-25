@@ -46,7 +46,7 @@ The proof has two parts.
   `(0, j]` gives `T_levelCanonical`.
 -/
 
-@[expose] public section
+public section
 
 /-! # PART I — Abstract laminar interval family: Kernel + forest recursion.
 
@@ -82,11 +82,11 @@ structure Family (ι : Type*) [DecidableEq ι] where
 variable (fam : Family ι)
 
 /-- Edges contained in the window `(a, b]`. -/
-def contained (a b : ℕ) : Finset ι :=
+@[expose] def contained (a b : ℕ) : Finset ι :=
   fam.E.filter (fun e => a ≤ fam.lo e ∧ fam.hi e ≤ b)
 
 /-- The count `N(a,b)`. -/
-def N (a b : ℕ) : ℕ := (contained fam a b).card
+@[expose] def N (a b : ℕ) : ℕ := (contained fam a b).card
 
 lemma mem_contained {a b : ℕ} {e : ι} :
     e ∈ contained fam a b ↔ e ∈ fam.E ∧ a ≤ fam.lo e ∧ fam.hi e ≤ b := by
@@ -111,6 +111,7 @@ lemma overlap_imp_nested {e f : ι} (he : e ∈ fam.E) (hf : f ∈ fam.E)
   omega
 
 /-- "strict": interval not exactly the window. -/
+@[expose]
 def IsStrict (a b : ℕ) (e : ι) : Prop := fam.lo e ≠ a ∨ fam.hi e ≠ b
 
 instance (a b : ℕ) (e : ι) : Decidable (IsStrict fam a b e) := by unfold IsStrict; infer_instance
@@ -291,7 +292,7 @@ lemma Sstrict_card_eq_sum :
   rfl
 
 /-- Edges with interval exactly the window. -/
-def topEdges (a b : ℕ) : Finset ι :=
+@[expose] def topEdges (a b : ℕ) : Finset ι :=
   (contained fam a b).filter (fun e => fam.lo e = a ∧ fam.hi e = b)
 
 /-- At most one top edge (intervals identify edges). -/
@@ -596,11 +597,11 @@ lemma cross_false [NeZero (d * m)] {P : Finset (Finset (ZMod (d * m)))} (hP : Po
 /-! ## Phase 2: total edge data `(loV, hiV, colV)`. -/
 
 /-- The level index `x.val / m` of a position `x`. -/
-def hiV (x : ZMod (d * m)) : ℕ := x.val / m
+@[expose] def hiV (x : ZMod (d * m)) : ℕ := x.val / m
 /-- The fiber index `x.val % m` of a position `x`. -/
-def colV (x : ZMod (d * m)) : ℕ := x.val % m
+@[expose] def colV (x : ZMod (d * m)) : ℕ := x.val % m
 /-- The low interval-endpoint value of `x` within its host critical set. -/
-noncomputable def loV [NeZero (d * m)] (P : Finset (Finset (ZMod (d * m))))
+@[expose] noncomputable def loV [NeZero (d * m)] (P : Finset (Finset (ZMod (d * m))))
     (x : ZMod (d * m)) : ℕ :=
   if hx : x ∈ T P then (predIn P x hx).val / m else 0
 
@@ -834,7 +835,7 @@ lemma edge_inj [NeZero (d * m)] (hd : 0 < d) (hm : 0 < m)
 /-! ## Phase 5: the `Family` instance and the forward bound. -/
 
 /-- The laminar interval family of a portrait's survivors (edges = survivors). -/
-noncomputable def survivorFamily [NeZero (d * m)] (hd : 0 < d) (hm : 0 < m)
+@[expose] noncomputable def survivorFamily [NeZero (d * m)] (hd : 0 < d) (hm : 0 < m)
     {P : Finset (Finset (ZMod (d * m)))} (hP : Portrait d m P) :
     AbstractLaminar.Family (ZMod (d*m)) where
   E := T P

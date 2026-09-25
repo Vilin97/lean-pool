@@ -22,7 +22,7 @@ Strong induction on `N` proving `even_bound`: every triple-free `A ⊆ [1, 2e]` 
 `5/8` counting bound, split into the cases `even_bound_case1` and `even_bound_case2`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

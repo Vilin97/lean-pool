@@ -27,4 +27,4 @@ Tags: number-theory, pythagorean-triples, integer-valued-polynomials
 MSC: 11D09, 11D85, 13F20
 -/
 
-@[expose] public section
+public section
