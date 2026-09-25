@@ -3,10 +3,14 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.Arithmetic
+
+public import LeanPool.FullyDynamicMatching.FD1D.Arithmetic
 
 /-! # Drift -/
+
+@[expose] public section
 
 namespace FD1D
 

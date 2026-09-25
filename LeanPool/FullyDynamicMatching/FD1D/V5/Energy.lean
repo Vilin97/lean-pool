@@ -3,9 +3,11 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.Dynamics
-import LeanPool.FullyDynamicMatching.FD1D.Expectations
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Dynamics
+public import LeanPool.FullyDynamicMatching.FD1D.Expectations
 
 /-!
 # Unified energy estimates for the v5 policy
@@ -13,6 +15,8 @@ import LeanPool.FullyDynamicMatching.FD1D.Expectations
 This module proves the stationary and finite-horizon forms of the manuscript's
 master energy inequality.
 -/
+
+@[expose] public section
 
 namespace FD1D.V5.Dynamics
 

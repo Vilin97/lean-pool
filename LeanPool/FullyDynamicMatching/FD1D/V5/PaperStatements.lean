@@ -3,9 +3,11 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.Main
-import LeanPool.FullyDynamicMatching.FD1D.V5.StatementModel
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Main
+public import LeanPool.FullyDynamicMatching.FD1D.V5.StatementModel
 
 /-!
 # Palomar endpoint for optimal fully dynamic matching
@@ -13,6 +15,8 @@ import LeanPool.FullyDynamicMatching.FD1D.V5.StatementModel
 This module instantiates the compact paper-facing stochastic model with the
 hierarchical V5 selector and transfers the proved continuous-process bounds.
 -/
+
+@[expose] public section
 
 namespace FD1D.V5.Palomar
 

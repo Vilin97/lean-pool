@@ -3,13 +3,17 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.Transport
-import LeanPool.FullyDynamicMatching.FD1D.Dynamics
-import LeanPool.FullyDynamicMatching.FD1D.Bounds
-import LeanPool.FullyDynamicMatching.FD1D.Spatial
+
+public import LeanPool.FullyDynamicMatching.FD1D.Transport
+public import LeanPool.FullyDynamicMatching.FD1D.Dynamics
+public import LeanPool.FullyDynamicMatching.FD1D.Bounds
+public import LeanPool.FullyDynamicMatching.FD1D.Spatial
 
 /-! # Concrete Transport -/
+
+@[expose] public section
 
 namespace FD1D
 

@@ -3,16 +3,18 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import Mathlib.Topology.Instances.Matrix
-import Mathlib.LinearAlgebra.Matrix.Stochastic
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.MeasureTheory.Integral.Layercake
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.MeasureTheory.Constructions.UnitInterval
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.Tactic
+
+public import Mathlib.Topology.Instances.Matrix
+public import Mathlib.LinearAlgebra.Matrix.Stochastic
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.MeasureTheory.Integral.Layercake
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Mathlib.MeasureTheory.Constructions.UnitInterval
+public import Mathlib.Algebra.Order.Floor.Semifield
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.Tactic
 
 /-!
 # Fully dynamic matching on the line
@@ -21,6 +23,8 @@ Common definitions for the formal proof of the hierarchical quantile matching
 bound. All analytic quantities are represented in `ℝ`; finite probability
 laws are represented by weighted sums over finite types.
 -/
+
+@[expose] public section
 
 namespace FD1D
 

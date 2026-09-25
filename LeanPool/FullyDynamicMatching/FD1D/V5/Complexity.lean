@@ -3,8 +3,10 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.Parameters
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Parameters
 
 /-!
 # Abstract resource accounting for the v5 hierarchical policy
@@ -17,6 +19,8 @@ word for each labeled supply and a constant number of words per tree leaf.
 These are mathematical accounting functions, not runtime measurements of
 Lean's noncomputable definitions.
 -/
+
+@[expose] public section
 
 namespace FD1D.V5
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.CostBounds
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.CostBounds
 
 /-!
 # Balanced initial count laws for every inventory size
@@ -16,6 +18,8 @@ potential, so this law is tree invariant. Its initial expected potential is
 maximal, which removes the endpoint term from the finite-horizon energy
 telescope.
 -/
+
+@[expose] public section
 
 namespace FD1D.V5.Balanced
 

@@ -3,17 +3,21 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.ContinuousState
-import LeanPool.FullyDynamicMatching.FD1D.KernelBridge
-import LeanPool.FullyDynamicMatching.FD1D.V5.Process
-import LeanPool.FullyDynamicMatching.FD1D.TrajectoryBridge
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.Probability.Kernel.Composition.Lemmas
-import Mathlib.Probability.Kernel.IonescuTulcea.Traj
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.ContinuousState
+public import LeanPool.FullyDynamicMatching.FD1D.KernelBridge
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Process
+public import LeanPool.FullyDynamicMatching.FD1D.TrajectoryBridge
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.Probability.Kernel.Composition.Lemmas
+public import Mathlib.Probability.Kernel.IonescuTulcea.Traj
 
 /-! # Continuous Process -/
+
+@[expose] public section
 
 namespace FD1D
 

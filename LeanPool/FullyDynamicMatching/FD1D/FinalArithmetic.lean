@@ -3,11 +3,13 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.Bounds
-import LeanPool.FullyDynamicMatching.FD1D.Parameters
-import LeanPool.FullyDynamicMatching.FD1D.Arithmetic
-import LeanPool.FullyDynamicMatching.FD1D.Initialization
+
+public import LeanPool.FullyDynamicMatching.FD1D.Bounds
+public import LeanPool.FullyDynamicMatching.FD1D.Parameters
+public import LeanPool.FullyDynamicMatching.FD1D.Arithmetic
+public import LeanPool.FullyDynamicMatching.FD1D.Initialization
 
 /-!
 # Final arithmetic for the chosen parameters
@@ -16,6 +18,8 @@ This file turns the concrete stationary and finite-time hazard estimates into
 the advertised `6a/m` and `7a/m` bounds. Transport enters only through an
 equation-(3) inequality supplied as a hypothesis.
 -/
+
+@[expose] public section
 
 namespace FD1D
 

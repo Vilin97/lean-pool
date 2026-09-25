@@ -3,12 +3,16 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import Mathlib.MeasureTheory.Order.Group.Lattice
-import Mathlib.Analysis.Convex.Integral
-import LeanPool.FullyDynamicMatching.FD1D.Basic
+
+public import Mathlib.MeasureTheory.Order.Group.Lattice
+public import Mathlib.Analysis.Convex.Integral
+public import LeanPool.FullyDynamicMatching.FD1D.Basic
 
 /-! # Transport -/
+
+@[expose] public section
 
 namespace FD1D
 

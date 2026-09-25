@@ -3,8 +3,10 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.LocalBellman
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.LocalBellman
 
 /-!
 # The v5 hierarchical tree policy
@@ -14,6 +16,8 @@ tree. It proves the invariant domain, rate-energy monotonicity, the lifted
 local Bellman inequality, and the deterministic aggregate estimate.
 -/
 
+@[expose] public section
+
 namespace FD1D.V5.TreePolicy
 
 noncomputable section
@@ -22,7 +26,8 @@ open LocalPolicy
 
 variable {L m : ℕ}
 
-private def childRate (a p h : ℝ) (x y : ℕ) (side : Fin 2) : ℝ :=
+/-- Select the left or right rate of the local rule for one dyadic child. -/
+def childRate (a p h : ℝ) (x y : ℕ) (side : Fin 2) : ℝ :=
   if side = 0 then rateLeft a p h x y else rateRight a p h x y
 
 /-- Recursively propagated analytic rate, rooted at `1/m`. -/

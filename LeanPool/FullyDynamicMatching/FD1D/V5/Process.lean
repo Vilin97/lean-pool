@@ -3,12 +3,16 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.SquaredCost
-import LeanPool.FullyDynamicMatching.FD1D.UniformArrival
-import LeanPool.FullyDynamicMatching.FD1D.Realization
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.SquaredCost
+public import LeanPool.FullyDynamicMatching.FD1D.UniformArrival
+public import LeanPool.FullyDynamicMatching.FD1D.Realization
 
 /-! # Process -/
+
+@[expose] public section
 
 namespace FD1D
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import Mathlib.Probability.Kernel.IonescuTulcea.Traj
+
+public import Mathlib.Probability.Kernel.IonescuTulcea.Traj
 
 /-!
 # Homogeneous Markov chains as trajectory measures
@@ -13,6 +15,8 @@ This file packages the Ionescu--Tulcea trajectory construction for a
 homogeneous Markov kernel and identifies every coordinate marginal with the
 usual recursive iterate of the initial law.
 -/
+
+@[expose] public section
 
 namespace FD1D.TrajectoryBridge
 

@@ -3,13 +3,17 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.Markov
-import LeanPool.FullyDynamicMatching.FD1D.Policy
-import LeanPool.FullyDynamicMatching.FD1D.Potential
-import LeanPool.FullyDynamicMatching.FD1D.PotentialBounds
+
+public import LeanPool.FullyDynamicMatching.FD1D.Markov
+public import LeanPool.FullyDynamicMatching.FD1D.Policy
+public import LeanPool.FullyDynamicMatching.FD1D.Potential
+public import LeanPool.FullyDynamicMatching.FD1D.PotentialBounds
 
 /-! # Dynamics -/
+
+@[expose] public section
 
 namespace FD1D
 

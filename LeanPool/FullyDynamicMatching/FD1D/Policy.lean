@@ -3,12 +3,16 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.Hazard
-import LeanPool.FullyDynamicMatching.FD1D.Tree
-import LeanPool.FullyDynamicMatching.FD1D.Bellman
+
+public import LeanPool.FullyDynamicMatching.FD1D.Hazard
+public import LeanPool.FullyDynamicMatching.FD1D.Tree
+public import LeanPool.FullyDynamicMatching.FD1D.Bellman
 
 /-! # Policy -/
+
+@[expose] public section
 
 namespace FD1D
 
@@ -30,7 +34,7 @@ open LocalHazard
 variable {L m : ℕ}
 
 /-- Select the appropriate extended child hazard. -/
-private def childHazard (a h : ℝ) (x y : ℕ) (side : Fin 2) : ℝ :=
+def childHazard (a h : ℝ) (x y : ℕ) (side : Fin 2) : ℝ :=
   if side = 0 then hL a h x y else hR a h x y
 
 /-- The recursively propagated extended hazard, rooted at `1 / m`. -/

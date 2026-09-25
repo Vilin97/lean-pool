@@ -3,14 +3,18 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.Transport
-import LeanPool.FullyDynamicMatching.FD1D.ConcreteTransport
-import LeanPool.FullyDynamicMatching.FD1D.Symmetry
-import LeanPool.FullyDynamicMatching.FD1D.Initialization
-import LeanPool.FullyDynamicMatching.FD1D.Averaging
+
+public import LeanPool.FullyDynamicMatching.FD1D.Transport
+public import LeanPool.FullyDynamicMatching.FD1D.ConcreteTransport
+public import LeanPool.FullyDynamicMatching.FD1D.Symmetry
+public import LeanPool.FullyDynamicMatching.FD1D.Initialization
+public import LeanPool.FullyDynamicMatching.FD1D.Averaging
 
 /-! # Invariant Transport -/
+
+@[expose] public section
 
 namespace FD1D
 

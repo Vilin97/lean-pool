@@ -3,8 +3,10 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.QuantileSquared
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.QuantileSquared
 
 /-!
 # Squared matching cost for the v5 policy
@@ -14,6 +16,8 @@ spatial coupling. It proves the manuscript's conditional and count-law RMS
 bounds while allowing arbitrary occupied locations inside their certified
 dyadic cells.
 -/
+
+@[expose] public section
 
 namespace FD1D.V5.Transport
 

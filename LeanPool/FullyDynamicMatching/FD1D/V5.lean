@@ -3,30 +3,32 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.Balanced
-import LeanPool.FullyDynamicMatching.FD1D.V5.CompleteFormalizationAudit
-import LeanPool.FullyDynamicMatching.FD1D.V5.Complexity
-import LeanPool.FullyDynamicMatching.FD1D.V5.ContinuousProcess
-import LeanPool.FullyDynamicMatching.FD1D.V5.ContinuousState
-import LeanPool.FullyDynamicMatching.FD1D.V5.CostBounds
-import LeanPool.FullyDynamicMatching.FD1D.V5.Dynamics
-import LeanPool.FullyDynamicMatching.FD1D.V5.Energy
-import LeanPool.FullyDynamicMatching.FD1D.V5.InitialProcess
-import LeanPool.FullyDynamicMatching.FD1D.V5.JoinedTrajectory
-import LeanPool.FullyDynamicMatching.FD1D.V5.LocalBellman
-import LeanPool.FullyDynamicMatching.FD1D.V5.LocalInvariants
-import LeanPool.FullyDynamicMatching.FD1D.V5.LocalPolicy
-import LeanPool.FullyDynamicMatching.FD1D.V5.Main
-import LeanPool.FullyDynamicMatching.FD1D.V5.PaperStatements
-import LeanPool.FullyDynamicMatching.FD1D.V5.Parameters
-import LeanPool.FullyDynamicMatching.FD1D.V5.Process
-import LeanPool.FullyDynamicMatching.FD1D.V5.QuantileSquared
-import LeanPool.FullyDynamicMatching.FD1D.V5.SquaredCost
-import LeanPool.FullyDynamicMatching.FD1D.V5.StatementModel
-import LeanPool.FullyDynamicMatching.FD1D.V5.Symmetry
-import LeanPool.FullyDynamicMatching.FD1D.V5.TrajectoryBounds
-import LeanPool.FullyDynamicMatching.FD1D.V5.Transport
-import LeanPool.FullyDynamicMatching.FD1D.V5.TreePolicy
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Balanced
+public import LeanPool.FullyDynamicMatching.FD1D.V5.CompleteFormalizationAudit
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Complexity
+public import LeanPool.FullyDynamicMatching.FD1D.V5.ContinuousProcess
+public import LeanPool.FullyDynamicMatching.FD1D.V5.ContinuousState
+public import LeanPool.FullyDynamicMatching.FD1D.V5.CostBounds
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Dynamics
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Energy
+public import LeanPool.FullyDynamicMatching.FD1D.V5.InitialProcess
+public import LeanPool.FullyDynamicMatching.FD1D.V5.JoinedTrajectory
+public import LeanPool.FullyDynamicMatching.FD1D.V5.LocalBellman
+public import LeanPool.FullyDynamicMatching.FD1D.V5.LocalInvariants
+public import LeanPool.FullyDynamicMatching.FD1D.V5.LocalPolicy
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Main
+public import LeanPool.FullyDynamicMatching.FD1D.V5.PaperStatements
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Parameters
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Process
+public import LeanPool.FullyDynamicMatching.FD1D.V5.QuantileSquared
+public import LeanPool.FullyDynamicMatching.FD1D.V5.SquaredCost
+public import LeanPool.FullyDynamicMatching.FD1D.V5.StatementModel
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Symmetry
+public import LeanPool.FullyDynamicMatching.FD1D.V5.TrajectoryBounds
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Transport
+public import LeanPool.FullyDynamicMatching.FD1D.V5.TreePolicy
 
 /-! Supporting modules for Optimal fully dynamic matching on the line. -/

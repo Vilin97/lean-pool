@@ -3,12 +3,16 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.Transport
-import LeanPool.FullyDynamicMatching.FD1D.Markov
-import LeanPool.FullyDynamicMatching.FD1D.Tree
+
+public import LeanPool.FullyDynamicMatching.FD1D.Transport
+public import LeanPool.FullyDynamicMatching.FD1D.Markov
+public import LeanPool.FullyDynamicMatching.FD1D.Tree
 
 /-! # Spatial -/
+
+@[expose] public section
 
 namespace FD1D
 

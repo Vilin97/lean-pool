@@ -3,9 +3,11 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.Dynamics
-import LeanPool.FullyDynamicMatching.FD1D.V5.TreePolicy
+
+public import LeanPool.FullyDynamicMatching.FD1D.Dynamics
+public import LeanPool.FullyDynamicMatching.FD1D.V5.TreePolicy
 
 /-!
 # Count dynamics for the v5 policy
@@ -14,6 +16,8 @@ This module instantiates the generic delete-then-arrive inventory kernel with
 the v5 deletion masses and connects it to the harmonic potential with
 regularizer `a / 2`.
 -/
+
+@[expose] public section
 
 namespace FD1D.V5.Dynamics
 

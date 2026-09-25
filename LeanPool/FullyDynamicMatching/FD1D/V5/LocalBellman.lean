@@ -3,8 +3,10 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.LocalInvariants
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.LocalInvariants
 
 /-!
 # The local quadratic Bellman inequality
@@ -12,6 +14,8 @@ import LeanPool.FullyDynamicMatching.FD1D.V5.LocalInvariants
 This module follows the normalization and three active-cap cases in the
 appendix of `manuscript-v5/optimal_dynamic_matching.tex`.
 -/
+
+@[expose] public section
 
 namespace FD1D.V5.LocalBellman
 

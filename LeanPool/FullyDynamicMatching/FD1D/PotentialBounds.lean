@@ -3,14 +3,18 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import Mathlib.Analysis.Convex.SpecificFunctions.Pow
-import Mathlib.Analysis.SumIntegralComparisons
-import Mathlib.Analysis.Convex.Jensen
-import LeanPool.FullyDynamicMatching.FD1D.Potential
-import LeanPool.FullyDynamicMatching.FD1D.Parameters
+
+public import Mathlib.Analysis.Convex.SpecificFunctions.Pow
+public import Mathlib.Analysis.SumIntegralComparisons
+public import Mathlib.Analysis.Convex.Jensen
+public import LeanPool.FullyDynamicMatching.FD1D.Potential
+public import LeanPool.FullyDynamicMatching.FD1D.Parameters
 
 /-! # Potential Bounds -/
+
+@[expose] public section
 
 namespace FD1D
 

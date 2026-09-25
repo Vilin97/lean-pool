@@ -3,10 +3,14 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.Spatial
+
+public import LeanPool.FullyDynamicMatching.FD1D.Spatial
 
 /-! # Realization -/
+
+@[expose] public section
 
 namespace FD1D
 
@@ -28,11 +32,11 @@ namespace SupplyConfiguration
 variable {L m : ℕ}
 
 /-- One distinguishable slot for every unit of inventory in every leaf. -/
-private abbrev CountSlot (x : InventoryState (DyadicNode L) m) :=
+abbrev CountSlot (x : InventoryState (DyadicNode L) m) :=
   Σ i : DyadicNode L, Fin (x.1 i)
 
 /-- Enumerate all count slots by the `m` supply labels. -/
-private noncomputable def countSlotEquiv
+noncomputable def countSlotEquiv
     (x : InventoryState (DyadicNode L) m) :
     Fin m ≃ CountSlot x :=
   Fintype.equivOfCardEq (by
@@ -40,7 +44,7 @@ private noncomputable def countSlotEquiv
     simpa using x.2.symm)
 
 /-- The leaf label obtained by forgetting which copy of a count slot was used. -/
-private noncomputable def countAssignment
+noncomputable def countAssignment
     (x : InventoryState (DyadicNode L) m) (j : Fin m) :
     DyadicNode L :=
   (countSlotEquiv x j).1

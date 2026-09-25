@@ -3,8 +3,10 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.Parameters
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Parameters
 
 /-!
 # The local three-cap policy from manuscript bundle v5
@@ -13,6 +15,8 @@ The two child counts are ordered only inside `orderedBias`. `bias` restores
 the fixed left/right spatial sign. Empty-child rates are auxiliary analytic
 rates; empty children still receive zero deletion mass.
 -/
+
+@[expose] public section
 
 namespace FD1D.V5.LocalPolicy
 

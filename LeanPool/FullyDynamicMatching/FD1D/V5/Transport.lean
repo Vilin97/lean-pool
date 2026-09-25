@@ -3,13 +3,15 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.Energy
-import LeanPool.FullyDynamicMatching.FD1D.V5.Symmetry
-import LeanPool.FullyDynamicMatching.FD1D.InvariantTransport
-import LeanPool.FullyDynamicMatching.FD1D.Initialization
-import LeanPool.FullyDynamicMatching.FD1D.Averaging
-import LeanPool.FullyDynamicMatching.FD1D.Spatial
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Energy
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Symmetry
+public import LeanPool.FullyDynamicMatching.FD1D.InvariantTransport
+public import LeanPool.FullyDynamicMatching.FD1D.Initialization
+public import LeanPool.FullyDynamicMatching.FD1D.Averaging
+public import LeanPool.FullyDynamicMatching.FD1D.Spatial
 
 /-!
 # Quantile transport for the v5 policy
@@ -18,6 +20,8 @@ This module realizes the v5 leaf deletion probabilities as a recursive
 dyadic mass, identifies its integrated Haar coefficients with the v5
 deletion imbalances, and proves the exact invariant-law `L²` identity.
 -/
+
+@[expose] public section
 
 namespace FD1D.V5.Transport
 

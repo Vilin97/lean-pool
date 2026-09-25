@@ -3,10 +3,12 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.JoinedTrajectory
-import LeanPool.FullyDynamicMatching.FD1D.V5.Balanced
-import LeanPool.FullyDynamicMatching.FD1D.V5.Complexity
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.JoinedTrajectory
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Balanced
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Complexity
 
 /-!
 # Manuscript-facing theorem for bundle v5
@@ -16,6 +18,8 @@ exact finite count marginals, the two natural-log cost bounds in the main
 theorem, the balanced-initial-law corollary, and the abstract resource
 guarantees.
 -/
+
+@[expose] public section
 
 namespace FD1D.V5
 

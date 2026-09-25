@@ -3,15 +3,19 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import Mathlib.Probability.ProbabilityMassFunction.Integrals
-import Mathlib.Probability.ProbabilityMassFunction.Constructions
-import Mathlib.Probability.Kernel.Basic
-import LeanPool.FullyDynamicMatching.FD1D.FinalArithmetic
-import LeanPool.FullyDynamicMatching.FD1D.InvariantTransport
-import LeanPool.FullyDynamicMatching.FD1D.Realization
+
+public import Mathlib.Probability.ProbabilityMassFunction.Integrals
+public import Mathlib.Probability.ProbabilityMassFunction.Constructions
+public import Mathlib.Probability.Kernel.Basic
+public import LeanPool.FullyDynamicMatching.FD1D.FinalArithmetic
+public import LeanPool.FullyDynamicMatching.FD1D.InvariantTransport
+public import LeanPool.FullyDynamicMatching.FD1D.Realization
 
 /-! # Measure Bridge -/
+
+@[expose] public section
 
 namespace FD1D
 

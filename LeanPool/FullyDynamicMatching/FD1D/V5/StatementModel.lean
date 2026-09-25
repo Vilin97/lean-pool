@@ -3,14 +3,16 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Probability.Kernel.IonescuTulcea.Traj
-import Mathlib.Probability.Kernel.Composition.Prod
-import Mathlib.MeasureTheory.Constructions.UnitInterval
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.Floor.Semifield
+public import Mathlib.Probability.Kernel.IonescuTulcea.Traj
+public import Mathlib.Probability.Kernel.Composition.Prod
+public import Mathlib.MeasureTheory.Constructions.UnitInterval
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Tactic
 
 /-!
 # Paper-facing model for fully dynamic matching on the line
@@ -21,6 +23,8 @@ one live supply, pays their distance, and replaces that supply by an independent
 uniform replenishment. The path measure below is the homogeneous Markov law
 driven by iid uniform demand/replenishment pairs.
 -/
+
+@[expose] public section
 
 namespace FD1D.V5.Palomar
 

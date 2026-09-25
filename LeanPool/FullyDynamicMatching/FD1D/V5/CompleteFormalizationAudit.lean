@@ -3,9 +3,11 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.PaperStatements
-import Mathlib.Util.AssertNoSorry
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.PaperStatements
+public import Mathlib.Util.AssertNoSorry
 
 /-!
 # Proof-closure audit
@@ -13,6 +15,8 @@ import Mathlib.Util.AssertNoSorry
 The commands below reject proof placeholders and nonstandard axioms in the
 paper-facing theorem and its principal producer lemmas.
 -/
+
+@[expose] public section
 
 open Lean Meta Elab Command
 

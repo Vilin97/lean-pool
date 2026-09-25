@@ -3,9 +3,11 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import Mathlib.Data.List.Basic
-import Mathlib.Tactic
+
+public import Mathlib.Data.List.Basic
+public import Mathlib.Tactic
 
 /-!
 # Sparse exact polynomial certificate
@@ -15,6 +17,8 @@ integer polynomials. Its proved evaluator is used to kernel-check every
 coefficient in the four Bellman charts without materializing enormous
 `ring_nf` goals.
 -/
+
+@[expose] public section
 
 namespace FD1D
 

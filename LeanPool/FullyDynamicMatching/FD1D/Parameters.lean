@@ -3,8 +3,10 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.Basic
+
+public import LeanPool.FullyDynamicMatching.FD1D.Basic
 
 /-!
 # Parameter choices
@@ -13,6 +15,8 @@ This file makes the parameter choices in the hierarchical matching argument
 computationally exact. Natural-number division is the floor in the definition
 of the tree depth.
 -/
+
+@[expose] public section
 
 namespace FD1D
 

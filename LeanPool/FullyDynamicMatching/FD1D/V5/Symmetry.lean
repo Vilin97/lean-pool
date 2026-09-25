@@ -3,9 +3,11 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.Dynamics
-import LeanPool.FullyDynamicMatching.FD1D.Symmetry
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Dynamics
+public import LeanPool.FullyDynamicMatching.FD1D.Symmetry
 
 /-!
 # Tree symmetry for the v5 policy
@@ -14,6 +16,8 @@ The underlying subtree permutations are policy-independent and live in
 `FD1D.TreeSymmetry`. This module proves that the recursively propagated v5
 rates and deletion masses are equivariant under those permutations.
 -/
+
+@[expose] public section
 
 namespace FD1D.V5.TreeSymmetry
 

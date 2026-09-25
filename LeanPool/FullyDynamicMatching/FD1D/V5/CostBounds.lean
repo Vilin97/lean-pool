@@ -3,10 +3,12 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.SquaredCost
-import LeanPool.FullyDynamicMatching.FD1D.V5.Parameters
-import LeanPool.FullyDynamicMatching.FD1D.FiniteConvergence
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.SquaredCost
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Parameters
+public import LeanPool.FullyDynamicMatching.FD1D.FiniteConvergence
 
 /-!
 # RMS matching-cost bounds for the v5 count chain
@@ -15,6 +17,8 @@ This module combines the v5 energy estimates with squared quantile transport,
 discharges the parameter arithmetic, and records stationary, transient, and
 ordinary-convergence bounds for the count-state cost envelope.
 -/
+
+@[expose] public section
 
 namespace FD1D.V5
 

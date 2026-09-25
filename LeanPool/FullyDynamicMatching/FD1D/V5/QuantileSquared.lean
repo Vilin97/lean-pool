@@ -3,8 +3,10 @@ Copyright (c) 2026 Yash Kanoria. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
+module
 
-import LeanPool.FullyDynamicMatching.FD1D.V5.Transport
+
+public import LeanPool.FullyDynamicMatching.FD1D.V5.Transport
 
 /-!
 # Squared quantile transport for dyadic masses
@@ -17,6 +19,8 @@ The proof keeps track of an affine spatial interval and a cumulative-mass
 offset. On each leaf it is an elementary polynomial identity. At a branch,
 the two boundary cubic terms cancel.
 -/
+
+@[expose] public section
 
 namespace FD1D
 
