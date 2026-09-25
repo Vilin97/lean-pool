@@ -716,6 +716,8 @@ public import LeanPool.BrillNoetherGraphs.Tricycle.Highlights
 public import LeanPool.BrillNoetherGraphs.Tricycle.RegularSubdivisionBridge
 public import LeanPool.BrillNoetherGraphs.Tricycle.UpperBounds
 public import LeanPool.BrillNoetherGraphs.TwiceMarkedBananas
+public import LeanPool.BrillNoetherGraphs.TwiceMarkedBananas.CoreVocabulary
+public import LeanPool.BrillNoetherGraphs.TwiceMarkedBananas.StatementVocabulary
 public import LeanPool.BrillNoetherGraphs.Utilities
 public import LeanPool.BrillNoetherGraphs.Utilities.Certificate
 public import LeanPool.BrillNoetherGraphs.Utilities.Certificate.CubicMatrixCanonical
