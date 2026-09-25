@@ -24,12 +24,15 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the current ellipsoid-state word from a center-update request. -/
 def machineRationalCenterUpdateStateWord
     (word : List Bool) : List Bool := machinePairFirst word
 
+/-- Extracts the cut-vector word from a center-update request. -/
 def machineRationalCenterUpdateCutWord
     (word : List Bool) : List Bool := machinePairSecond word
 
+/-- Reads the binary ellipsoid dimension from the center-update state. -/
 def machineRationalCenterUpdateDimensionBits
     (word : List Bool) : List Bool :=
   machineRationalEllipsoidDimensionWord
@@ -42,16 +45,20 @@ def machineRationalCenterUpdateDimensionUnary
     (pair (machineRationalCenterUpdateStateWord word)
       (machineRationalCenterUpdateDimensionBits word))
 
+/-- Reads the encoded current center from the center-update state. -/
 def machineRationalCenterUpdateCenterWord
     (word : List Bool) : List Bool :=
   machineRationalEllipsoidCenterWord
     (machineRationalCenterUpdateStateWord word)
 
+/-- Reads the encoded current basis matrix from the center-update state. -/
 def machineRationalCenterUpdateBasisWord
     (word : List Bool) : List Bool :=
   machineRationalEllipsoidBasisWord
     (machineRationalCenterUpdateStateWord word)
 
+/-- Multiplies the cut vector by the transpose of the current basis to pull it into ellipsoid
+coordinates. -/
 def machineRationalCenterUpdatePulledBackCode
     (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorCode
@@ -59,11 +66,14 @@ def machineRationalCenterUpdatePulledBackCode
       (pair (machineRationalCenterUpdateBasisWord word)
         (machineRationalCenterUpdateCutWord word)))
 
+/-- Computes the rational normalized direction associated with the pulled-back cut vector. -/
 def machineRationalCenterUpdateNormalizedCode
     (word : List Bool) : List Bool :=
   machineRationalNormalizedDirectionCode
     (machineRationalCenterUpdatePulledBackCode word)
 
+/-- Maps the normalized pulled-back direction through the current basis to obtain a displacement
+vector. -/
 def machineRationalCenterUpdateDisplacementCode
     (word : List Bool) : List Bool :=
   machineRationalMatrixMulVectorCode
@@ -71,6 +81,8 @@ def machineRationalCenterUpdateDisplacementCode
       (pair (machineRationalCenterUpdateBasisWord word)
         (machineRationalCenterUpdateNormalizedCode word)))
 
+/-- Scales the displacement vector by the dimension-dependent rational ellipsoid center-shift
+factor. -/
 def machineRationalCenterUpdateScaledDisplacementCode
     (word : List Bool) : List Bool :=
   machineRationalVectorScaleCode
@@ -79,6 +91,8 @@ def machineRationalCenterUpdateScaledDisplacementCode
         (machineRationalCenterUpdateDimensionBits word))
       (machineRationalCenterUpdateDisplacementCode word))
 
+/-- Encodes the updated ellipsoid center by subtracting the scaled displacement from its current
+center. -/
 def machineRationalEllipsoidCenterUpdateCode
     (word : List Bool) : List Bool :=
   machineRationalVectorSubCode

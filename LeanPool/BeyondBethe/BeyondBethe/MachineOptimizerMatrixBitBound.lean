@@ -25,33 +25,43 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Packs remaining matrix rows, the current suffix, accumulated length ruler, and bound for the
+entry-length scan. -/
 def machineMatrixEntryLengthPack
     (rows current acc bound : List Bool) : List Bool :=
   pair rows (pair current (pair acc bound))
 
+/-- Extracts the remaining rows from the matrix-entry-length scan state. -/
 def machineMatrixEntryLengthRows (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the current row suffix from the matrix-entry-length scan state. -/
 def machineMatrixEntryLengthCurrent (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the accumulated entry-length ruler from the scan state. -/
 def machineMatrixEntryLengthAcc (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the length-bound word from the matrix-entry-length scan state. -/
 def machineMatrixEntryLengthBound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
+/-- Reads the next encoded entry of the current row suffix. -/
 def machineMatrixEntryLengthEntry (state : List Bool) : List Bool :=
   machineListHead (machineMatrixEntryLengthCurrent state)
 
+/-- Appends the current entry's optimizer length ruler to the accumulated ruler. -/
 def machineMatrixEntryLengthCandidate (state : List Bool) : List Bool :=
   machineMatrixEntryLengthAcc state ++
     machineOptimizerEntryLengthRuler (machineMatrixEntryLengthEntry state)
 
+/-- Truncates the updated length ruler to the length of the stored bound. -/
 def machineMatrixEntryLengthNextAcc (state : List Bool) : List Bool :=
   (machineMatrixEntryLengthCandidate state).take
     (machineMatrixEntryLengthBound state).length
 
+/-- Consumes one matrix entry and stores its contribution in the bounded length accumulator. -/
 def machineMatrixEntryLengthProcessEntry (state : List Bool) : List Bool :=
   machineMatrixEntryLengthPack
     (machineMatrixEntryLengthRows state)
@@ -59,6 +69,7 @@ def machineMatrixEntryLengthProcessEntry (state : List Bool) : List Bool :=
     (machineMatrixEntryLengthNextAcc state)
     (machineMatrixEntryLengthBound state)
 
+/-- Loads the next matrix row while preserving the accumulated length and bound. -/
 def machineMatrixEntryLengthLoadRow (state : List Bool) : List Bool :=
   machineMatrixEntryLengthPack
     (machineListTail (machineMatrixEntryLengthRows state))
@@ -66,15 +77,19 @@ def machineMatrixEntryLengthLoadRow (state : List Bool) : List Bool :=
     (machineMatrixEntryLengthAcc state)
     (machineMatrixEntryLengthBound state)
 
+/-- Fixes a scan with no remaining rows and otherwise loads its next row. -/
 def machineMatrixEntryLengthAfterRow (state : List Bool) : List Bool :=
   machineIfEmpty (machineMatrixEntryLengthRows state) state
     (machineMatrixEntryLengthLoadRow state)
 
+/-- Processes the current entry when present and otherwise loads another row or finishes. -/
 def machineMatrixEntryLengthStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineMatrixEntryLengthCurrent state)
     (machineMatrixEntryLengthAfterRow state)
     (machineMatrixEntryLengthProcessEntry state)
 
+/-- Builds a bound word consisting of eight false bits followed by sixty-four copies of the
+input word. -/
 def machineMatrixEntryLengthInputBound (word : List Bool) : List Bool :=
   let w2 := word ++ word
   let w4 := w2 ++ w2
@@ -84,14 +99,18 @@ def machineMatrixEntryLengthInputBound (word : List Bool) : List Bool :=
   let w64 := w32 ++ w32
   List.replicate 8 false ++ w64
 
+/-- Initializes the entry-length scan with all matrix rows, empty current row, a one-bit
+accumulator, and its computed bound. -/
 def machineMatrixEntryLengthInit (word : List Bool) : List Bool :=
   machineMatrixEntryLengthPack (machineMatrixRowsWord word) [] [true]
     (machineMatrixEntryLengthInputBound word)
 
+/-- Packs four copies of the computed bound to bound the encoded entry-length scan state. -/
 def machineMatrixEntryLengthWidth (word : List Bool) : List Bool :=
   let bound := machineMatrixEntryLengthInputBound word
   machineMatrixEntryLengthPack bound bound bound bound
 
+/-- Runs the entry-length scan once per input bit from its initial state. -/
 def machineMatrixEntryLengthFinalState (word : List Bool) : List Bool :=
   (machineMatrixEntryLengthStep)^[word.length]
     (machineMatrixEntryLengthInit word)
@@ -225,6 +244,8 @@ theorem machineMatrixEntryLengthWidth_mem_FP :
   simp [machineMatrixEntryLengthInputBound]
   omega
 
+/-- Requires exact scan-state packing, remaining row data bounded by input length, bounded
+accumulated ruler, and the prescribed bound word. -/
 def MachineMatrixEntryLengthStateBound (word state : List Bool) : Prop :=
   state = machineMatrixEntryLengthPack
       (machineMatrixEntryLengthRows state)
@@ -334,17 +355,24 @@ theorem machineMatrixEntryBitBoundRuler_mem_FP :
 
 /-! ## Exact semantics -/
 
+/-- Sums the rational encoding bit lengths of a list of entries. -/
 def matrixEntryLengthListCost (xs : List ℚ) : ℕ :=
   (xs.map fun q ↦ encodedBitLength ℚ q).sum
 
+/-- Sums the entry-encoding bit costs of all rows. -/
 def matrixEntryLengthRowsCost (rows : List (List ℚ)) : ℕ :=
   (rows.map matrixEntryLengthListCost).sum
 
 structure MatrixEntryLengthSemState where
+  /-- The unprocessed rows of the semantic matrix-entry-length scan. -/
   rows : List (List ℚ)
+  /-- The unprocessed suffix of the current row in the semantic length scan. -/
   current : List ℚ
+  /-- The natural-number total accumulated by the semantic entry-length scan. -/
   acc : ℕ
 
+/-- Encodes the semantic remaining rows, current suffix, and unary accumulated length using the
+supplied bound word. -/
 def matrixEntryLengthSemCode (bound : List Bool)
     (s : MatrixEntryLengthSemState) : List Bool :=
   machineMatrixEntryLengthPack
@@ -352,6 +380,8 @@ def matrixEntryLengthSemCode (bound : List Bool)
     (binaryListCode rationalEntryBinaryCode s.current)
     (List.replicate s.acc true) bound
 
+/-- Adds the next entry's encoding length, loads the next row when needed, and fixes the
+exhausted semantic scan. -/
 def matrixEntryLengthSemStep :
     MatrixEntryLengthSemState → MatrixEntryLengthSemState
   | ⟨[], [], acc⟩ => ⟨[], [], acc⟩
@@ -359,6 +389,8 @@ def matrixEntryLengthSemStep :
   | ⟨rows, q :: qs, acc⟩ =>
       ⟨rows, qs, acc + encodedBitLength ℚ q⟩
 
+/-- Bounds the accumulated length plus all unprocessed entry costs by the specified bound
+length. -/
 def MatrixEntryLengthSemInvariant
     (boundLength : ℕ) (s : MatrixEntryLengthSemState) : Prop :=
   s.acc + matrixEntryLengthListCost s.current +

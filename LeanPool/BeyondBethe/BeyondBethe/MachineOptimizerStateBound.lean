@@ -24,6 +24,7 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Adds `10 + 4 * D` to the rounding precision to obtain the state denominator bound in binary. -/
 def machineOptimizerFeasibilityStateDenominatorBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityRoundingPrecisionBits
@@ -31,26 +32,31 @@ def machineOptimizerFeasibilityStateDenominatorBits
       (machineBinaryMulOf (machineBinaryConst 4)
         machineOptimizerFeasibilityDBits)) word
 
+/-- Doubles the initial length plus accumulated magnitude growth for the state-entry bound. -/
 def machineOptimizerFeasibilityStateTwiceMagnitudeBits
     (word : List Bool) : List Bool :=
   machineBinaryMulOf (machineBinaryConst 2)
     machineOptimizerFeasibilityKPlusGrowthBits word
 
+/-- Quadruples the state denominator bound in binary. -/
 def machineOptimizerFeasibilityStateFourDenominatorBits
     (word : List Bool) : List Bool :=
   machineBinaryMulOf (machineBinaryConst 4)
     machineOptimizerFeasibilityStateDenominatorBits word
 
+/-- Adds eight to the doubled magnitude bound for the first state-entry term. -/
 def machineOptimizerFeasibilityStateEntryFirstBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf (machineBinaryConst 8)
     machineOptimizerFeasibilityStateTwiceMagnitudeBits word
 
+/-- Adds four times the denominator bound to the first state-entry term. -/
 def machineOptimizerFeasibilityStateEntryBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityStateEntryFirstBits
     machineOptimizerFeasibilityStateFourDenominatorBits word
 
+/-- Doubles the state-entry bound and adds two for one encoded list entry. -/
 def machineOptimizerFeasibilityStateTwiceEntryPlusTwoBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf
@@ -58,11 +64,13 @@ def machineOptimizerFeasibilityStateTwiceEntryPlusTwoBits
       machineOptimizerFeasibilityStateEntryBits)
     (machineBinaryConst 2) word
 
+/-- Multiplies the encoded-entry bound by the ellipsoid dimension to bound a vector. -/
 def machineOptimizerFeasibilityStateVectorBits
     (word : List Bool) : List Bool :=
   machineBinaryMulOf machineOptimizerFeasibilityDBits
     machineOptimizerFeasibilityStateTwiceEntryPlusTwoBits word
 
+/-- Doubles the vector bound and adds two for one encoded matrix row. -/
 def machineOptimizerFeasibilityStateTwiceVectorPlusTwoBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf
@@ -70,17 +78,20 @@ def machineOptimizerFeasibilityStateTwiceVectorPlusTwoBits
       machineOptimizerFeasibilityStateVectorBits)
     (machineBinaryConst 2) word
 
+/-- Multiplies the encoded-row bound by the ellipsoid dimension to bound a matrix. -/
 def machineOptimizerFeasibilityStateMatrixBits
     (word : List Bool) : List Bool :=
   machineBinaryMulOf machineOptimizerFeasibilityDBits
     machineOptimizerFeasibilityStateTwiceVectorPlusTwoBits word
 
+/-- Computes the outer dimension-encoding contribution `2 * (D + 1)`. -/
 def machineOptimizerFeasibilityStateDimensionTermBits
     (word : List Bool) : List Bool :=
   machineBinaryMulOf (machineBinaryConst 2)
     (machineBinaryAddOf machineOptimizerFeasibilityDBits
       (machineBinaryConst 1)) word
 
+/-- Adds twice the vector bound and twice the matrix bound for the state inner payload. -/
 def machineOptimizerFeasibilityStateInnerFirstBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf
@@ -89,26 +100,32 @@ def machineOptimizerFeasibilityStateInnerFirstBits
     (machineBinaryMulOf (machineBinaryConst 2)
       machineOptimizerFeasibilityStateMatrixBits) word
 
+/-- Adds two to the combined vector-and-matrix payload bound. -/
 def machineOptimizerFeasibilityStateInnerBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityStateInnerFirstBits
     (machineBinaryConst 2) word
 
+/-- Doubles the inner payload bound for the outer state encoding. -/
 def machineOptimizerFeasibilityStateTwiceInnerBits
     (word : List Bool) : List Bool :=
   machineBinaryMulOf (machineBinaryConst 2)
     machineOptimizerFeasibilityStateInnerBits word
 
+/-- Adds the dimension contribution to the doubled inner payload bound. -/
 def machineOptimizerFeasibilityStateBoundFirstBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityStateDimensionTermBits
     machineOptimizerFeasibilityStateTwiceInnerBits word
 
+/-- Adds the final two-bit overhead to the complete feasibility-state bound. -/
 def machineOptimizerFeasibilityStateBoundBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityStateBoundFirstBits
     (machineBinaryConst 2) word
 
+/-- Concatenates dimension, initial-magnitude-length, iteration-budget, and rounding-precision
+rulers to seed the state guard. -/
 def machineOptimizerFeasibilityStateGuardSource
     (word : List Bool) : List Bool :=
   machineOptimizerFeasibilityEllipsoidDimensionUnary word ++
@@ -116,11 +133,13 @@ def machineOptimizerFeasibilityStateGuardSource
       (machineOptimizerFeasibilityBudgetUnary word ++
         machineOptimizerFeasibilityRoundingPrecisionUnary word))
 
+/-- Applies the binary-width construction three times to the feasibility-state guard source. -/
 def machineOptimizerFeasibilityStateGuard
     (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 3
     (machineOptimizerFeasibilityStateGuardSource word)
 
+/-- Converts the computed state bound from binary to a unary ruler under its guard. -/
 def machineOptimizerFeasibilityStateBoundUnary
     (word : List Bool) : List Bool :=
   machineBoundedUnary

@@ -24,22 +24,27 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Converts the reduced feasibility dimension to a unary ruler bounded by the source word. -/
 def machineOptimizerFeasibilityReducedDimensionUnary
     (word : List Bool) : List Bool :=
   machineBoundedUnary
     (pair (machineOptimizerFeasibilitySource word)
       (machineOptimizerFeasibilityReducedDimensionBits word))
 
+/-- Normalizes the source matrix's regularization parameter for the feasibility oracle. -/
 def machineOptimizerFeasibilityTauCode
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineOptimizerTauRawCode (machineOptimizerFeasibilitySource word))
 
+/-- Obtains the encoded optimizer floor from the source matrix. -/
 def machineOptimizerFeasibilityDeltaRawCode
     (word : List Bool) : List Bool :=
   machineExplicitOptimizerFloorRawCode
     (machineOptimizerFeasibilitySource word)
 
+/-- Packages dimension, precision, regularization, floor, threshold, and source for the static
+feasibility oracle. -/
 def machineOptimizerFeasibilityOracleStaticCode
     (word : List Bool) : List Bool :=
   pair (machineOptimizerFeasibilityReducedDimensionUnary word)
@@ -51,12 +56,15 @@ def machineOptimizerFeasibilityOracleStaticCode
           (pair (machineOptimizerFeasibilityUpperRawCode word)
             (machineOptimizerFeasibilitySource word)))))
 
+/-- Encodes the initial rational ball using the ellipsoid dimension and outer-radius code. -/
 def machineOptimizerFeasibilityInitialBallCode
     (word : List Bool) : List Bool :=
   machineRationalBallStateCode
     (pair (machineOptimizerFeasibilityEllipsoidDimensionUnary word)
       (machineOptimizerFeasibilityOuterRadiusEntryCode word))
 
+/-- Packages the iteration budget, state bound, rounding precision, static oracle data, and
+initial ball. -/
 def machineOptimizerFeasibilityLoopWord
     (word : List Bool) : List Bool :=
   pair (machineOptimizerFeasibilityBudgetUnary word)
@@ -65,6 +73,8 @@ def machineOptimizerFeasibilityLoopWord
         (pair (machineOptimizerFeasibilityOracleStaticCode word)
           (machineOptimizerFeasibilityInitialBallCode word))))
 
+/-- Runs the Bethe feasibility loop on the optimizer-generated request and extracts its result
+code. -/
 def machineExplicitBetheThresholdFeasibilityCode
     (word : List Bool) : List Bool :=
   machineBetheFeasibilityResultCode

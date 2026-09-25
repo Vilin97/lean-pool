@@ -33,21 +33,25 @@ open Complexity
 
 /-! ## Exact dyadic thresholds -/
 
+/-- The raw-rational initial lower objective bound `-2*n^2`. -/
 def rawOptimizerInitialLow (n : ℕ) : RawRat :=
   (rawOptimizerTwiceNSquare n).neg
 
+/-- The threshold at dyadic position `k/2^t` within the initial objective interval. -/
 def optimizerDyadicThreshold {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (k t : ℕ) : ℚ :=
   betheNegativeObjectiveLower m +
     (k : ℚ) / 2 ^ t * explicitOptimizerInitialWidth A
 
+/-- Normalizes the encoded initial lower objective bound `-2*n^2`. -/
 def machineOptimizerInitialLowEntryCode
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineRawRatNegCode
       (machineOptimizerTwiceNSquareForWidthRawCode word))
 
+/-- Normalizes the initial interval width for use in the bisection loop. -/
 def machineOptimizerInitialWidthEntryCodeForBisection
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
@@ -55,51 +59,62 @@ def machineOptimizerInitialWidthEntryCodeForBisection
 
 /-! ## Persistent state -/
 
+/-- Encodes a bisection state as source matrix, iteration ruler, binary index, and unary depth. -/
 def machineOptimizerBisectionStatePack
     (source ruler index depth : List Bool) : List Bool :=
   pair source (pair ruler (pair index depth))
 
+/-- Extracts the source matrix from the bisection state. -/
 def machineOptimizerBisectionStateSource
     (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the fixed bisection-iteration ruler from the state. -/
 def machineOptimizerBisectionStateRuler
     (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the binary index of the current dyadic interval. -/
 def machineOptimizerBisectionStateIndex
     (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the unary depth of the current dyadic interval. -/
 def machineOptimizerBisectionStateDepth
     (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
+/-- Initializes bisection with the source matrix, scheduled ruler, and zero index and depth. -/
 def machineOptimizerBisectionInit (word : List Bool) : List Bool :=
   machineOptimizerBisectionStatePack word
     (machineExplicitOptimizerBisectionStepsRuler word) [] []
 
 /-! ## Reconstruct the queried midpoint -/
 
+/-- Doubles the current dyadic interval index in binary. -/
 def machineOptimizerBisectionEvenIndexBits
     (state : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machineOptimizerBisectionStateIndex state) [false, true])
 
+/-- Computes the odd midpoint index `2*k + 1` in binary. -/
 def machineOptimizerBisectionOddIndexBits
     (state : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineOptimizerBisectionEvenIndexBits state) [true])
 
+/-- Increments the unary bisection depth. -/
 def machineOptimizerBisectionNextDepth
     (state : List Bool) : List Bool :=
   true :: machineOptimizerBisectionStateDepth state
 
+/-- Computes the binary denominator `2^(t + 1)` for the next midpoint. -/
 def machineOptimizerBisectionDenominatorBits
     (state : List Bool) : List Bool :=
   machineDirectedLogPowerTwoBits
     (machineOptimizerBisectionNextDepth state)
 
+/-- Encodes the raw dyadic midpoint fraction `(2*k + 1)/2^(t + 1)`. -/
 def machineOptimizerBisectionFractionRawCode
     (state : List Bool) : List Bool :=
   pair
@@ -107,6 +122,7 @@ def machineOptimizerBisectionFractionRawCode
       (machineOptimizerBisectionOddIndexBits state))
     (machineOptimizerBisectionDenominatorBits state)
 
+/-- Multiplies the dyadic midpoint fraction by the initial objective-interval width. -/
 def machineOptimizerBisectionScaledFractionRawCode
     (state : List Bool) : List Bool :=
   machineRawRatMulCode
@@ -114,6 +130,7 @@ def machineOptimizerBisectionScaledFractionRawCode
       (machineOptimizerInitialWidthEntryCodeForBisection
         (machineOptimizerBisectionStateSource state)))
 
+/-- Adds the initial lower objective bound to the scaled midpoint fraction. -/
 def machineOptimizerBisectionMidpointUnnormalizedRawCode
     (state : List Bool) : List Bool :=
   machineRawRatAddCode
@@ -122,21 +139,25 @@ def machineOptimizerBisectionMidpointUnnormalizedRawCode
         (machineOptimizerBisectionStateSource state))
       (machineOptimizerBisectionScaledFractionRawCode state))
 
+/-- Normalizes the encoded midpoint threshold. -/
 def machineOptimizerBisectionMidpointRawCode
     (state : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineOptimizerBisectionMidpointUnnormalizedRawCode state)
 
+/-- Pairs the source matrix with the current midpoint threshold for a feasibility query. -/
 def machineOptimizerBisectionFeasibilityCall
     (state : List Bool) : List Bool :=
   pair (machineOptimizerBisectionStateSource state)
     (machineOptimizerBisectionMidpointRawCode state)
 
+/-- Runs the explicit threshold-feasibility machine at the current bisection midpoint. -/
 def machineOptimizerBisectionFeasibilityResult
     (state : List Bool) : List Bool :=
   machineExplicitBetheThresholdFeasibilityCode
     (machineOptimizerBisectionFeasibilityCall state)
 
+/-- Reads the exhausted flag from the midpoint feasibility result. -/
 def machineOptimizerBisectionExhaustedBit
     (state : List Bool) : List Bool :=
   machineHeadBit
@@ -145,12 +166,14 @@ def machineOptimizerBisectionExhaustedBit
 
 /-! ## One branch and the bounded iteration -/
 
+/-- Chooses index `2*k + 1` on exhaustion and `2*k` on acceptance. -/
 def machineOptimizerBisectionNextIndexBits
     (state : List Bool) : List Bool :=
   machineIfHead (machineOptimizerBisectionExhaustedBit state)
     (machineOptimizerBisectionOddIndexBits state)
     (machineOptimizerBisectionEvenIndexBits state)
 
+/-- Updates the dyadic interval index and depth while preserving the source and iteration ruler. -/
 def machineOptimizerBisectionStep (state : List Bool) : List Bool :=
   machineOptimizerBisectionStatePack
     (machineOptimizerBisectionStateSource state)
@@ -158,6 +181,7 @@ def machineOptimizerBisectionStep (state : List Bool) : List Bool :=
     (machineOptimizerBisectionNextIndexBits state)
     (machineOptimizerBisectionNextDepth state)
 
+/-- Runs bisection for the scheduled number of iterations. -/
 def machineOptimizerBisectionFinalState
     (word : List Bool) : List Bool :=
   (machineOptimizerBisectionStep)^[(
@@ -166,11 +190,13 @@ def machineOptimizerBisectionFinalState
 
 /-! ## Re-query the certified upper endpoint -/
 
+/-- Computes the upper endpoint index `k + 1` of the current dyadic interval. -/
 def machineOptimizerBisectionHighIndexBits
     (state : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineOptimizerBisectionStateIndex state) [true])
 
+/-- Encodes the current upper endpoint fraction `(k + 1)/2^t`. -/
 def machineOptimizerBisectionHighFractionRawCode
     (state : List Bool) : List Bool :=
   pair
@@ -179,6 +205,7 @@ def machineOptimizerBisectionHighFractionRawCode
     (machineDirectedLogPowerTwoBits
       (machineOptimizerBisectionStateDepth state))
 
+/-- Scales the upper endpoint fraction by the initial interval width. -/
 def machineOptimizerBisectionHighScaledRawCode
     (state : List Bool) : List Bool :=
   machineRawRatMulCode
@@ -186,6 +213,7 @@ def machineOptimizerBisectionHighScaledRawCode
       (machineOptimizerInitialWidthEntryCodeForBisection
         (machineOptimizerBisectionStateSource state)))
 
+/-- Adds the initial lower bound to the scaled upper endpoint fraction. -/
 def machineOptimizerBisectionHighUnnormalizedRawCode
     (state : List Bool) : List Bool :=
   machineRawRatAddCode
@@ -194,17 +222,20 @@ def machineOptimizerBisectionHighUnnormalizedRawCode
         (machineOptimizerBisectionStateSource state))
       (machineOptimizerBisectionHighScaledRawCode state))
 
+/-- Normalizes the encoded upper endpoint threshold. -/
 def machineOptimizerBisectionHighRawCode
     (state : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineOptimizerBisectionHighUnnormalizedRawCode state)
 
+/-- Runs threshold feasibility once more at the final bisection interval's upper endpoint. -/
 def machineExplicitBetheOptimizerFeasibilityResultCode
     (word : List Bool) : List Bool :=
   let state := machineOptimizerBisectionFinalState word
   machineExplicitBetheThresholdFeasibilityCode
     (pair word (machineOptimizerBisectionHighRawCode state))
 
+/-- Extracts the point payload returned by the final optimizer feasibility call. -/
 def machineExplicitBetheOptimizerPointCode
     (word : List Bool) : List Bool :=
   machinePairSecond
@@ -387,6 +418,8 @@ theorem machineOptimizerBisectionStep_mem_FP :
   simp [machineOptimizerBisectionStateDepth,
     machineOptimizerBisectionStatePack]
 
+/-- Records canonical state packing, fixed source and ruler, index below `2^iterations`, and
+matching depth. -/
 def MachineOptimizerBisectionStateBound
     (word : List Bool) (iterations : ℕ) (state : List Bool) : Prop :=
   state = machineOptimizerBisectionStatePack
@@ -474,6 +507,7 @@ theorem machineOptimizerBisectionIterate_bound (word : List Bool) : ∀ k,
       simpa only [Nat.succ_eq_add_one] using!
         machineOptimizerBisectionStep_bound ih
 
+/-- Packs four copies of a source-and-ruler envelope to bound a bisection state. -/
 def machineOptimizerBisectionWidth (word : List Bool) : List Bool :=
   let envelope := false ::
     (word ++ machineExplicitOptimizerBisectionStepsRuler word)

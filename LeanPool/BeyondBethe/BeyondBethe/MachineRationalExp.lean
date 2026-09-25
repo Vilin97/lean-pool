@@ -30,39 +30,49 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the unary guard bound from a rational exponential query. -/
 def machineExpGuard (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the argument and loss payload from a rational exponential query. -/
 def machineExpPayload (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the encoded raw-rational exponential argument. -/
 def machineExpArgumentCode (word : List Bool) : List Bool :=
   machinePairFirst (machineExpPayload word)
 
+/-- Extracts the encoded raw-rational exponential loss allowance. -/
 def machineExpLossCode (word : List Bool) : List Bool :=
   machinePairSecond (machineExpPayload word)
 
+/-- Reads the sign bit of the exponential argument's numerator. -/
 def machineExpArgumentSign (word : List Bool) : List Bool :=
   machineHeadBit (machinePairFirst (machineExpArgumentCode word))
 
+/-- Selects the argument or its negation to encode its nonnegative magnitude. -/
 def machineExpMagnitudeCode (word : List Bool) : List Bool :=
   machineIfHead (machineExpArgumentSign word)
     (machineRawRatNegCode (machineExpArgumentCode word))
     (machineExpArgumentCode word)
 
+/-- Squares the encoded magnitude of the exponential argument. -/
 def machineExpSquareCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineExpMagnitudeCode word) (machineExpMagnitudeCode word))
 
+/-- Divides the squared argument magnitude by the loss allowance. -/
 def machineExpSquareOverLossCode (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineExpSquareCode word) (machineExpLossCode word))
 
+/-- Adds the argument magnitude to its square divided by the loss allowance. -/
 def machineExpScheduleArgumentCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineExpMagnitudeCode word)
       (machineExpSquareOverLossCode word))
 
+/-- Computes the natural ceiling of the exponential scheduling expression. -/
 def machineExpCeilBits (word : List Bool) : List Bool :=
   machineRationalCeilNatBits (machineExpScheduleArgumentCode word)
 
@@ -70,16 +80,20 @@ def machineExpCeilBits (word : List Bool) : List Bool :=
 def machineExpStepsBits (word : List Bool) : List Bool :=
   true :: machineExpCeilBits word
 
+/-- Converts the exponential step count into a unary ruler bounded by the supplied guard. -/
 def machineExpStepsRuler (word : List Bool) : List Bool :=
   machineBoundedUnary (pair (machineExpGuard word) (machineExpStepsBits word))
 
+/-- Encodes the scheduled exponential step count as a raw rational with denominator one. -/
 def machineExpStepsRawRatCode (word : List Bool) : List Bool :=
   pair (machineNaturalIntegerCode (machineExpStepsBits word)) [true]
 
+/-- Divides the exponential argument by the scheduled step count. -/
 def machineExpScaledArgumentCode (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineExpArgumentCode word) (machineExpStepsRawRatCode word))
 
+/-- Forms the rational exponential-approximation base `1 + s/N`. -/
 def machineExpBaseCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair rawRatOneCode (machineExpScaledArgumentCode word))
@@ -96,6 +110,7 @@ def machineBoundedRationalExpLowerRawPowerCode
   machineRawRatPowerCode
     (pair (machineExpStepsRuler word) (machineExpBaseCode word))
 
+/-- Normalizes the bounded raw exponential power approximation into a rational entry code. -/
 def machineBoundedRationalExpLowerRawEntryCode
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
@@ -218,6 +233,8 @@ def expMagnitude (q : RawRat) : RawRat :=
   | .ofNat _ => q
   | .negSucc _ => q.neg
 
+/-- The scheduled number of rational exponential steps determined by argument magnitude and
+loss. -/
 def expApproxSteps (s loss : RawRat) : ℕ :=
   binaryRationalExpApproxSteps (expMagnitude s).value loss.value
 

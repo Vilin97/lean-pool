@@ -24,44 +24,55 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the unary row index from a rational matrix-update request. -/
 def machineRationalMatrixUpdateRow (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the matrix-update payload following its row index. -/
 def machineRationalMatrixUpdateRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the unary column index from a rational matrix-update request. -/
 def machineRationalMatrixUpdateColumn (word : List Bool) : List Bool :=
   machinePairFirst (machineRationalMatrixUpdateRest word)
 
+/-- Extracts the replacement-and-matrix payload following the requested indices. -/
 def machineRationalMatrixUpdatePayload (word : List Bool) : List Bool :=
   machinePairSecond (machineRationalMatrixUpdateRest word)
 
+/-- Extracts the replacement entry from a rational matrix-update request. -/
 def machineRationalMatrixUpdateReplacement (word : List Bool) : List Bool :=
   machinePairFirst (machineRationalMatrixUpdatePayload word)
 
+/-- Extracts the encoded matrix from a rational matrix-update request. -/
 def machineRationalMatrixUpdateMatrix (word : List Bool) : List Bool :=
   machinePairSecond (machineRationalMatrixUpdatePayload word)
 
+/-- Reads the encoded row list of the matrix being updated. -/
 def machineRationalMatrixUpdateRows (word : List Bool) : List Bool :=
   machineMatrixRowsWord (machineRationalMatrixUpdateMatrix word)
 
+/-- Looks up the row selected by the unary matrix-update index. -/
 def machineRationalMatrixUpdateCurrentRow (word : List Bool) : List Bool :=
   machineListIndex
     (pair (machineRationalMatrixUpdateRow word)
       (machineRationalMatrixUpdateRows word))
 
+/-- Replaces the selected column of the current row with the supplied entry. -/
 def machineRationalMatrixUpdateNewRow (word : List Bool) : List Bool :=
   machineListUpdate
     (pair (machineRationalMatrixUpdateColumn word)
       (pair (machineRationalMatrixUpdateReplacement word)
         (machineRationalMatrixUpdateCurrentRow word)))
 
+/-- Replaces the selected matrix row with its updated row. -/
 def machineRationalMatrixUpdateNewRows (word : List Bool) : List Bool :=
   machineListUpdate
     (pair (machineRationalMatrixUpdateRow word)
       (pair (machineRationalMatrixUpdateNewRow word)
         (machineRationalMatrixUpdateRows word)))
 
+/-- Reconstructs the matrix encoding from its unchanged dimension and updated row list. -/
 def machineRationalMatrixUpdateAtUnary (word : List Bool) : List Bool :=
   pair (machineMatrixDimensionWord (machineRationalMatrixUpdateMatrix word))
     (machineRationalMatrixUpdateNewRows word)
@@ -139,6 +150,7 @@ theorem machineRationalMatrixUpdateAtUnary_mem_FP :
 
 /-! ## Exact semantics -/
 
+/-- Pairs a dimension word with an encoded nested list of rational rows. -/
 def rationalRowsWord (dimension : List Bool)
     (rows : List (List ℚ)) : List Bool :=
   pair dimension

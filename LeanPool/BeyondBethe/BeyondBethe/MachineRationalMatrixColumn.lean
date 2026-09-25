@@ -25,52 +25,64 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the unary column index from a matrix-column query. -/
 def machineRationalMatrixColumnIndex (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the encoded rows from a matrix-column query. -/
 def machineRationalMatrixColumnRows (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Encodes column-extraction state as remaining rows, reversed column, index, and width bound. -/
 def machineRationalMatrixColumnPack
     (remaining accumulator column bound : List Bool) : List Bool :=
   pair remaining (pair accumulator (pair column bound))
 
+/-- Extracts the rows not yet processed by column extraction. -/
 def machineRationalMatrixColumnRemaining
     (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the reversed accumulated column entries. -/
 def machineRationalMatrixColumnAccumulator
     (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the fixed unary column index from the scan state. -/
 def machineRationalMatrixColumnColumn
     (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the width bound stored in the column-extraction state. -/
 def machineRationalMatrixColumnBound
     (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
+/-- Reads the first unprocessed matrix row. -/
 def machineRationalMatrixColumnCurrentRow
     (state : List Bool) : List Bool :=
   machineListHead (machineRationalMatrixColumnRemaining state)
 
+/-- Looks up the selected column entry in the current row. -/
 def machineRationalMatrixColumnCurrentEntry
     (state : List Bool) : List Bool :=
   machineListIndex
     (pair (machineRationalMatrixColumnColumn state)
       (machineRationalMatrixColumnCurrentRow state))
 
+/-- Prepends the current column entry to the reversed accumulator. -/
 def machineRationalMatrixColumnCandidate
     (state : List Bool) : List Bool :=
   pair (machineRationalMatrixColumnCurrentEntry state)
     (machineRationalMatrixColumnAccumulator state)
 
+/-- Truncates the candidate column accumulator to the stored width bound. -/
 def machineRationalMatrixColumnNextAccumulator
     (state : List Bool) : List Bool :=
   (machineRationalMatrixColumnCandidate state).take
     (machineRationalMatrixColumnBound state).length
 
+/-- Consumes one row and stores its selected column entry while retaining the index and bound. -/
 def machineRationalMatrixColumnAdvance
     (state : List Bool) : List Bool :=
   machineRationalMatrixColumnPack
@@ -79,24 +91,30 @@ def machineRationalMatrixColumnAdvance
     (machineRationalMatrixColumnColumn state)
     (machineRationalMatrixColumnBound state)
 
+/-- Processes the next row, leaving exhausted column-extraction states fixed. -/
 def machineRationalMatrixColumnStep
     (state : List Bool) : List Bool :=
   machineIfEmpty (machineRationalMatrixColumnRemaining state) state
     (machineRationalMatrixColumnAdvance state)
 
+/-- Initializes column extraction with the source rows, empty accumulator, fixed index, and
+input-word bound. -/
 def machineRationalMatrixColumnInit (word : List Bool) : List Bool :=
   machineRationalMatrixColumnPack
     (machineRationalMatrixColumnRows word) []
     (machineRationalMatrixColumnIndex word) word
 
+/-- Packs four copies of the input word to bound a column-extraction state. -/
 def machineRationalMatrixColumnWidth (word : List Bool) : List Bool :=
   machineRationalMatrixColumnPack word word word word
 
+/-- Runs column extraction for one step per input bit. -/
 def machineRationalMatrixColumnFinalState
     (word : List Bool) : List Bool :=
   (machineRationalMatrixColumnStep)^[word.length]
     (machineRationalMatrixColumnInit word)
 
+/-- Extracts the selected column entries in reverse row order. -/
 def machineRationalMatrixColumnReversedCode
     (word : List Bool) : List Bool :=
   machineRationalMatrixColumnAccumulator
@@ -210,6 +228,8 @@ theorem machineRationalMatrixColumnWidth_mem_FP :
   simp [machineRationalMatrixColumnBound,
     machineRationalMatrixColumnPack]
 
+/-- Bounds remaining rows, accumulated entries, and the column index while retaining the input
+word as bound. -/
 def MachineRationalMatrixColumnStateBound
     (word state : List Bool) : Prop :=
   state = machineRationalMatrixColumnPack
@@ -304,9 +324,11 @@ theorem machineRationalMatrixColumnCode_mem_FP :
 
 /-! ## Exact semantics -/
 
+/-- Selects column `j` from each rational row, using zero when the row has no such entry. -/
 def rationalColumnOfRows (rows : List (List ℚ)) (j : ℕ) : List ℚ :=
   rows.map fun row => row.getD j 0
 
+/-- Requires every supplied row to contain an entry at column index `j`. -/
 def RationalRowsHaveColumn (rows : List (List ℚ)) (j : ℕ) : Prop :=
   ∀ row ∈ rows, j < row.length
 
@@ -369,6 +391,8 @@ theorem rationalColumnOfRows_take_reverse_code_length_le
       rationalEntryBinaryCode (rationalColumnOfRows rows j) k).trans
     (rationalColumnOfRows_code_length_le j rows hvalid)
 
+/-- Encodes column extraction after `k` rows, with the selected entries accumulated in reverse
+order. -/
 def machineRationalMatrixColumnSemanticState
     (rows : List (List ℚ)) (j k : ℕ)
     (bound : List Bool) : List Bool :=

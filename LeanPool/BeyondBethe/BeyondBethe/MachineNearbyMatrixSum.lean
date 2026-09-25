@@ -27,30 +27,40 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Packs the fixed source, remaining rows, current row suffix, accumulator, and bound for the
+nearby-matrix sum. -/
 def machineNearbyMatrixPack
     (source rows current acc bound : List Bool) : List Bool :=
   pair source (pair rows (pair current (pair acc bound)))
 
+/-- Extracts the fixed problem source from a nearby-matrix scan state. -/
 def machineNearbyMatrixSource (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the remaining encoded matrix rows from a nearby-matrix scan state. -/
 def machineNearbyMatrixRows (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the current row suffix from a nearby-matrix scan state. -/
 def machineNearbyMatrixCurrent (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the raw accumulated nearby-coordinate sum from a scan state. -/
 def machineNearbyMatrixAcc (state : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Extracts the accumulator length-bound word from a nearby-matrix scan state. -/
 def machineNearbyMatrixBound (state : List Bool) : List Bool :=
   machinePairSecond
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Reads the next entry of the current matrix-row suffix. -/
 def machineNearbyMatrixEntry (state : List Bool) : List Bool :=
   machineListHead (machineNearbyMatrixCurrent state)
 
+/-- Packages the source's certificate precision and regularization scale with the current matrix
+entry. -/
 def machineNearbyMatrixCoordinateInput (state : List Bool) : List Bool :=
   pair
     (machineCertificateLogPrecisionRuler (machineNearbyMatrixSource state))
@@ -59,19 +69,24 @@ def machineNearbyMatrixCoordinateInput (state : List Bool) : List Bool :=
         (machineNearbyMatrixSource state))
       (machineNearbyMatrixEntry state))
 
+/-- Computes the current matrix entry's directed nearby-coordinate lower expression. -/
 def machineNearbyMatrixCoordinateRawCode (state : List Bool) : List Bool :=
   machineNearbyCoordinateLowerRawCode
     (machineNearbyMatrixCoordinateInput state)
 
+/-- Adds the current nearby-coordinate expression to the raw accumulator. -/
 def machineNearbyMatrixCandidate (state : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineNearbyMatrixAcc state)
       (machineNearbyMatrixCoordinateRawCode state))
 
+/-- Truncates the updated nearby-matrix accumulator to the stored bound length. -/
 def machineNearbyMatrixNextAcc (state : List Bool) : List Bool :=
   (machineNearbyMatrixCandidate state).take
     (machineNearbyMatrixBound state).length
 
+/-- Consumes the current matrix entry and stores the bounded updated accumulator while retaining
+source, remaining rows, and bound. -/
 def machineNearbyMatrixProcessEntry (state : List Bool) : List Bool :=
   machineNearbyMatrixPack
     (machineNearbyMatrixSource state)
@@ -80,6 +95,8 @@ def machineNearbyMatrixProcessEntry (state : List Bool) : List Bool :=
     (machineNearbyMatrixNextAcc state)
     (machineNearbyMatrixBound state)
 
+/-- Loads the next matrix row while preserving the source, nearby-term accumulator, and width
+bound. -/
 def machineNearbyMatrixLoadRow (state : List Bool) : List Bool :=
   machineNearbyMatrixPack
     (machineNearbyMatrixSource state)
@@ -88,10 +105,12 @@ def machineNearbyMatrixLoadRow (state : List Bool) : List Bool :=
     (machineNearbyMatrixAcc state)
     (machineNearbyMatrixBound state)
 
+/-- Loads another row when available, otherwise retaining the completed nearby-sum state. -/
 def machineNearbyMatrixAfterRow (state : List Bool) : List Bool :=
   machineIfEmpty (machineNearbyMatrixRows state) state
     (machineNearbyMatrixLoadRow state)
 
+/-- Adds the next nearby-coordinate term or loads a row when the current row is exhausted. -/
 def machineNearbyMatrixStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineNearbyMatrixCurrent state)
     (machineNearbyMatrixAfterRow state)
@@ -104,20 +123,26 @@ def machineNearbyMatrixInputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth
     (machineBinaryMulWidth (machineBinaryMulWidth word))
 
+/-- Extracts the optimizer matrix's encoded rows for nearby-coordinate summation. -/
 def machineNearbyMatrixRowsWord (word : List Bool) : List Bool :=
   machineMatrixRowsWord (machineOptimizerMatrixWord word)
 
+/-- Initializes nearby-coordinate summation with all rows, zero accumulator, and input-derived
+bound. -/
 def machineNearbyMatrixInit (word : List Bool) : List Bool :=
   machineNearbyMatrixPack word (machineNearbyMatrixRowsWord word) []
     (rawRatBinaryCode RawRat.zero) (machineNearbyMatrixInputBound word)
 
+/-- Builds a width envelope for the source, remaining rows, current row, accumulator, and bound. -/
 def machineNearbyMatrixWidth (word : List Bool) : List Bool :=
   let bound := machineNearbyMatrixInputBound word
   machineNearbyMatrixPack word word word bound bound
 
+/-- Runs nearby-coordinate summation for one step per input bit. -/
 def machineNearbyMatrixFinalState (word : List Bool) : List Bool :=
   (machineNearbyMatrixStep)^[word.length] (machineNearbyMatrixInit word)
 
+/-- Extracts the accumulated raw-rational nearby-coordinate sum after the full scan. -/
 def machineNearbyMatrixRawSumCode (word : List Bool) : List Bool :=
   machineNearbyMatrixAcc (machineNearbyMatrixFinalState word)
 
@@ -279,6 +304,8 @@ theorem machineNearbyMatrixWidth_mem_FP :
         (machineNearbyMatrixPack source rows current acc bound) = bound := by
   simp [machineNearbyMatrixBound, machineNearbyMatrixPack]
 
+/-- Bounds the scan state lengths while preserving its source and input-derived accumulator
+bound. -/
 def MachineNearbyMatrixStateBound (word state : List Bool) : Prop :=
   state = machineNearbyMatrixPack
       (machineNearbyMatrixSource state) (machineNearbyMatrixRows state)
@@ -379,9 +406,11 @@ theorem machineNearbyMatrixRawSumCode_mem_FP :
 
 /-! ## Semantic invariant and exactness before discharging the size bound -/
 
+/-- Sums the raw widths plus one of nearby-coordinate lower approximations for a rational row. -/
 def rawNearbyListCost (tau : RawRat) (p : ℕ) (xs : List ℚ) : ℕ :=
   (xs.map fun q => rawRatWidth (rawNearbyCoordinateLower tau q p) + 1).sum
 
+/-- Sums the nearby-coordinate width costs across a list of rational rows. -/
 def rawNearbyRowsCost (tau : RawRat) (p : ℕ)
     (rows : List (List ℚ)) : ℕ :=
   (rows.map (rawNearbyListCost tau p)).sum
@@ -623,6 +652,7 @@ theorem machineNearbyMatrixInputBound_length_dominates (word : List Bool) :
     ring_nf at hcover ⊢
     omega
 
+/-- Adds nearby-coordinate lower approximations for a list into a raw-rational accumulator. -/
 def rawNearbyListSum (tau : RawRat) (p : ℕ) :
     RawRat → List ℚ → RawRat
   | acc, [] => acc
@@ -630,6 +660,7 @@ def rawNearbyListSum (tau : RawRat) (p : ℕ) :
       rawNearbyListSum tau p
         (acc.add (rawNearbyCoordinateLower tau q p)) qs
 
+/-- Adds nearby-coordinate lower approximations across all rows into a raw-rational accumulator. -/
 def rawNearbyRowsSum (tau : RawRat) (p : ℕ) :
     RawRat → List (List ℚ) → RawRat
   | acc, [] => acc
@@ -637,10 +668,15 @@ def rawNearbyRowsSum (tau : RawRat) (p : ℕ) :
       rawNearbyRowsSum tau p (rawNearbyListSum tau p acc row) rows
 
 structure NearbyMatrixSemState where
+  /-- Rows not yet loaded by the semantic nearby-coordinate scan. -/
   rows : List (List ℚ)
+  /-- Unprocessed entries of the current semantic scan row. -/
   current : List ℚ
+  /-- Accumulated raw-rational sum of nearby-coordinate lower approximations. -/
   acc : RawRat
 
+/-- Adds the next nearby-coordinate term, loads another row, or leaves a completed semantic
+state fixed. -/
 def nearbyMatrixSemStep (tau : RawRat) (p : ℕ)
     (s : NearbyMatrixSemState) : NearbyMatrixSemState :=
   match s.current with
@@ -651,6 +687,7 @@ def nearbyMatrixSemStep (tau : RawRat) (p : ℕ)
       | row :: rows => ⟨rows, row, s.acc⟩
       | [] => s
 
+/-- Encodes a semantic nearby-coordinate scan state together with its source and width bound. -/
 def nearbyMatrixSemCode (source bound : List Bool)
     (s : NearbyMatrixSemState) : List Bool :=
   machineNearbyMatrixPack source
@@ -658,6 +695,7 @@ def nearbyMatrixSemCode (source bound : List Bool)
     (binaryListCode rationalEntryBinaryCode s.current)
     (rawRatBinaryCode s.acc) bound
 
+/-- Bounds accumulator width plus the remaining nearby-coordinate costs by a fixed budget. -/
 def NearbyMatrixSemInvariant (tau : RawRat) (p budget : ℕ)
     (s : NearbyMatrixSemState) : Prop :=
   rawRatWidth s.acc + rawNearbyListCost tau p s.current +

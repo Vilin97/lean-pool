@@ -23,15 +23,19 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the signed numerator of the left raw rational in a pair. -/
 def machineRawLeftNumeratorCode (word : List Bool) : List Bool :=
   machinePairFirst (machinePairFirst word)
 
+/-- Extracts the denominator bits of the left raw rational in a pair. -/
 def machineRawLeftDenominatorBits (word : List Bool) : List Bool :=
   machinePairSecond (machinePairFirst word)
 
+/-- Extracts the signed numerator of the right raw rational in a pair. -/
 def machineRawRightNumeratorCode (word : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond word)
 
+/-- Extracts the denominator bits of the right raw rational in a pair. -/
 def machineRawRightDenominatorBits (word : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond word)
 
@@ -39,26 +43,31 @@ def machineRawRightDenominatorBits (word : List Bool) : List Bool :=
 def machineNaturalIntegerCode (word : List Bool) : List Bool :=
   false :: word
 
+/-- Multiplies the left signed numerator by the right denominator for raw rational addition. -/
 def machineRawAddLeftScaledNumerator (word : List Bool) : List Bool :=
   machineIntegerMulCode
     (pair (machineRawLeftNumeratorCode word)
       (machineNaturalIntegerCode (machineRawRightDenominatorBits word)))
 
+/-- Multiplies the right signed numerator by the left denominator for raw rational addition. -/
 def machineRawAddRightScaledNumerator (word : List Bool) : List Bool :=
   machineIntegerMulCode
     (pair (machineRawRightNumeratorCode word)
       (machineNaturalIntegerCode (machineRawLeftDenominatorBits word)))
 
+/-- Adds the two cross-multiplied signed numerators for raw rational addition. -/
 def machineRawAddNumeratorCode (word : List Bool) : List Bool :=
   machineIntegerAddCode
     (pair (machineRawAddLeftScaledNumerator word)
       (machineRawAddRightScaledNumerator word))
 
+/-- Multiplies the two signed numerators for raw rational multiplication. -/
 def machineRawProductNumeratorCode (word : List Bool) : List Bool :=
   machineIntegerMulCode
     (pair (machineRawLeftNumeratorCode word)
       (machineRawRightNumeratorCode word))
 
+/-- Multiplies the two binary denominators for raw rational arithmetic. -/
 def machineRawProductDenominatorBits (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machineRawLeftDenominatorBits word)

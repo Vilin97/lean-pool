@@ -82,6 +82,7 @@ theorem rationalEllipsoidStateBinaryCode_injective_fixed {d : ℕ} :
 injectivity of the self-contained word representation. -/
 abbrev RationalEllipsoidInput := Σ d : ℕ, RationalEllipsoidState d
 
+/-- Encodes a dimension-indexed rational ellipsoid input using its state encoding. -/
 def rationalEllipsoidInputBinaryCode :
     RationalEllipsoidInput → List Bool
   | ⟨_d, E⟩ => rationalEllipsoidStateBinaryCode E
@@ -168,15 +169,19 @@ theorem rationalFeasibilityResultBinaryCode_injective {d : ℕ} :
 
 /-! ## Polynomial-time field accessors -/
 
+/-- Extracts the encoded ellipsoid dimension. -/
 def machineRationalEllipsoidDimensionWord (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the paired center and basis payload of an encoded ellipsoid. -/
 def machineRationalEllipsoidPayloadWord (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the encoded center vector from the ellipsoid payload. -/
 def machineRationalEllipsoidCenterWord (word : List Bool) : List Bool :=
   machinePairFirst (machineRationalEllipsoidPayloadWord word)
 
+/-- Extracts the encoded basis matrix from the ellipsoid payload. -/
 def machineRationalEllipsoidBasisWord (word : List Bool) : List Bool :=
   machinePairSecond (machineRationalEllipsoidPayloadWord word)
 
@@ -225,9 +230,11 @@ theorem machineRationalEllipsoidBasisWord_mem_FP :
     machineRationalEllipsoidPayloadWord,
     rationalEllipsoidStateBinaryCode]
 
+/-- Extracts the tag from a tagged rational result. -/
 def machineRationalTaggedResultTag (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the payload from a tagged rational result. -/
 def machineRationalTaggedResultPayload (word : List Bool) : List Bool :=
   machinePairSecond word
 

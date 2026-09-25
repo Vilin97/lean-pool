@@ -25,13 +25,16 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Assigns data-code size two to false and four to true. -/
 def boolDataSize : Bool → ℕ
   | false => 2
   | true => 4
 
+/-- Sums the data-code sizes of all bits in a word. -/
 def boolDataLength (word : List Bool) : ℕ :=
   (word.map boolDataSize).sum
 
+/-- Expands each false bit to two unary bits and each true bit to four. -/
 def boolDataRuler (word : List Bool) : List Bool :=
   word.flatMap fun bit ↦ List.replicate (boolDataSize bit) true
 
@@ -109,41 +112,52 @@ theorem rational_encodedBitLength_eq_boolDataLength (q : ℚ) :
 
 /-! ## A finite-word transducer for `boolDataRuler` -/
 
+/-- Encodes a Boolean-data length state as remaining bits and accumulated unary ruler. -/
 def machineBoolDataPack (remaining acc : List Bool) : List Bool :=
   pair remaining acc
 
+/-- Extracts the unprocessed bits of the data-length scan. -/
 def machineBoolDataRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the accumulated unary data-length ruler. -/
 def machineBoolDataAcc (state : List Bool) : List Bool :=
   machinePairSecond state
 
+/-- Produces four unary bits for a true head and two for a false head. -/
 def machineBoolDataBitRuler (state : List Bool) : List Bool :=
   machineIfHead (machineBoolDataRemaining state)
     (List.replicate 4 true) (List.replicate 2 true)
 
+/-- Consumes one source bit and appends its data-size ruler to the accumulator. -/
 def machineBoolDataContinue (state : List Bool) : List Bool :=
   machineBoolDataPack (machineBoolDataRemaining state).tail
     (machineBoolDataAcc state ++ machineBoolDataBitRuler state)
 
+/-- Processes the next data bit, leaving an exhausted scan state fixed. -/
 def machineBoolDataStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineBoolDataRemaining state) state
     (machineBoolDataContinue state)
 
+/-- Initializes the Boolean-data length scan with the whole word and an empty ruler. -/
 def machineBoolDataInit (word : List Bool) : List Bool :=
   machineBoolDataPack word []
 
+/-- Provides a ruler of length `4 + 4*word.length` for the data-length state bound. -/
 def machineBoolDataBound (word : List Bool) : List Bool :=
   List.replicate 4 true ++
     (word ++ (word ++ (word ++ word)))
 
+/-- Packs two copies of the data-length bound to bound the encoded scan state. -/
 def machineBoolDataWidth (word : List Bool) : List Bool :=
   machineBoolDataPack (machineBoolDataBound word)
     (machineBoolDataBound word)
 
+/-- Runs the data-length scan once per input bit. -/
 def machineBoolDataFinalState (word : List Bool) : List Bool :=
   (machineBoolDataStep)^[word.length] (machineBoolDataInit word)
 
+/-- Extracts the complete unary ruler for the input's data-code length. -/
 def machineBoolDataLengthRuler (word : List Bool) : List Bool :=
   machineBoolDataAcc (machineBoolDataFinalState word)
 
@@ -200,6 +214,7 @@ theorem machineBoolDataWidth_mem_FP :
     machineBoolDataAcc (machineBoolDataPack remaining acc) = acc := by
   simp [machineBoolDataAcc, machineBoolDataPack]
 
+/-- Bounds the remaining source and an accumulator growing by at most four bits per iteration. -/
 def MachineBoolDataStateBound
     (word : List Bool) (iterations : ℕ) (state : List Bool) : Prop :=
   state = machineBoolDataPack
@@ -295,19 +310,25 @@ theorem machineBoolDataIterate_complete (word acc : List Bool) :
 
 /-! ## One rational entry -/
 
+/-- Extracts the encoded integer numerator of a rational entry. -/
 def machineOptimizerEntryNumeratorCode (word : List Bool) : List Bool :=
   machineRationalEntryNumeratorWord word
 
+/-- Extracts the numerator's absolute-value bits from a rational entry. -/
 def machineOptimizerEntryNatAbsBits (word : List Bool) : List Bool :=
   machineIntegerNatAbsBits (machineOptimizerEntryNumeratorCode word)
 
+/-- Produces the data-size ruler for the numerator sign, with four bits for negative and two
+otherwise. -/
 def machineOptimizerEntrySignRuler (word : List Bool) : List Bool :=
   machineIfHead (machineOptimizerEntryNumeratorCode word)
     (List.replicate 4 true) (List.replicate 2 true)
 
+/-- Builds the Boolean-data length ruler for the numerator's absolute-value bits. -/
 def machineOptimizerEntryNumeratorRuler (word : List Bool) : List Bool :=
   machineBoolDataLengthRuler (machineOptimizerEntryNatAbsBits word)
 
+/-- Builds the Boolean-data length ruler for the rational entry's denominator bits. -/
 def machineOptimizerEntryDenominatorRuler (word : List Bool) : List Bool :=
   machineBoolDataLengthRuler
     (machineRationalEntryDenominatorWord word)

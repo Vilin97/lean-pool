@@ -26,55 +26,70 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- The binary encoding of the raw-rational constant zero. -/
 def rawRatZeroCode : List Bool := rawRatBinaryCode RawRat.zero
 
+/-- Encodes logarithmic-series state as sum, current odd power, squared base, odd denominator,
+and bound. -/
 def machineLogSeriesPack
     (sum power square odd bound : List Bool) : List Bool :=
   pair sum (pair power (pair square (pair odd bound)))
 
+/-- Extracts the partial sum from the logarithmic-series state. -/
 def machineLogSeriesSumField (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the current odd power from the logarithmic-series state. -/
 def machineLogSeriesPowerField (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the fixed squared series base. -/
 def machineLogSeriesSquareField (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the binary odd denominator of the current series term. -/
 def machineLogSeriesOddField (state : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Extracts the width bound stored in the logarithmic-series state. -/
 def machineLogSeriesBoundField (state : List Bool) : List Bool :=
   machinePairSecond
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Encodes the current odd denominator as a raw rational with denominator one. -/
 def machineLogSeriesOddRawRatCode (state : List Bool) : List Bool :=
   pair (machineNaturalIntegerCode (machineLogSeriesOddField state)) [true]
 
+/-- Divides the current odd power by its odd denominator to form the next series term. -/
 def machineLogSeriesTermCandidate (state : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineLogSeriesPowerField state)
       (machineLogSeriesOddRawRatCode state))
 
+/-- Adds the current series term to the partial sum. -/
 def machineLogSeriesSumCandidate (state : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineLogSeriesSumField state)
       (machineLogSeriesTermCandidate state))
 
+/-- Multiplies the current odd power by the squared base to obtain the next odd power. -/
 def machineLogSeriesPowerCandidate (state : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineLogSeriesPowerField state)
       (machineLogSeriesSquareField state))
 
+/-- Increments the odd denominator by two. -/
 def machineLogSeriesOddCandidate (state : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineLogSeriesOddField state) [false, true])
 
+/-- Truncates a candidate state component to the stored logarithmic-series width bound. -/
 def machineLogSeriesClamp
     (candidate : List Bool → List Bool) (state : List Bool) : List Bool :=
   (candidate state).take (machineLogSeriesBoundField state).length
 
+/-- Updates bounded sum, odd power, and odd denominator while retaining the square and bound. -/
 def machineLogSeriesStep (state : List Bool) : List Bool :=
   machineLogSeriesPack
     (machineLogSeriesClamp machineLogSeriesSumCandidate state)
@@ -83,9 +98,11 @@ def machineLogSeriesStep (state : List Bool) : List Bool :=
     (machineLogSeriesClamp machineLogSeriesOddCandidate state)
     (machineLogSeriesBoundField state)
 
+/-- Extracts the unary term-count ruler from the logarithmic-series input. -/
 def machineLogSeriesInputRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the encoded raw-rational base of the logarithmic series. -/
 def machineLogSeriesInputBase (word : List Bool) : List Bool :=
   machinePairSecond word
 
@@ -94,11 +111,14 @@ well-formed partial sum while remaining polynomial on arbitrary inputs. -/
 def machineLogSeriesInputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth (machineBinaryMulWidth word)
 
+/-- Squares the encoded series base for initialization. -/
 def machineLogSeriesInitialSquareCandidate (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineLogSeriesInputBase word)
       (machineLogSeriesInputBase word))
 
+/-- Initializes a zero sum, bounded base and square, odd denominator one, and input-derived
+bound. -/
 def machineLogSeriesInit (word : List Bool) : List Bool :=
   let bound := machineLogSeriesInputBound word
   machineLogSeriesPack rawRatZeroCode
@@ -106,17 +126,21 @@ def machineLogSeriesInit (word : List Bool) : List Bool :=
     (List.take bound.length (machineLogSeriesInitialSquareCandidate word))
     [true] bound
 
+/-- Packs five copies of the input bound to bound the complete series state. -/
 def machineLogSeriesWidth (word : List Bool) : List Bool :=
   let bound := machineLogSeriesInputBound word
   machineLogSeriesPack bound bound bound bound bound
 
+/-- Runs one logarithmic-series step per bit of the term-count ruler. -/
 def machineLogSeriesFinalState (word : List Bool) : List Bool :=
   (machineLogSeriesStep)^[(machineLogSeriesInputRuler word).length]
     (machineLogSeriesInit word)
 
+/-- Extracts the raw partial sum after the scheduled logarithmic-series iterations. -/
 def machineRawRationalLogSeriesSumCode (word : List Bool) : List Bool :=
   machineLogSeriesSumField (machineLogSeriesFinalState word)
 
+/-- Normalizes the computed raw logarithmic-series sum into a rational encoding. -/
 def machineRationalLogSeriesSumCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode (machineRawRationalLogSeriesSumCode word)
 
@@ -241,6 +265,7 @@ theorem machineLogSeriesWidth_mem_FP :
         (machinePair_mem_FP machineLogSeriesInputBound_mem_FP
           machineLogSeriesInputBound_mem_FP)))
 
+/-- Bounds all five components of a canonically packed logarithmic-series state. -/
 def MachineLogSeriesStateBound (word state : List Bool) : Prop :=
   state = machineLogSeriesPack
       (machineLogSeriesSumField state)
@@ -592,6 +617,8 @@ private theorem logSeriesOddBits_length_le_inputBound
     nlinarith
   exact hsize.trans ((by omega : 2 * k + 2 ≤ 2 * word.length + 2).trans hlarge)
 
+/-- Encodes the semantic series state after `k` terms, with next odd power and denominator `2*k
++ 1`. -/
 def rawLogSeriesMachineState (q : RawRat) (total k : ℕ) : List Bool :=
   let word := pair (List.replicate total true) (rawRatBinaryCode q)
   machineLogSeriesPack

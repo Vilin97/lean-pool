@@ -27,51 +27,66 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Constructs row `i` of the scalar diagonal matrix with value `A` on its diagonal. -/
 def rationalDirectionDiagonalRow {d : ℕ}
     (A : ℚ) (i : Fin d) : Fin d → ℚ :=
   fun j ↦ if i = j then A else 0
 
+/-- Computes the raw squared Euclidean norm of the rational direction by taking its dot product
+with itself. -/
 def rawDirectionNormSq {d : ℕ} (b : Fin d → ℚ) : RawRat :=
   rawRatListDot RawRat.zero (List.ofFn b) (List.ofFn b)
 
+/-- Subtracts the parallel ellipsoid scale from the perpendicular scale in raw rational
+arithmetic. -/
 def rawDirectionGap (d : ℕ) : RawRat :=
   (rawEllipsoidPerpScale d).sub (rawEllipsoidParallelScale d)
 
+/-- Divides the raw perpendicular-parallel scale gap by the squared direction norm. -/
 def rawDirectionCoefficient {d : ℕ} (b : Fin d → ℚ) : RawRat :=
   (rawDirectionGap d).div (rawDirectionNormSq b)
 
+/-- Multiplies the direction-update coefficient by direction coordinate `i`. -/
 def rawDirectionRowScale {d : ℕ}
     (b : Fin d → ℚ) (i : Fin d) : RawRat :=
   (rawDirectionCoefficient b).mul (rawRatOfRat (b i))
 
+/-- Extracts the unary row index from a direction-update row request. -/
 def machineDirectionRowIndex (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the dimension-and-vector payload after the requested row index. -/
 def machineDirectionRowPayload (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the unary direction dimension from a row request. -/
 def machineDirectionRowDimensionUnary
     (word : List Bool) : List Bool :=
   machinePairFirst (machineDirectionRowPayload word)
 
+/-- Extracts the binary-dimension and vector payload from a direction-update row request. -/
 def machineDirectionRowDimensionAndVector
     (word : List Bool) : List Bool :=
   machinePairSecond (machineDirectionRowPayload word)
 
+/-- Extracts the binary direction dimension from a row request. -/
 def machineDirectionRowDimensionBits
     (word : List Bool) : List Bool :=
   machinePairFirst (machineDirectionRowDimensionAndVector word)
 
+/-- Extracts the encoded direction vector from a row request. -/
 def machineDirectionRowVectorCode
     (word : List Bool) : List Bool :=
   machinePairSecond (machineDirectionRowDimensionAndVector word)
 
+/-- Computes the raw dot product of the direction vector with itself. -/
 def machineDirectionRowNormSqRawCode
     (word : List Bool) : List Bool :=
   machineRationalVectorDotRawCode
     (pair (machineDirectionRowVectorCode word)
       (machineDirectionRowVectorCode word))
 
+/-- Computes the raw perpendicular scale minus the parallel scale for the requested dimension. -/
 def machineDirectionRowGapRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
@@ -82,35 +97,42 @@ def machineDirectionRowGapRawCode
         (machineEllipsoidParallelScaleRawCode
           (machineDirectionRowDimensionBits word))))
 
+/-- Divides the raw scale gap by the squared direction norm to compute the update coefficient. -/
 def machineDirectionRowCoefficientRawCode
     (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineDirectionRowGapRawCode word)
       (machineDirectionRowNormSqRawCode word))
 
+/-- Looks up the direction coordinate at the requested unary row index. -/
 def machineDirectionRowBEntry
     (word : List Bool) : List Bool :=
   machineListIndex
     (pair (machineDirectionRowIndex word)
       (machineDirectionRowVectorCode word))
 
+/-- Multiplies the update coefficient by the selected direction coordinate. -/
 def machineDirectionRowScaleRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineDirectionRowCoefficientRawCode word)
       (machineDirectionRowBEntry word))
 
+/-- Scales the full direction vector by the row-dependent update coefficient. -/
 def machineDirectionRowScaledVectorCode
     (word : List Bool) : List Bool :=
   machineRationalVectorScaleCode
     (pair (machineDirectionRowScaleRawCode word)
       (machineDirectionRowVectorCode word))
 
+/-- Constructs the zero vector of the requested unary dimension. -/
 def machineDirectionRowZeroVectorCode
     (word : List Bool) : List Bool :=
   machineRationalZeroVectorCode
     (machineDirectionRowDimensionUnary word)
 
+/-- Updates the selected entry of the zero vector to the perpendicular scale, producing a scaled
+diagonal row. -/
 def machineDirectionRowDiagonalCode
     (word : List Bool) : List Bool :=
   machineListUpdate
@@ -120,6 +142,8 @@ def machineDirectionRowDiagonalCode
           (machineDirectionRowDimensionBits word))
         (machineDirectionRowZeroVectorCode word)))
 
+/-- Subtracts the scaled direction vector from the diagonal row to obtain one direction-update
+matrix row. -/
 def machineRationalDirectionUpdateRowCode
     (word : List Bool) : List Bool :=
   machineRationalVectorSubCode

@@ -26,21 +26,27 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the fixed raw increment from a row-addition request. -/
 def machineRationalRowAddDelta (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the encoded rational row from a row-addition request. -/
 def machineRationalRowAddRow (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Concatenates two copies of a word for row-addition width padding. -/
 def machineRationalRowAddPadTwo (word : List Bool) : List Bool :=
   word ++ word
 
+/-- Concatenates four copies of a word for row-addition width padding. -/
 def machineRationalRowAddPadFour (word : List Bool) : List Bool :=
   machineRationalRowAddPadTwo word ++ machineRationalRowAddPadTwo word
 
+/-- Concatenates eight copies of a word for row-addition width padding. -/
 def machineRationalRowAddPadEight (word : List Bool) : List Bool :=
   machineRationalRowAddPadFour word ++ machineRationalRowAddPadFour word
 
+/-- Concatenates sixteen copies of a word for row-addition width padding. -/
 def machineRationalRowAddPadSixteen (word : List Bool) : List Bool :=
   machineRationalRowAddPadEight word ++ machineRationalRowAddPadEight word
 
@@ -50,39 +56,51 @@ the impractical quartic padding used by an earlier draft. -/
 def machineRationalRowAddInputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth (machineRationalRowAddPadSixteen word)
 
+/-- Packs the unprocessed row, reversed output accumulator, fixed increment, and bound for row
+addition. -/
 def machineRationalRowAddPack
     (remaining accumulator delta bound : List Bool) : List Bool :=
   pair remaining (pair accumulator (pair delta bound))
 
+/-- Extracts the unprocessed encoded row from a row-addition state. -/
 def machineRationalRowAddRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the reverse-order output accumulator from a row-addition state. -/
 def machineRationalRowAddAccumulator (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the fixed raw increment from a row-addition state. -/
 def machineRationalRowAddDeltaField (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the accumulator length-bound word from a row-addition state. -/
 def machineRationalRowAddBound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
+/-- Adds the fixed increment to the next row entry in raw rational arithmetic. -/
 def machineRationalRowAddRawEntry (state : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineListHead (machineRationalRowAddRemaining state))
       (machineRationalRowAddDeltaField state))
 
+/-- Normalizes the updated row entry into its rational entry encoding. -/
 def machineRationalRowAddEntry (state : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineRationalRowAddRawEntry state)
 
+/-- Prepends the normalized updated entry to the reverse-order output accumulator. -/
 def machineRationalRowAddCandidate (state : List Bool) : List Bool :=
   pair (machineRationalRowAddEntry state)
     (machineRationalRowAddAccumulator state)
 
+/-- Truncates the candidate row-addition accumulator to the stored bound length. -/
 def machineRationalRowAddNextAccumulator (state : List Bool) : List Bool :=
   (machineRationalRowAddCandidate state).take
     (machineRationalRowAddBound state).length
 
+/-- Consumes the next row entry and stores the bounded updated accumulator, preserving increment
+and bound. -/
 def machineRationalRowAddAdvance (state : List Bool) : List Bool :=
   machineRationalRowAddPack
     (machineListTail (machineRationalRowAddRemaining state))
@@ -90,23 +108,29 @@ def machineRationalRowAddAdvance (state : List Bool) : List Bool :=
     (machineRationalRowAddDeltaField state)
     (machineRationalRowAddBound state)
 
+/-- Fixes an exhausted row-addition state and otherwise processes one entry. -/
 def machineRationalRowAddStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineRationalRowAddRemaining state) state
     (machineRationalRowAddAdvance state)
 
+/-- Initializes row addition with the requested row, empty accumulator, fixed increment, and
+computed bound. -/
 def machineRationalRowAddInit (word : List Bool) : List Bool :=
   machineRationalRowAddPack (machineRationalRowAddRow word) []
     (machineRationalRowAddDelta word)
     (machineRationalRowAddInputBound word)
 
+/-- Packs input and bound words in the four-field layout to bound the row-addition state. -/
 def machineRationalRowAddWidth (word : List Bool) : List Bool :=
   let bound := machineRationalRowAddInputBound word
   machineRationalRowAddPack word bound word bound
 
+/-- Runs the row-addition scan once per input bit from its initial state. -/
 def machineRationalRowAddFinalState (word : List Bool) : List Bool :=
   (machineRationalRowAddStep)^[word.length]
     (machineRationalRowAddInit word)
 
+/-- Reverses the final accumulator to return the incremented rational row in its original order. -/
 def machineRationalRowAdd (word : List Bool) : List Bool :=
   machineListReverse
     (machineRationalRowAddAccumulator
@@ -259,6 +283,8 @@ theorem machineRationalRowAddWidth_mem_FP :
       (machineRationalRowAddPack a b c d) = d := by
   simp [machineRationalRowAddBound, machineRationalRowAddPack]
 
+/-- Requires exact row-addition state packing, input-bounded remaining row and increment, a
+bounded accumulator, and the prescribed bound word. -/
 def MachineRationalRowAddStateBound (word state : List Bool) : Prop :=
   state = machineRationalRowAddPack
       (machineRationalRowAddRemaining state)
@@ -445,6 +471,8 @@ theorem machineRationalRowAdd_output_length_le_bound
 
 /-! ## Exact semantics -/
 
+/-- Adds the raw increment to each rational row entry and normalizes each resulting raw
+fraction. -/
 def rationalRowAddValues (delta : RawRat) (row : List ℚ) : List ℚ :=
   row.map fun q ↦ binaryNormalizeRawRat ((rawRatOfRat q).add delta)
 

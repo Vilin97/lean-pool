@@ -23,26 +23,33 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes a raw rational as its signed integer numerator paired with binary denominator bits. -/
 def rawRatBinaryCode (q : RawRat) : List Bool :=
   pair (integerBinaryCode q.num) q.den.bits
 
+/-- Computes the binary absolute value of a raw rational code's numerator. -/
 def machineRawRatNatAbsBits (word : List Bool) : List Bool :=
   machineIntegerNatAbsBits (machinePairFirst word)
 
+/-- Computes the binary greatest common divisor of numerator magnitude and denominator. -/
 def machineRawRatGcdBits (word : List Bool) : List Bool :=
   machineBinaryGcdBits
     (pair (machineRawRatNatAbsBits word) (machinePairSecond word))
 
+/-- Divides the numerator magnitude by its gcd with the denominator and extracts the quotient. -/
 def machineRawRatAbsQuotientBits (word : List Bool) : List Bool :=
   machinePairFirst
     (machineBinaryDivModBits
       (pair (machineRawRatNatAbsBits word) (machineRawRatGcdBits word)))
 
+/-- Divides the denominator by its gcd with the numerator magnitude and extracts the quotient. -/
 def machineRawRatDenQuotientBits (word : List Bool) : List Bool :=
   machinePairFirst
     (machineBinaryDivModBits
       (pair (machinePairSecond word) (machineRawRatGcdBits word)))
 
+/-- Builds a normalized rational-entry code from the gcd-reduced numerator magnitude, its
+original sign, and the reduced denominator. -/
 def machineNormalizeRawRatEntryCode (word : List Bool) : List Bool :=
   pair
     (machineIntegerCodeFromSignedAbs

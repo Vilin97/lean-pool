@@ -22,6 +22,7 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Builds the direction-update matrix from the dimension and pulled-back cut direction. -/
 def machineRationalEllipsoidUpdateDirectionMatrixCode
     (word : List Bool) : List Bool :=
   machineRationalDirectionUpdateMatrixCode
@@ -29,6 +30,7 @@ def machineRationalEllipsoidUpdateDirectionMatrixCode
       (pair (machineRationalCenterUpdateDimensionBits word)
         (machineRationalCenterUpdatePulledBackCode word)))
 
+/-- Multiplies the current ellipsoid basis by its direction-update matrix. -/
 def machineRationalEllipsoidUpdateBasisCode
     (word : List Bool) : List Bool :=
   machineRationalMatrixMulCode

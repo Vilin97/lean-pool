@@ -22,19 +22,26 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Constructs the rational direction-update matrix using the dimension-dependent perpendicular
+and parallel ellipsoid scales. -/
 def rationalDirectionUpdateMatrix {d : ℕ} (b : Fin d → ℚ) :
     Matrix (Fin d) (Fin d) ℚ :=
   directionUpdateMatrix (rationalEllipsoidPerpScale d)
     (rationalEllipsoidParallelScale d) b
 
+/-- Encodes the direction dimension in both unary and binary followed by the rational direction
+vector. -/
 def rationalDirectionUpdateCanonicalWord {d : ℕ}
     (b : Fin d → ℚ) : List Bool :=
   pair (List.replicate d true)
     (pair d.bits (rationalFiniteVectorCode b))
 
+/-- Returns the raw perpendicular scale on the diagonal and raw zero off the diagonal. -/
 def rawDirectionDiagonalEntry {d : ℕ} (i j : Fin d) : RawRat :=
   if i = j then rawEllipsoidPerpScale d else RawRat.zero
 
+/-- Subtracts the raw rank-one correction from the scaled diagonal entry to form a
+direction-update matrix coefficient. -/
 def rawDirectionMatrixEntry {d : ℕ}
     (b : Fin d → ℚ) (i j : Fin d) : RawRat :=
   (rawDirectionDiagonalEntry i j).sub
@@ -298,6 +305,7 @@ theorem rationalDirectionMatrix_entry_code_length_le {d : ℕ}
   have hwidth := rawDirectionMatrixEntry_width_le_word b i j
   exact hcanonical.trans (by nlinarith)
 
+/-- Reuses the rational transpose-vector input bound for direction-update matrix generation. -/
 def machineRationalDirectionUpdateMatrixInputBound
     (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorInputBound word
@@ -410,26 +418,31 @@ theorem rationalDirectionUpdateMatrix_code_length_le_bound {d : ℕ}
 
 /-! ## Bounded outer row scan -/
 
+/-- Builds the complete encoded row-index range from the unary direction dimension. -/
 def machineRationalDirectionUpdateMatrixIndices
     (word : List Bool) : List Bool :=
   machineUnaryRangeCode (machinePairFirst word)
 
+/-- Computes the direction-update row at the current row index using the fixed request payload. -/
 def machineRationalDirectionUpdateMatrixCurrentRow
     (state : List Bool) : List Bool :=
   machineRationalDirectionUpdateRowCode
     (pair (machineRationalTransposeMulVectorCurrentIndex state)
       (machineRationalTransposeMulVectorStatePayload state))
 
+/-- Prepends the newly computed direction-update row to the reverse-order matrix accumulator. -/
 def machineRationalDirectionUpdateMatrixCandidate
     (state : List Bool) : List Bool :=
   pair (machineRationalDirectionUpdateMatrixCurrentRow state)
     (machineRationalTransposeMulVectorAccumulator state)
 
+/-- Truncates the candidate matrix accumulator to the stored bound length. -/
 def machineRationalDirectionUpdateMatrixNextAccumulator
     (state : List Bool) : List Bool :=
   (machineRationalDirectionUpdateMatrixCandidate state).take
     (machineRationalTransposeMulVectorBound state).length
 
+/-- Drops the completed row index and stores the bounded updated matrix accumulator. -/
 def machineRationalDirectionUpdateMatrixAdvance
     (state : List Bool) : List Bool :=
   machineRationalTransposeMulVectorPack
@@ -438,27 +451,34 @@ def machineRationalDirectionUpdateMatrixAdvance
     (machineRationalTransposeMulVectorStatePayload state)
     (machineRationalTransposeMulVectorBound state)
 
+/-- Fixes direction-matrix generation when no indices remain and otherwise computes its next
+row. -/
 def machineRationalDirectionUpdateMatrixStep
     (state : List Bool) : List Bool :=
   machineIfEmpty (machineRationalTransposeMulVectorRemaining state) state
     (machineRationalDirectionUpdateMatrixAdvance state)
 
+/-- Initializes direction-matrix generation with all row indices, empty accumulator, fixed
+request, and computed bound. -/
 def machineRationalDirectionUpdateMatrixInit
     (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorPack
     (machineRationalDirectionUpdateMatrixIndices word) [] word
     (machineRationalDirectionUpdateMatrixInputBound word)
 
+/-- Packs four copies of the computed bound to bound the direction-matrix generation state. -/
 def machineRationalDirectionUpdateMatrixWidth
     (word : List Bool) : List Bool :=
   let bound := machineRationalDirectionUpdateMatrixInputBound word
   machineRationalTransposeMulVectorPack bound bound bound bound
 
+/-- Runs direction-matrix generation once per input bit from its initial state. -/
 def machineRationalDirectionUpdateMatrixFinalState
     (word : List Bool) : List Bool :=
   (machineRationalDirectionUpdateMatrixStep)^[word.length]
     (machineRationalDirectionUpdateMatrixInit word)
 
+/-- Extracts the generated rows in reverse order from the final matrix-generation state. -/
 def machineRationalDirectionUpdateMatrixReversedCode
     (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorAccumulator
@@ -622,11 +642,14 @@ theorem machineRationalDirectionUpdateMatrixCode_mem_FP :
 
 /-! ## Exact scan semantics -/
 
+/-- Lists the first `k` rows of the rational direction-update matrix in finite-index order. -/
 def rationalDirectionUpdateRowsPrefix {d : ℕ}
     (b : Fin d → ℚ) (k : ℕ) : List (List ℚ) :=
   ((List.finRange d).take k).map
     fun i ↦ List.ofFn fun j ↦ rationalDirectionUpdateMatrix b i j
 
+/-- Encodes the remaining row indices and reversed generated row prefix after `k` rows,
+preserving request and bound. -/
 def machineRationalDirectionUpdateMatrixSemanticState {d : ℕ}
     (b : Fin d → ℚ) (k : ℕ) : List Bool :=
   let word := rationalDirectionUpdateCanonicalWord b

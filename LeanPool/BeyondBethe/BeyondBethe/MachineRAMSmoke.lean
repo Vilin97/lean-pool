@@ -25,6 +25,7 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- The constant string function returning the empty word. -/
 def emptyMachineTarget (_ : List Bool) : List Bool := []
 
 theorem outputBitLanguage_emptyMachineTarget :

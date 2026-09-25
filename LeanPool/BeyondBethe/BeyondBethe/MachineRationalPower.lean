@@ -23,60 +23,78 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- The raw rational binary code for the multiplicative identity. -/
 def rawRatOneCode : List Bool := rawRatBinaryCode RawRat.one
 
+/-- Packs the current power accumulator, fixed base, and length bound. -/
 def machineRawRatPowerPack (acc base bound : List Bool) : List Bool :=
   pair acc (pair base bound)
 
+/-- Extracts the raw power accumulator from an exponentiation state. -/
 def machineRawRatPowerAccField (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the fixed raw base from an exponentiation state. -/
 def machineRawRatPowerBaseField (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the accumulator length-bound word from an exponentiation state. -/
 def machineRawRatPowerBoundField (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Multiplies the current raw power accumulator by the fixed base. -/
 def machineRawRatPowerCandidate (state : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineRawRatPowerAccField state)
       (machineRawRatPowerBaseField state))
 
+/-- Truncates the updated power accumulator to the stored bound length. -/
 def machineRawRatPowerNextAcc (state : List Bool) : List Bool :=
   (machineRawRatPowerCandidate state).take
     (machineRawRatPowerBoundField state).length
 
+/-- Updates the bounded power accumulator while preserving its base and bound. -/
 def machineRawRatPowerStep (state : List Bool) : List Bool :=
   machineRawRatPowerPack (machineRawRatPowerNextAcc state)
     (machineRawRatPowerBaseField state)
     (machineRawRatPowerBoundField state)
 
+/-- Extracts the unary exponent ruler from a raw rational power request. -/
 def machineRawRatPowerInputRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the raw base code from a rational power request. -/
 def machineRawRatPowerInputBase (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Builds the power accumulator bound by concatenating four copies of the binary-multiplication
+width word. -/
 def machineRawRatPowerInputBound (word : List Bool) : List Bool :=
   let square := machineBinaryMulWidth word
   square ++ (square ++ (square ++ square))
 
+/-- Initializes raw exponentiation with accumulator one, the requested base, and the computed
+bound. -/
 def machineRawRatPowerInit (word : List Bool) : List Bool :=
   machineRawRatPowerPack rawRatOneCode
     (machineRawRatPowerInputBase word)
     (machineRawRatPowerInputBound word)
 
+/-- Packs three copies of the computed bound to bound the exponentiation state. -/
 def machineRawRatPowerWidth (word : List Bool) : List Bool :=
   let bound := machineRawRatPowerInputBound word
   machineRawRatPowerPack bound bound bound
 
+/-- Iterates bounded multiplication for the length of the unary exponent ruler. -/
 def machineRawRatPowerFinalState (word : List Bool) : List Bool :=
   (machineRawRatPowerStep)^[(machineRawRatPowerInputRuler word).length]
     (machineRawRatPowerInit word)
 
+/-- Extracts the final raw power accumulator. -/
 def machineRawRatPowerCode (word : List Bool) : List Bool :=
   machineRawRatPowerAccField (machineRawRatPowerFinalState word)
 
+/-- Normalizes the raw power result into the rational binary output encoding. -/
 def machineRationalPowerCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode (machineRawRatPowerCode word)
 

@@ -92,20 +92,26 @@ def machineMatrixRawSumStep (state : List Bool) : List Bool :=
 def machineMatrixRawSumInputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth word
 
+/-- Initializes the matrix sum with all encoded rows, an empty current row, zero raw
+accumulator, and the computed bound. -/
 def machineMatrixRawSumInit (word : List Bool) : List Bool :=
   machineMatrixRawSumPack (machineMatrixRowsWord word) []
     (rawRatBinaryCode RawRat.zero) (machineMatrixRawSumInputBound word)
 
+/-- Packs the original word twice and the accumulator bound twice to bound the matrix-sum state. -/
 def machineMatrixRawSumWidth (word : List Bool) : List Bool :=
   let bound := machineMatrixRawSumInputBound word
   machineMatrixRawSumPack word word bound bound
 
+/-- Runs the matrix-sum step once per input bit from the initial state. -/
 def machineMatrixRawSumFinalState (word : List Bool) : List Bool :=
   (machineMatrixRawSumStep)^[word.length] (machineMatrixRawSumInit word)
 
+/-- Extracts the raw rational accumulator from the final matrix-sum state. -/
 def machineMatrixRawSumCode (word : List Bool) : List Bool :=
   machineMatrixRawSumAcc (machineMatrixRawSumFinalState word)
 
+/-- Normalizes the final raw matrix sum into the rational binary output encoding. -/
 def machineMatrixSumOutputCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode (machineMatrixRawSumCode word)
 
@@ -114,6 +120,7 @@ def machineMatrixNormalizationScaleRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (rawRatBinaryCode RawRat.one) (machineMatrixRawSumCode word))
 
+/-- Normalizes the raw matrix-normalization scale into the rational binary output encoding. -/
 def machineMatrixNormalizationScaleOutputCode
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode
@@ -228,6 +235,8 @@ theorem machineMatrixRawSumWidth_mem_FP :
         (machineMatrixRawSumPack rows current acc bound) = bound := by
   simp [machineMatrixRawSumBound, machineMatrixRawSumPack]
 
+/-- Requires exact sum-state packing, row and current-suffix lengths bounded by the input
+length, bounded accumulator length, and the prescribed bound word. -/
 def MachineMatrixRawSumStateBound (word state : List Bool) : Prop :=
   state = machineMatrixRawSumPack
       (machineMatrixRawSumRows state) (machineMatrixRawSumCurrent state)
@@ -340,16 +349,22 @@ theorem machineMatrixNormalizationScaleOutputCode_mem_FP :
 
 /-! ## Semantic invariant and exactness -/
 
+/-- Sums the raw rational widths of a list's entries, adding one per entry for accumulator
+growth. -/
 def rawRatListCost (xs : List ℚ) : ℕ :=
   (xs.map fun q => rawRatWidth (rawRatOfRat q) + 1).sum
 
+/-- Sums the raw rational list costs of all matrix rows. -/
 def rawRatRowsCost (rows : List (List ℚ)) : ℕ :=
   (rows.map rawRatListCost).sum
 
+/-- Adds a list of rational entries to a raw rational accumulator from left to right. -/
 def rawRatListSum : RawRat → List ℚ → RawRat
   | acc, [] => acc
   | acc, q :: qs => rawRatListSum (acc.add (rawRatOfRat q)) qs
 
+/-- Adds successive rational rows to a raw rational accumulator, processing each row from left
+to right. -/
 def rawRatRowsSum : RawRat → List (List ℚ) → RawRat
   | acc, [] => acc
   | acc, row :: rows => rawRatRowsSum (rawRatListSum acc row) rows
@@ -479,10 +494,15 @@ theorem rawRatRowsCost_le_codeLength (rows : List (List ℚ)) :
       omega
 
 structure MatrixRawSumSemState where
+  /-- The unprocessed rows of the semantic raw matrix-sum scan. -/
   rows : List (List ℚ)
+  /-- The unprocessed suffix of the row currently being summed. -/
   current : List ℚ
+  /-- The raw rational sum accumulated from processed matrix entries. -/
   acc : RawRat
 
+/-- Adds the next current-row entry, loads the next row when needed, and fixes a state with no
+entries or rows remaining. -/
 def matrixRawSumSemStep (s : MatrixRawSumSemState) : MatrixRawSumSemState :=
   match s.current with
   | q :: qs => ⟨s.rows, qs, s.acc.add (rawRatOfRat q)⟩
@@ -491,6 +511,8 @@ def matrixRawSumSemStep (s : MatrixRawSumSemState) : MatrixRawSumSemState :=
       | row :: rows => ⟨rows, row, s.acc⟩
       | [] => s
 
+/-- Encodes the semantic scan's remaining rows, current suffix, and raw accumulator using the
+supplied bound word. -/
 def matrixRawSumSemCode (bound : List Bool)
     (s : MatrixRawSumSemState) : List Bool :=
   machineMatrixRawSumPack
@@ -498,6 +520,8 @@ def matrixRawSumSemCode (bound : List Bool)
     (binaryListCode rationalEntryBinaryCode s.current)
     (rawRatBinaryCode s.acc) bound
 
+/-- Bounds the accumulator width plus the costs of all unprocessed current-row entries and
+remaining rows by the supplied budget. -/
 def MatrixRawSumSemInvariant (budget : ℕ)
     (s : MatrixRawSumSemState) : Prop :=
   rawRatWidth s.acc + rawRatListCost s.current + rawRatRowsCost s.rows ≤ budget

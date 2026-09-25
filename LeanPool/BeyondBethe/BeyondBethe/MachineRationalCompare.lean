@@ -23,6 +23,7 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Compares raw rationals by comparing their signed cross-multiplied numerators. -/
 def machineRawRatLeBit (word : List Bool) : List Bool :=
   machineIntegerLeCode
     (pair (machineRawAddLeftScaledNumerator word)

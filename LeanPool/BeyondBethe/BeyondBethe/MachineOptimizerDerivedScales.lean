@@ -24,53 +24,71 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- The raw-rational constant one used in optimizer scale formulas. -/
 def rawOptimizerOne : RawRat := RawRat.ofNat 1
 
+/-- The raw-rational constant three used in optimizer scale formulas. -/
 def rawOptimizerThree : RawRat := RawRat.ofNat 3
 
+/-- The raw-rational constant ten used in optimizer scale formulas. -/
 def rawOptimizerTen : RawRat := RawRat.ofNat 10
 
+/-- The raw-rational constant forty-eight used in optimizer scale formulas. -/
 def rawOptimizerFortyEight : RawRat := RawRat.ofNat 48
 
+/-- The raw-rational representation of the fixed optimizer KKT error allowance. -/
 def rawOptimizerKKTError : RawRat := rawRatOfRat explicitKKTError
 
+/-- Half the power of one half determined by the numerical interior exponent. -/
 def rawExplicitOptimizerFloor (n B : ℕ) : RawRat :=
   (rawOptimizerHalf.pow
     (numericalInteriorExponent n B (explicitRegularizationScale n))).div
       rawOptimizerTwo
 
+/-- The optimizer radius parameter given by the floor times the KKT error allowance divided by
+48. -/
 def rawExplicitOptimizerRho (n B : ℕ) : RawRat :=
   ((rawExplicitOptimizerFloor n B).mul rawOptimizerKKTError).div
     rawOptimizerFortyEight
 
+/-- The optimizer gap given by the regularization parameter times the squared radius, divided by
+four. -/
 def rawExplicitOptimizerGap (n B : ℕ) : RawRat :=
   ((rawOptimizerTau n).mul
     ((rawExplicitOptimizerRho n B).mul (rawExplicitOptimizerRho n B))).div
       rawOptimizerFour
 
+/-- The raw-rational objective range `n*B + 3*n^2`. -/
 def rawOptimizerObjectiveRange (n B : ℕ) : RawRat :=
   ((rawOptimizerDimension n).mul (rawOptimizerBitBound B)).add
     (rawOptimizerThree.mul (rawOptimizerNSquare n))
 
+/-- Four times one plus the objective range, used as the mixing denominator. -/
 def rawOptimizerMixDenominator (n B : ℕ) : RawRat :=
   rawOptimizerFour.mul ((rawOptimizerObjectiveRange n B).add rawOptimizerOne)
 
+/-- The candidate mixing parameter obtained by dividing the optimizer gap by its mixing
+denominator. -/
 def rawOptimizerMixCandidate (n B : ℕ) : RawRat :=
   (rawExplicitOptimizerGap n B).div (rawOptimizerMixDenominator n B)
 
+/-- The smaller of one half and the candidate optimizer mixing parameter. -/
 def rawExplicitOptimizerMix (n B : ℕ) : RawRat :=
   if rawOptimizerHalf.value ≤ (rawOptimizerMixCandidate n B).value then
     rawOptimizerHalf
   else rawOptimizerMixCandidate n B
 
+/-- The raw-rational quantity `2*n`. -/
 def rawOptimizerTwiceDimension (n : ℕ) : RawRat :=
   rawOptimizerTwo.mul (rawOptimizerDimension n)
 
+/-- The inner radius given by the mixing parameter divided by twice the dimension. -/
 def rawExplicitOptimizerInnerRadius (n B : ℕ) : RawRat :=
   (rawExplicitOptimizerMix n B).div (rawOptimizerTwiceDimension n)
 
 /-! ## Finite-word scale machines -/
 
+/-- Computes the encoded floor times the KKT error allowance, divided by 48. -/
 def machineExplicitOptimizerRhoRawCode (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair
@@ -79,58 +97,69 @@ def machineExplicitOptimizerRhoRawCode (word : List Bool) : List Bool :=
           (rawRatBinaryCode rawOptimizerKKTError)))
       (rawRatBinaryCode rawOptimizerFortyEight))
 
+/-- Squares the encoded optimizer radius parameter. -/
 def machineExplicitOptimizerRhoSquareRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineExplicitOptimizerRhoRawCode word)
       (machineExplicitOptimizerRhoRawCode word))
 
+/-- Multiplies the encoded regularization parameter by the squared radius. -/
 def machineExplicitOptimizerGapNumeratorRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineOptimizerTauRawCode word)
       (machineExplicitOptimizerRhoSquareRawCode word))
 
+/-- Divides the gap numerator by four. -/
 def machineExplicitOptimizerGapRawCode (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineExplicitOptimizerGapNumeratorRawCode word)
       (rawRatBinaryCode rawOptimizerFour))
 
+/-- Computes the encoded quantity `3*n^2`. -/
 def machineOptimizerThreeNSquareRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawOptimizerThree)
       (machineOptimizerNSquareRawCode word))
 
+/-- Adds `n*B` and `3*n^2` to encode the objective range. -/
 def machineOptimizerObjectiveRangeRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineOptimizerNBProductRawCode word)
       (machineOptimizerThreeNSquareRawCode word))
 
+/-- Adds one to the encoded objective range. -/
 def machineOptimizerRangePlusOneRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineOptimizerObjectiveRangeRawCode word)
       (rawRatBinaryCode rawOptimizerOne))
 
+/-- Multiplies the objective range plus one by four for the mixing denominator. -/
 def machineOptimizerMixDenominatorRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawOptimizerFour)
       (machineOptimizerRangePlusOneRawCode word))
 
+/-- Divides the encoded optimizer gap by the mixing denominator. -/
 def machineOptimizerMixCandidateRawCode (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineExplicitOptimizerGapRawCode word)
       (machineOptimizerMixDenominatorRawCode word))
 
+/-- Takes the raw-rational minimum of one half and the candidate mixing parameter. -/
 def machineExplicitOptimizerMixRawCode (word : List Bool) : List Bool :=
   machineRawRatMinCode
     (pair (rawRatBinaryCode rawOptimizerHalf)
       (machineOptimizerMixCandidateRawCode word))
 
+/-- Computes the encoded quantity twice the matrix dimension. -/
 def machineOptimizerTwiceDimensionRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawOptimizerTwo)
       (machineOptimizerDimensionRawCode word))
 
+/-- Divides the encoded mixing parameter by twice the dimension to obtain the inner radius. -/
 def machineExplicitOptimizerInnerRadiusRawCode
     (word : List Bool) : List Bool :=
   machineRawRatDivCode
@@ -437,14 +466,18 @@ theorem rawExplicitOptimizerScales_value {m : ℕ}
 
 /-! ## Exact unary precision ruler -/
 
+/-- Normalizes the raw optimizer gap into a rational entry code. -/
 def machineExplicitOptimizerGapEntryCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode (machineExplicitOptimizerGapRawCode word)
 
+/-- Builds an entry-length ruler for the normalized optimizer gap. -/
 def machineExplicitOptimizerGapLengthRuler
     (word : List Bool) : List Bool :=
   machineOptimizerEntryLengthRuler
     (machineExplicitOptimizerGapEntryCode word)
 
+/-- Schedules precision from the gap length, KKT-error encoding length, twice the dimension, and
+ten extra steps. -/
 def machineExplicitOptimizerPrecisionRuler
     (word : List Bool) : List Bool :=
   machineExplicitOptimizerGapLengthRuler word ++

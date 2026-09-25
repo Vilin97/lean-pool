@@ -24,82 +24,103 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- The raw-rational constant one used in ellipsoid updates. -/
 def rawEllipsoidOne : RawRat := RawRat.ofNat 1
+/-- The raw-rational constant two used in ellipsoid updates. -/
 def rawEllipsoidTwo : RawRat := RawRat.ofNat 2
+/-- The raw-rational constant four used in ellipsoid updates. -/
 def rawEllipsoidFour : RawRat := RawRat.ofNat 4
 
+/-- Embeds the ellipsoid dimension as a raw rational. -/
 def rawEllipsoidDimension (d : ℕ) : RawRat := RawRat.ofNat d
 
+/-- The square of the ellipsoid dimension as a raw rational. -/
 def rawEllipsoidDimensionSquare (d : ℕ) : RawRat :=
   (rawEllipsoidDimension d).mul (rawEllipsoidDimension d)
 
+/-- Four times the squared ellipsoid dimension as a raw rational. -/
 def rawEllipsoidFourDimensionSquare (d : ℕ) : RawRat :=
   rawEllipsoidFour.mul (rawEllipsoidDimensionSquare d)
 
+/-- The raw-rational update parameter `alpha = 1/(4*d^2)`. -/
 def rawEllipsoidAlpha (d : ℕ) : RawRat :=
   rawEllipsoidOne.div (rawEllipsoidFourDimensionSquare d)
 
+/-- The square of the ellipsoid update parameter `alpha`. -/
 def rawEllipsoidAlphaSquare (d : ℕ) : RawRat :=
   (rawEllipsoidAlpha d).mul (rawEllipsoidAlpha d)
 
+/-- Twice the square of the ellipsoid update parameter `alpha`. -/
 def rawEllipsoidTwiceAlphaSquare (d : ℕ) : RawRat :=
   rawEllipsoidTwo.mul (rawEllipsoidAlphaSquare d)
 
+/-- The perpendicular update scale `1 + 2*alpha^2`. -/
 def rawEllipsoidPerpScale (d : ℕ) : RawRat :=
   rawEllipsoidOne.add (rawEllipsoidTwiceAlphaSquare d)
 
+/-- The update parameter `alpha` divided by the ellipsoid dimension. -/
 def rawEllipsoidAlphaOverDimension (d : ℕ) : RawRat :=
   (rawEllipsoidAlpha d).div (rawEllipsoidDimension d)
 
+/-- The parallel update scale `1 - alpha/d`. -/
 def rawEllipsoidParallelScale (d : ℕ) : RawRat :=
   rawEllipsoidOne.sub (rawEllipsoidAlphaOverDimension d)
 
 /-! ## Finite-word formulas -/
 
+/-- Encodes binary dimension bits as a nonnegative raw rational with denominator one. -/
 def machineEllipsoidDimensionRawCode (word : List Bool) : List Bool :=
   pair (machineNaturalIntegerCode word) [true]
 
+/-- Squares the encoded raw-rational ellipsoid dimension. -/
 def machineEllipsoidDimensionSquareRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineEllipsoidDimensionRawCode word)
       (machineEllipsoidDimensionRawCode word))
 
+/-- Computes four times the encoded squared dimension. -/
 def machineEllipsoidFourDimensionSquareRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawEllipsoidFour)
       (machineEllipsoidDimensionSquareRawCode word))
 
+/-- Computes the encoded update parameter `1/(4*d^2)`. -/
 def machineEllipsoidAlphaRawCode (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (rawRatBinaryCode rawEllipsoidOne)
       (machineEllipsoidFourDimensionSquareRawCode word))
 
+/-- Squares the encoded ellipsoid update parameter. -/
 def machineEllipsoidAlphaSquareRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineEllipsoidAlphaRawCode word)
       (machineEllipsoidAlphaRawCode word))
 
+/-- Computes twice the encoded squared update parameter. -/
 def machineEllipsoidTwiceAlphaSquareRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawEllipsoidTwo)
       (machineEllipsoidAlphaSquareRawCode word))
 
+/-- Computes the encoded perpendicular scale `1 + 2*alpha^2`. -/
 def machineEllipsoidPerpScaleRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (rawRatBinaryCode rawEllipsoidOne)
       (machineEllipsoidTwiceAlphaSquareRawCode word))
 
+/-- Divides the encoded update parameter by the dimension. -/
 def machineEllipsoidAlphaOverDimensionRawCode
     (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineEllipsoidAlphaRawCode word)
       (machineEllipsoidDimensionRawCode word))
 
+/-- Computes the encoded parallel scale `1 - alpha/d`. -/
 def machineEllipsoidParallelScaleRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
@@ -107,13 +128,16 @@ def machineEllipsoidParallelScaleRawCode
       (machineRawRatNegCode
         (machineEllipsoidAlphaOverDimensionRawCode word)))
 
+/-- Normalizes the ellipsoid update parameter into a rational entry code. -/
 def machineEllipsoidAlphaEntryCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode (machineEllipsoidAlphaRawCode word)
 
+/-- Normalizes the perpendicular update scale into a rational entry code. -/
 def machineEllipsoidPerpScaleEntryCode
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode (machineEllipsoidPerpScaleRawCode word)
 
+/-- Normalizes the parallel update scale into a rational entry code. -/
 def machineEllipsoidParallelScaleEntryCode
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode

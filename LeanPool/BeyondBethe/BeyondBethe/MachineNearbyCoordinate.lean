@@ -25,21 +25,27 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the unary precision ruler from a nearby-coordinate request. -/
 def machineNearbyCoordinatePrecisionRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the regularization-and-coordinate payload following the precision ruler. -/
 def machineNearbyCoordinatePayload (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the raw regularization parameter from a nearby-coordinate request. -/
 def machineNearbyCoordinateTauRawCode (word : List Bool) : List Bool :=
   machinePairFirst (machineNearbyCoordinatePayload word)
 
+/-- Extracts the encoded rational coordinate from a nearby-coordinate request. -/
 def machineNearbyCoordinateXCode (word : List Bool) : List Bool :=
   machinePairSecond (machineNearbyCoordinatePayload word)
 
+/-- Negates the encoded coordinate in raw rational arithmetic. -/
 def machineNearbyCoordinateNegXRawCode (word : List Bool) : List Bool :=
   machineRawRatNegCode (machineNearbyCoordinateXCode word)
 
+/-- Adds raw one to the negated coordinate to compute its unnormalized complement. -/
 def machineNearbyCoordinateComplementUnnormalizedRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
@@ -51,29 +57,36 @@ def machineNearbyCoordinateComplementCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineNearbyCoordinateComplementUnnormalizedRawCode word)
 
+/-- Computes the scheduled lower logarithm approximation of the coordinate complement at the
+requested precision. -/
 def machineNearbyCoordinateLogComplementRawCode
     (word : List Bool) : List Bool :=
   machineScheduledLogLowerRawCode
     (pair (machineNearbyCoordinatePrecisionRuler word)
       (machineNearbyCoordinateComplementCode word))
 
+/-- Computes the scheduled lower logarithm approximation of the coordinate at the requested
+precision. -/
 def machineNearbyCoordinateLogXRawCode (word : List Bool) : List Bool :=
   machineScheduledLogLowerRawCode
     (pair (machineNearbyCoordinatePrecisionRuler word)
       (machineNearbyCoordinateXCode word))
 
+/-- Multiplies the raw regularization parameter by the coordinate. -/
 def machineNearbyCoordinateTauTimesXRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineNearbyCoordinateTauRawCode word)
       (machineNearbyCoordinateXCode word))
 
+/-- Multiplies the regularized coordinate by its scheduled lower logarithm approximation. -/
 def machineNearbyCoordinateWeightedLogXRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineNearbyCoordinateTauTimesXRawCode word)
       (machineNearbyCoordinateLogXRawCode word))
 
+/-- Adds the lower complement logarithm to the regularized coordinate times its lower logarithm. -/
 def machineNearbyCoordinateLowerRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineNearbyCoordinateLogComplementRawCode word)
@@ -158,9 +171,11 @@ theorem machineNearbyCoordinateLowerRawCode_mem_FP :
   simpa only [machineNearbyCoordinateLowerRawCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
+/-- Computes raw one minus the rational coordinate without reducing the resulting fraction. -/
 def rawNearbyCoordinateComplement (x : ℚ) : RawRat :=
   RawRat.one.add (rawRatOfRat x).neg
 
+/-- Forms the raw expression `logLower(1 - x) + tau * x * logLower(x)` at precision `p`. -/
 def rawNearbyCoordinateLower (tau : RawRat) (x : ℚ) (p : ℕ) : RawRat :=
   (rawScheduledLogLower (1 - x) p).add
     ((tau.mul (rawRatOfRat x)).mul (rawScheduledLogLower x p))

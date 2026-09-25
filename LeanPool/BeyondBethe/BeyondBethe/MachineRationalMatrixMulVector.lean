@@ -25,6 +25,7 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- The rational matrix-vector product computed as row dot products. -/
 def rationalMatrixMulVector {d : ℕ}
     (A : Matrix (Fin d) (Fin d) ℚ) (v : Fin d → ℚ) : Fin d → ℚ :=
   fun i ↦ ∑ j, A i j * v j
@@ -75,6 +76,7 @@ theorem machineRationalMatrixMulVectorEntryCode_mem_FP :
 
 /-! ## The full vector -/
 
+/-- Computes one matrix-vector product coordinate as a raw-rational dot product. -/
 def rawRationalMatrixCoordinate {d : ℕ}
     (A : Matrix (Fin d) (Fin d) ℚ) (v : Fin d → ℚ)
     (i : Fin d) : RawRat :=
@@ -87,6 +89,7 @@ theorem rawRationalMatrixCoordinate_value {d : ℕ}
       rationalMatrixMulVector A v i := by
   exact rawRatListDot_ofFn_value (fun j ↦ A i j) v
 
+/-- Encodes a unary dimension, square matrix rows, and rational vector for multiplication. -/
 def rationalMatrixMulVectorCanonicalWord {d : ℕ}
     (A : Matrix (Fin d) (Fin d) ℚ) (v : Fin d → ℚ) : List Bool :=
   pair (List.replicate d true)
@@ -139,6 +142,7 @@ theorem rationalMatrixMulVector_entry_code_length_le {d : ℕ}
     (Nat.mul_le_mul_left 36
       (rawRationalMatrixCoordinate_width_le_word A v i)) 64)
 
+/-- Reuses the transpose-vector input bound for matrix-vector multiplication. -/
 def machineRationalMatrixMulVectorInputBound
     (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorInputBound word
@@ -185,22 +189,27 @@ theorem rationalMatrixMulVector_code_length_le_bound {d : ℕ}
 /-! The state layout and the degree-eight envelope are shared with the
 transpose--vector machine; only the one-coordinate routine changes. -/
 
+/-- Computes the matrix-vector product entry at the current scan index. -/
 def machineRationalMatrixMulVectorCurrentEntry
     (state : List Bool) : List Bool :=
   machineRationalMatrixMulVectorEntryCode
     (pair (machineRationalTransposeMulVectorCurrentIndex state)
       (machineRationalTransposeMulVectorStatePayload state))
 
+/-- Prepends the current product entry to the reversed vector accumulator. -/
 def machineRationalMatrixMulVectorCandidate
     (state : List Bool) : List Bool :=
   pair (machineRationalMatrixMulVectorCurrentEntry state)
     (machineRationalTransposeMulVectorAccumulator state)
 
+/-- Truncates the candidate product-vector accumulator to the stored width bound. -/
 def machineRationalMatrixMulVectorNextAccumulator
     (state : List Bool) : List Bool :=
   (machineRationalMatrixMulVectorCandidate state).take
     (machineRationalTransposeMulVectorBound state).length
 
+/-- Consumes one coordinate index and updates the bounded product vector, retaining payload and
+bound. -/
 def machineRationalMatrixMulVectorAdvance
     (state : List Bool) : List Bool :=
   machineRationalTransposeMulVectorPack
@@ -209,27 +218,33 @@ def machineRationalMatrixMulVectorAdvance
     (machineRationalTransposeMulVectorStatePayload state)
     (machineRationalTransposeMulVectorBound state)
 
+/-- Generates the next product coordinate, leaving exhausted scans fixed. -/
 def machineRationalMatrixMulVectorStep
     (state : List Bool) : List Bool :=
   machineIfEmpty (machineRationalTransposeMulVectorRemaining state) state
     (machineRationalMatrixMulVectorAdvance state)
 
+/-- Reuses the transpose-vector state layout to initialize matrix-vector multiplication. -/
 def machineRationalMatrixMulVectorInit (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorInit word
 
+/-- Reuses the transpose-vector width envelope for matrix-vector multiplication. -/
 def machineRationalMatrixMulVectorWidth (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorWidth word
 
+/-- Runs matrix-vector coordinate generation for one step per input bit. -/
 def machineRationalMatrixMulVectorFinalState
     (word : List Bool) : List Bool :=
   (machineRationalMatrixMulVectorStep)^[word.length]
     (machineRationalMatrixMulVectorInit word)
 
+/-- Extracts the generated matrix-vector product coordinates in reverse order. -/
 def machineRationalMatrixMulVectorReversedCode
     (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorAccumulator
     (machineRationalMatrixMulVectorFinalState word)
 
+/-- Reverses the accumulated matrix-vector product entries to restore row order. -/
 def machineRationalMatrixMulVectorCode
     (word : List Bool) : List Bool :=
   machineListReverse (machineRationalMatrixMulVectorReversedCode word)
@@ -352,12 +367,15 @@ theorem machineRationalMatrixMulVectorCode_mem_FP :
 
 /-! ## Exact iteration semantics -/
 
+/-- Lists the first `k` coordinates of the rational matrix-vector product in row order. -/
 def rationalMatrixMulVectorPrefix {d : ℕ}
     (A : Matrix (Fin d) (Fin d) ℚ) (v : Fin d → ℚ)
     (k : ℕ) : List ℚ :=
   ((List.finRange d).take k).map
     fun i ↦ rationalMatrixMulVector A v i
 
+/-- Encodes the remaining row indices and reversed product prefix after `k` rows, retaining the
+matrix-vector payload and input bound. -/
 def machineRationalMatrixMulVectorSemanticState {d : ℕ}
     (A : Matrix (Fin d) (Fin d) ℚ) (v : Fin d → ℚ)
     (k : ℕ) : List Bool :=

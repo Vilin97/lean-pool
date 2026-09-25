@@ -24,14 +24,18 @@ new computational primitive: each is just pairing followed by the verified
 binary addition or multiplication machine.
 -/
 
+/-- Adds the binary outputs of two machines evaluated on the same input word. -/
 def machineBinaryAddOf (f g : List Bool → List Bool)
     (word : List Bool) : List Bool :=
   machineBinaryAddBits (pair (f word) (g word))
 
+/-- Multiplies the binary outputs of two machines evaluated on the same input word. -/
 def machineBinaryMulOf (f g : List Bool → List Bool)
     (word : List Bool) : List Bool :=
   machineBinaryMulBits (pair (f word) (g word))
 
+/-- Returns the binary natural-number code for the fixed constant `k`, independently of the
+input. -/
 def machineBinaryConst (k : ℕ) (_word : List Bool) : List Bool := k.bits
 
 theorem machineBinaryAddOf_mem_FP {f g : List Bool → List Bool}

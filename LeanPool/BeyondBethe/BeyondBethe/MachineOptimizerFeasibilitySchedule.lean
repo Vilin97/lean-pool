@@ -24,68 +24,84 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes a matrix and raw upper threshold as a feasibility call. -/
 def optimizerFeasibilityCallCode {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℚ) (upper : RawRat) : List Bool :=
   pair (rationalMatrixBinaryEncoding.encode ⟨n, A⟩)
     (rawRatBinaryCode upper)
 
+/-- Extracts the source matrix word from an optimizer feasibility call. -/
 def machineOptimizerFeasibilitySource (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the raw upper-threshold code from an optimizer feasibility call. -/
 def machineOptimizerFeasibilityUpperRawCode
     (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Replaces a raw rational code's numerator by its nonnegative absolute value while preserving
+the denominator. -/
 def machineRawRatAbsCode (word : List Bool) : List Bool :=
   pair (machineNaturalIntegerCode
     (machineIntegerNatAbsBits (machinePairFirst word)))
     (machinePairSecond word)
 
+/-- Replaces a raw rational numerator by its natural absolute value, retaining the positive
+denominator. -/
 def rawRatAbs (q : RawRat) : RawRat :=
   ⟨q.num.natAbs, q.den, q.den_pos⟩
 
+/-- Reads the binary source-matrix dimension from a feasibility call. -/
 def machineOptimizerFeasibilityDimensionBits
     (word : List Bool) : List Bool :=
   machineOptimizerDimensionBits (machineOptimizerFeasibilitySource word)
 
+/-- Computes the binary reduced dimension `n - 1` using truncated natural subtraction. -/
 def machineOptimizerFeasibilityReducedDimensionBits
     (word : List Bool) : List Bool :=
   machineBinarySubBits
     (pair (machineOptimizerFeasibilityDimensionBits word) [true])
 
+/-- Computes the square of the reduced dimension in binary. -/
 def machineOptimizerFeasibilityReducedDimensionSquareBits
     (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machineOptimizerFeasibilityReducedDimensionBits word)
       (machineOptimizerFeasibilityReducedDimensionBits word))
 
+/-- Adds one to the reduced-dimension square to obtain the ellipsoid dimension. -/
 def machineOptimizerFeasibilityEllipsoidDimensionBits
     (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineOptimizerFeasibilityReducedDimensionSquareBits word) [true])
 
+/-- Converts the ellipsoid dimension to a unary ruler bounded by the source matrix word. -/
 def machineOptimizerFeasibilityEllipsoidDimensionUnary
     (word : List Bool) : List Bool :=
   machineBoundedUnary
     (pair (machineOptimizerFeasibilitySource word)
       (machineOptimizerFeasibilityEllipsoidDimensionBits word))
 
+/-- Encodes the ellipsoid dimension as a raw rational with denominator one. -/
 def machineOptimizerFeasibilityEllipsoidDimensionRawCode
     (word : List Bool) : List Bool :=
   pair (machineNaturalIntegerCode
     (machineOptimizerFeasibilityEllipsoidDimensionBits word)) [true]
 
+/-- Computes the optimizer's raw inner radius from the source matrix word. -/
 def machineOptimizerFeasibilityInnerRadiusRawCode
     (word : List Bool) : List Bool :=
   machineExplicitOptimizerInnerRadiusRawCode
     (machineOptimizerFeasibilitySource word)
 
+/-- Multiplies the optimizer's raw inner radius by two. -/
 def machineOptimizerFeasibilityTwiceInnerRadiusRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawOptimizerTwo)
       (machineOptimizerFeasibilityInnerRadiusRawCode word))
 
+/-- Computes raw one plus the absolute value of the feasibility upper threshold. -/
 def machineOptimizerFeasibilityOnePlusAbsUpperRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
@@ -93,12 +109,14 @@ def machineOptimizerFeasibilityOnePlusAbsUpperRawCode
       (machineRawRatAbsCode
         (machineOptimizerFeasibilityUpperRawCode word)))
 
+/-- Adds twice the inner radius to one plus the absolute upper threshold. -/
 def machineOptimizerFeasibilityRadiusFactorRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineOptimizerFeasibilityOnePlusAbsUpperRawCode word)
       (machineOptimizerFeasibilityTwiceInnerRadiusRawCode word))
 
+/-- Multiplies the radius factor by the ellipsoid dimension to obtain the raw outer radius. -/
 def machineOptimizerFeasibilityOuterRadiusRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
@@ -364,6 +382,7 @@ theorem optimizerEllipsoidDimension_le_sourceLength {n : ℕ}
     machineRawRatMulCode_encode, machineRawRatAddCode_encode,
     machineRawRatMulCode_encode]
 
+/-- Forms the raw outer radius `((n - 1)^2 + 1) * (1 + abs upper + 2 * innerRadius(n, B))`. -/
 def rawOptimizerFeasibilityOuterRadius
     (n B : ℕ) (upper : RawRat) : RawRat :=
   (RawRat.ofNat ((n - 1) ^ 2 + 1)).mul
@@ -400,99 +419,119 @@ theorem rawOptimizerFeasibilityOuterRadius_eq {m : ℕ}
 
 /-! ## Exact encoded lengths and guarded budget -/
 
+/-- Normalizes the raw feasibility outer radius into its rational entry encoding. -/
 def machineOptimizerFeasibilityOuterRadiusEntryCode
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineOptimizerFeasibilityOuterRadiusRawCode word)
 
+/-- Computes the optimizer length ruler for the normalized outer-radius entry. -/
 def machineOptimizerFeasibilityOuterRadiusLengthRuler
     (word : List Bool) : List Bool :=
   machineOptimizerEntryLengthRuler
     (machineOptimizerFeasibilityOuterRadiusEntryCode word)
 
+/-- Normalizes the raw feasibility inner radius into its rational entry encoding. -/
 def machineOptimizerFeasibilityInnerRadiusEntryCode
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineOptimizerFeasibilityInnerRadiusRawCode word)
 
+/-- Computes the optimizer length ruler for the normalized inner-radius entry. -/
 def machineOptimizerFeasibilityInnerRadiusLengthRuler
     (word : List Bool) : List Bool :=
   machineOptimizerEntryLengthRuler
     (machineOptimizerFeasibilityInnerRadiusEntryCode word)
 
+/-- Concatenates the unary ellipsoid dimension and the two radius-length rulers to seed the
+feasibility-budget guard. -/
 def machineOptimizerFeasibilityBudgetGuardSource
     (word : List Bool) : List Bool :=
   machineOptimizerFeasibilityEllipsoidDimensionUnary word ++
     (machineOptimizerFeasibilityOuterRadiusLengthRuler word ++
       machineOptimizerFeasibilityInnerRadiusLengthRuler word)
 
+/-- Reads the binary ellipsoid dimension used in the feasibility-budget formulas. -/
 def machineOptimizerFeasibilityDBits (word : List Bool) : List Bool :=
   machineOptimizerFeasibilityEllipsoidDimensionBits word
 
+/-- Computes the square of the ellipsoid dimension in binary. -/
 def machineOptimizerFeasibilityDSquareBits
     (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machineOptimizerFeasibilityDBits word)
       (machineOptimizerFeasibilityDBits word))
 
+/-- Computes the cube of the ellipsoid dimension in binary. -/
 def machineOptimizerFeasibilityDCubeBits
     (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machineOptimizerFeasibilityDSquareBits word)
       (machineOptimizerFeasibilityDBits word))
 
+/-- Converts the outer-radius length ruler into its binary length. -/
 def machineOptimizerFeasibilityOuterLengthBits
     (word : List Bool) : List Bool :=
   machineLengthBits
     (machineOptimizerFeasibilityOuterRadiusLengthRuler word)
 
+/-- Converts the inner-radius length ruler into its binary length. -/
 def machineOptimizerFeasibilityInnerLengthBits
     (word : List Bool) : List Bool :=
   machineLengthBits
     (machineOptimizerFeasibilityInnerRadiusLengthRuler word)
 
+/-- Multiplies the outer-radius length by the ellipsoid dimension in binary. -/
 def machineOptimizerFeasibilityOuterLengthTimesDBits
     (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machineOptimizerFeasibilityOuterLengthBits word)
       (machineOptimizerFeasibilityDBits word))
 
+/-- Multiplies the inner-radius length by the ellipsoid dimension in binary. -/
 def machineOptimizerFeasibilityInnerLengthTimesDBits
     (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machineOptimizerFeasibilityInnerLengthBits word)
       (machineOptimizerFeasibilityDBits word))
 
+/-- Computes `D^2 + D * outerLength` in binary for the feasibility budget. -/
 def machineOptimizerFeasibilityMFirstBits (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineOptimizerFeasibilityDSquareBits word)
       (machineOptimizerFeasibilityOuterLengthTimesDBits word))
 
+/-- Adds `D * innerLength` to the first feasibility-budget sum. -/
 def machineOptimizerFeasibilityMSecondBits (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineOptimizerFeasibilityMFirstBits word)
       (machineOptimizerFeasibilityInnerLengthTimesDBits word))
 
+/-- Computes the budget factor `D^2 + D * outerLength + D * innerLength + 1` in binary. -/
 def machineOptimizerFeasibilityMBits (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineOptimizerFeasibilityMSecondBits word) [true])
 
+/-- Computes thirty-two times the cube of the ellipsoid dimension in binary. -/
 def machineOptimizerFeasibilityThirtyTwoDCubeBits
     (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (32 : ℕ).bits (machineOptimizerFeasibilityDCubeBits word))
 
+/-- Multiplies `32 * D^3` by the dimension-and-radius-length budget factor. -/
 def machineOptimizerFeasibilityBudgetBits
     (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machineOptimizerFeasibilityThirtyTwoDCubeBits word)
       (machineOptimizerFeasibilityMBits word))
 
+/-- Applies the binary-width construction three times to the budget-guard source word. -/
 def machineOptimizerFeasibilityBudgetGuard
     (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 3
     (machineOptimizerFeasibilityBudgetGuardSource word)
 
+/-- Converts the binary feasibility budget to a unary ruler bounded by the computed guard. -/
 def machineOptimizerFeasibilityBudgetUnary
     (word : List Bool) : List Bool :=
   machineBoundedUnary

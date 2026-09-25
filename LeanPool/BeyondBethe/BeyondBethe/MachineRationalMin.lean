@@ -24,10 +24,13 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Selects the lesser raw rational in a pair, choosing the left one when the comparison is
+equal. -/
 def machineRawRatMinCode (word : List Bool) : List Bool :=
   machineIfHead (machineRawRatLeBit word)
     (machinePairFirst word) (machinePairSecond word)
 
+/-- Normalizes the selected raw minimum into the rational binary output encoding. -/
 def machineRationalMinCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode (machineRawRatMinCode word)
 

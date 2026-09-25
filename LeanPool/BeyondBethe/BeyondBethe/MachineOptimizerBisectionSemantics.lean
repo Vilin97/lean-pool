@@ -52,6 +52,7 @@ theorem explicitOptimizerInitialWidth_eq_interval {m : ℕ}
     explicitOptimizerInitialWidth_eq_interval]
   norm_num
 
+/-- The raw-rational dyadic fraction `k/2^t`. -/
 def rawDyadicFraction (k t : ℕ) : RawRat :=
   ⟨k, 2 ^ t, pow_pos (by omega) _⟩
 
@@ -59,6 +60,8 @@ def rawDyadicFraction (k t : ℕ) : RawRat :=
     (rawDyadicFraction k t).value = (k : ℚ) / 2 ^ t := by
   simp [rawDyadicFraction, RawRat.value]
 
+/-- Encodes a matrix, scheduled iteration ruler, binary index `k`, and unary depth `t` as
+bisection state. -/
 def machineOptimizerBisectionCanonicalState {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (k t : ℕ) : List Bool :=
@@ -222,6 +225,7 @@ def machineOptimizerBisectionCanonicalState {m : ℕ}
 
 /-! ## Indexed semantic loop and exact step simulation -/
 
+/-- Updates the dyadic index to `2*k` on midpoint acceptance or `2*k + 1` on exhaustion. -/
 def scannedOptimizerIndexStep {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (k t : ℕ) : ℕ :=
@@ -236,6 +240,8 @@ def scannedOptimizerIndexStep {m : ℕ}
   | .accepted _ => 2 * k
   | .exhausted _ => 2 * k + 1
 
+/-- Runs the semantic dyadic-index update for a specified number of steps from depth `t` and
+index `k`. -/
 def runScannedOptimizerIndex {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ) :
     ℕ → ℕ → ℕ → ℕ
@@ -397,6 +403,8 @@ theorem optimizerDyadicThreshold_odd_high {m : ℕ}
   rw [pow_succ]
   ring
 
+/-- Relates a bisection state's endpoints to adjacent dyadic thresholds with index `k` and depth
+`t`. -/
 def ScannedOptimizerIndexAgrees {m : ℕ}
     (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (s : BetheBisectionState (m * m + 1)) (k t : ℕ) : Prop :=

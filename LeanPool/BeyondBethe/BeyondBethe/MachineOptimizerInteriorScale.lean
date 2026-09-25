@@ -29,114 +29,144 @@ open Complexity
 
 /-! ## Raw rational expression computed by the machine -/
 
+/-- The raw rational constant two used in optimizer scale formulas. -/
 def rawOptimizerTwo : RawRat := RawRat.ofNat 2
 
+/-- The raw rational constant four used in optimizer scale formulas. -/
 def rawOptimizerFour : RawRat := RawRat.ofNat 4
 
+/-- The raw rational one-half obtained by dividing one by two. -/
 def rawOptimizerHalf : RawRat :=
   (RawRat.ofNat 1).div rawOptimizerTwo
 
+/-- The raw rational representation of the explicit optimizer parameter `explicitXi`. -/
 def rawOptimizerXi : RawRat := rawRatOfRat explicitXi
 
+/-- Embeds the optimizer dimension as a raw rational with denominator one. -/
 def rawOptimizerDimension (n : ℕ) : RawRat := RawRat.ofNat n
 
+/-- Embeds the matrix-entry bit bound as a raw rational with denominator one. -/
 def rawOptimizerBitBound (B : ℕ) : RawRat := RawRat.ofNat B
 
+/-- Computes the raw regularization scale `explicitXi / (4 * n)`. -/
 def rawOptimizerTau (n : ℕ) : RawRat :=
   rawOptimizerXi.div (rawOptimizerFour.mul (rawOptimizerDimension n))
 
+/-- Computes the dimension squared in raw rational arithmetic. -/
 def rawOptimizerNSquare (n : ℕ) : RawRat :=
   (rawOptimizerDimension n).mul (rawOptimizerDimension n)
 
+/-- Computes the dimension cubed in raw rational arithmetic. -/
 def rawOptimizerNCube (n : ℕ) : RawRat :=
   (rawOptimizerNSquare n).mul (rawOptimizerDimension n)
 
+/-- Computes the interior-scale sum `n * B + 2 * n^2` in raw rational arithmetic. -/
 def rawOptimizerInteriorSum (n B : ℕ) : RawRat :=
   ((rawOptimizerDimension n).mul (rawOptimizerBitBound B)).add
     (rawOptimizerTwo.mul (rawOptimizerNSquare n))
 
+/-- Computes the raw interior constant `n * (n * B + 2 * n^2) / tau(n) + n^3`. -/
 def rawOptimizerInteriorK0 (n B : ℕ) : RawRat :=
   ((rawOptimizerDimension n).mul (rawOptimizerInteriorSum n B)).div
       (rawOptimizerTau n) |>.add (rawOptimizerNCube n)
 
+/-- Doubles the raw interior constant used to define optimizer scales. -/
 def rawOptimizerTwiceInteriorK0 (n B : ℕ) : RawRat :=
   rawOptimizerTwo.mul (rawOptimizerInteriorK0 n B)
 
 /-! ## Binary machines for the expression -/
 
+/-- Extracts the binary matrix dimension for optimizer computations. -/
 def machineOptimizerDimensionBits (word : List Bool) : List Bool :=
   machineMatrixDimensionWord word
 
+/-- Extracts the unary matrix dimension for optimizer computations. -/
 def machineOptimizerDimensionUnary (word : List Bool) : List Bool :=
   machineMatrixDimensionUnary word
 
+/-- Encodes the matrix dimension as a raw rational with denominator one. -/
 def machineOptimizerDimensionRawCode (word : List Bool) : List Bool :=
   pair (machineNaturalIntegerCode (machineOptimizerDimensionBits word)) [true]
 
+/-- Computes the binary length of the matrix-entry bit-bound ruler. -/
 def machineOptimizerBitBoundBits (word : List Bool) : List Bool :=
   machineLengthBits (machineMatrixEntryBitBoundRuler word)
 
+/-- Encodes the matrix-entry bit bound as a raw rational with denominator one. -/
 def machineOptimizerBitBoundRawCode (word : List Bool) : List Bool :=
   pair (machineNaturalIntegerCode (machineOptimizerBitBoundBits word)) [true]
 
+/-- Computes raw four times the matrix dimension. -/
 def machineOptimizerFourDimensionRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawOptimizerFour)
       (machineOptimizerDimensionRawCode word))
 
+/-- Computes the encoded raw regularization scale by dividing `explicitXi` by four times the
+dimension. -/
 def machineOptimizerTauRawCode (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (rawRatBinaryCode rawOptimizerXi)
       (machineOptimizerFourDimensionRawCode word))
 
+/-- Computes the encoded raw square of the matrix dimension. -/
 def machineOptimizerNSquareRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineOptimizerDimensionRawCode word)
       (machineOptimizerDimensionRawCode word))
 
+/-- Computes the encoded raw cube of the matrix dimension. -/
 def machineOptimizerNCubeRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineOptimizerNSquareRawCode word)
       (machineOptimizerDimensionRawCode word))
 
+/-- Computes the encoded raw product of dimension and matrix-entry bit bound. -/
 def machineOptimizerNBProductRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineOptimizerDimensionRawCode word)
       (machineOptimizerBitBoundRawCode word))
 
+/-- Computes the encoded raw value of twice the squared dimension. -/
 def machineOptimizerTwiceNSquareRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawOptimizerTwo)
       (machineOptimizerNSquareRawCode word))
 
+/-- Computes the encoded raw interior sum `n * B + 2 * n^2`. -/
 def machineOptimizerInteriorSumRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineOptimizerNBProductRawCode word)
       (machineOptimizerTwiceNSquareRawCode word))
 
+/-- Multiplies the raw interior sum by the matrix dimension. -/
 def machineOptimizerNTimesInteriorSumRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineOptimizerDimensionRawCode word)
       (machineOptimizerInteriorSumRawCode word))
 
+/-- Divides the dimension-scaled interior sum by the raw regularization parameter. -/
 def machineOptimizerInteriorQuotientRawCode
     (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineOptimizerNTimesInteriorSumRawCode word)
       (machineOptimizerTauRawCode word))
 
+/-- Adds the dimension cube to the interior quotient to compute the raw interior constant. -/
 def machineOptimizerInteriorK0RawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineOptimizerInteriorQuotientRawCode word)
       (machineOptimizerNCubeRawCode word))
 
+/-- Computes the raw code for twice the optimizer interior constant. -/
 def machineOptimizerTwiceInteriorK0RawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawOptimizerTwo)
       (machineOptimizerInteriorK0RawCode word))
 
+/-- Computes the natural ceiling of twice the raw interior constant in binary. -/
 def machineOptimizerInteriorExponentBits (word : List Bool) : List Bool :=
   machineRationalCeilNatBits
     (machineOptimizerTwiceInteriorK0RawCode word)
@@ -462,6 +492,7 @@ theorem machineOptimizerInteriorExponentBits_mem_FP :
 
 /-! ## Guarded unary exponent and dyadic floor -/
 
+/-- The explicit interior-exponent coefficient `34 * rationalCeilNat (8 / explicitXi) + 2`. -/
 def explicitOptimizerInteriorExponentCoefficient : ℕ :=
   34 * rationalCeilNat (8 / explicitXi) + 2
 
@@ -510,19 +541,24 @@ theorem numericalInteriorExponent_le_sourcePolynomial
   rw [hrewrite]
   exact hmain.trans hpoly
 
+/-- Applies the binary-width construction six times to bound conversion of the interior exponent
+to unary. -/
 def machineOptimizerInteriorExponentGuard (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 6 word
 
+/-- Converts the interior exponent to a unary ruler under its computed guard. -/
 def machineOptimizerInteriorExponentUnary (word : List Bool) : List Bool :=
   machineBoundedUnary
     (pair (machineOptimizerInteriorExponentGuard word)
       (machineOptimizerInteriorExponentBits word))
 
+/-- Raises raw one-half to the unary interior exponent. -/
 def machineOptimizerInteriorFloorRawCode (word : List Bool) : List Bool :=
   machineRawRatPowerCode
     (pair (machineOptimizerInteriorExponentUnary word)
       (rawRatBinaryCode rawOptimizerHalf))
 
+/-- Divides the interior power-of-two floor by two to obtain the explicit optimizer floor. -/
 def machineExplicitOptimizerFloorRawCode (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineOptimizerInteriorFloorRawCode word)

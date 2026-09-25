@@ -23,6 +23,8 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Returns zero in dimensions zero and one; otherwise evaluates the directed certificate at the
+explicit optimizer matrix and its row and column potentials. -/
 def explicitNormalizedCertificateAlgorithm :
     ∀ n, Matrix (Fin n) (Fin n) ℚ → ℚ
   | 0, _ => 0
@@ -43,19 +45,24 @@ def NormalizedCertificateStringRealizesOnPositive
       rawRatBinaryCode
         (rawRatOfRat (explicitNormalizedCertificateAlgorithm (m + 2) B))
 
+/-- Returns raw one for a zero-dimensional positive-matrix input and its first entry otherwise. -/
 def machinePositiveSmallRawCode (word : List Bool) : List Bool :=
   machineIfHead (machineMatrixDimensionZeroBit word)
     (rawRatBinaryCode RawRat.one)
     (machineMatrixFirstEntryCode word)
 
+/-- Normalizes the positive input matrix's entries for the certificate machine. -/
 def machinePositiveNormalizedMatrixCode (word : List Bool) : List Bool :=
   machineMatrixNormalizeEntries word
 
+/-- Runs the supplied certificate machine on the normalized positive matrix. -/
 def machinePositiveCertificateRawCode
     (certificateMachine : List Bool → List Bool)
     (word : List Bool) : List Bool :=
   certificateMachine (machinePositiveNormalizedMatrixCode word)
 
+/-- Multiplies the normalized-matrix certificate by the matrix-normalization scale raised to the
+dimension. -/
 def machinePositiveLargeProductRawCode
     (certificateMachine : List Bool → List Bool)
     (word : List Bool) : List Bool :=
@@ -63,12 +70,15 @@ def machinePositiveLargeProductRawCode
     (pair (machineMatrixNormalizationScalePowerRawCode word)
       (machinePositiveCertificateRawCode certificateMachine word))
 
+/-- Normalizes the scaled certificate product into a rational entry code. -/
 def machinePositiveLargeRawCode
     (certificateMachine : List Bool → List Bool)
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machinePositiveLargeProductRawCode certificateMachine word)
 
+/-- Uses the direct small-dimension branch below dimension two and the scaled
+normalized-certificate branch otherwise. -/
 def machinePositiveAlgorithmRawCode
     (certificateMachine : List Bool → List Bool)
     (word : List Bool) : List Bool :=

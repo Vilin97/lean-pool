@@ -24,10 +24,12 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Divides every rational direction coordinate by the cut's L1 scale. -/
 def rationalNormalizedDirection {d : ℕ}
     (b : Fin d → ℚ) : Fin d → ℚ :=
   fun i ↦ b i / cutL1Scale b
 
+/-- Divides the encoded rational vector by its raw L1 norm to obtain its normalized direction. -/
 def machineRationalNormalizedDirectionCode
     (word : List Bool) : List Bool :=
   machineRationalRowDivide

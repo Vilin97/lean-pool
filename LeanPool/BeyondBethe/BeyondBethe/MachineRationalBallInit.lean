@@ -28,6 +28,7 @@ dimension ruler.  The following section will replace the diagonal entries by
 the encoded radius and package the result as a complete ellipsoid state.
 -/
 
+/-- The canonical rational-entry binary code for zero. -/
 def machineRationalZeroEntry : List Bool :=
   rationalEntryBinaryCode 0
 
@@ -158,9 +159,11 @@ theorem rationalMatrixRows_diagonalPrefix_set
 
 /-! ## Diagonal-basis machine -/
 
+/-- Extracts the unary dimension ruler from a diagonal-basis request. -/
 def machineDiagonalBasisRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the encoded radius entry from a diagonal-basis request. -/
 def machineDiagonalBasisRadiusEntry (word : List Bool) : List Bool :=
   machinePairSecond word
 
@@ -168,30 +171,38 @@ def machineDiagonalBasisRadiusEntry (word : List Bool) : List Bool :=
 def machineDiagonalBasisBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth (machineBinaryMulWidth word)
 
+/-- Packs the diagonal-basis scan index, accumulated matrix, fixed radius entry, and bound word. -/
 def machineDiagonalBasisPack
     (index matrix radius bound : List Bool) : List Bool :=
   pair index (pair matrix (pair radius bound))
 
+/-- Extracts the unary diagonal index from a diagonal-basis construction state. -/
 def machineDiagonalBasisIndex (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the accumulated encoded matrix from a diagonal-basis state. -/
 def machineDiagonalBasisMatrix (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the fixed radius entry from a diagonal-basis state. -/
 def machineDiagonalBasisRadius (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the stored field-length bound from a diagonal-basis state. -/
 def machineDiagonalBasisStateBound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
+/-- Increments the unary diagonal index by prepending one true bit. -/
 def machineDiagonalBasisNextIndexCandidate
     (state : List Bool) : List Bool :=
   true :: machineDiagonalBasisIndex state
 
+/-- Truncates the incremented diagonal index to the stored bound length. -/
 def machineDiagonalBasisNextIndex (state : List Bool) : List Bool :=
   (machineDiagonalBasisNextIndexCandidate state).take
     (machineDiagonalBasisStateBound state).length
 
+/-- Updates the matrix entry at the current diagonal index to the fixed radius value. -/
 def machineDiagonalBasisMatrixCandidate (state : List Bool) : List Bool :=
   machineNestedMatrixUpdateAtUnary
     (pair (machineDiagonalBasisIndex state)
@@ -199,34 +210,44 @@ def machineDiagonalBasisMatrixCandidate (state : List Bool) : List Bool :=
         (pair (machineDiagonalBasisRadius state)
           (machineDiagonalBasisMatrix state))))
 
+/-- Truncates the updated matrix code to the stored bound length. -/
 def machineDiagonalBasisNextMatrix (state : List Bool) : List Bool :=
   (machineDiagonalBasisMatrixCandidate state).take
     (machineDiagonalBasisStateBound state).length
 
+/-- Advances the diagonal index and updates the corresponding matrix entry while preserving
+radius and bound. -/
 def machineDiagonalBasisStep (state : List Bool) : List Bool :=
   machineDiagonalBasisPack (machineDiagonalBasisNextIndex state)
     (machineDiagonalBasisNextMatrix state)
     (machineDiagonalBasisRadius state)
     (machineDiagonalBasisStateBound state)
 
+/-- Constructs an encoded zero matrix of the requested dimension and truncates it to the
+diagonal-basis bound. -/
 def machineDiagonalBasisInitialMatrix (word : List Bool) : List Bool :=
   (machineRationalZeroMatrixRowsCode (machineDiagonalBasisRuler word)).take
     (machineDiagonalBasisBound word).length
 
+/-- Initializes diagonal-basis construction at index zero with the bounded zero matrix and
+requested radius. -/
 def machineDiagonalBasisInit (word : List Bool) : List Bool :=
   machineDiagonalBasisPack [] (machineDiagonalBasisInitialMatrix word)
     (machineDiagonalBasisRadiusEntry word)
     (machineDiagonalBasisBound word)
 
+/-- Packs four copies of the diagonal-basis bound to bound the full state encoding. -/
 def machineDiagonalBasisWidth (word : List Bool) : List Bool :=
   machineDiagonalBasisPack (machineDiagonalBasisBound word)
     (machineDiagonalBasisBound word) (machineDiagonalBasisBound word)
     (machineDiagonalBasisBound word)
 
+/-- Iterates the diagonal-basis update once per element of the unary dimension ruler. -/
 def machineDiagonalBasisFinalState (word : List Bool) : List Bool :=
   (machineDiagonalBasisStep)^[(machineDiagonalBasisRuler word).length]
     (machineDiagonalBasisInit word)
 
+/-- Extracts the encoded matrix rows after all diagonal updates. -/
 def machineDiagonalBasisRowsCode (word : List Bool) : List Bool :=
   machineDiagonalBasisMatrix (machineDiagonalBasisFinalState word)
 
@@ -334,6 +355,8 @@ theorem machineDiagonalBasisWidth_mem_FP : machineDiagonalBasisWidth ∈ FP :=
     machineDiagonalBasisStateBound (machineDiagonalBasisPack a b c e) = e := by
   simp [machineDiagonalBasisStateBound, machineDiagonalBasisPack]
 
+/-- Requires exact diagonal-state packing and bounds each of its four field lengths by the
+input-derived bound. -/
 def MachineDiagonalBasisStateBound (word state : List Bool) : Prop :=
   let B := (machineDiagonalBasisBound word).length
   state = machineDiagonalBasisPack
@@ -411,9 +434,11 @@ theorem machineDiagonalBasisRowsCode_mem_FP :
 
 /-! ### Exact canonical semantics -/
 
+/-- Encodes dimension `d` as a unary ruler followed by rational radius `R`. -/
 def machineDiagonalBasisCanonicalInput (d : ℕ) (R : ℚ) : List Bool :=
   pair (List.replicate d true) (rationalEntryBinaryCode R)
 
+/-- Encodes the semantic construction state after `k` diagonal entries have been set to `R`. -/
 def machineDiagonalBasisCanonicalState
     (d : ℕ) (R : ℚ) (k : ℕ) : List Bool :=
   let word := machineDiagonalBasisCanonicalInput d R

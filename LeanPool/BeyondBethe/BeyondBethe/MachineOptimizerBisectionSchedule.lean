@@ -23,61 +23,74 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- The raw-rational objective upper bound `n*B + n`. -/
 def rawOptimizerObjectiveUpper (n B : ℕ) : RawRat :=
   ((rawOptimizerDimension n).mul (rawOptimizerBitBound B)).add
     (rawOptimizerDimension n)
 
+/-- Twice the explicit optimizer inner radius as a raw rational. -/
 def rawOptimizerTwiceInnerRadius (n B : ℕ) : RawRat :=
   rawOptimizerTwo.mul (rawExplicitOptimizerInnerRadius n B)
 
+/-- The smoothing slack given by mixing times the objective range plus twice the inner radius. -/
 def rawOptimizerSmoothingSlack (n B : ℕ) : RawRat :=
   ((rawExplicitOptimizerMix n B).mul
     (rawOptimizerObjectiveRange n B)).add
       (rawOptimizerTwiceInnerRadius n B)
 
+/-- The initial upper threshold obtained by adding smoothing slack to the objective upper bound. -/
 def rawOptimizerInitialHigh (n B : ℕ) : RawRat :=
   (rawOptimizerObjectiveUpper n B).add
     (rawOptimizerSmoothingSlack n B)
 
+/-- The raw-rational quantity `2*n^2` used to form the initial interval width. -/
 def rawOptimizerTwiceNSquare (n : ℕ) : RawRat :=
   rawOptimizerTwo.mul (rawOptimizerNSquare n)
 
+/-- The initial upper threshold minus the lower threshold `-2*n^2`. -/
 def rawExplicitOptimizerInitialWidth (n B : ℕ) : RawRat :=
   (rawOptimizerInitialHigh n B).add (rawOptimizerTwiceNSquare n)
 
+/-- Computes the encoded objective upper bound `n*B + n`. -/
 def machineOptimizerObjectiveUpperRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineOptimizerNBProductRawCode word)
       (machineOptimizerDimensionRawCode word))
 
+/-- Computes twice the encoded optimizer inner radius. -/
 def machineOptimizerTwiceInnerRadiusRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawOptimizerTwo)
       (machineExplicitOptimizerInnerRadiusRawCode word))
 
+/-- Multiplies the encoded mixing parameter by the objective range. -/
 def machineOptimizerMixRangeRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineExplicitOptimizerMixRawCode word)
       (machineOptimizerObjectiveRangeRawCode word))
 
+/-- Adds the mixing-range product and twice the inner radius to encode smoothing slack. -/
 def machineOptimizerSmoothingSlackRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineOptimizerMixRangeRawCode word)
       (machineOptimizerTwiceInnerRadiusRawCode word))
 
+/-- Adds smoothing slack to the encoded objective upper bound. -/
 def machineOptimizerInitialHighRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineOptimizerObjectiveUpperRawCode word)
       (machineOptimizerSmoothingSlackRawCode word))
 
+/-- Computes the encoded quantity `2*n^2` used in the initial width. -/
 def machineOptimizerTwiceNSquareForWidthRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawOptimizerTwo)
       (machineOptimizerNSquareRawCode word))
 
+/-- Adds `2*n^2` to the initial upper threshold to encode the initial bisection width. -/
 def machineExplicitOptimizerInitialWidthRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
@@ -264,16 +277,19 @@ theorem rawExplicitOptimizerInitialWidth_eq {m : ℕ}
 
 /-! ## Exact unary bisection count -/
 
+/-- Normalizes the raw initial bisection width into a rational entry code. -/
 def machineExplicitOptimizerInitialWidthEntryCode
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineExplicitOptimizerInitialWidthRawCode word)
 
+/-- Measures the encoded initial interval width with an optimizer entry-length ruler. -/
 def machineExplicitOptimizerInitialWidthLengthRuler
     (word : List Bool) : List Bool :=
   machineOptimizerEntryLengthRuler
     (machineExplicitOptimizerInitialWidthEntryCode word)
 
+/-- Concatenates the initial-width and gap length rulers with three extra bisection steps. -/
 def machineExplicitOptimizerBisectionStepsRuler
     (word : List Bool) : List Bool :=
   machineExplicitOptimizerInitialWidthLengthRuler word ++

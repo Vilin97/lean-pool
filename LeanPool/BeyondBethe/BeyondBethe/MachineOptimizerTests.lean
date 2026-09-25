@@ -24,9 +24,11 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Constructs a one-coordinate rational test point with value one-quarter of the finite index. -/
 def optimizerTestAffinePoint {N : ℕ} (a : Fin N) : Fin 1 → ℚ :=
   fun _ ↦ a.val / 4
 
+/-- Constructs a raw rational test floor equal to one-quarter of the finite index. -/
 def optimizerTestFloor {N : ℕ} (d : Fin N) : RawRat :=
   rawRatOfRat (d.val / 4 : ℚ)
 
@@ -87,6 +89,7 @@ theorem machineExecutablePotentialEntries_two_by_two_half :
     machineExecutableColumnPotentialEntryCode_encode
       (1 / 8) (fun _ _ ↦ 1) (fun _ ↦ 1 / 2) 1 dummy i⟩
 
+/-- Chooses rational test entry three-quarters for true and one-quarter for false. -/
 def optimizerTestEntry (bit : Bool) : ℚ :=
   if bit then 3 / 4 else 1 / 4
 

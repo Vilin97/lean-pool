@@ -26,12 +26,15 @@ open Complexity
 
 /-! ## The finite-word program -/
 
+/-- Extracts the final matching payload from the completed Kuhn run. -/
 def machineKuhnFinalMate (matrix : List Bool) : List Bool :=
   machineKuhnDoneMate (machineKuhnControl (machineKuhnFinalState matrix))
 
+/-- Pairs the matrix dimension ruler with the final Kuhn matching for the completeness test. -/
 def machineKuhnPerfectMatchingInput (matrix : List Bool) : List Bool :=
   pair (machineKuhnInitDimension matrix) (machineKuhnFinalMate matrix)
 
+/-- Tests whether every column of the final Kuhn matching has a present mate. -/
 def machineKuhnPerfectMatchingBit (matrix : List Bool) : List Bool :=
   machineMateAllSomeBit (machineKuhnPerfectMatchingInput matrix)
 
@@ -55,6 +58,7 @@ theorem machineKuhnPerfectMatchingBit_mem_FP :
 
 /-! ## The column-totality criterion -/
 
+/-- Requires every column to have some matched row. -/
 def AllColumnsMatched {n : ℕ} (mate : ColumnMate n) : Prop :=
   ∀ col, ∃ row, mate col = some row
 

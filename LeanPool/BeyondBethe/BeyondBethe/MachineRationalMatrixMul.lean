@@ -24,6 +24,8 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- The square rational matrix product, computed by summing entrywise products over the inner
+index. -/
 def rationalMatrixMul {d : ℕ}
     (A B : Matrix (Fin d) (Fin d) ℚ) : Matrix (Fin d) (Fin d) ℚ :=
   fun i j ↦ ∑ k, A i k * B k j
@@ -33,22 +35,27 @@ theorem rationalMatrixMul_eq_matrix_mul {d : ℕ}
     rationalMatrixMul A B = A * B := by
   rfl
 
+/-- Encodes a unary dimension and the row encodings of two square rational matrices. -/
 def rationalMatrixMulCanonicalWord {d : ℕ}
     (A B : Matrix (Fin d) (Fin d) ℚ) : List Bool :=
   pair (List.replicate d true)
     (pair (rationalSquareMatrixRowsCode A)
       (rationalSquareMatrixRowsCode B))
 
+/-- Extracts the unary dimension ruler from a matrix-product query. -/
 def machineRationalMatrixMulDimensionUnary
     (word : List Bool) : List Bool := machinePairFirst word
 
+/-- Extracts the paired left and right row encodings from a matrix-product query. -/
 def machineRationalMatrixMulMatrices
     (word : List Bool) : List Bool := machinePairSecond word
 
+/-- Extracts the left matrix's encoded rows. -/
 def machineRationalMatrixMulLeftRows
     (word : List Bool) : List Bool :=
   machinePairFirst (machineRationalMatrixMulMatrices word)
 
+/-- Extracts the right matrix's encoded rows. -/
 def machineRationalMatrixMulRightRows
     (word : List Bool) : List Bool :=
   machinePairSecond (machineRationalMatrixMulMatrices word)
@@ -133,6 +140,7 @@ theorem rationalTransposeMulVector_row_eq_matrixMul {d : ℕ}
 
 /-! ## A global ordinary-binary output bound -/
 
+/-- Computes a product entry as the raw dot product of a left row with a right column. -/
 def rawRationalMatrixMulCoordinate {d : ℕ}
     (A B : Matrix (Fin d) (Fin d) ℚ) (i j : Fin d) : RawRat :=
   rawRatListDot RawRat.zero (List.ofFn fun k ↦ A i k)
@@ -192,6 +200,7 @@ theorem rationalMatrixMul_entry_code_length_le {d : ℕ}
     (Nat.mul_le_mul_left 36
       (rawRationalMatrixMulCoordinate_width_le_word A B i j)) 64)
 
+/-- Reuses the transpose-vector width bound for matrix-product state. -/
 def machineRationalMatrixMulInputBound (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorInputBound word
 
@@ -300,23 +309,29 @@ theorem rationalMatrixMul_code_length_le_bound {d : ℕ}
 
 /-! ## Bounded outer row scan -/
 
+/-- Encodes the range of row indices to generate in the matrix product. -/
 def machineRationalMatrixMulIndices (word : List Bool) : List Bool :=
   machineUnaryRangeCode (machineRationalMatrixMulDimensionUnary word)
 
+/-- Computes the product row at the current scan index from the stored matrix payload. -/
 def machineRationalMatrixMulCurrentRow (state : List Bool) : List Bool :=
   machineRationalMatrixMulRowCode
     (pair (machineRationalTransposeMulVectorCurrentIndex state)
       (machineRationalTransposeMulVectorStatePayload state))
 
+/-- Prepends the current product row to the reversed output accumulator. -/
 def machineRationalMatrixMulCandidate (state : List Bool) : List Bool :=
   pair (machineRationalMatrixMulCurrentRow state)
     (machineRationalTransposeMulVectorAccumulator state)
 
+/-- Truncates the candidate product-row accumulator to the stored bound. -/
 def machineRationalMatrixMulNextAccumulator
     (state : List Bool) : List Bool :=
   (machineRationalMatrixMulCandidate state).take
     (machineRationalTransposeMulVectorBound state).length
 
+/-- Consumes one row index and updates the bounded product accumulator, retaining payload and
+bound. -/
 def machineRationalMatrixMulAdvance (state : List Bool) : List Bool :=
   machineRationalTransposeMulVectorPack
     (machineListTail (machineRationalTransposeMulVectorRemaining state))
@@ -324,23 +339,29 @@ def machineRationalMatrixMulAdvance (state : List Bool) : List Bool :=
     (machineRationalTransposeMulVectorStatePayload state)
     (machineRationalTransposeMulVectorBound state)
 
+/-- Generates the next product row, leaving exhausted matrix-product scans fixed. -/
 def machineRationalMatrixMulStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineRationalTransposeMulVectorRemaining state) state
     (machineRationalMatrixMulAdvance state)
 
+/-- Initializes matrix multiplication with all row indices, empty output, input payload, and
+width bound. -/
 def machineRationalMatrixMulInit (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorPack
     (machineRationalMatrixMulIndices word) [] word
     (machineRationalMatrixMulInputBound word)
 
+/-- Packs four copies of the matrix-product input bound to bound its scan state. -/
 def machineRationalMatrixMulWidth (word : List Bool) : List Bool :=
   let bound := machineRationalMatrixMulInputBound word
   machineRationalTransposeMulVectorPack bound bound bound bound
 
+/-- Runs matrix-product row generation for one step per input bit. -/
 def machineRationalMatrixMulFinalState (word : List Bool) : List Bool :=
   (machineRationalMatrixMulStep)^[word.length]
     (machineRationalMatrixMulInit word)
 
+/-- Extracts the generated matrix-product rows in reverse order. -/
 def machineRationalMatrixMulReversedCode (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorAccumulator
     (machineRationalMatrixMulFinalState word)
@@ -493,11 +514,14 @@ theorem machineRationalMatrixMulCode_mem_FP :
 
 /-! ## Exact scan semantics -/
 
+/-- Lists the first `k` rows of the rational matrix product. -/
 def rationalMatrixMulRowsPrefix {d : ℕ}
     (A B : Matrix (Fin d) (Fin d) ℚ) (k : ℕ) : List (List ℚ) :=
   ((List.finRange d).take k).map
     fun i ↦ List.ofFn fun j ↦ rationalMatrixMul A B i j
 
+/-- Encodes matrix multiplication after `k` rows, with remaining indices and reversed generated
+rows. -/
 def machineRationalMatrixMulSemanticState {d : ℕ}
     (A B : Matrix (Fin d) (Fin d) ℚ) (k : ℕ) : List Bool :=
   let word := rationalMatrixMulCanonicalWord A B

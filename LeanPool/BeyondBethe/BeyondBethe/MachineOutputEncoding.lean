@@ -24,22 +24,27 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Squares the left binary natural-number component of a pair. -/
 def machineNatPairLeftSquare (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machinePairFirst word) (machinePairFirst word))
 
+/-- Squares the right binary natural-number component of a pair. -/
 def machineNatPairRightSquare (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machinePairSecond word) (machinePairSecond word))
 
+/-- Computes the natural-pairing branch `right^2 + left` in binary. -/
 def machineNatPairLeftBranch (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineNatPairRightSquare word) (machinePairFirst word))
 
+/-- Computes the intermediate natural-pairing term `left^2 + left` in binary. -/
 def machineNatPairRightBranchFirst (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineNatPairLeftSquare word) (machinePairFirst word))
 
+/-- Computes the natural-pairing branch `left^2 + left + right` in binary. -/
 def machineNatPairRightBranch (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineNatPairRightBranchFirst word) (machinePairSecond word))
@@ -115,13 +120,16 @@ theorem machineNatPairBits_pair_natBits (a b : ℕ) :
       machineBinaryAddBits_pair_natBits]
     simp [Nat.pair, h, Nat.add_assoc]
 
+/-- Drops the sign bit to expose the integer code's magnitude payload. -/
 def machineIntegerMagnitudeWord (word : List Bool) : List Bool := word.tail
 
+/-- Doubles the integer payload in binary to obtain its even natural-number code. -/
 def machineIntegerEvenCodeBits (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineIntegerMagnitudeWord word)
       (machineIntegerMagnitudeWord word))
 
+/-- Adds one to the doubled integer payload to obtain its odd natural-number code. -/
 def machineIntegerOddCodeBits (word : List Bool) : List Bool :=
   machineBinaryAddBits (pair (machineIntegerEvenCodeBits word) [true])
 

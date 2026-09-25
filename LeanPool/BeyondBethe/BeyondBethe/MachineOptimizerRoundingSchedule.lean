@@ -27,10 +27,12 @@ the exact iteration budget, and canonical bit lengths of the outer radius and
 of the initial state-magnitude bound.
 -/
 
+/-- Computes the raw initial magnitude `2 + d * R` for ellipsoid feasibility. -/
 def rawOptimizerFeasibilityInitialMagnitude
     (d : ℕ) (R : RawRat) : RawRat :=
   rawOptimizerTwo.add ((RawRat.ofNat d).mul R)
 
+/-- Computes the raw initial magnitude by adding two to ellipsoid dimension times outer radius. -/
 def machineOptimizerFeasibilityInitialMagnitudeRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
@@ -39,99 +41,121 @@ def machineOptimizerFeasibilityInitialMagnitudeRawCode
         (pair (machineOptimizerFeasibilityEllipsoidDimensionRawCode word)
           (machineOptimizerFeasibilityOuterRadiusRawCode word))))
 
+/-- Normalizes the raw initial-magnitude code into its rational entry encoding. -/
 def machineOptimizerFeasibilityInitialMagnitudeEntryCode
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineOptimizerFeasibilityInitialMagnitudeRawCode word)
 
+/-- Computes the optimizer length ruler for the normalized initial magnitude. -/
 def machineOptimizerFeasibilityInitialMagnitudeLengthRuler
     (word : List Bool) : List Bool :=
   machineOptimizerEntryLengthRuler
     (machineOptimizerFeasibilityInitialMagnitudeEntryCode word)
 
+/-- Computes the binary initial-magnitude length `K` from its ruler. -/
 def machineOptimizerFeasibilityKBits (word : List Bool) : List Bool :=
   machineLengthBits
     (machineOptimizerFeasibilityInitialMagnitudeLengthRuler word)
 
+/-- Computes `L` as the outer-radius length multiplied by ellipsoid dimension. -/
 def machineOptimizerFeasibilityLBits (word : List Bool) : List Bool :=
   machineBinaryMulOf machineOptimizerFeasibilityOuterLengthBits
     machineOptimizerFeasibilityDBits word
 
+/-- Doubles the binary feasibility iteration budget `T`. -/
 def machineOptimizerFeasibilityTwoTBits (word : List Bool) : List Bool :=
   machineBinaryMulOf (machineBinaryConst 2)
     machineOptimizerFeasibilityBudgetBits word
 
+/-- Computes the magnitude-bound term `L + 2 * T` in binary. -/
 def machineOptimizerFeasibilityFirstBaseBits (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityLBits
     machineOptimizerFeasibilityTwoTBits word
 
+/-- Computes the magnitude-bound term `L + 2 * T + 1` in binary. -/
 def machineOptimizerFeasibilityFirstBits (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityFirstBaseBits
     (machineBinaryConst 1) word
 
+/-- Computes three times the ellipsoid dimension in binary. -/
 def machineOptimizerFeasibilityThreeDBits (word : List Bool) : List Bool :=
   machineBinaryMulOf (machineBinaryConst 3)
     machineOptimizerFeasibilityDBits word
 
+/-- Computes the per-step magnitude-growth term `6 + 3 * D` in binary. -/
 def machineOptimizerFeasibilitySixPlusThreeDBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf (machineBinaryConst 6)
     machineOptimizerFeasibilityThreeDBits word
 
+/-- Multiplies the feasibility iteration budget by the magnitude-growth term `6 + 3 * D`. -/
 def machineOptimizerFeasibilityTTimesGrowthBits
     (word : List Bool) : List Bool :=
   machineBinaryMulOf machineOptimizerFeasibilityBudgetBits
     machineOptimizerFeasibilitySixPlusThreeDBits word
 
+/-- Adds initial-magnitude length `K` to the accumulated growth `T * (6 + 3 * D)`. -/
 def machineOptimizerFeasibilityKPlusGrowthBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityKBits
     machineOptimizerFeasibilityTTimesGrowthBits word
 
+/-- Adds three to the initial length plus accumulated magnitude growth. -/
 def machineOptimizerFeasibilityKPlusGrowthPlusThreeBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityKPlusGrowthBits
     (machineBinaryConst 3) word
 
+/-- Computes the inner magnitude term `K + T * (6 + 3 * D) + 3 + D` in binary. -/
 def machineOptimizerFeasibilityInnerMagnitudeBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityKPlusGrowthPlusThreeBits
     machineOptimizerFeasibilityDBits word
 
+/-- Multiplies the inner magnitude term by the ellipsoid dimension. -/
 def machineOptimizerFeasibilityDInnerMagnitudeBits
     (word : List Bool) : List Bool :=
   machineBinaryMulOf machineOptimizerFeasibilityDBits
     machineOptimizerFeasibilityInnerMagnitudeBits word
 
+/-- Computes eight times the ellipsoid dimension in binary. -/
 def machineOptimizerFeasibilityEightDBits (word : List Bool) : List Bool :=
   machineBinaryMulOf (machineBinaryConst 8)
     machineOptimizerFeasibilityDBits word
 
+/-- Computes the first denominator-exponent term `12 + 8 * D` in binary. -/
 def machineOptimizerFeasibilityDenomFirstBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf (machineBinaryConst 12)
     machineOptimizerFeasibilityEightDBits word
 
+/-- Adds the squared dimension to the first denominator-exponent term. -/
 def machineOptimizerFeasibilityDenomSecondBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityDenomFirstBits
     machineOptimizerFeasibilityDSquareBits word
 
+/-- Adds dimension times the inner magnitude to `12 + 8 * D + D^2` for the denominator exponent. -/
 def machineOptimizerFeasibilityDenominatorExponentBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityDenomSecondBits
     machineOptimizerFeasibilityDInnerMagnitudeBits word
 
+/-- Adds the first magnitude term and denominator exponent to form the rounding-precision base. -/
 def machineOptimizerFeasibilityPrecisionBaseBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityFirstBits
     machineOptimizerFeasibilityDenominatorExponentBits word
 
+/-- Adds two to the rounding-precision base. -/
 def machineOptimizerFeasibilityRoundingPrecisionBits
     (word : List Bool) : List Bool :=
   machineBinaryAddOf machineOptimizerFeasibilityPrecisionBaseBits
     (machineBinaryConst 2) word
 
+/-- Concatenates the iteration, dimension, initial-magnitude-length, and outer-radius-length
+rulers to seed the rounding guard. -/
 def machineOptimizerFeasibilityRoundingGuardSource
     (word : List Bool) : List Bool :=
   machineOptimizerFeasibilityBudgetUnary word ++
@@ -139,11 +163,13 @@ def machineOptimizerFeasibilityRoundingGuardSource
       (machineOptimizerFeasibilityInitialMagnitudeLengthRuler word ++
         machineOptimizerFeasibilityOuterRadiusLengthRuler word))
 
+/-- Applies the binary-width construction twice to the rounding-guard source. -/
 def machineOptimizerFeasibilityRoundingGuard
     (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 2
     (machineOptimizerFeasibilityRoundingGuardSource word)
 
+/-- Converts rounding precision from binary to unary under the computed guard. -/
 def machineOptimizerFeasibilityRoundingPrecisionUnary
     (word : List Bool) : List Bool :=
   machineBoundedUnary
@@ -340,6 +366,8 @@ theorem machineOptimizerFeasibilityRoundingPrecisionUnary_mem_FP :
   rw [rawOptimizerFeasibilityInitialMagnitude_value]
   rfl
 
+/-- The explicit feasibility rounding precision, combining radius length, iteration count,
+dimension, and initial magnitude length. -/
 def optimizerFeasibilityRoundingPrecision
     (d LR K T : ℕ) : ℕ :=
   (LR * d + 2 * T + 1) +

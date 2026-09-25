@@ -26,24 +26,30 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Tests whether the current matrix entry differs from zero in raw rational arithmetic. -/
 def machineMatrixSupportNonzeroFlag (state : List Bool) : List Bool :=
   machineRawRatNeBit
     (pair (machineMatrixRawSumEntry state)
       (rawRatBinaryCode RawRat.zero))
 
+/-- Uses the current nonzero matrix entry as a support-product factor and substitutes one for
+zero entries. -/
 def machineMatrixSupportFactorCode (state : List Bool) : List Bool :=
   machineIfHead (machineMatrixSupportNonzeroFlag state)
     (machineMatrixRawSumEntry state) (rawRatBinaryCode RawRat.one)
 
+/-- Multiplies the support-product accumulator by the current entry's nonzero-or-one factor. -/
 def machineMatrixSupportCandidate (state : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineMatrixRawSumAcc state)
       (machineMatrixSupportFactorCode state))
 
+/-- Truncates the updated support-product accumulator to the length of the stored bound. -/
 def machineMatrixSupportNextAcc (state : List Bool) : List Bool :=
   (machineMatrixSupportCandidate state).take
     (machineMatrixRawSumBound state).length
 
+/-- Consumes one current-row entry and stores the bounded updated support-product accumulator. -/
 def machineMatrixSupportProcessEntry (state : List Bool) : List Bool :=
   machineMatrixRawSumPack
     (machineMatrixRawSumRows state)
@@ -51,35 +57,49 @@ def machineMatrixSupportProcessEntry (state : List Bool) : List Bool :=
     (machineMatrixSupportNextAcc state)
     (machineMatrixRawSumBound state)
 
+/-- Reuses the raw matrix scan's row-loading operation for the support-product scan. -/
 def machineMatrixSupportLoadRow (state : List Bool) : List Bool :=
   machineMatrixRawSumLoadRow state
 
+/-- Fixes an exhausted support-product scan or loads the next row if one remains. -/
 def machineMatrixSupportAfterRow (state : List Bool) : List Bool :=
   machineIfEmpty (machineMatrixRawSumRows state) state
     (machineMatrixSupportLoadRow state)
 
+/-- Processes the next current-row support factor, or loads another row when the current one is
+empty. -/
 def machineMatrixSupportStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineMatrixRawSumCurrent state)
     (machineMatrixSupportAfterRow state)
     (machineMatrixSupportProcessEntry state)
 
+/-- Applies the binary-multiplication width construction to bound the support-product
+accumulator. -/
 def machineMatrixSupportInputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth word
 
+/-- Initializes the support-product scan with all matrix rows, empty current row, multiplicative
+identity, and its input bound. -/
 def machineMatrixSupportInit (word : List Bool) : List Bool :=
   machineMatrixRawSumPack (machineMatrixRowsWord word) []
     (rawRatBinaryCode RawRat.one) (machineMatrixSupportInputBound word)
 
+/-- Packs the original word twice and the support-product bound twice to bound the complete scan
+state. -/
 def machineMatrixSupportWidth (word : List Bool) : List Bool :=
   let bound := machineMatrixSupportInputBound word
   machineMatrixRawSumPack word word bound bound
 
+/-- Runs the support-product scan once per input bit from its initial state. -/
 def machineMatrixSupportFinalState (word : List Bool) : List Bool :=
   (machineMatrixSupportStep)^[word.length] (machineMatrixSupportInit word)
 
+/-- Extracts the raw support-product accumulator from the final scan state. -/
 def machineMatrixSupportRawCode (word : List Bool) : List Bool :=
   machineMatrixRawSumAcc (machineMatrixSupportFinalState word)
 
+/-- Normalizes the raw product of nonzero matrix entries into the rational binary output
+encoding. -/
 def machineMatrixSupportProductCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode (machineMatrixSupportRawCode word)
 
@@ -257,19 +277,26 @@ theorem machineMatrixSupportProductCode_mem_FP :
 
 /-! ## Exact semantics -/
 
+/-- Replaces zero by the raw multiplicative identity and converts each nonzero rational to its
+raw representation. -/
 def rawRatSupportFactor (q : ℚ) : RawRat :=
   if q = 0 then RawRat.one else rawRatOfRat q
 
+/-- Multiplies the nonzero entries of a rational list into a raw accumulator, treating zero
+entries as factors of one. -/
 def rawRatListSupportProduct : RawRat → List ℚ → RawRat
   | acc, [] => acc
   | acc, q :: qs =>
       rawRatListSupportProduct (acc.mul (rawRatSupportFactor q)) qs
 
+/-- Multiplies the nonzero entries of successive rational rows into a raw accumulator. -/
 def rawRatRowsSupportProduct : RawRat → List (List ℚ) → RawRat
   | acc, [] => acc
   | acc, row :: rows =>
       rawRatRowsSupportProduct (rawRatListSupportProduct acc row) rows
 
+/-- Multiplies in one support factor, loads another row when necessary, and fixes the exhausted
+semantic scan. -/
 def matrixSupportSemStep (s : MatrixRawSumSemState) : MatrixRawSumSemState :=
   match s.current with
   | q :: qs => ⟨s.rows, qs, s.acc.mul (rawRatSupportFactor q)⟩
@@ -278,6 +305,8 @@ def matrixSupportSemStep (s : MatrixRawSumSemState) : MatrixRawSumSemState :=
       | row :: rows => ⟨rows, row, s.acc⟩
       | [] => s
 
+/-- Bounds the support-product accumulator width plus all remaining entry costs by the supplied
+budget. -/
 def MatrixSupportSemInvariant (budget : ℕ)
     (s : MatrixRawSumSemState) : Prop :=
   rawRatWidth s.acc + rawRatListCost s.current + rawRatRowsCost s.rows ≤ budget
