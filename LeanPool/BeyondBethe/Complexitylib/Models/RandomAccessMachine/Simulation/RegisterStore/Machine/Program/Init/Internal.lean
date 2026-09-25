@@ -710,6 +710,73 @@ theorem initialZeroBitTM_hoareTime_internal
     rw [hframe i hlhs]
     exact hready.frame i hlhs hrhs hcount hbuffer
 
+/-- Emission followed by the two counter increments restores the complete input-loop ABI. -/
+private theorem initialOneBit_finalReady
+    (tapes : ControlInstructionTapes n) (address count : ℕ) (entries : Store)
+    (work₀ emittedWork countedWork advancedWork : Fin (n + 1) → Tape)
+    (hready : InitialLoopReady tapes address count entries work₀)
+    (hemitFrame : ∀ i, i ≠ tapes.buffer → emittedWork i = work₀ i)
+    (hemitBuffer : (emittedWork tapes.buffer).HasBinaryPrefix
+      (entries.flatMap Entry.encode ++ Entry.encode (address, 1)))
+    (hcountFrame : ∀ i, i ≠ tapes.lifted.data.update.remaining →
+      countedWork i = emittedWork i)
+    (hcountValue : (countedWork tapes.lifted.data.update.remaining).HasBinaryNat (count + 1))
+    (hcountWorkParked : ∀ i, TM.Parked (countedWork i))
+    (haddressFrame : ∀ i, i ≠ tapes.liftedLhs → advancedWork i = countedWork i)
+    (haddressValue : (advancedWork tapes.liftedLhs).HasBinaryNat (address + 1)) :
+    InitialLoopReady tapes (address + 1) (count + 1)
+      (entries ++ [(address, 1)]) advancedWork := by
+  have hremainingBuffer : tapes.lifted.data.update.remaining ≠
+      tapes.buffer := tapes.liftedData_ne_buffer 9
+  have hlhsBuffer : tapes.liftedLhs ≠ tapes.buffer :=
+    tapes.liftedData_ne_buffer 13
+  have hrhsBuffer : tapes.lifted.data.rhs ≠ tapes.buffer :=
+    tapes.liftedData_ne_buffer 14
+  have hlhsRemaining : tapes.liftedLhs ≠
+      tapes.lifted.data.update.remaining :=
+    tapes.lifted.data.ne (by decide)
+  have hremainingLhs : tapes.lifted.data.update.remaining ≠
+      tapes.liftedLhs := hlhsRemaining.symm
+  have hrhsLhs : tapes.lifted.data.rhs ≠ tapes.liftedLhs :=
+    tapes.lifted.data.ne (by decide)
+  have hrhsRemaining : tapes.lifted.data.rhs ≠
+      tapes.lifted.data.update.remaining :=
+    tapes.lifted.data.ne (by decide)
+  refine
+    { address := by
+        change (advancedWork tapes.liftedLhs).HasBinaryNat (address + 1)
+        exact haddressValue
+      value := ?_
+      count := ?_
+      buffer := ?_
+      parked := ?_
+      frame := ?_ }
+  · change (advancedWork tapes.lifted.data.rhs).HasBinaryNat 1
+    rw [haddressFrame _ hrhsLhs, hcountFrame _ hrhsRemaining,
+      hemitFrame _ hrhsBuffer]
+    exact hready.value
+  · change (advancedWork
+      tapes.lifted.data.update.remaining).HasBinaryNat (count + 1)
+    rw [haddressFrame _ hremainingLhs]
+    exact hcountValue
+  · change (advancedWork tapes.buffer).HasBinaryPrefix
+      ((entries ++ [(address, 1)]).flatMap Entry.encode)
+    rw [haddressFrame _ hlhsBuffer.symm,
+      hcountFrame _ hremainingBuffer.symm]
+    simpa [List.flatMap_append] using! hemitBuffer
+  · intro i
+    change TM.Parked (advancedWork i)
+    by_cases hi : i = tapes.liftedLhs
+    · subst i
+      exact parked_of_binaryNat haddressValue
+    · rw [haddressFrame i hi]
+      exact hcountWorkParked i
+  · intro i hlhs hrhs hcountIdx hbuffer
+    change advancedWork i = TM.resetBinaryBlank
+    rw [haddressFrame i hlhs, hcountFrame i hcountIdx,
+      hemitFrame i hbuffer]
+    exact hready.frame i hlhs hrhs hcountIdx hbuffer
+
 /-- A one input bit appends the current `(address, 1)` entry and advances the
 entry count and current address, restoring every reusable source cursor. -/
 theorem initialOneBitTM_hoareTime_internal
@@ -904,40 +971,10 @@ theorem initialOneBitTM_hoareTime_internal
   · refine ⟨?_, ?_, ?_⟩
     · change advanced.input = inp₀
       exact haddressInput.trans (hcountInput.trans hemitInput)
-    · refine
-        { address := by
-            change (advanced.work tapes.liftedLhs).HasBinaryNat (address + 1)
-            exact haddressValue
-          value := ?_
-          count := ?_
-          buffer := ?_
-          parked := ?_
-          frame := ?_ }
-      · change (advanced.work tapes.lifted.data.rhs).HasBinaryNat 1
-        rw [haddressFrame _ hrhsLhs, hcountFrame _ hrhsRemaining,
-          hemitFrame _ hrhsBuffer]
-        exact hready.value
-      · change (advanced.work
-          tapes.lifted.data.update.remaining).HasBinaryNat (count + 1)
-        rw [haddressFrame _ hremainingLhs]
-        exact hcountValue
-      · change (advanced.work tapes.buffer).HasBinaryPrefix
-          ((entries ++ [(address, 1)]).flatMap Entry.encode)
-        rw [haddressFrame _ hlhsBuffer.symm,
-          hcountFrame _ hremainingBuffer.symm]
-        simpa [List.flatMap_append] using! hemitBuffer
-      · intro i
-        change TM.Parked (advanced.work i)
-        by_cases hi : i = tapes.liftedLhs
-        · subst i
-          exact parked_of_binaryNat haddressValue
-        · rw [haddressFrame i hi]
-          exact hcountWorkParked i
-      · intro i hlhs hrhs hcountIdx hbuffer
-        change advanced.work i = TM.resetBinaryBlank
-        rw [haddressFrame i hlhs, hcountFrame i hcountIdx,
-          hemitFrame i hbuffer]
-        exact hready.frame i hlhs hrhs hcountIdx hbuffer
+    · exact initialOneBit_finalReady tapes address count entries
+        work₀ emitted.work counted.work advanced.work hready hemitFrame
+        hemitBuffer hcountFrame hcountValue hcountWorkParked
+        haddressFrame haddressValue
     · change advanced.output = out₀
       exact haddressOutput.trans (hcountOutput.trans hemitOutput')
 
@@ -1690,6 +1727,132 @@ theorem initialLengthInstallTM_hoareTime_internal
     · change lengthDone.output = out₀
       exact hlengthOutput.trans hpredOutput
 
+/-- Copy the sparse entry count into the ABI result counter while preserving every other tape. -/
+private theorem initialAbiCount_hoareTime
+    (tapes : ControlInstructionTapes n) (store : Store) (length : ℕ)
+    (inp₀ : Tape) (work₀ : Fin (n + 1) → Tape) (out₀ : Tape)
+    (hready : InitialLoopReady tapes length store.length store work₀)
+    (hinput : TM.Parked inp₀) (houtputParked : TM.Parked out₀) :
+    let W₁ := initialAbiCountWork tapes work₀ store.length
+    (TM.binaryCopyIntoTM
+        tapes.lifted.data.update.remaining
+        tapes.lifted.data.update.resultCount
+        tapes.lifted.data.update.found).HoareTime
+        (fun inp work out => inp = inp₀ ∧ work = work₀ ∧ out = out₀)
+        (fun inp work out => inp = inp₀ ∧ work = W₁ ∧ out = out₀)
+        (TM.binaryCopyTime store.length 0) := by
+  dsimp only
+  let W₁ := initialAbiCountWork tapes work₀ store.length
+  have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
+    simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
+  have hremainingResult : tapes.lifted.data.update.remaining ≠
+      tapes.lifted.data.update.resultCount :=
+    tapes.lifted.data.ne (by decide)
+  have hremainingFound : tapes.lifted.data.update.remaining ≠
+      tapes.lifted.data.update.found := tapes.lifted.data.ne (by decide)
+  have hresultFound : tapes.lifted.data.update.resultCount ≠
+      tapes.lifted.data.update.found := tapes.lifted.data.ne (by decide)
+  have hresultLhs : tapes.lifted.data.update.resultCount ≠
+      tapes.liftedLhs := tapes.lifted.data.ne (by decide)
+  have hresultRhs : tapes.lifted.data.update.resultCount ≠
+      tapes.lifted.data.rhs := tapes.lifted.data.ne (by decide)
+  have hresultBuffer : tapes.lifted.data.update.resultCount ≠
+      tapes.buffer := tapes.liftedData_ne_buffer 12
+  have hfoundLhs : tapes.lifted.data.update.found ≠
+      tapes.liftedLhs := tapes.lifted.data.ne (by decide)
+  have hfoundRhs : tapes.lifted.data.update.found ≠
+      tapes.lifted.data.rhs := tapes.lifted.data.ne (by decide)
+  have hfoundRemaining : tapes.lifted.data.update.found ≠
+      tapes.lifted.data.update.remaining := tapes.lifted.data.ne (by decide)
+  have hfoundBuffer : tapes.lifted.data.update.found ≠ tapes.buffer :=
+    tapes.liftedData_ne_buffer 11
+  have hresultZero :
+      (work₀ tapes.lifted.data.update.resultCount).HasBinaryNat 0 := by
+    rw [hready.frame _ hresultLhs hresultRhs hremainingResult.symm
+      hresultBuffer]
+    exact hblankNat
+  have hfoundZero :
+      (work₀ tapes.lifted.data.update.found).HasBinaryNat 0 := by
+    rw [hready.frame _ hfoundLhs hfoundRhs hfoundRemaining hfoundBuffer]
+    exact hblankNat
+  have hcopy := TM.binaryCopyIntoTM_hoareTime_frame
+    tapes.lifted.data.update.remaining
+    tapes.lifted.data.update.resultCount
+    tapes.lifted.data.update.found hremainingResult hremainingFound
+    hresultFound store.length 0 inp₀ work₀ out₀ hready.count
+    hresultZero hfoundZero hinput
+    (fun i _ _ _ => hready.parked i) houtputParked
+  have hcopy' :
+      (TM.binaryCopyIntoTM
+        tapes.lifted.data.update.remaining
+        tapes.lifted.data.update.resultCount
+        tapes.lifted.data.update.found).HoareTime
+        (fun inp work out => inp = inp₀ ∧ work = work₀ ∧ out = out₀)
+        (fun inp work out => inp = inp₀ ∧ work = W₁ ∧ out = out₀)
+        (TM.binaryCopyTime store.length 0) := by
+    simpa only [W₁, initialAbiCountWork] using! hcopy
+  exact hcopy'
+
+/-- Clear the initialization address and value tapes after installing the sparse store. -/
+private theorem initialAbiCleanup_hoareTime
+    (tapes : ControlInstructionTapes n) (store : Store) (length : ℕ)
+    (inp₀ : Tape) (work₀ W₅ : Fin (n + 1) → Tape) (out₀ : Tape)
+    (hready : InitialLoopReady tapes length store.length store work₀)
+    (hW₅Lhs : W₅ tapes.liftedLhs = work₀ tapes.liftedLhs)
+    (hW₅Rhs : W₅ tapes.lifted.data.rhs = work₀ tapes.lifted.data.rhs)
+    (hinput : TM.Parked inp₀) (hW₅Parked : ∀ i, TM.Parked (W₅ i))
+    (houtputParked : TM.Parked out₀) :
+    let W₆ := initialAbiFinalWork tapes W₅
+    (TM.resetBinaryWorkManyTM (initialCleanupTargets tapes)).HoareTime
+        (fun inp work out => inp = inp₀ ∧ work = W₅ ∧ out = out₀)
+        (fun inp work out => inp = inp₀ ∧ work = W₆ ∧ out = out₀)
+        (TM.resetBinaryWorkManyTime (initialCleanupBits tapes length)
+          (fun _ => 1) (initialCleanupTargets tapes)) := by
+  dsimp only
+  let W₆ := initialAbiFinalWork tapes W₅
+  have hlhsRhs : tapes.liftedLhs ≠ tapes.lifted.data.rhs :=
+    tapes.lifted.data.ne (by decide)
+  have htargetsNodup : (initialCleanupTargets tapes).Nodup := by
+    simp [initialCleanupTargets, hlhsRhs]
+  have htargetsContent : ∀ i, i ∈ initialCleanupTargets tapes →
+      (W₅ i).HasBinaryContent (initialCleanupBits tapes length i) := by
+    intro i hi
+    simp [initialCleanupTargets] at hi
+    rcases hi with rfl | rfl
+    · rw [hW₅Lhs]
+      simpa [initialCleanupBits] using! hready.address.2.hasBinaryContent
+    · rw [hW₅Rhs]
+      simpa [initialCleanupBits, hlhsRhs.symm] using!
+        hready.value.2.hasBinaryContent
+  have htargetsStart : ∀ i, i ∈ initialCleanupTargets tapes →
+      (W₅ i).cells 0 = Γ.start := by
+    intro i hi
+    simp [initialCleanupTargets] at hi
+    rcases hi with rfl | rfl
+    · rw [hW₅Lhs]
+      exact hready.address.1
+    · rw [hW₅Rhs]
+      exact hready.value.1
+  have htargetsHead : ∀ i, i ∈ initialCleanupTargets tapes →
+      (W₅ i).head ≤ 1 := by
+    intro i hi
+    simp [initialCleanupTargets] at hi
+    rcases hi with rfl | rfl
+    · rw [hW₅Lhs, hready.address.2.1]
+    · rw [hW₅Rhs, hready.value.2.1]
+  have hresetMany := TM.resetBinaryWorkManyTM_hoareTime_frame
+    (initialCleanupTargets tapes) (initialCleanupBits tapes length)
+    (fun _ => 1) inp₀ W₅ out₀ htargetsNodup htargetsContent
+    htargetsStart htargetsHead hinput hW₅Parked houtputParked
+  have hresetMany' :
+      (TM.resetBinaryWorkManyTM (initialCleanupTargets tapes)).HoareTime
+        (fun inp work out => inp = inp₀ ∧ work = W₅ ∧ out = out₀)
+        (fun inp work out => inp = inp₀ ∧ work = W₆ ∧ out = out₀)
+        (TM.resetBinaryWorkManyTime (initialCleanupBits tapes length)
+          (fun _ => 1) (initialCleanupTargets tapes)) := by
+    simpa only [W₆, initialAbiFinalWork] using! hresetMany
+  exact hresetMany'
+
 /-- Install the completed sparse buffer into the exact clean program-loop
 snapshot image. -/
 theorem initialAbiInstallTM_hoareTime_internal
@@ -1717,27 +1880,8 @@ theorem initialAbiInstallTM_hoareTime_internal
   have houtputParked : TM.Parked out₀ := by
     rw [houtput]
     exact parked_of_binaryNat hblankNat
-  have hremainingResult : tapes.lifted.data.update.remaining ≠
-      tapes.lifted.data.update.resultCount :=
-    tapes.lifted.data.ne (by decide)
-  have hremainingFound : tapes.lifted.data.update.remaining ≠
-      tapes.lifted.data.update.found := tapes.lifted.data.ne (by decide)
-  have hresultFound : tapes.lifted.data.update.resultCount ≠
-      tapes.lifted.data.update.found := tapes.lifted.data.ne (by decide)
-  have hresultLhs : tapes.lifted.data.update.resultCount ≠
-      tapes.liftedLhs := tapes.lifted.data.ne (by decide)
-  have hresultRhs : tapes.lifted.data.update.resultCount ≠
-      tapes.lifted.data.rhs := tapes.lifted.data.ne (by decide)
   have hresultBuffer : tapes.lifted.data.update.resultCount ≠
       tapes.buffer := tapes.liftedData_ne_buffer 12
-  have hfoundLhs : tapes.lifted.data.update.found ≠
-      tapes.liftedLhs := tapes.lifted.data.ne (by decide)
-  have hfoundRhs : tapes.lifted.data.update.found ≠
-      tapes.lifted.data.rhs := tapes.lifted.data.ne (by decide)
-  have hfoundRemaining : tapes.lifted.data.update.found ≠
-      tapes.lifted.data.update.remaining := tapes.lifted.data.ne (by decide)
-  have hfoundBuffer : tapes.lifted.data.update.found ≠ tapes.buffer :=
-    tapes.liftedData_ne_buffer 11
   have hsourceLhs : tapes.liftedSource ≠ tapes.liftedLhs :=
     tapes.lifted.data.ne (by decide)
   have hsourceRhs : tapes.liftedSource ≠ tapes.lifted.data.rhs :=
@@ -1748,8 +1892,6 @@ theorem initialAbiInstallTM_hoareTime_internal
       tapes.lifted.data.update.resultCount := tapes.lifted.data.ne (by decide)
   have hsourceBuffer : tapes.liftedSource ≠ tapes.buffer :=
     tapes.liftedSource_ne_buffer
-  have hlhsRhs : tapes.liftedLhs ≠ tapes.lifted.data.rhs :=
-    tapes.lifted.data.ne (by decide)
   have hlhsRemaining : tapes.liftedLhs ≠
       tapes.lifted.data.update.remaining := tapes.lifted.data.ne (by decide)
   have hlhsResult : tapes.liftedLhs ≠
@@ -1772,31 +1914,8 @@ theorem initialAbiInstallTM_hoareTime_internal
   have hbufferEq : work₀ tapes.buffer = programBinaryPrefixTape storeBits := by
     exact eq_programBinaryPrefixTape_of_hasBinaryPrefix hready.buffer
       hbufferStart
-  have hresultZero :
-      (work₀ tapes.lifted.data.update.resultCount).HasBinaryNat 0 := by
-    rw [hready.frame _ hresultLhs hresultRhs hremainingResult.symm
-      hresultBuffer]
-    exact hblankNat
-  have hfoundZero :
-      (work₀ tapes.lifted.data.update.found).HasBinaryNat 0 := by
-    rw [hready.frame _ hfoundLhs hfoundRhs hfoundRemaining hfoundBuffer]
-    exact hblankNat
-  have hcopy := TM.binaryCopyIntoTM_hoareTime_frame
-    tapes.lifted.data.update.remaining
-    tapes.lifted.data.update.resultCount
-    tapes.lifted.data.update.found hremainingResult hremainingFound
-    hresultFound store.length 0 inp₀ work₀ out₀ hready.count
-    hresultZero hfoundZero hinput
-    (fun i _ _ _ => hready.parked i) houtputParked
-  have hcopy' :
-      (TM.binaryCopyIntoTM
-        tapes.lifted.data.update.remaining
-        tapes.lifted.data.update.resultCount
-        tapes.lifted.data.update.found).HoareTime
-        (fun inp work out => inp = inp₀ ∧ work = work₀ ∧ out = out₀)
-        (fun inp work out => inp = inp₀ ∧ work = W₁ ∧ out = out₀)
-        (TM.binaryCopyTime store.length 0) := by
-    simpa only [W₁, initialAbiCountWork] using! hcopy
+  have hcopy' := initialAbiCount_hoareTime tapes store length inp₀ work₀ out₀
+    hready hinput houtputParked
   have hW₁Parked : ∀ i, TM.Parked (W₁ i) := by
     exact parked_update hready.parked (binaryTape_parked store.length.bits)
   have hW₁Buffer : W₁ tapes.buffer = programBinaryPrefixTape storeBits := by
@@ -1872,45 +1991,8 @@ theorem initialAbiInstallTM_hoareTime_internal
     simp [W₅, W₄, W₃, W₂, W₁, initialAbiBufferResetWork,
       initialAbiSourceWork, initialAbiCopiedWork, initialAbiBufferWork,
       initialAbiCountWork, hrhsBuffer, hrhsSource, hrhsResult]
-  have htargetsNodup : (initialCleanupTargets tapes).Nodup := by
-    simp [initialCleanupTargets, hlhsRhs]
-  have htargetsContent : ∀ i, i ∈ initialCleanupTargets tapes →
-      (W₅ i).HasBinaryContent (initialCleanupBits tapes length i) := by
-    intro i hi
-    simp [initialCleanupTargets] at hi
-    rcases hi with rfl | rfl
-    · rw [hW₅Lhs]
-      simpa [initialCleanupBits] using! hready.address.2.hasBinaryContent
-    · rw [hW₅Rhs]
-      simpa [initialCleanupBits, hlhsRhs.symm] using!
-        hready.value.2.hasBinaryContent
-  have htargetsStart : ∀ i, i ∈ initialCleanupTargets tapes →
-      (W₅ i).cells 0 = Γ.start := by
-    intro i hi
-    simp [initialCleanupTargets] at hi
-    rcases hi with rfl | rfl
-    · rw [hW₅Lhs]
-      exact hready.address.1
-    · rw [hW₅Rhs]
-      exact hready.value.1
-  have htargetsHead : ∀ i, i ∈ initialCleanupTargets tapes →
-      (W₅ i).head ≤ 1 := by
-    intro i hi
-    simp [initialCleanupTargets] at hi
-    rcases hi with rfl | rfl
-    · rw [hW₅Lhs, hready.address.2.1]
-    · rw [hW₅Rhs, hready.value.2.1]
-  have hresetMany := TM.resetBinaryWorkManyTM_hoareTime_frame
-    (initialCleanupTargets tapes) (initialCleanupBits tapes length)
-    (fun _ => 1) inp₀ W₅ out₀ htargetsNodup htargetsContent
-    htargetsStart htargetsHead hinput hW₅Parked houtputParked
-  have hresetMany' :
-      (TM.resetBinaryWorkManyTM (initialCleanupTargets tapes)).HoareTime
-        (fun inp work out => inp = inp₀ ∧ work = W₅ ∧ out = out₀)
-        (fun inp work out => inp = inp₀ ∧ work = W₆ ∧ out = out₀)
-        (TM.resetBinaryWorkManyTime (initialCleanupBits tapes length)
-          (fun _ => 1) (initialCleanupTargets tapes)) := by
-    simpa only [W₆, initialAbiFinalWork] using! hresetMany
+  have hresetMany' := initialAbiCleanup_hoareTime tapes store length inp₀ work₀ W₅ out₀
+    hready hW₅Lhs hW₅Rhs hinput hW₅Parked houtputParked
   have htail₅ := TM.seqTM_hoareTime
     (TM.resetBinaryWorkTM tapes.buffer)
     (TM.resetBinaryWorkManyTM (initialCleanupTargets tapes))

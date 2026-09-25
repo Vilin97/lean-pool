@@ -117,6 +117,120 @@ private theorem programSnapshotWork_other
     Function.update_of_ne hsource]
   rfl
 
+/-- The snapshot's source and blank scratch slots initialize the entry scanner. -/
+private theorem programSnapshotWork_scanner
+    (tapes : ControlInstructionTapes n) (snapshot : Snapshot)
+    (work : Fin (n + 1) → Tape)
+    (hsource : work tapes.liftedSource =
+      programBinaryTape (snapshot.store.flatMap Entry.encode))
+    (hdataBlank : ∀ (slot : Fin 18), slot ≠ 0 → slot ≠ 9 → slot ≠ 12 →
+      work (tapes.lifted.data.idx slot) = TM.resetBinaryBlank)
+    (hparked : ∀ i, TM.Parked (work i)) :
+    EntryScanReady tapes.lifted.data.lhsLookup.scan.entry
+      (snapshot.store.flatMap Entry.encode) [] work work := by
+  let entry := tapes.lifted.data.lhsLookup.scan.entry
+  have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
+    simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
+  have hblankString : TM.resetBinaryBlank.HasBinaryString [] := hblankNat.2
+  have hblankPrefix : TM.resetBinaryBlank.HasBinaryPrefix [] :=
+    ⟨by simpa using! hblankString.1, hblankString.2⟩
+  have hblankStart : TM.resetBinaryBlank.cells 0 = Γ.start := hblankNat.1
+  have hslotOther (slot : Fin 9) (hslot : slot ≠ 0) :
+      work (entry.idx slot) = TM.resetBinaryBlank := by
+    fin_cases slot
+    · exact (hslot rfl).elim
+    · simpa [entry, BinaryInstructionTapes.lhsLookup,
+        BinaryInstructionTapes.lhsLookupSlot] using!
+        hdataBlank 1 (by decide) (by decide) (by decide)
+    · simpa [entry, BinaryInstructionTapes.lhsLookup,
+        BinaryInstructionTapes.lhsLookupSlot] using!
+        hdataBlank 2 (by decide) (by decide) (by decide)
+    · simpa [entry, BinaryInstructionTapes.lhsLookup,
+        BinaryInstructionTapes.lhsLookupSlot] using!
+        hdataBlank 3 (by decide) (by decide) (by decide)
+    · simpa [entry, BinaryInstructionTapes.lhsLookup,
+        BinaryInstructionTapes.lhsLookupSlot] using!
+        hdataBlank 4 (by decide) (by decide) (by decide)
+    · simpa [entry, BinaryInstructionTapes.lhsLookup,
+        BinaryInstructionTapes.lhsLookupSlot] using!
+        hdataBlank 5 (by decide) (by decide) (by decide)
+    · simpa [entry, BinaryInstructionTapes.lhsLookup,
+        BinaryInstructionTapes.lhsLookupSlot] using!
+        hdataBlank 6 (by decide) (by decide) (by decide)
+    · simpa [entry, BinaryInstructionTapes.lhsLookup,
+        BinaryInstructionTapes.lhsLookupSlot] using!
+        hdataBlank 7 (by decide) (by decide) (by decide)
+    · simpa [entry, BinaryInstructionTapes.lhsLookup,
+        BinaryInstructionTapes.lhsLookupSlot] using!
+        hdataBlank 8 (by decide) (by decide) (by decide)
+  refine
+    { source := by
+        change (work tapes.liftedSource).HasBinarySuffix _
+        rw [hsource]
+        exact Tape.init_move_right_hasBinarySuffix _
+      address := by
+        rw [show work entry.address = TM.resetBinaryBlank by
+          simpa only [EntryMatchTapes.address] using!
+            hslotOther 1 (by decide)]
+        exact hblankPrefix
+      addressStart := by
+        rw [show work entry.address = TM.resetBinaryBlank by
+          simpa only [EntryMatchTapes.address] using!
+            hslotOther 1 (by decide)]
+        exact hblankStart
+      value := by
+        rw [show work entry.value = TM.resetBinaryBlank by
+          simpa only [EntryMatchTapes.value] using!
+            hslotOther 2 (by decide)]
+        exact hblankPrefix
+      valueStart := by
+        rw [show work entry.value = TM.resetBinaryBlank by
+          simpa only [EntryMatchTapes.value] using!
+            hslotOther 2 (by decide)]
+        exact hblankStart
+      addressCounter := by
+        rw [show work entry.addressCounter = TM.resetBinaryBlank by
+          simpa only [EntryMatchTapes.addressCounter] using!
+            hslotOther 3 (by decide)]
+        exact hblankNat
+      addressWidth := by
+        rw [show work entry.addressWidth = TM.resetBinaryBlank by
+          simpa only [EntryMatchTapes.addressWidth] using!
+            hslotOther 4 (by decide)]
+        exact hblankNat
+      valueCounter := by
+        rw [show work entry.valueCounter = TM.resetBinaryBlank by
+          simpa only [EntryMatchTapes.valueCounter] using!
+            hslotOther 5 (by decide)]
+        exact hblankNat
+      valueWidth := by
+        rw [show work entry.valueWidth = TM.resetBinaryBlank by
+          simpa only [EntryMatchTapes.valueWidth] using!
+            hslotOther 6 (by decide)]
+        exact hblankNat
+      query := by
+        rw [show work entry.query = TM.resetBinaryBlank by
+          simpa only [EntryMatchTapes.query] using!
+            hslotOther 7 (by decide)]
+        exact hblankString
+      queryStart := by
+        rw [show work entry.query = TM.resetBinaryBlank by
+          simpa only [EntryMatchTapes.query] using!
+            hslotOther 7 (by decide)]
+        exact hblankStart
+      result := by
+        rw [show work entry.result = TM.resetBinaryBlank by
+          simpa only [EntryMatchTapes.result] using!
+            hslotOther 8 (by decide)]
+        exact hblankPrefix
+      resultStart := by
+        rw [show work entry.result = TM.resetBinaryBlank by
+          simpa only [EntryMatchTapes.result] using!
+            hslotOther 8 (by decide)]
+        exact hblankStart
+      parked := hparked
+      frame := by intros; rfl }
+
 /-- The exact snapshot work image satisfies the complete reusable instruction
 ABI whenever its sparse store is canonical. -/
 theorem programSnapshotWork_ready_internal
@@ -129,10 +243,6 @@ theorem programSnapshotWork_ready_internal
   change InstructionExecutionReady tapes snapshot.store snapshot.pc work
   have hblankNat : TM.resetBinaryBlank.HasBinaryNat 0 := by
     simpa [TM.resetBinaryBlank] using! Tape.init_move_right_hasBinaryNat 0
-  have hblankString : TM.resetBinaryBlank.HasBinaryString [] := hblankNat.2
-  have hblankPrefix : TM.resetBinaryBlank.HasBinaryPrefix [] :=
-    ⟨by simpa using! hblankString.1, hblankString.2⟩
-  have hblankStart : TM.resetBinaryBlank.cells 0 = Γ.start := hblankNat.1
   have hsource : work tapes.liftedSource =
       programBinaryTape (snapshot.store.flatMap Entry.encode) := by
     exact programSnapshotWork_source tapes snapshot
@@ -180,102 +290,8 @@ theorem programSnapshotWork_ready_internal
     · rw [hother i hsi hri hci hpi]
       exact blank_parked
   have hscanner : EntryScanReady entry
-      (snapshot.store.flatMap Entry.encode) [] work work := by
-    have hslotOther (slot : Fin 9) (hslot : slot ≠ 0) :
-        work (entry.idx slot) = TM.resetBinaryBlank := by
-      fin_cases slot
-      · exact (hslot rfl).elim
-      · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using!
-          hdataBlank 1 (by decide) (by decide) (by decide)
-      · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using!
-          hdataBlank 2 (by decide) (by decide) (by decide)
-      · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using!
-          hdataBlank 3 (by decide) (by decide) (by decide)
-      · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using!
-          hdataBlank 4 (by decide) (by decide) (by decide)
-      · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using!
-          hdataBlank 5 (by decide) (by decide) (by decide)
-      · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using!
-          hdataBlank 6 (by decide) (by decide) (by decide)
-      · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using!
-          hdataBlank 7 (by decide) (by decide) (by decide)
-      · simpa [entry, BinaryInstructionTapes.lhsLookup,
-          BinaryInstructionTapes.lhsLookupSlot] using!
-          hdataBlank 8 (by decide) (by decide) (by decide)
-    refine
-      { source := by
-          change (work tapes.liftedSource).HasBinarySuffix _
-          rw [hsource]
-          exact Tape.init_move_right_hasBinarySuffix _
-        address := by
-          rw [show work entry.address = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.address] using!
-              hslotOther 1 (by decide)]
-          exact hblankPrefix
-        addressStart := by
-          rw [show work entry.address = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.address] using!
-              hslotOther 1 (by decide)]
-          exact hblankStart
-        value := by
-          rw [show work entry.value = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.value] using!
-              hslotOther 2 (by decide)]
-          exact hblankPrefix
-        valueStart := by
-          rw [show work entry.value = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.value] using!
-              hslotOther 2 (by decide)]
-          exact hblankStart
-        addressCounter := by
-          rw [show work entry.addressCounter = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.addressCounter] using!
-              hslotOther 3 (by decide)]
-          exact hblankNat
-        addressWidth := by
-          rw [show work entry.addressWidth = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.addressWidth] using!
-              hslotOther 4 (by decide)]
-          exact hblankNat
-        valueCounter := by
-          rw [show work entry.valueCounter = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.valueCounter] using!
-              hslotOther 5 (by decide)]
-          exact hblankNat
-        valueWidth := by
-          rw [show work entry.valueWidth = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.valueWidth] using!
-              hslotOther 6 (by decide)]
-          exact hblankNat
-        query := by
-          rw [show work entry.query = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.query] using!
-              hslotOther 7 (by decide)]
-          exact hblankString
-        queryStart := by
-          rw [show work entry.query = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.query] using!
-              hslotOther 7 (by decide)]
-          exact hblankStart
-        result := by
-          rw [show work entry.result = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.result] using!
-              hslotOther 8 (by decide)]
-          exact hblankPrefix
-        resultStart := by
-          rw [show work entry.result = TM.resetBinaryBlank by
-            simpa only [EntryMatchTapes.result] using!
-              hslotOther 8 (by decide)]
-          exact hblankStart
-        parked := hparked
-        frame := by intros; rfl }
+      (snapshot.store.flatMap Entry.encode) [] work work :=
+    programSnapshotWork_scanner tapes snapshot work hsource hdataBlank hparked
   have hlookup : EntryLookupStaticReady tapes.lifted.data.lhsLookup
       snapshot.store work := by
     refine
@@ -771,6 +787,83 @@ theorem instructionHaltVerdictTM_hoareTime_frame_internal
     rw [hinp, hworkEq, hout]
   exact ⟨final, 1, le_rfl, .step hstep .zero, rfl, rfl, rfl, rfl⟩
 
+/-- An empty dispatch program resets its selector and emits the halt verdict. -/
+private theorem dispatchHaltEmpty_hoareTime_frame
+    (tapes : ControlInstructionTapes n)
+    (store : Store) (pcValue selector : ℕ)
+    (cleanWork work₀ : Fin (n + 1) → Tape) (inp₀ : Tape)
+    (hready : DispatchReady tapes store pcValue selector cleanWork work₀)
+    (hinput : TM.Parked inp₀) :
+    (dispatchHaltTM tapes ([] : Program)).HoareTime
+      (fun inp work out =>
+        inp = inp₀ ∧ work = work₀ ∧
+        out = (Tape.init []).move Dir3.right)
+      (fun inp work out =>
+        inp = inp₀ ∧ work = cleanWork ∧
+        out = instructionHaltOutput
+          (selectedInstruction ([] : Program) selector))
+      (dispatchHaltTime tapes ([] : Program) selector) := by
+  let blankTape := (Tape.init []).move Dir3.right
+  have hselector : (work₀ tapes.liftedLhs).HasBinaryNat selector := by
+    rw [hready.2]
+    simp only [Function.update_self]
+    exact Tape.init_move_right_hasBinaryNat selector
+  have hcleanLhs : cleanWork tapes.liftedLhs = blankTape := by
+    have hzero := hready.1.control.lookup.destination
+    change (cleanWork tapes.liftedLhs).HasBinaryNat 0 at hzero
+    simpa only [blankTape] using!
+      Tape.HasBinaryNat.eq_init_move_right hzero
+  have hwork₀Parked : ∀ i, TM.Parked (work₀ i) := by
+    intro i
+    rw [hready.2]
+    by_cases hi : i = tapes.liftedLhs
+    · subst i
+      simp only [Function.update_self]
+      exact hasBinaryNat_parked
+        (Tape.init_move_right_hasBinaryNat selector)
+    · simp only [Function.update_of_ne hi]
+      exact hready.1.control.lookup.scanner.parked i
+  have hreset := TM.resetBinaryWorkTM_hoareTime_frame tapes.liftedLhs
+    selector.bits 1 inp₀ work₀ ((Tape.init []).move Dir3.right)
+    hselector.2.hasBinaryContent hselector.1
+    ⟨by rw [hselector.2.1], by rw [hselector.2.1]⟩
+    hinput (fun i _ => hwork₀Parked i) blank_parked
+  have hreset' : (TM.resetBinaryWorkTM tapes.liftedLhs).HoareTime
+      (fun inp work out =>
+        inp = inp₀ ∧ work = work₀ ∧
+        out = (Tape.init []).move Dir3.right)
+      (fun inp work out =>
+        inp = inp₀ ∧ work = cleanWork ∧
+        out = (Tape.init []).move Dir3.right)
+      (TM.resetBinaryWorkTime 1 selector.bits.length) := by
+    apply hreset.consequence
+    · exact fun _ _ _ h => h
+    · rintro inp work out ⟨hinp, hworkEq, hout⟩
+      refine ⟨hinp, ?_, hout⟩
+      rw [hworkEq, hready.2, Function.update_idem]
+      change Function.update cleanWork tapes.liftedLhs blankTape = cleanWork
+      rw [← hcleanLhs, Function.update_eq_self]
+    · exact le_rfl
+  have hverdict := instructionHaltVerdictTM_hoareTime_frame_internal
+    (.halt : Instr) inp₀ cleanWork hinput
+    hready.1.control.lookup.scanner.parked
+  have hseq := TM.seqTM_hoareTime
+    (TM.resetBinaryWorkTM tapes.liftedLhs)
+    (instructionHaltVerdictTM (.halt : Instr)) hreset'
+    (by
+      rintro inp work out ⟨hinp, hworkEq, hout⟩
+      obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
+        (inp := inp) (work := work) (out := out)
+        (by simpa [hinp] using! hinput)
+        (by simpa [hworkEq] using!
+          hready.1.control.lookup.scanner.parked)
+        (by simpa [hout] using! blank_parked)
+      rw [hi, hw, ho]
+      exact ⟨hinp, hworkEq, hout⟩)
+    hverdict
+  simpa only [dispatchHaltTM, dispatchHaltTime,
+    selectedInstruction] using! hseq
+
 /-- The decrementing selector emits the verdict of the selected instruction
 and restores its scratch tape to the clean ABI. -/
 theorem dispatchHaltTM_hoareTime_frame_internal
@@ -790,66 +883,8 @@ theorem dispatchHaltTM_hoareTime_frame_internal
       (dispatchHaltTime tapes program selector) := by
   induction program generalizing selector work₀ with
   | nil =>
-      let blankTape := (Tape.init []).move Dir3.right
-      have hselector : (work₀ tapes.liftedLhs).HasBinaryNat selector := by
-        rw [hready.2]
-        simp only [Function.update_self]
-        exact Tape.init_move_right_hasBinaryNat selector
-      have hcleanLhs : cleanWork tapes.liftedLhs = blankTape := by
-        have hzero := hready.1.control.lookup.destination
-        change (cleanWork tapes.liftedLhs).HasBinaryNat 0 at hzero
-        simpa only [blankTape] using!
-          Tape.HasBinaryNat.eq_init_move_right hzero
-      have hwork₀Parked : ∀ i, TM.Parked (work₀ i) := by
-        intro i
-        rw [hready.2]
-        by_cases hi : i = tapes.liftedLhs
-        · subst i
-          simp only [Function.update_self]
-          exact hasBinaryNat_parked
-            (Tape.init_move_right_hasBinaryNat selector)
-        · simp only [Function.update_of_ne hi]
-          exact hready.1.control.lookup.scanner.parked i
-      have hreset := TM.resetBinaryWorkTM_hoareTime_frame tapes.liftedLhs
-        selector.bits 1 inp₀ work₀ ((Tape.init []).move Dir3.right)
-        hselector.2.hasBinaryContent hselector.1
-        ⟨by rw [hselector.2.1], by rw [hselector.2.1]⟩
-        hinput (fun i _ => hwork₀Parked i) blank_parked
-      have hreset' : (TM.resetBinaryWorkTM tapes.liftedLhs).HoareTime
-          (fun inp work out =>
-            inp = inp₀ ∧ work = work₀ ∧
-            out = (Tape.init []).move Dir3.right)
-          (fun inp work out =>
-            inp = inp₀ ∧ work = cleanWork ∧
-            out = (Tape.init []).move Dir3.right)
-          (TM.resetBinaryWorkTime 1 selector.bits.length) := by
-        apply hreset.consequence
-        · exact fun _ _ _ h => h
-        · rintro inp work out ⟨hinp, hworkEq, hout⟩
-          refine ⟨hinp, ?_, hout⟩
-          rw [hworkEq, hready.2, Function.update_idem]
-          change Function.update cleanWork tapes.liftedLhs blankTape = cleanWork
-          rw [← hcleanLhs, Function.update_eq_self]
-        · exact le_rfl
-      have hverdict := instructionHaltVerdictTM_hoareTime_frame_internal
-        (.halt : Instr) inp₀ cleanWork hinput
-        hready.1.control.lookup.scanner.parked
-      have hseq := TM.seqTM_hoareTime
-        (TM.resetBinaryWorkTM tapes.liftedLhs)
-        (instructionHaltVerdictTM (.halt : Instr)) hreset'
-        (by
-          rintro inp work out ⟨hinp, hworkEq, hout⟩
-          obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
-            (inp := inp) (work := work) (out := out)
-            (by simpa [hinp] using! hinput)
-            (by simpa [hworkEq] using!
-              hready.1.control.lookup.scanner.parked)
-            (by simpa [hout] using! blank_parked)
-          rw [hi, hw, ho]
-          exact ⟨hinp, hworkEq, hout⟩)
-        hverdict
-      simpa only [dispatchHaltTM, dispatchHaltTime,
-        selectedInstruction] using! hseq
+      exact dispatchHaltEmpty_hoareTime_frame tapes store pcValue selector
+        cleanWork work₀ inp₀ hready hinput
   | cons instruction program ih =>
       let pre : TM.TapePred (n + 1) := fun inp work out =>
         inp = inp₀ ∧ work = work₀ ∧
