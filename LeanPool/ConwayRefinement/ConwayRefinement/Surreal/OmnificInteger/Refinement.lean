@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Abramov
 -/
 
-import LeanPool.ConwayRefinement.ConwayRefinement.Surreal.OmnificInteger.Refinement.ConwayRefinement
+module
+
+public import LeanPool.ConwayRefinement.ConwayRefinement.Surreal.OmnificInteger.Refinement.ConwayRefinement
 
 /-! Supporting modules for Conway refinement for omnific integers. -/

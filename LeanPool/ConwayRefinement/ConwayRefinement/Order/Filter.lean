@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Abramov
 -/
 
-import LeanPool.ConwayRefinement.ConwayRefinement.Order.Filter.FunAtZeroMinus
-import LeanPool.ConwayRefinement.ConwayRefinement.Order.Filter.Germ
-import LeanPool.ConwayRefinement.ConwayRefinement.Order.Filter.Tests
+module
+
+public import LeanPool.ConwayRefinement.ConwayRefinement.Order.Filter.FunAtZeroMinus
+public import LeanPool.ConwayRefinement.ConwayRefinement.Order.Filter.Germ
+public import LeanPool.ConwayRefinement.ConwayRefinement.Order.Filter.Tests
 
 /-! Supporting modules for Conway refinement for omnific integers. -/

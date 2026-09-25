@@ -4,11 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Abramov
 -/
 
-import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Divisibility.DenominatorIdeal
-import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Divisibility.MaximalDivisor
-import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Divisibility.PrimalPreimage
-import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Divisibility.PrimalProduct
-import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Divisibility.Refinement
-import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Divisibility.Tests
+module
+
+public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Divisibility.DenominatorIdeal
+public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Divisibility.MaximalDivisor
+public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Divisibility.PrimalPreimage
+public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Divisibility.PrimalProduct
+public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Divisibility.Refinement
+public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.Divisibility.Tests
 
 /-! Supporting modules for Conway refinement for omnific integers. -/

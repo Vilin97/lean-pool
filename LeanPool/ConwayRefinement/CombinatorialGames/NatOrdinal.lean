@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Abramov
 -/
 
-import LeanPool.ConwayRefinement.CombinatorialGames.NatOrdinal.Basic
-import LeanPool.ConwayRefinement.CombinatorialGames.NatOrdinal.Pow
+module
+
+public import LeanPool.ConwayRefinement.CombinatorialGames.NatOrdinal.Basic
+public import LeanPool.ConwayRefinement.CombinatorialGames.NatOrdinal.Pow
 
 /-! Supporting modules for Conway refinement for omnific integers. -/

@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Abramov
 -/
 
-import LeanPool.ConwayRefinement.CombinatorialGames.Game
-import LeanPool.ConwayRefinement.CombinatorialGames.Mathlib
-import LeanPool.ConwayRefinement.CombinatorialGames.NatOrdinal
-import LeanPool.ConwayRefinement.CombinatorialGames.Surreal
-import LeanPool.ConwayRefinement.CombinatorialGames.Tactic
+module
+
+public import LeanPool.ConwayRefinement.CombinatorialGames.Game
+public import LeanPool.ConwayRefinement.CombinatorialGames.Mathlib
+public import LeanPool.ConwayRefinement.CombinatorialGames.NatOrdinal
+public import LeanPool.ConwayRefinement.CombinatorialGames.Surreal
+public import LeanPool.ConwayRefinement.CombinatorialGames.Tactic
 
 /-! Supporting modules for Conway refinement for omnific integers. -/

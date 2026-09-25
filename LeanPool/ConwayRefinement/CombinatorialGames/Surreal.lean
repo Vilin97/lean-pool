@@ -4,15 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Abramov
 -/
 
-import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Basic
-import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Birthday
-import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Division
-import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Dyadic
-import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.HahnSeries
-import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Leading
-import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Multiplication
-import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Ordinal
-import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Pow
-import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Real
+module
+
+public import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Basic
+public import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Birthday
+public import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Division
+public import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Dyadic
+public import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.HahnSeries
+public import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Leading
+public import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Multiplication
+public import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Ordinal
+public import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Pow
+public import LeanPool.ConwayRefinement.CombinatorialGames.Surreal.Real
 
 /-! Supporting modules for Conway refinement for omnific integers. -/

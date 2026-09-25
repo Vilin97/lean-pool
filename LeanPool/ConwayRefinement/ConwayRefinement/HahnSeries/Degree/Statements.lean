@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Abramov
 -/
 
-import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Degree.Statements.Degree
-import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Degree.Statements.DegreeResidue
-import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Degree.Statements.DegreeValuation
+module
+
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Degree.Statements.Degree
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Degree.Statements.DegreeResidue
+public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.Degree.Statements.DegreeValuation
 
 /-! Supporting modules for Conway refinement for omnific integers. -/

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Abramov
 -/
 
-import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.MonoidAlgebra.LatticeFunctional
-import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.MonoidAlgebra.SingleZeroFactors
+module
+
+public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.MonoidAlgebra.LatticeFunctional
+public import LeanPool.ConwayRefinement.ConwayRefinement.Algebra.MonoidAlgebra.SingleZeroFactors
 
 /-! Supporting modules for Conway refinement for omnific integers. -/

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Abramov
 -/
 
-import LeanPool.ConwayRefinement.ConwayRefinement.Tests.SourceIndex
-import LeanPool.ConwayRefinement.ConwayRefinement.Tests.UpstreamReuse
+module
+
+public import LeanPool.ConwayRefinement.ConwayRefinement.Tests.SourceIndex
+public import LeanPool.ConwayRefinement.ConwayRefinement.Tests.UpstreamReuse
 
 /-! Supporting modules for Conway refinement for omnific integers. -/
