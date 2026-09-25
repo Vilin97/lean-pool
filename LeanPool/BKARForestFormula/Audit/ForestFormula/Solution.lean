@@ -11,14 +11,17 @@ public import LeanPool.BKARForestFormula.Audit.ForestFormula.SolutionBasic
 /-!
 # BKAR forest formula — Solution
 
-This file proves the byte-identical challenge statement of
-`Audit/ForestFormula/Challenge.lean` from the repository flagship
+This file proves the mirror statement below from the repository flagship
 `BKAR.bkar_formula_forestIndex_cube_contributions`, through the bridge lemmas of
 `Audit/ForestFormula/SolutionBasic.lean`.
 
-The theorem statement below is character-for-character identical to the one in
-`Challenge.lean` (same namespace `BKARMirror`, same mirror vocabulary); only the
-proof differs (`sorry` there, a real proof here).
+The mirror originates in `Audit/ForestFormula/Challenge.lean` in
+`scottnarmstrong/bkarforestformula`, commit
+`a07f44a534240fe6339558951dd78a19e4ef7c51`. That upstream statement can be inspected
+at the pinned revision; its placeholder proof is omitted from Lean Pool. The
+local statement vocabulary lives in `SolutionBasic.lean`, and the bridge lemmas
+and proof below establish the formula for that vocabulary. This port does not
+maintain an automated comparison with the upstream challenge.
 
 `#print axioms` gives exactly `[propext, Classical.choice, Quot.sound]`.
 -/

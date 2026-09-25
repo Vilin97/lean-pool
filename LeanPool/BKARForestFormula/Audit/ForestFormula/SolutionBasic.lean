@@ -11,12 +11,15 @@ public import LeanPool.BKARForestFormula.BKAR
 /-!
 # BKAR forest formula — Challenge → repository bridges
 
-Shared statement vocabulary (byte-identical to `Challenge.lean`) together with
-the bridge lemmas connecting the Mathlib-only mirror to the repository flagship
+Shared statement vocabulary adapted from `Audit/ForestFormula/Challenge.lean`
+in `scottnarmstrong/bkarforestformula` at commit
+`a07f44a534240fe6339558951dd78a19e4ef7c51`, together with the bridge lemmas
+connecting the Mathlib-based mirror to the repository flagship
 `BKAR.bkar_formula_forestIndex_cube_contributions`.
 
-This file is `sorry`-free and importable.  `Solution.lean` uses it to prove the
-byte-identical challenge statement.
+`Solution.lean` proves the formula using this local vocabulary. The upstream
+challenge placeholder is omitted from Lean Pool; no automated comparison with
+that upstream statement is maintained here.
 
 ## Bridge outline
 
@@ -48,7 +51,7 @@ namespace BKARMirror
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-/-! ## Mirror vocabulary (byte-identical to `Challenge.lean`) -/
+/-! ## Mirror vocabulary adapted from the pinned upstream challenge -/
 
 /-- Off-diagonal unordered pairs = edges of the complete graph on `V`. -/
 abbrev Edge (V : Type*) : Type _ := {e : Sym2 V // ¬ e.IsDiag}
@@ -136,7 +139,7 @@ def ContDiffHyp (ρ : (Edge V → ℝ) → ℝ) : Prop := ContDiff ℝ (∞ : Wi
 
 omit [Fintype V] in
 omit [DecidableEq V] in
-/-- The mirror graph on an edge set is byte-identical to the repository's
+/-- The mirror graph on an edge set is definitionally equal to the repository's
 `EdgePath.edgeSetGraph`. -/
 theorem edgeGraph_eq (S : Finset (Edge V)) :
     edgeGraph S = BKAR.EdgePath.edgeSetGraph S := rfl
