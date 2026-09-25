@@ -42,13 +42,15 @@ noncomputable def chooseSmoothJordanOuter
     (ε : ℝ) (hε : 0 < ε) : SmoothJordanDomain :=
   Classical.choose (houter ε hε)
 
-private theorem target_subset_chooseSmoothJordanOuter
+/-- The chosen outer domain contains the target set. -/
+theorem target_subset_chooseSmoothJordanOuter
     {K : Set ℂ} (houter : HasSmoothJordanOuterApproximation K)
     (ε : ℝ) (hε : 0 < ε) :
     K ⊆ (chooseSmoothJordanOuter houter ε hε).carrier :=
   (Classical.choose_spec (houter ε hε)).1
 
-private theorem closure_chooseSmoothJordanOuter_subset_thickening
+/-- The chosen outer domain has closure inside the prescribed thickening. -/
+theorem closure_chooseSmoothJordanOuter_subset_thickening
     {K : Set ℂ} (houter : HasSmoothJordanOuterApproximation K)
     (ε : ℝ) (hε : 0 < ε) :
     closure (chooseSmoothJordanOuter houter ε hε).carrier ⊆
@@ -67,7 +69,8 @@ noncomputable def smoothJordanNestingRadius
     (hK.exists_cthickening_subset_open
       Omega.val.isOpen_carrier Omega.property)
 
-private theorem smoothJordanNestingRadius_pos
+/-- The nesting radius is strictly positive. -/
+theorem smoothJordanNestingRadius_pos
     {K : Set ℂ} (hK : IsCompact K)
     (Omega : ContainingSmoothJordanDomain K) :
     0 < smoothJordanNestingRadius hK Omega :=
@@ -75,7 +78,8 @@ private theorem smoothJordanNestingRadius_pos
     (hK.exists_cthickening_subset_open
       Omega.val.isOpen_carrier Omega.property)).1
 
-private theorem cthickening_smoothJordanNestingRadius_subset
+/-- The closed thickening at the nesting radius lies inside the current domain. -/
+theorem cthickening_smoothJordanNestingRadius_subset
     {K : Set ℂ} (hK : IsCompact K)
     (Omega : ContainingSmoothJordanDomain K) :
     Metric.cthickening (smoothJordanNestingRadius hK Omega) K ⊆
@@ -95,21 +99,24 @@ noncomputable def smoothJordanOuterStepRadius
     (Omega : ContainingSmoothJordanDomain K) : ℝ :=
   min (smoothJordanNestingRadius hK Omega) (smoothApproxRadius (n + 1))
 
-private theorem smoothJordanOuterStepRadius_pos
+/-- The next approximation scale is strictly positive. -/
+theorem smoothJordanOuterStepRadius_pos
     {K : Set ℂ} (hK : IsCompact K) (n : ℕ)
     (Omega : ContainingSmoothJordanDomain K) :
     0 < smoothJordanOuterStepRadius hK n Omega := by
   exact lt_min (smoothJordanNestingRadius_pos hK Omega)
     (smoothApproxRadius_pos_outer (n + 1))
 
-private theorem smoothJordanOuterStepRadius_le_nesting
+/-- The next approximation scale does not exceed the nesting radius. -/
+theorem smoothJordanOuterStepRadius_le_nesting
     {K : Set ℂ} (hK : IsCompact K) (n : ℕ)
     (Omega : ContainingSmoothJordanDomain K) :
     smoothJordanOuterStepRadius hK n Omega ≤
       smoothJordanNestingRadius hK Omega :=
   min_le_left _ _
 
-private theorem smoothJordanOuterStepRadius_le_schedule
+/-- The next approximation scale does not exceed the scheduled radius. -/
+theorem smoothJordanOuterStepRadius_le_schedule
     {K : Set ℂ} (hK : IsCompact K) (n : ℕ)
     (Omega : ContainingSmoothJordanDomain K) :
     smoothJordanOuterStepRadius hK n Omega ≤
@@ -130,7 +137,8 @@ noncomputable def nextSmoothJordanOuter
         (smoothJordanOuterStepRadius hK n Omega)
         (smoothJordanOuterStepRadius_pos hK n Omega)⟩
 
-private theorem closure_nextSmoothJordanOuter_subset_carrier
+/-- The closure of the next outer domain lies inside the current domain. -/
+theorem closure_nextSmoothJordanOuter_subset_carrier
     {K : Set ℂ} (hK : IsCompact K)
     (houter : HasSmoothJordanOuterApproximation K) (n : ℕ)
     (Omega : ContainingSmoothJordanDomain K) :
@@ -143,7 +151,8 @@ private theorem closure_nextSmoothJordanOuter_subset_carrier
     (smoothJordanOuterStepRadius_le_nesting hK n Omega) K).trans
   exact cthickening_smoothJordanNestingRadius_subset hK Omega
 
-private theorem closure_nextSmoothJordanOuter_subset_schedule
+/-- The closure of the next outer domain lies inside the next scheduled thickening. -/
+theorem closure_nextSmoothJordanOuter_subset_schedule
     {K : Set ℂ} (hK : IsCompact K)
     (houter : HasSmoothJordanOuterApproximation K) (n : ℕ)
     (Omega : ContainingSmoothJordanDomain K) :
@@ -166,7 +175,8 @@ noncomputable def firstSmoothJordanOuter
       exact target_subset_chooseSmoothJordanOuter houter (smoothApproxRadius 0)
         (smoothApproxRadius_pos_outer 0)⟩
 
-private theorem closure_firstSmoothJordanOuter_subset_schedule
+/-- The initial outer domain has closure inside the initial scheduled thickening. -/
+theorem closure_firstSmoothJordanOuter_subset_schedule
     {K : Set ℂ} (houter : HasSmoothJordanOuterApproximation K) :
     closure (firstSmoothJordanOuter houter).val.carrier ⊆
       convexThickeningApprox K 0 := by
@@ -181,7 +191,8 @@ noncomputable def nestedSmoothJordanOuterStage
   fun n => Nat.rec (firstSmoothJordanOuter houter)
     (fun n Omega => nextSmoothJordanOuter hK houter n Omega) n
 
-private theorem closure_nestedSmoothJordanOuterStage_succ_subset
+/-- The closure of each successive outer approximation lies inside the previous domain. -/
+theorem closure_nestedSmoothJordanOuterStage_succ_subset
     {K : Set ℂ} (hK : IsCompact K)
     (houter : HasSmoothJordanOuterApproximation K) (n : ℕ) :
     closure (nestedSmoothJordanOuterStage hK houter (n + 1)).val.carrier ⊆
@@ -189,7 +200,8 @@ private theorem closure_nestedSmoothJordanOuterStage_succ_subset
   exact closure_nextSmoothJordanOuter_subset_carrier hK houter n
     (nestedSmoothJordanOuterStage hK houter n)
 
-private theorem closure_nestedSmoothJordanOuterStage_subset_schedule
+/-- Each outer approximation has closure inside its scheduled thickening. -/
+theorem closure_nestedSmoothJordanOuterStage_subset_schedule
     {K : Set ℂ} (hK : IsCompact K)
     (houter : HasSmoothJordanOuterApproximation K) (n : ℕ) :
     closure (nestedSmoothJordanOuterStage hK houter n).val.carrier ⊆
