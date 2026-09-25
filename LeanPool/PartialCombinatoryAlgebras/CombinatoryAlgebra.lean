@@ -17,7 +17,7 @@ A total combinatory structure on a type `A`, and the fact that any total
 combinatory algebra induces a partial combinatory algebra on the same type.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PartialCombinatoryAlgebras
 
@@ -35,7 +35,7 @@ class CA (A : Type*) extends HasDot A where
 namespace Part
 
 /-- Missing from `Part`. -/
-@[simps]
+@[expose, simps]
 def map₂ {α β γ : Type*} (f : α → β → γ) (u : _root_.Part α) (v : _root_.Part β) : _root_.Part γ :=
   ⟨u.Dom ∧ v.Dom, fun p => f (u.get (And.left p)) (v.get (And.right p))⟩
 

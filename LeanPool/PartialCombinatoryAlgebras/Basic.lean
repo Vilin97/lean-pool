@@ -15,7 +15,7 @@ left-associative binary application operator, and the class for a partial
 binary operation on a type.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PartialCombinatoryAlgebras
 

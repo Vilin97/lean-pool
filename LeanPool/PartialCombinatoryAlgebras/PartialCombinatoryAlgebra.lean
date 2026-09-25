@@ -35,7 +35,7 @@ with a separate claim that they are total.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PartialCombinatoryAlgebras
 
@@ -116,12 +116,11 @@ variable {A : Type v} [PCA A]
 
 /-- A valuation `η : Γ → A` assigning elements to variables,
     with the value of `x` overridden to be `a`. -/
-@[reducible]
-def override (x : Γ) (a : A) (η : Γ → A) (y : Γ) : A :=
+@[expose, reducible] def override (x : Γ) (a : A) (η : Γ → A) (y : Γ) : A :=
   if y = x then a else η y
 
 /-- Evaluate an expression with respect to a given valuation `η`. -/
-def eval (η : Γ → A) : Expr Γ A → Part A
+@[expose] def eval (η : Γ → A) : Expr Γ A → Part A
   | .K => PCA.K
   | .S => PCA.S
   | .elm a => .some a
@@ -129,10 +128,10 @@ def eval (η : Γ → A) : Expr Γ A → Part A
   | .app e₁ e₂ => (eval η e₁) ⬝ (eval η e₂)
 
 /-- An expression is said to be defined when it is defined at every valuation. -/
-def defined (e : Expr Γ A) := ∀ (η : Γ → A), (eval η e) ⇓
+@[expose] def defined (e : Expr Γ A) := ∀ (η : Γ → A), (eval η e) ⇓
 
 /-- The substitution of an element for the extra variable. -/
-def subst (x : Γ) (a : A) : Expr Γ A → Expr Γ A
+@[expose] def subst (x : Γ) (a : A) : Expr Γ A → Expr Γ A
   | .K => .K
   | .S => .S
   | .elm b => .elm b
@@ -242,7 +241,7 @@ lemma eval_override (η : Γ → A) (x : Γ) (a : A) (e : Expr Γ A) :
 
 /-- Compile an expression to a partial element, substituting
     the default value for any variables occurring in e. -/
-@[simp]
+@[expose, simp]
 def compile (e : Expr Γ A) : Part A :=
   eval (fun _ => default) e
 

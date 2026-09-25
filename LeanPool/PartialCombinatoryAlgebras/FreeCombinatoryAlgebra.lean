@@ -11,7 +11,7 @@ import Mathlib.Tactic.SetLike
 
 /-! # Free (total) combinatory algebra -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PartialCombinatoryAlgebras
 
@@ -38,8 +38,7 @@ inductive eq : Expr → Expr → Prop where
 infix:40 " ≈ " => eq
 
 /-- The carrier of the free total combinatory algebra -/
-@[reducible]
-def carrier := Quot eq
+@[expose, reducible] def carrier := Quot eq
 
 /-- Convert an expression to a (defined) partial element of the carrier. -/
 @[reducible]
@@ -51,7 +50,7 @@ instance hasDot : HasDot carrier where
     (by intros a b c e'; exact Quot.sound (.app ‹_› .refl))
 
 @[simp]
-theorem eq_mk_app (a b : Expr) : mk a ⬝ mk b = mk (a ⬝ b) := rfl
+theorem eq_mk_app (a b : Expr) : mk a ⬝ mk b = mk (a ⬝ b) := by rfl
 
 end FreeCA
 
