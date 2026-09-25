@@ -311,14 +311,18 @@ theorem sumInt_perm {as bs : List Int} (h : as.Perm bs) :
 
 theorem sumInt_pair_zero {A : Type} (pairs : List (A × A))
     (size : A -> Nat)
-    (opposite : forall p : A × A,
+    (opposite : forall p : A × A, p ∈ pairs ->
       paritySign (size p.1) + paritySign (size p.2) = 0) :
     sumInt (pairs.flatMap (fun p =>
       [paritySign (size p.1), paritySign (size p.2)])) = 0 := by
+  revert opposite
   induction pairs with
-  | nil => rfl
+  | nil => intro _; rfl
   | cons p ps ih =>
-       simp [sumInt, opposite, ih]
+      intro opposite
+      have hp := opposite p (by simp)
+      have hps := ih (fun q hq => opposite q (List.mem_cons_of_mem p hq))
+      simp [sumInt, hp, hps]
 
 /-- A decomposition into surviving objects and pairs with opposite parity contributions. -/
 structure NBCPairing (A : Type) where
@@ -334,7 +338,7 @@ structure NBCPairing (A : Type) where
   rank : Nat
   decomposition :
     all = good ++ badPairs.flatMap (fun p => [p.1, p.2])
-  opposite : forall p : A × A,
+  opposite : forall p : A × A, p ∈ badPairs ->
     paritySign (size p.1) + paritySign (size p.2) = 0
   goodParity : forall a, a ∈ good ->
     paritySign (size a) = paritySign rank
