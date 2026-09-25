@@ -27,7 +27,7 @@ ideal yields a new N-subring.
 Loepp, "Constructing local generic formal fibers", 1997, Lemma 11.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -45,7 +45,7 @@ expectation values in a state, where the entanglement of the evolved state enter
 formalized. The quantitative bound on the sum of the discarded norms is in `LayerError.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 namespace PauliString
@@ -114,6 +114,7 @@ theorem traj_zero_input (Gs : ℕ → PauliString n) (θ : ℕ → ℝ) (g : ℕ
 
 /-- A complete untruncated rotation block, as an additive endomorphism. Its powers represent
 the residual whole-step evolutions in `apd:thm:triangle`. -/
+@[expose]
 noncomputable def blockEnd (Gs : ℕ → PauliString n) (θ : ℕ → ℝ) (period : ℕ) :
     AddMonoid.End (Matrix (Bits n) (Bits n) ℂ) where
   toFun A := traj Gs θ A period

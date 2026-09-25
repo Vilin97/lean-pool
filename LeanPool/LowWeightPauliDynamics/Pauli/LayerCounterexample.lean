@@ -56,7 +56,7 @@ expanded; every other branch the recurrence meets is shown to vanish by the soun
 `partnerSign`. Nothing is evaluated numerically.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD.LayerCounterexample
 

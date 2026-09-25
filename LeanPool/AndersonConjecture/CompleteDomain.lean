@@ -22,4 +22,4 @@ ring `T = ℂ[[x,y,z]]/(x²-yz)` is a complete two-dimensional Cohen–Macaulay
 local domain with a non-principal height-one prime.
 -/
 
-@[expose] public section
+public section

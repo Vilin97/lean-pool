@@ -77,7 +77,7 @@ All bounds are in the normalized Pauli 2-norm. Expectation values in a state, an
 of the Trotter circuit with the Hamiltonian evolution, are not treated here.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -125,6 +125,7 @@ variable {n : ℕ}
 
 /-- The untruncated evolution through the first `i` layers of a fixed block, as used to define
 `Õ^{(d)}_{≥w*+1}` in `apd:eq:step_component`. -/
+@[expose]
 noncomputable def layerBlockTraj (layers : ℕ → List (PauliString n × ℝ))
     (O : Matrix (Bits n) (Bits n) ℂ) : ℕ → Matrix (Bits n) (Bits n) ℂ
   | 0 => O
@@ -142,6 +143,7 @@ theorem layerBlockTraj_succ (layers : ℕ → List (PauliString n × ℝ))
 /-- The LPD recurrence: evolve through a whole block of `Γ` layers, then keep Pauli weights at
 most `wstar`. This is the recurrence of the kept operator in `apd:eq:step_component`. It is
 defined directly, not as a subsequence of `layerScheduledTraj`. -/
+@[expose]
 noncomputable def layerStepTraj (layers : ℕ → List (PauliString n × ℝ))
     (Γ wstar : ℕ) (O : Matrix (Bits n) (Bits n) ℂ) : ℕ → Matrix (Bits n) (Bits n) ℂ
   | 0 => O
@@ -161,6 +163,7 @@ theorem layerStepTraj_succ (layers : ℕ → List (PauliString n × ℝ))
 
 /-- Execute the repeated fixed block with a cut after each multiple of `Γ` **layers**.
 This uses the boundary convention of `apd:thm:triangle`. -/
+@[expose]
 noncomputable def layerScheduledTraj (layers : ℕ → List (PauliString n × ℝ))
     (Γ wstar : ℕ) (O : Matrix (Bits n) (Bits n) ℂ) : ℕ → Matrix (Bits n) (Bits n) ℂ :=
   layerTraj (fun T => layers (T % Γ)) (trotterSchedule Γ wstar) O
@@ -346,7 +349,9 @@ theorem sum_pauliNorm_discardedLayerStep_le_chain
     (entryFactor_nonneg_all hkh1 hc ha) (pauliNorm_nonneg O) hm hΓ r
     (layerStepMass layers Γ (rungWeight ko kh m) O)
     (fun d _ => layerStepMass_reset layers (Nat.le_add_right ko _) hloc d)
-    (fun d _ i hi => layerStepMass_inflow layers Γ O hkh hL hherm ha hsin hm hb d i hi)
+    (fun d _ i hi => by
+      simpa only [ML, pauliMultiLadder_N] using
+        layerStepMass_inflow layers Γ O hkh hL hherm ha hsin hm hb d i hi)
   simpa only [pauliNorm_discardedLayerStep, layerStepMass] using h
 
 /-- Layer conjugation is additive, supporting the operator telescope of
@@ -395,7 +400,8 @@ noncomputable def layerBlockEnd (layers : ℕ → List (PauliString n × ℝ)) (
 /-- `layerBlockEnd` applies the matrix evolution `layerBlockTraj` through `Γ` layers
 (`apd:thm:triangle`). -/
 @[simp] theorem layerBlockEnd_apply (layers : ℕ → List (PauliString n × ℝ)) (Γ : ℕ)
-    (A : Matrix (Bits n) (Bits n) ℂ) : layerBlockEnd layers Γ A = layerBlockTraj layers A Γ := rfl
+    (A : Matrix (Bits n) (Bits n) ℂ) : layerBlockEnd layers Γ A = layerBlockTraj layers A Γ := by
+  rfl
 
 /-- **The operator telescope for layered steps.** This is the identity in `apd:thm:triangle`:
 the untruncated evolution minus the LPD output after `r` steps is the sum of the discarded
@@ -509,7 +515,10 @@ theorem sum_pauliNorm_discardedLayerStep_le_cZero
   have h := MultiLadder.sum_block_epsJump_le_cZero ML hkh1 hc ha hb hA (pauliNorm_nonneg O)
     hΓ hr haA m (layerStepMass layers Γ (rungWeight ko kh (m + 1)) O)
     (fun d _ => layerStepMass_reset layers (Nat.le_add_right ko _) hloc d)
-    (fun d _ i hi => layerStepMass_inflow layers Γ O hkh hL hherm ha hsin (by omega) hb1 d i hi)
+    (fun d _ i hi => by
+      simpa only [ML, pauliMultiLadder_N] using
+        layerStepMass_inflow layers Γ O (m := m + 1) hkh hL hherm ha hsin
+          (by omega) hb1 d i hi)
   simpa only [pauliNorm_discardedLayerStep, layerStepMass] using h
 
 /-- The truncation error obeys the `c₀` bound

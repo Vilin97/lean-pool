@@ -20,7 +20,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 /-- The symmetric difference of two distinct singletons is the corresponding pair.  This is a
 general `Finset` fact, stated here because Mathlib does not have it. -/
@@ -35,7 +35,7 @@ namespace BSLambda
 abbrev Input (V : Type*) : Type _ := V → Bool
 
 /-- The all-zero input, written `0^V` in `bs_lambda.txt`. -/
-def zeroInput (V : Type*) : Input V := fun _ ↦ false
+@[expose] def zeroInput (V : Type*) : Input V := fun _ ↦ false
 
 @[simp] lemma zeroInput_apply {V : Type*} (v : V) : zeroInput V v = false := rfl
 
@@ -46,6 +46,7 @@ variable [DecidableEq V]
 
 /-- `flipSet x A` is the input written `x^A` in the source document: it flips every
 coordinate lying in `A` and leaves all other coordinates unchanged. -/
+@[expose]
 def flipSet (x : Input V) (A : Finset V) : Input V := fun v ↦ if v ∈ A then !x v else x v
 
 @[simp] lemma flipSet_apply_of_mem {x : Input V} {A : Finset V} {v : V} (hv : v ∈ A) :

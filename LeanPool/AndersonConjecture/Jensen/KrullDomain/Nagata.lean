@@ -23,7 +23,7 @@ prime ideal of R contains a prime element, obtained by lifting
 a prime from the localisation and cancelling powers of p.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

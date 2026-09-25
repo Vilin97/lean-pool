@@ -35,7 +35,7 @@ theorem next to `ChainBound.lean`.
 * `MultiLadder.sum_steps_le`: the bound on the globally sampled mass.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD.MultiLadder
 

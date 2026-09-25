@@ -60,7 +60,7 @@ powers and a harmonic-sum bound, and is proved in `Lean4LPD.Constants.AssemblyBo
 product).
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 

@@ -78,7 +78,7 @@ caller supplies it either. All of this is at the level of the normalized Pauli 2
 conversion to an error in expectation (`apd:thm:triangle`) is not part of this file.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 

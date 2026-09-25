@@ -93,7 +93,7 @@ both `Y` and `−Y`. The canonical signless representative needs `phase = #{Y-si
 is a finer condition than the parity one and is not used here.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -103,7 +103,7 @@ namespace Lean4LPD
 check over `ZMod 2`, discharged by `decide`. -/
 
 /-- `signPhase a` is the `ZMod 4` phase exponent of the sign `(-1)^a`, defined as `2a`. -/
-def signPhase (a : ZMod 2) : ZMod 4 := 2 * (a.val : ZMod 4)
+@[expose] def signPhase (a : ZMod 2) : ZMod 4 := 2 * (a.val : ZMod 4)
 
 @[simp] lemma signPhase_zero : signPhase 0 = 0 := rfl
 
@@ -261,7 +261,7 @@ instance : StarMul (PauliString n) where
 /-- The symplectic form `⟪s,t⟫ = ∑ᵢ (x_s(i) z_t(i) + z_s(i) x_t(i))` over `ZMod 2`, written with
 Mathlib's `dotProduct`. It is the obstruction to commuting: see
 `commute_iff_sympForm_eq_zero`. -/
-def sympForm (s t : PauliString n) : ZMod 2 := s.x ⬝ᵥ t.z + s.z ⬝ᵥ t.x
+@[expose] def sympForm (s t : PauliString n) : ZMod 2 := s.x ⬝ᵥ t.z + s.z ⬝ᵥ t.x
 
 lemma sympForm_eq_sum (s t : PauliString n) :
     sympForm s t = ∑ i, (s.x i * t.z i + s.z i * t.x i) := by
@@ -290,6 +290,7 @@ lemma sympForm_mul_left (s t u : PauliString n) :
   exact bit_add_self _
 
 /-- `phaseMul k s` is `i^k · s`: the same bit vectors, the phase shifted by `k`. -/
+@[expose]
 def phaseMul (k : ZMod 4) (s : PauliString n) : PauliString n := ⟨s.x, s.z, s.phase + k⟩
 
 @[simp] lemma phaseMul_x (k : ZMod 4) (s : PauliString n) : (phaseMul k s).x = s.x := rfl
@@ -458,14 +459,14 @@ every `x` and `z` is `0`, and `sympForm` is identically zero, so the whole antic
 vacuous there. One qubit is enough to make it non-vacuous. -/
 
 /-- The one-qubit `X`. -/
-def X1 : PauliString 1 := ⟨1, 0, 0⟩
+@[expose] def X1 : PauliString 1 := ⟨1, 0, 0⟩
 
 /-- The one-qubit `Z`. -/
-def Z1 : PauliString 1 := ⟨0, 1, 0⟩
+@[expose] def Z1 : PauliString 1 := ⟨0, 1, 0⟩
 
 /-- The one-qubit `Y`, whose phase is one of the two `isSelfAdjoint_iff_phase` admits. It is `+Y`
 rather than `−Y`; `Pauli/Matrix.lean` checks that entrywise. -/
-def Y1 : PauliString 1 := ⟨1, 1, 1⟩
+@[expose] def Y1 : PauliString 1 := ⟨1, 1, 1⟩
 
 theorem isSelfAdjoint_X1 : IsSelfAdjoint X1 := isSelfAdjoint_iff_phase.2 (by decide)
 

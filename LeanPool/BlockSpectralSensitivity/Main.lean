@@ -45,7 +45,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 namespace BSLambda
 
@@ -99,19 +99,19 @@ theorem uniqueConflict_cert (γ : Idx → Idx → Fin r) (i j : Idx) (hij : i �
 
 /-- Property (L1) of Section 6: every positive point has at most three other
 certificates at distance one. -/
-def ListOne (γ : Idx → Idx → Fin r) : Prop :=
+@[expose] def ListOne (γ : Idx → Idx → Fin r) : Prop :=
   ∀ i x, (cert Arc γ i).Sat x →
     (Finset.univ.filter fun j => j ≠ i ∧ (cert Arc γ j).dist x = 1).card ≤ 3
 
 /-- Property (L2) of Section 6: every positive point has at most seven other
 certificates at distance at most two. -/
-def ListTwo (γ : Idx → Idx → Fin r) : Prop :=
+@[expose] def ListTwo (γ : Idx → Idx → Fin r) : Prop :=
   ∀ i x, (cert Arc γ i).Sat x →
     (Finset.univ.filter fun j => j ≠ i ∧ (cert Arc γ j).dist x ≤ 2).card ≤ 7
 
 /-- The certificate family attached to a gate labelling satisfying (L1) and (L2)
 (Sections 3, 4 and 6). -/
-@[simps]
+@[expose, simps]
 def family (γ : Idx → Idx → Fin r) (h₁ : ListOne γ) (h₂ : ListTwo γ) :
     CertFamily (Coord Idx r) Idx where
   P := cert Arc γ

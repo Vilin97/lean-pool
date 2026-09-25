@@ -29,7 +29,7 @@ Tags: commutative-algebra, ring-theory
 MSC: 13B35, 13H10
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

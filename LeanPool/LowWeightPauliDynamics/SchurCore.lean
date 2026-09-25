@@ -20,7 +20,7 @@ This lightweight module depends only on Mathlib and is shared by the Pauli-dynam
 block/spectral-sensitivity developments.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 

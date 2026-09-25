@@ -26,7 +26,7 @@ import Mathlib.RingTheory.PicardGroup
 Imported Lean Pool material for `LeanPool.AndersonConjecture.QuasiCompleteRing.QuasiCompleteRing`.
 -/
 
-@[expose] public section
+public section
 
 open scoped Pointwise
 

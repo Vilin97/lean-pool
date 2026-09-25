@@ -28,7 +28,7 @@ the general case reduces to it by extracting
 common factors.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

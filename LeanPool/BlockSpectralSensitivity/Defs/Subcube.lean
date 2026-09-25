@@ -33,7 +33,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 namespace BSLambda
 
@@ -48,6 +48,7 @@ variable {V : Type*}
 /-! ### Satisfaction, projection and conflicts -/
 
 /-- `x` satisfies every literal of `P`. -/
+@[expose]
 def Sat (P : PartialAssign V) (x : Input V) : Prop := ∀ v b, P v = some b → x v = b
 
 lemma Sat.eq_of_fixed {P : PartialAssign V} {x : Input V} (hx : P.Sat x) {v : V} {b : Bool}
@@ -55,7 +56,7 @@ lemma Sat.eq_of_fixed {P : PartialAssign V} {x : Input V} (hx : P.Sat x) {v : V}
 
 /-- The nearest-point projection of `x` onto `C(P)`: reset every violated fixed
 coordinate, leave the free coordinates alone. -/
-def proj (P : PartialAssign V) (x : Input V) : Input V := fun v => (P v).getD (x v)
+@[expose] def proj (P : PartialAssign V) (x : Input V) : Input V := fun v => (P v).getD (x v)
 
 /-- The projection keeps the value `P` fixes, falling back on the value of `x`. -/
 @[simp] lemma proj_apply (P : PartialAssign V) (x : Input V) (v : V) :
@@ -72,6 +73,7 @@ lemma proj_eq_self_of_sat {P : PartialAssign V} {x : Input V} (hx : P.Sat x) : P
   | some b => simp [hv, hx.eq_of_fixed hv]
 
 /-- Two partial assignments *conflict* at `v` if they fix `v` to opposite values. -/
+@[expose]
 def Conflict (P Q : PartialAssign V) (v : V) : Prop := ∃ b, P v = some b ∧ Q v = some (!b)
 
 /-- `Conflict` is an existential over `Bool`, hence decidable; providing the instance
@@ -144,7 +146,7 @@ lemma mem_fixedSet_iff_exists {P : PartialAssign V} {v : V} :
   rw [mem_fixedSet_iff_ne_none, Option.ne_none_iff_exists']
 
 /-- The codimension of the subcube `C(P)`: the number of coordinates that `P` fixes. -/
-def codim (P : PartialAssign V) : ℕ := P.fixedSet.card
+@[expose] def codim (P : PartialAssign V) : ℕ := P.fixedSet.card
 
 /-- The defining equation for `codim`, so that call sites need not unfold the `def`. -/
 lemma codim_eq_card_fixedSet (P : PartialAssign V) : P.codim = P.fixedSet.card := rfl
@@ -191,7 +193,7 @@ lemma violSet_subset_of_sat_of_eq_off {P : PartialAssign V} {x y : Input V} {A :
   exact hne ((h v hvA).trans (hx.eq_of_fixed hb))
 
 /-- `dist(x, C(P))`: the number of fixed literals of `P` violated by `x`. -/
-def dist (P : PartialAssign V) (x : Input V) : ℕ := (P.violSet x).card
+@[expose] def dist (P : PartialAssign V) (x : Input V) : ℕ := (P.violSet x).card
 
 /-- The defining equation for `dist`, so that call sites need not unfold the `def`. -/
 lemma dist_eq_card_violSet (P : PartialAssign V) (x : Input V) :

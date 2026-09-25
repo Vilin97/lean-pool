@@ -24,7 +24,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 namespace BSLambda
 
@@ -33,7 +33,7 @@ open scoped Matrix Matrix.Norms.L2Operator
 variable {V : Type*} [Fintype V]
 
 /-- The adjacency matrix `A_f` of the sensitivity graph `G_f`. -/
-noncomputable def adj (f : Input V → Bool) : Matrix (Input V) (Input V) ℝ :=
+@[expose] noncomputable def adj (f : Input V → Bool) : Matrix (Input V) (Input V) ℝ :=
   Matrix.of fun x y => if hammingDist x y = 1 ∧ f x ≠ f y then (1 : ℝ) else 0
 
 lemma adj_apply (f : Input V → Bool) (x y : Input V) :
@@ -117,6 +117,7 @@ lemma trace_adj (f : Input V → Bool) : (adj f).trace = 0 := by
   simp [Matrix.diag_apply, adj_apply]
 
 /-- `lambda(f)`: the largest eigenvalue of the sensitivity-graph adjacency matrix. -/
+@[expose]
 noncomputable def lam (f : Input V → Bool) : ℝ := ⨆ i, (isHermitian_adj f).eigenvalues i
 
 /-- `lambda(f) ≥ 0`: the eigenvalues of `adj f` sum to `trace (adj f) = 0`, so at least one of

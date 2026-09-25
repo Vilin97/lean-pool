@@ -26,7 +26,7 @@ T = C[[x,y,z]]/(x^2 - yz) is a Noetherian complete local domain
 whose residue field has the cardinality of C.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

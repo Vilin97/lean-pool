@@ -27,7 +27,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 /-! ## A missing `Set` lemma
 
@@ -48,7 +48,7 @@ namespace BSLambda
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
 /-- A coordinate `v` is sensitive for `f` at `x` when flipping it changes the value. -/
-def SensitiveCoord (f : Input V → Bool) (x : Input V) (v : V) : Prop :=
+@[expose] def SensitiveCoord (f : Input V → Bool) (x : Input V) (v : V) : Prop :=
   f (flipSet x {v}) ≠ f x
 
 instance (f : Input V → Bool) (x : Input V) (v : V) : Decidable (SensitiveCoord f x v) :=
@@ -62,7 +62,7 @@ lemma mem_sensCoords {f : Input V → Bool} {x : Input V} {v : V} :
     v ∈ sensCoords f x ↔ SensitiveCoord f x v := Finset.mem_filter_univ v
 
 /-- `s(f,x)`: the number of sensitive coordinates at `x`. -/
-def sensAt (f : Input V → Bool) (x : Input V) : ℕ := (sensCoords f x).card
+@[expose] def sensAt (f : Input V → Bool) (x : Input V) : ℕ := (sensCoords f x).card
 
 /-- Any `Finset` containing every sensitive coordinate at `x` bounds `s(f,x)`. -/
 lemma sensAt_le_card {f : Input V → Bool} {x : Input V} {s : Finset V}

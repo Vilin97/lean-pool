@@ -45,7 +45,7 @@ nor any bound on the angles. The telescoping error estimate is in `TruncationErr
 layer-level version with its quantitative bound is in `LayerError.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 namespace PauliString
@@ -56,6 +56,7 @@ variable {n : ℕ}
 
 /-- The end-of-step schedule of `apd:thm:triangle`: rotation `g` is followed
 by a cut exactly when `g+1` is a multiple of the block length. -/
+@[expose]
 def trotterSchedule (period wstar : ℕ) (g : ℕ) : Finset (PauliIndex n) :=
   if (g + 1) % period = 0 then (highSet n wstar)ᶜ else univ
 
@@ -78,6 +79,7 @@ theorem trotterSchedule_boundary (period wstar d : ℕ) (hp : 0 < period) :
 
 /-- Rotation-indexed execution of a fixed repeated block with end-of-step truncation
 (`apd:thm:triangle`; `apd:eq:step_component`). -/
+@[expose]
 noncomputable def trotterTraj (Gs : ℕ → PauliString n) (θ : ℕ → ℝ)
     (period wstar : ℕ) (O : Matrix (Bits n) (Bits n) ℂ) :
     ℕ → Matrix (Bits n) (Bits n) ℂ :=
@@ -101,6 +103,7 @@ theorem trotterTraj_succ (Gs : ℕ → PauliString n) (θ : ℕ → ℝ)
 
 /-- The step-indexed recurrence, defined independently of `trotterTraj`: evolve through a whole
 block, then cut (`apd:eq:step_component`; `apd:thm:triangle`). -/
+@[expose]
 noncomputable def trotterStepTraj (Gs : ℕ → PauliString n) (θ : ℕ → ℝ)
     (period wstar : ℕ) (O : Matrix (Bits n) (Bits n) ℂ) :
     ℕ → Matrix (Bits n) (Bits n) ℂ
@@ -171,6 +174,7 @@ theorem trotterTraj_at_boundary (Gs : ℕ → PauliString n) (θ : ℕ → ℝ)
 /-- The discarded operator `X_{d+1}` of `apd:eq:step_component`: the operator at the end of the
 block before truncation, minus the kept operator. The zero-based index `d` is the number of
 steps completed before. -/
+@[expose]
 noncomputable def discardedStep (Gs : ℕ → PauliString n) (θ : ℕ → ℝ)
     (period wstar : ℕ) (O : Matrix (Bits n) (Bits n) ℂ) (d : ℕ) :
     Matrix (Bits n) (Bits n) ℂ :=
