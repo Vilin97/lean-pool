@@ -10258,7 +10258,7 @@ projects:
       - '11E88'
   - title: Carlson special functions and complex Dirichlet averages
     summary: Formalizes Carlson special functions through complex Dirichlet averages, with simplex measures,
-      analytic continuation, Euler inversion, Euler–Poisson equations, and quadratic transformations.
+      Gamma-regularized analytic continuation, Euler inversion, Euler–Poisson equations, and quadratic transformations.
       Includes the complete supporting several-complex-variable and special-function libraries.
     branch: complex analysis
     main_declarations:
@@ -10269,7 +10269,11 @@ projects:
       informal: The Gamma-regularized Carlson R function satisfies the first quadratic transformation
         for complex exponent and Dirichlet parameters with positive-real-part unsquared variables.
     - declaration: PalomarSnapshot.joint_average_continuation
-      informal: Holomorphic averages on convex open scalar domains admit joint entire-parameter continuation.
+      informal: For a holomorphic scalar function on a convex open domain D, its
+        Gamma-regularized Dirichlet average extends jointly holomorphically to all complex
+        Dirichlet parameters and all node vectors in D. The extension agrees with the
+        regularized simplex integral when every parameter has positive real part; the
+        ordinary normalized average differs by the factor Gamma of the parameter sum.
     tags:
     - special-functions
     - complex-analysis

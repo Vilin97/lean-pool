@@ -44,6 +44,10 @@ associated-function theory, confluence, and Laplace representation of Carlson's 
 The regularized slit-plane function is jointly entire in the exponent and Dirichlet
 parameters and holomorphic in all nodes off the nonpositive real axis.
 Node differentiation, the homogeneity recurrence, and polynomial dependence of
-associated functions are available on this full slit domain. See `Carlson/R/Coverage.md`
-for implemented results and known remaining work.
+associated functions are available on this full slit domain. The [pinned upstream audit
+guide][carlsonScope] maps the selected statements to their proof modules and records scope
+limits. In particular, `Carlson.R.Contour` adds no contour representation: formula (6.8-7)
+remains unformalized, while joint continuation is proved without that representation.
+
+[carlsonScope]: https://github.com/bjbraams/lean-codes/blob/fcc2be9a086c1bdd572db91f005e868b80a8d644/PALOMAR.md
 -/

@@ -18,10 +18,14 @@ public import LeanPool.CarlsonFunctions.Carlson
 /-!
 # Proved counterparts of Statement.lean
 
-This module imports all five mathematical libraries, never Statement.
-Comparator compares the PalomarSnapshot declarations in these two independent
-environments. The elementary definitions are intentionally repeated verbatim;
-each theorem below points to an existing project proof. See PALOMAR.md.
+This module imports all five mathematical libraries and proves the local statements
+below. Its elementary definitions are explicit, so their meanings can be inspected
+independently of the development. The [upstream statement][carlsonStatement] and
+[audit guide][carlsonAudit] describe the separate comparator submission at the pinned
+source revision; this import does not maintain that upstream comparison.
+
+[carlsonStatement]: https://github.com/bjbraams/lean-codes/blob/fcc2be9a086c1bdd572db91f005e868b80a8d644/Statement.lean
+[carlsonAudit]: https://github.com/bjbraams/lean-codes/blob/fcc2be9a086c1bdd572db91f005e868b80a8d644/PALOMAR.md
 -/
 
 @[expose] public section
@@ -53,8 +57,12 @@ def simplexMeasure : Measure (ι → ℝ) :=
 def density (b : ι → ℂ) (u : ι → ℝ) : ℂ :=
   interior.indicator (fun u => ∏ i, (u i : ℂ) ^ (b i - 1) / Gamma (b i)) u
 
-/-- The native regularized average of f at the affine combination of the nodes.
-This totalized integral is not itself the continuation outside convergence. -/
+/-- The native Gamma-regularized average of `f` at the affine combination of the nodes.
+Its simplex density is `∏ i, uᵢ ^ (bᵢ - 1) / Gamma bᵢ`. On the convergence domain,
+the ordinary normalized Dirichlet average is `Gamma (∑ i, b i) * average b z f`;
+see `complexDirichletIntegral_eq_gamma_mul`. The continuation theorem below extends
+the regularized average to all parameters. This totalized native integral is not
+itself that continuation outside convergence. -/
 def average (b z : ι → ℂ) (f : ℂ → ℂ) : ℂ :=
   ∫ u in simplex, density b u * f (∑ i, (u i : ℂ) * z i) ∂simplexMeasure
 
@@ -149,7 +157,9 @@ theorem dirichlet_aggregation {κ : Type*} [Fintype κ] {q : ι → κ} (hq : Fu
   exact ProbabilityTheory.measurePreserving_stdSimplexAggregate_dirichletMeasure hq hb
 
 open scoped Classical in
-/-- Carlson 1977, 6.3-6: joint entire-parameter continuation on every convex open scalar domain. -/
+/-- The Gamma-regularized continuation assertion of Carlson 1977, 6.3-6, on a convex open
+scalar domain. The extension is entire in the Dirichlet parameters and jointly analytic
+with the nodes; native agreement is asserted only when every parameter has positive real part. -/
 theorem joint_average_continuation {D : Set ℂ} (hD : IsOpen D) (hconv : Convex ℝ D)
     {f : ℂ → ℂ} (hf : AnalyticOnNhd ℂ f D) :
     ∃ G : ((ι → ℂ) × (ι → ℂ)) → ℂ,
