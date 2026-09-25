@@ -431,9 +431,9 @@ theorem RecDecidable.not {p : ℕ → Prop} (hp : RecDecidable p) : RecDecidable
 equality on `ℕ`); useful for choice-free De Morgan. -/
 theorem RecDecidable.em {p : ℕ → Prop} (hp : RecDecidable p) (n : ℕ) : p n ∨ ¬ p n := by
   obtain ⟨f, _, hfe⟩ := hp
-  rcases Nat.decEq (f n) 1 with h | h
-  · exact Or.inr (fun hp => h ((hfe n).mp hp))
+  by_cases h : f n = 1
   · exact Or.inl ((hfe n).mpr h)
+  · exact Or.inr (fun hp => h ((hfe n).mp hp))
 
 /-- **Disjunction.** Recursive decidability is closed under `∨`, via choice-free
 De Morgan

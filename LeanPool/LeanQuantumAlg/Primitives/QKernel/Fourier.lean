@@ -138,7 +138,7 @@ theorem tpVecPhase_eval (lam : Fin d → ℝ) (k : Fin N)
       = Complex.exp (-Complex.I * ((x k * lam m : ℝ) : ℂ)) * (V m).eval x := by
   rw [tpVecPhase, TrigPolynomial.eval_expMul]
   congr 1
-  rw [freqDot_comm, freqDot_smul_single]; push_cast; ring
+  rw [freqDot_comm, freqDot_smul_single]; push_cast; ring_nf
 
 /-- The constructive feature component after `j` layers: an explicit `Fin d`-indexed family
 of trigonometric polynomials mirroring `featState`. -/

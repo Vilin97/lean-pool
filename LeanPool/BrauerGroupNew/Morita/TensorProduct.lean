@@ -301,7 +301,7 @@ abbrev e01 (M : TensorModule R A C) :
       · exact AddHom.id _
       · intro a m
         change a • m = (moduleAux R A C M (a ⊗ₜ[R] (1 : C))) m
-        simp
+        rw [moduleAux_apply, map_one, Module.End.one_apply]
     · exact id
     · exact congrFun rfl
     · exact congrFun rfl)) fun c ↦ by

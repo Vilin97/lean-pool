@@ -565,7 +565,7 @@ private lemma majority_error_le_seven_rate_of_good_fraction
         simp only [Finset.card_univ, Fintype.card_fin] at hcomp2
         have hfilt_false : (Finset.univ.filter (fun j : Fin k => ¬hs j x = true)).card
             = (Finset.univ.filter (fun j : Fin k => hs j x = false)).card := by
-          congr 1; ext j; simp [Bool.not_eq_true]
+          simp only [Bool.not_eq_true]
         rw [hwrongAll_def, hfilt_ne]
         omega
     have hwrong_split : wrongAll ≤ wrongGood + (k - good.card) := by

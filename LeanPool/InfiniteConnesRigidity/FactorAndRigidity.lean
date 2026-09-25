@@ -21,6 +21,11 @@ import LeanPool.InfiniteConnesRigidity.GroupConstruction
 
 noncomputable section
 
+-- `instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent` applies to `F = ZMod 2` and, winning instance
+-- search for `AddCommGroup F`, yields an `AddCommMonoid F` that does not match the one carried by
+-- `Module F F`; that breaks `AddCommGroup (X × Y)` and everything built on it.
+attribute [local instance low] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 namespace ConnesRigidity
 section
 
@@ -517,7 +522,7 @@ private noncomputable def shiftedQuotientToKernelEquiv
     rw [hshift, ← LinearMap.range_toAddSubgroup, shiftVector_range]
   let e : ShiftedQuotient n ≃+ (V ⧸ D.shift.range) :=
     QuotientAddGroup.congr (shiftedSubmodule n).toAddSubgroup D.shift.range
-      (AddEquiv.refl V) (by simpa only [AddEquiv.coe_addMonoidHom_refl,
+      (AddEquiv.refl V) (by simpa only [AddEquiv.toAddMonoidHom_refl,
                               AddSubgroup.map_id] using hrange.symm)
   exact e.trans D.quotientIotaKernelEquiv
 
@@ -621,11 +626,12 @@ private theorem mulEquiv_map_torsionSquareGenerated (e : G ≃* H) :
   · rintro ⟨x, hx, rfl⟩
     rcases hx with ⟨z, hz, rfl⟩
     exact ⟨e z, e.toMonoidHom.isOfFinOrder hz, by simp only [MulEquiv.toMonoidHom_eq_coe,
-                                                    MonoidHom.coe_coe, map_pow]⟩
+                                                    MonoidHom.coe_ofClass, map_pow]⟩
   · rintro ⟨z, hz, rfl⟩
     refine ⟨(e.symm z) ^ (2 : ℕ), ?_, ?_⟩
     · exact ⟨e.symm z, e.symm.toMonoidHom.isOfFinOrder hz, rfl⟩
-    · simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, map_pow, MulEquiv.apply_symm_apply]
+    · simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, map_pow,
+        MulEquiv.apply_symm_apply]
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem involutionGenerated_characteristic (G : Type u) [Group G] :

@@ -187,8 +187,8 @@ lemma hgen_rho (i : M.index) :
           rw [Ideal.map_span, Set.image_singleton]
   · have h : Ideal.map (algebraMap B224 C224)
         ((Multicenter.complement M K).ideal (⟨i, hi⟩ : (Kᶜ : Set M.index))) ≤
-          Ideal.span {(algebraMap B224 C224)
-            ((Multicenter.complement M K).elem (⟨i, hi⟩ : (Kᶜ : Set M.index)))} :=
+          Ideal.span {((algebraMap B224 C224)
+            ((Multicenter.complement M K).elem (⟨i, hi⟩ : (Kᶜ : Set M.index))))} :=
       (gen_iff_le (Multicenter.complement M K) (⟨i, hi⟩ : (Kᶜ : Set M.index))).mp
         (reciprocal_for_univ (Multicenter.complement M K) (AlgHom.id B224 C224)
           (⟨i, hi⟩ : (Kᶜ : Set M.index)))

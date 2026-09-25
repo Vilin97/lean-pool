@@ -151,7 +151,7 @@ lemma BrauerOverR (A : CSA.{0, 0} ℝ) :
           rw [← e'.symm_apply_apply d, ← e'.symm_apply_apply d']
           conv_lhs => rw [← _root_.map_mul e'.symm, mul_comm, map_mul]
       rw [this]
-      exact SetLike.lt_iff_le_and_exists.2 ⟨fun _ _ ↦ ⟨⟩, ⟨e'.symm Complex.I, ⟨⟨⟩, by
+      exact IsConcreteLE.lt_iff_le_and_exists.2 ⟨fun _ _ ↦ ⟨⟩, ⟨e'.symm Complex.I, ⟨⟨⟩, by
         by_contra! mem
         change ∃(_ : _), _ = _ at mem
         obtain ⟨r, eq⟩ := mem

@@ -4137,7 +4137,8 @@ private def rootDegreeZeroLaplacianKernelTransport {r : ℕ}
         (positiveRootFischerLaplacian n lam
           (rootJointHarmonicDegreeZeroEquiv n lam
             ((rootJointHarmonicDegreeZeroEquiv n lam).symm p.val))) = 0
-    simp only [LinearEquiv.apply_symm_apply, LinearMap.map_coe_ker, map_zero]
+    rw [LinearEquiv.apply_symm_apply, LinearMap.map_coe_ker]
+    exact (rootJointHarmonicDegreeZeroEquiv n lam).symm.map_zero
   left_inv p := by
     apply Subtype.ext
     exact (rootJointHarmonicDegreeZeroEquiv n lam).left_inv p.val

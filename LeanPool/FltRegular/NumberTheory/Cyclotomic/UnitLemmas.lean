@@ -71,8 +71,8 @@ lemma unit_inv_conj_not_neg_zeta_runity_aux (u : (𝓞 K)ˣ) [Fact (p.Prime)] (h
   let _ := IsCyclotomicExtension.Rat.isCMField (S := {p}) K ⟨p, rfl, hp⟩
   have hmap := Units.coe_map_inv (N := 𝓞 K ⧸ I) (algebraMap (𝓞 K) (𝓞 K ⧸ I))
     (unitsComplexConj K u)
-  rw [unitsMulComplexConjInv_apply, Units.val_mul, map_mul, ← MonoidHom.coe_coe, ← hmap,
-    Units.mul_inv_eq_one, Units.coe_map, MonoidHom.coe_coe]
+  rw [unitsMulComplexConjInv_apply, Units.val_mul, map_mul, ← MonoidHom.coe_ofClass, ← hmap,
+    Units.mul_inv_eq_one, Units.coe_map, MonoidHom.coe_ofClass]
   exact (RingHom.congr_fun (quotient_zero_sub_one_comp_aut hζ
     (ringOfIntegersComplexConj K).toRingEquiv.toRingHom) (u : 𝓞 K)).symm
 

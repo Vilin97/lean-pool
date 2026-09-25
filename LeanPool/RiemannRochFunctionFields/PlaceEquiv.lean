@@ -378,10 +378,10 @@ theorem infinite_X_gt_one
       (A := A) (K := k⟮X⟯)).symm.trans hmap
   have hbaseX : 1 < u.valuation k⟮X⟯ RatFunc.X :=
     hbase.one_lt_iff_one_lt.mpr (by simp [← WithZero.exp_zero])
-  have he : u.asIdeal.ramificationIdx' w.asIdeal ≠ 0 :=
-    Ideal.IsDedekindDomain.ramificationIdx'_ne_zero_of_liesOver w.asIdeal u.ne_bot
+  have he : w.asIdeal.ramificationIdx A ≠ 0 :=
+    (Ideal.ramificationIdx_pos_of_isDedekindDomain' w.asIdeal u.ne_bot).ne'
   have hpow : 1 < (u.valuation k⟮X⟯ RatFunc.X) ^
-      u.asIdeal.ramificationIdx' w.asIdeal := by
+      w.asIdeal.ramificationIdx A := by
     exact one_lt_pow₀ hbaseX he
   rw [u.valuation_liesOver K w RatFunc.X] at hpow
   exact hpow

@@ -24,6 +24,11 @@ public import LeanPool.InfiniteConnesRigidity.SpectralAndPropertyT
 
 noncomputable section
 
+-- `instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent` applies to `F = ZMod 2` and, winning instance
+-- search for `AddCommGroup F`, yields an `AddCommMonoid F` that does not match the one carried by
+-- `Module F F`; that breaks `AddCommGroup (X × Y)` and everything built on it.
+attribute [local instance low] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 namespace ConnesRigidity
 section
 
