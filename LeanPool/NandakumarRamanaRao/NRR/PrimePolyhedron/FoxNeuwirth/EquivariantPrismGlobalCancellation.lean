@@ -698,7 +698,7 @@ theorem Result.global_signed_prism_facet_cancellation
     (H : EquivariantCoordinateHomotopy.ZeroFreeHomotopy hp F₀ F₁)
     (m : Real) (R : Result hp N L H m) :
     globalSignedFacetSum hp N L R.assignment = 0 :=
-  global_signed_prism_facet_cancellation
+  EquivariantPrismGlobalCancellation.global_signed_prism_facet_cancellation
     hp N L R.assignment R.generalPosition
 
 /-- Cancellation specialized to the assignment produced by the generic perturbation theorem. -/
@@ -710,7 +710,7 @@ theorem Result.signature_weighted_boundary_sum_eq_zero
     (∑ s : FacetSignature hp N L,
       signatureBoundaryCoefficient hp N L s *
         signatureWeight hp N L R.assignment s) = 0 :=
-  signature_weighted_boundary_sum_eq_zero
+  EquivariantPrismGlobalCancellation.signature_weighted_boundary_sum_eq_zero
     hp N L R.assignment R.generalPosition
 
 /-! ## Horizontal and nonhorizontal decomposition -/
@@ -826,7 +826,7 @@ theorem Result.horizontal_add_nonhorizontal_eq_zero
     lowerHorizontalContribution hp N L R.assignment +
       upperHorizontalContribution hp N L R.assignment +
         nonhorizontalContribution hp N L R.assignment = 0 :=
-  horizontal_add_nonhorizontal_eq_zero
+  EquivariantPrismGlobalCancellation.horizontal_add_nonhorizontal_eq_zero
     hp N L R.assignment R.generalPosition
 
 /-- Once internal and spatial-side signatures have been shown to cancel, the two horizontal
@@ -852,9 +852,11 @@ theorem Result.lowerHorizontalContribution_eq_neg_upper_of_nonhorizontal_eq_zero
     (m : Real) (R : Result hp N L H m)
     (hside : nonhorizontalContribution hp N L R.assignment = 0) :
     lowerHorizontalContribution hp N L R.assignment =
-      -upperHorizontalContribution hp N L R.assignment :=
-  lowerHorizontalContribution_eq_neg_upper_of_nonhorizontal_eq_zero
-    hp N L R.assignment R.generalPosition hside
+      -upperHorizontalContribution hp N L R.assignment := by
+  have h := EquivariantPrismGlobalCancellation.horizontal_add_nonhorizontal_eq_zero
+    hp N L R.assignment R.generalPosition
+  rw [hside, add_zero] at h
+  exact eq_neg_of_add_eq_zero_left h
 
 end EquivariantPrismGlobalCancellation
 end FoxNeuwirthOrderComplex
