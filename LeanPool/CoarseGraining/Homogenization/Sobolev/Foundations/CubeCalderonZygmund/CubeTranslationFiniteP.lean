@@ -117,7 +117,13 @@ theorem cubeLpNorm_pullbackToOrigin_eq {E : Type*} [NormedAddCommGroup E]
     (hF : AEStronglyMeasurable F (normalizedCubeMeasure Q)) :
     cubeLpNorm (originCube d Q.scale) p (pullbackToOrigin Q F) =
       cubeLpNorm Q p F := by
-  unfold cubeLpNorm
+  have htrans : AEStronglyMeasurable (pullbackToOrigin Q F)
+      (normalizedCubeMeasure (originCube d Q.scale)) := by
+    simpa only [pullbackToOrigin, Function.comp_def] using
+      hF.comp_measurePreserving
+        (measurePreserving_addRight_normalizedCubeMeasure_originCube Q)
+  rw [cubeLpNorm_eq_eLpNorm_toReal _ _ _ htrans,
+    cubeLpNorm_eq_eLpNorm_toReal _ _ _ hF]
   exact congrArg ENNReal.toReal (eLpNorm_pullbackToOrigin_eq Q p hF)
 
 /-- Pushforward preserves the real normalized cube `Lᵖ` norm. -/
@@ -127,7 +133,13 @@ theorem cubeLpNorm_pushforwardFromOrigin_eq {E : Type*} [NormedAddCommGroup E]
       (normalizedCubeMeasure (originCube d Q.scale))) :
     cubeLpNorm Q p (pushforwardFromOrigin Q F) =
       cubeLpNorm (originCube d Q.scale) p F := by
-  unfold cubeLpNorm
+  have htrans : AEStronglyMeasurable (pushforwardFromOrigin Q F)
+      (normalizedCubeMeasure Q) := by
+    simpa only [pushforwardFromOrigin, Function.comp_def] using
+      hF.comp_measurePreserving
+        (measurePreserving_subRight_normalizedCubeMeasure_originCube Q)
+  rw [cubeLpNorm_eq_eLpNorm_toReal _ _ _ htrans,
+    cubeLpNorm_eq_eLpNorm_toReal _ _ _ hF]
   exact congrArg ENNReal.toReal (eLpNorm_pushforwardFromOrigin_eq Q p hF)
 
 /-- Raw vector fields retain `MemLp` under pullback. -/
