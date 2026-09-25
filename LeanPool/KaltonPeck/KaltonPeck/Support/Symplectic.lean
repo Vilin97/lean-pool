@@ -335,7 +335,8 @@ private theorem sectionPair_mem (x : L2) : IsAdmissiblePair (sectionPair x) := b
   · exact fromL2SquareSummable x
   · simp [sectionPair, IsSquareSummable]
 
-/-- The canonical vector with the given Hilbert-space first coordinate and zero second coordinate. -/
+/-- The canonical vector with the given Hilbert-space first coordinate
+and zero second coordinate. -/
 def kernelVector (x : L2) : CanonicalRealKaltonPeck :=
   Classical.choose (canonicalRealKaltonPeckPresentation.coordinates_surjective
     (kernelPair x) (by exact kernelPair_mem x))

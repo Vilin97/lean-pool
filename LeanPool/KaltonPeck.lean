@@ -7,7 +7,6 @@ module
 
 
 public import LeanPool.KaltonPeck.KaltonPeck
-public import LeanPool.KaltonPeck.KaltonPeck.Basic
 public import LeanPool.KaltonPeck.KaltonPeck.Support
 public import LeanPool.KaltonPeck.KaltonPeck.Support.CanonicalPairing
 public import LeanPool.KaltonPeck.KaltonPeck.Support.CgpBlockExtraction

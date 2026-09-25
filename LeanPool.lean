@@ -3697,7 +3697,6 @@ public import LeanPool.KahnKalai.Numeric
 public import LeanPool.KahnKalai.ParkPham
 public import LeanPool.KaltonPeck
 public import LeanPool.KaltonPeck.KaltonPeck
-public import LeanPool.KaltonPeck.KaltonPeck.Basic
 public import LeanPool.KaltonPeck.KaltonPeck.Support
 public import LeanPool.KaltonPeck.KaltonPeck.Support.CanonicalPairing
 public import LeanPool.KaltonPeck.KaltonPeck.Support.CgpBlockExtraction
