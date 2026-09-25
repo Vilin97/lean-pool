@@ -325,7 +325,7 @@ def canonicalSplitVertexMap
                 (oldSlot source split)
                 ⟨offset.val, by
                   simp only [splitSpec, splitLength_old]
-                  simp only [if_true]
+                  simp only [ite_true]
                   omega⟩
           · by_cases hAt : offset.val + 1 = first
             · exact
@@ -343,7 +343,7 @@ def canonicalSplitVertexMap
           (oldSlot source edge)
           ⟨offset.val, by
             simp only [splitSpec, splitLength_old]
-            simp only [hEdge, if_false]
+            simp only [hEdge, ite_false]
             exact offset.isLt⟩
 
 /-- The inverse of `canonicalSplitVertexMap`, written by cases on the fresh
@@ -423,7 +423,7 @@ def canonicalSplitVertexEquiv
       · simp only [canonicalSplitVertexMap, canonicalSplitVertexMapInv, Spec.interiorVertex,
           Spec.coreVertex, Fin.lastCases_last, ↓reduceDIte, oldSlot, splitVertex, secondSlot,
           tsub_le_iff_right, le_add_iff_nonneg_right, zero_le, Nat.sub_eq_zero_of_le]
-        rw [dif_neg (by omega), dif_pos (by omega)]
+        rw [dite_eq_right (by omega), dite_eq_left (by omega)]
       · simp [canonicalSplitVertexMap, canonicalSplitVertexMapInv,
           oldVertex, SubdivisionGraph.Spec.coreVertex,
           SubdivisionGraph.Spec.interiorVertex]
@@ -469,7 +469,7 @@ def canonicalSplitStepMap
           subst edge
           by_cases hBefore : offset.val < first
           · exact ⟨oldSlot source split, ⟨offset.val, by
-              simp only [splitSpec, splitLength_old, if_true]
+              simp only [splitSpec, splitLength_old, ite_true]
               exact hBefore⟩⟩
           · exact ⟨secondSlot source, ⟨offset.val - first, by
               simp only [splitSpec, splitLength_second]
@@ -477,7 +477,7 @@ def canonicalSplitStepMap
               omega⟩⟩
       else
         ⟨oldSlot source edge, ⟨offset.val, by
-          simp only [splitSpec, splitLength_old, if_neg hEdge]
+          simp only [splitSpec, splitLength_old, ite_eq_right hEdge]
           exact offset.isLt⟩⟩
 
 /-- Inverse occurrence map for `canonicalSplitStepMap`. -/
@@ -518,7 +518,7 @@ private theorem canonicalSplitStepMap_split
       ⟨split, offset⟩ =
         if hBefore : offset.val < first then
           ⟨oldSlot source split, ⟨offset.val, by
-            simp only [splitSpec, splitLength_old, if_true]
+            simp only [splitSpec, splitLength_old, ite_true]
             exact hBefore⟩⟩
         else
           ⟨secondSlot source, ⟨offset.val - first, by
@@ -535,7 +535,7 @@ private theorem canonicalSplitStepMap_old
     canonicalSplitStepMap source split first second hFirst hSecond hLength
       ⟨edge, offset⟩ =
         ⟨oldSlot source edge, ⟨offset.val, by
-          simp only [splitSpec, splitLength_old, if_neg hEdge]
+          simp only [splitSpec, splitLength_old, ite_eq_right hEdge]
           exact offset.isLt⟩⟩ := by
   simp [canonicalSplitStepMap, hEdge]
 
@@ -596,10 +596,10 @@ def canonicalSplitStepEquiv
     · subst edge
       by_cases hBefore : offset.val < first
       · rw [canonicalSplitStepMap_split source split first second hFirst hSecond hLength,
-          dif_pos hBefore,
+          dite_eq_left hBefore,
           canonicalSplitStepMapInv_old_split source split first second hFirst hSecond hLength]
       · rw [canonicalSplitStepMap_split source split first second hFirst hSecond hLength,
-          dif_neg hBefore,
+          dite_eq_right hBefore,
           canonicalSplitStepMapInv_second source split first second hFirst hSecond hLength]
         apply Sigma.ext
         · rfl
@@ -624,7 +624,7 @@ def canonicalSplitStepEquiv
       rw [canonicalSplitStepMapInv_second source split first second hFirst hSecond hLength,
         canonicalSplitStepMap_split source split first second hFirst hSecond hLength]
       have hNotBefore : ¬ (first + secondOffset.val < first) := by omega
-      rw [dif_neg hNotBefore]
+      rw [dite_eq_right hNotBefore]
       apply Sigma.ext
       · rfl
       · apply heq_of_eq
@@ -641,7 +641,7 @@ def canonicalSplitStepEquiv
             ⟨oldSlot source split, oldOffset⟩) = ⟨oldSlot source split, oldOffset⟩
         rw [canonicalSplitStepMapInv_old_split source split first second hFirst hSecond hLength,
           canonicalSplitStepMap_split source split first second hFirst hSecond hLength,
-          dif_pos hBefore]
+          dite_eq_left hBefore]
 
       · change canonicalSplitStepMap source split first second hFirst hSecond hLength
           (canonicalSplitStepMapInv source split first second hFirst hSecond hLength
@@ -675,7 +675,7 @@ inclusion into the enlarged core. -/
         (splitSpec source split first second hFirst hSecond).interiorVertex
           (oldSlot source edge)
           ⟨offset.val, by
-            simp only [splitSpec, splitLength_old, if_neg hEdge]
+            simp only [splitSpec, splitLength_old, ite_eq_right hEdge]
             exact offset.isLt⟩ := by
   change canonicalSplitVertexEquiv source split first second hFirst hSecond hLength
       (Sum.inr ⟨edge, offset⟩) = _
@@ -694,7 +694,7 @@ first (old) slot. -/
         (splitSpec source split first second hFirst hSecond).interiorVertex
           (oldSlot source split)
           ⟨offset.val, by
-            simp only [splitSpec, splitLength_old, if_true]
+            simp only [splitSpec, splitLength_old, ite_true]
             omega⟩ := by
   change canonicalSplitVertexEquiv source split first second hFirst hSecond hLength
       (Sum.inr ⟨split, offset⟩) = _
@@ -1058,7 +1058,7 @@ private theorem canonicalSplit_unitEdge_eq_split
     have hMapped : canonicalSplitStepMap source split first second hFirst hSecond hLength
         ⟨split, offset⟩ = ⟨oldSlot source split, targetOffset⟩ := by
       rw [canonicalSplitStepMap_split source split first second hFirst hSecond hLength,
-        dif_pos hBefore]
+        dite_eq_left hBefore]
     rw [hMapped]
     change
       ((splitSpec source split first second hFirst hSecond).stepLeft
@@ -1102,7 +1102,7 @@ private theorem canonicalSplit_unitEdge_eq_split
       source.pathVertex_stepRightPosition]
     rfl
   · rw [canonicalSplitStepMap_split source split first second hFirst hSecond hLength,
-      dif_neg hBefore]
+      dite_eq_right hBefore]
     have hFirstLe : first ≤ offset.val := Nat.le_of_not_gt hBefore
     have hOffsetLt : offset.val < first + second := by
       rw [← hLength]

@@ -215,7 +215,7 @@ theorem invTauCorrection_eq_zero_of_not_mark_pair_canonical
       (canonicalDivisor M.graph)) :
     invTauCorrection M D = 0 := by
   unfold invTauCorrection
-  rw [if_neg]
+  rw [ite_eq_right]
   rintro ⟨-, hCanon⟩
   exact hRigid hCanon
 
@@ -336,7 +336,7 @@ theorem sum_correctionProduct_eq_invTauCorrection
         (canonicalDivisor B.graph -
           fixedDegreeTwist B.graph u v D 2 (((b₀ - 1) % k).toNat : ℤ))
         (hDegA _) (hDegY _) hA hY
-      rw [hOne, invTauCorrection_mark, if_pos ⟨⟨b₀, hb₀⟩, hUV⟩]
+      rw [hOne, invTauCorrection_mark, ite_eq_left ⟨⟨b₀, hb₀⟩, hUV⟩]
   · -- no correction: every residual product vanishes
     have hZero : ∀ b : Fin k,
         rankPlusOne B.graph
@@ -353,7 +353,7 @@ theorem sum_correctionProduct_eq_invTauCorrection
       · exact rankPlusOne_mul_eq_zero_of_not_linearEquiv_zero_left
           _ _ (hDegA _) hA
     rw [Finset.sum_congr rfl (fun b _ => hZero b), invTauCorrection_mark,
-      if_neg hCond]
+      ite_eq_right hCond]
     simp
 
 /-- Paper source: `lem:invtau` (Lemma 4.10), in full, with its correction

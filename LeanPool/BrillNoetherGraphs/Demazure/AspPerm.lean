@@ -559,14 +559,14 @@ private lemma a_step_raw (a b : ℤ) : τ.sRaw (a + 1) b = τ.sRaw a b + (if τ�
       constructor
       · intro ⟨⟨hge, hlt⟩, _⟩; omega
       · rintro rfl; exact ⟨⟨le_refl _, by omega⟩, h⟩
-    simp only [ge_iff_le, hfilt, Finset.card_singleton, Nat.cast_one, if_pos h]
+    simp only [ge_iff_le, hfilt, Finset.card_singleton, Nat.cast_one, ite_eq_left h]
   · have hfilt : ((Finset.Ico a (a + 1)).filter (τ⁻¹ · ≥ b)) = ∅ := by
       ext x
       simp only [Finset.mem_filter, Finset.mem_Ico, Finset.notMem_empty, iff_false]
       rintro ⟨⟨hge, hlt⟩, htau⟩
       have hxa : x = a := le_antisymm (Int.le_of_lt_add_one hlt) hge
       rw [hxa] at htau; exact h htau
-    simp only [ge_iff_le, hfilt, Finset.card_empty, Nat.cast_zero, add_zero, if_neg h]
+    simp only [ge_iff_le, hfilt, Finset.card_empty, Nat.cast_zero, add_zero, ite_eq_right h]
 
 
 /-- We have $s_\alpha(a,b+1) = s_\alpha(a,b) - \delta(\alpha(b)<a)$.
@@ -579,7 +579,7 @@ private lemma b_step_raw (a b : ℤ) : τ.sRaw a (b+1) = τ.sRaw a b - (if τ b 
   · simp only [h_lt]
     suffices {x ∈ Finset.Ico b (b+1) | τ x < a} = {b} by
       rw [this]
-      simp only [Finset.card_singleton, if_true]
+      simp only [Finset.card_singleton, ite_true]
     ext n
     constructor
     · intro h; simp only [Finset.mem_filter, Finset.mem_Ico, Finset.mem_singleton] at h ⊢

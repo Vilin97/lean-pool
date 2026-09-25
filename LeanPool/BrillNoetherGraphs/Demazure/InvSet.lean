@@ -386,7 +386,7 @@ private lemma postIndicator_eq_post_lt_sub (k : ℤ) :
   -- Proof written by GPT 5.5.
   classical
   by_cases hn : asps.postLt k n <;> by_cases hm : asps.postLt k m <;>
-    simp only [postIndicator, mem_post_Ico, oneIf, hn, hm, if_true, if_false,
+    simp only [postIndicator, mem_post_Ico, oneIf, hn, hm, ite_true, ite_false,
       true_and, false_and, not_true_eq_false, not_false_eq_true, sub_self,
       sub_zero, zero_sub]
 

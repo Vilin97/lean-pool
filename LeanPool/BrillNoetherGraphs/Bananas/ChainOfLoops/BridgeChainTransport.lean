@@ -101,10 +101,10 @@ noncomputable def bridgeWedgeAssocIso (M N K : MarkedGraph.{u}) :
     Sum.inr (wedgeRightVertex N.graph K.graph N.right K.left K.right)
   unfold bridgeWedgeAssocIso
   by_cases h : K.right = K.left
-  · simp only [wedgeRightVertex, dif_pos h]
+  · simp only [wedgeRightVertex, dite_eq_left h]
     change Sum.inr (Sum.inl N.right) = Sum.inr (Sum.inl N.right)
     rfl
-  · simp only [wedgeRightVertex, dif_neg h]
+  · simp only [wedgeRightVertex, dite_eq_right h]
     change Sum.inr (Sum.inr
         (⟨K.right, h⟩ : {b : K.graph.V // b ≠ K.left})) =
       Sum.inr (Sum.inr
@@ -228,8 +228,8 @@ private theorem bridgePushforward_one_chip_left (M N : MarkedGraph.{u}) :
     · simp only [MarkedGraphs.liftLeftDivisor_inl, oneChip]
       by_cases h : a = M.left
       · subst a
-        rw [if_pos rfl, if_pos rfl]
-      · rw [if_neg (fun e => h (Sum.inl.inj e)), if_neg h]
+        rw [ite_eq_left rfl, ite_eq_left rfl]
+      · rw [ite_eq_right (fun e => h (Sum.inl.inj e)), ite_eq_right h]
     · simp [oneChip]
   rw [hSource, bridgePushforward_liftLeftDivisor]
   funext z
@@ -237,8 +237,8 @@ private theorem bridgePushforward_one_chip_left (M N : MarkedGraph.{u}) :
   · simp only [wedgeLiftLeftDivisor_left, oneChip]
     by_cases h : a = M.left
     · subst a
-      rw [if_pos rfl, if_pos rfl]
-    · rw [if_neg h, if_neg (fun e => h (Sum.inl.inj e))]
+      rw [ite_eq_left rfl, ite_eq_left rfl]
+    · rw [ite_eq_right h, ite_eq_right (fun e => h (Sum.inl.inj e))]
   · simp [oneChip]
 
 /-- Contract the bridge between two marked factors. -/

@@ -289,13 +289,13 @@ theorem armCenter_nonneg (SB Ss Su : PairLedger) (shift : ℤ)
         exact zeroChip_add_tail_full' Ss S gamma
       omega
   by_cases hu : u = 0 ∧ D < E
-  · have hshift1 : shift = 1 := by rw [hshift, if_pos hu]
+  · have hshift1 : shift = 1 := by rw [hshift, ite_eq_left hu]
     have hCD : C = D := by omega
     have hMid : Su.tail u C D = 0 := by
       rw [hCD]; exact Su.tail_same u D
     have := hArmsFull (by omega)
     omega
-  · have hshift0 : shift = 0 := by rw [hshift, if_neg hu]
+  · have hshift0 : shift = 0 := by rw [hshift, ite_eq_right hu]
     by_cases hCD : C = D
     · have hMid : Su.tail u C D = 0 := by
         rw [hCD]; exact Su.tail_same u D
@@ -323,7 +323,7 @@ theorem bananaChip_nonneg (Su Sp Sq : PairLedger) (shift : ℤ)
     have h2 : Sq.tail m2 D E = 0 := by rw [hDE]; exact Sq.tail_same m2 E
     omega
   · by_cases hu : u = 0
-    · have hshift1 : shift = 1 := by rw [hshift, if_pos ⟨hu, by omega⟩]
+    · have hshift1 : shift = 1 := by rw [hshift, ite_eq_left ⟨hu, by omega⟩]
       have hCD : C = D := by omega
       have hZero : Su.tail u D C = 0 := by
         rw [hCD]; exact Su.tail_same u D

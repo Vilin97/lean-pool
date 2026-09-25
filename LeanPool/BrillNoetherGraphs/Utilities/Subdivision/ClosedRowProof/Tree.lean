@@ -355,9 +355,9 @@ theorem CutData.sound (d : CutData) (hn : 0 < n)
     (ℓ : Fin p → ℕ) (hForest : IsForest core (zeroSet ℓ))
     (hNotLoopy : ¬ IsLoopy core (zeroSet ℓ)) :
     BNExists (censusSpec core hn ℓ hForest hNotLoopy).graph 1 degree := by
-  rw [CutData.checks, dif_pos hn] at hchk
+  rw [CutData.checks, dite_eq_left hn] at hchk
   by_cases hp : 0 < p
-  · rw [dif_pos hp, Bool.and_eq_true, Bool.and_eq_true] at hchk
+  · rw [dite_eq_left hp, Bool.and_eq_true, Bool.and_eq_true] at hchk
     obtain ⟨⟨hdeg, hLoop⟩, hCheck⟩ := hchk
     have hdeg' : degree = 3 := of_decide_eq_true hdeg
     subst hdeg'
@@ -365,7 +365,7 @@ theorem CutData.sound (d : CutData) (hn : 0 < n)
       (d.toCut core hn) (d.toTree core hn hp) (fun e => ?_) hCheck ℓ hForest
       hNotLoopy
     exact of_decide_eq_true ((ExplicitPotential.allFin_eq_true_iff _).mp hLoop e)
-  · rw [dif_neg hp] at hchk
+  · rw [dite_eq_right hp] at hchk
     exact absurd hchk (by simp)
 
 /-- The root domain rows hold at any point whose first `p` coordinates are the
@@ -443,7 +443,7 @@ theorem PTree.sound (hp : p ≤ m) (hn : 0 < n) (point : Fin m → ℤ)
       intro E Γ hE hchk hΓ
       rw [PTree.checksIn] at hchk
       by_cases hp0 : 0 < p
-      · rw [dif_pos hp0, Bool.and_eq_true, Bool.and_eq_true] at hchk
+      · rw [dite_eq_left hp0, Bool.and_eq_true, Bool.and_eq_true] at hchk
         have hmp : m = p := of_decide_eq_true hchk.1.1
         subst m
         let symmetry := d.toSymmetry core hn hp0 hchk.1.2
@@ -463,7 +463,7 @@ theorem PTree.sound (hp : p ≤ m) (hn : 0 < n) (point : Fin m → ℤ)
           (ℓ := ℓ') (hlen := fun _ => rfl) (hForest := hForest')
           (hNotLoopy := hNotLoopy') E (d.pullbackContext hp0 Γ) hE hchk.2 hΓ'
         exact (ClosedAuto.bnExists_iff symmetry ℓ hn hForest hNotLoopy 1 degree).mp htarget
-      · rw [dif_neg hp0] at hchk
+      · rw [dite_eq_right hp0] at hchk
         exact _root_.absurd hchk (by simp)
   | cutvertex d =>
       intro E Γ _ hchk _

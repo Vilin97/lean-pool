@@ -611,7 +611,7 @@ theorem rankSupport_two_distinct_interior_strand_chips
       simp [y, hwy]
     have hEw : E w = 0 := by
       dsimp [E]
-      simp only [oneChip, if_neg hnx, if_neg hny, add_zero]
+      simp only [oneChip, ite_eq_right hnx, ite_eq_right hny, add_zero]
     have hRank := rank_semibreak_sub_vertex_eq_neg_one B E hSemi hDeg w hEw
     have hw' : 0 ≤ rank B.graph (E - oneChip w) := by
       simpa [rankSupport, E, x, y] using hw

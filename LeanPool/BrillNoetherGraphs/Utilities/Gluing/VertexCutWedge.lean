@@ -108,11 +108,11 @@ noncomputable def presentation :
   num_edges_cross := by
     intro a b hBMarked
     by_cases hAMarked : a = cut.leftGlue
-    · rw [if_pos hAMarked]
+    · rw [ite_eq_left hAMarked]
       subst a
       exact (num_edges_inducedSubgraph K cut.right cut.right_nonempty
         cut.rightGlue b).symm
-    · rw [if_neg hAMarked]
+    · rw [ite_eq_right hAMarked]
       apply cut.no_cross a.val a.property
       · intro hValue
         apply hAMarked

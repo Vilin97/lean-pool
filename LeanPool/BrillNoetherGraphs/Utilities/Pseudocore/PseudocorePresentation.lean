@@ -59,7 +59,7 @@ def shrink {m : ℕ} (hm : 0 < m) (x : Fin (m + 1)) : Fin m :=
 @[simp] theorem shrink_castSucc {m : ℕ} (hm : 0 < m) (y : Fin m) :
     shrink hm (Fin.castSucc y) = y := by
   have hy : (Fin.castSucc y).val < m := y.isLt
-  simp only [shrink, dif_pos hy]
+  simp only [shrink, dite_eq_left hy]
   exact Fin.ext rfl
 
 theorem castSucc_shrink {m : ℕ} (hm : 0 < m) {x : Fin (m + 1)}
@@ -69,7 +69,7 @@ theorem castSucc_shrink {m : ℕ} (hm : 0 < m) {x : Fin (m + 1)}
     rcases Nat.lt_or_ge x.val m with h | h
     · exact h
     · exact absurd (Fin.ext (by omega : x.val = m)) hx
-  simp only [shrink, dif_pos hlt]
+  simp only [shrink, dite_eq_left hlt]
   exact Fin.ext rfl
 
 theorem shrink_injective_of_ne_last {m : ℕ} (hm : 0 < m) {x y : Fin (m + 1)}
@@ -310,7 +310,7 @@ theorem exists_merge (hn : 0 < n) (hp : 0 < p)
       intro hEq
       exact habNe (σ.injective (shrink_injective_of_ne_last hn
         (hσNe a haNe) (hσNe b hbNe) hEq))
-    · simp only [hsourceCore, if_neg hEdge]
+    · simp only [hsourceCore, ite_eq_right hEdge]
       obtain ⟨hTail, hHead⟩ := hAvoid (pre edge) (hpreNe₁ edge hEdge) (hpreNe₂ edge)
       intro hEq
       exact hLoopless (pre edge) (σ.injective (shrink_injective_of_ne_last hn
@@ -323,9 +323,9 @@ theorem exists_merge (hn : 0 < n) (hp : 0 < p)
       length_pos := by
         intro edge
         by_cases hEdge : edge = split
-        · rw [if_pos hEdge]
+        · rw [ite_eq_left hEdge]
           exact Nat.add_pos_left (spec.length_pos e₁) L₂
-        · rw [if_neg hEdge]
+        · rw [ite_eq_right hEdge]
           exact spec.length_pos (pre edge) } with hsource
   have hL₁pos : 0 < L₁ := spec.length_pos e₁
   have hL₂pos : 0 < L₂ := spec.length_pos e₂
@@ -364,7 +364,7 @@ theorem exists_merge (hn : 0 < n) (hp : 0 < p)
     else decide (spec.core.tail E = v) with hrev
   have hRevOther : ∀ E : Fin (p + 1), E ≠ e₁ → E ≠ e₂ → rev E = false := by
     intro E hE₁ hE₂
-    simp only [hrev, if_neg hE₂, decide_eq_false_iff_not]
+    simp only [hrev, ite_eq_right hE₂, decide_eq_false_iff_not]
     exact (hAvoid E hE₁ hE₂).1
   have hσa : Fin.castSucc (shrink hn (σ a)) = σ a := castSucc_shrink hn (hσNe a haNe)
   have hσb : Fin.castSucc (shrink hn (σ b)) = σ b := castSucc_shrink hn (hσNe b hbNe)
@@ -375,7 +375,7 @@ theorem exists_merge (hn : 0 < n) (hp : 0 < p)
         (if rev e₂ = true then σ (spec.core.tail e₂) else σ (spec.core.head e₂))
           = σ b := by
     have hrev₂ : rev e₂ = decide (spec.core.head e₂ = v) := by
-      simp only [hrev, if_pos rfl]
+      simp only [hrev, ite_eq_left rfl]
     rcases hSecondCase with ⟨hT, hB⟩ | ⟨hH, hB⟩
     · have hHeadNe : spec.core.head e₂ ≠ v := by
         rw [← hT]; exact fun hEq => hLoopless e₂ hEq.symm
@@ -391,7 +391,7 @@ theorem exists_merge (hn : 0 < n) (hp : 0 < p)
         (if rev e₁ = true then σ (spec.core.tail e₁) else σ (spec.core.head e₁))
           = Fin.last n := by
     have hrev₁ : rev e₁ = decide (spec.core.tail e₁ = v) := by
-      simp only [hrev, if_neg hSlots]
+      simp only [hrev, ite_eq_right hSlots]
     rcases hFirstCase with ⟨hT, hA⟩ | ⟨hH, hA⟩
     · have hFlag : rev e₁ = true := by rw [hrev₁, hT]; simp
       rw [hFlag]
@@ -541,7 +541,7 @@ theorem slotValence_eq_natSum {n p : ℕ} (core : Core n p) (v : Fin n) :
   refine Finset.sum_congr rfl ?_
   intro edge _hEdge
   rw [Fintype.sum_bool]
-  simp only [Bool.false_eq_true, if_false, if_true]
+  simp only [Bool.false_eq_true, ite_false, ite_true]
   ring
 
 theorem slotValence_eq_sum {n p : ℕ} (core : Core n p) (v : Fin n) :
@@ -585,10 +585,10 @@ theorem card_incidentSlots {n p : ℕ} (core : Core n p)
     · rintro ⟨x, hx, rfl⟩
       rcases hSide : x.2 with _ | _
       · rw [hSide] at hx
-        simp only [Bool.false_eq_true, if_false] at hx
+        simp only [Bool.false_eq_true, ite_false] at hx
         exact Or.inl hx
       · rw [hSide] at hx
-        simp only [if_true] at hx
+        simp only [ite_true] at hx
         exact Or.inr hx
     · rintro (hTail | hHead)
       · exact ⟨(edge, false), by simpa using hTail, rfl⟩
@@ -601,13 +601,13 @@ theorem card_incidentSlots {n p : ℕ} (core : Core n p)
     rcases hxSide : x.2 with _ | _ <;> rcases hySide : y.2 with _ | _
     · exact Prod.ext hEq (hxSide.trans hySide.symm)
     · rw [hxSide] at hx'; rw [hySide] at hy'
-      simp only [Bool.false_eq_true, if_false] at hx'
-      simp only [if_true] at hy'
+      simp only [Bool.false_eq_true, ite_false] at hx'
+      simp only [ite_true] at hy'
       rw [hEq] at hx'
       exact absurd (hx'.trans hy'.symm) (hLoopless y.1)
     · rw [hxSide] at hx'; rw [hySide] at hy'
-      simp only [if_true] at hx'
-      simp only [Bool.false_eq_true, if_false] at hy'
+      simp only [ite_true] at hx'
+      simp only [Bool.false_eq_true, ite_false] at hy'
       rw [hEq] at hx'
       exact absurd (hy'.trans hx'.symm) (hLoopless y.1)
     · exact Prod.ext hEq (hxSide.trans hySide.symm)
@@ -650,8 +650,8 @@ theorem exists_marker_pair {n p : ℕ} {core : Core n p}
         · rfl
       rw [hCase] at hx
       rw [hy2] at hy
-      simp only [Bool.false_eq_true, if_false] at hx
-      simp only [if_true] at hy
+      simp only [Bool.false_eq_true, ite_false] at hx
+      simp only [ite_true] at hy
       rw [hEq] at hx
       exact hLoopless y.1 (hx.trans hy.symm)
     · have hy2 : y.2 = false := by
@@ -660,8 +660,8 @@ theorem exists_marker_pair {n p : ℕ} {core : Core n p}
         · exact absurd (hCase.trans hCase2.symm) hSide
       rw [hCase] at hx
       rw [hy2] at hy
-      simp only [if_true] at hx
-      simp only [Bool.false_eq_true, if_false] at hy
+      simp only [ite_true] at hx
+      simp only [Bool.false_eq_true, ite_false] at hy
       rw [hEq] at hx
       exact hLoopless y.1 (hy.trans hx.symm)
   refine ⟨x, y, hxMem, hyMem, hSlots, hExhaust, ?_⟩
@@ -780,7 +780,7 @@ theorem sum_explicitCoreMultiplicity {n p : ℕ} (core : Core n p)
   intro edge _hEdge
   by_cases hTail : core.tail edge = v
   · have hHead : core.head edge ≠ v := fun hEq => hLoopless edge (hTail.trans hEq.symm)
-    rw [if_pos hTail, if_neg hHead]
+    rw [ite_eq_left hTail, ite_eq_right hHead]
     have hCond : ∀ w : Fin n,
         (((core.tail edge = v ∧ core.head edge = w) ∨
           (core.tail edge = w ∧ core.head edge = v)) ↔ core.head edge = w) := by
@@ -793,7 +793,7 @@ theorem sum_explicitCoreMultiplicity {n p : ℕ} (core : Core n p)
     rw [Finset.sum_congr rfl (fun w _ => if_congr (hCond w) rfl rfl)]
     simp
   · by_cases hHead : core.head edge = v
-    · rw [if_neg hTail, if_pos hHead]
+    · rw [ite_eq_right hTail, ite_eq_left hHead]
       have hCond : ∀ w : Fin n,
           (((core.tail edge = v ∧ core.head edge = w) ∨
             (core.tail edge = w ∧ core.head edge = v)) ↔ core.tail edge = w) := by
@@ -805,7 +805,7 @@ theorem sum_explicitCoreMultiplicity {n p : ℕ} (core : Core n p)
         · intro h; exact Or.inr ⟨h, hHead⟩
       rw [Finset.sum_congr rfl (fun w _ => if_congr (hCond w) rfl rfl)]
       simp
-    · rw [if_neg hTail, if_neg hHead]
+    · rw [ite_eq_right hTail, ite_eq_right hHead]
       have hCond : ∀ w : Fin n,
           ¬(((core.tail edge = v ∧ core.head edge = w) ∨
             (core.tail edge = w ∧ core.head edge = v))) := by
@@ -813,7 +813,7 @@ theorem sum_explicitCoreMultiplicity {n p : ℕ} (core : Core n p)
         rintro (⟨h, _⟩ | ⟨_, h⟩)
         · exact hTail h
         · exact hHead h
-      rw [Finset.sum_congr rfl (fun w _ => if_neg (hCond w))]
+      rw [Finset.sum_congr rfl (fun w _ => ite_eq_right (hCond w))]
       simp
 
 theorem explicitCoreMultiplicity_reindex {n p n' p' : ℕ} (core : Core n p)
@@ -901,13 +901,13 @@ theorem marker_structure {N P : ℕ} {spec : Spec N P} (hReduced : Reduced spec.
   refine ⟨farEnd spec.core x, ?_, ?_, ?_⟩
   · rcases hSide : x.2 with _ | _
     · rw [hSide] at hx
-      simp only [Bool.false_eq_true, if_false] at hx
-      simp only [farEnd, hSide, Bool.false_eq_true, if_false]
+      simp only [Bool.false_eq_true, ite_false] at hx
+      simp only [farEnd, hSide, Bool.false_eq_true, ite_false]
       rw [← hx]
       exact fun hEq => spec.core_loopless x.1 hEq.symm
     · rw [hSide] at hx
-      simp only [if_true] at hx
-      simp only [farEnd, hSide, if_true]
+      simp only [ite_true] at hx
+      simp only [farEnd, hSide, ite_true]
       rw [← hx]
       exact spec.core_loopless x.1
   · intro edge hEdge
@@ -916,22 +916,22 @@ theorem marker_structure {N P : ℕ} {spec : Spec N P} (hReduced : Reduced spec.
     rcases hExhaust _ hMem with hEq | hEq
     · have h1 : x.1 = edge := congrArg Prod.fst hEq.symm
       have h2 : x.2 = false := congrArg Prod.snd hEq.symm
-      simp only [farEnd, h2, Bool.false_eq_true, if_false, h1]
+      simp only [farEnd, h2, Bool.false_eq_true, ite_false, h1]
     · have h1 : y.1 = edge := congrArg Prod.fst hEq.symm
       have h2 : y.2 = false := congrArg Prod.snd hEq.symm
       rw [hFar]
-      simp only [farEnd, h2, Bool.false_eq_true, if_false, h1]
+      simp only [farEnd, h2, Bool.false_eq_true, ite_false, h1]
   · intro edge hEdge
     have hMem : (edge, true) ∈ slotEnds spec.core v := by
       simpa [mem_slotEnds] using hEdge
     rcases hExhaust _ hMem with hEq | hEq
     · have h1 : x.1 = edge := congrArg Prod.fst hEq.symm
       have h2 : x.2 = true := congrArg Prod.snd hEq.symm
-      simp only [farEnd, h2, if_true, h1]
+      simp only [farEnd, h2, ite_true, h1]
     · have h1 : y.1 = edge := congrArg Prod.fst hEq.symm
       have h2 : y.2 = true := congrArg Prod.snd hEq.symm
       rw [hFar]
-      simp only [farEnd, h2, if_true, h1]
+      simp only [farEnd, h2, ite_true, h1]
 
 section Shape
 
@@ -1331,11 +1331,11 @@ theorem pseudocorePresentation_of_markedShapeAt {N P g : ℕ} (spec : Spec N P)
     intro i j
     rw [explicitCoreMultiplicity_symm]
     by_cases hEq : fmap j = i
-    · rw [if_pos hEq]
+    · rw [ite_eq_left hEq]
       have hPartner : shape.partner (markOf j) = baseOf i := (hFmapIff j i).mp hEq
       rw [← hPartner]
       exact shape.marker_mult (markOf j) (hMarkMarker j)
-    · rw [if_neg hEq]
+    · rw [ite_eq_right hEq]
       refine shape.marker_mult_zero (markOf j) (baseOf i) (hMarkMarker j) ?_
       intro hContra
       exact hEq ((hFmapIff j i).mpr hContra.symm)

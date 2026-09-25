@@ -112,10 +112,10 @@ theorem cutMultiplicity_preimageFinset (c : GraphContractionCertificate G H)
     intro a b
     by_cases hMem : a ∈ S ∧ b ∉ S
     · have hab : a ≠ b := fun h => hMem.2 (h ▸ hMem.1)
-      rw [if_pos hMem, hEdge a b hab]
+      rw [ite_eq_left hMem, hEdge a b hab]
       refine Finset.sum_congr rfl fun q _ => ?_
       by_cases hq : c.vertexMap q.1 = a ∧ c.vertexMap q.2 = b <;> simp [hq, hMem]
-    · rw [if_neg hMem]
+    · rw [ite_eq_right hMem]
       symm
       refine Finset.sum_eq_zero fun q _ => ?_
       by_cases hq : c.vertexMap q.1 = a ∧ c.vertexMap q.2 = b <;> simp [hq, hMem]
@@ -346,11 +346,11 @@ theorem cutMultiplicity_eq_card_crossingSteps (A : Finset spec.Vertex) :
                   spec.unitEdge step = (w, v) then (1 : ℤ) else 0) else 0) := by
           refine Finset.sum_congr rfl fun v _ => Finset.sum_congr rfl fun w _ => ?_
           by_cases hMem : v ∈ A ∧ w ∉ A
-          · rw [if_pos hMem, hnum v w]
-            exact Finset.sum_congr rfl fun step _ => by rw [if_pos hMem]
-          · rw [if_neg hMem]
+          · rw [ite_eq_left hMem, hnum v w]
+            exact Finset.sum_congr rfl fun step _ => by rw [ite_eq_left hMem]
+          · rw [ite_eq_right hMem]
             symm
-            exact Finset.sum_eq_zero fun step _ => by rw [if_neg hMem]
+            exact Finset.sum_eq_zero fun step _ => by rw [ite_eq_right hMem]
     _ = ∑ v : spec.Vertex, ∑ step : spec.Step, ∑ w : spec.Vertex,
             (if v ∈ A ∧ w ∉ A then
               (if spec.unitEdge step = (v, w) ∨
@@ -465,7 +465,7 @@ private theorem pathVertex_interiorPosition (edge : Fin p)
       spec.interiorVertex edge offset := by
   have hIsLt := offset.isLt
   unfold pathVertex interiorPosition
-  rw [dif_neg (by simp), dif_neg (by simp; omega)]
+  rw [dite_eq_right (by simp), dite_eq_right (by simp; omega)]
   congr 1
 
 /-- **Positive subdivisions of two-edge connected cores are bridgeless.**

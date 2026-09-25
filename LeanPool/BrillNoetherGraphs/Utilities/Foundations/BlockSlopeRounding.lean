@@ -58,9 +58,9 @@ private theorem sum_range_indicator_le (a : ℕ) :
       subst ha
       rw [Finset.sum_eq_zero (fun t ht => by
         rw [Finset.mem_range] at ht
-        exact if_neg (by omega))]
+        exact ite_eq_right (by omega))]
       simp
-    · rw [Finset.sum_range_succ, ih (by omega), if_pos hge]
+    · rw [Finset.sum_range_succ, ih (by omega), ite_eq_left hge]
       push_cast
       ring
 
@@ -83,10 +83,10 @@ private theorem sum_range_indicator_lt (a : ℕ) :
       have hall : ∀ t ∈ Finset.range (n + 1), (if t < n + 1 then (1 : ℤ) else 0) = 1 := by
         intro t ht
         rw [Finset.mem_range] at ht
-        exact if_pos ht
+        exact ite_eq_left ht
       rw [Finset.sum_congr rfl hall, Finset.sum_const, Finset.card_range]
       simp
-    · rw [Finset.sum_range_succ, ih (by omega), if_neg (by omega)]
+    · rw [Finset.sum_range_succ, ih (by omega), ite_eq_right (by omega)]
       ring
 
 /-! ### Splitting a chip count off a threshold -/
@@ -237,13 +237,13 @@ theorem block_lower (N : ℕ) (hN : 0 < N) (s : ℕ → ℤ) (chips : Finset ι)
   have hA : (∑ i ∈ chips.filter (fun i => side i = true),
       (if side i then ((N : ℤ) - (off i : ℤ)) else -(off i : ℤ)))
       = ∑ i ∈ chips.filter (fun i => side i = true), ((N : ℤ) - (off i : ℤ)) :=
-    Finset.sum_congr rfl (fun i hi => if_pos (Finset.mem_filter.mp hi).2)
+    Finset.sum_congr rfl (fun i hi => ite_eq_left (Finset.mem_filter.mp hi).2)
   have hB : (∑ i ∈ chips.filter (fun i => side i = false),
       (if side i then ((N : ℤ) - (off i : ℤ)) else -(off i : ℤ)))
       = ∑ i ∈ chips.filter (fun i => side i = false), (-(off i : ℤ)) :=
     Finset.sum_congr rfl (fun i hi => by
       have h2 := (Finset.mem_filter.mp hi).2
-      exact if_neg (by simp [h2]))
+      exact ite_eq_right (by simp [h2]))
   have hneg : (∑ i ∈ chips.filter (fun i => side i = false), (-(off i : ℤ)))
       = -(∑ i ∈ chips.filter (fun i => side i = false), (off i : ℤ)) :=
     Finset.sum_neg_distrib _
@@ -287,13 +287,13 @@ theorem block_upper (N : ℕ) (hN : 0 < N) (s : ℕ → ℤ) (chips : Finset ι)
   have hA : (∑ i ∈ chips.filter (fun i => side i = true),
       (if side i then ((N : ℤ) - (off i : ℤ)) else -(off i : ℤ)))
       = ∑ i ∈ chips.filter (fun i => side i = true), ((N : ℤ) - (off i : ℤ)) :=
-    Finset.sum_congr rfl (fun i hi => if_pos (Finset.mem_filter.mp hi).2)
+    Finset.sum_congr rfl (fun i hi => ite_eq_left (Finset.mem_filter.mp hi).2)
   have hB : (∑ i ∈ chips.filter (fun i => side i = false),
       (if side i then ((N : ℤ) - (off i : ℤ)) else -(off i : ℤ)))
       = ∑ i ∈ chips.filter (fun i => side i = false), (-(off i : ℤ)) :=
     Finset.sum_congr rfl (fun i hi => by
       have h2 := (Finset.mem_filter.mp hi).2
-      exact if_neg (by simp [h2]))
+      exact ite_eq_right (by simp [h2]))
   have hneg : (∑ i ∈ chips.filter (fun i => side i = false), (-(off i : ℤ)))
       = -(∑ i ∈ chips.filter (fun i => side i = false), (off i : ℤ)) :=
     Finset.sum_neg_distrib _
@@ -323,8 +323,8 @@ theorem abs_delta_le (N : ℕ) (chips : Finset ι) (off : ι → ℕ) (side : ι
   obtain ⟨_, hlt⟩ := hoff i hi
   have hle : (off i : ℤ) ≤ (N : ℤ) := by exact_mod_cast le_of_lt hlt
   by_cases hs : side i = true
-  · rw [if_pos hs, if_pos hs, Nat.cast_sub (le_of_lt hlt),
+  · rw [ite_eq_left hs, ite_eq_left hs, Nat.cast_sub (le_of_lt hlt),
       abs_of_nonneg (by linarith)]
-  · rw [if_neg hs, if_neg hs, abs_neg, Nat.abs_cast]
+  · rw [ite_eq_right hs, ite_eq_right hs, abs_neg, Nat.abs_cast]
 
 end Utilities.BlockSlopeRounding

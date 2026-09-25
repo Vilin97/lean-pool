@@ -136,13 +136,13 @@ theorem sectionFive_tau_reflection_of_twisted_automorphism_proved
   constructor
   · intro h
     by_contra hNot
-    rw [if_pos h, hRank] at hShiftValue
-    rw [if_neg hNot] at hTauValue
+    rw [ite_eq_left h, hRank] at hShiftValue
+    rw [ite_eq_right hNot] at hTauValue
     omega
   · intro h
     by_contra hNot
-    rw [if_pos h] at hTauValue
-    rw [if_neg hNot, hRank] at hShiftValue
+    rw [ite_eq_left h] at hTauValue
+    rw [ite_eq_right hNot, hRank] at hShiftValue
     omega
 
 end Bananas

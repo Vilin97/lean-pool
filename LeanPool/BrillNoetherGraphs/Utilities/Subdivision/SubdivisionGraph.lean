@@ -120,7 +120,7 @@ def unitEdge (step : spec.Step) : spec.Vertex × spec.Vertex :=
       spec.coreVertex (spec.core.head edge) := by
   have hpos := spec.length_pos edge
   have hlast : spec.length edge - 1 + 1 = spec.length edge := by omega
-  rw [stepRight, dif_pos hlast]
+  rw [stepRight, dite_eq_left hlast]
 
 @[simp] theorem stepRight_before_last
     (edge : Fin p) (offset : Fin (spec.length edge - 1)) :
@@ -128,7 +128,7 @@ def unitEdge (step : spec.Step) : spec.Vertex × spec.Vertex :=
         ⟨offset.val, by have := offset.isLt; omega⟩ =
       spec.interiorVertex edge offset := by
   simp only [stepRight]
-  rw [dif_neg (by have := offset.isLt; omega)]
+  rw [dite_eq_right (by have := offset.isLt; omega)]
 
 @[simp] theorem stepLeft_after_zero
     (edge : Fin p) (offset : Fin (spec.length edge - 1)) :
@@ -136,7 +136,7 @@ def unitEdge (step : spec.Step) : spec.Vertex × spec.Vertex :=
         ⟨offset.val + 1, by have := offset.isLt; omega⟩ =
       spec.interiorVertex edge offset := by
   simp only [stepLeft]
-  rw [dif_neg (by omega)]
+  rw [dite_eq_right (by omega)]
   congr 3
 
 /-- Consecutive path positions are always distinct.  In the length-one case
@@ -245,7 +245,7 @@ theorem num_edges_eq_sum_steps (x y : spec.Vertex) :
             spec.unitEdge step = (y, x) then 1 else 0 := by
   rw [spec.num_edges_eq_card_filter_steps]
   simpa only [Finset.sum_filter, Finset.sum_const_zero, Finset.sum_ite_irrel,
-    Finset.mem_univ, if_true] using
+    Finset.mem_univ, ite_true] using
     (Finset.card_filter
       (fun step : spec.Step =>
         spec.unitEdge step = (x, y) ∨ spec.unitEdge step = (y, x))
@@ -340,9 +340,9 @@ theorem stepRight_eq_interiorVertex_iff (step : spec.Step)
   · intro hEqual
     unfold stepRight at hEqual
     by_cases hlast : otherOffset.val + 1 = spec.length otherEdge
-    · rw [dif_pos hlast] at hEqual
+    · rw [dite_eq_left hlast] at hEqual
       simp [coreVertex, interiorVertex] at hEqual
-    · rw [dif_neg hlast] at hEqual
+    · rw [dite_eq_right hlast] at hEqual
       have hSigma :
           (⟨otherEdge, ⟨otherOffset.val, by
             have := otherOffset.isLt
@@ -369,9 +369,9 @@ theorem stepLeft_eq_interiorVertex_iff (step : spec.Step)
   · intro hEqual
     unfold stepLeft at hEqual
     by_cases hzero : otherOffset.val = 0
-    · rw [dif_pos hzero] at hEqual
+    · rw [dite_eq_left hzero] at hEqual
       simp [coreVertex, interiorVertex] at hEqual
-    · rw [dif_neg hzero] at hEqual
+    · rw [dite_eq_right hzero] at hEqual
       have hSigma :
           (⟨otherEdge, ⟨otherOffset.val - 1, by
             have := otherOffset.isLt
@@ -505,13 +505,13 @@ theorem interpolatedScript_stepLeft (potential : Fin n → ℤ)
       spec.pathValue potential edge offset.val := by
   unfold stepLeft
   by_cases hzero : offset.val = 0
-  · rw [dif_pos hzero]
+  · rw [dite_eq_left hzero]
     change potential (spec.core.tail edge) =
       spec.pathValue potential edge offset.val
     rw [hzero]
     simp [pathValue, SubdivisionArithmetic.potential_zero,
       spec.length_pos edge]
-  · rw [dif_neg hzero]
+  · rw [dite_eq_right hzero]
     change spec.pathValue potential edge ((offset.val - 1) + 1) =
       spec.pathValue potential edge offset.val
     congr 2
@@ -525,7 +525,7 @@ theorem interpolatedScript_stepRight (potential : Fin n → ℤ)
       spec.pathValue potential edge (offset.val + 1) := by
   unfold stepRight
   by_cases hlast : offset.val + 1 = spec.length edge
-  · rw [dif_pos hlast]
+  · rw [dite_eq_left hlast]
     change potential (spec.core.head edge) =
       spec.pathValue potential edge (offset.val + 1)
     unfold pathValue
@@ -533,7 +533,7 @@ theorem interpolatedScript_stepRight (potential : Fin n → ℤ)
       (spec.coreRise potential edge) (spec.length_pos edge)]
     unfold coreRise
     ring
-  · rw [dif_neg hlast]
+  · rw [dite_eq_right hlast]
     rfl
 
 /-- The script difference across a unit edge is exactly the arithmetic

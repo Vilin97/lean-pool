@@ -568,7 +568,7 @@ theorem prin_wedgeScript
       by_cases hax : a = x
       · subst a
         rw [hxy]
-        simp only [if_pos]
+        simp only [ite_eq_left]
         have hMarked :
             (τ y - τ y) * (numEdges H y y : ℤ) = 0 := by simp
         have hRight := sum_unmarked_eq_sum_of_marked_zero H y
@@ -952,11 +952,11 @@ theorem winnable_vertexWedge_iff_exists_chipShift
         have h := hFEffective (Sum.inl x)
         rw [hF, wedgeAddDivisor_left] at h
         rw [chipShift_apply]
-        simp only [if_pos]
+        simp only [ite_eq_left]
         change 0 ≤ EH y + -t
         dsimp [t]
         simp only [neg_neg]
-        simp only [if_pos] at h
+        simp only [ite_eq_left] at h
         linarith
       · have h := hFEffective (Sum.inr ⟨b, hby⟩)
         rw [hF, wedgeAddDivisor_right] at h

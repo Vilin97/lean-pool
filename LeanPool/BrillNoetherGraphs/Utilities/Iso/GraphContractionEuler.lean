@@ -155,7 +155,7 @@ private theorem sum_by_vertexMap_pair (c : GraphContractionCertificate G H)
       apply Finset.sum_congr rfl
       intro x _
       by_cases hxa : c.vertexMap x = a
-      · simp only [hxa, if_true]
+      · simp only [hxa, ite_true]
         exact c.sum_by_vertexMap (fun y => f x y)
       · simp [hxa]
     _ = ∑ a : H.V, ∑ b : H.V, ∑ x : G.V, ∑ y : G.V,

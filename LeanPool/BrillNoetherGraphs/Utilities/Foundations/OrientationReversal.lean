@@ -135,7 +135,7 @@ lemma indeg_eq_sum_flow (O : CFOrientation G) (v : G.V) :
       e ∈ (Finset.univ : Finset (G.V × G.V)) := fun e _ => Finset.mem_univ e
   rw [indeg, ← Multiset.sum_count_eq_card hmem, ← Finset.univ_product_univ, Finset.sum_product]
   refine Finset.sum_congr rfl fun u _ => ?_
-  simp only [Multiset.count_filter, flow, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Multiset.count_filter, flow, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 /-- A directed edge is exactly a pair carrying positive flow. -/
 lemma directed_edge_iff_flow_pos (O : CFOrientation G) (u v : G.V) :
@@ -291,9 +291,9 @@ cycle has at least three vertices. -/
 private lemma fin_succ_succ_zero_ne {n : ℕ} (hn : 1 ≤ n) :
     ((0 : Fin (n + 2)) + 1 + 1) ≠ (0 : Fin (n + 2)) := by
   have h1 : (((0 : Fin (n + 2)) + 1 : Fin (n + 2)) : ℕ) = 1 := by
-    rw [fin_val_succ, Fin.val_zero, if_neg (by omega)]
+    rw [fin_val_succ, Fin.val_zero, ite_eq_right (by omega)]
   have h2 : (((0 : Fin (n + 2)) + 1 + 1 : Fin (n + 2)) : ℕ) = 2 := by
-    rw [fin_val_succ, h1, if_neg (by omega)]
+    rw [fin_val_succ, h1, ite_eq_right (by omega)]
   intro h
   rw [h, Fin.val_zero] at h2
   omega
@@ -303,9 +303,9 @@ two vertices. -/
 private lemma fin_succ_succ_zero_eq {n : ℕ} (hn : n = 0) :
     ((0 : Fin (n + 2)) + 1 + 1) = (0 : Fin (n + 2)) := by
   have h1 : (((0 : Fin (n + 2)) + 1 : Fin (n + 2)) : ℕ) = 1 := by
-    rw [fin_val_succ, Fin.val_zero, if_neg (by omega)]
+    rw [fin_val_succ, Fin.val_zero, ite_eq_right (by omega)]
   refine Fin.ext ?_
-  rw [fin_val_succ, h1, if_pos (by omega), Fin.val_zero]
+  rw [fin_val_succ, h1, ite_eq_left (by omega), Fin.val_zero]
 
 namespace DirectedCycle
 
@@ -565,7 +565,7 @@ def reversed {O : CFOrientation G} (C : DirectedCycle O) :
     have hneg : (-(j + 1) : Fin (C.len + 2)) = -j - 1 := by abel
     rw [hneg]
     refine (directed_edge_iff_flow_pos _ _ _).mpr ?_
-    rw [reverseCycle, flow_reverseOn, if_pos hstep]
+    rw [reverseCycle, flow_reverseOn, ite_eq_left hstep]
     omega
 
 end DirectedCycle
@@ -581,14 +581,14 @@ lemma indeg_reverseCycle_vert (O : CFOrientation G) (C : DirectedCycle O)
       = (flow O (C.vert (j - 1)) (C.vert j) : ℤ) := by
     refine (Finset.sum_eq_single (C.vert (j - 1)) (fun b _ hb => ?_)
       (fun hb => absurd (Finset.mem_univ _) hb)).trans ?_
-    · exact if_neg fun hc => hb ((C.pred_into b j).mp hc)
-    · exact if_pos ((C.pred_into _ j).mpr rfl)
+    · exact ite_eq_right fun hc => hb ((C.pred_into b j).mp hc)
+    · exact ite_eq_left ((C.pred_into _ j).mpr rfl)
   have hout : ∑ w : G.V, (if C.pred (C.vert j) w then (flow O (C.vert j) w : ℤ) else 0)
       = (flow O (C.vert j) (C.vert (j + 1)) : ℤ) := by
     refine (Finset.sum_eq_single (C.vert (j + 1)) (fun b _ hb => ?_)
       (fun hb => absurd (Finset.mem_univ _) hb)).trans ?_
-    · exact if_neg fun hc => hb ((C.pred_outOf b j).mp hc)
-    · exact if_pos ((C.pred_outOf _ j).mpr rfl)
+    · exact ite_eq_right fun hc => hb ((C.pred_outOf b j).mp hc)
+    · exact ite_eq_left ((C.pred_outOf _ j).mpr rfl)
   rw [reverseCycle, indeg_reverseOn, hin, hout]
 
 /-- The `indeg` bookkeeping at a vertex *off* the cycle: nothing changes. -/
@@ -596,8 +596,8 @@ lemma indeg_reverseCycle_of_notMem (O : CFOrientation G) (C : DirectedCycle O) {
     (hv : ∀ i, v ≠ C.vert i) : indeg G (reverseCycle O C) v = indeg G O v := by
   have h : (indeg G (reverseCycle O C) v : ℤ) = (indeg G O v : ℤ) := by
     rw [reverseCycle, indeg_reverseOn,
-      Finset.sum_eq_zero fun w _ => if_neg (C.not_pred_of_notMem hv w).1,
-      Finset.sum_eq_zero fun w _ => if_neg (C.not_pred_of_notMem hv w).2]
+      Finset.sum_eq_zero fun w _ => ite_eq_right (C.not_pred_of_notMem hv w).1,
+      Finset.sum_eq_zero fun w _ => ite_eq_right (C.not_pred_of_notMem hv w).2]
     ring
   exact_mod_cast h
 
@@ -658,8 +658,8 @@ lemma reverseCycle_ne (O : CFOrientation G) (C : DirectedCycle O) (hlen : 1 ≤ 
   have hpos : 0 < flow O (C.vert 0) (C.vert (0 + 1)) :=
     (directed_edge_iff_flow_pos O _ _).mp (C.edge 0)
   have hzero : flow (reverseCycle O C) (C.vert 0) (C.vert (0 + 1)) = 0 := by
-    rw [reverseCycle, flow_reverseOn, if_pos ⟨0, rfl, rfl⟩,
-      if_neg (C.not_pred_succ_zero hlen), add_zero]
+    rw [reverseCycle, flow_reverseOn, ite_eq_left ⟨0, rfl, rfl⟩,
+      ite_eq_right (C.not_pred_succ_zero hlen), add_zero]
   rw [heq] at hzero
   omega
 
@@ -688,15 +688,15 @@ lemma reverseCycleOneFlow_count_preserving (O : CFOrientation G) (C : DirectedCy
   by_cases h₁ : C.pred u v <;> by_cases h₂ : C.pred v u
   · have hp := C.flow_pos_of_pred h₁
     have hq := C.flow_pos_of_pred h₂
-    simp only [reverseCycleOneFlow, if_pos h₁, if_pos h₂]
+    simp only [reverseCycleOneFlow, ite_eq_left h₁, ite_eq_left h₂]
     omega
   · have hp := C.flow_pos_of_pred h₁
-    simp only [reverseCycleOneFlow, if_pos h₁, if_neg h₂]
+    simp only [reverseCycleOneFlow, ite_eq_left h₁, ite_eq_right h₂]
     omega
   · have hq := C.flow_pos_of_pred h₂
-    simp only [reverseCycleOneFlow, if_pos h₂, if_neg h₁]
+    simp only [reverseCycleOneFlow, ite_eq_left h₂, ite_eq_right h₁]
     omega
-  · simp only [reverseCycleOneFlow, if_neg h₁, if_neg h₂]
+  · simp only [reverseCycleOneFlow, ite_eq_right h₁, ite_eq_right h₂]
     omega
 
 /-- **Fine cycle reversal.** Turn one edge of each parallel class traversed by `C`. -/
@@ -724,7 +724,7 @@ def reversedOne {O : CFOrientation G} (C : DirectedCycle O) :
     have hneg : (-(j + 1) : Fin (C.len + 2)) = -j - 1 := by abel
     rw [hneg]
     refine (directed_edge_iff_flow_pos _ _ _).mpr ?_
-    rw [flow_reverseCycleOne, if_pos hstep]
+    rw [flow_reverseCycleOne, ite_eq_left hstep]
     split_ifs with hback
     · have := C.flow_pos_of_pred hback
       omega
@@ -752,16 +752,16 @@ lemma indeg_reverseCycleOne (O : CFOrientation G) (C : DirectedCycle O) (v : G.V
     · obtain ⟨j, rfl⟩ := hv
       have hin : (∑ w : G.V, (if C.pred w (C.vert j) then (1 : ℤ) else 0)) = 1 :=
         (Finset.sum_eq_single (C.vert (j - 1))
-          (fun b _ hb => if_neg fun hc => hb ((C.pred_into b j).mp hc))
-          (fun hb => absurd (Finset.mem_univ _) hb)).trans (if_pos ((C.pred_into _ j).mpr rfl))
+          (fun b _ hb => ite_eq_right fun hc => hb ((C.pred_into b j).mp hc))
+          (fun hb => absurd (Finset.mem_univ _) hb)).trans (ite_eq_left ((C.pred_into _ j).mpr rfl))
       have hout : (∑ w : G.V, (if C.pred (C.vert j) w then (1 : ℤ) else 0)) = 1 :=
         (Finset.sum_eq_single (C.vert (j + 1))
-          (fun b _ hb => if_neg fun hc => hb ((C.pred_outOf b j).mp hc))
-          (fun hb => absurd (Finset.mem_univ _) hb)).trans (if_pos ((C.pred_outOf _ j).mpr rfl))
+          (fun b _ hb => ite_eq_right fun hc => hb ((C.pred_outOf b j).mp hc))
+          (fun hb => absurd (Finset.mem_univ _) hb)).trans (ite_eq_left ((C.pred_outOf _ j).mpr rfl))
       rw [hin, hout]
     · simp only [not_exists] at hv
-      rw [Finset.sum_eq_zero fun w _ => if_neg (C.not_pred_of_notMem hv w).1,
-        Finset.sum_eq_zero fun w _ => if_neg (C.not_pred_of_notMem hv w).2]
+      rw [Finset.sum_eq_zero fun w _ => ite_eq_right (C.not_pred_of_notMem hv w).1,
+        Finset.sum_eq_zero fun w _ => ite_eq_right (C.not_pred_of_notMem hv w).2]
   have h : (indeg G (reverseCycleOne O C) v : ℤ) = (indeg G O v : ℤ) := by
     rw [indeg_eq_sum_flow (reverseCycleOne O C) v, indeg_eq_sum_flow O v]
     push_cast
@@ -788,7 +788,7 @@ lemma reverseCycleOne_ne (O : CFOrientation G) (C : DirectedCycle O) (hlen : 1 �
   have hstep : C.pred (C.vert 0) (C.vert (0 + 1)) := ⟨0, rfl, rfl⟩
   have hlt : flow (reverseCycleOne O C) (C.vert 0) (C.vert (0 + 1))
       < flow O (C.vert 0) (C.vert (0 + 1)) := by
-    rw [flow_reverseCycleOne, if_pos hstep, if_neg (C.not_pred_succ_zero hlen)]
+    rw [flow_reverseCycleOne, ite_eq_left hstep, ite_eq_right (C.not_pred_succ_zero hlen)]
     omega
   rw [heq] at hlt
   omega
@@ -894,20 +894,20 @@ def reverseCut (O : CFOrientation G) (W : Finset G.V) : CFOrientation G :=
 /-- After the reversal no edge leaves `W`. -/
 lemma flow_reverseCut_out (O : CFOrientation G) (W : Finset G.V) {u v : G.V}
     (hu : u ∈ W) (hv : v ∉ W) : flow (reverseCut O W) u v = 0 := by
-  rw [reverseCut, flow_reverseOn, if_pos ⟨hu, hv⟩, if_neg fun hh => hv hh.1, add_zero]
+  rw [reverseCut, flow_reverseOn, ite_eq_left ⟨hu, hv⟩, ite_eq_right fun hh => hv hh.1, add_zero]
 
 /-- The edges that used to leave `W` now enter it. -/
 lemma flow_reverseCut_in (O : CFOrientation G) (W : Finset G.V) (hcut : IsDirectedCut O W)
     {u v : G.V} (hu : u ∉ W) (hv : v ∈ W) :
     flow (reverseCut O W) u v = flow O v u := by
-  rw [reverseCut, flow_reverseOn, if_neg fun hh => hu hh.1, if_pos ⟨hv, hu⟩,
+  rw [reverseCut, flow_reverseOn, ite_eq_right fun hh => hu hh.1, ite_eq_left ⟨hv, hu⟩,
     hcut u v hu hv, zero_add]
 
 /-- Edges with both ends on the same side of the cut are untouched. -/
 lemma flow_reverseCut_same (O : CFOrientation G) (W : Finset G.V) {u v : G.V}
     (h : u ∈ W ↔ v ∈ W) : flow (reverseCut O W) u v = flow O u v := by
-  rw [reverseCut, flow_reverseOn, if_neg fun hh => hh.2 (h.mp hh.1),
-    if_neg fun hh => hh.2 (h.mpr hh.1), add_zero]
+  rw [reverseCut, flow_reverseOn, ite_eq_right fun hh => hh.2 (h.mp hh.1),
+    ite_eq_right fun hh => hh.2 (h.mpr hh.1), add_zero]
 
 /-- After reversing the directed cut at `W`, the complement of `W` is a directed cut. -/
 lemma isDirectedCut_reverseCut (O : CFOrientation G) (W : Finset G.V) :
@@ -1236,23 +1236,23 @@ private lemma reversalEquiv_of_indeg_eq_aux (n : ℕ) : ∀ O₁ O₂ : CFOrient
       by_cases h₁ : D.pred u v
       · have hp := hpredR u v h₁
         simp only [hR] at hp
-        rw [if_pos h₁, if_neg (hnotboth u v h₁)] at h
+        rw [ite_eq_left h₁, ite_eq_right (hnotboth u v h₁)] at h
         omega
       · by_cases h₂ : D.pred v u
         · have hp := hpredR v u h₂
           have e₁ := flow_add_flow_rev O₁ u v
           have e₂ := flow_add_flow_rev O₂ u v
           simp only [hR] at hp
-          rw [if_neg h₁, if_pos h₂] at h
+          rw [ite_eq_right h₁, ite_eq_left h₂] at h
           omega
-        · rw [if_neg h₁, if_neg h₂] at h
+        · rw [ite_eq_right h₁, ite_eq_right h₂] at h
           omega
     have hstrict : (diffFlow (reverseCycleOne O₁ D) O₂ (D.vert 0) (D.vert (0 + 1))).toNat
         < (diffFlow O₁ O₂ (D.vert 0) (D.vert (0 + 1))).toNat := by
       have h₁ : D.pred (D.vert 0) (D.vert (0 + 1)) := ⟨0, rfl, rfl⟩
       have hp := hpredR _ _ h₁
       have h := hflow (D.vert 0) (D.vert (0 + 1))
-      rw [if_pos h₁, if_neg (hnotboth _ _ h₁)] at h
+      rw [ite_eq_left h₁, ite_eq_right (hnotboth _ _ h₁)] at h
       simp only [hR] at hp
       simp only [diffFlow]
       omega
@@ -1399,25 +1399,25 @@ private lemma indeg_reverseCut_compl (O : CFOrientation G) (W : Finset G.V)
     have hsum' := flow_add_flow_rev O w v
     have hsym := num_edges_symmetric G v w
     by_cases hvW : v ∈ W <;> by_cases hwW : w ∈ W
-    · rw [if_pos hwW, if_pos hvW,
-        if_neg (fun hc => (Finset.mem_compl.mp hc.1) hwW),
-        if_neg (fun hc => (Finset.mem_compl.mp hc.1) hvW)]
+    · rw [ite_eq_left hwW, ite_eq_left hvW,
+        ite_eq_right (fun hc => (Finset.mem_compl.mp hc.1) hwW),
+        ite_eq_right (fun hc => (Finset.mem_compl.mp hc.1) hvW)]
       ring
-    · rw [if_neg hwW, if_pos hvW,
-        if_pos ⟨Finset.mem_compl.mpr hwW, by simp only [Finset.mem_compl, not_not]; exact hvW⟩,
-        if_neg (fun hc => (Finset.mem_compl.mp hc.1) hvW)]
+    · rw [ite_eq_right hwW, ite_eq_left hvW,
+        ite_eq_left ⟨Finset.mem_compl.mpr hwW, by simp only [Finset.mem_compl, not_not]; exact hvW⟩,
+        ite_eq_right (fun hc => (Finset.mem_compl.mp hc.1) hvW)]
       have := hout hvW w hwW
       push_cast
       omega
-    · rw [if_pos hwW, if_neg hvW,
-        if_neg (fun hc => (Finset.mem_compl.mp hc.1) hwW),
-        if_pos ⟨Finset.mem_compl.mpr hvW, by simp only [Finset.mem_compl, not_not]; exact hwW⟩]
+    · rw [ite_eq_left hwW, ite_eq_right hvW,
+        ite_eq_right (fun hc => (Finset.mem_compl.mp hc.1) hwW),
+        ite_eq_left ⟨Finset.mem_compl.mpr hvW, by simp only [Finset.mem_compl, not_not]; exact hwW⟩]
       have := hin hvW w hwW
       push_cast
       omega
-    · rw [if_neg hwW, if_neg hvW,
-        if_neg (fun hc => hc.2 (Finset.mem_compl.mpr hvW)),
-        if_neg (fun hc => hc.2 (Finset.mem_compl.mpr hwW))]
+    · rw [ite_eq_right hwW, ite_eq_right hvW,
+        ite_eq_right (fun hc => hc.2 (Finset.mem_compl.mpr hvW)),
+        ite_eq_right (fun hc => hc.2 (Finset.mem_compl.mpr hwW))]
       ring
   rw [reverseCut, indeg_reverseOn,
     Finset.sum_congr rfl fun u (_ : u ∈ Finset.univ) => hterm u,
@@ -1494,15 +1494,15 @@ private lemma reversalEquiv_of_potential (n : ℕ) :
         push_cast at hsv ⊢
         by_cases hvW : v ∈ W
         · by_cases hwW : w ∈ W
-          · rw [if_pos hvW, if_pos hwW, hb1 v hvW, hb1 w hwW]
+          · rw [ite_eq_left hvW, ite_eq_left hwW, hb1 v hvW, hb1 w hwW]
             omega
-          · rw [if_pos hvW, if_neg hwW, hb1 v hvW]
+          · rw [ite_eq_left hvW, ite_eq_right hwW, hb1 v hvW]
             have := hb2 w hwW
             omega
         · by_cases hwW : w ∈ W
-          · rw [if_neg hvW, if_pos hwW, hb1 w hwW]
+          · rw [ite_eq_right hvW, ite_eq_left hwW, hb1 w hwW]
             omega
-          · rw [if_neg hvW, if_neg hwW]
+          · rw [ite_eq_right hvW, ite_eq_right hwW]
             have := hb2 w hwW
             omega
 

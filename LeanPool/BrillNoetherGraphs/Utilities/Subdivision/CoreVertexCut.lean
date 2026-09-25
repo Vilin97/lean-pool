@@ -136,16 +136,16 @@ theorem stepLeft_eq_glue_of_mem_not_mem (h : c.Valid)
     spec.stepLeft edge offset = spec.coreVertex c.glue := by
   by_cases hzero : offset.val = 0
   · have hTailLeft : spec.core.tail edge ∈ c.left := by
-      rw [SubdivisionGraph.Spec.stepLeft, dif_pos hzero] at hLeft
+      rw [SubdivisionGraph.Spec.stepLeft, dite_eq_left hzero] at hLeft
       exact (c.mem_leftVertices_core spec _).mp hLeft
     have hHeadNotLeft : spec.core.head edge ∉ c.left := by
       unfold SubdivisionGraph.Spec.stepRight at hRight
       by_cases hlast : offset.val + 1 = spec.length edge
-      · rw [dif_pos hlast] at hRight
+      · rw [dite_eq_left hlast] at hRight
         intro hHead
         apply hRight
         exact (c.mem_leftVertices_core spec _).mpr hHead
-      · rw [dif_neg hlast] at hRight
+      · rw [dite_eq_right hlast] at hRight
         intro hHead
         apply hRight
         exact (c.mem_leftVertices_interior spec _ _).mpr
@@ -154,19 +154,19 @@ theorem stepLeft_eq_glue_of_mem_not_mem (h : c.Valid)
       by_contra hTailNe
       exact (h.2 edge) (Or.inl
         ⟨hTailLeft, hTailNe, hHeadNotLeft⟩)
-    rw [SubdivisionGraph.Spec.stepLeft, dif_pos hzero]
+    rw [SubdivisionGraph.Spec.stepLeft, dite_eq_left hzero]
     simp [hTailGlue]
   · have hInteriorLeft :
         spec.core.tail edge ∈ c.left ∧ spec.core.head edge ∈ c.left := by
       unfold SubdivisionGraph.Spec.stepLeft at hLeft
-      rw [dif_neg hzero] at hLeft
+      rw [dite_eq_right hzero] at hLeft
       exact (c.mem_leftVertices_interior spec _ _).mp hLeft
     unfold SubdivisionGraph.Spec.stepRight at hRight
     by_cases hlast : offset.val + 1 = spec.length edge
-    · rw [dif_pos hlast] at hRight
+    · rw [dite_eq_left hlast] at hRight
       exact False.elim (hRight
         ((c.mem_leftVertices_core spec _).mpr hInteriorLeft.2))
-    · rw [dif_neg hlast] at hRight
+    · rw [dite_eq_right hlast] at hRight
       exact False.elim (hRight
         ((c.mem_leftVertices_interior spec _ _).mpr hInteriorLeft))
 
@@ -179,16 +179,16 @@ theorem stepRight_eq_glue_of_mem_not_mem (h : c.Valid)
     spec.stepRight edge offset = spec.coreVertex c.glue := by
   by_cases hlast : offset.val + 1 = spec.length edge
   · have hHeadLeft : spec.core.head edge ∈ c.left := by
-      rw [SubdivisionGraph.Spec.stepRight, dif_pos hlast] at hRight
+      rw [SubdivisionGraph.Spec.stepRight, dite_eq_left hlast] at hRight
       exact (c.mem_leftVertices_core spec _).mp hRight
     have hTailNotLeft : spec.core.tail edge ∉ c.left := by
       unfold SubdivisionGraph.Spec.stepLeft at hLeft
       by_cases hzero : offset.val = 0
-      · rw [dif_pos hzero] at hLeft
+      · rw [dite_eq_left hzero] at hLeft
         intro hTail
         apply hLeft
         exact (c.mem_leftVertices_core spec _).mpr hTail
-      · rw [dif_neg hzero] at hLeft
+      · rw [dite_eq_right hzero] at hLeft
         intro hTail
         apply hLeft
         exact (c.mem_leftVertices_interior spec _ _).mpr
@@ -197,19 +197,19 @@ theorem stepRight_eq_glue_of_mem_not_mem (h : c.Valid)
       by_contra hHeadNe
       exact (h.2 edge) (Or.inr
         ⟨hHeadLeft, hHeadNe, hTailNotLeft⟩)
-    rw [SubdivisionGraph.Spec.stepRight, dif_pos hlast]
+    rw [SubdivisionGraph.Spec.stepRight, dite_eq_left hlast]
     simp [hHeadGlue]
   · have hInteriorLeft :
         spec.core.tail edge ∈ c.left ∧ spec.core.head edge ∈ c.left := by
       unfold SubdivisionGraph.Spec.stepRight at hRight
-      rw [dif_neg hlast] at hRight
+      rw [dite_eq_right hlast] at hRight
       exact (c.mem_leftVertices_interior spec _ _).mp hRight
     unfold SubdivisionGraph.Spec.stepLeft at hLeft
     by_cases hzero : offset.val = 0
-    · rw [dif_pos hzero] at hLeft
+    · rw [dite_eq_left hzero] at hLeft
       exact False.elim (hLeft
         ((c.mem_leftVertices_core spec _).mpr hInteriorLeft.1))
-    · rw [dif_neg hzero] at hLeft
+    · rw [dite_eq_right hzero] at hLeft
       exact False.elim (hLeft
         ((c.mem_leftVertices_interior spec _ _).mpr hInteriorLeft))
 

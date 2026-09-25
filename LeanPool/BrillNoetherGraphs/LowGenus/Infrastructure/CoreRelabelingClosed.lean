@@ -264,7 +264,7 @@ noncomputable def faceRelabeling
   tail_eq := by
     intro e
     by_cases hr : r.reversed e
-    · simp only [if_pos hr]
+    · simp only [ite_eq_left hr]
       rw [faceClassEquiv_apply r length source_nonempty hForest hNotLoopy]
       apply Subtype.ext
       have ht := r.tail_eq e
@@ -275,7 +275,7 @@ noncomputable def faceRelabeling
           (target.tail (r.slotEquiv e))
       rw [ht]
     · have hr' : r.reversed e = false := Bool.eq_false_of_not_eq_true hr
-      simp only [if_neg hr]
+      simp only [ite_eq_right hr]
       rw [faceClassEquiv_apply r length source_nonempty hForest hNotLoopy]
       apply Subtype.ext
       have ht := r.tail_eq e
@@ -288,7 +288,7 @@ noncomputable def faceRelabeling
   head_eq := by
     intro e
     by_cases hr : r.reversed e
-    · simp only [if_pos hr]
+    · simp only [ite_eq_left hr]
       rw [faceClassEquiv_apply r length source_nonempty hForest hNotLoopy]
       apply Subtype.ext
       have hh := r.head_eq e
@@ -299,7 +299,7 @@ noncomputable def faceRelabeling
           (target.head (r.slotEquiv e))
       rw [hh]
     · have hr' : r.reversed e = false := Bool.eq_false_of_not_eq_true hr
-      simp only [if_neg hr]
+      simp only [ite_eq_right hr]
       rw [faceClassEquiv_apply r length source_nonempty hForest hNotLoopy]
       apply Subtype.ext
       have hh := r.head_eq e

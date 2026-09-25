@@ -47,8 +47,8 @@ theorem pathVertex_interior (spec : SubdivisionGraph.Spec n p)
     spec.pathVertex edge ⟨k, by omega⟩ =
       spec.interiorVertex edge ⟨k - 1, by omega⟩ := by
   unfold SubdivisionGraph.Spec.pathVertex
-  rw [dif_neg (by omega : ¬ k = 0),
-    dif_neg (by omega : ¬ k = spec.length edge)]
+  rw [dite_eq_right (by omega : ¬ k = 0),
+    dite_eq_right (by omega : ¬ k = spec.length edge)]
 
 /-- Distinct interior vertices are distinguished by slot and offset. -/
 theorem interiorVertex_eq_iff (spec : SubdivisionGraph.Spec n p)
@@ -122,7 +122,7 @@ theorem isStepSlope_ramp (h : RampData spec pot sgn lo t) :
     spec.slotValueScript_stepLeft (rampCompatible h)]
   simp only [rampValue, rampSlope]
   by_cases hw : lo edge ≤ offset.val ∧ offset.val < lo edge + t
-  · rw [if_pos hw]
+  · rw [ite_eq_left hw]
     obtain ⟨hw1, hw2⟩ := hw
     have h1 : min (offset.val + 1 - lo edge) t =
         (offset.val - lo edge) + 1 := by omega
@@ -130,7 +130,7 @@ theorem isStepSlope_ramp (h : RampData spec pot sgn lo t) :
     rw [h1, h2]
     push_cast
     try ring
-  · rw [if_neg hw]
+  · rw [ite_eq_right hw]
     have h1 : min (offset.val + 1 - lo edge) t =
         min (offset.val - lo edge) t := by
       simp only [not_and_or, not_le, not_lt] at hw
@@ -174,7 +174,7 @@ theorem rampSlope_last (h : RampData spec pot sgn lo t) (edge : Fin p) :
 theorem rampSlope_zero_t (sgn : Fin p → ℤ) (lo : Fin p → ℕ)
     (edge : Fin p) (k : ℕ) : rampSlope sgn lo 0 edge k = 0 := by
   simp only [rampSlope]
-  rw [if_neg (show ¬ (lo edge ≤ k ∧ k < lo edge + 0) by omega)]
+  rw [ite_eq_right (show ¬ (lo edge ≤ k ∧ k < lo edge + 0) by omega)]
 
 /-- Divergence of a ramp along one slot. -/
 theorem rampSlope_diff (sgn : Fin p → ℤ) (lo : Fin p → ℕ) (t : ℕ)
@@ -185,27 +185,27 @@ theorem rampSlope_diff (sgn : Fin p → ℤ) (lo : Fin p → ℕ) (t : ℕ)
   rcases Nat.eq_zero_or_pos t with ht | ht
   · subst ht
     rw [rampSlope_zero_t, rampSlope_zero_t,
-      if_neg (show ¬ (k = lo edge ∧ 0 < 0) by omega),
-      if_neg (show ¬ (k = lo edge + 0 ∧ 0 < 0) by omega)]
+      ite_eq_right (show ¬ (k = lo edge ∧ 0 < 0) by omega),
+      ite_eq_right (show ¬ (k = lo edge + 0 ∧ 0 < 0) by omega)]
     try ring
   · simp only [rampSlope]
     by_cases h1 : lo edge ≤ k ∧ k < lo edge + t
-    · rw [if_pos h1]
+    · rw [ite_eq_left h1]
       by_cases h2 : lo edge ≤ k - 1 ∧ k - 1 < lo edge + t
-      · rw [if_pos h2, if_neg (show ¬ (k = lo edge ∧ 0 < t) by omega),
-          if_neg (show ¬ (k = lo edge + t ∧ 0 < t) by omega)]
+      · rw [ite_eq_left h2, ite_eq_right (show ¬ (k = lo edge ∧ 0 < t) by omega),
+          ite_eq_right (show ¬ (k = lo edge + t ∧ 0 < t) by omega)]
         try ring
-      · rw [if_neg h2, if_pos (show k = lo edge ∧ 0 < t by omega),
-          if_neg (show ¬ (k = lo edge + t ∧ 0 < t) by omega)]
+      · rw [ite_eq_right h2, ite_eq_left (show k = lo edge ∧ 0 < t by omega),
+          ite_eq_right (show ¬ (k = lo edge + t ∧ 0 < t) by omega)]
         try ring
-    · rw [if_neg h1]
+    · rw [ite_eq_right h1]
       by_cases h2 : lo edge ≤ k - 1 ∧ k - 1 < lo edge + t
-      · rw [if_pos h2, if_neg (show ¬ (k = lo edge ∧ 0 < t) by omega),
-          if_pos (show k = lo edge + t ∧ 0 < t by omega)]
+      · rw [ite_eq_left h2, ite_eq_right (show ¬ (k = lo edge ∧ 0 < t) by omega),
+          ite_eq_left (show k = lo edge + t ∧ 0 < t by omega)]
         try ring
-      · rw [if_neg h2,
-          if_neg (show ¬ (k = lo edge ∧ 0 < t) by omega),
-          if_neg (show ¬ (k = lo edge + t ∧ 0 < t) by omega)]
+      · rw [ite_eq_right h2,
+          ite_eq_right (show ¬ (k = lo edge ∧ 0 < t) by omega),
+          ite_eq_right (show ¬ (k = lo edge + t ∧ 0 < t) by omega)]
         try ring
 
 end Utilities.Certificate.SubdivisionRamp

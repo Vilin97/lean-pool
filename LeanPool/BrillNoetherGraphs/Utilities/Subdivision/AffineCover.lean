@@ -814,7 +814,7 @@ theorem formsHold_full_of_valid
   | cons step steps ih =>
       simp only [ValidRows] at hValid
       obtain ⟨hMem, hFarkas, hTail⟩ := hValid
-      simp only [resultRows, hMem, if_true] at hResult
+      simp only [resultRows, hMem, ite_true] at hResult
       have hRemaining : FormsHold (full.erase step.removed) point :=
         ih (full.erase step.removed) hTail hResult
       exact formsHold_insert_erased full step.removed hMem point hRemaining

@@ -242,7 +242,7 @@ of raw chips whose first syntactic match is that index. -/
 theorem chipAt_eq_indicator_sum (w : RichWitness) (a e i : ℕ) (hi : i ≠ 0) :
     w.chipAt a e i =
       (w.chips.map fun c => if w.chipMatches a e i c then c.2.2 else 0).sum := by
-  rw [chipAt, if_neg (by simpa using hi)]
+  rw [chipAt, ite_eq_right (by simpa using hi)]
   exact foldl_cond_add_eq_sum w.chips (w.chipMatches a e i) (fun c => c.2.2)
 
 /-- The inclusive named-point sum used in `chipPrefix` has an explicit raw

@@ -94,8 +94,8 @@ theorem windowValue_succ_sub_windowValue {start stop i : ℕ} {slope : ℤ}
         simp [windowValue, windowSlope, hStopI]
       · have hINotStart : ¬i ≤ start := by omega
         have hSub : i + 1 - start = (i - start) + 1 := by omega
-        simp only [windowValue, if_neg hSuccNotStart, if_pos hSuccLeStop,
-          if_neg hINotStart, if_pos hILeStop]
+        simp only [windowValue, ite_eq_right hSuccNotStart, ite_eq_left hSuccLeStop,
+          ite_eq_right hINotStart, ite_eq_left hILeStop]
         rw [hSub]
         push_cast
         simp [windowSlope, hStart, hStopI]
@@ -307,7 +307,7 @@ theorem edgeDivergence_pathVertex (data : Data spec) (edge : Fin p)
                 (data.slope edge) selected.val else 0) := by
           apply Fintype.sum_eq_single selected
           intro other hOther
-          rw [if_neg]
+          rw [ite_eq_right]
           intro hValue
           apply hOther
           apply Fin.ext
@@ -343,7 +343,7 @@ theorem edgeDivergence_pathVertex (data : Data spec) (edge : Fin p)
                 (data.slope edge) selected.val else 0) := by
           apply Fintype.sum_eq_single selected
           intro other hOther
-          rw [if_neg]
+          rw [ite_eq_right]
           intro hValue
           apply hOther
           apply Fin.ext

@@ -151,7 +151,7 @@ theorem markValue_of_pos {mark : Fin 12 → ℕ} {h : Fin 8 → ℕ} {e : Fin 12
 theorem markValue_of_zero {mark : Fin 12 → ℕ} {h : Fin 8 → ℕ} {e : Fin 12}
     (hzero : mark e = 0) :
     markValue d mark h e = heightPotential d h (d.rep (d.core.tail e)) := by
-  simp only [markValue, hzero, lt_irrefl, if_false, heightPotential, d.rep_idem]
+  simp only [markValue, hzero, lt_irrefl, ite_false, heightPotential, d.rep_idem]
 
 theorem marks_admissible {mark : Fin 12 → ℕ} {h : Fin 8 → ℕ}
     (hprof : Profile d mark h) (hRep : ∀ v : Fin 8, h (d.rep v) = h v) :
@@ -202,13 +202,13 @@ theorem slotTailTerm_eq {mark : Fin 12 → ℕ} {h : Fin 8 → ℕ}
       (heightPotential_rep d hRep _) (heightPotential_rep d hRep _)
       (hprof.flat e hpos)]
     unfold slotTailForm
-    rw [if_pos hpos]
+    rw [ite_eq_left hpos]
   · have hzero : mark e = 0 := by omega
     rw [slotTailTerm_of_unmarked d hzero (markValue_of_zero d hzero)
       (hu := h (d.core.tail e)) (hv := h (d.core.head e))
       (heightPotential_rep d hRep _) (heightPotential_rep d hRep _)]
     unfold slotTailForm
-    rw [if_neg hpos]
+    rw [ite_eq_right hpos]
 
 theorem slotHeadTerm_eq {mark : Fin 12 → ℕ} {h : Fin 8 → ℕ}
     (hprof : Profile d mark h) (hRep : ∀ v : Fin 8, h (d.rep v) = h v)
@@ -222,13 +222,13 @@ theorem slotHeadTerm_eq {mark : Fin 12 → ℕ} {h : Fin 8 → ℕ}
       (heightPotential_rep d hRep _) (heightPotential_rep d hRep _)
       (hprof.flat e hpos)]
     unfold slotHeadForm
-    rw [if_pos hpos]
+    rw [ite_eq_left hpos]
   · have hzero : mark e = 0 := by omega
     rw [slotHeadTerm_of_unmarked d hzero (markValue_of_zero d hzero)
       (hu := h (d.core.tail e)) (hv := h (d.core.head e))
       (heightPotential_rep d hRep _) (heightPotential_rep d hRep _)]
     unfold slotHeadForm
-    rw [if_neg hpos]
+    rw [ite_eq_right hpos]
 
 /-! ### Specializations a chamber actually uses
 
@@ -248,8 +248,8 @@ theorem slotTailForm_of_flat_tail (htail : h (d.core.tail e) = 0) :
   unfold slotTailForm
   rw [htail]
   by_cases hpos : 0 < mark e
-  · rw [if_pos hpos, if_pos hpos, tailContribution_zero_zero]
-  · rw [if_neg hpos, if_neg hpos]
+  · rw [ite_eq_left hpos, ite_eq_left hpos, tailContribution_zero_zero]
+  · rw [ite_eq_right hpos, ite_eq_right hpos]
 
 /-- The head end of a slot whose head height vanishes.  The extra hypothesis is
 free at a marked slot: a mark sitting at the tail carries the tail's height,
@@ -262,16 +262,16 @@ theorem slotHeadForm_of_flat_head (hhead : h (d.core.head e) = 0)
   unfold slotHeadForm
   rw [hhead]
   by_cases hpos : 0 < mark e
-  · rw [if_pos hpos]
+  · rw [ite_eq_left hpos]
     by_cases hlt : mark e < d.length e
-    · rw [if_pos hlt, if_pos hlt, headContribution_zero_zero]
-    · rw [if_neg hlt, if_neg hlt]
+    · rw [ite_eq_left hlt, ite_eq_left hlt, headContribution_zero_zero]
+    · rw [ite_eq_right hlt, ite_eq_right hlt]
   · have hz : mark e = 0 := by omega
-    rw [if_neg hpos, hzero hz]
+    rw [ite_eq_right hpos, hzero hz]
     by_cases hlt : mark e < d.length e
-    · rw [if_pos hlt]
+    · rw [ite_eq_left hlt]
       exact headContribution_zero_zero _
-    · rw [if_neg hlt]
+    · rw [ite_eq_right hlt]
 
 /-- The near half of a marked slot, read as an arm from the tail. -/
 theorem slotTailForm_of_arm (hhead : h (d.core.head e) = 0)
@@ -279,9 +279,9 @@ theorem slotTailForm_of_arm (hhead : h (d.core.head e) = 0)
     slotTailForm d mark h e = tailContribution (mark e) (h (d.core.tail e)) 0 := by
   unfold slotTailForm
   by_cases hpos : 0 < mark e
-  · rw [if_pos hpos]
+  · rw [ite_eq_left hpos]
   · have hz : mark e = 0 := by omega
-    rw [if_neg hpos, hhead, hzero hz, hz]
+    rw [ite_eq_right hpos, hhead, hzero hz, hz]
     simp
 
 /-- The far half of a marked slot, read as an arm from the head. -/
@@ -293,13 +293,13 @@ theorem slotHeadForm_of_arm (htail : h (d.core.tail e) = 0)
   unfold slotHeadForm
   rw [htail]
   by_cases hpos : 0 < mark e
-  · rw [if_pos hpos]
+  · rw [ite_eq_left hpos]
     by_cases hlt : mark e < d.length e
-    · rw [if_pos hlt]
-    · rw [if_neg hlt, show h (d.core.head e) = 0 by omega]
+    · rw [ite_eq_left hlt]
+    · rw [ite_eq_right hlt, show h (d.core.head e) = 0 by omega]
       simp
   · have hz : mark e = 0 := by omega
-    rw [if_neg hpos, hz]
+    rw [ite_eq_right hpos, hz]
     simp
 
 end Forms
@@ -325,10 +325,10 @@ theorem residual_of_coeff {alloc contrib : Fin 8 → ℤ} {owner : Fin 8}
     0 ≤ alloc v - indicatorWeight v owner + contrib v := by
   by_cases hv : v = owner
   · subst hv
-    simp only [indicatorWeight, if_pos]
+    simp only [indicatorWeight, ite_eq_left]
     omega
   · have := hAll v
-    simp only [indicatorWeight, if_neg hv]
+    simp only [indicatorWeight, ite_eq_right hv]
     omega
 
 /-- The hypotheses of the kink lemma, at a mark strictly inside its slot. -/
@@ -418,7 +418,7 @@ theorem residual_effective {mark : Fin 12 → ℕ} {h : Fin 8 → ℕ}
       simp [DegSpec.coreVertex, DegSpec.interiorVertex]
     have hZeroChip : oneChip (G := d.graph) (d.coreVertex center)
         (d.interiorVertex edge offset) = 0 := by
-      simp only [oneChip, if_neg hNe.symm]
+      simp only [oneChip, ite_eq_right hNe.symm]
     rw [hZeroChip]
     by_cases hmark : offset.val + 1 = mark edge
     · have hlt : mark edge < d.length edge := by

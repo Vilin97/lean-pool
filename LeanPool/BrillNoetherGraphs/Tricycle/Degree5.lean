@@ -305,12 +305,12 @@ theorem burnedInd_le_one (spec : Spec 7 15) (D : CFDiv spec.graph) (w : spec.Ver
 
 theorem burnedInd_of_mem {v : Fin 7} (h : spec.coreVertex v ∈ burned spec.graph D w) :
     burnedInd spec D w v = 1 := by
-  unfold burnedInd; rw [if_pos h]
+  unfold burnedInd; rw [ite_eq_left h]
 
 theorem burnedInd_of_not_mem {v : Fin 7}
     (h : spec.coreVertex v ∉ burned spec.graph D w) :
     burnedInd spec D w v = 0 := by
-  unfold burnedInd; rw [if_neg h]
+  unfold burnedInd; rw [ite_eq_right h]
 
 /-! ## Lemma 3.5(b) in slot coordinates -/
 

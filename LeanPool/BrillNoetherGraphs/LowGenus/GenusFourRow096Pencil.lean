@@ -267,16 +267,16 @@ theorem one_chip_pathVertex_core (e : Fin p) (q : spec.PathPosition e)
   have hpos := spec.length_pos e
   unfold SubdivisionGraph.Spec.pathVertex
   by_cases hz : q.val = 0
-  · rw [dif_pos hz, if_neg (show ¬(q.val = spec.length e) by omega), add_zero,
-      if_pos hz]
+  · rw [dite_eq_left hz, ite_eq_right (show ¬(q.val = spec.length e) by omega), add_zero,
+      ite_eq_left hz]
     simp [oneChip, SubdivisionGraph.Spec.coreVertex, eq_comm]
-  · rw [dif_neg hz, if_neg hz, zero_add]
+  · rw [dite_eq_right hz, ite_eq_right hz, zero_add]
     by_cases hl : q.val = spec.length e
-    · rw [dif_pos hl, if_pos hl]
+    · rw [dite_eq_left hl, ite_eq_left hl]
       simp [oneChip, SubdivisionGraph.Spec.coreVertex, eq_comm]
-    · rw [dif_neg hl, if_neg hl]
+    · rw [dite_eq_right hl, ite_eq_right hl]
       simp only [oneChip]
-      exact if_neg (coreVertex_ne_interiorVertex spec v e _)
+      exact ite_eq_right (coreVertex_ne_interiorVertex spec v e _)
 
 /-- The same reading at an interior vertex: the chip registers exactly when the
 slot matches and the depth matches. -/
@@ -289,37 +289,37 @@ theorem one_chip_pathVertex_int (e : Fin p) (q : spec.PathPosition e)
   have hoff := off.isLt
   unfold SubdivisionGraph.Spec.pathVertex
   by_cases hz : q.val = 0
-  · rw [dif_pos hz]
+  · rw [dite_eq_left hz]
     simp only [oneChip]
-    rw [if_neg fun hEq => (coreVertex_ne_interiorVertex spec _ e' off) hEq.symm]
+    rw [ite_eq_right fun hEq => (coreVertex_ne_interiorVertex spec _ e' off) hEq.symm]
     by_cases he : e = e'
-    · rw [if_pos he, if_neg (by omega)]
-    · rw [if_neg he]
-  · rw [dif_neg hz]
+    · rw [ite_eq_left he, ite_eq_right (by omega)]
+    · rw [ite_eq_right he]
+  · rw [dite_eq_right hz]
     by_cases hl : q.val = spec.length e
-    · rw [dif_pos hl]
+    · rw [dite_eq_left hl]
       simp only [oneChip]
-      rw [if_neg fun hEq =>
+      rw [ite_eq_right fun hEq =>
         (coreVertex_ne_interiorVertex spec _ e' off) hEq.symm]
       by_cases he : e = e'
       · subst he
-        rw [if_pos rfl, if_neg (by omega)]
-      · rw [if_neg he]
-    · rw [dif_neg hl]
+        rw [ite_eq_left rfl, ite_eq_right (by omega)]
+      · rw [ite_eq_right he]
+    · rw [dite_eq_right hl]
       simp only [oneChip]
       by_cases he : e = e'
       · subst he
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         by_cases hv : off.val + 1 = q.val
-        · rw [if_pos hv, if_pos]
+        · rw [ite_eq_left hv, ite_eq_left]
           exact (interiorVertex_eq_iff spec e e off _).mpr
             ⟨rfl, by show off.val = q.val - 1; omega⟩
-        · rw [if_neg hv, if_neg]
+        · rw [ite_eq_right hv, ite_eq_right]
           intro hEq
           have hv' : off.val = q.val - 1 :=
             ((interiorVertex_eq_iff spec e e off _).mp hEq).2
           exact hv (by omega)
-      · rw [if_neg he, if_neg]
+      · rw [ite_eq_right he, ite_eq_right]
         intro hEq
         exact he ((interiorVertex_eq_iff spec e' e off _).mp hEq).1.symm
 
@@ -327,7 +327,7 @@ theorem one_chip_pathVertex_int (e : Fin p) (q : spec.PathPosition e)
 theorem pathVertex_eq_tail (e : Fin p) (q : spec.PathPosition e) (h : q.val = 0) :
     spec.pathVertex e q = spec.coreVertex (spec.core.tail e) := by
   unfold SubdivisionGraph.Spec.pathVertex
-  rw [dif_pos h]
+  rw [dite_eq_left h]
 
 /-- A path position at full depth is the head of its slot. -/
 theorem pathVertex_eq_head (e : Fin p) (q : spec.PathPosition e)
@@ -335,7 +335,7 @@ theorem pathVertex_eq_head (e : Fin p) (q : spec.PathPosition e)
     spec.pathVertex e q = spec.coreVertex (spec.core.head e) := by
   have hpos := spec.length_pos e
   unfold SubdivisionGraph.Spec.pathVertex
-  rw [dif_neg (by omega), dif_pos h]
+  rw [dite_eq_right (by omega), dite_eq_left h]
 
 /-- **The cut march**, in full generality.
 
@@ -377,8 +377,8 @@ theorem prin_cutRamp {pot : Fin n → ℤ} {sgn : Fin p → ℤ} {lo : Fin p →
     simp only [Pi.smul_apply, Pi.sub_apply, smul_eq_mul,
       one_chip_pathVertex_core, rampSlope_zero, rampSlope_last h,
       hpos e he, hpos' e he]
-    rw [if_neg (show ¬(lo e + t = 0) by omega),
-      if_neg (show ¬(lo e = spec.length e) by omega)]
+    rw [ite_eq_right (show ¬(lo e + t = 0) by omega),
+      ite_eq_right (show ¬(lo e = spec.length e) by omega)]
     simp only [ht, and_true]
     split_ifs <;> ring
   · -- Interior vertices: the ramp only moves chips inside its own window.
@@ -388,16 +388,16 @@ theorem prin_cutRamp {pot : Fin n → ℤ} {sgn : Fin p → ℤ} {lo : Fin p →
       one_chip_pathVertex_int]
     by_cases heA : e' ∈ A
     · rw [Finset.sum_eq_single e'
-        (fun e _ hne => by simp only [if_neg hne, sub_zero, mul_zero])
+        (fun e _ hne => by simp only [ite_eq_right hne, sub_zero, mul_zero])
         (fun hc => absurd heA hc)]
       have hd := rampSlope_diff sgn lo t e' (off.val + 1) (by omega)
       simp only [Nat.add_sub_cancel] at hd
-      rw [hd, if_pos rfl, hpos e' heA, hpos' e' heA]
+      rw [hd, ite_eq_left rfl, hpos e' heA, hpos' e' heA]
       simp only [ht, and_true]
       split_ifs <;> ring
     · rw [Finset.sum_eq_zero (fun e he => by
         have hc : ¬(e = e') := by rintro rfl; exact heA he
-        simp only [if_neg hc, sub_self, mul_zero])]
+        simp only [ite_eq_right hc, sub_self, mul_zero])]
       simp [rampSlope, hzero e' heA]
 
 /-- **The two-slot march.**

@@ -77,7 +77,7 @@ theorem selectedBlock_intervalLength (d : Utilities.Certificate.DegenerateSpec.D
   have hStart : b.startAt i = (w.pointValue x a.val e.val i).toNat := by
     by_cases hiz : i = 0
     · simp [FiniteBlockEnds.startAt, hiz, pointValue_zero]
-    · rw [FiniteBlockEnds.startAt, if_neg hiz]
+    · rw [FiniteBlockEnds.startAt, ite_eq_right hiz]
       have hp : i - 1 < (w.blockList a.val e.val).length := by omega
       have hprev := w.richBlockEnds_endAt d core Γ x hW1 hx hCoord a e (i - 1) hp
       simpa [b, show i - 1 + 1 = i by omega] using hprev
@@ -325,7 +325,7 @@ theorem tail_blockAt_eq_collapse (d : Utilities.Certificate.DegenerateSpec.DegSp
   have hstart : b.startAt s = 0 := by
     by_cases hz : s = 0
     · simp [FiniteBlockEnds.startAt, hz]
-    · rw [FiniteBlockEnds.startAt, if_neg hz]
+    · rw [FiniteBlockEnds.startAt, ite_eq_right hz]
       have hp := w.richBlockEnds_endAt d core Γ x hW1 hx hCoord a e (s - 1) (by omega)
       rw [show s - 1 + 1 = s by omega, hzero] at hp
       simpa [b] using hp
@@ -372,7 +372,7 @@ theorem head_blockAt_eq_collapse (d : Utilities.Certificate.DegenerateSpec.DegSp
   have hstartlt : b.startAt t < d.length e := by
     by_cases ht0 : t = 0
     · simp [FiniteBlockEnds.startAt, ht0, hpos]
-    · rw [FiniteBlockEnds.startAt, if_neg ht0]
+    · rw [FiniteBlockEnds.startAt, ite_eq_right ht0]
       have hp := w.richBlockEnds_endAt d core Γ x hW1 hx hCoord a e (t - 1) (by omega)
       have hidx : t - 1 + 1 = t := by omega
       rw [hp, hidx]
@@ -402,14 +402,14 @@ private theorem sum_class_indicator (d : Utilities.Certificate.DegenerateSpec.De
       if d.rep u = d.rep r then z else 0 := by
   classical
   by_cases hmem : u ∈ Finset.univ.filter (fun v : Fin n => d.rep v = d.rep r)
-  · rw [if_pos (by simpa using (Finset.mem_filter.mp hmem).2)]
+  · rw [ite_eq_left (by simpa using (Finset.mem_filter.mp hmem).2)]
     rw [Finset.sum_eq_single u]
     · simp
     · intro b hb hbu
       have hval : u.val ≠ b.val := fun h => hbu (Fin.ext h.symm)
       simp [hval]
     · exact fun h => (h hmem).elim
-  · rw [if_neg]
+  · rw [ite_eq_right]
     · apply Finset.sum_eq_zero
       intro b hb
       have hval : u.val ≠ b.val := by
@@ -427,14 +427,14 @@ private theorem sum_class_indicator_rev (d : Utilities.Certificate.DegenerateSpe
       if d.rep u = d.rep r then z else 0 := by
   classical
   by_cases hmem : u ∈ Finset.univ.filter (fun v : Fin n => d.rep v = d.rep r)
-  · rw [if_pos (by simpa using (Finset.mem_filter.mp hmem).2)]
+  · rw [ite_eq_left (by simpa using (Finset.mem_filter.mp hmem).2)]
     rw [Finset.sum_eq_single u]
     · simp
     · intro b hb hbu
       have hval : b.val ≠ u.val := fun h => hbu (Fin.ext h)
       simp [hval]
     · exact fun h => (h hmem).elim
-  · rw [if_neg]
+  · rw [ite_eq_right]
     · apply Finset.sum_eq_zero
       intro b hb
       have hval : b.val ≠ u.val := by
@@ -557,7 +557,7 @@ private theorem richCensusEndpoint_bounds
         Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e 0
         at hslope
       dsimp only [tail]
-      rw [if_neg hz]
+      rw [ite_eq_right hz]
       omega
   have hHead : ∀ e, w.headContribution anchor.val e.val ≤ head e := by
     intro e
@@ -596,7 +596,7 @@ private theorem richCensusEndpoint_bounds
         exact hCoord e
       rw [hcoordD] at hle
       dsimp only [head]
-      rw [if_neg hz]
+      rw [ite_eq_right hz]
       omega
   exact ⟨hTail, hHead⟩
 
@@ -658,10 +658,10 @@ theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
         unfold oneChip
         rw [Pi.smul_apply]
         by_cases hr : d.rep anchor = d.rep c.val
-        · rw [if_pos ((d.coreVertex_eq_iff c.val anchor).mpr hr.symm), if_pos hr]
+        · rw [ite_eq_left ((d.coreVertex_eq_iff c.val anchor).mpr hr.symm), ite_eq_left hr]
           simp
-        · rw [if_neg (fun heq => hr (((d.coreVertex_eq_iff c.val anchor).mp heq).symm)),
-            if_neg hr]
+        · rw [ite_eq_right (fun heq => hr (((d.coreVertex_eq_iff c.val anchor).mp heq).symm)),
+            ite_eq_right hr]
           simp
       have hPrin : prin d.graph script (d.coreVertex c.val) =
           ∑ e : Fin p,
@@ -708,17 +708,17 @@ theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
           have hlohi : (w.block anchor.val e.val 0).lo ≤
               (w.block anchor.val e.val 0).hi := by
             exact ((hW2' anchor e).1 0 (by simp [hk])).1.1
-          simp only [tail, head, hz, if_pos, headMassAdj, hmass0]
+          simp only [tail, head, hz, ite_eq_left, headMassAdj, hmass0]
           by_cases hclass : d.rep (d.core.tail e) = d.rep c.val
           · have hclassH : d.rep (d.core.head e) = d.rep c.val := by
               rw [← hRep]
               exact hclass
-            rw [if_pos hclass, if_pos hclassH]
+            rw [ite_eq_left hclass, ite_eq_left hclassH]
             simp
             omega
           · have hclassH : d.rep (d.core.head e) ≠ d.rep c.val := by
               rwa [← hRep]
-            rw [if_neg hclass, if_neg hclassH]
+            rw [ite_eq_right hclass, ite_eq_right hclassH]
             omega
         · by_cases ht : d.rep (d.core.tail e) = d.rep c.val
           all_goals
@@ -756,7 +756,7 @@ theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
       have hChip : (mult • oneChip (G := d.graph) (d.coreVertex anchor))
           (d.interiorVertex e o) = 0 := by
         unfold oneChip
-        rw [Pi.smul_apply, if_neg]
+        rw [Pi.smul_apply, ite_eq_right]
         · simp
         · exact fun h => interiorVertex_ne_coreVertex d e o anchor h
       unfold richDivisor

@@ -73,7 +73,7 @@ noncomputable def vertexWedgeCommPresentation
     by_cases ha : a = x
     · subst a
       simp
-    · rw [if_neg ha]
+    · rw [ite_eq_right ha]
       rw [wedgeRightVertex_unmarked H G y x a ha]
       rw [num_edges_vertexWedge_right_left]
       simp [hb]

@@ -114,11 +114,11 @@ theorem lt_of_endAt_lt_length_of_endAt_eq_length {i s : ℕ}
   omega
 
 theorem blockAt_spec (k : ℕ) (hk : k < L) : k < b.endAt (b.blockAt k) := by
-  rw [blockAt, dif_pos hk]
+  rw [blockAt, dite_eq_left hk]
   exact (Nat.find_spec (b.cover k hk)).2
 
 theorem blockAt_lt_length (k : ℕ) (hk : k < L) : b.blockAt k < b.ends.length := by
-  rw [blockAt, dif_pos hk]
+  rw [blockAt, dite_eq_left hk]
   rcases b.cover k hk with ⟨i, hi, hEnd⟩
   exact lt_of_le_of_lt (Nat.find_min' (b.cover k hk) ⟨hi, hEnd⟩) hi
 
@@ -145,7 +145,7 @@ theorem endAt_le_of_lt_blockAt (k i : ℕ) (hk : k < L)
   have hFinite : i < b.ends.length :=
     lt_trans hIndex (b.blockAt_lt_length k hk)
   have hMin : b.blockAt k ≤ i := by
-    rw [blockAt, dif_pos hk]
+    rw [blockAt, dite_eq_left hk]
     exact Nat.find_min' (b.cover k hk) ⟨hFinite, hEnd⟩
   omega
 
@@ -197,7 +197,7 @@ theorem covers (k : ℕ) (hk : k < L) :
     · have hPos : 0 < b.blockAt k := by omega
       apply b.endAt_pred_le (b.blockAt k) k hPos (b.blockAt_lt_length k hk)
       intro m hmFinite hm
-      rw [blockAt, dif_pos hk]
+      rw [blockAt, dite_eq_left hk]
       exact Nat.find_min' (b.cover k hk) ⟨hmFinite, hm⟩
   · exact b.blockAt_spec k hk
 
@@ -227,19 +227,19 @@ theorem ownsInterval (block k : ℕ)
     have hMono := b.endAt_mono hPred
     have hStartL : L ≤ b.startAt block := by
       unfold startAt
-      rw [if_neg (by omega : block ≠ 0)]
+      rw [ite_eq_right (by omega : block ≠ 0)]
       change L ≤ b.ends.getD (block - 1) L
       simpa only [endAt, b.last] using hMono
     omega
   apply Nat.le_antisymm
-  · rw [blockAt, dif_pos hk]
+  · rw [blockAt, dite_eq_left hk]
     exact Nat.find_min' (b.cover k hk) ⟨hFinite, hEnd⟩
   · by_cases hzero : block = 0
     · subst block
       exact Nat.zero_le _
     · have hPos : 0 < block := by omega
       unfold startAt at hStart
-      rw [if_neg hzero] at hStart
+      rw [ite_eq_right hzero] at hStart
       by_contra hlt
       have hle : b.blockAt k ≤ block - 1 := by omega
       have hMono := b.endAt_mono hle
@@ -314,7 +314,7 @@ theorem sum_selected_steps_eq_sum_rises (rises : ℕ → ℤ) :
   apply Finset.sum_congr rfl
   intro i hi
   by_cases hNonempty : b.startAt i < b.endAt i
-  · rw [if_pos hNonempty]
+  · rw [ite_eq_left hNonempty]
     have hLength : 0 < b.endAt i - b.startAt i := Nat.sub_pos_of_lt hNonempty
     have hOwner : ∀ j ∈ Finset.range (b.endAt i - b.startAt i),
         b.blockAt (b.startAt i + j) = i := by
@@ -331,7 +331,7 @@ theorem sum_selected_steps_eq_sum_rises (rises : ℕ → ℤ) :
         rw [hOwner j hj]
         rw [Nat.add_sub_cancel_left]
       _ = rises i := SubdivisionArithmetic.sum_steps_eq_rise (rises i) hLength
-  · rw [if_neg hNonempty]
+  · rw [ite_eq_right hNonempty]
     have hEmpty : b.endAt i - b.startAt i = 0 := Nat.sub_eq_zero_of_le (Nat.le_of_not_gt hNonempty)
     rw [hEmpty]
     simp
@@ -347,9 +347,9 @@ theorem sum_rises_eq_sum_nonempty (rises : ℕ → ℤ)
   apply Finset.sum_congr rfl
   intro i hi
   by_cases hNonempty : b.startAt i < b.endAt i
-  · rw [if_pos hNonempty]
+  · rw [ite_eq_left hNonempty]
   · have hLE : b.endAt i ≤ b.startAt i := Nat.le_of_not_gt hNonempty
-    rw [if_neg hNonempty, hEmpty i hLE]
+    rw [ite_eq_right hNonempty, hEmpty i hLE]
 
 /-- The canonical selected slopes realize every declared rise once W2 has
 discharged the zero-length blocks. -/

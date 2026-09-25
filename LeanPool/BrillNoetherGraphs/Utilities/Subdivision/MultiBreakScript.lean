@@ -165,7 +165,7 @@ theorem breakSlopeFrom_eq_initial_of_forall_lt (breaks : List (ℕ × ℤ)) (k :
   | nil => rfl
   | cons entry rest ih =>
       rw [breakSlopeFrom_cons,
-        if_neg (by have := hAfter entry (by simp); omega)]
+        ite_eq_right (by have := hAfter entry (by simp); omega)]
       exact ih (fun e he => hAfter e (List.mem_cons_of_mem _ he)) initial
 
 /-- A break list evaluates to `0` strictly before its first entry: the `k`
@@ -198,7 +198,7 @@ theorem breakSlope_append_cons_eq (pre : List (ℕ × ℤ)) (entry : ℕ × ℤ)
     (hPost : ∀ e ∈ post, k < e.1) :
     breakSlope (pre ++ entry :: post) k = entry.2 := by
   unfold breakSlope
-  rw [breakSlopeFrom_append, breakSlopeFrom_cons, if_pos hEntry]
+  rw [breakSlopeFrom_append, breakSlopeFrom_cons, ite_eq_left hEntry]
   exact breakSlopeFrom_eq_initial_of_forall_lt post k hPost entry.2
 
 /-- The value of a sorted break list at any point `k` at or after a member
@@ -257,7 +257,7 @@ theorem mem_breaks_of_edge_eq
     ((script.entry index).position.coordinate certificate point,
         (script.entry index).slope) ∈ script.breaks certificate point edge := by
   rw [breaks, List.mem_filterMap]
-  exact ⟨script.entry index, List.mem_ofFn.mpr ⟨index, rfl⟩, by rw [if_pos hEdge]⟩
+  exact ⟨script.entry index, List.mem_ofFn.mpr ⟨index, rfl⟩, by rw [ite_eq_left hEdge]⟩
 
 /-- Every slot's decoded break list is sorted. -/
 def SortedBreaks (certificate : ExplicitPotential.Certificate m n p)
@@ -286,14 +286,14 @@ theorem sortedBreaks_of_coordinate_lt
   intro i j hij pairA hA pairB hB
   by_cases hiEdge : (script.entry i).position.edge = edge
   · by_cases hjEdge : (script.entry j).position.edge = edge
-    · rw [if_pos hiEdge] at hA
-      rw [if_pos hjEdge] at hB
+    · rw [ite_eq_left hiEdge] at hA
+      rw [ite_eq_left hjEdge] at hB
       cases hA
       cases hB
       exact hOrder edge i j hij hiEdge hjEdge
-    · rw [if_neg hjEdge] at hB
+    · rw [ite_eq_right hjEdge] at hB
       simp at hB
-  · rw [if_neg hiEdge] at hA
+  · rw [ite_eq_right hiEdge] at hA
     simp at hA
 
 /-- Consistency data for a multi-break script that marches through its

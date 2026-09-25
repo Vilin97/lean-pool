@@ -344,7 +344,7 @@ theorem matrixOf_relabel {n p : ℕ} (core : Core n p) (σ : Equiv.Perm (Fin n))
     (i j : ℕ) (hi : i < n) (hj : j < n) :
     matrixOf (core.relabel σ) i j
       = core.pairMultiplicity (σ⁻¹ ⟨i, hi⟩) (σ⁻¹ ⟨j, hj⟩) := by
-  simp only [matrixOf, dif_pos hi, dif_pos hj]
+  simp only [matrixOf, dite_eq_left hi, dite_eq_left hj]
   have := Core.pairMultiplicity_relabel core σ (σ⁻¹ ⟨i, hi⟩) (σ⁻¹ ⟨j, hj⟩)
   simpa using this
 

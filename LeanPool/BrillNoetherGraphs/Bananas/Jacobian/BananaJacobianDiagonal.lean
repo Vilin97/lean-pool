@@ -38,7 +38,7 @@ private theorem leftChip_initialSlope {g : ℕ} (B : Banana g)
     strandVertex_ne_leftEndpoint B alpha one (by simp [one])
   rw [strandVertex_zero]
   simp only [oneChip]
-  rw [if_neg hOne]
+  rw [ite_eq_right hOne]
   simp
 
 private theorem leftChip_slope_eq_zero_of_pos {g : ℕ} (B : Banana g)
@@ -53,7 +53,7 @@ private theorem leftChip_slope_eq_zero_of_pos {g : ℕ} (B : Banana g)
   have hRight : strandVertex B alpha next ≠ leftEndpoint B :=
     strandVertex_ne_leftEndpoint B alpha next (by simp [next])
   simp only [oneChip]
-  rw [if_neg hRight, if_neg hLeft]
+  rw [ite_eq_right hRight, ite_eq_right hLeft]
   norm_num
 
 private theorem coordinateStep_leftEndpoint {g : ℕ} (B : Banana g)
@@ -66,7 +66,7 @@ private theorem coordinateStep_leftEndpoint {g : ℕ} (B : Banana g)
   unfold bananaCoordinateStep
   change (if leftEndpoint B = strandVertex B alpha one then 1 else 0) -
       (if leftEndpoint B = leftEndpoint B then 1 else 0) = -1
-  rw [if_neg hOne.symm, if_pos rfl]
+  rw [ite_eq_right hOne.symm, ite_eq_left rfl]
   norm_num
 
 private theorem coordinateStep_rightEndpoint {g : ℕ} (B : Banana g)
@@ -88,10 +88,10 @@ private theorem coordinateStep_rightEndpoint {g : ℕ} (B : Banana g)
         (⟨1, by have := B.length_pos alpha; omega⟩ : B.PathPosition alpha) =
           rightEndpoint B := by
       simpa [one] using hOneVertex
-    rw [if_pos hLength]
+    rw [ite_eq_left hLength]
     unfold bananaCoordinateStep
     simp only [Pi.sub_apply, oneChip]
-    rw [if_pos hOneVertex'.symm, if_neg hLR]
+    rw [ite_eq_left hOneVertex'.symm, ite_eq_right hLR]
     norm_num
   · have hLt : 1 < B.length alpha := by
       have := B.length_pos alpha
@@ -102,10 +102,10 @@ private theorem coordinateStep_rightEndpoint {g : ℕ} (B : Banana g)
         (⟨1, by have := B.length_pos alpha; omega⟩ : B.PathPosition alpha) ≠
           rightEndpoint B := by
       simpa [one] using hOneVertex
-    rw [if_neg hLength]
+    rw [ite_eq_right hLength]
     unfold bananaCoordinateStep
     simp only [Pi.sub_apply, oneChip]
-    rw [if_neg hOneVertex'.symm, if_neg hLR]
+    rw [ite_eq_right hOneVertex'.symm, ite_eq_right hLR]
     norm_num
 
 private theorem leftChip_finalSlope {g : ℕ} (B : Banana g)
@@ -114,9 +114,9 @@ private theorem leftChip_finalSlope {g : ℕ} (B : Banana g)
         (B.length alpha - 1) =
       if B.length alpha = 1 then -1 else 0 := by
   by_cases hLength : B.length alpha = 1
-  · rw [if_pos hLength]
+  · rw [ite_eq_left hLength]
     simpa [hLength] using leftChip_initialSlope B alpha
-  · rw [if_neg hLength]
+  · rw [ite_eq_right hLength]
     apply leftChip_slope_eq_zero_of_pos B alpha
     · have := B.length_pos alpha
       omega
@@ -177,7 +177,7 @@ private theorem coordinateStep_normalizedInterior {g : ℕ} (B : Banana g)
     strandVertex_ne_leftEndpoint B alpha p hp.1
   unfold bananaCoordinateStep
   simp only [Pi.sub_apply, oneChip]
-  simp only [hFirstEq', if_neg hTargetLeft, sub_zero]
+  simp only [hFirstEq', ite_eq_right hTargetLeft, sub_zero]
 
 private theorem prin_leftChip_normalizedInterior {g : ℕ} (B : Banana g)
     (alpha : Fin (g + 1)) (p : B.PathPosition alpha)
@@ -199,7 +199,7 @@ private theorem prin_leftChip_normalizedInterior {g : ℕ} (B : Banana g)
   rw [hpEq] at hPrin
   rw [hPrin]
   by_cases hpOne : p.val = 1
-  · rw [if_pos hpOne]
+  · rw [ite_eq_left hpOne]
     have hrZero : r.val = 0 := by omega
     have hNext : bananaStepSlope B (oneChip (leftEndpoint B)) alpha
         (r.val + 1) = 0 := by
@@ -212,7 +212,7 @@ private theorem prin_leftChip_normalizedInterior {g : ℕ} (B : Banana g)
       simpa [hrZero] using leftChip_initialSlope B alpha
     rw [hNext, hInitial]
     norm_num
-  · rw [if_neg hpOne]
+  · rw [ite_eq_right hpOne]
     have hrPos : 0 < r.val := by omega
     have hCurrent : bananaStepSlope B (oneChip (leftEndpoint B)) alpha
         r.val = 0 := by
@@ -265,9 +265,9 @@ theorem bananaDiagonalRelation_image_eq_prin_leftEndpoint {g : ℕ}
     rw [Finset.sum_apply]
     simp_rw [coordinateStep_normalizedInterior B alpha _ p hp]
     by_cases hpOne : p.val = 1
-    · rw [if_pos hpOne]
+    · rw [ite_eq_left hpOne]
       simp [hpOne]
-    · rw [if_neg hpOne]
+    · rw [ite_eq_right hpOne]
       simp [hpOne]
 
 /-- Thus the diagonal relation maps to a principal divisor. -/

@@ -142,24 +142,24 @@ theorem script_stepLeft {n p : ℕ}
         value (spec.length edge) position.val offset.val else 0 := by
   by_cases hOther : other = edge
   · subst other
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     unfold SubdivisionGraph.Spec.stepLeft
     by_cases hZero : offset.val = 0
-    · rw [dif_pos hZero]
+    · rw [dite_eq_left hZero]
       simp [hZero]
-    · rw [dif_neg hZero]
+    · rw [dite_eq_right hZero]
       rw [script_interior_same]
       change value (spec.length edge) position.val
           ((offset.val - 1) + 1) =
         value (spec.length edge) position.val offset.val
       congr 1
       omega
-  · rw [if_neg hOther]
+  · rw [ite_eq_right hOther]
     unfold SubdivisionGraph.Spec.stepLeft
     by_cases hZero : offset.val = 0
-    · rw [dif_pos hZero]
+    · rw [dite_eq_left hZero]
       rfl
-    · rw [dif_neg hZero]
+    · rw [dite_eq_right hZero]
       exact script_interior_other spec edge other position hOther _
 
 /-- Script value at the right endpoint of any emitted unit step. -/
@@ -175,20 +175,20 @@ theorem script_stepRight {n p : ℕ}
     omega
   by_cases hOther : other = edge
   · subst other
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     unfold SubdivisionGraph.Spec.stepRight
     by_cases hLast : offset.val + 1 = spec.length edge
-    · rw [dif_pos hLast]
+    · rw [dite_eq_left hLast]
       rw [hLast, value_length hPosition]
       rfl
-    · rw [dif_neg hLast]
+    · rw [dite_eq_right hLast]
       exact script_interior_same spec edge position _
-  · rw [if_neg hOther]
+  · rw [ite_eq_right hOther]
     unfold SubdivisionGraph.Spec.stepRight
     by_cases hLast : offset.val + 1 = spec.length other
-    · rw [dif_pos hLast]
+    · rw [dite_eq_left hLast]
       rfl
-    · rw [dif_neg hLast]
+    · rw [dite_eq_right hLast]
       exact script_interior_other spec edge other position hOther _
 
 /-- The script difference along a unit step is the reflection slope on the
@@ -204,7 +204,7 @@ theorem script_stepDifference {n p : ℕ}
   rw [script_stepRight, script_stepLeft]
   by_cases hOther : other = edge
   · subst other
-    simp only [if_pos]
+    simp only [ite_eq_left]
     apply value_succ_sub_value
     have := position.isLt
     omega
@@ -252,11 +252,11 @@ theorem prin_script_eq_slot_sum {n p : ℕ}
         apply hDistinct
         exact hLeft.trans h.symm
       subst vertex
-      simp only [hRight, if_false, if_true, add_zero]
+      simp only [hRight, ite_false, ite_true, add_zero]
       exact hDifference
     · by_cases hRight : spec.stepRight step.1 step.2 = vertex
       · subst vertex
-        simp only [hLeft, if_false, if_true, zero_add]
+        simp only [hLeft, ite_false, ite_true, zero_add]
         omega
       · simp [hLeft, hRight]
   simp_rw [hTerm]
@@ -314,7 +314,7 @@ theorem prin_script_pathVertex {n p : ℕ}
               slope (spec.length edge) position.val selected.val else 0) := by
           apply Fintype.sum_eq_single selected
           intro other hOther
-          rw [if_neg]
+          rw [ite_eq_right]
           intro hValue
           apply hOther
           apply Fin.ext
@@ -346,7 +346,7 @@ theorem prin_script_pathVertex {n p : ℕ}
               -slope (spec.length edge) position.val selected.val else 0) := by
           apply Fintype.sum_eq_single selected
           intro other hOther
-          rw [if_neg]
+          rw [ite_eq_right]
           intro hValue
           apply hOther
           apply Fin.ext
@@ -485,7 +485,7 @@ theorem prin_script_eq_reflectionDivisor {n p : ℕ}
           intro hEqual
           exact hHead (Sum.inl.inj hEqual)
         rw [prin_script_eq_slot_sum]
-        simp_rw [if_neg (hLeft _), if_neg (hRight _)]
+        simp_rw [ite_eq_right (hLeft _), ite_eq_right (hRight _)]
         simp [oneChip, hTailVertex, hHeadVertex,
           hTargetNe', hReflectedNe']
   · obtain ⟨other, offset⟩ := interior
@@ -498,8 +498,8 @@ theorem prin_script_eq_reflectionDivisor {n p : ℕ}
       have hProbe :
           spec.pathVertex edge probe = spec.interiorVertex edge offset := by
         unfold SubdivisionGraph.Spec.pathVertex
-        rw [dif_neg (by dsimp [probe]; omega)]
-        rw [dif_neg (by dsimp [probe]; have := offset.isLt; omega)]
+        rw [dite_eq_right (by dsimp [probe]; omega)]
+        rw [dite_eq_right (by dsimp [probe]; have := offset.isLt; omega)]
         congr 2
       have hPath := prin_script_pathVertex_eq_reflectionDivisor
         spec edge position probe
@@ -551,7 +551,7 @@ theorem prin_script_eq_reflectionDivisor {n p : ℕ}
             spec.pathVertex edge (symmetricPosition spec edge position) :=
         hReflectedNe
       rw [prin_script_eq_slot_sum]
-      simp_rw [if_neg (hLeft _), if_neg (hRight _)]
+      simp_rw [ite_eq_right (hLeft _), ite_eq_right (hRight _)]
       simp [oneChip, SubdivisionGraph.Spec.coreVertex,
         hTargetNe', hReflectedNe']
 

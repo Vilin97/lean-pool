@@ -280,9 +280,9 @@ private theorem exists_coarse_double_of_split {n p : ℕ} (spec : Spec n p) (N :
           = ∑ k : Fin 2, ((chips0 i).double k).signedCost := by
       intro i
       rw [Finset.sum_filter, Fintype.sum_prod_type]
-      refine (Finset.sum_eq_single i (fun b _ hb => Finset.sum_eq_zero fun k _ => if_neg hb)
+      refine (Finset.sum_eq_single i (fun b _ hb => Finset.sum_eq_zero fun k _ => ite_eq_right hb)
         (fun hc => absurd (Finset.mem_univ i) hc)).trans ?_
-      exact Finset.sum_congr rfl fun k _ => if_pos rfl
+      exact Finset.sum_congr rfl fun k _ => ite_eq_left rfl
     have hcost : (∑ step : spec.Step, |spec.stepCost N
         (fun q : {i : ι // P i} × Fin 2 => (chips0 q.1).double q.2) step|) < (N : ℤ) := by
       refine lt_of_le_of_lt

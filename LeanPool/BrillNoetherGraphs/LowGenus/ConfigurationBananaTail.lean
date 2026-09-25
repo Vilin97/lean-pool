@@ -145,14 +145,14 @@ theorem armCenter_nonneg (Sa Sb Sw : BananaLedger)
         omega
       omega
   by_cases hw : w = 0 ∧ D < E
-  · have hshift1 : shift = 1 := by rw [hshift, if_pos hw]
+  · have hshift1 : shift = 1 := by rw [hshift, ite_eq_left hw]
     have hCDeq : C = D := by omega
     have hMidZero : Sw.tail w C D = 0 := by
       rw [hCDeq]
       exact Sw.toChainLedger.tail_same w D
     have := hArmsFull (by omega)
     omega
-  · have hshift0 : shift = 0 := by rw [hshift, if_neg hw]
+  · have hshift0 : shift = 0 := by rw [hshift, ite_eq_right hw]
     by_cases hCDeq : C = D
     · have hMidZero : Sw.tail w C D = 0 := by
         rw [hCDeq]
@@ -200,7 +200,7 @@ theorem bananaChip_nonneg (Sw Sp Sq : BananaLedger)
       omega
     by_cases hw : w = 0
     · have hshift1 : shift = 1 := by
-        rw [hshift, if_pos ⟨hw, by omega⟩]
+        rw [hshift, ite_eq_left ⟨hw, by omega⟩]
       have hCDeq : C = D := by omega
       have hMidZero : Sw.head w C D = 0 := by
         rw [hCDeq]; exact Sw.toChainLedger.head_same w D

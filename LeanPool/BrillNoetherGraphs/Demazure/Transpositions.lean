@@ -42,7 +42,7 @@ noncomputable def sigmaFun (S : Set ℤ) (n : ℤ) : ℤ :=
 private lemma sigmaFun_of_mem {S : Set ℤ} {n : ℤ} (hn : n ∈ S) :
     sigmaFun S n = n + 1 := by
   -- Proof written by GPT 5.5.
-  simp only [sigmaFun, hn, if_true]
+  simp only [sigmaFun, hn, ite_true]
 
 private lemma sigmaFun_of_pred_mem {S : Set ℤ} (hS : NoConsecutive S) {n : ℤ}
     (hn : n - 1 ∈ S) :
@@ -51,12 +51,12 @@ private lemma sigmaFun_of_pred_mem {S : Set ℤ} (hS : NoConsecutive S) {n : ℤ
   have hmem : n ∉ S := by
     intro h
     exact hS (n - 1) hn (by simpa only [sub_add_cancel] using h)
-  simp only [sigmaFun, hmem, if_false, hn, if_true]
+  simp only [sigmaFun, hmem, ite_false, hn, ite_true]
 
 private lemma sigmaFun_of_not_mem {S : Set ℤ} {n : ℤ} (hn : n ∉ S) (hpred : n - 1 ∉ S) :
     sigmaFun S n = n := by
   -- Proof written by GPT 5.5.
-  simp only [sigmaFun, hn, if_false, hpred]
+  simp only [sigmaFun, hn, ite_false, hpred]
 
 private lemma not_succ_mem_of_noConsecutive {S : Set ℤ} (hS : NoConsecutive S)
     {n : ℤ} (hn : n ∈ S) : n + 1 ∉ S :=
@@ -76,11 +76,11 @@ private lemma sigmaFun_involutive {S : Set ℤ} (hS : NoConsecutive S) :
   intro n
   by_cases hn : n ∈ S
   · have hsucc : n + 1 ∉ S := not_succ_mem_of_noConsecutive hS hn
-    simp only [sigmaFun, hn, if_true, hsucc, if_false, add_sub_cancel_right]
+    simp only [sigmaFun, hn, ite_true, hsucc, ite_false, add_sub_cancel_right]
   · by_cases hpred : n - 1 ∈ S
-    · simp only [sigmaFun, hn, if_false, hpred, if_true]
+    · simp only [sigmaFun, hn, ite_false, hpred, ite_true]
       omega
-    · simp only [sigmaFun, hn, if_false, hpred]
+    · simp only [sigmaFun, hn, ite_false, hpred]
 
 private lemma sigmaFun_injective {S : Set ℤ} (hS : NoConsecutive S) :
     Function.Injective (sigmaFun S) :=
@@ -204,7 +204,7 @@ private lemma sigma_s_diag (S : Set ℤ) (hS : NoConsecutive S) (b : ℤ) :
         · rw [sigma_apply_of_pred_mem (S := S) (hS := hS) hb]
           omega
     simp only [hset, Finset.card_singleton, Nat.cast_one]
-    simp only [Utils.oneIf, hb, if_true]
+    simp only [Utils.oneIf, hb, ite_true]
   · rw [(sigma S hS).s_eq_se_card]
     have hset : (sigma S hS).seFinset b b = ∅ := by
       ext n
@@ -219,7 +219,7 @@ private lemma sigma_s_diag (S : Set ℤ) (hS : NoConsecutive S) (b : ℤ) :
       · have hge := pred_le_sigma_apply S hS n
         omega
     simp only [hset, Finset.card_empty, Nat.cast_zero]
-    simp only [Utils.oneIf, hb, if_false]
+    simp only [Utils.oneIf, hb, ite_false]
 
 /-- The slipface of $\sigma_S$ is the identity slipface, incremented by 1 on diagonal entries
 corresponding to the inversions.
@@ -233,7 +233,7 @@ private lemma sigma_slipface (S : Set ℤ) (hS : NoConsecutive S) (a b : ℤ) :
       simpa using sigma_s_zero_of_lt S hS hab]
     have hmax : max 0 (a - b) = 0 := max_eq_left (by omega)
     have hne : a ≠ b := ne_of_lt hab
-    simp only [hmax, Utils.oneIf, hne, false_and, if_false, add_zero]
+    simp only [hmax, Utils.oneIf, hne, false_and, ite_false, add_zero]
   · subst a
     rw [show (sigma S hS).s b b = Utils.oneIf (b - 1 ∈ S) by
       simpa using sigma_s_diag S hS b]
@@ -242,7 +242,7 @@ private lemma sigma_slipface (S : Set ℤ) (hS : NoConsecutive S) (a b : ℤ) :
       simpa using sigma_s_of_gt S hS hba]
     have hmax : max 0 (a - b) = a - b := max_eq_right (by omega)
     have hne : a ≠ b := ne_of_gt hba
-    simp only [hmax, Utils.oneIf, hne, false_and, if_false, add_zero]
+    simp only [hmax, Utils.oneIf, hne, false_and, ite_false, add_zero]
 
 private lemma bend_set_sigma_cases (S : Set ℤ) (hS : NoConsecutive S) (b : ℤ) :
     SlipFace.bendSet (sigma S hS).s b =
@@ -413,14 +413,14 @@ private lemma star_step_min_eq_oneIf (s : SlipFace) (a b : ℤ) :
   · have hone :
         Utils.oneIf (s a (b - 1) > s a b ∧ s a b = s a (b + 1)) = 1 := by
       simp only [Utils.oneIf]
-      exact if_pos hcond
+      exact ite_eq_left hcond
     have hleft : s a (b - 1) = s a b + 1 := by omega
     have hright : s a (b + 1) + 1 = s a b + 1 := by omega
     rw [hone, hleft, hright, min_self]
   · have hzero :
         Utils.oneIf (s a (b - 1) > s a b ∧ s a b = s a (b + 1)) = 0 := by
       simp only [Utils.oneIf]
-      exact if_neg hcond
+      exact ite_eq_right hcond
     rw [hzero, add_zero]
     by_cases hleft : s a (b - 1) = s a b
     · rw [hleft]
@@ -445,14 +445,14 @@ private lemma lres_step_max_eq_oneIf (s : SlipFace) (a b : ℤ) :
   · have hone :
         Utils.oneIf (s a (b - 1) = s a b ∧ s a b > s a (b + 1)) = 1 := by
       simp only [Utils.oneIf]
-      exact if_pos hcond
+      exact ite_eq_left hcond
     have hleft : s a (b - 1) - 1 = s a b - 1 := by omega
     have hright : s a (b + 1) = s a b - 1 := by omega
     rw [hone, hleft, hright, max_self]
   · have hzero :
         Utils.oneIf (s a (b - 1) = s a b ∧ s a b > s a (b + 1)) = 0 := by
       simp only [Utils.oneIf]
-      exact if_neg hcond
+      exact ite_eq_right hcond
     rw [hzero, sub_zero]
     by_cases hleft : s a (b - 1) = s a b
     · have hnot_gt : ¬ s a b > s a (b + 1) := by
@@ -480,14 +480,14 @@ theorem sf_star_sigma (S : Set ℤ) (hS : NoConsecutive S) (s : SlipFace) (a b :
       rw [sigma_slipface S hS (b - 1) b]
       have hmax : max 0 (b - 1 - b) = 0 := max_eq_left (by omega)
       have hne : b - 1 ≠ b := ne_of_lt (sub_one_lt b)
-      simp only [hmax, hne, false_and, Utils.oneIf, if_false, add_zero]
+      simp only [hmax, hne, false_and, Utils.oneIf, ite_false, add_zero]
     have ht_right : (sigma S hS).s (b + 1) b = 1 := by
       rw [sigma_slipface S hS (b + 1) b]
       have hmax : max 0 (b + 1 - b) = 1 := by
         rw [max_eq_right (by omega)]
         omega
       have hne : b + 1 ≠ b := ne_of_gt (lt_add_one b)
-      simp only [hmax, hne, false_and, Utils.oneIf, if_false, add_zero]
+      simp only [hmax, hne, false_and, Utils.oneIf, ite_false, add_zero]
     have hstar_min :
         (s ⋆ (sigma S hS).s) a b =
           min (s a (b - 1)) (s a (b + 1) + 1) := by
@@ -523,9 +523,9 @@ theorem sf_star_sigma (S : Set ℤ) (hS : NoConsecutive S) (s : SlipFace) (a b :
     subst l
     have ht_diag : (sigma S hS).s b b = 0 := by
       rw [sigma_slipface S hS b b]
-      simp only [sub_self, max_self, true_and, hb, Utils.oneIf, if_false, add_zero]
+      simp only [sub_self, max_self, true_and, hb, Utils.oneIf, ite_false, add_zero]
     rw [hval, ht_diag, add_zero]
-    simp only [hb, false_and, Utils.oneIf, if_false, add_zero]
+    simp only [hb, false_and, Utils.oneIf, ite_false, add_zero]
 
 /-- A formula for $s_\alpha \star \sigma_S$, specializing the more general `sf_star_sigma`.
 *Lemma 3.17 (`lem:starTrans`) of
@@ -568,12 +568,12 @@ theorem sf_lres_sigma (S : Set ℤ) (hS : NoConsecutive S)
         rw [max_eq_right (by omega)]
         omega
       have hne : b ≠ b - 1 := ne_of_gt (sub_one_lt b)
-      simp only [hmax, hne, false_and, Utils.oneIf, if_false, add_zero]
+      simp only [hmax, hne, false_and, Utils.oneIf, ite_false, add_zero]
     have ht_right : (sigma S hS).s.dual b (b + 1) = 0 := by
       rw [sigma_sf_dual S hS, sigma_slipface S hS b (b + 1)]
       have hmax : max 0 (b - (b + 1)) = 0 := max_eq_left (by omega)
       have hne : b ≠ b + 1 := ne_of_lt (lt_add_one b)
-      simp only [hmax, hne, false_and, Utils.oneIf, if_false, add_zero]
+      simp only [hmax, hne, false_and, Utils.oneIf, ite_false, add_zero]
     have hlres_max :
         (s ◃ (sigma S hS).s) a b =
           max (s a (b - 1) - 1) (s a (b + 1)) := by
@@ -612,9 +612,9 @@ theorem sf_lres_sigma (S : Set ℤ) (hS : NoConsecutive S)
     subst l
     have ht_diag : (sigma S hS).s.dual b b = 0 := by
       rw [sigma_sf_dual S hS, sigma_slipface S hS b b]
-      simp only [sub_self, max_self, true_and, hb, Utils.oneIf, if_false, add_zero]
+      simp only [sub_self, max_self, true_and, hb, Utils.oneIf, ite_false, add_zero]
     rw [hval, ht_diag, sub_zero]
-    simp only [hb, false_and, Utils.oneIf, if_false, sub_zero]
+    simp only [hb, false_and, Utils.oneIf, ite_false, sub_zero]
 
 /-- A formula for $s_\alpha \triangleleft \sigma_S$. This is the ASP specialization of
 `sf_residual_sigma`. *Lemma 3.17 (`lem:starTrans`) of
@@ -795,7 +795,7 @@ private lemma sigmaFun_mul (S₁ S₂ : Set ℤ) (hDisj : Disjoint S₁ S₂)
     have h2 : n - 1 ∉ S₂ := by
       intro h
       exact hNoLeft n (Set.mem_union_left S₂ h1) (Set.mem_union_right S₁ h)
-    simp only [sigmaFun, h1', if_false, h2, h1, if_true, Set.mem_union,
+    simp only [sigmaFun, h1', ite_false, h2, h1, ite_true, Set.mem_union,
       true_or]
   · by_cases h2 : n ∈ S₂
     · have h2' : n ∉ S₁ := hD2 n h2
@@ -803,11 +803,11 @@ private lemma sigmaFun_mul (S₁ S₂ : Set ℤ) (hDisj : Disjoint S₁ S₂)
         intro h
         exact hS n (Set.mem_union_right S₁ h2) (Set.mem_union_left S₂ h)
       have h4 : (n + 1 : ℤ) - 1 = n := add_sub_cancel_right n 1
-      simp only [sigmaFun, h2', if_false, h2, if_true, h3, h4, Set.mem_union,
+      simp only [sigmaFun, h2', ite_false, h2, ite_true, h3, h4, Set.mem_union,
         false_or]
     · by_cases h3 : n - 1 ∈ S₁
       · have h3' : n - 1 ∉ S₂ := hD1 (n - 1) h3
-        simp only [sigmaFun, h1, if_false, h2, h3', h3, if_true,
+        simp only [sigmaFun, h1, ite_false, h2, h3', h3, ite_true,
           Set.mem_union, false_or, true_or]
       · by_cases h4 : n - 1 ∈ S₂
         · have h5 : n - 1 ∉ S₁ := hD2 (n - 1) h4
@@ -815,11 +815,11 @@ private lemma sigmaFun_mul (S₁ S₂ : Set ℤ) (hDisj : Disjoint S₁ S₂)
             intro h
             have hm : n - 1 ∈ S₁ ∪ S₂ := Set.mem_union_right S₁ h4
             exact hNoLeft (n - 1) hm (Set.mem_union_left S₂ h)
-          simp only [sigmaFun, h1, if_false, h2, h4, if_true, h5, h6,
+          simp only [sigmaFun, h1, ite_false, h2, h4, ite_true, h5, h6,
             Set.mem_union, false_or]
         · have h5 : n - 1 ∉ S₁ ∪ S₂ := by
             simp only [Set.mem_union, h3, h4, or_self, not_false_eq_true]
-          simp only [sigmaFun, h1, if_false, h2, h3, h4, Set.mem_union,
+          simp only [sigmaFun, h1, ite_false, h2, h3, h4, Set.mem_union,
             false_or, h5]
 
 private lemma sigma_mul (S₁ S₂ : Set ℤ)
@@ -891,7 +891,7 @@ private lemma star_sigma_eq_self (α : AspPerm) (S : Set ℤ) (hS : NoConsecutiv
   have hzero :
       Utils.oneIf (b - 1 ∈ S ∧ α (b - 1) < a ∧ a ≤ α b) = 0 := by
     simp only [Utils.oneIf]
-    apply if_neg
+    apply ite_eq_right
     rintro ⟨hb, hlt, hle⟩
     have hfall := hα (b - 1) hb
     have hfall' : α b < α (b - 1) := by
@@ -910,7 +910,7 @@ private lemma residual_sigma_eq_self (α : AspPerm) (S : Set ℤ) (hS : NoConsec
   have hzero :
       Utils.oneIf (b - 1 ∈ S ∧ α b < a ∧ a ≤ α (b - 1)) = 0 := by
     simp only [Utils.oneIf]
-    apply if_neg
+    apply ite_eq_right
     rintro ⟨hb, hlt, hle⟩
     have hrise := hα (b - 1) hb
     have hrise' : α (b - 1) < α b := by
@@ -1017,7 +1017,7 @@ theorem star_simple (α σ : AspPerm) (n : ℤ)
     eq_sigma_singleton_of_chi_eq_zero_of_inv_set_eq_singleton σ n hχ hInv
   rw [hσ]
   by_cases hα : α n < α (n + 1)
-  · rw [if_pos hα]
+  · rw [ite_eq_left hα]
     have hRise : risingSet α T = T := by
       simpa only [T] using risingSet_singleton_of_lt α n hα
     calc
@@ -1026,7 +1026,7 @@ theorem star_simple (α σ : AspPerm) (n : ℤ)
             starSigma α T hT
       _ = α * sigma T hT := by
         rw [sigma_eq_of_set_eq hRise (noConsecutive_risingSet α hT) hT]
-  · rw [if_neg hα]
+  · rw [ite_eq_right hα]
     apply star_sigma_eq_self
     intro m hm
     have hm_eq : m = n := by simpa only [T, Set.mem_singleton_iff] using hm
@@ -1054,7 +1054,7 @@ theorem residual_simple (α σ : AspPerm) (n : ℤ)
     eq_sigma_singleton_of_chi_eq_zero_of_inv_set_eq_singleton σ n hχ hInv
   rw [hσ]
   by_cases hα : α (n + 1) < α n
-  · rw [if_pos hα]
+  · rw [ite_eq_left hα]
     have hFall : fallingSet α T = T := by
       simpa only [T] using fallingSet_singleton_of_lt α n hα
     calc
@@ -1063,7 +1063,7 @@ theorem residual_simple (α σ : AspPerm) (n : ℤ)
             residualSigma α T hT
       _ = α * sigma T hT := by
         rw [sigma_eq_of_set_eq hFall (noConsecutive_fallingSet α hT) hT]
-  · rw [if_neg hα]
+  · rw [ite_eq_right hα]
     apply residual_sigma_eq_self
     intro m hm
     have hm_eq : m = n := by simpa only [T, Set.mem_singleton_iff] using hm

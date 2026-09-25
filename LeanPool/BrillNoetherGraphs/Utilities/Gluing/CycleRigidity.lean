@@ -230,7 +230,7 @@ theorem vertex_degree_coreVertex_eq_incidentSlots (vertex : Fin n) :
           (if first.val = 0 then (1 : ℤ) else 0) := by
         apply Fintype.sum_eq_single first
         intro offset hne
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hzero
         apply hne
         apply Fin.ext
@@ -249,7 +249,7 @@ theorem vertex_degree_coreVertex_eq_incidentSlots (vertex : Fin n) :
           (if last.val + 1 = spec.length edge then (1 : ℤ) else 0) := by
         apply Fintype.sum_eq_single last
         intro offset hne
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hlast
         apply hne
         apply Fin.ext
@@ -270,14 +270,14 @@ theorem vertex_degree_coreVertex_eq_incidentSlots (vertex : Fin n) :
     · have hRight : spec.stepRight edge offset ≠ spec.coreVertex vertex := by
         intro h
         exact hne (hLeft.trans h.symm)
-      rw [if_pos hLeft, if_neg hRight]
+      rw [ite_eq_left hLeft, ite_eq_right hRight]
       simp only [unitEdge, Prod.mk.injEq]
       simp [hLeft, hRight]
     · by_cases hRight : spec.stepRight edge offset = spec.coreVertex vertex
-      · rw [if_neg hLeft, if_pos hRight]
+      · rw [ite_eq_right hLeft, ite_eq_left hRight]
         simp only [unitEdge, Prod.mk.injEq]
         simp [hLeft, hRight]
-      · rw [if_neg hLeft, if_neg hRight]
+      · rw [ite_eq_right hLeft, ite_eq_right hRight]
         simp only [unitEdge, Prod.mk.injEq]
         simp [hLeft, hRight]
   simp_rw [hNeighborSum]
@@ -290,7 +290,7 @@ theorem vertex_degree_coreVertex_eq_incidentSlots (vertex : Fin n) :
           else 0) =
         if spec.core.tail edge = vertex then 1 else 0 := by
     by_cases hTail : spec.core.tail edge = vertex
-    · simp only [hTail, and_true, if_true]
+    · simp only [hTail, and_true, ite_true]
       exact hFirstSum
     · simp [hTail]
   have hLastPart :
@@ -299,7 +299,7 @@ theorem vertex_degree_coreVertex_eq_incidentSlots (vertex : Fin n) :
             spec.core.head edge = vertex then (1 : ℤ) else 0) =
         if spec.core.head edge = vertex then 1 else 0 := by
     by_cases hHead : spec.core.head edge = vertex
-    · simp only [hHead, and_true, if_true]
+    · simp only [hHead, and_true, ite_true]
       exact hLastSum
     · simp [hHead]
   rw [hFirstPart, hLastPart]

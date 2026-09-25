@@ -83,11 +83,11 @@ noncomputable def extendScript (G : CFGraph.{u}) (A : Finset G.V) (hA : A.Nonemp
 
 @[simp] theorem extendScript_of_mem {A : Finset G.V} {hA : A.Nonempty}
     (t : firingScript (inducedSubgraph G A hA)) {v : G.V} (hv : v ∈ A) :
-    extendScript G A hA t v = t ⟨v, hv⟩ := dif_pos hv
+    extendScript G A hA t v = t ⟨v, hv⟩ := dite_eq_left hv
 
 @[simp] theorem extendScript_of_not_mem {A : Finset G.V} {hA : A.Nonempty}
     (t : firingScript (inducedSubgraph G A hA)) {v : G.V} (hv : v ∉ A) :
-    extendScript G A hA t v = 0 := dif_neg hv
+    extendScript G A hA t v = 0 := dite_eq_right hv
 
 /-- The script's support consists of interior vertices. -/
 def SupportInterior {A : Finset G.V} {hA : A.Nonempty}

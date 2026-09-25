@@ -56,12 +56,12 @@ theorem prin_subinterval_reflection
       one_chip_pos_core spec star ⟨hi, by omega⟩ v,
       one_chip_pos_core spec star ⟨target, by omega⟩ v,
       one_chip_pos_core spec star ⟨lo + hi - target, by omega⟩ v]
-    rw [if_neg (show ¬ (lo = spec.length star) by omega),
-      if_neg (show ¬ (hi = 0) by omega),
-      if_neg (show ¬ (target = 0) by omega),
-      if_neg (show ¬ (target = spec.length star) by omega),
-      if_neg (show ¬ (lo + hi - target = 0) by omega),
-      if_neg (show ¬ (lo + hi - target = spec.length star) by omega)]
+    rw [ite_eq_right (show ¬ (lo = spec.length star) by omega),
+      ite_eq_right (show ¬ (hi = 0) by omega),
+      ite_eq_right (show ¬ (target = 0) by omega),
+      ite_eq_right (show ¬ (target = spec.length star) by omega),
+      ite_eq_right (show ¬ (lo + hi - target = 0) by omega),
+      ite_eq_right (show ¬ (lo + hi - target = spec.length star) by omega)]
     split_ifs <;> omega
   · intro edge off
     have hoi := off.isLt
@@ -73,11 +73,11 @@ theorem prin_subinterval_reflection
       one_chip_pos_int spec star ⟨lo + hi - target, by omega⟩ edge off]
     by_cases he : edge = star
     · subst he
-      rw [if_pos rfl, if_pos rfl, if_pos rfl, if_pos rfl, if_pos rfl]
+      rw [ite_eq_left rfl, ite_eq_left rfl, ite_eq_left rfl, ite_eq_left rfl, ite_eq_left rfl]
       split_ifs <;> omega
-    · rw [if_neg he, if_neg (fun hh => he hh.symm),
-        if_neg (fun hh => he hh.symm), if_neg (fun hh => he hh.symm),
-        if_neg (fun hh => he hh.symm)]
+    · rw [ite_eq_right he, ite_eq_right (fun hh => he hh.symm),
+        ite_eq_right (fun hh => he hh.symm), ite_eq_right (fun hh => he hh.symm),
+        ite_eq_right (fun hh => he hh.symm)]
       ring
 
 /-- Two interior chips whose raw path coordinates sum to less than the slot
@@ -236,17 +236,17 @@ theorem interior_and_strand_eq_of_pathVertex_eq_interior {g : ℕ}
   have hjZero : j.val ≠ 0 := hj.1.ne'
   have hjLast : j.val ≠ B.length β := ne_of_lt hj.2
   unfold SubdivisionGraph.Spec.pathVertex at h
-  rw [dif_neg hjZero, dif_neg hjLast] at h
+  rw [dite_eq_right hjZero, dite_eq_right hjLast] at h
   by_cases hiZero : i.val = 0
-  · rw [dif_pos hiZero] at h
+  · rw [dite_eq_left hiZero] at h
     simp [SubdivisionGraph.Spec.coreVertex,
       SubdivisionGraph.Spec.interiorVertex] at h
-  rw [dif_neg hiZero] at h
+  rw [dite_eq_right hiZero] at h
   by_cases hiLast : i.val = B.length α
-  · rw [dif_pos hiLast] at h
+  · rw [dite_eq_left hiLast] at h
     simp [SubdivisionGraph.Spec.coreVertex,
       SubdivisionGraph.Spec.interiorVertex] at h
-  rw [dif_neg hiLast] at h
+  rw [dite_eq_right hiLast] at h
   have hi : B.IsInteriorPosition α i := by
     change 0 < i.val ∧ i.val < B.length α
     have hiBound := i.isLt

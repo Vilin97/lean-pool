@@ -225,12 +225,12 @@ def vertexWedge (G : CFGraph.{u}) (H : CFGraph.{v})
         by_cases ha : a = y
         · by_cases hb : b = y
           · exact ha.trans hb.symm
-          · rw [dif_pos ha, dif_neg hb] at hmap
+          · rw [dite_eq_left ha, dite_eq_right hb] at hmap
             exact absurd hmap Sum.inl_ne_inr
         · by_cases hb : b = y
-          · rw [dif_neg ha, dif_pos hb] at hmap
+          · rw [dite_eq_right ha, dite_eq_left hb] at hmap
             exact absurd hmap Sum.inr_ne_inl
-          · rw [dif_neg ha, dif_neg hb] at hmap
+          · rw [dite_eq_right ha, dite_eq_right hb] at hmap
             exact congrArg Subtype.val (Sum.inr.inj hmap)
       subst hab'
       exact H.loopless _ hab
@@ -343,18 +343,18 @@ theorem stepLeft_ne_stepRight (α : Fin (g + 1)) (offset : Fin (B.length α)) :
     B.stepLeft α offset ≠ B.stepRight α offset := by
   unfold stepLeft stepRight
   by_cases hzero : offset.val = 0
-  · rw [dif_pos hzero]
+  · rw [dite_eq_left hzero]
     by_cases hlast : offset.val + 1 = B.length α
-    · rw [dif_pos hlast]
+    · rw [dite_eq_left hlast]
       intro heq
       exact B.core_loopless α (Sum.inl.inj heq)
-    · rw [dif_neg hlast]
+    · rw [dite_eq_right hlast]
       exact Sum.inl_ne_inr
-  · rw [dif_neg hzero]
+  · rw [dite_eq_right hzero]
     by_cases hlast : offset.val + 1 = B.length α
-    · rw [dif_pos hlast]
+    · rw [dite_eq_left hlast]
       exact Sum.inr_ne_inl
-    · rw [dif_neg hlast]
+    · rw [dite_eq_right hlast]
       intro heq
       have h : offset.val - 1 = offset.val :=
         congrArg (fun z : B.Interior => z.2.val) (Sum.inr.inj heq)

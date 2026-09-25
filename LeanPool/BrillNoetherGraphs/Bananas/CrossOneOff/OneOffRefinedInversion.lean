@@ -136,8 +136,8 @@ theorem oneOffColumnPosition_row
   by_cases hr : x % (n - 1) = 0
   · simp [oneOffRow, hmod, hdiv, hr]
   · have hlast : x % (n - 1) ≠ n - 1 := by omega
-    rw [oneOffRow, if_neg (by simpa [hmod] using hr),
-      if_neg (by simpa [hmod] using hlast), if_neg hr, hdiv]
+    rw [oneOffRow, ite_eq_right (by simpa [hmod] using hr),
+      ite_eq_right (by simpa [hmod] using hlast), ite_eq_right hr, hdiv]
     unfold crossOneOffColumnPosition
     omega
 
@@ -179,11 +179,11 @@ theorem oneOffPredecessorPosition_row
       simpa [Nat.add_comm, Nat.mul_comm,
         Nat.div_eq_of_lt (by omega : n - 1 < n)] using
         (Nat.add_mul_div_left (n - 1) (q - 1) (by omega : 0 < n))
-    rw [if_pos hr, hpre, oneOffRow,
-      if_neg (by rw [hrem]; omega : (q * n - 1) % n ≠ 0),
-      if_pos hrem, hquot]
+    rw [ite_eq_left hr, hpre, oneOffRow,
+      ite_eq_right (by rw [hrem]; omega : (q * n - 1) % n ≠ 0),
+      ite_eq_left hrem, hquot]
     omega
-  · rw [if_neg hr, crossOneOffPredecessorPosition, if_neg hr]
+  · rw [ite_eq_right hr, crossOneOffPredecessorPosition, ite_eq_right hr]
     simpa [hr] using oneOffColumnPosition_row hn hxg
 
 /-- The predecessor coordinate has the same compressed coordinate, including
@@ -228,7 +228,7 @@ theorem oneOffPredecessorPosition_decode
       rw [Nat.mul_sub_left_distrib, Nat.mul_one]
     have hqle : q ≤ q * n := Nat.le_mul_of_pos_right q (by omega)
     omega
-  · rw [crossOneOffPredecessorPosition, if_neg hr]
+  · rw [crossOneOffPredecessorPosition, ite_eq_right hr]
     exact crossOneOffColumnPosition_decode hn
 
 theorem oneOffPredecessorPosition_injective
@@ -261,7 +261,7 @@ private theorem nat_div_lt_div_add_sub_oneOff
     apply hxMod
     rw [hx]
     exact Nat.mod_eq_zero_of_dvd hDvd
-  rw [hx, Nat.succ_div, if_neg hNotDvd]
+  rw [hx, Nat.succ_div, ite_eq_right hNotDvd]
   omega
 
 /-- A predecessor row over `y` and the preferred row over `x > y` form an
@@ -302,18 +302,18 @@ theorem oneOff_predecessor_column_mem
       oneOffRow g n (crossOneOffColumnPosition n x) := by
     rw [hPreRow, hColRow]
     by_cases hry : y % (n - 1) = 0
-    · rw [if_pos hry]
+    · rw [ite_eq_left hry]
       have hqyPos : 1 ≤ y / (n - 1) := by
         apply (Nat.le_div_iff_mul_le (by omega : 0 < n - 1)).2
         have hLe := Nat.le_of_dvd (by omega : 0 < y)
           (Nat.dvd_of_mod_eq_zero hry)
         simpa using hLe
       by_cases hrx : x % (n - 1) = 0
-      · rw [if_pos hrx]
+      · rw [ite_eq_left hrx]
         have hqxLe : x / (n - 1) ≤ g :=
           (Nat.div_le_self x (n - 1)).trans hxg
         omega
-      · rw [if_neg hrx]
+      · rw [ite_eq_right hrx]
         have hqxSucc : x / (n - 1) + 1 ≤ x := by
           have hxPos : 0 < x := by omega
           have hlt : x / (n - 1) < x := by
@@ -326,9 +326,9 @@ theorem oneOff_predecessor_column_mem
           omega
         have hNoUnderflow : g + x / (n - 1) + 1 - x ≤ g := by omega
         omega
-    · rw [if_neg hry]
+    · rw [ite_eq_right hry]
       by_cases hrx : x % (n - 1) = 0
-      · rw [if_pos hrx]
+      · rw [ite_eq_left hrx]
         have hqxBound : x / (n - 1) ≤ y / (n - 1) + (x - y) := hDivLe
         have hgAdd : g ≤ g + y / (n - 1) + 1 := by
           simp only [Nat.add_assoc]
@@ -337,7 +337,7 @@ theorem oneOff_predecessor_column_mem
             (g + y / (n - 1) + 1 - y) + y = g + y / (n - 1) + 1 :=
           Nat.sub_add_cancel ((hyx.le.trans hxg).trans hgAdd)
         omega
-      · rw [if_neg hrx]
+      · rw [ite_eq_right hrx]
         have hStrict := nat_div_lt_div_add_sub_oneOff
           (by omega : 1 ≤ n - 1) hyx hrx
         have hgAddY : g ≤ g + y / (n - 1) + 1 := by
@@ -445,7 +445,7 @@ private theorem oneOffAdjacentPair_mem
     simp [crossOneOffPredecessorPosition, hxMod, hCol]
   have hPreRow := oneOffPredecessorPosition_row hn hx hxg
   have hColRow := oneOffColumnPosition_row hn hxg
-  rw [if_pos hxMod, hxDiv] at hPreRow hColRow
+  rw [ite_eq_left hxMod, hxDiv] at hPreRow hColRow
   have hColHi := crossOneOffColumnPosition_le_cutoff hn hxg
   have hPreHi : crossOneOffPredecessorPosition n x ≤
       crossOneOffCutoff g n := by

@@ -125,13 +125,13 @@ theorem exists_rankDelta_neg_same_strand_interior
     by_cases hTail : B.core.tail alpha = 0
     · have hI : strandVertex B alpha i = B.pathVertex alpha i := by
         unfold strandVertex
-        rw [if_pos hTail]
+        rw [ite_eq_left hTail]
       have hK : strandVertex B alpha k = B.pathVertex alpha k := by
         unfold strandVertex
-        rw [if_pos hTail]
+        rw [ite_eq_left hTail]
       have hJ : strandVertex B alpha j = B.pathVertex alpha j := by
         unfold strandVertex
-        rw [if_pos hTail]
+        rw [ite_eq_left hTail]
       dsimp [D]
       rw [hI, hK, hJ]
       apply rank_same_path_pair_sub_of_sum_inside_full B alpha i k j hi hk hj
@@ -139,15 +139,15 @@ theorem exists_rankDelta_neg_same_strand_interior
     · have hI : strandVertex B alpha i =
           B.pathVertex alpha (strandMirror B alpha i) := by
         unfold strandVertex strandMirror
-        rw [if_neg hTail]
+        rw [ite_eq_right hTail]
       have hK : strandVertex B alpha k =
           B.pathVertex alpha (strandMirror B alpha k) := by
         unfold strandVertex strandMirror
-        rw [if_neg hTail]
+        rw [ite_eq_right hTail]
       have hJ : strandVertex B alpha j =
           B.pathVertex alpha (strandMirror B alpha j) := by
         unfold strandVertex strandMirror
-        rw [if_neg hTail]
+        rw [ite_eq_right hTail]
       have hiMirror : B.IsInteriorPosition alpha (strandMirror B alpha i) := by
         change 0 < B.length alpha - i.val ∧
           B.length alpha - i.val < B.length alpha
@@ -315,10 +315,10 @@ theorem theta_nonSubmodular_iff_of_raw_classification
   by_cases hTail : B.core.tail alpha = 0
   · have hI : strandVertex B alpha i = B.pathVertex alpha i := by
       unfold strandVertex
-      rw [if_pos hTail]
+      rw [ite_eq_left hTail]
     have hJ : strandVertex B alpha j = B.pathVertex alpha j := by
       unfold strandVertex
-      rw [if_pos hTail]
+      rw [ite_eq_left hTail]
     rw [hI, hJ]
     exact hRaw i j hij
   · have hiBound := i.isLt
@@ -326,11 +326,11 @@ theorem theta_nonSubmodular_iff_of_raw_classification
     have hI : strandVertex B alpha i =
         B.pathVertex alpha (strandMirror B alpha i) := by
       unfold strandVertex strandMirror
-      rw [if_neg hTail]
+      rw [ite_eq_right hTail]
     have hJ : strandVertex B alpha j =
         B.pathVertex alpha (strandMirror B alpha j) := by
       unfold strandVertex strandMirror
-      rw [if_neg hTail]
+      rw [ite_eq_right hTail]
     have hMirror :
         (strandMirror B alpha j).val < (strandMirror B alpha i).val := by
       simp only [strandMirror]

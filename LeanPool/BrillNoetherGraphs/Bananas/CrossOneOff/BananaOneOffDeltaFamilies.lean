@@ -215,13 +215,13 @@ theorem rankDelta_oneOff_terminal_family
       have hle : (b : ℤ) ≤ (a : ℤ) + b + 1 - a := by
         ring_nf
         omega
-      rw [if_pos rfl, max_eq_right hle]
+      rw [ite_eq_left rfl, max_eq_right hle]
       ring
     · have hagLt : a < g := lt_of_le_of_ne hag hagEq
       have hagLtInt : (a : ℤ) + 1 ≤ (g : ℤ) := by
         exact_mod_cast hagLt
       have hle : (a : ℤ) + b + 1 - g ≤ b := by omega
-      rw [if_neg hagEq, max_eq_left hle]
+      rw [ite_eq_right hagEq, max_eq_left hle]
       ring
   have hMaxDU : max (b : ℤ) ((a : ℤ) - 1 + b + 1 - g) = b := by
     rw [max_eq_left]
@@ -248,9 +248,9 @@ theorem rankDelta_oneOff_terminal_family
   simp only [map_zero, add_zero]
   rw [hMinA, hMinPred, hMaxD, hMaxDU, hMaxDV, hMaxBoth]
   by_cases hagEq : a = g
-  · rw [if_pos hagEq]
+  · rw [ite_eq_left hagEq]
     omega
-  · rw [if_neg hagEq]
+  · rw [ite_eq_right hagEq]
     omega
 
 /-- Corollary 2.25(2), packaged with the paper's common hypotheses

@@ -84,7 +84,7 @@ theorem bnRectangle_card (r n : ℕ) : (bnRectangle r n).card = (r + 1) * n := b
 theorem bnRectangle_rowLens_length_of_pos {r n : ℕ} (hn : 0 < n) :
     (bnRectangle r n).rowLens.length = r + 1 := by
   unfold bnRectangle
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
   have hpos : ∀ x ∈ List.replicate (r + 1) n, 0 < x := by
     intro x hx
     rw [List.eq_of_mem_replicate hx]
@@ -94,7 +94,7 @@ theorem bnRectangle_rowLens_length_of_pos {r n : ℕ} (hn : 0 < n) :
 theorem bnRectangle_getD_of_pos {r n : ℕ} (hn : 0 < n) :
     (bnRectangle r n).rowLens.getD r 0 = n := by
   unfold bnRectangle
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
   have hpos : ∀ x ∈ List.replicate (r + 1) n, 0 < x := by
     intro x hx
     rw [List.eq_of_mem_replicate hx]

@@ -200,7 +200,7 @@ private theorem vertex_degree_induced_coreVertex_eq_incidentSlots
       exact ⟨hRight, (hStep edge offset).mpr hSlot |>.1⟩
   simp_rw [hBoth, hBoth']
   by_cases hSlot : spec.core.tail edge ∈ side ∧ spec.core.head edge ∈ side
-  · simp only [hSlot, and_true, if_true]
+  · simp only [hSlot, and_true, ite_true]
     rw [Finset.sum_add_distrib]
     simp_rw [spec.stepLeft_eq_coreVertex_iff edge,
       spec.stepRight_eq_coreVertex_iff edge]
@@ -220,7 +220,7 @@ private theorem vertex_degree_induced_coreVertex_eq_incidentSlots
                 then (1 : ℤ) else 0) := by
             apply Fintype.sum_eq_single first
             intro offset hne
-            rw [if_neg]
+            rw [ite_eq_right]
             intro hzero
             apply hne
             apply Fin.ext
@@ -252,7 +252,7 @@ private theorem vertex_degree_induced_coreVertex_eq_incidentSlots
                 then (1 : ℤ) else 0) := by
             apply Fintype.sum_eq_single last
             intro offset hne
-            rw [if_neg]
+            rw [ite_eq_right]
             intro hlast
             apply hne
             apply Fin.ext

@@ -68,7 +68,7 @@ theorem effective_ordiv_sub_one_chip_of_inHeavyAt {O : CFOrientation G} {q : G.V
     simp only [Pi.sub_apply, ordiv, oneChip]
     omega
   · have := h.1 v
-    simp only [Pi.sub_apply, ordiv, oneChip, if_neg hv]
+    simp only [Pi.sub_apply, ordiv, oneChip, ite_eq_right hv]
     omega
 
 /-! ## The surviving statement: in-heavy reachability certifies rank one -/

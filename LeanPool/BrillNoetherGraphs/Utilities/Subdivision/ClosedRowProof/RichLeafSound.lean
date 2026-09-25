@@ -68,7 +68,7 @@ theorem pointValue_succ_sub (w : RichWitness) (x : List ℤ) (a e i : ℕ) :
       w.blockLengthValue x a e i := by
   rw [blockLengthValue_eq]
   simp only [pointValue, point]
-  rw [if_neg (Nat.succ_ne_zero _)]
+  rw [ite_eq_right (Nat.succ_ne_zero _)]
   rfl
 
 /-- W1 monotonicity receipts make the evaluated named points weakly ordered.
@@ -176,7 +176,7 @@ theorem chip_named_of_w3Checks (w : RichWitness) (core : ExplicitPotential.Core 
   have hForA := (ExplicitPotential.allFin_eq_true_iff _).mp hAll a
   have hForAE := (ExplicitPotential.allFin_eq_true_iff _).mp hForA e
   have hAny := (List.all_eq_true.mp hForAE chip hchip)
-  rw [if_pos (by simp [e])] at hAny
+  rw [ite_eq_left (by simp [e])] at hAny
   rcases List.any_eq_true.mp hAny with ⟨i, hi, hform⟩
   exact ⟨i, List.mem_range.mp hi, hform⟩
 
@@ -576,14 +576,14 @@ theorem w4_checked_or_separated_of_w4Checks (w : RichWitness)
     have hEq : formEq (w.point a.val e.val j) (coordForm e.val) = true := by
       simpa [headConfined] using hc
     exact hNotHead (eval_eq_of_formEq hEq x)
-  rw [hTailFalse, hHeadFalse, Bool.or_self, if_neg (by simp)] at hEntry
+  rw [hTailFalse, hHeadFalse, Bool.or_self, ite_eq_right (by simp)] at hEntry
   by_cases hResidual : 0 ≤ w.w4Residual a.val e.val i j
   · exact Or.inl hResidual
-  · rw [if_neg hResidual] at hEntry
+  · rw [ite_eq_right hResidual] at hEntry
     by_cases hEq : i == j
-    · rw [if_pos hEq] at hEntry
+    · rw [ite_eq_left hEq] at hEntry
       contradiction
-    · rw [if_neg hEq] at hEntry
+    · rw [ite_eq_right hEq] at hEntry
       exact Or.inr (by
         simpa [pointValue, eval_subForm] using (positiveCheck_sound hEntry hx))
 
@@ -720,7 +720,7 @@ theorem blockRise_eq_zero_of_richBlockEnds_empty
     by_cases hZero : i = 0
     · subst i
       have hEnd : (w.pointValue x a.val e.val 1).toNat ≤ 0 := by
-        simp only [FiniteBlockEnds.startAt, if_pos] at hEmpty
+        simp only [FiniteBlockEnds.startAt, ite_eq_left] at hEmpty
         rw [w.richBlockEnds_endAt d core Γ x hW1 hx hCoord a e 0 hi] at hEmpty
         exact hEmpty
       have hPointNonneg : 0 ≤ w.pointValue x a.val e.val 1 :=
@@ -734,7 +734,7 @@ theorem blockRise_eq_zero_of_richBlockEnds_empty
     · have hPred : i - 1 < k := by omega
       have hEnd : (w.pointValue x a.val e.val (i + 1)).toNat ≤
           (w.pointValue x a.val e.val i).toNat := by
-        rw [FiniteBlockEnds.startAt, if_neg hZero] at hEmpty
+        rw [FiniteBlockEnds.startAt, ite_eq_right hZero] at hEmpty
         rw [w.richBlockEnds_endAt d core Γ x hW1 hx hCoord a e i (by simpa [k] using hi),
           w.richBlockEnds_endAt d core Γ x hW1 hx hCoord a e (i - 1) (by simpa [k] using hPred)] at hEmpty
         simpa [show i - 1 + 1 = i by omega] using hEmpty

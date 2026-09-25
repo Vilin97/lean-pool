@@ -278,7 +278,7 @@ private theorem star_simple_of_ascent (τ : AspPerm) (i : ℤ)
     (hasc : τ i < τ (i + 1)) :
     τ ⋆ simpleReflection i = AspPerm.mul τ (simpleReflection i) := by
   rw [Transpositions.star_simple τ (simpleReflection i) i
-    (simpleReflection_chi i) (simpleReflection_inv_set i), if_pos hasc]
+    (simpleReflection_chi i) (simpleReflection_inv_set i), ite_eq_left hasc]
   rfl
 
 private theorem star_simple_of_descent (τ : AspPerm) (i : ℤ)
@@ -286,7 +286,7 @@ private theorem star_simple_of_descent (τ : AspPerm) (i : ℤ)
     τ ⋆ simpleReflection i = τ := by
   rw [Transpositions.star_simple τ (simpleReflection i) i
     (simpleReflection_chi i) (simpleReflection_inv_set i)]
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 /-- A positive-length finite ASP permutation is a shorter permutation
 Demazure-multiplied on the right by one adjacent reflection. -/

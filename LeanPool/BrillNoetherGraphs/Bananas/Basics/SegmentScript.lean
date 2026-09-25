@@ -79,7 +79,7 @@ theorem segCompatible (hlo : lo < target) (hhi : target < hi)
   · intro edge
     by_cases he : edge = star
     · subst he
-      rw [segValue_star, if_pos (Nat.zero_le _),
+      rw [segValue_star, ite_eq_left (Nat.zero_le _),
         (by omega : (0 : ℕ) - lo = 0), value_zero]
     · rw [segValue_other he]
   · intro edge
@@ -88,8 +88,8 @@ theorem segCompatible (hlo : lo < target) (hhi : target < hi)
       rw [segValue_star]
       by_cases hcase : spec.length edge ≤ hi
       · have heq : spec.length edge = hi := le_antisymm hcase hlen
-        rw [if_pos hcase, heq, value_length (by omega)]
-      · rw [if_neg hcase]
+        rw [ite_eq_left hcase, heq, value_length (by omega)]
+      · rw [ite_eq_right hcase]
     · rw [segValue_other he]
 
 theorem isStepSlope_seg (hlo : lo < target) (hhi : target < hi)
@@ -103,23 +103,23 @@ theorem isStepSlope_seg (hlo : lo < target) (hhi : target < hi)
   · subst he
     rw [segValue_star, segValue_star, segSlope_star]
     by_cases hcase : lo ≤ offset.val ∧ offset.val < hi
-    · rw [if_pos hcase, if_pos (by omega : offset.val + 1 ≤ hi),
-        if_pos (by omega : offset.val ≤ hi),
+    · rw [ite_eq_left hcase, ite_eq_left (by omega : offset.val + 1 ≤ hi),
+        ite_eq_left (by omega : offset.val ≤ hi),
         (by omega : offset.val + 1 - lo = (offset.val - lo) + 1)]
       exact value_succ_sub_value (by omega)
-    · rw [if_neg hcase]
+    · rw [ite_eq_right hcase]
       simp only [not_and_or, not_le, not_lt] at hcase
       rcases hcase with hcase | hcase
-      · rw [if_pos (by omega : offset.val + 1 ≤ hi),
-          if_pos (by omega : offset.val ≤ hi),
+      · rw [ite_eq_left (by omega : offset.val + 1 ≤ hi),
+          ite_eq_left (by omega : offset.val ≤ hi),
           (by omega : offset.val + 1 - lo = 0), (by omega : offset.val - lo = 0)]
         simp
-      · rw [if_neg (by omega : ¬ (offset.val + 1 ≤ hi))]
+      · rw [ite_eq_right (by omega : ¬ (offset.val + 1 ≤ hi))]
         by_cases hEq : offset.val ≤ hi
-        · rw [if_pos hEq, (by omega : offset.val - lo = hi - lo),
+        · rw [ite_eq_left hEq, (by omega : offset.val - lo = hi - lo),
             value_length (by omega)]
           ring
-        · rw [if_neg hEq]
+        · rw [ite_eq_right hEq]
           ring
   · rw [segValue_other he, segValue_other he, segSlope_other he]
     ring
@@ -128,10 +128,10 @@ theorem segSlope_zero (hlo : lo < target) (hhi : target < hi) :
     segSlope star lo hi target star 0 = if lo = 0 then -1 else 0 := by
   rw [segSlope_star]
   by_cases hz : lo = 0
-  · rw [if_pos (by omega : lo ≤ 0 ∧ 0 < hi), if_pos hz, hz]
+  · rw [ite_eq_left (by omega : lo ≤ 0 ∧ 0 < hi), ite_eq_left hz, hz]
     simp only [slope]
-    rw [if_pos (by omega : 0 - 0 < min (target - 0) (hi - 0 - (target - 0)))]
-  · rw [if_neg (by omega : ¬ (lo ≤ 0 ∧ 0 < hi)), if_neg hz]
+    rw [ite_eq_left (by omega : 0 - 0 < min (target - 0) (hi - 0 - (target - 0)))]
+  · rw [ite_eq_right (by omega : ¬ (lo ≤ 0 ∧ 0 < hi)), ite_eq_right hz]
 
 theorem segSlope_last (hlo : lo < target) (hhi : target < hi)
     (hlen : hi ≤ spec.length star) :
@@ -140,15 +140,15 @@ theorem segSlope_last (hlo : lo < target) (hhi : target < hi)
   have hpos := spec.length_pos star
   rw [segSlope_star]
   by_cases heq : hi = spec.length star
-  · rw [if_pos (by omega : lo ≤ spec.length star - 1 ∧
-      spec.length star - 1 < hi), if_pos heq]
+  · rw [ite_eq_left (by omega : lo ≤ spec.length star - 1 ∧
+      spec.length star - 1 < hi), ite_eq_left heq]
     simp only [slope]
-    rw [if_neg (by omega : ¬ (spec.length star - 1 - lo <
+    rw [ite_eq_right (by omega : ¬ (spec.length star - 1 - lo <
         min (target - lo) (hi - lo - (target - lo)))),
-      if_pos (by omega : max (target - lo) (hi - lo - (target - lo)) ≤
+      ite_eq_left (by omega : max (target - lo) (hi - lo - (target - lo)) ≤
         spec.length star - 1 - lo)]
-  · rw [if_neg (by omega : ¬ (lo ≤ spec.length star - 1 ∧
-      spec.length star - 1 < hi)), if_neg heq]
+  · rw [ite_eq_right (by omega : ¬ (lo ≤ spec.length star - 1 ∧
+      spec.length star - 1 < hi)), ite_eq_right heq]
 
 theorem segSlope_diff (hlo : lo < target) (hhi : target < hi) (k : ℕ)
     (hk : 0 < k) :
@@ -158,36 +158,36 @@ theorem segSlope_diff (hlo : lo < target) (hhi : target < hi) (k : ℕ)
         (if k = lo + hi - target then 1 else 0) := by
   rw [segSlope_star, segSlope_star]
   rcases Nat.lt_or_ge k lo with hcase | hcase
-  · rw [if_neg (by omega), if_neg (by omega), if_neg (by omega : ¬ (k = lo)),
-      if_neg (by omega : ¬ (k = hi)), if_neg (by omega : ¬ (k = target)),
-      if_neg (by omega : ¬ (k = lo + hi - target))]
+  · rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega : ¬ (k = lo)),
+      ite_eq_right (by omega : ¬ (k = hi)), ite_eq_right (by omega : ¬ (k = target)),
+      ite_eq_right (by omega : ¬ (k = lo + hi - target))]
     ring
   · rcases Nat.eq_or_lt_of_le hcase with hcase2 | hcase2
-    · rw [if_pos (by omega), if_neg (by omega),
-        if_pos (by omega : k = lo), if_neg (by omega : ¬ (k = hi)),
-        if_neg (by omega : ¬ (k = target)),
-        if_neg (by omega : ¬ (k = lo + hi - target)),
+    · rw [ite_eq_left (by omega), ite_eq_right (by omega),
+        ite_eq_left (by omega : k = lo), ite_eq_right (by omega : ¬ (k = hi)),
+        ite_eq_right (by omega : ¬ (k = target)),
+        ite_eq_right (by omega : ¬ (k = lo + hi - target)),
         (by omega : k - lo = 0)]
       simp only [slope]
-      rw [if_pos (by omega : 0 < min (target - lo) (hi - lo - (target - lo)))]
+      rw [ite_eq_left (by omega : 0 < min (target - lo) (hi - lo - (target - lo)))]
       ring
     · rcases Nat.lt_or_ge hi k with hcase3 | hcase3
-      · rw [if_neg (by omega), if_neg (by omega),
-          if_neg (by omega : ¬ (k = lo)), if_neg (by omega : ¬ (k = hi)),
-          if_neg (by omega : ¬ (k = target)),
-          if_neg (by omega : ¬ (k = lo + hi - target))]
+      · rw [ite_eq_right (by omega), ite_eq_right (by omega),
+          ite_eq_right (by omega : ¬ (k = lo)), ite_eq_right (by omega : ¬ (k = hi)),
+          ite_eq_right (by omega : ¬ (k = target)),
+          ite_eq_right (by omega : ¬ (k = lo + hi - target))]
         ring
       · have hdiv := slope_divergence (length := hi - lo)
           (position := target - lo) (j := k - lo)
           (by omega) (by omega) (by omega)
-        rw [if_pos (by omega : 0 < k - lo)] at hdiv
-        rw [if_pos (by omega : lo ≤ k - 1 ∧ k - 1 < hi),
+        rw [ite_eq_left (by omega : 0 < k - lo)] at hdiv
+        rw [ite_eq_left (by omega : lo ≤ k - 1 ∧ k - 1 < hi),
           (by omega : k - 1 - lo = (k - lo) - 1)]
         by_cases hklt : k < hi
-        · rw [if_pos (by omega : lo ≤ k ∧ k < hi)]
-          rw [if_pos (by omega : k - lo < hi - lo)] at hdiv
-          rw [hdiv, if_neg (by omega : ¬ (k - lo = 0)),
-            if_neg (by omega : ¬ (k = lo))]
+        · rw [ite_eq_left (by omega : lo ≤ k ∧ k < hi)]
+          rw [ite_eq_left (by omega : k - lo < hi - lo)] at hdiv
+          rw [hdiv, ite_eq_right (by omega : ¬ (k - lo = 0)),
+            ite_eq_right (by omega : ¬ (k = lo))]
           have e1 : (k - lo = hi - lo) ↔ (k = hi) := by omega
           have e2 : (k - lo = target - lo) ↔ (k = target) := by omega
           have e3 : (k - lo = hi - lo - (target - lo)) ↔
@@ -195,15 +195,15 @@ theorem segSlope_diff (hlo : lo < target) (hhi : target < hi) (k : ℕ)
           simp only [e1, e2, e3]
           try ring
         · have hkh : k = hi := by omega
-          rw [if_neg (by omega : ¬ (lo ≤ k ∧ k < hi))]
-          rw [if_neg (by omega : ¬ (k - lo < hi - lo))] at hdiv
-          rw [if_neg (by omega : ¬ (k = lo)), if_pos hkh,
-            if_neg (by omega : ¬ (k = target)),
-            if_neg (by omega : ¬ (k = lo + hi - target))]
-          rw [if_neg (by omega : ¬ (k - lo = 0)),
-            if_pos (by omega : k - lo = hi - lo),
-            if_neg (by omega : ¬ (k - lo = target - lo)),
-            if_neg (by omega : ¬ (k - lo = hi - lo - (target - lo)))] at hdiv
+          rw [ite_eq_right (by omega : ¬ (lo ≤ k ∧ k < hi))]
+          rw [ite_eq_right (by omega : ¬ (k - lo < hi - lo))] at hdiv
+          rw [ite_eq_right (by omega : ¬ (k = lo)), ite_eq_left hkh,
+            ite_eq_right (by omega : ¬ (k = target)),
+            ite_eq_right (by omega : ¬ (k = lo + hi - target))]
+          rw [ite_eq_right (by omega : ¬ (k - lo = 0)),
+            ite_eq_left (by omega : k - lo = hi - lo),
+            ite_eq_right (by omega : ¬ (k - lo = target - lo)),
+            ite_eq_right (by omega : ¬ (k - lo = hi - lo - (target - lo)))] at hdiv
           try omega
 
 theorem prin_seg_core (hlo : lo < target) (hhi : target < hi)
@@ -233,10 +233,10 @@ theorem prin_seg_int (hlo : lo < target) (hhi : target < hi)
   rw [spec.prin_interiorVertex_eq_slopeDifference (isStepSlope_seg hlo hhi hlen)]
   by_cases he : edge = star
   · subst he
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     have hd := segSlope_diff (star := edge) hlo hhi (offset.val + 1) (by omega)
     simpa using hd
-  · rw [if_neg he, segSlope_other he, segSlope_other he]
+  · rw [ite_eq_right he, segSlope_other he, segSlope_other he]
     ring
 
 /-! ## Generic vertex and chip lemmas
@@ -292,7 +292,7 @@ theorem pathVertex_interior (edge : Fin p) (k : ℕ) (hk0 : 0 < k)
     spec.pathVertex edge ⟨k, by omega⟩ =
       spec.interiorVertex edge ⟨k - 1, by omega⟩ := by
   unfold SubdivisionGraph.Spec.pathVertex
-  rw [dif_neg (by omega : ¬ k = 0), dif_neg (by omega : ¬ k = spec.length edge)]
+  rw [dite_eq_right (by omega : ¬ k = 0), dite_eq_right (by omega : ¬ k = spec.length edge)]
 
 end GenericChips
 
@@ -311,24 +311,24 @@ theorem one_chip_pV_core (e : Fin p) (k : ℕ) (hk : k ≤ spec.length e)
   by_cases hzero : k = 0
   · have hfin : (⟨k, by omega⟩ : spec.PathPosition e) = ⟨0, by omega⟩ :=
       Fin.ext (by simpa using hzero)
-    rw [hfin, spec.pathVertex_zero, if_pos hzero,
-      if_neg (by omega : ¬ (k = spec.length e)), add_zero]
+    rw [hfin, spec.pathVertex_zero, ite_eq_left hzero,
+      ite_eq_right (by omega : ¬ (k = spec.length e)), add_zero]
     simp only [oneChip, SubdivisionGraph.Spec.coreVertex, Sum.inl.injEq]
     by_cases hv : spec.core.tail e = v
-    · rw [if_pos hv.symm, if_pos hv]
-    · rw [if_neg (fun hh => hv hh.symm), if_neg hv]
+    · rw [ite_eq_left hv.symm, ite_eq_left hv]
+    · rw [ite_eq_right (fun hh => hv hh.symm), ite_eq_right hv]
   · by_cases hlast : k = spec.length e
     · have hfin : (⟨k, by omega⟩ : spec.PathPosition e) =
           ⟨spec.length e, by omega⟩ := Fin.ext (by simpa using hlast)
-      rw [hfin, spec.pathVertex_length, if_neg hzero, zero_add, if_pos hlast]
+      rw [hfin, spec.pathVertex_length, ite_eq_right hzero, zero_add, ite_eq_left hlast]
       simp only [oneChip, SubdivisionGraph.Spec.coreVertex, Sum.inl.injEq]
       by_cases hv : spec.core.head e = v
-      · rw [if_pos hv.symm, if_pos hv]
-      · rw [if_neg (fun hh => hv hh.symm), if_neg hv]
-    · rw [pathVertex_interior e k (by omega) (by omega), if_neg hzero,
-        if_neg hlast]
+      · rw [ite_eq_left hv.symm, ite_eq_left hv]
+      · rw [ite_eq_right (fun hh => hv hh.symm), ite_eq_right hv]
+    · rw [pathVertex_interior e k (by omega) (by omega), ite_eq_right hzero,
+        ite_eq_right hlast]
       simp only [oneChip]
-      rw [if_neg (coreVertex_ne_interiorVertex spec v e _)]
+      rw [ite_eq_right (coreVertex_ne_interiorVertex spec v e _)]
       ring
 
 theorem one_chip_pV_int (e : Fin p) (k : ℕ) (hk : k ≤ spec.length e)
@@ -343,37 +343,37 @@ theorem one_chip_pV_int (e : Fin p) (k : ℕ) (hk : k ≤ spec.length e)
       Fin.ext (by simpa using hzero)
     rw [hfin, spec.pathVertex_zero]
     simp only [oneChip]
-    rw [if_neg (fun hh =>
+    rw [ite_eq_right (fun hh =>
       (coreVertex_ne_interiorVertex spec (spec.core.tail e) e' off) hh.symm)]
     by_cases he : e = e'
-    · rw [if_pos he, if_neg (by omega : ¬ (k = off.val + 1))]
-    · rw [if_neg he]
+    · rw [ite_eq_left he, ite_eq_right (by omega : ¬ (k = off.val + 1))]
+    · rw [ite_eq_right he]
   · by_cases hlast : k = spec.length e
     · have hfin : (⟨k, by omega⟩ : spec.PathPosition e) =
           ⟨spec.length e, by omega⟩ := Fin.ext (by simpa using hlast)
       rw [hfin, spec.pathVertex_length]
       simp only [oneChip]
-      rw [if_neg (fun hh =>
+      rw [ite_eq_right (fun hh =>
         (coreVertex_ne_interiorVertex spec (spec.core.head e) e' off) hh.symm)]
       by_cases he : e = e'
       · subst he
-        rw [if_pos rfl, if_neg (by omega : ¬ (k = off.val + 1))]
-      · rw [if_neg he]
+        rw [ite_eq_left rfl, ite_eq_right (by omega : ¬ (k = off.val + 1))]
+      · rw [ite_eq_right he]
     · rw [pathVertex_interior e k (by omega) (by omega)]
       simp only [oneChip]
       by_cases he : e = e'
       · subst he
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         by_cases hoff : k = off.val + 1
-        · rw [if_pos hoff, if_pos]
+        · rw [ite_eq_left hoff, ite_eq_left]
           exact (interiorVertex_eq_iff spec e e off _).mpr
             ⟨rfl, by show off.val = k - 1; omega⟩
-        · rw [if_neg hoff, if_neg]
+        · rw [ite_eq_right hoff, ite_eq_right]
           intro hh
           obtain ⟨-, hv⟩ := (interiorVertex_eq_iff spec e e off _).mp hh
           have hv' : off.val = k - 1 := hv
           omega
-      · rw [if_neg he, if_neg]
+      · rw [ite_eq_right he, ite_eq_right]
         intro hh
         obtain ⟨hee, -⟩ := (interiorVertex_eq_iff spec e' e off _).mp hh
         exact he hee.symm

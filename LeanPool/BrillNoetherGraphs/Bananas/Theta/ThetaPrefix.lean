@@ -130,7 +130,7 @@ theorem strand_prefix_linearEquiv_of_tail_zero
       strandVertex B α i = B.pathVertex α i := by
     intro i
     unfold strandVertex
-    rw [if_pos hTail]
+    rw [ite_eq_left hTail]
   simp only [hstrand, leftEndpoint]
   exact hRaw
 

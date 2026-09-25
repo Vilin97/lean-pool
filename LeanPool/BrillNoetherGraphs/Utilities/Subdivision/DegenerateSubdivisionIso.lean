@@ -142,14 +142,14 @@ theorem stepLeft_map_of_not_reversed (e : Fin p) (o : Fin (source.length e))
     target.stepLeft (r.slotEquiv e) (stepOffsetEquiv source target r e o) =
       vertexEquiv source target r (source.stepLeft e o) := by
   by_cases h : o.val = 0
-  · rw [show source.stepLeft e o = source.coreVertex (source.core.tail e) from dif_pos h]
+  · rw [show source.stepLeft e o = source.coreVertex (source.core.tail e) from dite_eq_left h]
     unfold DegSpec.stepLeft
-    rw [dif_pos (by simpa [stepOffsetEquiv, hr] using h),
+    rw [dite_eq_left (by simpa [stepOffsetEquiv, hr] using h),
       vertexEquiv_tail_of_not_reversed source target r e hr]
   · rw [show source.stepLeft e o = source.interiorVertex e
-          ⟨o.val - 1, by have := o.isLt; omega⟩ from dif_neg h]
+          ⟨o.val - 1, by have := o.isLt; omega⟩ from dite_eq_right h]
     unfold DegSpec.stepLeft
-    rw [dif_neg (by simpa [stepOffsetEquiv, hr] using h),
+    rw [dite_eq_right (by simpa [stepOffsetEquiv, hr] using h),
       r.vertexEquiv_interiorVertex]
     congr 2
     simp [stepOffsetEquiv, hr]
@@ -159,14 +159,14 @@ theorem stepRight_map_of_not_reversed (e : Fin p) (o : Fin (source.length e))
     target.stepRight (r.slotEquiv e) (stepOffsetEquiv source target r e o) =
       vertexEquiv source target r (source.stepRight e o) := by
   by_cases h : o.val + 1 = source.length e
-  · rw [show source.stepRight e o = source.coreVertex (source.core.head e) from dif_pos h]
+  · rw [show source.stepRight e o = source.coreVertex (source.core.head e) from dite_eq_left h]
     unfold DegSpec.stepRight
-    rw [dif_pos (by simpa [Fin.ext_iff, stepOffsetEquiv, hr, r.length_eq e] using h),
+    rw [dite_eq_left (by simpa [Fin.ext_iff, stepOffsetEquiv, hr, r.length_eq e] using h),
       vertexEquiv_head_of_not_reversed source target r e hr]
   · rw [show source.stepRight e o = source.interiorVertex e
-          ⟨o.val, by have := o.isLt; omega⟩ from dif_neg h]
+          ⟨o.val, by have := o.isLt; omega⟩ from dite_eq_right h]
     unfold DegSpec.stepRight
-    rw [dif_neg (by simpa [Fin.ext_iff, stepOffsetEquiv, hr, r.length_eq e] using h),
+    rw [dite_eq_right (by simpa [Fin.ext_iff, stepOffsetEquiv, hr, r.length_eq e] using h),
       r.vertexEquiv_interiorVertex]
     congr 2
     simp [stepOffsetEquiv, hr]
@@ -176,14 +176,14 @@ theorem stepLeft_map_of_reversed (e : Fin p) (o : Fin (source.length e))
     target.stepLeft (r.slotEquiv e) (stepOffsetEquiv source target r e o) =
       vertexEquiv source target r (source.stepRight e o) := by
   by_cases h : o.val + 1 = source.length e
-  · rw [show source.stepRight e o = source.coreVertex (source.core.head e) from dif_pos h]
+  · rw [show source.stepRight e o = source.coreVertex (source.core.head e) from dite_eq_left h]
     unfold DegSpec.stepLeft
-    rw [dif_pos (by simp [stepOffsetEquiv, hr, Fin.rev]; omega),
+    rw [dite_eq_left (by simp [stepOffsetEquiv, hr, Fin.rev]; omega),
       vertexEquiv_head_of_reversed source target r e hr]
   · rw [show source.stepRight e o = source.interiorVertex e
-          ⟨o.val, by have := o.isLt; omega⟩ from dif_neg h]
+          ⟨o.val, by have := o.isLt; omega⟩ from dite_eq_right h]
     unfold DegSpec.stepLeft
-    rw [dif_neg (by simp [stepOffsetEquiv, hr, Fin.rev]; omega),
+    rw [dite_eq_right (by simp [stepOffsetEquiv, hr, Fin.rev]; omega),
       r.vertexEquiv_interiorVertex]
     congr 2
     simp only [stepOffsetEquiv, hr, ↓reduceIte, Equiv.trans_apply, Fin.revPerm_apply, Fin.rev,
@@ -195,14 +195,14 @@ theorem stepRight_map_of_reversed (e : Fin p) (o : Fin (source.length e))
     target.stepRight (r.slotEquiv e) (stepOffsetEquiv source target r e o) =
       vertexEquiv source target r (source.stepLeft e o) := by
   by_cases h : o.val = 0
-  · rw [show source.stepLeft e o = source.coreVertex (source.core.tail e) from dif_pos h]
+  · rw [show source.stepLeft e o = source.coreVertex (source.core.tail e) from dite_eq_left h]
     unfold DegSpec.stepRight
-    rw [dif_pos (by simp [stepOffsetEquiv, hr, Fin.rev, ← r.length_eq e]; omega),
+    rw [dite_eq_left (by simp [stepOffsetEquiv, hr, Fin.rev, ← r.length_eq e]; omega),
       vertexEquiv_tail_of_reversed source target r e hr]
   · rw [show source.stepLeft e o = source.interiorVertex e
-          ⟨o.val - 1, by have := o.isLt; omega⟩ from dif_neg h]
+          ⟨o.val - 1, by have := o.isLt; omega⟩ from dite_eq_right h]
     unfold DegSpec.stepRight
-    rw [dif_neg (by simp [stepOffsetEquiv, hr, Fin.rev, ← r.length_eq e]; omega),
+    rw [dite_eq_right (by simp [stepOffsetEquiv, hr, Fin.rev, ← r.length_eq e]; omega),
       r.vertexEquiv_interiorVertex]
     congr 2
     simp only [stepOffsetEquiv, hr, ↓reduceIte, Equiv.trans_apply, Fin.revPerm_apply, Fin.rev,

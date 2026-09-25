@@ -245,7 +245,7 @@ theorem grassmannianNegativeContribution_eq
     simpa [tau, r] using
       (grassmannianPerm_apply_neg_lt_iff_le_zeroCut lambda a n hn)
   by_cases hStart : b ≤ a - r
-  · rw [if_pos hStart]
+  · rw [ite_eq_left hStart]
     have hFilter :
         (Finset.Ico b 0).filter (fun n : ℤ =>
           n + (lambda.colLen (-n - 1).toNat : ℤ) < a + 1) =
@@ -262,7 +262,7 @@ theorem grassmannianNegativeContribution_eq
     rw [hFilter, Int.card_Icc]
     rw [Int.toNat_of_nonneg (by omega)]
     omega
-  · rw [if_neg hStart]
+  · rw [ite_eq_right hStart]
     have hFilter :
         (Finset.Ico b 0).filter (fun n : ℤ =>
           n + (lambda.colLen (-n - 1).toNat : ℤ) < a + 1) = ∅ := by

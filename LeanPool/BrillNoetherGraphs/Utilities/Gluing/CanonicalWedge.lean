@@ -47,7 +47,7 @@ theorem vertex_degree_vertexWedge_inl
   simp_rw [num_edges_vertexWedge_left, num_edges_vertexWedge_left_right]
   by_cases ha : a = x
   · subst a
-    simp only [if_pos]
+    simp only [ite_eq_left]
     have hSplit := sum_unmarked_eq_sum_of_marked_zero H y
       (fun b => (numEdges H y b : ℤ)) (by simp)
     rw [hSplit]

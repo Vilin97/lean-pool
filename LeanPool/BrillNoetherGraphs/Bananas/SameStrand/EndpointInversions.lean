@@ -262,7 +262,7 @@ theorem exists_affineTransmissionPermutation_of_submodular
   rw [rankDelta_marked_twist_add_torsion hk D (τ n) n] at hShift
   rw [← hBase] at hShift
   by_contra hne
-  rw [if_neg hne] at hShift
+  rw [ite_eq_right hne] at hShift
   norm_num at hShift
 
 /-! ## The endpoint pencil -/
@@ -370,7 +370,7 @@ theorem rank_endpointPencilDivisor_ge_one {g : ℕ} (B : Banana g) :
     have hPosition :
         B.pathVertex edge position = B.interiorVertex edge offset := by
       unfold Spec.pathVertex
-      rw [dif_neg (by simp [position]), dif_neg (by
+      rw [dite_eq_right (by simp [position]), dite_eq_right (by
         have := offset.isLt
         simp only [position]
         omega)]

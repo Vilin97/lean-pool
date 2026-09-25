@@ -78,7 +78,7 @@ theorem tailContribution_ge_neg_one {L hu hv : ℕ}
   · have hEq : hu = hv := by omega
     simp [tailContribution, hL]
   · have hPos : 0 < L := by omega
-    simp only [tailContribution, if_neg hL]
+    simp only [tailContribution, ite_eq_right hL]
     exact (SubdivisionArithmetic.endpointSlopeBounds
       ((hu : ℤ) - (hv : ℤ)) (-1) (-1) hPos (by
         omega) (by
@@ -91,7 +91,7 @@ theorem headContribution_ge_neg_one {L hu hv : ℕ}
   · have hEq : hu = hv := by omega
     simp [headContribution, hL]
   · have hPos : 0 < L := by omega
-    simp only [headContribution, if_neg hL]
+    simp only [headContribution, ite_eq_right hL]
     exact (SubdivisionArithmetic.endpointSlopeBounds
       ((hu : ℤ) - (hv : ℤ)) (-1) (-1) hPos (by
         omega) (by
@@ -103,7 +103,7 @@ theorem tailContribution_nonneg {L hu hv : ℕ} (h : hv ≤ hu)
   by_cases hL : L = 0
   · have hEq : hu = hv := by omega
     simp [tailContribution, hL]
-  · simp only [tailContribution, if_neg hL]
+  · simp only [tailContribution, ite_eq_right hL]
     exact (SubdivisionArithmetic.endpointSlopeBounds
       ((hu : ℤ) - (hv : ℤ)) 0 (-1) (by omega) (by
         omega) (by
@@ -115,7 +115,7 @@ theorem headContribution_nonneg {L hu hv : ℕ} (h : hu ≤ hv)
   by_cases hL : L = 0
   · have hEq : hu = hv := by omega
     simp [headContribution, hL]
-  · simp only [headContribution, if_neg hL]
+  · simp only [headContribution, ite_eq_right hL]
     exact (SubdivisionArithmetic.endpointSlopeBounds
       ((hu : ℤ) - (hv : ℤ)) (-1) 0 (by omega) (by
         omega) (by
@@ -214,7 +214,7 @@ theorem headContribution_eq_neg_drain_of_ge {L hi lo : ℕ}
       dsimp [k]
       omega
     have hkLe : k ≤ L := by dsimp [k]; omega
-    simp only [headContribution, if_neg hPos.ne', hkCast]
+    simp only [headContribution, ite_eq_right hPos.ne', hkCast]
     rw [ConfigurationThree.lastStep_pos_eq_drain hPos hkLe]
 
 theorem tailContribution_eq_neg_drain_of_le {L hi lo : ℕ}
@@ -228,7 +228,7 @@ theorem tailContribution_eq_neg_drain_of_le {L hi lo : ℕ}
       dsimp [k]
       omega
     have hkLe : k ≤ L := by dsimp [k]; omega
-    simp only [tailContribution, if_neg hPos.ne', hkCast]
+    simp only [tailContribution, ite_eq_right hPos.ne', hkCast]
     rw [ConfigurationThree.firstStep_neg_eq_neg_drain hPos hkLe]
 
 /-! ## The orientation ledger
@@ -311,9 +311,9 @@ theorem outerTarget_center_nonneg (SA SB : SlotLedger)
       exact tailContribution_same c i
     by_cases hSide : a ≤ b + m
     · have hSupply := hArmFull (by omega)
-      rw [if_pos hc, if_pos hSide, hMiddleZero]
+      rw [ite_eq_left hc, ite_eq_left hSide, hMiddleZero]
       omega
-    · rw [if_pos hc, if_neg hSide, hMiddleZero]
+    · rw [ite_eq_left hc, ite_eq_right hSide, hMiddleZero]
       omega
   · have hOuterSupply : o = la ∨ o = lb ∨ o = i + c := by
       rcases min_choice a (b + m + c) with hOa | hOr
@@ -321,7 +321,7 @@ theorem outerTarget_center_nonneg (SA SB : SlotLedger)
         · exact Or.inl (by omega)
         · exact Or.inr (Or.inl (by omega))
       · exact Or.inr (Or.inr (by omega))
-    rw [if_neg hc]
+    rw [ite_eq_right hc]
     rcases hOuterSupply with hFull | hFull | hFull
     · have hOne : 1 ≤ zeroChip la + SA.tail la o 0 := by
         rw [hFull]
@@ -371,12 +371,12 @@ theorem outerTarget_inner_nonneg
       rw [show o = i by omega]
       exact headContribution_same c i
     by_cases hSide : a ≤ b + m
-    · rw [if_pos hc, if_pos hSide, hMiddleZero]
+    · rw [ite_eq_left hc, ite_eq_left hSide, hMiddleZero]
       omega
     · have hSupply := hParallelFull (by omega)
-      rw [if_pos hc, if_neg hSide, hMiddleZero]
+      rw [ite_eq_left hc, ite_eq_right hSide, hMiddleZero]
       omega
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     by_cases hio : i = o
     · have hMiddleZero : headContribution c o i = 0 := by
         rw [hio]
@@ -427,14 +427,14 @@ theorem innerTarget_center_nonneg (SA SB : SlotLedger)
     by_cases hc : c = 0
     · by_cases hSide : a ≤ b + m
       · have hSupply := hArmFull (by omega)
-        rw [if_pos hc, if_pos hSide, hMiddleZero]
+        rw [ite_eq_left hc, ite_eq_left hSide, hMiddleZero]
         omega
-      · rw [if_pos hc, if_neg hSide, hMiddleZero]
+      · rw [ite_eq_left hc, ite_eq_right hSide, hMiddleZero]
         omega
-    · rw [if_neg hc, hMiddleZero]
+    · rw [ite_eq_right hc, hMiddleZero]
       omega
   · have hSupply := hArmFull (by omega)
-    rw [if_neg (show ¬ c = 0 by omega)]
+    rw [ite_eq_right (show ¬ c = 0 by omega)]
     omega
 
 /-- Residual effectivity at the inner centre of an inner-target reading. -/
@@ -473,16 +473,16 @@ theorem innerTarget_inner_nonneg
       rw [show o = i by omega]
       exact headContribution_same c i
     by_cases hSide : a ≤ b + m
-    · rw [if_pos hc, if_pos hSide, hMiddleZero]
+    · rw [ite_eq_left hc, ite_eq_left hSide, hMiddleZero]
       omega
     · have hSupply := hParallelFull (by omega)
-      rw [if_pos hc, if_neg hSide, hMiddleZero]
+      rw [ite_eq_left hc, ite_eq_right hSide, hMiddleZero]
       omega
   · have hInnerSupply : i = o + c ∨ i = e + m := by
       rcases min_choice (a + c) (b + m) with hIa | hIb
       · exact Or.inl (by omega)
       · exact Or.inr (by omega)
-    rw [if_neg hc]
+    rw [ite_eq_right hc]
     rcases hInnerSupply with hFull | hFull
     · have hOne := headContribution_eq_one_of_full (L := c) (hu := o) (hv := i)
         (by omega) hFull

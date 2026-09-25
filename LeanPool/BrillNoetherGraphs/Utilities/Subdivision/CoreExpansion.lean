@@ -58,20 +58,20 @@ theorem pathVertex_of_zero (j : Fin p) (q : spec.PathPosition j)
     (h : q.val = 0) :
     spec.pathVertex j q = spec.coreVertex (spec.core.tail j) := by
   unfold SubdivisionGraph.Spec.pathVertex
-  rw [dif_pos h]
+  rw [dite_eq_left h]
 
 theorem pathVertex_of_last (j : Fin p) (q : spec.PathPosition j)
     (h0 : q.val ≠ 0) (h : q.val = spec.length j) :
     spec.pathVertex j q = spec.coreVertex (spec.core.head j) := by
   unfold SubdivisionGraph.Spec.pathVertex
-  rw [dif_neg h0, dif_pos h]
+  rw [dite_eq_right h0, dite_eq_left h]
 
 theorem pathVertex_of_interior (j : Fin p) (q : spec.PathPosition j)
     (h0 : q.val ≠ 0) (h : q.val ≠ spec.length j) :
     spec.pathVertex j q =
       spec.interiorVertex j ⟨q.val - 1, by have := q.isLt; omega⟩ := by
   unfold SubdivisionGraph.Spec.pathVertex
-  rw [dif_neg h0, dif_neg h]
+  rw [dite_eq_right h0, dite_eq_right h]
 
 theorem pathVertex_congr (j : Fin p) (q q' : spec.PathPosition j)
     (h : q.val = q'.val) : spec.pathVertex j q = spec.pathVertex j q' := by
@@ -126,14 +126,14 @@ theorem kindVertex_double_le {small : Spec n p} (j₁ j₂ : Fin p)
     (fallback : Fin n) {q : ℕ} (hq : q ≤ small.length j₁) :
     kindVertex small fallback (.double j₁ j₂) q =
       small.pathVertex j₁ ⟨min q (small.length j₁), by omega⟩ := by
-  simp only [kindVertex, if_pos hq]
+  simp only [kindVertex, ite_eq_left hq]
 
 theorem kindVertex_double_gt {small : Spec n p} (j₁ j₂ : Fin p)
     (fallback : Fin n) {q : ℕ} (hq : ¬ q ≤ small.length j₁) :
     kindVertex small fallback (.double j₁ j₂) q =
       small.pathVertex j₂
         ⟨min (q - small.length j₁) (small.length j₂), by omega⟩ := by
-  simp only [kindVertex, if_neg hq]
+  simp only [kindVertex, ite_eq_right hq]
 
 /-! ## The passive datum -/
 
@@ -662,7 +662,7 @@ theorem owner_aggregate (hCond : D.Conditions small.core)
       refine (Finset.sum_eq_zero fun j _ => ?_).symm
       by_cases ho : D.owner j = e
       · exact absurd (by rw [ho]; exact hk) (claimed_of_conditions hCond j).1
-      · exact if_neg ho
+      · exact ite_eq_right ho
   | single j₀ =>
       obtain ⟨ho1, _⟩ := (indexed_of_conditions hCond e).1 j₀ hk
       show slotSum small j₀ a b = _
@@ -673,9 +673,9 @@ theorem owner_aggregate (hCond : D.Conditions small.core)
         by_cases ho : D.owner j = e
         · exact absurd ((claimed_of_conditions hCond j).2.1 j₀
             (by rw [ho]; exact hk)).2.symm hj
-        · exact if_neg ho
+        · exact ite_eq_right ho
       rw [Finset.sum_eq_single j₀ hzero (fun h => absurd (Finset.mem_univ j₀) h),
-        if_pos ho1]
+        ite_eq_left ho1]
   | double j₁ j₂ =>
       obtain ⟨ho1, hs1, ho2, hs2⟩ := (indexed_of_conditions hCond e).2 j₁ j₂ hk
       have hne : j₁ ≠ j₂ := by
@@ -696,8 +696,8 @@ theorem owner_aggregate (hCond : D.Conditions small.core)
             ⟨_, h⟩ | ⟨_, h⟩
           · exact hj.1 h.symm
           · exact hj.2 h.symm
-        · exact if_neg ho
-      rw [← hsub, Finset.sum_pair hne, if_pos ho1, if_pos ho2]
+        · exact ite_eq_right ho
+      rw [← hsub, Finset.sum_pair hne, ite_eq_left ho1, ite_eq_left ho2]
 
 /-- **Quotient multiplicities match exactly.** -/
 theorem valid_multiplicity (hCond : D.Conditions small.core)
@@ -719,11 +719,11 @@ theorem valid_multiplicity (hCond : D.Conditions small.core)
           else 0) := by
     intro x y
     by_cases h : vertexMap D small hN hL x = a ∧ vertexMap D small hN hL y = b
-    · simp only [if_pos h]
+    · simp only [ite_eq_left h]
       rw [(D.bigSpec small hN hL).num_edges_eq_sum_steps x y]
       refine Finset.sum_congr rfl fun s _ => ?_
       simp only [SubdivisionGraph.Spec.unitEdge, Prod.mk.injEq]
-    · simp only [if_neg h, Finset.sum_const_zero]
+    · simp only [ite_eq_right h, Finset.sum_const_zero]
   have hswap : (∑ x : (D.bigSpec small hN hL).Vertex,
       ∑ y : (D.bigSpec small hN hL).Vertex,
         if vertexMap D small hN hL x = a ∧ vertexMap D small hN hL y = b then
@@ -1196,12 +1196,12 @@ theorem certificate_connectedFibres (hCond : D.Conditions small.core) :
   have hL0 : (D.bigSpec small hN hL).stepLeft e ⟨0, by omega⟩
       = (D.bigSpec small hN hL).coreVertex (D.bigCore.tail e) := by
     unfold SubdivisionGraph.Spec.stepLeft
-    rw [dif_pos rfl]
+    rw [dite_eq_left rfl]
     rfl
   have hR0 : (D.bigSpec small hN hL).stepRight e ⟨0, by omega⟩
       = (D.bigSpec small hN hL).coreVertex (D.bigCore.head e) := by
     unfold SubdivisionGraph.Spec.stepRight
-    rw [dif_pos (by omega : (0 : ℕ) + 1 = (D.bigSpec small hN hL).length e)]
+    rw [dite_eq_left (by omega : (0 : ℕ) + 1 = (D.bigSpec small hN hL).length e)]
     rfl
   have hedge : 0 < numEdges (D.bigSpec small hN hL).graph
       (Sum.inl (D.bigCore.tail e)) (Sum.inl (D.bigCore.head e)) := by

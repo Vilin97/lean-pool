@@ -139,12 +139,12 @@ private theorem sum_single_edge_between_fibres
           · have hx : x = right := (congrArg Prod.snd he).symm
             have hy : y = left := (congrArg Prod.fst he).symm
             exact (h₂ ⟨by simpa [hx] using hf.1, by simpa [hy] using hf.2⟩).elim
-        · rw [if_pos hf, if_neg he]
+        · rw [ite_eq_left hf, ite_eq_right he]
       · simp [hf]
     have hCross :
         (f left = a ∧ f right = b) ∨ (f right = a ∧ f left = b) :=
       Or.inl ⟨hl, hr⟩
-    rw [if_pos hCross]
+    rw [ite_eq_left hCross]
     rw [Finset.sum_eq_single left]
     · rw [Finset.sum_eq_single right]
       · simp [hl, hr]
@@ -171,12 +171,12 @@ private theorem sum_single_edge_between_fibres
             · have hx : x = right := (congrArg Prod.snd he).symm
               have hy : y = left := (congrArg Prod.fst he).symm
               exact (hxy.elim (fun h => h hx) (fun h => h hy)).elim
-          · rw [if_pos hf, if_neg he]
+          · rw [ite_eq_left hf, ite_eq_right he]
         · simp [hf]
       have hCross :
           (f left = a ∧ f right = b) ∨ (f right = a ∧ f left = b) :=
         Or.inr ⟨hr, hl⟩
-      rw [if_pos hCross]
+      rw [ite_eq_left hCross]
       rw [Finset.sum_eq_single right]
       · rw [Finset.sum_eq_single left]
         · simp [hl, hr]
@@ -201,12 +201,12 @@ private theorem sum_single_edge_between_fibres
             · have hx : x = right := (congrArg Prod.snd he).symm
               have hy : y = left := (congrArg Prod.fst he).symm
               exact (h₂ ⟨by simpa [hx] using hf.1, by simpa [hy] using hf.2⟩).elim
-          · rw [if_pos hf, if_neg he]
+          · rw [ite_eq_left hf, ite_eq_right he]
         · simp [hf]
       have hNoCross :
           ¬((f left = a ∧ f right = b) ∨ (f right = a ∧ f left = b)) :=
         not_or_intro h₁ h₂
-      rw [if_neg hNoCross]
+      rw [ite_eq_right hNoCross]
       apply Finset.sum_eq_zero
       intro x _
       apply Finset.sum_eq_zero
@@ -255,7 +255,7 @@ private theorem mapped_edge_count_eq_fibre_sum
           rintro (h | h)
           · exact hab (h.1.symm.trans (hloop.trans h.2))
           · exact hab (h.1.symm.trans (hloop.symm.trans h.2))
-        rw [if_neg (by simpa using hloop), if_neg hNoCross]
+        rw [ite_eq_right (by simpa using hloop), ite_eq_right hNoCross]
         rfl
       · have hPairCross :
             ((f left, f right) = (a, b) ∨ (f left, f right) = (b, a)) ↔
@@ -265,15 +265,15 @@ private theorem mapped_edge_count_eq_fibre_sum
         by_cases hCross :
             (f left = a ∧ f right = b) ∨ (f right = a ∧ f left = b)
         · have hPair := hPairCross.mpr hCross
-          rw [if_pos hloop, if_pos hCross]
-          rw [Multiset.filter_singleton, if_pos hPair]
+          rw [ite_eq_left hloop, ite_eq_left hCross]
+          rw [Multiset.filter_singleton, ite_eq_left hPair]
           rfl
         · have hPair :
               ¬((f left, f right) = (a, b) ∨
                 (f left, f right) = (b, a)) :=
             fun h => hCross (hPairCross.mp h)
-          rw [if_pos hloop, if_neg hCross]
-          rw [Multiset.filter_singleton, if_neg hPair]
+          rw [ite_eq_left hloop, ite_eq_right hCross]
+          rw [Multiset.filter_singleton, ite_eq_right hPair]
           rfl
 
 /-- The fossil really is the quotient graph associated to its vertex map:
@@ -451,9 +451,9 @@ private theorem sum_smul_representative_eq_lift_pushforward
   · simp
   · intro q _ hq
     by_cases hw : w = fossilRepresentative G q
-    · rw [if_pos hw, if_neg (Ne.symm hq)]
+    · rw [ite_eq_left hw, ite_eq_right (Ne.symm hq)]
       simp
-    · rw [if_neg hw]
+    · rw [ite_eq_right hw]
       simp
   · simp
 

@@ -40,11 +40,11 @@ private theorem ite_sum_ite {ι : Type*} [Fintype ι] (P : Prop) [Decidable P]
     (if P then ∑ i, (if Q i then (1 : ℤ) else 0) else 0) =
       ∑ i, (if P ∧ Q i then (1 : ℤ) else 0) := by
   by_cases h : P
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     exact Finset.sum_congr rfl fun i _ => (if_congr (and_iff_right h) rfl rfl).symm
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     refine (Finset.sum_eq_zero fun i _ => ?_).symm
-    exact if_neg fun hc => h hc.1
+    exact ite_eq_right fun hc => h hc.1
 
 /-- Membership in a coarse step, with the dependent index unpacked. -/
 private theorem coarseStep_eq_iff (c : spec.Chip N) (e : Fin p)
@@ -63,11 +63,11 @@ private theorem coarseStep_eq_iff (c : spec.Chip N) (e : Fin p)
 
 private theorem coarseVertex_of_false {c : spec.Chip N} (h : c.toRight = false) :
     c.coarseVertex = spec.stepLeft c.edge ⟨c.step, c.step_lt⟩ := by
-  simp only [Chip.coarseVertex, h, Bool.false_eq_true, if_false]
+  simp only [Chip.coarseVertex, h, Bool.false_eq_true, ite_false]
 
 private theorem coarseVertex_of_true {c : spec.Chip N} (h : c.toRight = true) :
     c.coarseVertex = spec.stepRight c.edge ⟨c.step, c.step_lt⟩ := by
-  simp only [Chip.coarseVertex, h, if_true]
+  simp only [Chip.coarseVertex, h, ite_true]
 
 /-- The rounded chip divisor as a sum of indicators. -/
 private theorem coarseChips_apply {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N)
@@ -80,7 +80,7 @@ private theorem coarseChips_apply {ι : Type*} [Fintype ι] (chips : ι → spec
   by_cases h : (chips i).coarseVertex = v
   · subst h
     simp
-  · rw [one_chip_apply_other _ _ h, if_neg h]
+  · rw [one_chip_apply_other _ _ h, ite_eq_right h]
 
 /-- The left counter of a step as a sum of indicators. -/
 private theorem leftCount_eq_sum {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N)
@@ -145,12 +145,12 @@ private theorem chip_core_sum (c : spec.Chip N) (u : Fin n) :
           (1 : ℤ) else 0 := by
     rw [Fintype.sum_eq_single c.edge]
     · by_cases h : spec.core.tail c.edge = u ∧ c.step = 0 ∧ c.toRight = false
-      · rw [if_pos ⟨h.1, rfl, h.2.1, h.2.2⟩, if_pos h]
-      · rw [if_neg, if_neg h]
+      · rw [ite_eq_left ⟨h.1, rfl, h.2.1, h.2.2⟩, ite_eq_left h]
+      · rw [ite_eq_right, ite_eq_right h]
         rintro ⟨h1, -, h3, h4⟩
         exact h ⟨h1, h3, h4⟩
     · intro e he
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨-, h2, -, -⟩
       exact he h2.symm
   have hright :
@@ -161,12 +161,12 @@ private theorem chip_core_sum (c : spec.Chip N) (u : Fin n) :
     rw [Fintype.sum_eq_single c.edge]
     · by_cases h : spec.core.head c.edge = u ∧ c.step = spec.length c.edge - 1 ∧
           c.toRight = true
-      · rw [if_pos ⟨h.1, rfl, h.2.1, h.2.2⟩, if_pos h]
-      · rw [if_neg, if_neg h]
+      · rw [ite_eq_left ⟨h.1, rfl, h.2.1, h.2.2⟩, ite_eq_left h]
+      · rw [ite_eq_right, ite_eq_right h]
         rintro ⟨h1, -, h3, h4⟩
         exact h ⟨h1, h3, h4⟩
     · intro e he
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨-, h2, -, -⟩
       exact he h2.symm
   rw [hleft, hright]
@@ -175,7 +175,7 @@ private theorem chip_core_sum (c : spec.Chip N) (u : Fin n) :
         ((false : Bool) = true)) := by
       rintro ⟨-, -, h⟩
       exact Bool.noConfusion h
-    rw [if_neg hfalse, add_zero]
+    rw [ite_eq_right hfalse, add_zero]
     refine if_congr ?_ rfl rfl
     rw [spec.coarseVertex_of_false N hb, spec.stepLeft_eq_coreVertex_iff]
     constructor
@@ -187,7 +187,7 @@ private theorem chip_core_sum (c : spec.Chip N) (u : Fin n) :
         ((true : Bool) = false)) := by
       rintro ⟨-, -, h⟩
       exact Bool.noConfusion h
-    rw [if_neg hfalse, zero_add]
+    rw [ite_eq_right hfalse, zero_add]
     refine if_congr ?_ rfl rfl
     rw [spec.coarseVertex_of_true N hb, spec.stepRight_eq_coreVertex_iff]
     constructor
@@ -212,7 +212,7 @@ private theorem chip_interior_sum (c : spec.Chip N) (e : Fin p)
   · have hfalse : ¬ (c.edge = e ∧ c.step = j.val ∧ ((false : Bool) = true)) := by
       rintro ⟨-, -, h⟩
       exact Bool.noConfusion h
-    rw [if_neg hfalse, add_zero]
+    rw [ite_eq_right hfalse, add_zero]
     refine if_congr ?_ rfl rfl
     rw [spec.coarseVertex_of_false N hb]
     have hiff := spec.stepLeft_eq_interiorVertex_iff
@@ -226,7 +226,7 @@ private theorem chip_interior_sum (c : spec.Chip N) (e : Fin p)
   · have hfalse : ¬ (c.edge = e ∧ c.step = j.val + 1 ∧ ((true : Bool) = false)) := by
       rintro ⟨-, -, h⟩
       exact Bool.noConfusion h
-    rw [if_neg hfalse, zero_add]
+    rw [ite_eq_right hfalse, zero_add]
     refine if_congr ?_ rfl rfl
     rw [spec.coarseVertex_of_true N hb]
     have hiff := spec.stepRight_eq_interiorVertex_iff

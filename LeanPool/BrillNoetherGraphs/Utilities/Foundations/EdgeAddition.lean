@@ -56,9 +56,9 @@ abbrev addEdge (H : CFGraph) (x y : H.V) (hxy : x ≠ y) : CFGraph where
     simp only [Prod.mk.injEq]
     aesop
   by_cases h : (v = x ∧ w = y) ∨ (v = y ∧ w = x)
-  · rw [if_pos (hiff.mpr h), if_pos h]
+  · rw [ite_eq_left (hiff.mpr h), ite_eq_left h]
     simp
-  · rw [if_neg (mt hiff.mp h), if_neg h]
+  · rw [ite_eq_right (mt hiff.mp h), ite_eq_right h]
     simp
 
 theorem num_edges_le_addEdge

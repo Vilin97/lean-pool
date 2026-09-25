@@ -216,25 +216,25 @@ theorem rawChipMassAt_zero_eq_chipPrefix (w : RichWitness)
       intro i _
       by_cases hi : i = 0
       · subst hi
-        rw [if_pos rfl, if_neg (by omega)]
-      · rw [if_neg hi]
+        rw [ite_eq_left rfl, ite_eq_right (by omega)]
+      · rw [ite_eq_right hi]
         by_cases hm : w.chipMatches a.val e.val i c = true
-        · rw [if_pos hm, if_pos (hi₀uniq i (by omega) hm)]
-        · rw [if_neg hm, if_neg ?_]
+        · rw [ite_eq_left hm, ite_eq_left (hi₀uniq i (by omega) hm)]
+        · rw [ite_eq_right hm, ite_eq_right ?_]
           rintro rfl
           exact hm hi₀match
     rw [Finset.sum_congr rfl hterm, Finset.sum_ite_eq' (Finset.range (s + 1)) i₀
       (fun _ => c.2.2)]
     by_cases hcase : i₀ ≤ s
-    · rw [if_pos (Finset.mem_range.mpr (by omega))]
-      rw [if_pos]
+    · rw [ite_eq_left (Finset.mem_range.mpr (by omega))]
+      rw [ite_eq_left]
       simp only [Bool.and_eq_true, beq_iff_eq, hslot, true_and]
       rw [hvalue]
       exact hzero i₀ hi₀pos hcase
     · have hnotmem : i₀ ∉ Finset.range (s + 1) := by
         simp only [Finset.mem_range]
         omega
-      rw [if_neg hnotmem, if_neg]
+      rw [ite_eq_right hnotmem, ite_eq_right]
       simp only [Bool.and_eq_true, beq_iff_eq, hslot, true_and, hvalue]
       exact hpos i₀ (by omega) hi₀le
   · have hfalse : ∀ i, w.chipMatches a.val e.val i c = false := by
@@ -280,13 +280,13 @@ theorem rawChipMassAt_length_eq_headChipSum (w : RichWitness)
         omega
       by_cases htz : t = 0
       · subst htz
-        rw [if_pos rfl, if_neg (by omega)]
-      · rw [if_neg htz, if_neg (by omega)]
+        rw [ite_eq_left rfl, ite_eq_right (by omega)]
+      · rw [ite_eq_right htz, ite_eq_right (by omega)]
         by_cases hm : w.chipMatches a.val e.val (k - t) c = true
-        · rw [if_pos hm, if_pos]
+        · rw [ite_eq_left hm, ite_eq_left]
           have := hi₀uniq (k - t) (by omega) hm
           omega
-        · rw [if_neg hm, if_neg ?_]
+        · rw [ite_eq_right hm, ite_eq_right ?_]
           intro hEq
           refine hm ?_
           have : k - t = i₀ := by omega
@@ -295,14 +295,14 @@ theorem rawChipMassAt_length_eq_headChipSum (w : RichWitness)
     rw [Finset.sum_congr rfl hterm, Finset.sum_ite_eq' (Finset.range (s + 1))
       (k - i₀) (fun _ => c.2.2)]
     by_cases hcase : k - s ≤ i₀
-    · rw [if_pos (Finset.mem_range.mpr (by omega)), if_pos]
+    · rw [ite_eq_left (Finset.mem_range.mpr (by omega)), ite_eq_left]
       simp only [Bool.and_eq_true, beq_iff_eq, hslot, true_and]
       rw [hvalue]
       exact hhead i₀ hcase hi₀le
     · have hnotmem : k - i₀ ∉ Finset.range (s + 1) := by
         simp only [Finset.mem_range]
         omega
-      rw [if_neg hnotmem, if_neg]
+      rw [ite_eq_right hnotmem, ite_eq_right]
       simp only [Bool.and_eq_true, beq_iff_eq, hslot, true_and, hvalue]
       exact hlow i₀ hi₀pos (by omega)
   · have hfalse : ∀ i, w.chipMatches a.val e.val i c = false := by
@@ -363,22 +363,22 @@ theorem rawChipMassAt_eq_w4ChipSum (w : RichWitness)
         intro t ht
         by_cases hm : w.chipMatches a.val e.val (i + t) c = true
         · have heq : i + t = i₀ := hi₀uniq (i + t) (by omega) hm
-          rw [if_pos hm, if_pos (by omega : t = i₀ - i)]
+          rw [ite_eq_left hm, ite_eq_left (by omega : t = i₀ - i)]
         · have hne : ¬ (t = i₀ - i) := by
             intro hEq
             exact hm (by rw [show i + t = i₀ by omega]; exact hi₀match)
-          rw [if_neg hm, if_neg hne]
+          rw [ite_eq_right hm, ite_eq_right hne]
       rw [Finset.sum_congr rfl hterm,
         Finset.sum_ite_eq' (Finset.range (j + 1 - i)) (i₀ - i) (fun _ => c.2.2)]
       by_cases hcase : i₀ ≤ j
-      · rw [if_pos (Finset.mem_range.mpr (by omega)), if_pos]
+      · rw [ite_eq_left (Finset.mem_range.mpr (by omega)), ite_eq_left]
         simp only [Bool.and_eq_true, beq_iff_eq, hslot, true_and]
         rw [hvalue]
         exact hrun i₀ hle hcase
       · have hnotmem : i₀ - i ∉ Finset.range (j + 1 - i) := by
           simp only [Finset.mem_range]
           omega
-        rw [if_neg hnotmem, if_neg]
+        rw [ite_eq_right hnotmem, ite_eq_right]
         simp only [Bool.and_eq_true, beq_iff_eq, hslot, true_and, hvalue]
         exact habove i₀ (by omega) hi₀le
     · have hzero : ∀ t ∈ Finset.range (j + 1 - i),
@@ -388,8 +388,8 @@ theorem rawChipMassAt_eq_w4ChipSum (w : RichWitness)
           intro hm
           have heq : i + t = i₀ := hi₀uniq (i + t) (by omega) hm
           omega
-        rw [if_neg hm]
-      rw [Finset.sum_congr rfl hzero, Finset.sum_const_zero, if_neg]
+        rw [ite_eq_right hm]
+      rw [Finset.sum_congr rfl hzero, Finset.sum_const_zero, ite_eq_right]
       simp only [Bool.and_eq_true, beq_iff_eq, hslot, true_and, hvalue]
       exact hbelow i₀ hi₀pos (by omega)
   · have hfalse : ∀ t, w.chipMatches a.val e.val t c = false := by
@@ -448,7 +448,7 @@ theorem exists_tail_collapse (w : RichWitness)
       simp only [w1Checks, ExplicitPotential.allFin_eq_true_iff,
         Bool.and_eq_true] at hW1'
       have hclause := (hW1' a e).1.2
-      rw [if_pos (by simpa [hk, hα] using hbranch)] at hclause
+      rw [ite_eq_left (by simpa [hk, hα] using hbranch)] at hclause
       have hstrict : 0 < eval (w.point a.val e.val (α + 1)) x :=
         positiveCheck_sound hclause hx
       by_contra hnot
@@ -515,7 +515,7 @@ theorem exists_head_collapse (w : RichWitness)
       simp only [w1Checks, ExplicitPotential.allFin_eq_true_iff,
         Bool.and_eq_true] at hW1'
       have hclause := (hW1' a e).2
-      rw [if_pos (by simpa [hk, hω] using hbranch)] at hclause
+      rw [ite_eq_left (by simpa [hk, hω] using hbranch)] at hclause
       have hstrict : 0 < eval (subForm (coordForm e.val)
           (w.point a.val e.val (k - 1 - ω))) x := positiveCheck_sound hclause hx
       rw [eval_subForm] at hstrict

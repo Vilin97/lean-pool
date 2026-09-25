@@ -104,39 +104,39 @@ theorem pathVertex_injective (edge : Fin p) :
   intro left right hEqual
   unfold pathVertex at hEqual
   by_cases hLeftZero : left.val = 0
-  · rw [dif_pos hLeftZero] at hEqual
+  · rw [dite_eq_left hLeftZero] at hEqual
     by_cases hRightZero : right.val = 0
     · exact Fin.ext (hLeftZero.trans hRightZero.symm)
-    · rw [dif_neg hRightZero] at hEqual
+    · rw [dite_eq_right hRightZero] at hEqual
       by_cases hRightLast : right.val = spec.length edge
-      · rw [dif_pos hRightLast] at hEqual
+      · rw [dite_eq_left hRightLast] at hEqual
         have hEnds : spec.core.tail edge = spec.core.head edge :=
           Sum.inl.inj hEqual
         exact (spec.core_loopless edge hEnds).elim
-      · rw [dif_neg hRightLast] at hEqual
+      · rw [dite_eq_right hRightLast] at hEqual
         simp [coreVertex, interiorVertex] at hEqual
-  · rw [dif_neg hLeftZero] at hEqual
+  · rw [dite_eq_right hLeftZero] at hEqual
     by_cases hLeftLast : left.val = spec.length edge
-    · rw [dif_pos hLeftLast] at hEqual
+    · rw [dite_eq_left hLeftLast] at hEqual
       by_cases hRightZero : right.val = 0
-      · rw [dif_pos hRightZero] at hEqual
+      · rw [dite_eq_left hRightZero] at hEqual
         have hEnds : spec.core.head edge = spec.core.tail edge :=
           Sum.inl.inj hEqual
         exact (spec.core_loopless edge hEnds.symm).elim
-      · rw [dif_neg hRightZero] at hEqual
+      · rw [dite_eq_right hRightZero] at hEqual
         by_cases hRightLast : right.val = spec.length edge
         · exact Fin.ext (hLeftLast.trans hRightLast.symm)
-        · rw [dif_neg hRightLast] at hEqual
+        · rw [dite_eq_right hRightLast] at hEqual
           simp [coreVertex, interiorVertex] at hEqual
-    · rw [dif_neg hLeftLast] at hEqual
+    · rw [dite_eq_right hLeftLast] at hEqual
       by_cases hRightZero : right.val = 0
-      · rw [dif_pos hRightZero] at hEqual
+      · rw [dite_eq_left hRightZero] at hEqual
         simp [coreVertex, interiorVertex] at hEqual
-      · rw [dif_neg hRightZero] at hEqual
+      · rw [dite_eq_right hRightZero] at hEqual
         by_cases hRightLast : right.val = spec.length edge
-        · rw [dif_pos hRightLast] at hEqual
+        · rw [dite_eq_left hRightLast] at hEqual
           simp [coreVertex, interiorVertex] at hEqual
-        · rw [dif_neg hRightLast] at hEqual
+        · rw [dite_eq_right hRightLast] at hEqual
           apply Fin.ext
           have hSigma := Sum.inr.inj hEqual
           have hOffsets : left.val - 1 = right.val - 1 :=
@@ -187,7 +187,7 @@ theorem pathVertex_eq_interiorVertex (edge : Fin p)
       spec.interiorVertex edge
         (spec.interiorOffsetOfPosition edge position hInterior) := by
   unfold pathVertex interiorOffsetOfPosition IsInteriorPosition at *
-  rw [dif_neg hInterior.1.ne', dif_neg (ne_of_lt hInterior.2)]
+  rw [dite_eq_right hInterior.1.ne', dite_eq_right (ne_of_lt hInterior.2)]
 
 theorem previousVertex_eq_pathVertex (edge : Fin p)
     (position : spec.PathPosition edge)

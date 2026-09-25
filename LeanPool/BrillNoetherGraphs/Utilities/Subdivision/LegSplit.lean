@@ -86,9 +86,9 @@ theorem legSplit_loopless (core : Core n p) (slot : Fin p)
     simp only [legSplit_tail_old, legSplit_head_old]
     by_cases hslot : old = slot
     · subst hslot
-      simp only [if_pos]
+      simp only [ite_eq_left]
       exact (Fin.castSucc_lt_last (core.tail old)).ne
-    · simp only [if_neg hslot]
+    · simp only [ite_eq_right hslot]
       exact fun h => hLoopless old (Fin.castSucc_injective n h)
 
 /-- Splitting preserves cut connectedness. -/

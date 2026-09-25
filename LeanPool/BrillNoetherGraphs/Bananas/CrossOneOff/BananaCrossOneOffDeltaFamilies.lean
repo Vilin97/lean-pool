@@ -191,12 +191,12 @@ theorem rankDelta_crossOneOff_terminal_delta_family
           (strandVertex B beta ⟨B.length beta - 1, by omega⟩)) =
       if b < g - 1 then 1 else 0 := by
   by_cases hbLt : b < g - 1
-  · rw [if_pos hbLt]
+  · rw [ite_eq_left hbLt]
     exact rankDelta_crossOneOff_complement_normalForm_eq_one
       B alpha beta p b hg hab hpLo hpHi hBeta hbLt
   · have hbEq : b = g - 1 := by omega
     subst b
-    rw [if_neg (by omega : ¬ g - 1 < g - 1)]
+    rw [ite_eq_right (by omega : ¬ g - 1 < g - 1)]
     simpa [Nat.cast_sub (by omega : 1 ≤ g)] using
       rankDelta_crossOneOff_complement_boundary_eq_zero
         B alpha beta p hg hpLo hpHi hBeta
@@ -219,12 +219,12 @@ theorem rankDelta_crossOneOff_balanced_delta_family
         oneChip (strandVertex B beta q)) =
       if b < g - 1 then 1 else 0 := by
   by_cases hbLt : b < g - 1
-  · rw [if_pos hbLt]
+  · rw [ite_eq_left hbLt]
     exact rankDelta_crossOneOff_two_interior_eq_one
       B alpha beta p q b hg hab hpLo hpHi hqLo hqHi (by omega)
   · have hbEq : b = g - 1 := by omega
     subst b
-    rw [if_neg (by omega : ¬ g - 1 < g - 1)]
+    rw [ite_eq_right (by omega : ¬ g - 1 < g - 1)]
     simpa [Nat.cast_sub (by omega : 1 ≤ g)] using
       rankDelta_crossOneOff_two_interior_boundary_eq_zero
         B alpha beta p q hg hab hpLo hpHi hqLo hqHi

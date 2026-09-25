@@ -157,9 +157,9 @@ theorem tailNeighbor_mem_rightVertices (h : c.Valid) :
   rw [mem_rightVertices_iff]
   unfold SubdivisionGraph.Spec.tailNeighbor SubdivisionGraph.Spec.stepRight
   by_cases hLast : 0 + 1 = spec.length c.bridge
-  · rw [dif_pos hLast]
+  · rw [dite_eq_left hLast]
     exact fun hMem => h.2.1 ((c.mem_leftVertices_core spec _).mp hMem)
-  · rw [dif_neg hLast]
+  · rw [dite_eq_right hLast]
     exact fun hMem => h.2.1
       ((c.mem_leftVertices_interior spec _ _).mp hMem).2
 
@@ -180,28 +180,28 @@ theorem step_eq_bridge_zero_of_left_right (h : c.Valid)
   · refine ⟨?_, hZero⟩
     by_contra hNe
     have hTail : spec.core.tail edge ∈ c.left := by
-      rw [SubdivisionGraph.Spec.stepLeft, dif_pos hZero] at hLeft
+      rw [SubdivisionGraph.Spec.stepLeft, dite_eq_left hZero] at hLeft
       exact (c.mem_leftVertices_core spec _).mp hLeft
     have hHead : spec.core.head edge ∈ c.left :=
       (h.2.2 edge hNe).mp hTail
     apply hRight
     unfold SubdivisionGraph.Spec.stepRight
     by_cases hLast : offset.val + 1 = spec.length edge
-    · rw [dif_pos hLast]
+    · rw [dite_eq_left hLast]
       exact (c.mem_leftVertices_core spec _).mpr hHead
-    · rw [dif_neg hLast]
+    · rw [dite_eq_right hLast]
       exact (c.mem_leftVertices_interior spec _ _).mpr ⟨hTail, hHead⟩
   · have hInterior :
         spec.core.tail edge ∈ c.left ∧ spec.core.head edge ∈ c.left := by
-      rw [SubdivisionGraph.Spec.stepLeft, dif_neg hZero] at hLeft
+      rw [SubdivisionGraph.Spec.stepLeft, dite_eq_right hZero] at hLeft
       exact (c.mem_leftVertices_interior spec _ _).mp hLeft
     exfalso
     apply hRight
     unfold SubdivisionGraph.Spec.stepRight
     by_cases hLast : offset.val + 1 = spec.length edge
-    · rw [dif_pos hLast]
+    · rw [dite_eq_left hLast]
       exact (c.mem_leftVertices_core spec _).mpr hInterior.2
-    · rw [dif_neg hLast]
+    · rw [dite_eq_right hLast]
       exact (c.mem_leftVertices_interior spec _ _).mpr hInterior
 
 /-- No unit step can be directed from the complementary side back into the
@@ -214,7 +214,7 @@ theorem not_step_right_left (h : c.Valid)
   rw [mem_rightVertices_iff] at hLeft
   by_cases hLast : offset.val + 1 = spec.length edge
   · have hHead : spec.core.head edge ∈ c.left := by
-      rw [SubdivisionGraph.Spec.stepRight, dif_pos hLast] at hRight
+      rw [SubdivisionGraph.Spec.stepRight, dite_eq_left hLast] at hRight
       exact (c.mem_leftVertices_core spec _).mp hRight
     by_cases hZero : offset.val = 0
     · have hTail : spec.core.tail edge ∈ c.left := by
@@ -223,7 +223,7 @@ theorem not_step_right_left (h : c.Valid)
           exact False.elim (h.2.1 hHead)
         · exact (h.2.2 edge hEq).mpr hHead
       apply hLeft
-      rw [SubdivisionGraph.Spec.stepLeft, dif_pos hZero]
+      rw [SubdivisionGraph.Spec.stepLeft, dite_eq_left hZero]
       exact (c.mem_leftVertices_core spec _).mpr hTail
     · have hBoth : spec.core.tail edge ∈ c.left ∧ spec.core.head edge ∈ c.left := by
         constructor
@@ -233,16 +233,16 @@ theorem not_step_right_left (h : c.Valid)
         · exact (h.2.2 edge hEq).mpr hHead
         exact hHead
       apply hLeft
-      rw [SubdivisionGraph.Spec.stepLeft, dif_neg hZero]
+      rw [SubdivisionGraph.Spec.stepLeft, dite_eq_right hZero]
       exact (c.mem_leftVertices_interior spec _ _).mpr hBoth
   · have hBoth : spec.core.tail edge ∈ c.left ∧ spec.core.head edge ∈ c.left := by
-      rw [SubdivisionGraph.Spec.stepRight, dif_neg hLast] at hRight
+      rw [SubdivisionGraph.Spec.stepRight, dite_eq_right hLast] at hRight
       exact (c.mem_leftVertices_interior spec _ _).mp hRight
     apply hLeft
     by_cases hZero : offset.val = 0
-    · rw [SubdivisionGraph.Spec.stepLeft, dif_pos hZero]
+    · rw [SubdivisionGraph.Spec.stepLeft, dite_eq_left hZero]
       exact (c.mem_leftVertices_core spec _).mpr hBoth.1
-    · rw [SubdivisionGraph.Spec.stepLeft, dif_neg hZero]
+    · rw [SubdivisionGraph.Spec.stepLeft, dite_eq_right hZero]
       exact (c.mem_leftVertices_interior spec _ _).mpr hBoth
 
 /-- Lift valid core bridge data to an occurrence-safe separating bridge cut
@@ -272,7 +272,7 @@ noncomputable def toOneBridgeCut (h : c.Valid) : OneBridgeCut spec.graph where
     by_cases hAttach : a = spec.coreVertex (spec.core.tail c.bridge) ∧
         b = spec.tailNeighbor c.bridge
     · rcases hAttach with ⟨rfl, rfl⟩
-      rw [if_pos ⟨rfl, rfl⟩]
+      rw [ite_eq_left ⟨rfl, rfl⟩]
       rw [Finset.card_eq_one]
       refine ⟨⟨c.bridge, ⟨0, spec.length_pos c.bridge⟩⟩, ?_⟩
       ext step

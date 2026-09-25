@@ -70,11 +70,11 @@ def splitStep (L t : ℕ) (first second : ℤ) (i : ℕ) : ℤ :=
 /-! ## The two regimes -/
 
 theorem splitPotential_of_lt (h : i < t) :
-    splitPotential L t first second i = potential t first i := if_pos h
+    splitPotential L t first second i = potential t first i := ite_eq_left h
 
 theorem splitPotential_of_le (h : t ≤ i) :
     splitPotential L t first second i = first + potential (L - t) second (i - t) :=
-  if_neg (by omega)
+  ite_eq_right (by omega)
 
 /-- The second ramp starts at zero: either it has positive length, or the split
 point is the head and its rise vanishes. -/
@@ -158,18 +158,18 @@ theorem splitStep_first (h : SplitRamp L t first second) :
     splitStep L t first second 0 =
       if 0 < t then step t first 0 else step L second 0 := by
   rcases Nat.eq_zero_or_pos t with ht | ht
-  · rw [if_neg (by omega), splitStep_right (by omega), ht]
+  · rw [ite_eq_right (by omega), splitStep_right (by omega), ht]
     simp
-  · rw [if_pos ht, splitStep_left h (by omega)]
+  · rw [ite_eq_left ht, splitStep_left h (by omega)]
 
 theorem splitStep_last (h : SplitRamp L t first second) (hL : 0 < L) :
     splitStep L t first second (L - 1) =
       if t < L then step (L - t) second (L - 1 - t) else step L first (L - 1) := by
   rcases Nat.lt_or_ge t L with hlt | hge
-  · rw [if_pos hlt, splitStep_right (by omega)]
+  · rw [ite_eq_left hlt, splitStep_right (by omega)]
   · have ht : t = L := le_antisymm h.le hge
     subst ht
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
     exact splitStep_left h (by omega)
 
 /-! ## Convexity away from the split point, and the kink at it -/

@@ -976,7 +976,7 @@ private theorem libraryMarkedGraph_TMTheta_eq_thetaFactor
   have hGuard : 1 ≤ u ∧ u < a ∧ 1 ≤ v ∧ v < c :=
     ⟨h.2.2.2.1, h.2.2.2.2.1, h.2.2.2.2.2.1,
       h.2.2.2.2.2.2.1⟩
-  rw [TMTheta, dif_pos hGuard]
+  rw [TMTheta, dite_eq_left hGuard]
   unfold thetaKGeneralFactor
   dsimp only
   rw [_root_.Utilities.MarkedGraph.mk.injEq]

@@ -52,13 +52,13 @@ theorem exists_interior_strandVertex {g : ℕ} (B : Banana g)
   by_cases htail : B.core.tail γ = 0
   · refine ⟨⟨o.val + 1, by omega⟩, hp, ?_⟩
     unfold strandVertex
-    rw [if_pos htail]
+    rw [ite_eq_left htail]
     exact hpv
   · refine ⟨⟨B.length γ - (o.val + 1), by omega⟩, ?_, ?_⟩
     · change 0 < B.length γ - (o.val + 1) ∧ B.length γ - (o.val + 1) < B.length γ
       omega
     · unfold strandVertex
-      rw [if_neg htail]
+      rw [ite_eq_right htail]
       rw [show (⟨B.length γ - (B.length γ - (o.val + 1)), by omega⟩ :
           B.PathPosition γ) = (⟨o.val + 1, by omega⟩ : B.PathPosition γ) from
         Fin.ext (by simp; omega)]

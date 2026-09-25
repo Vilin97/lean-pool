@@ -50,9 +50,9 @@ theorem stepLeft_eq_coreVertex_iff (edge : Fin p)
       offset.val = 0 ∧ spec.core.tail edge = vertex := by
   unfold stepLeft
   by_cases hzero : offset.val = 0
-  · rw [dif_pos hzero]
+  · rw [dite_eq_left hzero]
     simp [hzero, coreVertex]
-  · rw [dif_neg hzero]
+  · rw [dite_eq_right hzero]
     simp [hzero, coreVertex, interiorVertex]
 
 /-- A unit step ends at a core vertex exactly when it is the final step of
@@ -64,9 +64,9 @@ theorem stepRight_eq_coreVertex_iff (edge : Fin p)
         spec.core.head edge = vertex := by
   unfold stepRight
   by_cases hlast : offset.val + 1 = spec.length edge
-  · rw [dif_pos hlast]
+  · rw [dite_eq_left hlast]
     simp [hlast, coreVertex]
-  · rw [dif_neg hlast]
+  · rw [dite_eq_right hlast]
     simp [hlast, coreVertex, interiorVertex]
 
 private theorem sum_first_step (edge : Fin p) (value : Fin (spec.length edge) → ℤ) :
@@ -81,7 +81,7 @@ private theorem sum_first_step (edge : Fin p) (value : Fin (spec.length edge) �
         (if first.val = 0 then value first else 0) := by
       apply Fintype.sum_eq_single first
       intro offset hne
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hzero
       apply hne
       apply Fin.ext
@@ -103,7 +103,7 @@ private theorem sum_last_step (edge : Fin p) (value : Fin (spec.length edge) →
         (if last.val + 1 = spec.length edge then value last else 0) := by
       apply Fintype.sum_eq_single last
       intro offset hne
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hlast
       apply hne
       apply Fin.ext

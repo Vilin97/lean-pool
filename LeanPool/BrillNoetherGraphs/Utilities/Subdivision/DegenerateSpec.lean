@@ -199,21 +199,21 @@ def pathVertex (e : Fin p) (k : d.PathPosition e) : d.Vertex :=
   else d.interiorVertex e ⟨k.val - 1, by have := k.isLt; omega⟩
 
 theorem pathVertex_zero (e : Fin p) :
-    d.pathVertex e ⟨0, by omega⟩ = d.coreVertex (d.core.tail e) := dif_pos rfl
+    d.pathVertex e ⟨0, by omega⟩ = d.coreVertex (d.core.tail e) := dite_eq_left rfl
 
 theorem pathVertex_length (e : Fin p) :
     d.pathVertex e ⟨d.length e, by omega⟩ = d.coreVertex (d.core.head e) := by
   unfold pathVertex
   by_cases h : d.length e = 0
-  · rw [dif_pos (by simpa using h)]
+  · rw [dite_eq_left (by simpa using h)]
     exact (d.coreVertex_eq_iff _ _).mpr (d.rep_zero e h)
-  · rw [dif_neg (by simpa using h), dif_pos rfl]
+  · rw [dite_eq_right (by simpa using h), dite_eq_left rfl]
 
 theorem pathVertex_interior (e : Fin p) (k : d.PathPosition e)
     (h0 : k.val ≠ 0) (hL : k.val ≠ d.length e) :
     d.pathVertex e k = d.interiorVertex e ⟨k.val - 1, by have := k.isLt; omega⟩ := by
   unfold pathVertex
-  rw [dif_neg h0, dif_neg hL]
+  rw [dite_eq_right h0, dite_eq_right hL]
 
 theorem pathVertex_eq_of_val_eq (e : Fin p) {j k : d.PathPosition e}
     (h : j.val = k.val) : d.pathVertex e j = d.pathVertex e k :=
@@ -374,14 +374,14 @@ theorem sum_tail_class (r : Fin n) (F : Fin p → ℤ) :
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun e _ => ?_
   by_cases h : d.rep (d.core.tail e) = r
-  · rw [if_pos h, Finset.sum_eq_single_of_mem (d.core.tail e)
+  · rw [ite_eq_left h, Finset.sum_eq_single_of_mem (d.core.tail e)
       (Finset.mem_filter.mpr ⟨Finset.mem_univ _, h⟩)
-      (fun b _ hb => if_neg (fun hEq => hb hEq.symm))]
-    exact (if_pos rfl).symm
-  · rw [if_neg h]
+      (fun b _ hb => ite_eq_right (fun hEq => hb hEq.symm))]
+    exact (ite_eq_left rfl).symm
+  · rw [ite_eq_right h]
     symm
     refine Finset.sum_eq_zero fun v hv => ?_
-    refine if_neg ?_
+    refine ite_eq_right ?_
     rintro rfl
     exact h (Finset.mem_filter.mp hv).2
 
@@ -392,14 +392,14 @@ theorem sum_head_class (r : Fin n) (G : Fin p → ℤ) :
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun e _ => ?_
   by_cases h : d.rep (d.core.head e) = r
-  · rw [if_pos h, Finset.sum_eq_single_of_mem (d.core.head e)
+  · rw [ite_eq_left h, Finset.sum_eq_single_of_mem (d.core.head e)
       (Finset.mem_filter.mpr ⟨Finset.mem_univ _, h⟩)
-      (fun b _ hb => if_neg (fun hEq => hb hEq.symm))]
-    exact (if_pos rfl).symm
-  · rw [if_neg h]
+      (fun b _ hb => ite_eq_right (fun hEq => hb hEq.symm))]
+    exact (ite_eq_left rfl).symm
+  · rw [ite_eq_right h]
     symm
     refine Finset.sum_eq_zero fun v hv => ?_
-    refine if_neg ?_
+    refine ite_eq_right ?_
     rintro rfl
     exact h (Finset.mem_filter.mp hv).2
 
@@ -538,31 +538,31 @@ theorem unitEdge_stepEquiv (s : target.Step) :
       = c.vertexEquiv (target.stepLeft e' o) := by
     by_cases h0 : o.val = 0
     · rw [show d.stepLeft (c.slot e') ⟨o.val, by omega⟩
-            = d.coreVertex (d.core.tail (c.slot e')) from dif_pos h0,
+            = d.coreVertex (d.core.tail (c.slot e')) from dite_eq_left h0,
         show target.stepLeft e' o
-            = target.coreVertex (target.core.tail e') from dif_pos h0,
+            = target.coreVertex (target.core.tail e') from dite_eq_left h0,
         c.vertexEquiv_coreVertex, c.tail_eq e', d.coreVertex_eq_iff]
       exact (d.rep_idem _).symm
     · rw [show d.stepLeft (c.slot e') ⟨o.val, by omega⟩
-            = d.interiorVertex (c.slot e') ⟨o.val - 1, by omega⟩ from dif_neg h0,
+            = d.interiorVertex (c.slot e') ⟨o.val - 1, by omega⟩ from dite_eq_right h0,
         show target.stepLeft e' o
-            = target.interiorVertex e' ⟨o.val - 1, by omega⟩ from dif_neg h0,
+            = target.interiorVertex e' ⟨o.val - 1, by omega⟩ from dite_eq_right h0,
         c.vertexEquiv_interiorVertex]
   have hRight : d.stepRight (c.slot e') ⟨o.val, by omega⟩
       = c.vertexEquiv (target.stepRight e' o) := by
     by_cases h1 : o.val + 1 = target.length e'
     · rw [show d.stepRight (c.slot e') ⟨o.val, by omega⟩
             = d.coreVertex (d.core.head (c.slot e')) from
-            dif_pos (by change o.val + 1 = d.length (c.slot e'); omega),
+            dite_eq_left (by change o.val + 1 = d.length (c.slot e'); omega),
         show target.stepRight e' o
-            = target.coreVertex (target.core.head e') from dif_pos h1,
+            = target.coreVertex (target.core.head e') from dite_eq_left h1,
         c.vertexEquiv_coreVertex, c.head_eq e', d.coreVertex_eq_iff]
       exact (d.rep_idem _).symm
     · rw [show d.stepRight (c.slot e') ⟨o.val, by omega⟩
             = d.interiorVertex (c.slot e') ⟨o.val, by omega⟩ from
-            dif_neg (by change ¬ (o.val + 1 = d.length (c.slot e')); omega),
+            dite_eq_right (by change ¬ (o.val + 1 = d.length (c.slot e')); omega),
         show target.stepRight e' o
-            = target.interiorVertex e' ⟨o.val, by omega⟩ from dif_neg h1,
+            = target.interiorVertex e' ⟨o.val, by omega⟩ from dite_eq_right h1,
         c.vertexEquiv_interiorVertex]
   exact Prod.ext hLeft hRight
 

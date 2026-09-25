@@ -187,14 +187,14 @@ theorem isStepSlope_ramp (h : RampData d pot sgn lo t) :
     d.slotValueScript_stepLeft (rampCompatible h)]
   simp only [rampValue, rampSlope]
   by_cases hw : lo e ≤ o.val ∧ o.val < lo e + t
-  · rw [if_pos hw]
+  · rw [ite_eq_left hw]
     obtain ⟨hw1, hw2⟩ := hw
     have h1 : min (o.val + 1 - lo e) t = (o.val - lo e) + 1 := by omega
     have h2 : min (o.val - lo e) t = o.val - lo e := by omega
     rw [h1, h2]
     push_cast
     ring
-  · rw [if_neg hw]
+  · rw [ite_eq_right hw]
     have h1 : min (o.val + 1 - lo e) t = min (o.val - lo e) t := by
       simp only [not_and_or, not_le, not_lt] at hw
       omega
@@ -259,7 +259,7 @@ theorem rampSlope_last (h : RampData d pot sgn lo t) (e : Fin p) :
 theorem rampSlope_zero_t (sgn : Fin p → ℤ) (lo : Fin p → ℕ) (e : Fin p)
     (k : ℕ) : rampSlope sgn lo 0 e k = 0 := by
   simp only [rampSlope]
-  rw [if_neg (show ¬ (lo e ≤ k ∧ k < lo e + 0) by omega)]
+  rw [ite_eq_right (show ¬ (lo e ≤ k ∧ k < lo e + 0) by omega)]
 
 /-- Divergence of a ramp along one slot: a chip is created at path position
 `lo` and destroyed at `lo + t`, up to the sign. -/
@@ -271,26 +271,26 @@ theorem rampSlope_diff (sgn : Fin p → ℤ) (lo : Fin p → ℕ) (t : ℕ)
   rcases Nat.eq_zero_or_pos t with ht | ht
   · subst ht
     rw [rampSlope_zero_t, rampSlope_zero_t,
-      if_neg (show ¬ (k = lo e ∧ 0 < 0) by omega),
-      if_neg (show ¬ (k = lo e + 0 ∧ 0 < 0) by omega)]
+      ite_eq_right (show ¬ (k = lo e ∧ 0 < 0) by omega),
+      ite_eq_right (show ¬ (k = lo e + 0 ∧ 0 < 0) by omega)]
     try ring
   · simp only [rampSlope]
     by_cases h1 : lo e ≤ k ∧ k < lo e + t
-    · rw [if_pos h1]
+    · rw [ite_eq_left h1]
       by_cases h2 : lo e ≤ k - 1 ∧ k - 1 < lo e + t
-      · rw [if_pos h2, if_neg (show ¬ (k = lo e ∧ 0 < t) by omega),
-          if_neg (show ¬ (k = lo e + t ∧ 0 < t) by omega)]
+      · rw [ite_eq_left h2, ite_eq_right (show ¬ (k = lo e ∧ 0 < t) by omega),
+          ite_eq_right (show ¬ (k = lo e + t ∧ 0 < t) by omega)]
         try ring
-      · rw [if_neg h2, if_pos (show k = lo e ∧ 0 < t by omega),
-          if_neg (show ¬ (k = lo e + t ∧ 0 < t) by omega)]
+      · rw [ite_eq_right h2, ite_eq_left (show k = lo e ∧ 0 < t by omega),
+          ite_eq_right (show ¬ (k = lo e + t ∧ 0 < t) by omega)]
         try ring
-    · rw [if_neg h1]
+    · rw [ite_eq_right h1]
       by_cases h2 : lo e ≤ k - 1 ∧ k - 1 < lo e + t
-      · rw [if_pos h2, if_neg (show ¬ (k = lo e ∧ 0 < t) by omega),
-          if_pos (show k = lo e + t ∧ 0 < t by omega)]
+      · rw [ite_eq_left h2, ite_eq_right (show ¬ (k = lo e ∧ 0 < t) by omega),
+          ite_eq_left (show k = lo e + t ∧ 0 < t by omega)]
         try ring
-      · rw [if_neg h2, if_neg (show ¬ (k = lo e ∧ 0 < t) by omega),
-          if_neg (show ¬ (k = lo e + t ∧ 0 < t) by omega)]
+      · rw [ite_eq_right h2, ite_eq_right (show ¬ (k = lo e ∧ 0 < t) by omega),
+          ite_eq_right (show ¬ (k = lo e + t ∧ 0 < t) by omega)]
         try ring
 
 /-! ## Agreement with the open orthant
@@ -379,12 +379,12 @@ theorem sum_class_indicator (r u : Fin n) (c : ℤ) :
       if u = v then c else 0) = if d.rep u = d.rep r then c else 0 := by
   classical
   by_cases hu : d.rep u = d.rep r
-  · rw [if_pos hu, Finset.sum_eq_single_of_mem u
+  · rw [ite_eq_left hu, Finset.sum_eq_single_of_mem u
       (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hu⟩)
-      (fun b _ hb => if_neg fun hEq => hb hEq.symm)]
-    exact if_pos rfl
-  · rw [if_neg hu]
-    refine Finset.sum_eq_zero fun v hv => if_neg ?_
+      (fun b _ hb => ite_eq_right fun hEq => hb hEq.symm)]
+    exact ite_eq_left rfl
+  · rw [ite_eq_right hu]
+    refine Finset.sum_eq_zero fun v hv => ite_eq_right ?_
     rintro rfl
     exact hu (Finset.mem_filter.mp hv).2
 
@@ -400,34 +400,34 @@ theorem one_chip_pathVertex_coreVertex (e : Fin p) (k : d.PathPosition e)
         d.pathVertex_zero]
     have hchip : ∀ v : Fin n,
         d.chipCore e k.val v = if d.core.tail e = v then 1 else 0 := fun v => by
-      simp only [chipCore]; rw [if_pos hz]
+      simp only [chipCore]; rw [ite_eq_left hz]
     rw [hk]
     simp only [hchip]
     rw [d.sum_class_indicator r (d.core.tail e) 1]
     simp only [oneChip, d.coreVertex_eq_iff]
     by_cases h : d.rep (d.core.tail e) = d.rep r
-    · rw [if_pos h.symm, if_pos h]
-    · rw [if_neg fun hh => h hh.symm, if_neg h]
+    · rw [ite_eq_left h.symm, ite_eq_left h]
+    · rw [ite_eq_right fun hh => h hh.symm, ite_eq_right h]
   · by_cases hl : k.val = d.length e
     · have hk : d.pathVertex e k = d.coreVertex (d.core.head e) := by
         rw [d.pathVertex_eq_of_val_eq e (j := k) (k := ⟨d.length e, by omega⟩) hl,
           d.pathVertex_length]
       have hchip : ∀ v : Fin n,
           d.chipCore e k.val v = if d.core.head e = v then 1 else 0 := fun v => by
-        simp only [chipCore]; rw [if_neg hz, if_pos hl]
+        simp only [chipCore]; rw [ite_eq_right hz, ite_eq_left hl]
       rw [hk]
       simp only [hchip]
       rw [d.sum_class_indicator r (d.core.head e) 1]
       simp only [oneChip, d.coreVertex_eq_iff]
       by_cases h : d.rep (d.core.head e) = d.rep r
-      · rw [if_pos h.symm, if_pos h]
-      · rw [if_neg fun hh => h hh.symm, if_neg h]
+      · rw [ite_eq_left h.symm, ite_eq_left h]
+      · rw [ite_eq_right fun hh => h hh.symm, ite_eq_right h]
     · have hchip : ∀ v : Fin n, d.chipCore e k.val v = 0 := fun v => by
-        simp only [chipCore]; rw [if_neg hz, if_neg hl]
+        simp only [chipCore]; rw [ite_eq_right hz, ite_eq_right hl]
       rw [d.pathVertex_interior e k hz hl]
       simp only [hchip, Finset.sum_const_zero]
       simp only [oneChip]
-      exact if_neg (d.coreVertex_ne_interiorVertex r e _)
+      exact ite_eq_right (d.coreVertex_ne_interiorVertex r e _)
 
 theorem one_chip_pathVertex_interiorVertex (e : Fin p) (k : d.PathPosition e)
     (e' : Fin p) (o : Fin (d.length e' - 1)) :
@@ -441,37 +441,37 @@ theorem one_chip_pathVertex_interiorVertex (e : Fin p) (k : d.PathPosition e)
   · have hk : d.pathVertex e k = d.coreVertex (d.core.tail e) := by
       rw [d.pathVertex_eq_of_val_eq e (j := k) (k := ⟨0, by omega⟩) hz,
         d.pathVertex_zero]
-    rw [hk, if_neg fun hh =>
+    rw [hk, ite_eq_right fun hh =>
       (d.coreVertex_ne_interiorVertex (d.core.tail e) e' o) hh.symm,
-      if_neg (show ¬ (k.val = o.val + 1) by omega)]
+      ite_eq_right (show ¬ (k.val = o.val + 1) by omega)]
     exact (ite_self _).symm
   · by_cases hl : k.val = d.length e
     · have hk : d.pathVertex e k = d.coreVertex (d.core.head e) := by
         rw [d.pathVertex_eq_of_val_eq e (j := k) (k := ⟨d.length e, by omega⟩) hl,
           d.pathVertex_length]
-      rw [hk, if_neg fun hh =>
+      rw [hk, ite_eq_right fun hh =>
         (d.coreVertex_ne_interiorVertex (d.core.head e) e' o) hh.symm]
       symm
       by_cases he : e = e'
       · subst he
-        rw [if_pos rfl, if_neg (show ¬ (k.val = o.val + 1) by omega)]
-      · rw [if_neg he]
+        rw [ite_eq_left rfl, ite_eq_right (show ¬ (k.val = o.val + 1) by omega)]
+      · rw [ite_eq_right he]
     · rw [d.pathVertex_interior e k hz hl]
       by_cases he : e = e'
       · subst he
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         by_cases hoff : k.val = o.val + 1
-        · rw [if_pos hoff, if_pos]
+        · rw [ite_eq_left hoff, ite_eq_left]
           exact congrArg (d.interiorVertex e)
             (Fin.ext (by show (o : ℕ) = k.val - 1; omega))
-        · rw [if_neg hoff, if_neg]
+        · rw [ite_eq_right hoff, ite_eq_right]
           intro hEq
           have hs : (⟨e, o⟩ : d.Interior)
               = ⟨e, ⟨k.val - 1, by omega⟩⟩ := Sum.inr.inj hEq
           have hv : (o : ℕ) = k.val - 1 :=
             congrArg (fun x : d.Interior => (x.2 : ℕ)) hs
           omega
-      · rw [if_neg he, if_neg]
+      · rw [ite_eq_right he, ite_eq_right]
         intro hEq
         have hs : (⟨e', o⟩ : d.Interior)
             = ⟨e, ⟨k.val - 1, by omega⟩⟩ := Sum.inr.inj hEq
@@ -518,7 +518,7 @@ theorem ramp_slot_interior (h : RampData d pot sgn lo t) (e' : Fin p)
       sgn e' * (d.chipInt e' (min (lo e') (d.length e')) e' o.val -
         d.chipInt e' (min (lo e' + t) (d.length e')) e' o.val) := by
     refine Fintype.sum_eq_single e' fun e hne => ?_
-    simp only [chipInt, if_neg hne, sub_zero, mul_zero]
+    simp only [chipInt, ite_eq_right hne, sub_zero, mul_zero]
   rw [hcollapse]
   have hdiff := rampSlope_diff sgn lo t e' (o.val + 1) (by omega)
   simp only [Nat.add_sub_cancel] at hdiff

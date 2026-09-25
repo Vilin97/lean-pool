@@ -117,7 +117,7 @@ theorem splitStep_tail_of_pos {potential : Fin 8 → ℤ} {mark : Fin 12 → ℕ
         (d.markRiseOut potential markValue e) 0 =
       SubdivisionArithmetic.step (mark e)
         (d.markRiseIn potential markValue e) 0 := by
-  rw [SubdivisionArithmetic.splitStep_first (hMarks e), if_pos hPos]
+  rw [SubdivisionArithmetic.splitStep_first (hMarks e), ite_eq_left hPos]
 
 /-- At the head of a marked slot the script is the canonical ramp of rise
 `markRiseOut` over `length e - mark e` steps. -/
@@ -131,7 +131,7 @@ theorem splitStep_head_of_lt {potential : Fin 8 → ℤ} {mark : Fin 12 → ℕ}
       SubdivisionArithmetic.step (d.length e - mark e)
         (d.markRiseOut potential markValue e)
         (d.length e - 1 - mark e) := by
-  rw [SubdivisionArithmetic.splitStep_last (hMarks e) hPos, if_pos hLt]
+  rw [SubdivisionArithmetic.splitStep_last (hMarks e) hPos, ite_eq_left hLt]
 
 /-- A marked slot whose *incoming* ramp is flat contributes nothing at its
 tail.  This is the shape both AR rows use at the far end of a marked leg. -/
@@ -147,9 +147,9 @@ theorem splitStep_tail_eq_zero_of_flat {potential : Fin 8 → ℤ}
         (d.markRiseOut potential markValue e) 0 := by
   rw [SubdivisionArithmetic.splitStep_first (hMarks e)]
   by_cases hPos : 0 < mark e
-  · rw [if_pos hPos, if_pos hPos, hFlat]
+  · rw [ite_eq_left hPos, ite_eq_left hPos, hFlat]
     exact SubdivisionArithmetic.step_zero_of_lt hPos
-  · rw [if_neg hPos, if_neg hPos]
+  · rw [ite_eq_right hPos, ite_eq_right hPos]
 
 /-- A marked slot whose *outgoing* ramp is flat contributes nothing at its
 head. -/
@@ -221,7 +221,7 @@ theorem endpointPair_eq_zero_of_ne_tail {potential : Fin 8 → ℤ}
     (hNe : d.rep (d.core.tail e) ≠ d.rep r) :
     endpointPair d potential mark markValue e r = 0 := by
   unfold endpointPair
-  rw [if_neg hNe, splitStep_head_eq_zero_of_flat d hMarks hPos hLt hOut]
+  rw [ite_eq_right hNe, splitStep_head_eq_zero_of_flat d hMarks hPos hLt hOut]
   simp
 
 /-- A marked slot read from its **head**: nothing reaches any class other than
@@ -233,7 +233,7 @@ theorem endpointPair_eq_zero_of_ne_head {potential : Fin 8 → ℤ}
     {r : Fin 8} (hNe : d.rep (d.core.head e) = d.rep r → False) :
     endpointPair d potential mark markValue e r = 0 := by
   unfold endpointPair
-  rw [if_neg hNe, splitStep_tail_eq_zero_of_flat d hMarks hIn, if_pos hPos]
+  rw [ite_eq_right hNe, splitStep_tail_eq_zero_of_flat d hMarks hIn, ite_eq_left hPos]
   simp
 
 end AtanasovRanganathan.ConfigurationMarkedCommon

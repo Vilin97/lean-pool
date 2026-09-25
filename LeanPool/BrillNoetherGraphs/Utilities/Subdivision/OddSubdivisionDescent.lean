@@ -111,8 +111,8 @@ private theorem fineVertex_eq_inr (c : spec.Chip N)
     rw [Nat.mul_succ] at h1
     omega
   unfold Chip.fineVertex pathVertex
-  rw [dif_neg (by show ¬ N * c.step + c.offset = 0; omega),
-    dif_neg (by show ¬ N * c.step + c.offset = N * spec.length c.edge; omega)]
+  rw [dite_eq_right (by show ¬ N * c.step + c.offset = 0; omega),
+    dite_eq_right (by show ¬ N * c.step + c.offset = N * spec.length c.edge; omega)]
   simp only [interiorVertex, Sum.inr.injEq, Sigma.mk.injEq, heq_eq_eq, true_and]
   apply Fin.ext
   show N * c.step + c.offset - 1 = k.val
@@ -140,7 +140,7 @@ theorem eq_fineOf_of_roundData_eq_inl {y : (spec.scale N hN).Vertex} {x : spec.V
     rfl
   · simp only [roundData] at h
     by_cases hr : (j.val + 1) % N = 0
-    · rw [dif_pos hr] at h
+    · rw [dite_eq_left hr] at h
       have hx := Sum.inl.inj h
       subst hx
       have hdvd : N ∣ (j.val + 1) := Nat.dvd_of_mod_eq_zero hr
@@ -154,7 +154,7 @@ theorem eq_fineOf_of_roundData_eq_inl {y : (spec.scale N hN).Vertex} {x : spec.V
       show j.val = N * ((j.val + 1) / N - 1 + 1) - 1
       rw [Nat.sub_add_cancel hpos, hmul]
       omega
-    · rw [dif_neg hr] at h
+    · rw [dite_eq_right hr] at h
       exact absurd h Sum.inr_ne_inl
 
 theorem eq_fineVertex_of_roundData_eq_inr {y : (spec.scale N hN).Vertex} {c : spec.Chip N}
@@ -163,9 +163,9 @@ theorem eq_fineVertex_of_roundData_eq_inr {y : (spec.scale N hN).Vertex} {c : sp
   · exact absurd h Sum.inl_ne_inr
   · simp only [roundData] at h
     by_cases hr : (j.val + 1) % N = 0
-    · rw [dif_pos hr] at h
+    · rw [dite_eq_left hr] at h
       exact absurd h Sum.inl_ne_inr
-    · rw [dif_neg hr] at h
+    · rw [dite_eq_right hr] at h
       have hc := Sum.inr.inj h
       subst hc
       symm
@@ -179,9 +179,9 @@ theorem two_mul_distance_le_of_roundData_eq_inr {y : (spec.scale N hN).Vertex}
   · exact absurd h Sum.inl_ne_inr
   · simp only [roundData] at h
     by_cases hr : (j.val + 1) % N = 0
-    · rw [dif_pos hr] at h
+    · rw [dite_eq_left hr] at h
       exact absurd h Sum.inl_ne_inr
-    · rw [dif_neg hr] at h
+    · rw [dite_eq_right hr] at h
       have hc := Sum.inr.inj h
       subst hc
       exact spec.two_mul_distance_le_of_toRight N _ rfl
@@ -208,13 +208,13 @@ theorem embed_one_chip (x : spec.Vertex) :
   unfold embed
   rw [Finset.sum_eq_single x]
   · by_cases hxy : spec.fineOf N hN x = y
-    · rw [if_pos hxy, one_chip_apply_v, ← hxy, one_chip_apply_v]
-    · rw [if_neg hxy]
+    · rw [ite_eq_left hxy, one_chip_apply_v, ← hxy, one_chip_apply_v]
+    · rw [ite_eq_right hxy]
       exact (one_chip_apply_other' _ _ (fun hc => hxy hc.symm)).symm
   · intro x' _ hne
     have hzero : (oneChip x : CFDiv spec.graph) x' = 0 := by
       simp only [oneChip]
-      rw [if_neg hne]
+      rw [ite_eq_right hne]
     rw [hzero]
     split_ifs <;> rfl
   · intro hmem

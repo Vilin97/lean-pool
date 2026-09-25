@@ -303,26 +303,26 @@ lemma edgesBetweenOf_eq_sum (M : Multiset (G.V × G.V)) {S T : Finset G.V}
         = if a ∈ S ∧ b ∈ T then 1 else 0 := by
       by_cases haS : a ∈ S
       · rw [Finset.sum_eq_single a (fun v _ hv => Finset.sum_eq_zero fun w _ =>
-          if_neg (by tauto)) (fun h => absurd haS h)]
+          ite_eq_right (by tauto)) (fun h => absurd haS h)]
         by_cases hbT : b ∈ T
-        · rw [Finset.sum_eq_single b (fun w _ hw => if_neg (by tauto))
-            (fun h => absurd hbT h), if_pos ⟨rfl, rfl⟩, if_pos ⟨haS, hbT⟩]
-        · rw [Finset.sum_eq_zero fun w hw => if_neg (by rintro ⟨-, rfl⟩; exact hbT hw),
-            if_neg (by tauto)]
+        · rw [Finset.sum_eq_single b (fun w _ hw => ite_eq_right (by tauto))
+            (fun h => absurd hbT h), ite_eq_left ⟨rfl, rfl⟩, ite_eq_left ⟨haS, hbT⟩]
+        · rw [Finset.sum_eq_zero fun w hw => ite_eq_right (by rintro ⟨-, rfl⟩; exact hbT hw),
+            ite_eq_right (by tauto)]
       · rw [Finset.sum_eq_zero fun v hv => Finset.sum_eq_zero fun w _ =>
-          if_neg (by rintro ⟨rfl, -⟩; exact haS hv), if_neg (by tauto)]
+          ite_eq_right (by rintro ⟨rfl, -⟩; exact haS hv), ite_eq_right (by tauto)]
     have h₂ : (∑ v ∈ S, ∑ w ∈ T, if a = w ∧ b = v then (1 : ℕ) else 0)
         = if a ∈ T ∧ b ∈ S then 1 else 0 := by
       by_cases hbS : b ∈ S
       · rw [Finset.sum_eq_single b (fun v _ hv => Finset.sum_eq_zero fun w _ =>
-          if_neg (by tauto)) (fun h => absurd hbS h)]
+          ite_eq_right (by tauto)) (fun h => absurd hbS h)]
         by_cases haT : a ∈ T
-        · rw [Finset.sum_eq_single a (fun w _ hw => if_neg (by tauto))
-            (fun h => absurd haT h), if_pos ⟨rfl, rfl⟩, if_pos ⟨haT, hbS⟩]
-        · rw [Finset.sum_eq_zero fun w hw => if_neg (by rintro ⟨rfl, -⟩; exact haT hw),
-            if_neg (by tauto)]
+        · rw [Finset.sum_eq_single a (fun w _ hw => ite_eq_right (by tauto))
+            (fun h => absurd haT h), ite_eq_left ⟨rfl, rfl⟩, ite_eq_left ⟨haT, hbS⟩]
+        · rw [Finset.sum_eq_zero fun w hw => ite_eq_right (by rintro ⟨rfl, -⟩; exact haT hw),
+            ite_eq_right (by tauto)]
       · rw [Finset.sum_eq_zero fun v hv => Finset.sum_eq_zero fun w _ =>
-          if_neg (by rintro ⟨-, rfl⟩; exact hbS hv), if_neg (by tauto)]
+          ite_eq_right (by rintro ⟨-, rfl⟩; exact hbS hv), ite_eq_right (by tauto)]
     have hdisj : ¬ ((a ∈ S ∧ b ∈ T) ∧ (a ∈ T ∧ b ∈ S)) := by
       rintro ⟨⟨haS, -⟩, haT, -⟩
       exact (Finset.disjoint_left.mp hST haS) haT
@@ -498,13 +498,13 @@ private lemma hakimi_step {n : ℕ}
         by_cases hb : b ∈ S
         · have hsplit := hd'S S hb
           by_cases ha : a ∈ S
-          · rw [if_pos ⟨ha, hb⟩] at hcs
+          · rw [ite_eq_left ⟨ha, hb⟩] at hcs
             omega
           · have := hstrict S hb ha
-            rw [if_neg (by tauto)] at hcs
+            rw [ite_eq_right (by tauto)] at hcs
             omega
         · rw [hd'notMem S hb]
-          rw [if_neg (by tauto)] at hcs
+          rw [ite_eq_right (by tauto)] at hcs
           omega)
   refine ⟨(a, b) ::ₘ N₀, fun v w => ?_, fun v => ?_⟩
   · have hex : ¬ ((a, b) = (v, w) ∧ (a, b) = (w, v)) := by
@@ -521,9 +521,9 @@ private lemma hakimi_step {n : ℕ}
   · rw [Multiset.countP_cons, hindeg₀ v]
     by_cases hv : v = b
     · subst hv
-      rw [hd', Function.update_self, if_pos rfl]
+      rw [hd', Function.update_self, ite_eq_left rfl]
       omega
-    · rw [hd', Function.update_of_ne hv, if_neg (by simpa using fun h => hv h.symm)]
+    · rw [hd', Function.update_of_ne hv, ite_eq_right (by simpa using fun h => hv h.symm)]
       omega
 
 /-- **Hakimi's criterion for an arbitrary edge multiset.** If `d` sums to the number of edges

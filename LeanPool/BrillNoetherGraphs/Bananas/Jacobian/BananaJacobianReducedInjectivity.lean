@@ -155,7 +155,7 @@ theorem bananaPositionCoordinates_eq_zero_of_qReduced_of_mem_relations
   have hAlpha := hEach alpha (Finset.mem_univ alpha)
   have hpVal : (p alpha).val = 0 := by
     by_contra hpZero
-    rw [if_neg hpZero] at hAlpha
+    rw [ite_eq_right hpZero] at hAlpha
     omega
   simp [bananaPositionCoordinates, hpVal]
 

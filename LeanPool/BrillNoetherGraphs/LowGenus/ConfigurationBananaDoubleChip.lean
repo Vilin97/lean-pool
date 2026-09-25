@@ -74,7 +74,7 @@ allows -- and needs -- slope two on its own arm. -/
 arm's length. -/
 theorem headContribution_ge_one_of_ge {L h : ℕ} (hL : 0 < L) (hle : L ≤ h) :
     1 ≤ headContribution L 0 h := by
-  simp only [headContribution, if_neg hL.ne', Nat.cast_zero]
+  simp only [headContribution, ite_eq_right hL.ne', Nat.cast_zero]
   have hstep := SubdivisionArithmetic.step_le_upper_of_le_mul
     (L := L) (i := L - 1) ((0 : ℤ) - (h : ℤ)) (-1) hL (by omega)
     (by omega)
@@ -84,7 +84,7 @@ theorem headContribution_ge_one_of_ge {L h : ℕ} (hL : 0 < L) (hle : L ≤ h) :
 its head.  This is what the double chip buys. -/
 theorem headContribution_ge_two_of_ge {L h : ℕ} (hL : 0 < L) (hle : 2 * L ≤ h) :
     2 ≤ headContribution L 0 h := by
-  simp only [headContribution, if_neg hL.ne', Nat.cast_zero]
+  simp only [headContribution, ite_eq_right hL.ne', Nat.cast_zero]
   have hstep := SubdivisionArithmetic.step_le_upper_of_le_mul
     (L := L) (i := L - 1) ((0 : ℤ) - (h : ℤ)) (-2) hL (by omega)
     (by omega)
@@ -97,7 +97,7 @@ theorem tailContribution_ge_neg_two {L h : ℕ} (hh : h ≤ 2 * L) :
   rcases Nat.eq_zero_or_pos L with hL | hL
   · have : h = 0 := by omega
     simp [tailContribution, hL]
-  · simp only [tailContribution, if_neg hL.ne']
+  · simp only [tailContribution, ite_eq_right hL.ne']
     exact SubdivisionArithmetic.lower_le_step_of_mul_le (L := L) (i := 0)
       ((0 : ℤ) - (h : ℤ)) (-2) hL (by omega)
 

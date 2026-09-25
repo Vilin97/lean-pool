@@ -118,7 +118,7 @@ theorem rank_toLib (G : CFGraph) (D : CFDiv G) :
   have h2 : ¬ _root_.rank (toLib G) D ≥ Classical.choose h + 1 := fun hh =>
     hc.2 ((_root_.rank_geq_iff (toLib G) D (Classical.choose h + 1)).mpr hh)
   unfold rank
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   omega
 
 theorem bnExists_toLib (G : CFGraph) (r d : ℤ) :

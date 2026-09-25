@@ -171,10 +171,10 @@ theorem rankDelta_degreeTwistInt_eq_degree_indicator
   rw [deg_transmissionCorner]
   by_cases hEq : tau b = d - deg D + b
   · have hDegree : deg D + tau b - b = d := by omega
-    rw [if_pos hDegree]
+    rw [ite_eq_left hDegree]
     simpa [hEq] using h.symm
   · have hDegree : deg D + tau b - b ≠ d := by omega
-    rw [if_neg hDegree]
+    rw [ite_eq_right hDegree]
     simpa [hEq] using h.symm
 
 /-- A divisor with marked second rank difference one is winnable. -/
@@ -731,10 +731,10 @@ theorem genusTwoCornerWeight_eq_threeDegreeTwistContribution
       rankDelta (mark B.graph u v)
         (D + (d - deg D + b) • oneChip u - b • oneChip v) at hs
     by_cases hd : deg C = d
-    · rw [if_pos hd]
+    · rw [ite_eq_left hd]
       have hTauEq : tau b = d - deg D + b := by omega
       simpa [hTauEq] using hs.symm
-    · rw [if_neg hd]
+    · rw [ite_eq_right hd]
       have hTauNe : tau b ≠ d - deg D + b := by
         intro hEq
         apply hd
@@ -751,7 +751,7 @@ theorem genusTwoCornerWeight_eq_threeDegreeTwistContribution
     have hComp := complement_rank_add_one_eq_two_of_corner_degree_zero
       B u v C hDeltaC h0
     rw [hDelta 0, hDelta 1, hDelta 2]
-    simp only [h0, if_pos, OfNat.zero_ne_ofNat, if_false,
+    simp only [h0, ite_eq_left, OfNat.zero_ne_ofNat, ite_false,
       zero_mul, add_zero, one_mul]
     rw [← hC0]
     simpa [genusTwoCornerWeight, h0] using hComp.symm
@@ -766,7 +766,7 @@ theorem genusTwoCornerWeight_eq_threeDegreeTwistContribution
     rw [hDelta 0, hDelta 1, hDelta 2]
     have h10 : deg C ≠ 0 := by omega
     have h12 : deg C ≠ 2 := by omega
-    simp only [h1, if_pos,
+    simp only [h1, ite_eq_left,
       one_mul]
     rw [← hC1]
     simpa [genusTwoCornerWeight, h10, h1] using hComp.symm
@@ -779,7 +779,7 @@ theorem genusTwoCornerWeight_eq_threeDegreeTwistContribution
     have h20 : deg C ≠ 0 := by omega
     have h21 : deg C ≠ 1 := by omega
     rw [hDelta 0, hDelta 1, hDelta 2]
-    simp only [h2, if_pos,
+    simp only [h2, ite_eq_left,
       one_mul]
     rw [← hC2]
     by_cases hCanon : linearEquiv B.graph C (canonicalDivisor B.graph)
@@ -810,7 +810,7 @@ theorem genusTwoCornerWeight_eq_threeDegreeTwistContribution
     have h32 : deg C ≠ 2 := h2
     rw [hDelta 0, hDelta 1, hDelta 2]
     unfold genusTwoCornerWeight
-    simp only [h30, h31, h32, if_false, false_and,
+    simp only [h30, h31, h32, ite_false, false_and,
       zero_mul, add_zero]
 
 /-- Exact pointwise genus-two reduction of a selected corner's complementary
@@ -824,22 +824,22 @@ theorem complement_rank_add_one_eq_genusTwoCornerWeight
     (mark B.graph u v) X hDelta
   unfold genusTwoCornerWeight
   by_cases hDegZero : deg X = 0
-  · simp only [hDegZero, if_pos]
+  · simp only [hDegZero, ite_eq_left]
     exact complement_rank_add_one_eq_two_of_corner_degree_zero
       B u v X hDelta hDegZero
-  simp only [hDegZero, if_false]
+  simp only [hDegZero, ite_false]
   by_cases hDegOne : deg X = 1
-  · simp only [hDegOne, if_pos]
+  · simp only [hDegOne, ite_eq_left]
     exact complement_rank_add_one_eq_one_of_corner_degree_one
       B u v X hDelta hDegOne
-  simp only [hDegOne, if_false]
+  simp only [hDegOne, ite_false]
   by_cases hDegTwo : deg X = 2
   · by_cases hCanon :
         linearEquiv B.graph X (canonicalDivisor B.graph)
-    · simp only [hDegTwo, hCanon, and_self, if_pos]
+    · simp only [hDegTwo, hCanon, and_self, ite_eq_left]
       exact (complement_rank_add_one_eq_one_iff_corner_canonical
         B X hDegTwo).mpr hCanon
-    · simp only [hDegTwo, hCanon, and_false, if_false]
+    · simp only [hDegTwo, hCanon, and_false, ite_false]
       have hLower := rank_geq_neg_one B.graph
         (canonicalDivisor B.graph - X)
       have hCompDeg : deg (canonicalDivisor B.graph - X) = 0 := by
@@ -861,7 +861,7 @@ theorem complement_rank_add_one_eq_genusTwoCornerWeight
             B X hDegTwo).mp hOne)
       omega
   · have hThree : 3 ≤ deg X := by omega
-    simp only [hDegTwo, false_and, if_false]
+    simp only [hDegTwo, false_and, ite_false]
     exact complement_rank_add_one_eq_zero_of_three_le_degree B X hThree
 
 /-- The finite inversion count is exactly the sum of the genus-two corner

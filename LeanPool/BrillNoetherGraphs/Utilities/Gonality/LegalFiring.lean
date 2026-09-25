@@ -229,11 +229,11 @@ theorem exists_nested_legal_chain (h_conn : graphConnected G) (q : G.V)
         by_cases h : x v = x m
         · have hvW : v ∈ W := by simp [hW, h]
           show max (-x v - (-(x m) - 1)) 0 = indicatorScript G W v
-          rw [indicatorScript, if_pos hvW]
+          rw [indicatorScript, ite_eq_left hvW]
           omega
         · have hvW : v ∉ W := by simp [hW, h]
           show max (-x v - (-(x m) - 1)) 0 = indicatorScript G W v
-          rw [indicatorScript, if_neg hvW]
+          rw [indicatorScript, ite_eq_right hvW]
           omega
       rw [heq, ← set_firing_eq_add_prin_indicator_script] at htr
       intro u hu
@@ -276,9 +276,9 @@ theorem exists_nested_legal_chain (h_conn : graphConnected G) (q : G.V)
           show max (x v - (K - ((t : ℤ) + 1))) 0
               = max (x v - (K - (t : ℤ))) 0 + indicatorScript G (U t) v
           by_cases h : K - (t : ℤ) ≤ x v
-          · rw [indicatorScript, if_pos ((hmemU t v).mpr h)]
+          · rw [indicatorScript, ite_eq_left ((hmemU t v).mpr h)]
             omega
-          · rw [indicatorScript, if_neg (fun hc => h ((hmemU t v).mp hc))]
+          · rw [indicatorScript, ite_eq_right (fun hc => h ((hmemU t v).mp hc))]
             omega
         rw [fireChain_succ, ih, set_firing_eq_add_prin_indicator_script]
         push_cast

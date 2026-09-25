@@ -77,8 +77,8 @@ theorem bananaLeftJustifyMeasure_swap_lt {g : ℕ} (B : Banana g)
     exact Nat.ne_of_gt (B.length_pos alpha)
   simp only [bananaLeftJustifySwap_at_full, ↓reduceIte]
   rw [bananaLeftJustifySwap_at_zero B p alpha beta hNe.symm]
-  rw [if_neg (Nat.ne_of_gt (B.length_pos beta)), if_neg hFullNeZero,
-    if_pos hZero]
+  rw [ite_eq_right (Nat.ne_of_gt (B.length_pos beta)), ite_eq_right hFullNeZero,
+    ite_eq_left hZero]
   have hValues : beta.val < alpha.val := hOrder
   omega
 

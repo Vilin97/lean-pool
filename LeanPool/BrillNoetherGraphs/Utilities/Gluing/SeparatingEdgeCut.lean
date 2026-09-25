@@ -184,8 +184,8 @@ theorem normalizeScript_preserves_endpoints_eq
         indicatorScript G cut.side a = indicatorScript G cut.side b := by
       unfold indicatorScript
       by_cases ha : a ∈ cut.side
-      · rw [if_pos ha, if_pos (hSide.mp ha)]
-      · rw [if_neg ha, if_neg (fun hb => ha (hSide.mpr hb))]
+      · rw [ite_eq_left ha, ite_eq_left (hSide.mp ha)]
+      · rw [ite_eq_right ha, ite_eq_right (fun hb => ha (hSide.mpr hb))]
     rw [hEqual, hIndicator]
   · rcases hSame with ⟨rfl, rfl⟩
     exact cut.normalizeScript_endpoints_eq sigma

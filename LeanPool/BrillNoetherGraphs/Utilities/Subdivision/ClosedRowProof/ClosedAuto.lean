@@ -106,7 +106,7 @@ endpoint checks succeed. -/
 def toSymmetry (d : AutoData) (core : ExplicitPotential.Core n p)
     (hn : 0 < n) (hp : 0 < p) (hcheck : d.checks core = true) :
     CoreSymmetry core := by
-  rw [checks, dif_pos hn, dif_pos hp, Bool.and_eq_true, Bool.and_eq_true,
+  rw [checks, dite_eq_left hn, dite_eq_left hp, Bool.and_eq_true, Bool.and_eq_true,
     Bool.and_eq_true] at hcheck
   let vp : Equiv.Perm (Fin n) :=
     { toFun := d.vertexMap hn
@@ -405,7 +405,7 @@ theorem bnExists_iff (hn : 0 < n) (hForest : IsForest core (zeroSet length))
       length_eq := fun e => symmetry.reindexLength_compat length e
       tail_eq := fun e => by
         by_cases hr : symmetry.reversed e
-        · simp only [if_pos hr]
+        · simp only [ite_eq_left hr]
           rw [hclass]
           apply Subtype.ext
           have ht := symmetry.tail_eq e
@@ -414,7 +414,7 @@ theorem bnExists_iff (hn : 0 < n) (hForest : IsForest core (zeroSet length))
             target.rep (core.tail (symmetry.slotPerm e))
           rw [ht]
         · have hr' : symmetry.reversed e = false := Bool.eq_false_of_not_eq_true hr
-          simp only [if_neg hr]
+          simp only [ite_eq_right hr]
           rw [hclass]
           apply Subtype.ext
           have ht := symmetry.tail_eq e
@@ -424,7 +424,7 @@ theorem bnExists_iff (hn : 0 < n) (hForest : IsForest core (zeroSet length))
           rw [ht]
       head_eq := fun e => by
         by_cases hr : symmetry.reversed e
-        · simp only [if_pos hr]
+        · simp only [ite_eq_left hr]
           rw [hclass]
           apply Subtype.ext
           have hh := symmetry.head_eq e
@@ -433,7 +433,7 @@ theorem bnExists_iff (hn : 0 < n) (hForest : IsForest core (zeroSet length))
             target.rep (core.head (symmetry.slotPerm e))
           rw [hh]
         · have hr' : symmetry.reversed e = false := Bool.eq_false_of_not_eq_true hr
-          simp only [if_neg hr]
+          simp only [ite_eq_right hr]
           rw [hclass]
           apply Subtype.ext
           have hh := symmetry.head_eq e

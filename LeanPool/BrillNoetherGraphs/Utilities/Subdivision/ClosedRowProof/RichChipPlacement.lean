@@ -89,11 +89,11 @@ theorem slot_eq_of_pathVertex_eq_interiorVertex {s e : Fin p}
     s = e ∧ k.val = o.val + 1 := by
   by_cases h0 : k.val = 0
   · rw [Utilities.Certificate.DegenerateSpec.DegSpec.pathVertex,
-      dif_pos h0] at h
+      dite_eq_left h0] at h
     exact absurd h.symm (interiorVertex_ne_coreVertex d e o _)
   · by_cases hL : k.val = d.length s
     · rw [Utilities.Certificate.DegenerateSpec.DegSpec.pathVertex,
-        dif_neg h0, dif_pos hL] at h
+        dite_eq_right h0, dite_eq_left hL] at h
       exact absurd h.symm (interiorVertex_ne_coreVertex d e o _)
     · rw [d.pathVertex_interior s k h0 hL] at h
       obtain ⟨hse, hval⟩ := interiorVertex_inj d h
@@ -108,23 +108,23 @@ theorem pathVertex_eq_coreVertex_iff (s : Fin p) (k : d.PathPosition s)
         (k.val ≠ 0 ∧ k.val = d.length s ∧ d.rep (d.core.head s) = d.rep r) := by
   unfold Utilities.Certificate.DegenerateSpec.DegSpec.pathVertex
   by_cases h0 : k.val = 0
-  · rw [dif_pos h0, d.coreVertex_eq_iff]
+  · rw [dite_eq_left h0, d.coreVertex_eq_iff]
     constructor
     · intro h
       exact Or.inl ⟨h0, h⟩
     · rintro (⟨-, h⟩ | ⟨hne, -⟩)
       · exact h
       · exact absurd h0 hne
-  · rw [dif_neg h0]
+  · rw [dite_eq_right h0]
     by_cases hL : k.val = d.length s
-    · rw [dif_pos hL, d.coreVertex_eq_iff]
+    · rw [dite_eq_left hL, d.coreVertex_eq_iff]
       constructor
       · intro h
         exact Or.inr ⟨h0, hL, h⟩
       · rintro (⟨h, -⟩ | ⟨-, -, h⟩)
         · exact absurd h h0
         · exact h
-    · rw [dif_neg hL]
+    · rw [dite_eq_right hL]
       constructor
       · intro h
         exact absurd h (interiorVertex_ne_coreVertex d s _ r)
@@ -207,10 +207,10 @@ theorem rawChipDivisor_interiorVertex_eq_rawChipMassAt (w : RichWitness)
       show (eval c.2.1 x).toNat = o.val + 1
       have := hcond.2
       omega
-    rw [if_pos hpos, if_pos]
+    rw [ite_eq_left hpos, ite_eq_left]
     simp only [Bool.and_eq_true, beq_iff_eq, hcond.1, true_and]
     exact_mod_cast hcond.2
-  · rw [if_neg, if_neg]
+  · rw [ite_eq_right, ite_eq_right]
     · simp only [Bool.and_eq_true, beq_iff_eq, not_and]
       intro hEq
       have hne : ¬ eval c.2.1 x = (o.val + 1 : ℕ) := fun h => hcond ⟨hEq, h⟩
@@ -268,14 +268,14 @@ theorem rawChipDivisor_coreVertex_eq (w : RichWitness)
     rw [List.sum_map_add]
     congr 1
     · by_cases hT : d.rep (d.core.tail e) = d.rep r
-      · simp only [if_pos hT]
+      · simp only [ite_eq_left hT]
         rw [rawChipMassAt]
       · simp [hT]
     · by_cases hH : d.rep (d.core.head e) = d.rep r
       · by_cases hL : d.length e = 0
         · simp [hH, hL, headMassAdj]
-        · simp only [if_pos hH, if_pos (show d.rep (d.core.head e) = d.rep r ∧
-            d.length e ≠ 0 from ⟨hH, hL⟩), headMassAdj, if_neg hL]
+        · simp only [ite_eq_left hH, ite_eq_left (show d.rep (d.core.head e) = d.rep r ∧
+            d.length e ≠ 0 from ⟨hH, hL⟩), headMassAdj, ite_eq_right hL]
           rw [rawChipMassAt]
       · simp [hH]
   rw [Finset.sum_congr rfl (fun e _ => hExpand e)]
@@ -319,10 +319,10 @@ theorem rawChipDivisor_coreVertex_eq (w : RichWitness)
       · exact absurd (show d.length (⟨c.1, hslot⟩ : Fin p) = 0 by omega) h1.2
       · rfl
       · rfl
-    rw [hsecond, if_pos hZ]
+    rw [hsecond, ite_eq_left hZ]
     by_cases hT : d.rep (d.core.tail (⟨c.1, hslot⟩ : Fin p)) = d.rep r
-    · rw [if_pos hT, if_pos (Or.inl ⟨hN, hT⟩), add_zero]
-    · rw [if_neg hT, if_neg ?_, add_zero]
+    · rw [ite_eq_left hT, ite_eq_left (Or.inl ⟨hN, hT⟩), add_zero]
+    · rw [ite_eq_right hT, ite_eq_right ?_, add_zero]
       rintro (⟨-, h⟩ | ⟨h, -⟩)
       · exact hT h
       · exact h hN
@@ -331,20 +331,20 @@ theorem rawChipDivisor_coreVertex_eq (w : RichWitness)
       have hNne : (eval c.2.1 x).toNat ≠ 0 := by omega
       have hNL : (eval c.2.1 x).toNat = d.length (⟨c.1, hslot⟩ : Fin p) := by omega
       have hLne : d.length (⟨c.1, hslot⟩ : Fin p) ≠ 0 := by omega
-      rw [if_neg hZ, if_pos hQL]
+      rw [ite_eq_right hZ, ite_eq_left hQL]
       simp only [ite_self, zero_add]
       by_cases hH : d.rep (d.core.head (⟨c.1, hslot⟩ : Fin p)) = d.rep r
-      · rw [if_pos (Or.inr ⟨hNne, hNL, hH⟩), if_pos ⟨hH, hLne⟩]
-      · rw [if_neg ?_, if_neg (by tauto)]
+      · rw [ite_eq_left (Or.inr ⟨hNne, hNL, hH⟩), ite_eq_left ⟨hH, hLne⟩]
+      · rw [ite_eq_right ?_, ite_eq_right (by tauto)]
         rintro (⟨h, -⟩ | ⟨-, -, h⟩)
         · exact hNne h
         · exact hH h
     · -- the chip sits strictly inside the slot
       have hNne : (eval c.2.1 x).toNat ≠ 0 := by omega
       have hNLne : (eval c.2.1 x).toNat ≠ d.length (⟨c.1, hslot⟩ : Fin p) := by omega
-      rw [if_neg hZ, if_neg hQL]
+      rw [ite_eq_right hZ, ite_eq_right hQL]
       simp only [ite_self, add_zero]
-      rw [if_neg ?_]
+      rw [ite_eq_right ?_]
       rintro (⟨h, -⟩ | ⟨-, h, -⟩)
       · exact hNne h
       · exact hNLne h

@@ -99,7 +99,7 @@ theorem interiorMoment_one_chip
         have hjlt : j.val < B.length α := hj.2
         have hsub : j.val - 1 + 1 = j.val := Nat.sub_add_cancel hjpos
         have hsel : j.val - 1 + 1 < B.length α := by rw [hsub]; exact hjlt
-        rw [dif_pos hsel]
+        rw [dite_eq_left hsel]
         simp [Nat.sub_add_cancel hjpos]
       · have hne : strandVertex B α ⟨r + 1, by omega⟩ ≠
             strandVertex B α j := by
@@ -123,7 +123,7 @@ theorem interiorMoment_one_chip
     have hsel : j.val - 1 + 1 < B.length α := by
       rw [Nat.sub_add_cancel hjpos]
       exact hj.2
-    rw [dif_pos hsel]
+    rw [dite_eq_left hsel]
     simp [Nat.sub_add_cancel hjpos]
   · simp only [hαβ, ↓reduceIte]
     apply Finset.sum_eq_zero

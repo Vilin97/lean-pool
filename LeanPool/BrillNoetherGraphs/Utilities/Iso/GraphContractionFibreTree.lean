@@ -176,7 +176,7 @@ theorem sum_fibreGraph_edge_cards (c : GraphContractionCertificate G H)
         if c.vertexMap edge.1 = c.vertexMap edge.2 then 1 else 0 := by
     by_cases hInternal : c.edgeInternal edge
     · change c.vertexMap edge.1 = c.vertexMap edge.2 at hInternal
-      simp only [hInternal, if_true]
+      simp only [hInternal, ite_true]
       rw [Finset.card_eq_one]
       refine ⟨c.vertexMap edge.1, ?_⟩
       ext target
@@ -189,7 +189,7 @@ theorem sum_fibreGraph_edge_cards (c : GraphContractionCertificate G H)
         subst target
         exact ⟨rfl, hInternal.symm⟩
     · change ¬c.vertexMap edge.1 = c.vertexMap edge.2 at hInternal
-      simp only [hInternal, if_false]
+      simp only [hInternal, ite_false]
       rw [Finset.card_eq_zero]
       apply Finset.eq_empty_iff_forall_notMem.mpr
       intro target hTarget
@@ -237,7 +237,7 @@ theorem internalDirectedMultiplicity_eq_two_mul_contractedEdgeCard
       (Finset.univ.filter fun pair => c.edgeRealizesDirectedPair pair edge).card =
         if c.vertexMap edge.1 = c.vertexMap edge.2 then 2 else 0 := by
     by_cases hInternal : c.vertexMap edge.1 = c.vertexMap edge.2
-    · simp only [hInternal, if_true]
+    · simp only [hInternal, ite_true]
       rw [Finset.card_eq_two]
       refine ⟨(edge.1, edge.2), (edge.2, edge.1), ?_, ?_⟩
       · intro hEqual
@@ -266,7 +266,7 @@ theorem internalDirectedMultiplicity_eq_two_mul_contractedEdgeCard
             subst x
             subst y
             exact ⟨hInternal.symm, Or.inr rfl⟩
-    · simp only [hInternal, if_false]
+    · simp only [hInternal, ite_false]
       rw [Finset.card_eq_zero]
       apply Finset.eq_empty_of_forall_notMem
       intro pair hPair

@@ -100,10 +100,10 @@ theorem exists_rankDelta_neg_same_strand_interior_generic
     by_cases hTail : B.core.tail alpha = 0
     · have hI : strandVertex B alpha i = B.pathVertex alpha i := by
         unfold strandVertex
-        rw [if_pos hTail]
+        rw [ite_eq_left hTail]
       have hK : strandVertex B alpha k = B.pathVertex alpha k := by
         unfold strandVertex
-        rw [if_pos hTail]
+        rw [ite_eq_left hTail]
       dsimp [D]
       rw [hI, hK]
       apply rank_same_strand_pair_zero_of_not_reflection_generic hg
@@ -113,11 +113,11 @@ theorem exists_rankDelta_neg_same_strand_interior_generic
     · have hI : strandVertex B alpha i =
           B.pathVertex alpha (strandMirror B alpha i) := by
         unfold strandVertex strandMirror
-        rw [if_neg hTail]
+        rw [ite_eq_right hTail]
       have hK : strandVertex B alpha k =
           B.pathVertex alpha (strandMirror B alpha k) := by
         unfold strandVertex strandMirror
-        rw [if_neg hTail]
+        rw [ite_eq_right hTail]
       dsimp [D]
       rw [hI, hK]
       apply rank_same_strand_pair_zero_of_not_reflection_generic hg
@@ -137,13 +137,13 @@ theorem exists_rankDelta_neg_same_strand_interior_generic
     by_cases hTail : B.core.tail alpha = 0
     · have hI : strandVertex B alpha i = B.pathVertex alpha i := by
         unfold strandVertex
-        rw [if_pos hTail]
+        rw [ite_eq_left hTail]
       have hK : strandVertex B alpha k = B.pathVertex alpha k := by
         unfold strandVertex
-        rw [if_pos hTail]
+        rw [ite_eq_left hTail]
       have hJ : strandVertex B alpha j = B.pathVertex alpha j := by
         unfold strandVertex
-        rw [if_pos hTail]
+        rw [ite_eq_left hTail]
       have hSlide := path_pair_linearEquiv_tail_sum B alpha i k hi.1 hk.1
         (by rw [hIK]; exact hj.2)
       have hShift := Certificate.StrongSeparator.linearEquiv_sub_one_chip
@@ -176,15 +176,15 @@ theorem exists_rankDelta_neg_same_strand_interior_generic
         omega
       have hI : strandVertex B alpha i = B.pathVertex alpha i' := by
         unfold strandVertex
-        rw [if_neg hTail]
+        rw [ite_eq_right hTail]
         rfl
       have hK : strandVertex B alpha k = B.pathVertex alpha k' := by
         unfold strandVertex
-        rw [if_neg hTail]
+        rw [ite_eq_right hTail]
         rfl
       have hJ : strandVertex B alpha j = B.pathVertex alpha j' := by
         unfold strandVertex
-        rw [if_neg hTail]
+        rw [ite_eq_right hTail]
         rfl
       have hPast : B.length alpha < i'.val + k'.val := by
         dsimp [i', k', strandMirror]
@@ -257,11 +257,11 @@ theorem exists_rankDelta_neg_same_strand_interior_self_generic
     by_cases hTail : B.core.tail alpha = 0
     · have hI : strandVertex B alpha i = B.pathVertex alpha i := by
         unfold strandVertex
-        rw [if_pos hTail]
+        rw [ite_eq_left hTail]
       have hLeft : leftEndpoint B = B.pathVertex alpha z := by
         rw [← hZ]
         unfold strandVertex
-        rw [if_pos hTail]
+        rw [ite_eq_left hTail]
       dsimp [D]
       rw [hI, hLeft]
       apply rank_same_strand_pair_zero_of_not_reflection_generic hg
@@ -270,7 +270,7 @@ theorem exists_rankDelta_neg_same_strand_interior_self_generic
     · have hI : strandVertex B alpha i =
           B.pathVertex alpha (strandMirror B alpha i) := by
         unfold strandVertex strandMirror
-        rw [if_neg hTail]
+        rw [ite_eq_right hTail]
       have hLeft : leftEndpoint B = B.pathVertex alpha
           ⟨B.length alpha, by omega⟩ := by
         rw [B.pathVertex_length]

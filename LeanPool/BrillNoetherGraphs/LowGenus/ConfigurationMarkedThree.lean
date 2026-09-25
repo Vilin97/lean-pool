@@ -112,11 +112,11 @@ theorem positiveEndpointContribution_classSum_eq
   intro e _he
   by_cases hZero : d.length e = 0
   · have hRep := d.rep_zero e hZero
-    simp only [slotTailTerm, slotHeadTerm, hZero, if_true, ite_self,
+    simp only [slotTailTerm, slotHeadTerm, hZero, ite_true, ite_self,
       add_zero, Finset.sum_const_zero]
     rw [hRep]
     by_cases h : d.rep (d.core.head e) = d.rep r <;> simp [h]
-  · simp only [slotTailTerm, slotHeadTerm, hZero, if_false,
+  · simp only [slotTailTerm, slotHeadTerm, hZero, ite_false,
       Finset.sum_add_distrib]
     by_cases hTail : d.rep (d.core.tail e) = d.rep r <;>
       by_cases hHead : d.rep (d.core.head e) = d.rep r <;>
@@ -142,8 +142,8 @@ theorem slotTailTerm_of_unmarked (hMark : mark e = 0)
     slotTailTerm d potential mark markValue e = tailContribution (d.length e) hu hv := by
   unfold slotTailTerm tailContribution
   by_cases hZero : d.length e = 0
-  · rw [if_pos hZero, if_pos hZero]
-  · rw [if_neg hZero, if_neg hZero, hMark,
+  · rw [ite_eq_left hZero, ite_eq_left hZero]
+  · rw [ite_eq_right hZero, ite_eq_right hZero, hMark,
       SubdivisionArithmetic.splitStep_mark_zero]
     congr 1
     simp only [DegSpec.markRiseOut, hValue, hTail, hHead]
@@ -156,8 +156,8 @@ theorem slotHeadTerm_of_unmarked (hMark : mark e = 0)
     slotHeadTerm d potential mark markValue e = headContribution (d.length e) hu hv := by
   unfold slotHeadTerm headContribution
   by_cases hZero : d.length e = 0
-  · rw [if_pos hZero, if_pos hZero]
-  · rw [if_neg hZero, if_neg hZero, hMark,
+  · rw [ite_eq_left hZero, ite_eq_left hZero]
+  · rw [ite_eq_right hZero, ite_eq_right hZero, hMark,
       SubdivisionArithmetic.splitStep_mark_zero]
     congr 2
     simp only [DegSpec.markRiseOut, hValue, hTail, hHead]
@@ -179,10 +179,10 @@ theorem slotTailTerm_of_markedTail
   unfold slotTailTerm
   by_cases hMark : 0 < mark e
   · have hLen : d.length e ≠ 0 := by have := (hMarks e).le; omega
-    rw [if_neg hLen, SubdivisionArithmetic.splitStep_first (hMarks e),
-      if_pos hMark, hIn]
+    rw [ite_eq_right hLen, SubdivisionArithmetic.splitStep_first (hMarks e),
+      ite_eq_left hMark, hIn]
     unfold tailContribution
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
     norm_num
   · have hMark0 : mark e = 0 := by omega
     have hu0 : hu = 0 := by
@@ -191,8 +191,8 @@ theorem slotTailTerm_of_markedTail
       exact_mod_cast this
     rw [hMark0, hu0, tailContribution_zero_zero]
     by_cases hZero : d.length e = 0
-    · rw [if_pos hZero]
-    · rw [if_neg hZero, SubdivisionArithmetic.splitStep_mark_zero, hOut]
+    · rw [ite_eq_left hZero]
+    · rw [ite_eq_right hZero, SubdivisionArithmetic.splitStep_mark_zero, hOut]
       exact SubdivisionArithmetic.step_zero_of_lt (by omega)
 
 theorem slotHeadTerm_of_markedTail
@@ -209,16 +209,16 @@ theorem slotHeadTerm_of_markedTail
   unfold slotHeadTerm
   by_cases hZero : d.length e = 0
   · have hMark0 : mark e = 0 := by have := (hMarks e).le; omega
-    rw [if_pos hZero, if_neg (by omega)]
+    rw [ite_eq_left hZero, ite_eq_right (by omega)]
     simp [headContribution, hZero]
-  · rw [if_neg hZero, SubdivisionArithmetic.splitStep_last (hMarks e) (by omega)]
+  · rw [ite_eq_right hZero, SubdivisionArithmetic.splitStep_last (hMarks e) (by omega)]
     by_cases hLt : mark e < d.length e
-    · rw [if_pos hLt, if_pos hLt, hOut,
+    · rw [ite_eq_left hLt, ite_eq_left hLt, hOut,
         SubdivisionArithmetic.step_zero_of_lt (by omega)]
       norm_num
-    · rw [if_neg hLt, if_neg hLt, hIn]
+    · rw [ite_eq_right hLt, ite_eq_right hLt, hIn]
       unfold headContribution
-      rw [if_neg hZero]
+      rw [ite_eq_right hZero]
       norm_num
 
 /-- A marked slot whose **tail** carries height zero: its head sees an ordinary
@@ -238,15 +238,15 @@ theorem slotTailTerm_of_markedHead
   unfold slotTailTerm
   by_cases hZero : d.length e = 0
   · have hMark0 : mark e = 0 := by have := (hMarks e).le; omega
-    rw [if_pos hZero, if_neg (by omega)]
+    rw [ite_eq_left hZero, ite_eq_right (by omega)]
     simp [tailContribution, hZero]
-  · rw [if_neg hZero, SubdivisionArithmetic.splitStep_first (hMarks e)]
+  · rw [ite_eq_right hZero, SubdivisionArithmetic.splitStep_first (hMarks e)]
     by_cases hMark : 0 < mark e
-    · rw [if_pos hMark, if_pos hMark, hIn]
+    · rw [ite_eq_left hMark, ite_eq_left hMark, hIn]
       exact SubdivisionArithmetic.step_zero_of_lt hMark
-    · rw [if_neg hMark, if_neg hMark, hOut]
+    · rw [ite_eq_right hMark, ite_eq_right hMark, hOut]
       unfold tailContribution
-      rw [if_neg hZero]
+      rw [ite_eq_right hZero]
       norm_num
 
 theorem slotHeadTerm_of_markedHead
@@ -263,17 +263,17 @@ theorem slotHeadTerm_of_markedHead
   unfold slotHeadTerm
   by_cases hZero : d.length e = 0
   · have hMark0 : mark e = 0 := by have := (hMarks e).le; omega
-    rw [if_pos hZero]
+    rw [ite_eq_left hZero]
     simp [headContribution, hZero, hMark0]
-  · rw [if_neg hZero, SubdivisionArithmetic.splitStep_last (hMarks e) (by omega)]
+  · rw [ite_eq_right hZero, SubdivisionArithmetic.splitStep_last (hMarks e) (by omega)]
     by_cases hLt : mark e < d.length e
-    · rw [if_pos hLt, hOut]
+    · rw [ite_eq_left hLt, hOut]
       unfold headContribution
-      rw [if_neg (by omega),
+      rw [ite_eq_right (by omega),
         show d.length e - 1 - mark e = d.length e - mark e - 1 from by omega]
       norm_num
     · have hEq : mark e = d.length e := by have := (hMarks e).le; omega
-      rw [if_neg hLt, hIn,
+      rw [ite_eq_right hLt, hIn,
         SubdivisionArithmetic.step_zero_of_lt (by omega)]
       simp [headContribution, hEq]
 
@@ -301,14 +301,14 @@ theorem slotTailTerm_of_marked
   · subst h0
     rw [slotTailTerm_of_markedHead d hMarks hValue (by simpa using hTail) hHead]
     by_cases hm : 0 < mark e
-    · rw [if_pos hm, if_pos hm]
+    · rw [ite_eq_left hm, ite_eq_left hm]
       exact (tailContribution_zero_zero _).symm
-    · rw [if_neg hm, if_neg hm]
+    · rw [ite_eq_right hm, ite_eq_right hm]
   · subst h0
     rw [slotTailTerm_of_markedTail d hMarks hValue hTail (by simpa using hHead)]
     by_cases hm : 0 < mark e
-    · rw [if_pos hm]
-    · rw [if_neg hm]
+    · rw [ite_eq_left hm]
+    · rw [ite_eq_right hm]
       have hMark0 : mark e = 0 := by omega
       have hu0 : hu = 0 := by
         have hz := (hMarks e).first_zero hMark0
@@ -331,8 +331,8 @@ theorem slotHeadTerm_of_marked
   · subst h0
     rw [slotHeadTerm_of_markedHead d hMarks hValue (by simpa using hTail) hHead]
     by_cases hlt : mark e < d.length e
-    · rw [if_pos hlt]
-    · rw [if_neg hlt]
+    · rw [ite_eq_left hlt]
+    · rw [ite_eq_right hlt]
       have hEq : mark e = d.length e := by have := (hMarks e).le; omega
       have hv0 : hv = 0 := by
         have hz := (hMarks e).second_zero hEq
@@ -342,9 +342,9 @@ theorem slotHeadTerm_of_marked
   · subst h0
     rw [slotHeadTerm_of_markedTail d hMarks hValue hTail (by simpa using hHead)]
     by_cases hlt : mark e < d.length e
-    · rw [if_pos hlt, if_pos hlt]
+    · rw [ite_eq_left hlt, ite_eq_left hlt]
       exact (headContribution_zero_zero _).symm
-    · rw [if_neg hlt, if_neg hlt]
+    · rw [ite_eq_right hlt, ite_eq_right hlt]
 
 end Readings
 
@@ -378,8 +378,8 @@ theorem markChip_classSum_eq (mark : Fin 12 → ℕ) (e : Fin 12) (r : Fin 8) :
     rw [Finset.sum_ite_eq' (Finset.univ.filter (fun v : Fin 8 => d.rep v = d.rep r))]
     simp only [oneChip, Finset.mem_filter, Finset.mem_univ, true_and]
     by_cases h : d.rep u = d.rep r
-    · rw [if_pos h, if_pos ((d.coreVertex_eq_iff r u).mpr h.symm)]
-    · rw [if_neg h, if_neg (fun hx => h ((d.coreVertex_eq_iff r u).mp hx).symm)]
+    · rw [ite_eq_left h, ite_eq_left ((d.coreVertex_eq_iff r u).mpr h.symm)]
+    · rw [ite_eq_right h, ite_eq_right (fun hx => h ((d.coreVertex_eq_iff r u).mp hx).symm)]
   by_cases hZero : mark e = 0
   · have h1 : d.pathAt e (mark e) = d.coreVertex (d.core.tail e) := by
       rw [hZero]; exact d.pathAt_zero e
@@ -410,7 +410,7 @@ theorem sum_conditional_transfer_eq_zero (P : Prop) [Decidable P]
     ∑ v ∈ Finset.univ.filter (fun v : Fin 8 => d.rep v = d.rep r),
         (if P then transferWeight source target v else 0) = 0 := by
   by_cases hP : P
-  · simp only [if_pos hP]
+  · simp only [ite_eq_left hP]
     exact sum_transferWeight_eq_zero d (hRep hP) r
   · simp [hP]
 

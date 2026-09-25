@@ -96,10 +96,10 @@ private theorem outdeg_S_leftGraph_eq
     rw [outdeg_S_eq_sum_filter, Finset.sum_filter]
     refine Finset.sum_congr rfl fun b _ => ?_
     by_cases hb : b ∈ S.image Subtype.val
-    · rw [if_neg (fun h => h hb)]
-      simp only [hF, if_pos hb]
-    · rw [if_pos hb]
-      simp only [hF, if_neg hb]
+    · rw [ite_eq_right (fun h => h hb)]
+      simp only [hF, ite_eq_left hb]
+    · rw [ite_eq_left hb]
+      simp only [hF, ite_eq_right hb]
   have hAmbient : ∑ b : K.V, F b = ∑ b ∈ cut.left, F b := by
     symm
     refine Finset.sum_subset (Finset.subset_univ _) fun b _ hb => hZeroOutside b hb
@@ -114,10 +114,10 @@ private theorem outdeg_S_leftGraph_eq
     have hNum : numEdges cut.leftGraph v w = numEdges K v.val w.val :=
       num_edges_inducedSubgraph K cut.left cut.left_nonempty v w
     by_cases hw : w ∈ S
-    · rw [if_neg (fun h => h hw)]
-      simp only [hF, if_pos ((hMem w).mpr hw)]
-    · rw [if_pos hw, hNum]
-      simp only [hF, if_neg (fun h => hw ((hMem w).mp h))]
+    · rw [ite_eq_right (fun h => h hw)]
+      simp only [hF, ite_eq_left ((hMem w).mpr hw)]
+    · rw [ite_eq_left hw, hNum]
+      simp only [hF, ite_eq_right (fun h => hw ((hMem w).mp h))]
   rw [hLeft, hRight, hAmbient]
   exact Finset.sum_attach cut.left F
 

@@ -49,7 +49,7 @@ theorem IsTransmissionPermutation.isKAffine_of_torsionWitness
   rw [rankDelta_marked_twist_add_torsion hm D (τ n) n] at hShift
   rw [← hBase] at hShift
   by_contra hne
-  rw [if_neg hne] at hShift
+  rw [ite_eq_right hne] at hShift
   norm_num at hShift
 
 /-- Paper source: `lem:kgtImpliesTorsionOrder` (Lemma 4.2).

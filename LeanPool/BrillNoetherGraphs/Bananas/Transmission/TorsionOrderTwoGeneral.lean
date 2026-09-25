@@ -66,7 +66,7 @@ theorem transmissionPermutation_ge
   by_contra hlt
   push Not at hlt
   have hInd := hτ.2 (τ b) b
-  rw [if_pos rfl] at hInd
+  rw [ite_eq_left rfl] at hInd
   set a := τ b with ha_def
   have hd0 : deg (D + a • oneChip M.u - b • oneChip M.v) < 0 := by
     rw [deg_markedTwist]; omega
@@ -98,7 +98,7 @@ theorem transmissionPermutation_le
   by_contra hlt
   push Not at hlt
   have hInd := hτ.2 (τ b) b
-  rw [if_pos rfl] at hInd
+  rw [ite_eq_left rfl] at hInd
   set a := τ b with ha_def
   have hd0 : deg (D + a • oneChip M.u - b • oneChip M.v) > 2 * genus M.graph - 2 := by
     rw [deg_markedTwist]; omega
@@ -165,11 +165,11 @@ theorem kInversionCount_two_le_genus
     have hm01 : m = 0 ∨ m = 1 := by omega
     rcases hm01 with hm' | hm'
     · subst hm'
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       rcases hSplit n with ⟨k, hk⟩ | ⟨k, hk⟩ <;> subst hk <;>
         have hτ2k0 := hShift 0 k <;> have hτ2k1 := hShift 1 k <;> omega
     · subst hm'
-      rw [if_neg hne10]
+      rw [ite_eq_right hne10]
       rcases hSplit n with ⟨k, hk⟩ | ⟨k, hk⟩ <;> subst hk <;>
         have hτ2k0 := hShift 0 k <;> have hτ2k1 := hShift 1 k <;> omega
   have hInj : Set.InjOn f (kInversions 2 τ) := by
@@ -183,10 +183,10 @@ theorem kInversionCount_two_le_genus
     rcases hm01 with hm' | hm' <;> subst hm' <;>
       rcases hm01' with hm'' | hm'' <;> subst hm'' <;>
       first
-        | rw [if_pos rfl, if_pos rfl] at hEq
-        | rw [if_pos rfl, if_neg hne10] at hEq
-        | rw [if_neg hne10, if_pos rfl] at hEq
-        | rw [if_neg hne10, if_neg hne10] at hEq
+        | rw [ite_eq_left rfl, ite_eq_left rfl] at hEq
+        | rw [ite_eq_left rfl, ite_eq_right hne10] at hEq
+        | rw [ite_eq_right hne10, ite_eq_left rfl] at hEq
+        | rw [ite_eq_right hne10, ite_eq_right hne10] at hEq
     all_goals
       rcases hSplit n with ⟨k, hk⟩ | ⟨k, hk⟩ <;> subst hk <;>
         rcases hSplit n' with ⟨k', hk'⟩ | ⟨k', hk'⟩ <;> subst hk' <;>

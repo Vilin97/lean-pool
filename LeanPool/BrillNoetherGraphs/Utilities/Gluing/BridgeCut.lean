@@ -292,7 +292,7 @@ def swap : OneBridgeCut K where
     by_cases hPair : a = cut.rightAttach ∧ b = cut.leftAttach
     · rcases hPair with ⟨rfl, rfl⟩
       simpa using h
-    · simp only [hPair, if_false]
+    · simp only [hPair, ite_false]
       have hReverse : ¬ (b = cut.leftAttach ∧ a = cut.rightAttach) := by
         rintro ⟨hLeft, hRight⟩
         exact hPair ⟨hRight, hLeft⟩

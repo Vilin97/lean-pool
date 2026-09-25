@@ -422,7 +422,7 @@ theorem bigEndOfEnd_mem (w : Fin n) (x : slotEnds C w)
   have hx' := (mem_slotEnds C w (j, s)).mp hx
   cases s with
   | false =>
-      simp only [Bool.false_eq_true, if_false] at hx'
+      simp only [Bool.false_eq_true, ite_false] at hx'
       subst hx'
       refine mem_slotEnds_tail C hDeg (Sum.inr j) ⟨C.tail j, i⟩ ?_
       have hend : tailEnd C j = (⟨(j, false), hx⟩ : slotEnds C (C.tail j)) :=
@@ -430,7 +430,7 @@ theorem bigEndOfEnd_mem (w : Fin n) (x : slotEnds C w)
       show (⟨C.tail j, legOf C hDeg (C.tail j) (tailEnd C j)⟩ : BigV C) = ⟨C.tail j, i⟩
       rw [hend, hleg]
   | true =>
-      simp only [if_true] at hx'
+      simp only [ite_true] at hx'
       subst hx'
       refine mem_slotEnds_head C hDeg (Sum.inr j) ⟨C.head j, i⟩ ?_
       have hend : headEnd C j = (⟨(j, true), hx⟩ : slotEnds C (C.head j)) :=

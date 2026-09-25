@@ -61,7 +61,7 @@ theorem sum_over_first_step (edge : Fin p)
         (if first.val = 0 then value first else 0) := by
       apply Fintype.sum_eq_single first
       intro offset hne
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hzero
       apply hne
       apply Fin.ext
@@ -88,7 +88,7 @@ theorem sum_over_last_step (edge : Fin p)
         (if last.val + 1 = spec.length edge then value last else 0) := by
       apply Fintype.sum_eq_single last
       intro offset hne
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hEq
       apply hne
       apply Fin.ext
@@ -117,10 +117,10 @@ theorem prin_eq_sum_slopes {script : firingScript spec.graph}
     by_cases hright : spec.stepRight edge offset = vertex
   · exact absurd (hleft.trans hright.symm) (spec.stepLeft_ne_stepRight edge offset)
   · subst vertex
-    simp only [hright, if_false, if_true, add_zero]
+    simp only [hright, ite_false, ite_true, add_zero]
     exact hDifference
   · subst vertex
-    simp only [hleft, if_false, if_true, zero_add]
+    simp only [hleft, ite_false, ite_true, zero_add]
     omega
   · simp [hleft, hright]
 
@@ -262,9 +262,9 @@ theorem slotValueScript_stepLeft {potential : Fin n → ℤ}
       value edge offset.val := by
   unfold SubdivisionGraph.Spec.stepLeft
   by_cases hzero : offset.val = 0
-  · rw [dif_pos hzero, hzero]
+  · rw [dite_eq_left hzero, hzero]
     exact (hCompat.tail edge).symm
-  · rw [dif_neg hzero]
+  · rw [dite_eq_right hzero]
     show value edge (offset.val - 1 + 1) = value edge offset.val
     congr 1
     omega
@@ -277,9 +277,9 @@ theorem slotValueScript_stepRight {potential : Fin n → ℤ}
       value edge (offset.val + 1) := by
   unfold SubdivisionGraph.Spec.stepRight
   by_cases hlast : offset.val + 1 = spec.length edge
-  · rw [dif_pos hlast, hlast]
+  · rw [dite_eq_left hlast, hlast]
     exact (hCompat.head edge).symm
-  · rw [dif_neg hlast]
+  · rw [dite_eq_right hlast]
     exact spec.slotValueScript_interior potential value edge
       ⟨offset.val, by have := offset.isLt; omega⟩
 

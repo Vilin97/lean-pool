@@ -35,9 +35,9 @@ lemma oneIf_congr {P Q : Prop} (h : P ↔ Q) :
   -- Proof written by GPT 5.5.
   by_cases hP : P
   · have hQ : Q := h.mp hP
-    simp only [oneIf, hP, hQ, if_true]
+    simp only [oneIf, hP, hQ, ite_true]
   · have hQ : ¬ Q := fun hQ => hP (h.mpr hQ)
-    simp only [oneIf, hP, hQ, if_false]
+    simp only [oneIf, hP, hQ, ite_false]
 
 /-- On an integer interval, membership is the difference of two initial
 segments. -/
@@ -62,8 +62,8 @@ lemma sum_oneIf_mem_of_subset {ι : Type*} {A U : Finset ι} (hAU : A ⊆ U) :
     apply Finset.sum_congr rfl
     intro k _
     by_cases hkA : k ∈ A
-    · simp only [oneIf, hkA, if_true]
-    · simp only [oneIf, hkA, if_false]
+    · simp only [oneIf, hkA, ite_true]
+    · simp only [oneIf, hkA, ite_false]
   rw [hsum_eq, Finset.sum_boole, hfilter]
 
 /-- The difference of the cardinalities of two finite sets is equal to the

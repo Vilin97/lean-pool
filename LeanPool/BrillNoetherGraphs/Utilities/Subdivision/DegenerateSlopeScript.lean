@@ -75,10 +75,10 @@ theorem stepLeft_eq_coreVertex_iff (e : Fin p) (o : Fin (d.length e))
       o.val = 0 ∧ d.rep (d.core.tail e) = d.rep v := by
   unfold stepLeft
   by_cases hz : o.val = 0
-  · rw [dif_pos hz]
+  · rw [dite_eq_left hz]
     simp only [hz, true_and]
     exact d.coreVertex_eq_iff _ _
-  · rw [dif_neg hz]
+  · rw [dite_eq_right hz]
     simp [hz, coreVertex, interiorVertex]
 
 theorem stepRight_eq_coreVertex_iff (e : Fin p) (o : Fin (d.length e))
@@ -87,21 +87,21 @@ theorem stepRight_eq_coreVertex_iff (e : Fin p) (o : Fin (d.length e))
       o.val + 1 = d.length e ∧ d.rep (d.core.head e) = d.rep v := by
   unfold stepRight
   by_cases hl : o.val + 1 = d.length e
-  · rw [dif_pos hl]
+  · rw [dite_eq_left hl]
     simp only [hl, true_and]
     exact d.coreVertex_eq_iff _ _
-  · rw [dif_neg hl]
+  · rw [dite_eq_right hl]
     simp [hl, coreVertex, interiorVertex]
 
 @[simp] theorem stepRight_previousStep (e : Fin p) (o : Fin (d.length e - 1)) :
     d.stepRight e (d.previousStep e o) = d.interiorVertex e o := by
   unfold stepRight previousStep
-  rw [dif_neg (by change ¬ (o.val + 1 = d.length e); have := o.isLt; omega)]
+  rw [dite_eq_right (by change ¬ (o.val + 1 = d.length e); have := o.isLt; omega)]
 
 @[simp] theorem stepLeft_nextStep (e : Fin p) (o : Fin (d.length e - 1)) :
     d.stepLeft e (d.nextStep e o) = d.interiorVertex e o := by
   unfold stepLeft nextStep
-  rw [dif_neg (by change ¬ (o.val + 1 = 0); omega)]
+  rw [dite_eq_right (by change ¬ (o.val + 1 = 0); omega)]
   exact congrArg (d.interiorVertex e) (Fin.ext (by change o.val + 1 - 1 = o.val; omega))
 
 theorem stepRight_eq_interiorVertex_iff (s : d.Step) (e : Fin p)
@@ -112,9 +112,9 @@ theorem stepRight_eq_interiorVertex_iff (s : d.Step) (e : Fin p)
     rcases s with ⟨e', o'⟩
     unfold stepRight at hEq
     by_cases hl : o'.val + 1 = d.length e'
-    · rw [dif_pos hl] at hEq
+    · rw [dite_eq_left hl] at hEq
       simp [coreVertex, interiorVertex] at hEq
-    · rw [dif_neg hl] at hEq
+    · rw [dite_eq_right hl] at hEq
       have hs : (⟨e', ⟨o'.val, by have := o'.isLt; omega⟩⟩ : d.Interior) = ⟨e, o⟩ :=
         Sum.inr.inj hEq
       have he : e' = e := congrArg Sigma.fst hs
@@ -134,9 +134,9 @@ theorem stepLeft_eq_interiorVertex_iff (s : d.Step) (e : Fin p)
     rcases s with ⟨e', o'⟩
     unfold stepLeft at hEq
     by_cases hz : o'.val = 0
-    · rw [dif_pos hz] at hEq
+    · rw [dite_eq_left hz] at hEq
       simp [coreVertex, interiorVertex] at hEq
-    · rw [dif_neg hz] at hEq
+    · rw [dite_eq_right hz] at hEq
       have hs : (⟨e', ⟨o'.val - 1, by have := o'.isLt; omega⟩⟩ : d.Interior)
           = ⟨e, o⟩ := Sum.inr.inj hEq
       have he : e' = e := congrArg Sigma.fst hs
@@ -157,7 +157,7 @@ theorem num_edges_eq_sum_steps (x y : d.Vertex) :
         if d.unitEdge s = (x, y) ∨ d.unitEdge s = (y, x) then 1 else 0 := by
   rw [d.num_edges_eq_card_filter_steps]
   simpa only [Finset.sum_filter, Finset.sum_const_zero, Finset.sum_ite_irrel,
-    Finset.mem_univ, if_true] using
+    Finset.mem_univ, ite_true] using
     (Finset.card_filter
       (fun s : d.Step => d.unitEdge s = (x, y) ∨ d.unitEdge s = (y, x))
       Finset.univ)
@@ -216,10 +216,10 @@ theorem prin_eq_sum_slopes {script : firingScript d.graph}
   by_cases hleft : d.stepLeft e o = v <;> by_cases hright : d.stepRight e o = v
   · exact absurd (hleft.trans hright.symm) (d.stepLeft_ne_stepRight e o)
   · subst v
-    simp only [hright, if_false, if_true, add_zero]
+    simp only [hright, ite_false, ite_true, add_zero]
     exact hDifference
   · subst v
-    simp only [hleft, if_false, if_true, zero_add]
+    simp only [hleft, ite_false, ite_true, zero_add]
     omega
   · simp [hleft, hright]
 
@@ -230,9 +230,9 @@ theorem sum_over_first_step {e : Fin p} (hpos : 0 < d.length e)
     (∑ o : Fin (d.length e), if o.val = 0 then value o else 0) =
       value ⟨0, hpos⟩ := by
   classical
-  refine (Fintype.sum_eq_single (⟨0, hpos⟩ : Fin (d.length e)) ?_).trans (if_pos rfl)
+  refine (Fintype.sum_eq_single (⟨0, hpos⟩ : Fin (d.length e)) ?_).trans (ite_eq_left rfl)
   intro o hne
-  exact if_neg fun hz => hne (Fin.ext (by simpa using hz))
+  exact ite_eq_right fun hz => hne (Fin.ext (by simpa using hz))
 
 theorem sum_over_last_step {e : Fin p} (hpos : 0 < d.length e)
     (value : Fin (d.length e) → ℤ) :
@@ -240,9 +240,9 @@ theorem sum_over_last_step {e : Fin p} (hpos : 0 < d.length e)
       value ⟨d.length e - 1, by omega⟩ := by
   classical
   refine (Fintype.sum_eq_single
-    (⟨d.length e - 1, by omega⟩ : Fin (d.length e)) ?_).trans (if_pos (by simp; omega))
+    (⟨d.length e - 1, by omega⟩ : Fin (d.length e)) ?_).trans (ite_eq_left (by simp; omega))
   intro o hne
-  exact if_neg fun hEq => hne (Fin.ext (by simp; omega))
+  exact ite_eq_right fun hEq => hne (Fin.ext (by simp; omega))
 
 /-- **The load-bearing formula.**  At a contracted core class the Laplacian is
 the endpoint sum over *all* slots of the uncontracted core.  Vanishing slots
@@ -314,8 +314,8 @@ theorem prin_interiorVertex_eq_slopeDifference {script : firingScript d.graph}
     · intro s hne
       by_cases hEq : d.stepLeft s.1 s.2 = d.interiorVertex e o
       · exact absurd ((d.stepLeft_eq_interiorVertex_iff s e o).mp hEq) hne
-      · exact if_neg hEq
-    · rw [if_pos ((d.stepLeft_eq_interiorVertex_iff ⟨e, d.nextStep e o⟩ e o).mpr rfl)]
+      · exact ite_eq_right hEq
+    · rw [ite_eq_left ((d.stepLeft_eq_interiorVertex_iff ⟨e, d.nextStep e o⟩ e o).mpr rfl)]
       rfl
   have hRight :
       (∑ s : d.Step,
@@ -325,8 +325,8 @@ theorem prin_interiorVertex_eq_slopeDifference {script : firingScript d.graph}
     · intro s hne
       by_cases hEq : d.stepRight s.1 s.2 = d.interiorVertex e o
       · exact absurd ((d.stepRight_eq_interiorVertex_iff s e o).mp hEq) hne
-      · exact if_neg hEq
-    · rw [if_pos ((d.stepRight_eq_interiorVertex_iff ⟨e, d.previousStep e o⟩ e o).mpr rfl)]
+      · exact ite_eq_right hEq
+    · rw [ite_eq_left ((d.stepRight_eq_interiorVertex_iff ⟨e, d.previousStep e o⟩ e o).mpr rfl)]
       rfl
   rw [hLeft, hRight]
   ring
@@ -405,9 +405,9 @@ theorem slotValueScript_stepLeft {potential : Fin n → ℤ}
     d.slotValueScript potential value (d.stepLeft e o) = value e o.val := by
   unfold stepLeft
   by_cases hz : o.val = 0
-  · rw [dif_pos hz, hz]
+  · rw [dite_eq_left hz, hz]
     exact (hCompat.tail e).symm
-  · rw [dif_neg hz]
+  · rw [dite_eq_right hz]
     show value e (o.val - 1 + 1) = value e o.val
     congr 1
     omega
@@ -419,9 +419,9 @@ theorem slotValueScript_stepRight {potential : Fin n → ℤ}
       value e (o.val + 1) := by
   unfold stepRight
   by_cases hl : o.val + 1 = d.length e
-  · rw [dif_pos hl, hl]
+  · rw [dite_eq_left hl, hl]
     exact (hCompat.head e).symm
-  · rw [dif_neg hl]
+  · rw [dite_eq_right hl]
     exact d.slotValueScript_interior potential value e
       ⟨o.val, by have := o.isLt; omega⟩
 

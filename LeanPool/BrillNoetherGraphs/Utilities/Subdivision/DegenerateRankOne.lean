@@ -78,14 +78,14 @@ theorem sum_endpointIndicator_class {n p : ℕ} (rep : Fin n → Fin n)
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun e _ => ?_
   by_cases h : rep (endpoint e) = rep r
-  · rw [if_pos h, Finset.sum_eq_single_of_mem (endpoint e)
+  · rw [ite_eq_left h, Finset.sum_eq_single_of_mem (endpoint e)
       (Finset.mem_filter.mpr ⟨Finset.mem_univ _, h⟩)
-      (fun b _ hb => if_neg (fun hEq => hb hEq.symm))]
-    exact (if_pos rfl).symm
-  · rw [if_neg h]
+      (fun b _ hb => ite_eq_right (fun hEq => hb hEq.symm))]
+    exact (ite_eq_left rfl).symm
+  · rw [ite_eq_right h]
     symm
     refine Finset.sum_eq_zero fun v hv => ?_
-    refine if_neg ?_
+    refine ite_eq_right ?_
     rintro rfl
     exact h (Finset.mem_filter.mp hv).2
 
@@ -500,9 +500,9 @@ theorem effective_degenerateAnchorResidual {degree : ℤ}
         (if rep anchor = rep c.val then 1 else 0) := by
       unfold oneChip
       by_cases h : rep anchor = rep c.val
-      · rw [if_pos ((d.coreVertex_eq_iff c.val anchor).mpr h.symm), if_pos h]
-      · rw [if_neg (fun hEq => h (((d.coreVertex_eq_iff c.val anchor).mp hEq)).symm),
-          if_neg h]
+      · rw [ite_eq_left ((d.coreVertex_eq_iff c.val anchor).mpr h.symm), ite_eq_left h]
+      · rw [ite_eq_right (fun hEq => h (((d.coreVertex_eq_iff c.val anchor).mp hEq)).symm),
+          ite_eq_right h]
     rw [hChip]
     have hBalance := certificate.class_core_balance_nonnegative hValid point hCone
       rep rep_zero anchor c.val

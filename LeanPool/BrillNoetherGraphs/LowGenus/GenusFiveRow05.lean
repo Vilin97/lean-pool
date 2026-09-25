@@ -159,7 +159,7 @@ def rowMarkValue (d : DegSpec 8 12) (h : Fin 8 → ℕ) (e : Fin 12) : ℤ :=
 theorem rowMarkValue_other (d : DegSpec 8 12) (h : Fin 8 → ℕ) {e : Fin 12}
     (h3 : e ≠ 3) (h8 : e ≠ 8) :
     rowMarkValue d h e = rowPotential d h (d.rep (d.core.tail e)) := by
-  simp only [rowMarkValue, h3, h8, or_self, if_false, rowPotential, d.rep_idem]
+  simp only [rowMarkValue, h3, h8, or_self, ite_false, rowPotential, d.rep_idem]
 
 @[simp] theorem rowMarkValue_three (d : DegSpec 8 12) (h : Fin 8 → ℕ) :
     rowMarkValue d h 3 = 0 := by simp [rowMarkValue]
@@ -363,7 +363,7 @@ theorem slotHeadTerm_eq {d : DegSpec 8 12} (hCore : d.core = row05Core)
       (by simp only [rowPotential, hRep, tail_three hCore])
       (by simp only [rowPotential, hRep, head_three hCore]) hflat3]
     unfold slotHeadForm
-    rw [if_pos (Or.inl rfl), tail_three hCore, head_three hCore]
+    rw [ite_eq_left (Or.inl rfl), tail_three hCore, head_three hCore]
   · by_cases h8 : e = 8
     · subst h8
       rw [slotHeadTerm_of_marked d hMarks (rowMarkValue_eight d h)
@@ -371,13 +371,13 @@ theorem slotHeadTerm_eq {d : DegSpec 8 12} (hCore : d.core = row05Core)
         (by simp only [rowPotential, hRep, tail_eight hCore])
         (by simp only [rowPotential, hRep, head_eight hCore]) hflat8]
       unfold slotHeadForm
-      rw [if_pos (Or.inr rfl), tail_eight hCore, head_eight hCore]
+      rw [ite_eq_left (Or.inr rfl), tail_eight hCore, head_eight hCore]
     · rw [slotHeadTerm_of_unmarked d (rowMark_other d h3 h8)
         (rowMarkValue_other d h h3 h8)
         (hu := h (d.core.tail e)) (hv := h (d.core.head e))
         (by simp only [rowPotential, hRep]) (by simp only [rowPotential, hRep])]
       unfold slotHeadForm
-      rw [if_neg (by tauto)]
+      rw [ite_eq_right (by tauto)]
 
 /-! ## The endpoint ledger, vertex by vertex -/
 
@@ -574,8 +574,8 @@ theorem slotTailForm_three_eq {d : DegSpec 8 12} (hCore : d.core = row05Core)
   unfold slotTailForm
   rw [rowMark_three, tail_three hCore, head_three hCore, hHeadZero]
   by_cases hm : 0 < markL d
-  · rw [if_pos hm]
-  · rw [if_neg hm, show h 1 = 0 by omega, show markL d = 0 by omega]
+  · rw [ite_eq_left hm]
+  · rw [ite_eq_right hm, show h 1 = 0 by omega, show markL d = 0 by omega]
     simp
 
 theorem slotHeadForm_three_eq {d : DegSpec 8 12} (hCore : d.core = row05Core)
@@ -583,11 +583,11 @@ theorem slotHeadForm_three_eq {d : DegSpec 8 12} (hCore : d.core = row05Core)
     (hOut3 : h 3 ≤ d.length 3 - markL d) :
     slotHeadForm d h 3 = headContribution (d.length 3 - markL d) 0 (h 3) := by
   unfold slotHeadForm
-  rw [if_pos (Or.inl rfl), rowMark_three, tail_three hCore, head_three hCore,
+  rw [ite_eq_left (Or.inl rfl), rowMark_three, tail_three hCore, head_three hCore,
     hTailZero]
   by_cases hlt : markL d < d.length 3
-  · rw [if_pos hlt]
-  · rw [if_neg hlt, show h 3 = 0 by omega]
+  · rw [ite_eq_left hlt]
+  · rw [ite_eq_right hlt, show h 3 = 0 by omega]
     simp
 
 theorem slotTailForm_eight_eq {d : DegSpec 8 12} (hCore : d.core = row05Core)
@@ -596,8 +596,8 @@ theorem slotTailForm_eight_eq {d : DegSpec 8 12} (hCore : d.core = row05Core)
   unfold slotTailForm
   rw [rowMark_eight, tail_eight hCore, head_eight hCore, hHeadZero]
   by_cases hm : 0 < markR d
-  · rw [if_pos hm]
-  · rw [if_neg hm, show h 4 = 0 by omega, show markR d = 0 by omega]
+  · rw [ite_eq_left hm]
+  · rw [ite_eq_right hm, show h 4 = 0 by omega, show markR d = 0 by omega]
     simp
 
 theorem slotHeadForm_eight_eq {d : DegSpec 8 12} (hCore : d.core = row05Core)
@@ -605,11 +605,11 @@ theorem slotHeadForm_eight_eq {d : DegSpec 8 12} (hCore : d.core = row05Core)
     (hOut8 : h 6 ≤ d.length 8 - markR d) :
     slotHeadForm d h 8 = headContribution (d.length 8 - markR d) 0 (h 6) := by
   unfold slotHeadForm
-  rw [if_pos (Or.inr rfl), rowMark_eight, tail_eight hCore, head_eight hCore,
+  rw [ite_eq_left (Or.inr rfl), rowMark_eight, tail_eight hCore, head_eight hCore,
     hTailZero]
   by_cases hlt : markR d < d.length 8
-  · rw [if_pos hlt]
-  · rw [if_neg hlt, show h 6 = 0 by omega]
+  · rw [ite_eq_left hlt]
+  · rw [ite_eq_right hlt, show h 6 = 0 by omega]
     simp
 
 /-- The tail of the left marked leg, with the split kept: the profiles of the
@@ -628,7 +628,7 @@ theorem slotHeadForm_eight_split {d : DegSpec 8 12} (hCore : d.core = row05Core)
       if markR d < d.length 8 then headContribution (d.length 8 - markR d) 0 (h 6)
       else headContribution (d.length 8) (h 4) (h 6) := by
   unfold slotHeadForm
-  rw [if_pos (Or.inr rfl), rowMark_eight, tail_eight hCore, head_eight hCore]
+  rw [ite_eq_left (Or.inr rfl), rowMark_eight, tail_eight hCore, head_eight hCore]
 
 theorem slotTailForm_eight_split {d : DegSpec 8 12} (hCore : d.core = row05Core)
     (h : Fin 8 → ℕ) :
@@ -644,7 +644,7 @@ theorem slotHeadForm_three_split {d : DegSpec 8 12} (hCore : d.core = row05Core)
       if markL d < d.length 3 then headContribution (d.length 3 - markL d) 0 (h 3)
       else headContribution (d.length 3) (h 1) (h 3) := by
   unfold slotHeadForm
-  rw [if_pos (Or.inl rfl), rowMark_three, tail_three hCore, head_three hCore]
+  rw [ite_eq_left (Or.inl rfl), rowMark_three, tail_three hCore, head_three hCore]
 
 /-! ## The core-class weights, vertex by vertex -/
 
@@ -718,17 +718,17 @@ theorem lbCoeff_nonneg {d : DegSpec 8 12} (hL : d.length 2 ≤ d.length 3) (v : 
         + (if markL d < d.length 3 then (0 : ℤ)
             else headContribution (d.length 3) (markL d) 0)
     by_cases hlt : markL d < d.length 3
-    · rw [if_pos hlt, if_neg (by omega : ¬ d.length 3 ≤ markL d)]
+    · rw [ite_eq_left hlt, ite_eq_right (by omega : ¬ d.length 3 ≤ markL d)]
       split_ifs <;> norm_num
-    · rw [if_neg hlt, if_pos (by omega : d.length 3 ≤ markL d)]
+    · rw [ite_eq_right hlt, ite_eq_left (by omega : d.length 3 ≤ markL d)]
       have hEq : markL d = d.length 3 := by omega
       have hHead := positiveChip_add_head_nonneg (L := d.length 3) (h := markL d)
         (by omega)
       by_cases hz : markL d = 0
-      · rw [if_pos hz]
+      · rw [ite_eq_left hz]
         have : d.length 3 = 0 := by omega
         simp [headContribution, this]
-      · rw [if_neg hz]
+      · rw [ite_eq_right hz]
         have : positiveChip (d.length 3) = 1 := by simp [positiveChip]; omega
         omega
   · show (0 : ℤ) ≤ zeroChip (markR d)
@@ -748,12 +748,12 @@ theorem lbCoeff_owner_zero {d : DegSpec 8 12} : 1 ≤ lbCoeff d (ownerZero d) :=
   have hM : markL d = d.length 2 := rfl
   unfold ownerZero
   by_cases hz : d.length 2 = 0
-  · rw [if_pos hz]
+  · rw [ite_eq_left hz]
     show (1 : ℤ) ≤ 1 + tailContribution (markL d) 0 (markL d)
     have : markL d = 0 := by omega
     rw [this]
     simp [tailContribution]
-  · rw [if_neg hz]
+  · rw [ite_eq_right hz]
     show (1 : ℤ) ≤ headContribution (markL d) 0 (markL d)
     rw [headContribution_eq_one_of_full (L := markL d) (hu := 0) (hv := markL d)
       (by omega) (by omega)]
@@ -824,10 +824,10 @@ theorem rbCoeff_nonneg {d : DegSpec 8 12} (hR : d.length 6 ≤ d.length 8) (v : 
       + (if 0 < markR d then (0 : ℤ)
           else tailContribution (d.length 8) 0 (d.length 6))
     by_cases hp : 0 < markR d
-    · rw [if_pos hp]
+    · rw [ite_eq_left hp]
       have := zeroChip_nonneg (markR d)
       omega
-    · rw [if_neg hp]
+    · rw [ite_eq_right hp]
       have hz : zeroChip (markR d) = 1 := by simp [zeroChip]; omega
       have := tailContribution_ge_neg_one (L := d.length 8) (hu := 0)
         (hv := d.length 6) (by omega) (by omega)
@@ -857,11 +857,11 @@ theorem rbCoeff_owner_seven {d : DegSpec 8 12} (_hR : d.length 6 ≤ d.length 8)
     1 ≤ rbCoeff d (ownerSeven d) := by
   unfold ownerSeven
   by_cases hz : d.length 6 = 0
-  · rw [if_pos hz]
+  · rw [ite_eq_left hz]
     show (1 : ℤ) ≤ 1 + tailContribution (d.length 6) 0 (d.length 6)
     rw [hz]
     simp [tailContribution]
-  · rw [if_neg hz]
+  · rw [ite_eq_right hz]
     show (1 : ℤ) ≤ headContribution (d.length 6) 0 (d.length 6)
     rw [headContribution_eq_one_of_full (L := d.length 6) (hu := 0)
       (hv := d.length 6) (by omega) (by omega)]
@@ -871,20 +871,20 @@ theorem rbCoeff_owner_six {d : DegSpec 8 12} (hR : d.length 6 ≤ d.length 8) :
   have hN : markR d = d.length 8 - d.length 6 := rfl
   unfold ownerSix
   by_cases hz : d.length 8 = 0
-  · rw [if_pos hz]
+  · rw [ite_eq_left hz]
     show (1 : ℤ) ≤ zeroChip (markR d)
       + (if 0 < markR d then (0 : ℤ)
           else tailContribution (d.length 8) 0 (d.length 6))
     have hm : markR d = 0 := by omega
-    rw [if_neg (by omega), hm, hz, show d.length 6 = 0 by omega]
+    rw [ite_eq_right (by omega), hm, hz, show d.length 6 = 0 by omega]
     simp [zeroChip, tailContribution]
-  · rw [if_neg hz]
+  · rw [ite_eq_right hz]
     show (1 : ℤ) ≤
       (if markR d = 0 then (0 : ℤ) else if d.length 8 ≤ markR d then 1 else 0)
         + headContribution (d.length 8 - markR d) 0 (d.length 6)
     by_cases h6 : d.length 6 = 0
     · have hm : markR d = d.length 8 := by omega
-      rw [if_neg (by omega), if_pos (by omega), hm]
+      rw [ite_eq_right (by omega), ite_eq_left (by omega), hm]
       rw [show d.length 8 - d.length 8 = 0 by omega, h6]
       simp [headContribution]
     · have hOne := headContribution_eq_one_of_full (L := d.length 8 - markR d)
@@ -970,7 +970,7 @@ theorem t3Coeff_nonneg {d : DegSpec 8 12} (hL : d.length 2 ≤ d.length 3)
       + (if 0 < markL d then (0 : ℤ)
           else tailContribution (d.length 3) 0 (targetThree d))
     by_cases hp : 0 < markL d
-    · rw [if_pos hp]
+    · rw [ite_eq_left hp]
       have hm : markL d = d.length 2 := rfl
       have h1 : zeroChip (markL d) = 0 := by
         have hne : markL d ≠ 0 := by omega
@@ -979,7 +979,7 @@ theorem t3Coeff_nonneg {d : DegSpec 8 12} (hL : d.length 2 ≤ d.length 3)
         have hne : d.length 3 ≠ 0 := by omega
         simp [zeroChip, hne]
       omega
-    · rw [if_neg hp]
+    · rw [ite_eq_right hp]
       have h1 : zeroChip (markL d) = 1 := by
         have hz : markL d = 0 := by omega
         simp [zeroChip, hz]
@@ -1022,18 +1022,18 @@ theorem t3Coeff_nonneg {d : DegSpec 8 12} (hL : d.length 2 ≤ d.length 3)
         + (if markR d < d.length 8 then (0 : ℤ)
             else headContribution (d.length 8) (pairLow d) 0)
     by_cases hlt : markR d < d.length 8
-    · rw [if_pos hlt]
+    · rw [ite_eq_left hlt]
       split_ifs <;> omega
-    · rw [if_neg hlt]
+    · rw [ite_eq_right hlt]
       have hpos := positiveChip_add_head_nonneg (L := d.length 8)
         (h := pairLow d) (by omega)
       by_cases hz : markR d = 0
-      · rw [if_pos hz]
+      · rw [ite_eq_left hz]
         have h8 : d.length 8 = 0 := by omega
         have hgz : pairLow d = 0 := by omega
         rw [h8, hgz]
         simp [headContribution]
-      · rw [if_neg hz, if_pos (by omega : d.length 8 ≤ markR d)]
+      · rw [ite_eq_right hz, ite_eq_left (by omega : d.length 8 ≤ markR d)]
         have hne : d.length 8 ≠ 0 := by omega
         have : positiveChip (d.length 8) = 1 := by simp [positiveChip, hne]
         omega
@@ -1049,7 +1049,7 @@ theorem t3Coeff_owner {d : DegSpec 8 12} : 1 ≤ t3Coeff d (ownerThree d) := by
   unfold ownerThree
   by_cases hc : d.length 9 = 0 ∧ ¬ (armA d ≤ armB d)
   · obtain ⟨hc1, hc2⟩ := hc
-    rw [if_pos ⟨hc1, hc2⟩]
+    rw [ite_eq_left ⟨hc1, hc2⟩]
     show (1 : ℤ) ≤ zeroChip (d.length 7) + zeroChip (markR d)
       + (headContribution (d.length 7) 0 (pairLow d)
           + tailContribution (markR d) (pairLow d) 0
@@ -1060,7 +1060,7 @@ theorem t3Coeff_owner {d : DegSpec 8 12} : 1 ≤ t3Coeff d (ownerThree d) := by
       rfl rfl rfl (by norm_num) le_rfl (fun _ => ⟨hc1, by omega⟩)
     simp only [fwd_tail, rev_tail] at hpair
     omega
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     show (1 : ℤ) ≤ zeroChip (d.length 3 - markL d) + zeroChip (d.length 5)
       + (tailContribution (d.length 5) (targetThree d) 0
           + headContribution (d.length 3 - markL d) 0 (targetThree d)
@@ -1159,7 +1159,7 @@ theorem t4Coeff_nonneg {d : DegSpec 8 12} (hL : d.length 2 ≤ d.length 3)
           else tailContribution (d.length 3) 0 (pairLow d))
     have hm : markL d = d.length 2 := rfl
     by_cases hp : 0 < markL d
-    · rw [if_pos hp]
+    · rw [ite_eq_left hp]
       have h1 : zeroChip (markL d) = 0 := by
         have hne : markL d ≠ 0 := by omega
         simp [zeroChip, hne]
@@ -1167,7 +1167,7 @@ theorem t4Coeff_nonneg {d : DegSpec 8 12} (hL : d.length 2 ≤ d.length 3)
         have hne : d.length 3 ≠ 0 := by omega
         simp [zeroChip, hne]
       omega
-    · rw [if_neg hp]
+    · rw [ite_eq_right hp]
       have h1 : zeroChip (markL d) = 1 := by
         have hz : markL d = 0 := by omega
         simp [zeroChip, hz]
@@ -1210,18 +1210,18 @@ theorem t4Coeff_nonneg {d : DegSpec 8 12} (hL : d.length 2 ≤ d.length 3)
         + (if markR d < d.length 8 then (0 : ℤ)
             else headContribution (d.length 8) (targetFour d) 0)
     by_cases hlt : markR d < d.length 8
-    · rw [if_pos hlt]
+    · rw [ite_eq_left hlt]
       split_ifs <;> omega
-    · rw [if_neg hlt]
+    · rw [ite_eq_right hlt]
       have hpos := positiveChip_add_head_nonneg (L := d.length 8)
         (h := targetFour d) (by omega)
       by_cases hz : markR d = 0
-      · rw [if_pos hz]
+      · rw [ite_eq_left hz]
         have h8 : d.length 8 = 0 := by omega
         have hgz : targetFour d = 0 := by omega
         rw [h8, hgz]
         simp [headContribution]
-      · rw [if_neg hz, if_pos (by omega : d.length 8 ≤ markR d)]
+      · rw [ite_eq_right hz, ite_eq_left (by omega : d.length 8 ≤ markR d)]
         have hne : d.length 8 ≠ 0 := by omega
         have : positiveChip (d.length 8) = 1 := by simp [positiveChip, hne]
         omega
@@ -1237,7 +1237,7 @@ theorem t4Coeff_owner {d : DegSpec 8 12} : 1 ≤ t4Coeff d (ownerFour d) := by
   unfold ownerFour
   by_cases hc : d.length 9 = 0 ∧ ¬ (armB d ≤ armA d)
   · obtain ⟨hc1, hc2⟩ := hc
-    rw [if_pos ⟨hc1, hc2⟩]
+    rw [ite_eq_left ⟨hc1, hc2⟩]
     show (1 : ℤ) ≤ zeroChip (d.length 3 - markL d) + zeroChip (d.length 5)
       + (tailContribution (d.length 5) (pairLow d) 0
           + headContribution (d.length 3 - markL d) 0 (pairLow d)
@@ -1248,7 +1248,7 @@ theorem t4Coeff_owner {d : DegSpec 8 12} : 1 ≤ t4Coeff d (ownerFour d) := by
       rfl (pairLow_comm d) rfl (by norm_num) le_rfl (fun _ => ⟨hc1, by omega⟩)
     simp only [fwd_tail, rev_tail] at hpair
     omega
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     show (1 : ℤ) ≤ zeroChip (d.length 7) + zeroChip (markR d)
       + (headContribution (d.length 7) 0 (targetFour d)
           + tailContribution (markR d) (targetFour d) 0
@@ -1272,10 +1272,10 @@ theorem residual_of_coeff {alloc contrib : Fin 8 → ℤ} {owner : Fin 8}
     0 ≤ alloc v - indicatorWeight v owner + contrib v := by
   by_cases hv : v = owner
   · subst hv
-    simp only [indicatorWeight, if_pos]
+    simp only [indicatorWeight, ite_eq_left]
     omega
   · have := hAll v
-    simp only [indicatorWeight, if_neg hv]
+    simp only [indicatorWeight, ite_eq_right hv]
     omega
 
 /-- The hypotheses of the kink lemma at a mark strictly inside its slot. -/
@@ -1368,7 +1368,7 @@ theorem residual_effective {d : DegSpec 8 12} (hCore : d.core = row05Core)
       simp [DegSpec.coreVertex, DegSpec.interiorVertex]
     have hZeroChip : oneChip (G := d.graph) (d.coreVertex center)
         (d.interiorVertex edge offset) = 0 := by
-      simp only [oneChip, if_neg hNe.symm]
+      simp only [oneChip, ite_eq_right hNe.symm]
     rw [hZeroChip]
     by_cases hmark : offset.val + 1 = rowMark d edge
     · have hlt : rowMark d edge < d.length edge := by
@@ -1391,51 +1391,51 @@ theorem ownerZero_rep {d : DegSpec 8 12} (hCore : d.core = row05Core) :
     d.rep (ownerZero d) = d.rep 0 := by
   unfold ownerZero
   by_cases hz : d.length 2 = 0
-  · rw [if_pos hz]
+  · rw [ite_eq_left hz]
     have h := d.rep_zero 2 hz
     rw [hCore] at h
     simpa [row05Core] using h
-  · rw [if_neg hz]
+  · rw [ite_eq_right hz]
 
 theorem ownerSix_rep {d : DegSpec 8 12} (hCore : d.core = row05Core) :
     d.rep (ownerSix d) = d.rep 6 := by
   unfold ownerSix
   by_cases hz : d.length 8 = 0
-  · rw [if_pos hz]
+  · rw [ite_eq_left hz]
     have h := d.rep_zero 8 hz
     rw [hCore] at h
     simpa [row05Core] using h
-  · rw [if_neg hz]
+  · rw [ite_eq_right hz]
 
 theorem ownerSeven_rep {d : DegSpec 8 12} (hCore : d.core = row05Core) :
     d.rep (ownerSeven d) = d.rep 7 := by
   unfold ownerSeven
   by_cases hz : d.length 6 = 0
-  · rw [if_pos hz]
+  · rw [ite_eq_left hz]
     have h := d.rep_zero 6 hz
     rw [hCore] at h
     simpa [row05Core] using h
-  · rw [if_neg hz]
+  · rw [ite_eq_right hz]
 
 theorem ownerThree_rep {d : DegSpec 8 12} (hCore : d.core = row05Core) :
     d.rep (ownerThree d) = d.rep 3 := by
   unfold ownerThree
   by_cases hz : d.length 9 = 0 ∧ ¬ (armA d ≤ armB d)
-  · rw [if_pos hz]
+  · rw [ite_eq_left hz]
     have h := d.rep_zero 9 hz.1
     rw [hCore] at h
     simpa [row05Core] using h
-  · rw [if_neg hz]
+  · rw [ite_eq_right hz]
 
 theorem ownerFour_rep {d : DegSpec 8 12} (hCore : d.core = row05Core) :
     d.rep (ownerFour d) = d.rep 4 := by
   unfold ownerFour
   by_cases hz : d.length 9 = 0 ∧ ¬ (armB d ≤ armA d)
-  · rw [if_pos hz]
+  · rw [ite_eq_left hz]
     have h := d.rep_zero 9 hz.1
     rw [hCore] at h
     simpa [row05Core] using h.symm
-  · rw [if_neg hz]
+  · rw [ite_eq_right hz]
 
 /-! ## Every contracted core class is reached -/
 

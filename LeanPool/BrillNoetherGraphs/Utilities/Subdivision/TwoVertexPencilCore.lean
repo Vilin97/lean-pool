@@ -77,7 +77,7 @@ theorem bnExists_one_two_of_coreVertexCount_eq_two
       have hPosition :
           spec.pathVertex edge position = spec.interiorVertex edge offset := by
         unfold Spec.pathVertex
-        rw [dif_neg (by simp [position]), dif_neg (by
+        rw [dite_eq_right (by simp [position]), dite_eq_right (by
           have := offset.isLt
           simp only [position]
           omega)]

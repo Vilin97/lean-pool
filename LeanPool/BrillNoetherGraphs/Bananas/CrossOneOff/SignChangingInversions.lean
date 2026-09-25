@@ -138,14 +138,14 @@ theorem sub_one_le_sci_of_two_signFlips
     intro i _
     have hlt' := hrange i
     by_cases hpos : 0 < α (m₁ + 1 + (i.val : ℤ))
-    · simp only [hf, if_pos hpos]
+    · simp only [hf, ite_eq_left hpos]
       exact ⟨hlt', hpos, h₂⟩
     · have hne : m₁ + 1 < m₁ + 1 + (i.val : ℤ) := by
         rcases Nat.eq_zero_or_pos i.val with h0 | hpos'
         · exact absurd (by simpa [h0] using h₁) hpos
         · have : (0 : ℤ) < (i.val : ℤ) := by exact_mod_cast hpos'
           omega
-      simp only [hf, if_neg hpos]
+      simp only [hf, ite_eq_right hpos]
       exact ⟨hne, h₁, not_lt.mp hpos⟩
   have hinj : Set.InjOn f (Set.univ : Set (Fin n)) := by
     intro a _ b _ hab
@@ -154,14 +154,14 @@ theorem sub_one_le_sci_of_two_signFlips
     apply Fin.ext
     by_cases hpa : 0 < α (m₁ + 1 + (a.val : ℤ)) <;>
       by_cases hpb : 0 < α (m₁ + 1 + (b.val : ℤ))
-    · simp only [hf, if_pos hpa, if_pos hpb, Prod.mk.injEq] at hab
+    · simp only [hf, ite_eq_left hpa, ite_eq_left hpb, Prod.mk.injEq] at hab
       omega
     · -- `(m₁+1+a, m₂) = (m₁+1, m₁+1+b)` forces `m₂ = m₁+1+b`, impossible.
-      simp only [hf, if_pos hpa, if_neg hpb, Prod.mk.injEq] at hab
+      simp only [hf, ite_eq_left hpa, ite_eq_right hpb, Prod.mk.injEq] at hab
       omega
-    · simp only [hf, if_neg hpa, if_pos hpb, Prod.mk.injEq] at hab
+    · simp only [hf, ite_eq_right hpa, ite_eq_left hpb, Prod.mk.injEq] at hab
       omega
-    · simp only [hf, if_neg hpa, if_neg hpb, Prod.mk.injEq] at hab
+    · simp only [hf, ite_eq_right hpa, ite_eq_right hpb, Prod.mk.injEq] at hab
       omega
   have hle := Set.ncard_le_ncard_of_injOn (s := (Set.univ : Set (Fin n)))
     (t := sciSet α) f hmaps hinj hfin

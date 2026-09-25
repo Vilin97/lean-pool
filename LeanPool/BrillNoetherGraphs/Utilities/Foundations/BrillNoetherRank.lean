@@ -249,7 +249,7 @@ noncomputable def bnRank (G : CFGraph) (r d : ℤ) : ℤ :=
 theorem bnRank_eq_neg_one_of_not_bnExists {G : CFGraph} {r d : ℤ}
     (hExists : ¬ BNExists G r d) :
     bnRank G r d = -1 := by
-  rw [bnRank, if_neg hExists]
+  rw [bnRank, ite_eq_right hExists]
 
 /-- **The defining property of `bnRank`.**  For nonnegative parameters the
 predicate `BNRankGe` is exactly the comparison `k ≤ w^r_d(G)`. -/
@@ -257,7 +257,7 @@ theorem bnRankGe_iff_le_bnRank {G : CFGraph} {r d k : ℤ} (hr : 0 ≤ r) (hk : 
     BNRankGe G r d k ↔ k ≤ bnRank G r d := by
   by_cases hExists : BNExists G r d
   · have hValue : bnRank G r d = sSup {k : ℤ | 0 ≤ k ∧ BNRankGe G r d k} := by
-      rw [bnRank, if_pos hExists]
+      rw [bnRank, ite_eq_left hExists]
     have hBdd : BddAbove {k : ℤ | 0 ≤ k ∧ BNRankGe G r d k} := by
       refine ⟨d - r, ?_⟩
       rintro m ⟨hm, hRank⟩

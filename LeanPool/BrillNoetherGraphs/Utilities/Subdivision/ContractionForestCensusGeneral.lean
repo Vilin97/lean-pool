@@ -267,11 +267,11 @@ theorem unionStep_iff {rep : Fin n → Fin n} {R : Fin n → Fin n → Prop}
   by_cases hx : rep x = rep u <;> by_cases hy : rep y = rep u
   · have hxu : R x u := (hIff x u).mp hx
     have hyu : R y u := (hIff y u).mp hy
-    rw [if_pos hx, if_pos hy]
+    rw [ite_eq_left hx, ite_eq_left hy]
     exact iff_of_true rfl (Or.inl (hR.trans hxu (hR.symm hyu)))
   · have hxu : R x u := (hIff x u).mp hx
     have hnyu : ¬ R y u := fun h => hy ((hIff y u).mpr h)
-    rw [if_pos hx, if_neg hy, hIff]
+    rw [ite_eq_left hx, ite_eq_right hy, hIff]
     constructor
     · intro hvy; exact Or.inr (Or.inl ⟨hxu, hR.symm hvy⟩)
     · rintro (hxy | ⟨_, hyv⟩ | ⟨_, hyu⟩)
@@ -280,7 +280,7 @@ theorem unionStep_iff {rep : Fin n → Fin n} {R : Fin n → Fin n → Prop}
       · exact absurd hyu hnyu
   · have hyu : R y u := (hIff y u).mp hy
     have hnxu : ¬ R x u := fun h => hx ((hIff x u).mpr h)
-    rw [if_neg hx, if_pos hy, hIff]
+    rw [ite_eq_right hx, ite_eq_left hy, hIff]
     constructor
     · intro hxv; exact Or.inr (Or.inr ⟨hxv, hyu⟩)
     · rintro (hxy | ⟨hxu, _⟩ | ⟨hxv, _⟩)
@@ -289,7 +289,7 @@ theorem unionStep_iff {rep : Fin n → Fin n} {R : Fin n → Fin n → Prop}
       · exact hxv
   · have hnxu : ¬ R x u := fun h => hx ((hIff x u).mpr h)
     have hnyu : ¬ R y u := fun h => hy ((hIff y u).mpr h)
-    rw [if_neg hx, if_neg hy, hIff]
+    rw [ite_eq_right hx, ite_eq_right hy, hIff]
     constructor
     · intro hxy; exact Or.inl hxy
     · rintro (hxy | ⟨hxu, _⟩ | ⟨_, hyu⟩)
@@ -308,19 +308,19 @@ theorem unionStep_idem {rep : Fin n → Fin n} (hidem : ∀ x, rep (rep x) = rep
   by_cases hx : rep x = rep u
   · have hux : unionStep rep u v x = rep v := by
       show (if rep x = rep u then rep v else rep x) = rep v
-      rw [if_pos hx]
+      rw [ite_eq_left hx]
     rw [hux]
     have hrv : rep (rep v) = rep v := hidem v
     by_cases hcase : rep v = rep u
-    · rw [if_pos (by rw [hrv]; exact hcase)]
-    · rw [if_neg (by rw [hrv]; exact hcase)]
+    · rw [ite_eq_left (by rw [hrv]; exact hcase)]
+    · rw [ite_eq_right (by rw [hrv]; exact hcase)]
       exact hrv
   · have hux : unionStep rep u v x = rep x := by
       show (if rep x = rep u then rep v else rep x) = rep x
-      rw [if_neg hx]
+      rw [ite_eq_right hx]
     rw [hux]
     have hrx : rep (rep x) = rep x := hidem x
-    rw [if_neg (by rw [hrx]; exact hx)]
+    rw [ite_eq_right (by rw [hrx]; exact hx)]
     exact hrx
 
 /-- **New.** One `unionStep` merges at most two classes, so it destroys at
@@ -339,7 +339,7 @@ theorem card_image_le_card_image_unionStep_succ (rep : Fin n → Fin n) (u v : F
     · exact Finset.mem_insert.mpr (Or.inl hx)
     · refine Finset.mem_insert.mpr (Or.inr (Finset.mem_image.mpr ⟨x, Finset.mem_univ x, ?_⟩))
       show (if rep x = rep u then rep v else rep x) = rep x
-      rw [if_neg hx]
+      rw [ite_eq_right hx]
   calc (Finset.image rep Finset.univ).card
       ≤ (insert (rep u) (Finset.image (unionStep rep u v) Finset.univ)).card :=
         Finset.card_le_card hsub

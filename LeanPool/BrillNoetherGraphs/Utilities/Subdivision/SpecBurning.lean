@@ -173,7 +173,7 @@ theorem slotVertex_eq_interiorVertex {edge : Fin p} {k : ℕ} (hk : 0 < k)
     spec.slotVertex edge k = spec.interiorVertex edge ⟨k - 1, by omega⟩ := by
   rw [slotVertex_of_le (le_of_lt hk')]
   unfold pathVertex
-  rw [dif_neg (by simpa using hk.ne'), dif_neg (by simpa using hk'.ne)]
+  rw [dite_eq_right (by simpa using hk.ne'), dite_eq_right (by simpa using hk'.ne)]
 
 theorem slotVertex_ne_coreVertex {edge : Fin p} {k : ℕ} (hk : 0 < k)
     (hk' : k < spec.length edge) (v : Fin n) :

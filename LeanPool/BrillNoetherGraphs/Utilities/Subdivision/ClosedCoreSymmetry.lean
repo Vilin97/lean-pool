@@ -251,7 +251,7 @@ theorem bnExists_iff (hn : 0 < n) (hForest : IsForest core (zeroSet length))
       length_eq := fun e => symmetry.reindexLength_compat length e
       tail_eq := fun e => by
         by_cases hr : symmetry.reversed e
-        · simp only [if_pos hr]
+        · simp only [ite_eq_left hr]
           rw [hclass]
           apply Subtype.ext
           have ht := symmetry.tail_eq e
@@ -260,7 +260,7 @@ theorem bnExists_iff (hn : 0 < n) (hForest : IsForest core (zeroSet length))
             target.rep (core.tail (symmetry.slotPerm e))
           rw [ht]
         · have hr' : symmetry.reversed e = false := Bool.eq_false_of_not_eq_true hr
-          simp only [if_neg hr]
+          simp only [ite_eq_right hr]
           rw [hclass]
           apply Subtype.ext
           have ht := symmetry.tail_eq e
@@ -270,7 +270,7 @@ theorem bnExists_iff (hn : 0 < n) (hForest : IsForest core (zeroSet length))
           rw [ht]
       head_eq := fun e => by
         by_cases hr : symmetry.reversed e
-        · simp only [if_pos hr]
+        · simp only [ite_eq_left hr]
           rw [hclass]
           apply Subtype.ext
           have hh := symmetry.head_eq e
@@ -279,7 +279,7 @@ theorem bnExists_iff (hn : 0 < n) (hForest : IsForest core (zeroSet length))
             target.rep (core.head (symmetry.slotPerm e))
           rw [hh]
         · have hr' : symmetry.reversed e = false := Bool.eq_false_of_not_eq_true hr
-          simp only [if_neg hr]
+          simp only [ite_eq_right hr]
           rw [hclass]
           apply Subtype.ext
           have hh := symmetry.head_eq e

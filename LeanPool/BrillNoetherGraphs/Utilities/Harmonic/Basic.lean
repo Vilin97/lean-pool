@@ -494,7 +494,7 @@ theorem fibre_sub_one_chip_effective
   change 0 ≤ f.fibre (f.vertexMap x) y - oneChip x y
   by_cases hxy : y = x
   · subst y
-    simp only [fibre, oneChip, if_pos]
+    simp only [fibre, oneChip, ite_eq_left]
     exact sub_nonneg.mpr (by
       exact_mod_cast (Nat.succ_le_iff.mpr (f.localDegree_pos x)))
   · have hEffective := f.fibre_effective (f.vertexMap x) y

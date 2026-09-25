@@ -1154,15 +1154,15 @@ theorem sum_incidence_class (V : Finset (Fin n)) (S : Finset (Fin p))
     rw [Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq]
     congr 1
     · by_cases h : d.rep (d.core.tail e) = k
-      · rw [if_pos (Finset.mem_filter.mpr ⟨hT, h⟩), if_pos h]
+      · rw [ite_eq_left (Finset.mem_filter.mpr ⟨hT, h⟩), ite_eq_left h]
       · have hm : d.core.tail e ∉ V.filter (fun v => d.rep v = k) :=
           fun hm => h (Finset.mem_filter.mp hm).2
-        rw [if_neg hm, if_neg h]
+        rw [ite_eq_right hm, ite_eq_right h]
     · by_cases h : d.rep (d.core.head e) = k
-      · rw [if_pos (Finset.mem_filter.mpr ⟨hH, h⟩), if_pos h]
+      · rw [ite_eq_left (Finset.mem_filter.mpr ⟨hH, h⟩), ite_eq_left h]
       · have hm : d.core.head e ∉ V.filter (fun v => d.rep v = k) :=
           fun hm => h (Finset.mem_filter.mp hm).2
-        rw [if_neg hm, if_neg h]
+        rw [ite_eq_right hm, ite_eq_right h]
   have hsplit := Finset.sum_sdiff
     (f := fun e => (if d.rep (d.core.tail e) = k then 1 else 0)
       + (if d.rep (d.core.head e) = k then 1 else 0)) hsub

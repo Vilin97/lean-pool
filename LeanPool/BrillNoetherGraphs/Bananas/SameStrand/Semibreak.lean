@@ -99,11 +99,11 @@ theorem eq_of_interiorVertex_eq_one {g : ℕ} {B : Banana g}
   rw [semibreakDivisor_interiorVertex] at hp hq
   have hpChip : chips γ = some p := by
     by_contra h
-    rw [if_neg h] at hp
+    rw [ite_eq_right h] at hp
     omega
   have hqChip : chips γ = some q := by
     by_contra h
-    rw [if_neg h] at hq
+    rw [ite_eq_right h] at hq
     omega
   exact Option.some.inj (hpChip.symm.trans hqChip)
 
@@ -135,7 +135,7 @@ theorem degree_semibreakDivisor {g : ℕ} (B : Banana g)
   cases chips γ with
   | none => simp
   | some chip =>
-      simp only [Option.isSome_some, if_true]
+      simp only [Option.isSome_some, ite_true]
       simp
 
 theorem exists_free_strand_of_degree_le_genus {g : ℕ} (B : Banana g)

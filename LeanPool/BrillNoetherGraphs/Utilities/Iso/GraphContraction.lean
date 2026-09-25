@@ -234,7 +234,7 @@ def pullScript (c : GraphContractionCertificate G H)
     · simp
   · have hbx : b ≠ c.vertexMap x := Ne.symm hb
     rw [pushDiv]
-    simp only [oneChip, if_neg hbx]
+    simp only [oneChip, ite_eq_right hbx]
     apply Finset.sum_eq_zero
     intro y _
     by_cases hy : y = x

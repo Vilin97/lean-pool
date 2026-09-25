@@ -203,7 +203,7 @@ theorem prin_leftEndpoint_eq_sum_initialSlope {g : ℕ} (B : Banana g)
       rcases fin_two_eq_zero_or_one (B.core.head α) with h0 | h1
       · exact h0
       · exact (B.core_loopless α (ht1.trans h1.symm)).elim
-    simp only [ht1, hh0, if_true, bananaStorageSlope]
+    simp only [ht1, hh0, ite_true, bananaStorageSlope]
     simp only [show (1 : Fin 2) ≠ 0 by decide, ↓reduceIte, neg_neg]
     have hlen := B.length_pos α
     have hidx : B.length α - 1 - (B.length α - 1) = 0 := by omega

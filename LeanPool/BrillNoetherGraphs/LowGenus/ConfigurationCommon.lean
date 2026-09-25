@@ -232,11 +232,11 @@ theorem positiveEndpointContribution_classSum_eq
       unfold DegSpec.coreRise
       rw [← hInv (d.core.tail e), ← hInv (d.core.head e), hRep]
       omega
-    simp only [hZero, if_true, Finset.sum_const_zero]
+    simp only [hZero, ite_true, Finset.sum_const_zero]
     rw [hRep]
     by_cases h : d.rep (d.core.head e) = d.rep r <;>
       simp [h, hRise]
-  · simp only [hZero, if_false, Finset.sum_add_distrib]
+  · simp only [hZero, ite_false, Finset.sum_add_distrib]
     by_cases hTail : d.rep (d.core.tail e) = d.rep r <;>
       by_cases hHead : d.rep (d.core.head e) = d.rep r <;>
       simp [hTail, hHead]

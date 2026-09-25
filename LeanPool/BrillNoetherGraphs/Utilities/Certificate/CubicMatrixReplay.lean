@@ -461,18 +461,18 @@ theorem entryOf_rowsOf {n deg : ℕ} {M : ℕ → ℕ → ℕ} (h : Conditions n
         = (List.range' (0 + i + 1) (n - 1 - i)).map fun j => M (0 + i) j :=
       getD_rowsOf M n 0 i hi
     have hOffset : j - i - 1 < n - 1 - i := by omega
-    simp only [entryOf, if_pos hlt, hRow, Nat.zero_add]
+    simp only [entryOf, ite_eq_left hlt, hRow, Nat.zero_add]
     rw [getD_map_range' _ _ _ _ hOffset]
     have hIndex : i + 1 + (j - i - 1) = j := by omega
     rw [hIndex]
   · subst heq
-    simp only [entryOf, lt_self_iff_false, if_false]
+    simp only [entryOf, lt_self_iff_false, ite_false]
     exact (h.diag i hi).symm
   · have hRow : (rowsOf M 0 n).getD j []
         = (List.range' (0 + j + 1) (n - 1 - j)).map fun i => M (0 + j) i :=
       getD_rowsOf M n 0 j hj
     have hOffset : i - j - 1 < n - 1 - j := by omega
-    simp only [entryOf, if_neg (by omega : ¬ i < j), if_pos hgt, hRow,
+    simp only [entryOf, ite_eq_right (by omega : ¬ i < j), ite_eq_left hgt, hRow,
       Nat.zero_add]
     rw [getD_map_range' _ _ _ _ hOffset]
     have hIndex : j + 1 + (i - j - 1) = i := by omega
@@ -496,10 +496,10 @@ theorem conditions_matrixOf {n p deg : ℕ} (core : Core n p)
     Conditions n deg (matrixOf core) := by
   refine ⟨?_, ?_, ?_⟩
   · intro i j hi hj
-    simp only [matrixOf, dif_pos hi, dif_pos hj]
+    simp only [matrixOf, dite_eq_left hi, dite_eq_left hj]
     exact Core.pairMultiplicity_comm core ⟨i, hi⟩ ⟨j, hj⟩
   · intro i hi
-    simp only [matrixOf, dif_pos hi]
+    simp only [matrixOf, dite_eq_left hi]
     exact Core.pairMultiplicity_self_eq_zero core hLoopless ⟨i, hi⟩
   · intro i hi
     have hRange : ∑ j ∈ Finset.range n, matrixOf core i j
@@ -509,7 +509,7 @@ theorem conditions_matrixOf {n p deg : ℕ} (core : Core n p)
     have hEntry : ∀ j : Fin n,
         matrixOf core i (j : ℕ) = core.pairMultiplicity ⟨i, hi⟩ j := by
       intro j
-      simp only [matrixOf, dif_pos hi, dif_pos j.isLt]
+      simp only [matrixOf, dite_eq_left hi, dite_eq_left j.isLt]
     simp only [hEntry]
     rw [sum_pairMultiplicity_eq_incidenceDegree core hLoopless ⟨i, hi⟩]
     exact hDegree ⟨i, hi⟩

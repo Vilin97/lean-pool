@@ -348,7 +348,7 @@ theorem allocated_class_sum_eq
       ∑ v ∈ Finset.univ.filter (fun v : Fin 8 => d.rep v = d.rep r),
           (if P then transferWeight source target v else 0) = 0 := by
     by_cases hP : P
-    · simp only [if_pos hP]
+    · simp only [ite_eq_left hP]
       exact sum_transferWeight_eq_zero d (hRep hP) r
     · simp [hP]
   simp only [allocatedWeight, Finset.sum_add_distrib]
@@ -562,7 +562,7 @@ theorem bananaResidual_nonneg (d : DegSpec 8 12) (v : Fin 8) :
       (by
         intro hk
         by_cases hP : parMin d = 0 ∧ armMin d + d.length 1 < d.length 0
-        · rw [if_pos hP] at hk; norm_num at hk
+        · rw [ite_eq_left hP] at hk; norm_num at hk
         · exact hP)
     omega
   · show (0:ℤ) ≤ bananaCoefficient d 7 -
@@ -586,7 +586,7 @@ theorem bananaResidual_nonneg (d : DegSpec 8 12) (v : Fin 8) :
         intro hk
         by_cases hP : parMin d = 0 ∧ armMin d + d.length 1 < d.length 0
         · exact hP.1
-        · rw [if_neg hP] at hk; norm_num at hk)
+        · rw [ite_eq_right hP] at hk; norm_num at hk)
     omega
 
 theorem localResidual_nonneg
@@ -651,7 +651,7 @@ theorem residual_effective
     rw [rowDivisor, d.coreClassDivisor_interiorVertex]
     have hNe : d.coreVertex 6 ≠ d.interiorVertex edge offset := by
       simp [DegSpec.coreVertex, DegSpec.interiorVertex]
-    simp only [oneChip, if_neg hNe.symm, zero_sub, neg_zero, zero_add]
+    simp only [oneChip, ite_eq_right hNe.symm, zero_sub, neg_zero, zero_add]
     exact d.prin_interpolatedScript_interiorVertex_nonneg hInv edge offset
 
 /-! ## Combining the two families -/
