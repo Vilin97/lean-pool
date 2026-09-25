@@ -394,7 +394,9 @@ theorem sinTheta (N : SymmetricNormingFunction)
   rw [N.norm_eq, N.norm_eq]
   exact hsrc.2
 
-/-- **The `tan Θ` theorem, in its stronger residual form.** -/
+/-- **The `tan Θ` theorem, in its stronger residual form, for Rayleigh--Ritz trial data.**
+The residual is orthogonal to the trial subspace, as required by
+`RitzData.residual_orthogonal`. -/
 theorem tanTheta (N : SymmetricNormingFunction)
     {A : E →ₗ.[𝕜] E} (_hA : IsSelfAdjoint A)
     {V : Submodule 𝕜 E} [V.HasOrthogonalProjection] (hV : Reduces A V)
