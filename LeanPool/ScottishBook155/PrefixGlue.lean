@@ -107,6 +107,19 @@ theorem link_targetProjection_apply (i k : Set.Iio j) (hik : i ≤ k)
     (F.stageEq i k hik) ((F.item k).chain.link
       ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik) z
 
+/-- Transporting both ends of a dependent map respects equality of its index. -/
+private theorem transportedMap_congr {Index Stage : Type*} (space : Stage → Type*)
+    (transport : {A B : Stage} → A = B → space A → space B)
+    (domain codomain : Index → Stage)
+    (map : ∀ i, space (domain i) → space (codomain i))
+    {i k : Index} (h : i = k) {A B : Stage}
+    (hi : domain i = A) (hk : domain k = A)
+    (hi' : codomain i = B) (hk' : codomain k = B) (x : space A) :
+    transport hi' (map i (transport hi.symm x)) =
+      transport hk' (map k (transport hk.symm x)) := by
+  subst k
+  rfl
+
 theorem source_cast_embed_eq_later (i k m : Set.Iio j)
     (hik : i ≤ k) (hkm : k ≤ m) (x : (F.stage i).source) :
     ProtectedStage.castSourcePoint (F.stageEq k m hkm).symm
@@ -117,48 +130,18 @@ theorem source_cast_embed_eq_later (i k m : Set.Iio j)
         ⟨i.1, hik.trans hkm⟩ ⟨k.1, hkm⟩ hik
         (ProtectedStage.castSourcePoint
           (F.stageEq i m (hik.trans hkm)).symm x) := by
-  let C := ((F.item m).restriction hkm).chain
-  let D := (F.item k).chain
   let a : Set.Iic k.1 := ⟨i.1, hik⟩
   let b : Set.Iic k.1 := ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩
-  let x₀ : (C.stage a).source :=
+  have h := transportedMap_congr
+    (fun S : ProtectedStage.{0} ((1 : ℝ) / 2) => S.source)
     ProtectedStage.castSourcePoint
-      (F.stageEq i m (hik.trans hkm)).symm x
-  have ht := ProtectedChain.source_embed_transport
-    (C := C) (D := D) (F.coherent k m hkm) a b hik x₀
-  dsimp [C, D, a, b, ProtectedPrefix.restriction,
-    ProtectedChain.reindex] at ht
-  have hx₀ :
-      ProtectedStage.castSourcePoint
-          (congrArg
-            (fun E : ProtectedChain (ι := Set.Iic k.1) ((1 : ℝ) / 2) 1 =>
-              E.stage ⟨i.1, hik⟩)
-            (F.coherent k m hkm)) x₀ =
-        ProtectedStage.castSourcePoint (F.stageEq i k hik).symm x := by
-    exact ProtectedStage.castSourcePoint_trans _ _ x
-  have ht' := ht.trans (congrArg
-    ((F.item k).chain.sourceSystem.embed
-      ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik) hx₀)
-  change
-    ProtectedStage.castSourcePoint (F.stageEq k m hkm)
-        ((F.item m).chain.sourceSystem.embed
-          ⟨i.1, hik.trans hkm⟩ ⟨k.1, hkm⟩ hik x₀) =
-      (F.item k).chain.sourceSystem.embed
-        ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik
-        (ProtectedStage.castSourcePoint (F.stageEq i k hik).symm x) at ht'
-  calc
-    ProtectedStage.castSourcePoint (F.stageEq k m hkm).symm
-        ((F.item k).chain.sourceSystem.embed
-          ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik
-          (ProtectedStage.castSourcePoint (F.stageEq i k hik).symm x)) =
-      ProtectedStage.castSourcePoint (F.stageEq k m hkm).symm
-        (ProtectedStage.castSourcePoint (F.stageEq k m hkm)
-          ((F.item m).chain.sourceSystem.embed
-            ⟨i.1, hik.trans hkm⟩ ⟨k.1, hkm⟩ hik x₀)) := by
-              rw [ht']
-    _ = (F.item m).chain.sourceSystem.embed
-          ⟨i.1, hik.trans hkm⟩ ⟨k.1, hkm⟩ hik x₀ := by simp
-    _ = _ := rfl
+    (fun C : ProtectedChain (ι := Set.Iic k.1) ((1 : ℝ) / 2) 1 => C.stage a)
+    (fun C => C.stage b) (fun C => C.sourceSystem.embed a b hik)
+    (F.coherent k m hkm) (F.stageEq i m (hik.trans hkm)) (F.stageEq i k hik)
+    rfl (F.stageEq k m hkm).symm x
+  dsimp [a, b, ProtectedPrefix.restriction, ProtectedChain.reindex] at h
+  simpa only [RelEmbedding.coe_mk, Function.Embedding.coeFn_mk,
+    ProtectedStage.castSourcePoint_rfl] using! h.symm
 
 theorem target_cast_embed_eq_later (i k m : Set.Iio j)
     (hik : i ≤ k) (hkm : k ≤ m) (x : (F.stage i).target) :
@@ -170,48 +153,18 @@ theorem target_cast_embed_eq_later (i k m : Set.Iio j)
         ⟨i.1, hik.trans hkm⟩ ⟨k.1, hkm⟩ hik
         (ProtectedStage.castTargetPoint
           (F.stageEq i m (hik.trans hkm)).symm x) := by
-  let C := ((F.item m).restriction hkm).chain
-  let D := (F.item k).chain
   let a : Set.Iic k.1 := ⟨i.1, hik⟩
   let b : Set.Iic k.1 := ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩
-  let x₀ : (C.stage a).target :=
+  have h := transportedMap_congr
+    (fun S : ProtectedStage.{0} ((1 : ℝ) / 2) => S.target)
     ProtectedStage.castTargetPoint
-      (F.stageEq i m (hik.trans hkm)).symm x
-  have ht := ProtectedChain.target_embed_transport
-    (C := C) (D := D) (F.coherent k m hkm) a b hik x₀
-  dsimp [C, D, a, b, ProtectedPrefix.restriction,
-    ProtectedChain.reindex] at ht
-  have hx₀ :
-      ProtectedStage.castTargetPoint
-          (congrArg
-            (fun E : ProtectedChain (ι := Set.Iic k.1) ((1 : ℝ) / 2) 1 =>
-              E.stage ⟨i.1, hik⟩)
-            (F.coherent k m hkm)) x₀ =
-        ProtectedStage.castTargetPoint (F.stageEq i k hik).symm x := by
-    exact ProtectedStage.castTargetPoint_trans _ _ x
-  have ht' := ht.trans (congrArg
-    ((F.item k).chain.targetSystem.embed
-      ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik) hx₀)
-  change
-    ProtectedStage.castTargetPoint (F.stageEq k m hkm)
-        ((F.item m).chain.targetSystem.embed
-          ⟨i.1, hik.trans hkm⟩ ⟨k.1, hkm⟩ hik x₀) =
-      (F.item k).chain.targetSystem.embed
-        ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik
-        (ProtectedStage.castTargetPoint (F.stageEq i k hik).symm x) at ht'
-  calc
-    ProtectedStage.castTargetPoint (F.stageEq k m hkm).symm
-        ((F.item k).chain.targetSystem.embed
-          ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik
-          (ProtectedStage.castTargetPoint (F.stageEq i k hik).symm x)) =
-      ProtectedStage.castTargetPoint (F.stageEq k m hkm).symm
-        (ProtectedStage.castTargetPoint (F.stageEq k m hkm)
-          ((F.item m).chain.targetSystem.embed
-            ⟨i.1, hik.trans hkm⟩ ⟨k.1, hkm⟩ hik x₀)) := by
-              rw [ht']
-    _ = (F.item m).chain.targetSystem.embed
-          ⟨i.1, hik.trans hkm⟩ ⟨k.1, hkm⟩ hik x₀ := by simp
-    _ = _ := rfl
+    (fun C : ProtectedChain (ι := Set.Iic k.1) ((1 : ℝ) / 2) 1 => C.stage a)
+    (fun C => C.stage b) (fun C => C.targetSystem.embed a b hik)
+    (F.coherent k m hkm) (F.stageEq i m (hik.trans hkm)) (F.stageEq i k hik)
+    rfl (F.stageEq k m hkm).symm x
+  dsimp [a, b, ProtectedPrefix.restriction, ProtectedChain.reindex] at h
+  simpa only [RelEmbedding.coe_mk, Function.Embedding.coeFn_mk,
+    ProtectedStage.castTargetPoint_rfl] using! h.symm
 
 theorem source_cast_project_eq_later (a i k : Set.Iio j)
     (hai : a ≤ i) (hik : i ≤ k) (x : (F.stage i).source) :
@@ -222,69 +175,18 @@ theorem source_cast_project_eq_later (a i k : Set.Iio j)
       ProtectedStage.castSourcePoint (F.stageEq a i hai)
         ((F.item i).chain.sourceSystem.project
           ⟨a.1, hai⟩ ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩ hai x) := by
-  let C := ((F.item k).restriction hik).chain
-  let D := (F.item i).chain
   let b : Set.Iic i.1 := ⟨a.1, hai⟩
   let c : Set.Iic i.1 := ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩
-  let z : (C.stage c).source :=
-    ProtectedStage.castSourcePoint (F.stageEq i k hik).symm x
-  have ht := ProtectedChain.source_project_transport
-    (C := C) (D := D) (F.coherent i k hik) b c hai z
-  dsimp [C, D, b, c, ProtectedPrefix.restriction,
-    ProtectedChain.reindex] at ht
-  have hz :
-      ProtectedStage.castSourcePoint
-          (congrArg
-            (fun E : ProtectedChain (ι := Set.Iic i.1) ((1 : ℝ) / 2) 1 =>
-              E.stage ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩)
-            (F.coherent i k hik)) z = x := by
-    dsimp [z]
-    have heq :
-        congrArg
-            (fun E : ProtectedChain (ι := Set.Iic i.1) ((1 : ℝ) / 2) 1 =>
-              E.stage ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩)
-            (F.coherent i k hik) = F.stageEq i k hik :=
-      Subsingleton.elim _ _
-    rw [heq]
-    exact ProtectedStage.castSourcePoint_apply_symm (F.stageEq i k hik) x
-  have ht' := ht.trans (congrArg
-    ((F.item i).chain.sourceSystem.project
-      ⟨a.1, hai⟩ ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩ hai) hz)
-  change
+  have h := transportedMap_congr
+    (fun S : ProtectedStage.{0} ((1 : ℝ) / 2) => S.source)
     ProtectedStage.castSourcePoint
-        (congrArg
-          (fun E : ProtectedChain (ι := Set.Iic i.1) ((1 : ℝ) / 2) 1 =>
-            E.stage ⟨a.1, hai⟩)
-          (F.coherent i k hik))
-        ((F.item k).chain.sourceSystem.project
-          ⟨a.1, hai.trans hik⟩ ⟨i.1, hik⟩ hai z) =
-      (F.item i).chain.sourceSystem.project
-        ⟨a.1, hai⟩ ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩ hai x at ht'
-  dsimp [z] at ht'
-  have hfactor : F.stageEq a k (hai.trans hik) =
-      (congrArg
-        (fun E : ProtectedChain (ι := Set.Iic i.1) ((1 : ℝ) / 2) 1 =>
-          E.stage ⟨a.1, hai⟩)
-        (F.coherent i k hik)).trans (F.stageEq a i hai) :=
-    Subsingleton.elim _ _
-  rw [hfactor]
-  let ea := congrArg
-    (fun E : ProtectedChain (ι := Set.Iic i.1) ((1 : ℝ) / 2) 1 =>
-      E.stage ⟨a.1, hai⟩) (F.coherent i k hik)
-  let p := (F.item k).chain.sourceSystem.project
-    ⟨a.1, hai.trans hik⟩ ⟨i.1, hik⟩ hai
-    (ProtectedStage.castSourcePoint (F.stageEq i k hik).symm x)
-  change ProtectedStage.castSourcePoint ea p =
-    (F.item i).chain.sourceSystem.project
-      ⟨a.1, hai⟩ ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩ hai x at ht'
-  calc
-    ProtectedStage.castSourcePoint (ea.trans (F.stageEq a i hai)) p =
-        ProtectedStage.castSourcePoint (F.stageEq a i hai)
-          (ProtectedStage.castSourcePoint ea p) :=
-      (ProtectedStage.castSourcePoint_trans ea (F.stageEq a i hai) p).symm
-    _ = _ := by
-      dsimp [ea, p]
-      rw [ht']
+    (fun C : ProtectedChain (ι := Set.Iic i.1) ((1 : ℝ) / 2) 1 => C.stage c)
+    (fun C => C.stage b) (fun C => C.sourceSystem.project b c hai)
+    (F.coherent i k hik) (F.stageEq i k hik) rfl
+    (F.stageEq a k (hai.trans hik)) (F.stageEq a i hai) x
+  dsimp [b, c, ProtectedPrefix.restriction, ProtectedChain.reindex] at h
+  simpa only [RelEmbedding.coe_mk, Function.Embedding.coeFn_mk,
+    ProtectedStage.castSourcePoint_rfl] using! h
 
 theorem target_cast_project_eq_later (a i k : Set.Iio j)
     (hai : a ≤ i) (hik : i ≤ k) (x : (F.stage i).target) :
@@ -295,69 +197,18 @@ theorem target_cast_project_eq_later (a i k : Set.Iio j)
       ProtectedStage.castTargetPoint (F.stageEq a i hai)
         ((F.item i).chain.targetSystem.project
           ⟨a.1, hai⟩ ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩ hai x) := by
-  let C := ((F.item k).restriction hik).chain
-  let D := (F.item i).chain
   let b : Set.Iic i.1 := ⟨a.1, hai⟩
   let c : Set.Iic i.1 := ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩
-  let z : (C.stage c).target :=
-    ProtectedStage.castTargetPoint (F.stageEq i k hik).symm x
-  have ht := ProtectedChain.target_project_transport
-    (C := C) (D := D) (F.coherent i k hik) b c hai z
-  dsimp [C, D, b, c, ProtectedPrefix.restriction,
-    ProtectedChain.reindex] at ht
-  have hz :
-      ProtectedStage.castTargetPoint
-          (congrArg
-            (fun E : ProtectedChain (ι := Set.Iic i.1) ((1 : ℝ) / 2) 1 =>
-              E.stage ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩)
-            (F.coherent i k hik)) z = x := by
-    dsimp [z]
-    have heq :
-        congrArg
-            (fun E : ProtectedChain (ι := Set.Iic i.1) ((1 : ℝ) / 2) 1 =>
-              E.stage ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩)
-            (F.coherent i k hik) = F.stageEq i k hik :=
-      Subsingleton.elim _ _
-    rw [heq]
-    exact ProtectedStage.castTargetPoint_apply_symm (F.stageEq i k hik) x
-  have ht' := ht.trans (congrArg
-    ((F.item i).chain.targetSystem.project
-      ⟨a.1, hai⟩ ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩ hai) hz)
-  change
+  have h := transportedMap_congr
+    (fun S : ProtectedStage.{0} ((1 : ℝ) / 2) => S.target)
     ProtectedStage.castTargetPoint
-        (congrArg
-          (fun E : ProtectedChain (ι := Set.Iic i.1) ((1 : ℝ) / 2) 1 =>
-            E.stage ⟨a.1, hai⟩)
-          (F.coherent i k hik))
-        ((F.item k).chain.targetSystem.project
-          ⟨a.1, hai.trans hik⟩ ⟨i.1, hik⟩ hai z) =
-      (F.item i).chain.targetSystem.project
-        ⟨a.1, hai⟩ ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩ hai x at ht'
-  dsimp [z] at ht'
-  have hfactor : F.stageEq a k (hai.trans hik) =
-      (congrArg
-        (fun E : ProtectedChain (ι := Set.Iic i.1) ((1 : ℝ) / 2) 1 =>
-          E.stage ⟨a.1, hai⟩)
-        (F.coherent i k hik)).trans (F.stageEq a i hai) :=
-    Subsingleton.elim _ _
-  rw [hfactor]
-  let ea := congrArg
-    (fun E : ProtectedChain (ι := Set.Iic i.1) ((1 : ℝ) / 2) 1 =>
-      E.stage ⟨a.1, hai⟩) (F.coherent i k hik)
-  let p := (F.item k).chain.targetSystem.project
-    ⟨a.1, hai.trans hik⟩ ⟨i.1, hik⟩ hai
-    (ProtectedStage.castTargetPoint (F.stageEq i k hik).symm x)
-  change ProtectedStage.castTargetPoint ea p =
-    (F.item i).chain.targetSystem.project
-      ⟨a.1, hai⟩ ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩ hai x at ht'
-  calc
-    ProtectedStage.castTargetPoint (ea.trans (F.stageEq a i hai)) p =
-        ProtectedStage.castTargetPoint (F.stageEq a i hai)
-          (ProtectedStage.castTargetPoint ea p) :=
-      (ProtectedStage.castTargetPoint_trans ea (F.stageEq a i hai) p).symm
-    _ = _ := by
-      dsimp [ea, p]
-      rw [ht']
+    (fun C : ProtectedChain (ι := Set.Iic i.1) ((1 : ℝ) / 2) 1 => C.stage c)
+    (fun C => C.stage b) (fun C => C.targetSystem.project b c hai)
+    (F.coherent i k hik) (F.stageEq i k hik) rfl
+    (F.stageEq a k (hai.trans hik)) (F.stageEq a i hai) x
+  dsimp [b, c, ProtectedPrefix.restriction, ProtectedChain.reindex] at h
+  simpa only [RelEmbedding.coe_mk, Function.Embedding.coeFn_mk,
+    ProtectedStage.castTargetPoint_rfl] using! h
 
 /-- Glue a compatible family of closed prefixes into one protected chain on
 the open initial segment. -/
