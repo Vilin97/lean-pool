@@ -321,7 +321,7 @@ noncomputable def handleHH (a : HChart M) (b : HChart M) (h : Overlap a.source b
   have hne : φ.source.Nonempty := by
     rw [hφ]
     exact Set.Nonempty.inl (h.1.mono Set.inter_subset_left)
-  exact φ.toHomeomorphOfCompactTarget hne hs
+  exact OneMfld.OpenPartialHomeomorph.toHomeomorphOfCompactTarget φ hne hs
 
 omit [ConnectedSpace M] in
 /-- An O-chart and an H-chart with connected overlap glue to an H-chart on the union:
@@ -457,7 +457,7 @@ noncomputable def circleOfDisconnectedOverlap (a : OChart M) (b : OChart M)
   have hne : f'.source.Nonempty := by
     rw [hfs']
     exact Set.Nonempty.inl (h.1.mono Set.inter_subset_left)
-  exact f'.toHomeomorphOfCompactTarget hne hft'
+  exact OneMfld.OpenPartialHomeomorph.toHomeomorphOfCompactTarget f' hne hft'
 
 /-- Glue two O-charts: with a connected overlap they merge into an O-chart on the union;
 with a disconnected overlap, `M` is a circle. -/
