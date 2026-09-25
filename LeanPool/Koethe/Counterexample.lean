@@ -37,7 +37,7 @@ in an arbitrary universe, a nil two-sided ideal `I ⊆ R`, and a matrix in `M_2(
 not nilpotent.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

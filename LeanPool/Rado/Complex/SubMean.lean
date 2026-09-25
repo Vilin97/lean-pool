@@ -22,7 +22,7 @@ principle on bounded opens. All are elementary consequences of the circle
 average inequality and a clopen argument.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology Metric MeasureTheory Real
 

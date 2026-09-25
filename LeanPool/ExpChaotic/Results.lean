@@ -26,7 +26,7 @@ escaping set, John Harrison's HOL Light formalisation of Misiurewicz's original 
 See `LeanPool.ExpChaotic` for attribution and the upstream source.
 -/
 
-@[expose] public section
+public section
 
 open Function Filter Set Metric
 

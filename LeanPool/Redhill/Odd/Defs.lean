@@ -23,7 +23,7 @@ The lower bound `s` for `primeChain` in `U` was originally `max 16 (F.sup id)`.
 This could be lowered because `strongSSC_vwTup` only requires `m ≤ s`, not `2m ≤ s`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace OddCase
@@ -33,6 +33,7 @@ open Nat Fin Finset
 variable (n : ℕ) (F : Finset ℕ)
 
 /-- The sum of `tup` over all indices save `n` and `n + 1`, i.e. the input `u` to `VWPair`. -/
+@[expose]
 def U : ℕ := 8 + ∑ i ∈ range n, primeChain (max 8 (F.sup id)) i
 
 /-- The `VWPair` generated from the inputs `u = U n F, m = max (U n F) (F.sup id)`. -/
@@ -40,13 +41,13 @@ def VW : VWPair (U n F) (max (U n F) (F.sup id)) := .of ..
 
 /-- We require `x` in `tup` to be a multiple of this number,
 an optimised version of the paper's `y`. -/
-def Y : ℕ :=
+@[expose] def Y : ℕ :=
   10 * (F.erase 0).prod id *
   (∏ i ∈ range n, primeChain (max 8 (F.sup id)) i) * (VW n F).v * (VW n F).w
 
 /-- The sequence of `(n + 5)`-tuples containing an infinite subsequence in `factorFreeTuples`
 whose qualities tend to `5 / 3`, assuming `n` is even and `0, 1, 2, 5, 10 ∉ F`. -/
-def tup (x : ℤ) (i : Fin (n + 5)) : ℤ :=
+@[expose] def tup (x : ℤ) (i : Fin (n + 5)) : ℤ :=
   i.addCases (primeChain (max 8 (F.sup id)) ·.1) fun
     | 0 => (VW n F).v
     | 1 => -(VW n F).w

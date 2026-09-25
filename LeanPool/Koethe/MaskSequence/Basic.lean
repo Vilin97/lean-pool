@@ -26,7 +26,7 @@ preserves this invariant.  Thus no limiting density or geometric-series
 calculation is needed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -36,6 +36,7 @@ namespace MaskSequence
 variable {k : Type*} [Field k]
 
 /-- All assignments, at all sites, of `M` persist in `N`. -/
+@[expose]
 def Extends (N M : PeriodicMask k) : Prop :=
   ∀ n z, M.lookup n = some z → N.lookup n = some z
 
@@ -133,7 +134,7 @@ def install (M : PeriodicMask k) (w : List (Triple k))
 
 @[simp] theorem install_period (M : PeriodicMask k) (w : List (Triple k))
     (hw : ∀ z ∈ w, z ≠ 0) :
-    (install M w hw).period = (4 * w.length + 1) * M.period := rfl
+    (install M w hw).period = (4 * w.length + 1) * M.period := by rfl
 
 theorem period_dvd_install (M : PeriodicMask k) (w : List (Triple k))
     (hw : ∀ z ∈ w, z ≠ 0) : M.period ∣ (install M w hw).period :=

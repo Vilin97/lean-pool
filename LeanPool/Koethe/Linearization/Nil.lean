@@ -28,7 +28,7 @@ multiplication by `x` preserves linearizability. At a generator this is the
 `prepend` construction; the multiplication step is then composition.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

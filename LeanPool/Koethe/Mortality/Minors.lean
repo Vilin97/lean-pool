@@ -17,7 +17,7 @@ This avoids choosing bases for exterior powers.  All matrix products in this
 file are ordinary products over a commutative scalar ring.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -33,7 +33,7 @@ variable {r : ℕ}
 
 /-- All minors of a specified size vanish.  Repeated rows or columns are allowed
 in the indexing functions; their determinants are automatically zero. -/
-def MinorsVanish (A : Matrix n n R) (r : ℕ) : Prop :=
+@[expose] def MinorsVanish (A : Matrix n n R) (r : ℕ) : Prop :=
   ∀ I J : Fin r → n, (A.submatrix I J).det = 0
 
 theorem det_submatrix_zero_of_not_injective (A : Matrix n m R)

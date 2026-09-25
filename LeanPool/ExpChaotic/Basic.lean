@@ -22,7 +22,7 @@ The initial proof architecture uses John Harrison's HOL Light formalisation.
 See `LeanPool.ExpChaotic` for attribution and the upstream source.
 -/
 
-@[expose] public section
+public section
 
 open Function Filter Set Metric
 open scoped Topology NNReal Uniformity
@@ -51,18 +51,21 @@ theorem expIterate_succ (n : ℕ) (z : ℂ) :
   simp [expIterate, exponentialMap, Function.iterate_succ_apply']
 
 /-- The closed horizontal strip used in Misiurewicz's proof. -/
-def centralStrip : Set ℂ := {z | |z.im| ≤ Real.pi / 3}
+@[expose] def centralStrip : Set ℂ := {z | |z.im| ≤ Real.pi / 3}
 
 /-- The right half-plane used in Misiurewicz's proof. -/
+@[expose]
 def rightHalfPlane : Set ℂ := {z | 4 < z.re}
 
 /-- The wider closed strip occurring in Lemma 5. -/
+@[expose]
 def wideStrip : Set ℂ := {z | |z.im| ≤ 2 * Real.pi}
 
 /-- A complex number lies on the embedded real axis. -/
-def OnRealAxis (z : ℂ) : Prop := z.im = 0
+@[expose] def OnRealAxis (z : ℂ) : Prop := z.im = 0
 
 /-- Some forward image of `V` meets the real axis. -/
+@[expose]
 def EventuallyMeetsRealAxis (V : Set ℂ) : Prop :=
   ∃ n : ℕ, ∃ z ∈ V, OnRealAxis (expIterate n z)
 

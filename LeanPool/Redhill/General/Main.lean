@@ -21,7 +21,7 @@ import Mathlib.Tactic.Positivity.Finset
 # The general case (Theorem 1.14)
 -/
 
-@[expose] public section
+public section
 
 
 namespace GeneralCase

@@ -21,7 +21,7 @@ integral sparsity bound is retained.  A pointwise choice then produces a
 nonzero sequence respecting every assignment at every stage.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -31,10 +31,12 @@ namespace MaskSequence
 variable {k : Type*} [Field k]
 
 /-- The word is installed at the beginning of a period, and fits in that period. -/
+@[expose]
 def Carries (M : PeriodicMask k) (w : List (Triple k)) : Prop :=
   w.length ≤ M.period ∧ ∀ i : Fin w.length, M.lookup i.val = some (w.get i)
 
 /-- A mask contains a periodically recurring mortal word for this pencil. -/
+@[expose]
 def Kills {d : ℕ} (M : PeriodicMask k) (P : Pencil k d) : Prop :=
   ∃ w : List (Triple k), Carries M w ∧ P.wordProd w = 0
 

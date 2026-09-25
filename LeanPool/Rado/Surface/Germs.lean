@@ -23,7 +23,7 @@ constant germ would force `u` to be constant), and every connected component
 projects onto all of a connected base.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex Filter
 
@@ -263,7 +263,7 @@ variable (u : X → ℝ) (Y : Set X)
 
 /-- The value of a germ at the base point of its filter (well defined because
 every neighbourhood of `y` contains `y`). -/
-noncomputable def germValue {y : X} (γ : Germ (𝓝 y) ℂ) : ℂ :=
+@[expose] noncomputable def germValue {y : X} (γ : Germ (𝓝 y) ℂ) : ℂ :=
   γ.liftOn (fun f ↦ f y) fun _ _ h ↦ h.self_of_nhds
 
 omit [ChartedSpace ℂ X] [IsManifold (modelWithCornersSelf ℂ ℂ) 1 X] in
@@ -280,7 +280,7 @@ theorem isOpen_eventuallyEq_nhds {F G : X → ℂ} : IsOpen {x : X | F =ᶠ[𝓝
 /-- The étale space of conjugate germs of `u` over `Y`: pairs of a point
 `y ∈ Y` and the germ at `y` of a conjugate of `u` defined on some open
 neighbourhood inside `Y`. -/
-def ConjEtale : Type _ :=
+@[expose] def ConjEtale : Type _ :=
   {p : Σ y : X, Germ (𝓝 y) ℂ // p.1 ∈ Y ∧
     ∃ V F, IsOpen V ∧ p.1 ∈ V ∧ V ⊆ Y ∧ IsConjugate u F V ∧ p.2 = (F : Germ (𝓝 p.1) ℂ)}
 
@@ -301,6 +301,7 @@ instance : TopologicalSpace (ConjEtale u Y) :=
   TopologicalSpace.generateFrom (basicSets u Y)
 
 /-- The projection to the surface. -/
+@[expose]
 def proj (q : ConjEtale u Y) : X := q.1.1
 
 /-- The evaluation map. -/

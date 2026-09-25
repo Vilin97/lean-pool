@@ -25,7 +25,7 @@ The real-manifold analogue is false (Prüfer surface, long line), so the proof
 must use the complex structure in an essential way.
 -/
 
-@[expose] public section
+public section
 
 theorem rado_riemannSurface {X : Type*} [TopologicalSpace X] [T2Space X]
     [ConnectedSpace X] [ChartedSpace ℂ X]

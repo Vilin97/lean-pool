@@ -16,7 +16,7 @@ in `RatFunc k` are invertible. Reciprocal prefix products produce a genuine
 (non-finitely-supported) eigenvector on the full function space.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

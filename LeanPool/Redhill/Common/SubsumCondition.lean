@@ -18,7 +18,7 @@ public import Mathlib.Algebra.Order.Ring.Nat
 # Subsum conditions
 -/
 
-@[expose] public section
+public section
 
 
 open Finset SignType
@@ -27,16 +27,17 @@ variable {n k : ℕ} (a : Fin n → ℤ)
 
 /-- The subsum condition: any subset of the tuple summing to 0
 is either empty or the whole tuple. -/
-def SSC : Prop :=
+@[expose] def SSC : Prop :=
   ∀ b, b.Nonempty → bᶜ.Nonempty → ∑ i ∈ b, a i ≠ 0
 
 /-- A subsum block for `a` is an index set that must be constant in any sign weighting
 of the tuple's elements that leads to a zero sum. -/
+@[expose]
 def IsSubsumBlock (s : Finset (Fin n)) : Prop :=
   ∀ b : Fin n → SignType, ∑ i, b i * a i = 0 → ∃ c, ∀ i ∈ s, b i = c
 
 /-- The strong subsum condition, defined as all `Fin n` being a subsum block. -/
-def StrongSSC : Prop :=
+@[expose] def StrongSSC : Prop :=
   IsSubsumBlock a univ
 
 variable {a}
@@ -129,7 +130,7 @@ section TupReduce
 variable (s : Finset (Fin n)) (hk : k = n - #s)
 
 /-- The order-preserving bijection from `Fin k` to `sᶜ`, where `k = n - #s`. -/
-def complRank (i : Fin k) : Fin n :=
+@[expose] def complRank (i : Fin k) : Fin n :=
   sᶜ.orderEmbOfFin (by simp [card_compl]) (i.cast hk)
 
 lemma complRank_01 : complRank {0, 1} (n.add_sub_cancel 2).symm = (Fin.addNat · 2) :=
@@ -139,7 +140,7 @@ variable (a) in
 /-- `tupReduce a s hk` is the tuple with `∑ i ∈ s, a i` at the last index
 and the remaining elements of `a` appended in order.
 `hk : k = n - #s` mitigates definitional equality problems. -/
-def tupReduce : Fin (k + 1) → ℤ :=
+@[expose] def tupReduce : Fin (k + 1) → ℤ :=
   Fin.lastCases (∑ i ∈ s, a i) fun i ↦ a (complRank s hk i)
 
 variable {s hk}

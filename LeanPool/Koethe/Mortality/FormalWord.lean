@@ -23,7 +23,7 @@ The common-zero theorem is applied to the coefficients of a single pivot
 minor.  Its equation count is the full word length plus one.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -46,11 +46,13 @@ def letterCoeffs [Field k] : FormalLetter k N → Fin 3 → HoleRing k N
 
 /-- The multidegree of a formal letter: zero for a fixed letter, one unit of its block for a
 hole. -/
+@[expose]
 def letterDegree : FormalLetter k N → Fin N → ℕ
   | .inl _ => 0
   | .inr b => blockUnit b
 
 /-- Specialize a formal letter at an assignment of the hole variables. -/
+@[expose]
 def specializeLetter (x : (Fin N × Fin 3) → k) : FormalLetter k N → Triple k
   | .inl a => a
   | .inr b => fun j => x (b, j)

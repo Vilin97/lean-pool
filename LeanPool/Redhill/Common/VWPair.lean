@@ -32,7 +32,7 @@ because 29 and 31 are big primes.
 The coprimality condition only requires `0 < u ≤ m` and is proved separately.
 -/
 
-@[expose] public section
+public section
 
 
 open Nat Finset
@@ -201,7 +201,7 @@ variable {n m s B : ℕ} {vw : VWPair (m + ∑ i ∈ range n, primeChain s i) B}
 
 variable (vw) in
 /-- An `(n + 3)`-tuple reducing to `chainTup n m s`. -/
-def vwTup (i : Fin (n + 3)) : ℤ :=
+@[expose] def vwTup (i : Fin (n + 3)) : ℤ :=
   i.addCases (primeChain s ·.1) fun
     | 0 => vw.v
     | 1 => -vw.w

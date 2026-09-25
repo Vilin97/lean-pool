@@ -14,7 +14,7 @@ import Mathlib.RingTheory.Coprime.Lemmas
 # Pairwise coprimality
 -/
 
-@[expose] public section
+public section
 
 
 /-- A predicate stating that the given tuple's numbers are pairwise coprime. -/

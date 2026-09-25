@@ -24,7 +24,7 @@ Point-set topology preliminaries for the Poincaré–Volterra lemma
 All statements are pure topology, independent of the rest of the development.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology
 
