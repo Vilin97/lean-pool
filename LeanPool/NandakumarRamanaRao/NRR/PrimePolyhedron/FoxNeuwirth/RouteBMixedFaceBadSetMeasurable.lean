@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBCanonicalCoordinateSplit
-import Mathlib.Topology.Maps.Proper.Basic
-import Mathlib.MeasureTheory.Measure.Prod
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBCanonicalCoordinateSplit
+public import Mathlib.Topology.Maps.Proper.Basic
+public import Mathlib.MeasureTheory.Measure.Prod
 /-!
 # Route B: measurability of the complete mixed-face bad set
 
@@ -17,6 +19,8 @@ threshold relation is closed in parameter space times the simplex, and its
 projection is closed because the simplex is compact.  Hence the complete bad
 set is a countable union of closed sets.
 -/
+
+@[expose] public section
 
 namespace NRR
 

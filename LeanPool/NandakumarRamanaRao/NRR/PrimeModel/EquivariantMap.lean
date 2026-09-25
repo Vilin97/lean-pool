@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.FixedVectors
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.FixedVectors
 
 /-!
 # Elementary equivariant-map API
@@ -12,6 +14,8 @@ import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.FixedVectors
 This file deliberately stays below the PL and obstruction-theory layers. It records only the
 pointwise equations needed by the configuration-model construction.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -25,13 +29,13 @@ def IsPrimeEquivariant
     (f : X → Y) : Prop :=
   ∀ (g : PrimeSymmetry p) (x : X), f (g • x) = g • f x
 
- theorem IsPrimeEquivariant.id
+theorem IsPrimeEquivariant.id
     [MulAction (PrimeSymmetry p) X] :
     IsPrimeEquivariant (p := p) (fun x : X => x) := by
   intro g x
   rfl
 
- theorem IsPrimeEquivariant.comp
+theorem IsPrimeEquivariant.comp
     [MulAction (PrimeSymmetry p) X]
     [MulAction (PrimeSymmetry p) Y]
     [MulAction (PrimeSymmetry p) Z]
@@ -43,7 +47,7 @@ def IsPrimeEquivariant
   change g (f (a • x)) = a • g (f x)
   rw [hf a x, hg a (f x)]
 
- theorem IsPrimeEquivariant.const_zero
+theorem IsPrimeEquivariant.const_zero
     [MulAction (PrimeSymmetry p) X]
     [Zero Y] [MulAction (PrimeSymmetry p) Y]
     (hzero : ∀ g : PrimeSymmetry p, g • (0 : Y) = 0) :
@@ -57,7 +61,7 @@ def IsPrimeInvariant
     (S : Set X) : Prop :=
   ∀ (g : PrimeSymmetry p) (x : X), x ∈ S → g • x ∈ S
 
- theorem IsPrimeEquivariant.preimage_invariant
+theorem IsPrimeEquivariant.preimage_invariant
     [MulAction (PrimeSymmetry p) X]
     [MulAction (PrimeSymmetry p) Y]
     {f : X → Y} {T : Set Y}
@@ -69,7 +73,7 @@ def IsPrimeInvariant
   rw [hf g x]
   exact hT g (f x) hx
 
- theorem IsPrimeEquivariant.zeroSet_invariant
+theorem IsPrimeEquivariant.zeroSet_invariant
     [MulAction (PrimeSymmetry p) X]
     [Zero Y] [MulAction (PrimeSymmetry p) Y]
     {f : X → Y} (hf : IsPrimeEquivariant (p := p) f)
@@ -91,7 +95,7 @@ theorem PrimeSymmetry.smulParamProd_one
     PrimeSymmetry.smulParamProd (p := p) (1 : PrimeSymmetry p) z = z := by
   ext <;> simp [PrimeSymmetry.smulParamProd]
 
- theorem PrimeSymmetry.smulParamProd_mul
+theorem PrimeSymmetry.smulParamProd_mul
     [MulAction (PrimeSymmetry p) X]
     (g h : PrimeSymmetry p) (z : P × X) :
     PrimeSymmetry.smulParamProd (p := p) (g * h) z =

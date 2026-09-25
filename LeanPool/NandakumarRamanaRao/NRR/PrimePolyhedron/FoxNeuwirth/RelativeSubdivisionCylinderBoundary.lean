@@ -3,11 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import
-  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionCylinderCombinatorics
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteSimplexDoubleBoundary
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionCylinderCombinatorics
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteSimplexDoubleBoundary
 /-!
 # Oriented boundary of the recursive one-step subdivision cylinder
 
@@ -25,6 +26,8 @@ The theorem is stated for arbitrary weights on ordered geometric vertex tuples. 
 to be the characteristic function of one quotient-facet class gives the pointwise incidence
 identity needed by the global Fox--Neuwirth collar.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

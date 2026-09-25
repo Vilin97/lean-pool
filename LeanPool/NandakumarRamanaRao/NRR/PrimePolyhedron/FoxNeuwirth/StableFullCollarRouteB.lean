@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableFullCollarOriginMarginAffinePullback
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBStepsOneToSix
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableFullCollarOriginMarginAffinePullback
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBStepsOneToSix
 
 /-!
 # Route B on the concrete affine-pullback full collar
@@ -20,6 +22,8 @@ two geometric certificates on the concrete collar:
 The latter is converted internally into a genuine positive-radius facet-regular neighborhood by
 `RouteB.exists_safePerturbationBall`.
 -/
+
+@[expose] public section
 
 namespace NRR
 

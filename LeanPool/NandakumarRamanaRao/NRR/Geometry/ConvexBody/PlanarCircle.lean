@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthContinuity
+
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthContinuity
 
 /-!
 # `NRR.Geometry.ConvexBody` — the angle parameterization of the unit circle
@@ -37,6 +39,8 @@ unit-sphere subtype), we parameterize directions by the interval `[0, 2π]` via 
 
 The width-function continuity API and interval-integrability lemmas are imported directly.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 
@@ -84,7 +88,7 @@ theorem continuous_circleVec : Continuous circleVec := by
   apply (PiLp.homeomorph 2 (fun _ : Fin 2 => ℝ)).symm.continuous.comp
   rw [continuous_pi_iff]
   intro i
-  fin_cases i <;> simp <;> fun_prop
+  fin_cases i <;> simp? <;> fun_prop
 
 /-- The angle parameterization is `2π`-periodic. -/
 theorem circleVec_periodic : Function.Periodic circleVec (2 * Real.pi) := by

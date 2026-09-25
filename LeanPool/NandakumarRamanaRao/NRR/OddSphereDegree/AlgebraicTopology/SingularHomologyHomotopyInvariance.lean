@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.HomotopyInvariance
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.Backports.PrismSimplicialHomotopy
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.HomotopyInvariance
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.Backports.PrismSimplicialHomotopy
 
 /-!
 # Homotopy invariance of singular homology — unconditional
@@ -25,6 +27,8 @@ homotopy-invariance results below are **unconditional**.
 Integer coefficients (`ModuleCat.{0} ℤ`), the case relevant to the topological
 degree of sphere maps.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 

@@ -3,14 +3,16 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.AlgebraicTopology.SingularHomology.Basic
-import Mathlib.Topology.Homotopy.Basic
-import Mathlib.AlgebraicTopology.SimplicialSet.StdSimplex
-import Mathlib.AlgebraicTopology.SimplicialSet.TopAdj
-import Mathlib.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
-import Mathlib.Analysis.Convex.StdSimplex
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.HomotopyToChainHomotopy
+
+public import Mathlib.AlgebraicTopology.SingularHomology.Basic
+public import Mathlib.Topology.Homotopy.Basic
+public import Mathlib.AlgebraicTopology.SimplicialSet.StdSimplex
+public import Mathlib.AlgebraicTopology.SimplicialSet.TopAdj
+public import Mathlib.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
+public import Mathlib.Analysis.Convex.StdSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.HomotopyToChainHomotopy
 /-!
 # Singular prism construction
 
@@ -19,6 +21,8 @@ singular simplicial-set functor. The endpoint identities connect this
 construction to the algebraic simplicial-homotopy and chain-homotopy machinery
 used by the singular-homology homotopy-invariance proof.
 -/
+
+@[expose] public section
 open CategoryTheory Limits AlgebraicTopology Simplicial
 
 namespace SphereOddDegree
@@ -203,7 +207,8 @@ theorem cylinder_sect_zero {X Y : TopCat.{0}} {f g : X ⟶ Y}
     (H : ContinuousMap.Homotopy f.hom g.hom) :
     sect X 0 ≫ cylinder H = TopCat.toSSet.map f := by
   unfold cylinder sect;
-  convert congr_arg ( fun x => x ≫ TopCat.toSSet.map ( homotopyMap H ) ) ( lift_const_comp_iso_inv X 0 ) using 1;
+  convert congr_arg ( fun x => x ≫ TopCat.toSSet.map ( homotopyMap H ) ) (
+    lift_const_comp_iso_inv X 0 ) using 1;
   · simp +decide [ ← Category.assoc, ← edge_vtx_zero ];
   · rw [ ← Functor.map_comp, homotopyMap_zero ]
 
@@ -212,8 +217,9 @@ along the end inclusion. -/
 theorem cylinder_sect_one {X Y : TopCat.{0}} {f g : X ⟶ Y}
     (H : ContinuousMap.Homotopy f.hom g.hom) :
     sect X 1 ≫ cylinder H = TopCat.toSSet.map g := by
-  unfold sect cylinder; simp +decide [ ← Category.assoc ];
-  convert congr_arg ( fun x => x ≫ TopCat.toSSet.map ( homotopyMap H ) ) ( lift_const_comp_iso_inv X 1 ) using 1;
+  unfold sect cylinder; simp? +decide [ ← Category.assoc ];
+  convert congr_arg ( fun x => x ≫ TopCat.toSSet.map ( homotopyMap H ) ) (
+    lift_const_comp_iso_inv X 1 ) using 1;
   · rw [ edge_vtx_one ];
   · rw [ ← Functor.map_comp, homotopyMap_one ]
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
 
 /-!
 # `NRR.Partition.ConvexPartition` — the shared convex‑partition structure
@@ -38,6 +40,8 @@ what finite measure additivity needs and what power/Voronoi partitions actually 
 
 Area additivity itself is intentionally *not* proved here.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

@@ -3,16 +3,19 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomologyReduction
-import Mathlib.CategoryTheory.Limits.Shapes.Kernels
-import Mathlib.Algebra.Category.ModuleCat.Abelian
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomologyReduction
+public import Mathlib.CategoryTheory.Limits.Shapes.Kernels
+public import Mathlib.Algebra.Category.ModuleCat.Abelian
 
 /-!
 # Reduced-to-unreduced bridge for sphere top homology
 
 This file builds the **genuine** reduced-to-unreduced comparison for integral
-singular homology and uses it to reduce the positive-dimensional sphere top-homology family to the corresponding *reduced* statement.
+singular homology and uses it to reduce the positive-dimensional sphere top-homology family to the
+corresponding *reduced* statement.
 
 ## Reduced homology, honestly
 
@@ -65,6 +68,8 @@ the **reduced suspension isomorphism** `H_tildeₖ(Sⁿ) ≅ H_tildeₖ₋₁(S�
 Mathlib. Consequently `SphereSuspensionTower.step` is **not** fillable from this
 choice`, `Quot.sound`).
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits AlgebraicTopology
 

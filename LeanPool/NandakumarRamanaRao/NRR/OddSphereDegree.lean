@@ -3,32 +3,36 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Antipodal
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AntipodalDegree
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.BallBoundaryLES
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Basic
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ConstructRPAlpha
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Covering
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DegreeAPIStrengthening
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DegreeFunctorialityAndHomotopy
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DegreePositiveIntegration
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DoubleCoverClass
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.FinalOddMapComparison
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ModTwoDegreeComparison
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Monodromy
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.MonodromyCharacter
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.MonodromyNontrivial
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnCohomologyRingBridge
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnCohomologyRingModel
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnLowDimensional
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnTopClassAlphaPower
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RealProjectiveSpace
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ReducedToUnreducedSphereTopHomology
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomology
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomologyReduction
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.TopCatBridge
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.UnconditionalDegree
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Antipodal
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AntipodalDegree
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.BallBoundaryLES
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ConstructRPAlpha
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Covering
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DegreeAPIStrengthening
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DegreeFunctorialityAndHomotopy
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DegreePositiveIntegration
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DoubleCoverClass
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.FinalOddMapComparison
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ModTwoDegreeComparison
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Monodromy
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.MonodromyCharacter
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.MonodromyNontrivial
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnCohomologyRingBridge
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnCohomologyRingModel
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnLowDimensional
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnTopClassAlphaPower
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RealProjectiveSpace
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ReducedToUnreducedSphereTopHomology
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomology
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomologyReduction
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.TopCatBridge
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.UnconditionalDegree
 
 /-! Supporting modules for Equal-area and equal-perimeter convex partitions. -/
+
+@[expose] public section

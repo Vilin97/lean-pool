@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.SignedInterval
+
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.SignedInterval
 
 /-!
 # `NRR.Multivalued.Nice` — nice multivalued functions
@@ -18,6 +20,8 @@ continuous scalar observable together with the two strict endpoint sign conditio
 provides the evaluation projection, its continuity, extensionality reducing equality to pointwise
 equality, the endpoint sign lemmas, and a constructor from an unbundled continuous function.
 -/
+
+@[expose] public section
 
 namespace NRR
 

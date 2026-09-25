@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AlexanderWhitneyChainMap
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AlexanderWhitneyChainMap
 
 /-!
 # Cochain cup Leibniz identity and its descent consequences
@@ -47,6 +49,8 @@ degree `p+(q+1)`; both are transported to the common degree `(p+q)+1` via the
 cochain degree cast `cochainCast` (with `p+(q+1) = (p+q)+1` definitional and
 `(p+1)+q = (p+q)+1` propositional via `aw_degree_left_succ`).
 -/
+
+@[expose] public section
 
 open CategoryTheory
 open SphereOddDegree.AlexanderWhitney

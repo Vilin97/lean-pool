@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DegreeFunctorialityAndHomotopy
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DegreeFunctorialityAndHomotopy
 
 /-!
 # Degree of the antipodal map
@@ -15,6 +17,8 @@ antipodal map with ambient negation. The exact integer formula
 `DegreeEqAmbientDet`, the standard bridge from an orthogonal linear map to the sign of its
 determinant.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -68,7 +72,8 @@ theorem odd_degreeOfIso_antipodal {n : ℕ} (e : SphereTopHomologyIso n) :
   rcases degreeOfIso_antipodal_eq_one_or_neg_one e with h | h <;> rw [h] <;> decide
 
 /-- **The degree of the antipodal map is `≡ 1 (mod 2)`** (relative to any chosen
-`e`). This is the parity statement `degree(antipodal) ≡ 1 mod 2` expressed as an integer remainder statement. -/
+`e`). This is the parity statement `degree(antipodal) ≡ 1 mod 2` expressed as an integer remainder
+statement. -/
 theorem degreeOfIso_antipodal_emod_two {n : ℕ} (e : SphereTopHomologyIso n) :
     degreeOfIso e (antipodal n) % 2 = 1 :=
   Int.odd_iff.mp (odd_degreeOfIso_antipodal e)

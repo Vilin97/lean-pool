@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StablePatchedHomotopyFineMargin
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StablePatchedHomotopyFineMargin
 
 /-!
 # Full-collar origin-margin packaging
@@ -20,6 +22,8 @@ The structure `FineFullCollarData` packages a compatible simplicial retraction/P
 the lower and upper subdivision stacks together with the controlled middle prism. All results in
 this file are theorem-level consequences of that data.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -66,7 +70,8 @@ structure FineFullCollarData
     AvoidsOrigin (localVertexMap hp collar.cells assignment q)
 
 /-- Item 4, expressed as the exact construction proposition still required from the endpoint-stack
-geometry.  This is a named target, not an assumed theorem and not a field of the final AAK result. -/
+geometry.  This is a named target, not an assumed theorem and not a field of the final AAK result.
+-/
 def FineFullCollarConstructionTheorem : Prop :=
   ∀ {p : Nat} (hp : Nat.Prime p)
     (F₀ F₁ : ZeroFreeMap hp)

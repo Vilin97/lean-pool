@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CanonicalConfiguration
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.Model
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CanonicalConfiguration
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.Model
 /-!
 # Topological realization of the Fox--Neuwirth order complex
 
@@ -25,6 +27,8 @@ If two labels are in different blocks there, their first-coordinate order persis
 strict at the chosen cell.  If they are in the same block, their common block persists and their
 rank order persists strictly.  The barycentric average therefore cannot identify the labels.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -94,7 +98,7 @@ def pairConstraint (a b : BarredPermutation p) :
 theorem isClosed_pairConstraint (a b : BarredPermutation p) :
     IsClosed (pairConstraint a b) := by
   by_cases h : PairCompatible a b
-  · simpa [pairConstraint, h]
+  · simp [pairConstraint, h]
   · have ha : IsClosed {weight : BarredPermutation p → Real | weight a = 0} :=
       isClosed_eq (continuous_apply a) continuous_const
     have hb : IsClosed {weight : BarredPermutation p → Real | weight b = 0} :=

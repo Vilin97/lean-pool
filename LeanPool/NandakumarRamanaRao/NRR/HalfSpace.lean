@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Algebra.Order.Archimedean.Real.Hom
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.HalfspaceCut
+
+public import Mathlib.Algebra.Order.Archimedean.Real.Hom
+public import Mathlib.Algebra.Ring.IsFormallyReal
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.HalfspaceCut
 
 /-!
 # `NRR.HalfSpace` — public halfspace definitions
@@ -16,6 +18,8 @@ import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.HalfspaceCut
 Provides the set-theoretic lower and upper halfspaces used throughout the cut and power-diagram
 layers. Measure-theoretic and continuity results live in the dedicated halfspace-cut modules.
 -/
+
+@[expose] public section
 
 open NRR
 open scoped RealInnerProductSpace

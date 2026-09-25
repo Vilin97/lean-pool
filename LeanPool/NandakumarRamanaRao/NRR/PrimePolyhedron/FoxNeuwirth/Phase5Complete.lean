@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CellAtlas
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.PrimeBoundary
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CellAtlas
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.PrimeBoundary
 
 /-!
 # Fox–Neuwirth prime configuration model
@@ -17,6 +19,8 @@ configurations, and the first-coordinate zero-sum reference map.
 The signed cellular cycle, orientation comparison, and nonzero orbit count are not postulated here.
 They provide the finite model used by the obstruction argument.
 -/
+
+@[expose] public section
 
 namespace NRR
 

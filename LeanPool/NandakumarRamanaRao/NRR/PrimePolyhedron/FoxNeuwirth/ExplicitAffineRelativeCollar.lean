@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericityPolynomials
-import Mathlib.Algebra.MvPolynomial.Eval
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericityPolynomials
+public import Mathlib.Algebra.MvPolynomial.Eval
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 /-!
 # Explicit affine relative collars and boundary-restricted genericity polynomials
 
@@ -16,7 +18,8 @@ This module defines the affine-cell interface used by the relative-cobordism con
 A `RelativeAffineCellSystem` is finite proof-carrying data for a genuine simplicial cylinder:
 its top cells are prime-orbit representatives with ordered geometric vertices, injective affine
 charts, and coefficients.  Prime equivariance is reconstructed from symmetry-decorated local
-vertex occurrences rather than by imposing an action on the chosen orbit representatives.  A `FoxNeuwirthRelativeAffineCollar` adds the exact signed facet-incidence formula
+vertex occurrences rather than by imposing an action on the chosen orbit representatives.  A
+`FoxNeuwirthRelativeAffineCollar` adds the exact signed facet-incidence formula
 for independently subdivided lower and upper boundaries.
 
 The second half of the file constructs the global point-coordinate orbit quotient directly from
@@ -30,6 +33,8 @@ are handled by the dedicated geometric and boundary-aware algebraic modules. Pur
 codimension-two minors are governed by stable endpoint transversality rather than the movable
 genericity family.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -469,7 +474,7 @@ noncomputable def IsFrozenParameter : Parameter hp C → Prop :=
       change MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp C) a b at hab
       rw [MulAction.orbitRel_apply] at hab
       rcases hab with ⟨g, rfl⟩
-      simpa using propext (isFrozenVertex_smul hp C g b.1))
+      simp)
 
 /-- Frozen horizontal scalar parameter orbits. -/
 abbrev FrozenParameter := {q : Parameter hp C // IsFrozenParameter hp C q}

@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBFullBadSetNullity
-import Mathlib.Topology.Algebra.MvPolynomial
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBFullBadSetNullity
+public import Mathlib.Topology.Algebra.MvPolynomial
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 /-!
 # Route B, Step 6: small generic relative perturbation
 
@@ -20,6 +22,8 @@ The incidence analysis is organized by positive support:
 
 Step 5 supplies the bad-set nullity certificates internally.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -325,8 +329,6 @@ theorem exists_safePerturbationBall
           _ ≤ |x sm - center sm| + |center sm - base s| := abs_add_le _ _
       have hsum : |x sm - center sm| + |center sm - base s| < control := by
         rw [← hbase]
-        change |x sm - center sm| +
-          |center sm - baseMovableParameters hp C base sm| < control
         dsimp [quarter] at hcoord hcb
         linarith
       simpa [assignmentOfMovableParameters, replaceMovable, hs, sm] using

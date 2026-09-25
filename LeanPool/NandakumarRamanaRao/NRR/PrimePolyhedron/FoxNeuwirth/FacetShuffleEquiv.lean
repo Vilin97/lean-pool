@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ActualCellularBoundary
-import Mathlib.Data.Fintype.Sort
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ActualCellularBoundary
+public import Mathlib.Data.Fintype.Sort
 /-!
 # Facet extensions and shuffles
 
@@ -15,6 +17,8 @@ of positions occupied by the first block. This module constructs the inverse int
 proves the resulting equivalence with `ShuffleIndex`, and closes the genuine cellular-cycle
 calculation modulo a prime.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -51,7 +55,7 @@ noncomputable def facetLabelSumEquiv
     split_ifs with hi
     · simp
     · have hge : facetLeftSize hp a ha ≤ (a.rank i).1 := Nat.le_of_not_gt hi
-      simpa [Nat.add_sub_of_le hge]
+      simp [Nat.add_sub_of_le hge]
   right_inv x := by
     rcases x with i | i
     · dsimp
@@ -67,7 +71,7 @@ theorem shuffle_compl_card
     (s : ShuffleIndex p (facetLeftSize hp a ha)) :
     s.1ᶜ.card = p - facetLeftSize hp a ha := by
   rw [Finset.card_compl]
-  simpa [s.2]
+  simp [s.2]
 
 /-- Increasing merge of the two ordered blocks into the positions selected by a shuffle. -/
 noncomputable def shuffleMergeEquiv
@@ -86,7 +90,8 @@ noncomputable def shuffleRank
     Equiv.Perm (Fin p) :=
   (facetLabelSumEquiv hp a ha).trans (shuffleMergeEquiv hp a ha s)
 
-/-- On a first-block label, `shuffleRank` is the increasing enumeration of the selected positions. -/
+/-- On a first-block label, `shuffleRank` is the increasing enumeration of the selected positions.
+-/
 theorem shuffleRank_apply_left
     (hp : Nat.Prime p) (a : BarredPermutation p)
     (ha : a.dualDimension = p - 2)
@@ -191,7 +196,7 @@ theorem firstBlockPositions_shuffleToTopExtension
     firstBlockPositions hp a ha (shuffleToTopExtension hp a ha s).1 = s.1 := by
   unfold firstBlockPositions
   -- The TopCell.rank equals shuffleRank
-  simp [shuffleToTopExtension, BarredPermutation.TopCell.ofPerm_rank]
+  simp? [shuffleToTopExtension, BarredPermutation.TopCell.ofPerm_rank]
   -- Use shuffleRank_apply_left to rewrite the image
   have himage : Finset.image (fun i : FirstBlockLabel hp a ha =>
       shuffleRank hp a ha s i.1) Finset.univ =
@@ -270,7 +275,7 @@ noncomputable def topExtensionLeftOrderEmb
     intro r s hrs
     have heq := (((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank.injective hrs)
     have := congr_arg a.rank heq
-    simp at this
+    simp? at this
     exact Fin.ext this
   map_rel_iff' := by
     intro r₁ r₂

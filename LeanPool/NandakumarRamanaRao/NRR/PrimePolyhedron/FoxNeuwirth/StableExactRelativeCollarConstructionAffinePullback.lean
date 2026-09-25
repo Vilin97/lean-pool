@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableFullCollarRouteBInstantiation
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarRelativeSubdivisionExact
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableFullCollarRouteBInstantiation
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarRelativeSubdivisionExact
 
 /-!
 # Exact relative stable collar from the affine-pullback Route B perturbation
@@ -21,6 +23,8 @@ The construction uses the focused Route B API rather than repeating the perturba
 * convert that package to the local positive-ray Stokes certificate;
 * inhabit `ExactRelativeStableCollarConstructionTheorem`.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -170,7 +174,8 @@ noncomputable def exactRelativeStableCollarDataAffinePullback
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) :
     ExactRelativeStableCollarData hp H A₀ A₁ :=
-  (exactRelativeStableCollarGeneralPositionDataAffinePullback hp F₀ F₁ H A₀ A₁).toExactRelativeStableCollarData
+  (exactRelativeStableCollarGeneralPositionDataAffinePullback hp F₀ F₁ H A₀
+    A₁).toExactRelativeStableCollarData
 
 /-- The exact certificate retains the endpoint assignments literally. -/
 theorem exactRelativeStableCollarData_affinePullback_horizontalVertexFixed
@@ -191,7 +196,8 @@ theorem exactRelativeStableCollarData_affinePullback_localPositiveRayStokes
     (H : ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) :
-    (exactRelativeStableCollarDataAffinePullback hp F₀ F₁ H A₀ A₁).collar.toFoxNeuwirthRelativeAffineCollar.LocalPositiveRayStokes hp
+    (exactRelativeStableCollarDataAffinePullback hp F₀ F₁ H A₀
+      A₁).collar.toFoxNeuwirthRelativeAffineCollar.LocalPositiveRayStokes hp
         (exactRelativeStableCollarDataAffinePullback hp F₀ F₁ H A₀ A₁).assignment :=
   (exactRelativeStableCollarDataAffinePullback hp F₀ F₁ H A₀ A₁).localPositiveRayStokes
 

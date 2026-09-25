@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CanonicalCell
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.HalfspaceCoefficients
+
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CanonicalCell
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.HalfspaceCoefficients
 /-!
 # `NRR.EMP.VariableBody.CanonicalCellGraph` — one-sided closedness of the cell graph
 
@@ -27,6 +29,8 @@ passes to the limit by continuity of the separating normal (in the sites) and of
 and the selected weight, through `continuous_normalizedWeight_compactFamily`) together with
 closedness of `≤`. Hence `y` lies in the limiting cell.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 open scoped RealInnerProductSpace
@@ -69,7 +73,7 @@ theorem isClosed_canonicalCellLowerGraph
     (sites : SiteFamily X n) (hA : 0 < A) (hn : 0 < n)
     (i : Fin n) :
     IsClosed (CanonicalCellLowerGraph (K := K) sites hA hn i) := by
-  refine' isSeqClosed_iff_isClosed.mp _;
+  refine isSeqClosed_iff_isClosed.mp ?_;
   intro f hf a hlim y hy;
   -- By `ConvexSubbody.exists_tendsto_points`, obtain a sequence of points `yseq` in the
   -- approximating subbodies converging to `y`.
@@ -88,7 +92,7 @@ theorem isClosed_canonicalCellLowerGraph
     apply ConvexSubbody.mem_limit_of_tendsto h_parent hyseq.2;
     filter_upwards [ Filter.eventually_gt_atTop 0 ] with m hm;
     exact ( a m ) ( hyseq.1 m ) |> fun h => by simpa using h.1;
-  refine' mem_canonicalCell_iff sites hA hn hf.1 i y |>.2 ⟨ h_parent, _ ⟩;
+  refine mem_canonicalCell_iff sites hA hn hf.1 i y |>.2 ⟨ h_parent, ?_ ⟩;
   intro j
   have h_wall : ∀ m, ⟪sepNormal (sites (f m).1.2) i j.1, yseq m⟫ ≤ sepOffset (sites (f m).1.2)
     (normalizedWeight hA hn (f m).1.1 (sites (f m).1.2)) i j.1 := by
@@ -96,7 +100,7 @@ theorem isClosed_canonicalCellLowerGraph
     have h_wall : yseq m ∈ ((canonicalCell sites hA hn (f m).1 i).body : Set Plane) := by
       exact a m ( hyseq.1 m );
     exact ( mem_canonicalCell_iff sites hA hn ( f m |>.1 ) i ( yseq m ) ) |>.1 h_wall |>.2 j;
-  refine' le_of_tendsto_of_tendsto' ( Filter.Tendsto.inner ( _ ) hyseq.2 ) ( _ ) fun m => h_wall m;
+  refine le_of_tendsto_of_tendsto' ( Filter.Tendsto.inner ( ?_ ) hyseq.2 ) ( ?_ ) fun m => h_wall m;
   · exact Continuous.continuousAt ( continuous_sepNormal i j ) |> fun h => h.tendsto.comp (
       Continuous.continuousAt ( sites.continuous ) |> fun h => h.tendsto.comp (
       continuous_snd.continuousAt.tendsto.comp ( continuous_fst.continuousAt.tendsto.comp hlim )

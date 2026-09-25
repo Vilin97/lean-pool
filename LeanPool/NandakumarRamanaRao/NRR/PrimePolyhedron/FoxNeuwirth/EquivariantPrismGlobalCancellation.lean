@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismSubdivisionMargin
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismSubdivisionMargin
 /-!
 # Global signed cancellation for the refined equivariant prism
 
@@ -23,6 +25,8 @@ The final section separates signatures in the lower horizontal layer, the upper 
 and the nonhorizontal part. The endpoint module proves vanishing of the nonhorizontal contribution
 and identifies the horizontal sums with the endpoint refined counts.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -694,7 +698,7 @@ theorem Result.global_signed_prism_facet_cancellation
     (H : EquivariantCoordinateHomotopy.ZeroFreeHomotopy hp F₀ F₁)
     (m : Real) (R : Result hp N L H m) :
     globalSignedFacetSum hp N L R.assignment = 0 :=
-  _root_.NRR.FoxNeuwirthOrderComplex.EquivariantPrismGlobalCancellation.global_signed_prism_facet_cancellation
+  global_signed_prism_facet_cancellation
     hp N L R.assignment R.generalPosition
 
 /-- Cancellation specialized to the assignment produced by the generic perturbation theorem. -/
@@ -706,7 +710,7 @@ theorem Result.signature_weighted_boundary_sum_eq_zero
     (∑ s : FacetSignature hp N L,
       signatureBoundaryCoefficient hp N L s *
         signatureWeight hp N L R.assignment s) = 0 :=
-  _root_.NRR.FoxNeuwirthOrderComplex.EquivariantPrismGlobalCancellation.signature_weighted_boundary_sum_eq_zero
+  signature_weighted_boundary_sum_eq_zero
     hp N L R.assignment R.generalPosition
 
 /-! ## Horizontal and nonhorizontal decomposition -/
@@ -822,7 +826,7 @@ theorem Result.horizontal_add_nonhorizontal_eq_zero
     lowerHorizontalContribution hp N L R.assignment +
       upperHorizontalContribution hp N L R.assignment +
         nonhorizontalContribution hp N L R.assignment = 0 :=
-  _root_.NRR.FoxNeuwirthOrderComplex.EquivariantPrismGlobalCancellation.horizontal_add_nonhorizontal_eq_zero
+  horizontal_add_nonhorizontal_eq_zero
     hp N L R.assignment R.generalPosition
 
 /-- Once internal and spatial-side signatures have been shown to cancel, the two horizontal
@@ -849,7 +853,7 @@ theorem Result.lowerHorizontalContribution_eq_neg_upper_of_nonhorizontal_eq_zero
     (hside : nonhorizontalContribution hp N L R.assignment = 0) :
     lowerHorizontalContribution hp N L R.assignment =
       -upperHorizontalContribution hp N L R.assignment :=
-  _root_.NRR.FoxNeuwirthOrderComplex.EquivariantPrismGlobalCancellation.lowerHorizontalContribution_eq_neg_upper_of_nonhorizontal_eq_zero
+  lowerHorizontalContribution_eq_neg_upper_of_nonhorizontal_eq_zero
     hp N L R.assignment R.generalPosition hside
 
 end EquivariantPrismGlobalCancellation

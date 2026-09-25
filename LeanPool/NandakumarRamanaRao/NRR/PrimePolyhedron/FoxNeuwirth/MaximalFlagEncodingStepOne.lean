@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagSourceCancellation
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagSourceCancellation
 
 /-!
 # Step 1: recovering maximal-flag codes
@@ -27,6 +29,8 @@ the file constructs `simplexToCode`, proves both inverse
 identities, and packages the requested equivalence with all maximal strict flags.  No cycle,
 coefficient, or cancellation statement is included in that classification hypothesis.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -131,7 +135,8 @@ theorem perm_eq_of_lt_iff
   have hset_eq : {j : Fin n | sigma j < sigma i} = {j : Fin n | tau j < tau i} := by
     ext j
     exact horder j i
-  have heq_card : Fintype.card {j : Fin n | sigma j < sigma i} = Fintype.card {j : Fin n | tau j < tau i} := by
+  have heq_card : Fintype.card {j : Fin n | sigma j < sigma i} = Fintype.card {j : Fin n | tau j
+    < tau i} := by
     apply Fintype.card_congr
     refine Equiv.subtypeEquivRight ?_ |>.symm
     simp only [Set.mem_ofPred_eq]
@@ -319,7 +324,8 @@ noncomputable def simplexToCodeOfSurjective
   apply toSimplex_injective hp
   exact toSimplex_simplexToCodeOfSurjective hp hall _
 
-/-- Equivalence with all maximal strict flags, conditional on the surjectivity/classification theorem. -/
+/-- Equivalence with all maximal strict flags, conditional on the surjectivity/classification
+theorem. -/
 noncomputable def maximalFlagEquivOfSurjective
     (hp : Nat.Prime p) (hall : EveryMaximalFlagEncoded hp) :
     Code p ≃ Simplex p (p - 1) where

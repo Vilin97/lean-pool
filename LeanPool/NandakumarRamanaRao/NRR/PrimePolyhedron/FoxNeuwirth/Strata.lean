@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CanonicalConfiguration
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CanonicalConfiguration
 
 /-!
 # Planar Fox--Neuwirth strata
@@ -14,13 +16,15 @@ Labels in one block have equal first coordinate and occur in the recorded vertic
 in different blocks occur in the recorded left-to-right order.
 -/
 
+@[expose] public section
+
 namespace NRR
 
 variable {p : ℕ}
 
 namespace BarredPermutation
 
- theorem blockIndex_mono
+theorem blockIndex_mono
     (c : BarredPermutation p) {i j : Fin p}
     (hij : (c.rank i).1 ≤ (c.rank j).1) :
     c.blockIndex i ≤ c.blockIndex j := by
@@ -30,7 +34,7 @@ namespace BarredPermutation
   simp only [Finset.mem_filter] at hk ⊢
   exact ⟨hk.1, lt_of_lt_of_le hk.2 hij⟩
 
- theorem blockIndex_lt_of_rank_lt_of_not_sameBlock
+theorem blockIndex_lt_of_rank_lt_of_not_sameBlock
     (c : BarredPermutation p) {i j : Fin p}
     (hij : (c.rank i).1 < (c.rank j).1)
     (hblock : ¬ c.SameBlock i j) :
@@ -49,7 +53,7 @@ def InStratum (c : BarredPermutation p) (s : Config p) : Prop :=
     else
       s.pts i 0 < s.pts j 0
 
- theorem canonicalConfig_mem_stratum (c : BarredPermutation p) :
+theorem canonicalConfig_mem_stratum (c : BarredPermutation p) :
     c.InStratum c.canonicalConfig := by
   intro i j hij
   by_cases hblock : c.SameBlock i j

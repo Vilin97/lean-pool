@@ -3,18 +3,21 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAreaVector
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PositiveAreaInterior
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAreaVector
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PositiveAreaInterior
 
 /-!
 # `NRR.EMP.PowerCellPositiveArea` — positive area of equal‑area cells
 
 If the weights `w` are equal‑area for sites `s` in a body `K` with `0 < K.area` and `0 < n`,
-then every restricted power cell has strictly positive area, and hence (by the theorem `interior_nonempty_of_convex_positive_area`) nonempty interior.
+then every restricted power cell has strictly positive area, and hence (by the theorem
+`interior_nonempty_of_convex_positive_area`) nonempty interior.
 
 ## Public API
 
@@ -24,6 +27,8 @@ then every restricted power cell has strictly positive area, and hence (by the t
 Equal area means each cell carries exactly the average area `K.area / n`; the coercion
 `n : ℕ ↦ (n : ℝ)` is via `Nat.cast`, so positivity follows from `0 < K.area` and `0 < n`.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry MeasureTheory
 

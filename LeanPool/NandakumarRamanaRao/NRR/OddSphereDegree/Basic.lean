@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Analysis.Normed.Group.BallSphere
-import Mathlib.Analysis.InnerProductSpace.PiL2
+
+public import Mathlib.Analysis.Normed.Group.BallSphere
+public import Mathlib.Analysis.InnerProductSpace.PiL2
 
 /-!
 # Basic sphere and odd-map interface
@@ -14,6 +16,8 @@ This file fixes a working model of the sphere and defines odd maps.
 The definitions here should eventually be aligned with whichever sphere API is
 most convenient for the full formalization, possibly `TopCat.sphere n`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

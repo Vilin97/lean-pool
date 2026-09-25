@@ -3,13 +3,16 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.Orientation
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.Orientation
 
 /-!
 # Order complex of the Fox--Neuwirth face relation
 
-This module defines the order complex of the finite barred-permutation face relation.  Instead of trying to glue a family of
+This module defines the order complex of the finite barred-permutation face relation.  Instead of
+trying to glue a family of
 closed top-cell simplices by a separate regular-CW construction, it passes to the order complex
 of the finite barred-permutation face relation.
 
@@ -23,6 +26,8 @@ The file also defines the global barycentric carrier as nonnegative weights of t
 with chain support.  Compactness, simplex charts, the prime action on that carrier, and its
 collision-free map into configuration space are the associated geometric constructions.
 -/
+
+@[expose] public section
 
 namespace NRR
 

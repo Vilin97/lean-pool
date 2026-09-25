@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.SeparatorCertificate
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.SeparatorCertificate
 
 /-!
 # Model-independent prime-refinement steps
@@ -13,6 +15,8 @@ The geometric obstruction may be represented by any compact prime-equivariant co
 The recursive partition construction uses only that model's site family and the separator lifting
 property, independently of a particular top-cell atlas.
 -/
+
+@[expose] public section
 
 namespace NRR
 

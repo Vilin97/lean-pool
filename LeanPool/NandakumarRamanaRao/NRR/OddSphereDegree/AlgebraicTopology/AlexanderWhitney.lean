@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CupProductScaffolding
-import Mathlib.Data.Finset.NatAntidiagonal
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CupProductScaffolding
+public import Mathlib.Data.Finset.NatAntidiagonal
 
 /-!
 # Alexander–Whitney diagonal — combinatorial and simplex-level layer
@@ -71,6 +73,8 @@ of the diagonal.
  `σ ↦ (front_p σ, back_q σ)` of the (un-linearized) AW diagonal, natural in the
  space (`awPair_naturality`).
 -/
+
+@[expose] public section
 
 open CategoryTheory MonoidalCategory AlgebraicTopology Simplicial SimplexCategory
 
@@ -259,7 +263,8 @@ noncomputable def singularChainTensorSquareMap (R : Type) [CommRing R]
 theorem singularChainTensorSquareMap_id (R : Type) [CommRing R]
     (M : ModuleCat.{0} R) (X : TopCat.{0}) :
     singularChainTensorSquareMap R M (𝟙 X) = 𝟙 _ := by
-  rw [singularChainTensorSquareMap, (((singularChainComplexFunctor (ModuleCat.{0} R)).obj M)).map_id]
+  rw [singularChainTensorSquareMap, (((singularChainComplexFunctor (ModuleCat.{0} R)).obj
+    M)).map_id]
   exact MonoidalCategory.id_tensorHom_id _ _
 
 /-- Functoriality: the chain tensor-square pushforward preserves composition. -/

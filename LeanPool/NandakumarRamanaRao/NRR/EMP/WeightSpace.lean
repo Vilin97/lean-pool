@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Order.Archimedean.Real.Basic
-import Mathlib.Data.Fintype.Card
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.Tactic
 
 /-!
 # `NRR.EMP.WeightSpace` — finite‑dimensional algebra of normalized weights
@@ -36,6 +38,8 @@ the vocabulary used to pin down the additive‑constant freedom in equal‑area 
 
 This file must not depend on optimal transport; it imports only `Mathlib`.
 -/
+
+@[expose] public section
 
 namespace NRR
 

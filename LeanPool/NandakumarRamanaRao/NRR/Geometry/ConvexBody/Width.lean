@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunction
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionBasic
+
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunction
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionBasic
 
 /-!
 # `NRR.Geometry.ConvexBody` — the width function
@@ -36,6 +38,8 @@ normals `u` and `-u`, scaled by `‖u‖`).
 `SupportFunction.lean` (via `Basic.lean`) already pulls in `import Mathlib`, so no extra imports
 are required here.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointStackAffinePullbackCore
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollar
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedChartCarrierEquivariant
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointStackAffinePullbackCore
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollar
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedChartCarrierEquivariant
 /-!
 # Global descent interface for affine-pullback endpoint-stack values
 
@@ -21,6 +23,8 @@ simplex-local affine-pullback values, so origin avoidance follows from
 The upper values are the ordinary PL values at the next
 barycentric-subdivision vertices.  Hence this convention is seam-compatible under iteration.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -84,7 +88,8 @@ noncomputable def localSpatialWeight
     (hp : Nat.Prime p) (N : Nat)
     (s : (Cells hp N).VertexSlot) : StandardSimplex (p - 1) :=
   StandardSimplex.ofDelta
-    (RelativeSubdivisionOneStepCells.localPoint hp s.1.2 (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)).1
+    (RelativeSubdivisionOneStepCells.localPoint hp s.1.2 (SphereOddDegree.FiniteSimplex.vertex
+      (S := Real) s.2)).1
 
 /-- A local pullback vector is literally the parent refined affine value at the represented
 spatial point. -/
@@ -116,7 +121,8 @@ theorem pullbackVector_eq_value
     Nat.sub_add_cancel hp.pos, Pi.single_apply] using hc
 
 /-- The affine-pullback convention satisfies the required global shared-face compatibility.
-The proof uses the chart-independent carrier theorem and equivariance of the sampled endpoint map. -/
+The proof uses the chart-independent carrier theorem and equivariance of the sampled endpoint map.
+-/
 theorem oneStepAffinePullbackCompatible
     (hp : Nat.Prime p)
     {F : ContinuousCoordinateMap p}
@@ -234,7 +240,8 @@ theorem vectorValue_assignment_sample
       (sampleVertex hp (Cells hp A.level) s) = pullbackVector hp A s := by
   rfl
 
-/-- Local vertex values of the descended assignment are exactly the simplex-local affine pullback. -/
+/-- Local vertex values of the descended assignment are exactly the simplex-local affine pullback.
+-/
 theorem localVertexMap_assignment_value
     (hp : Nat.Prime p)
     {F : ContinuousCoordinateMap p}

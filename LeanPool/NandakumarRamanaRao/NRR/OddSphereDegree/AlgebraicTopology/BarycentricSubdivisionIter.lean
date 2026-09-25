@@ -3,11 +3,15 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainHomotopy
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainHomotopy
+public import Mathlib.Tactic
 
 /-! # Barycentric Subdivision Iter -/
+
+@[expose] public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
@@ -53,7 +57,7 @@ theorem barycentricSubdivisionIterLinearMap_succ
 /-- **`sd^N` commutes with the boundary** (degree-wise, pointwise form). This is
 the chain-map condition of `barycentricSubdivisionIterChainMap`. -/
 theorem barycentricSubdivisionIterLinearMap_commutes_boundary
-    (R : Type) [CommRing R] (X : TopCat.{0}) (N n : ℕ) (c : singularChainGroup R X (n+1)) :
+    (R : Type) [CommRing R] (X : TopCat.{0}) (N n : ℕ) (c : singularChainGroup R X (n + 1)) :
     (singularBoundary R X n).hom (barycentricSubdivisionIterLinearMap R X N (n+1) c)
       = barycentricSubdivisionIterLinearMap R X N n ((singularBoundary R X n).hom c) := by
   have h := (barycentricSubdivisionIterChainMap R X N).comm (n+1) n
@@ -102,7 +106,7 @@ theorem barycentricSubdivisionIterHomotopyBoundaryTerm_zero
     barycentricSubdivisionIterHomotopyBoundaryTerm R X N 0 c = 0 := rfl
 
 theorem barycentricSubdivisionIterHomotopyBoundaryTerm_succ
-    (R : Type) [CommRing R] (X : TopCat.{0}) (N m : ℕ) (c : singularChainGroup R X (m+1)) :
+    (R : Type) [CommRing R] (X : TopCat.{0}) (N m : ℕ) (c : singularChainGroup R X (m + 1)) :
     barycentricSubdivisionIterHomotopyBoundaryTerm R X N (m+1) c
       = barycentricSubdivisionIterHomotopyLinearMap R X N m
           ((singularBoundary R X m).hom c) := rfl

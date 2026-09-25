@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CompatibleRefinedChartHomotopy
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarAssignmentCompose
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CompatibleRefinedChartHomotopy
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarAssignmentCompose
 /-!
 # One-step collar assignments from compatible affine chart maps
 
@@ -19,6 +21,8 @@ that cylinder vertex.  Compatibility makes the value descend to global collar ve
 identifies the local affine interpolation with evaluation of the same chart map at the spatial
 image of the cell, so zero-freeness is inherited without a new estimate.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -133,7 +137,8 @@ noncomputable def localSpatialWeight
     (hp : Nat.Prime p) (N : Nat)
     (s : (Cells hp N).VertexSlot) : StandardSimplex (p - 1) :=
   StandardSimplex.ofDelta
-    (RelativeSubdivisionOneStepCells.localPoint hp s.1.2 (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2)).1
+    (RelativeSubdivisionOneStepCells.localPoint hp s.1.2 (SphereOddDegree.FiniteSimplex.vertex
+      (S := Real) s.2)).1
 
 /-- Local value supplied by a compatible chart map. -/
 noncomputable def localVector
@@ -158,7 +163,8 @@ theorem decoratedVector_eq_of_coverPoint_eq
       (localSpatialWeight hp N a.2) (localSpatialWeight hp N b.2)
   simpa [coverPoint, RelativeAffineCellSystem.slotPoint, Cells,
     RelativeSubdivisionOneStepCells.cellSystem,
-    localSpatialWeight, RelativeSubdivisionOneStepCells.vertex, RelativeSubdivisionOneStepCells.chart, RelativeSubdivisionOneStepCells.liftPoint,
+    localSpatialWeight, RelativeSubdivisionOneStepCells.vertex,
+      RelativeSubdivisionOneStepCells.chart, RelativeSubdivisionOneStepCells.liftPoint,
     EquivariantPrismVertexParameters.CylinderPoint.ofProd] using hspatial
 
 /-- Global vector obtained by quotient descent. -/

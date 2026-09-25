@@ -3,14 +3,16 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import
-  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainMap
-import
-  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyOperator
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainMap
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyOperator
+public import Mathlib.Tactic
 
 /-! # Barycentric Subdivision Homotopy Formula -/
+
+@[expose] public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
@@ -181,7 +183,7 @@ noncomputable def homotopyBoundaryTerm (R : Type) [CommRing R] (X : TopCat.{0}) 
       ((singularBoundary R X m).hom c)
 
 theorem homotopyBoundaryTerm_succ (R : Type) [CommRing R] (X : TopCat.{0}) (m : ℕ)
-    (c : singularChainGroup R X (m+1)) :
+    (c : singularChainGroup R X (m + 1)) :
     homotopyBoundaryTerm R X (m+1) c
       = (barycentricSubdivisionHomotopyLinearMap R X m).hom
           ((singularBoundary R X m).hom c) := rfl
@@ -191,7 +193,7 @@ theorem homotopyBoundaryTerm_zero (R : Type) [CommRing R] (X : TopCat.{0})
     homotopyBoundaryTerm R X 0 c = 0 := rfl
 
 theorem singularChainMap_boundary_apply (R : Type) [CommRing R] {X Y : TopCat.{0}}
-    (f : X ⟶ Y) (n : ℕ) (c : singularChainGroup R X (n+1)) :
+    (f : X ⟶ Y) (n : ℕ) (c : singularChainGroup R X (n + 1)) :
     (singularBoundary R Y n).hom ((singularChainMap R f (n+1)).hom c)
       = (singularChainMap R f n).hom ((singularBoundary R X n).hom c) := by
   have h := singularChainMap_boundary R f n
@@ -199,7 +201,7 @@ theorem singularChainMap_boundary_apply (R : Type) [CommRing R] {X Y : TopCat.{0
   simpa [ModuleCat.hom_comp, LinearMap.comp_apply] using h2
 
 theorem homotopyBoundaryTerm_singularBoundary_eq_zero (R : Type) [CommRing R] (X : TopCat.{0})
-    (n : ℕ) (c : singularChainGroup R X (n+1)) :
+    (n : ℕ) (c : singularChainGroup R X (n + 1)) :
     homotopyBoundaryTerm R X n ((singularBoundary R X n).hom c) = 0 := by
   cases n with
   | zero => rfl
@@ -236,7 +238,7 @@ theorem barycentricSubdivisionHomotopy_boundary_formula (R : Type) [CommRing R]
         intro f g h
         apply ModuleCat.hom_ext; apply LinearMap.ext; intro x
         have hf := f.hom.map_smul x (1 : R); have hg := g.hom.map_smul x (1 : R)
-        simp at hf hg; rw [hf, hg, h]
+        simp? at hf hg; rw [hf, hg, h]
       apply hval
       erw [ModuleCat.hom_comp, LinearMap.comp_apply,
            ModuleCat.hom_comp, LinearMap.comp_apply,
@@ -325,7 +327,7 @@ theorem barycentricSubdivisionHomotopy_boundary_formula (R : Type) [CommRing R]
         intro f g h
         apply ModuleCat.hom_ext; apply LinearMap.ext; intro x
         have hf := f.hom.map_smul x (1 : R); have hg := g.hom.map_smul x (1 : R)
-        simp at hf hg; rw [hf, hg, h]
+        simp? at hf hg; rw [hf, hg, h]
       apply hval
       erw [ModuleCat.hom_add, LinearMap.add_apply,
            ModuleCat.hom_comp, LinearMap.comp_apply,

@@ -3,11 +3,15 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.HumanVerification.EqualAreaEqualPerimeterPartitionWrapper
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.HumanVerification.EqualAreaEqualPerimeterPartitionWrapper
 
 /-! # Main -/
+
+@[expose] public section
 
 noncomputable section
 

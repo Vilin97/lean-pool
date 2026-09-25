@@ -3,19 +3,24 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Data.Nat.Factors
-import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.Core
-import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.IndexedPartition
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.FullBody
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.PerimeterObservable
+
+public import Mathlib.Data.Nat.Factors
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.Core
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.IndexedPartition
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.FullBody
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.PerimeterObservable
 /-!
 # Iteration of the prime-refinement lemma
 
 Assuming `PrimeRefinementTheorem`, this module performs the complete formal iteration over a list
 of prime factors, flattens the resulting nested power partitions, and derives the arbitrary-number
-fair-partition theorem.  The construction is parameterized by the prime-refinement separator theorem.
+fair-partition theorem.  The construction is parameterized by the prime-refinement separator
+theorem.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

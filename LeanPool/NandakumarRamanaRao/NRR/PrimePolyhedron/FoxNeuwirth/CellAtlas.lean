@@ -3,15 +3,20 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopCellModel
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopCellModel
 /-!
 # Finite top-cell atlas
 
-The concrete Fox–Neuwirth model is a finite disjoint union of standard `(p - 1)`-simplices.  This file
+The concrete Fox–Neuwirth model is a finite disjoint union of standard `(p - 1)`-simplices.  This
+file
 records the closed and open cell components, their compactness, and the explicit simplex charts.
 The later mod-`p` cycle construction replaces this disjoint atlas by the invariant glued chain.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -39,16 +44,16 @@ def cellParam (c : FoxNeuwirthTopCell p) :
     cellParam c w = (c, w) :=
   rfl
 
- theorem continuous_cellParam (c : FoxNeuwirthTopCell p) :
+theorem continuous_cellParam (c : FoxNeuwirthTopCell p) :
     Continuous (cellParam c) :=
   continuous_const.prodMk continuous_id
 
- theorem injective_cellParam (c : FoxNeuwirthTopCell p) :
+theorem injective_cellParam (c : FoxNeuwirthTopCell p) :
     Function.Injective (cellParam c) := by
   intro u v h
   exact congrArg Prod.snd h
 
- theorem range_cellParam (c : FoxNeuwirthTopCell p) :
+theorem range_cellParam (c : FoxNeuwirthTopCell p) :
     Set.range (cellParam c) = cellCarrier c := by
   ext z
   constructor
@@ -60,22 +65,22 @@ def cellParam (c : FoxNeuwirthTopCell p) :
       · exact hz.symm
       · rfl⟩
 
- theorem isClosed_cellCarrier (c : FoxNeuwirthTopCell p) :
+theorem isClosed_cellCarrier (c : FoxNeuwirthTopCell p) :
     IsClosed (cellCarrier c) := by
   exact isClosed_eq (continuous_fst) continuous_const
 
- theorem isOpen_cellCarrier (c : FoxNeuwirthTopCell p) :
+theorem isOpen_cellCarrier (c : FoxNeuwirthTopCell p) :
     IsOpen (cellCarrier c) := by
   rw [show cellCarrier c = Prod.fst ⁻¹' {c} from rfl]
   exact (isOpen_discrete {c}).preimage continuous_fst
 
- theorem isCompact_cellCarrier (c : FoxNeuwirthTopCell p) :
+theorem isCompact_cellCarrier (c : FoxNeuwirthTopCell p) :
     IsCompact (cellCarrier c) := by
   rw [← range_cellParam]
   simpa only [Set.image_univ] using
     isCompact_univ.image (continuous_cellParam c)
 
- theorem cellCarrier_pairwise_disjoint
+theorem cellCarrier_pairwise_disjoint
     {c d : FoxNeuwirthTopCell p} (hcd : c ≠ d) :
     Disjoint (cellCarrier c) (cellCarrier d) := by
   rw [Set.disjoint_left]
@@ -84,7 +89,7 @@ def cellParam (c : FoxNeuwirthTopCell p) :
   change z.1 = d at hzd
   exact hcd (hzc.symm.trans hzd)
 
- theorem cellCarrier_cover :
+theorem cellCarrier_cover :
     ⋃ c : FoxNeuwirthTopCell p, cellCarrier c = Set.univ := by
   ext z
   simp [cellCarrier]
@@ -94,7 +99,7 @@ def cellDimension (p : Nat)
     (_c : FoxNeuwirthTopCell p) : ℕ :=
   p - 1
 
- theorem cellDimension_eq
+theorem cellDimension_eq
     (p : Nat) (c : FoxNeuwirthTopCell p) :
     cellDimension p c = p - 1 :=
   rfl

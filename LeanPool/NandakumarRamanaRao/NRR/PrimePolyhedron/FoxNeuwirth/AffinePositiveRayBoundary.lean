@@ -3,15 +3,17 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedAffineMap
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexChain
-import Mathlib.LinearAlgebra.Matrix.Adjugate
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.LinearAlgebra.Matrix.Nondegenerate
-import Mathlib.Order.Interval.Finset.Basic
-import Mathlib.Data.Finset.Max
-import Mathlib.Data.Fin.Tuple.Basic
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedAffineMap
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexChain
+public import Mathlib.LinearAlgebra.Matrix.Adjugate
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import Mathlib.LinearAlgebra.Matrix.Nondegenerate
+public import Mathlib.Order.Interval.Finset.Basic
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Data.Fin.Tuple.Basic
 /-!
 # The affine positive-ray boundary identity
 
@@ -25,6 +27,8 @@ zero set of the deviation map is an affine line.  Cramer's rule identifies the s
 endpoints with the alternating facet determinants.  The full-origin avoidance hypothesis makes the
 coordinate mean have a constant sign along the interval.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -395,7 +399,7 @@ theorem coordinate_eq_lastLabel_of_deviation_eq_zero
     (i : Fin p) :
     y i = y (FoxNeuwirthOrderComplex.ReferenceAffineOrbitCount.lastLabel hp) := by
   by_cases hi : i = FoxNeuwirthOrderComplex.ReferenceAffineOrbitCount.lastLabel hp
-  · simpa [hi]
+  · simp [hi]
   · obtain ⟨q, hq⟩ : ∃ q : Fin (p - 1),
         FoxNeuwirthOrderComplex.ReferenceAffineOrbitCount.coordinateLabel hp q = i := by
       have hiSet : i ∈ {x : Fin p |
@@ -750,7 +754,7 @@ theorem lineFeasible_zero
     (hp : Nat.Prime p) (V : VertexMap p) (w : StandardSimplex p) :
     LineFeasible hp V w 0 := by
   intro k
-  simpa [lineCoordinate] using w.nonneg k
+  simp [lineCoordinate]
 
 /-- The lower endpoint is at most zero. -/
 theorem lowerParameter_le_zero
@@ -1061,7 +1065,8 @@ theorem mean_ne_zero_of_deviation_eq_zero_of_avoidsOrigin
   exact coordinate_eq_zero_of_deviation_eq_zero_of_mean_eq_zero
     hp (affineValue V w) hw hmean
 
-/-- Origin avoidance makes the mean nonzero everywhere on a feasible deviation-zero cofactor line. -/
+/-- Origin avoidance makes the mean nonzero everywhere on a feasible deviation-zero cofactor line.
+-/
 theorem lineSimplexPoint_mean_ne_zero
     (hp : Nat.Prime p) (V : VertexMap p)
     (havoid : AvoidsOrigin V) (w : StandardSimplex p)
@@ -1179,7 +1184,8 @@ theorem lineSimplexPoint_mean_pos_iff
   · exact (lineSimplexPoint_mean_pos_iff_of_le hp V hregular havoid w hw
       t₁ t₀ ht₁ ht₀ (le_of_not_ge ht)).symm
 
-/-- Under codimension-two avoidance, the chosen lower endpoint is the unique vanishing coordinate. -/
+/-- Under codimension-two avoidance, the chosen lower endpoint is the unique vanishing coordinate.
+-/
 theorem lowerEndpoint_unique_zero
     (hp : Nat.Prime p) (V : VertexMap p)
     (hregular : FacetRegular hp V)
@@ -1200,7 +1206,8 @@ theorem lowerEndpoint_unique_zero
     ⟨by simpa [wLower] using hj,
       by simpa [wLower] using lowerEndpoint_coordinate_eq_zero hp V hregular w⟩
 
-/-- Under codimension-two avoidance, the chosen upper endpoint is the unique vanishing coordinate. -/
+/-- Under codimension-two avoidance, the chosen upper endpoint is the unique vanishing coordinate.
+-/
 theorem upperEndpoint_unique_zero
     (hp : Nat.Prime p) (V : VertexMap p)
     (hregular : FacetRegular hp V)
@@ -1537,7 +1544,7 @@ noncomputable def fullSimplexOfFacet
       intro j
       rcases Fin.eq_self_or_eq_succAbove k j with rfl | ⟨i, rfl⟩
       · simp
-      · simpa using u.nonneg (facetCoordinateIndex i),
+      · simp,
      by
       rw [Fin.sum_univ_succAbove
         (fun j : Fin (p + 1) =>
@@ -1652,7 +1659,8 @@ theorem affineValue_fullSimplexOfFacet
       mean p (facetAffineValue V k u) := by
   rw [affineValue_fullSimplexOfFacet]
 
-/-- A facet point with zero fixed deviations gives a full-simplex point with zero fixed deviations. -/
+/-- A facet point with zero fixed deviations gives a full-simplex point with zero fixed deviations.
+-/
 theorem fullSimplexOfFacet_deviation_eq_zero
     (hp : Nat.Prime p) (V : VertexMap p) (k : Fin (p + 1))
     (u : StandardSimplex (p - 1))
@@ -2047,7 +2055,7 @@ theorem facetHasPositiveRayIntersection_endpoint_classification
       simpa [lineSimplexPoint_apply] using
         congrArg (fun z : StandardSimplex p => z k) hpoint
     have hw₁zero : w₁ k = 0 := by
-      simpa [w₁] using fullSimplexOfFacet_omitted_eq_zero hp k u
+      simp [w₁]
     linarith
   rcases lineParameter_eq_lower_or_upper_of_coordinate_eq_zero
       hp V hregular w₀ t ht k hkzero with htLower | htUpper
@@ -2097,7 +2105,7 @@ theorem facetHasPositiveRayIntersection_endpoint_classification_of_positiveCodim
       simpa [lineSimplexPoint_apply] using
         congrArg (fun z : StandardSimplex p => z k) hpoint
     have hw₁zero : w₁ k = 0 := by
-      simpa [w₁] using fullSimplexOfFacet_omitted_eq_zero hp k u
+      simp [w₁]
     linarith
   rcases lineParameter_eq_lower_or_upper_of_coordinate_eq_zero
       hp V hregular w₀ t ht k hkzero with htLower | htUpper
@@ -2400,7 +2408,7 @@ theorem alternating_facetIndex_sum_eq_zero_of_certificate
               ((∑ k ∈ ((Finset.univ.erase lower).erase upper), facetIndex hp V k) +
                 facetIndex hp V upper) := by
                 rw [Finset.sum_erase_add]
-                simpa [hne.symm]
+                simp [hne.symm]
         _ = facetIndex hp V lower + facetIndex hp V upper +
               ∑ k ∈ ((Finset.univ.erase lower).erase upper), facetIndex hp V k := by ac_rfl
         _ = 1 + (-1) + 0 := by

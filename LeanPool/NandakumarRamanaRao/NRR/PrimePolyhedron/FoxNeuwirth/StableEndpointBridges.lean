@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarRelativeSubdivisionExact
-import Mathlib.Topology.UniformSpace.HeineCantor
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarRelativeSubdivisionExact
+public import Mathlib.Topology.UniformSpace.HeineCantor
 /-!
 # Zero-free endpoint bridges for stable regular approximations
 
@@ -32,6 +34,8 @@ uses a finite, localized correction of the original map.
 Thus every `StableRegularApproximation` canonically determines the
 `ZeroFreeEndpointInterpolant` required by the exact relative-collar interface.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -518,7 +522,8 @@ noncomputable def bridgedMap
           bridgeWeight_nonneg hp F A x,
           bridgeWeight_le_one hp F A x⟩
 
-/-- The bridged map has exactly the stored approximation value at every translated refined vertex. -/
+/-- The bridged map has exactly the stored approximation value at every translated refined vertex.
+-/
 @[simp] theorem bridgedMap_sample
     (hp : Nat.Prime p) (F : ZeroFreeMap hp)
     (A : StableRegularApproximation hp F.map)

@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteGenericPerturbation
-import Mathlib.Algebra.MvPolynomial.Funext
-import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
-import Mathlib.Algebra.MvPolynomial.Polynomial
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteGenericPerturbation
+public import Mathlib.Algebra.MvPolynomial.Funext
+public import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+public import Mathlib.Algebra.MvPolynomial.Polynomial
 
 /-!
 # Finite multivariate generic perturbations
@@ -23,13 +25,15 @@ then becomes a nonzero univariate polynomial because its value at parameter one 
 small positive parameter avoiding the finitely many roots gives the required perturbation.
 -/
 
+@[expose] public section
+
 namespace NRR
 namespace FiniteMultivariateGenericPerturbation
 
 open scoped BigOperators
 open Polynomial MvPolynomial
 
-variable {J I : Type*} [Fintype I]
+variable {J I : Type*} [Finite I]
 
 /-- A nonzero real multivariate polynomial has a nonzero evaluation. -/
 theorem exists_eval_ne_zero (P : MvPolynomial J Real) (hP : P ≠ 0) :
@@ -48,6 +52,7 @@ theorem exists_common_eval_ne_zero
     (P : I → MvPolynomial J Real) (hP : ∀ i, P i ≠ 0) :
     ∃ b : J → Real, ∀ i, MvPolynomial.eval b (P i) ≠ 0 := by
   classical
+  letI := Fintype.ofFinite I
   let Q : MvPolynomial J Real := ∏ i, P i
   have hQ : Q ≠ 0 := by
     exact Finset.prod_ne_zero_iff.mpr fun i _ => hP i

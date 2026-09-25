@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnCohomologyRingModel
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.InducedOnRPCohomology
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnCohomologyRingModel
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.InducedOnRPCohomology
 
 /-!
 # Projective top-class and model power API
@@ -16,6 +18,8 @@ lemmas used by the comparison layer and records the pullback induced by a
 descended odd sphere map. Later modules identify the actual projective
 cohomology generator and its powers with this model.
 -/
+
+@[expose] public section
 noncomputable section
 
 open CategoryTheory AlgebraicTopology

@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthContinuity
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthIdentities
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionParametric
+
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthContinuity
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthIdentities
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionParametric
 /-!
 # `NRR.Geometry.ConvexBody` — width continuity for parameterized families
 
@@ -35,7 +37,8 @@ from `SupportFunctionParametric.lean`:
 * `of_support` writes `w = h(t, u) + h(t, -u)`, where the second summand is the joint support map
  precomposed with the continuous reparameterisation `(t, u) ↦ (t, -u)`.
 * `translate` is immediate: width is translation invariant, so the translated family is the *same*
- function of `(t, u)` as the original width family (`ha` is not needed but is included for a uniform interface).
+ function of `(t, u)` as the original width family (`ha` is not needed but is included for a uniform
+ interface).
 * `scalePos` uses `widthFunction_scalePos_body` to rewrite the family as `(t, u) ↦ r t · w_{K_t}(u)`
  and takes the product of the (continuous) scalar with the width map.
 
@@ -46,6 +49,8 @@ No structure internals or `sSup` are unfolded here.
 `WidthContinuity.lean`, `WidthIdentities.lean` and `SupportFunctionParametric.lean` (all
 transitively via `Basic.lean`) already pull in `import Mathlib`, so no extra imports are required.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

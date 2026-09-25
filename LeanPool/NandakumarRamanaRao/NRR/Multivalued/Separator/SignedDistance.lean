@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Fibers
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Distance
+
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Fibers
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Distance
 /-!
 # `NRR.Multivalued.Separator.SignedDistance` — signed distance to the carrier
 
@@ -25,6 +27,8 @@ The carrier is nonempty because `X` is nonempty (via the vertical-fiber theorem)
 by the separator structure; these two facts drive the sign laws through the `Metric.infDist`
 wrappers.
 -/
+
+@[expose] public section
 
 namespace NRR
 

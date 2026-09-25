@@ -3,13 +3,15 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.HalfspaceCut
-import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
-import LeanPool.NandakumarRamanaRao.NRR.HalfSpaceCutArea
-import LeanPool.NandakumarRamanaRao.NRR.HalfSpaceCutAreaContinuity
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.HalfspaceCut
+public import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
+public import LeanPool.NandakumarRamanaRao.NRR.HalfSpaceCutArea
+public import LeanPool.NandakumarRamanaRao.NRR.HalfSpaceCutAreaContinuity
 
 /-!
 # `NRR.Geometry.HalfspaceFiniteIntersectionAreaContinuity`
@@ -53,6 +55,8 @@ The offset-to-area map factors as `A ∘ c` where
 Continuity for an arbitrary topological domain `α` is then obtained by composing with the
 continuous offset map `c : α → ι → ℝ`, so no first-countability hypothesis on `α` is needed.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped RealInnerProductSpace
@@ -103,15 +107,14 @@ theorem volume_finiteHalfspaceIntersection_lt_top
 **Continuity of the finite fixed-normal intersection area in the offset vector.** For fixed
 nonzero normals, the area is a continuous function of the offset vector `f : ι → ℝ`.
 -/
-theorem continuous_finiteHalfspaceIntersectionArea_pi [Fintype ι]
+theorem continuous_finiteHalfspaceIntersectionArea_pi [Finite ι]
     (K : ConvexBody Plane) (u : ι → Plane) (hu : ∀ i, u i ≠ 0) :
     Continuous fun f : ι → ℝ => finiteHalfspaceIntersectionArea K u f := by
-  refine' continuous_iff_continuousAt.mpr fun f₀ => _;
+  refine continuous_iff_continuousAt.mpr fun f₀ => ?_;
   have h_dominated : ∀ᵐ x ∂volume, ContinuousAt (fun f : ι → ℝ => (K.finiteHalfspaceIntersection
     u f).indicator (fun _ => (1 : ℝ)) x) f₀ := by
-    refine' MeasureTheory.measure_mono_null _ _;
-    exact ⋃ i, { x : Plane | ⟪u i, x⟫ = f₀ i };
-    · intro x hx; contrapose! hx; simp_all +decide [ ContinuousAt ];
+    refine MeasureTheory.measure_mono_null (t := ⋃ i, {x : Plane | ⟪u i, x⟫ = f₀ i}) ?_ ?_
+    · intro x hx; contrapose! hx; simp_all? +decide [ ContinuousAt ];
       by_cases hxK : x ∈ (K : Set Plane) <;> simp_all +decide [
         NRR.Geometry.ConvexBody.finiteHalfspaceIntersection ];
       by_cases h : ∀ i, ⟪u i, x⟫ ≤ f₀ i <;> simp_all +decide;
@@ -130,7 +133,7 @@ theorem continuous_finiteHalfspaceIntersectionArea_pi [Fintype ι]
     · exact K.isCompact.measurableSet;
   have h_dominated : ∀ᵐ x ∂volume, ∀ f : ι → ℝ, |(K.finiteHalfspaceIntersection u f).indicator
     (fun _ => (1 : ℝ)) x| ≤ (K : Set Plane).indicator (fun _ => (1 : ℝ)) x := by
-    filter_upwards [ ] with x f; by_cases hx : x ∈ K.carrier <;> simp +decide [ hx ];
+    filter_upwards [ ] with x f; by_cases hx : x ∈ K.carrier <;> simp? +decide [ hx ];
     · by_cases h : x ∈ K.finiteHalfspaceIntersection u f <;> simp +decide [ h ];
     · exact fun h => hx h.1;
   have h_cont : ContinuousAt (fun f : ι → ℝ => ∫ x, (K.finiteHalfspaceIntersection u
@@ -149,7 +152,7 @@ theorem continuous_finiteHalfspaceIntersectionArea_pi [Fintype ι]
 nonzero normals `u` and continuously-moving offsets `c a`, the intersection area depends
 continuously on `a`. The hypothesis `∀ i, u i ≠ 0` is necessary (see the module docstring). -/
 theorem continuous_finiteHalfspaceIntersectionArea
-    {α : Type*} [TopologicalSpace α] [Fintype ι]
+    {α : Type*} [TopologicalSpace α] [Finite ι]
     (K : ConvexBody Plane) (u : ι → Plane) (hu : ∀ i, u i ≠ 0)
     (c : α → ι → ℝ) (hc : Continuous c) :
     Continuous fun a : α => finiteHalfspaceIntersectionArea K u (c a) :=

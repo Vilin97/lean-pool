@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CochainCupLeibniz
-import Mathlib.Algebra.Homology.ConcreteCategory
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CochainCupLeibniz
+public import Mathlib.Algebra.Homology.ConcreteCategory
 
 /-!
 # Cohomology-level singular cup product over `ZMod 2`
@@ -40,6 +42,8 @@ of the classes of two cocycles is the class of their cochain cup.
 
 The module exports the cohomology-level product and its functoriality laws.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits AlgebraicTopology SphereOddDegree.AlexanderWhitney
 

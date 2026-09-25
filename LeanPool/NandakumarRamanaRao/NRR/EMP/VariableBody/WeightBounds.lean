@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Basic
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CompactSiteFamily
-import LeanPool.NandakumarRamanaRao.NRR.EMP.PowerCellPositiveArea
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CompactSiteFamily
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.PowerCellPositiveArea
 
 /-!
 # `NRR.EMP.VariableBody.WeightBounds` — uniform coordinate bounds
@@ -30,6 +32,8 @@ rearranges to `w j - w i ≤ ‖y - s j‖² - ‖y - s i‖²`. Dropping the no
 coordinate bound follows from normalization `∑ j, w j = 0` and the triangle inequality on the finite
 sum `(n : ℝ) * w i = ∑ j, (w i - w j)`.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.PowerDiagram
 

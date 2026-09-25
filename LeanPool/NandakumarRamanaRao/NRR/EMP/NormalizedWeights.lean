@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
-import LeanPool.NandakumarRamanaRao.NRR.EMP.WeightShift
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightsExistence
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.WeightShift
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightsExistence
 /-!
 # `NRR.EMP.NormalizedWeights` — normalized equal‑area power weights and existence
 
@@ -35,6 +37,8 @@ exist.
 * `EMP.exists_normalized_equalArea_weight` — normalized equal‑area weights exist, combining the
  existence theorem `EMP.exists_equalArea_weights` with the two facts above.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

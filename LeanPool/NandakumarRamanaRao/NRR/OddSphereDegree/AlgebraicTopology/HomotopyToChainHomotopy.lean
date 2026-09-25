@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.AlgebraicTopology.SingularHomology.Basic
-import Mathlib.Algebra.Category.ModuleCat.Abelian
-import Mathlib.Algebra.Category.ModuleCat.Colimits
+
+public import Mathlib.AlgebraicTopology.SingularHomology.Basic
+public import Mathlib.Algebra.Category.ModuleCat.Abelian
+public import Mathlib.Algebra.Category.ModuleCat.Colimits
 
 /-!
 # Chain-homotopy implies equality on singular homology
@@ -15,6 +17,8 @@ Specializes Mathlib's `Homotopy.homologyMap_eq` to the integral singular chain a
 functors. The theorem consumes an explicit chain homotopy; the prism-operator modules construct
 that chain homotopy from a topological homotopy.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 

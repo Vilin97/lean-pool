@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
 
 /-!
 # `NRR.EMP.WeightShift` — additive‑constant shift invariance of power weights
@@ -33,6 +35,8 @@ preserved.
 No equal‑area existence, no normalization, and no variation of sites is used: the sites `s`
 are held fixed throughout and every result is a pure algebraic cancellation of the constant.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.PowerDiagram
 

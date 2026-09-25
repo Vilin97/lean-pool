@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBMovableParameterSpace
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBMovableParameterSpace
 /-!
 # Route B, Step 3: decomposition of mixed-face positive-ray incidence
 
@@ -13,6 +15,8 @@ finitely many cases by choosing a retained movable vertex whose barycentric
 coefficient is positive.  The next stages will prove that each resulting bad
 parameter set is null.
 -/
+
+@[expose] public section
 
 namespace NRR
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
-import LeanPool.NandakumarRamanaRao.NRR.EMP.OptimalTransportCore
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.OptimalTransportCore
 
 /-!
 # `NRR.EMP.EqualAreaWeightsExistence` — existence of equal‑area power weights
@@ -35,6 +37,8 @@ the equal‑area‑partition development. No new hypotheses are introduced — t
 the core theorem exactly, and the nondegeneracy hypotheses (`hn`, `hs`) are the minimal ones
 justified in `OptimalTransportCore`.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

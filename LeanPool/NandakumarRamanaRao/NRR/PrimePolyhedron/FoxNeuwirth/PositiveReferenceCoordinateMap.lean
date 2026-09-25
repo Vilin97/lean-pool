@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceCoordinateLift
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedAffineMap
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceCoordinateLift
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedAffineMap
 /-!
 # A globally positive coordinate lift of the S5 reference map
 
@@ -14,6 +16,8 @@ vertex-wise offset large enough that the full coordinate lift is strictly positi
 order-complex realization.  This gives a manifestly zero-free straight-line homotopy from the
 upper child map to the reference obstruction map.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace AAK
@@ -27,12 +31,12 @@ variable {p : Nat}
 noncomputable def referenceCoordinateAbsBound (hp : Nat.Prime p) : Real :=
   1 + ∑ c : BarredPermutation p, ∑ i : Fin p, |(referenceCoordinateMap hp).vertexValue c i|
 
- theorem referenceCoordinateAbsBound_pos (hp : Nat.Prime p) :
+theorem referenceCoordinateAbsBound_pos (hp : Nat.Prime p) :
     0 < referenceCoordinateAbsBound hp := by
   unfold referenceCoordinateAbsBound
   positivity
 
- theorem referenceCoordinate_vertex_lt_bound
+theorem referenceCoordinate_vertex_lt_bound
     (hp : Nat.Prime p) (c : BarredPermutation p) (i : Fin p) :
     |(referenceCoordinateMap hp).vertexValue c i| < referenceCoordinateAbsBound hp := by
   unfold referenceCoordinateAbsBound
@@ -57,7 +61,7 @@ noncomputable def positiveReferenceCoordinateMap
   vertexValue c i :=
     (referenceCoordinateMap hp).vertexValue c i + referenceCoordinateAbsBound hp
 
- theorem positiveReferenceCoordinateMap_vertex_pos
+theorem positiveReferenceCoordinateMap_vertex_pos
     (hp : Nat.Prime p) :
     ∀ c i, 0 < (positiveReferenceCoordinateMap hp).vertexValue c i := by
   intro c i
@@ -68,7 +72,7 @@ noncomputable def positiveReferenceCoordinateMap
   simp only [positiveReferenceCoordinateMap]
   linarith
 
- theorem positiveReferenceCoordinateMap_global_pos
+theorem positiveReferenceCoordinateMap_global_pos
     (hp : Nat.Prime p) :
     ∀ x : Realization p, ∀ i : Fin p,
       0 < (positiveReferenceCoordinateMap hp).globalValue x i := by

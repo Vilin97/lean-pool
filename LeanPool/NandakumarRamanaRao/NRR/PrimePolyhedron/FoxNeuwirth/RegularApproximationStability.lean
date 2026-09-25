@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantCoordinateHomotopy
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantCoordinateHomotopy
 /-!
 # Stable regular approximations for endpoint cobordism
 
@@ -16,6 +18,8 @@ sufficient for a boundary-relative prism comparison.
 This module introduces the transversality condition required by the endpoint-comparison stage.
 Existence and comparison are established by the downstream collar modules.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -77,7 +81,8 @@ theorem positive_coordinate
 
 end StableRegularApproximation
 
-/-- Finite-PL endpoint comparison proposition.  This proposition requires boundary-transverse endpoint approximations. -/
+/-- Finite-PL endpoint comparison proposition.  This proposition requires boundary-transverse
+endpoint approximations. -/
 def StableHomotopyInvarianceTheorem : Prop :=
   ∀ {p : Nat} (hp : Nat.Prime p)
     (F₀ F₁ : EquivariantCoordinateHomotopy.ZeroFreeMap hp)

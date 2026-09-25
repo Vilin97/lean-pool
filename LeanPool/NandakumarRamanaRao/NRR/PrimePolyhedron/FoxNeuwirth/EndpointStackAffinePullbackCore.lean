@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepEndpoints
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionZeroFreeApproximation
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepEndpoints
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionZeroFreeApproximation
 /-!
 # Affine pullback values on one endpoint-subdivision cylinder
 
@@ -23,6 +25,8 @@ ordinary barycentric-subdivision vertex values needed by the next layer.
 This file proves the complete simplex-local statement.  Global iteration only needs the standard
 face-gluing theorem saying that the parent PL values agree on shared refined faces.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -59,7 +63,8 @@ theorem affine_pullbackVertexValue_eq_spatial
     (V : Fin (d + 1) → Fin n → Real)
     (w : Delta (d + 1)) :
     (fun c => ∑ i : Fin (d + 2), w i * pullbackVertexValue d q V i c) =
-      fun c => ∑ j : Fin (d + 1), RelativeSubdivisionCylinderCombinatorics.spatialPoint d q w j * V j c := by
+      fun c => ∑ j : Fin (d + 1), RelativeSubdivisionCylinderCombinatorics.spatialPoint d q w j
+        * V j c := by
   funext c
   simp only [pullbackVertexValue,
     RelativeSubdivisionCylinderCombinatorics.spatialPoint, Finset.mul_sum]
@@ -77,7 +82,8 @@ theorem affine_pullbackVertexValue_eq_spatial
 /-- The affine-pullback convention fixes every coarse lower-boundary vertex literally. -/
 @[simp] theorem pullbackVertexValue_lower
     (d : Nat) (V : Fin (d + 1) → Fin n → Real) (i : Fin (d + 1)) :
-    pullbackVertexValue d (RelativeSubdivisionCylinderCombinatorics.lowerCell d) V i.succ = V i := by
+    pullbackVertexValue d (RelativeSubdivisionCylinderCombinatorics.lowerCell d) V i.succ = V i
+      := by
   funext c
   simp [pullbackVertexValue,
     RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex,

@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.Strata
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.Strata
 
 /-!
 # Top Fox--Neuwirth cells
@@ -13,6 +15,8 @@ Top dual cells are exactly one-block barred permutations.  Consequently their fi
 canonically equivalent to the full permutation group.  The prime symmetry action is the
 restriction of relabelling on this permutation torsor.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -89,7 +93,7 @@ def transpositionRepresentative
     (i j : Fin p) : TopCell p :=
   ofPerm (Equiv.swap i j)
 
- theorem dimension
+theorem dimension
     (hp : Nat.Prime p) (c : TopCell p) :
     c.1.dualDimension = p - 1 :=
   BarredPermutation.dualDimension_top c.1 hp.pos c.2

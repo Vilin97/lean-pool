@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RealProjectiveSpace
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.HomotopyToChainHomotopy
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RealProjectiveSpace
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.HomotopyToChainHomotopy
 
 /-!
 # Low-dimensional real projective space: `RP⁰`
@@ -37,6 +39,8 @@ in this packaged form, so that step is the recorded next concrete theorem (see
 cohomology computation is introduced.
 -/
 
+@[expose] public section
+
 open CategoryTheory AlgebraicTopology
 
 namespace SphereOddDegree
@@ -45,7 +49,7 @@ namespace SphereOddDegree
 antipodal: the one-dimensional unit sphere is the two-point set `{±e}`. -/
 theorem sphere_zero_eq_or_neg (x y : Sphere 0) : x = y ∨ x = -y := by
   rcases x with ⟨x, hx⟩; rcases y with ⟨y, hy⟩
-  simp_all +decide
+  simp_all? +decide
   rw [mem_sphere_zero_iff_norm] at hx hy
   norm_num [EuclideanSpace.norm_eq] at hx hy
   simp_all +decide [Fin.eq_zero, Subtype.ext_iff]
@@ -61,7 +65,7 @@ instance : Subsingleton (RP 0) := by
   refine ⟨fun a b => ?_⟩
   obtain ⟨x, rfl⟩ := RP.exists_rep a
   obtain ⟨y, rfl⟩ := RP.exists_rep b
-  simp +decide
+  simp? +decide
   exact sphere_zero_eq_or_neg x y
 
 /-- `RP⁰` is nonempty (it is the image of the nonempty `Sphere 0`). -/

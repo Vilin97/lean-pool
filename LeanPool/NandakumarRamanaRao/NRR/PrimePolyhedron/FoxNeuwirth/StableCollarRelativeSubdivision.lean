@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarExistenceAudit
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarGenericity
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpoints
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionIter
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarExistenceAudit
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarGenericity
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpoints
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionIter
 
 /-!
 # Relative subdivision cobordisms for stable endpoint counts
@@ -33,6 +35,8 @@ horizontal parameter subsets, and use strong general position only on movable in
 cells.  The fixed horizontal boundaries require only the `PositiveRaySkeletonFree` property
 already carried by `StableRegularApproximation`.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -350,7 +354,8 @@ theorem zeroCount_eq
     C.horizontalVertexFixed.toEndpointBoundaryFixed hp A₀ A₁ C.collar C.assignment
   rw [← B.lowerHorizontalContribution_eq_zeroCount,
     ← B.upperHorizontalContribution_eq_zeroCount]
-  exact FoxNeuwirthRelativeAffineCollar.lowerHorizontalContribution_eq_upperHorizontalContribution_of_localPositiveRayStokes
+  open FoxNeuwirthRelativeAffineCollar in
+  exact lowerHorizontalContribution_eq_upperHorizontalContribution_of_localPositiveRayStokes
       hp C.collar.toFoxNeuwirthRelativeAffineCollar C.assignment C.localPositiveRayStokes
 
 end ExplicitRelativeStableCollarCertificate
@@ -399,7 +404,8 @@ structure RelativeStableCollarConstructionData
 namespace RelativeStableCollarConstructionData
 
 /-- A geometric construction package yields a boundary-fixed generic collar certificate.  The
-movable perturbation is chosen automatically, retains a positive compactness-derived norm margin, and cannot
+movable perturbation is chosen automatically, retains a positive compactness-derived norm margin,
+and cannot
 change the horizontal positive-ray safety condition. -/
 theorem certificate_nonempty
     {hp : Nat.Prime p}

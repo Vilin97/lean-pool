@@ -3,14 +3,16 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Basic
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.AreaVector
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.EqualAreaRelation
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.WeightBounds
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.WeightBox
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.ClosedGraph
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.AreaVector
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.EqualAreaRelation
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.WeightBounds
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.WeightBox
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.ClosedGraph
 
 /-!
 # `NRR.EMP.VariableBody.NormalizedWeightContinuity` — continuity of the selected weight
@@ -32,6 +34,8 @@ continuity core.
 * `areaVec_normalizedWeight_eq_target` — the selected area vector is the constant target vector.
 * `continuous_areaVec_normalizedWeight_compactFamily` — continuity of the selected area vector.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

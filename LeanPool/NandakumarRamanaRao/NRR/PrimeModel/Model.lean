@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.EquivariantMap
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.EquivariantMap
 
 /-!
 # Abstract compact prime configuration model
@@ -13,6 +15,8 @@ The concrete polyhedron used in the paper will eventually instantiate this struc
 structure records only compact topological and equivariant data; it does not postulate a zero-count
 or separation theorem.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -56,7 +60,7 @@ attribute [instance] PrimeConfigurationModel.metricSpace
     M.reference (g • x) = g • M.reference x :=
   M.reference_equivariant g x
 
- theorem smul_eq_self_imp
+theorem smul_eq_self_imp
     (M : PrimeConfigurationModel hp)
     (g : PrimeSymmetry p) (x : M.Point)
     (h : g • x = x) : g = 1 := by
@@ -65,7 +69,7 @@ attribute [instance] PrimeConfigurationModel.metricSpace
     g • M.toConfig x = M.toConfig (g • x) := (M.toConfig_smul g x).symm
     _ = M.toConfig x := by rw [h]
 
- theorem action_free (M : PrimeConfigurationModel hp) :
+theorem action_free (M : PrimeConfigurationModel hp) :
     ∀ {g : PrimeSymmetry p} {x : M.Point}, g • x = x → g = 1 := by
   intro g x h
   exact M.smul_eq_self_imp g x h
@@ -74,12 +78,12 @@ attribute [instance] PrimeConfigurationModel.metricSpace
 def referenceZeroSet (M : PrimeConfigurationModel hp) : Set M.Point :=
   {x | M.reference x = 0}
 
- theorem referenceZeroSet_invariant (M : PrimeConfigurationModel hp) :
+theorem referenceZeroSet_invariant (M : PrimeConfigurationModel hp) :
     IsPrimeInvariant (p := p) M.referenceZeroSet :=
   M.reference_equivariant.zeroSet_invariant (fun g =>
     PrimeSymmetry.zeroSumSMulZero.smul_zero g)
 
- theorem isClosed_referenceZeroSet (M : PrimeConfigurationModel hp) :
+theorem isClosed_referenceZeroSet (M : PrimeConfigurationModel hp) :
     IsClosed M.referenceZeroSet :=
   isClosed_eq M.reference.continuous continuous_const
 

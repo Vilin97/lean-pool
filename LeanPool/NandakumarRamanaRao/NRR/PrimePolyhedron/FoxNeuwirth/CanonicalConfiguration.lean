@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.BarredPermutation
-import LeanPool.NandakumarRamanaRao.NRR.ConfigurationSpace
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.BarredPermutation
+public import LeanPool.NandakumarRamanaRao.NRR.ConfigurationSpace
 
 /-!
 # Canonical configurations of barred permutations
@@ -14,6 +16,8 @@ Every barred permutation has a concrete labelled planar configuration: the first
 block number and the second coordinate is the permutation rank.  This realizes every
 Fox--Neuwirth symbol by an actual collision-free configuration and is equivariant for relabelling.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -40,7 +44,7 @@ noncomputable def canonicalPoint (c : BarredPermutation p) (i : Fin p) : E2 :=
     c.canonicalPoint i 1 = ((c.rank i).1 : ℝ) := by
   simp [canonicalPoint]
 
- theorem canonicalPoint_injective (c : BarredPermutation p) :
+theorem canonicalPoint_injective (c : BarredPermutation p) :
     Function.Injective c.canonicalPoint := by
   intro i j hij
   apply c.rank.injective
@@ -58,7 +62,7 @@ noncomputable def canonicalConfig (c : BarredPermutation p) : Config p :=
     c.canonicalConfig.pts i = c.canonicalPoint i :=
   rfl
 
- theorem canonicalConfig_relabel
+theorem canonicalConfig_relabel
     (σ : Equiv.Perm (Fin p)) (c : BarredPermutation p) :
     (c.relabel σ).canonicalConfig =
       Config.relabel σ c.canonicalConfig := by

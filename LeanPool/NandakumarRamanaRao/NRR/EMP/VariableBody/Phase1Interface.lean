@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace
-import LeanPool.NandakumarRamanaRao.NRR.ConfigurationSpace
+
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace
+public import LeanPool.NandakumarRamanaRao.NRR.ConfigurationSpace
 
 /-!
 # Convex-body interface for variable-body power partitions
@@ -32,6 +34,8 @@ Hausdorff convergence. The metric is Mathlib's Hausdorff metric inherited throug
 Continuity results are stated over a compact metric parameter space `X` carrying a continuous site
 family `sites : C(X, Config n)`. The configuration space `Config n` itself is not assumed compact.
 -/
+
+@[expose] public section
 
 open MeasureTheory Filter Topology
 

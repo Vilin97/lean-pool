@@ -3,14 +3,16 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAlgebra
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.HalfspaceFiniteIntersectionAreaContinuity
+
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAlgebra
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.HalfspaceFiniteIntersectionAreaContinuity
 
 /-!
 # `NRR.PowerDiagram.CellAreaContinuityWeights`
@@ -43,6 +45,8 @@ so its halfspace is the constant whole plane `{x | 0 ≤ 0}`; it contributes not
 harmless, which is why the diagonal is exempted (only the off‑diagonal normals must be
 nonzero).
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody MeasureTheory
 open scoped RealInnerProductSpace
@@ -84,8 +88,9 @@ theorem bodyCellSet_eq_finiteHalfspaceIntersection_offDiag
         (fun j : {j : Fin n // j ≠ i} => sepNormal s i j.1)
         (fun j : {j : Fin n // j ≠ i} => sepOffset s w i j.1) := by
   convert Set.ext _;
-  intro x; simp +decide [ finiteHalfspaceIntersection ];
-  intro hx; constructor <;> intro h <;> intro j <;> by_cases hj : j = i <;> simp_all +decide [ powerDist_le_iff_halfspace ];
+  intro x; simp? +decide [ finiteHalfspaceIntersection ];
+  intro hx; constructor <;> intro h <;> intro j <;> by_cases hj : j = i <;> simp_all +decide [
+    powerDist_le_iff_halfspace ];
 
 /-- **Fixed‑site weight‑continuity of the restricted power‑cell area.** With sites `s` fixed and
 pairwise distinct from `s i` (`hs`), the restricted cell area `w ↦ bodyCellArea K s w i` is
@@ -94,12 +99,14 @@ theorem continuous_bodyCellArea_weights
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane) (i : Fin n)
     (hs : ∀ j, j ≠ i → s j ≠ s i) :
     Continuous fun w : Fin n → ℝ => bodyCellArea K s w i := by
-  have hu : ∀ j : {j : Fin n // j ≠ i}, (fun j : {j : Fin n // j ≠ i} => sepNormal s i j.1) j ≠ 0 := by
+  have hu : ∀ j : {j : Fin n // j ≠ i}, (fun j : {j : Fin n // j ≠ i} => sepNormal s i j.1) j ≠
+    0 := by
     intro j
     simp only [sepNormal]
     have h : s j.1 - s i ≠ 0 := sub_ne_zero.mpr (hs j.1 j.2)
     exact smul_ne_zero (by norm_num) h
-  have hc : Continuous fun w : Fin n → ℝ => fun j : {j : Fin n // j ≠ i} => sepOffset s w i j.1 := by
+  have hc : Continuous fun w : Fin n → ℝ => fun j : {j : Fin n // j ≠ i} => sepOffset s w i j.1
+    := by
     refine continuous_pi fun j => ?_
     unfold sepOffset
     fun_prop

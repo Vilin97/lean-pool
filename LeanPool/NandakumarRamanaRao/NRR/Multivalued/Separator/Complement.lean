@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Basic
+
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Basic
 
 /-!
 # Complement data for a prescribed top--bottom carrier
@@ -14,6 +16,8 @@ complement has lower and upper components joining the two endpoint boundaries.  
 the carrier is obtained independently as the projection of a compact zero set: compactness proves
 closedness, while a cobordism or intersection-number argument supplies the complement data.
 -/
+
+@[expose] public section
 
 namespace NRR
 

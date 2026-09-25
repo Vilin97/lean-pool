@@ -3,18 +3,20 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.ObstructionValue
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FacetShuffleEquiv
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopIncidenceComplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexRealization
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteAffineZeroCount
-import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopFlagSubdivision
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopFlagTerminalCancellation
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagCode
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagBridge
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceAffineOrbitCount
+
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.ObstructionValue
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FacetShuffleEquiv
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopIncidenceComplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexRealization
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteAffineZeroCount
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopFlagSubdivision
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopFlagTerminalCancellation
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagCode
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagBridge
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceAffineOrbitCount
 
 /-!
 # AAK simplest route
@@ -23,6 +25,8 @@ This module records the hybrid route.  The order-complex realization supplies th
 compact glued configuration model, while the top cycle is defined by the genuine cellular
 incidence sum.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace AAK
@@ -123,7 +127,8 @@ theorem simplestRoute_implies_flexiblePrimeRefinement
   intro p hp K A hA _ phi
   exact ⟨simplestRouteStep H p hp K A hA phi⟩
 
-/-- The locally constant obstruction theorem and the model-independent prime-factor iteration yield the full arbitrary-number conclusion. -/
+/-- The locally constant obstruction theorem and the model-independent prime-factor iteration yield
+the full arbitrary-number conclusion. -/
 theorem avvakumov_akopyan_karasev_of_simplestRoute
     (H : SimplestRouteObstructionTheorem) :
     ∀ (K : Geometry.ConvexBody Plane) (n : Nat), 0 < n →

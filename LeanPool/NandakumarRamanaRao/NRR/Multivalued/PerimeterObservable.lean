@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Operations
+
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Operations
 
 /-!
 # `NRR.Multivalued.PerimeterObservable` — normalized perimeter as a nice multivalued function
@@ -23,6 +25,8 @@ The resulting nice multivalued function `perimeterNiceMV` evaluates by `(t : ℝ
 normalizedPerimeter C`, following the fixed sign convention (negative at `-1`, positive at `1`); its
 zero relation is exactly `(t : ℝ) = normalizedPerimeter C`.
 -/
+
+@[expose] public section
 
 open NRR.Geometry
 

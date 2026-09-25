@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarGenericity
-import Mathlib.Topology.Algebra.Module.FiniteDimension
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarGenericity
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-!
 # Route B, Step 2: the movable parameter space
@@ -15,6 +17,8 @@ finite-dimensional product of real lines.  It also records the elementary
 coordinate-replacement and reconstruction lemmas needed by the incidence
 argument.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

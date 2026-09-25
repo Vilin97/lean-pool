@@ -3,25 +3,31 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import Mathlib.Topology.Separation.Hausdorff
+
+public import Mathlib.Tactic
+public import Mathlib.Topology.Separation.Hausdorff
 
 /-!
 # `NRR.EMP.VariableBody.ClosedGraph` — the compact closed-graph criterion
 
-This module provides the abstract topological input that turns uniqueness plus a closed relation into
+This module provides the abstract topological input that turns uniqueness plus a closed relation
+into
 continuity of a selection map.
 
 * `continuous_of_isClosed_graph_of_compact`: a function into a compact Hausdorff space, out of a
   compact Hausdorff space, whose graph is closed, is continuous. Mathlib does not carry this exact
   statement as a single named theorem, so it is proved here via the compact-projection route.
-* `isClosed_graph_of_isClosed_relation_of_unique`: if a closed relation `R` contains the graph of `f`
+* `isClosed_graph_of_isClosed_relation_of_unique`: if a closed relation `R` contains the graph of
+`f`
   and selects each value uniquely, then the graph of `f` is closed (indeed equal to `R`).
 
 The compactness of both the domain and the codomain is essential: the closed-graph theorem is false
 for continuity without it.
 -/
+
+@[expose] public section
 
 namespace NRR.EMP.VariableBody
 
@@ -34,7 +40,7 @@ Hausdorff; and that image equals `f ⁻¹' F`. -/
 theorem continuous_of_isClosed_graph_of_compact
     {D Y : Type*}
     [TopologicalSpace D] [CompactSpace D] [T2Space D]
-    [TopologicalSpace Y] [CompactSpace Y] 
+    [TopologicalSpace Y] [CompactSpace Y]
     (f : D → Y)
     (hgraph : IsClosed {z : D × Y | z.2 = f z.1}) :
     Continuous f := by

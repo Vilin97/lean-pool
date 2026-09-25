@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Width
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionTransform
+
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Width
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionTransform
 
 /-!
 # `NRR.Geometry.ConvexBody` — width function transformation identities
@@ -35,6 +37,8 @@ No structure internals or `sSup` are unfolded here.
 `Width.lean` and `SupportFunctionTransform.lean` (both transitively via `Basic.lean`) already
 pull in `import Mathlib`, so no extra imports are required here.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

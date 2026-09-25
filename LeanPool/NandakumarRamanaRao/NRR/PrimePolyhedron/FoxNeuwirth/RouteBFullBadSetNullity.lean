@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBMixedFaceBadSetMeasurable
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.LinearAlgebra.Dimension.Constructions
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBMixedFaceBadSetMeasurable
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import Mathlib.LinearAlgebra.Dimension.Constructions
 /-!
 # Route B: full mixed-face bad-set nullity
 
@@ -19,6 +21,8 @@ retained vertex blocks.  The span has dimension at most `p - 1` in a
 the measure-preserving coordinate split give nullity of the original complete
 bad set, including its existential simplex witness.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -401,7 +405,7 @@ theorem volume_mixedFaceBadSet_eq_zero
     (volume_splitMixedFaceBadSetCanonical_eq_zero hp C base κ)
 
 /-- Concrete Step 5 certificate. -/
-noncomputable def mixedFaceBadSetNullCertificate
+theorem mixedFaceBadSetNullCertificate
     (base : Assignment hp C) (κ : MixedFaceCase hp C) :
     MixedFaceBadSetNullCertificate hp C base κ :=
   ⟨volume_mixedFaceBadSet_eq_zero hp C base κ⟩

@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallChains
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionIter
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallChains
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionIter
+public import Mathlib.Tactic
 
 /-!
 # Smallness/carrier control of the subdivision homotopy terms
@@ -72,6 +74,8 @@ of the small boundary `z`), which is exactly what the project require; we do not
 state the (false) claim that `H^(N)(c)` is small for arbitrary `c`.
 -/
 
+@[expose] public section
+
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Limits
 
@@ -94,19 +98,23 @@ theorem singularChainMap_mem_smallChainSubmodule (R : Type) [CommRing R]
     (hf : ∃ U ∈ 𝒰.sets, Set.range (ConcreteCategory.hom f) ⊆ U)
     (c : singularChainGroup R Y n) :
     (singularChainMap R f n).hom c ∈ smallChainSubmodule R X 𝒰 n := by
-  have h_pushforward_small : ∀ (σ : singularSimplices Y n), (singularChainMap R f n).hom (chainGenerator R Y n σ) ∈ smallChainSubmodule R X 𝒰 n := by
+  have h_pushforward_small : ∀ (σ : singularSimplices Y n), (singularChainMap R f n).hom
+    (chainGenerator R Y n σ) ∈ smallChainSubmodule R X 𝒰 n := by
     intro σ
     have h_small : IsSmallSimplex 𝒰 (pushSimplex f n σ) := by
       obtain ⟨ U, hU₁, hU₂ ⟩ := hf
       generalize_proofs at *; (
-      exact ⟨ U, hU₁, Set.range_subset_iff.mpr fun x => hU₂ ⟨ ( singularSimplexAsContinuousMap Y n σ ) x, by simp +decide [ pushSimplex_continuousMap ] ⟩ ⟩)
+      exact ⟨U, hU₁, Set.range_subset_iff.mpr fun x =>
+        hU₂ ⟨(singularSimplexAsContinuousMap Y n σ) x, by
+          simp +decide [pushSimplex_continuousMap]⟩⟩)
     generalize_proofs at *; (exact (by
     exact singularChainMap_generator R f n σ ▸ chainGenerator_mem_smallChainSubmodule h_small) )
   generalize_proofs at *; (
   have h_span : c ∈ Submodule.span R (Set.range (chainGenerator R Y n)) := by
     exact chainGenerator_span_top R n ▸ Submodule.mem_top
   generalize_proofs at *; (
-  refine' Submodule.span_induction _ _ _ _ h_span <;> aesop ( simp_config := { singlePass := true } );))
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ h_span <;> aesop ( simp_config := { singlePass :=
+    true } );))
 
 /-! ## 2. The one-step homotopy preserves small chains -/
 
@@ -122,14 +130,15 @@ theorem subdivisionHomotopy_preserves_smallChains (R : Type) [CommRing R]
       (barycentricSubdivisionHomotopyLinearMap R X n).hom c
         ∈ smallChainSubmodule R X 𝒰 (n + 1) := by
   intro c hc;
-  refine' Submodule.span_induction _ _ _ _ hc;
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ hc;
   · rintro _ ⟨ σ, hσ, rfl ⟩;
-    convert singularChainMap_mem_smallChainSubmodule R 𝒰 ( n + 1 ) ( TopCat.ofHom ( singularSimplexAsContinuousMap X n σ ) ) _ ( barycentricHomotopyUniversal R n ) using 1;
+    convert singularChainMap_mem_smallChainSubmodule R 𝒰 ( n + 1 ) ( TopCat.ofHom (
+      singularSimplexAsContinuousMap X n σ ) ) _ ( barycentricHomotopyUniversal R n ) using 1;
     · convert barycentricSubdivisionHomotopyLinearMap_apply_generator R X n σ using 1;
     · exact hσ;
   · simp +decide;
   · exact fun x y hx hy hx' hy' => by simpa using Submodule.add_mem _ hx' hy';
-  · simp +zetaDelta at *;
+  · simp? +zetaDelta at *;
     exact fun a x hx hx' => Submodule.smul_mem _ _ hx'
 
 /-! ## 3. The accumulated homotopy preserves small chains -/
@@ -144,9 +153,13 @@ theorem iteratedSubdivisionHomotopy_preserves_smallChains (R : Type) [CommRing R
     ∀ c ∈ smallChainSubmodule R X 𝒰 n,
       barycentricSubdivisionIterHomotopyLinearMap R X N n c
         ∈ smallChainSubmodule R X 𝒰 (n + 1) := by
-  induction' N with N ih generalizing n;
-  · simp +decide [ barycentricSubdivisionIterHomotopyLinearMap ];
-  · intro c hc; rw [ barycentricSubdivisionIterHomotopyLinearMap_succ ]; exact Submodule.add_mem _ ( ih n c hc ) ( barycentricSubdivisionIter_maps_smallChainSubmodule R 𝒰 N ( n + 1 ) _ ( subdivisionHomotopy_preserves_smallChains R 𝒰 n c hc ) );
+  induction N generalizing n with
+  | zero =>
+    simp +decide [ barycentricSubdivisionIterHomotopyLinearMap ];
+  | succ N ih =>
+    intro c hc; rw [ barycentricSubdivisionIterHomotopyLinearMap_succ ]; exact Submodule.add_mem
+      _ ( ih n c hc ) ( barycentricSubdivisionIter_maps_smallChainSubmodule R 𝒰 N ( n + 1 ) _ (
+      subdivisionHomotopy_preserves_smallChains R 𝒰 n c hc ) );
 
 /-! ## 4. Existence theorems combining shrinking and carrier control -/
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Partition.ConvexPartition
-import LeanPool.NandakumarRamanaRao.NRR.AreaPerimeter
-import LeanPool.NandakumarRamanaRao.NRR.Representation.ZeroSum
+
+public import LeanPool.NandakumarRamanaRao.NRR.Partition.ConvexPartition
+public import LeanPool.NandakumarRamanaRao.NRR.AreaPerimeter
+public import LeanPool.NandakumarRamanaRao.NRR.Representation.ZeroSum
 
 /-!
 # `NRR.Partition.PerimeterVector` — perimeter vector of a convex partition
@@ -26,6 +28,8 @@ directly to each piece.
 No equal-area assumption, test map, or continuity statement is introduced here: this module is
 purely the definitional perimeter API.
 -/
+
+@[expose] public section
 
 namespace NRR
 

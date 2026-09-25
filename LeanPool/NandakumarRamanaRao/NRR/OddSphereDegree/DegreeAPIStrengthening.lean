@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomology
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Antipodal
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomology
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Antipodal
 
 /-!
 # Strengthened sphere-degree API
@@ -15,6 +17,8 @@ maps, homeomorphisms, and antipodal parity results. The declarations are paramet
 chosen top-homology isomorphism or orientation; later modules supply the unconditional
 positive-dimensional orientation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

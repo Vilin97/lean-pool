@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeter
+
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeter
 
 /-!
 # `NRR.Geometry.ConvexBody` — basic scalar properties of the planar perimeter
@@ -25,6 +27,8 @@ This module records basic scalar properties of the planar Cauchy perimeter
 Only `PlanarPerimeter.lean` is imported; it transitively provides all of Mathlib together with
 the `planarPerimeter`, `widthFunction`, and `circleVec` APIs. No extra imports are required.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 
@@ -66,13 +70,15 @@ theorem ConvexBody.widthFunction_pos
     exact Metric.mem_nhds_iff.1 ( mem_interior_iff_mem_nhds.1 hx₀.1 );
   -- Choose $t$ such that $0 < t < r$.
   obtain ⟨t, ht_pos, ht⟩ : ∃ t > 0, t < r ∧ t * ‖u‖ > 0 := by
-    exact ⟨ r / 2, half_pos hr_pos, half_lt_self hr_pos, mul_pos ( half_pos hr_pos ) ( norm_pos_iff.mpr hu ) ⟩;
+    exact ⟨ r / 2, half_pos hr_pos, half_lt_self hr_pos, mul_pos ( half_pos hr_pos ) (
+      norm_pos_iff.mpr hu ) ⟩;
   -- Consider the points $x₀ + \frac{t}{‖u‖} u$ and $x₀ - \frac{t}{‖u‖} u$.
   set v := (t / ‖u‖) • u with hv_def
   have hv_mem : x₀ + v ∈ K.carrier ∧ x₀ - v ∈ K.carrier := by
-    refine' ⟨ hr _, hr _ ⟩ <;> simp +decide [ *, norm_smul, abs_of_pos ];
+    refine ⟨ hr ?_, hr ?_ ⟩ <;> simp +decide [ *, norm_smul, abs_of_pos ];
   -- By definition of support function, we have:
-  have h_support : K.supportFunction u ≥ inner ℝ (x₀ + v) u ∧ K.supportFunction (-u) ≥ inner ℝ (x₀ - v) (-u) := by
+  have h_support : K.supportFunction u ≥ inner ℝ (x₀ + v) u ∧ K.supportFunction (-u) ≥ inner ℝ
+    (x₀ - v) (-u) := by
     exact ⟨ K.inner_le_supportFunction hv_mem.1, K.inner_le_supportFunction hv_mem.2 ⟩;
   simp_all +decide [ inner_add_left, inner_sub_left, inner_smul_left ];
   nlinarith [ show 0 < t / ‖u‖ * ‖u‖ ^ 2 by positivity, norm_pos_iff.mpr hu ]
@@ -81,11 +87,13 @@ theorem ConvexBody.widthFunction_pos
 theorem planarPerimeter_pos
     (K : ConvexBody Plane) :
     0 < planarPerimeter K := by
-  refine' mul_pos ( by norm_num ) ( _ );
+  refine mul_pos ( by norm_num ) ( ?_ );
   apply intervalIntegral.integral_pos;
   · positivity;
-  · exact Continuous.continuousOn ( by exact continuous_widthFunction K |> Continuous.comp <| continuous_circleVec );
+  · exact Continuous.continuousOn ( by
+      exact continuous_widthFunction K |> Continuous.comp <| continuous_circleVec );
   · exact fun x hx => ConvexBody.widthFunction_nonneg K _;
-  · exact ⟨ 0, ⟨ le_rfl, Real.two_pi_pos.le ⟩, ConvexBody.widthFunction_pos _ <| by norm_num [ circleVec ] ⟩
+  · exact ⟨0, ⟨le_rfl, Real.two_pi_pos.le⟩, ConvexBody.widthFunction_pos _ <| by
+      norm_num [circleVec]⟩
 
 end NRR.Geometry

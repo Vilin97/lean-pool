@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.PrimeSymmetry
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.PrimeSymmetry
 
 /-!
 # Barred permutations for the planar Fox--Neuwirth stratification
@@ -18,6 +20,8 @@ second-coordinate order.
 The dual Fox--Neuwirth cell has dimension `p - blockCount`.  Thus one-block symbols index top
 dual cells of dimension `p - 1`, while the all-singleton symbols index vertices.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -103,7 +107,7 @@ def relabel (σ : Equiv.Perm (Fin p))
     exact congrArg (fun j => (c.rank j : ℕ)) hi
   · rfl
 
- theorem relabel_mul
+theorem relabel_mul
     (σ τ : Equiv.Perm (Fin p)) (c : BarredPermutation p) :
     c.relabel (σ * τ) = (c.relabel τ).relabel σ := by
   apply BarredPermutation.ext
@@ -155,7 +159,7 @@ def IsFace (a b : BarredPermutation p) : Prop :=
         (b.rank i).1 < (b.rank j).1)) ∧
   a.dualDimension ≤ b.dualDimension
 
- theorem isFace_refl (a : BarredPermutation p) :
+theorem isFace_refl (a : BarredPermutation p) :
     a.IsFace a := by
   refine ⟨?_, ?_, le_rfl⟩
   · intro i j hij
@@ -163,7 +167,7 @@ def IsFace (a b : BarredPermutation p) : Prop :=
   · intro i j hij
     exact Iff.rfl
 
- theorem isFace_trans
+theorem isFace_trans
     {a b c : BarredPermutation p}
     (hab : a.IsFace b) (hbc : b.IsFace c) :
     a.IsFace c := by
@@ -177,7 +181,7 @@ def IsFace (a b : BarredPermutation p) : Prop :=
       · exact hab.1 j i (Nat.le_of_eq hij.symm)
     exact (hab.2.1 i j hij).trans (hbc.2.1 i j hbij)
 
- theorem isFace_relabel
+theorem isFace_relabel
     {a b : BarredPermutation p}
     (h : a.IsFace b) (σ : Equiv.Perm (Fin p)) :
     (a.relabel σ).IsFace (b.relabel σ) := by
@@ -197,31 +201,31 @@ noncomputable instance isFaceDecidable (a b : BarredPermutation p) :
 noncomputable instance isFacetDecidable (a b : BarredPermutation p) :
     Decidable (a.IsFacet b) := Classical.dec _
 
- theorem isFacet_relabel
+theorem isFacet_relabel
     {a b : BarredPermutation p}
     (h : a.IsFacet b) (σ : Equiv.Perm (Fin p)) :
     (a.relabel σ).IsFacet (b.relabel σ) := by
   exact ⟨isFace_relabel h.1 σ, by simpa using h.2⟩
 
- theorem bars_card_le (c : BarredPermutation p) :
+theorem bars_card_le (c : BarredPermutation p) :
     c.bars.card ≤ p - 1 := by
   calc
     c.bars.card ≤ (Finset.univ : Finset (Fin (p - 1))).card :=
       Finset.card_le_card (Finset.subset_univ c.bars)
     _ = p - 1 := by simp
 
- theorem blockCount_eq
+theorem blockCount_eq
     (c : BarredPermutation p) (hp0 : 0 < p) :
     c.blockCount = c.bars.card + 1 := by
   simp [blockCount, Nat.ne_of_gt hp0]
 
- theorem dualDimension_eq
+theorem dualDimension_eq
     (c : BarredPermutation p) (hp0 : 0 < p) :
     c.dualDimension = (p - 1) - c.bars.card := by
   rw [dualDimension, blockCount_eq c hp0]
   omega
 
- theorem dualDimension_top
+theorem dualDimension_top
     (c : BarredPermutation p) (hp0 : 0 < p)
     (hc : c.IsTop) :
     c.dualDimension = p - 1 := by
@@ -229,7 +233,7 @@ noncomputable instance isFacetDecidable (a b : BarredPermutation p) :
   simp [IsTop] at hc
   simp [hc]
 
- theorem dualDimension_vertex
+theorem dualDimension_vertex
     (c : BarredPermutation p) (hp0 : 0 < p)
     (hc : c.IsVertex) :
     c.dualDimension = 0 := by

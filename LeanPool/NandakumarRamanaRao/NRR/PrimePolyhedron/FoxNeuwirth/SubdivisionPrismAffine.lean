@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionPrismCharts
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionPrismCharts
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
 /-!
 # Affine-coordinate formulas for refined staircase prisms
 
@@ -18,6 +20,8 @@ is the barycentric interpolation of its values at the `p + 1` vertices.
 These formulas are used by the concrete common-level middle-prism constructor for the explicit
 relative collar.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -123,7 +127,8 @@ theorem linearMap_apply_eq_sum_vertices
   intro i hi
   rw [map_smul]
 
-/-- Linear functional computing one spatial realization coordinate of a fully refined prism chart. -/
+/-- Linear functional computing one spatial realization coordinate of a fully refined prism chart.
+-/
 noncomputable def prismSpatialCoordinateLinear
     (hp : Nat.Prime p) (N L : Nat) (q : PrismCell hp N L)
     (c : BarredPermutation p) :
@@ -159,7 +164,7 @@ theorem chart_spatial_eq_linear
     funext i
     simp [spatialWeight, maximalCoordinateReindexLinear,
       staircaseSpatialLinear, Fin.ext_iff]
-  simp [SubdivisionPrismCharts.chart, prismSpatialCoordinateLinear,
+  simp? [SubdivisionPrismCharts.chart, prismSpatialCoordinateLinear,
     realizationCoordinateLinear, maximalCoordinateReindexLinear,
     staircaseSpatialLinear,
     RefinedAffineMap.chart, Simplex.refinedContinuousMap,

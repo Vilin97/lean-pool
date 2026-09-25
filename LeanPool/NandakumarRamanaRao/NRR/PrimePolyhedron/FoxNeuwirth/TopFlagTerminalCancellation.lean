@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopFlagSubdivision
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FacetShuffleEquiv
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopFlagSubdivision
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FacetShuffleEquiv
 /-!
 # Terminal cancellation for the top-flag subdivision
 
@@ -18,6 +20,8 @@ the facet--shuffle equivalence.
 The proof is deliberately separated from the internal rank-two cancellation.  No classification
 of rank-two intervals is used here.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -302,7 +306,7 @@ theorem liftedTerminalChain_eq_of_terminalSource
   rw [simplicialChain_cast_apply]
   apply chain_eq_of_head_matrix
   · -- head vertex
-    simp [ simplex_cast_apply]
+    simp? [ simplex_cast_apply]
     exact (terminalSource_castSucc hp target u 0).trans (terminalSource_castSucc hp target v 0).symm
   · -- barDifferenceMatrix
     ext k r
@@ -345,7 +349,7 @@ theorem liftedTerminalChain_eq_of_terminalSource
         terminalSource_last_dualDimension hp target v
       have hctop' : (v.1 (Fin.last ((p - 2) + 1))).IsTop := isTop_of_dualDimension_eq_top hp.pos
         _ hcdim'
-      simp [barIndicator_of_not_mem _ _ (by rw [hctop]; simp),
+      simp? [barIndicator_of_not_mem _ _ (by rw [hctop]; simp),
             barIndicator_of_not_mem _ _ (by rw [hctop']; simp)]
       -- Need to show barIndicators are equal for the castSucc case
       have h_castSucc_eq : (Fin.cast hpc r).castSucc = r'.castSucc := rfl
@@ -454,7 +458,8 @@ theorem terminalMultiplicityTheorem : TerminalMultiplicityTheorem := by
   intro p hp
   exact terminalCancellation hp
 
-/-- After terminal reindexing, only the rank-two internal pairing remains for the simplicial cycle. -/
+/-- After terminal reindexing, only the rank-two internal pairing remains for the simplicial cycle.
+-/
 theorem cycle_of_rankTwo
     (hrank : RankTwoCancellationTheorem) :
     ∀ {p : Nat} (hp : Nat.Prime p), boundary hp = 0 :=

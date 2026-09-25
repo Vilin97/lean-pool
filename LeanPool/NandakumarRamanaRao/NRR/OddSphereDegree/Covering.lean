@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RealProjectiveSpace
-import Mathlib.Topology.Covering.Quotient
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RealProjectiveSpace
+public import Mathlib.Topology.Covering.Quotient
 
 /-!
 # The antipodal quotient is a covering map
@@ -54,6 +56,8 @@ typeclass resolution downstream), and the supporting `abbrev`/lemmas are
 `proj_isCoveringMap` and `proj_isLocalHomeomorph`.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 namespace SphereOddDegree
@@ -73,7 +77,7 @@ private abbrev DeckGroup : Type := Multiplicative (ZMod 2)
 
 /-- The antipodal action of `DeckGroup` on `S^n`: the nontrivial element
 negates. -/
-local instance antipodalSMul (n : ℕ) : SMul DeckGroup (Sphere n) where
+private local instance antipodalSMul (n : ℕ) : SMul DeckGroup (Sphere n) where
   smul g x := if Multiplicative.toAdd g = 0 then x else -x
 
 /-- The defining equation of the antipodal `DeckGroup`-action. -/
@@ -86,14 +90,14 @@ private theorem antipodalSMul_one {n : ℕ} (x : Sphere n) :
   rfl
 
 /-- The antipodal `DeckGroup`-action on `S^n`. -/
-local instance antipodalMulAction (n : ℕ) : MulAction DeckGroup (Sphere n) where
-  one_smul := antipodalSMul_one
+private local instance antipodalMulAction (n : ℕ) : MulAction DeckGroup (Sphere n) where
+  one_smul := by exact antipodalSMul_one
   mul_smul := by
     intro x y b
     fin_cases x <;> fin_cases y <;> simp +decide [antipodalSMul_def]
 
 /-- The antipodal action is by homeomorphisms (each element acts continuously). -/
-local instance antipodalContinuousConstSMul (n : ℕ) :
+private local instance antipodalContinuousConstSMul (n : ℕ) :
     ContinuousConstSMul DeckGroup (Sphere n) where
   continuous_const_smul := by
     intro g
@@ -111,13 +115,13 @@ local instance antipodalContinuousConstSMul (n : ℕ) :
 
 /-- The antipodal action is free (cancellative): no point on the unit sphere is
 fixed by the nontrivial element. -/
-local instance antipodalIsCancelSMul (n : ℕ) : IsCancelSMul DeckGroup (Sphere n) where
+private local instance antipodalIsCancelSMul (n : ℕ) : IsCancelSMul DeckGroup (Sphere n) where
   left_cancel' := by
     intro a b c h
     fin_cases a <;> simp_all +decide
   right_cancel' := by
     intro a b c h
-    fin_cases a <;> fin_cases b <;> simp_all +decide [antipodalSMul_def] <;>
+    fin_cases a <;> fin_cases b <;> simp_all? +decide [antipodalSMul_def] <;>
       first
         | exact absurd h (ne_neg_of_mem_unit_sphere ℝ c)
         | exact absurd h.symm (ne_neg_of_mem_unit_sphere ℝ c)

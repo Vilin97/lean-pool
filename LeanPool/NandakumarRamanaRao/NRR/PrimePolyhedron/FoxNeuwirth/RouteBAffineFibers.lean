@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBMixedFaceIncidence
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBMixedFaceIncidence
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 /-!
 # Route B, Step 4: one-coordinate affine fibers
 
@@ -20,6 +22,8 @@ an affine function of the distinguished scalar parameter.  If one total orbit
 coefficient is nonzero, the bad fiber is contained in a singleton and therefore
 has Lebesgue measure zero.
 -/
+
+@[expose] public section
 
 namespace NRR
 

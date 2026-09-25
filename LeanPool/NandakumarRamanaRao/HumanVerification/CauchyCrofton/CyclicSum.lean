@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Data.Int.Star
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Data.Int.Star
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Tactic
 
 /-!
 # Total variation of a cyclically unimodal sequence
@@ -22,6 +24,8 @@ The proof is a layer-cake computation: the intervals `[a j, a (j+1))` attached t
 steps are pairwise disjoint (two of them would produce two up-crossings of a common level) and
 they cover the range interval `[N, M)` up to the single point `0`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 

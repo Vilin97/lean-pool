@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionBasic
+
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionBasic
 /-!
 # `NRR.Geometry.ConvexBody` — continuity of the support function
 
@@ -33,6 +35,8 @@ radius bound `h_K(u) ≤ R‖u‖` give `h_K(u) - h_K(v) ≤ h_K(u - v) ≤ R‖
 so the map is `R`-Lipschitz. This is more robust than a compact-maximum-with-parameters argument
 and yields the strongest downstream API.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 
@@ -77,7 +81,8 @@ theorem supportFunction_lipschitz_with_radius
     rw [show ‖v - u‖ = ‖u - v‖ from by rw [norm_sub_rev]] at this
     exact this
 
-/-- **Bundled Lipschitz.** The support function is `R.toNNReal`-Lipschitz when `K ⊆ closedBall 0 R`. -/
+/-- **Bundled Lipschitz.** The support function is `R.toNNReal`-Lipschitz when `K ⊆ closedBall 0 R`.
+-/
 theorem supportFunction_lipschitzWith
     (K : ConvexBody E) {R : ℝ} (hRnn : 0 ≤ R)
     (hR : ∀ x ∈ (K : Set E), ‖x‖ ≤ R) :

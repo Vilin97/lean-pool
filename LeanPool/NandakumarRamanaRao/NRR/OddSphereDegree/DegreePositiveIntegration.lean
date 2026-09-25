@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.UnconditionalDegree
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.FinalOddMapComparison
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.DegreeHomotopyInvariance
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.UnconditionalDegree
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.FinalOddMapComparison
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.DegreeHomotopyInvariance
 
 /-!
 # Positive-dimensional degree from bundled sphere orientations
@@ -17,6 +19,8 @@ It derives identity, composition, homotopy invariance, and conditional odd-map
 results from that bundle. Later sphere-homology modules construct the
 unconditional orientation used by the public final theorem.
 -/
+
+@[expose] public section
 noncomputable section
 
 open CategoryTheory AlgebraicTopology

@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AntipodalDegree
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AntipodalDegree
 
 /-!
 # Mod-two comparison of integer degree
@@ -14,6 +16,8 @@ Arithmetic and topological wrappers connecting parity of an integer degree with 
 oriented degree API. Native coefficient-reduction and sphere top-class constructions are supplied
 by the dedicated coefficient-reduction modules.
 -/
+
+@[expose] public section
 
 noncomputable section
 

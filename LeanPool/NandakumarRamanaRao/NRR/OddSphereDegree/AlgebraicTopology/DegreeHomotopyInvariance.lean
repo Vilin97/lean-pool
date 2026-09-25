@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.Degree
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularHomologyHomotopyInvariance
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.Degree
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularHomologyHomotopyInvariance
 
 /-!
 # Homotopy invariance of the topological degree — unconditional
@@ -16,6 +18,8 @@ algebraic prism and the library cylinder), the homotopy-invariance wrappers of
 `Degree.lean` — which were stated conditionally on `SingularPrismOperator` — are
 **unconditional**.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 

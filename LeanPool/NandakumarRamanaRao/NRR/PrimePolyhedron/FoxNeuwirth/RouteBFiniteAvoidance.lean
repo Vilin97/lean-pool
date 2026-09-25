@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
-import Mathlib.Topology.MetricSpace.Pseudo.Defs
+
+public import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
 /-!
 # Route B, Step 1: avoidance of a finite family of null bad sets
 
@@ -17,6 +19,8 @@ Once every individual geometric bad set has been proved null, the theorem
 `exists_mem_ball_avoiding_finset_of_null` produces a parameter in any
 positive-measure perturbation ball which avoids all of them simultaneously.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CupProduct
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CupProduct
 
 /-!
 # Alexander–Whitney face maps and degree bookkeeping
@@ -62,6 +64,8 @@ only at the cochain coboundary level. Over `ZMod 2` all signs are
 `1`, so the same identities give the characteristic-two Leibniz rule with no
 extra work.
 -/
+
+@[expose] public section
 
 open CategoryTheory MonoidalCategory AlgebraicTopology Simplicial SimplexCategory
 
@@ -182,7 +186,8 @@ theorem backFace_comp_δ_of_gt (p q : ℕ) (k : Fin (p + q + 2)) (hk : p < k.val
   ext x : 3; apply Fin.ext
   change ((SimplexCategory.δ k).toOrderHom ((backFace p q).toOrderHom x) : ℕ)
      = ((backFace p (q + 1)).toOrderHom
-          ((SimplexCategory.δ (⟨k.val - p, by have := k.isLt; omega⟩ : Fin (q + 2))).toOrderHom x) : ℕ)
+          ((SimplexCategory.δ (⟨k.val - p, by
+            have := k.isLt; omega⟩ : Fin (q + 2))).toOrderHom x) : ℕ)
   rw [δ_toOrderHom_val, backFace_apply, backFace_apply, δ_toOrderHom_val]
   have hf : (⟨k.val - p, by have := k.isLt; omega⟩ : Fin (q + 2)).val = k.val - p := rfl
   rw [hf]

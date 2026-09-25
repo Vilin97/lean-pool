@@ -3,13 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import
-  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyOperator
-import
-  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionDiameter
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffineSubdivisionDeterminant
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyOperator
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionDiameter
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffineSubdivisionDeterminant
 /-!
 # Recursive one-step subdivision cylinders
 
@@ -21,6 +21,8 @@ The construction is recursive. Triangulate the boundary of the prism by one coar
 all barycentric top simplices, and recursively triangulated side cylinders. Every boundary simplex
 is then coned to the central point `(barycenter, 1 / 2)`.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -328,7 +330,7 @@ theorem vertex_injective_of_chart_injective
     simpa using hij
   by_contra hne
   have hi := congrArg (fun w : Delta (d + 1) => w i) hstd
-  simpa [SphereOddDegree.FiniteSimplex.vertex, hne] using hi
+  simp [SphereOddDegree.FiniteSimplex.vertex, hne] at hi
 
 /-- A facet is entirely at time zero exactly for the coarse lower base facet. -/
 theorem lowerFacet_classification
@@ -735,8 +737,9 @@ theorem vertex_eq_lowerBoundaryVertex_of_time_eq_zero :
       (vertex d q i).2.1 = 0 →
         ∃ j : Fin (d + 1), vertex d q i = lowerBoundaryVertex d j := by
   intro d;
-  induction' d with d ih;
-  · rintro ( _ | _ ) ( _ | _ ) <;> simp +decide [ vertex ];
+  induction d with
+  | zero =>
+    rintro ( _ | _ ) ( _ | _ ) <;> simp? +decide [ vertex ];
     · unfold apex lowerBoundaryVertex
       simp only [Prod.mk.injEq]
       intro h
@@ -744,7 +747,8 @@ theorem vertex_eq_lowerBoundaryVertex_of_time_eq_zero :
       norm_num at hz
     · exact fun h => absurd h <| ne_of_gt <| Subtype.mk_lt_mk.mpr <| by norm_num;
     · unfold upperBoundaryVertex; aesop;
-  · intro q i hi; rcases q with ( _ | _ | q ) <;> rcases i with ( _ | i ) <;> norm_num [
+  | succ d ih =>
+    intro q i hi; rcases q with ( _ | _ | q ) <;> rcases i with ( _ | i ) <;> norm_num [
       NRR.FoxNeuwirthOrderComplex.RelativeSubdivisionCylinderCombinatorics.vertex ] at hi ⊢;
     · exact absurd hi ( by erw [ Subtype.mk_eq_mk ]; norm_num );
     · exact absurd hi ( by exact ne_of_gt ( by exact Subtype.mk_lt_mk.mpr ( by norm_num ) ) );

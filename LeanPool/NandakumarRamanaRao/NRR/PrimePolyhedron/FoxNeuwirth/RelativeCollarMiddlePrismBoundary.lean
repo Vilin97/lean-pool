@@ -3,13 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrism
-import
-  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismNonhorizontalCancellation
-import
-  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismHorizontalEndpointIdentification
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrism
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismNonhorizontalCancellation
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismHorizontalEndpointIdentification
 /-!
 # Pointwise boundary formula for the common-level middle prism
 
@@ -23,6 +23,8 @@ facet-map weight.  Applying it to the characteristic function of one prime-orbit
 required pointwise incidence formula.  The resulting object is a genuine
 `FoxNeuwirthRelativeAffineCollar` at the common endpoint level `N + L`.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -1112,7 +1114,8 @@ theorem upperBoundaryCoefficient_zero_of_not_upper
     rw [hindicator, mul_zero]
   rw [hinner, mul_zero]
 
-/-- The common-level staircase prism, with its boundary understood pointwise on prime-orbit facets. -/
+/-- The common-level staircase prism, with its boundary understood pointwise on prime-orbit facets.
+-/
 noncomputable def collar
     (hp : Nat.Prime p) (N L : Nat) :
     FoxNeuwirthRelativeAffineCollar hp (N + L) (N + L) (N + L) L where

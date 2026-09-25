@@ -3,13 +3,16 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.MonodromyNontrivial
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.MonodromyNontrivial
 
 /-!
 # The abelianized monodromy classifying character of the double cover
 
-This file constructs the abelianized monodromy character associated with the canonical degree-one class
+This file constructs the abelianized monodromy character associated with the canonical degree-one
+class
 
 ```text
 α ∈ H¹(RPⁿ; F₂).
@@ -30,7 +33,8 @@ homomorphism `classifyingHom n x` factors **uniquely** through the abelianizatio
 theorem the abelianization of the fundamental group is the first integral
 homology group `H₁(RP n; ℤ)`; the abelianized character is therefore exactly the
 group-theoretic shadow of the `Hom(H₁, F₂)` side of the universal coefficient
-theorem `H¹(X; F₂) ≅ Hom(H₁(X; ℤ), F₂)`. The character supplies the group-theoretic input to a degree-one cohomological classifier.
+theorem `H¹(X; F₂) ≅ Hom(H₁(X; ℤ), F₂)`. The character supplies the group-theoretic input to a
+degree-one cohomological classifier.
 
 ## Main declarations
 
@@ -43,6 +47,8 @@ theorem `H¹(X; F₂) ≅ Hom(H₁(X; ℤ), F₂)`. The character supplies the g
 * `classifyingHomAb_inducedOnRP_naturality` — the descended odd map `fbar` acts
  trivially on the abelianized character, the `H₁`-level form of `fbar^*(α) = α`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

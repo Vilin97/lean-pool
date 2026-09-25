@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ChildEquivariance
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ChildEquivariance
 
 /-!
 # Equivariant child-evaluation test map
@@ -12,6 +14,8 @@ import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ChildEquivariance
 An arbitrary nice multivalued function is evaluated on all equal-area children. The resulting
 coordinate vector is continuous and transforms by coordinate relabelling.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -31,14 +35,14 @@ noncomputable def childTestMap
   fun z i => φ.eval
     (EMP.VariableBody.child M.sites hA hp.pos z.1 i) z.2
 
- theorem continuous_childTestMap
+theorem continuous_childTestMap
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A)
     (φ : NiceMV (BodySpace K (A / (p : ℝ)))) :
     Continuous (M.childTestMap hA φ) :=
   φ.continuous_childEvalVec M.sites hA hp.pos
 
- theorem childTestMap_smul
+theorem childTestMap_smul
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A)
     (φ : NiceMV (BodySpace K (A / (p : ℝ))))
@@ -61,7 +65,7 @@ def allChildrenZeroSet
     Set ((BodySpace K A × M.Point) × SignedInterval) :=
   {z | M.childTestMap hA φ z = 0}
 
- theorem mem_allChildrenZeroSet_iff
+theorem mem_allChildrenZeroSet_iff
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A)
     (φ : NiceMV (BodySpace K (A / (p : ℝ))))
@@ -79,14 +83,14 @@ def allChildrenZeroSet
     funext i
     simpa [childTestMap, NiceMV.Zero] using hz i
 
- theorem isClosed_allChildrenZeroSet
+theorem isClosed_allChildrenZeroSet
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A)
     (φ : NiceMV (BodySpace K (A / (p : ℝ)))) :
     IsClosed (M.allChildrenZeroSet hA φ) :=
   isClosed_eq (M.continuous_childTestMap hA φ) continuous_const
 
- theorem allChildrenZeroSet_invariant
+theorem allChildrenZeroSet_invariant
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A)
     (φ : NiceMV (BodySpace K (A / (p : ℝ)))) :

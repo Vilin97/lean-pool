@@ -3,14 +3,16 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.Normed.Module.Convex
-import Mathlib.Data.Int.Star
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Normed.Module.Convex
+public import Mathlib.Data.Int.Star
+public import Mathlib.Tactic
 
 /-!
 # Diameter shrinking for iterated barycentric subdivision
@@ -53,6 +55,8 @@ The geometric simplex is the convex hull of the vertex tuple, and
  such that *every* affine sub-simplex appearing in the `N`-fold barycentric
  subdivision of `Δⁿ` has diameter `< ε`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Finset Metric
@@ -107,7 +111,7 @@ theorem dist_vertex_step_le (n : ℕ) (V : Fin (n + 1) → E)
       ≤ (l.val : ℝ) / (l.val + 1) * Metric.diam (Set.range V) := by
   have h_step : V (π i) - (stepVertices n V π l) = (l.val + 1 : ℝ)⁻¹ • ∑ j ∈ Finset.Iic l, (V (π
     i) - V (π j)) := by
-    simp [stepVertices]
+    simp? [stepVertices]
     simp [smul_sub, ← Nat.cast_smul_eq_nsmul ℝ]
     rw [inv_smul_smul₀ (Nat.cast_add_one_ne_zero _)]
   have h_norm : ‖∑ j ∈ Finset.Iic l, (V (π i) - V (π j))‖ ≤ l.val * Metric.diam (Set.range V) := by
@@ -209,9 +213,11 @@ theorem iterVertices_diam_le (n N : ℕ)
     (πs : Fin N → Equiv.Perm (Fin (n + 1))) (V : Fin (n + 1) → E) :
     Metric.diam (Set.range (iterVertices n N πs V))
       ≤ (contractionFactor n) ^ N * Metric.diam (Set.range V) := by
-  induction' N with N ih
-  · simp [iterVertices]
-  · rw [iterVertices_succ]
+  induction N with
+  | zero =>
+    simp [iterVertices]
+  | succ N ih =>
+    rw [iterVertices_succ]
     refine le_trans (stepVertices_diam_le n (iterVertices n N (fun i => πs i.castSucc) V) (πs
       (Fin.last N))) ?_
     have h_ih := ih (fun i => πs i.castSucc)

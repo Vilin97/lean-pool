@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismHorizontalEndpointIdentification
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismHorizontalEndpointIdentification
 /-!
 # Refinement words carried by a prescribed boundary face
 
@@ -15,6 +17,8 @@ last facet of an ambient barycentric simplex.  This module supplies the correspo
 permutations and proves the affine compatibility identity used by both the stable endpoint
 interpolant and the explicit middle collar.
 -/
+
+@[expose] public section
 
 namespace NRR
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionOperator
-import Mathlib.GroupTheory.Perm.Fin
-import Mathlib.GroupTheory.Perm.Sign
-import Mathlib.Order.Fin.Basic
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionOperator
+public import Mathlib.GroupTheory.Perm.Fin
+public import Mathlib.GroupTheory.Perm.Sign
+public import Mathlib.Order.Fin.Basic
+public import Mathlib.Tactic
 
 /-!
 # Last-face sign identity for barycentric subdivision
@@ -32,6 +34,8 @@ then proves
 
 This module proves the permutation-sign identity used by the boundary-chain theorem.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Equiv Equiv.Perm
@@ -130,7 +134,8 @@ theorem factor_lastFace_of_faceData {n : ℕ}
   · have h_emb : (extendLastPerm ρ) (Fin.castSucc t) = Fin.castSucc (ρ t) :=
       Equiv.Perm.viaFintypeEmbedding_apply_image ρ Fin.castSuccOrderEmb.toEmbedding t
     rw [Equiv.trans_apply, h_emb, insertLastPerm_castSucc, hρ]
-  · have h_not : (Fin.last (n + 1) : Fin (n + 2)) ∉ Set.range (Fin.castSuccOrderEmb.toEmbedding) := by
+  · have h_not : (Fin.last (n + 1) : Fin (n + 2)) ∉ Set.range (Fin.castSuccOrderEmb.toEmbedding)
+      := by
       simp [Fin.castSuccOrderEmb]
     have h_fix : (extendLastPerm ρ) (Fin.last (n + 1)) = Fin.last (n + 1) :=
       Equiv.Perm.viaFintypeEmbedding_apply_notMem_range ρ Fin.castSuccOrderEmb.toEmbedding h_not

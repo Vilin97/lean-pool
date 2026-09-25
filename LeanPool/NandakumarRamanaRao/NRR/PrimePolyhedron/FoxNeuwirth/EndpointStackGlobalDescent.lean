@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointStackLastVertexCore
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollar
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointStackLastVertexCore
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollar
 /-!
 # Global descent interface for the endpoint-stack last-vertex assignment
 
@@ -19,6 +21,8 @@ local values to the global vertex quotient and then to the diagonal scalar-param
 recovers the local cell values and cellwise origin avoidance.  No compatibility assumption is
 hidden: the required compatibility theorem is `OneStepLastVertexCompatible`.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -99,7 +103,8 @@ theorem decoratedSelectedVector_eq_map
 
 /-- Exact global overlap condition required for the local last-vertex values to descend.
 
-This is the simplicial-carrier compatibility theorem in value form.  It says that two decorated local
+This is the simplicial-carrier compatibility theorem in value form.  It says that two decorated
+local
 occurrences representing the same geometric cylinder point select the same equivariant endpoint
 value. -/
 def OneStepLastVertexCompatible

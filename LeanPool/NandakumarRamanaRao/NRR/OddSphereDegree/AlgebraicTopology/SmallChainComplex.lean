@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChains
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainMap
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChains
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainMap
 
 /-!
 # The small-chain complex and its inclusion into singular chains
@@ -49,6 +51,8 @@ C_*^𝒰(X; R) ⟶ C_*(X; R).
 We do **not** prove here that `smallChainsInclusion` is a quasi-isomorphism.
 -/
 
+@[expose] public section
+
 open CategoryTheory AlgebraicTopology
 open SphereOddDegree.AffineBarycentricSubdivision
 
@@ -82,9 +86,11 @@ theorem smallBoundary_comp_smallBoundary
   apply LinearMap.ext
   intro c
   apply Subtype.ext
-  change (singularBoundary R X n).hom ((singularBoundary R X (n + 1)).hom (c : singularChainGroup R X (n + 2))) = 0
+  change (singularBoundary R X n).hom ((singularBoundary R X (n + 1)).hom (c :
+    singularChainGroup R X (n + 2))) = 0
   have h := (singularChainComplex R X).d_comp_d (n + 2) (n + 1) n
-  have happ := congrArg (fun (m : (singularChainComplex R X).X (n + 2) ⟶ (singularChainComplex R X).X n) => m.hom (c : singularChainGroup R X (n + 2))) h
+  have happ := congrArg (fun (m : (singularChainComplex R X).X (n + 2) ⟶ (singularChainComplex R
+    X).X n) => m.hom (c : singularChainGroup R X (n + 2))) h
   exact happ
 
 /-! ## 2. The small-chain complex -/

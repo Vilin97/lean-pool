@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Phase1Interface
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Phase1Interface
 
 /-!
 # `NRR.EMP.VariableBody.CompactSiteFamily` — uniform bounds and separation
@@ -18,6 +20,8 @@ These uniform quantities are the geometric inputs to the later continuity argume
 variable-body power partition: they let one work inside a fixed ball and with a fixed minimal gap,
 independently of the parameter.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry
 
@@ -78,7 +82,9 @@ theorem exists_uniformSiteSeparation
       NRR.Config.continuous_pts.comp sites.continuous ) ) ( Continuous.comp ( continuous_apply _
       ) ( NRR.Config.continuous_pts.comp sites.continuous ) );
   by_cases hX : Nonempty X;
-  · -- For each pair `p = ⟨(i,j), hij⟩ ∈ P`, the map `g p : X → ℝ`, `x ↦ dist ((sites x).pts i) ((sites x).pts j)`, attains a minimum at some `x_p`, with value `m p := dist ((sites x_p).pts i) ((sites x_p).pts j)`.
+  · -- For each pair `p = ⟨(i,j), hij⟩ ∈ P`, the map `g p : X → ℝ`, `x ↦ dist ((sites x).pts i)
+    -- ((sites x).pts j)`, attains a minimum at some `x_p`, with value `m p := dist ((sites x_p).pts
+    -- i) ((sites x_p).pts j)`.
     obtain ⟨m, hm⟩ : ∃ m : P → ℝ, ∀ p : P, ∃ x_p : X, ∀ x : X, m p ≤ dist ((sites x).pts
       p.val.1) ((sites x).pts p.val.2) ∧ m p = dist ((sites x_p).pts p.val.1) ((sites x_p).pts
       p.val.2) := by

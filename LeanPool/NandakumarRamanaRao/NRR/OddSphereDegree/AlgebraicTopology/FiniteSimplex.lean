@@ -3,11 +3,13 @@ Copyright (c) 2019 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov, Yaël Dillies, Joël Riou
 -/
+module
 
-import Mathlib.Analysis.Convex.Combination
-import Mathlib.Geometry.Convex.ConvexSpace.CompactSpaceStdSimplex
-import Mathlib.Topology.Algebra.Monoid.FunOnFinite
-import Mathlib.Tactic
+
+public import Mathlib.Analysis.Convex.Combination
+public import Mathlib.Geometry.Convex.ConvexSpace.CompactSpaceStdSimplex
+public import Mathlib.Topology.Algebra.Monoid.FunOnFinite
+public import Mathlib.Tactic
 
 /-! # Finite coordinate simplices
 
@@ -15,6 +17,8 @@ The subdivision construction uses a simplex as a subset of a finite coordinate
 space. The equivalence below identifies these coordinates with Mathlib's
 finitely supported simplex without changing their pointwise values.
 -/
+
+@[expose] public section
 
 open Set Convexity
 
@@ -186,7 +190,7 @@ theorem isCompact_finiteSimplex (S X : Type*) [Fintype X] [TopologicalSpace S]
     rw [hset]
     exact (isClosed_iInter fun i => isClosed_le continuous_const (continuous_apply i)).inter
       (isClosed_eq (by fun_prop) continuous_const)
-  apply IsCompact.of_isClosed_subset isCompact_Icc hclosed
+  apply IsCompact.of_isClosed_subset (isCompact_Icc (a := (0 : X → S)) (b := 1)) hclosed
   intro s hs
   exact ⟨hs.1, fun x => FiniteSimplex.le_one ⟨s, hs⟩ x⟩
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChainsHomologySurjectivity
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChainsHomologyInjectivity
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChainsHomologySurjectivity
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChainsHomologyInjectivity
 
 /-!
 # The small-simplices theorem: small chains include as a quasi-isomorphism
@@ -41,6 +43,8 @@ an isomorphism of `ModuleCat`-modules, hence the chain map is a quasi-isomorphis
 * `SphereOddDegree.smallChains_inclusion_quasiIso` — the official **small-simplices
  theorem**: `smallChainsInclusion R X 𝒰` is a quasi-isomorphism.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 open SphereOddDegree.AffineBarycentricSubdivision

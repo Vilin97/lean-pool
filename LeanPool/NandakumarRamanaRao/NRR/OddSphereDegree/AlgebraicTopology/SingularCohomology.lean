@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularHomologyFunctorAPI
-import Mathlib.Algebra.Homology.Opposite
-import Mathlib.CategoryTheory.Linear.Yoneda
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularHomologyFunctorAPI
+public import Mathlib.Algebra.Homology.Opposite
+public import Mathlib.CategoryTheory.Linear.Yoneda
 
 /-!
 # Singular cohomology functor (dualization of the singular chain complex)
@@ -75,6 +77,8 @@ inventories). It does **not** include homotopy invariance, the universal
 coefficient theorem, any cohomology computation, or the cup product; those remain
 downstream work.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 

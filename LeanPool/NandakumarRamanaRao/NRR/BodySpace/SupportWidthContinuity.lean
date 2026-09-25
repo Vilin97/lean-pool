@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.PositiveArea
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionParametric
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthFamilies
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.PositiveArea
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionParametric
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthFamilies
 
 /-!
 # `NRR.BodySpace` — joint support-function and width continuity
@@ -44,6 +46,8 @@ When `A > 0` every element of `BodySpace K A` is genuinely solid, so the solid b
 follow from the core reusable lemma applied to the continuous bridge
 `BodySpace.continuous_toGeometryConvexBody`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Metric Filter Topology
 

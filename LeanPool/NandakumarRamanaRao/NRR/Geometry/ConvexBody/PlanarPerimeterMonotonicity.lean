@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeter
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Width
+
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeter
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Width
 
 /-!
 # `NRR.Geometry.ConvexBody` — monotonicity of the planar perimeter
@@ -31,6 +33,8 @@ Equality under mutual subset then follows from antisymmetry of `≤`.
 Only `PlanarPerimeter.lean` and `Width.lean` are imported; they transitively provide all of
 Mathlib together with the perimeter and width APIs. No extra imports are required.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

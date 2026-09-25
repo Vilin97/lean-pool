@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.SupportFunction
-import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.SupportFunction
+public import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
 
 /-!
 # `NRR.PowerDiagram.Defs` — core definitions
@@ -15,13 +17,16 @@ import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
 Base definitions for the power-diagram API: the power (Laguerre) distance `powerDist` and the
 power cell `cell` of a site.
 
-These definitions are isolated so that the implementation modules under `NRR/PowerDiagram/` can depend on the
+These definitions are isolated so that the implementation modules under `NRR/PowerDiagram/` can
+depend on the
 core definitions, while the top-level `NRR.PowerDiagram` re-exports the full, proved API
 (see `NRR/PowerDiagram.lean`). This breaks what would otherwise be an import cycle.
 
 Given `n` sites `s : Fin n → E2` and weights `w : Fin n → ℝ`, the power cell of site `i` is
 `{x : ∀ j, ‖x - sᵢ‖² - wᵢ ≤ ‖x - sⱼ‖² - wⱼ}`.
 -/
+
+@[expose] public section
 
 open NRR MeasureTheory
 

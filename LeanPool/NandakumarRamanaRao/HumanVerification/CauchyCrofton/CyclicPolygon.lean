@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.Radial
+
+public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.Radial
 
 /-!
 # Cyclic convex polygons inscribed in a planar convex body
@@ -24,6 +26,8 @@ origin) is a convex polygon `polySet K A` whose boundary is, by construction, th
 The cyclic ordering of the vertices is therefore supplied by the construction; no
 combinatorial analysis of an arbitrary finite planar point set is needed.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory NRR.Geometry
 open scoped ENNReal NNReal Pointwise

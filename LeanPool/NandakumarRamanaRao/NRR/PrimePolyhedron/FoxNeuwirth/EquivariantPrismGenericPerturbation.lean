@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericityNonzero
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteMultivariateGenericPerturbation
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericityNonzero
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteMultivariateGenericPerturbation
 /-!
 # Simultaneous generic perturbation of the equivariant refined prism
 
@@ -28,6 +30,8 @@ must later be supplied by sufficiently fine spatial and staircase subdivision.  
 retains half of that margin, while polynomial nonvanishing gives facet regularity and
 codimension-two avoidance on every refined prism simplex.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -60,13 +64,14 @@ The first application of `exists_small_positive_generic` supplies a generic assi
 univariate root-avoidance step moves an arbitrarily small positive distance from the base assignment
 toward that generic point. -/
 theorem exists_generic_assignment_close
-    {J I : Type*} [Fintype J] [Fintype I]
+    {J I : Type*} [Finite J] [Finite I]
     (P : I → MvPolynomial J Real) (hP : ∀ i, P i ≠ 0)
     (a : J → Real) {eps : Real} (heps : 0 < eps) :
     ∃ a' : J → Real,
       AssignmentClose a' a eps ∧
         ∀ i, MvPolynomial.eval a' (P i) ≠ 0 := by
   classical
+  letI := Fintype.ofFinite J
   obtain ⟨b, t₀, ht₀, ht₀one, hgeneric₀⟩ :=
     FiniteMultivariateGenericPerturbation.exists_small_positive_generic
       P hP a (show (0 : Real) < 1 by positivity)
@@ -261,7 +266,8 @@ theorem local_regular_and_avoidsCodimTwo_of_generic
       MvPolynomial.eval a (genericityPolynomial hp N L i) ≠ 0)
     (q : PrismCell hp N L) :
     AffinePositiveRayBoundary.VertexMap.FacetRegular hp (localVertexMap hp N L a q) ∧
-      AffinePositiveRayBoundary.VertexMap.AvoidsCodimTwoDeviationZero hp (localVertexMap hp N L a q) := by
+      AffinePositiveRayBoundary.VertexMap.AvoidsCodimTwoDeviationZero hp (localVertexMap hp N L
+        a q) := by
   refine ⟨facetRegular_of_generic hp N L a hgeneric q, ?_⟩
   exact avoidsCodimTwo_of_minorRegular hp N L a q
     (codimTwoMinorRegular_of_generic hp N L a hgeneric q)
@@ -379,7 +385,8 @@ structure Result
   facetRegular : ∀ q : PrismCell hp N L,
     AffinePositiveRayBoundary.VertexMap.FacetRegular hp (localVertexMap hp N L assignment q)
   avoidsCodimTwo : ∀ q : PrismCell hp N L,
-    AffinePositiveRayBoundary.VertexMap.AvoidsCodimTwoDeviationZero hp (localVertexMap hp N L assignment q)
+    AffinePositiveRayBoundary.VertexMap.AvoidsCodimTwoDeviationZero hp (localVertexMap hp N L
+      assignment q)
   retainedMargin :
     LocalAffineCoordinateNormMargin hp N L assignment (m / 2)
   avoidsOrigin : ∀ q : PrismCell hp N L,
@@ -390,7 +397,8 @@ structure Result
 /-- Apply finite multivariate generic perturbation at the homotopy assignment.  If the unperturbed
 piecewise-affine interpolation has positive coordinate norm margin `m`, the resulting compatible
 equivariant assignment has all facet determinants and codimension-two minors nonzero and retains
-margin `m/2`; hence every local prism simplex satisfies the full affine general-position interface. -/
+margin `m/2`; hence every local prism simplex satisfies the full affine general-position interface.
+-/
 theorem exists_generic_perturbation
     (hp : Nat.Prime p) (N L : Nat)
     {F₀ F₁ : ZeroFreeMap hp} (H : ZeroFreeHomotopy hp F₀ F₁)
@@ -414,7 +422,8 @@ theorem exists_generic_perturbation
       AffinePositiveRayBoundary.VertexMap.FacetRegular hp (localVertexMap hp N L a q) :=
     fun q => facetRegular_of_generic hp N L a hgeneric q
   have hcodim : ∀ q : PrismCell hp N L,
-      AffinePositiveRayBoundary.VertexMap.AvoidsCodimTwoDeviationZero hp (localVertexMap hp N L a q) :=
+      AffinePositiveRayBoundary.VertexMap.AvoidsCodimTwoDeviationZero hp (localVertexMap hp N L
+        a q) :=
     fun q => (local_regular_and_avoidsCodimTwo_of_generic hp N L a hgeneric q).2
   have horigin : ∀ q : PrismCell hp N L,
       AffinePositiveRayBoundary.VertexMap.AvoidsOrigin (localVertexMap hp N L a q) :=

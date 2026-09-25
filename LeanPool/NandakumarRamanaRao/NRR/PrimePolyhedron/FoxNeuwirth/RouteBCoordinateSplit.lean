@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBVectorFiberElimination
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBVectorFiberElimination
+public import Mathlib.Tactic
 /-!
 # Route B: finite coordinate split for a selected vector block
 
@@ -21,6 +23,8 @@ remaining movable scalar-orbit parameters.  From this index equivalence we
 construct an equivalence of parameter spaces, prove its inverse formulas, and
 isolate the single measure-preservation obligation needed by Step 5.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -80,7 +84,7 @@ theorem selectedParameter_ne_restParameter
     selectedParameter (hp := hp) (C := C) S j ≠ restParameter (hp := hp) (C := C) S r := by
   intro h
   have := congrArg S.indexEquiv h
-  simpa [selectedParameter, restParameter] using this
+  simp [selectedParameter, restParameter] at this
 
 /-- Split a movable assignment into complementary coordinates and the selected
 `p`-vector block. -/
@@ -132,13 +136,13 @@ noncomputable def merge
   | inl r =>
       have hq : q = restParameter (hp := hp) (C := C) S r := by
         apply S.indexEquiv.injective
-        simpa [restParameter, h]
+        simp [restParameter, h]
       subst q
       simp [split]
   | inr j =>
       have hq : q = selectedParameter (hp := hp) (C := C) S j := by
         apply S.indexEquiv.injective
-        simpa [selectedParameter, h]
+        simp [selectedParameter, h]
       subst q
       simp [split]
 

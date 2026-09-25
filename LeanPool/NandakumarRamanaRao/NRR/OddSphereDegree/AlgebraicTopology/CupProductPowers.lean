@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CupProduct
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CupProduct
 
 /-!
 # Cup-product naturality and powers
@@ -13,6 +15,8 @@ Reusable algebra for powers under multiplicative pullbacks, together with its co
 realization. The cohomology-level cup product and power naturality are implemented in
 `CohomologyCupProduct.lean`; `InducedOnRPCohomology.lean` specializes them to maps of `RP n`.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 

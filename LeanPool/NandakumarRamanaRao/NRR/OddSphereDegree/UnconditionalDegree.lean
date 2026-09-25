@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ModTwoDegreeComparison
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomologyReduction
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ModTwoDegreeComparison
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomologyReduction
 
 /-!
 # Bundled sphere degree setup
@@ -15,6 +17,8 @@ Packages positive-dimensional sphere orientation data and a singular prism opera
 invariance APIs from that setup. Unconditional instances of both fields are constructed later
 and re-exported through `SphereOddDegree.Final`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -35,7 +39,8 @@ self-maps.
 
 Bundling both means a downstream consumer assumes **one** hypothesis rather than
 several, and every degree theorem — including homotopy invariance — is
-unconditional relative to a `SphereDegreeSetup`. The fields are supplied by the final assembly modules. -/
+unconditional relative to a `SphereDegreeSetup`. The fields are supplied by the final assembly
+modules. -/
 structure SphereDegreeSetup where
   /-- The positive top-homology orientation `Hₙ(Sⁿ; ℤ) ≅ ℤ` (`n ≥ 1`). -/
   orientation : SphereOrientationPos

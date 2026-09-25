@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Complement
+
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Complement
 
 /-!
 # Separators from locally constant obstruction values
@@ -16,6 +18,8 @@ open regions required by `TopBottomComplement`.
 
 This construction avoids any local path-connectedness assumption on the base hyperspace.
 -/
+
+@[expose] public section
 
 namespace NRR
 

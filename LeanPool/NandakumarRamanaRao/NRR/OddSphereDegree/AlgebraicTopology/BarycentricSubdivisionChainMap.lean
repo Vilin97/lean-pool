@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryChainMap
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryChainMap
+public import Mathlib.Tactic
 
 /-!
 # Barycentric subdivision as a chain map
@@ -27,6 +29,8 @@ The chain-map condition is exactly the boundary-commutation identity
  chain map gives the signed subdivision sum
  `barycentricSubdivisionGenerator R X n σ`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits

@@ -3,13 +3,15 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import Mathlib.Algebra.Polynomial.Div
-import Mathlib.Algebra.Polynomial.Coeff
-import Mathlib.Data.ZMod.Basic
-import Mathlib.RingTheory.AdjoinRoot
-import Mathlib.LinearAlgebra.Dimension.Finrank
+
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.Algebra.Polynomial.Div
+public import Mathlib.Algebra.Polynomial.Coeff
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.RingTheory.AdjoinRoot
+public import Mathlib.LinearAlgebra.Dimension.Finrank
 
 /-!
 # The algebraic target ring `F₂[α] / (αⁿ⁺¹)` of the `RPⁿ` mod-two cohomology computation
@@ -45,9 +47,12 @@ the cellular/inductive nonvanishing input — none of which exist in pinned
 Mathlib; see
 
 These model facts are nonetheless the precise *consequences* requested for the
-final theorem (`αⁿ ≠ 0`, `αⁿ` is the top class, `αⁿ⁺¹ = 0`): under the ring isomorphism, they transport to
+final theorem (`αⁿ ≠ 0`, `αⁿ` is the top class, `αⁿ⁺¹ = 0`): under the ring isomorphism, they
+transport to
 `H^*(RPⁿ; F₂)`.
 -/
+
+@[expose] public section
 
 open Polynomial
 

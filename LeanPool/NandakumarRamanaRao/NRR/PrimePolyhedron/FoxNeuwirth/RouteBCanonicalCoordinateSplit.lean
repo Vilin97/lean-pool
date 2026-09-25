@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBSelectedVectorBlock
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.Logic.Equiv.Set
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBSelectedVectorBlock
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.Logic.Equiv.Set
 
 /-!
 # Route B: canonical split of the selected local vector block
@@ -19,6 +21,8 @@ movable product into selected and complementary coordinates.
 Unlike the earlier abstract `SelectedVectorCoordinateSplit`, this construction
 requires no additional coordinate-equivalence hypothesis.
 -/
+
+@[expose] public section
 
 namespace NRR
 

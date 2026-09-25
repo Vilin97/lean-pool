@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Children
-import LeanPool.NandakumarRamanaRao.NRR.EMP.PartitionFromPowerDiagram
+
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Children
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.PartitionFromPowerDiagram
 
 /-!
 # `NRR.EMP.VariableBody.Partition` — the variable-body equal-area power partition
@@ -28,6 +30,8 @@ dependent `partition` field is *not* asserted to be continuous, and no topology 
 * `Witness` / `witness` — the partition packaged together with its children and all partition facts,
   as consumed by the prime-refinement layer.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody MeasureTheory
 

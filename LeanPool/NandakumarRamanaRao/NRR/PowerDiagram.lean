@@ -3,15 +3,17 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.Defs
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAlgebra
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellGeometry
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellOverlap
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCellPartition
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAreaContinuityWeights
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAreaVector
+
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.Defs
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAlgebra
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellGeometry
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellOverlap
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCellPartition
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAreaContinuityWeights
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAreaVector
 
 /-!
 # `NRR.PowerDiagram` — weighted Voronoi / power diagrams
@@ -24,6 +26,8 @@ The proved continuity API is intentionally fixed-site: `continuous_bodyCellArea_
 `continuous_areaVec_weights` vary the weights while the distinct sites remain fixed. General joint
 continuity in moving sites and weights is not claimed.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody MeasureTheory
 

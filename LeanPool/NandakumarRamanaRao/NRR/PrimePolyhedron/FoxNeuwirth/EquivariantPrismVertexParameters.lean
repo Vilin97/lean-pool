@@ -3,15 +3,18 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionPrismCharts
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantCoordinateHomotopy
-import Mathlib.GroupTheory.GroupAction.Quotient
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionPrismCharts
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantCoordinateHomotopy
+public import Mathlib.GroupTheory.GroupAction.Quotient
 
 /-!
 # Finite equivariant parameter space for refined prism vertices
 
-A perturbation used in the refined S6 prism argument must satisfy two compatibility conditions before
+A perturbation used in the refined S6 prism argument must satisfy two compatibility conditions
+before
 any determinant or minor polynomial is considered:
 
 * local copies of one geometric prism vertex must receive the same coordinate values;
@@ -28,6 +31,8 @@ The zero-free homotopy itself determines the distinguished base assignment in th
 Later genericity modules only need to define their determinant and codimension-two polynomials on
 this finite type.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -98,7 +103,8 @@ abbrev VertexSlot (hp : Nat.Prime p) (N L : Nat) :=
   PrismCell hp N L × Fin (p + 1)
 
 noncomputable instance (hp : Nat.Prime p) (N L : Nat) : Fintype (VertexSlot hp N L) := inferInstance
-noncomputable instance (hp : Nat.Prime p) (N L : Nat) : DecidableEq (VertexSlot hp N L) := inferInstance
+noncomputable instance (hp : Nat.Prime p) (N L : Nat) : DecidableEq (VertexSlot hp N L) :=
+  inferInstance
 
 /-- A local prism vertex occurrence as an actual point of the realization cylinder. -/
 noncomputable def slotPoint
@@ -110,8 +116,10 @@ prime translates of the selected quotient-cell representatives. -/
 abbrev CoverVertexSlot (hp : Nat.Prime p) (N L : Nat) :=
   PrimeSymmetry p × VertexSlot hp N L
 
-noncomputable instance (hp : Nat.Prime p) (N L : Nat) : Fintype (CoverVertexSlot hp N L) := inferInstance
-noncomputable instance (hp : Nat.Prime p) (N L : Nat) : DecidableEq (CoverVertexSlot hp N L) := inferInstance
+noncomputable instance (hp : Nat.Prime p) (N L : Nat) : Fintype (CoverVertexSlot hp N L) :=
+  inferInstance
+noncomputable instance (hp : Nat.Prime p) (N L : Nat) : DecidableEq (CoverVertexSlot hp N L) :=
+  inferInstance
 
 /-- Geometric point represented by one symmetry-decorated local vertex occurrence. -/
 noncomputable def coverPoint

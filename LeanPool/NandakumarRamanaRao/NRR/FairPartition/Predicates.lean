@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Partition.ConvexPartition
-import LeanPool.NandakumarRamanaRao.NRR.Partition.PerimeterVector
+
+public import LeanPool.NandakumarRamanaRao.NRR.Partition.ConvexPartition
+public import LeanPool.NandakumarRamanaRao.NRR.Partition.PerimeterVector
 
 /-!
 # `NRR.FairPartition.Predicates` — the public fair-partition predicate
@@ -31,6 +33,8 @@ No new partition structure is introduced and `ConvexPartition` is not redefined.
 * `ConvexPartition.isFair_iff` — unfolding lemma exposing the conjunction.
 * `ConvexPartition.IsFair.mk'` — build `IsFair` from the two components.
 -/
+
+@[expose] public section
 
 namespace NRR
 

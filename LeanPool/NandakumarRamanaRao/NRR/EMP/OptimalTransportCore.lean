@@ -3,13 +3,15 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
-import LeanPool.NandakumarRamanaRao.NRR.EMP.NormalizedAreaDeviation
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightCoercivity
-import LeanPool.NandakumarRamanaRao.NRR.Topology.OutwardFieldZero
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.NormalizedAreaDeviation
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightCoercivity
+public import LeanPool.NandakumarRamanaRao.NRR.Topology.OutwardFieldZero
 
 /-!
 # `NRR.EMP.OptimalTransportCore` — the isolated optimal‑transport core
@@ -62,6 +64,8 @@ outward-field zero theorem. It is consumed by `NRR.EMP.exists_equalArea_weights`
  the same distinct‑site hypothesis carried by `sum_EMP_areaVec_eq_area` and
  `continuous_EMP_areaVec_weights`.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.BarredPermutation
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.BarredPermutation
 
 /-!
 # Orientations for Fox--Neuwirth cells
@@ -19,13 +21,16 @@ under an arbitrary change of chosen cell orientations; it is covariant by the pr
 transport signs.  This is the correct datum needed by the later cellular mod-`p` argument.
 -/
 
+@[expose] public section
+
 namespace NRR
 
 variable {p : Nat}
 
 namespace BarredPermutation
 
-/-- Inversions of the displayed permutation, expressed using the natural order on labels and ranks. -/
+/-- Inversions of the displayed permutation, expressed using the natural order on labels and ranks.
+-/
 def inversionSet (c : BarredPermutation p) : Finset (Fin p × Fin p) :=
   Finset.univ.filter fun ij =>
     ij.1.1 < ij.2.1 ∧ (c.rank ij.2).1 < (c.rank ij.1).1

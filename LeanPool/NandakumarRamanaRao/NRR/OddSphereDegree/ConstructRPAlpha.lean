@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.KroneckerNaturality
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.InducedOnRPCohomology
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.MonodromyCharacter
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.KroneckerNaturality
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.InducedOnRPCohomology
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.MonodromyCharacter
 
 /-!
 # Constructing the degree-one projective cohomology class
@@ -17,6 +19,8 @@ descended odd sphere maps. The structure `MonodromyFunctional n` isolates the
 homology functional and its invariance property. The canonical instance used by
 the final proof is constructed later in `RPnMonodromyFunctional`.
 -/
+
+@[expose] public section
 open CategoryTheory AlgebraicTopology
 
 noncomputable section

@@ -3,15 +3,17 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunction
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionBasic
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionContinuity
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionTransform
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Width
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthContinuity
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthIdentities
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarCircle
+
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunction
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionBasic
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionContinuity
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionTransform
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Width
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthContinuity
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthIdentities
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarCircle
 
 /-!
 # `NRR.SupportFunction` — public support-function and width API
@@ -19,6 +21,8 @@ import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarCircle
 This compatibility module re-exports the implemented convex-body support function and width under
 stable public names. All substantive proofs live under `NRR.Geometry.ConvexBody`.
 -/
+
+@[expose] public section
 
 open scoped RealInnerProductSpace
 

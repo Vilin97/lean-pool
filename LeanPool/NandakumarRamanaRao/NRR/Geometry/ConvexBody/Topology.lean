@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Basic
+
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Basic
 
 /-!
 # `NRR.Geometry.ConvexBody` — topological accessor API
@@ -25,6 +27,8 @@ imports are required here; the topological lemmas used
 (`IsCompact.isClosed`, `IsCompact.isBounded`, `IsClosed.closure_eq`, `IsClosed.frontier_subset`,
 `interior_subset`) are all available transitively.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

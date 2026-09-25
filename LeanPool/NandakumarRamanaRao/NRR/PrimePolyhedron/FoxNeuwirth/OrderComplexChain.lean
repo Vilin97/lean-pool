@@ -3,22 +3,28 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexRealization
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrientedBoundary
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexRealization
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrientedBoundary
 /-!
 # Simplicial chains on the Fox--Neuwirth order complex
 
-This module defines simplicial chains on the order complex.  Chains are finite coefficient functions on the strict-chain
+This module defines simplicial chains on the order complex.  Chains are finite coefficient functions
+on the strict-chain
 simplices from `OrderComplex`.  The simplicial boundary is defined by deleting one vertex with the
 usual alternating sign.  The construction is deliberately concrete: all sums are over finite
 `Fintype` indices, so later cancellation arguments reduce to finite algebra.
 
 The file also defines the first genuine Fox--Neuwirth top chain on maximal flags.  Its coefficient
 is the product of the signed cellular incidences along consecutive vertices of the flag, reduced
-modulo the prime.  Its simplicial boundary is expressed as an actual chain on the glued realization and is handled
+modulo the prime.  Its simplicial boundary is expressed as an actual chain on the glued realization
+and is handled
 by the boundary-cancellation theorems.
 -/
+
+@[expose] public section
 
 noncomputable section
 

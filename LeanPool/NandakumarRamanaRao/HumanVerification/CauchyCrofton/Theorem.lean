@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.PolygonCauchy
-import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.PolygonApproximation
-import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.HausdorffMonotonicity
-import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCroftonStatement
+
+public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.PolygonCauchy
+public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.PolygonApproximation
+public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.HausdorffMonotonicity
+public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCroftonStatement
 
 /-!
 # The Cauchy–Crofton bridge
@@ -27,6 +29,8 @@ a squeeze as `r ↓ 1` gives the Cauchy–Crofton identity
 
 for every planar compact convex body with nonempty interior.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory NRR.Geometry
 open scoped ENNReal NNReal Pointwise

@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DoubleCoverClass
-import Mathlib.Analysis.Normed.Module.Connected
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DoubleCoverClass
+public import Mathlib.Analysis.Normed.Module.Connected
 
 /-!
 # Nontriviality of the monodromy classifying character of the double cover
@@ -39,6 +41,8 @@ monodromy sends the sheet `e` to the other sheet `-e`.
  classifying value `≠ 1`.
 * `classifyingHom_surjective` — for `n ≥ 1`, `classifyingHom n x` is surjective.
 -/
+
+@[expose] public section
 
 noncomputable section
 

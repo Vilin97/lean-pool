@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeter
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthIdentities
+
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeter
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthIdentities
 
 /-!
 # `NRR.Geometry.ConvexBody` — transformation laws for the planar perimeter
@@ -43,6 +45,8 @@ Only `PlanarPerimeter.lean` and `WidthIdentities.lean` are imported; they transi
 all of Mathlib together with the perimeter, width and support-function APIs. No extra imports are
 required.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

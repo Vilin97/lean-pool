@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.SignedDistance
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Operations
+
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.SignedDistance
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Operations
 
 /-!
 # `NRR.Multivalued.Separator.ToNiceMV` — separators as nice multivalued functions
@@ -23,6 +25,8 @@ separator's nice multivalued function has the same zero set as the pullback of t
 multivalued function, even though the two signed distances are computed in different product metrics
 and need not agree pointwise.
 -/
+
+@[expose] public section
 
 namespace NRR
 

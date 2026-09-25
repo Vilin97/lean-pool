@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DegreePositiveIntegration
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SphereOrientationPosFromMV
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.BallBoundaryLES
+
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DegreePositiveIntegration
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SphereOrientationPosFromMV
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.BallBoundaryLES
 /-!
 # A zero theorem for outward-pointing Euclidean vector fields
 
@@ -23,6 +25,8 @@ closed ball to its boundary.  Its restriction to the boundary is both nullhomoto
 strictly outward scalar-product condition), contradicting degree.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 open Metric RealInnerProductSpace
@@ -34,7 +38,8 @@ open SphereOddDegree
 
 variable {d : Nat}
 
-private abbrev Ambient (d : Nat) := EuclideanSpace Real (Fin (d + 1))
+/-- Euclidean ambient space for the sphere of dimension `d`. -/
+abbrev Ambient (d : Nat) := EuclideanSpace Real (Fin (d + 1))
 
 /-- Radial normalization of a nonzero vector. -/
 private def radialNormalize {d : Nat} (x : Ambient d) (hx : x ≠ 0) : Sphere d :=

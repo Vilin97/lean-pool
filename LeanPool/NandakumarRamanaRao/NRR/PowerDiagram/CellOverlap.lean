@@ -3,14 +3,16 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.Defs
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAlgebra
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellGeometry
-import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
+
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.Defs
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAlgebra
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellGeometry
+public import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
 
 /-!
 # `NRR.PowerDiagram.CellOverlap` — null overlap of distinct power cells
@@ -32,6 +34,8 @@ The ambient type is the library alias `E2 = Geometry.Plane = EuclideanSpace ℝ 
 (this is the `Plane` referred to in the design).
 -/
 
+@[expose] public section
+
 open NRR MeasureTheory
 open scoped RealInnerProductSpace
 
@@ -46,7 +50,7 @@ theorem cell_inter_subset_bisector (s : Fin n → E2) (w : Fin n → ℝ) {i j :
     cell s w i ∩ cell s w j ⊆
       {x : E2 | ⟪sepNormal s i j, x⟫ = sepOffset s w i j} := by
   intro x hx;
-  simp_all +decide [ cell, powerDist, sepNormal, sepOffset ];
+  simp_all? +decide [ cell, powerDist, sepNormal, sepOffset ];
   have := hx.1 j; have := hx.2 i; norm_num [ EuclideanSpace.norm_eq, Real.sq_sqrt <| add_nonneg
     ( sq_nonneg _ ) ( sq_nonneg _ ) ] at *;
   norm_num [ two_smul, inner ]; linarith!;

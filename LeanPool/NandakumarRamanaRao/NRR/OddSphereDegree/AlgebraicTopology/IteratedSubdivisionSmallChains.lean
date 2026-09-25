@@ -3,11 +3,15 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
+public import Mathlib.Tactic
 
 /-! # Iterated Subdivision Small Chains -/
+
+@[expose] public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Limits
@@ -40,12 +44,15 @@ theorem barycentricSubdivision_maps_smallChainSubmodule (R : Type) [CommRing R]
     ∀ c ∈ smallChainSubmodule R X 𝒰 n,
       (barycentricSubdivisionLinearMap R X n).hom c ∈ smallChainSubmodule R X 𝒰 n := by
   intro c hc
-  have hle : smallChainSubmodule R X 𝒰 n ≤ Submodule.comap (barycentricSubdivisionLinearMap R X n).hom (smallChainSubmodule R X 𝒰 n) := by
+  have hle : smallChainSubmodule R X 𝒰 n ≤ Submodule.comap (barycentricSubdivisionLinearMap R X
+    n).hom (smallChainSubmodule R X 𝒰 n) := by
     refine Submodule.span_le.mpr ?_
     rintro c ⟨σ, hσ, rfl⟩
-    change (barycentricSubdivisionLinearMap R X n).hom (chainGenerator R X n σ) ∈ smallChainSubmodule R X 𝒰 n
+    change (barycentricSubdivisionLinearMap R X n).hom (chainGenerator R X n σ) ∈
+      smallChainSubmodule R X 𝒰 n
     rw [barycentricSubdivisionLinearMap_generator_sum]
-    exact Submodule.sum_mem _ fun π _ => Submodule.smul_mem _ _ (chainGenerator_mem_smallChainSubmodule (IsSmallSimplex.barycentricSubdivSimplex hσ π))
+    exact Submodule.sum_mem _ fun π _ => Submodule.smul_mem _ _
+      (chainGenerator_mem_smallChainSubmodule (IsSmallSimplex.barycentricSubdivSimplex hσ π))
   exact hle hc
 
 /-- **Every iterate preserves small chains.** -/
@@ -90,7 +97,9 @@ theorem sdIter_mem_smallChainSubmodule_mono (R : Type) [CommRing R]
 `R`-module on singular simplices). -/
 theorem chainGenerator_span_top (R : Type) [CommRing R] (n : ℕ) :
     Submodule.span R (Set.range (chainGenerator R X n)) = ⊤ := by
-  have hq_zero : (ModuleCat.ofHom (Submodule.mkQ (Submodule.span R (Set.range (chainGenerator R X n)))) : (singularChainGroup R X n) ⟶ ModuleCat.of R ((singularChainGroup R X n) ⧸ Submodule.span R (Set.range (chainGenerator R X n)))) = 0 := by
+  have hq_zero : (ModuleCat.ofHom (Submodule.mkQ (Submodule.span R (Set.range (chainGenerator R
+    X n)))) : (singularChainGroup R X n) ⟶ ModuleCat.of R ((singularChainGroup R X n) ⧸
+    Submodule.span R (Set.range (chainGenerator R X n)))) = 0 := by
     apply Sigma.hom_ext
     intro σ
     apply ModuleCat.hom_ext
@@ -100,7 +109,9 @@ theorem chainGenerator_span_top (R : Type) [CommRing R] (n : ℕ) :
     exact Submodule.subset_span (Set.mem_range_self σ)
   refine Submodule.eq_top_iff'.mpr fun x => ?_
   rw [← Submodule.Quotient.mk_eq_zero]
-  have h_val := congr_arg (fun (f : (singularChainGroup R X n) ⟶ ModuleCat.of R ((singularChainGroup R X n) ⧸ Submodule.span R (Set.range (chainGenerator R X n)))) => f.hom x) hq_zero
+  have h_val := congr_arg (fun (f : (singularChainGroup R X n) ⟶ ModuleCat.of R
+    ((singularChainGroup R X n) ⧸ Submodule.span R (Set.range (chainGenerator R X n)))) => f.hom
+    x) hq_zero
   exact h_val
 
 /-- **Main theorem.** For every singular chain `c` and every open cover `𝒰`,

@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.PositiveReferenceCoordinateMap
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.PositiveReferenceCoordinateMap
 /-!
 # A globally negative coordinate lift of the S5 reference map
 
@@ -12,6 +14,8 @@ Subtracting a common scalar from every coordinate does not change the deviation 
 negative lift is used as the lower-end comparison map in S6.  Its positive-ray count is zero,
 while its deviation map remains the regular S5 reference map.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace AAK
@@ -26,14 +30,14 @@ noncomputable def negativeReferenceCoordinateMap
   vertexValue c i :=
     (referenceCoordinateMap hp).vertexValue c i - referenceCoordinateAbsBound hp
 
- theorem negativeReferenceCoordinateMap_vertex_neg
+theorem negativeReferenceCoordinateMap_vertex_neg
     (hp : Nat.Prime p) :
     ∀ c i, (negativeReferenceCoordinateMap hp).vertexValue c i < 0 := by
   intro c i
   have h := referenceCoordinate_vertex_lt_bound hp c i
   exact sub_neg.mpr (lt_of_le_of_lt (le_abs_self _) h)
 
- theorem negativeReferenceCoordinateMap_global_neg
+theorem negativeReferenceCoordinateMap_global_neg
     (hp : Nat.Prime p) :
     ∀ x : Realization p, ∀ i : Fin p,
       (negativeReferenceCoordinateMap hp).globalValue x i < 0 := by

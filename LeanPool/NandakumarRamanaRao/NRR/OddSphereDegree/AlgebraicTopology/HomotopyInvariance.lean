@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.HomotopyInvarianceWrappers
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.PrismOperator
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.HomotopyInvarianceWrappers
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.PrismOperator
 
 /-!
 # Singular-homology homotopy invariance from a prism operator
@@ -15,6 +17,8 @@ invariance statements for integral singular homology from it. A concrete proof i
 `singularPrismOperator` by `SingularHomologyHomotopyInvariance.lean`; this module remains the
 reusable conditional API.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 

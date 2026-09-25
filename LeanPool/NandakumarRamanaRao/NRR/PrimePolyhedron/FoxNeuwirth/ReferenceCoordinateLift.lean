@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffinePrismObstruction
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffinePrismObstruction
 /-!
 # Coordinate lift of the S5 reference deviation map
 
@@ -12,6 +14,8 @@ The S5 model is expressed in fixed difference coordinates.  This module adds one
 whose value is fixed, producing a coordinate-valued affine map with exactly the same deviation
 map and the same positive local-index cochain.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace AAK

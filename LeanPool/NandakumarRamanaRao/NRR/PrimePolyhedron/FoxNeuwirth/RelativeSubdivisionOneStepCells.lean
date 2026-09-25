@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionCylinderCombinatorics
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrism
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionPrismAffine
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionCylinderCombinatorics
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrism
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionPrismAffine
 /-!
 # One-step relative subdivision cells over the Fox--Neuwirth cycle
 
@@ -19,6 +21,8 @@ The pointwise quotient-facet boundary formula is proved in the following module.
 the genuine cells and prove all nondegeneracy and prime-orbit separation fields required by
 `RelativeAffineCellSystem`.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -92,7 +96,7 @@ theorem refinedChart_coordinate_eq_linear
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp N)
     (w : Delta (p - 1)) (c : BarredPermutation p) :
     RefinedAffineMap.chart hp N q w c = refinedCoordinateLinear hp N q c w.1 := by
-  simp [refinedCoordinateLinear, RefinedAffineMap.chart,
+  simp? [refinedCoordinateLinear, RefinedAffineMap.chart,
     Simplex.refinedContinuousMap, Simplex.realizationContinuousMap,
     Simplex.realizationPoint,  StandardSimplex.ofDelta,
      realizationCoordinateLinear]
@@ -143,7 +147,7 @@ theorem chart_spatial_affine
   change (RelativeSubdivisionCylinderCombinatorics.chart
     p q.2 (localWeight hp w)).1 r = _
   rw [RelativeSubdivisionCylinderCombinatorics.chart_spatial_affine]
-  simpa [localWeight, localPoint, vertex, chart, liftPoint, CylinderPoint.ofProd,
+  simp [localWeight, localPoint, vertex, chart, liftPoint, CylinderPoint.ofProd,
     RelativeSubdivisionCylinderCombinatorics.chart_vertex]
 
 /-- The time component of the lifted chart is affine in the source barycentric coordinates. -/
@@ -157,7 +161,7 @@ theorem chart_time_affine
   change (RelativeSubdivisionCylinderCombinatorics.chart
     p q.2 (localWeight hp w)).2.1 = _
   rw [RelativeSubdivisionCylinderCombinatorics.chart_time_affine]
-  simpa [localWeight, localPoint, vertex, chart, liftPoint, CylinderPoint.ofProd,
+  simp [localWeight, localPoint, vertex, chart, liftPoint, CylinderPoint.ofProd,
     RelativeSubdivisionCylinderCombinatorics.chart_vertex,
     Nat.sub_add_cancel hp.pos]
 
@@ -210,7 +214,7 @@ theorem vertex_injective
     chart_injective hp N q hij
   by_contra hne
   have hi := congrArg (fun w : Delta p => w i) hstd
-  simpa [SphereOddDegree.FiniteSimplex.vertex, hne] using hi
+  simp [SphereOddDegree.FiniteSimplex.vertex, hne] at hi
 
 /-- No two vertices of a lifted cell lie in the same nontrivial prime orbit. -/
 theorem vertex_orbit_injective

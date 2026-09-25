@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Compactness
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.AreaContinuity
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PositiveAreaInterior
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Compactness
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.AreaContinuity
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PositiveAreaInterior
 
 /-!
 # `NRR.BodySpace` — lower-area subspace and the positive-area solid bridge
@@ -31,6 +33,8 @@ area is at least `A`.
 * Membership and a.e. indicator convergence lemmas are lifted from `ConvexSubbody` by composing
   with the continuous projection `BodySpace.body`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Metric Filter Topology
 

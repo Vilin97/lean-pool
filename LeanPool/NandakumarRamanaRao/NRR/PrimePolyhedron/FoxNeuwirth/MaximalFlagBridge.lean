@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagCode
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagCode
 /-!
 # The maximal-flag code-to-simplex bridge
 
@@ -31,6 +33,8 @@ The two internal pairings act transparently on this model:
 
 Consequently the paired maximal flags have literally equal deleted faces.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -84,7 +88,7 @@ theorem ordinalRankNat_lt (key : Fin p → Nat ×ₗ Nat) (x : Fin p) :
     have hx : x ∈ (Finset.univ.filter fun y : Fin p => key y < key x) := by
       rw [hEq]
       simp
-    simpa using hx
+    simp at hx
   simpa [ordinalRankNat] using Finset.card_lt_card hssub
 
 /-- Fin-valued ordinal rank. -/

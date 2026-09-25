@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Operations
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.PhaseInterfaces
+
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Operations
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.PhaseInterfaces
 
 /-!
 # `NRR.Multivalued.ChildEvaluation` — nice multivalued functions on continuous children
@@ -26,6 +28,8 @@ vanishing of every child evaluation coordinate.
 The output is kept in `Fin n → ℝ`; no projection to a zero-sum representation is performed here,
 and no common zero, equivariance, or obstruction result is assumed.
 -/
+
+@[expose] public section
 
 open NRR.Geometry
 

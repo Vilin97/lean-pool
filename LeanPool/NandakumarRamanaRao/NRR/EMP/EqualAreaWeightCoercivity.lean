@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightOutward
-import LeanPool.NandakumarRamanaRao.NRR.EMP.NormalizedAreaDeviation
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightOutward
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.NormalizedAreaDeviation
 /-!
 # Coercivity gauge for the augmented equal-area deviation field
 
@@ -19,6 +21,8 @@ A continuous homogeneous gauge detects both components.  Its restriction to the
 Euclidean unit sphere has a positive minimum, giving a uniform outward radius.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 open NRR Geometry RealInnerProductSpace
@@ -28,7 +32,8 @@ namespace EMP
 
 variable {n : Nat}
 
-private abbrev WeightE (n : Nat) := EuclideanSpace Real (Fin n)
+/-- Euclidean coordinates for the weight gauge and its unit sphere. -/
+abbrev WeightE (n : Nat) := EuclideanSpace Real (Fin n)
 
 /-- Sum of positive coordinates of a weight vector. -/
 noncomputable def positiveWeightMass (w : Fin n → Real) : Real :=
@@ -273,7 +278,8 @@ open Geometry RealInnerProductSpace
 
 variable {n : Nat}
 
-private abbrev WeightE' (n : Nat) := EuclideanSpace Real (Fin n)
+/-- Euclidean weight coordinates used in the compact-sphere lower-bound argument. -/
+abbrev WeightE' (n : Nat) := EuclideanSpace Real (Fin n)
 
 lemma max_normalized_weight_nonneg
     (hn : 0 < n) (w : Fin n → Real)

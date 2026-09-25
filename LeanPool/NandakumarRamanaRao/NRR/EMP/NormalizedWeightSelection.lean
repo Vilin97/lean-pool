@@ -3,19 +3,22 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightsUniqueness
-import LeanPool.NandakumarRamanaRao.NRR.EMP.NormalizedWeights
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightsUniqueness
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.NormalizedWeights
 
 /-!
 # `NRR.EMP.NormalizedWeightSelection` — canonical normalized equal‑area weight
 
 This module proves that normalized equal‑area weights are **unique** (as a `Subsingleton` of
 the subtype `EMP.NormalizedEqualAreaWeight`), and then selects a canonical representative,
-`EMP.normalizedWeight`, via `Classical.choice` of the existence result from the existing existence theorem.
+`EMP.normalizedWeight`, via `Classical.choice` of the existence result from the existing existence
+theorem.
 
 ## Results
 
@@ -28,6 +31,8 @@ the subtype `EMP.NormalizedEqualAreaWeight`), and then selects a canonical repre
 * `EMP.normalizedWeight_normalized` — the selected weight is normalized.
 * `EMP.normalizedWeight_unique` — any equal‑area normalized weight equals the selected one.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 
@@ -52,7 +57,8 @@ theorem EMP.normalized_equalArea_weight_subsingleton
 /-- **Selected normalized equal‑area weight.** A canonical choice of a weight vector that is
 both equal‑area for the sites `s` in `K` and normalized (`∑ i, w i = 0`), obtained by
 `Classical.choice` from the existence theorem `EMP.exists_normalized_equalArea_weight`
-(the existing existence theorem). By `EMP.normalized_equalArea_weight_subsingleton` this choice is in fact unique. -/
+(the existing existence theorem). By `EMP.normalized_equalArea_weight_subsingleton` this choice is
+in fact unique. -/
 noncomputable def EMP.normalizedWeight
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane)
     (hn : 0 < n) (hs : Function.Injective s) : Fin n → ℝ :=

@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ModPOrbitCycle
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceZero
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ModPOrbitCycle
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceZero
 
 /-!
 # Direct Fox--Neuwirth cellular obstruction cycle
@@ -17,6 +19,8 @@ boundary coefficient of a split of sizes `k` and `p-k` is a common orientation s
 
 No barycentric maximal-flag classification is used here.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -87,7 +91,7 @@ noncomputable def cellularObstruction (hp : Nat.Prime p) : CellularObstruction h
     (cellularObstruction hp).cycle.boundaryCoefficient a s = 0 :=
   (cellularObstruction hp).cycle.boundary_zero a s
 
- theorem cellularObstruction_reference_ne_zero
+theorem cellularObstruction_reference_ne_zero
     (hp : Nat.Prime p) :
     (cellularObstruction hp).referenceCount ≠ 0 :=
   (cellularObstruction hp).referenceCount_ne_zero

@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CanonicalCellGraph
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.ClosedGraph
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.AreaRigidity
+
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CanonicalCellGraph
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.ClosedGraph
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.AreaRigidity
 
 /-!
 # `NRR.EMP.VariableBody.CanonicalCellContinuity` — closed graph and continuity of cells
@@ -20,13 +22,17 @@ of the canonical power cell and deduce continuity of each cell and of the finite
 * `continuous_canonicalCells` — the finite family of cells varies continuously.
 
 The exact-graph closedness combines the one-sided lower-graph inclusion with area continuity and the
-convex-area rigidity of `ConvexSubbody.eq_of_subset_of_area_eq`: a Hausdorff limit `D` of the cells is contained in the limiting
+convex-area rigidity of `ConvexSubbody.eq_of_subset_of_area_eq`: a Hausdorff limit `D` of the cells
+is contained in the limiting
 canonical cell, both have the common target area `z.1.body.area / n` (positive since `0 < A` and
-`0 < n`), so `ConvexSubbody.eq_of_subset_of_area_eq` forces equality. Continuity then follows from the
+`0 < n`), so `ConvexSubbody.eq_of_subset_of_area_eq` forces equality. Continuity then follows from
+the
 compact closed-graph criterion `continuous_of_isClosed_graph_of_compact` (both the parameter space
 `BodySpace K A × X` and the codomain `ConvexSubbody K` are compact Hausdorff metric spaces), and the
 family continuity from `continuous_pi`.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 open Filter Topology

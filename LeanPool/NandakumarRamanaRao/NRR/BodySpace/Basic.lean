@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
 
 /-!
 # `NRR.ConvexSubbody` — fixed-parent convex subbodies
@@ -23,6 +25,8 @@ compact hyperspace under the Hausdorff metric.
 The area of a subbody is the real-valued Lebesgue measure of its carrier, matching the convention
 of `Geometry.ConvexBody.area`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

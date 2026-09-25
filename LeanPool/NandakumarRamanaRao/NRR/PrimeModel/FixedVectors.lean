@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.Actions
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.Actions
 
 /-!
 # Fixed-vector rigidity
@@ -13,11 +15,13 @@ Transitivity of the label action forces fixed coordinate vectors to be constant.
 fixed subspace with the zero-sum representation leaves only the origin.
 -/
 
+@[expose] public section
+
 namespace NRR
 
 variable {p : ℕ}
 
- theorem PrimeSymmetry.coordinate_fixed_constant
+theorem PrimeSymmetry.coordinate_fixed_constant
     (hp : Nat.Prime p) (v : Fin p → ℝ)
     (hfix : ∀ g : PrimeSymmetry p, g • v = v) :
     ∀ i j, v i = v j := by
@@ -29,7 +33,7 @@ variable {p : ℕ}
   rw [PrimeSymmetry.smul_coordinate_apply, hsymm] at h
   exact h.symm
 
- theorem PrimeSymmetry.coordinate_fixed_iff_constant
+theorem PrimeSymmetry.coordinate_fixed_iff_constant
     (hp : Nat.Prime p) (v : Fin p → ℝ) :
     (∀ g : PrimeSymmetry p, g • v = v) ↔
       ∃ c : ℝ, v = fun _ => c := by
@@ -43,7 +47,7 @@ variable {p : ℕ}
     funext i
     rfl
 
- theorem PrimeSymmetry.zeroSum_fixed_eq_zero
+theorem PrimeSymmetry.zeroSum_fixed_eq_zero
     (hp : Nat.Prime p) (v : ZeroSum p)
     (hfix : ∀ g : PrimeSymmetry p, g • v = v) :
     v = 0 := by
@@ -73,12 +77,12 @@ variable {p : ℕ}
     _ = 0 := hi0
     _ = (0 : ZeroSum p) i := (ZeroSum.zero_apply i).symm
 
- theorem coordinateMean_prime_smul
+theorem coordinateMean_prime_smul
     (p : Nat) (v : Fin p → ℝ) (g : PrimeSymmetry p) :
     coordinateMean p (g • v) = coordinateMean p v :=
   coordinateMean_relabel p (PrimeSymmetry.toPerm p g) v
 
- theorem coordinateDeviation_prime_smul
+theorem coordinateDeviation_prime_smul
     (hp : Nat.Prime p) (v : Fin p → ℝ) (g : PrimeSymmetry p) :
     coordinateDeviation hp.pos (g • v) = g • coordinateDeviation hp.pos v :=
   coordinateDeviation_relabel hp.pos (PrimeSymmetry.toPerm p g) v

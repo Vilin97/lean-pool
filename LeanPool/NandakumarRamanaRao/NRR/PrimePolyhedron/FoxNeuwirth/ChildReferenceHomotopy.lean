@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableObstructionCount
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableObstructionCount
 
 /-!
 # Endpoint homotopies for the child-coordinate family
@@ -13,6 +15,8 @@ At the lower endpoint every child coordinate is negative, and at the upper endpo
 coordinate is positive.  Hence the straight-line segments to the corresponding shifted S5
 reference lifts remain in the negative and positive orthants, respectively.
 -/
+
+@[expose] public section
 
 namespace NRR
 

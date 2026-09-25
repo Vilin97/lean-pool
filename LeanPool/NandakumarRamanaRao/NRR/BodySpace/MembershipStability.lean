@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Algebra.Order.Archimedean.Real.Hom
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.ConvexClosed
+
+public import Mathlib.Algebra.Order.Archimedean.Real.Hom
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.ConvexClosed
 
 /-!
 # Pointwise membership stability for Hausdorff-convergent convex subbodies
@@ -31,6 +33,8 @@ from a compact convex set by a unit normal, packaged as the auxiliary set lemmas
 `exists_separating_unit` and `mem_of_hausdorffDist_lt`.
 -/
 
+@[expose] public section
+
 open MeasureTheory Metric Filter Topology
 open scoped RealInnerProductSpace
 
@@ -50,9 +54,10 @@ theorem exists_separating_unit {D : Set Plane} (hconv : Convex ℝ D)
     (hcomp : IsCompact D) (hne : D.Nonempty) {x : Plane} (hx : x ∉ D) :
     ∃ u : Plane, ‖u‖ = 1 ∧ ∀ y ∈ D, ⟪y, u⟫ ≤ ⟪x, u⟫ := by
   obtain ⟨ p, hp, h ⟩ := hcomp.exists_infDist_eq_dist hne x;
-  refine' ⟨ ‖x - p‖⁻¹ • ( x - p ), _, _ ⟩ <;> simp_all +decide [ norm_smul, dist_eq_norm' ];
+  refine ⟨ ‖x - p‖⁻¹ • ( x - p ), ?_, ?_ ⟩ <;> simp_all? +decide [ norm_smul, dist_eq_norm' ];
   · rw [ inv_mul_cancel₀ ( norm_ne_zero_iff.mpr ( sub_ne_zero.mpr ( by aesop ) ) ) ];
-  · -- By the variational inequality for the metric projection, we have ⟪x - p, y - p⟫ ≤ 0 for all y ∈ D.
+  · -- By the variational inequality for the metric projection, we have ⟪x - p, y - p⟫ ≤ 0 for all y
+    -- ∈ D.
     have h_var : ∀ y ∈ D, ⟪x - p, y - p⟫ ≤ 0 := by
       convert norm_eq_iInf_iff_real_inner_le_zero hconv hp |>.1 _ using 1;
       convert h.symm using 1;
@@ -84,7 +89,7 @@ theorem mem_of_hausdorffDist_lt {D E : Set Plane} (hDconv : Convex ℝ D)
   -- Metric.closedBall x ε`, hence `z ∈ E` by `hball`.
   set z : Plane := x + ε • u
   have hz : z ∈ E := by
-    refine' hball _;
+    refine hball ?_;
     simp only [z, Metric.mem_closedBall, dist_self_add_left]
     rw [norm_smul, Real.norm_of_nonneg hε.le, hu.1, mul_one]
   -- Since `z ∈ E`, `Metric.infDist z D ≤ Metric.hausdorffDist E D` (via
@@ -176,7 +181,7 @@ theorem eventually_not_mem_of_not_mem
     {x : Plane} (hx : x ∉ (C₀.body : Set Plane)) :
     ∀ᶠ a in l, x ∉ ((C a).body : Set Plane) := by
   obtain ⟨d, hd_pos, hd⟩ : ∃ d > 0, Metric.infDist x (C₀.body : Set Plane) = d := by
-    refine' ⟨ _, _, rfl ⟩;
+    refine ⟨ ?_, ?_, rfl ⟩;
     contrapose! hx;
     exact C₀.isCompact.isClosed.closure_subset_iff.mpr ( Set.Subset.refl _ ) (
       Metric.mem_closure_iff.mpr fun ε εpos => by

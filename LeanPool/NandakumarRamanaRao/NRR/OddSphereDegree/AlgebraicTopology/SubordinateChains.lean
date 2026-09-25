@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChainComplex
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChainComplex
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Tactic
 
 /-!
 # Subordinate singular chains for a single subset
@@ -29,6 +31,8 @@ This is the algebraic backbone of singular Mayer–Vietoris: for an open cover
 and `subChainComplex R X (↑U ∩ ↑V)` are the singular chains supported in `U`,
 `V` and `U ∩ V` respectively.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 open SphereOddDegree.AffineBarycentricSubdivision
@@ -170,9 +174,11 @@ theorem subBoundary_comp_subBoundary
   apply LinearMap.ext
   intro c
   apply Subtype.ext
-  change (singularBoundary R X n).hom ((singularBoundary R X (n + 1)).hom (c : singularChainGroup R X (n + 2))) = 0
+  change (singularBoundary R X n).hom ((singularBoundary R X (n + 1)).hom (c :
+    singularChainGroup R X (n + 2))) = 0
   have h := (singularChainComplex R X).d_comp_d (n + 2) (n + 1) n
-  have happ := congrArg (fun (m : (singularChainComplex R X).X (n + 2) ⟶ (singularChainComplex R X).X n) => m.hom (c : singularChainGroup R X (n + 2))) h
+  have happ := congrArg (fun (m : (singularChainComplex R X).X (n + 2) ⟶ (singularChainComplex R
+    X).X n) => m.hom (c : singularChainGroup R X (n + 2))) h
   exact happ
 
 /-- **The subordinate-chain complex** `C_*^S(X; R)`. -/

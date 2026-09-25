@@ -3,16 +3,18 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionOperator
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineInternalSwapFace
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.PermSignAdjacentSwap
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineLastFaceIdentity
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.PermSignLastFaceFinished
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricFiniteCancellation
-import Mathlib.Combinatorics.Quiver.ReflQuiver
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionOperator
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineInternalSwapFace
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.PermSignAdjacentSwap
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineLastFaceIdentity
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.PermSignLastFaceFinished
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricFiniteCancellation
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Mathlib.Tactic
 
 /-!
 # Generator-level barycentric boundary cancellation `∂ (sd σ) = sd (∂ σ)`
@@ -60,6 +62,8 @@ Splitting the inner face index `i` into internal faces `i = castSucc i'`
  sum onto `sd (∂ σ)`.
 -/
 
+@[expose] public section
+
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
 open Finset
@@ -87,7 +91,8 @@ theorem toSSetObjEquiv_map_op_naturality (X : TopCat.{0}) (n m : ℕ)
 /-- The topological coface map `Δⁿ → Δⁿ⁺¹` deleting the `k`-th vertex, as the
 affine inclusion sending vertex `t` to vertex `k.succAbove t`. -/
 noncomputable def cofaceTop (n : ℕ) (k : Fin (n + 2)) : C(Delta n, Delta (n + 1)) :=
-  ⟨SphereOddDegree.FiniteSimplex.map (S := ℝ) (Fin.succAbove k), SphereOddDegree.FiniteSimplex.continuous_map _⟩
+  ⟨SphereOddDegree.FiniteSimplex.map (S := ℝ) (Fin.succAbove k),
+    SphereOddDegree.FiniteSimplex.continuous_map _⟩
 
 /-- The `k`-coordinate of `cofaceTop n k y` is zero: the affine coface never hits
 the deleted vertex `k`. -/
@@ -103,7 +108,8 @@ theorem cofaceTop_apply_base (n : ℕ) (k : Fin (n + 2)) (y : Delta n) :
 its `castSucc t` coordinate is the `t` coordinate of `y`. -/
 theorem cofaceTop_last_castSucc (n : ℕ) (t : Fin (n + 1)) (y : Delta n) :
     (cofaceTop n (Fin.last (n + 1)) y : Fin (n + 2) → ℝ) (Fin.castSucc t) = y t := by
-  change (SphereOddDegree.FiniteSimplex.map (S := ℝ) (Fin.succAbove (Fin.last (n + 1))) y : Fin (n + 2) → ℝ)
+  change (SphereOddDegree.FiniteSimplex.map (S := ℝ) (Fin.succAbove (Fin.last (n + 1))) y : Fin
+    (n + 2) → ℝ)
       (Fin.castSucc t) = y t
   rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply, Fin.succAbove_last]
   rw [Finset.sum_eq_single t]

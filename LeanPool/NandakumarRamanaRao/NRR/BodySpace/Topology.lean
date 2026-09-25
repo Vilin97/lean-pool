@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import Mathlib.Topology.MetricSpace.Closeds
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Basic
+
+public import Mathlib.Tactic
+public import Mathlib.Topology.MetricSpace.Closeds
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Basic
 
 /-!
 # `NRR.ConvexSubbody` — inherited Hausdorff topology and hyperspace embedding
@@ -25,6 +27,8 @@ from Mathlib's root convex body `_root_.ConvexBody Plane`. It provides:
 No new metric, hyperspace topology, or convex-body type is introduced: everything is inherited
 from the root Mathlib body and its Hausdorff metric.
 -/
+
+@[expose] public section
 
 open MeasureTheory Metric TopologicalSpace Filter Topology
 

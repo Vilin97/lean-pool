@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AlexanderWhitneyFaceMaps
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AlexanderWhitneyFaceMaps
 
 /-!
 # Alexander–Whitney cochain chain-map (Leibniz) identity
@@ -46,6 +48,8 @@ degree equality via the cochain degree cast `cochainCast`.
  alternating-face evaluation formula.
 * `aw_cochain_leibniz_zmod2` — the Leibniz / chain-map identity over `ZMod 2`.
 -/
+
+@[expose] public section
 
 open CategoryTheory MonoidalCategory AlgebraicTopology Simplicial SimplexCategory
 open SphereOddDegree.AlexanderWhitney

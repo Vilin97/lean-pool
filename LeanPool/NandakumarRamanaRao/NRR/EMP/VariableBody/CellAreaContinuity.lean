@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Basic
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.IndicatorStability
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.IndicatorStability
 
 /-!
 # `NRR.EMP.VariableBody.CellAreaContinuity` — joint continuity of cell area
@@ -22,6 +24,8 @@ dominating function.
 * `continuous_cellArea_compactFamily` — the composition with a continuous site family
   `sites : C(X, Config n)`, needing only continuity of `X`, not compactness.
 -/
+
+@[expose] public section
 
 open MeasureTheory Filter Topology
 open NRR NRR.Geometry NRR.Geometry.ConvexBody

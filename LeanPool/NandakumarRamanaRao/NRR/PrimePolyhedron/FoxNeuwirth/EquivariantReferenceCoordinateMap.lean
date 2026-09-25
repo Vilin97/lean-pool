@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceAffineOrbitCount
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffinePrismObstruction
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceAffineOrbitCount
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffinePrismObstruction
 /-!
 # Equivariant full-coordinate lift of the S5 reference map
 
@@ -15,6 +17,8 @@ indices, while top cells use the full triangular rank vector.  Taking difference
 label recovers exactly the S5 map.  Relabelling acts by the same coordinate permutation, so this
 lift is genuinely prime-equivariant.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace AAK
@@ -103,12 +107,12 @@ noncomputable def equivariantReferenceAbsBound (hp : Nat.Prime p) : Real :=
   1 + ∑ c : BarredPermutation p,
     ∑ i : Fin p, |(equivariantReferenceCoordinateMap hp).vertexValue c i|
 
- theorem equivariantReferenceAbsBound_pos (hp : Nat.Prime p) :
+theorem equivariantReferenceAbsBound_pos (hp : Nat.Prime p) :
     0 < equivariantReferenceAbsBound hp := by
   unfold equivariantReferenceAbsBound
   positivity
 
- theorem equivariantReference_vertex_lt_bound
+theorem equivariantReference_vertex_lt_bound
     (hp : Nat.Prime p) (c : BarredPermutation p) (i : Fin p) :
     |(equivariantReferenceCoordinateMap hp).vertexValue c i| <
       equivariantReferenceAbsBound hp := by
@@ -147,7 +151,7 @@ noncomputable def negativeEquivariantReferenceCoordinateMap
     (equivariantReferenceCoordinateMap hp).vertexValue c i -
       equivariantReferenceAbsBound hp
 
- theorem positiveEquivariantReferenceCoordinateMap_vertex_pos
+theorem positiveEquivariantReferenceCoordinateMap_vertex_pos
     (hp : Nat.Prime p) :
     ∀ c i, 0 < (positiveEquivariantReferenceCoordinateMap hp).vertexValue c i := by
   intro c i
@@ -155,14 +159,14 @@ noncomputable def negativeEquivariantReferenceCoordinateMap
   unfold positiveEquivariantReferenceCoordinateMap
   linarith [(abs_lt.mp h).1]
 
- theorem negativeEquivariantReferenceCoordinateMap_vertex_neg
+theorem negativeEquivariantReferenceCoordinateMap_vertex_neg
     (hp : Nat.Prime p) :
     ∀ c i, (negativeEquivariantReferenceCoordinateMap hp).vertexValue c i < 0 := by
   intro c i
   have h := equivariantReference_vertex_lt_bound hp c i
   exact sub_neg.mpr (lt_of_le_of_lt (le_abs_self _) h)
 
- theorem positiveEquivariantReferenceCoordinateMap_deviation
+theorem positiveEquivariantReferenceCoordinateMap_deviation
     (hp : Nat.Prime p) :
     (positiveEquivariantReferenceCoordinateMap hp).deviation hp =
       ReferenceAffineOrbitCount.referenceMap hp := by
@@ -172,7 +176,7 @@ noncomputable def negativeEquivariantReferenceCoordinateMap
   funext c r
   simp [positiveEquivariantReferenceCoordinateMap]
 
- theorem negativeEquivariantReferenceCoordinateMap_deviation
+theorem negativeEquivariantReferenceCoordinateMap_deviation
     (hp : Nat.Prime p) :
     (negativeEquivariantReferenceCoordinateMap hp).deviation hp =
       ReferenceAffineOrbitCount.referenceMap hp := by
@@ -182,7 +186,7 @@ noncomputable def negativeEquivariantReferenceCoordinateMap
   funext c r
   simp [negativeEquivariantReferenceCoordinateMap]
 
- theorem positiveEquivariantReferenceCoordinateMap_global_smul
+theorem positiveEquivariantReferenceCoordinateMap_global_smul
     (hp : Nat.Prime p) (g : PrimeSymmetry p) (x : Realization p) :
     (positiveEquivariantReferenceCoordinateMap hp).globalValue (g • x) =
       g • (positiveEquivariantReferenceCoordinateMap hp).globalValue x := by
@@ -211,7 +215,7 @@ noncomputable def negativeEquivariantReferenceCoordinateMap
     congrArg (fun a : Real => a + equivariantReferenceAbsBound hp)
       (congrFun (equivariantReferenceCoordinateMap_global_smul hp g x) i)
 
- theorem negativeEquivariantReferenceCoordinateMap_global_smul
+theorem negativeEquivariantReferenceCoordinateMap_global_smul
     (hp : Nat.Prime p) (g : PrimeSymmetry p) (x : Realization p) :
     (negativeEquivariantReferenceCoordinateMap hp).globalValue (g • x) =
       g • (negativeEquivariantReferenceCoordinateMap hp).globalValue x := by
@@ -240,7 +244,7 @@ noncomputable def negativeEquivariantReferenceCoordinateMap
     congrArg (fun a : Real => a - equivariantReferenceAbsBound hp)
       (congrFun (equivariantReferenceCoordinateMap_global_smul hp g x) i)
 
- theorem positiveEquivariantReferenceCoordinateMap_global_pos
+theorem positiveEquivariantReferenceCoordinateMap_global_pos
     (hp : Nat.Prime p) :
     ∀ x : Realization p, ∀ i : Fin p,
       0 < (positiveEquivariantReferenceCoordinateMap hp).globalValue x i := by
@@ -261,7 +265,7 @@ noncomputable def negativeEquivariantReferenceCoordinateMap
     ⟨c, Finset.mem_univ c,
       mul_pos hc (positiveEquivariantReferenceCoordinateMap_vertex_pos hp c i)⟩
 
- theorem negativeEquivariantReferenceCoordinateMap_global_neg
+theorem negativeEquivariantReferenceCoordinateMap_global_neg
     (hp : Nat.Prime p) :
     ∀ x : Realization p, ∀ i : Fin p,
       (negativeEquivariantReferenceCoordinateMap hp).globalValue x i < 0 := by

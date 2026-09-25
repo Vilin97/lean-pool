@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CanonicalCellContinuity
+
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CanonicalCellContinuity
 
 /-!
 # `NRR.EMP.VariableBody.Children` — canonical children in the lower-area `BodySpace`
@@ -23,6 +25,8 @@ as a genuine element of the lower-area hyperspace `BodySpace K (A / (n : ℝ))`.
   a direct composition through the solid bridge `BodySpace.toGeometryConvexBody`.
 -/
 
+@[expose] public section
+
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 open Filter Topology
 
@@ -39,7 +43,8 @@ theorem child_lower_bound_pos (hA : 0 < A) (hn : 0 < n) :
   div_pos hA (by exact_mod_cast hn)
 
 /-- The **canonical child** of site `i`: the canonical power cell of the parameter `z`, packaged as
-an element of the lower-area hyperspace `BodySpace K (A / (n : ℝ))`. The lower-area condition follows
+an element of the lower-area hyperspace `BodySpace K (A / (n : ℝ))`. The lower-area condition
+follows
 from `A ≤ z.1.body.area`, `0 < n`, and `canonicalCell.area = z.1.body.area / n`. -/
 noncomputable def child
     (z : BodySpace K A × X) (i : Fin n) :

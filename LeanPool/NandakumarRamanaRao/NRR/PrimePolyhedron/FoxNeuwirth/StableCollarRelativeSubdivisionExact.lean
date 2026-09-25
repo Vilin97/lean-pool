@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarRelativeSubdivision
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarRelativeSubdivision
 
 /-!
 # Exact relative stable-collar interface
@@ -19,6 +21,8 @@ prime-equivariant assignment, exact horizontal boundary values, and the cellwise
 No discontinuous endpoint-adjusted sampler and no unnecessary codimension-two determinant are
 part of the certificate.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -100,7 +104,8 @@ theorem zeroCount_eq
     D.horizontalVertexFixed.toEndpointBoundaryFixed hp A₀ A₁ D.collar D.assignment
   rw [← B.lowerHorizontalContribution_eq_zeroCount,
     ← B.upperHorizontalContribution_eq_zeroCount]
-  exact FoxNeuwirthRelativeAffineCollar.lowerHorizontalContribution_eq_upperHorizontalContribution_of_localPositiveRayStokes
+  open FoxNeuwirthRelativeAffineCollar in
+  exact lowerHorizontalContribution_eq_upperHorizontalContribution_of_localPositiveRayStokes
       hp D.collar.toFoxNeuwirthRelativeAffineCollar D.assignment D.localPositiveRayStokes
 
 /-- Every certificate built through the older polynomial route satisfies the exact interface. -/

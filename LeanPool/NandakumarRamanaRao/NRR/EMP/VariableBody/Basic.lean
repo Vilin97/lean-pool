@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Phase1Interface
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
-import LeanPool.NandakumarRamanaRao.NRR.EMP.WeightSpace
-import LeanPool.NandakumarRamanaRao.NRR.EMP.NormalizedWeightSelection
+
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Phase1Interface
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.WeightSpace
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.NormalizedWeightSelection
 
 /-!
 # `NRR.EMP.VariableBody.Basic` — variable-body power-diagram vocabulary
@@ -21,6 +23,8 @@ Every declaration here is a thin wrapper that specializes the existing fixed-bod
 normalized-weight APIs to the solid body `C.toGeometryConvexBody hA`. No new power diagram,
 configuration space, weight selection, or convex-body topology is introduced.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

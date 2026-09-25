@@ -3,14 +3,17 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableFullCollarOriginMargin
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableFullCollarOriginMargin
 
 /-!
 # Relative-mesh completion of the fine full collar
 
-This module isolates the geometric certificate for a boundary-preserving fine relative mesh.  The assignment is the globally defined patched
+This module isolates the geometric certificate for a boundary-preserving fine relative mesh.  The
+assignment is the globally defined patched
 homotopy assignment.  A relative mesh certificate records:
 
 * exact agreement of every local vertex sample with the patched zero-free homotopy;
@@ -23,9 +26,12 @@ Consequently any endpoint-identified relative collar satisfying this certificate
 avoidance.
 
 The construction problem is geometric: construct a boundary-preserving
-relative triangulation fine enough to satisfy `cellOscillation` and prove its local vertices have the
+relative triangulation fine enough to satisfy `cellOscillation` and prove its local vertices have
+the
 stated patched-sample representation.  No overlap or seam assumption is hidden in the adapter.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -127,10 +133,12 @@ theorem norm_localAffineValue_sub_homotopy_le_of_oscillation
     ‖∑ i : Fin (p + 1), w i •
         (K.map (EquivariantPrismVertexParameters.CylinderPoint.toProd (C.vertex q i)) - y)‖
         ≤ ∑ i : Fin (p + 1),
-          ‖w i • (K.map (EquivariantPrismVertexParameters.CylinderPoint.toProd (C.vertex q i)) - y)‖ :=
+          ‖w i • (K.map (EquivariantPrismVertexParameters.CylinderPoint.toProd (C.vertex q i)) -
+            y)‖ :=
       norm_sum_le _ _
     _ = ∑ i : Fin (p + 1),
-        w i * ‖K.map (EquivariantPrismVertexParameters.CylinderPoint.toProd (C.vertex q i)) - y‖ := by
+        w i * ‖K.map (EquivariantPrismVertexParameters.CylinderPoint.toProd (C.vertex q i)) - y‖
+          := by
       apply Finset.sum_congr rfl
       intro i hi
       rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (w.nonneg i)]

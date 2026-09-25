@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrism
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointFaceRefinement
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrism
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointFaceRefinement
 /-!
 # Canonical endpoint occurrences of the common-level middle prism
 
@@ -14,6 +16,8 @@ This module contains only the geometry of the lower and upper endpoint facets.  
 independent of the stable endpoint interpolation and global Stokes modules, so both can use the same
 endpoint cells without an import cycle.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -205,7 +209,8 @@ theorem lowerOccurrence_isLower
     ((lowerOccurrence hp N L q eta).2.succAbove i)).2.1 = 0
   calc
     _ = (lowerEndpointMap (endpointSpatialMap hp N L q eta)
-        (SphereOddDegree.FiniteSimplex.vertex (AffinePositiveRayBoundary.VertexMap.facetCoordinateIndex i))).2.1 :=
+        (SphereOddDegree.FiniteSimplex.vertex
+          (AffinePositiveRayBoundary.VertexMap.facetCoordinateIndex i))).2.1 :=
       congrArg Subtype.val ht
     _ = 0 := rfl
 
@@ -226,7 +231,8 @@ theorem upperOccurrence_isUpper
     ((upperOccurrence hp N L q eta).2.succAbove i)).2.1 = 1
   calc
     _ = (upperEndpointMap (endpointSpatialMap hp N L q eta)
-        (SphereOddDegree.FiniteSimplex.vertex (AffinePositiveRayBoundary.VertexMap.facetCoordinateIndex i))).2.1 :=
+        (SphereOddDegree.FiniteSimplex.vertex
+          (AffinePositiveRayBoundary.VertexMap.facetCoordinateIndex i))).2.1 :=
       congrArg Subtype.val ht
     _ = 1 := rfl
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.Degree
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnLowDimensional
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.Degree
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnLowDimensional
 
 /-!
 # Sphere top homology and degree interfaces
@@ -14,6 +16,8 @@ Defines the integral top-homology objects for spheres, orientation packages, and
 to a selected top-homology isomorphism. Positive-dimensional unconditional instances are built
 from the Mayer--Vietoris suspension computation and re-exported by the final API.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 

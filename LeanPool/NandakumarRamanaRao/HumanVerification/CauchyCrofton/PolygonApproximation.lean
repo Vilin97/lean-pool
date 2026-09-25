@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.CyclicPolygon
+
+public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.CyclicPolygon
 
 /-!
 # Polygonal approximation from inside
@@ -24,6 +26,8 @@ vertices is immediate.  The inclusion `r⁻¹ • K ⊆ P` follows from two elem
 * a ray hitting a chord whose endpoints have radius at least `L` meets it at radius at least
   `L * cos (δ / 2)`, where `δ` is the angle subtended by the chord.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory NRR.Geometry
 open scoped ENNReal NNReal Pointwise
@@ -127,7 +131,8 @@ theorem mem_convexHull_triangle_of_norm_le {α γ t : ℝ} (hαt : α ≤ t) (ht
       have hhalfpos : 0 < Real.sin ((γ - α) / 2) :=
         Real.sin_pos_of_pos_of_lt_pi (by linarith) (by linarith [Real.pi_pos])
       have hcosle : Real.cos ((γ + α - 2 * t) / 2) ≤ 1 := Real.cos_le_one _
-      have hbound : c1 + c2 ≤ s * (Real.sin (γ - t) + Real.sin (t - α)) / (L * Real.sin (γ - α)) := by
+      have hbound : c1 + c2 ≤ s * (Real.sin (γ - t) + Real.sin (t - α)) / (L * Real.sin (γ - α))
+        := by
         rw [hc1, hc2]
         have e1 : s * Real.sin (γ - t) / (a * Real.sin (γ - α))
             ≤ s * Real.sin (γ - t) / (L * Real.sin (γ - α)) := by

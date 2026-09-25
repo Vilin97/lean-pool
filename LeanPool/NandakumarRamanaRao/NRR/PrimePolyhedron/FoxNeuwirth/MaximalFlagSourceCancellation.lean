@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagBridge
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopFlagTerminalCancellation
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricFiniteCancellation
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagBridge
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopFlagTerminalCancellation
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricFiniteCancellation
 
 /-!
 # Source-sum cancellation for maximal Fox--Neuwirth flags
@@ -29,6 +31,8 @@ type of `TopFlagSubdivision.deletionCoefficient`.  Restriction of a `(p - 1)`-di
 `toSimplex hp z` along that index uses the built-in-cast coface map `deleteFace`, which absorbs the
 `(p - 2) + 2` vs `p - 1 + 1` reindexing.
 -/
+
+@[expose] public section
 
 namespace NRR
 

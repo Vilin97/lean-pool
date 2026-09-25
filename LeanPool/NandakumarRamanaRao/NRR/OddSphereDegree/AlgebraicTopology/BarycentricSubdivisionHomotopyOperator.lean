@@ -3,16 +3,20 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionCone
-import Mathlib.CategoryTheory.Limits.Lattice
-import Mathlib.CategoryTheory.Limits.Shapes.Countable
-import Mathlib.CategoryTheory.Limits.Sifted
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionCone
+public import Mathlib.CategoryTheory.Limits.Lattice
+public import Mathlib.CategoryTheory.Limits.Shapes.Countable
+public import Mathlib.CategoryTheory.Limits.Sifted
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Tactic
 
 /-! # Barycentric Subdivision Homotopy Operator -/
+
+@[expose] public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
@@ -93,14 +97,17 @@ theorem homotopyFromUniversal_generator (R : Type) [CommRing R] (X : TopCat.{0})
     (T : singularChainGroup R (TopCat.of (Delta n)) (n + 1))
     (σ : singularSimplices X n) :
     (homotopyFromUniversal R X n T).hom (chainGenerator R X n σ)
-      = (singularChainMap R (TopCat.ofHom (singularSimplexAsContinuousMap X n σ)) (n + 1)).hom T := by
+      = (singularChainMap R (TopCat.ofHom (singularSimplexAsContinuousMap X n σ)) (n + 1)).hom T
+        := by
   have h := Sigma.ι_comp_desc (fun σ => pushUniversalHom R X n T σ) σ
-  have happ := congrArg (fun (m : ModuleCat.of R R ⟶ singularChainGroup R X (n + 1)) => m.hom (1 : R)) h
+  have happ := congrArg (fun (m : ModuleCat.of R R ⟶ singularChainGroup R X (n + 1)) => m.hom (1
+    : R)) h
   simp only [ModuleCat.hom_comp, LinearMap.comp_apply] at happ
   have h1 : (pushUniversalHom R X n T σ).hom (1 : R)
       = (singularChainMap R (TopCat.ofHom (singularSimplexAsContinuousMap X n σ)) (n + 1)).hom T :=
     one_smul R _
-  have hgen : chainGenerator R X n σ = (Sigma.ι (fun (_ : singularSimplices X n) => ModuleCat.of R R) σ).hom (1 : R) := rfl
+  have hgen : chainGenerator R X n σ = (Sigma.ι (fun (_ : singularSimplices X n) => ModuleCat.of
+    R R) σ).hom (1 : R) := rfl
   rw [hgen]
   exact happ.trans h1
 

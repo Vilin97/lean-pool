@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.SeparatorCertificate
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.SeparatorCertificate
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth
 
 /-!
 # Prime-refinement separator interface and consequences
@@ -13,6 +15,8 @@ import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth
 `PrimeRefinementTheorem` states the separator property for the concrete Fox--Neuwirth model.
 This file derives the functional prime-refinement consequences from that proposition.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -32,7 +36,8 @@ def PrimeRefinementTheorem : Prop :=
 
 namespace PrimeRefinementTheorem
 
-/-- A prime-refinement separator witness yields the refined nice multivalued function together with its
+/-- A prime-refinement separator witness yields the refined nice multivalued function together with
+its
 complete child-partition lifting property. -/
 theorem refinedNiceMV
     (H : PrimeRefinementTheorem)

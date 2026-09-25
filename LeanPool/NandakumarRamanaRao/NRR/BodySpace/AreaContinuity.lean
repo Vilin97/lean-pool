@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.BoundaryNull
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.MembershipStability
+
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.BoundaryNull
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.MembershipStability
 
 /-!
 # Continuity of the area functional on `NRR.ConvexSubbody`
@@ -23,6 +25,8 @@ theorem, with the constant parent indicator as an integrable dominating function
   of subbodies.
 * `ConvexSubbody.continuous_area` — the area functional is continuous.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open Filter Topology
@@ -85,7 +89,7 @@ theorem norm_indicator_le_parent (C : ConvexSubbody K) (x : Plane) :
 theorem integrable_parent_indicator (K : Geometry.ConvexBody Plane) :
     Integrable (fun x => (K : Set Plane).indicator (fun _ => (1 : ℝ)) x) volume := by
   rw [ MeasureTheory.integrable_indicator_iff ];
-  · simp +zetaDelta at *;
+  · simp? +zetaDelta at *;
     exact K.isCompact.measure_lt_top;
   · exact K.isCompact.measurableSet
 
@@ -93,16 +97,23 @@ theorem integrable_parent_indicator (K : Geometry.ConvexBody Plane) :
 indicator as dominating function. -/
 theorem continuousAt_area (C₀ : ConvexSubbody K) :
     ContinuousAt (fun C : ConvexSubbody K => C.area) C₀ := by
-  have h_dominated : Filter.Tendsto (fun C => ∫ x, (C.body : Set Plane).indicator (fun _ => (1 : ℝ)) x ∂volume) (nhds C₀) (nhds (∫ x, (C₀.body : Set Plane).indicator (fun _ => (1 : ℝ)) x ∂volume)) := by
-    refine' MeasureTheory.tendsto_integral_filter_of_dominated_convergence _ _ _ _ _;
-    refine' fun x => ( K : Set Plane ).indicator ( fun _ => 1 ) x;
-    · exact Filter.Eventually.of_forall fun n => Measurable.aestronglyMeasurable ( by exact Measurable.indicator measurable_const ( by exact n.measurableSet_body ) );
-    · exact Filter.Eventually.of_forall fun C => Filter.Eventually.of_forall fun x => norm_indicator_le_parent C x;
+  have h_dominated : Filter.Tendsto (fun C => ∫ x, (C.body : Set Plane).indicator (fun _ => (1 :
+    ℝ)) x ∂volume) (nhds C₀) (nhds (∫ x, (C₀.body : Set Plane).indicator (fun _ => (1 : ℝ)) x
+    ∂volume)) := by
+    refine MeasureTheory.tendsto_integral_filter_of_dominated_convergence ?_ ?_ ?_ ?_ ?_;
+    · exact fun x => (K : Set Plane).indicator (fun _ => 1) x
+    · exact Filter.Eventually.of_forall fun n => Measurable.aestronglyMeasurable ( by
+        exact Measurable.indicator measurable_const ( by
+          exact n.measurableSet_body ) );
+    · exact Filter.Eventually.of_forall fun C => Filter.Eventually.of_forall fun x =>
+        norm_indicator_le_parent C x;
     · convert integrable_parent_indicator K;
     · convert ConvexSubbody.tendsto_indicator_ae _;
       exact Filter.tendsto_id;
   convert h_dominated using 1;
-  rw [ show ( fun C : ConvexSubbody K => C.area ) = fun C => ∫ x, ( C.body : Set Plane ).indicator ( fun _ => ( 1 : ℝ ) ) x ∂volume from funext fun _ => ConvexSubbody.area_eq_integral_indicator _ ]; rw [ ContinuousAt ];
+  rw [ show ( fun C : ConvexSubbody K => C.area ) = fun C => ∫ x, ( C.body : Set Plane
+    ).indicator ( fun _ => ( 1 : ℝ ) ) x ∂volume from funext fun _ =>
+    ConvexSubbody.area_eq_integral_indicator _ ]; rw [ ContinuousAt ];
 
 /-- **Filter-level area convergence.** Along any Hausdorff-convergent family of subbodies, the
 areas converge. -/

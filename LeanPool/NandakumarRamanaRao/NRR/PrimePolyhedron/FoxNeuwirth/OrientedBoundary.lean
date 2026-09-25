@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.Orientation
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.Orientation
 
 /-!
 # Oriented Fox--Neuwirth facet incidences
@@ -17,6 +19,8 @@ orientation-transport signs, while its unsigned support is strictly invariant.
 This module records the oriented cell model and its boundary relation. The cycle and boundary-
 cancellation results are proved in the chain modules.
 -/
+
+@[expose] public section
 
 namespace NRR
 

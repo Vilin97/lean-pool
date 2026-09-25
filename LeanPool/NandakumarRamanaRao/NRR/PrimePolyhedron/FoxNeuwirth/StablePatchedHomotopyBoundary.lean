@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableEndpointBridges
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableEndpointBridges
 /-!
 # Patched endpoint homotopy and exact frozen-boundary samples
 
@@ -18,6 +20,8 @@ literal.  On every vertex of an identified external endpoint facet, the stored v
 actual value of the continuous patched homotopy; this follows from endpoint identification,
 prime equivariance, and the refined-vertex interpolation theorem.
 -/
+
+@[expose] public section
 
 namespace NRR
 

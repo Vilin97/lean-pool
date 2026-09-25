@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCellPartition
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAreaContinuityWeights
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCellPartition
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAreaContinuityWeights
 
 /-!
 # `NRR.PowerDiagram.CellAreaVector` — the restricted power‑cell area vector
@@ -44,6 +46,8 @@ cells cover nothing while a convex body has positive area, so the `n = 0` claim 
 Sites are held fixed throughout; nothing here assumes cells are nonempty, and no equal‑area
 statement is proved.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody MeasureTheory
 

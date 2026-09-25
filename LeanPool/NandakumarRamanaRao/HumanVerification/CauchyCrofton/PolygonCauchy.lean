@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.PolygonHausdorff
-import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.CyclicSum
+
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.PolygonHausdorff
+public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.CyclicSum
 
 /-!
 # Cauchy perimeter of an inscribed cyclic polygon
@@ -22,6 +24,8 @@ vertices of the inscribed polygon equals twice its width:
 Integrating this identity over the circle and using `∫₀^{2π} |⟪e, circleVec θ⟫| dθ = 4 ‖e‖`
 identifies the Cauchy perimeter of the polygon with the sum of its edge lengths.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory NRR.Geometry
 open scoped ENNReal NNReal Pointwise
@@ -177,8 +181,10 @@ theorem supportFunction_polyBody (h0 : (0 : Point2) ∈ interior (K : Set Point2
 /-- The width of the polygon is the range of the linear functional over its vertices. -/
 theorem widthFunction_polyBody (h0 : (0 : Point2) ∈ interior (K : Set Point2))
     {u : Point2} (hu : u ≠ 0) {M N : ℝ}
-    (hMle : ∀ j : ℤ, (inner ℝ (vtx K A j) u : ℝ) ≤ M) (hMex : ∃ j : ℤ, (inner ℝ (vtx K A j) u : ℝ) = M)
-    (hNle : ∀ j : ℤ, N ≤ (inner ℝ (vtx K A j) u : ℝ)) (hNex : ∃ j : ℤ, (inner ℝ (vtx K A j) u : ℝ) = N) :
+    (hMle : ∀ j : ℤ, (inner ℝ (vtx K A j) u : ℝ) ≤ M) (hMex : ∃ j : ℤ, (inner ℝ (vtx K A j) u :
+      ℝ) = M)
+    (hNle : ∀ j : ℤ, N ≤ (inner ℝ (vtx K A j) u : ℝ)) (hNex : ∃ j : ℤ, (inner ℝ (vtx K A j) u :
+      ℝ) = N) :
     NRR.Geometry.ConvexBody.widthFunction (polyBody K A h0) u = M - N := by
   rw [NRR.Geometry.ConvexBody.widthFunction_def,
     supportFunction_polyBody h0 hu hMle hMex,

@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.ZeroSet
+
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.ZeroSet
 
 /-!
 # `NRR.Multivalued.Operations` — constructors and transformations of nice multivalued functions
@@ -23,6 +25,8 @@ The signed-interval negation `SignedInterval.neg` is introduced first, together 
 and continuity lemmas. Each operation records its evaluation law and the corresponding
 zero-set/zero relation identity.
 -/
+
+@[expose] public section
 
 namespace NRR
 

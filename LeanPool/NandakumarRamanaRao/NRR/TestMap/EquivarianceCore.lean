@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.EMP.PowerPartitionPerimeter
-import LeanPool.NandakumarRamanaRao.NRR.ConfigurationSpace
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.PowerPartitionPerimeter
+public import LeanPool.NandakumarRamanaRao.NRR.ConfigurationSpace
 
 /-!
 # `NRR.TestMap.EquivarianceCore` — power-partition relabelling
@@ -14,6 +16,8 @@ import LeanPool.NandakumarRamanaRao.NRR.ConfigurationSpace
 This module proves that the canonical normalized weights, power-partition pieces, perimeter vector,
 and perimeter deviation commute with relabelling of sites.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 
@@ -24,7 +28,8 @@ variable {n : ℕ}
 /--
 **Power cell relabeling.** Precomposing both the sites and the weights by `σ.symm`
 reindexes the power cell: the `i`-th cell of the relabeled data is the `σ.symm i`-th cell of
-the original data. This is because `powerDist (t∘σ.symm) (u∘σ.symm) i x = powerDist t u (σ.symm i) x`
+the original data. This is because `powerDist (t∘σ.symm) (u∘σ.symm) i x = powerDist t u (σ.symm i)
+x`
 and the universally-quantified `j` in the cell condition ranges bijectively via `σ.symm`.
 -/
 theorem PowerDiagram.cell_relabel
@@ -32,7 +37,7 @@ theorem PowerDiagram.cell_relabel
     PowerDiagram.cell (fun j => t (σ.symm j)) (fun j => u (σ.symm j)) i
       = PowerDiagram.cell t u (σ.symm i) := by
   convert Set.ext _;
-  intro x; constructor <;> intro hx <;> simp_all +decide [ cell, PowerDiagram.powerDist ];
+  intro x; constructor <;> intro hx <;> simp_all? +decide [ cell, PowerDiagram.powerDist ];
   exact fun j => by simpa using hx ( σ j );
 
 /--
@@ -59,9 +64,9 @@ theorem EMP.normalizedWeight_relabel
     (σ : Equiv.Perm (Fin n)) (s : Config n) :
     EMP.normalizedWeight K (Config.relabel σ s).pts hn (Config.relabel σ s).injective_pts
       = fun i => EMP.normalizedWeight K s.pts hn s.injective_pts (σ.symm i) := by
-  refine' ( EMP.normalizedWeight_unique _ _ _ _ _ _ ).symm
-  generalize_proofs at *;
-  · intro i;
+  refine ( EMP.normalizedWeight_unique ?_ ?_ ?_ ?_ ?_ ?_ ).symm
+  · generalize_proofs at *
+    intro i
     convert EMP.normalizedWeight_isEqualArea K s.pts hn s.injective_pts ( σ.symm i ) using 1
     generalize_proofs at *;
     unfold areaVec PowerDiagram.areaVec PowerDiagram.bodyCellArea PowerDiagram.bodyCellSet

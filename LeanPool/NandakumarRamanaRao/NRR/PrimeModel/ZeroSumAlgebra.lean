@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.PhaseInterfaces
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.PhaseInterfaces
 
 /-!
 # Algebra on the zero-sum representation
@@ -13,6 +15,8 @@ The pre-existing `ZeroSum n` type is the subtype of functions `Fin n → ℝ` wh
 zero. This module equips it with the pointwise additive and real-linear structures and records the
 coordinate-sum linear map.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -31,7 +35,8 @@ def coordinateSum (n : ℕ) : (Fin n → ℝ) →ₗ[ℝ] ℝ where
 
 namespace ZeroSum
 
-private def equivKernel (n : ℕ) :
+/-- Identify zero-sum coordinate vectors with the kernel of coordinate summation. -/
+def equivKernel (n : ℕ) :
     ZeroSum n ≃ LinearMap.ker (coordinateSum n) where
   toFun v := ⟨fun i => v i, v.sum_coe⟩
   invFun v := ⟨v.1, v.2⟩

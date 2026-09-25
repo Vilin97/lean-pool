@@ -3,10 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarThinSlabs
-import
-  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismBoundary
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarThinSlabs
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismBoundary
 /-!
 # Signed boundary of a thin-time stack
 
@@ -17,6 +18,8 @@ slab and apply the arbitrary prime-invariant weighted boundary theorem for the o
 prism.  The upper endpoint term of slab `r` is literally the lower endpoint term of slab `r+1`, so
 the finite sum telescopes.  Only time zero and time one remain.
 -/
+
+@[expose] public section
 
 namespace NRR
 

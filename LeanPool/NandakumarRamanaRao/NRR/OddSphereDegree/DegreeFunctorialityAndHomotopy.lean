@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DegreeAPIStrengthening
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DegreeAPIStrengthening
 
 /-!
 # Degree functoriality and homotopy invariance (consolidation layer)
@@ -41,6 +43,8 @@ Every statement is conditional only on the explicit identification `e` (resp. a
 `SphereOrientation`) and, for homotopy invariance, on `SingularPrismOperator` —
 the honest set of hypotheses. None of them is a disguised unconditional theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

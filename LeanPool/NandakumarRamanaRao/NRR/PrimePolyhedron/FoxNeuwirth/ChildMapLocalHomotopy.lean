@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantCoordinateHomotopy
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.NegativeReferenceCoordinateMap
-import Mathlib.Topology.UniformSpace.HeineCantor
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantCoordinateHomotopy
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.NegativeReferenceCoordinateMap
+public import Mathlib.Topology.UniformSpace.HeineCantor
 
 /-!
 # Local zero-free homotopies for the child-map family
@@ -16,6 +18,8 @@ parameter.  Compactness of the order-complex realization upgrades this to a loca
 estimate.  Consequently, outside the projected full-zero set, nearby frozen child maps are joined
 by a zero-free straight-line homotopy.
 -/
+
+@[expose] public section
 
 namespace NRR
 

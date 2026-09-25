@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceAffineOrbitCount
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexRealization
-import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.ProjectedZeroSet
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceAffineOrbitCount
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexRealization
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.ProjectedZeroSet
 
 /-!
 # Affine prism obstruction on the prime-orbit cycle
@@ -28,6 +30,8 @@ an equivariant affine approximation: local prisms away from the projected full-z
 upper-end prism from the S5 reference map.  It does not contain a separator or assume local
 constancy as a field.
 -/
+
+@[expose] public section
 
 namespace NRR
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunction
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.AffineOps
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.LinearImage
+
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunction
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.AffineOps
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.LinearImage
 
 /-!
 # `NRR.Geometry.ConvexBody` — algebraic and geometric properties of the support function
@@ -43,6 +45,8 @@ assumed to be a real inner product space. The linear-equivalence lemma additiona
 domain and codomain to be complete (so that the adjoint exists); this is automatic in finite
 dimensions.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

@@ -3,11 +3,15 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.Basic
-import Mathlib.Analysis.InnerProductSpace.Projection.Minimal
+
+public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.Basic
+public import Mathlib.Analysis.InnerProductSpace.Projection.Minimal
 
 /-! # Nearest Projection -/
+
+@[expose] public section
 
 open Set MeasureTheory
 open scoped ENNReal NNReal

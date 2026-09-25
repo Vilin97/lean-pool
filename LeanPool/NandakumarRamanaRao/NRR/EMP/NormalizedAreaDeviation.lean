@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.EMP.AreaVectorTarget
-import LeanPool.NandakumarRamanaRao.NRR.EMP.WeightSpace
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.AreaVectorTarget
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.WeightSpace
 
 /-!
 # `NRR.EMP.NormalizedAreaDeviation` — the deviation map on zero-sum weights
@@ -20,6 +22,8 @@ hyperplane.
 This is the finite-dimensional map to which the eventual degree / outward-pointing argument
 for existence of equal-area power weights is applied.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

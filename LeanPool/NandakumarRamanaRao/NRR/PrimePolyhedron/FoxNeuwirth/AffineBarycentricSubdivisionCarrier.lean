@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffineSubdivisionDeterminant
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffineSubdivisionDeterminant
 /-!
 # Carrier coordinates for affine barycentric subdivision
 
@@ -20,6 +22,8 @@ source coefficient gives a strict cut in the ordered coordinates, so the corresp
 is determined by the image point itself.  These are the algebraic carrier facts used to prove that
 piecewise-affine interpolation agrees on overlapping barycentric-subdivision simplices.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Finset
@@ -431,7 +435,8 @@ theorem affineSubdiv_vertexInterpolation_eq_of_map_eq
   by_cases hx : x r = 0
   · have hy : y r = 0 := by
       by_contra hy0
-      have hypos : 0 < y r := lt_of_le_of_ne (SphereOddDegree.FiniteSimplex.zero_le y r) (Ne.symm hy0)
+      have hypos : 0 < y r := lt_of_le_of_ne (SphereOddDegree.FiniteSimplex.zero_le y r)
+        (Ne.symm hy0)
       have hrev := affineSubdivMap_active_coefficient_eq
         n sigma pi y x hxy.symm r hypos
       apply hy0
@@ -490,7 +495,7 @@ Every point of the standard simplex is the barycentric sum of its standard verti
 theorem delta_val_eq_sum_smul_stdVerts
     (n : Nat) (z : Delta n) :
     z.1 = ∑ i : Fin (n + 1), z i • BarycentricSubdivisionDiameter.stdVerts n i := by
-  ext j; simp [BarycentricSubdivisionDiameter.stdVerts];
+  ext j; simp? [BarycentricSubdivisionDiameter.stdVerts];
   rw [ Finset.sum_eq_single j ] <;> aesop
 
 /-- Two iterated affine charts agree at a point if they agree at every active standard vertex. -/
@@ -537,7 +542,7 @@ theorem affineCompMap_active_vertex_and_coefficient_eq
       have hbase : x = y := by simpa using hxy
       constructor
       · simp
-      · simpa [hbase]
+      · simp [hbase]
   | succ N ih =>
       let rho0 : Fin N → Equiv.Perm (Fin (n + 1)) := fun i => rho i.castSucc
       let sigma0 : Fin N → Equiv.Perm (Fin (n + 1)) := fun i => sigma i.castSucc

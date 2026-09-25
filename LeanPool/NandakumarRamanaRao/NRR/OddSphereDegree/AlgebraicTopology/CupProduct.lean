@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AlexanderWhitney
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AlexanderWhitney
 
 /-!
 # Cochain-level singular cup product (Alexander–Whitney formula)
@@ -56,6 +58,8 @@ Everything is stated for a general `CommRing R`, with coefficients in `R` itself
 (`ModuleCat.of R R`). The `ZMod 2` specializations (`cochainCupZMod2`, …) are thin
 abbreviations; over `ZMod 2` the Koszul sign in the Leibniz rule is trivial.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology Limits SphereOddDegree.AlexanderWhitney
 
@@ -135,7 +139,8 @@ noncomputable def cochainCup {R : Type} [CommRing R] {Z : TopCat.{0}} (p q : ℕ
       ModuleCat.ofHom ((cochainEval p φ (frontSimplex Z p q σ)
         * cochainEval q ψ (backSimplex Z p q σ)) • (LinearMap.id : R →ₗ[R] R))) σ)
   dsimp at h
-  have hone : cochainEval p φ (frontSimplex Z p q σ) * cochainEval q ψ (backSimplex Z p q σ) * (1 : R)
+  have hone : cochainEval p φ (frontSimplex Z p q σ) * cochainEval q ψ (backSimplex Z p q σ) *
+    (1 : R)
       = cochainEval p φ (frontSimplex Z p q σ) * cochainEval q ψ (backSimplex Z p q σ) := mul_one _
   exact hone ▸ h
 
@@ -201,7 +206,8 @@ theorem chainmap_generator {R : Type} [CommRing R] {X Y : TopCat.{0}} (f : X ⟶
       ≫ ((((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).map f).f n)
       = Sigma.ι (fun (_ : singularSimplices Y n) => ModuleCat.of R R)
           ((TopCat.toSSet.map f).app (Opposite.op (SimplexCategory.mk n)) τ) :=
-  @SSet.ι_chainComplexMap_f (ModuleCat R) _ _ _ (TopCat.toSSet.obj X) (TopCat.toSSet.obj Y) (TopCat.toSSet.map f) (ModuleCat.of R R) n τ
+  @SSet.ι_chainComplexMap_f (ModuleCat R) _ _ _ (TopCat.toSSet.obj X) (TopCat.toSSet.obj Y)
+    (TopCat.toSSet.map f) (ModuleCat.of R R) n τ
 
 /-- **Pullback evaluation.** `(f^* φ)(τ) = φ(f ∘ τ)`. -/
 theorem cochainPullback_eval {R : Type} [CommRing R] {X Y : TopCat.{0}} (f : X ⟶ Y)

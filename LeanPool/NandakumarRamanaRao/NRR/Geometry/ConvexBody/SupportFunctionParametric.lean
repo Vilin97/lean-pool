@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionContinuity
+
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunctionContinuity
 
 /-!
 # `NRR.Geometry.ConvexBody` — support-function continuity under body parameters
@@ -60,6 +62,8 @@ We therefore take the two-pronged approach the design allows:
 * `supportFunction_continuous_family_on_unit_directions`
 -/
 
+@[expose] public section
+
 namespace NRR.Geometry
 
 namespace ConvexBody
@@ -77,7 +81,7 @@ theorem abs_supportFunction_sub_le_hausdorffDist_mul_norm
     (K L : ConvexBody E) (u : E) :
     |supportFunction K u - supportFunction L u| ≤
       Metric.hausdorffDist (K : Set E) (L : Set E) * ‖u‖ := by
-  refine' abs_sub_le_iff.mpr ⟨ _, _ ⟩;
+  refine abs_sub_le_iff.mpr ⟨ ?_, ?_ ⟩;
   · -- By definition of $d_H$, we know that for any $x \in K$, $d(x, L) \leq d_H(K, L)$.
     have h_dist_le : ∀ x ∈ K.carrier, Metric.infDist x L.carrier ≤ Metric.hausdorffDist
       K.carrier L.carrier := by
@@ -91,7 +95,7 @@ theorem abs_supportFunction_sub_le_hausdorffDist_mul_norm
       have := L.isCompact.exists_infDist_eq_dist ( L.nonempty ) x; aesop;
     have h_inner_le : inner ℝ (x - y) u ≤ ‖x - y‖ * ‖u‖ := by
       exact real_inner_le_norm _ _;
-    simp_all +decide [ dist_eq_norm, inner_sub_left ];
+    simp_all? +decide [ dist_eq_norm, inner_sub_left ];
     exact h_inner_le.trans ( add_le_add ( mul_le_mul_of_nonneg_right ( h_dist_le x hx ) (
       norm_nonneg u ) ) ( L.inner_le_supportFunction hy ) );
   · obtain ⟨ x, hx, hx' ⟩ := L.exists_supportPoint u;
@@ -111,7 +115,7 @@ theorem abs_supportFunction_sub_le_hausdorffDist_mul_norm
     -- Using the triangle inequality and the definition of the support function, we have:
     have h_triangle : inner ℝ x u - inner ℝ y u ≤ ‖x - y‖ * ‖u‖ := by
       simpa [ inner_sub_left ] using abs_le.mp ( abs_real_inner_le_norm ( x - y ) u ) |>.2;
-    simp_all +decide [ dist_eq_norm, Metric.hausdorffDist_comm ];
+    simp_all? +decide [ dist_eq_norm, Metric.hausdorffDist_comm ];
     exact h_triangle.trans ( add_le_add ( mul_le_mul_of_nonneg_right h_dist ( norm_nonneg u ) )
       ( ConvexBody.inner_le_supportFunction K hy ) )
 

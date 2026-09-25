@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Basic
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Topology
+
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Topology
 
 /-!
 # `NRR.Geometry.ConvexBody` — interior lemmas
@@ -28,6 +30,8 @@ imports are required here; the metric lemmas used (`mem_interior_iff_mem_nhds`,
 `Metric.isOpen_ball`, `Metric.mem_ball_self`, `Metric.closedBall_subset_ball`,
 `interior_mono`) are all available transitively.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepCells
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionZeroFreeApproximation
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepCells
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionZeroFreeApproximation
 /-!
 # Local last-vertex retraction for endpoint subdivision cylinders
 
@@ -22,6 +24,8 @@ The global descent condition requires these local choices to agree for occurrenc
 geometric stack vertex in different refined top cells. This overlap compatibility yields an
 `Assignment` on the quotient of global collar vertices.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -52,9 +56,9 @@ theorem deltaSupport_nonempty (x : Delta d) : (deltaSupport x).Nonempty := by
     intro i
     by_contra hi
     have : i ∈ deltaSupport x := (mem_deltaSupport_iff x i).2 hi
-    simpa [hempty] using this
+    simp [hempty] at this
   have hsum := SphereOddDegree.FiniteSimplex.sum_eq_one x
-  simpa [hzero] using hsum
+  simp [hzero] at hsum
 
 /-- Largest index in the nonzero barycentric support. -/
 noncomputable def lastSupportIndex (x : Delta d) : Fin (d + 1) :=
@@ -267,8 +271,6 @@ theorem affine_selectedEndpointValue_eq_value
     simp [endpointIndex]
   rw [hleft, h]
   funext c
-  change (∑ j, (retractedWeight (p - 1) r w') j *
-    A.map (RefinedAffineMap.vertex hp A.level q j) c) = _
   simp only [RefinedAffineMap.value, RefinedAffineMap.vertexValue]
   apply Finset.sum_congr rfl
   intro j hj

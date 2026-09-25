@@ -3,14 +3,18 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.PrimeSymmetry
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.PrimeSymmetry
 
 /-!
 # Restricted prime-symmetry actions
 
 All actions use the established relabelling convention `v i = old (σ.symm i)`.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -68,21 +72,21 @@ instance zeroSumSMulZero : SMulZeroClass (PrimeSymmetry p) (ZeroSum p) where
     intro i
     simp
 
- theorem continuous_smul_config (g : PrimeSymmetry p) :
+theorem continuous_smul_config (g : PrimeSymmetry p) :
     Continuous fun s : Config p => g • s :=
   Config.continuous_relabel (PrimeSymmetry.toPerm p g)
 
- theorem continuous_smul_zeroSum (g : PrimeSymmetry p) :
+theorem continuous_smul_zeroSum (g : PrimeSymmetry p) :
     Continuous fun v : ZeroSum p => g • v :=
   ZeroSum.continuous_relabel (PrimeSymmetry.toPerm p g)
 
- theorem config_smul_eq_self_imp
+theorem config_smul_eq_self_imp
     (g : PrimeSymmetry p) (s : Config p) (h : g • s = s) :
     g = 1 := by
   apply PrimeSymmetry.toPerm_injective p
   exact Config.relabel_eq_self_imp (PrimeSymmetry.toPerm p g) s h
 
- theorem config_action_free :
+theorem config_action_free :
     ∀ {g : PrimeSymmetry p} {s : Config p}, g • s = s → g = 1 := by
   intro g s h
   exact config_smul_eq_self_imp g s h

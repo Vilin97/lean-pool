@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Defs
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.Tactic
-import Mathlib.Topology.MetricSpace.Pseudo.Defs
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Tactic
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel
 
 /-!
 # Finite polyhedral cell data
@@ -17,6 +19,8 @@ This module records a finite collection of compact cells by continuous barycentr
 parameterizations.  The data are intentionally proof-carrying: later topology uses the
 specified face and relative-interior relations rather than an unverified geometric picture.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -102,16 +106,16 @@ def relInterior (P : FiniteCellStructure X) (c : P.Cell) : Set X :=
       ∃ w, StandardSimplex.IsInterior w ∧ P.param c w = x :=
   Iff.rfl
 
- theorem relInterior_subset_carrier (P : FiniteCellStructure X) (c : P.Cell) :
+theorem relInterior_subset_carrier (P : FiniteCellStructure X) (c : P.Cell) :
     P.relInterior c ⊆ P.carrier c := by
   rintro x ⟨w, hw, rfl⟩
   exact ⟨w, rfl⟩
 
- theorem isCompact_carrier (P : FiniteCellStructure X) (c : P.Cell) :
+theorem isCompact_carrier (P : FiniteCellStructure X) (c : P.Cell) :
     IsCompact (P.carrier c) :=
   P.isCompact_range c
 
- theorem carrier_cover (P : FiniteCellStructure X) :
+theorem carrier_cover (P : FiniteCellStructure X) :
     ⋃ c : P.Cell, P.carrier c = Set.univ := by
   ext x
   constructor

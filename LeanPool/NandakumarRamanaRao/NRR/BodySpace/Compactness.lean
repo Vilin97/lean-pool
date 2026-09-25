@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.ConvexClosed
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.ConvexClosed
 
 /-!
 # Compactness of the fixed-parent convex subbody hyperspace
@@ -25,6 +27,8 @@ that embedding yields compactness of `Set.univ` in `ConvexSubbody K`, hence the 
 `CompactSpace` instance. No new metric, hyperspace topology, or convex-body type is introduced, and
 compactness is grounded in the fixed compact parent rather than in an unproved Blaschke selection.
 -/
+
+@[expose] public section
 
 open MeasureTheory Metric TopologicalSpace Filter Topology
 

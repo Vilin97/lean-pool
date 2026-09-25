@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.NearestProjection
+
+public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.NearestProjection
 
 /-!
 # Monotonicity of the Hausdorff perimeter
@@ -17,6 +19,8 @@ outwards along a supporting direction until it hits the boundary of `L`), so
 `frontier K ⊆ nearestPoint K '' frontier L`, and Lipschitz maps do not increase the
 one-dimensional Hausdorff measure.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 open scoped ENNReal NNReal Topology

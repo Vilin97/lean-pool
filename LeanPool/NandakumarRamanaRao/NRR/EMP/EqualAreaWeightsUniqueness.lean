@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightCellRigidity
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightMaxUnion
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightCellRigidity
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightMaxUnion
 /-!
 # `NRR.EMP.EqualAreaWeightsUniqueness` — uniqueness of equal-area power weights
 
@@ -19,6 +21,8 @@ the union of those cells is relatively clopen in the convex body, hence all of t
 cell area and null pairwise overlap force every index to be maximal.  Normalization then removes
 the common additive constant.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

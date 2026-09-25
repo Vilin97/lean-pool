@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
 
 /-!
 # `NRR.ConfigurationSpace` — configurations of distinct labelled sites
@@ -13,6 +15,8 @@ import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
 `Config n` is the subtype of injective maps `Fin n → Plane`. Its topology is induced by the point
 map, and permutations act by precomposition with `σ.symm`. The action is continuous and free.
 -/
+
+@[expose] public section
 
 open NRR
 

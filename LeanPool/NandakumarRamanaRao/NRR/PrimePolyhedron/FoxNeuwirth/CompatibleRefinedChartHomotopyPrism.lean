@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CompatibleChartMapOneStep
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpoints
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismSubdivisionMargin
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CompatibleChartMapOneStep
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpoints
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismSubdivisionMargin
 /-!
 # Fine prism assignments for compatible chart homotopies
 
@@ -20,6 +22,8 @@ uniform modulus of continuity.  Iterated barycentric subdivision then makes the 
 interpolation of the samples remain within half that margin.  The resulting middle-prism
 assignment is origin-free and its two horizontal boundaries are the exact endpoint chart maps.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -144,7 +148,8 @@ noncomputable def localVector
 noncomputable def decoratedVector
     (hp : Nat.Prime p) {N : Nat} {K0 K1 : ChartMap hp N}
     (J : ChartHomotopy hp N K0 K1)
-    (L : Nat) (s : CoverVertexSlot hp (RelativeCollarMiddlePrism.cellSystem hp N L)) : Fin p → Real :=
+    (L : Nat) (s : CoverVertexSlot hp (RelativeCollarMiddlePrism.cellSystem hp N L)) : Fin p →
+      Real :=
   s.1 • localVector hp J L s.2
 
 /-- Refined prism samples agree on every shared decorated geometric vertex. -/
@@ -221,7 +226,8 @@ noncomputable def assignment
     (hp : Nat.Prime p) {N : Nat} {K0 K1 : ChartMap hp N}
     (J : ChartHomotopy hp N K0 K1) (L : Nat)
     (q : PrismCell hp N L) (i : Fin (p + 1)) :
-    (localVertexMap hp (RelativeCollarMiddlePrism.cellSystem hp N L) (assignment hp J L) q).value i =
+    (localVertexMap hp (RelativeCollarMiddlePrism.cellSystem hp N L) (assignment hp J L)
+      q).value i =
       refinedPrismValue hp J L q
         (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) := by
   rfl
@@ -333,10 +339,12 @@ theorem norm_affineValue_sub_refinedPrismValue_le
   let y := refinedPrismValue hp J L q w
   have hid :
       affineValue
-          (localVertexMap hp (RelativeCollarMiddlePrism.cellSystem hp N L) (assignment hp J L) q) w - y =
+          (localVertexMap hp (RelativeCollarMiddlePrism.cellSystem hp N L) (assignment hp J L)
+            q) w - y =
         ∑ i : Fin (p + 1), w i •
           (refinedPrismValue hp J L q
-            (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) - y) := by
+            (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) - y)
+              := by
     funext c
     simp only [affineValue, localVertexMap_assignment_value, y, Pi.sub_apply,
       Finset.sum_apply, Pi.smul_apply, smul_eq_mul, mul_sub]
@@ -372,7 +380,8 @@ theorem exists_refinement_avoidsOrigin
     (J : ChartHomotopy hp N K0 K1) :
     ∃ L : Nat, ∀ q : PrismCell hp N L,
       AvoidsOrigin
-        (localVertexMap hp (RelativeCollarMiddlePrism.cellSystem hp N L) (assignment hp J L) q) := by
+        (localVertexMap hp (RelativeCollarMiddlePrism.cellSystem hp N L) (assignment hp J L) q)
+          := by
   obtain ⟨M, hM, hmargin⟩ := exists_positive_norm_margin hp J
   obtain ⟨L, hosc⟩ := exists_refinement_oscillation hp J
     (show 0 < M / 2 by positivity)

@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericityPolynomials
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffineSubdivisionDeterminant
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericityPolynomials
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffineSubdivisionDeterminant
 /-!
 # Nontriviality of the equivariant prism genericity polynomials
 
@@ -21,6 +23,8 @@ augmented-deviation matrix with diagonal one.  For a codimension-two minor we pr
 identity deviation matrix.  Evaluation at the corresponding assignments proves that the two
 polynomial families, and hence the combined family, are nonzero.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -191,7 +195,7 @@ theorem spatialWeight_eq_of_gt
 theorem spatialWeight_pivot
     (hp : Nat.Prime p) (k : Fin p) (w : StandardSimplex p) :
     spatialWeight hp k w (spatialIndex hp k) =
-      w k.castSucc + w ⟨k.1 + 1, by have := k.2; omega⟩ := by
+      w k.castSucc + w k.succ := by
   classical
   unfold spatialWeight
   simp only [spatialIndex, Fin.cast_inj]
@@ -202,15 +206,15 @@ theorem spatialWeight_pivot
       simp only [Finset.mem_sdiff, Finset.mem_univ, Finset.mem_singleton, true_and]
       intro h
       have := congrArg Fin.val h
-      simp at this : (⟨k.1 + 1, by have := k.2; omega⟩ : Fin (p + 1)) ∈
+      simp at this : (k.succ : Fin (p + 1)) ∈
         (Finset.univ : Finset (Fin (p + 1))) \ {k.castSucc})]
-  simp [staircaseSpatial]
+  simp? [staircaseSpatial]
   apply Finset.sum_eq_zero
   intro j hj
   have hjmem := Finset.mem_sdiff.mp hj
   have hj0 : j ≠ k.castSucc := by
     simpa only [Finset.mem_singleton] using (Finset.mem_sdiff.mp hjmem.1).2
-  have hj1 : j ≠ (⟨k.1 + 1, by have := k.2; omega⟩ : Fin (p + 1)) := by
+  have hj1 : j ≠ (k.succ : Fin (p + 1)) := by
     simpa only [Finset.mem_singleton] using hjmem.2
   have hne : staircaseSpatial p k j ≠ k := by
     intro h
@@ -240,12 +244,12 @@ theorem intervalWeight_eq_sum_gt
 theorem intervalWeight_eq_pivot_add_spatial_tail
     (hp : Nat.Prime p) (k : Fin p) (w : StandardSimplex p) :
     intervalWeight k w =
-      w ⟨k.1 + 1, by have := k.2; omega⟩ +
+      w k.succ +
         ∑ i : Fin p, if k.1 < i.1 then
           spatialPoint hp k w (spatialIndex hp i) else 0 := by
   classical
   rw [intervalWeight_eq_sum_gt]
-  let kp : Fin (p + 1) := ⟨k.1 + 1, by have := k.2; omega⟩
+  let kp : Fin (p + 1) := k.succ
   rw [Fin.sum_univ_succAbove (fun j : Fin (p + 1) =>
     if k.1 < j.1 then w j else 0) kp]
   have hpivot : (if k.1 < kp.1 then w kp else 0) = w kp := by
@@ -282,7 +286,7 @@ theorem staircasePoint_injective
     congrArg Prod.fst hwv
   have hit : intervalPoint k w = intervalPoint k v :=
     congrArg Prod.snd hwv
-  let kp : Fin (p + 1) := ⟨k.1 + 1, by have := k.2; omega⟩
+  let kp : Fin (p + 1) := k.succ
   have htail :
       (∑ i : Fin p, if k.1 < i.1 then spatialPoint hp k w (spatialIndex hp i) else 0) =
         ∑ i : Fin p, if k.1 < i.1 then spatialPoint hp k v (spatialIndex hp i) else 0 := by
@@ -367,7 +371,7 @@ theorem prism_vertex_injective
     prism_chart_injective hp N L q hij
   by_contra hne
   have hi := congrArg (fun w : Delta p => w i) hstd
-  simpa [SphereOddDegree.FiniteSimplex.vertex, hne] using hi
+  simp [SphereOddDegree.FiniteSimplex.vertex, hne] at hi
 
 /-! ## Separation under the prime action -/
 
@@ -392,7 +396,7 @@ theorem realizationPoint_orbit_separated
     have hgcoord := congrArg (fun x : Realization p => x (g • s i)) h
     have hleft : (g • s.realizationPoint w) (g • s i) = w i := by
       rw [Realization.prime_smul_apply]
-      simpa [Simplex.realizationPoint, Simplex.chartWeight,
+      simp [Simplex.realizationPoint, Simplex.chartWeight,
         s.vertex_injective.eq_iff]
     change (g • s.realizationPoint w) (g • s i) =
       s.realizationPoint v (g • s i) at hgcoord
@@ -594,7 +598,7 @@ theorem facetMatrix_witness
   generalize hr : AffinePositiveRayBoundary.VertexMap.augmentedRowEquiv hp r = r'
   refine Fin.lastCases ?_ (fun s => ?_) r'
   · simp
-  · simp [AffinePositiveRayBoundary.VertexMap.deviation,
+  · simp? [AffinePositiveRayBoundary.VertexMap.deviation,
       AffinePositiveRayBoundary.VertexMap.facetValue, localVertexMap,
       facetWitnessTarget_succAbove]
     generalize hc : AffinePositiveRayBoundary.VertexMap.augmentedRowEquiv hp c = c'
@@ -711,7 +715,7 @@ theorem facetDeterminantPolynomial_ne_zero
     (MvPolynomial.eval
       (localRealizingAssignment hp N L q (facetWitnessTarget hp k))) hzero
   rw [eval_facetDeterminantPolynomial, facetDeterminant_witness] at heval
-  simpa using heval
+  simp at heval
 
 /-- Every codimension-two minor polynomial is nonzero. -/
 theorem codimTwoMinorPolynomial_ne_zero
@@ -723,7 +727,7 @@ theorem codimTwoMinorPolynomial_ne_zero
     (MvPolynomial.eval
       (localRealizingAssignment hp N L q (codimTwoWitnessTarget hp f))) hzero
   rw [eval_codimTwoMinorPolynomial, codimTwoDeviationMatrix_witness] at heval
-  simpa using heval
+  simp at heval
 
 /-- Every polynomial in the combined finite prism-genericity family is nonzero. -/
 theorem genericityPolynomial_ne_zero

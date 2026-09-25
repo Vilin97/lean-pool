@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnTopClassAlphaPower
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnCohomologyRingBridge
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ModTwoDegreeComparison
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ConstructRPAlpha
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnTopClassAlphaPower
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RPnCohomologyRingBridge
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ModTwoDegreeComparison
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ConstructRPAlpha
 
 /-!
 # Conditional odd-map cohomological comparison
@@ -17,6 +19,8 @@ transfer/naturality, and mod-two degree data to odd integer degree. These condit
 are used by later assembly modules; the stable public theorem is the unconditional endpoint in
 `SphereOddDegree.Final`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -176,7 +180,8 @@ parity bridge `degreeOfIso_intCast_zmodTwo_eq_one_iff_odd`), with **no extra
 parity assumptions**. This is the exact form of the required input. -/
 
 /-- **The mod-two top-class / degree comparison.** This interface packages the
-coefficient-reduction statement consumed by the conditional assembly. Relative to a chosen identification
+coefficient-reduction statement consumed by the conditional assembly. Relative to a chosen
+identification
 `e : SphereTopHomologyIso n` (which fixes the integer degree `degreeOfIso e`), it
 asserts: whenever a self-map `f` of `Sⁿ` **fixes a nonzero top class**
 `c ∈ Hⁿ(Sⁿ; F₂)` (`f^* c = c`, `c ≠ 0`), its integer degree is **odd mod 2**
@@ -195,7 +200,8 @@ The comparison `ModTwoTopClassComparison e` is here reduced — fully formalized
 using only the library's *proved* universal-coefficient machinery over `F₂`
 (`kroneckerMap_naturality_apply` and `kroneckerMap_injective`) — to the single,
 precise statement that the `F₂` pushforward on the top homology `Hₙ(Sⁿ; F₂)` acts
-as the scalar `(degree f mod 2)`. This isolates the exact homological scalar statement from which the comparison
+as the scalar `(degree f mod 2)`. This isolates the exact homological scalar statement from which
+the comparison
 follows. -/
 
 /-- **The top `F₂`-homology scalar action.** Relative to a chosen integral
@@ -304,7 +310,8 @@ self-map `f` of `Sⁿ` fixes some nonzero class `c ∈ Hⁿ(Sⁿ; F₂)`
 Mathematically this holds because `f` descends to `fbar : RPⁿ → RPⁿ`, which acts
 as the identity on the one-dimensional top group `Hⁿ(RPⁿ; F₂) = ⟨αⁿ⟩` (the unique
 nonzero element is fixed by any ring map), and the double-cover *transfer*
-homomorphism transports this to the nonzero sphere top class. This property is packaged as an explicit named input corresponding to the `F₂` transfer/Gysin
+homomorphism transports this to the nonzero sphere top class. This property is packaged as an
+explicit named input corresponding to the `F₂` transfer/Gysin
 sequence of the double cover `Sⁿ → RPⁿ`. It is
 **not** the degenerate `proj^*` route (`proj^*(αⁿ) = 0` for `n ≥ 1`). -/
 def OddMapFixesTopClass (n : ℕ) : Prop :=

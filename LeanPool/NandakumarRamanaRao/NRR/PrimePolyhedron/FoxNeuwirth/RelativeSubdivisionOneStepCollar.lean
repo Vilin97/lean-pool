@@ -3,10 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import
-  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepBoundary
 
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepBoundary
 /-!
 # Endpoint-identified one-step subdivision collar
 
@@ -15,6 +15,8 @@ The pointwise boundary identity from `RelativeSubdivisionOneStepBoundary` is pac
 `RelativeSubdivisionOneStepEndpoints` identify its horizontal boundary with the level-`N` and
 level-`N+1` refined Fox--Neuwirth chains.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

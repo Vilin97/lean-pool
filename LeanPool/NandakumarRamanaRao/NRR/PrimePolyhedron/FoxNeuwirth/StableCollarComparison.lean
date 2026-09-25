@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismStableRelativeBoundary
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismStableRelativeBoundary
 /-!
 # Stable collar comparison
 
@@ -19,6 +21,8 @@ collar for arbitrary endpoint triangulations is deliberately separated as
 `StableCollarExistenceTheorem`; constructing it requires a relative triangulation/perturbation which
 leaves both endpoint triangulations unchanged.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -84,7 +88,8 @@ theorem zeroCount_eq
 end StableCollar
 
 /-- Proposition asserting that every pair of stable endpoint approximations admits a finite
-boundary-fixed generic collar.  This is the relative-triangulation existence statement used with the finite Stokes theorem. -/
+boundary-fixed generic collar.  This is the relative-triangulation existence statement used with the
+finite Stokes theorem. -/
 def StableCollarExistenceTheorem : Prop :=
   ∀ {p : Nat} (hp : Nat.Prime p)
     (F₀ F₁ : ZeroFreeMap hp)

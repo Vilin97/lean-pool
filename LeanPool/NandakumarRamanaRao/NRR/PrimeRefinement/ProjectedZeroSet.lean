@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.SeparatorCertificate
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Complement
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.SeparatorCertificate
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Complement
 
 /-!
 # Projection of the simultaneous child-zero set
@@ -17,6 +19,8 @@ boundaries.  These facts provide the analytic and point-set-topological input to
 construction. The cobordism theorem establishes the required lower and upper regions of the
 complement.
 -/
+
+@[expose] public section
 
 namespace NRR
 

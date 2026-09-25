@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FacetShuffleEquiv
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FacetShuffleEquiv
 /-!
 # The top two terms of the Fox--Neuwirth cellular incidence complex
 
@@ -18,6 +20,8 @@ zero map, so the chain-complex identity is literal rather than an unproved asser
 Fox--Neuwirth incidences.  The nontrivial statement is that the oriented top chain lies in the
 kernel of the genuine top-to-facet incidence map; this is supplied by the facet--shuffle theorem.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -82,7 +86,8 @@ theorem topIncidenceBoundary_orientedTopChain_eq_zero
   exact actualTopBoundaryCoefficient_eq_zero_prime hp a
 
 /-- The two-term top incidence complex together with its distinguished prime cycle.  This is data,
-not an assumption: both the composite-zero identity and the top-cycle equation are theorems above. -/
+not an assumption: both the composite-zero identity and the top-cycle equation are theorems above.
+-/
 structure PrimeTopIncidenceData (hp : Nat.Prime p) where
   /-- The top chain and its identification with the canonical oriented chain. -/
   topChainData : {chain : TopCellChain p (ZMod p) // chain = orientedTopChain p}

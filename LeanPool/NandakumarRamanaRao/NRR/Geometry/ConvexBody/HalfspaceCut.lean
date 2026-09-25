@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Continuous
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Basic
+
+public import Mathlib.Analysis.InnerProductSpace.Continuous
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Basic
 
 /-!
 # `NRR.Geometry.ConvexBody` — cutting a convex body by a closed halfspace
@@ -53,6 +55,8 @@ explicit argument), which is what appears throughout this file.
 Following the library-wide policy, `Basic.lean` already pulls in `import Mathlib`, so no extra
 imports are required here.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

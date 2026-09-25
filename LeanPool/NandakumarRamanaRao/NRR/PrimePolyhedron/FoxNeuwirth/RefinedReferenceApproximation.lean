@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionZeroFreeApproximation
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantReferenceCoordinateMap
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionZeroFreeApproximation
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantReferenceCoordinateMap
 
 /-!
 # Explicit refined approximations at the two reference endpoints
@@ -17,6 +19,8 @@ recovers the same map.  This gives explicit regular approximations of both shift
 lifts.  The positive lift has exactly the S5 orbit count; the negative lift has no positive-ray
 intersections.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -112,7 +116,7 @@ theorem positiveReference_localIndex_zero
         apply sub_eq_zero.mpr
         have hr := hdev r
         rw [value_zero_ofCoordinateAffineVertexMap hp F q w, chart_zero] at hr
-        simp [Simplex.realizationContinuousMap] at hr
+        simp? [Simplex.realizationContinuousMap] at hr
         rw [CoordinateAffineVertexMap.globalValue_realizationPoint] at hr
         exact hr
       · rintro ⟨w, hw, hdev⟩
@@ -122,7 +126,7 @@ theorem positiveReference_localIndex_zero
           rw [CoordinateAffineVertexMap.deviation_value_apply] at hr
           apply sub_eq_zero.mp at hr
           rw [value_zero_ofCoordinateAffineVertexMap hp F q w, chart_zero]
-          simp [Simplex.realizationContinuousMap]
+          simp? [Simplex.realizationContinuousMap]
           rw [CoordinateAffineVertexMap.globalValue_realizationPoint]
           exact hr
         · have hpos := AAK.positiveEquivariantReferenceCoordinateMap_global_pos hp
@@ -189,7 +193,8 @@ theorem negativeReference_localIndex_zero
   have hneg := AAK.negativeEquivariantReferenceCoordinateMap_global_neg hp x
   have hmeanneg : coordinateMean p
       (value hp 0
-        (ofCoordinateAffineVertexMap (AAK.negativeEquivariantReferenceCoordinateMap hp)) q w) < 0 := by
+        (ofCoordinateAffineVertexMap (AAK.negativeEquivariantReferenceCoordinateMap hp)) q w) <
+          0 := by
     rw [value_zero_ofCoordinateAffineVertexMap]
     unfold coordinateMean
     let : Nonempty (Fin p) := ⟨⟨0, hp.pos⟩⟩

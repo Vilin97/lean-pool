@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.GroupTheory.SpecificGroups.Alternating
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagEncodingStepTwo
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrbitIncidenceQuotient
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrbitRepresentatives
+
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagEncodingStepTwo
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrbitIncidenceQuotient
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrbitRepresentatives
 /-!
 # Prime-symmetry orbit quotient of the Fox--Neuwirth top-flag cycle
 
@@ -21,6 +23,8 @@ order-complex simplex.  It then applies the generic orbit-incidence quotient con
 unconditional top-flag cycle.  The resulting finite incidence cycle has one top cell and one facet
 per prime-symmetry orbit and is the correct input for orbit-level zero counts.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -162,7 +166,7 @@ noncomputable instance instMulActionCoveringFacet (hp : Nat.Prime p) :
   inferInstanceAs (MulAction (PrimeSymmetry p) (Simplex p (p - 2)))
 
 /-- Equivariance data for the covering top-flag cycle. -/
-noncomputable def coveringEquivariantData
+theorem coveringEquivariantData
     (hp : Nat.Prime p) :
     FiniteIncidenceCycle.EquivariantData
       (G := PrimeSymmetry p) (coveringCycle hp) where

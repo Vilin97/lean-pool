@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagEncodingStepOne
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagEncodingStepOne
 
 /-!
 # Classification of maximal Fox--Neuwirth flags
@@ -19,6 +21,8 @@ The first and last ranks, together with this removal permutation, reconstruct ev
 cell: the bottom rank fixes the block order and the final rank fixes the order inside each block.
 This yields the explicit inverse `simplexToCode` and proves that `toSimplex` is bijective.
 -/
+
+@[expose] public section
 
 namespace NRR
 

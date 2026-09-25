@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Basic
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAreaContinuityWeights
-import LeanPool.NandakumarRamanaRao.NRR.ConfigurationSpace
+
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAreaContinuityWeights
+public import LeanPool.NandakumarRamanaRao.NRR.ConfigurationSpace
 
 /-!
 # `NRR.EMP.VariableBody.HalfspaceCoefficients` — moving halfspace coefficients
@@ -28,6 +30,8 @@ intersected with the intersection of these halfspaces, both over all `j` and ove
 `j ≠ i` (the diagonal term is the whole plane and drops out). Keeping the parent as `C.body` lets
 later indicator-convergence arguments apply the subbody membership-stability theorem directly.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 open scoped RealInnerProductSpace

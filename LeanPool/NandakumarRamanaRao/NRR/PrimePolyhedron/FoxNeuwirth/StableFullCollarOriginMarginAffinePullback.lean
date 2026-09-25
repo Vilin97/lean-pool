@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableFullCollarConstructionAffinePullback
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableFullCollarConstructionAffinePullback
 
 /-!
 # Unconditional full-collar origin margin from the affine-pullback construction
@@ -13,6 +15,8 @@ This file instantiates the generic compactness theorem of
 `StableFullCollarOriginMargin` with the concrete Step 4 collar constructed in
 `StableFullCollarConstructionAffinePullback`.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

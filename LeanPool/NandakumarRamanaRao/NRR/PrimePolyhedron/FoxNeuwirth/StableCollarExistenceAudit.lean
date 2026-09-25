@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarComparison
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarComparison
 /-!
 # Necessary conditions for arbitrary stable-collar existence
 
@@ -26,6 +28,8 @@ constructed from the available hypotheses.  A genuine arbitrary-endpoint theorem
 prism complex with independent lower and upper triangulations, and a boundary version of the local
 affine theorem requiring only positive-ray skeleton transversality.
 -/
+
+@[expose] public section
 
 namespace NRR
 

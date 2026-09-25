@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Basic
-import Mathlib.Topology.Category.TopCat.Sphere
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Basic
+public import Mathlib.Topology.Category.TopCat.Sphere
 
 /-!
 # Bridge between `Sphere n` and `TopCat.sphere n`
@@ -16,6 +18,8 @@ module proves that the two models differ only by `ULift`, packages the resulting
 homeomorphism and categorical isomorphism, and transports continuous maps
 between the models with identity and composition laws.
 -/
+
+@[expose] public section
 noncomputable section
 
 open CategoryTheory

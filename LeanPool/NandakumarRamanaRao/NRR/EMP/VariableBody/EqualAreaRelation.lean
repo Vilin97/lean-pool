@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.AreaVector
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.AreaVector
 
 /-!
 # `NRR.EMP.VariableBody.EqualAreaRelation` — closedness of the equal-area relation
@@ -20,6 +22,8 @@ site family yields the closed normalized-weight graph over any topological param
 * `NormalizedWeightGraph`, `isClosed_normalizedWeightGraph` — the closed graph over a continuous
   site family.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

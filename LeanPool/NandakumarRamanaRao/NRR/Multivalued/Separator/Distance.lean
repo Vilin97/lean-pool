@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import Mathlib.Topology.MetricSpace.HausdorffDistance
+
+public import Mathlib.Tactic
+public import Mathlib.Topology.MetricSpace.HausdorffDistance
 
 /-!
 # `NRR.Multivalued.Separator.Distance` — distance to a closed nonempty set
@@ -18,6 +20,8 @@ by the distance to any chosen point of the set.
 All results are stated for a general metric space; no compactness is assumed. Positivity requires
 both closedness and nonemptiness of the set.
 -/
+
+@[expose] public section
 
 namespace NRR.MetricTools
 

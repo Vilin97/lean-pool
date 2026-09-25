@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Algebra.Homology.Opposite
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularCohomology
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.HomotopyInvariance
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.Backports.PrismSimplicialHomotopy
+
+public import Mathlib.Algebra.Homology.Opposite
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularCohomology
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.HomotopyInvariance
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.Backports.PrismSimplicialHomotopy
 
 /-!
 # Homotopy invariance of singular cohomology — UNCONDITIONAL
@@ -50,6 +52,8 @@ topological homotopy ──singularChainHomotopyOfHomotopyModule──▶ chain 
  equal pullbacks on Hⁿ(-; M)
 ```
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology HomologicalComplex Opposite Limits
 

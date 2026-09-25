@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopIncidenceComplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexChain
-import Mathlib.LinearAlgebra.Matrix.Permutation
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopIncidenceComplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexChain
+public import Mathlib.LinearAlgebra.Matrix.Permutation
 
 /-!
 # Top-flag subdivision of the Fox--Neuwirth cellular cycle
@@ -27,6 +29,8 @@ The construction has two advantages over the earlier affine block determinant:
 The local boundary theorem is rank-two internal cancellation.  It is isolated below as an
 explicit finite statement about the actual chain, rather than hidden in a geometric certificate.
 -/
+
+@[expose] public section
 
 namespace NRR
 

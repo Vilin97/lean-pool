@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.GroupTheory.GroupAction.Basic
-import Mathlib.GroupTheory.GroupAction.Quotient
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteAffineZeroCount
+
+public import Mathlib.GroupTheory.GroupAction.Basic
+public import Mathlib.GroupTheory.GroupAction.Quotient
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteAffineZeroCount
 /-!
 # Orbit quotients of finite incidence cycles
 
@@ -19,6 +21,8 @@ one coefficient per top orbit, while incidence is transferred by summing over th
 The construction does not divide by the group order.  This is essential in characteristic `p`,
 where the prime symmetry group has order divisible by `p`.
 -/
+
+@[expose] public section
 
 namespace NRR
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericPerturbation
-import Mathlib.Topology.UniformSpace.HeineCantor
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericPerturbation
+public import Mathlib.Topology.UniformSpace.HeineCantor
 
 /-!
 # Quantitative zero-free margin after staircase refinement
@@ -27,6 +29,8 @@ The main result is formulated for an arbitrary preselected spatial level `N`: on
 refinement level `L` must subsequently be increased.  This permits later arguments to choose a
 common spatial subdivision for endpoint data first and then refine the entire homotopy prism.
 -/
+
+@[expose] public section
 
 namespace NRR
 

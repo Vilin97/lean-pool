@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.AreaVector
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.NormalizedWeightContinuity
+
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.AreaVector
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.NormalizedWeightContinuity
 
 /-!
 # `NRR.EMP.VariableBody.CanonicalCell` — the canonical variable-body power cell
@@ -25,6 +27,8 @@ which is convex and compact by the general cell API and nonempty because the equ
 gives it positive area (indeed nonempty interior). The cell area equals the target average area
 `z.1.body.area / n`.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

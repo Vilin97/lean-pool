@@ -3,15 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import
-  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGlobalCancellation
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedChartCarrierEquivariant
-import
-  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryCancellation
-import
-  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricFiniteCancellation
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGlobalCancellation
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedChartCarrierEquivariant
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryCancellation
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricFiniteCancellation
 /-!
 # Cancellation of the nonhorizontal refined-prism boundary
 
@@ -32,6 +31,8 @@ Together these statements prove that the `nonhorizontalContribution` isolated in
 the result is a consequence of the explicit subdivision signs, staircase signs, and the already
 proved orbit-cycle boundary identity.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -80,7 +81,7 @@ noncomputable def deltaCast {m n : Nat} (h : m = n) : Delta m → Delta n :=
     (n : Nat) (k : Fin (n + 2)) (x : Delta n) (i : Fin (n + 1)) :
     cofacePoint n k x (k.succAbove i) = x i := by
   unfold cofacePoint
-  simp +decide [ ]
+  simp? +decide [ ]
   simp +decide [FunOnFinite.linearMap]
   simp +decide [Finsupp.mapDomain, Finsupp.single_apply]
   exact fun h => h.symm
@@ -1056,7 +1057,7 @@ theorem staircaseFacet_sum_decomposition
     _ = _ := by
       rw [Fintype.sum_sum_type, Fintype.sum_sum_type,
         Fintype.sum_sum_type, Fintype.sum_sum_type, Fintype.sum_prod_type]
-      simp [staircaseFacetUnclassify]
+      simp? [staircaseFacetUnclassify]
       have hs :
           (∑ r : Fin (n + 1), ∑ h : Fin n,
             F (if r.1 ≤ h.1 then (Fin.succ h, r.castSucc)
@@ -1961,7 +1962,7 @@ theorem refined_side_eq_spatialSideWeight
   | succ n =>
       dsimp only
       rw [refined_chart_eq_affineCompMap]
-      simp [spatialSideWeight, sidePrismMap, deltaCast, Equiv.cast]
+      simp? [spatialSideWeight, sidePrismMap, deltaCast, Equiv.cast]
       have hspatial :
           (fun k =>
             ((Equiv.cast (congrArg Fin (show n + 1 - 1 + 2 = n + 1 + 1 by omega))).trans
@@ -2101,7 +2102,7 @@ private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 
     funext x
     apply Realization.ext
     intro c
-    simp [ iteratedBoundaryMap, ReferenceAffineOrbitCount.topRepr,
+    simp? [ iteratedBoundaryMap, ReferenceAffineOrbitCount.topRepr,
       Simplex.realizationContinuousMap, Simplex.realizationPoint,
       Simplex.chartWeight, cofacePoint]
     change (∑ i : Fin (n + 1 + 1),
@@ -2195,7 +2196,7 @@ private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 
               apply Finset.sum_congr rfl
               intro k hk
               ring
-    _ = 0 := by simpa only [hz, mul_zero]
+    _ = 0 := by simp only [hz, mul_zero]
 
 /-- The complete nonhorizontal refined-prism contribution vanishes. -/
 theorem nonhorizontalContribution_eq_zero_core
@@ -2367,7 +2368,7 @@ theorem Result.nonhorizontalContribution_eq_zero
     (H : EquivariantCoordinateHomotopy.ZeroFreeHomotopy hp F0 F1)
     (m : Real) (R : Result hp N L H m) :
     nonhorizontalContribution hp N L R.assignment = 0 :=
-  NRR.FoxNeuwirthOrderComplex.EquivariantPrismNonhorizontalCancellation.nonhorizontalContribution_eq_zero_core
+  EquivariantPrismNonhorizontalCancellation.nonhorizontalContribution_eq_zero_core
     hp N L R.assignment
 
 /-- The two horizontal contributions of a generic perturbation are opposite. -/
@@ -2378,9 +2379,9 @@ theorem Result.lowerHorizontalContribution_eq_neg_upperHorizontalContribution
     (m : Real) (R : Result hp N L H m) :
     lowerHorizontalContribution hp N L R.assignment =
       -upperHorizontalContribution hp N L R.assignment :=
-  _root_.NRR.FoxNeuwirthOrderComplex.EquivariantPrismGlobalCancellation.lowerHorizontalContribution_eq_neg_upper_of_nonhorizontal_eq_zero
+  lowerHorizontalContribution_eq_neg_upper_of_nonhorizontal_eq_zero
     hp N L R.assignment R.generalPosition
-    (_root_.NRR.FoxNeuwirthOrderComplex.EquivariantPrismNonhorizontalCancellation.nonhorizontalContribution_eq_zero_core
+    (EquivariantPrismNonhorizontalCancellation.nonhorizontalContribution_eq_zero_core
       hp N L R.assignment)
 
 end EquivariantPrismNonhorizontalCancellation

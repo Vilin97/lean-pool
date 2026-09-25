@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBFullBadSetNullity
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBSmallGenericPerturbation
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBFullBadSetNullity
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBSmallGenericPerturbation
 
 /-!
 # Route B, Steps 1--6
@@ -24,3 +26,5 @@ The imported development contains:
   positive-ray general position, under the explicit origin-margin,
   frozen-support safety, and facet-neighborhood inputs.
 -/
+
+@[expose] public section

@@ -3,24 +3,26 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Phase1Interface
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Basic
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.HalfspaceCoefficients
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.IndicatorStability
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CellAreaContinuity
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.AreaVector
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.EqualAreaRelation
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CompactSiteFamily
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.WeightBounds
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.WeightBox
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.ClosedGraph
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.NormalizedWeightContinuity
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CanonicalCell
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CanonicalCellGraph
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CanonicalCellContinuity
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Children
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Partition
+
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Phase1Interface
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.HalfspaceCoefficients
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.IndicatorStability
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CellAreaContinuity
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.AreaVector
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.EqualAreaRelation
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CompactSiteFamily
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.WeightBounds
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.WeightBox
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.ClosedGraph
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.NormalizedWeightContinuity
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CanonicalCell
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CanonicalCellGraph
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CanonicalCellContinuity
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Children
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Partition
 
 /-!
 # `NRR.EMP.VariableBody` — variable-body equal-area power partitions
@@ -51,3 +53,5 @@ The continuity results hold on this compact family only; `Config n` itself is no
 compact. The proofs go through the equal-area existence and uniqueness cores reached via
 `EMP.normalizedWeight`, and do not invoke `EMP.continuous_normalizedWeight_core`.
 -/
+
+@[expose] public section

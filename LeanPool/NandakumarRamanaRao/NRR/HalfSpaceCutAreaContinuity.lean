@@ -3,13 +3,15 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.HalfspaceCut
-import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
-import LeanPool.NandakumarRamanaRao.NRR.HalfSpaceCutArea
+
+public import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.HalfspaceCut
+public import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
+public import LeanPool.NandakumarRamanaRao.NRR.HalfSpaceCutArea
 
 /-!
 # `NRR.HalfSpaceCutAreaContinuity` — continuity of fixed-normal cut areas
@@ -42,6 +44,8 @@ and continuity in `c` follows from `MeasureTheory.continuousAt_of_dominated`:
  slice `{x ∈ K | ⟪u, x⟫ = c₀}`, which is null by `lowerCut_boundary_null` (needs `u ≠ 0`).
 -/
 
+@[expose] public section
+
 open MeasureTheory
 open scoped RealInnerProductSpace
 
@@ -61,7 +65,7 @@ theorem continuous_cutAreaLower_fixedNormal
   -- Apply the dominated convergence theorem to show that the integral is continuous.
   have h_int_cont : Continuous (fun c : ℝ => ∫ x in K.carrier, (if ⟪u, x⟫ ≤ c then 1 else 0 : ℝ)
     ∂volume) := by
-    refine' continuous_iff_continuousAt.mpr _;
+    refine continuous_iff_continuousAt.mpr ?_;
     intro c₀; apply_rules [ MeasureTheory.continuousAt_of_dominated, continuousAt_const ];
     any_goals exact fun _ => 1;
     · exact Filter.Eventually.of_forall fun x => Measurable.aestronglyMeasurable ( by
@@ -70,10 +74,9 @@ theorem continuous_cutAreaLower_fixedNormal
     · exact Filter.Eventually.of_forall fun x => Filter.Eventually.of_forall fun y => by
         split_ifs <;> norm_num;
     · exact ContinuousOn.integrableOn_compact K.isCompact ( continuousOn_const );
-    · refine' MeasureTheory.ae_restrict_of_ae _;
-      refine' MeasureTheory.measure_mono_null _ _;
-      exact { x : Plane | ⟪u, x⟫ = c₀ };
-      · intro x hx; contrapose! hx; simp_all +decide [ ContinuousAt ];
+    · refine MeasureTheory.ae_restrict_of_ae ?_;
+      refine MeasureTheory.measure_mono_null (t := {x : Plane | ⟪u, x⟫ = c₀}) ?_ ?_
+      · intro x hx; contrapose! hx; simp_all? +decide [ ContinuousAt ];
         cases lt_or_gt_of_ne hx <;> split_ifs <;> norm_num at *;
         · exact tendsto_const_nhds.congr' ( by
             filter_upwards [ lt_mem_nhds ‹_› ] with y hy; split_ifs <;> linarith );
@@ -83,7 +86,7 @@ theorem continuous_cutAreaLower_fixedNormal
             filter_upwards [ Iio_mem_nhds ‹_› ] with y hy; split_ifs <;> linarith [ hy.out ] );
       · exact NRR.Halfspace.hyperplane_null hu c₀;
   convert h_int_cont using 1;
-  ext c; simp +decide [ ConvexBody.cutAreaLower ];
+  ext c; simp? +decide [ ConvexBody.cutAreaLower ];
   erw [ MeasureTheory.integral_indicator ( show MeasurableSet ( lowerClosedHalfspace u c ) from
     lowerClosedHalfspace_isClosed u c |> IsClosed.measurableSet ) ]; norm_num [
     lowerClosedHalfspace ];

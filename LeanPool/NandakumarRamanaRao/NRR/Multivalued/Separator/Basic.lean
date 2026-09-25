@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.SignedInterval
+
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.SignedInterval
 
 /-!
 # `NRR.Multivalued.Separator.Basic` — top–bottom separator structure
@@ -22,6 +24,8 @@ The elementary side API derives, from these fields, that each side lies in the c
 that membership in a side excludes membership in the carrier, that a point outside the carrier lies
 in exactly one side, and that the two boundaries never meet the carrier.
 -/
+
+@[expose] public section
 
 namespace NRR
 

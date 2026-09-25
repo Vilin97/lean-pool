@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
-import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+
+public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.Basic
 
 /-!
 # Radial boundary points of a planar convex body
@@ -23,6 +25,8 @@ intermediate direction dominates the corresponding convex combination of linear 
 We also record the planar cross product and the trigonometric identity expressing a direction
 lying between two others as a nonnegative combination of them.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory NRR.Geometry
 open scoped ENNReal NNReal Pointwise

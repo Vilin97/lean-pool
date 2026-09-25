@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import Mathlib.Analysis.Convex.StdSimplex
-import Mathlib.Topology.Algebra.Module.Basic
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import Mathlib.Analysis.Convex.StdSimplex
+public import Mathlib.Topology.Algebra.Module.Basic
+public import Mathlib.Tactic
 
 /-!
 # Affine barycentric subdivision maps on topological standard simplices
@@ -32,6 +34,8 @@ This deliberately does **not** claim the chain-level boundary identity or the
 subdivision chain homotopy. Those are separate later files.
 -/
 
+@[expose] public section
+
 open scoped BigOperators
 open Finset
 
@@ -53,7 +57,8 @@ def prefixVertex (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) (k : Fin (n + 1)) :
 
 /-- The barycenter of the first `k+1` vertices in the order given by `π`,
 viewed as a point of the ambient simplex `Δ^n`. This uses Mathlib's existing
-`SphereOddDegree.FiniteSimplex.barycenter` and `SphereOddDegree.FiniteSimplex.map`, avoiding a hand proof that the
+`SphereOddDegree.FiniteSimplex.barycenter` and `SphereOddDegree.FiniteSimplex.map`, avoiding a hand
+proof that the
 coordinates are nonnegative and have total mass `1`. -/
 noncomputable def prefixBarycenter (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) : Delta n :=
@@ -83,7 +88,8 @@ theorem affineSubdivMapFun_nonneg (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     0 ≤ affineSubdivMapFun n π x j := by
   unfold affineSubdivMapFun
   exact Finset.sum_nonneg fun k _ =>
-    mul_nonneg (SphereOddDegree.FiniteSimplex.zero_le x k) (SphereOddDegree.FiniteSimplex.zero_le (prefixBarycenter n π k) j)
+    mul_nonneg (SphereOddDegree.FiniteSimplex.zero_le x k)
+      (SphereOddDegree.FiniteSimplex.zero_le (prefixBarycenter n π k) j)
 
 /-- The coordinates of `affineSubdivMapFun` sum to `1`. -/
 theorem affineSubdivMapFun_sum_eq_one (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
@@ -114,7 +120,8 @@ noncomputable def affineSubdivMap (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) :
 `k`-th prefix barycenter. -/
 theorem affineSubdivMap_vertex (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) :
-    affineSubdivMap n π (SphereOddDegree.FiniteSimplex.vertex (S := ℝ) k) = prefixBarycenter n π k := by
+    affineSubdivMap n π (SphereOddDegree.FiniteSimplex.vertex (S := ℝ) k) = prefixBarycenter n π
+      k := by
   apply SphereOddDegree.FiniteSimplex.ext
   funext j
   simp only [affineSubdivMap_apply]
@@ -141,7 +148,8 @@ theorem prefixBarycenter_zero (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) :
   have : Unique (Fin ((0 : Fin (n + 1)).val + 1)) := by
     rw [h1]
     infer_instance
-  have hb : (SphereOddDegree.FiniteSimplex.barycenter (X := Fin ((0 : Fin (n + 1)).val + 1)) (𝕜 := ℝ)) =
+  have hb : (SphereOddDegree.FiniteSimplex.barycenter (X := Fin ((0 : Fin (n + 1)).val + 1)) (𝕜
+    := ℝ)) =
       SphereOddDegree.FiniteSimplex.vertex 0 := Subsingleton.elim _ _
   rw [prefixBarycenter, hb, SphereOddDegree.FiniteSimplex.map_vertex]
   rfl

@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeter
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterTransform
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthFamilies
+
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeter
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterTransform
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthFamilies
 
 /-!
 # `NRR.Geometry.ConvexBody` — continuity of the planar perimeter
@@ -55,6 +57,8 @@ reparameterisation `(a, θ) ↦ (a, circleVec θ)`), and holds for constant fami
 `PlanarPerimeter.lean`, `PlanarPerimeterTransform.lean` and `WidthFamilies.lean` each transitively
 pull in `import Mathlib`, so no extra imports are required.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

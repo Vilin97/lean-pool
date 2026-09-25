@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ChildTestMap
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.ToNiceMV
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Fibers
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Partition
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ChildTestMap
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.ToNiceMV
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Fibers
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Partition
 
 /-!
 # Prime-refinement separator certificates
@@ -21,6 +23,8 @@ The definition contains no orbit-count or transversality axiom. Those belong to 
 prime-refinement theorem that constructs such a certificate. Once a certificate is available, the
 conversion to a new nice multivalued function is formal and is proved here directly.
 -/
+
+@[expose] public section
 
 namespace NRR
 

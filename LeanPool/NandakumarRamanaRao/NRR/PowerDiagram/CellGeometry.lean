@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.Defs
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAlgebra
-import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.Defs
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAlgebra
+public import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
 
 /-!
 # Geometry of power cells
@@ -15,6 +17,8 @@ import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
 Proves convexity, closedness, and covering of the ambient space by power cells. The definitions are
 in `NRR.PowerDiagram.Defs`, and the halfspace representation is in `CellAlgebra`.
 -/
+
+@[expose] public section
 
 open NRR
 open scoped RealInnerProductSpace

@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineBarycentricSubdivision
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CupProduct
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AlexanderWhitneyChainMap
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineBarycentricSubdivision
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CupProduct
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AlexanderWhitneyChainMap
 
 /-!
 # Degree-wise barycentric subdivision operator on singular chains
@@ -42,6 +44,8 @@ boundary. The required boundary theorem is the face/sign calculation
 
 Only after that theorem is proved should one package `sd` as a genuine chain map.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
@@ -81,7 +85,7 @@ noncomputable def affineSubdivContinuousMap (n : ℕ)
 /-- Coordinate realization of Mathlib's intrinsic simplex. -/
 noncomputable def intrinsicSimplexCoordinates (n : ℕ) :
     Convexity.StdSimplex ℝ (Fin (n + 1)) ≃ₜ Delta n where
-  toFun x := ⟨x.weights, x.nonneg, by simpa [Finsupp.sum_fintype] using x.total⟩
+  toFun x := ⟨x.weights, x.nonneg, by simp [Finsupp.sum_fintype]⟩
   invFun x :=
     { weights := Finsupp.equivFunOnFinite.symm x.1
       nonneg := x.2.1
@@ -193,7 +197,8 @@ theorem barycentricSubdivisionLinearMap_generator (R : Type) [CommRing R]
       = barycentricSubdivisionGeneratorHom R X n σ := Sigma.ι_comp_desc _ _
   have h := congrArg (fun (f : ModuleCat.of R R ⟶ singularChainGroup R X n) => f.hom (1 : R)) key
   dsimp [chainGenerator, barycentricSubdivisionGeneratorHom] at h
-  have hone : (1 : R) • barycentricSubdivisionGenerator R X n σ = barycentricSubdivisionGenerator R X n σ := one_smul _ _
+  have hone : (1 : R) • barycentricSubdivisionGenerator R X n σ =
+    barycentricSubdivisionGenerator R X n σ := one_smul _ _
   exact h.trans hone
 
 /-- Integral degree-wise barycentric subdivision. -/
@@ -270,14 +275,16 @@ theorem singularBoundary_chainGenerator_formula (R : Type) [CommRing R] (X : Top
       = ∑ i : Fin (n + 2),
           ((-1 : R) ^ i.val) • chainGenerator R X n (AlexanderWhitney.faceSimplex X n i σ) := by
   let F : Fin (n + 2) → (ModuleCat.of R R ⟶ singularChainGroup R X n) :=
-    fun i => Sigma.ι (fun (_ : singularSimplices X n) => ModuleCat.of R R) (AlexanderWhitney.faceSimplex X n i σ)
+    fun i => Sigma.ι (fun (_ : singularSimplices X n) => ModuleCat.of R R)
+      (AlexanderWhitney.faceSimplex X n i σ)
   have h := singularBoundary_sigma_ι_formula R X n σ
   have h2 := congrArg (fun (f : ModuleCat.of R R ⟶ singularChainGroup R X n) => f.hom (1 : R)) h
   dsimp [chainGenerator] at h2
   have h_hom : (∑ (i : Fin (n + 2)), (-1 : ℤ) ^ (i : ℕ) • F i).hom (1 : R)
       = ∑ (i : Fin (n + 2)), (-1 : ℤ) ^ (i : ℕ) • (F i).hom (1 : R) := by simp
   have h_sum : ∑ (i : Fin (n + 2)), (-1 : ℤ) ^ (i : ℕ) • (F i).hom (1 : R)
-      = ∑ i : Fin (n + 2), ((-1 : R) ^ i.val) • chainGenerator R X n (AlexanderWhitney.faceSimplex X n i σ) := by
+      = ∑ i : Fin (n + 2), ((-1 : R) ^ i.val) • chainGenerator R X n
+        (AlexanderWhitney.faceSimplex X n i σ) := by
     apply Finset.sum_congr rfl
     intro i _
     rw [← Int.cast_smul_eq_zsmul R ((-1 : ℤ) ^ (i : ℕ))]

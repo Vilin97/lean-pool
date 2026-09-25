@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.Backports.StdSimplexOne
-import Mathlib.AlgebraicTopology.SimplicialObject.ChainHomotopy
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.PrismOperator
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.Backports.StdSimplexOne
+public import Mathlib.AlgebraicTopology.SimplicialObject.ChainHomotopy
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.PrismOperator
 
 /-!
 # Combinatorial simplicial homotopy from a topological homotopy (prism, link L4)
@@ -18,6 +20,8 @@ This file assembles the library's singular cylinder
 consumed by the backported algebraic prism
 `CategoryTheory.SimplicialObject.Homotopy.toChainHomotopy`.
 -/
+
+@[expose] public section
 
 open CategoryTheory Simplicial Limits AlgebraicTopology SSet
 

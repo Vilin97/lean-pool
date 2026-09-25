@@ -3,13 +3,16 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.MayerVietoris
-import
-  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyFormula
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.BallBoundaryLES
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.MayerVietoris
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyFormula
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.BallBoundaryLES
 
 /-! # Sub Chain Subspace Bridge -/
+
+@[expose] public section
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
 open SphereOddDegree.AffineBarycentricSubdivision
@@ -49,8 +52,6 @@ theorem exists_pushSimplex_of_subordinate (S : Set X) (n : ℕ)
     ContinuousMap.mk (fun x => ⟨singularSimplexAsContinuousMap X n σ x, h_range ⟨x, rfl⟩⟩)
   use continuousMapAsSingularSimplex (TopCat.of S) n g
   apply singularSimplices_ext
-  change singularSimplexAsContinuousMap X n
-    (pushSimplex (sInclusion S) n (continuousMapAsSingularSimplex (TopCat.of S) n g)) = _
   rw [pushSimplex_continuousMap, singularSimplexAsContinuousMap_continuousMapAsSingularSimplex]
   ext x
   rfl
@@ -95,7 +96,7 @@ def subChainCorestrict (R : Type) [CommRing R] (X : TopCat.{0}) (S : Set X) :
     apply Subtype.ext
     have := singularChainMap_boundary_apply R (sInclusion S) j (c : singularChainGroup R
       (TopCat.of S) (j + 1))
-    simp_all [singularBoundary]
+    simp_all? [singularBoundary]
     change (subBoundary R X S j).hom ((LinearMap.codRestrict (subChainSubmodule R X S (j + 1))
       (singularChainMap R (sInclusion S) (j + 1)).hom (singularChainMap_sInclusion_mem S (j +
       1))) c) =

@@ -3,20 +3,22 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.PhaseInterfaces
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ZeroSumAlgebra
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.CoordinateDecomposition
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.PrimeSymmetry
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.Actions
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.FixedVectors
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.EquivariantMap
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.Model
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ModelSites
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ChildEquivariance
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ChildTestMap
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.BoundaryOrthants
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.AugmentedReference
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.PhaseInterfaces
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ZeroSumAlgebra
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.CoordinateDecomposition
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.PrimeSymmetry
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.Actions
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.FixedVectors
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.EquivariantMap
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.Model
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ModelSites
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ChildEquivariance
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ChildTestMap
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.BoundaryOrthants
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.AugmentedReference
 
 /-!
 # Prime configuration-model interface
@@ -29,3 +31,5 @@ orthants, and the bounded augmented reference map.
 It does not assert existence of the concrete polyhedral model and does not contain a PL
 transversality, orbit-count, or separation theorem.
 -/
+
+@[expose] public section

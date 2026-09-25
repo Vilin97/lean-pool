@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ReducedToUnreducedSphereTopHomology
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularHomologyHomotopyInvariance
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Basic
-import Mathlib.Topology.Homotopy.Contractible
-import Mathlib.Analysis.Convex.Contractible
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.ReducedToUnreducedSphereTopHomology
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularHomologyHomotopyInvariance
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Basic
+public import Mathlib.Topology.Homotopy.Contractible
+public import Mathlib.Analysis.Convex.Contractible
 
 /-!
 # Ball--boundary long-exact-sequence route for sphere homology
@@ -18,6 +20,8 @@ relative-homology input needed by the classical pair `(Dⁿ⁺¹, Sⁿ)` argumen
 route; the unconditional sphere top-homology theorem used by the public API is obtained through
 the Mayer--Vietoris suspension construction.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology Limits
 

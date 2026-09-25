@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.AAK.SimplestRouteS6Refined
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableHomotopyInvarianceAffinePullback
+
+public import LeanPool.NandakumarRamanaRao.NRR.AAK.SimplestRouteS6Refined
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableHomotopyInvarianceAffinePullback
 
 /-!
 # Unconditional AAK theorem from the affine-pullback stable collar
@@ -14,6 +16,8 @@ The exact relative stable-collar construction supplies the stable homotopy-invar
 by the refined S6 route.  This module provides the final adapter and exports the arbitrary-
 `n` fair-partition theorem without a theorem-provider argument.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace AAK

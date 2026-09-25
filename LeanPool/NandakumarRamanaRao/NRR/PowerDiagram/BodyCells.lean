@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.Defs
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellGeometry
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.Defs
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellGeometry
 
 /-!
 # `NRR.PowerDiagram.BodyCells` — restricted power cells as sets
@@ -27,6 +29,8 @@ restricted cell can be empty or lower‑dimensional, so it need not be a solid c
 
 Partition properties of the family `i ↦ bodyCellSet K s w i` are out of scope here.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry MeasureTheory
 
@@ -81,7 +85,8 @@ noncomputable def bodyCellBody (K : Geometry.ConvexBody Plane) (s : Fin n → Pl
   interior_nonempty' := hInt
 
 /-- The carrier of `bodyCellBody` is the restricted cell set. -/
-@[simp] theorem bodyCellBody_carrier (K : Geometry.ConvexBody Plane) (s : Fin n → Plane) (w : Fin n → ℝ)
+@[simp] theorem bodyCellBody_carrier (K : Geometry.ConvexBody Plane) (s : Fin n → Plane) (w :
+  Fin n → ℝ)
     (i : Fin n) (hInt : (interior (bodyCellSet K s w i)).Nonempty) :
     (bodyCellBody K s w i hInt : Set Plane) = bodyCellSet K s w i := rfl
 

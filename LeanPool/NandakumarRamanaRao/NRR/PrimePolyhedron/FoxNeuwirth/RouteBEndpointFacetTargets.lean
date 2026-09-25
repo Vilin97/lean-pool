@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBFacetWitnessRealization
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointStackIteratedAffinePullback
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBFacetWitnessRealization
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointStackIteratedAffinePullback
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 /-!
 # Boundary-respecting facet targets for affine-pullback endpoint stacks
 
@@ -17,6 +19,8 @@ frozen facet columns to coarse-simplex vertices therefore extends to a permutati
 remaining movable columns with the missing coarse-simplex values makes the selected facet a column
 permutation of the regular endpoint matrix.
 -/
+
+@[expose] public section
 
 namespace NRR
 open FoxNeuwirthOrderComplex
@@ -112,7 +116,8 @@ theorem exists_perm_extending_finset
 /-- Facet columns whose represented local vertices lie on the coarse lower boundary. -/
 noncomputable def lowerFrozenColumns
     (hp : Nat.Prime p) {N : Nat}
-    (q : (RelativeSubdivisionOneStepCells.cellSystem hp N).Cell) (k : Fin (p + 1)) : Finset (Fin p) :=
+    (q : (RelativeSubdivisionOneStepCells.cellSystem hp N).Cell) (k : Fin (p + 1)) : Finset (Fin
+      p) :=
   Finset.univ.filter (fun c =>
     ((RelativeSubdivisionOneStepCells.cellSystem hp N).vertex q (k.succAbove c)).time.1 = 0)
 
@@ -214,7 +219,8 @@ noncomputable def oneStepLowerFacetTarget
       vertexValue hp A.toRegularApproximation.level A.toRegularApproximation.map q.1
         (augmentedRowEquiv hp (lowerFacetPermutation hp q k (Classical.choose h))) j
     else
-      (localVertexMap hp (RelativeSubdivisionOneStepCells.cellSystem hp A.toRegularApproximation.level)
+      (localVertexMap hp (RelativeSubdivisionOneStepCells.cellSystem hp
+        A.toRegularApproximation.level)
         (CompatibleChartMapOneStep.assignment hp
           (baseOriginalPLMap hp A.toRegularApproximation)) q).value i j
 
@@ -283,9 +289,11 @@ theorem oneStepLowerFacetTarget_respects_lower
     (q : (RelativeSubdivisionOneStepCells.cellSystem hp A.toRegularApproximation.level).Cell)
     (k : Fin (p + 1)) :
     ∀ (i : Fin (p + 1)) (j : Fin p),
-      ((RelativeSubdivisionOneStepCells.cellSystem hp A.toRegularApproximation.level).vertex q i).time.1 = 0 →
+      ((RelativeSubdivisionOneStepCells.cellSystem hp A.toRegularApproximation.level).vertex q
+        i).time.1 = 0 →
       oneStepLowerFacetTarget hp A q k i j =
-        (localVertexMap hp (RelativeSubdivisionOneStepCells.cellSystem hp A.toRegularApproximation.level)
+        (localVertexMap hp (RelativeSubdivisionOneStepCells.cellSystem hp
+          A.toRegularApproximation.level)
           (CompatibleChartMapOneStep.assignment hp
             (baseOriginalPLMap hp A.toRegularApproximation)) q).value i j := by
   intro i j hi
@@ -336,7 +344,8 @@ theorem oneStep_lowerFacetTargets
     (hp : Nat.Prime p)
     {F : ContinuousCoordinateMap p}
     (A : StableRegularApproximation hp F) :
-    LowerFacetTargets hp (RelativeSubdivisionOneStepCells.cellSystem hp A.toRegularApproximation.level)
+    LowerFacetTargets hp (RelativeSubdivisionOneStepCells.cellSystem hp
+      A.toRegularApproximation.level)
       (CompatibleChartMapOneStep.assignment hp
         (baseOriginalPLMap hp A.toRegularApproximation)) := by
   intro q k

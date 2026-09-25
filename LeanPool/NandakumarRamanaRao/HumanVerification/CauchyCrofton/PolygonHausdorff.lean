@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.CyclicPolygon
+
+public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.CyclicPolygon
 
 /-!
 # Hausdorff perimeter of an inscribed cyclic polygon
@@ -14,6 +16,8 @@ at most one point (a set of vanishing one-dimensional Hausdorff measure), and th
 segment is the distance between its endpoints.  Hence the Hausdorff perimeter of the polygon is
 the sum of its edge lengths.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory NRR.Geometry
 open scoped ENNReal NNReal Pointwise

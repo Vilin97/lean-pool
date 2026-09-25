@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionOperator
-import Mathlib.GroupTheory.Perm.Sign
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionOperator
+public import Mathlib.GroupTheory.Perm.Sign
 
 /-!
 # Adjacent-swap sign lemma for barycentric subdivision
@@ -18,6 +20,8 @@ If `τ` is the adjacent transposition swapping positions `i` and `i+1`, then
 coefficient-ring sign convention used by `permSignCoeff` in
 `BarycentricSubdivisionOperator.lean`.
 -/
+
+@[expose] public section
 
 namespace SphereOddDegree
 namespace AffineBarycentricSubdivision

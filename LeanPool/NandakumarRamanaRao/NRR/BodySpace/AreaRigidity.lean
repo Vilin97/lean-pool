@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Basic
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PositiveAreaInterior
+
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PositiveAreaInterior
 /-!
 # `NRR.BodySpace.AreaRigidity` — area rigidity for nested convex subbodies
 
@@ -21,6 +23,8 @@ The set-level argument is elementary: a point of `interior D` lies outside the c
 `D = closure (interior D) ⊆ C`, contradicting strictness), and a small ball around that point sits
 inside `D` and misses `C`, contributing strictly positive extra area.
 -/
+
+@[expose] public section
 
 open MeasureTheory Metric
 
@@ -45,7 +49,9 @@ theorem measure_lt_of_compact_convex_ssubset
     obtain ⟨x, hx⟩ : ∃ x : Plane, x ∈ interior D ∧ x ∉ C := by
       by_contra! h;
       have := hDconv.closure_interior_eq_closure_of_nonempty_interior hDint;
-      exact hCD.2 ( by rw [ hDcomp.isClosed.closure_eq ] at this; exact this ▸ closure_minimal ( Set.subset_def.mpr h ) hCcomp.isClosed );
+      exact hCD.2 ( by
+        rw [ hDcomp.isClosed.closure_eq ] at this; exact this ▸ closure_minimal (
+          Set.subset_def.mpr h ) hCcomp.isClosed );
     obtain ⟨ε, hε⟩ : ∃ ε > 0, Metric.ball x ε ⊆ interior D := by
       exact Metric.isOpen_iff.mp ( isOpen_interior ) x hx.1
     obtain ⟨δ, hδ⟩ : ∃ δ > 0, Metric.ball x δ ⊆ Cᶜ := by
@@ -54,14 +60,16 @@ theorem measure_lt_of_compact_convex_ssubset
     have hr_pos : 0 < r := by
       exact lt_min hε.1 hδ.1
     have hr_ball : Metric.ball x r ⊆ D ∧ Disjoint (Metric.ball x r) C := by
-      exact ⟨ Set.Subset.trans ( Metric.ball_subset_ball ( min_le_left _ _ ) ) ( Set.Subset.trans hε.2 ( interior_subset ) ), Set.disjoint_left.mpr fun y hy₁ hy₂ => hδ.2 ( Metric.ball_subset_ball ( min_le_right _ _ ) hy₁ ) hy₂ ⟩;
+      exact ⟨ Set.Subset.trans ( Metric.ball_subset_ball ( min_le_left _ _ ) ) (
+        Set.Subset.trans hε.2 ( interior_subset ) ), Set.disjoint_left.mpr fun y hy₁ hy₂ => hδ.2
+        ( Metric.ball_subset_ball ( min_le_right _ _ ) hy₁ ) hy₂ ⟩;
     have h_volume : volume C + volume (Metric.ball x r) ≤ volume D := by
       rw [ ← MeasureTheory.measure_union ];
       · exact MeasureTheory.measure_mono ( Set.union_subset hCD.1 hr_ball.1 );
       · exact hr_ball.2.symm;
       · exact measurableSet_ball;
-    refine' lt_of_lt_of_le _ h_volume;
-    refine' ENNReal.lt_add_right _ _;
+    refine lt_of_lt_of_le ?_ h_volume;
+    refine ENNReal.lt_add_right ?_ ?_;
     · exact hCcomp.measure_lt_top.ne;
     · exact ne_of_gt ( Metric.measure_ball_pos _ _ hr_pos );
   gcongr;

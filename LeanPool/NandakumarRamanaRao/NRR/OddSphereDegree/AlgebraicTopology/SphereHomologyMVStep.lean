@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Geometry.Manifold.Instances.Sphere
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SubChainSubspaceBridge
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomology
+public import Mathlib.Geometry.Manifold.Instances.Sphere
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SubChainSubspaceBridge
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomology
 /-!
 # The Mayer–Vietoris recursive step for sphere homology
 
@@ -22,6 +24,8 @@ positive homology vanishes, and the Mayer–Vietoris connecting isomorphism
 (`subspaceHomologyIsoℤ`) and homotopy invariance then identify its homology with
 `Hₙ(Sⁿ)`.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology Limits Metric
 open SphereOddDegree.AffineBarycentricSubdivision
@@ -169,7 +173,7 @@ def fFun (x : Sphere (n + 1)) : EuclideanSpace ℝ (Fin (n + 1)) :=
 
 theorem fFun_mem {x : Sphere (n + 1)} (hx : x ∈ sphereBand n) :
     fFun n x ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1 := by
-      simp +decide [ fFun, EuclideanSpace.norm_eq ];
+      simp? +decide [ fFun, EuclideanSpace.norm_eq ];
       norm_num [ div_pow, Real.sq_sqrt ( show 0 ≤ eqNormSq n x from Finset.sum_nonneg fun _ _ =>
         sq_nonneg _ ) ];
       rw [ ← Finset.sum_div _ _ _, eqNormSq ];
@@ -177,16 +181,16 @@ theorem fFun_mem {x : Sphere (n + 1)} (hx : x ∈ sphereBand n) :
 
 theorem continuous_fFun_band :
     Continuous (fun x : ↥(sphereBand n) => (⟨fFun n x.val, fFun_mem n x.2⟩ : Sphere n)) := by
-      refine' Continuous.subtype_mk _ _;
-      refine' continuous_iff_continuousAt.mpr _;
+      refine Continuous.subtype_mk ?_ ?_;
+      refine continuous_iff_continuousAt.mpr ?_;
       intro x
       have h_cont : ContinuousAt (fun x : EuclideanSpace ℝ (Fin (n + 2)) => (WithLp.equiv 2 (Fin
         (n + 1) → ℝ)).symm (fun i => x i.succ / Real.sqrt (∑ i : Fin (n + 1), (x i.succ) ^ 2)))
         x.val := by
-        refine' ContinuousAt.comp ( _ : ContinuousAt ( fun x : Fin ( n + 1 ) → ℝ => (
-          WithLp.equiv 2 ( Fin ( n + 1 ) → ℝ ) ).symm x ) _ ) _;
+        refine ContinuousAt.comp (?_ : ContinuousAt (fun x : Fin (n + 1) → ℝ =>
+          (WithLp.equiv 2 (Fin (n + 1) → ℝ)).symm x) _) ?_
         · exact Continuous.continuousAt ( by continuity );
-        · refine' tendsto_pi_nhds.mpr fun i => ContinuousAt.div _ _ _;
+        · refine tendsto_pi_nhds.mpr fun i => ContinuousAt.div ?_ ?_ ?_;
           · exact Continuous.continuousAt ( by
               exact continuous_apply _ |> Continuous.comp <| by
                 continuity );
@@ -205,13 +209,13 @@ def gFun (y : Sphere n) : EuclideanSpace ℝ (Fin (n + 2)) :=
 
 theorem gFun_mem_sphere (y : Sphere n) :
     gFun n y ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 2))) 1 := by
-      simp +decide [ gFun, EuclideanSpace.norm_eq ];
+      simp? +decide [ gFun, EuclideanSpace.norm_eq ];
       convert y.2 using 1;
       rw [ mem_sphere_zero_iff_norm, EuclideanSpace.norm_eq ]; norm_num [ Fin.sum_univ_succ ]
 
 theorem gFun_mem_band (y : Sphere n) :
     (⟨gFun n y, gFun_mem_sphere n y⟩ : Sphere (n + 1)) ∈ sphereBand n := by
-      constructor <;> intro h <;> simp_all +decide [  ];
+      constructor <;> intro h <;> simp_all? +decide [  ];
       · injection h with h; replace h := congr_arg ( fun z => z 0 ) h; simp_all +decide [ gFun ];
         exact absurd h ( by erw [ PiLp.single_apply ]; norm_num );
       · injection h with h; have := congr_arg ( fun x => x 0 ) h; norm_num [ southPole ] at this;
@@ -220,13 +224,13 @@ theorem gFun_mem_band (y : Sphere n) :
 theorem continuous_gFun :
     Continuous (fun y : Sphere n =>
       (⟨⟨gFun n y, gFun_mem_sphere n y⟩, gFun_mem_band n y⟩ : ↥(sphereBand n))) := by
-        refine' Continuous.subtype_mk ( Continuous.subtype_mk _ _ ) _;
+        refine Continuous.subtype_mk ( Continuous.subtype_mk ?_ ?_ ) ?_;
         -- The function y ↦ Fin.cons 0 (fun i => y.val i) is continuous because it is a
         -- composition of continuous functions.
         have h_cont : Continuous (fun y : Sphere n => Fin.cons 0 (fun i => y.val i) : Sphere n →
           Fin (n + 2) → ℝ) := by
-          refine' continuous_pi_iff.mpr _;
-          intro i; induction i using Fin.inductionOn <;> simp_all +decide [ Fin.cons ];
+          refine continuous_pi_iff.mpr ?_;
+          intro i; induction i using Fin.inductionOn <;> simp_all? +decide [ Fin.cons ];
           · exact continuous_const;
           · fun_prop;
         convert h_cont using 1;
@@ -238,7 +242,7 @@ def sphereToBand : C(Sphere n, ↥(sphereBand n)) :=
 
 theorem bandToSphere_comp_sphereToBand :
     (bandToSphere n).comp (sphereToBand n) = ContinuousMap.id (Sphere n) := by
-      ext i; simp [bandToSphere, sphereToBand, fFun, gFun];
+      ext i; simp? [bandToSphere, sphereToBand, fFun, gFun];
       rw [ eqNormSq_eq ]; norm_num [ Fin.sum_univ_succ ]
 
 /-- The straight-line-on-the-sphere homotopy from `sphereToBand ∘ bandToSphere` to the
@@ -256,7 +260,7 @@ theorem bandHomotopyFun_ne_zero (p : unitInterval × ↥(sphereBand n)) :
           simp +decide [ h i ];
       intro h; have := congr_arg ( fun x => x i.succ ) h; norm_num [ hi, sphereToBand,
         bandToSphere, fFun, gFun ] at this;
-      by_cases h : p.1.val = 0 <;> simp_all +decide [ div_eq_mul_inv,  mul_comm ];
+      by_cases h : p.1.val = 0 <;> simp_all? +decide [ div_eq_mul_inv,  mul_comm ];
       · exact absurd this ( ne_of_gt ( Real.sqrt_pos.mpr ( eqNormSq_pos n p.2.2 ) ) );
       · exact hi ( by
           nlinarith [ show 0 < ( 1 - p.1.val ) * ( Real.sqrt ( eqNormSq n p.2.val ) ) ⁻¹ +

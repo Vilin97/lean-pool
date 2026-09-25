@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpoints
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpoints
 /-!
 # Thin-time stacks of unrefined Fox--Neuwirth staircase prisms
 
@@ -21,6 +23,8 @@ The construction below supplies the genuine affine-cell system.  The subsequent 
 collects quotient-facet incidences: side facets cancel inside each slab, adjacent horizontal facets
 cancel between consecutive slabs, and only the first lower and final upper boundary remain.
 -/
+
+@[expose] public section
 
 namespace NRR
 

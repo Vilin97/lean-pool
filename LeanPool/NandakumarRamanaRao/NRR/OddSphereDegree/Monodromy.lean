@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Covering
-import Mathlib.Topology.Homotopy.Lifting
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Covering
+public import Mathlib.Topology.Homotopy.Lifting
 
 /-!
 # Monodromy of the canonical double cover `S^n → RP n`
@@ -21,7 +23,8 @@ double cover → π₁(RPⁿ) acting on the fibre → ZMod 2 → H¹(RPⁿ; F₂
 ```
 
 namely the path-lifting property and the monodromy action of the fundamental
-groupoid of `RP n` on the (two-element) fibres of `proj n`. Every declaration is a specialization of an existing Mathlib theorem to `proj_isCoveringMap`.
+groupoid of `RP n` on the (two-element) fibres of `proj n`. Every declaration is a specialization of
+an existing Mathlib theorem to `proj_isCoveringMap`.
 
 ## Main results
 
@@ -49,6 +52,8 @@ groupoid of `RP n` on the (two-element) fibres of `proj n`. Every declaration is
 These declarations provide the monodromy permutation action. The associated classifying
 homomorphism and degree-one cohomology class are developed in the downstream modules.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -370,10 +375,12 @@ theorem inducedOnRPFiberMap_projMonodromy (n : ℕ) (f : C(Sphere n, Sphere n))
     have he : (γ_path : C(unitInterval, RP n)) 0 = proj n p := by
       change γ_path 0 = proj n p
       rw [γ_path.source, hp.symm]
-    have he_f : (γ_path.map (inducedOnRP f hf).continuous : C(unitInterval, RP n)) 0 = proj n (f p) := by
+    have he_f : (γ_path.map (inducedOnRP f hf).continuous : C(unitInterval, RP n)) 0 = proj n (f
+      p) := by
       change inducedOnRP f hf (γ_path 0) = proj n (f p)
       rw [γ_path.source, ← hp, inducedOnRP_comm f hf]
-    have h_lift : f.comp (projLiftPath n γ_path p he) = projLiftPath n (γ_path.map (inducedOnRP f hf).continuous) (f p) he_f := by
+    have h_lift : f.comp (projLiftPath n γ_path p he) = projLiftPath n (γ_path.map (inducedOnRP
+      f hf).continuous) (f p) he_f := by
       apply eq_projLiftPath
       · ext t
         have h_proj : proj n (projLiftPath n γ_path p he t) = γ_path t :=

@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepEndpoints
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepEndpoints
 /-!
 # Base-facet chain of the one-step subdivision cylinder
 
@@ -20,6 +22,8 @@ sd^(N+1)(orbitCycle) - sd^N(orbitCycle).
 The radial-facet cancellation and the recursive-side vanishing over the Fox--Neuwirth orbit cycle
 are proved in the boundary-cancellation module.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -104,14 +108,16 @@ noncomputable def upperEndpointPairing
     (hp : Nat.Prime p) (N : Nat)
     (W : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet → ZMod p) : ZMod p :=
   ∑ q : TopCell hp (N + 1),
-    RefinedAffineMap.coefficient hp (N + 1) q * W (RelativeSubdivisionOneStepEndpoints.upperFacet hp N q)
+    RefinedAffineMap.coefficient hp (N + 1) q * W
+      (RelativeSubdivisionOneStepEndpoints.upperFacet hp N q)
 
 /-- Endpoint cells in the local recursive cylinder are precisely the one lower cell and all upper
 barycentric cells. -/
 theorem endpoint_local_sum
     (hp : Nat.Prime p)
     (f : RelativeSubdivisionCylinderCombinatorics.Cell (p - 1) → ZMod p) :
-    (∑ q : RelativeSubdivisionCylinderCombinatorics.Cell (p - 1), if IsEndpointCell hp q then f q else 0) =
+    (∑ q : RelativeSubdivisionCylinderCombinatorics.Cell (p - 1), if IsEndpointCell hp q then f
+      q else 0) =
       f (RelativeSubdivisionCylinderCombinatorics.lowerCell (p - 1)) +
         ∑ pi : Equiv.Perm (Fin p),
           f (RelativeSubdivisionCylinderCombinatorics.upperCell (p - 1) (by
@@ -119,7 +125,9 @@ theorem endpoint_local_sum
   classical
   obtain ⟨d, rfl⟩ : ∃ d, p = d + 2 := by
     exact ⟨p - 2, (Nat.sub_add_cancel hp.two_le).symm⟩
-  simp [IsEndpointCell, RelativeSubdivisionCylinderCombinatorics.Cell, RelativeSubdivisionCylinderCombinatorics.lowerCell, RelativeSubdivisionCylinderCombinatorics.upperCell]
+  simp [IsEndpointCell, RelativeSubdivisionCylinderCombinatorics.Cell,
+    RelativeSubdivisionCylinderCombinatorics.lowerCell,
+    RelativeSubdivisionCylinderCombinatorics.upperCell]
 
 /-- The endpoint part of the base chain is the refined upper chain minus the coarse lower chain. -/
 theorem endpointBasePairing_eq_upper_sub_lower

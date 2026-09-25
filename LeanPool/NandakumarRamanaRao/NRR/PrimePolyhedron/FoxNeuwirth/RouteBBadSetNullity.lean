@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBAffineFibers
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBFiniteAvoidance
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBAffineFibers
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBFiniteAvoidance
 
 /-!
 # Route B, Step 5: bad-set nullity certificates and finite avoidance
@@ -32,6 +34,8 @@ showing that each full `mixedFaceBadSet` is null.  It must use the complete
 system of deviation equations (or an equivalent nonzero elimination
 polynomial), rather than only one fixed-witness scalar equation.
 -/
+
+@[expose] public section
 
 namespace NRR
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagClassification
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagSourceCancellation
-import Mathlib.LinearAlgebra.Matrix.Permutation
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagClassification
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.MaximalFlagSourceCancellation
+public import Mathlib.LinearAlgebra.Matrix.Permutation
 
 /-!
 # Step 2: the maximal-flag determinant sign
@@ -20,6 +22,8 @@ Combining this identity with the bijection proved in Step 1 constructs `Complete
 the rank-two cancellation theorem, and proves that the top-flag subdivision chain is a genuine
 mod-`p` simplicial cycle.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -96,7 +100,7 @@ theorem integralCoefficient_toSimplex
     (fun sigma : Equiv.Perm (Fin p) => ((Equiv.Perm.sign sigma : ℤˣ) : ℤ)) hzero
 
 /-- Step 1 plus the determinant calculation gives the complete maximal-flag encoding. -/
-def completeEncoding (hp : Nat.Prime p) : CompleteEncoding hp where
+theorem completeEncoding (hp : Nat.Prime p) : CompleteEncoding hp where
   bijective_toSimplex := toSimplex_bijective hp
   coefficient_eq := integralCoefficient_toSimplex hp
 

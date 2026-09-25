@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarStokes
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericPerturbation
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismSubdivisionMargin
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarStokes
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGenericPerturbation
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismSubdivisionMargin
 /-!
 # Relative genericity for explicit affine collars
 
@@ -24,6 +26,8 @@ The final section packages finite multivariate perturbation on movable parameter
 that closeness there gives closeness of the reconstructed full assignment while retaining the
 horizontal boundary literally.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -217,7 +221,8 @@ theorem codimTwoMinor_ne_zero_of_relativeGeneric
   exact h
 
 /-- Safety condition left for the frozen endpoint geometry.  It is required only when the ordered
-codimension-two face determined by the two vanishing barycentric coordinates is purely horizontal. -/
+codimension-two face determined by the two vanishing barycentric coordinates is purely horizontal.
+-/
 def HorizontalPositiveRayCodimTwoSafe
     (a : Assignment hp C) : Prop :=
   ∀ (q : C.Cell) (w : StandardSimplex p) (i j : Fin (p + 1)), (hij : i ≠ j) →

@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CanonicalConfiguration
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopCells
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.Model
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CanonicalConfiguration
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopCells
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.Model
 /-!
 # The finite Fox--Neuwirth top-cell model
 
@@ -23,6 +25,8 @@ This module supplies the concrete compact equivariant configuration model requir
 the finite model. The oriented mod-`p` cycle obtained by gluing boundary faces is constructed in
 the chain modules.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -104,7 +108,7 @@ def relabel (σ : Equiv.Perm (Fin p))
     constructor
     · intro i
       exact w.nonneg (σ.symm i)
-    · simpa [Equiv.sum_comp] using w.sum_eq_one⟩
+    · simp [Equiv.sum_comp]⟩
 
 @[simp] theorem relabel_apply
     (σ : Equiv.Perm (Fin p)) (w : FoxNeuwirthWeights p) (i : Fin p) :

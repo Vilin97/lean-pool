@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollar
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGlobalCancellation
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RegularApproximationStability
-import Mathlib.LinearAlgebra.Matrix.Reindex
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollar
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGlobalCancellation
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RegularApproximationStability
+public import Mathlib.LinearAlgebra.Matrix.Reindex
 /-!
 # Finite Stokes theorem for explicit relative affine collars
 
@@ -25,6 +27,8 @@ Endpoint identification with the two refined Fox--Neuwirth counts is deliberatel
 this finite Stokes theorem.  It requires the boundary assignment to equal the two supplied stable
 endpoint maps on all frozen horizontal vertices.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -537,7 +541,8 @@ theorem lowerFacetVertexValuePrimeSmul
         A₀.toRegularApproximation.map (C.cells.slotPoint s).spatial :=
       HorizontalVertexFixed.lowerValue B s (by rw [hpoint]; simp [lowerCylinderPoint])
     _ = A₀.toRegularApproximation.map
-        (g • RefinedAffineMap.vertex hp A₀.toRegularApproximation.level q (refinedVertexIndex hp i)) := by
+        (g • RefinedAffineMap.vertex hp A₀.toRegularApproximation.level q (refinedVertexIndex hp
+          i)) := by
       rw [hpoint]
       rfl
     _ = g • A₀.toRegularApproximation.map
@@ -572,7 +577,8 @@ theorem upperFacetVertexValuePrimeSmul
         A₁.toRegularApproximation.map (C.cells.slotPoint s).spatial :=
       HorizontalVertexFixed.upperValue B s (by rw [hpoint]; simp [upperCylinderPoint])
     _ = A₁.toRegularApproximation.map
-        (g • RefinedAffineMap.vertex hp A₁.toRegularApproximation.level q (refinedVertexIndex hp i)) := by
+        (g • RefinedAffineMap.vertex hp A₁.toRegularApproximation.level q (refinedVertexIndex hp
+          i)) := by
       rw [hpoint]
       rfl
     _ = g • A₁.toRegularApproximation.map
@@ -661,7 +667,8 @@ variable (a : Assignment hp C.cells)
 variable (B : EndpointBoundaryFixed hp A₀ A₁ C a)
 include B
 
-/-- Weight of a lower horizontal facet is the refined local index of its prescribed endpoint cell. -/
+/-- Weight of a lower horizontal facet is the refined local index of its prescribed endpoint cell.
+-/
 theorem lower_facetWeight_eq_localIndex
     (q : RefinedAffineMap.TopCell hp A₀.toRegularApproximation.level) :
     C.toFoxNeuwirthRelativeAffineCollar.facetWeight hp a (C.lowerFacet q) =
@@ -678,7 +685,8 @@ theorem lower_facetWeight_eq_localIndex
     A₀.toRegularApproximation.level A₀.toRegularApproximation.map q
     g hvertex haffine
 
-/-- Weight of an upper horizontal facet is the refined local index of its prescribed endpoint cell. -/
+/-- Weight of an upper horizontal facet is the refined local index of its prescribed endpoint cell.
+-/
 theorem upper_facetWeight_eq_localIndex
     (q : RefinedAffineMap.TopCell hp A₁.toRegularApproximation.level) :
     C.toFoxNeuwirthRelativeAffineCollar.facetWeight hp a (C.upperFacet q) =

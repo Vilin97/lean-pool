@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SphereSuspensionTowerFromMV
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SphereSuspensionTowerFromMV
 
 /-!
 # Branch 1 finalization: the unconditional `SphereOrientationPos`
@@ -30,6 +32,8 @@ positive-dimensional `SphereOrientationPos`.
 
 The construction is assembled from the Mayer–Vietoris results.
 -/
+
+@[expose] public section
 
 noncomputable section
 

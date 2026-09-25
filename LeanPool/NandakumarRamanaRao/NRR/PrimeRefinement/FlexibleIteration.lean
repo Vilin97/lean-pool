@@ -3,15 +3,19 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.Iteration
-import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.FlexibleCore
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.Iteration
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.FlexibleCore
 /-!
 # Model-independent prime-refinement iteration
 
 This module repeats only the recursive constructor and final assembly, allowing each prime step to
 carry the compact configuration model supplied by the obstruction proof.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

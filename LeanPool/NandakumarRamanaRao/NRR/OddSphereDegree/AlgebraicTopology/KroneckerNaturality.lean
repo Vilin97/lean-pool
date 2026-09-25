@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.H1ClassifierZMod2
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.H1ClassifierZMod2
 
 /-!
 # Naturality and bijectivity of the Kronecker classifier over `F₂`
@@ -36,6 +38,8 @@ degree-`n` universal coefficient theorem over `F₂` for the library's own singu
 * `kroneckerMap_injective`, `kroneckerMap_bijective`.
 * `kroneckerEquiv X n` — the universal coefficient isomorphism over `F₂`.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology Limits
 

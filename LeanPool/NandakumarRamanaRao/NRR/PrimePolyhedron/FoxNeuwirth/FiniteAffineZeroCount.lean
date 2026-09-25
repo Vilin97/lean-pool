@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexChain
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceZero
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FiniteCells
+
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexChain
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceZero
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FiniteCells
 
 /-!
 # Finite affine zero counts on Fox--Neuwirth incidence cycles
@@ -27,6 +29,8 @@ For the order complex itself, the file defines the explicit alternating incidenc
 that an ordinary simplicial cycle produces a finite incidence cycle.  The later orbit reduction can
 instantiate the same interface with orbit representatives and quotient incidences.
 -/
+
+@[expose] public section
 
 namespace NRR
 

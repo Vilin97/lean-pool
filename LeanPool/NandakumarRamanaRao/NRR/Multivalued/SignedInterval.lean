@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.PhaseInterfaces
+
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.PhaseInterfaces
 
 /-!
 # `NRR.Multivalued.SignedInterval` — the signed interval `[-1, 1]`
@@ -18,6 +20,8 @@ This module provides the endpoint elements (`left`, `center`, `right`), the coor
 `CompactSpace`/`T2Space`/`MetricSpace`/`ConnectedSpace` structures, and the vertical embedding
 `vertical` used to build separator fibers.
 -/
+
+@[expose] public section
 
 namespace NRR
 

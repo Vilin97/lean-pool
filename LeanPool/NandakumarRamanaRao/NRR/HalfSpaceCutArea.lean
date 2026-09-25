@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Analysis.Normed.Lp.MeasurableSpace
-import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.HalfspaceCut
+
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.HalfspaceCut
 
 /-!
 # `NRR.HalfSpaceCutArea` — area of fixed-normal halfspace cuts
@@ -16,6 +18,8 @@ import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.HalfspaceCut
 Defines lower and upper halfspace-cut areas for a planar convex body and proves their basic
 monotonicity and endpoint properties. The compatibility name `cutArea` denotes the lower cut area.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped RealInnerProductSpace

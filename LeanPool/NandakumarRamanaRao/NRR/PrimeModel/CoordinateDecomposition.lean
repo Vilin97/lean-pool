@@ -3,14 +3,19 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ZeroSumAlgebra
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ZeroSumAlgebra
 /-! # Mean/deviation decomposition -/
+
+@[expose] public section
 namespace NRR
 open scoped BigOperators
 variable {n : ℕ}
 
-/-- The linear functional taking the mean of a coordinate vector, with value zero in dimension zero. -/
+/-- The linear functional taking the mean of a coordinate vector, with value zero in dimension zero.
+-/
 noncomputable def coordinateMean (n : ℕ) :
     (Fin n → ℝ) →ₗ[ℝ] ℝ where
   toFun v := (∑ i, v i) / (n : ℝ)

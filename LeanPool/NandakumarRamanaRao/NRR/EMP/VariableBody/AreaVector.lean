@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Basic
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CellAreaContinuity
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CellAreaContinuity
 
 /-!
 # `NRR.EMP.VariableBody.AreaVector` — the variable-body area vector
@@ -21,6 +23,8 @@ an equal-area weight assigns to every cell.
 * `continuous_areaVec` — joint continuity of the area vector in body, sites, and weights.
 * `continuous_targetArea` — continuity of the average area in the parent subbody.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

@@ -3,13 +3,15 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantReferenceCoordinateMap
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CoordinateEquivariance
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceSubdivisionRegular
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteGenericPerturbation
-import Mathlib.Topology.UniformSpace.HeineCantor
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantReferenceCoordinateMap
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CoordinateEquivariance
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceSubdivisionRegular
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteGenericPerturbation
+public import Mathlib.Topology.UniformSpace.HeineCantor
 /-!
 # Zero-free regular affine approximation after iterated subdivision
 
@@ -24,6 +26,8 @@ straight-line homotopy from the original map to the refined affine interpolation
 The perturbation direction is a single global continuous map.  Consequently values agree on every
 shared refined face and prime-symmetry equivariance is preserved.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -85,7 +89,8 @@ theorem exists_common_refinement_oscillation
         ∃ delta : Q → Real, ∀ q, 0 < delta q ∧
           ∀ a b : Delta (p - 1), dist a b < delta q →
             dist ((F.comp (ReferenceAffineOrbitCount.topRepr hp q).realizationContinuousMap) a)
-              ((F.comp (ReferenceAffineOrbitCount.topRepr hp q).realizationContinuousMap) b) < eps := by
+              ((F.comp (ReferenceAffineOrbitCount.topRepr hp q).realizationContinuousMap) b) <
+                eps := by
       refine ⟨fun q => Classical.choose
         ((Metric.uniformContinuous_iff.1 (huc q)) eps heps), ?_⟩
       intro q

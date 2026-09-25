@@ -3,14 +3,16 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.SupportFunction
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeter
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterBasic
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterTransform
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterMonotonicity
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterContinuity
+
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.SupportFunction
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeter
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterBasic
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterTransform
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterMonotonicity
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterContinuity
 
 /-!
 # `NRR.AreaPerimeter` — planar Cauchy perimeter
@@ -21,6 +23,8 @@ for explicitly parameterized convex-body families with jointly continuous angle-
 
 No topology on the type of all convex bodies is assumed.
 -/
+
+@[expose] public section
 
 open NRR
 open scoped RealInnerProductSpace
@@ -54,7 +58,8 @@ theorem perimeter_mono {K L : ConvexBody Plane} (h : (K : Set Plane) ⊆ (L : Se
   NRR.Geometry.planarPerimeter_mono h
 
 /-- **Continuity of perimeter** for a family of convex bodies whose angle-width integrand is
-jointly continuous. There is no metric topology on `Geometry.ConvexBody`; continuity is therefore stated for an
+jointly continuous. There is no metric topology on `Geometry.ConvexBody`; continuity is therefore
+stated for an
 explicit family with a jointly continuous angle-width integrand. -/
 theorem continuous_perimeter_of_angleWidth
     {α : Type*} [TopologicalSpace α]

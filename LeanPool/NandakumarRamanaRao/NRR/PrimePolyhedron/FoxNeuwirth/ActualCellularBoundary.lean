@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ModPOrbitCycle
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteAffineZeroCount
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ModPOrbitCycle
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.FiniteAffineZeroCount
 /-!
 # Actual Fox--Neuwirth top-cell boundary
 
@@ -19,6 +21,8 @@ cardinality of this extension set, multiplied by the chosen orientation of `a`. 
 prime cycle theorem reduces to the concrete shuffle-cardinality statement for codimension-one
 cells.
 -/
+
+@[expose] public section
 
 namespace NRR
 

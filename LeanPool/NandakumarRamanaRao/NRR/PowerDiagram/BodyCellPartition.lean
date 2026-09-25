@@ -3,16 +3,18 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.Defs
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellGeometry
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellOverlap
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
+
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.Defs
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellGeometry
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellOverlap
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
 
 /-!
 # `NRR.PowerDiagram.BodyCellPartition` — partition properties of restricted cells
@@ -34,6 +36,8 @@ The nondegeneracy needed for the null‑overlap statement is `sepNormal s i j �
 No nonemptiness of restricted cells is assumed, no `ConvexPartition` is bundled, and no
 equal‑area properties are proved here.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry MeasureTheory
 

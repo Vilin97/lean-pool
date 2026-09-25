@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.HalfspaceCoefficients
-import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
+
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.HalfspaceCoefficients
+public import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
 
 /-!
 # `NRR.EMP.VariableBody.IndicatorStability` — a.e. stability of cell indicators
@@ -36,6 +38,8 @@ converts to convergence of the indicator.
 This module uses no compactness of `Config n` and no continuity of the normalized weight; it is an
 input to area continuity, not the reverse.
 -/
+
+@[expose] public section
 
 open MeasureTheory Filter Topology
 open NRR NRR.Geometry NRR.Geometry.ConvexBody

@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Basic.Real.Basic
-import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic
+
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.RingTheory.Etale.Weakly
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.TotallySplit
+public import Mathlib.Tactic
 
 /-!
 # Finite generic scalar perturbations
@@ -18,6 +20,8 @@ arbitrarily small positive parameter away from the finitely many determinant roo
 only genericity input needed by the S6 subdivision argument: the perturbation direction is fixed
 globally, so face compatibility and prime equivariance are preserved automatically.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FiniteGenericPerturbation
@@ -69,7 +73,7 @@ theorem determinantPath_ne_zero_of_target
 
 /-- The union of the real root sets of a finite family of nonzero polynomials is finite. -/
 theorem finite_badParameters
-    [Fintype I] (P : I → Real[X]) (hP : ∀ i, P i ≠ 0) :
+    [Finite I] (P : I → Real[X]) (hP : ∀ i, P i ≠ 0) :
     Set.Finite {t : Real | ∃ i, eval t (P i) = 0} := by
   classical
   have hi : ∀ i, Set.Finite (Polynomial.rootSet (P i) Real) :=
@@ -82,7 +86,7 @@ theorem finite_badParameters
 
 /-- Arbitrarily small positive parameters avoid all roots of a finite nonzero polynomial family. -/
 theorem exists_small_positive_avoiding
-    [Fintype I] (P : I → Real[X]) (hP : ∀ i, P i ≠ 0)
+    [Finite I] (P : I → Real[X]) (hP : ∀ i, P i ≠ 0)
     {eps : Real} (heps : 0 < eps) :
     ∃ t : Real, 0 < t ∧ t < eps ∧ ∀ i, eval t (P i) ≠ 0 := by
   classical
@@ -97,7 +101,7 @@ theorem exists_small_positive_avoiding
 
 /-- Simultaneous regularization of a finite family of matrix paths. -/
 theorem exists_small_positive_regular
-    [Fintype I]
+    [Finite I]
     (A B : I → Matrix n n Real)
     (hB : ∀ i, Matrix.det (B i) ≠ 0)
     {eps : Real} (heps : 0 < eps) :

@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableFullCollarRouteBGeometry
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableFullCollarRouteBFacetGeometry
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableFullCollarRouteBGeometry
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableFullCollarRouteBFacetGeometry
 
 /-!
 # Unconditional Route B perturbation on the affine-pullback full collar
@@ -20,6 +22,8 @@ certificate into a positive-radius facet-regular perturbation ball.  The generic
 theorem then produces a small, frozen-boundary-preserving, prime-equivariant perturbation in full
 positive-ray general position while retaining half of the Step 5 origin margin.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

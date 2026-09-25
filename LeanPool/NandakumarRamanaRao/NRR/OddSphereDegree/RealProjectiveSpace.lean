@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Antipodal
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Antipodal
 
 /-!
 # Real projective space as an antipodal quotient
@@ -29,6 +31,8 @@ Implemented here:
  depend only on the quotient relation, not on any covering-space machinery, so
  they live here next to the quotient rather than in `Covering.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

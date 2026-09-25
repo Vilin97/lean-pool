@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Tactic
 
 /-!
 # Finite cancellation kernels for barycentric subdivision
@@ -25,6 +27,8 @@ independent of any singular-chain or face-map API:
 
 No chain-level boundary statement is asserted here.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Finset
@@ -83,7 +87,7 @@ theorem internal_faces_double_sum_cancel
     (hswap_invol : ∀ i, Function.Involutive (swapFor i))
     (hswap_ne : ∀ i a, swapFor i a ≠ a)
     (T : α → ιx → M)
-    (hpair : ∀ i a, T (swapFor i a) i = - T a i) :
+    (hpair : ∀ i a, T (swapFor i a) i = -T a i) :
     (∑ a : α, ∑ i : ιx, T a i) = 0 := by
   classical
   rw [Finset.sum_comm]

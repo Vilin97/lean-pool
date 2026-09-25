@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.FairPartition.Predicates
+
+public import LeanPool.NandakumarRamanaRao.NRR.FairPartition.Predicates
 
 /-!
 # Finite-indexed convex partitions
@@ -13,6 +15,8 @@ The prime-refinement iteration naturally produces nested product index types.  T
 an index-polymorphic version of `ConvexPartition` and a canonical conversion back to the public
 `Fin n`-indexed structure.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

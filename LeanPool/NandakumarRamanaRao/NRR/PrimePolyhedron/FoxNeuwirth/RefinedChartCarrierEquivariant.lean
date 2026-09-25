@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedChartCarrierCore
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CoordinateEquivariance
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedChartCarrierCore
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CoordinateEquivariance
 /-!
 # Equivariant refined-chart carrier compatibility
 
@@ -15,6 +17,8 @@ occurrences.  It is the exact compatibility statement needed by the endpoint-sta
 when two decorated refined charts represent the same global realization point, the corresponding
 affine interpolants of one equivariant sampling map are related by the same decorations.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -105,7 +109,8 @@ theorem simplex_active_vertex_and_coefficient_eq
     (h : s.refinedPoint N rho (StandardSimplex.ofDelta x) =
       t.refinedPoint N sigma (StandardSimplex.ofDelta y))
     (i : Fin p) (hi : 0 < x (maximalCoordinateIndex i)) :
-    s.refinedVertex N rho i = t.refinedVertex N sigma i ∧ y (maximalCoordinateIndex i) = x (maximalCoordinateIndex i) := by
+    s.refinedVertex N rho i = t.refinedVertex N sigma i ∧ y (maximalCoordinateIndex i) = x
+      (maximalCoordinateIndex i) := by
   let u : Delta (p - 1) := affineCompMap (p - 1) N (maximalRefinementWord N rho) x
   let v : Delta (p - 1) := affineCompMap (p - 1) N (maximalRefinementWord N sigma) y
   have hreal :
@@ -197,7 +202,8 @@ theorem simplexValue_eq_of_refinedPoint_eq
   by_cases hwi : w (maximalCoordinateIndex i) = 0
   · have hvi : v (maximalCoordinateIndex i) = 0 := by
       by_contra hvi
-      have hvpos : 0 < v (maximalCoordinateIndex i) := lt_of_le_of_ne (v.nonneg (maximalCoordinateIndex i)) (Ne.symm hvi)
+      have hvpos : 0 < v (maximalCoordinateIndex i) := lt_of_le_of_ne (v.nonneg
+        (maximalCoordinateIndex i)) (Ne.symm hvi)
       have hrev := simplex_active_vertex_and_coefficient_eq hp N
         t s sigma rho (StandardSimplex.toDelta v) (StandardSimplex.toDelta w)
         h.symm i (by
@@ -208,7 +214,8 @@ theorem simplexValue_eq_of_refinedPoint_eq
       change v (maximalCoordinateIndex i) = w (maximalCoordinateIndex i) at heq
       exact heq.trans hwi
     simp [hwi, hvi]
-  · have hwpos : 0 < w (maximalCoordinateIndex i) := lt_of_le_of_ne (w.nonneg (maximalCoordinateIndex i)) (Ne.symm hwi)
+  · have hwpos : 0 < w (maximalCoordinateIndex i) := lt_of_le_of_ne (w.nonneg
+      (maximalCoordinateIndex i)) (Ne.symm hwi)
     have hactive := simplex_active_vertex_and_coefficient_eq hp N
       s t rho sigma (StandardSimplex.toDelta w) (StandardSimplex.toDelta v)
       h i (by

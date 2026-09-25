@@ -3,15 +3,19 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Algebra.Homology.ConcreteCategory
-import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChainComplex
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallChains
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionIter
+
+public import Mathlib.Algebra.Homology.ConcreteCategory
+public import Mathlib.Algebra.Homology.ShortComplex.ModuleCat
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChainComplex
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallChains
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionIter
 
 /-! # Small Chains Homology Surjectivity -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 open SphereOddDegree.AffineBarycentricSubdivision
@@ -86,7 +90,8 @@ theorem smallChainsInclusion_surjective_on_homology
          ModuleCat.hom_comp, LinearMap.comp_apply] at hsd2
     rw [hsd2]
     erw [LinearMap.comp_apply]
-    erw [show ((singularChainComplex R X).d n ((ComplexShape.down ℕ).next n)).hom' c = 0 from hcyc, map_zero]
+    erw [show ((singularChainComplex R X).d n ((ComplexShape.down ℕ).next n)).hom' c = 0 from
+      hcyc, map_zero]
   -- The small cycle.
   set zSmall := (smallChainComplex R X 𝒰).cyclesMk cS ((ComplexShape.down ℕ).next n) rfl hcond
     with hzSmall

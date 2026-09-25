@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopFlagTerminalCancellation
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.PermSignAdjacentSwap
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopFlagTerminalCancellation
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.PermSignAdjacentSwap
 
 /-!
 # Explicit codes and internal pairings for maximal Fox--Neuwirth flags
@@ -30,6 +32,8 @@ subtraction does not make `p - 2 + 1` and `p - 1` definitionally equal, the remo
 uses the explicit reindexing equivalence `eQ hp : Fin (p - 2 + 1) ≃ Fin (p - 1)`, and the
 first-cut labels use `ePp hp : Fin (p - 1 + 1) ≃ Fin p`.
 -/
+
+@[expose] public section
 
 namespace NRR
 

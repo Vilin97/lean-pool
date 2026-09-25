@@ -3,15 +3,15 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChains
-import
-  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionDiameter
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionIter
-import
-  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularSimplexLebesgueNumber
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChains
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionDiameter
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionIter
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularSimplexLebesgueNumber
+public import Mathlib.Tactic
 /-!
 # Each singular simplex eventually becomes small after iterated subdivision
 
@@ -46,6 +46,8 @@ and the whole chain to lie in the small-chain submodule.
 * `exists_iteratedSubdivision_generator_mem_smallChains` — for some `N`,
   `sdᴺ([σ])` lies in `smallChainSubmodule`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Finset
@@ -83,7 +85,7 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
     (k : Fin (n + 1)) :
     (prefixBarycenter n π k).val = stepVertices n (stdVerts n) π k := by
   unfold prefixBarycenter stepVertices;
-  ext j; simp +decide [ SphereOddDegree.FiniteSimplex.map,
+  ext j; simp? +decide [ SphereOddDegree.FiniteSimplex.map,
     SphereOddDegree.FiniteSimplex.barycenter,  stdVerts ];
   unfold FunOnFinite.linearMap; simp +decide [ Finset.mul_sum _ _ _ ];
   simp +decide [ Finsupp.mapDomain, Finsupp.linearEquivFunOnFinite, Pi.single_apply ];
@@ -102,7 +104,7 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
 theorem affineSubdivLinear_stdVerts (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) :
     affineSubdivLinear n π (stdVerts n k) = stepVertices n (stdVerts n) π k := by
-  ext j; simp +decide [ affineSubdivLinear_apply, stdVerts, Pi.single_apply ];
+  ext j; simp? +decide [ affineSubdivLinear_apply, stdVerts, Pi.single_apply ];
   exact congr_fun ( prefixBarycenter_val_eq_stepVertices n π k ) j
 
 /-- Compose the barycentric subdivision linear maps selected by a permutation word. -/
@@ -156,9 +158,11 @@ theorem affineCompMap_succ (n N : ℕ) (ρs : Fin (N + 1) → Equiv.Perm (Fin (n
 
 theorem affineCompMap_coe (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (n + 1))) (x : Delta n) :
     (affineCompMap n N ρs x).val = affineCompLinear n N ρs x.val := by
-  induction' N with N ih generalizing x <;> simp_all +decide [ affineCompMap_succ,
-    affineCompLinear_succ ];
-  rw [ ← affineSubdivLinear_coe ]
+  induction N generalizing x with
+  | zero => simp_all +decide [affineCompMap_succ, affineCompLinear_succ]
+  | succ N ih =>
+    simp_all? +decide [affineCompMap_succ, affineCompLinear_succ]
+    rw [← affineSubdivLinear_coe]
 
 theorem affineCompMap_snoc (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (n + 1)))
     (π : Equiv.Perm (Fin (n + 1))) :

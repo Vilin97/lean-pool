@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CohomologyCupProduct
-import Mathlib.Algebra.Module.Injective
-import Mathlib.Algebra.Category.ModuleCat.Injective
-import Mathlib.RingTheory.Ideal.Lattice
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CohomologyCupProduct
+public import Mathlib.Algebra.Module.Injective
+public import Mathlib.Algebra.Category.ModuleCat.Injective
+public import Mathlib.RingTheory.Ideal.Lattice
 
 /-!
 # The Kronecker (evaluation) classifier `Hⁿ(X; F₂) → Hom(Hₙ(X; F₂), F₂)`
@@ -59,6 +61,8 @@ the precise remaining input toward *inverting* the classifier (and thereby
 producing a class `α ∈ H¹(RPⁿ; F₂)` from the monodromy character, together with a
 degree-one Hurewicz comparison `π₁(X)ᵃᵇ ≅ H₁(X; ℤ)`).
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology Limits
 

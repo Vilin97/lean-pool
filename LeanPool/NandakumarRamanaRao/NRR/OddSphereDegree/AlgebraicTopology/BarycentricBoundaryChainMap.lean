@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryCancellation
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryCancellation
+public import Mathlib.Tactic
 
 /-!
 # Chain-level barycentric boundary commutation `∂ ∘ sd = sd ∘ ∂`
@@ -36,6 +38,8 @@ permutations. The commutation identity below relates
 `barycentricSubdivisionLinearMap R X (n+1) ≫ singularBoundary R X n` with
 `singularBoundary R X n ≫ barycentricSubdivisionLinearMap R X n`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
@@ -81,7 +85,7 @@ theorem barycentricSubdivisionLinearMap_commutes_boundary
     intro x
     have hf := f.hom.map_smul x (1 : R)
     have hg := g.hom.map_smul x (1 : R)
-    simp at hf hg
+    simp? at hf hg
     rw [hf, hg, h]
   apply hval
   -- Reduce (ι σ ≫ f).hom 1 to f.hom (chainGenerator σ) via erw to handle
@@ -105,7 +109,8 @@ theorem boundary_barycentricSubdivision_apply
     (barycentricSubdivisionLinearMap R X n).hom
         ((singularBoundary R X n).hom c) := by
   have h := barycentricSubdivisionLinearMap_commutes_boundary R X n
-  have := congrArg (fun (m : singularChainGroup R X (n + 1) ⟶ singularChainGroup R X n) => m.hom c) h
+  have := congrArg (fun (m : singularChainGroup R X (n + 1) ⟶ singularChainGroup R X n) => m.hom
+    c) h
   simp only [ModuleCat.hom_comp, LinearMap.comp_apply] at this
   exact this
 

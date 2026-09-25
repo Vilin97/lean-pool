@@ -3,13 +3,15 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.GroupTheory.Index
-import Mathlib.Topology.Algebra.Order.Support
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.PrimeOrbitCycle
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceZero
+
+public import Mathlib.GroupTheory.Index
+public import Mathlib.Topology.Algebra.Order.Support
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.PrimeOrbitCycle
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceZero
 /-!
 # The explicit reference affine orbit count
 
@@ -29,6 +31,8 @@ single sufficiently small positive perturbation preserves all determinant signs.
 regular affine reference map whose orbit zero count is the previously computed nonzero value
 `FoxNeuwirth.referenceSignedOrbitCount p`.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -390,7 +394,7 @@ theorem selected_stageBlock_sum_rank
     induction m with
     | zero =>
         intro hm
-        simp [stageBlock, selectedCode]
+        simp? [stageBlock, selectedCode]
         change 0 = 0
         rfl
     | succ m ih =>
@@ -666,9 +670,8 @@ theorem selectedSimplex_smul
         (stageRank (selectedCode sigma) (stageIndex hp i) (tau.symm x)).1 <
           (stageRank (selectedCode sigma) (stageIndex hp i) (tau.symm y)).1
     rw [stageRank_lt_iff, stageRank_lt_iff]
-    congr 1;
-      simp [stageKey, stageBlock, selectedCode, sigma', tau, retainedBars,
-        removedBefore]
+    simp [stageKey, stageBlock, selectedCode, sigma', tau, retainedBars,
+      removedBefore]
     rfl
   · rfl
 
@@ -818,7 +821,7 @@ theorem continuous_determinant_mapAt
 /-- A finite family of continuous nonzero values at zero has a common positive neighborhood on
 which every sign is unchanged. -/
 theorem exists_common_positive_sign_neighborhood
-    {ι : Type*} [Fintype ι]
+    {ι : Type*} [Finite ι]
     (f : ι → Real → Real)
     (hf : ∀ i, Continuous (f i))
     (h0 : ∀ i, f i 0 ≠ 0) :
@@ -1462,7 +1465,7 @@ theorem localZeroIndex_toSimplex
           have hodd : Odd p := hp.odd_of_ne_two h2
           rcases hodd with ⟨m, rfl⟩
           exact ⟨m, by omega⟩
-        simpa [Even.neg_one_pow heven]
+        simp [Even.neg_one_pow heven]
     calc
       AffineVertexMap.determinantIndex (p := p)
           ((referenceMap hp).determinant (toSimplex hp z)) =
@@ -1551,7 +1554,7 @@ noncomputable def selectedOrbitEquivTopSupport
     have hselected : IsSelected hp (g⁻¹ • selectedFlagOfTopCell hp c) := by
       rcases c with ⟨c, hc⟩
       refine ⟨((PrimeSymmetry.toPerm p g⁻¹).symm.trans c.rank), ?_⟩
-      simpa [selectedFlagOfTopCell, selectedSimplex_smul]
+      simp [selectedFlagOfTopCell, selectedSimplex_smul]
     have hd : p - 2 + 1 = p - 1 := by have := hp.two_le; omega
     have hgcast :
         g • topRepr hp (toTop (Quotient.mk'' c)) =

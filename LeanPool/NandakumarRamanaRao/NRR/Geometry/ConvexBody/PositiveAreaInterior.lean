@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Analysis.Normed.Affine.AddTorsorBases
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
+
+public import Mathlib.Analysis.Normed.Affine.AddTorsorBases
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
 /-!
 # `NRR.Geometry.ConvexBody` — positive area implies nonempty interior
 
@@ -20,9 +22,12 @@ span strictly smaller than the whole plane
 (`NRR.Halfspace.hyperplane_null`, the project), so the set has zero area, contradicting
 positivity.
 
-The compactness hypothesis is retained on the public statements for a uniform public interface; it is not actually needed for the proof (only convexity and
+The compactness hypothesis is retained on the public statements for a uniform public interface; it
+is not actually needed for the proof (only convexity and
 finite-dimensionality of the plane are used).
 -/
+
+@[expose] public section
 
 open scoped RealInnerProductSpace
 open MeasureTheory

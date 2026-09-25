@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Basic
-import Mathlib.Analysis.Normed.Module.Ball.Action
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Basic
+public import Mathlib.Analysis.Normed.Module.Ball.Action
 
 /-!
 # Antipodal map API
@@ -20,6 +22,8 @@ orientation/determinant facts about the ambient linear map `x ↦ -x` (which
 belong to the topological-degree support layer, not the point-set foundation)
 live in `Degree.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionZeroFreeApproximation
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CoordinateEquivariance
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ChildTestMap
-import Mathlib.Topology.Homotopy.Basic
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.SubdivisionZeroFreeApproximation
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CoordinateEquivariance
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ChildTestMap
+public import Mathlib.Topology.Homotopy.Basic
 
 /-!
 # Equivariant zero-free coordinate homotopies
@@ -20,6 +22,8 @@ The crucial distinction is between avoiding the origin in the full coordinate re
 avoiding zero only in the deviation representation.  The projected simultaneous-child-zero set is
 exactly the locus where the full coordinate map meets the origin.
 -/
+
+@[expose] public section
 
 namespace NRR
 

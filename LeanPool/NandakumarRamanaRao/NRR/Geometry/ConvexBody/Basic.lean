@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Analysis.Convex.Basic
-import Mathlib.Basic.Real.Basic
-import Mathlib.Tactic
-import Mathlib.Topology.Closure
+
+public import Mathlib.Analysis.Convex.Basic
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Tactic
+public import Mathlib.Topology.Closure
 
 /-!
 # `NRR.Geometry.ConvexBody` — bundled compact convex bodies with nonempty interior
@@ -56,6 +58,8 @@ Following the library-wide policy fixed in `AI_CONTEXT.md`, this file
 uses the whole-library `import Mathlib`. The concrete dependencies are lightweight
 (`Convex`, `IsCompact`, `interior`, `Set` membership/extensionality).
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

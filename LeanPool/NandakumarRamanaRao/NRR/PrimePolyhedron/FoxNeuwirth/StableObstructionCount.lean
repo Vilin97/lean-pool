@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceZeroFreeMaps
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismStableRelativeBoundary
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ReferenceZeroFreeMaps
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismStableRelativeBoundary
 /-!
 # Stable homotopy-invariant positive-ray obstruction
 
@@ -21,6 +23,8 @@ approximation.  The reference-specific input is packaged as
 nonzero orbit count.  This obligation is strictly smaller than, and does not imply, the invalid raw
 homotopy-invariance proposition.
 -/
+
+@[expose] public section
 
 namespace NRR
 

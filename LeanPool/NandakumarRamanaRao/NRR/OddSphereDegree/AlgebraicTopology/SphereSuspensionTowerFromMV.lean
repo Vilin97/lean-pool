@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SphereHomologyS1BaseMV
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomologyReduction
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SphereHomologyS1BaseMV
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomologyReduction
 
 /-!
 # Branch 1 assembly: the unconditional `SphereSuspensionTower`
@@ -26,6 +28,8 @@ import this file and use `sphereSuspensionTowerFromMV` (or its aliases) to obtai
 /-! # Sphere Suspension Tower From MV -/
 the full positive-dimensional sphere top-homology family and orientation data.
 -/
+
+@[expose] public section
 
 open CategoryTheory
 

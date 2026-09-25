@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBSmallGenericPerturbation
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBSelectedVectorBlock
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBSmallGenericPerturbation
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBSelectedVectorBlock
 
 /-!
 # Realizing local facet witnesses with frozen boundary parameters
@@ -15,6 +17,8 @@ assignment at frozen vertices.  Injectivity of the local scalar-parameter map th
 that target by one global movable-parameter assignment.  This is the algebraic adapter used by the
 concrete endpoint-stack facet witnesses.
 -/
+
+@[expose] public section
 
 namespace NRR
 open FoxNeuwirthOrderComplex

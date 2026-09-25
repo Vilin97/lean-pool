@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import Mathlib.Topology.Metrizable.Uniformity
+
+public import Mathlib.Tactic
+public import Mathlib.Topology.Metrizable.Uniformity
 
 /-!
 # `NRR.Representation.ZeroSum` — zero-sum real-valued target type (public API)
@@ -20,6 +22,8 @@ This module keeps `ZeroSum` minimal: it does *not* introduce representation sphe
 obstruction theory, or quotient spaces, and it does not make `AddCommGroup`/`Module`
 structure mandatory.
 -/
+
+@[expose] public section
 
 namespace NRR
 

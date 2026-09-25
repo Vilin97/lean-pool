@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableExactRelativeCollarConstructionAffinePullback
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableExactRelativeCollarConstructionAffinePullback
 
 /-!
 # Stable homotopy invariance from the exact affine-pullback collar
@@ -14,6 +16,8 @@ Step 4 and Route B identifies the stable zero counts of any two endpoint approxi
 zero-free equivariant homotopy.  The pointwise equality is then packaged into the project-level
 `StableHomotopyInvarianceTheorem` interface.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

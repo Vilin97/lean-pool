@@ -3,11 +3,15 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.HumanVerification.Transfer
-import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.Theorem
+
+public import LeanPool.NandakumarRamanaRao.HumanVerification.Transfer
+public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.Theorem
 
 /-! # Equal Area Equal Perimeter Partition Wrapper -/
+
+@[expose] public section
 
 open Set MeasureTheory
 

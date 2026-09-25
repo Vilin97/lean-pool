@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Continuous
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Basic
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Topology
+
+public import Mathlib.Analysis.InnerProductSpace.Continuous
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Topology
 
 /-!
 # `NRR.Geometry.ConvexBody` — the support function
@@ -42,6 +44,8 @@ Following the library-wide policy, `Basic.lean` already pulls in `import Mathlib
 imports are required here. The decisive Mathlib results used are `IsCompact.exists_isMaxOn`,
 `IsGreatest.csSup_eq`, `le_csSup`, `csSup_le`, and continuity of the inner product.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

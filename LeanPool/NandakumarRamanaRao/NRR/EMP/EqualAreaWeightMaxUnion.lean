@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.CategoryTheory.Countable
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightCellRigidity
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCellPartition
+
+public import Mathlib.CategoryTheory.Countable
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightCellRigidity
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCellPartition
 
 /-!
 # `NRR.EMP.EqualAreaWeightMaxUnion` — the maximal-difference clopen argument
@@ -24,6 +26,8 @@ maximal.
 This supplies the global propagation step needed for uniqueness of equal-area weights without
 introducing a separate adjacency graph for the power diagram.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry MeasureTheory
 

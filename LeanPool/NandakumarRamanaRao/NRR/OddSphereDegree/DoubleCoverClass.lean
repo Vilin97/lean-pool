@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Monodromy
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.InducedOnRPCohomology
-import Mathlib.GroupTheory.Perm.Sign
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.Monodromy
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.InducedOnRPCohomology
+public import Mathlib.GroupTheory.Perm.Sign
 /-!
 # The canonical `ZMod 2` monodromy class of the double cover `S^n → RP n`
 
@@ -64,6 +66,8 @@ therefore stops exactly at the last formalized object before `α`, plus the
  `classifyingHom n (fbar x) ∘ (π₁ map fbar) = classifyingHom n x`. This is the
  fundamental-group form of the eventual `fbar^*(α) = α`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -229,7 +233,8 @@ two-element fibre over `x`, composed with the permutation parity into
 sheets of the cover.
 
 This is the genuine covering-theoretic datum from which the canonical class
-`α ∈ H¹(RP n; F₂)` is obtained, via a degree-one cohomological classifier `H¹(X; F₂) ≅ Hom(π₁(X)ᵃᵇ, F₂)`. It is a proved homomorphism out of `π₁(RP n, x)`. -/
+`α ∈ H¹(RP n; F₂)` is obtained, via a degree-one cohomological classifier `H¹(X; F₂) ≅ Hom(π₁(X)ᵃᵇ,
+F₂)`. It is a proved homomorphism out of `π₁(RP n, x)`. -/
 noncomputable def classifyingHom (n : ℕ) (x : RP n) :
     FundamentalGroup (RP n) x →* Multiplicative (ZMod 2) :=
   permToZMod2.comp (projMonodromyHom n x)

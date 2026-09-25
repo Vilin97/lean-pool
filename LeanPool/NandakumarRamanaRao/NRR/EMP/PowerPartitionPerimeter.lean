@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.EMP.PartitionFromPowerDiagram
-import LeanPool.NandakumarRamanaRao.NRR.Partition.PerimeterVector
+
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.PartitionFromPowerDiagram
+public import LeanPool.NandakumarRamanaRao.NRR.Partition.PerimeterVector
 
 /-!
 # `NRR.EMP.PowerPartitionPerimeter` — perimeter vector of the canonical power partition
@@ -30,6 +32,8 @@ The power-partition parameter profile is the one fixed in the project:
 
 No continuity, equivariance, or test-map material is introduced here.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

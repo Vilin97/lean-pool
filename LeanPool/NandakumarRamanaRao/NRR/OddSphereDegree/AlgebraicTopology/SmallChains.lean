@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallSimplices
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallSimplices
 
 /-!
 # The subcomplex of `𝒰`-small singular chains
@@ -35,6 +37,8 @@ lemma `IsSmallSimplex.face` from the small-simplex file. Together these results
 are exactly what is needed to assemble the small singular chains into a
 subcomplex of the singular chain complex.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 open SphereOddDegree.AffineBarycentricSubdivision

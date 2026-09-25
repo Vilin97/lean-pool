@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineBarycentricSubdivision
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineBarycentricSubdivision
 
 /-!
 # Internal-swap barycenter lemmas for barycentric subdivision
@@ -21,6 +23,8 @@ barycenter except the deleted `i`-th one is unchanged after replacing `π` by
 The proof is deliberately stated in terms of reindexing of the prefix domain;
 this is the right form for the later face-map proof.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Finset
@@ -45,9 +49,10 @@ theorem stdSimplex_map_barycenter_equiv (e : X ≃ Y) [Nonempty X] [Nonempty Y] 
   funext y
   -- `SphereOddDegree.FiniteSimplex.map` is `FunOnFinite.linearMap`; for an equivalence each fiber
   -- has exactly one point, namely `e.symm y`.
-  convert congr_arg ( fun f => f y ) ( SphereOddDegree.FiniteSimplex.map_coe e SphereOddDegree.FiniteSimplex.barycenter ) using 1; simp +decide [ SphereOddDegree.FiniteSimplex.barycenter ];
-  simp +decide [ FunOnFinite.linearMap, Fintype.card_congr e ];
-  rfl
+  convert congr_arg ( fun f => f y ) ( SphereOddDegree.FiniteSimplex.map_coe e
+    SphereOddDegree.FiniteSimplex.barycenter ) using 1; simp +decide [
+    SphereOddDegree.FiniteSimplex.barycenter ];
+  simp +decide [ FunOnFinite.linearMap, Fintype.card_congr e ]
 
 /-- If two maps out of the prefix domain differ only by a permutation of that
  domain, then the corresponding prefix barycenters are equal. -/
@@ -106,12 +111,14 @@ theorem prefixVertex_internal_swap_reindex {n : ℕ}
           prefixVertex (n + 1)
             ((Equiv.swap (Fin.castSucc i) (Fin.succ i)).trans π) k (e t) := by
   classical
-  rcases lt_trichotomy k.val i.val with ( hk_lt | hk_eq | hk_gt ) <;> simp_all +decide [ prefixVertex ];
-  · refine' ⟨ Equiv.refl _, _ ⟩; simp +decide [ Equiv.swap_apply_def ];
+  rcases lt_trichotomy k.val i.val with ( hk_lt | hk_eq | hk_gt ) <;> simp_all? +decide [
+    prefixVertex ];
+  · refine ⟨ Equiv.refl ?_, ?_ ⟩; simp +decide [ Equiv.swap_apply_def ];
     grind;
   · exact False.elim <| hk <| Fin.ext hk_eq;
   · use Equiv.swap ⟨i.val, by omega⟩ ⟨i.val + 1, by omega⟩;
-    intro t; by_cases h : t.val = i.val <;> by_cases h' : t.val = i.val + 1 <;> simp_all +decide [ Fin.ext_iff, Equiv.swap_apply_def ];
+    intro t; by_cases h : t.val = i.val <;> by_cases h' : t.val = i.val + 1 <;> simp_all +decide
+      [ Fin.ext_iff, Equiv.swap_apply_def ];
 
 /-- Prefix barycenters are unchanged by the internal adjacent swap, except at
  the deleted prefix index itself.

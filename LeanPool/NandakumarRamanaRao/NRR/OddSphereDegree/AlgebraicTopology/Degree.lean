@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.TopCatBridge
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularHomologyFunctorAPI
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.HomotopyInvariance
-import Mathlib.LinearAlgebra.Determinant
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.TopCatBridge
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularHomologyFunctorAPI
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.HomotopyInvariance
+public import Mathlib.LinearAlgebra.Determinant
 
 /-!
 # Topological degree relative to a sphere orientation
@@ -19,6 +21,8 @@ after choosing an isomorphism from top homology to `ℤ`. The resulting
 chosen orientation isomorphism. Unconditional orientation data is supplied by
 later sphere-homology modules.
 -/
+
+@[expose] public section
 noncomputable section
 
 open CategoryTheory

@@ -3,20 +3,22 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SphereHomologyMVStep
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularH0PathConnected
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.MayerVietoris
-import Mathlib.Algebra.AffineMonoid.Basic
-import Mathlib.Algebra.Category.FGModuleCat.Colimits
-import Mathlib.Algebra.Category.ModuleCat.Projective
-import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.PicardGroup
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic
-import Mathlib.Topology.Separation.Lemmas
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SphereHomologyMVStep
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularH0PathConnected
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.MayerVietoris
+public import Mathlib.Algebra.AffineMonoid.Basic
+public import Mathlib.Algebra.Category.FGModuleCat.Colimits
+public import Mathlib.Algebra.Category.ModuleCat.Projective
+public import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.PicardGroup
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.TotallySplit
+public import Mathlib.Tactic
+public import Mathlib.Topology.Separation.Lemmas
 /-!
 # Mayer–Vietoris base case: `H₁(S¹; ℤ) ≅ ℤ`
 
@@ -38,6 +40,8 @@ zeroth homology `H_tilde₀(S⁰) ≅ ℤ`.
 The result `sphereTopHomologyIsoOne : SphereTopHomologyIso 1` supplies the
 `base` field of `SphereSuspensionTower`.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology Limits TopologicalSpace
 open SphereOddDegree.AffineBarycentricSubdivision
@@ -116,17 +120,17 @@ theorem ker_linearEquiv_int_of_finrank_two {M : Type} [AddCommGroup M] [Module �
 `S⁰` has exactly two points.
 -/
 theorem sphere0_equiv_fin2 : Nonempty (Sphere 0 ≃ Fin 2) := by
-  refine' ⟨ _ ⟩;
-  refine' Equiv.ofBijective ( fun x => if x = ⟨ EuclideanSpace.single 0 1, by
-    norm_num [ EuclideanSpace.norm_eq ] ⟩ then 0 else 1 ) ⟨ _, _ ⟩;
+  refine ⟨ ?_ ⟩;
+  refine Equiv.ofBijective (fun x => if x = ⟨EuclideanSpace.single 0 1, by
+    norm_num [EuclideanSpace.norm_eq]⟩ then 0 else 1) ⟨?_, ?_⟩
   · intro x y hxy;
     cases sphere_zero_eq_or_neg x ⟨ EuclideanSpace.single 0 1, by
       norm_num [ EuclideanSpace.norm_eq ] ⟩ <;> cases sphere_zero_eq_or_neg y ⟨
         EuclideanSpace.single 0 1, by
       norm_num [ EuclideanSpace.norm_eq ] ⟩ <;> aesop;
   · intro x;
-    fin_cases x <;> simp +decide;
-    refine' ⟨ EuclideanSpace.single 0 ( -1 ), _, _ ⟩ <;> norm_num;
+    fin_cases x <;> simp? +decide;
+    refine ⟨ EuclideanSpace.single 0 ( -1 ), ?_, ?_ ⟩ <;> norm_num;
     exact ne_of_apply_ne ( fun x => x 0 ) ( by norm_num )
 
 /-
@@ -136,7 +140,7 @@ theorem h0_sphere0_free_finrank :
     Module.Free ℤ ((singularChainComplex ℤ (TopCat.of (Sphere 0))).homology 0) ∧
     Module.Finite ℤ ((singularChainComplex ℤ (TopCat.of (Sphere 0))).homology 0) ∧
     Module.finrank ℤ ((singularChainComplex ℤ (TopCat.of (Sphere 0))).homology 0) = 2 := by
-  refine' ⟨ _, _, _ ⟩;
+  refine ⟨ ?_, ?_, ?_ ⟩;
   · have := AlgebraicTopology.singularHomologyFunctorZeroOfTotallyDisconnectedSpace ( ModuleCat
       ℤ ) ( ModuleCat.of ℤ ℤ ) ( TopCat.of ( Sphere 0 ) );
     have := this.toLinearEquiv;
@@ -153,7 +157,7 @@ theorem h0_sphere0_free_finrank :
       change (singularChainComplex ℤ (TopCat.of (Sphere 0))).homology 0 ≅ _ at hi
       exact hi ≪≫ ModuleCat.coprodIsoDirectSum _
     convert LinearEquiv.finrank_eq ( h_iso.toLinearEquiv ) using 1;
-    simp +decide [ Module.finrank ];
+    simp? +decide [ Module.finrank ];
     rw [ Cardinal.mk_congr e ]; norm_num
 
 /-
@@ -169,7 +173,7 @@ theorem reducedH0_sphere0_iso :
     (ModuleCat.Hom.hom (H0aug (TopCat.of (Sphere 0)))) (surjective_H0aug _)
   -- Use the isomorphism from the kernel to the integers to construct the desired isomorphism.
   apply Nonempty.intro;
-  refine' CategoryTheory.Iso.trans _ ( LinearEquiv.toModuleIso e );
+  refine CategoryTheory.Iso.trans ?_ ( LinearEquiv.toModuleIso e );
   convert ModuleCat.kernelIsoKer _;
   exact Subsingleton.elim _ _
 
@@ -357,7 +361,7 @@ theorem sphereH1_iso_kerF0 :
     have := ( mvShortExact ℤ circU circV circUV_top ).homology_exact₃ 1 0 ( by
       simp [ ComplexShape.down_Rel ] );
     convert this.mono_g;
-    simp +decide [  ];
+    simp? +decide [  ];
     exact Or.inl ( hδ_mono.eq_of_src _ _ );
   have hexact := (mvShortExact ℤ circU circV circUV_top).homology_exact₁ 1 0
     (by simp [ComplexShape.down_Rel])

@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismNonhorizontalCancellation
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismNonhorizontalCancellation
 /-!
 # Horizontal endpoint identification for the refined equivariant prism
 
@@ -14,6 +16,8 @@ nonhorizontal contributions, and the nonhorizontal term has been shown to vanish
 reindexes each horizontal contribution as the positive-ray count on the corresponding endpoint
 triangulation.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -617,9 +621,9 @@ theorem lowerHorizontalContribution_eq_neg_lowerEndpointRefinedCount
     have hlower (sigma : Delta p → Realization (p + 1)) :
         realizedFacetWeight hp N L a (lowerEndpointMap sigma) =
           realizedFacetWeight hp N L a (fun x => (sigma x, ⟨0, by constructor <;> norm_num⟩)) := rfl
-    simp [lowerEndpointRefinedCount, endpointSpatialMap_succ,  hlower,
-
+    simp [lowerEndpointRefinedCount, endpointSpatialMap_succ, hlower,
       subdivisionSign]
+    rfl
 /-- The upper horizontal contribution is the refined upper endpoint count. -/
 theorem upperHorizontalContribution_eq_upperEndpointRefinedCount
     (hp : Nat.Prime p) (N L : Nat) (a : Assignment hp N L) :
@@ -711,9 +715,9 @@ theorem upperHorizontalContribution_eq_upperEndpointRefinedCount
     have hupper (sigma : Delta p → Realization (p + 1)) :
         realizedFacetWeight hp N L a (upperEndpointMap sigma) =
           realizedFacetWeight hp N L a (fun x => (sigma x, ⟨1, by constructor <;> norm_num⟩)) := rfl
-    simp [upperEndpointRefinedCount, endpointSpatialMap_succ,  hupper,
-
+    simp [upperEndpointRefinedCount, endpointSpatialMap_succ, hupper,
       subdivisionSign]
+    rfl
 
 /-- Horizontal balance identifies the two refined endpoint counts represented by any compatible
 assignment. -/
@@ -728,7 +732,7 @@ theorem lowerEndpointRefinedCount_eq_upperEndpointRefinedCount
     EquivariantPrismNonhorizontalCancellation.nonhorizontalContribution_eq_zero_core
       hp N L a
   have hbalance :=
-    EquivariantPrismGlobalCancellation.lowerHorizontalContribution_eq_neg_upper_of_nonhorizontal_eq_zero
+    lowerHorizontalContribution_eq_neg_upper_of_nonhorizontal_eq_zero
       hp N L a hgp hside
   rw [lowerHorizontalContribution_eq_neg_lowerEndpointRefinedCount,
     upperHorizontalContribution_eq_upperEndpointRefinedCount] at hbalance
@@ -742,7 +746,7 @@ theorem Result.lowerEndpointRefinedCount_eq_upperEndpointRefinedCount
     (m : Real) (R : Result hp N L H m) :
     lowerEndpointRefinedCount hp N L R.assignment =
       upperEndpointRefinedCount hp N L R.assignment :=
-  EquivariantPrismHorizontalEndpointIdentification.lowerEndpointRefinedCount_eq_upperEndpointRefinedCount
+  lowerEndpointRefinedCount_eq_upperEndpointRefinedCount
     hp N L R.assignment R.generalPosition
 
 end EquivariantPrismHorizontalEndpointIdentification

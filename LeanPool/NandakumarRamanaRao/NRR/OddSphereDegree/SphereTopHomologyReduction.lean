@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomology
-import Mathlib.Algebra.Category.ModuleCat.Products
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomology
+public import Mathlib.Algebra.Category.ModuleCat.Products
 
 /-!
 # Sphere top homology from a suspension tower
@@ -15,6 +17,8 @@ The `n = 0` obstruction is recorded explicitly because `S⁰` has two connected 
 concrete suspension tower and the resulting unconditional orientation are constructed in the
 Mayer--Vietoris sphere-homology modules.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 
@@ -147,10 +151,13 @@ theorem card_topCatSphere_zero :
   -- The sphere of dimension 0 is just two points, so its cardinality is 2.
   have h_card : Nat.card (Sphere 0) = 2 := by
     rw [ Nat.card_eq_two_iff ];
-    refine' ⟨ ⟨ EuclideanSpace.single 0 1, _ ⟩, ⟨ -EuclideanSpace.single 0 1, _ ⟩, _, _ ⟩ <;> norm_num [ Set.ext_iff ];
+    refine ⟨ ⟨ EuclideanSpace.single 0 1, ?_ ⟩, ⟨ -EuclideanSpace.single 0 1, ?_ ⟩, ?_, ?_ ⟩ <;>
+      norm_num [ Set.ext_iff ];
     · exact ne_of_apply_ne ( fun x => x 0 ) ( by norm_num );
-    · intro a ha; rw [ EuclideanSpace.norm_eq ] at ha; simp_all +decide [ Fin.eq_zero ];
-      exact Or.imp ( fun h => by ext i; fin_cases i; aesop ) ( fun h => by ext i; fin_cases i; aesop ) ha;
+    · intro a ha; rw [ EuclideanSpace.norm_eq ] at ha; simp_all? +decide [ Fin.eq_zero ];
+      exact Or.imp ( fun h => by
+        ext i; fin_cases i; aesop ) ( fun h => by
+        ext i; fin_cases i; aesop ) ha;
   convert h_card using 1;
   fapply Nat.card_congr;
   exact ( topCatSphereHomeomorph 0 ).toEquiv

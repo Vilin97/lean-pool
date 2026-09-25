@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexRealization
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FiniteCells
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrderComplexRealization
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FiniteCells
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
 
 /-!
 # Barycentric subdivision charts for the Fox--Neuwirth order complex
@@ -20,6 +22,8 @@ A strict chain `s : Simplex p d` gives a canonical affine chart from the standar
 global barycentric carrier.  Precomposing this chart with an iterated affine subdivision map gives
 the refined simplex charts used in the S6 approximation theorem.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -106,7 +110,8 @@ noncomputable def realizationPoint
 /-- A chart sends a standard vertex to the corresponding realization vertex. -/
 theorem realizationPoint_vertex
     (s : Simplex p d) (i : Fin (d + 1)) :
-    s.realizationPoint (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) =
+    s.realizationPoint (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S :=
+      Real) i)) =
       Realization.vertex (s i) := by
   apply Realization.ext
   intro c

@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Nice
+
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Nice
 
 /-!
 # `NRR.Multivalued.ZeroSet` — zero sets, fibers, and existence of zeros
@@ -19,6 +21,8 @@ observable is strictly negative at the left endpoint and strictly positive at th
 and the signed interval is connected, so the continuous image contains `0`. No zero selector is
 introduced; only existence is proved. Zeros never occur at either endpoint, by the strict signs.
 -/
+
+@[expose] public section
 
 namespace NRR
 

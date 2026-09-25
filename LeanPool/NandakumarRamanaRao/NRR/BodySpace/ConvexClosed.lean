@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Tactic
-import Mathlib.Topology.MetricSpace.Closeds
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Topology
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Tactic
+public import Mathlib.Topology.MetricSpace.Closeds
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Topology
 
 /-!
 # Closedness of convexity in the Hausdorff hyperspace
@@ -29,6 +31,8 @@ Convexity of a limit set (`convex_limit_of_tendsto`) then follows by approximati
 endpoints of a segment and passing the convex combinations to the limit; closedness
 (`isClosed_convex_nonemptyCompacts`) is the sequential packaging of this fact.
 -/
+
+@[expose] public section
 
 open MeasureTheory Metric Filter Topology EMetric
 

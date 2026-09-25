@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepCells
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointFaceRefinement
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionOneStepCells
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointFaceRefinement
 /-!
 # Endpoint facets of the one-step relative subdivision cylinder
 
@@ -18,6 +20,8 @@ barycentric subdivision, indexed by level-`N + 1` top cells.  The definitions ar
 quotient-facet level, while the geometric theorems are stated for arbitrary representatives of the
 canonical occurrences.  The signed boundary formula is supplied in the following module.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -149,7 +153,8 @@ noncomputable def upperFacet
 /-- The canonical lower occurrence lies entirely in the time-zero boundary. -/
 theorem lowerOccurrence_isLower
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp N) :
-    (RelativeSubdivisionOneStepCells.cellSystem hp N).IsLowerFacetOccurrence (lowerOccurrence hp N q) := by
+    (RelativeSubdivisionOneStepCells.cellSystem hp N).IsLowerFacetOccurrence (lowerOccurrence hp
+      N q) := by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (ne_of_gt hp.pos)
   intro i
   simp [lowerOccurrence, RelativeSubdivisionOneStepCells.cellSystem,
@@ -175,7 +180,8 @@ theorem upperOccurrenceBase_isUpper
 /-- The canonical upper occurrence indexed by a refined top cell is horizontal at time one. -/
 theorem upperOccurrence_isUpper
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp (N + 1)) :
-    (RelativeSubdivisionOneStepCells.cellSystem hp N).IsUpperFacetOccurrence (upperOccurrence hp N q) := by
+    (RelativeSubdivisionOneStepCells.cellSystem hp N).IsUpperFacetOccurrence (upperOccurrence hp
+      N q) := by
   let data := splitTopCellEquiv hp N q
   change (RelativeSubdivisionOneStepCells.cellSystem hp N).IsUpperFacetOccurrence
     (upperOccurrenceBase hp N data.1 data.2)
@@ -233,7 +239,8 @@ theorem refinedChart_snoc_vertex
 theorem upperOccurrenceBase_facetSignature
     (hp : Nat.Prime p) (N : Nat)
     (q : TopCell hp N) (pi : Equiv.Perm (Fin p)) (i : Fin p) :
-    (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature (upperOccurrenceBase hp N q pi) i =
+    (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature (upperOccurrenceBase hp N q
+      pi) i =
       upperCylinderPoint
         (RefinedAffineMap.vertex hp (N + 1) (q.1, Fin.snoc q.2 pi)
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
@@ -285,7 +292,8 @@ theorem lowerOccurrence_exhaustive
         RelativeSubdivisionOneStepCells.localWeight,
         RelativeSubdivisionCylinderCombinatorics.chart_vertex, CylinderPoint.ofProd]
         using ho i
-    rcases RelativeSubdivisionCylinderCombinatorics.lowerFacet_classification n r j hlocal with ⟨hr, hj⟩
+    rcases RelativeSubdivisionCylinderCombinatorics.lowerFacet_classification n r j hlocal with
+      ⟨hr, hj⟩
     subst r
     subst j
     exact ⟨q, rfl⟩

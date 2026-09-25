@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarCircle
+
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarCircle
 
 /-!
 # `NRR.Geometry.ConvexBody` — the planar Cauchy perimeter
@@ -41,6 +43,8 @@ projected extent), giving the classical Cauchy perimeter.
 Only `PlanarCircle.lean` is imported; it transitively provides all of Mathlib together with the
 `circleVec` and width-function APIs. No extra imports are required.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

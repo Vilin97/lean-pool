@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointStackIteratedAffinePullback
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBSmallGenericPerturbation
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EndpointStackIteratedAffinePullback
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBSmallGenericPerturbation
 /-!
 # Frozen positive-support safety for endpoint stacks and composed collars
 
@@ -15,6 +17,8 @@ all positive barycentric support lies at time zero; reversal gives the correspon
 Collar composition then converts those two one-sided statements into the global frozen-parameter
 condition because the two half-cylinder embeddings have no other horizontal points.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -113,10 +117,12 @@ theorem lowerSpatialWeight_not_interior
       simp [hij.symm]
     simpa [Finset.card_erase_of_mem, hjmem] using hle
   let lowerIndex : {k // k ∈ active} → Fin (d + 1) := fun k =>
-    Classical.choose (RelativeSubdivisionCylinderCombinatorics.vertex_eq_lowerBoundaryVertex_of_time_eq_zero
+    Classical.choose
+      (RelativeSubdivisionCylinderCombinatorics.vertex_eq_lowerBoundaryVertex_of_time_eq_zero
       d q k.1 (hsupport k.1 ((Finset.mem_filter.mp k.2).2)))
   have lowerIndex_spec : ∀ k : {k // k ∈ active},
-      RelativeSubdivisionCylinderCombinatorics.vertex d q k.1 = RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex d (lowerIndex k) := by
+      RelativeSubdivisionCylinderCombinatorics.vertex d q k.1 =
+        RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex d (lowerIndex k) := by
     intro k
     exact Classical.choose_spec
       (RelativeSubdivisionCylinderCombinatorics.vertex_eq_lowerBoundaryVertex_of_time_eq_zero
@@ -156,8 +162,10 @@ theorem lowerSpatialWeight_not_interior
         apply hc
         exact Finset.mem_image.mpr ⟨ks, Finset.mem_univ _, heq⟩
       rw [lowerIndex_spec ks]
-      simp [RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex, SphereOddDegree.FiniteSimplex.vertex, hne]
-    · have hw0 : w k = 0 := le_antisymm (le_of_not_gt hkw) (SphereOddDegree.FiniteSimplex.zero_le w k)
+      simp [RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex,
+        SphereOddDegree.FiniteSimplex.vertex, hne]
+    · have hw0 : w k = 0 := le_antisymm (le_of_not_gt hkw)
+        (SphereOddDegree.FiniteSimplex.zero_le w k)
       simp [hw0]
   have hcpos : 0 < RelativeSubdivisionCylinderCombinatorics.spatialPoint d q w c :=
     hinterior c
@@ -168,7 +176,8 @@ theorem lowerSpatialWeight_not_interior
 theorem oneStep_lowerPositiveSupportRaySafe
     {F : ContinuousCoordinateMap p}
     (A : StableRegularApproximation hp F) :
-    LowerPositiveSupportRaySafe hp (RelativeSubdivisionOneStepCells.cellSystem hp A.toRegularApproximation.level)
+    LowerPositiveSupportRaySafe hp (RelativeSubdivisionOneStepCells.cellSystem hp
+      A.toRegularApproximation.level)
       (CompatibleChartMapOneStep.assignment hp
         (baseOriginalPLMap hp A.toRegularApproximation)) := by
   obtain ⟨m, rfl⟩ : ∃ m, p = m + 1 := ⟨p - 1, (Nat.succ_pred_eq_of_pos hp.pos).symm⟩

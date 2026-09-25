@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CellularCycle
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.CellularCycle
 
 /-!
 # Explicit representatives for free finite group orbits
@@ -13,6 +15,8 @@ Orbit sums in characteristic `p` cannot be obtained by summing over the covering
 by the group order.  This module records chosen representatives together with existence and
 uniqueness up to the acting group.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -64,7 +68,8 @@ namespace FoxNeuwirth
 
 variable {p : Nat}
 
-/-- C3 data needed for the cellular top cells.  The action is already finite; the representative data and subgroup-index relation provide the quotient bookkeeping. -/
+/-- C3 data needed for the cellular top cells.  The action is already finite; the representative
+data and subgroup-index relation provide the quotient bookkeeping. -/
 noncomputable instance instFintypePrimeSymmetry (p : Nat) :
     Fintype (PrimeSymmetry p) :=
   Fintype.ofFinite _

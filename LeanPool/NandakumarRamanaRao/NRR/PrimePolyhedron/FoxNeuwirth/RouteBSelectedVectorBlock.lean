@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBCoordinateSplit
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBCoordinateSplit
 
 /-!
 # Route B: the actual selected local vector block
@@ -18,6 +20,8 @@ The proof uses the `vertex_orbit_injective` field of
 `RelativeAffineCellSystem`; it does not assume freeness of the quotient action
 without justification.
 -/
+
+@[expose] public section
 
 namespace NRR
 

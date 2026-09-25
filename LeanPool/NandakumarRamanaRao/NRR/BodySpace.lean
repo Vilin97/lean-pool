@@ -3,18 +3,20 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Basic
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Topology
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.ConvexClosed
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Compactness
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.BoundaryNull
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.MembershipStability
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.AreaContinuity
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.PositiveArea
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.SupportWidthContinuity
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.PerimeterContinuity
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.FullBody
+
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Topology
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.ConvexClosed
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Compactness
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.BoundaryNull
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.MembershipStability
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.AreaContinuity
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.PositiveArea
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.SupportWidthContinuity
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.PerimeterContinuity
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.FullBody
 
 /-!
 # `NRR.BodySpace` — convex-body hyperspace
@@ -35,3 +37,5 @@ The metric is Mathlib's Hausdorff distance on nonempty compact planar sets, tran
 `ConvexSubbody.toNonemptyCompacts`. The API includes continuity of area and Cauchy perimeter and
 pointwise membership stability under Hausdorff convergence.
 -/
+
+@[expose] public section

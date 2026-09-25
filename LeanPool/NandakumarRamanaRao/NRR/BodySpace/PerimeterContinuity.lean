@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.SupportWidthContinuity
-import LeanPool.NandakumarRamanaRao.NRR.AreaPerimeter
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.SupportWidthContinuity
+public import LeanPool.NandakumarRamanaRao.NRR.AreaPerimeter
 
 /-!
 # `NRR.BodySpace` — perimeter continuity for positive lower area
@@ -21,6 +23,8 @@ This combines the analytic ingredients: area (`BodySpace.continuous_toGeometryCo
 composed with `Geometry.ConvexBody.area`) and perimeter both vary continuously over the compact
 lower-area hyperspace `BodySpace K A`.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

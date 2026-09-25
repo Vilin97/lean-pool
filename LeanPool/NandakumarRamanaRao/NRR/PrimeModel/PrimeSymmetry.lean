@@ -3,14 +3,19 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.CoordinateDecomposition
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.CoordinateDecomposition
 /-!
 # Prime symmetry subgroup
 
 For two labels the symmetry group is the full permutation group; for every other number of labels
-it is the alternating group. The prime configuration model uses this construction at prime cardinality.
+it is the alternating group. The prime configuration model uses this construction at prime
+cardinality.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -38,17 +43,17 @@ def PrimeSymmetry.toPerm (p : ℕ) :
     (p : ℕ) (g : PrimeSymmetry p) :
     PrimeSymmetry.toPerm p g = (g : Equiv.Perm (Fin p)) := rfl
 
- theorem PrimeSymmetry.toPerm_injective (p : ℕ) :
+theorem PrimeSymmetry.toPerm_injective (p : ℕ) :
     Function.Injective (PrimeSymmetry.toPerm p) :=
   (primeSymmetrySubgroup p).subtype_injective
 
- theorem primeSymmetrySubgroup_eq_top
+theorem primeSymmetrySubgroup_eq_top
     (p : ℕ) (h2 : p = 2) :
     primeSymmetrySubgroup p = ⊤ := by
   classical
   simp [primeSymmetrySubgroup, h2]
 
- theorem primeSymmetrySubgroup_eq_alternating
+theorem primeSymmetrySubgroup_eq_alternating
     (p : ℕ) (h2 : p ≠ 2) :
     primeSymmetrySubgroup p = alternatingGroup (Fin p) := by
   classical
@@ -84,7 +89,7 @@ theorem PrimeSymmetry.exists_map_label
   by_cases h2 : p = 2
   · by_cases hij : i = j
     · refine ⟨1, ?_⟩
-      simpa [hij]
+      simp [hij]
     · let σ : Equiv.Perm (Fin p) := Equiv.swap i j
       have hmem : σ ∈ primeSymmetrySubgroup p := by
         rw [primeSymmetrySubgroup_eq_top p h2]
@@ -93,7 +98,7 @@ theorem PrimeSymmetry.exists_map_label
       simp [σ]
   · by_cases hij : i = j
     · refine ⟨1, ?_⟩
-      simpa [hij]
+      simp [hij]
     · obtain ⟨k, hki, hkj⟩ := exists_third_label hp h2 i j hij
       let σ : Equiv.Perm (Fin p) := Equiv.swap k j * Equiv.swap i k
       have hσalt : σ ∈ alternatingGroup (Fin p) := by

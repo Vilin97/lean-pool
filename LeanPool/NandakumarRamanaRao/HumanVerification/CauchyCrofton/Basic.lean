@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.HumanVerification.InternalModel
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterMonotonicity
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterTransform
+
+public import LeanPool.NandakumarRamanaRao.HumanVerification.InternalModel
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterMonotonicity
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterTransform
 
 /-!
 # Cauchy–Crofton bridge: basic set-up
@@ -21,6 +23,8 @@ This module fixes the two perimeter functionals compared by the bridge theorem:
 It records their behaviour under translations and positive dilations and an elementary
 squeeze lemma in `ℝ≥0∞`.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 open scoped ENNReal NNReal Pointwise

@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Basic
+
+public import LeanPool.NandakumarRamanaRao.NRR.Multivalued.Separator.Basic
 
 /-!
 # `NRR.Multivalued.Separator.Fibers` — vertical fibers meet the carrier
@@ -19,6 +21,8 @@ Consequences: each vertical fiber is nonempty, the carrier is nonempty whenever 
 the vertical path through any point meets the carrier. Nonemptiness of the carrier is therefore
 derived rather than assumed, so no separate nonemptiness field is needed.
 -/
+
+@[expose] public section
 
 namespace NRR
 

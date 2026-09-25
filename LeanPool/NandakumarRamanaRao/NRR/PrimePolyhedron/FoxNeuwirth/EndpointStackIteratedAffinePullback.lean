@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ChartMapCollarRepresentation
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionEndpointCollar
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ChartMapCollarRepresentation
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeSubdivisionEndpointCollar
 /-!
 # Iterated affine-pullback endpoint stacks
 
@@ -19,6 +21,8 @@ The lower horizontal values of the stack are the native samples of the supplied 
 approximation.  Reversing an upper stack therefore supplies the exact upper horizontal boundary of
 the final collar.
 -/
+
+@[expose] public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -102,7 +106,8 @@ theorem oneStep_originalPL_lowerFixed
       CompatibleChartMapOneStep.localWeight_succ,
       EquivariantPrismVertexParameters.CylinderPoint.ofProd] using hi
   obtain ⟨j, hj⟩ :=
-    RelativeSubdivisionCylinderCombinatorics.vertex_eq_lowerBoundaryVertex_of_time_eq_zero m r i htime
+    RelativeSubdivisionCylinderCombinatorics.vertex_eq_lowerBoundaryVertex_of_time_eq_zero m r i
+      htime
   rw [CompatibleChartMapOneStep.vectorValue_assignment_sample]
   simp [CompatibleChartMapOneStep.localVector,
     CompatibleChartMapOneStep.localSpatialWeight,
@@ -111,10 +116,12 @@ theorem oneStep_originalPL_lowerFixed
     RelativeSubdivisionCylinderCombinatorics.lowerBoundaryVertex,
     RelativeAffineCellSystem.slotPoint, RelativeSubdivisionOneStepCells.cellSystem,
     RelativeSubdivisionOneStepCells.vertex, RelativeSubdivisionOneStepCells.chart,
-    RelativeSubdivisionOneStepCells.liftPoint, EquivariantPrismVertexParameters.CylinderPoint.ofProd]
+    RelativeSubdivisionOneStepCells.liftPoint,
+      EquivariantPrismVertexParameters.CylinderPoint.ofProd]
   funext c
   simp [RefinedAffineMap.value, RefinedAffineMap.vertexValue, RefinedAffineMap.vertex,
-    StandardSimplex.ofDelta, SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply, ite_mul, Finset.sum_ite_eq']
+    StandardSimplex.ofDelta, SphereOddDegree.FiniteSimplex.vertex, Pi.single_apply, ite_mul,
+      Finset.sum_ite_eq']
 
 /-- Complete data carried by a positive endpoint stack. -/
 structure Data

@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarThinSlabsBoundary
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpointsCore
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarThinSlabsBoundary
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpointsCore
 /-!
 # Endpoint identification for thin-time stacks
 
@@ -15,6 +17,8 @@ the telescoping boundary theorem.  This module supplies the endpoint quotient-fa
 pairing identities, exhaustiveness, and representative geometry required by
 `EndpointIdentifiedRelativeAffineCollar`.
 -/
+
+@[expose] public section
 
 namespace NRR
 

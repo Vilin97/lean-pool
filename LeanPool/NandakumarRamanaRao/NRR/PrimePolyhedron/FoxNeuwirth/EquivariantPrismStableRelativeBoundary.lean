@@ -3,18 +3,16 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import Mathlib.Topology.MetricSpace.Pseudo.Pi
-import
-  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpointsCore
-import
-  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpoints
-import
-  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarStokes
-import
-  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismSubdivisionMargin
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RegularApproximationStability
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import Mathlib.Topology.MetricSpace.Pseudo.Pi
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpointsCore
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpoints
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarStokes
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismSubdivisionMargin
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RegularApproximationStability
 /-!
 # Stable endpoint approximations and a boundary-relative prism perturbation
 
@@ -31,6 +29,8 @@ The resulting lower and upper maps are `StableRegularApproximation`s at the exac
 triangulation level.  The original generic prism assignment is then a relative perturbation with
 those two boundary maps fixed by construction; no second generic perturbation is required.
 -/
+
+@[expose] public section
 
 namespace NRR
 
@@ -593,7 +593,8 @@ theorem segment_ne_zero_of_norm_sub_lt
       _ = ‖y - x‖ := by rw [← norm_neg, neg_sub]
   linarith
 
-/-- Quantitative endpoint information used to construct stable approximations from a prism result. -/
+/-- Quantitative endpoint information used to construct stable approximations from a prism result.
+-/
 structure EndpointControl
     (hp : Nat.Prime p) (N L : Nat)
     {F₀ F₁ : ZeroFreeMap hp} (H : ZeroFreeHomotopy hp F₀ F₁)
@@ -1312,7 +1313,7 @@ theorem RelativeResult.stable_zeroCount_eq
   rw [R.lower_zeroCount_eq_endpointRefinedCount hp N L H m,
     R.upper_zeroCount_eq_endpointRefinedCount hp N L H m]
   exact
-    EquivariantPrismHorizontalEndpointIdentification.Result.lowerEndpointRefinedCount_eq_upperEndpointRefinedCount
+    Result.lowerEndpointRefinedCount_eq_upperEndpointRefinedCount
     hp N L H m R.prism
 
 end EquivariantPrismStableRelativeBoundary

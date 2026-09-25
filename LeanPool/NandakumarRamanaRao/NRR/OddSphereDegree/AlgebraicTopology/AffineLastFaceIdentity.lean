@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineBarycentricSubdivision
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineBarycentricSubdivision
 /-!
 # Last-face affine identity for barycentric subdivision
 
@@ -28,6 +30,8 @@ This deliberately avoids fixing the library's eventual coface-map API. Later,
 one instantiates `ι` with the ordinary order-preserving injection missing
 `π last`, and `ρ` with the induced ordering of the remaining vertices.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Finset
@@ -60,7 +64,8 @@ theorem prefixBarycenter_castSucc_eq_map_of_prefix {n : ℕ}
     have h1 : prefixVertex (n + 1) π (Fin.castSucc k) ⟨i, hi_val⟩ = π (Fin.castSucc ⟨i, hi⟩) := rfl
     have h2 : (ι ∘ prefixVertex n ρ k) ⟨i, hi_val⟩ = ι (ρ ⟨i, hi⟩) := rfl
     rw [h1, h2, ← hιρ ⟨i, hi⟩]
-  rw [prefixBarycenter_def, h_comp, ← SphereOddDegree.FiniteSimplex.map_comp_apply, prefixBarycenter_def]
+  rw [prefixBarycenter_def, h_comp, ← SphereOddDegree.FiniteSimplex.map_comp_apply,
+    prefixBarycenter_def]
 
 /-
 Last-face affine identity, in coordinate-face form.
@@ -85,10 +90,12 @@ theorem affineSubdiv_face_last_eq_boundary_subdiv_of_faceData {n : ℕ}
       = SphereOddDegree.FiniteSimplex.map (S := ℝ) ι (affineSubdivMap n ρ y) := by
   classical
   ext j;
-  simp +decide [ *, affineSubdivMap_apply, FunOnFinite.linearMap_apply_apply, SphereOddDegree.FiniteSimplex.map_coe ];
+  simp? +decide [ *, affineSubdivMap_apply, FunOnFinite.linearMap_apply_apply,
+    SphereOddDegree.FiniteSimplex.map_coe ];
   rw [ Fin.sum_univ_castSucc ];
   simp +decide [ ← hy, prefixBarycenter_castSucc_eq_map_of_prefix π ι ρ hιρ ];
-  simp +decide [ Finset.sum_filter, Finset.mul_sum _ _ _, mul_comm, FunOnFinite.linearMap_apply_apply ];
+  simp +decide [ Finset.sum_filter, Finset.mul_sum _ _ _, mul_comm,
+    FunOnFinite.linearMap_apply_apply ];
   rw [ Finset.sum_comm ];
   simp +decide [ Finset.sum_ite ];
   exact Or.inl hxlast

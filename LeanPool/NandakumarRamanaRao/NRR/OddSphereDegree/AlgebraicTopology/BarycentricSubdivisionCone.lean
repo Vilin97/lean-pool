@@ -3,16 +3,18 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import
-  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryCancellation
-import
-  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainMap
-import Mathlib.Tactic
-import Mathlib.Topology.GDelta.MetrizableSpace
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryCancellation
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainMap
+public import Mathlib.Tactic
+public import Mathlib.Topology.GDelta.MetrizableSpace
 
 /-! # Barycentric Subdivision Cone -/
+
+@[expose] public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
@@ -30,7 +32,7 @@ noncomputable def coneTailFun {k : ℕ} (x : Delta (k + 1)) : Fin (k + 1) → �
 theorem coneTailFun_mem {k : ℕ} (x : Delta (k + 1))
     (hx : (x : Fin (k + 1 + 1) → ℝ) 0 ≠ 1) :
     coneTailFun x ∈ SphereOddDegree.finiteSimplex ℝ (Fin (k + 1)) := by
-  refine' ⟨fun i => _, _⟩
+  refine ⟨fun i => ?_, ?_⟩
   · exact div_nonneg (x.2.1 _) (sub_nonneg.2 (x.2.2 ▸ Finset.single_le_sum (fun a _ => x.2.1 a)
       (Finset.mem_univ 0)))
   · have hxsum : (x : Fin (k + 1 + 1) → ℝ) 0 + ∑ i : Fin (k + 1), (x : Fin (k + 1 + 1) → ℝ)
@@ -69,7 +71,7 @@ noncomputable def affineConeMapFun {n k : ℕ} (v : Delta n) (τ : Delta k → D
 theorem affineConeMapFun_mem {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n)
     (x : Delta (k + 1)) : affineConeMapFun v τ x ∈ SphereOddDegree.finiteSimplex ℝ (Fin (n + 1))
       := by
-  refine' ⟨fun j => _, _⟩
+  refine ⟨fun j => ?_, ?_⟩
   · exact add_nonneg (mul_nonneg (SphereOddDegree.FiniteSimplex.zero_le x 0)
       (SphereOddDegree.FiniteSimplex.zero_le v j))
       (mul_nonneg (sub_nonneg.mpr (SphereOddDegree.FiniteSimplex.le_one x 0))
@@ -239,9 +241,7 @@ theorem coneTail_cofaceTop_succ {k : ℕ} (j : Fin (k + 1 + 1)) (y : Delta (k + 
       + 1) → ℝ) 0 = y 0
     rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     have hj0 : (j.succ : Fin (k + 1 + 1 + 1)).succAbove 0 = 0 := by
-      rw [Fin.succAbove_of_castSucc_lt]
-      rfl
-      exact Fin.succ_pos j
+      exact Fin.succAbove_of_castSucc_lt j.succ 0 (Fin.succ_pos j)
     rw [Finset.sum_eq_single 0]
     · intro b hb hb0
       have : (j.succ : Fin (k + 1 + 1 + 1)).succAbove b = 0 := (Finset.mem_filter.mp hb).2
@@ -291,7 +291,7 @@ theorem coneTail_cofaceTop_succ {k : ℕ} (j : Fin (k + 1 + 1)) (y : Delta (k + 
         cases x using Fin.inductionOn
         · exfalso
           have hj0 : (j.succ : Fin (k + 1 + 1 + 1)).succAbove 0 = 0 := by
-            rw [Fin.succAbove_of_castSucc_lt]; rfl; exact Fin.succ_pos j
+            exact Fin.succAbove_of_castSucc_lt j.succ 0 (Fin.succ_pos j)
           rw [hj0] at hx
           exact Fin.succ_ne_zero _ hx.symm
         · exact ⟨_, rfl⟩
@@ -313,7 +313,7 @@ theorem cone_face_succ {n k : ℕ} (v : Delta n) (τ : Delta (k + 1) → Delta n
       + 1) → ℝ) 0 = y 0
     rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     have hj0 : (j.succ : Fin (k + 1 + 1 + 1)).succAbove 0 = 0 := by
-      rw [Fin.succAbove_of_castSucc_lt]; rfl; exact Fin.succ_pos j
+      exact Fin.succAbove_of_castSucc_lt j.succ 0 (Fin.succ_pos j)
     rw [Finset.sum_eq_single 0]
     · intro b hb hb0
       have : (j.succ : Fin (k + 1 + 1 + 1)).succAbove b = 0 := (Finset.mem_filter.mp hb).2
@@ -521,7 +521,7 @@ theorem singularBoundary_coneLinearMap (R : Type) [CommRing R] (n m : ℕ) (v : 
     intro x
     have hf := f.hom.map_smul x (1 : R)
     have hg := g.hom.map_smul x (1 : R)
-    simp at hf hg
+    simp? at hf hg
     rw [hf, hg, h]
   apply hval
   erw [ModuleCat.hom_add, LinearMap.add_apply,

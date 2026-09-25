@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.GroupTheory.SpecificGroups.Alternating
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopCellModel
+
+public import Mathlib.GroupTheory.SpecificGroups.Alternating
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.TopCellModel
 
 /-!
 # The reference zero orbit in the Fox--Neuwirth top-cell model
@@ -19,6 +21,8 @@ Restricting that full permutation torsor to the prime symmetry group gives one o
 and two orbits for odd primes, because the chosen group is respectively `S_2` and `A_p`.  Giving
 each orbit local coefficient `1` produces the nonzero reference count used in the prime argument.
 -/
+
+@[expose] public section
 
 namespace NRR
 

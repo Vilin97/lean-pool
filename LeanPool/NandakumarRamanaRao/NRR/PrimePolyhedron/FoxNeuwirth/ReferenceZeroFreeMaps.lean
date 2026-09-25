@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantCoordinateHomotopy
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedReferenceApproximation
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantCoordinateHomotopy
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedReferenceApproximation
 
 /-!
 # Zero-free coordinate lifts of the two Fox--Neuwirth reference maps
@@ -14,6 +16,8 @@ This module contains the reference endpoint maps independently of any raw or sta
 count.  Keeping these definitions in a neutral module separates the stable obstruction API from the
 raw-count homotopy interface.
 -/
+
+@[expose] public section
 
 namespace NRR
 

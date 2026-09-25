@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBBadSetNullity
-import Mathlib.MeasureTheory.Measure.Prod
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBBadSetNullity
+public import Mathlib.MeasureTheory.Measure.Prod
 
 /-!
 # Route B: vector-fiber elimination of the barycentric witness
@@ -30,6 +32,8 @@ coordinate bookkeeping.  The only collar-specific obligation left after this
 file is to exhibit the `p` independent movable scalar orbits forming the value
 of the selected local vertex and the corresponding product-coordinate split.
 -/
+
+@[expose] public section
 
 namespace NRR
 

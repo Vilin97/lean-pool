@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Analysis.Convex.Body
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Interior
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarCircle
+
+public import Mathlib.Analysis.Convex.Body
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Interior
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarCircle
 
 /-!
 # `NRR.ConvexBody` — public convex‑body API (unified over the geometry layer)
@@ -35,6 +37,8 @@ whose bundled bodies are compact, convex, and **solid** (nonempty interior) by c
 Every geometry `ConvexBody` is already solid, so `IsSolid`/`SolidConvexBody` are provided for
 downstream compatibility rather than as genuine extra data.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

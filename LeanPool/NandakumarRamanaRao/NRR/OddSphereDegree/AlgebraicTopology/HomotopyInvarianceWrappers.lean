@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularHomologyFunctorAPI
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularHomologyFunctorAPI
 
 /-!
 # Chain-homotopy wrappers for singular homology
@@ -13,6 +15,8 @@ Composition, symmetry, and homotopy-equivalence wrappers around
 `singularHomologyMap_eq_of_singularChainHomotopy`. These lemmas are independent of the
 particular construction of the singular prism operator.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 

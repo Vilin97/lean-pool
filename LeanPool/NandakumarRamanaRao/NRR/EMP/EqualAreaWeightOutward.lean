@@ -3,13 +3,15 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
-import LeanPool.NandakumarRamanaRao.NRR.EMP.AreaVectorTarget
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CompactSiteFamily
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCellPartition
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAreaVector
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.AreaVectorTarget
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody.CompactSiteFamily
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCellPartition
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAreaVector
 /-!
 # Outward estimates for the equal-area deviation map
 
@@ -19,6 +21,8 @@ with positive area belongs to an index whose weight is at least `M - C`, where `
 body/site bound.  Consequently the scalar pairing of the weight vector with its area-deviation
 vector is at least `(M - C) * K.area`.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry MeasureTheory
 

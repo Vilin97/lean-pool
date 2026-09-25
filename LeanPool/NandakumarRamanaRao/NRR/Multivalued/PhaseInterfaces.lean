@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace
-import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody
+
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.VariableBody
 
 /-!
 # `NRR.Multivalued.PhaseInterfaces` — prerequisite interface for the separator phase
@@ -30,3 +32,5 @@ Every declaration named above already exists under exactly the name used here, s
 alias is required; downstream separator modules import this file rather than reaching into the
 individual prerequisite modules.
 -/
+
+@[expose] public section

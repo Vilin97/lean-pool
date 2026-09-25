@@ -3,12 +3,14 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularCohomology
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularCohomologyHomotopyInvariance
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RealProjectiveSpace
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CupProductPowers
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CohomologyCupProduct
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularCohomology
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularCohomologyHomotopyInvariance
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.RealProjectiveSpace
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CupProductPowers
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CohomologyCupProduct
 
 /-!
 # Pullback on singular cohomology of the descended odd map
@@ -58,6 +60,8 @@ transfer/Gysin comparison — implemented by the project modules listed below).
 These are the functorial pullback / double-cover-compatibility / descended-map
 naturality facts independent of the cup-product ring computation.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -153,7 +157,8 @@ theorem proj_pullback_antipodal {n : ℕ} (k : ℕ) :
   have h_comm : (proj n).comp (antipodal n) = proj n := proj_comp_antipodal n
   have h_top : TopCat.ofHom (antipodal n) ≫ TopCat.ofHom (proj n) = TopCat.ofHom (proj n) := by
     rw [← TopCat.ofHom_comp, h_comm]
-  have h_op : (TopCat.ofHom (antipodal n) ≫ TopCat.ofHom (proj n)).op = (TopCat.ofHom (proj n)).op :=
+  have h_op : (TopCat.ofHom (antipodal n) ≫ TopCat.ofHom (proj n)).op = (TopCat.ofHom (proj
+    n)).op :=
     congrArg Opposite.op h_top
   rw [op_comp] at h_op
   have h_map := congrArg (singularCohomologyZMod2 k).map h_op

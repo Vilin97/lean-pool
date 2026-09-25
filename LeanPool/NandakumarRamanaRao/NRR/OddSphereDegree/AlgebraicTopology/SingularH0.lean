@@ -3,12 +3,16 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SubChainSubspaceBridge
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionCone
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SubChainSubspaceBridge
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionCone
 
 /-! # Singular H0 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology Limits
 open SphereOddDegree
@@ -44,7 +48,6 @@ theorem test_coface1 (x : Delta 0) : cofaceTop 0 1 x = ⟨Pi.single 0 1,
 theorem faceSimplex_pathSimplex_0 {a b : X} (p : Path a b) :
     AlexanderWhitney.faceSimplex X 0 0 (pathSimplex p) = pointSimplex X b := by
   apply singularSimplices_ext
-  change singularSimplexAsContinuousMap X 0 _ = singularSimplexAsContinuousMap X 0 _
   rw [faceSimplex_continuousMap]
   simp only [pathSimplex, pointSimplex,
     singularSimplexAsContinuousMap_continuousMapAsSingularSimplex]
@@ -56,7 +59,6 @@ theorem faceSimplex_pathSimplex_0 {a b : X} (p : Path a b) :
 theorem faceSimplex_pathSimplex_1 {a b : X} (p : Path a b) :
     AlexanderWhitney.faceSimplex X 0 1 (pathSimplex p) = pointSimplex X a := by
   apply singularSimplices_ext
-  change singularSimplexAsContinuousMap X 0 _ = singularSimplexAsContinuousMap X 0 _
   rw [faceSimplex_continuousMap]
   simp only [pathSimplex, pointSimplex,
     singularSimplexAsContinuousMap_continuousMapAsSingularSimplex]
@@ -88,7 +90,6 @@ theorem pointSimplex_singularSimplex (σ : singularSimplices X 0) :
     pointSimplex X ((singularSimplexAsContinuousMap X 0 σ) (SphereOddDegree.FiniteSimplex.vertex
       0)) = σ := by
   apply singularSimplices_ext
-  change singularSimplexAsContinuousMap X 0 _ = singularSimplexAsContinuousMap X 0 σ
   rw [pointSimplex, singularSimplexAsContinuousMap_continuousMapAsSingularSimplex]
   ext x
   change (singularSimplexAsContinuousMap X 0 σ) _ =

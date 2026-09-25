@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularCohomology
-import Mathlib.Algebra.Homology.Monoidal
-import Mathlib.Algebra.Category.ModuleCat.Monoidal.Basic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularCohomology
+public import Mathlib.Algebra.Homology.Monoidal
+public import Mathlib.Algebra.Category.ModuleCat.Monoidal.Basic
 
 /-!
 # Cochain tensor-product infrastructure for the cup product
@@ -17,6 +19,8 @@ its functoriality laws. This is the algebraic substrate consumed by the
 Alexander–Whitney and cup-product modules; the diagonal itself is constructed
 in those later modules rather than in this file.
 -/
+
+@[expose] public section
 open CategoryTheory MonoidalCategory Limits
 
 namespace SphereOddDegree
@@ -60,7 +64,8 @@ shape of the singular cochain complex. We supply it with the same `(-1)^•`
 convention as the chain case. -/
 
 /-- The `ComplexShape.TensorSigns` instance for the cochain shape
-`ComplexShape.up ℕ`, using the sign `ε n = (-1)^n`. This instance makes `HomologicalComplex.monoidalCategory` apply to
+`ComplexShape.up ℕ`, using the sign `ε n = (-1)^n`. This instance makes
+`HomologicalComplex.monoidalCategory` apply to
 `CochainComplex (ModuleCat R) ℕ`. -/
 instance tensorSignsUpNat : (ComplexShape.up ℕ).TensorSigns where
   ε' := {

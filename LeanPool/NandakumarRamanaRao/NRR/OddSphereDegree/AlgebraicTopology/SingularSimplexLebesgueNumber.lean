@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallSimplices
-import Mathlib.Tactic
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallSimplices
+public import Mathlib.Tactic
 
 /-!
 # A Lebesgue number for a singular simplex against an open cover
@@ -30,6 +32,8 @@ This is the compactness input that the project combines with the
 diameter-shrinking theorem of the project: once a refined affine simplex has
 domain diameter `< ε`, its image under `σ` lies in some `U ∈ 𝒰`.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicTopology
 open SphereOddDegree.AffineBarycentricSubdivision
@@ -76,15 +80,15 @@ theorem singularSimplex_hasLebesgueNumber_for_openCover
     · exact fun x _ => by
         rcases 𝒰.covers ( mvSimplexMap σ x ) with ⟨ U, hU₁, hU₂ ⟩; exact Set.mem_iUnion₂.mpr ⟨
           U, hU₁, hU₂ ⟩;
-  refine' ⟨ δ, hδ_pos, fun A hA => _ ⟩;
+  refine ⟨ δ, hδ_pos, fun A hA => ?_ ⟩;
   by_cases hA_empty : A.Nonempty;
   · obtain ⟨ x, hx ⟩ := hA_empty;
     obtain ⟨ U, hU₁, hU₂ ⟩ := hδ x;
-    refine' ⟨ U, hU₁, Set.image_subset_iff.mpr fun y hy => hU₂ <| Metric.mem_ball.mpr <|
-      lt_of_le_of_lt ( Metric.dist_le_diam_of_mem ( show Bornology.IsBounded A from _ ) hy hx )
-      hA ⟩;
+    refine ⟨U, hU₁, Set.image_subset_iff.mpr fun y hy => hU₂ <| Metric.mem_ball.mpr <|
+      lt_of_le_of_lt (Metric.dist_le_diam_of_mem (show Bornology.IsBounded A from ?_) hy hx)
+      hA⟩
     exact isCompact_univ.isBounded.subset ( Set.subset_univ _ );
-  · simp_all +decide [ Set.not_nonempty_iff_eq_empty.mp hA_empty ];
+  · simp_all? +decide [ Set.not_nonempty_iff_eq_empty.mp hA_empty ];
     exact Exists.elim ( hδ _ ( Classical.choose_spec ( show ∃ x : Fin ( n + 1 ) → ℝ, x ∈ Delta n
       from by
                                                         exact ⟨ fun _ => 1 / ( n + 1 ), fun _ => by

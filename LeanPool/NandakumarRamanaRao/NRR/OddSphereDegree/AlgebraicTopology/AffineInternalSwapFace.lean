@@ -3,9 +3,11 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineInternalSwapLemmas
+
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
+public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineInternalSwapLemmas
 
 /-!
 # Internal face equality for affine barycentric subdivision
@@ -23,6 +25,8 @@ barycenter; all remaining prefix barycenters are equal by
 No chain-level boundary statement is asserted here. This is only the affine
 face identity needed before the sign-cancellation proof.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Finset

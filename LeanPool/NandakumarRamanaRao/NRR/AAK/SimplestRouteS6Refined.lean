@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.AAK.SimplestRoute
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ChildMapLocalHomotopy
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ChildReferenceHomotopy
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarRelativeSubdivision
+
+public import LeanPool.NandakumarRamanaRao.NRR.AAK.SimplestRoute
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ChildMapLocalHomotopy
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ChildReferenceHomotopy
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.StableCollarRelativeSubdivision
 
 /-!
 # Stable refined S6 obstruction
@@ -19,6 +21,8 @@ reference endpoint is discharged explicitly at level zero by the reference-map s
 transversality theorem.
 -/
 
+@[expose] public section
+
 namespace NRR
 namespace AAK
 
@@ -27,6 +31,7 @@ open FoxNeuwirthOrderComplex
 open FoxNeuwirthOrderComplex.EquivariantCoordinateHomotopy
 open FoxNeuwirthOrderComplex.EquivariantPLPositiveRay
 open FoxNeuwirthOrderComplex.RefinedAffineMap
+open FoxNeuwirthOrderComplex.EquivariantPrismStableRelativeBoundary
 
 variable {p : Nat}
 
@@ -126,7 +131,8 @@ theorem stableRefinedPL_implies_simplestRouteObstruction
   intro p hp K A hA _ phi
   exact ⟨stableRefinedComplementObstructionValue HPL hp hA phi⟩
 
-/-- Conditional arbitrary-`n` AAK endpoint.  This statement does not assume equality of counts for arbitrary raw regular approximations. -/
+/-- Conditional arbitrary-`n` AAK endpoint.  This statement does not assume equality of counts for
+arbitrary raw regular approximations. -/
 theorem avvakumov_akopyan_karasev_of_stableRefinedPL
     (HPL : StableHomotopyInvarianceTheorem) :
     ∀ (K : Geometry.ConvexBody Plane) (n : Nat), 0 < n →
@@ -134,14 +140,15 @@ theorem avvakumov_akopyan_karasev_of_stableRefinedPL
   avvakumov_akopyan_karasev_of_simplestRoute
     (stableRefinedPL_implies_simplestRouteObstruction HPL)
 
-/-- Relative stable-collar existence supplies the stable homotopy-invariance input used to prove the arbitrary-`n` AAK endpoint. -/
+/-- Relative stable-collar existence supplies the stable homotopy-invariance input used to prove the
+arbitrary-`n` AAK endpoint. -/
 theorem avvakumov_akopyan_karasev_of_relativeStableCollar
     (HC :
-      EquivariantPrismStableRelativeBoundary.StableCollarRelativeSubdivision.RelativeStableCollarExistenceTheorem) :
+      StableCollarRelativeSubdivision.RelativeStableCollarExistenceTheorem) :
     ∀ (K : Geometry.ConvexBody Plane) (n : Nat), 0 < n →
       ∃ P : ConvexPartition K n, P.IsFair :=
   avvakumov_akopyan_karasev_of_stableRefinedPL
-    (EquivariantPrismStableRelativeBoundary.StableCollarRelativeSubdivision.stableHomotopyInvariance_of_relative_collarExistence
+    (StableCollarRelativeSubdivision.stableHomotopyInvariance_of_relative_collarExistence
       HC)
 
 /-- Fully geometric S6 reduction.  It is enough to construct the endpoint-identified collar,
@@ -151,11 +158,11 @@ stable endpoint skeletons.  Compactness, horizontal facet regularity, polynomial
 relative perturbation, and finite Stokes are then automatic. -/
 theorem avvakumov_akopyan_karasev_of_relativeStableCollarConstruction
     (HC :
-      EquivariantPrismStableRelativeBoundary.StableCollarRelativeSubdivision.RelativeStableCollarConstructionTheorem) :
+      StableCollarRelativeSubdivision.RelativeStableCollarConstructionTheorem) :
     ∀ (K : Geometry.ConvexBody Plane) (n : Nat), 0 < n →
       ∃ P : ConvexPartition K n, P.IsFair :=
   avvakumov_akopyan_karasev_of_relativeStableCollar
-    (EquivariantPrismStableRelativeBoundary.StableCollarRelativeSubdivision.relativeStableCollarExistence_of_construction
+    (StableCollarRelativeSubdivision.relativeStableCollarExistence_of_construction
       HC)
 
 end AAK

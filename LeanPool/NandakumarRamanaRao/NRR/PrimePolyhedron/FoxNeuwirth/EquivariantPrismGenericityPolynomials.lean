@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismVertexParameters
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffinePositiveRayBoundary
-import Mathlib.Algebra.MvPolynomial.Eval
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismVertexParameters
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffinePositiveRayBoundary
+public import Mathlib.Algebra.MvPolynomial.Eval
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 /-!
 # Genericity polynomials for the equivariant refined prism
@@ -27,6 +29,8 @@ Evaluation lemmas identify them with the corresponding real matrices reconstruct
 assignment.  A final sum type packages the two finite families for direct use with
 `FiniteMultivariateGenericPerturbation.exists_small_positive_generic`.
 -/
+
+@[expose] public section
 
 namespace NRR
 

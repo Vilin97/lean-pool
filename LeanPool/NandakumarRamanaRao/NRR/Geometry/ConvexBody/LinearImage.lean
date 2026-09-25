@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Basic
+
+public import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Basic
 
 /-!
 # `NRR.Geometry.ConvexBody` — images under continuous linear equivalences
@@ -47,6 +49,8 @@ assume that `E`, `F` (and, for composition, `G`) are real normed spaces.
 Following the library-wide policy, `Basic.lean` already pulls in `import Mathlib`, so no extra
 imports are required here.
 -/
+
+@[expose] public section
 
 namespace NRR.Geometry
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ModelSites
+
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ModelSites
 
 /-!
 # Equivariance of variable-body children
@@ -14,6 +16,8 @@ by the same convention, and extensionality lifts carrier equality to `ConvexSubb
 `BodySpace`.
 -/
 
+@[expose] public section
+
 namespace NRR
 
 open Geometry
@@ -21,7 +25,7 @@ open Geometry
 variable {n p : ℕ}
 variable {K : Geometry.ConvexBody Plane} {A : ℝ}
 
- theorem EMP.VariableBody.normalizedWeight_relabel
+theorem EMP.VariableBody.normalizedWeight_relabel
     (hA : 0 < A) (hn : 0 < n)
     (C : BodySpace K A) (s : Config n)
     (σ : Equiv.Perm (Fin n)) :
@@ -30,7 +34,7 @@ variable {K : Geometry.ConvexBody Plane} {A : ℝ}
   simpa [EMP.VariableBody.normalizedWeight] using
     EMP.normalizedWeight_relabel (EMP.VariableBody.solidBody hA C) hn σ s
 
- theorem EMP.VariableBody.canonicalCellSet_relabel
+theorem EMP.VariableBody.canonicalCellSet_relabel
     (hA : 0 < A) (hn : 0 < n)
     (C : BodySpace K A) (s : Config n)
     (σ : Equiv.Perm (Fin n)) (i : Fin n) :
@@ -46,7 +50,7 @@ variable {K : Geometry.ConvexBody Plane} {A : ℝ}
 
 variable {hp : Nat.Prime p}
 
- theorem PrimeConfigurationModel.child_smul
+theorem PrimeConfigurationModel.child_smul
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A) (C : BodySpace K A)
     (g : PrimeSymmetry p) (x : M.Point) (i : Fin p) :
@@ -67,7 +71,7 @@ variable {hp : Nat.Prime p}
   exact EMP.VariableBody.canonicalCellSet_relabel hA hp.pos C (M.sites x)
     (PrimeSymmetry.toPerm p g) i
 
- theorem PrimeConfigurationModel.child_carrier_smul
+theorem PrimeConfigurationModel.child_carrier_smul
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A) (C : BodySpace K A)
     (g : PrimeSymmetry p) (x : M.Point) (i : Fin p) :

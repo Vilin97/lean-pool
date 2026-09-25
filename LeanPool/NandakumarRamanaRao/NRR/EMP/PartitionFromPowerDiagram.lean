@@ -3,11 +3,13 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.Partition.ConvexPartition
-import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCellPartition
-import LeanPool.NandakumarRamanaRao.NRR.EMP.PowerPartitionPieces
+
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.Partition.ConvexPartition
+public import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCellPartition
+public import LeanPool.NandakumarRamanaRao.NRR.EMP.PowerPartitionPieces
 
 /-!
 # `NRR.EMP.PartitionFromPowerDiagram` — the canonical equal‑area power partition
@@ -31,6 +33,8 @@ The three partition obligations are discharged from the set‑level power‑diag
 * `EMP.powerPartition_covers` — the pieces cover `K`.
 * `EMP.powerPartition_nullOverlap` — distinct pieces overlap only on a null set.
 -/
+
+@[expose] public section
 
 open NRR NRR.Geometry MeasureTheory
 

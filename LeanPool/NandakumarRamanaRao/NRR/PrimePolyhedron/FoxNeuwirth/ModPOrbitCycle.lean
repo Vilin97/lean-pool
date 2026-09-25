@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Data.ZMod.Basic
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrientedBoundary
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.PrimeBoundary
+
+public import Mathlib.Data.ZMod.Basic
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.OrientedBoundary
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.PrimeBoundary
 
 /-!
 # The Fox--Neuwirth top chain modulo a prime, at the cell-orbit level
@@ -20,6 +22,8 @@ The module deliberately records the orbit-summed coefficient used in the pseudom
 It does not identify the disjoint simplex atlas with the glued Blagojevic--Ziegler polyhedron; that
 regular-cell realization and the subsequent separator construction are separate topological steps.
 -/
+
+@[expose] public section
 
 namespace NRR
 

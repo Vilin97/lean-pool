@@ -3,10 +3,12 @@ Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
+module
 
-import Mathlib.Analysis.Convex.Measure
-import Mathlib.Tactic
-import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Basic
+
+public import Mathlib.Analysis.Convex.Measure
+public import Mathlib.Tactic
+public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Basic
 
 /-!
 # Boundary nullity for compact convex subbodies
@@ -19,6 +21,8 @@ The a.e. complement statement `ConvexSubbody.ae_not_mem_frontier` is the exact e
 lemma required by membership stability and area continuity: almost every point of the plane avoids
 the frontier of a given subbody.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 
