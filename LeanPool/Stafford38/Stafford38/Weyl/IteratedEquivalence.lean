@@ -316,26 +316,11 @@ theorem oldGenerator_commutator (n : Nat) (i j : Fin n ⊕ Fin n) :
     commutator (oldGenerator k n i) (oldGenerator k n j) =
       algebraMap k (PresentedWeyl k (n + 1)) (Matrix.J (Fin n) k i j) := by
   rw [oldGenerator, oldGenerator, freeWeylGenerator_commutator]
-  cases i with
-  | inl i =>
-      cases j with
-      | inl j => (simp [oldIndex, Matrix.J]; rfl)
-      | inr j =>
-          by_cases h : i = j
-          · subst j
-            simp only [Matrix.J, oldIndex, Matrix.fromBlocks_apply₁₂, Matrix.neg_apply,
-              Matrix.one_apply_eq, map_neg, map_one]
-            calc
-              _ = -algebraMap k (PresentedWeyl k (n + 1)) 1 :=
-                map_neg (algebraMap k (PresentedWeyl k (n + 1))) 1
-              _ = -1 := by rw [map_one]
-          · (simp [oldIndex, Matrix.J, h]; rfl)
-  | inr i =>
-      cases j with
-      | inl j =>
-          by_cases h : i = j <;>
-            (simp [oldIndex, Matrix.J, h]; rfl)
-      | inr j => (simp [oldIndex, Matrix.J]; rfl)
+  have hentry :
+      Matrix.J (Fin (n + 1)) k (oldIndex i) (oldIndex j) =
+        Matrix.J (Fin n) k i j := by
+    cases i <;> cases j <;> simp [oldIndex, Matrix.J]
+  exact congrArg (algebraMap k (PresentedWeyl k (n + 1))) hentry
 
 /-- The canonical rank-shift embedding preserving the old generators. -/
 def previousWeylEmbedding (n : Nat) :

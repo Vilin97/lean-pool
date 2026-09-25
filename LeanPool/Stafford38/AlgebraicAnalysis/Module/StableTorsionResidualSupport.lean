@@ -31,7 +31,9 @@ universe u v
 variable {R : Type u} {E : Type v}
 variable [CommRing R] [AddCommGroup E] [Module R E]
 
-private abbrev scalarEnd (x : R) : E →ₗ[R] E := LinearMap.lsmul R E x
+/-- Scalar multiplication by `x`, viewed as a module endomorphism. -/
+abbrev scalarEnd (x : R) : E →ₗ[R] E := LinearMap.lsmul R E x
+
 theorem residual_nontrivial_of_support
      [Module.Finite R E]
     (x : R) (n : ℕ) (p q : PrimeSpectrum R)
