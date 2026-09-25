@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.KernelIdentification
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.FiniteRestrictionIdentification
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.KernelIdentification
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.FiniteRestrictionIdentification
+
 
 /-!
 # Identifying joint laws of a finite past and a continuous future
@@ -15,6 +18,8 @@ the uniqueness step needed to upgrade finite-dimensional restart identities to a
 joint-law factorization.  It does not assert that any particular stochastic process has those
 finite-dimensional identities.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

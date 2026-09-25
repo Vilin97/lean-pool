@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.TrotterKato
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Convergence
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.WeakContinuity
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.TrotterKato
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Convergence
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.WeakContinuity
+
 
 /-!
 # Weak convergence of Feller processes on path space
@@ -39,6 +42,8 @@ assumed with the same exponents and constant for every member of the family; not
 when the constants are allowed to vary, nor for a family whose limit is not itself the process of
 a Feller semigroup.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

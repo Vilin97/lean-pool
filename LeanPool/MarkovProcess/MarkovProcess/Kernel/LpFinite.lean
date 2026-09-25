@@ -3,10 +3,13 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.Integral
-import Mathlib.MeasureTheory.Function.L1Space.Integrable
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-import Mathlib.Probability.Kernel.Composition.IntegralCompProd
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.Integral
+public import Mathlib.MeasureTheory.Function.L1Space.Integrable
+public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
+public import Mathlib.Probability.Kernel.Composition.IntegralCompProd
+
 
 /-!
 # Finite-exponent contraction for sub-Markov kernels
@@ -14,6 +17,8 @@ import Mathlib.Probability.Kernel.Composition.IntegralCompProd
 This file proves the scalar subprobability estimate behind contraction of a
 sub-Markov kernel on finite `Lᵖ` spaces, and its fibrewise integrated form.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

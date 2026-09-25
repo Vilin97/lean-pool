@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Time.FiniteGridIncrement
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.MeasureTheory.OuterMeasure.BorelCantelli
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Time.FiniteGridIncrement
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.MeasureTheory.OuterMeasure.BorelCantelli
+
 
 /-!
 # Dyadic increment bounds for the Kolmogorov--Chentsov argument
@@ -17,6 +20,8 @@ This file merges the following former modules, one section each:
 * `DyadicIncrementControl`: Almost-sure control of adjacent dyadic increments
 * `DyadicThresholdTail`: Geometric tails of dyadic increment thresholds
 -/
+
+@[expose] public section
 
 namespace MarkovProcess
 

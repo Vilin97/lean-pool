@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.CoordinateProductNormalization
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.CoordinateProductNormalization
+
 
 /-!
 # Restricting normalized coordinate products to active coordinates
@@ -18,6 +21,8 @@ If there are no active coordinates, the reduced index type is `Fin 0` and the em
 product is one.  No constant-one element of `C₀` is constructed.  This is purely algebraic
 finite-product infrastructure: it involves no measure and no kernel.
 -/
+
+@[expose] public section
 
 open scoped CompactlySupported ZeroAtInfty BigOperators
 

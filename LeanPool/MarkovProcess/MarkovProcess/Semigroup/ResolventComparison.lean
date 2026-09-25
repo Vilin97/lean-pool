@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.OrbitContinuity
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.OrbitProductRule
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Resolvent
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.OrbitContinuity
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.OrbitProductRule
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Resolvent
+
 
 /-!
 # Comparing two semigroups through their resolvents
@@ -32,6 +35,8 @@ Main results: `operator_resolvent_sub_resolvent_operator_eq_integral`,
 Both semigroups are read at the same shift `μ`; nothing is asserted when the two resolvents are
 taken at different shifts, and no relation between the two generators is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

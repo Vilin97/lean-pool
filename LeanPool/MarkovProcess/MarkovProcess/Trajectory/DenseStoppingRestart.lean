@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.RationalConditional
-import LeanPool.MarkovProcess.MarkovProcess.Restart.CountableStoppingRestart
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.RationalConditional
+public import LeanPool.MarkovProcess.MarkovProcess.Restart.CountableStoppingRestart
+
 
 /-!
 # Conditional restart at dense-time-valued stopping times
@@ -19,6 +22,8 @@ dense-time-valued stopping times.  An arbitrary finite `NNReal`-valued stopping 
 in `Trajectory/FellerStoppingConditional.lean`, and a stopping time that may be infinite in
 `Trajectory/StoppingLtTop.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

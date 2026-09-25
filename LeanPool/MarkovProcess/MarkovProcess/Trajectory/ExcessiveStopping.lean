@@ -3,10 +3,13 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.Resolvent
-import LeanPool.MarkovProcess.MarkovProcess.Path.OptionalStopping
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DynkinMartingale
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExpectedExitTime
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.Resolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Path.OptionalStopping
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DynkinMartingale
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExpectedExitTime
+
 
 /-!
 # Excessive functions and stopping
@@ -27,6 +30,8 @@ Main results: `IsFellerKernelSemigroup.resolvent_isLambdaExcessive`,
 
 No converse characterization of excessive functions is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

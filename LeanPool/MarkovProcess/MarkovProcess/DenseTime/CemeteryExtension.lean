@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.Basic
-import Mathlib.Probability.Kernel.Composition.MapComap
-import Mathlib.Topology.Constructions.SumProd
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.Basic
+public import Mathlib.Probability.Kernel.Composition.MapComap
+public import Mathlib.Topology.Constructions.SumProd
+
 
 /-!
 # Conservative cemetery extension of a sub-Markov kernel
@@ -14,6 +17,8 @@ This file adjoins an isolated cemetery state to a measurable state space and
 extends one sub-Markov kernel to a Markov kernel.  It deliberately makes no
 claim about preservation of kernel composition or semigroup laws.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

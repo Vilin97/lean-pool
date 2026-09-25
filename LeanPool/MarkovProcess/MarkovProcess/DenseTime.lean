@@ -4,20 +4,23 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
 
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CanonicalDiscreteLaw
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CanonicalDiscretePath
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CemeteryDenseTimeMarginals
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CemeteryExtension
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CemeterySemigroup
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.ConditionalKernel
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PhysicalCompactTestTransport
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PhysicalReindex
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PrefixKernel
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PrefixRecursion
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.Shift
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.Trajectory
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.TrajectoryMarginals
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.TwoPointMarginals
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CanonicalDiscreteLaw
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CanonicalDiscretePath
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CemeteryDenseTimeMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CemeteryExtension
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CemeterySemigroup
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.ConditionalKernel
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PhysicalCompactTestTransport
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PhysicalReindex
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PrefixKernel
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PrefixRecursion
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.Shift
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.Trajectory
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.TrajectoryMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.TwoPointMarginals
+
 
 /-!
 # DenseTime

@@ -3,11 +3,16 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.Basic
-import LeanPool.MarkovProcess.MarkovProcess.Time.CountableDenseTime
-import Mathlib.Topology.MetricSpace.HausdorffDistance
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Basic
+public import LeanPool.MarkovProcess.MarkovProcess.Time.CountableDenseTime
+public import Mathlib.Topology.MetricSpace.HausdorffDistance
+
 
 /-! # Detecting closed sets from countably many path coordinates -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

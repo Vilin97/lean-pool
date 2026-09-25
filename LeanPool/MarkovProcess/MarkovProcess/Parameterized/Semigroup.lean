@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.KernelSemigroup
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.KernelSemigroup
+
 
 /-!
 # Measurably parameterized sub-Markov kernel semigroups
@@ -16,6 +19,8 @@ measurability field is joint in parameter, time, and starting state, with carrie
 No parameter family is selected here, and no concrete coefficient, domain, Feller, conservativity,
 or stochastic-process assertion is made.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

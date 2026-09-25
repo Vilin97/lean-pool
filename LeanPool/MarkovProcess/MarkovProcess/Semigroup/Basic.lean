@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.Normed.Operator.Basic
+module
+
+public import Mathlib.Analysis.Normed.Operator.Basic
+
 
 /-!
 # Strongly continuous contraction semigroups
@@ -11,6 +14,8 @@ import Mathlib.Analysis.Normed.Operator.Basic
 This file provides a small reusable interface for strongly continuous contraction
 semigroups on real normed spaces, parametrized by nonnegative real time.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

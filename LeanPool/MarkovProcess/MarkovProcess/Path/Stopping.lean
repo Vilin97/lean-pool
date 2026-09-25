@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.Basic
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Basic
+
 
 /-!
 # Deterministic stopping of continuous paths
@@ -12,6 +15,8 @@ This file defines stopping a continuous path at a fixed deterministic time. It p
 topological and Borel-measurability properties of this operation; it introduces no stopping
 times or stochastic laws.
 -/
+
+@[expose] public section
 
 namespace MarkovProcess
 

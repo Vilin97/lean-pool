@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelRestriction
-import Mathlib.Data.Finset.Sort
-import Mathlib.MeasureTheory.Constructions.Projective
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelRestriction
+public import Mathlib.Data.Finset.Sort
+public import Mathlib.MeasureTheory.Constructions.Projective
+
 
 /-!
 # Finite-set finite-time laws
@@ -13,6 +16,8 @@ import Mathlib.MeasureTheory.Constructions.Projective
 This file reindexes the ordered finite-time kernels by finite sets of times and proves their
 Mathlib-native projectivity. It does not assert or construct a projective-limit measure.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

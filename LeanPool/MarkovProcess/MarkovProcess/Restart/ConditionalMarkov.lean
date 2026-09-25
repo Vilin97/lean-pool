@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Restart.ConditionalExpectation
-import LeanPool.MarkovProcess.MarkovProcess.Path.Shift
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Restart.ConditionalExpectation
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Shift
+
 
 /-!
 # Deterministic-time conditional restart on continuous paths
@@ -17,6 +20,8 @@ special case of the input for the whole path space and does not imply the result
 The theorem is a conditional API: it does not prove its restricted restart-law hypothesis and does
 not by itself associate a Markov or Hunt process with a transition semigroup.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

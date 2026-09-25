@@ -3,11 +3,14 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.KernelIdentification
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionMarginals
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.DenseTimeFiniteSetKernelShift
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.DenseTimeFiniteShift
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.FiniteRestrictionIdentification
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.KernelIdentification
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.DenseTimeFiniteSetKernelShift
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.DenseTimeFiniteShift
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.FiniteRestrictionIdentification
+
 
 /-!
 # Rational-time shifts of continuous trajectory laws
@@ -17,6 +20,8 @@ proof first identifies all finite rational-coordinate marginals of the shifted p
 uniqueness on the dense product path space and injectivity of dense restriction.  This is an
 unconditional law identity; conditional and strong Markov statements require additional work.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.BackwardC0Recursion
-import Mathlib.Probability.Kernel.Composition.IntegralCompProd
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.BackwardC0Recursion
+public import Mathlib.Probability.Kernel.Composition.IntegralCompProd
+
 
 /-!
 # Finite-time integral represented by the backward `C₀` recursion
@@ -17,6 +20,8 @@ No conservativity assumption is needed: sub-Markov finite-time kernels already g
 measures, which suffice for bounded integrability.  This is an analytic identification only; no
 statement about path space is proved here, and the process itself is built in `Trajectory/`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal ProbabilityTheory ZeroAtInfty

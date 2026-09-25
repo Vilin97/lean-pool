@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.NNReal
-import Mathlib.Topology.ContinuousMap.CompactlySupported
-import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingPotential
+module
+
+public import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.NNReal
+public import Mathlib.Topology.ContinuousMap.CompactlySupported
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingPotential
+
 
 /-!
 # From vanishing observables to measurable ones
@@ -26,6 +29,8 @@ measures.
 No topology on the target space is used, and no relation between the two measures other than the
 tested identity is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

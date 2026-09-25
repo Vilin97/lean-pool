@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.Kernel
-import Mathlib.Probability.Kernel.Composition.KernelLemmas
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.Kernel
+public import Mathlib.Probability.Kernel.Composition.KernelLemmas
+
 
 /-!
 # Translation of finite-time kernels
@@ -12,6 +15,8 @@ import Mathlib.Probability.Kernel.Composition.KernelLemmas
 This file proves the finite-dimensional translation identity for a conservative transition-kernel
 semigroup. It is ordinary kernel infrastructure and makes no path-space or process-existence claim.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ProbabilityTheory

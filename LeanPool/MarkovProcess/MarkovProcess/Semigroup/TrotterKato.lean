@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.CompactStrongConvergence
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.ResolventComparison
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.CompactStrongConvergence
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.ResolventComparison
+
 
 /-!
 # The Trotter--Kato theorem
@@ -40,6 +43,8 @@ semigroups on a sequence of different spaces (Trotter--Kurtz) is not stated.  No
 about convergence in the operator norm, nor about families that are merely uniformly bounded
 rather than contractive.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

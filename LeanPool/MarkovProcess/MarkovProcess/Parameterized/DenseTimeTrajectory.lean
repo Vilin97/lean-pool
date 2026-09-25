@@ -3,11 +3,16 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Parameterized.DenseTimeConditionalKernel
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.Trajectory
-import Mathlib.Probability.Kernel.IonescuTulcea.Traj
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Parameterized.DenseTimeConditionalKernel
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.Trajectory
+public import Mathlib.Probability.Kernel.IonescuTulcea.Traj
+
 
 /-! # Parameterized trajectories on countable dense time -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

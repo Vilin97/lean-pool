@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.YosidaStrongLimit
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Duhamel
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.OrbitContinuity
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.YosidaStrongLimit
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Duhamel
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.OrbitContinuity
+
 
 /-!
 # Generation of a contraction semigroup from a contractive resolvent
@@ -14,6 +17,8 @@ This file packages the strong limit of the Yosida exponential approximations
 as a strongly continuous contraction semigroup.  Strong continuity at zero is
 first proved on the range of one resolvent and then extended by density.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

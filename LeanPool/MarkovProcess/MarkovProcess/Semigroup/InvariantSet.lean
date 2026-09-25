@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Generation
-import Mathlib.Analysis.Convex.Combination
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Generation
+public import Mathlib.Analysis.Convex.Combination
+
 
 /-!
 # Invariant sets and strong semigroup limits
@@ -15,6 +18,8 @@ finite-iterate consequence of invariance under a normalized resolvent.  The
 Poisson-series argument transferring the latter invariance to each exponential
 approximant is in `Semigroup/PoissonInvariant.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,12 +3,15 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteSetCompactTestContinuity
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.WeakConvergence
-import LeanPool.MarkovProcess.MarkovProcess.Main
-import LeanPool.MarkovProcess.MarkovProcess.Parameterized.ContinuousProcessProperties
-import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
-import Mathlib.MeasureTheory.Measure.Tight
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteSetCompactTestContinuity
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.WeakConvergence
+public import LeanPool.MarkovProcess.MarkovProcess.Main
+public import LeanPool.MarkovProcess.MarkovProcess.Parameterized.ContinuousProcessProperties
+public import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
+public import Mathlib.MeasureTheory.Measure.Tight
+
 
 /-!
 # Measurable and continuous dependence on the starting point
@@ -39,6 +42,8 @@ Nothing here asserts weak continuity of the full path law `x ↦ continuousProce
 space; that needs tightness on path space itself, which is not proved here.  No statement covers
 a stopping time that can be infinite.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

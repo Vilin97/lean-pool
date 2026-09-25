@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.ConservativeResolvent
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.OnePointKilled
-import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingLocal
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.ConservativeResolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.OnePointKilled
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingLocal
+
 
 /-!
 # A conservative resolvent keeps the compactified process in the live space
@@ -22,6 +25,8 @@ compactified process.
 The regularity data of the compactification are an explicit hypothesis, as everywhere the
 continuous-path process is formed.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

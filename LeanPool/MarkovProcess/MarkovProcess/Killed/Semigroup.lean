@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Killed.Kernel
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.Kernel
+
 
 /-!
 # The killed semigroup on the domain
@@ -24,6 +27,8 @@ and the sub-Markov bound transfer from the carrier `alpha`.
 No Feller property, strong continuity, or regularity of the killed semigroup is claimed, and its
 process is not identified with the cemetery-extended process on lifetime paths.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal

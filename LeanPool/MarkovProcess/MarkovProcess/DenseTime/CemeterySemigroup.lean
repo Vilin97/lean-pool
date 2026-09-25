@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CemeteryExtension
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.KernelSemigroup
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CemeteryExtension
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.KernelSemigroup
+
 
 /-!
 # Cemetery extensions of sub-Markov kernel semigroups
@@ -14,6 +17,8 @@ kernel and composition of sub-Markov kernels.  Consequently, applying the
 extension at every time turns any sub-Markov kernel semigroup into a
 conservative semigroup on the cemetery state space.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Probability.Kernel.Composition.Comp
+module
+
+public import Mathlib.Probability.Kernel.Composition.Comp
+
 
 /-!
 # Sub-Markov kernels
@@ -12,6 +15,8 @@ This file records the elementary mass algebra of sub-Markov kernels.  It does
 not define transition families or connect kernels to operator semigroups or
 stochastic processes.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal ProbabilityTheory

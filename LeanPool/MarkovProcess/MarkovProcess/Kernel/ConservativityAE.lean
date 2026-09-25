@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.MeasureTheory.Measure.OpenPos
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.Operator
+module
+
+public import Mathlib.MeasureTheory.Measure.OpenPos
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.Operator
+
 
 /-!
 # Conservativity from preservation of constants
@@ -15,6 +18,8 @@ is initially almost everywhere in the starting point.  Continuity of the
 transition mass and positivity of the reference measure on nonempty open sets
 upgrade it to pointwise conservativity.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

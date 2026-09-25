@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PrefixRecursion
-import Mathlib.Probability.Kernel.IonescuTulcea.Traj
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PrefixRecursion
+public import Mathlib.Probability.Kernel.IonescuTulcea.Traj
+
 
 /-!
 # Trajectories on countable dense time
@@ -13,6 +16,8 @@ This file transports the finite-history transition kernels to the history carrie
 Mathlib's Ionescu--Tulcea construction, starts the resulting trajectory at a deterministic state,
 and reindexes its positive coordinates by a countable dense-time enumeration.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

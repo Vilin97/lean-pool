@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.ExitTime
-import LeanPool.MarkovProcess.MarkovProcess.Path.Shift
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.ExitTime
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Shift
+
 
 /-!
 # Exit times under shifts
@@ -22,6 +25,8 @@ shift `ContinuousPath.shift t`, and the measurability of the survival events the
 
 Nothing here involves a probability law.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

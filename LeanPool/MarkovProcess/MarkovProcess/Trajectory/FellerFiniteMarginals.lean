@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteDenseApproximationContinuity
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteDenseApproximationContinuity
+
 
 /-!
 # Arbitrary-time finite marginals of Feller trajectories
@@ -16,6 +19,8 @@ finite-set-kernel law.
 The theorem is stated for an arbitrary such semigroup; no particular semigroup is singled out,
 and no Hunt-process property is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

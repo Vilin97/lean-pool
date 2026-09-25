@@ -3,11 +3,14 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.Semigroup
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0Resolvent
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.Resolvent
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Resolvent
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.ResolventGeneration
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.Semigroup
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0Resolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.Resolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Resolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.ResolventGeneration
+
 
 /-!
 # The resolvent of a Feller kernel semigroup
@@ -37,6 +40,8 @@ Main results: `IsFellerKernelSemigroup.resolvent_apply_apply`,
 The bridge to `SubMarkovKernelSemigroup.kernelResolvent` is pointwise on nonnegative observables;
 no kernel-valued resolvent is constructed.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped NNReal ZeroAtInfty

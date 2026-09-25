@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0OperatorMeasure
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0OperatorMeasure
+
 
 /-!
 # Total mass of pointwise Riesz measures
@@ -15,6 +18,8 @@ supported Urysohn cutoff functions, then passes to the whole space by inner regu
 This file proves only a pointwise total-mass bound and finiteness.  It does not construct a kernel
 or prove any regularity in the evaluation point.
 -/
+
+@[expose] public section
 
 open CompactlySupported MeasureTheory
 open scoped ZeroAtInfty

@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.PoissonInvariant
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0SemigroupFeller
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.PoissonInvariant
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0SemigroupFeller
+
 
 /-!
 # Positive `C₀` resolvents and their Feller kernels
@@ -16,6 +19,8 @@ semigroup by a sub-Markov kernel semigroup and identifies its `C₀` operators e
 The package in this file starts from the resolvent identity, the Hille--Yosida bound, dense range,
 and positivity of the actual shifted resolvents.  It assumes neither a semigroup nor a kernel.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

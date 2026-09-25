@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.MeasureTheory.Constructions.Projective
-import Mathlib.Probability.Kernel.Composition.MapComap
+module
+
+public import Mathlib.MeasureTheory.Constructions.Projective
+public import Mathlib.Probability.Kernel.Composition.MapComap
+
 
 /-!
 # Identifying path kernels from finite-coordinate restrictions
@@ -13,6 +16,8 @@ A finite kernel on a product path space is determined by all of its finite-coord
 pushforwards.  The proof applies uniqueness of finite projective limits pointwise in the source
 parameter.  No topology, time order, path regularity, or Markov property is used.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Basic
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Basic
+
 
 /-!
 # Exit times of lifetime paths
@@ -15,6 +18,8 @@ path which never exits has infinite exit time.
 Only deterministic order properties are proved here. No measurability or stopping-time claim is
 made.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

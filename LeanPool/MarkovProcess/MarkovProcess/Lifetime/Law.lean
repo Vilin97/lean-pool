@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Basic
-import Mathlib.Probability.Kernel.Composition.MapComap
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Basic
+public import Mathlib.Probability.Kernel.Composition.MapComap
+
 
 /-!
 # Continuous laws as nonexplosive lifetime-path laws
@@ -13,6 +16,8 @@ This file transports kernels on ordinary continuous paths through the infinite-l
 embedding. It records the resulting nonexplosion and coordinate identities without asserting
 that any particular dense-time or PDE law has continuous paths.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteProductCompactSupportApproximation
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteProductCompactSupportApproximation
+
 
 /-!
 # Explicit coordinate-product normal forms
@@ -14,6 +17,8 @@ consumed by recursion (for example, by iterated kernel integration).  The empty 
 the constant function `1`; in particular the representation treats constants and an empty
 coordinate type without exceptional cases.
 -/
+
+@[expose] public section
 
 open scoped CompactlySupported ZeroAtInfty
 

@@ -3,12 +3,15 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Data.NNRat.Defs
-import Mathlib.Basic.NNReal.Defs
-import Mathlib.Data.Rat.Cast.Order
-import Mathlib.Data.Rat.Encodable
-import Mathlib.Basic.Denumerable
-import Mathlib.MeasureTheory.MeasurableSpace.Embedding
+module
+
+public import Mathlib.Data.NNRat.Defs
+public import Mathlib.Basic.NNReal.Defs
+public import Mathlib.Data.Rat.Cast.Order
+public import Mathlib.Data.Rat.Encodable
+public import Mathlib.Basic.Denumerable
+public import Mathlib.MeasureTheory.MeasurableSpace.Embedding
+
 
 /-!
 # Countable dense time indices
@@ -18,6 +21,8 @@ a countably infinite type. The fixed enumeration of nonnegative rational times b
 not increasing. No probability law, projective limit, stochastic process, continuity, or path
 regularity is constructed here.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 
@@ -141,7 +146,8 @@ private instance : Countable DenseTime where
 
 /-- A fixed arbitrary enumeration of nonnegative rational times. It is not order-preserving. -/
 noncomputable def enumeration : ℕ ≃ DenseTime :=
-  nonempty_equiv_of_countable.some
+  Classical.choice (show Nonempty (ℕ ≃ DenseTime) from by
+    exact nonempty_equiv_of_countable)
 
 end DenseTime
 end

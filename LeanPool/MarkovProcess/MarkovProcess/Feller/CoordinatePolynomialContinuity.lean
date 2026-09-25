@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.CoordinateProductContinuity
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.CoordinateProductContinuity
+
 
 /-!
 # Continuity of finite coordinate polynomials
@@ -15,6 +18,8 @@ their coordinate polynomials before applying linearity of the integral.
 This file handles only explicit finite coordinate polynomials.  The passage to arbitrary
 compactly supported continuous tests is in `Feller/FiniteTimeCompactTestContinuity.lean`.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped NNReal ZeroAtInfty BigOperators

@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.DenseTimeFiniteShift
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelShift
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.ProjectiveFamily
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.DenseTimeFiniteShift
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelShift
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.ProjectiveFamily
+
 
 /-!
 # Translation of finite-set kernels
@@ -15,6 +18,8 @@ translated set back to the original coordinates, and proves the corresponding tr
 for conservative transition-kernel semigroups.  It is finite-dimensional kernel infrastructure;
 it does not assert a path-space Markov property.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

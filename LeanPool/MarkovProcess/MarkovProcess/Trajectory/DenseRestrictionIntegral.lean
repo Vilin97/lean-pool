@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionMarginals
-import LeanPool.MarkovProcess.MarkovProcess.Feller.DensePhysicalFiniteSetContinuity
-import LeanPool.MarkovProcess.MarkovProcess.Path.Polish
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.DensePhysicalFiniteSetContinuity
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Polish
+
 
 /-!
 # Finite dense-time marginals of a restarted trajectory law
@@ -19,6 +22,8 @@ This is a kernel-level identity of finite-dimensional integrals.  No conditional
 stopping-time statement is proved here; those are in `Trajectory/FellerConditional.lean` and
 `Trajectory/FellerStoppingConditional.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

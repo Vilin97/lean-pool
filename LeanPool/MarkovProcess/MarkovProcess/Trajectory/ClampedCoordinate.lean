@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.StoppedValueMeasurability
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.StoppedValueMeasurability
+
 
 /-!
 # Measurability of clamped path coordinates
@@ -16,6 +19,8 @@ Main result: `ContinuousPath.measurable_clampedCoordinate`.
 
 No stochastic-process law or stopping-time identity is asserted.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal

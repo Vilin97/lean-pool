@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.DenseFiltration
-import LeanPool.MarkovProcess.MarkovProcess.Path.Shift
-import LeanPool.MarkovProcess.MarkovProcess.Restart.RestrictedRestartOfJoint
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.DenseFiltration
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Shift
+public import LeanPool.MarkovProcess.MarkovProcess.Restart.RestrictedRestartOfJoint
+
 
 /-!
 # Restricted restart at rational times
@@ -15,6 +18,8 @@ event-restricted restart identity on the canonical continuous-path filtration.  
 factorization remains an explicit input; proving it from the finite-dimensional Markov laws is the
 next process-construction step.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

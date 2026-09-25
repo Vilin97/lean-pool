@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Killed.Resolvent
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.Resolvent
+
 
 /-!
 # Identifying the expected exit time with a Dirichlet resolvent
@@ -31,6 +34,8 @@ the identification makes `RU` antitone on `U` too and the sequence increases to 
 The consumer-supplied resolvent and its limit are `ℝ≥0∞`-valued, so no integrability or finiteness
 hypothesis appears; a consumer working with real-valued solutions bridges with `ENNReal.ofReal`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

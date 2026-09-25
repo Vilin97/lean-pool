@@ -4,48 +4,51 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
 
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.AllTimeFiniteMarginals
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.AllTimeMarginals
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Basic
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ClampedCoordinate
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Convergence
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.CylinderAlgebra
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionIntegral
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionMarginals
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseStoppingRestart
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DiscountedDynkin
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Dynkin
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DynkinMartingale
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DynkinStopping
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Equivariance
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExcessiveStopping
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExitLaw
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExitTimeExponentialMoment
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExitTimeLaplace
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExpectedExitTime
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerConditional
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerCountableStoppingRestart
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerFiniteMarginals
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerRestrictedRestart
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerShift
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerStoppingConditional
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerStoppingRestart
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKac
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKacFunctional
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKacRealResolvent
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKacResolvent
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FiniteMarginals
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.HarmonicRepresentation
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.PathModulus
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.PathTightness
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.PenalizationDomination
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.RationalConditional
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.RationalShift
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ResolventExitDecomposition
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.StartingPointContinuity
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.StoppingLtTop
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.WeakContinuity
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.WeakConvergence
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.AllTimeFiniteMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.AllTimeMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Basic
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ClampedCoordinate
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Convergence
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.CylinderAlgebra
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionIntegral
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseStoppingRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DiscountedDynkin
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Dynkin
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DynkinMartingale
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DynkinStopping
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Equivariance
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExcessiveStopping
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExitLaw
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExitTimeExponentialMoment
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExitTimeLaplace
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExpectedExitTime
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerConditional
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerCountableStoppingRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerFiniteMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerRestrictedRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerShift
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerStoppingConditional
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerStoppingRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKac
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKacFunctional
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKacRealResolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKacResolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FiniteMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.HarmonicRepresentation
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.PathModulus
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.PathTightness
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.PenalizationDomination
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.RationalConditional
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.RationalShift
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ResolventExitDecomposition
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.StartingPointContinuity
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.StoppingLtTop
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.WeakContinuity
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.WeakConvergence
+
 
 /-!
 # Trajectory

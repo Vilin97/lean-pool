@@ -3,10 +3,13 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Topology.ContinuousMap.StoneWeierstrass
-import Mathlib.Topology.ContinuousMap.CompactlySupported
-import Mathlib.Topology.Separation.CompletelyRegular
-import Mathlib.Topology.UrysohnsLemma
+module
+
+public import Mathlib.Topology.ContinuousMap.StoneWeierstrass
+public import Mathlib.Topology.ContinuousMap.CompactlySupported
+public import Mathlib.Topology.Separation.CompletelyRegular
+public import Mathlib.Topology.UrysohnsLemma
+
 
 /-!
 # Stone--Weierstrass on products
@@ -24,6 +27,8 @@ The coordinate pullback of a function in `C₀(α, ℝ)` need not itself vanish 
 whole product.  Accordingly, `coordinateC0Subalgebra` is a subalgebra of continuous maps; the
 `C₀` designation records its one-coordinate generators, not its ambient carrier.
 -/
+
+@[expose] public section
 
 open Topology
 open scoped ZeroAtInfty

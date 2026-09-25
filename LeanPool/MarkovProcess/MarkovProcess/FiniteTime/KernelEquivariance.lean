@@ -3,10 +3,13 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.ProjectiveFamily
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.KolmogorovMoments
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.ProjectiveFamily
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.KolmogorovMoments
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
+
 
 /-!
 # Rescaled conjugation of finite-time kernels
@@ -28,6 +31,8 @@ Nothing here mentions path space; the path-space equivariance statement is in
 Kolmogorov moment criterion also transfers, with the constant multiplied by `c ^ q`
 (`IsRescaledConjugate.hasKolmogorovMoments`).
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal ProbabilityTheory

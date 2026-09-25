@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.ExitTime
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.ExitTime
+
 
 /-!
 # Uniform sampling of a continuous path
@@ -25,6 +28,8 @@ in `Path/ExitTime.lean`; `ContinuousPath.untopD_exitTime` converts the `WithTop.
 No lattice, no covering family and no discrete geometry appears here: the sampling is purely
 metric.
 -/
+
+@[expose] public section
 
 open Set
 open scoped ENNReal NNReal

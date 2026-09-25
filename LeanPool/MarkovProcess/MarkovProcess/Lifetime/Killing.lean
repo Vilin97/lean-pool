@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Basic
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Basic
+
 
 /-!
 # Deterministic killing of lifetime paths
@@ -12,6 +15,8 @@ This file truncates a lifetime path at a deterministic finite time. The coordina
 killing time itself is the cemetery state, so this operation is distinct from endpoint-retaining
 stopping.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Continuity.DenseTimeContinuousExtension
-import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Basic
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Continuity.DenseTimeContinuousExtension
+public import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Basic
+
 
 /-!
 # Countable separation of lifetime paths
@@ -12,6 +15,8 @@ import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Basic
 Lifetime and the coordinates at the fixed countable dense time set separate continuous lifetime
 paths.  Their measurable coding therefore gives a countable separating family.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

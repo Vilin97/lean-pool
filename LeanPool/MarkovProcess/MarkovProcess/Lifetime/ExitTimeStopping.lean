@@ -3,11 +3,16 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.ClosedSetDetection
-import LeanPool.MarkovProcess.MarkovProcess.Lifetime.ExitTime
-import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Filtration
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.ClosedSetDetection
+public import LeanPool.MarkovProcess.MarkovProcess.Lifetime.ExitTime
+public import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Filtration
+
 
 /-! # Exit times as stopping times -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

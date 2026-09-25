@@ -3,13 +3,16 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionMarginals
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.RationalConditional
-import LeanPool.MarkovProcess.MarkovProcess.Time.DenseTimeApproximationFromAbove
-import LeanPool.MarkovProcess.MarkovProcess.Path.ShiftCompactTestConvergence
-import LeanPool.MarkovProcess.MarkovProcess.Feller.DensePhysicalFiniteSetContinuity
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.MeasureFiniteRestrictionIdentification
-import LeanPool.MarkovProcess.MarkovProcess.Path.MeasureIdentification
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.RationalConditional
+public import LeanPool.MarkovProcess.MarkovProcess.Time.DenseTimeApproximationFromAbove
+public import LeanPool.MarkovProcess.MarkovProcess.Path.ShiftCompactTestConvergence
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.DensePhysicalFiniteSetContinuity
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.MeasureFiniteRestrictionIdentification
+public import LeanPool.MarkovProcess.MarkovProcess.Path.MeasureIdentification
+
 
 
 /-!
@@ -23,6 +26,8 @@ tests, and then uses measure identification on dense restrictions.
 The time here is deterministic. The strong Markov property at a finite stopping time is in
 `Trajectory/FellerStoppingRestart.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Continuity.PathModulus
-import Mathlib.MeasureTheory.Measure.Tight
-import Mathlib.Topology.UniformSpace.Ascoli
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Continuity.PathModulus
+public import Mathlib.MeasureTheory.Measure.Tight
+public import Mathlib.Topology.UniformSpace.Ascoli
+
 
 /-!
 # Compact sets of paths, and tightness on continuous-path space
@@ -37,6 +40,8 @@ Main results:
 Nothing here constructs a law, and no compactness theorem for measures (Prokhorov's theorem) is
 proved or used.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Metric Topology
 open scoped ENNReal NNReal

@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0Resolvent
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0Resolvent
+
 
 /-!
 # Exponential comparison under resolvent generation
@@ -20,6 +23,8 @@ Public declarations:
 
 No comparison for indicators of arbitrary measurable sets is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

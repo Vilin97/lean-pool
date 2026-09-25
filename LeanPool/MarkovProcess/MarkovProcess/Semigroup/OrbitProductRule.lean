@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Generator
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Generator
+
 
 /-!
 # The product rule for a semigroup acting along a curve
@@ -24,6 +27,8 @@ Main results: `hasDerivWithinAt_operator_apply`.
 Times are read from the real line at `Real.toNNReal`, as elsewhere in the library.  Nothing is
 asserted about the two-sided derivative, which for a general curve fails at `s = 0`.
 -/
+
+@[expose] public section
 
 open Filter Topology
 open scoped NNReal

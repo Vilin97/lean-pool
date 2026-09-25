@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Continuity.DenseTimeContinuousExtension
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Continuity.DenseTimeContinuousExtension
+
 
 /-!
 # Identifying continuous-path measures from dense-time restrictions
@@ -12,6 +15,8 @@ A measure on continuous-path space is determined by its pushforward to the fixed
 carrier. This is the measure-level counterpart of continuous-path kernel identification and is a
 deterministic property of continuous paths.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -4,12 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
 
-import LeanPool.MarkovProcess.MarkovProcess.Examples.BrownianMotion
-import LeanPool.MarkovProcess.MarkovProcess.Examples.Drift
-import LeanPool.MarkovProcess.MarkovProcess.Examples.HeatGenerator
-import LeanPool.MarkovProcess.MarkovProcess.Examples.HeatOnePoint
-import LeanPool.MarkovProcess.MarkovProcess.Examples.HeatSemigroup
-import LeanPool.MarkovProcess.MarkovProcess.Examples.Identity
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Examples.BrownianMotion
+public import LeanPool.MarkovProcess.MarkovProcess.Examples.Drift
+public import LeanPool.MarkovProcess.MarkovProcess.Examples.HeatGenerator
+public import LeanPool.MarkovProcess.MarkovProcess.Examples.HeatOnePoint
+public import LeanPool.MarkovProcess.MarkovProcess.Examples.HeatSemigroup
+public import LeanPool.MarkovProcess.MarkovProcess.Examples.Identity
+
 
 /-!
 # Examples

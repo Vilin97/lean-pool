@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Basic
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.Topology.ContinuousMap.ZeroAtInfty
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Basic
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Mathlib.Topology.ContinuousMap.ZeroAtInfty
+
 
 /-!
 # Joint regularity of strongly continuous semigroups on `C₀`
@@ -18,6 +21,8 @@ regularity premise on the semigroup.
 This is a generic functional-analytic API. It makes no representation claim
 about the semigroup.
 -/
+
+@[expose] public section
 
 open scoped ZeroAtInfty
 

@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PhysicalCompactTestTransport
-import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteSetCompactTestContinuity
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0OperatorMeasure
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PhysicalCompactTestTransport
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteSetCompactTestContinuity
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0OperatorMeasure
+
 
 /-!
 # Compact-test bounds for finite dense-time laws
@@ -17,6 +20,8 @@ the `C₀` norm of the test. Both statements include the empty coordinate set.
 This is finite-dimensional analytic infrastructure; no statement about path space is proved
 here.  The continuous-path process is built in `Trajectory/`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal CompactlySupported ZeroAtInfty

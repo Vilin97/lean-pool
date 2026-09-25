@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CemeterySemigroup
-import LeanPool.MarkovProcess.MarkovProcess.Parameterized.Semigroup
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CemeterySemigroup
+public import LeanPool.MarkovProcess.MarkovProcess.Parameterized.Semigroup
+
 
 /-!
 # Parameterized cemetery-extension semigroups
@@ -12,6 +15,8 @@ import LeanPool.MarkovProcess.MarkovProcess.Parameterized.Semigroup
 This file extends a jointly measurable family of sub-Markov semigroups by one absorbing
 cemetery state.  The construction is jointly measurable in the parameter, time, and state.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

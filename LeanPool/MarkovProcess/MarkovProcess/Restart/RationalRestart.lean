@@ -3,12 +3,15 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Restart.RationalRestrictedRestart
-import LeanPool.MarkovProcess.MarkovProcess.Restart.FinitePastRestart
-import LeanPool.MarkovProcess.MarkovProcess.Restart.MixedPastFuture
-import Mathlib.Probability.Kernel.Composition.KernelLemmas
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.CompProdReindex
-import LeanPool.MarkovProcess.MarkovProcess.Path.MixedFiniteMarginals
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Restart.RationalRestrictedRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Restart.FinitePastRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Restart.MixedPastFuture
+public import Mathlib.Probability.Kernel.Composition.KernelLemmas
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.CompProdReindex
+public import LeanPool.MarkovProcess.MarkovProcess.Path.MixedFiniteMarginals
+
 
 /-!
 # The rational-time restart kernel and its joint law
@@ -19,6 +22,8 @@ This file merges the following former modules, one section each:
 * `RationalRestartFiniteMarginals`: Finite marginals of the rational restart kernel
 * `RationalJointLaw`: Rational-time joint restart law
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

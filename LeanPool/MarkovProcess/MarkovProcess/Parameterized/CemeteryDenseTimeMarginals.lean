@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Parameterized.CemeterySemigroup
-import LeanPool.MarkovProcess.MarkovProcess.Parameterized.DenseTimeTrajectoryMarginals
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Parameterized.CemeterySemigroup
+public import LeanPool.MarkovProcess.MarkovProcess.Parameterized.DenseTimeTrajectoryMarginals
+
 
 /-!
 # Cemetery marginals of parameterized dense-time trajectories
@@ -12,6 +15,8 @@ import LeanPool.MarkovProcess.MarkovProcess.Parameterized.DenseTimeTrajectoryMar
 This file proves a one-time marginal identity.  It makes no simultaneous path-support or
 lifetime claim.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

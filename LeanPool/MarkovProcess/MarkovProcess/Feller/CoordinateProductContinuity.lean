@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.CoordinateProductActiveReduction
-import LeanPool.MarkovProcess.MarkovProcess.Feller.BackwardC0Integral
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelRestriction
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.CoordinateProductActiveReduction
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.BackwardC0Integral
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelRestriction
+
 
 /-!
 # Continuity of finite-time integrals of coordinate-product terms
@@ -19,6 +22,8 @@ uses conservativity to identify the finite-time law as a probability measure; in
 it never attempts to construct a constant-one element of `C₀`.  This is finite-dimensional
 analytic infrastructure; no statement about path space is proved here.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped NNReal ZeroAtInfty BigOperators

@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Analysis.ExpPrimitive
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.Operator
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DynkinMartingale
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Analysis.ExpPrimitive
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.Operator
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DynkinMartingale
+
 
 /-!
 # Feynman--Kac functionals and semigroups
@@ -25,6 +28,8 @@ Main results: `feynmanKacAdditiveFunctional`,
 
 The resolvent and perturbation identities are developed in `Trajectory/FeynmanKacResolvent.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

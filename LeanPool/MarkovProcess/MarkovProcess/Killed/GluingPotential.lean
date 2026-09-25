@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Killed.Resolvent
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.Resolvent
-import LeanPool.MarkovProcess.MarkovProcess.Path.Exhaustion
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.Resolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.Resolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Exhaustion
+
 
 /-!
 # Potential measures
@@ -32,6 +35,8 @@ homogeneous on measurable observables (`SubMarkovKernelSemigroup.kernelResolvent
 
 No resolvent identity and no topology on the state space are used here.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

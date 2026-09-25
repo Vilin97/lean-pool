@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.KernelSemigroup
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.Lp
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.KernelSemigroup
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.Lp
+
 
 /-!
 # Operators associated with a sub-Markov kernel semigroup
@@ -13,6 +16,8 @@ This file constructs the jointly measurable time-space kernel and the
 canonical contractive operator families on real `Lᵖ`.  It deliberately makes
 no claim here about the operator semigroup laws or strong continuity.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

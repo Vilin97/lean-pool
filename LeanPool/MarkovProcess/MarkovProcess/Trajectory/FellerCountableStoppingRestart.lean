@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerRestrictedRestart
-import LeanPool.MarkovProcess.MarkovProcess.Restart.CountableStoppingRestart
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerRestrictedRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Restart.CountableStoppingRestart
+
 
 /-!
 # Conditional restart of the Feller trajectory at countable-range stopping times
@@ -19,6 +22,8 @@ The stopping time here has countable range.  An arbitrary finite stopping time i
 `Trajectory/FellerStoppingConditional.lean`, and a `WithTop`-valued time that can be infinite in
 `Trajectory/StoppingLtTop.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

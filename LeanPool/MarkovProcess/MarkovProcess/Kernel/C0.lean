@@ -3,11 +3,14 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
-import Mathlib.Probability.Kernel.Composition.IntegralCompProd
-import Mathlib.Topology.ContinuousMap.ZeroAtInfty
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.Integral
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.KernelSemigroup
+module
+
+public import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
+public import Mathlib.Probability.Kernel.Composition.IntegralCompProd
+public import Mathlib.Topology.ContinuousMap.ZeroAtInfty
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.Integral
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.KernelSemigroup
+
 
 /-!
 # Kernel operators on continuous functions vanishing at infinity
@@ -16,6 +19,8 @@ This file records the spatial `C₀` property of a sub-Markov kernel semigroup a
 raw integral as a contractive continuous linear map on `C₀(α, ℝ)`.  It makes no assertion about
 continuity in time or the existence of an associated stochastic process.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal ZeroAtInfty

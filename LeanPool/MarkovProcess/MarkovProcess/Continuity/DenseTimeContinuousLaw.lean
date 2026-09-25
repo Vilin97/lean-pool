@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Continuity.DenseTimeContinuousExtension
-import Mathlib.Probability.Kernel.Composition.MapComap
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Continuity.DenseTimeContinuousExtension
+public import Mathlib.Probability.Kernel.Composition.MapComap
+
 
 /-!
 # Transporting dense-time laws to continuous paths
@@ -12,6 +15,8 @@ import Mathlib.Probability.Kernel.Composition.MapComap
 This file transports a kernel on dense-time trajectories to ordinary continuous paths under an
 explicit support-on-the-continuous-range hypothesis. It does not prove that support hypothesis.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

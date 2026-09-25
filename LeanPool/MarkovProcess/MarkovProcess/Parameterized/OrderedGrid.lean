@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Time.OrderedGrid
-import LeanPool.MarkovProcess.MarkovProcess.Parameterized.Semigroup
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Time.OrderedGrid
+public import LeanPool.MarkovProcess.MarkovProcess.Parameterized.Semigroup
+
 
 /-!
 # Parameterized trajectory laws on a fixed ordered time grid
@@ -17,6 +20,8 @@ output path.
 The result is a path-law kernel on `Theta × alpha` with values in measures on `ℕ → alpha`.
 It is not a continuous-time path law and does not assert measurability in the grid.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.Normed.Algebra.Exponential
-import Mathlib.Analysis.SpecialFunctions.Exponential
+module
+
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.Analysis.SpecialFunctions.Exponential
+
 
 /-!
 # Norm bounds for Banach-algebra exponentials
@@ -12,6 +15,8 @@ import Mathlib.Analysis.SpecialFunctions.Exponential
 This file records elementary estimates for the exponential in a real Banach algebra.  The
 contraction estimate is tailored to exponentials of bounded Yosida-type generators.
 -/
+
+@[expose] public section
 
 namespace MarkovProcess.Semigroup
 

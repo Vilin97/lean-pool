@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Continuity.DenseTimeContinuousExtension
-import Mathlib.Probability.Kernel.Composition.MapComap
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Continuity.DenseTimeContinuousExtension
+public import Mathlib.Probability.Kernel.Composition.MapComap
+
 
 /-!
 # Identifying continuous-path kernels from dense-time restrictions
@@ -14,6 +17,8 @@ space.  A measurable left inverse is obtained from the total continuous-extensio
 deterministic property of continuous paths; it makes no stochastic-process, Markov, or regularity
 claim.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Parameterized.ContinuousProcess
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Parameterized.ContinuousProcess
+
 
 /-!
 # Properties of the parameterized continuous-path process
@@ -27,6 +30,8 @@ form `continuousProcess_map_eval_zero'`), `continuousProcess_map_finiteEvaluatio
 `continuousProcess_condExp_shift`, `continuousProcess_condExp_shift_stoppingTime`,
 `continuousProcess_condExp_shift_countableStoppingTime`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

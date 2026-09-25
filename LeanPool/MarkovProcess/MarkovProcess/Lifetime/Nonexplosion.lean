@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Law
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Law
+
 
 /-!
 # Detecting nonexplosion from countably many coordinates
@@ -13,6 +16,8 @@ time. Consequently, nonexplosion of a lifetime-path kernel can be proved from co
 almost-sure coordinate statements. This is the measure-theoretic reduction later used to turn
 conservativity of transition laws into nonexplosion.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

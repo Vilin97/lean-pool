@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.C0
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Basic
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.C0
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Basic
+
 
 /-!
 # Strongly continuous `C₀` semigroups from kernels
@@ -14,6 +17,8 @@ packages those operators as a strongly continuous contraction semigroup. Spatial
 `C₀`, continuity of its time orbits, and conservativity of the kernels remain separate properties.
 No stochastic process or Hunt process is constructed here.
 -/
+
+@[expose] public section
 
 open Topology
 open scoped ZeroAtInfty

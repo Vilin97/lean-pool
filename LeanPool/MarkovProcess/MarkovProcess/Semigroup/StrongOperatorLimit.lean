@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.Normed.Operator.Completeness
+module
+
+public import Mathlib.Analysis.Normed.Operator.Completeness
+
 
 /-!
 # Strong operator limits of contractions
@@ -12,6 +15,8 @@ This module constructs the pointwise limit of a sequence of continuous linear
 contractions on a complete real normed space and records the small convergence
 API needed to pass algebraic identities to the limit.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteProductCoordinateNormalForm
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteProductCoordinateNormalForm
+
 
 /-!
 # Normalizing finite coordinate products
@@ -19,6 +22,8 @@ recursions that branch only over active coordinates.
 
 This is purely algebraic finite-product infrastructure: it involves no measure and no kernel.
 -/
+
+@[expose] public section
 
 open scoped CompactlySupported ZeroAtInfty BigOperators
 

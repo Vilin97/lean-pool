@@ -3,10 +3,13 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Algebra.Order.Sub.Basic
-import Mathlib.Basic.NNReal.Defs
-import Mathlib.MeasureTheory.MeasurableSpace.Constructions
-import Mathlib.Order.Fin.Basic
+module
+
+public import Mathlib.Algebra.Order.Sub.Basic
+public import Mathlib.Basic.NNReal.Defs
+public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+public import Mathlib.Order.Fin.Basic
+
 
 /-!
 # Finite ordered time families
@@ -15,6 +18,8 @@ This file provides increasing finite families of nonnegative times and the eleme
 for restricting such families and their coordinate paths along order embeddings.  It is an
 ordinary finite-dimensional API and makes no probability-law or stochastic-process claim.
 -/
+
+@[expose] public section
 
 namespace MarkovProcess
 

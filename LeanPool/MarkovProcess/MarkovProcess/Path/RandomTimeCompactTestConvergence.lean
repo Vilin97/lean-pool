@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.ShiftCompactTestConvergence
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0OperatorMeasure
-import LeanPool.MarkovProcess.MarkovProcess.Path.RandomShiftMeasurability
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.ShiftCompactTestConvergence
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0OperatorMeasure
+public import LeanPool.MarkovProcess.MarkovProcess.Path.RandomShiftMeasurability
+
 
 /-!
 # Dominated convergence for tests along random times
@@ -15,6 +18,8 @@ times converging pointwise to a limiting random time.  The measure is any finite
 continuous-path space; no Markov or kernel assumption is used.  The deterministic-sequence
 versions are in `ContinuousPathShiftCompactTestConvergence.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PhysicalReindex
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteSetKernelShift
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PhysicalReindex
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteSetKernelShift
+
 
 /-!
 # Translation of finite dense-time kernels
@@ -12,6 +15,8 @@ import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteSetKernelShift
 This file transports the finite-set kernel translation law from physical nonnegative-real times
 to finite sets of dense times, using the canonical coordinate reindexings.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Probability.Process.Adapted
+module
+
+public import Mathlib.Probability.Process.Adapted
+
 
 /-!
 # Canonical discrete path space
@@ -19,6 +22,8 @@ assert any Markov property.
 * `DiscretePath.coordinateProcess`: the canonical coordinate process.
 * `DiscretePath.canonicalFiltration`: the natural filtration of the coordinate process.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open TopologicalSpace

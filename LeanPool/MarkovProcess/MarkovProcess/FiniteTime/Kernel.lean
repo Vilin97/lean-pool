@@ -3,10 +3,13 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Time.FiniteOrderedTimes
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.KernelSemigroup
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.Probability.Kernel.Composition.CompProd
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Time.FiniteOrderedTimes
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.KernelSemigroup
+public import Mathlib.Data.Fin.Tuple.Basic
+public import Mathlib.Probability.Kernel.Composition.CompProd
+
 
 /-!
 # Finite-time kernels on strictly ordered time families
@@ -19,6 +22,8 @@ resulting kernels are Markov kernels.
 This file constructs finite-dimensional kernels only.  It makes no path-space, projectivity,
 conservativity, or stochastic-process existence claim beyond the explicitly stated results.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ProbabilityTheory

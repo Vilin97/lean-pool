@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.BackwardC0Integral
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.StrongOperatorLimit
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.BackwardC0Integral
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.StrongOperatorLimit
+
 
 /-!
 # Convergence of the backward `C₀` recursion along a family of semigroups
@@ -25,6 +28,8 @@ Main results: `tendsto_backwardC0_of_tendsto_c0Semigroup`,
 The factors and the observation times are fixed; nothing is asserted when they vary along the
 filter as well, and no rate of convergence is claimed.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Topology
 open scoped NNReal ZeroAtInfty BigOperators

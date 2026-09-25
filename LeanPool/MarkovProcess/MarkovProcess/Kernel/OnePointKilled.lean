@@ -3,13 +3,16 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.OnePointKolmogorov
-import LeanPool.MarkovProcess.MarkovProcess.Killed.Semigroup
-import LeanPool.MarkovProcess.MarkovProcess.Feller.Resolvent
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExitLaw
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExitTimeLaplace
-import Mathlib.Topology.Homeomorph.Lemmas
-import Mathlib.MeasureTheory.Measure.RegularityCompacts
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.OnePointKolmogorov
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.Semigroup
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.Resolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExitLaw
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExitTimeLaplace
+public import Mathlib.Topology.Homeomorph.Lemmas
+public import Mathlib.MeasureTheory.Measure.RegularityCompacts
+
 
 /-!
 # Killing the one-point process at infinity
@@ -17,6 +20,8 @@ import Mathlib.MeasureTheory.Measure.RegularityCompacts
 This file identifies the continuous process of the one-point extension of a positive
 `C₀`-contractive resolvent with the process killed on leaving its live part.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

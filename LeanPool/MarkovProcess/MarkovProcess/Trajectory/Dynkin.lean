@@ -3,11 +3,14 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Main
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0OperatorMeasure
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Generator
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.AllTimeMarginals
-import Mathlib.MeasureTheory.Integral.Prod
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Main
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0OperatorMeasure
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Generator
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.AllTimeMarginals
+public import Mathlib.MeasureTheory.Integral.Prod
+
 
 /-!
 # Dynkin's formula at deterministic times
@@ -25,6 +28,8 @@ The evaluation functional `c0EvalCLM x : C₀(α, ℝ) →L[ℝ] ℝ` is the too
 integral in `C₀` to a pointwise integral; `evalC0CLM` is the same functional under its original
 name, kept for consumers.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal ZeroAtInfty

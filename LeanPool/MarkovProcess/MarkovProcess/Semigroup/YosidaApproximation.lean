@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.ContractiveResolvent
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.ExponentialBounds
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Basic
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.ContractiveResolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.ExponentialBounds
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Basic
+
 
 /-!
 # Bounded Yosida approximations
@@ -14,6 +17,8 @@ For a contractive resolvent `R`, this file defines the bounded generator
 `G_α = α (α R_α - I)` and its exponential contraction semigroup.  It also
 records commutation and the exact formula on the range of a fixed resolvent.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 
@@ -53,6 +58,9 @@ private theorem commute_smul_smul_of_comp_eq (A B : E →L[ℝ] E)
 section CompleteSpace
 
 variable [CompleteSpace E]
+
+private instance : NormedAlgebra ℚ (E →L[ℝ] E) :=
+  NormedAlgebra.restrictScalars ℚ ℝ (E →L[ℝ] E)
 
 /-- The exponential of the bounded Yosida generator at nonnegative time. -/
 def yosidaOperator (R : ContractiveResolvent E) (α : PositiveShift) (t : NNReal) :

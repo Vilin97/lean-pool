@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Probability.Process.Stopping
-import Mathlib.Topology.Instances.NNReal.Lemmas
+module
+
+public import Mathlib.Probability.Process.Stopping
+public import Mathlib.Topology.Instances.NNReal.Lemmas
+
 
 /-!
 # Dyadic ceiling approximation of finite stopping times
@@ -15,6 +18,8 @@ times with countable range that decrease to the original time.  This is ordinary
 infrastructure and proves no restart identity; the restart identity obtained from this
 approximation is in `Trajectory/FellerStoppingRestart.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

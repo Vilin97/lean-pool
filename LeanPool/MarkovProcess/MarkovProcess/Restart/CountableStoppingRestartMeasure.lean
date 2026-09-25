@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Restart.CountableStoppingRestart
-import LeanPool.MarkovProcess.MarkovProcess.Path.RandomShiftMeasurability
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Restart.CountableStoppingRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Path.RandomShiftMeasurability
+
 
 /-!
 # Measure-level restart at countable-range stopping times
@@ -18,6 +21,8 @@ the countable level sets of the stopping time.
 This is ordinary conditional infrastructure.  The restart hypothesis is an assumption here; it
 is proved for the continuous-path process in `Trajectory/FellerRestrictedRestart.lean`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

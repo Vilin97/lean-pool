@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.Integral
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.Integral
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+
 
 /-!
 # The kernel integral on `L^∞`
@@ -14,6 +17,8 @@ against a sub-Markov kernel preserving a subinvariant measure.  The operator
 itself is packaged as a continuous linear map by `kernelLpTop` in
 `Kernel/Lp.lean`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

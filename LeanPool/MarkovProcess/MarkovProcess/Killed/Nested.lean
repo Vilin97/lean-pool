@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Killed.Marginals
-import LeanPool.MarkovProcess.MarkovProcess.Lifetime.ExitTimeStopping
-import LeanPool.MarkovProcess.MarkovProcess.Path.Exhaustion
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.Marginals
+public import LeanPool.MarkovProcess.MarkovProcess.Lifetime.ExitTimeStopping
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Exhaustion
+
 
 /-!
 # Nested domains: killing at the exit of a smaller set
@@ -34,6 +37,8 @@ The carriers of the two killed processes are the subtypes `U` and `V`, which are
 the statements here compare them through the inclusion of `U` in `V` rather than identifying the
 two killed processes as laws on a common carrier.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal

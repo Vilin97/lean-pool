@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
-import Mathlib.Probability.Kernel.Composition.IntegralCompProd
+module
+
+public import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
+public import Mathlib.Probability.Kernel.Composition.IntegralCompProd
+
 
 /-!
 # Conditional expectation from restricted restart laws
@@ -16,6 +19,8 @@ only an unconditional distributional identity and is not enough for this conclus
 
 No stochastic process, Markov property, or path-space construction is asserted here.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

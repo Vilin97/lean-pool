@@ -3,11 +3,14 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
-import Mathlib.MeasureTheory.Integral.CompactlySupported
-import Mathlib.MeasureTheory.Measure.Tight
-import Mathlib.Topology.UrysohnsLemma
+module
+
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
+public import Mathlib.MeasureTheory.Integral.CompactlySupported
+public import Mathlib.MeasureTheory.Measure.Tight
+public import Mathlib.Topology.UrysohnsLemma
+
 
 /-!
 # Vague convergence to a probability measure is weak convergence
@@ -25,6 +28,8 @@ Main results: `tendsto_integral_boundedContinuous_of_tendsto_compactlySupported`
 Nothing is asserted for families that are not probability measures: for sub-probability measures
 the conclusion is false, since mass may escape to infinity.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Topology
 open scoped BoundedContinuousFunction CompactlySupported

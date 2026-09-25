@@ -3,11 +3,14 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Topology.Compactification.OnePoint.Basic
-import Mathlib.Topology.Compactness.SigmaCompact
-import Mathlib.Topology.Metrizable.Urysohn
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0Resolvent
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.ResolventGeneration
+module
+
+public import Mathlib.Topology.Compactification.OnePoint.Basic
+public import Mathlib.Topology.Compactness.SigmaCompact
+public import Mathlib.Topology.Metrizable.Urysohn
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0Resolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.ResolventGeneration
+
 
 /-!
 # One-point extension of a positive `C₀` resolvent
@@ -26,6 +29,8 @@ Main results: `PositiveC0ContractiveResolvent.onePointResolvent`,
 This construction does not assert a Kolmogorov moment bound or construct a continuous-path
 process.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

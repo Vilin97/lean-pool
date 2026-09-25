@@ -3,10 +3,13 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.CylinderAlgebra
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.PathTightness
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.StartingPointContinuity
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.CylinderAlgebra
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.PathTightness
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.StartingPointContinuity
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+
 
 /-!
 # Weak continuity of the path law in the starting point
@@ -37,6 +40,8 @@ Main results:
 Nothing here asserts relative compactness of a family of laws, and no convergence of a sequence
 of semigroups is treated.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.ClosedSetDetection
-import LeanPool.MarkovProcess.MarkovProcess.Lifetime.ExitTime
-import Mathlib.Probability.Process.Stopping
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.ClosedSetDetection
+public import LeanPool.MarkovProcess.MarkovProcess.Lifetime.ExitTime
+public import Mathlib.Probability.Process.Stopping
+
 
 /-!
 # Exit times of open sets on continuous-path space
@@ -27,6 +30,8 @@ stays in the open set `U` throughout `[0, t]` stays in it slightly beyond `t`.
 This file constructs no probability law and proves no probabilistic statement; in particular it
 does not claim that the exit time is almost surely finite for any process.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

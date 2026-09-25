@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Parameterized.ContinuousProcess
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Equivariance
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Parameterized.ContinuousProcess
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Equivariance
+
 
 /-!
 # Equivariance of the parameterized continuous-path process
@@ -31,6 +34,8 @@ which stationarity and re-gauging covariance of a random environment (`g` the en
 No scaling limit and no ergodic statement is asserted: the environment map `g`, the factor `c`
 and both families are given in advance, and nothing is claimed about the law of the environment.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

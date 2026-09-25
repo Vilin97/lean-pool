@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.OnePointKilled
-import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingTransfer
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.OnePointKilled
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingTransfer
+
 
 /-!
 # Comparing two local resolvents through the part-process identity
@@ -26,6 +29,8 @@ potential measures.
 The regularity data are an explicit hypothesis: positivity, contractivity and the resolvent
 identity do not by themselves give the compactified semigroup a continuous-path process.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

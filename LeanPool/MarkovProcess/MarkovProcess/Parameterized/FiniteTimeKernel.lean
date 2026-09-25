@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.Kernel
-import LeanPool.MarkovProcess.MarkovProcess.Parameterized.OrderedGrid
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.Kernel
+public import LeanPool.MarkovProcess.MarkovProcess.Parameterized.OrderedGrid
+
 
 /-!
 # Parameterized finite-time kernels
@@ -18,6 +21,8 @@ The slice theorem identifies evaluation at a parameter and start with the existi
 nonparameterized finite-time kernel of the fixed-parameter semigroup. No path-space or
 stochastic-process existence claim is made here.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ProbabilityTheory

@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Continuity.PathModulus
-import LeanPool.MarkovProcess.MarkovProcess.Main
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.AllTimeMarginals
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Continuity.PathModulus
+public import LeanPool.MarkovProcess.MarkovProcess.Main
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.AllTimeMarginals
+
 
 /-!
 # The continuous-path process as a Kolmogorov process, and its uniform modulus
@@ -33,6 +36,8 @@ Main results:
 
 No tightness, weak continuity, or Hölder-path statement is proved here.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

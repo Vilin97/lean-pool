@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKacRealResolvent
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKacRealResolvent
+
 
 /-!
 # Penalization domination for killed resolvents
@@ -16,6 +19,8 @@ Polish space.
 
 Main result: `IsFellerKernelSemigroup.killedResolvent_le_of_perturbed_resolventFamily`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

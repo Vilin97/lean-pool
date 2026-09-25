@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Time.FiniteOrderEmbedding
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelDeletion
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Time.FiniteOrderEmbedding
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelDeletion
+
 
 /-!
 # Restricting finite-time kernels
@@ -13,6 +16,8 @@ For a conservative sub-Markov kernel semigroup, restriction along any finite ord
 gives the finite-time kernel at the selected times. This is finite-dimensional kernel
 infrastructure and does not construct a path-space law or a stochastic process.
 -/
+
+@[expose] public section
 
 open ProbabilityTheory
 

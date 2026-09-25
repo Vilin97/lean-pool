@@ -3,11 +3,14 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.Resolvent
-import LeanPool.MarkovProcess.MarkovProcess.Killed.Resolvent
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKacFunctional
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ResolventExitDecomposition
+module
+
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.Resolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.Resolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKacFunctional
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ResolventExitDecomposition
+
 
 /-!
 # Feynman--Kac resolvents
@@ -25,6 +28,8 @@ Main results: `IsConservative.feynmanKacResolvent`,
 
 No uniqueness statement for the associated resolvent equation is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

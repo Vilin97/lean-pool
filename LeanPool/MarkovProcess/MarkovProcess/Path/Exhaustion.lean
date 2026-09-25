@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.ExitTimeShift
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.ExitTimeShift
+
 
 /-!
 # Exit times along an exhaustion
@@ -16,6 +19,8 @@ interval for every `n ≥ N` (`tendsto_exitTime_atTop`).  Exit times are monoton
 
 This is the path-space fact behind nonexplosion arguments: no probability law is involved here.
 -/
+
+@[expose] public section
 
 open Filter Topology
 open scoped ENNReal NNReal

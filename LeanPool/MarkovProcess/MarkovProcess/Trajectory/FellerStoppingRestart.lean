@@ -3,12 +3,15 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerRestrictedRestart
-import LeanPool.MarkovProcess.MarkovProcess.Restart.CountableStoppingRestartMeasure
-import LeanPool.MarkovProcess.MarkovProcess.Path.RandomTimeCompactTestConvergence
-import LeanPool.MarkovProcess.MarkovProcess.Path.DenseRestrictionIntegral
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionIntegral
-import LeanPool.MarkovProcess.MarkovProcess.Path.StoppingTimeDyadicCeiling
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerRestrictedRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Restart.CountableStoppingRestartMeasure
+public import LeanPool.MarkovProcess.MarkovProcess.Path.RandomTimeCompactTestConvergence
+public import LeanPool.MarkovProcess.MarkovProcess.Path.DenseRestrictionIntegral
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionIntegral
+public import LeanPool.MarkovProcess.MarkovProcess.Path.StoppingTimeDyadicCeiling
+
 
 /-!
 # Event-restricted restart of the Feller trajectory at finite stopping times
@@ -24,6 +27,8 @@ The stopping time here is finite and `NNReal`-valued.  A `WithTop`-valued time t
 infinite is covered, on the event where it is finite, in `Trajectory/StoppingLtTop.lean`; no
 Hunt-process property is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

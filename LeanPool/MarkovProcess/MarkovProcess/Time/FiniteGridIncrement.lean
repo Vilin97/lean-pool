@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.MeasureTheory.Integral.Lebesgue.Markov
-import Mathlib.Probability.Process.Kolmogorov
+module
+
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Markov
+public import Mathlib.Probability.Process.Kolmogorov
+
 
 /-!
 # Finite-grid increment bounds
@@ -13,6 +16,8 @@ This file supplies the finite union-bound step in a Kolmogorov--Chentsov argumen
 independent of a particular dyadic-grid encoding: a later specialization only has to bound the
 distance between adjacent grid times.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal

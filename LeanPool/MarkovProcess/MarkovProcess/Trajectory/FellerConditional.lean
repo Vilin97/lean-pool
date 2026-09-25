@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerRestrictedRestart
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerRestrictedRestart
+
 
 /-!
 # Deterministic-time conditional expectation for the Feller trajectory
@@ -18,6 +21,8 @@ The time here is deterministic.  The corresponding statement at a finite stoppin
 `Trajectory/FellerStoppingConditional.lean`, and at a stopping time that may be infinite in
 `Trajectory/StoppingLtTop.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

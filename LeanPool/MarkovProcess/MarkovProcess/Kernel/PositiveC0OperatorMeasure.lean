@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
-import Mathlib.Topology.ContinuousMap.ZeroAtInfty
+module
+
+public import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
+public import Mathlib.Topology.ContinuousMap.ZeroAtInfty
+
 
 /-!
 # Pointwise Riesz measures of positive operators on `C₀`
@@ -18,6 +21,8 @@ This file makes only this pointwise construction. It does not prove that the mea
 measurably on the evaluation point, have bounded total mass, form a kernel, or satisfy any
 semigroup or stochastic-process law.
 -/
+
+@[expose] public section
 
 open CompactlySupported MeasureTheory
 open scoped ZeroAtInfty

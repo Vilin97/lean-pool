@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Examples.HeatSemigroup
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Examples.HeatSemigroup
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+
 
 /-!
 # Gaussian averages and half the Laplacian on the line
@@ -42,6 +45,8 @@ No partial differential equation is solved, the generator domain is not characte
 contained), and nothing is claimed in dimension greater than one or for a function outside the
 stated smoothness class.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

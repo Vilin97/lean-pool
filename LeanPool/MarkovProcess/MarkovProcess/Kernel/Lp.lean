@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.LpFinite
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.LpTop
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.LpFinite
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.LpTop
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
+
 
 /-!
 # Kernel integral operators on real `Lᵖ`
@@ -13,6 +16,8 @@ import Mathlib.MeasureTheory.Function.LpSpace.Basic
 This file packages the raw kernel integral as continuous linear contractions on
 finite-exponent and infinite-exponent real `Lᵖ` spaces.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory
@@ -22,7 +27,7 @@ namespace MarkovProcess
 
 variable {α : Type*} [MeasurableSpace α]
 
-private instance fact_one_le_coe_nnreal (p : NNReal) [Fact (1 ≤ p)] :
+instance fact_one_le_coe_nnreal (p : NNReal) [Fact (1 ≤ p)] :
     Fact (1 ≤ (p : ℝ≥0∞)) := ⟨by exact_mod_cast Fact.out⟩
 
 /- Head-class caches for the `Lᵖ` carrier.  Without them every normed-group

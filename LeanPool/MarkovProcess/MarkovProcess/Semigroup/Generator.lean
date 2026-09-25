@@ -3,11 +3,14 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Basic
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.StrongOperatorLimit
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Basic
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.StrongOperatorLimit
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
 
 /-!
 # The generator of a strongly continuous contraction semigroup
@@ -33,6 +36,8 @@ For `S : StronglyContinuousContractionSemigroup E` this file defines the generat
 Times are `NNReal` throughout the library; the real-variable statements read the semigroup at
 `Real.toNNReal s`.  The fundamental identity is what Dynkin's formula consumes.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 
@@ -113,7 +118,7 @@ end Domain
 section Generator
 
 /-- The limit of the difference quotients, for a vector of the domain. -/
-private noncomputable def generatorFun (f : S.generatorDomain) : E :=
+noncomputable def generatorFun (f : S.generatorDomain) : E :=
   limUnder (𝓝[>] (0 : NNReal)) (S.differenceQuotient f)
 
 private theorem tendsto_generatorFun (f : S.generatorDomain) :

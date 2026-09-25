@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteTimeKernelContinuity
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.Kernel
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteTimeKernelContinuity
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.Kernel
+
 
 /-!
 # Backward `C₀` recursion for finite Feller transitions
@@ -18,6 +21,8 @@ This file contains only the analytic recursion and its continuity.  Its identifi
 integral against a finite-time kernel is in `Feller/BackwardC0Integral.lean`; no statement about
 path space is proved here.
 -/
+
+@[expose] public section
 
 open Filter Topology
 open scoped NNReal ZeroAtInfty

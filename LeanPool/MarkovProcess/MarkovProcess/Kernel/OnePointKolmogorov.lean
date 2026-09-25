@@ -3,11 +3,14 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-import Mathlib.MeasureTheory.Integral.Lebesgue.Markov
-import Mathlib.Topology.MetricSpace.Lipschitz
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.OnePointExtension
-import LeanPool.MarkovProcess.MarkovProcess.Main
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Markov
+public import Mathlib.Topology.MetricSpace.Lipschitz
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.OnePointExtension
+public import LeanPool.MarkovProcess.MarkovProcess.Main
+
 
 /-!
 # Kolmogorov bounds on a one-point compactification
@@ -23,6 +26,8 @@ Main results: `OnePoint.exhaustionMetricSpace`,
 The tail bounds and their scalar integral budget remain hypotheses for the consumer; no analytic
 estimate for a particular semigroup is asserted here.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

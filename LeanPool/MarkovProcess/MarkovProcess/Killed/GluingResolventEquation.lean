@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingPotential
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingPotential
+
 
 /-!
 # The resolvent equation for a kernel resolvent
@@ -32,6 +35,8 @@ Main results: `expWeight_convolution`,
 `SubMarkovKernelSemigroup.kernelResolvent_comm`,
 `SubMarkovKernelSemigroup.kernelResolvent_resolventEquation`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

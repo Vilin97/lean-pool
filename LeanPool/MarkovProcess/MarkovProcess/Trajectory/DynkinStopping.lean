@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.ExitTime
-import LeanPool.MarkovProcess.MarkovProcess.Path.OptionalStopping
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DiscountedDynkin
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.ExitTime
+public import LeanPool.MarkovProcess.MarkovProcess.Path.OptionalStopping
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DiscountedDynkin
+
 
 /-!
 # Dynkin's formula at a bounded stopping time, and the expected exit time
@@ -35,6 +38,8 @@ The truncation at `K` is what keeps the stopping time finite; the bound is unifo
 The progressive-measurability and optional-stopping statements below are the zero-discount
 specializations of the corresponding results in `Trajectory/DiscountedDynkin.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

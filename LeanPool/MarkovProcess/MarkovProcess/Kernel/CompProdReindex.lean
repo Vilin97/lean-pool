@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Probability.Kernel.Composition.CompProd
+module
+
+public import Mathlib.Probability.Kernel.Composition.CompProd
+
 
 /-!
 # Mapping product kernels by coordinate maps
@@ -12,6 +15,8 @@ This file provides generic identities for mapping the coordinates of a kernel co
 product.  They are measure-kernel infrastructure and make no assertion about a stochastic
 process.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ProbabilityTheory

@@ -3,14 +3,17 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Basic
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.C0SemigroupJoint
-import LeanPool.MarkovProcess.MarkovProcess.Feller.Semigroup
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0OperatorMeasure
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
-import Mathlib.MeasureTheory.Measure.RegularityCompacts
-import Mathlib.Topology.Order.IsLUB
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.Basic
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.C0SemigroupJoint
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.Semigroup
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0OperatorMeasure
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
+public import Mathlib.MeasureTheory.Measure.RegularityCompacts
+public import Mathlib.Topology.Order.IsLUB
+
 
 /-!
 # All-time marginals of continuous-path trajectories
@@ -21,6 +24,8 @@ and Feller `C₀`-orbit continuity on the other.
 
 No continuous-time Markov, strong Markov, or Hunt-process assertion is made here.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

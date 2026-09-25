@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Topology.EMetricSpace.Basic
+module
+
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Topology.EMetricSpace.Basic
+
 
 /-!
 # Dyadic chaining on a bounded interval of nonnegative time
@@ -31,6 +34,8 @@ Main results:
 Everything here is a statement about a fixed function of time.  No measure, no probability law,
 and no continuity of `f` is used or asserted.
 -/
+
+@[expose] public section
 
 open Filter Topology
 open scoped ENNReal NNReal

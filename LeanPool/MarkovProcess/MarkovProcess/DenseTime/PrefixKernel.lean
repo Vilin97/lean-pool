@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Time.CountableDenseTime
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.ProjectiveFamily
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Time.CountableDenseTime
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.ProjectiveFamily
+
 
 /-!
 # Kernels on finite prefixes of a countable time enumeration
@@ -13,6 +16,8 @@ This file constructs the finite-dimensional kernel on the first `n` points of an
 enumeration, with coordinates retained in enumeration order. The enumeration need not respect
 the order of physical time.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

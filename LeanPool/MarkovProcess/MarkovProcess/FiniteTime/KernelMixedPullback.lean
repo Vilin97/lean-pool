@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelConcatenation
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelConcatenation
+
 
 /-!
 # Pulling a finite-time concatenation back to mixed labels
@@ -16,6 +19,8 @@ terminal past label without requiring either label to be present.
 The result is pure finite-dimensional Chapman--Kolmogorov algebra.  In particular it has no
 continuity, density, path-space, or Feller hypothesis.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

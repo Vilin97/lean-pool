@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Examples.HeatSemigroup
-import Mathlib.Probability.HasLaw
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Examples.HeatSemigroup
+public import Mathlib.Probability.HasLaw
+
 
 /-!
 # The process of the heat semigroup is a Brownian motion
@@ -38,6 +41,8 @@ marginals and independent increments, not through a projective family.  Only one
     is treated, and no
 Levy characterization, quadratic variation, or stochastic integral is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

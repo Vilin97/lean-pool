@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Killed.Resolvent
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Resolvent
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExitLaw
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.Resolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Resolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.ExitLaw
+
 
 /-!
 # The Laplace transform of an exit time
@@ -20,6 +23,8 @@ Main results: `IsConservative.lintegral_exp_neg_exitTime` and
 
 No moment bound or almost-sure finiteness of the exit time is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

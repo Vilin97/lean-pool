@@ -3,10 +3,13 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Group.Prod
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Exp
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.MeasureTheory.Group.Prod
+
 
 /-!
 # Exponential of an integral primitive
@@ -21,6 +24,8 @@ Main results: `intervalIntegral.integral_mul_exp_primitive`,
 
 No probabilistic structure is used or asserted.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

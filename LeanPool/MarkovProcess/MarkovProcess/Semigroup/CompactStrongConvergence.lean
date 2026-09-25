@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.Normed.Operator.Basic
+module
+
+public import Mathlib.Analysis.Normed.Operator.Basic
+
 
 /-!
 # Equibounded strong convergence is uniform on compact sets
@@ -18,6 +21,8 @@ Main results: `eventually_forall_mem_norm_apply_le_of_isCompact`.
 Neither completeness of the spaces nor countable generation of the index filter is used, and
 nothing is asserted about convergence in the operator norm, which is strictly stronger.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

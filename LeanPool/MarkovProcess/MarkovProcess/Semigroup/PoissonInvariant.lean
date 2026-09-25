@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.InvariantSet
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.InvariantSet
+
 
 /-!
 # Poisson invariance of bounded Yosida exponentials
@@ -11,6 +14,8 @@ import LeanPool.MarkovProcess.MarkovProcess.Semigroup.InvariantSet
 This file proves the uniformization argument: a normalized resolvent preserving
 a closed convex set containing zero has Yosida exponentials preserving that set.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

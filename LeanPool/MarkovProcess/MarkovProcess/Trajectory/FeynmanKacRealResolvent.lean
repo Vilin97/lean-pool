@@ -3,12 +3,15 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.ResolventUniqueness
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Resolvent
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKacResolvent
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.ResolventUniqueness
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Resolvent
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FeynmanKacResolvent
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
 
 /-!
 # Real Feynman--Kac resolvents
@@ -25,6 +28,8 @@ Together with `perturbed_eq_of_resolventFamilies`, these identities characterize
 Feynman--Kac resolvent among bounded measurable resolvent families solving the same perturbation
 equation at all sufficiently large shifts.  No model-specific realization is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

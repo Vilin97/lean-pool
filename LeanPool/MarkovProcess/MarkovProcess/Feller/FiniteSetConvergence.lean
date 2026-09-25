@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteTimeConvergence
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteSetKernelCompactTestTransport
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.WeakConvergence
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteTimeConvergence
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteSetKernelCompactTestTransport
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.WeakConvergence
+
 
 /-!
 # Convergence of the finite-dimensional laws of Feller semigroups
@@ -26,6 +29,8 @@ Main results: `tendstoUniformly_integral_compactlySupported_finiteSetKernel`,
 The set of observation times is fixed; nothing is asserted about joint convergence in the times
 and the semigroups.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped BoundedContinuousFunction CompactlySupported NNReal ZeroAtInfty

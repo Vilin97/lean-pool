@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.ExitTime
-import LeanPool.MarkovProcess.MarkovProcess.Path.OptionalStopping
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DynkinMartingale
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.ExitTime
+public import LeanPool.MarkovProcess.MarkovProcess.Path.OptionalStopping
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DynkinMartingale
+
 
 /-!
 # The discounted Dynkin formula
@@ -29,6 +32,8 @@ Main results: `IsFellerKernelSemigroup.discountedDynkinProcess`,
 
 No assertion is made at an unbounded stopping time or about passage to an infinite horizon.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

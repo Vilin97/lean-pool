@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.Basic
-import LeanPool.MarkovProcess.MarkovProcess.Time.CountableDenseTime
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Basic
+public import LeanPool.MarkovProcess.MarkovProcess.Time.CountableDenseTime
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+
 
 /-!
 # Continuous extension from dense-time paths
@@ -18,6 +21,8 @@ from the image.
 No probability law is shown to be supported on this image, and no continuous modification,
 stochastic-process association, or path-regularity claim is made here.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

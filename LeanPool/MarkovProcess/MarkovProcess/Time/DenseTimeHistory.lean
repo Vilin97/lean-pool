@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.MeasureTheory.MeasurableSpace.Embedding
+module
+
+public import Mathlib.MeasureTheory.MeasurableSpace.Embedding
+
 
 /-!
 # Finite dense-time histories
@@ -11,6 +14,8 @@ import Mathlib.MeasureTheory.MeasurableSpace.Embedding
 This file provides measurable coordinate equivalences for histories indexed by an initial
 segment of the natural numbers. It makes no probability-law, kernel, or stochastic-process claim.
 -/
+
+@[expose] public section
 
 namespace MarkovProcess
 

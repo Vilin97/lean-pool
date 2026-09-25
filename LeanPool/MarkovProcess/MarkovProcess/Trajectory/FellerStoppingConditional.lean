@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerStoppingRestart
-import LeanPool.MarkovProcess.MarkovProcess.Path.StoppedValueMeasurability
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerStoppingRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Path.StoppedValueMeasurability
+
 
 /-!
 # Conditional expectation of the Feller trajectory at finite stopping times
@@ -20,6 +23,8 @@ The stopping time here is finite and `NNReal`-valued.  A `WithTop`-valued time t
 infinite is covered, on the event where it is finite, in `Trajectory/StoppingLtTop.lean`; no
 Hunt-process property is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

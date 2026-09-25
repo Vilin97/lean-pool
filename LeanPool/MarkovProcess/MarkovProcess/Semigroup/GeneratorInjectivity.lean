@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Generator
-import Mathlib.Analysis.ODE.Gronwall
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Generator
+public import Mathlib.Analysis.ODE.Gronwall
+
 
 /-!
 # Eigenvectors of a generator, and injectivity of `μ - L`
@@ -20,6 +23,8 @@ Since `S` is contractive, an eigenvalue `μ > 0` therefore forces `f = 0`
 (`eq_of_smul_sub_generator_eq`).  This is the uniqueness half of the assertion that the resolvent
 `(μ - L)⁻¹` is a well-defined operator.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

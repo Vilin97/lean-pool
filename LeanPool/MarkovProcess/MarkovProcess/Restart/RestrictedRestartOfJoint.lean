@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Probability.Kernel.Composition.MeasureCompProd
-import Mathlib.Probability.Kernel.Composition.CompNotation
+module
+
+public import Mathlib.Probability.Kernel.Composition.MeasureCompProd
+public import Mathlib.Probability.Kernel.Composition.CompNotation
+
 
 /-!
 # Restricted restart laws from a joint-law factorization
@@ -15,6 +18,8 @@ restriction to any event measurable with respect to the conditioning variable.
 
 No stochastic process or Markov property is asserted here.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

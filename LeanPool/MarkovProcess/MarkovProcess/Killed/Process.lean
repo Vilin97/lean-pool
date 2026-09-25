@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Killed.KillAtExit
-import LeanPool.MarkovProcess.MarkovProcess.Killed.Semigroup
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.KillAtExit
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.Semigroup
+
 
 /-!
 # The process killed at the exit of an open set, as a law on lifetime paths
@@ -25,6 +28,8 @@ the killed transition kernel on `U` (`killedProcess_map_coordinate`): the live p
 No finite-dimensional distribution of the killed process is identified here, and no Feller or
 regularity property of the killed family is claimed.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal

@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.Semigroup
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0SemigroupKernel
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.Semigroup
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.PositiveC0SemigroupKernel
+
 
 /-!
 # Feller property of kernels represented by positive `C₀` semigroups
@@ -13,6 +16,8 @@ The kernel semigroup represented by a strongly continuous semigroup of positive 
 recovers the original operators on `C₀` and therefore satisfies the existing Feller interface.
 This file makes no conservativity, stochastic-process, or Hunt-process claim.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ZeroAtInfty

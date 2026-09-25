@@ -3,10 +3,13 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Continuity.DyadicChaining
-import Mathlib.Algebra.Order.Floor.Semiring
-import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
-import Mathlib.MeasureTheory.Integral.Lebesgue.Markov
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Continuity.DyadicChaining
+public import Mathlib.Algebra.Order.Floor.Semiring
+public import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Markov
+
 
 /-!
 # Dyadic floor approximation and the unit-interval continuous modification
@@ -23,6 +26,8 @@ This file merges the following former modules, one section each:
 * `DyadicFloorConvergenceInMeasure`: Convergence in measure of dyadic floor samples
 * `DyadicFloorUnitModification`: A continuous modification on the unit interval
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

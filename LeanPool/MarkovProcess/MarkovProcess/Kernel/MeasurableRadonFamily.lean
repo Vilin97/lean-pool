@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
-import Mathlib.MeasureTheory.Measure.GiryMonad
+module
+
+public import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
+public import Mathlib.MeasureTheory.Measure.GiryMonad
+
 
 /-!
 # Measurability of finite Radon measure families
@@ -18,6 +21,8 @@ supremum of measurable test integrals, then applies Mathlib's Giry
 
 The compact exhaustion and cutoff choices are private implementation details.
 -/
+
+@[expose] public section
 
 open scoped CompactlySupported ENNReal NNReal Topology
 open Set MeasureTheory TopologicalSpace
@@ -144,9 +149,9 @@ theorem measurable_measure_of_measurable_integral_compactlySupported
     (isPiSystem_generatePiSystem _) ?_ ?_
   · intro U hU
     have hU_open : IsOpen U := by
-      induction hU with
-      | base h => exact isOpen_of_mem_countableBasis h
-      | inter _ _ _ hs ht => exact hs.inter ht
+      induction hU using generatePiSystem_induction with
+      | base _ h => exact isOpen_of_mem_countableBasis h
+      | inter _ _ _ _ _ hs ht => exact hs.inter ht
     have heval : (fun q ↦ μ q U) = fun q ↦
         ⨆ n, ENNReal.ofReal (∫ x, MeasurableRadonFamily.openCutoff U hU_open n x ∂μ q) := by
       funext q

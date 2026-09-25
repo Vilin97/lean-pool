@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingLinearity
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingLinearity
+
 
 /-!
 # The potential measure of the supremum resolvent
@@ -19,6 +22,8 @@ to all nonnegative measurable observables through the two potential measures.
 
 Monotonicity of the transported resolvents in the index is a bare hypothesis throughout.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

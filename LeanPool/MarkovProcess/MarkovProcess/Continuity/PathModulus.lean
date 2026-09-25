@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Continuity.DyadicChaining
-import LeanPool.MarkovProcess.MarkovProcess.Continuity.DyadicPathChaining
-import LeanPool.MarkovProcess.MarkovProcess.Path.Basic
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Continuity.DyadicChaining
+public import LeanPool.MarkovProcess.MarkovProcess.Continuity.DyadicPathChaining
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Basic
+
 
 /-!
 # A quantitative modulus of continuity from a Kolmogorov moment bound
@@ -30,6 +33,8 @@ Main results:
 Nothing here constructs a law, asserts a Hölder exponent for individual paths, or claims
 tightness; tightness is assembled from this estimate elsewhere.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal NNReal

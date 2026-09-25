@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteTimeKernelContinuity
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.Kernel
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteTimeKernelContinuity
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.Kernel
+
 
 /-!
 # Singleton finite-time Feller continuity
@@ -14,6 +17,8 @@ transition kernel at that time.  Feller continuity therefore gives convergence o
 integrals as the observation time varies.  This is the base case for a recursive finite-time
 continuity argument; no higher-dimensional continuity is asserted here.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Topology
 open scoped NNReal ZeroAtInfty

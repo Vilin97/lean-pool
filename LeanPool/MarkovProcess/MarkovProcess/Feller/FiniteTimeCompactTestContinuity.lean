@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.CoordinatePolynomialContinuity
-import Mathlib.MeasureTheory.Integral.CompactlySupported
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.CoordinatePolynomialContinuity
+public import Mathlib.MeasureTheory.Integral.CompactlySupported
+
 
 /-!
 # Continuity of finite-time integrals of compactly supported tests
@@ -18,6 +21,8 @@ under the standing assumptions. We therefore derive strong measurability of the 
 coordinate-polynomial approximants instead of adding that extra assumption. This is
 finite-dimensional analytic infrastructure; no statement about path space is proved here.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped NNReal ZeroAtInfty BigOperators CompactlySupported

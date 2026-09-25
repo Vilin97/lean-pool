@@ -3,11 +3,14 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.DenseFiltration
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.DenseTimeFiniteShift
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PhysicalReindex
-import Mathlib.Data.Finset.Sum
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelMixedPullback
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.DenseFiltration
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.DenseTimeFiniteShift
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.PhysicalReindex
+public import Mathlib.Data.Finset.Sum
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.KernelMixedPullback
+
 
 /-!
 # Mixed past-future coordinates and the cut factorization
@@ -19,6 +22,8 @@ This file merges the following former modules, one section each:
 * `MixedPastFutureCutFactorization`: Factoring finite mixed past/future coordinates at a
     rational cut
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.ConditionalKernel
-import Mathlib.Probability.Kernel.Composition.Lemmas
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.ConditionalKernel
+public import Mathlib.Probability.Kernel.Composition.Lemmas
+
 
 /-!
 # One-step recursion for finite dense-time histories
@@ -12,6 +15,8 @@ import Mathlib.Probability.Kernel.Composition.Lemmas
 This file identifies the result of adjoining one conditionally sampled observation to an
 augmented finite history. It makes no infinite-process or path-regularity claim.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

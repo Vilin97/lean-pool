@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.Basic
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Basic
+
 
 /-!
 # Deterministic shifts of continuous paths
@@ -14,6 +17,8 @@ records the corresponding deterministic relation between the canonical filtratio
 
 No random-time shift, Markov property, strong Markov property, or Hunt-process assertion is made.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 
@@ -87,7 +92,7 @@ theorem measurable_shift_canonicalFiltration [MeasurableSpace alpha] [BorelSpace
     exact shift_apply S u omega
   rw [hfun]
   exact le_iSup_of_le
-    (⟨S + u.1, by simpa only [add_comm] using! add_le_add_left u.2 S⟩ :
+    (⟨S + u.1, by exact add_le_add_left u.2 S⟩ :
       Set.Iic (S + t)) le_rfl
 
 end ContinuousPath

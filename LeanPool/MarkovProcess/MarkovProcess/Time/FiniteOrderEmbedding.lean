@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Data.Fintype.Card
-import Mathlib.Order.Fin.Basic
+module
+
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.Order.Fin.Basic
+
 
 /-!
 # Factoring finite order embeddings through one deletion
@@ -13,6 +16,8 @@ This file records the elementary finite-order factorization obtained by deleting
 the range of an order embedding. It is ordinary combinatorial infrastructure and makes no
 probability-law or stochastic-process claim.
 -/
+
+@[expose] public section
 
 namespace MarkovProcess
 

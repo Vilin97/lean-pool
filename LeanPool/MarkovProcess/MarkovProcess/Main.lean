@@ -3,18 +3,21 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.FiniteRestrictionIdentification
-import LeanPool.MarkovProcess.MarkovProcess.Path.KernelIdentification
-import LeanPool.MarkovProcess.MarkovProcess.Path.Polish
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionMarginals
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerConditional
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerCountableStoppingRestart
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerFiniteMarginals
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerRestrictedRestart
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerShift
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerStoppingConditional
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerStoppingRestart
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.TwoPointMarginals
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.FiniteRestrictionIdentification
+public import LeanPool.MarkovProcess.MarkovProcess.Path.KernelIdentification
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Polish
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerConditional
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerCountableStoppingRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerFiniteMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerRestrictedRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerShift
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerStoppingConditional
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerStoppingRestart
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.TwoPointMarginals
+
 
 /-!
 # The continuous-path Markov process of a Feller semigroup
@@ -33,6 +36,8 @@ statements carry neither Feller continuity nor local compactness.
 Nothing here asserts a Hunt-process property, and no statement covers a stopping time that can be
 infinite.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

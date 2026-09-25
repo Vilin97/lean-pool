@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.Shift
-import Mathlib.Probability.Process.Stopping
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Shift
+public import Mathlib.Probability.Process.Stopping
+
 
 /-!
 # Measurability of random shifts of continuous paths
@@ -18,6 +21,8 @@ This is ordinary measurability infrastructure.  It proves no restart identity an
 expectation formula; those are in `Trajectory/FellerStoppingRestart.lean` and
 `Trajectory/FellerStoppingConditional.lean`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

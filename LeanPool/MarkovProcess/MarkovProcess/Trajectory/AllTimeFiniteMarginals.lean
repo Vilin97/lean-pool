@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.AllTimeMarginals
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FiniteMarginals
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.AllTimeMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FiniteMarginals
+
 
 /-!
 # Arbitrary-time finite marginals of continuous-path trajectories
@@ -20,6 +23,8 @@ recursively composed finite-time kernels have that convergence under simultaneou
 their strictly ordered time coordinates.  No continuous-time Markov or Hunt property is assumed
 or asserted.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

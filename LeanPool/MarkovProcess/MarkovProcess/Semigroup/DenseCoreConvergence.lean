@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.Normed.Operator.Basic
+module
+
+public import Mathlib.Analysis.Normed.Operator.Basic
+
 
 /-!
 # Convergence from a dense core
@@ -11,6 +14,8 @@ import Mathlib.Analysis.Normed.Operator.Basic
 This module extends pointwise convergence of uniformly contractive continuous
 linear maps from the range of a dense map to the whole ambient space.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

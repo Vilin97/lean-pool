@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Generator
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.OrbitContinuity
-import Mathlib.Analysis.ODE.Gronwall
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Generator
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.OrbitContinuity
+public import Mathlib.Analysis.ODE.Gronwall
+
 
 /-!
 # The generator determines the semigroup
@@ -24,6 +27,8 @@ and the two difference quotients on the right converge to the common value of th
 `T s f`.  Grönwall's inequality then makes the path constant, and its two endpoints are `S t f`
 and `T t f`.  Density of the generator domain extends the identity to the whole space.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

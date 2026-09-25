@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingPotential
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingPotential
+
 
 /-!
 # Conservativity from the resolvent of the constant observable
@@ -26,6 +29,8 @@ equivalence and not merely a sufficient condition.
 
 No topology on the state space is used.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

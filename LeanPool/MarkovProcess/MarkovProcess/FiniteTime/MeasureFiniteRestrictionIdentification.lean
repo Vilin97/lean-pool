@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.MeasureTheory.Constructions.Projective
+module
+
+public import Mathlib.MeasureTheory.Constructions.Projective
+
 
 /-!
 # Identifying measures from finite-coordinate restrictions
@@ -14,6 +17,8 @@ unequal mass cannot satisfy the hypothesis.
 
 This is generic measure-theoretic infrastructure and requires no topology.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Parameterized.CemeteryDenseTimeMarginals
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Parameterized.CemeteryDenseTimeMarginals
+
 
 /-!
 # Simultaneous dense-time cemetery avoidance
@@ -14,6 +17,8 @@ the cemetery state simultaneously at every point of its countable dense-time ind
 This is only a statement about the countable trajectory. It makes no continuous-extension,
 lifetime-path, or spatial support claim.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

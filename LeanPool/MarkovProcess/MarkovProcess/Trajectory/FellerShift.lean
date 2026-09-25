@@ -3,11 +3,14 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.KernelIdentification
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionMarginals
-import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerFiniteMarginals
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteSetKernelShift
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.FiniteRestrictionIdentification
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.KernelIdentification
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.DenseRestrictionMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.Trajectory.FellerFiniteMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteSetKernelShift
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.FiniteRestrictionIdentification
+
 
 /-!
 # Deterministic shifts of Feller trajectory laws
@@ -20,6 +23,8 @@ This is an unconditional kernel-law identity. The conditional form is in
 `Trajectory/FellerConditional.lean` and the strong Markov property in
 `Trajectory/FellerStoppingRestart.lean`; no Hunt-process property is asserted.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

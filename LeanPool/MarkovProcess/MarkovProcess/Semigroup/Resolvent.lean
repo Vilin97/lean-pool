@@ -3,11 +3,14 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.GeneratorClosed
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.GeneratorInjectivity
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.ContractiveResolvent
-import Mathlib.MeasureTheory.Integral.ExpDecay
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.GeneratorClosed
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.GeneratorInjectivity
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.ContractiveResolvent
+public import Mathlib.MeasureTheory.Integral.ExpDecay
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+
 
 /-!
 # The resolvent of a strongly continuous contraction semigroup
@@ -40,6 +43,8 @@ Main results: `laplaceIntegrand` and its integrability, `resolvent`, `resolvent_
 The shift `μ` is a positive real; nothing is asserted for complex shifts or for the spectrum of the
 generator beyond the half-line `(0, ∞)`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

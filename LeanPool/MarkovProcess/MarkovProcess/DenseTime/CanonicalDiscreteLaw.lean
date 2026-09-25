@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CanonicalDiscretePath
-import LeanPool.MarkovProcess.MarkovProcess.Time.OrderedGrid
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.CanonicalDiscretePath
+public import LeanPool.MarkovProcess.MarkovProcess.Time.OrderedGrid
+
 
 /-!
 # Canonical discrete trajectory laws
@@ -14,6 +17,8 @@ a conservative transition-kernel semigroup along one fixed ordered grid.  It
 records exact finite-prefix and coordinate marginal identities.  No
 conditional-expectation Markov property is asserted here.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

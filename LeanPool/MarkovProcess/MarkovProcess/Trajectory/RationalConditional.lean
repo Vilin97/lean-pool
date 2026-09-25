@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Restart.RationalRestart
-import LeanPool.MarkovProcess.MarkovProcess.Restart.RationalRestrictedRestart
-import LeanPool.MarkovProcess.MarkovProcess.Restart.ConditionalMarkov
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Restart.RationalRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Restart.RationalRestrictedRestart
+public import LeanPool.MarkovProcess.MarkovProcess.Restart.ConditionalMarkov
+
 
 /-!
 # Rational-time conditional Markov identities for the continuous trajectory
@@ -19,6 +22,8 @@ corresponding conditional-expectation formula.
 The times here are rational.  The strong Markov property at an arbitrary finite stopping time
 is in `Trajectory/FellerStoppingRestart.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

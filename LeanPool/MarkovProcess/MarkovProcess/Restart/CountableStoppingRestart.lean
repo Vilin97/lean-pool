@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Restart.ConditionalMarkov
-import Mathlib.MeasureTheory.Function.ConditionalExpectation.Indicator
-import Mathlib.Probability.Process.Stopping
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Restart.ConditionalMarkov
+public import Mathlib.MeasureTheory.Function.ConditionalExpectation.Indicator
+public import Mathlib.Probability.Process.Stopping
+
 
 /-!
 # Conditional restart at countable-valued stopping times
@@ -15,6 +18,8 @@ more generally, countable-valued finite stopping time.  It is ordinary condition
 infrastructure: the deterministic-time restart identity is a hypothesis here, proved for the
 continuous-path process in `Trajectory/FellerRestrictedRestart.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Analysis.SpecificLimits.Basic
+module
+
+public import Mathlib.Analysis.SpecificLimits.Basic
+
 
 /-!
 # Limits along positive real parameters
@@ -12,6 +15,8 @@ This module provides elementary filter limits for positive real resolvent
 parameters and a filter-generic criterion that turns a vanishing square bound
 into convergence to zero.
 -/
+
+@[expose] public section
 
 namespace MarkovProcess.Semigroup
 

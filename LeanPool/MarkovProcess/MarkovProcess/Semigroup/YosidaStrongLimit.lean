@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.YosidaApproximation
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Duhamel
-import LeanPool.MarkovProcess.MarkovProcess.Semigroup.StrongOperatorLimit
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.YosidaApproximation
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.Duhamel
+public import LeanPool.MarkovProcess.MarkovProcess.Semigroup.StrongOperatorLimit
+
 
 /-!
 # Strong limits of Yosida approximations
@@ -15,6 +18,8 @@ limit of the Yosida exponentials along the shifts `n + 1`.  Continuity of its
 orbits is proved in `Semigroup/Generation.lean`, from the criterion of
 `Semigroup/OrbitContinuity.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

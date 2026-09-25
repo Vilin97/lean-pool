@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.Lp
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.Lp
+
 
 /-!
 # Cross-exponent consistency of kernel integral operators
@@ -13,6 +16,8 @@ kernel integral.  Consequently their representatives agree almost everywhere
 whenever their inputs do, even when the inputs and outputs inhabit different
 `Lp` types.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

@@ -3,7 +3,10 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Basic
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Basic
+
 
 /-!
 # Deterministic time shifts of lifetime paths
@@ -11,6 +14,8 @@ import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Basic
 This file shifts a lifetime path forward by a fixed finite time. A shift beyond the original
 lifetime produces a path with zero lifetime, hence with cemetery state at every coordinate.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

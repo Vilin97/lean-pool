@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.DenseTime.TrajectoryMarginals
-import LeanPool.MarkovProcess.MarkovProcess.Parameterized.DenseTimeTrajectory
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.DenseTime.TrajectoryMarginals
+public import LeanPool.MarkovProcess.MarkovProcess.Parameterized.DenseTimeTrajectory
+
 
 /-!
 # One-time marginals of parameterized dense-time trajectories
@@ -12,6 +15,8 @@ import LeanPool.MarkovProcess.MarkovProcess.Parameterized.DenseTimeTrajectory
 This file identifies every coordinate marginal of the jointly measurable parameterized
 trajectory kernel.  No standard-Borel assumption is imposed on the parameter space.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

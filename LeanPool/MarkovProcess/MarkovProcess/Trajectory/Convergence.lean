@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteSetConvergence
-import LeanPool.MarkovProcess.MarkovProcess.Main
-import LeanPool.MarkovProcess.MarkovProcess.Parameterized.ContinuousProcessProperties
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteSetConvergence
+public import LeanPool.MarkovProcess.MarkovProcess.Main
+public import LeanPool.MarkovProcess.MarkovProcess.Parameterized.ContinuousProcessProperties
+
 
 /-!
 # Convergence of the finite-dimensional distributions of Feller processes
@@ -28,6 +31,8 @@ Main results: `tendsto_integral_finsetEvaluation_continuousProcess`,
 Convergence of the finite-dimensional distributions is not convergence on path space, which needs
 in addition a tightness estimate for the family of laws; that is not asserted here.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

@@ -3,8 +3,11 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteTimeJointCompactTestContinuity
-import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteSetKernelCompactTestTransport
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Feller.FiniteTimeJointCompactTestContinuity
+public import LeanPool.MarkovProcess.MarkovProcess.FiniteTime.FiniteSetKernelCompactTestTransport
+
 
 /-!
 # Continuity of finite-set compact-test integrals
@@ -17,6 +20,8 @@ separate nonemptiness assumption.
 This is finite-dimensional analytic infrastructure; no statement about path space is proved
 here.  The continuous-path process is built in `Trajectory/`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped NNReal CompactlySupported

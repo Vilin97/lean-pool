@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Examples.HeatSemigroup
-import LeanPool.MarkovProcess.MarkovProcess.Kernel.OnePointConservative
-import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingLocal
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Examples.HeatSemigroup
+public import LeanPool.MarkovProcess.MarkovProcess.Kernel.OnePointConservative
+public import LeanPool.MarkovProcess.MarkovProcess.Killed.GluingLocal
+
 
 /-!
 # The compactified heat process
@@ -24,6 +27,8 @@ available for a genuine example.  Because the heat semigroup is conservative, th
 process started at a live point almost surely never reaches the added point
 (`ae_exitTime_eq_top_heatResolvent`).
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 

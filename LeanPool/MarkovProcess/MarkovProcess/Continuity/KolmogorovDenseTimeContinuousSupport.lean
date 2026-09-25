@@ -3,9 +3,12 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import LeanPool.MarkovProcess.MarkovProcess.Path.Polish
-import LeanPool.MarkovProcess.MarkovProcess.Continuity.GlobalDyadicFloorModification
-import LeanPool.MarkovProcess.MarkovProcess.Continuity.DenseTimeContinuousSupport
+module
+
+public import LeanPool.MarkovProcess.MarkovProcess.Path.Polish
+public import LeanPool.MarkovProcess.MarkovProcess.Continuity.GlobalDyadicFloorModification
+public import LeanPool.MarkovProcess.MarkovProcess.Continuity.DenseTimeContinuousSupport
+
 
 /-!
 # Kolmogorov support for dense-time trajectory kernels
@@ -17,6 +20,8 @@ dense-time law is supported on restrictions of continuous paths.
 No measurability of the totalized modification as a path-valued map, PDE increment estimate,
 Markov property of the resulting paths, or Hunt-process assertion is made here.
 -/
+
+@[expose] public section
 
 noncomputable section PortComputability
 
