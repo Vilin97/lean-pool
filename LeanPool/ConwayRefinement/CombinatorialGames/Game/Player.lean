@@ -143,7 +143,7 @@ macro "!{" st:term "}'" h:term:max : term => `(OfSets.ofSets $st $h)
 macro "!{" s:term " | " t:term "}'" h:term:max : term => `(!{Player.cases $s $t}'$h)
 
 /-- A tactic which attempts to automatically solve goals which appear on `OfSets`. -/
-macro (name := ofSetsTactic) "of_sets_tactic" : tactic =>
+macro (name := conwayOfSetsTactic) "conway_of_sets_tactic" : tactic =>
   `(tactic| first
     | done
     | trivial
@@ -154,10 +154,10 @@ where `h` is a proof that sets are valid"
    )
 
 @[inherit_doc OfSets.ofSets]
-macro:max "!{" st:term "}" : term => `(!{$st}'(by of_sets_tactic))
+macro:max "!{" st:term "}" : term => `(!{$st}'(by conway_of_sets_tactic))
 
 @[inherit_doc OfSets.ofSets]
-macro:max "!{" s:term " | " t:term "}" : term => `(!{$s | $t}'(by of_sets_tactic))
+macro:max "!{" s:term " | " t:term "}" : term => `(!{$s | $t}'(by conway_of_sets_tactic))
 
 recommended_spelling "ofSets" for "!{st}'h" in [ofSets, «term!{_}'_»]
 recommended_spelling "ofSets" for "!{s | t}'h" in [ofSets, «term!{_|_}'_»]
