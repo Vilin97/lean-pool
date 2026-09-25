@@ -176,6 +176,7 @@ private lemma lintegral_enorm_mul_count_le (f g : ι → ℂ) :
 private lemma pair_enorm_tsum_le_B_sq {k : ℕ} (hk : 2 ≤ k)
     (a : Fin k → ι → ℂ) (i i' : Fin k) :
     ‖(∑' j, a i j * a i' j)‖ₑ ≤ (B hk a) ^ 2 := by
+  have hvolume : (volume : Measure ι) = Measure.count := rfl
   calc
     ‖(∑' j, a i j * a i' j)‖ₑ ≤ ∑' j, ‖a i j * a i' j‖ₑ :=
       enorm_tsum_le_tsum_enorm
@@ -185,7 +186,7 @@ private lemma pair_enorm_tsum_le_B_sq {k : ℕ} (hk : 2 ≤ k)
         eLpNorm (a i') 2 (Measure.count : Measure ι) :=
       lintegral_enorm_mul_count_le (a i) (a i')
     _ ≤ (B hk a) ^ 2 := by
-      simpa only [pow_two] using
+      simpa only [pow_two, hvolume] using
         mul_le_mul' (eLpNorm_coord_le_B hk a i) (eLpNorm_coord_le_B hk a i')
 
 private lemma diagonal_enorm_tsum_le_B_sq (a : Fin 2 → ι → ℂ)
