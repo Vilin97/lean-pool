@@ -10,6 +10,13 @@ public import LeanPool.ParameterFreeGradient.V7.Foundation
 
 /-!
 The proof-side convex smooth optimization instance and its condition number.
+
+Objectives are differentiable and convex on the whole finite-dimensional real space,
+with an attained minimum and a positive global Lipschitz-gradient bound from the
+primal norm to its dual. `MainStatement` restricts the exponent to finite real `p > 1`
+and separately requires supplied nondegenerate secant initialization. Its query count
+starts after initialization. The strict-local and known-parameter lower bounds use
+the separate method models in `StrictModel` and `LowerBoundStatements`.
 -/
 
 @[expose] public section
