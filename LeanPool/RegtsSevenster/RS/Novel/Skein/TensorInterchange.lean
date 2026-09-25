@@ -736,8 +736,9 @@ noncomputable def interchangeNormalRight
       (Fragment.mapPairs_wf e_l _
         (inrPairs_wf ips₂ wf₂))
       (List.Perm.of_eq
-        (by exact liftPairs_inlPairs_inrPairs ips₁ ips₂
-          wf_lr.append_sep)))
+        (by
+          exact liftPairs_inlPairs_inrPairs ips₁ ips₂
+            wf_lr.append_sep)))
   -- L2R: peel e_l through second-stage glueList
   have L2R := glueListRelabel
     (GL₁.disjUnion (F₂.disjUnion G₂)) e_l

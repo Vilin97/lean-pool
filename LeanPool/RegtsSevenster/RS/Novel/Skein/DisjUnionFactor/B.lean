@@ -708,6 +708,7 @@ theorem prod_vertex_split
         ∏ v : W₂.Vertex, X (Sum.inr v) :=
   Fintype.prod_sum_type X
 
+open scoped Classical in
 /-- **The colouring sum factors**: a colouring of the union is a
 pair of componentwise colourings, and the summand is their
 product. -/

@@ -68,6 +68,7 @@ private theorem xInd_self [LinearOrder α]
     (p : α × α) : xInd p p = 0 :=
   ite_eq_right (fun h => lt_irrefl _ h.1)
 
+open scoped Classical in
 /-- The two ordered indicators of a chord pair with distinct starts
 sum to the plain crossing indicator. -/
 private theorem xInd_pair [LinearOrder α]
@@ -144,6 +145,7 @@ private theorem max_ne_of_ne [LinearOrder α]
     max a b ≠ z := by
   rcases max_choice a b with h | h <;> rw [h] <;> assumption
 
+open scoped Classical in
 /-- Sorting the two probed points leaves the inside-indicator sum
 unchanged. -/
 private theorem inside_sorted_sum [LinearOrder α]
@@ -156,6 +158,7 @@ private theorem inside_sorted_sum [LinearOrder α]
   · rw [min_eq_left h, max_eq_right h]
   · rw [min_eq_right h, max_eq_left h, add_comm]
 
+open scoped Classical in
 /-- The crossing indicator of a raw chord `{a, b}` against a third
 chord `p` has the parity of the number of its raw ends inside
 `p`. -/
@@ -177,6 +180,7 @@ private theorem cross_parity_raw [LinearOrder α]
     (max_ne_of_ne h2a h2b)
   rw [h1, h2, inside_sorted_sum]
 
+open scoped Classical in
 /-- The two cut-label inside-indicators against a chord avoiding
 both cut labels sum (mod 2) to the crossing-the-cut indicator. -/
 private theorem pair_cut_parity [LinearOrder α]
@@ -228,6 +232,7 @@ end EdgeSubset
 
 /-! ## The glue delta, crossing case -/
 
+open scoped Classical in
 /-- **The glue delta, crossing case**: gluing the cut `{i, j}`
 (`i < j`, chord `(i,x)` and chord `(j,y)` concatenating into
 `(x,y)`, non-linked: `x ≠ j`) changes the diagram crossing count,

@@ -50,6 +50,7 @@ theorem stateOddFlipSet_empty :
   funext i
   exact ite_eq_right (Finset.notMem_empty i)
 
+open scoped Classical in
 /-- The pair relabel is the two-element set relabel. -/
 theorem stateOddFlip_eq_flipSet {i₁ i₂ : α} :
     stateOddFlip st i₁ i₂ = stateOddFlipSet st {i₁, i₂} := by
@@ -68,6 +69,7 @@ theorem stateOddFlip_eq_flipSet {i₁ i₂ : α} :
       · exact h (Or.inl rfl)
       · exact h (Or.inr (Finset.mem_singleton.mp hmem')))]
 
+open scoped Classical in
 /-- **Composition is symmetric difference**: two set relabels
 compose to the relabel at the symmetric difference — labels hit
 twice cancel by the odd-partner involution. -/

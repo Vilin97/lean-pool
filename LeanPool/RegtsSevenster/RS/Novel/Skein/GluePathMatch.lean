@@ -204,6 +204,7 @@ theorem iterWalk_glueOpen_from
           ((RelTransitionSystem.glueOpen hij hopen s' hc' hc κ).match_mem _
             hpair)
 
+open scoped Classical in
 /-- A surviving flag over a lifted boundary flag is a glued
 boundary flag. -/
 theorem boundary_mk_of_glueOpen
@@ -218,6 +219,7 @@ theorem boundary_mk_of_glueOpen
     cases hspec
   · exact ⟨lb, hga⟩
 
+open scoped Classical in
 /-- A glued boundary flag lies over a lifted boundary flag. -/
 theorem boundary_val_of_glueOpen
     {f' : SurvivingFlag W i j}
@@ -262,6 +264,7 @@ theorem pathMatch_exit_unique {α' : Type}
     (traceChain_fuel_mono κ (by omega)
       (traceChain_forward κ b hcont₂ hterm₂))
 
+open scoped Classical in
 /-- **pathMatch through an open glue, no cut hit**: when the
 original chain's endpoint avoids both cut flags, the glued chain
 has the same endpoint. -/
@@ -359,6 +362,7 @@ private theorem iterWalk_glueOpen_internal
   rw [hrw, hval]
   exact hint
 
+open scoped Classical in
 /-- **pathMatch through an open glue, `i`-cut hit**: when the
 original chain from a surviving boundary flag ends at the `i`-cut
 flag, the glued chain continues through the cut and ends at the
@@ -554,6 +558,7 @@ theorem pathMatch_glueOpen_hit_i
       hcontg htermg
     rw [hpmg, hcross, partnerSurvJ_val, hpmT]
 
+open scoped Classical in
 /-- **pathMatch through an open glue, `j`-cut hit**: when the
 original chain from a surviving boundary flag ends at the `j`-cut
 flag, the glued chain continues through the cut and ends at the
@@ -755,6 +760,7 @@ theorem pathMatch_glueOpen_hit_j
 end PathMatchGlue
 
 open EdgeSubset Fragment in
+open scoped Classical in
 /-- Participation transports through the open glue at label
 level. -/
 theorem glued_participation_iff

@@ -48,6 +48,7 @@ theorem chordPairCrossSym_iff [LinearOrder α]
         (max q₁ q₂) :=
   ⟨fun h => h.elim id (fun h => h.elim Or.inr Or.inl), Or.inl⟩
 
+open scoped Classical in
 /-- The two ordered crossing indicators of one sorted chord `(u, w)`
 against a chord recorded as `(x, y)` sum to the interleaving
 indicator, gated by `x < y`. -/
@@ -74,6 +75,7 @@ private theorem sorted_pair_sum [LinearOrder α]
         · exact h1 ⟨huw, hxy, hux, hxw, hwy⟩
       rw [ite_eq_right h1, ite_eq_right h2, ite_eq_right h3]
 
+open scoped Classical in
 /-- The four ordered crossing indicators between one chord with ends
 labelled `a`, `b` and a chord recorded as `(x, y)` sum to the gated
 interleaving indicator of the normalized chords. -/
@@ -109,6 +111,7 @@ private theorem side_label_sum [LinearOrder α]
       max_eq_left h.le]
     exact sorted_pair_sum h
 
+open scoped Classical in
 /-- **The 16-pair table, cross-chord part**: the eight ordered
 crossing indicators between two disjoint chords with end labels
 `{a, b}` and `{c, d}` sum to the symmetrized mutual-crossing
@@ -220,6 +223,7 @@ private theorem sum_split_four {β : Type} (S : Finset β)
 
 namespace EdgeSubset
 
+open scoped Classical in
 /-- The crossing indicator of two boundary ends, in terms of the
 four labels, with designated matching partners. -/
 private theorem chordCross_ite_eq
@@ -245,6 +249,7 @@ private theorem chordCross_ite_eq
   exact if_congr ((chordCross_iff_labels _ _).trans
     (by rw [h1, h2])) rfl rfl
 
+open scoped Classical in
 /-- A boundary end never crosses itself. -/
 private theorem chordCross_self_ite
     [LinearOrder α] {W : Fragment α} {F : EdgeSubset W}
@@ -255,6 +260,7 @@ private theorem chordCross_self_ite
     obtain ⟨-, -, hlt, -, -⟩ := (chordCross_iff_labels _ _).mp h
     exact lt_irrefl _ hlt
 
+open scoped Classical in
 /-- The two ends of one chord never cross each other. -/
 private theorem chordCross_partner_ite
     [LinearOrder α] {W : Fragment α} {F : EdgeSubset W}
@@ -270,6 +276,7 @@ private theorem chordCross_partner_ite
       F.boundaryLabel hx := boundaryLabel_congr _ hx hyx
   exact lt_asymm hstart (h2 ▸ hpartner)
 
+open scoped Classical in
 /-- **The four-end block**: the full ordered-pair crossing sum over
 the four ends of two disjoint chords is the symmetrized
 mutual-crossing indicator of their label chords. -/
@@ -324,6 +331,7 @@ private theorem chordCross_quad_sum
     (fun h => huw' (boundaryLabel_inj hu hw h))
     (fun h => hpq' (boundaryLabel_inj hp hq h))
 
+open scoped Classical in
 /-- **One chord against a third end**: the four ordered crossing
 indicators between the two ends of one chord and a fixed third end
 sum to the gated interleaving indicator. -/
@@ -351,6 +359,7 @@ private theorem chordCross_side_sum
     chordCross_ite_eq κ ht hw htmm hu htm hwu]
   exact side_label_sum (fun h => huw' (boundaryLabel_inj hu hw h))
 
+open scoped Classical in
 /-- **The mixed block, per third chord**: for a fixed untouched end,
 the eight ordered crossing indicators against the four touched ends
 have the same parity before and after the transposition
@@ -522,6 +531,7 @@ private theorem filter_touched_eq {W : Fragment α} {F : EdgeSubset W}
   simp only [Finset.mem_filter, Finset.mem_attach, true_and,
     Finset.mem_insert, Finset.mem_singleton, Subtype.mk.injEq]
 
+open scoped Classical in
 /-- **The per-step crossing-parity decomposition**: across a pairing
 transposition (two ends of distinct chords re-pair, the far ends
 re-pair with each other, everything else is preserved), the crossing

@@ -73,25 +73,26 @@ noncomputable def snakeFragLEquiv :
   flagEquiv := _root_.Equiv.ofBijective
     (fun g : Fin 1 × Bool =>
       snakeFragL.boundaryFlag (if g.2 then 1 else 0))
-    (by exact (Fintype.bijective_iff_injective_and_card _).mpr
-      ⟨by
-        intro a b h
-        obtain ⟨i, ba⟩ := a
-        obtain ⟨j, bb⟩ := b
-        have hi : i = ⟨0, Nat.zero_lt_one⟩ := Fin.ext (by
-          have := i.isLt
-          omega)
-        have hj : j = ⟨0, Nat.zero_lt_one⟩ := Fin.ext (by
-          have := j.isLt
-          omega)
-        subst hi
-        subst hj
-        cases ba <;> cases bb
-        · rfl
-        · exact absurd h (by decide)
-        · exact absurd h (by decide)
-        · rfl,
-        by decide⟩)
+    (by
+      exact (Fintype.bijective_iff_injective_and_card _).mpr
+        ⟨by
+          intro a b h
+          obtain ⟨i, ba⟩ := a
+          obtain ⟨j, bb⟩ := b
+          have hi : i = ⟨0, Nat.zero_lt_one⟩ := Fin.ext (by
+            have := i.isLt
+            omega)
+          have hj : j = ⟨0, Nat.zero_lt_one⟩ := Fin.ext (by
+            have := j.isLt
+            omega)
+          subst hi
+          subst hj
+          cases ba <;> cases bb
+          · rfl
+          · exact absurd h (by decide)
+          · exact absurd h (by decide)
+          · rfl,
+          by decide⟩)
   vertexEquiv := @_root_.Equiv.equivOfIsEmpty _ _ (by infer_instance) (by infer_instance)
   attach_comm := fun g => by
     obtain ⟨i, b⟩ := g
@@ -115,25 +116,26 @@ noncomputable def snakeFragREquiv :
   flagEquiv := _root_.Equiv.ofBijective
     (fun g : Fin 1 × Bool =>
       snakeFragR.boundaryFlag (if g.2 then 1 else 0))
-    (by exact (Fintype.bijective_iff_injective_and_card _).mpr
-      ⟨by
-        intro a b h
-        obtain ⟨i, ba⟩ := a
-        obtain ⟨j, bb⟩ := b
-        have hi : i = ⟨0, Nat.zero_lt_one⟩ := Fin.ext (by
-          have := i.isLt
-          omega)
-        have hj : j = ⟨0, Nat.zero_lt_one⟩ := Fin.ext (by
-          have := j.isLt
-          omega)
-        subst hi
-        subst hj
-        cases ba <;> cases bb
-        · rfl
-        · exact absurd h (by decide)
-        · exact absurd h (by decide)
-        · rfl,
-        by decide⟩)
+    (by
+      exact (Fintype.bijective_iff_injective_and_card _).mpr
+        ⟨by
+          intro a b h
+          obtain ⟨i, ba⟩ := a
+          obtain ⟨j, bb⟩ := b
+          have hi : i = ⟨0, Nat.zero_lt_one⟩ := Fin.ext (by
+            have := i.isLt
+            omega)
+          have hj : j = ⟨0, Nat.zero_lt_one⟩ := Fin.ext (by
+            have := j.isLt
+            omega)
+          subst hi
+          subst hj
+          cases ba <;> cases bb
+          · rfl
+          · exact absurd h (by decide)
+          · exact absurd h (by decide)
+          · rfl,
+          by decide⟩)
   vertexEquiv := @_root_.Equiv.equivOfIsEmpty _ _ (by infer_instance) (by infer_instance)
   attach_comm := fun g => by
     obtain ⟨i, b⟩ := g
