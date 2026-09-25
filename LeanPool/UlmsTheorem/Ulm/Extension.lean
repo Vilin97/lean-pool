@@ -374,7 +374,7 @@ theorem relativeUlmQuotient_nontrivial_iff_proper
   · intro hroom
     rw [Submodule.Quotient.nontrivial_iff] at hroom
     obtain ⟨v, _, hv⟩ :=
-      SetLike.exists_of_lt (lt_top_iff_ne_top.mpr hroom)
+      IsConcreteLE.exists_of_lt (lt_top_iff_ne_top.mpr hroom)
     have hv' : (v : G) ∉
         pSocleAt p α ⊓ (S ⊔ ulmSubgroup p (Order.succ α)) := by
       exact hv

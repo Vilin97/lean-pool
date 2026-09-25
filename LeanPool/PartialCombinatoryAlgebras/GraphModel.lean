@@ -154,7 +154,7 @@ theorem continuous_id : continuous (@id (Set α)) := by
       simp only [Membership.mem, Set.Mem]
       rintro (H | ⟨A, ⟨⟩⟩); assumption
     · rw [eq_toSet_fromList]
-      constructor
+      apply List.Mem.head
   case mpr =>
     rintro ⟨y, yS, xy⟩
     exact yS xy
@@ -305,7 +305,7 @@ theorem continuous_snd (S : Set α) : continuous (fun T => apply T S) := by
     · use y
       constructor
       · assumption
-      · rw [eq_toSet_fromList]; constructor
+      · rw [eq_toSet_fromList]; apply List.Mem.head
   · rintro ⟨y, yT, z, zS, xyz⟩
     exact ⟨z, zS, yT xyz⟩
 

@@ -1342,7 +1342,7 @@ lemma colin_sub {u v w : ℝ²} (h : colin u v w) {L : Segment}
     have hxl : ∃ x, x ∈ openHull L := open_pol_nonempty (by linarith) L
     rcases hxl with ⟨x, hx⟩
     by_cases hxl' : x ∈ closedHull (toSegment u v)
-    constructor
+    apply Or.inl
     · exact (colin_sub_aux h hLsub hLv hx hxl')
     have hLsubrev : closedHull L ⊆ closedHull (toSegment w u) := by
       rw [← reverseSegment_toSegment, reverseSegment_closedHull]

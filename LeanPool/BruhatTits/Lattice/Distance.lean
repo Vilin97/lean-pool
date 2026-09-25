@@ -426,14 +426,14 @@ lemma unit_smul_eq (u : Rˣ) (M : BruhatTits.Lattice R) : (Units.map R.subtype u
   · intro hx
     simp only [Lattice.smul_module] at hx
     obtain ⟨y, hy, rfl⟩ := hx
-    simp only [Units.coe_map, MonoidHom.coe_coe, Subring.coe_subtype,
+    simp only [Units.coe_map, MonoidHom.coe_ofClass, Subring.coe_subtype,
       DistribSMul.toLinearMap_apply]
     exact Submodule.smul_mem _ u.val hy
   · intro hx
     simp only [Lattice.smul_module]
     refine ⟨u⁻¹ • x, ?_, ?_⟩
     · exact Submodule.smul_mem _ u.inv hx
-    · simp only [Units.coe_map, MonoidHom.coe_coe, Subring.coe_subtype, LinearMap.map_smul_of_tower,
+    · simp only [Units.coe_map, MonoidHom.coe_ofClass, Subring.coe_subtype, LinearMap.map_smul_of_tower,
         DistribSMul.toLinearMap_apply]
       rw [← Subring.smul_def, Units.smul_def, smul_smul]
       simp

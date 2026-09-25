@@ -187,7 +187,7 @@ theorem toCNF_correct : g.language \ {[]} = g.toCNF.language := by
       (eliminateUnitRules_not_empty_output eliminateEmpty_not_empty_output) _ hrg hrₒ
   | [Symbol.terminal _] =>
     cases r; simp only at hrₒ; rw [hrₒ]
-    constructor
+    apply ContextFreeRule.Wellformed.terminal
   | [Symbol.nonterminal _] =>
     exfalso
     apply restrictTerminals_nonUnit_output at hrg

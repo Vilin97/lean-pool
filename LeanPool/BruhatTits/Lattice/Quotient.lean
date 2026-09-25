@@ -300,7 +300,7 @@ lemma _root_.BruhatTits.Lattice.mapIntermediateSubmodule_inj_of
     apply Submodule.comap_mono
     exact hge₂
   have h' : Q₁.map p.mkQ = Q₂.map p.mkQ := by
-    rwa [← SetLike.coe_set_eq] at h ⊢
+    rw [← SetLike.coe_set_eq] at h ⊢ <;> assumption
   have h'' : p.comapMkQRelIso.symm ⟨Q₁, hQ₁⟩ = p.comapMkQRelIso.symm ⟨Q₂, hQ₂⟩ := h'
   have h1 := p.comapMkQRelIso.symm.injective h''
   replace h1 : Q₁ = Q₂ := congrArg Subtype.val h1

@@ -276,7 +276,10 @@ inductive NullableRelated : List (Symbol T g.NT) → List (Symbol T g.NT) → Pr
 lemma NullableRelated.refl (u : List (Symbol T g.NT)) : NullableRelated u u := by
   induction u with
   | nil => exact empty_left [] (by rfl)
-  | cons d _ ih => cases d <;> constructor <;> exact ih
+  | cons d _ ih =>
+    cases d with
+    | terminal t => exact cons_term ih t
+    | nonterminal n => exact cons_nterm_match ih n
 
 lemma NullableRelated.derives {u v : List (Symbol T g.NT)} (huv : NullableRelated u v) :
     g.Derives v u := by

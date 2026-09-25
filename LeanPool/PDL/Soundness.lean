@@ -816,7 +816,7 @@ private theorem loadedDiamondPathsPDL_modL (α : Program) (X : Sequent) (tab : T
   refine ⟨s, ?_, Or.inr ?_⟩
   -- ... it is then obvious that `s` satisfies the required properties:
   · apply Relation.TransGen.single
-    constructor
+    apply Or.inl
     right
     refine ⟨Hist, _, nflprep, bas, _, (.modL Z_def rfl), next, tabAt_t_def, ?_⟩
     simp only [s, t_to_s]
@@ -966,7 +966,7 @@ private theorem loadedDiamondPathsPDL_modR (α : Program) (X : Sequent) (tab : T
   refine ⟨s, ?_, Or.inr ?_⟩
   -- ... it is then obvious that `s` satisfies the required properties:
   · apply Relation.TransGen.single
-    constructor
+    apply Or.inl
     right
     refine ⟨Hist, _, nflprep, bas, _, (PdlRule.modR Z_def rfl), next, tabAt_t_def, ?_⟩
     simp only [s, t_to_s]
