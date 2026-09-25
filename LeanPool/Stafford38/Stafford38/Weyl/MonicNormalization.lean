@@ -135,7 +135,7 @@ theorem scalar_or_positive_top_bernstein_piece {n : ℕ}
     refine ⟨c, ?_, hdc⟩
     intro hc
     subst c
-    simp? at hdc
+    simp only [map_zero] at hdc
     exact hd hdc
   · right
     exact ⟨N, Nat.pos_of_ne_zero hN, hpiece, hprincipal⟩

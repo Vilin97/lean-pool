@@ -89,7 +89,8 @@ theorem principal_oldGenerator (n : ℕ) (i : Fin n ⊕ Fin n) :
     change MvPolynomial.weightedHomogeneousComponent orderWeight 0
       (MvPolynomial.monomial (Finsupp.single (Sum.inl _) 1) 1) = _
     rw [weightedHomogeneousComponent_monomial]
-    simp? [monomialWeight, orderWeight, fibreWeight, oldIndex]
+    simp only [monomialWeight, orderWeight, fibreWeight, mul_zero, Finsupp.sum_single_index,
+      ↓reduceIte, oldIndex]
     rw [MvPolynomial.monomial_eq]
     simp
   · change MvPolynomial.weightedHomogeneousComponent orderWeight 1
@@ -99,7 +100,8 @@ theorem principal_oldGenerator (n : ℕ) (i : Fin n ⊕ Fin n) :
     change MvPolynomial.weightedHomogeneousComponent orderWeight 1
       (MvPolynomial.monomial (Finsupp.single (Sum.inr _) 1) 1) = _
     rw [weightedHomogeneousComponent_monomial]
-    simp? [monomialWeight, orderWeight, fibreWeight, oldIndex]
+    simp only [monomialWeight, orderWeight, fibreWeight, mul_one, Finsupp.sum_single_index,
+      ↓reduceIte, oldIndex]
     rw [MvPolynomial.monomial_eq]
     simp
 
@@ -337,7 +339,8 @@ theorem principal_coordinate (n : ℕ) :
   change MvPolynomial.weightedHomogeneousComponent orderWeight 0
     (MvPolynomial.monomial (Finsupp.single (Sum.inl (0 : Fin (n + 1))) 1) 1) = _
   rw [weightedHomogeneousComponent_monomial]
-  simp? [monomialWeight, orderWeight, fibreWeight]
+  simp only [monomialWeight, orderWeight, fibreWeight, mul_zero, Finsupp.sum_single_index,
+    ↓reduceIte]
   rw [MvPolynomial.monomial_eq]
   simp
 

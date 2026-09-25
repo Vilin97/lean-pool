@@ -89,7 +89,8 @@ lemma coefficientDerivation_rightMulMonomial (D E : OreDivisionDerivation B)
         (coefficientDerivation E q) b j]
       abel
   | monomial i a =>
-      simp? [rightMulMonomial, Polynomial.sum_monomial_index, rightTerm_zero]
+      simp only [rightMulMonomial, rightTerm_zero, sum_monomial_index,
+        coefficientDerivation_monomial]
       exact coefficientDerivation_rightTerm D E hcomm i a b j
 
 lemma coefficientDerivation_rightMul (D E : OreDivisionDerivation B)

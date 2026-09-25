@@ -58,7 +58,9 @@ theorem momentumEnd_mem_order_one (i : Fin n) :
   rw [mem_order_zero_iff_eq_multiplication]
   apply LinearMap.ext
   intro g
-  simp? [commutator_apply, momentumEnd, multiplication_apply]
+  simp only [momentumEnd, commutator_apply, Derivation.coeFn_coe, Derivation.leibniz, smul_eq_mul,
+    add_sub_cancel_left, mul_one, Derivation.map_one_eq_zero, mul_zero, sub_zero,
+    multiplication_apply]
   exact mul_comm _ _
 
 /-- The polynomial multiplication and differentiation operators satisfying the Weyl relations. -/

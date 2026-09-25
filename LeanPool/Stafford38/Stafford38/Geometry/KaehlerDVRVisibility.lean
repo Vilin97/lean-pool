@@ -108,7 +108,8 @@ theorem ker_kaehler_residue_map_eq
       rw [ha, Derivation.leibniz]
       simp only [f, map_smul, TensorProduct.tmul_add,
         TensorProduct.tmul_smul, TensorProduct.smul_tmul']
-      simp? [Algebra.smul_def, htresidue]
+      simp only [mk_apply, Algebra.smul_def, ResidueField.algebraMap_eq, htresidue, mul_one,
+        zero_tmul, zero_add]
       change (algebraMap V (ResidueField V) a) •
           ((1 : ResidueField V) ⊗ₜ[V] KaehlerDifferential.D k V t) = _
       rw [ResidueField.algebraMap_eq, TensorProduct.smul_tmul']

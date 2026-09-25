@@ -323,7 +323,8 @@ theorem oldGenerator_commutator (n : Nat) (i j : Fin n ⊕ Fin n) :
       | inr j =>
           by_cases h : i = j
           · subst j
-            simp? [oldIndex, Matrix.J]
+            simp only [Matrix.J, oldIndex, Matrix.fromBlocks_apply₁₂, Matrix.neg_apply,
+              Matrix.one_apply_eq, map_neg, map_one]
             calc
               _ = -algebraMap k (PresentedWeyl k (n + 1)) 1 :=
                 map_neg (algebraMap k (PresentedWeyl k (n + 1))) 1

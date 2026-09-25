@@ -57,14 +57,6 @@ noncomputable section
 
 universe u
 
-/-- Universal production of strict filtered coordinate cancellation for the
-literal canonical quotient. -/
-def CanonicalCoordinateCancellation : Prop :=
-  ∀ (k : Type u) [Field k] [CharZero k] [IsAlgClosed k] (n N : ℕ)
-    (d : PresentedWeyl k (n + 1)),
-    0 < N → IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d →
-      CoordinateCancellation k n N d
-
 /-- Universal production of the weakest filtered input used by terminal axis
 avoidance: one order-zero coordinate predecessor of the quotient unit. -/
 def CanonicalStrictUnitCoordinatePreimage : Prop :=

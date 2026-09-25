@@ -81,40 +81,40 @@ theorem transvection_mulVec {n : ℕ} (a : k) (u z : PhaseVar n → k)
 
 theorem phasePairing_add_left {n : ℕ} (u v w : PhaseVar n → k) :
     phasePairing k (u + v) w = phasePairing k u w + phasePairing k v w := by
-  simp? [phasePairing]
+  simp only [phasePairing, Pi.add_apply, Finset.sum_sub_distrib]
   simp_rw [add_mul]
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
   ring
 
 theorem phasePairing_add_right {n : ℕ} (u v w : PhaseVar n → k) :
     phasePairing k u (v + w) = phasePairing k u v + phasePairing k u w := by
-  simp? [phasePairing]
+  simp only [phasePairing, Pi.add_apply, Finset.sum_sub_distrib]
   simp_rw [mul_add]
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
   ring
 
 theorem phasePairing_smul_left {n : ℕ} (c : k) (u v : PhaseVar n → k) :
     phasePairing k (c • u) v = c * phasePairing k u v := by
-  simp? [phasePairing]
+  simp only [phasePairing, Pi.smul_apply, smul_eq_mul, Finset.sum_sub_distrib]
   rw [mul_sub]
   rw [Finset.mul_sum, Finset.mul_sum]
   congr 1 <;> apply Finset.sum_congr rfl <;> intro x hx <;> ring
 
 theorem phasePairing_smul_right {n : ℕ} (c : k) (u v : PhaseVar n → k) :
     phasePairing k u (c • v) = c * phasePairing k u v := by
-  simp? [phasePairing]
+  simp only [phasePairing, Pi.smul_apply, smul_eq_mul, Finset.sum_sub_distrib]
   rw [mul_sub]
   rw [Finset.mul_sum, Finset.mul_sum]
   congr 1 <;> apply Finset.sum_congr rfl <;> intro x hx <;> ring
 
 theorem phasePairing_skew {n : ℕ} (u v : PhaseVar n → k) :
     phasePairing k u v = -phasePairing k v u := by
-  simp? [phasePairing]
+  simp only [phasePairing, Finset.sum_sub_distrib, neg_sub]
   congr 1 <;> apply Finset.sum_congr rfl <;> intro x hx <;> ring
 
 theorem phasePairing_self {n : ℕ} (u : PhaseVar n → k) :
     phasePairing k u u = 0 := by
-  simp? [phasePairing]
+  simp only [phasePairing, Finset.sum_sub_distrib]
   have hsum : (∑ x, u (.inl x) * u (.inr x)) =
       ∑ x, u (.inr x) * u (.inl x) := by
     apply Finset.sum_congr rfl
@@ -179,7 +179,7 @@ theorem symplecticTransvection_mem {n : ℕ} (a : k)
 
 theorem phasePairing_sub_right {n : ℕ} (u v w : PhaseVar n → k) :
     phasePairing k u (v - w) = phasePairing k u v - phasePairing k u w := by
-  simp? [phasePairing, Finset.sum_sub_distrib]
+  simp only [phasePairing, Pi.sub_apply, Finset.sum_sub_distrib]
   simp_rw [mul_sub]
   rw [Finset.sum_sub_distrib, Finset.sum_sub_distrib]
   ring

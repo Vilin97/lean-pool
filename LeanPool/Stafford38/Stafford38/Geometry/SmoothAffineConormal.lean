@@ -81,7 +81,8 @@ theorem equationConormalClosure_smoothAffine_eq
       rw [PrimeSpectrum.mem_basicOpen]
       intro hker
       have hezero : e (Ideal.Quotient.mk I f) = 0 := hker
-      simp? [e] at hezero
+      simp only [Ideal.Quotient.liftₐ_apply, MvPolynomial.coe_aeval_eq_eval,
+        Ideal.Quotient.lift_mk, e] at hezero
       exact hyf hezero
     exact (Algebra.basicOpen_subset_smoothLocus_iff_smooth.mpr hsmooth) hopen
 

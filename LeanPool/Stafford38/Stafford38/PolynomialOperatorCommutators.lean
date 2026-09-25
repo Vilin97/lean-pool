@@ -34,7 +34,7 @@ def coordinateCommutator (i : Fin n) : OperatorEnd k n where
   map_add' P Q := by
     apply LinearMap.ext
     intro f
-    simp? [commutator_apply, sub_eq_add_neg]
+    simp only [commutator_apply, LinearMap.add_apply, sub_eq_add_neg]
     noncomm_ring
   map_smul' c P := by
     apply LinearMap.ext

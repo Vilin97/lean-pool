@@ -62,8 +62,7 @@ theorem derivation_eval₂
         MvPolynomial.eval₂_add, MvPolynomial.eval₂_X,
          MvPolynomial.pderiv_X,
         Pi.single_apply]
-      simp? [Finset.mul_sum,   mul_comm,
-        mul_left_comm, mul_assoc]
+      simp only [mul_comm, Finset.mul_sum, mul_left_comm, mul_assoc]
       have hsecond :
           (∑ x : Fin m,
             MvPolynomial.eval₂ (algebraMap k S) q f *

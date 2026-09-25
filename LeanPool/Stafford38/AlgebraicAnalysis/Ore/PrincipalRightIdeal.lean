@@ -56,7 +56,7 @@ lemma rightMul_coeff_C_top (D : OreDivisionDerivation B) (p : Polynomial B)
   · subst b
     simp
   · rw [Polynomial.support_C hb]
-    simp?
+    simp only [Finset.sum_singleton, coeff_C_zero]
     exact OreDivision.rightMulMonomial_coeff_top D p hp b 0
 
 lemma degree_lt_of_degree_le_of_coeff_zero

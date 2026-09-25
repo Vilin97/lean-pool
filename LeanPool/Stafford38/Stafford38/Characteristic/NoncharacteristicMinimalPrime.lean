@@ -95,7 +95,8 @@ private theorem iterPderiv_eq_factorial_of_homogeneous
           Nat.descFactorial_succ]
         have hnat : m + 1 + r - r = m + 1 := by omega
         rw [hnat]
-        simp? [Nat.add_assoc, Nat.cast_mul]
+        simp only [Nat.add_assoc, Finsupp.single_add, Finsupp.single_eq_same, Nat.cast_mul,
+          Nat.cast_add, Nat.cast_one]
         have hcarg :
             Finsupp.single i m + (Finsupp.single i 1 + Finsupp.single i r) =
               Finsupp.single i m + (Finsupp.single i r + Finsupp.single i 1) := by

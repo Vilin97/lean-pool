@@ -280,7 +280,8 @@ theorem phaseMonomial_succ_product (n : ℕ)
             phaseExponent (fun i => c i.succ) (fun i => q i.succ)).mapDomain
               oldIndex := by
     rw [phaseExponent_succ_eq_extend, phaseExponent_succ_eq_extend]
-    simp? [extendPhaseExponent,  add_assoc, add_comm, add_left_comm]
+    simp only [extendPhaseExponent, add_comm, add_assoc, add_left_comm, Finsupp.single_add,
+      Finsupp.mapDomain_zero, zero_add, add_right_inj]
     rw [Finsupp.mapDomain_add]
   rw [MvPolynomial.monomial_mul_monomial, MvPolynomial.monomial_mul_monomial,
     MvPolynomial.rename_monomial, MvPolynomial.monomial_mul_monomial]

@@ -291,7 +291,7 @@ theorem symbolScalarExtension_weightedHomogeneousComponent (n : Nat)
     MvPolynomial.coeff_weightedHomogeneousComponent]
   simp only [finsupp_weight_eq_monomialWeight]
   by_cases hm : monomialWeight w m = N
-  · simp? [hm]
+  · simp only [hm, ↓reduceIte]
     rw [MvPolynomial.coeff_map]
   · simp [hm]
 

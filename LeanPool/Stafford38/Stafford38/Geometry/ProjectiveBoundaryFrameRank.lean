@@ -94,7 +94,8 @@ theorem linearIndependent_chartDehomogenizedTangentColumns
       simp [mul_comm]
     · have hcoordinate := congrFun hc ⟨i, hi⟩
       simp only [Pi.zero_apply] at hcoordinate
-      simp? [chartDehomogenizedTangentColumn] at hcoordinate
+      simp only [ne_eq, Finset.sum_apply, Pi.smul_apply, chartDehomogenizedTangentColumn,
+        smul_eq_mul] at hcoordinate
       simp_rw [← mul_div_assoc] at hcoordinate
       rw [← Finset.sum_div] at hcoordinate
       simp only [s]

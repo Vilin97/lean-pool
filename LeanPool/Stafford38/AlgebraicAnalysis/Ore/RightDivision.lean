@@ -772,7 +772,7 @@ theorem commutator_iterate_pow_of_lt (p x : A)
       · have hjeq : j = n := by omega
         rw [Function.iterate_succ_apply', hjeq,
           commutator_iterate_pow_of_le p x hpx n n le_rfl]
-        simp? [commutatorDerivation]
+        simp only [commutatorDerivation, tsub_self, pow_zero, nsmul_eq_mul, mul_one]
         rw [Nat.cast_comm]
         simp
 
@@ -817,22 +817,16 @@ Newton arithmetic lemmas in `a2_newton_bound.lean`.
 -/
 
 /-- The linear map given by right multiplication by `p`. -/
-def pRightMulLinear {k A : Type*} [Field k] [Ring A] [Algebra k A]
-    (p : A) : A →ₗ[k] A where
-  toFun z := z * p
-  map_add' x y := by
-    change (x + y) * p = x * p + y * p
-    rw [add_mul]
-  map_smul' c x := by
-    simp only [Algebra.smul_def, RingHom.id_apply]
-    rw [mul_assoc]
+def pRightMulLinear {k A : Type*} [CommSemiring k] [Semiring A] [Algebra k A]
+    (p : A) : A →ₗ[k] A :=
+  LinearMap.mulRight k p
 
 /-- The range of right multiplication by `p`. -/
-def pRightMulRange {k A : Type*} [Field k] [Ring A] [Algebra k A]
+def pRightMulRange {k A : Type*} [CommSemiring k] [Semiring A] [Algebra k A]
     (p : A) : Submodule k A :=
   LinearMap.range (pRightMulLinear p)
 
-lemma pRightMulRange_mem_of_mul_p {k A : Type*} [Field k] [Ring A]
+lemma pRightMulRange_mem_of_mul_p {k A : Type*} [CommSemiring k] [Semiring A]
     [Algebra k A] (p z : A) : z * p ∈ pRightMulRange (k := k) p := by
   exact ⟨z, rfl⟩
 

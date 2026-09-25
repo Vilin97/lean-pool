@@ -195,7 +195,9 @@ private theorem firstContraction_newest_term
   simp only [MvPolynomial.pderiv_monomial,
     MvPolynomial.monomial_mul_monomial, MvPolynomial.rename_monomial]
   rw [phaseExponent_newest_contraction_exponents n a p c q hp hc]
-  simp? [phaseExponent,  Nat.descFactorial]
+  simp only [Nat.choose_one_right, Nat.descFactorial, tsub_zero, mul_one, phaseExponent,
+    nsmul_eq_mul, Nat.cast_mul, Finsupp.equivFunOnFinite_symm_apply_apply, Sum.elim_inr, one_mul,
+    Sum.elim_inl]
   rw [← map_natCast
       (MvPolynomial.C : k →+* SymbolRing k (n + 1)) (p 0),
     ← map_natCast

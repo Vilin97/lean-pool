@@ -145,7 +145,10 @@ theorem eval₂_finiteGradientSubstitution {L : Type*} [Field L] [Algebra k L]
       rw [hP]
       rcases i with i | i
       · simp [finiteGradientSubstitution]
-      · simp? [finiteGradientSubstitution, MvPolynomial.eval₂_rename]
+      · simp only [finiteGradientSubstitution, MvPolynomial.eval₂Hom_C_eq_bind₁, RingHom.coe_coe,
+          MvPolynomial.bind₁_X_right, Sum.elim_inr, MvPolynomial.eval₂_sum,
+          MvPolynomial.eval₂_mul, MvPolynomial.eval₂_X, MvPolynomial.eval₂_rename,
+          mul_eq_mul_left_iff]
         left
         congr 1
 
@@ -185,8 +188,10 @@ theorem scalarExtension_vanishing
       have heq : coordinateCovector ξ =
           ∑ a : ι, z (.inr a) • differentialCovector y (equations a) := by
         ext v
-        simp? [ξ, coordinateCovector, differentialCovector,
-          Finset.sum_mul, Finset.mul_sum]
+        simp only [coordinateCovector, Finset.sum_mul, LinearMap.coe_comp, LinearMap.coe_mk,
+          AddHom.coe_mk, LinearMap.coe_single, Function.comp_apply, differentialCovector,
+          LinearMap.coe_sum, LinearMap.coe_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul,
+          Finset.mul_sum, ξ]
         rw [Finset.sum_comm]
         simp [mul_assoc]
       rw [heq]
