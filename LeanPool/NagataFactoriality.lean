@@ -4,25 +4,28 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira
 -/
 
-import LeanPool.NagataFactoriality.NagataFactoriality
-import LeanPool.NagataFactoriality.NagataFactoriality.Applications
-import LeanPool.NagataFactoriality.NagataFactoriality.Applications.Examples
-import LeanPool.NagataFactoriality.NagataFactoriality.Applications.FractionField
-import LeanPool.NagataFactoriality.NagataFactoriality.Applications.Gauss
-import LeanPool.NagataFactoriality.NagataFactoriality.Applications.Laurent
-import LeanPool.NagataFactoriality.NagataFactoriality.Basic
-import LeanPool.NagataFactoriality.NagataFactoriality.Basic.Divisibility
-import LeanPool.NagataFactoriality.NagataFactoriality.Basic.Noetherian
-import LeanPool.NagataFactoriality.NagataFactoriality.Basic.Ring
-import LeanPool.NagataFactoriality.NagataFactoriality.Basic.UFD
-import LeanPool.NagataFactoriality.NagataFactoriality.Localization
-import LeanPool.NagataFactoriality.NagataFactoriality.Localization.IsLocalization
-import LeanPool.NagataFactoriality.NagataFactoriality.Localization.Localization
-import LeanPool.NagataFactoriality.NagataFactoriality.Localization.MultSet
-import LeanPool.NagataFactoriality.NagataFactoriality.Localization.Properties
-import LeanPool.NagataFactoriality.NagataFactoriality.Nagata
-import LeanPool.NagataFactoriality.NagataFactoriality.Nagata.Lemmas
-import LeanPool.NagataFactoriality.NagataFactoriality.Nagata.Theorem
+module
+
+public import LeanPool.NagataFactoriality.NagataFactoriality
+public import LeanPool.NagataFactoriality.NagataFactoriality.Applications
+public import LeanPool.NagataFactoriality.NagataFactoriality.Applications.Examples
+public import LeanPool.NagataFactoriality.NagataFactoriality.Applications.FractionField
+public import LeanPool.NagataFactoriality.NagataFactoriality.Applications.Gauss
+public import LeanPool.NagataFactoriality.NagataFactoriality.Applications.Laurent
+public import LeanPool.NagataFactoriality.NagataFactoriality.Basic
+public import LeanPool.NagataFactoriality.NagataFactoriality.Basic.Divisibility
+public import LeanPool.NagataFactoriality.NagataFactoriality.Basic.Noetherian
+public import LeanPool.NagataFactoriality.NagataFactoriality.Basic.Ring
+public import LeanPool.NagataFactoriality.NagataFactoriality.Basic.UFD
+public import LeanPool.NagataFactoriality.NagataFactoriality.Localization
+public import LeanPool.NagataFactoriality.NagataFactoriality.Localization.IsLocalization
+public import LeanPool.NagataFactoriality.NagataFactoriality.Localization.Localization
+public import LeanPool.NagataFactoriality.NagataFactoriality.Localization.MultSet
+public import LeanPool.NagataFactoriality.NagataFactoriality.Localization.Properties
+public import LeanPool.NagataFactoriality.NagataFactoriality.Nagata
+public import LeanPool.NagataFactoriality.NagataFactoriality.Nagata.Lemmas
+public import LeanPool.NagataFactoriality.NagataFactoriality.Nagata.Theorem
+
 
 /-!
 # Nagata's prime-generated factoriality theorem
@@ -34,3 +37,5 @@ Main declarations: `NagataFactoriality.nagata_theorem`
 Tags: commutative-algebra
 MSC: 13F15
 -/
+
+@[expose] public section

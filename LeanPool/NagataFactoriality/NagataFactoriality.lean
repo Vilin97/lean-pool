@@ -3,13 +3,18 @@ Copyright (c) 2026 the authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira
 -/
-import LeanPool.NagataFactoriality.NagataFactoriality.Basic
-import LeanPool.NagataFactoriality.NagataFactoriality.Localization
-import LeanPool.NagataFactoriality.NagataFactoriality.Nagata
-import LeanPool.NagataFactoriality.NagataFactoriality.Applications
+module
+
+public import LeanPool.NagataFactoriality.NagataFactoriality.Basic
+public import LeanPool.NagataFactoriality.NagataFactoriality.Localization
+public import LeanPool.NagataFactoriality.NagataFactoriality.Nagata
+public import LeanPool.NagataFactoriality.NagataFactoriality.Applications
+
 
 /-!
 # NagataFactoriality
 
 Supporting results for Nagata’s factoriality theorem.
 -/
+
+@[expose] public section

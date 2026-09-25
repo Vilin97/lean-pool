@@ -3,15 +3,20 @@ Copyright (c) 2026 the authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira
 -/
-import LeanPool.NagataFactoriality.NagataFactoriality.Localization.Properties
-import LeanPool.NagataFactoriality.NagataFactoriality.Localization.IsLocalization
-import LeanPool.NagataFactoriality.NagataFactoriality.Basic.UFD
+module
+
+public import LeanPool.NagataFactoriality.NagataFactoriality.Localization.Properties
+public import LeanPool.NagataFactoriality.NagataFactoriality.Localization.IsLocalization
+public import LeanPool.NagataFactoriality.NagataFactoriality.Basic.UFD
+
 
 /-!
 # Lemmas
 
 Supporting results for Nagata’s factoriality theorem.
 -/
+
+@[expose] public section
 
 namespace NagataFactoriality
 
@@ -653,7 +658,7 @@ theorem nagata_key_lemma {α : Type*} [CommRing α] [IsDomain α] {S : Submonoid
     (hUFD :
       @UniqueFactorizationMonoid (Localization S)
         (by
-          let : Fact ((0 : α) ∉ S) := submonoidZeroNotMemFact hS
+          let : Fact ((0 : α) ∉ S) := ⟨Submonoid.zero_notMem_of_prime_or_unit hS⟩
           infer_instance))
     {p : α} (hp : Irreducible p) : Prime p := by
   let : Fact ((0 : α) ∉ S) := submonoidZeroNotMemFact hS

@@ -3,11 +3,14 @@ Copyright (c) 2026 the authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira
 -/
-import Mathlib.RingTheory.Localization.Algebra
-import Mathlib.RingTheory.Localization.FractionRing
-import Mathlib.RingTheory.Polynomial.Basic
-import Mathlib.RingTheory.Polynomial.UniqueFactorization
-import LeanPool.NagataFactoriality.NagataFactoriality.Nagata.Theorem
+module
+
+public import Mathlib.RingTheory.Localization.Algebra
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.RingTheory.Polynomial.Basic
+public import Mathlib.RingTheory.Polynomial.UniqueFactorization
+public import LeanPool.NagataFactoriality.NagataFactoriality.Nagata.Theorem
+
 
 /-!
 # Polynomial UFD via Fraction Field Localization and Nagata's Theorem
@@ -37,6 +40,8 @@ with `R[T;T⁻¹]`.
 * `polynomial_uniqueFactorizationMonoid_via_fractionField`: If `R` is a noetherian UFD,
   then `R[X]` is a UFD, proved by localizing at constant primes and using Nagata's theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

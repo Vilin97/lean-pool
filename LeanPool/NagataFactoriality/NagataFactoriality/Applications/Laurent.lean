@@ -3,18 +3,23 @@ Copyright (c) 2026 the authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira
 -/
-import Mathlib.Algebra.Polynomial.Laurent
-import Mathlib.Algebra.Polynomial.RingDivision
-import Mathlib.RingTheory.Localization.Ideal
-import Mathlib.RingTheory.Polynomial.UniqueFactorization
-import LeanPool.NagataFactoriality.NagataFactoriality.Nagata.Lemmas
-import LeanPool.NagataFactoriality.NagataFactoriality.Nagata.Theorem
+module
+
+public import Mathlib.Algebra.Polynomial.Laurent
+public import Mathlib.Algebra.Polynomial.RingDivision
+public import Mathlib.RingTheory.Localization.Ideal
+public import Mathlib.RingTheory.Polynomial.UniqueFactorization
+public import LeanPool.NagataFactoriality.NagataFactoriality.Nagata.Lemmas
+public import LeanPool.NagataFactoriality.NagataFactoriality.Nagata.Theorem
+
 
 /-!
 # Laurent
 
 Supporting results for Nagata’s factoriality theorem.
 -/
+
+@[expose] public section
 
 namespace NagataFactoriality
 
