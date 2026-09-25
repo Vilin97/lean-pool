@@ -34,6 +34,115 @@ namespace Machine
 
 variable {n : ℕ}
 
+/-- Deletion and both counter decrements restore the complete next-iteration invariant. -/
+private theorem entryUpdateDelete_finalInvariant
+    (tapes : EntryUpdateTapes n) (store : Store) (address : ℕ)
+    (processed emitted : Store) (entry : Entry) (rest : Store) (resultCount : ℕ)
+    (initialWork work deleteWork countWork remainingWork : Fin n → Tape)
+    (hinv : EntryUpdateLoopInv tapes store address 0 processed
+      (entry :: rest) emitted false resultCount initialWork work)
+    (haddress : address = entry.1)
+    (hfoundZero : (work tapes.found).HasBinaryNat 0)
+    (hdeleteReady : EntryScanReady tapes.entry (rest.flatMap Entry.encode) address.bits
+      (entryUpdateMarkFoundWork tapes work) deleteWork)
+    (hcountOther : ∀ i, i ≠ tapes.resultCount → countWork i = deleteWork i)
+    (hcountValue : (countWork tapes.resultCount).HasBinaryNat (resultCount - 1))
+    (hremainingOther : ∀ i, i ≠ tapes.remaining → remainingWork i = countWork i)
+    (hremainingValue : (remainingWork tapes.remaining).HasBinaryNat rest.length) :
+    EntryUpdateLoopInv tapes store address 0 (processed ++ [entry]) rest
+      emitted true (resultCount - 1) initialWork remainingWork := by
+  have hreadyCount := hdeleteReady.change_resultCount_internal hcountOther hcountValue
+  have hreadyFinal := hreadyCount.change_remaining_internal hremainingOther hremainingValue
+  have hreplacementEq :
+      remainingWork tapes.replacement =
+        initialWork tapes.replacement := by
+    rw [hremainingOther tapes.replacement
+      (Ne.symm tapes.remaining_ne_replacement)]
+    rw [hcountOther tapes.replacement tapes.replacement_ne_resultCount]
+    rw [hdeleteReady.frame_outside_entry_internal tapes.replacement
+      tapes.replacement_ne_entry]
+    rw [entryUpdateMarkFoundWork_apply_ne_internal tapes work
+      tapes.replacement tapes.replacement_ne_found]
+    exact hinv.replacement_eq
+  have hreplacementFinal :
+      (remainingWork tapes.replacement).HasBinaryNat 0 := by
+    rw [hreplacementEq]
+    rw [← hinv.replacement_eq]
+    exact hinv.replacement
+  have hfoundFinal :
+      (remainingWork tapes.found).HasBinaryNat 1 := by
+    rw [hremainingOther tapes.found
+      (Ne.symm tapes.remaining_ne_found)]
+    rw [hcountOther tapes.found tapes.found_ne_resultCount]
+    rw [hdeleteReady.frame_outside_entry_internal tapes.found
+      tapes.found_ne_entry]
+    exact entryUpdateMarkFoundWork_found_one_internal tapes work hfoundZero
+  have hresultFinal :
+      (remainingWork tapes.resultCount).HasBinaryNat
+        (resultCount - 1) := by
+    rw [hremainingOther tapes.resultCount
+      (Ne.symm tapes.remaining_ne_resultCount)]
+    exact hcountValue
+  have hframeMarked := hinv.frame.markFound_internal
+  have hframeDelete :=
+    EntryUpdateFrame.trans_ready_internal hframeMarked hdeleteReady
+  have hframeCount := EntryUpdateFrame.trans_single_internal hframeDelete
+    (12 : Fin 13) (by
+      intro i hi
+      exact hcountOther i (by
+        simpa [EntryUpdateTapes.resultCount] using hi))
+  have hframeFinal := EntryUpdateFrame.trans_single_internal hframeCount
+    (9 : Fin 13) (by
+      intro i hi
+      exact hremainingOther i (by
+        simpa [EntryUpdateTapes.remaining] using hi))
+  have hprogress := hinv.progress.delete_internal haddress
+  have hinvFinal : EntryUpdateLoopInv tapes store address 0
+      (processed ++ [entry]) rest emitted true (resultCount - 1)
+      initialWork remainingWork :=
+    { progress := hprogress
+      ready := hreadyFinal
+      replacement := hreplacementFinal
+      replacement_eq := hreplacementEq
+      remainingCount := hremainingValue
+      foundCount := by simpa using hfoundFinal
+      resultCountTape := hresultFinal
+      resultCount_le := (Nat.sub_le resultCount 1).trans hinv.resultCount_le
+      frame := hframeFinal }
+  exact hinvFinal
+
+/-- A bounded positive result counter and ready cleanup fit the controller's deletion budget. -/
+private theorem entryUpdateDelete_branchBudget
+    (tapes : EntryUpdateTapes n) (entry : Entry) (rest : Store)
+    (address resultCount total deleteTime : ℕ) (readyWork : Fin n → Tape)
+    (hreadyMarked : EntryScanReady tapes.entry
+      (Entry.encode entry ++ rest.flatMap Entry.encode) address.bits readyWork readyWork)
+    (hdeleteTime : deleteTime ≤ entryMissCleanupTime tapes.entry entry address.bits readyWork)
+    (hresultPositive : 0 < resultCount) (hresultCountLe : resultCount ≤ total) :
+    deleteTime + 1 + TM.binaryPredTime (resultCount - 1) + 1 ≤
+      entryUpdateBranchTime tapes entry address 0 total := by
+  have hcleanupBound : deleteTime ≤
+      entryUpdateReadyCleanupTime tapes entry address := by
+    rw [← entryMissCleanupTime_eq_entryUpdateReadyCleanupTime_internal
+      tapes entry address hreadyMarked]
+    exact hdeleteTime
+  have hcountBound : TM.binaryPredTime (resultCount - 1) ≤
+      entryUpdateCountTime total := by
+    apply binaryPredTime_le_entryUpdateCountTime_internal
+    calc
+      resultCount - 1 + 1 = resultCount := by omega
+      _ ≤ total := hresultCountLe
+  have hdeleteBranchBound :
+      deleteTime + 1 + TM.binaryPredTime (resultCount - 1) + 1 ≤
+        entryUpdateBranchTime tapes entry address 0 total := by
+    have hthird : entryUpdateReadyCleanupTime tapes entry address + 1 +
+        entryUpdateCountTime total + 1 ≤
+        entryUpdateBranchTime tapes entry address 0 total := by
+      unfold entryUpdateBranchTime
+      exact (le_max_right _ _).trans (le_max_right _ _)
+    omega
+  exact hdeleteBranchBound
+
 /-- A matching zero write deletes the current entry, decrements both runtime
 counters, and returns to the loop test with no output contribution. -/
 theorem entryUpdateDeleteIteration_internal
@@ -173,8 +282,6 @@ theorem entryUpdateDeleteIteration_internal
   have hcountSeam := entryUpdateTM_step_deleteCount_halt_internal tapes
     countDone hcountHalt hcountInputParked hcountWorkParked
     hcountOutputParked
-  have hreadyCount := hdeleteReady.change_resultCount_internal
-    hcountOther hcountValue
   have hcountRemaining :
       (countDone.work tapes.remaining).HasBinaryNat (rest.length + 1) := by
     rw [hcountOther tapes.remaining tapes.remaining_ne_resultCount]
@@ -209,8 +316,6 @@ theorem entryUpdateDeleteIteration_internal
   have hloop := entryUpdateTM_step_remaining_halt_internal tapes
     remainingDone hremainingHalt hremainingInputParked hremainingWorkParked
     hremainingOutputParked
-  have hreadyFinal := hreadyCount.change_remaining_internal
-    hremainingOther hremainingValue
   have hprefix : (entryUpdateTM tapes).reachesIn (matchTime + 1)
       (entryUpdateTestCfg tapes inp work out)
       (entryUpdateMatchWrap tapes matchDone) :=
@@ -242,82 +347,13 @@ theorem entryUpdateDeleteIteration_internal
   have houtputEq : remainingDone.output = out :=
     hremainingOutput.trans (hcountOutput.trans
       (hdeleteOutput.trans hmatchOutput))
-  have hreplacementEq :
-      remainingDone.work tapes.replacement =
-        initialWork tapes.replacement := by
-    rw [hremainingOther tapes.replacement
-      (Ne.symm tapes.remaining_ne_replacement)]
-    rw [hcountOther tapes.replacement tapes.replacement_ne_resultCount]
-    rw [hdeleteReady.frame_outside_entry_internal tapes.replacement
-      tapes.replacement_ne_entry]
-    rw [entryUpdateMarkFoundWork_apply_ne_internal tapes work
-      tapes.replacement tapes.replacement_ne_found]
-    exact hinv.replacement_eq
-  have hreplacementFinal :
-      (remainingDone.work tapes.replacement).HasBinaryNat 0 := by
-    rw [hreplacementEq]
-    rw [← hinv.replacement_eq]
-    exact hinv.replacement
-  have hfoundFinal :
-      (remainingDone.work tapes.found).HasBinaryNat 1 := by
-    rw [hremainingOther tapes.found
-      (Ne.symm tapes.remaining_ne_found)]
-    rw [hcountOther tapes.found tapes.found_ne_resultCount]
-    rw [hdeleteReady.frame_outside_entry_internal tapes.found
-      tapes.found_ne_entry]
-    exact entryUpdateMarkFoundWork_found_one_internal tapes work hfoundZero
-  have hresultFinal :
-      (remainingDone.work tapes.resultCount).HasBinaryNat
-        (resultCount - 1) := by
-    rw [hremainingOther tapes.resultCount
-      (Ne.symm tapes.remaining_ne_resultCount)]
-    exact hcountValue
-  have hframeMarked := hinv.frame.markFound_internal
-  have hframeDelete :=
-    EntryUpdateFrame.trans_ready_internal hframeMarked hdeleteReady
-  have hframeCount := EntryUpdateFrame.trans_single_internal hframeDelete
-    (12 : Fin 13) (by
-      intro i hi
-      exact hcountOther i (by
-        simpa [EntryUpdateTapes.resultCount] using hi))
-  have hframeFinal := EntryUpdateFrame.trans_single_internal hframeCount
-    (9 : Fin 13) (by
-      intro i hi
-      exact hremainingOther i (by
-        simpa [EntryUpdateTapes.remaining] using hi))
-  have hprogress := hinv.progress.delete_internal haddress
-  have hinvFinal : EntryUpdateLoopInv tapes store address 0
-      (processed ++ [entry]) rest emitted true (resultCount - 1)
-      initialWork remainingDone.work :=
-    { progress := hprogress
-      ready := hreadyFinal
-      replacement := hreplacementFinal
-      replacement_eq := hreplacementEq
-      remainingCount := hremainingValue
-      foundCount := by simpa using hfoundFinal
-      resultCountTape := hresultFinal
-      resultCount_le := (Nat.sub_le resultCount 1).trans hinv.resultCount_le
-      frame := hframeFinal }
-  have hcleanupBound : deleteTime ≤
-      entryUpdateReadyCleanupTime tapes entry address := by
-    rw [← entryMissCleanupTime_eq_entryUpdateReadyCleanupTime_internal
-      tapes entry address hreadyMarked]
-    exact hdeleteTime
-  have hcountBound : TM.binaryPredTime (resultCount - 1) ≤
-      entryUpdateCountTime store.length := by
-    apply binaryPredTime_le_entryUpdateCountTime_internal
-    calc
-      resultCount - 1 + 1 = resultCount := by omega
-      _ ≤ store.length := hinv.resultCount_le
-  have hdeleteBranchBound :
-      deleteTime + 1 + TM.binaryPredTime (resultCount - 1) + 1 ≤
-        entryUpdateBranchTime tapes entry address 0 store.length := by
-    have hthird : entryUpdateReadyCleanupTime tapes entry address + 1 +
-        entryUpdateCountTime store.length + 1 ≤
-        entryUpdateBranchTime tapes entry address 0 store.length := by
-      unfold entryUpdateBranchTime
-      exact (le_max_right _ _).trans (le_max_right _ _)
-    omega
+  have hinvFinal := entryUpdateDelete_finalInvariant tapes store address processed emitted
+    entry rest resultCount initialWork work deleteDone.work countDone.work remainingDone.work
+    hinv haddress hfoundZero hdeleteReady hcountOther hcountValue
+    hremainingOther hremainingValue
+  have hdeleteBranchBound := entryUpdateDelete_branchBudget tapes entry rest address
+    resultCount store.length deleteTime (entryUpdateMarkFoundWork tapes work)
+    hreadyMarked hdeleteTime hresultPositive hinv.resultCount_le
   refine ⟨remainingDone.work, remainingDone.output,
     matchTime + 1 + 1 + deleteTime + 1 +
       TM.binaryPredTime (resultCount - 1) + 1 +
@@ -328,6 +364,86 @@ theorem entryUpdateDeleteIteration_internal
   · simpa [hinputEq, Nat.add_assoc] using htotalReach
   · rw [houtputEq]
     exact houtput
+
+/-- Replacement and the remaining-count decrement restore the next-iteration invariant. -/
+private theorem entryUpdateReplace_finalInvariant
+    (tapes : EntryUpdateTapes n) (store : Store) (address newValue : ℕ)
+    (processed emitted : Store) (entry : Entry) (rest : Store) (resultCount : ℕ)
+    (initialWork work matchedWork replaceWork remainingWork : Fin n → Tape)
+    (hinv : EntryUpdateLoopInv tapes store address newValue processed
+      (entry :: rest) emitted false resultCount initialWork work)
+    (haddress : address = entry.1) (hvalue : newValue ≠ 0)
+    (hfoundZero : (work tapes.found).HasBinaryNat 0)
+    (hmatchReplacement : matchedWork tapes.replacement = work tapes.replacement)
+    (hreplaceReady : EntryScanReady tapes.entry (rest.flatMap Entry.encode) address.bits
+      (entryUpdateMarkFoundWork tapes work) replaceWork)
+    (hreplaceReplacement : replaceWork tapes.replace.replacement =
+      entryUpdateMarkFoundWork tapes matchedWork tapes.replace.replacement)
+    (hremainingOther : ∀ i, i ≠ tapes.remaining → remainingWork i = replaceWork i)
+    (hremainingValue : (remainingWork tapes.remaining).HasBinaryNat rest.length) :
+    EntryUpdateLoopInv tapes store address newValue (processed ++ [entry]) rest
+      (emitted ++ [(address, newValue)]) true resultCount initialWork remainingWork := by
+  have hreadyFinal := hreplaceReady.change_remaining_internal hremainingOther hremainingValue
+  have hreplacementWorkEq :
+      remainingWork tapes.replacement = work tapes.replacement := by
+    rw [hremainingOther tapes.replacement
+      (Ne.symm tapes.remaining_ne_replacement)]
+    have hreplaceReplacement' :
+        replaceWork tapes.replacement =
+          entryUpdateMarkFoundWork tapes matchedWork
+            tapes.replacement := by
+      simpa only [EntryUpdateTapes.replace_replacement] using
+        hreplaceReplacement
+    rw [hreplaceReplacement']
+    rw [entryUpdateMarkFoundWork_apply_ne_internal tapes matchedWork
+      tapes.replacement tapes.replacement_ne_found]
+    exact hmatchReplacement
+  have hreplacementEq :
+      remainingWork tapes.replacement =
+        initialWork tapes.replacement :=
+    hreplacementWorkEq.trans hinv.replacement_eq
+  have hreplacementFinal :
+      (remainingWork tapes.replacement).HasBinaryNat newValue := by
+    rw [hreplacementWorkEq]
+    exact hinv.replacement
+  have hfoundFinal :
+      (remainingWork tapes.found).HasBinaryNat 1 := by
+    rw [hremainingOther tapes.found
+      (Ne.symm tapes.remaining_ne_found)]
+    rw [hreplaceReady.frame_outside_entry_internal tapes.found
+      tapes.found_ne_entry]
+    exact entryUpdateMarkFoundWork_found_one_internal tapes work hfoundZero
+  have hresultFinal :
+      (remainingWork tapes.resultCount).HasBinaryNat resultCount := by
+    rw [hremainingOther tapes.resultCount
+      (Ne.symm tapes.remaining_ne_resultCount)]
+    rw [hreplaceReady.frame_outside_entry_internal tapes.resultCount
+      tapes.resultCount_ne_entry]
+    rw [entryUpdateMarkFoundWork_apply_ne_internal tapes work
+      tapes.resultCount (Ne.symm tapes.found_ne_resultCount)]
+    exact hinv.resultCountTape
+  have hframeMarked := hinv.frame.markFound_internal
+  have hframeReplace :=
+    EntryUpdateFrame.trans_ready_internal hframeMarked hreplaceReady
+  have hframeFinal := EntryUpdateFrame.trans_single_internal hframeReplace
+    (9 : Fin 13) (by
+      intro i hi
+      exact hremainingOther i (by
+        simpa [EntryUpdateTapes.remaining] using hi))
+  have hprogress := hinv.progress.replace_internal haddress hvalue
+  have hinvFinal : EntryUpdateLoopInv tapes store address newValue
+      (processed ++ [entry]) rest (emitted ++ [(address, newValue)]) true
+      resultCount initialWork remainingWork :=
+    { progress := hprogress
+      ready := hreadyFinal
+      replacement := hreplacementFinal
+      replacement_eq := hreplacementEq
+      remainingCount := hremainingValue
+      foundCount := by simpa using hfoundFinal
+      resultCountTape := hresultFinal
+      resultCount_le := hinv.resultCount_le
+      frame := hframeFinal }
+  exact hinvFinal
 
 /-- A matching nonzero write emits the replacement entry, records the hit,
 decrements the remaining-entry counter, and returns to the loop test. -/
@@ -479,8 +595,6 @@ theorem entryUpdateReplaceIteration_internal
   have hloop := entryUpdateTM_step_remaining_halt_internal tapes
     remainingDone hremainingHalt hremainingInputParked hremainingWorkParked
     hremainingOutputParked
-  have hreadyFinal := hreplaceReady.change_remaining_internal
-    hremainingOther hremainingValue
   have hprefix : (entryUpdateTM tapes).reachesIn (matchTime + 1)
       (entryUpdateTestCfg tapes inp work out)
       (entryUpdateMatchWrap tapes matchDone) :=
@@ -504,65 +618,10 @@ theorem entryUpdateReplaceIteration_internal
     hthroughRemaining (.step hloop .zero)
   have hinputEq : remainingDone.input = inp :=
     hremainingInput.trans (hreplaceInput.trans hmatchInput)
-  have hreplacementWorkEq :
-      remainingDone.work tapes.replacement = work tapes.replacement := by
-    rw [hremainingOther tapes.replacement
-      (Ne.symm tapes.remaining_ne_replacement)]
-    have hreplaceReplacement' :
-        replaceDone.work tapes.replacement =
-          entryUpdateMarkFoundWork tapes matchDone.work
-            tapes.replacement := by
-      simpa only [EntryUpdateTapes.replace_replacement] using
-        hreplaceReplacement
-    rw [hreplaceReplacement']
-    rw [entryUpdateMarkFoundWork_apply_ne_internal tapes matchDone.work
-      tapes.replacement tapes.replacement_ne_found]
-    exact hmatchReplacement
-  have hreplacementEq :
-      remainingDone.work tapes.replacement =
-        initialWork tapes.replacement :=
-    hreplacementWorkEq.trans hinv.replacement_eq
-  have hreplacementFinal :
-      (remainingDone.work tapes.replacement).HasBinaryNat newValue := by
-    rw [hreplacementWorkEq]
-    exact hinv.replacement
-  have hfoundFinal :
-      (remainingDone.work tapes.found).HasBinaryNat 1 := by
-    rw [hremainingOther tapes.found
-      (Ne.symm tapes.remaining_ne_found)]
-    rw [hreplaceReady.frame_outside_entry_internal tapes.found
-      tapes.found_ne_entry]
-    exact entryUpdateMarkFoundWork_found_one_internal tapes work hfoundZero
-  have hresultFinal :
-      (remainingDone.work tapes.resultCount).HasBinaryNat resultCount := by
-    rw [hremainingOther tapes.resultCount
-      (Ne.symm tapes.remaining_ne_resultCount)]
-    rw [hreplaceReady.frame_outside_entry_internal tapes.resultCount
-      tapes.resultCount_ne_entry]
-    rw [entryUpdateMarkFoundWork_apply_ne_internal tapes work
-      tapes.resultCount (Ne.symm tapes.found_ne_resultCount)]
-    exact hinv.resultCountTape
-  have hframeMarked := hinv.frame.markFound_internal
-  have hframeReplace :=
-    EntryUpdateFrame.trans_ready_internal hframeMarked hreplaceReady
-  have hframeFinal := EntryUpdateFrame.trans_single_internal hframeReplace
-    (9 : Fin 13) (by
-      intro i hi
-      exact hremainingOther i (by
-        simpa [EntryUpdateTapes.remaining] using hi))
-  have hprogress := hinv.progress.replace_internal haddress hvalue
-  have hinvFinal : EntryUpdateLoopInv tapes store address newValue
-      (processed ++ [entry]) rest (emitted ++ [(address, newValue)]) true
-      resultCount initialWork remainingDone.work :=
-    { progress := hprogress
-      ready := hreadyFinal
-      replacement := hreplacementFinal
-      replacement_eq := hreplacementEq
-      remainingCount := hremainingValue
-      foundCount := by simpa using hfoundFinal
-      resultCountTape := hresultFinal
-      resultCount_le := hinv.resultCount_le
-      frame := hframeFinal }
+  have hinvFinal := entryUpdateReplace_finalInvariant tapes store address newValue
+    processed emitted entry rest resultCount initialWork work matchDone.work replaceDone.work
+    remainingDone.work hinv haddress hvalue hfoundZero hmatchReplacement
+    hreplaceReady hreplaceReplacement hremainingOther hremainingValue
   have hreplaceBound : replaceTime ≤
       entryUpdateReplaceTime tapes entry address newValue := by
     exact hreplaceTime.trans
