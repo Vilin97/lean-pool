@@ -45,14 +45,12 @@ open ClassFormation
 open RamificationTheory.HilbertRamification.ValuationSubring
 
 
-private abbrev absoluteGalois (K : Type) [Field K] :=
-  intrinsicAbsoluteGalois K
+local notation "absoluteGalois" => intrinsicAbsoluteGalois
 
-private abbrev abstractBase (K : Type) [Field K] :
-    ClosedSubgroup (absoluteGalois K) :=
-  intrinsicAbstractBase K
+local notation "abstractBase" => intrinsicAbstractBase
 
-private noncomputable def finiteResidueAbstractBase
+/-- The intrinsic finite base field equipped with its local residue datum. -/
+noncomputable def finiteResidueAbstractBase
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] :
     DegreeData.FiniteResidueAbstractField (localResidueDatum K) :=

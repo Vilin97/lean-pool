@@ -42,14 +42,14 @@ variable {p n : ℕ}
 This is the arithmetic input for the logarithm-series convergence estimate
 `v_p(n) <= log_p n`. -/
 theorem pow_padicValNat_le_self
-    [Fact p.Prime] (hn : n ≠ 0) :
+    (hn : n ≠ 0) :
     p ^ padicValNat p n ≤ n :=
   Nat.le_of_dvd (Nat.pos_iff_ne_zero.mpr hn) pow_padicValNat_dvd
 
 /-- Arithmetic estimate for the field-unit logarithm in real logarithmic
 form: `v_p(n) <= log_p(n)`. -/
 theorem padicValNat_le_real_logb
-    [Fact p.Prime] (n : ℕ) :
+    (n : ℕ) :
     (padicValNat p n : ℝ) ≤ Real.logb p n := by
   exact
     (Nat.cast_le.mpr (padicValNat_le_nat_log (p := p) n)).trans

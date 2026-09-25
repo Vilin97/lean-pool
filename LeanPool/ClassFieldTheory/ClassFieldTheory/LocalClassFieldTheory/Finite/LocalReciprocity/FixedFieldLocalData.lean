@@ -40,11 +40,10 @@ open scoped NNReal Pointwise ValuativeRel
 open ClassFormation LocalFieldTheory RamificationTheory CyclicCohomology
 open RamificationTheory.HilbertRamification.ValuationSubring
 
-private abbrev finiteFixedField
-    (K : Type) [Field K]
-    (H : FiniteAbstractField (Gal(SeparableClosure K/K))) :
-    Type :=
-  abstractFixedField K (SeparableClosure K) H.field
+local notation "finiteFixedField" =>
+  (fun (K : Type) [Field K]
+      (H : FiniteAbstractField (Gal(SeparableClosure K/K))) =>
+    abstractFixedField K (SeparableClosure K) H.field)
 
 /-- The separable closure of a finite fixed field is an algebra over that fixed field. -/
 local instance finiteFixedFieldSeparableClosureAlgebra

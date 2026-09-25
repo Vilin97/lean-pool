@@ -33,8 +33,8 @@ fields, bundled as a continuous homomorphism for their finite Krull
 topologies. -/
 noncomputable def intermediateFieldRestrictContinuous
     (E F : IntermediateField K (SeparableClosure K)) (hEF : E ≤ F)
-    [FiniteDimensional K E] [FiniteDimensional K F]
-    [IsGalois K E] [IsGalois K F] :
+    [FiniteDimensional K F]
+    [IsGalois K E] :
     Gal(F/K) →ₜ* Gal(E/K) :=
   { intermediateFieldRestrictNormalHom E F hEF with
     continuous_toFun := continuous_of_discreteTopology }

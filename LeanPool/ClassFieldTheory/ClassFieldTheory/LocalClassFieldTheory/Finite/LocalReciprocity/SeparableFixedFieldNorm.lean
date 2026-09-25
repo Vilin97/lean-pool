@@ -92,8 +92,7 @@ theorem baseFixingCosetToAlgHom_mk
       σ.1.toAlgHom.comp E.val :=
   rfl
 
-private theorem baseFixingCosetToAlgHom_surjective
-    [FiniteDimensional K E] [Algebra.IsSeparable K E] :
+private theorem baseFixingCosetToAlgHom_surjective :
     Function.Surjective (baseFixingCosetToAlgHom K Ω E) := by
   intro f
   let : Algebra.IsSeparable E Ω :=
@@ -144,8 +143,7 @@ private theorem baseFixingCosetToAlgHom_injective :
 
 /-- Left cosets of the absolute subgroup fixing `E` are the actual
 `K`-embeddings of `E` into the separably closed ambient field. -/
-def baseFixingCosetEquivAlgHom
-    [FiniteDimensional K E] [Algebra.IsSeparable K E] :
+def baseFixingCosetEquivAlgHom :
     ((closedFixingSubgroup K Ω (⊥ : IntermediateField K Ω)).toSubgroup ⧸
       extensionSubgroup
         (closedFixingSubgroup K Ω (⊥ : IntermediateField K Ω))

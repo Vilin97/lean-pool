@@ -103,9 +103,7 @@ theorem valuationHerbrand_multiplicativity_of_integerUnits_defined
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     letI := galoisGroupFieldUnitsMulDistribMulAction K L
     letI := galoisGroupValueGroupMulDistribMulAction K L
-    let hZ : HerbrandQuotientDefined (Gal(L/K)) (Multiplicative Int) g :=
-      galoisGroupValueGroup_herbrandQuotientDefined K L g
-    ∃ hField : HerbrandQuotientDefined (Gal(L/K)) Lˣ g,
+    ∃ _ : HerbrandQuotientDefined (Gal(L/K)) Lˣ g,
       @herbrandQuotient (Gal(L/K)) Lˣ _ _ _
           (galoisGroupFieldUnitsMulDistribMulAction K L) g =
         @herbrandQuotient (Gal(L/K))

@@ -38,7 +38,6 @@ back to `𝒪[L]`. -/
 theorem galoisGroup_mem_integerRing_of_isIntegralClosure
     (K L : Type u) [Field K] [ValuativeRel K] [Field L] [ValuativeRel L]
     [Algebra K L]
-    [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (σ : Gal(L/K)) (x : 𝒪[L]) :
     σ (x : L) ∈ 𝒪[L] := by
@@ -56,7 +55,6 @@ actual integral-closure property of valuation integer rings. -/
 def galoisGroupIntegerRingEquivOfIsIntegralClosure
     (K L : Type u) [Field K] [ValuativeRel K] [Field L] [ValuativeRel L]
     [Algebra K L]
-    [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L/K)) :
     𝒪[L] ≃+* 𝒪[L] where
   toFun x :=
@@ -86,7 +84,6 @@ valuation ring. -/
 theorem galoisGroupIntegerRingEquivOfIsIntegralClosure_apply
     (K L : Type u) [Field K] [ValuativeRel K] [Field L] [ValuativeRel L]
     [Algebra K L]
-    [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (σ : Gal(L/K)) (x : 𝒪[L]) :
     ((galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ x : 𝒪[L]) : L) =
@@ -99,7 +96,6 @@ field. -/
 theorem galoisGroupIntegerRingEquivOfIsIntegralClosure_symm_apply
     (K L : Type u) [Field K] [ValuativeRel K] [Field L] [ValuativeRel L]
     [Algebra K L]
-    [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
     (σ : Gal(L/K)) (x : 𝒪[L]) :
     (((galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ).symm x : 𝒪[L]) : L) =
@@ -111,7 +107,6 @@ restriction. -/
 def galoisGroupIntegerRingEquivHomOfIsIntegralClosure
     (K L : Type u) [Field K] [ValuativeRel K] [Field L] [ValuativeRel L]
     [Algebra K L]
-    [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
     Gal(L/K) →* (𝒪[L] ≃+* 𝒪[L]) where
   toFun := galoisGroupIntegerRingEquivOfIsIntegralClosure K L
@@ -129,7 +124,6 @@ integral-closure restriction of `Gal(L / K)`. -/
 def galoisGroupIntegerRingMulSemiringActionOfIsIntegralClosure
     (K L : Type u) [Field K] [ValuativeRel K] [Field L] [ValuativeRel L]
     [Algebra K L]
-    [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] :
     MulSemiringAction (Gal(L/K)) 𝒪[L] :=
   MulSemiringAction.compHom 𝒪[L] (galoisGroupIntegerRingEquivHomOfIsIntegralClosure K L)

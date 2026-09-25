@@ -1495,29 +1495,19 @@ private theorem cyclotomicAbstractFixedFieldArtin_eqTransThree
     a = d :=
   hab.trans (hbc.trans hcd)
 
-private abbrev cyclotomicAbstractFixedFieldArtinCoordinateBase
-    (H : FiniteAbstractField
-      (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)) :=
-  LocalClassFieldTheory.abstractFixedField
-    ℚ (SeparableClosure ℚ) H.field
+local notation "cyclotomicAbstractFixedFieldArtinCoordinateBase" =>
+  (fun H : FiniteAbstractField
+      (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ) =>
+    LocalClassFieldTheory.abstractFixedField ℚ (SeparableClosure ℚ) H.field)
 
-private abbrev cyclotomicAbstractFixedFieldArtinCoordinateRelative
-    (H : FiniteAbstractField
-      (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)) :=
-  LocalClassFieldTheory.abstractRelativeFixedField
-    ℚ (SeparableClosure ℚ)
-    (rationalCyclotomicFieldInertia_le H.field)
+local notation "cyclotomicAbstractFixedFieldArtinCoordinateRelative" =>
+  (fun H : FiniteAbstractField
+      (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ) =>
+    LocalClassFieldTheory.abstractRelativeFixedField ℚ (SeparableClosure ℚ)
+      (rationalCyclotomicFieldInertia_le H.field))
 
-private abbrev cyclotomicAbstractFixedFieldArtinCoordinateLayer
-    (H : FiniteAbstractField
-      (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ))
-    (E :
-      FiniteGaloisIntermediateField
-        ℚ rationalCyclotomicZHatField) :
-    IntermediateField
-      (cyclotomicAbstractFixedFieldArtinCoordinateBase H)
-      (cyclotomicAbstractFixedFieldArtinCoordinateRelative H) :=
-  abstractFixedFieldCyclotomicFiniteLayer H E
+local notation "cyclotomicAbstractFixedFieldArtinCoordinateLayer" =>
+  abstractFixedFieldCyclotomicFiniteLayer
 
 /-- The base field for an abstract fixed-field Artin coordinate carries its rational algebra
 structure. -/

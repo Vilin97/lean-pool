@@ -39,16 +39,11 @@ universe u v
 variable {K : Type u} {Omega : Type v}
   [Field K] [Field Omega] [Algebra K Omega]
 
-private abbrev absoluteGalois (K : Type) [Field K] :=
-  intrinsicAbsoluteGalois K
+local notation "absoluteGalois" => intrinsicAbsoluteGalois
 
-private abbrev absoluteUnits (K : Type) [Field K] :
-    Rep ℤ (absoluteGalois K) :=
-  intrinsicAbsoluteUnits K
+local notation "absoluteUnits" => intrinsicAbsoluteUnits
 
-private abbrev abstractBase (K : Type) [Field K] :
-    ClosedSubgroup (absoluteGalois K) :=
-  intrinsicAbstractBase K
+local notation "abstractBase" => intrinsicAbstractBase
 
 section AbstractToConcrete
 
@@ -57,7 +52,7 @@ variable (K L : Type) [Field K] [Field L] [Algebra K L]
 
 /-- The finite abstract norm class represented by a base-field unit in an
 explicit separable-closure realization. -/
-private def embeddedBaseNormClass
+def embeddedBaseNormClass
     (i : L →ₐ[K] SeparableClosure K) (a : Kˣ) :
     FiniteNormQuotient (absoluteUnits K) (abstractBase K)
       (finiteGaloisAbstractExtensionOfEmbedding K L i).field

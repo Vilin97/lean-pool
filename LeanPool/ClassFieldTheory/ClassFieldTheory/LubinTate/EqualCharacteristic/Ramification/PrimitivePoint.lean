@@ -202,7 +202,7 @@ theorem equalCharacteristicLubinTateBaseCompleteDVF_valuation_eq
 
 /-- Identity on Laurent-series elements identifies the canonical valuative
 integer ring with the valuation ring packaged by the chosen complete DVF. -/
-private noncomputable def
+noncomputable def
     equalCharacteristicLaurentValuativeIntegerEquivLubinTateBaseValuationSubring
     (F : LocalField.{0, v} K₀) :
     letI : ValuativeRel F.residueField⸨X⸩ :=

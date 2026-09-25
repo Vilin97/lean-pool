@@ -1400,9 +1400,6 @@ theorem herbrandQuotient_eq_of_finiteIndex_stableSubgroup
     letI _quotientAction :=
       stableQuotientMulDistribMulAction
         B hstable
-    let hA :=
-      finiteIndexStableSubgroup_ambientHerbrandQuotientDefined
-        B hstable σ hgen hB
     @herbrandQuotient G A _ _ _ _
         σ =
       @herbrandQuotient G B _ _ _ _

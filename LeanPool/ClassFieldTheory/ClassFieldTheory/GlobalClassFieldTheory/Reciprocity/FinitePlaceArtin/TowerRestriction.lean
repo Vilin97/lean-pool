@@ -425,7 +425,9 @@ theorem decompositionGroupEquivAlgebraicLocalizationAut_restrict_of_commutes
     exact localizationRamificationGroups_decompositionGroupEquiv_toLocalization vK hvK wL _ _
 
 open scoped Classical in
-private noncomputable def finitePlaceLocalRestrictionMonoidHom
+/-- Restriction of local Galois automorphisms along a compatible tower
+of finite-place completions. -/
+noncomputable def finitePlaceLocalRestrictionMonoidHom
     {E : Type}
     [Field E] [Algebra K E] [Algebra E L]
     [IsScalarTower K E L]

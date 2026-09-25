@@ -32,8 +32,7 @@ decreasing filtration of its canonical decomposition group. -/
 theorem realLowerRamificationGroup_canonical_antitone
     (K : Type u) (L : Type v) [Field K] [Field L] [Algebra K L]
     [ValuativeRel K] [TopologicalSpace K]
-    [ValuativeRel L] [TopologicalSpace L]
-    [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)] :
+    [ValuativeRel L] [TopologicalSpace L] :
     Antitone (ClassFieldTheory.realLowerRamificationGroup K
       (ValuativeRel.valuation L).valuationSubring) := by
   intro s t hst σ hσ x

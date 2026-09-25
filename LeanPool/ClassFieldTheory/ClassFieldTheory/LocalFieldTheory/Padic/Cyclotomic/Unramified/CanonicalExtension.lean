@@ -641,23 +641,20 @@ noncomputable def padicCyclotomicUnramifiedPadicFiniteExtensionValuationSubringE
         (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p).valuationSubring
         L).toSubring :=
     padicCyclotomicUnramified_padicFiniteExtensionValuationSubring_eq_integralClosure p L
-  have hT : T.toSubring =
-      (integralClosure
-        (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF p).valuationSubring
-        L).toSubring :=
-    by
-      exact padicCyclotomicUnramified_valuationSubring_eq_integralClosure
-        (K := ℚ_[p]) (L := L)
-        (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF
-          p).valuation.valuationSubring T
   exact
     { toFun := fun x => ⟨x, by
           change (x : L) ∈ T.toSubring
-          rw [hT, ← hW]
+          rw [padicCyclotomicUnramified_valuationSubring_eq_integralClosure
+            (K := ℚ_[p]) (L := L)
+            (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF
+              p).valuation.valuationSubring T, ← hW]
           exact x.property⟩
       invFun := fun x => ⟨x, by
           change (x : L) ∈ W.toSubring
-          rw [hW, ← hT]
+          rw [hW, ← padicCyclotomicUnramified_valuationSubring_eq_integralClosure
+            (K := ℚ_[p]) (L := L)
+            (LocalFieldTheory.DiscreteValuationField.Examples.Qp.padicCompleteDVF
+              p).valuation.valuationSubring T]
           exact x.property⟩
       left_inv := fun x => Subtype.ext rfl
       right_inv := fun x => Subtype.ext rfl

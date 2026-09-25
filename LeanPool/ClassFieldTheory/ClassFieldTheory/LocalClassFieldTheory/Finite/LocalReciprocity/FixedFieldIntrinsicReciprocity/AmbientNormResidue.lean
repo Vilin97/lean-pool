@@ -37,8 +37,6 @@ abbrev ambientEmbeddedSeparableClosureEquiv
     [Field F] [ValuativeRel F] [TopologicalSpace F]
     [Field E] [Algebra K F] [Algebra F E] [Algebra K E]
     [IsScalarTower K F E]
-    [Valuation.HasExtension
-      (ValuativeRel.valuation K) (ValuativeRel.valuation F)]
     (j : E →ₐ[K] SeparableClosure K) :=
   @AlgEquiv F (SeparableClosure F) (SeparableClosure K)
     _ _ _

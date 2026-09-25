@@ -93,9 +93,7 @@ theorem abstractFixedFieldCosetToAlgHom_mk
 
 private theorem abstractFixedFieldCosetToAlgHom_surjective
     (K L : ClosedSubgroup (Gal(Ω/k)))
-    (hLK : L.toSubgroup ≤ K.toSubgroup)
-    [FiniteDimensional (abstractFixedField k Ω K)
-      (abstractRelativeFixedField k Ω hLK)] :
+    (hLK : L.toSubgroup ≤ K.toSubgroup) :
     Function.Surjective
       (abstractFixedFieldCosetToAlgHom k Ω K L hLK) := by
   intro f
@@ -162,9 +160,7 @@ private theorem abstractFixedFieldCosetToAlgHom_injective
 concrete fixed field into the ambient separably closed field. -/
 def abstractFixedFieldCosetEquivAlgHom
     (K L : ClosedSubgroup (Gal(Ω/k)))
-    (hLK : L.toSubgroup ≤ K.toSubgroup)
-    [FiniteDimensional (abstractFixedField k Ω K)
-      (abstractRelativeFixedField k Ω hLK)] :
+    (hLK : L.toSubgroup ≤ K.toSubgroup) :
     (K.toSubgroup ⧸ extensionSubgroup K L hLK) ≃
       (abstractRelativeFixedField k Ω hLK →ₐ[
         abstractFixedField k Ω K] Ω) :=

@@ -32,16 +32,11 @@ open LocalFieldTheory RamificationTheory CyclicCohomology KummerTheory
 open ClassFormation LocalClassFieldTheory
 open scoped IsMulCommutative
 
-private abbrev towerAbsoluteGalois (K : Type) [Field K] :=
-  intrinsicAbsoluteGalois K
+local notation "towerAbsoluteGalois" => intrinsicAbsoluteGalois
 
-private abbrev towerAbsoluteUnits (K : Type) [Field K] :
-    Rep ℤ (towerAbsoluteGalois K) :=
-  intrinsicAbsoluteUnits K
+local notation "towerAbsoluteUnits" => intrinsicAbsoluteUnits
 
-private abbrev towerAbstractBase (K : Type) [Field K] :
-    ClosedSubgroup (towerAbsoluteGalois K) :=
-  intrinsicAbstractBase K
+local notation "towerAbstractBase" => intrinsicAbstractBase
 
 private def towerLowerEmbedding
     (K E L : Type)

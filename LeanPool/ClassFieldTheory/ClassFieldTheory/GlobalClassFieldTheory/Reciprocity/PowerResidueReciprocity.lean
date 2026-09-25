@@ -1505,11 +1505,11 @@ theorem powerResidueAwayFromExponentFiniteProduct_integral_eq_idealSymbol_div
         (nonzeroIntegralFieldUnit K b hb0) =
       integralRootsOfUnityToNthRoots K (n : ℕ)
           (idealPowerResidueSymbol K (Ideal.span {b})
-            (ideal_span_singleton_ne_zero K hb0)
+            (by exact ideal_span_singleton_ne_zero K hb0)
             n hmu a hcoprimeB haB) *
         (integralRootsOfUnityToNthRoots K (n : ℕ)
           (idealPowerResidueSymbol K (Ideal.span {a})
-            (ideal_span_singleton_ne_zero K ha0)
+            (by exact ideal_span_singleton_ne_zero K ha0)
             n hmu b hcoprimeA hbA))⁻¹ := by
   let IA : Ideal (𝓞 K) := Ideal.span {a}
   let IB : Ideal (𝓞 K) := Ideal.span {b}
@@ -1590,11 +1590,11 @@ theorem powerResidueAwayFromExponentFiniteProduct_integral_eq_idealSymbol_div
             K IA hIA n hmu b hcoprimeA hbA)]
     _ = integralRootsOfUnityToNthRoots K (n : ℕ)
           (idealPowerResidueSymbol K (Ideal.span {b})
-            (ideal_span_singleton_ne_zero K hb0)
+            (by exact ideal_span_singleton_ne_zero K hb0)
             n hmu a hcoprimeB haB) *
         (integralRootsOfUnityToNthRoots K (n : ℕ)
           (idealPowerResidueSymbol K (Ideal.span {a})
-            (ideal_span_singleton_ne_zero K ha0)
+            (by exact ideal_span_singleton_ne_zero K ha0)
             n hmu b hcoprimeA hbA))⁻¹ := by
       rfl
 
@@ -1729,22 +1729,22 @@ theorem idealPowerResidueSymbol_reciprocity_with_bad_place_correction
           P ∉ powerResidueExponentFinitePlaces K n) :
     integralRootsOfUnityToNthRoots K (n : ℕ)
         (idealPowerResidueSymbol K (Ideal.span {b})
-          (ideal_span_singleton_ne_zero K hb0)
+          (by exact ideal_span_singleton_ne_zero K hb0)
           n hmu a hcoprimeB haB) =
       (powerResidueBadPlaceCorrection K n hnK hmu
         (nonzeroIntegralFieldUnit K a ha0)
         (nonzeroIntegralFieldUnit K b hb0))⁻¹ *
       integralRootsOfUnityToNthRoots K (n : ℕ)
         (idealPowerResidueSymbol K (Ideal.span {a})
-          (ideal_span_singleton_ne_zero K ha0)
+          (by exact ideal_span_singleton_ne_zero K ha0)
           n hmu b hcoprimeA hbA) := by
   let symbolAB := integralRootsOfUnityToNthRoots K (n : ℕ)
     (idealPowerResidueSymbol K (Ideal.span {b})
-      (ideal_span_singleton_ne_zero K hb0)
+      (by exact ideal_span_singleton_ne_zero K hb0)
       n hmu a hcoprimeB haB)
   let symbolBA := integralRootsOfUnityToNthRoots K (n : ℕ)
     (idealPowerResidueSymbol K (Ideal.span {a})
-      (ideal_span_singleton_ne_zero K ha0)
+      (by exact ideal_span_singleton_ne_zero K ha0)
       n hmu b hcoprimeA hbA)
   let correction := powerResidueBadPlaceCorrection K n hnK hmu
     (nonzeroIntegralFieldUnit K a ha0)
@@ -2455,7 +2455,7 @@ theorem rationalIdealPowerResidueSymbol_two_eq_jacobiSym
         (idealPowerResidueSymbol ℚ
           (rationalPrincipalIdeal b)
           (rationalPrincipalIdeal_ne_zero b hb)
-          (2 : ℕ+) rationalQuadraticPrimitiveRoots_nonempty_pnat a
+          (2 : ℕ+) (by exact rationalQuadraticPrimitiveRoots_nonempty_pnat) a
           (by
             intro P hP
             change (Ideal.absNorm P.asIdeal).Coprime 2
