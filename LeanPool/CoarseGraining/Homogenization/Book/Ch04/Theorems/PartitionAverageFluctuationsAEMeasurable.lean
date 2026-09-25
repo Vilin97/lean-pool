@@ -30,6 +30,36 @@ open scoped BigOperators
 
 noncomputable section
 
+private theorem cubeSet_descendant_eq_translate_origin_of_nonneg
+    {d : ℕ} {Q R : TriadicCube d} {n : ℤ}
+    (hn : 0 ≤ n) (hnQ : n ≤ Q.scale) (hR : R ∈ descendantsAtScale Q n) :
+    cubeSet R =
+      translateSet (intVecToRealVec (scaleTranslationShift n R))
+        (cubeSet (originCube d n)) := by
+  have hscaleR : R.scale = n := by
+    calc
+      R.scale = Q.scale - Int.toNat (Q.scale - n) := by
+        exact scale_eq_sub_of_mem_descendantsAtScale (Q := Q) hnQ hR
+      _ = n := by
+            rw [Int.toNat_of_nonneg (sub_nonneg.mpr hnQ)]
+            ring
+  have hshift :
+      cubeSet R =
+        translateSet (intVecToRealVec (scaleTranslationShift n R))
+          (cubeSet (originCube d n)) := by
+    have hscale_nonneg : 0 ≤ R.scale := by
+      simpa [hscaleR] using hn
+    calc
+      cubeSet R =
+          translateSet (intVecToRealVec (scaleTranslationShift R.scale R))
+            (cubeSet (originCube d R.scale)) :=
+        cubeSet_eq_translateSet_originCube_of_nonneg_scale hscale_nonneg
+      _ =
+          translateSet (intVecToRealVec (scaleTranslationShift n R))
+            (cubeSet (originCube d n)) := by
+            simp [hscaleR]
+  exact hshift
+
 theorem isBigO_gammaSigma_restrictionCenteredDescendantAverageOnCube_of_restrictionUnitRangeDependentLaw_of_ae_eq_local
     {d : ℕ} {Q : TriadicCube d} {n : ℤ} {P : RestrictionCoeffLaw d} [IsProbabilityMeasure P]
     {σ K : ℝ}
@@ -94,28 +124,8 @@ theorem isBigO_gammaSigma_restrictionCenteredDescendantAverageOnCube_of_restrict
   have hZ_tail :
       ∀ R ∈ D, IsBigO P (gammaSigma σ) (Z R) K := by
     intro R hR
-    have hscaleR : R.scale = n := by
-      calc
-        R.scale = Q.scale - Int.toNat (Q.scale - n) := by
-          exact scale_eq_sub_of_mem_descendantsAtScale (Q := Q) hnQ (by simpa [D] using hR)
-        _ = n := by
-              rw [Int.toNat_of_nonneg (sub_nonneg.mpr hnQ)]
-              ring
-    have hshift :
-        cubeSet R =
-          translateSet (intVecToRealVec (scaleTranslationShift n R))
-            (cubeSet (originCube d n)) := by
-      have hscale_nonneg : 0 ≤ R.scale := by
-        simpa [hscaleR] using hn
-      calc
-        cubeSet R =
-            translateSet (intVecToRealVec (scaleTranslationShift R.scale R))
-              (cubeSet (originCube d R.scale)) :=
-          cubeSet_eq_translateSet_originCube_of_nonneg_scale hscale_nonneg
-        _ =
-            translateSet (intVecToRealVec (scaleTranslationShift n R))
-              (cubeSet (originCube d n)) := by
-              simp [hscaleR]
+    have hshift := cubeSet_descendant_eq_translate_origin_of_nonneg
+      (Q := Q) (R := R) hn hnQ (by simpa [D] using hR)
     have hYR_aemeas : AEMeasurable (Y (cubeSet R)) P := by
       simpa [Y] using!
         (hX_desc_aemeas R (by simpa [D] using hR)).sub measurable_const.aemeasurable
@@ -179,28 +189,8 @@ theorem isBigO_gammaSigma_restrictionCenteredDescendantAverageOnCube_of_restrict
   have hZraw_mean :
       ∀ R ∈ D, ∫ a, Zraw R a ∂P = 0 := by
     intro R hR
-    have hscaleR : R.scale = n := by
-      calc
-        R.scale = Q.scale - Int.toNat (Q.scale - n) := by
-          exact scale_eq_sub_of_mem_descendantsAtScale (Q := Q) hnQ (by simpa [D] using hR)
-        _ = n := by
-              rw [Int.toNat_of_nonneg (sub_nonneg.mpr hnQ)]
-              ring
-    have hshift :
-        cubeSet R =
-          translateSet (intVecToRealVec (scaleTranslationShift n R))
-            (cubeSet (originCube d n)) := by
-      have hscale_nonneg : 0 ≤ R.scale := by
-        simpa [hscaleR] using hn
-      calc
-        cubeSet R =
-            translateSet (intVecToRealVec (scaleTranslationShift R.scale R))
-              (cubeSet (originCube d R.scale)) :=
-          cubeSet_eq_translateSet_originCube_of_nonneg_scale hscale_nonneg
-        _ =
-            translateSet (intVecToRealVec (scaleTranslationShift n R))
-              (cubeSet (originCube d n)) := by
-              simp [hscaleR]
+    have hshift := cubeSet_descendant_eq_translate_origin_of_nonneg
+      (Q := Q) (R := R) hn hnQ (by simpa [D] using hR)
     have hint :
         ∫ a, Y (cubeSet R) a ∂P =
           ∫ a, Y (cubeSet (originCube d n)) a ∂P := by

@@ -763,6 +763,25 @@ private noncomputable def boundaryCaccioppoliDilationWitness {d : ℕ} [NeZero d
       ring
     simpa [vDatum, k, b] using le_of_eq heq
 
+private theorem interiorCaccioppoliRHS_dilate_eq_of_parentOscillation
+    {d : ℕ} [NeZero d] {Q : TriadicCube d} {a b : CoeffFamily d}
+    (u : CubeSolution Q a) (v : CubeSolution (Ch02.dilateCube (-Q.scale) Q) b)
+    (hFam : Ch02.TriadicCoeffFamily.IsDilation (-Q.scale) a b)
+    (hosc : interiorCaccioppoliParentOscillationL2Sq (Ch02.dilateCube (-Q.scale) Q) b v =
+      (Ch02.triadicDilationFactor (-Q.scale)) ^ (2 : ℕ) *
+        interiorCaccioppoliParentOscillationL2Sq Q a u)
+    (C s t : ℝ) :
+    interiorCaccioppoliRHS C (Ch02.dilateCube (-Q.scale) Q) b s t v =
+      interiorCaccioppoliRHS C Q a s t u := by
+  have hpref :=
+    caccioppoliPrefactor_dilate_neg_scale (Ch02.multiscaleDilationTheory d)
+      (Q := Q) (a := a) (b := b) (C := C) (s := s) (t := t) hFam
+  have hsq := triadicDilationFactor_neg_scale_sq Q
+  unfold interiorCaccioppoliRHS
+  rw [hosc, hsq]
+  rw [hpref]
+  ring
+
 /-- Interior cube solutions have a concrete normalized dilation witness. -/
 private noncomputable def interiorCaccioppoliDilationWitness {d : ℕ} [NeZero d]
     {Q : TriadicCube d} {a : CoeffFamily d} (u : CubeSolution Q a) :
@@ -811,21 +830,8 @@ private noncomputable def interiorCaccioppoliDilationWitness {d : ℕ} [NeZero d
     have hosc :=
       interiorCaccioppoliParentOscillationL2Sq_dilate_eq
         (A := a) (B := b) (Q := Q) vPack.isDilation
-    have hpref :=
-      caccioppoliPrefactor_dilate_neg_scale (Ch02.multiscaleDilationTheory d)
-        (Q := Q) (a := a) (b := b) (C := C) (s := s) (t := t)
-        (by simpa [k, b] using hFam)
-    have hsq :
-        r ^ (2 : ℕ) =
-          Real.rpow (3 : ℝ) (-2 * (((Q.scale : ℤ) : ℝ))) := by
-      simpa [r, k] using triadicDilationFactor_neg_scale_sq Q
-    have heq :
-        interiorCaccioppoliRHS C (Ch02.dilateCube k Q) b s t vSol =
-          interiorCaccioppoliRHS C Q a s t u := by
-      unfold interiorCaccioppoliRHS
-      rw [hosc, hsq]
-      rw [hpref]
-      ring
+    have heq := interiorCaccioppoliRHS_dilate_eq_of_parentOscillation
+      u vSol (by simpa [k, b] using hFam) hosc C s t
     simpa [vSol, k, b] using le_of_eq heq
 
 /-- Fully proved public coarse Caccioppoli theorem package for arbitrary
