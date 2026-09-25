@@ -138,6 +138,15 @@ private lemma exists_fin_net_of_totallyBounded {s : Set Y} (hs : TotallyBounded 
   simp only [Equiv.symm_apply_apply]
   exact le_of_lt (by rwa [← dist_eq_norm])
 
+/-- A small quotient norm gives an approximation by a vector in the subspace. -/
+private lemma exists_subspace_approximation (V : Submodule 𝕜 Y) {y : Y} {ε : ℝ}
+    (hy : ‖V.mkQL y‖ < ε) : ∃ v ∈ V, ‖y - v‖ < ε := by
+  have heq : ‖V.mkQL y‖ = Metric.infDist y V :=
+    QuotientAddGroup.norm_mk (S := V.toAddSubgroup) y
+  rw [heq] at hy
+  obtain ⟨v, hv, hdv⟩ := (Metric.infDist_lt_iff ⟨0, V.zero_mem⟩).mp hy
+  exact ⟨v, hv, by rwa [dist_eq_norm] at hdv⟩
+
 end TotallyBounded
 
 /-! ### The Kolmogorov numbers -/
@@ -167,6 +176,22 @@ theorem tendsto_kolmogorovNumber_of_totallyBounded {S : X →L[𝕜] Y}
     _ ≤ ε / 2 := hk
     _ < ε := by linarith
 
+/-- Small deviation gives a nearby subspace vector with a uniform norm bound. -/
+private lemma exists_bounded_subspace_approximation {S : X →L[𝕜] Y}
+    (V : Submodule 𝕜 Y) {ε : ℝ} (hV : deviationFromSubspace S V < ε)
+    {x : X} (hx : ‖x‖ ≤ 1) :
+    ∃ v ∈ V, ‖v‖ ≤ ‖S‖ + ε ∧ ‖S x - v‖ < ε := by
+  have hop : ‖V.mkQL (S x)‖ ≤ deviationFromSubspace S V := by
+    simpa [deviationFromSubspace] using (V.mkQL.comp S).unit_le_opNorm x hx
+  obtain ⟨v, hv, hdv⟩ := exists_subspace_approximation V (lt_of_le_of_lt hop hV)
+  refine ⟨v, hv, ?_, hdv⟩
+  have hSx : ‖S x‖ ≤ ‖S‖ := S.unit_le_opNorm x hx
+  have hvx : ‖v - S x‖ ≤ ε := by rw [norm_sub_rev]; exact hdv.le
+  have hveq : S x + (v - S x) = v := by abel
+  calc ‖v‖ = ‖S x + (v - S x)‖ := by rw [hveq]
+    _ ≤ ‖S x‖ + ‖v - S x‖ := norm_add_le _ _
+    _ ≤ ‖S‖ + ε := add_le_add hSx hvx
+
 /-- If `dₙ(S) → 0` then `S(B_X)` is totally bounded.
 
 Given `η > 0`, choose `V` of dimension `≤ n` with `‖π_V ∘ S‖ < η/3`. Every
@@ -183,26 +208,6 @@ theorem totallyBounded_of_tendsto_kolmogorovNumber {S : X →L[𝕜] Y}
     exists_lt_of_csInf_lt (kolmogorovSet_nonempty S n) hn
   have : FiniteDimensional 𝕜 V :=
     Module.rank_lt_aleph0_iff.mp (lt_of_le_of_lt hV_rank (Cardinal.natCast_lt_aleph0))
-  -- Every point of `S(B_X)` is `η/3`-close to a point of `V` of norm `≤ ‖S‖ + η/3`.
-  have hVne : (V : Set Y).Nonempty := ⟨0, V.zero_mem⟩
-  have key : ∀ x : X, ‖x‖ ≤ 1 →
-      ∃ v : Y, v ∈ V ∧ ‖v‖ ≤ ‖S‖ + η / 3 ∧ ‖S x - v‖ < η / 3 := by
-    intro x hx
-    have hop : ‖V.mkQL (S x)‖ ≤ deviationFromSubspace S V := by
-      simpa [deviationFromSubspace] using (V.mkQL.comp S).unit_le_opNorm x hx
-    have h1 : ‖V.mkQL (S x)‖ < η / 3 := lt_of_le_of_lt hop hV_lt
-    have heq : ‖V.mkQL (S x)‖ = Metric.infDist (S x) V :=
-      QuotientAddGroup.norm_mk (S := V.toAddSubgroup) (S x)
-    rw [heq] at h1
-    obtain ⟨v, hv, hdv⟩ := (Metric.infDist_lt_iff hVne).mp h1
-    rw [dist_eq_norm] at hdv
-    refine ⟨v, hv, ?_, hdv⟩
-    have hSx : ‖S x‖ ≤ ‖S‖ := S.unit_le_opNorm x hx
-    have hvx : ‖v - S x‖ ≤ η / 3 := by rw [norm_sub_rev]; exact hdv.le
-    have hveq : S x + (v - S x) = v := by abel
-    calc ‖v‖ = ‖S x + (v - S x)‖ := by rw [hveq]
-      _ ≤ ‖S x‖ + ‖v - S x‖ := norm_add_le _ _
-      _ ≤ ‖S‖ + η / 3 := add_le_add hSx hvx
   -- The relevant piece of `V` is compact, hence has a finite `η/3`-net.
   have hK : TotallyBounded
       (⇑V.subtypeL '' Metric.closedBall (0 : V) (‖S‖ + η / 3)) :=
@@ -211,14 +216,14 @@ theorem totallyBounded_of_tendsto_kolmogorovNumber {S : X →L[𝕜] Y}
   obtain ⟨t, ht_fin, ht_cov⟩ := Metric.totallyBounded_iff.mp hK (η / 3) hε
   refine ⟨t, ht_fin, ?_⟩
   rintro _ ⟨x, hx, rfl⟩
-  obtain ⟨v, hv_mem, hv_norm, hv_dist⟩ := key x (mem_closedBall_zero_iff.mp hx)
+  obtain ⟨v, hv_mem, hv_norm, hv_dist⟩ :=
+    exists_bounded_subspace_approximation V hV_lt (mem_closedBall_zero_iff.mp hx)
   have hvK : v ∈ ⇑V.subtypeL '' Metric.closedBall (0 : V) (‖S‖ + η / 3) :=
     ⟨⟨v, hv_mem⟩, by simpa using hv_norm, rfl⟩
   have hmem := ht_cov hvK
   simp only [Set.mem_iUnion, Metric.mem_ball, exists_prop] at hmem
   obtain ⟨w, hw, hwd⟩ := hmem
   refine Set.mem_biUnion hw ?_
-  have : dist (S x) w ≤ dist (S x) v + dist v w := dist_triangle _ _ _
   rw [Metric.mem_ball, dist_eq_norm] at *
   calc ‖S x - w‖ ≤ ‖S x - v‖ + ‖v - w‖ := by
         simpa [dist_eq_norm] using dist_triangle (S x) v w
@@ -285,6 +290,77 @@ theorem tendsto_gelfandNumber_of_totallyBounded {S : X →L[𝕜] Y}
     _ ≤ 2 * (ε / 3) := hk
     _ < ε := by linarith
 
+/-- A finite-dimensional quotient has finite nets whose centres lift to the unit ball. -/
+private lemma exists_finite_quotient_net (M : Submodule 𝕜 X) [IsClosed (M : Set X)]
+    [FiniteDimensional 𝕜 (X ⧸ M)] {δ : ℝ} (hδ : 0 < δ) :
+    ∃ t : Set X, t.Finite ∧ (∀ u ∈ t, ‖u‖ ≤ 1) ∧
+      ∀ x : X, ‖x‖ ≤ 1 → ∃ u ∈ t, ‖M.mkQL (x - u)‖ < δ := by
+  classical
+  have : ProperSpace (X ⧸ M) := FiniteDimensional.proper 𝕜 (X ⧸ M)
+  have hq : TotallyBounded (⇑M.mkQL '' Metric.closedBall (0 : X) 1) := by
+    refine TotallyBounded.subset ?_
+      (isCompact_closedBall (0 : X ⧸ M) 1).totallyBounded
+    rintro _ ⟨x, hx, rfl⟩
+    simpa using (M.norm_mkQL_apply_le x).trans (mem_closedBall_zero_iff.mp hx)
+  obtain ⟨t, ht_sub, ht_fin, ht_cov⟩ := Metric.finite_approx_of_totallyBounded hq δ hδ
+  have hpre : ∀ w : X ⧸ M, w ∈ t → ∃ u : X, ‖u‖ ≤ 1 ∧ M.mkQL u = w := by
+    intro w hw
+    obtain ⟨u, hu, rfl⟩ := ht_sub hw
+    exact ⟨u, mem_closedBall_zero_iff.mp hu, rfl⟩
+  choose! u hu_norm hu_eq using hpre
+  refine ⟨u '' t, ht_fin.image _, ?_, ?_⟩
+  · rintro _ ⟨w, hw, rfl⟩
+    exact hu_norm w hw
+  · intro x hx
+    have hmem := ht_cov ⟨x, mem_closedBall_zero_iff.mpr hx, rfl⟩
+    simp only [Set.mem_iUnion, Metric.mem_ball, exists_prop] at hmem
+    obtain ⟨w, hw, hwd⟩ := hmem
+    refine ⟨u w, ⟨w, hw, rfl⟩, ?_⟩
+    rw [map_sub, hu_eq w hw, ← dist_eq_norm]
+    exact hwd
+
+/-- Close unit-ball points in the quotient admit a correction of norm at most three. -/
+private lemma exists_bounded_subspace_correction (M : Submodule 𝕜 X)
+    {x u : X} {δ : ℝ} (hx : ‖x‖ ≤ 1) (hu : ‖u‖ ≤ 1) (hδ : δ ≤ 1)
+    (hquot : ‖M.mkQL (x - u)‖ < δ) :
+    ∃ m ∈ M, ‖m‖ ≤ 3 ∧ ‖(x - u) - m‖ < δ := by
+  obtain ⟨m, hm_mem, hmd⟩ := exists_subspace_approximation M hquot
+  refine ⟨m, hm_mem, ?_, hmd⟩
+  have h1 : ‖x - u‖ ≤ 2 := by
+    calc ‖x - u‖ ≤ ‖x‖ + ‖u‖ := norm_sub_le _ _
+      _ ≤ 1 + 1 := add_le_add hx hu
+      _ = 2 := by norm_num
+  calc ‖m‖ ≤ ‖x - u‖ + ‖(x - u) - m‖ := by
+        simpa using norm_sub_le (x - u) ((x - u) - m)
+    _ ≤ 2 + δ := add_le_add h1 hmd.le
+    _ ≤ 3 := by linarith
+
+/-- Small restriction norm controls images of nearby quotient classes in the unit ball. -/
+private lemma norm_sub_lt_of_small_restriction {S : X →L[𝕜] Y}
+    (M : Submodule 𝕜 X) {η δ : ℝ} (hM : deviationFromRestriction S M < η / 6)
+    (hδ : δ ≤ 1) (hδS : ‖S‖ * δ ≤ η / 2) {x u : X}
+    (hx : ‖x‖ ≤ 1) (hu : ‖u‖ ≤ 1) (hquot : ‖M.mkQL (x - u)‖ < δ) :
+    ‖S x - S u‖ < η := by
+  obtain ⟨m, hm_mem, hm_norm, hmd⟩ :=
+    exists_bounded_subspace_correction M hx hu hδ hquot
+  have hSm : ‖S m‖ < η / 2 := by
+    have h1 : ‖S m‖ ≤ deviationFromRestriction S M * ‖m‖ := by
+      have := (S.comp M.subtypeL).le_opNorm ⟨m, hm_mem⟩
+      simpa [deviationFromRestriction] using this
+    have h2 : (0 : ℝ) ≤ deviationFromRestriction S M :=
+      deviationFromRestriction_nonneg S M
+    calc ‖S m‖ ≤ deviationFromRestriction S M * ‖m‖ := h1
+      _ ≤ deviationFromRestriction S M * 3 := mul_le_mul_of_nonneg_left hm_norm h2
+      _ < (η / 6) * 3 := mul_lt_mul_of_pos_right hM (by norm_num)
+      _ = η / 2 := by ring
+  have hsplit : S x - S u = S m + S ((x - u) - m) := by
+    rw [map_sub, map_sub]; abel
+  have hSrest : ‖S ((x - u) - m)‖ ≤ ‖S‖ * δ :=
+    (S.le_opNorm _).trans (mul_le_mul_of_nonneg_left hmd.le (norm_nonneg _))
+  calc ‖S x - S u‖ = ‖S m + S ((x - u) - m)‖ := by rw [hsplit]
+    _ ≤ ‖S m‖ + ‖S ((x - u) - m)‖ := norm_add_le _ _
+    _ < η := by linarith
+
 /-- If `cₙ(S) → 0` then `S(B_X)` is totally bounded.
 
 Given `η > 0`, choose a closed `M` of finite codimension with `‖S|_M‖ < η/6`.
@@ -318,70 +394,14 @@ theorem totallyBounded_of_tendsto_gelfandNumber {S : X →L[𝕜] Y}
   have : IsClosed (M : Set X) := hM_closed
   have : FiniteDimensional 𝕜 (X ⧸ M) :=
     Module.rank_lt_aleph0_iff.mp (lt_of_le_of_lt hM_rank (Cardinal.natCast_lt_aleph0))
-  have : ProperSpace (X ⧸ M) := FiniteDimensional.proper 𝕜 (X ⧸ M)
-  -- The image of the unit ball in the finite-dimensional quotient.
-  have hq : TotallyBounded (⇑M.mkQL '' Metric.closedBall (0 : X) 1) := by
-    refine TotallyBounded.subset ?_
-      (isCompact_closedBall (0 : X ⧸ M) 1).totallyBounded
-    rintro _ ⟨x, hx, rfl⟩
-    simpa using (M.norm_mkQL_apply_le x).trans (mem_closedBall_zero_iff.mp hx)
-  obtain ⟨t, ht_sub, ht_fin, ht_cov⟩ := Metric.finite_approx_of_totallyBounded hq δ hδ
-  -- Lift the centres of the net back to the unit ball of `X`.
-  have hpre : ∀ w : X ⧸ M, w ∈ t → ∃ u : X, ‖u‖ ≤ 1 ∧ M.mkQL u = w := by
-    intro w hw
-    obtain ⟨u, hu, rfl⟩ := ht_sub hw
-    exact ⟨u, mem_closedBall_zero_iff.mp hu, rfl⟩
-  choose! u hu_norm hu_eq using hpre
-  refine ⟨(fun w => S (u w)) '' t, ht_fin.image _, ?_⟩
+  obtain ⟨t, ht_fin, ht_norm, ht_cov⟩ := exists_finite_quotient_net M hδ
+  refine ⟨S '' t, ht_fin.image _, ?_⟩
   rintro _ ⟨x, hx, rfl⟩
   have hx1 : ‖x‖ ≤ 1 := mem_closedBall_zero_iff.mp hx
-  -- Find a net point close to `[x]`.
-  have hmem := ht_cov ⟨x, hx, rfl⟩
-  simp only [Set.mem_iUnion, Metric.mem_ball, exists_prop] at hmem
-  obtain ⟨w, hw, hwd⟩ := hmem
-  -- Correct `x - u w` by an element of `M`.
-  have hMne : (M : Set X).Nonempty := ⟨0, M.zero_mem⟩
-  have hquot : ‖M.mkQL (x - u w)‖ < δ := by
-    rw [map_sub, hu_eq w hw, ← dist_eq_norm]
-    exact hwd
-  have heq : ‖M.mkQL (x - u w)‖ = Metric.infDist (x - u w) M :=
-    QuotientAddGroup.norm_mk (S := M.toAddSubgroup) (x - u w)
-  rw [heq] at hquot
-  obtain ⟨m, hm_mem, hmd⟩ := (Metric.infDist_lt_iff hMne).mp hquot
-  rw [dist_eq_norm] at hmd
-  -- `‖m‖ ≤ 2 + δ ≤ 3`, independently of the codimension of `M`.
-  have hm_norm : ‖m‖ ≤ 3 := by
-    have h1 : ‖x - u w‖ ≤ 2 := by
-      calc ‖x - u w‖ ≤ ‖x‖ + ‖u w‖ := norm_sub_le _ _
-        _ ≤ 1 + 1 := add_le_add hx1 (hu_norm w hw)
-        _ = 2 := by norm_num
-    calc ‖m‖ ≤ ‖x - u w‖ + ‖(x - u w) - m‖ := by
-          simpa using norm_sub_le (x - u w) ((x - u w) - m)
-      _ ≤ 2 + δ := add_le_add h1 hmd.le
-      _ ≤ 3 := by linarith
-  -- `S m` is small because `m ∈ M`.
-  -- Strictly less than `η/2`: the deviation is *strictly* below `η/6`.
-  have hSm : ‖S m‖ < η / 2 := by
-    have h1 : ‖S m‖ ≤ deviationFromRestriction S M * ‖m‖ := by
-      have := (S.comp M.subtypeL).le_opNorm ⟨m, hm_mem⟩
-      simpa [deviationFromRestriction] using this
-    have h2 : (0 : ℝ) ≤ deviationFromRestriction S M :=
-      deviationFromRestriction_nonneg S M
-    calc ‖S m‖ ≤ deviationFromRestriction S M * ‖m‖ := h1
-      _ ≤ deviationFromRestriction S M * 3 := mul_le_mul_of_nonneg_left hm_norm h2
-      _ < (η / 6) * 3 := mul_lt_mul_of_pos_right hM_lt (by norm_num)
-      _ = η / 2 := by ring
-  refine Set.mem_biUnion ⟨w, hw, rfl⟩ ?_
+  obtain ⟨u, hu, hquot⟩ := ht_cov x hx1
+  refine Set.mem_biUnion ⟨u, hu, rfl⟩ ?_
   rw [Metric.mem_ball, dist_eq_norm]
-  -- `S x - S (u w) = S m + S ((x - u w) - m)`.
-  have hsplit : S x - S (u w) = S m + S ((x - u w) - m) := by
-    rw [map_sub, map_sub]; abel
-  have hSrest : ‖S ((x - u w) - m)‖ ≤ ‖S‖ * δ :=
-    (S.le_opNorm _).trans (mul_le_mul_of_nonneg_left hmd.le (norm_nonneg _))
-  calc ‖S x - S (u w)‖
-      = ‖S m + S ((x - u w) - m)‖ := by rw [hsplit]
-    _ ≤ ‖S m‖ + ‖S ((x - u w) - m)‖ := norm_add_le _ _
-    _ < η := by linarith
+  exact norm_sub_lt_of_small_restriction M hM_lt hδ1 hδS hx1 (ht_norm u hu) hquot
 
 /-- **`cₙ(S) → 0` characterises total boundedness of `S(B_X)`.** No completeness
 assumption is needed. -/
