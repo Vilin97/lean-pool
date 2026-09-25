@@ -10128,8 +10128,9 @@ projects:
     - Superorthogonal.sqfct_estimate_of_type_iv_superorthogonal
     main_results:
     - declaration: Superorthogonal.sqfct_estimate_of_type_iv_superorthogonal
-      informal: A type IV superorthogonal family with integrable square function has unconditional L^(2r)
-        convergence and the stated square-function bound.
+      informal: For an integer r >= 1, a countable type IV superorthogonal family in L^(2r), with
+        almost-everywhere summable squared norms and square function in L^(2r), converges unconditionally
+        in L^(2r) and satisfies the square-function bound with constant C(r).
     tags:
     - harmonic-analysis
     - superorthogonality
