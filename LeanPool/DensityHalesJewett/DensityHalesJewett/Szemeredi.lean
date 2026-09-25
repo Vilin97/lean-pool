@@ -24,7 +24,7 @@ open Combinatorics
 
 namespace Combinatorics
 
-/-- A nonconstant arithmetic progression of length `k` in an additive monoid. -/
+/-- An arithmetic progression of length `k` with nonzero common difference in an additive monoid. -/
 @[ext]
 structure ArithmeticProgression (α : Type*) [AddMonoid α] (k : ℕ) where
   /-- The initial term of the arithmetic progression. -/
@@ -52,8 +52,9 @@ namespace DensityHalesJewett
 
 namespace Line
 
-/-- A base-encoded combinatorial line is a nonconstant arithmetic progression.  The encoding is
-mathlib's `finFunctionFinEquiv`, which reads a word as the base-`k` digits of a natural number. -/
+/-- A base-encoded combinatorial line gives an arithmetic progression with nonzero common
+difference. The encoding is mathlib's `finFunctionFinEquiv`, which reads a word as the base-`k`
+digits of a natural number. -/
 lemma baseEncode_isArithmeticProgression {k m : ℕ} (hk : 1 ≤ k)
     (l : Combinatorics.Line (Fin k) (Fin m)) :
     ∃ P : Combinatorics.ArithmeticProgression ℕ k,

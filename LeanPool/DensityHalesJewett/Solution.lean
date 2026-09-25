@@ -10,15 +10,15 @@ public import LeanPool.DensityHalesJewett.DensityHalesJewett.Szemeredi
 /-!
 # Proofs of the asymptotic forms of the density theorems
 
-This module proves the declarations stated in `Challenge.lean`, deriving them from the explicit
+This module proves the asymptotic density theorems, deriving them from the explicit
 threshold forms `Combinatorics.Line.exists_of_density` and
 `Combinatorics.ArithmeticProgression.exists_of_density_nat` developed in this repository.
 
 A *combinatorial line* in the cube of words of length `n` over a finite alphabet `α` is a family
 of `#α` words, one for each letter `x : α`, obtained from a single pattern by filling every
-occurrence of a wildcard with `x`; at least one coordinate must be a wildcard, so the line is
-nonconstant. This is Mathlib's `Combinatorics.Line α (Fin n)`, and `l x` is the word of the line
-indexed by the letter `x`.
+occurrence of a wildcard with `x`; at least one coordinate must be a wildcard, so distinct
+letters give distinct words. This is Mathlib's `Combinatorics.Line α (Fin n)`, and `l x` is the word
+of the line indexed by the letter `x`.
 -/
 
 @[expose] public section
