@@ -3,17 +3,19 @@ Copyright (c) 2026 Gabriel Dahia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Dahia
 -/
-import LeanPool.DensityHalesJewett.DensityHalesJewett.Canonization
-import LeanPool.DensityHalesJewett.DensityHalesJewett.DensityIncrement
-import LeanPool.DensityHalesJewett.DensityHalesJewett.DensityIncrement.CorrelatedFibers
-import LeanPool.DensityHalesJewett.DensityHalesJewett.DensityIncrement.Parameters
-import LeanPool.DensityHalesJewett.DensityHalesJewett.DensityIncrement.StructuredCorrelation
-import LeanPool.DensityHalesJewett.DensityHalesJewett.FiniteUnions
-import LeanPool.DensityHalesJewett.DensityHalesJewett.GrahamRothschild
-import LeanPool.DensityHalesJewett.DensityHalesJewett.Insensitive
-import LeanPool.DensityHalesJewett.DensityHalesJewett.Main
-import LeanPool.DensityHalesJewett.DensityHalesJewett.Subspace
-import LeanPool.DensityHalesJewett.DensityHalesJewett.Szemeredi
-import LeanPool.DensityHalesJewett.DensityHalesJewett.UniformFibers
-import LeanPool.DensityHalesJewett.DensityHalesJewett.Varnavides
-import LeanPool.DensityHalesJewett.DensityHalesJewett.Word
+module
+
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Canonization
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.DensityIncrement
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.DensityIncrement.CorrelatedFibers
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.DensityIncrement.Parameters
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.DensityIncrement.StructuredCorrelation
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.FiniteUnions
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.GrahamRothschild
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Insensitive
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Main
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Subspace
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Szemeredi
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.UniformFibers
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Varnavides
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Word
