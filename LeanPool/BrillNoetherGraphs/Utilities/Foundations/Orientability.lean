@@ -13,9 +13,10 @@ public import LeanPool.BrillNoetherGraphs.Utilities.Foundations.AcyclicOrientati
 
 An–Baker–Kuperberg–Shokrieh, *Canonical representatives for divisor classes on tropical
 curves and the matrix–tree theorem*, calls a divisor `D` **orientable** when
-`D(p) = indeg_𝒪(p) - 1` for some orientation `𝒪`, and proves (Theorem 1.2,
-arXiv:1304.4259) that **every divisor of
-degree `g - 1` is linearly equivalent to an orientable one**.  This file proves
+`D(p) = indeg_𝒪(p) - 1` for some orientation `𝒪`, and proves in
+[Theorem 4.10 of arXiv:1304.4259v2](https://arxiv.org/pdf/1304.4259v2) that **every divisor
+of degree `g - 1` on a finite graph is linearly equivalent to an orientable one**.
+This file proves
 the finite-multigraph form in `orientable_of_deg_eq` and
 `orientable_iff_deg_eq`.
 
@@ -152,8 +153,9 @@ theorem acyclicallyOrientable_iff_not_winnable (h_conn : graphConnected G) (D : 
 /-- **Every unwinnable class of degree `genus G - 1` is orientable, by an acyclic
 orientation.**
 
-This is the half of ABKS Theorem 1.2 that a *cyclic* orientation is never needed for, and it
-predates the ABKS route of §3, which now proves every degree-`(g−1)` class. It is kept
+This is the unwinnable case of ABKS Theorem 4.10, for which a *cyclic* orientation is
+never needed. It predates the ABKS route of §3, which now proves every degree-`(g−1)` class.
+It is kept
 because it says more than `orientable_of_deg_eq` does on unwinnable classes: the witnessing
 orientation is acyclic. -/
 theorem orientable_of_not_winnable (h_conn : graphConnected G) (D : CFDiv G)
@@ -975,7 +977,8 @@ theorem exists_linear_equiv_chi_nonneg (h_conn : graphConnected G) (D : CFDiv G)
 
 /-! ## 4. The main statement -/
 
-/-- **ABKS Theorem 1.2.** On a connected graph, simple or not, every divisor
+/-- **ABKS Theorem 4.10** ([arXiv:1304.4259v2](https://arxiv.org/pdf/1304.4259v2)).
+On a connected graph, simple or not, every divisor
 of degree `genus G - 1` is linearly equivalent to `ordiv G O` for some orientation `O`.
 
 The simplicity hypothesis this theorem used to carry (it was called
