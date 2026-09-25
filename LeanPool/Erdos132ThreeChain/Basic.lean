@@ -31,7 +31,7 @@ Everything is deliberately self-contained and coordinate-based: `Point` is `ℝ 
 (Heron, the anchored Gram determinant) is provable by `ring` from coordinates.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos132ThreeChain
 
@@ -39,7 +39,7 @@ namespace Erdos132ThreeChain
 abbrev Point : Type := ℝ × ℝ
 
 /-- The squared Euclidean distance between two points of the plane. -/
-def sqDist (p q : Point) : ℝ := (p.1 - q.1) ^ 2 + (p.2 - q.2) ^ 2
+@[expose] def sqDist (p q : Point) : ℝ := (p.1 - q.1) ^ 2 + (p.2 - q.2) ^ 2
 
 @[simp]
 theorem sqDist_self (p : Point) : sqDist p p = 0 := by simp [sqDist]
@@ -68,11 +68,11 @@ theorem sqDist_pos {p q : Point} (h : p ≠ q) : 0 < sqDist p q :=
 
 /-- `IsSqDiameter X D` says that `D` is the squared diameter of `X`: it is realised by two
 distinct points of `X`, and it dominates every squared distance inside `X`. -/
-def IsSqDiameter (X : Finset Point) (D : ℝ) : Prop :=
+@[expose] def IsSqDiameter (X : Finset Point) (D : ℝ) : Prop :=
   (∃ p ∈ X, ∃ q ∈ X, p ≠ q ∧ sqDist p q = D) ∧ ∀ p ∈ X, ∀ q ∈ X, sqDist p q ≤ D
 
 /-- The geometric 3-chain of length `h` and base `a`: the set `{a * 3 ^ j | j < h}`. -/
-def chain (a : ℝ) (h : ℕ) : Set ℝ := {x : ℝ | ∃ j < h, x = a * 3 ^ j}
+@[expose] def chain (a : ℝ) (h : ℕ) : Set ℝ := {x : ℝ | ∃ j < h, x = a * 3 ^ j}
 
 theorem mem_chain_iff {a x : ℝ} {h : ℕ} : x ∈ chain a h ↔ ∃ j < h, x = a * 3 ^ j := Iff.rfl
 
@@ -84,13 +84,13 @@ theorem triple_base_mem_chain {a : ℝ} {h : ℕ} (hh : 2 ≤ h) : a * 3 ∈ cha
 
 /-- The set of squared distances realised by distinct points of `X` that are not the squared
 diameter `D`. -/
-def nonDiameterSqDists (X : Finset Point) (D : ℝ) : Set ℝ :=
+@[expose] def nonDiameterSqDists (X : Finset Point) (D : ℝ) : Set ℝ :=
   {d : ℝ | ∃ p ∈ X, ∃ q ∈ X, p ≠ q ∧ sqDist p q = d ∧ d ≠ D}
 
 /-- `IsChainValue c x` records that `x` is `c` times a nonnegative power of three.  It is the
 scale-free shadow of `chain`: if `c` is the smallest value of a chain that `x` belongs to,
 then `x = c * 3 ^ j` for some `j : ℕ`. -/
-def IsChainValue (c x : ℝ) : Prop := ∃ j : ℕ, x = c * 3 ^ j
+@[expose] def IsChainValue (c x : ℝ) : Prop := ∃ j : ℕ, x = c * 3 ^ j
 
 theorem IsChainValue.pos {c x : ℝ} (hc : 0 < c) (h : IsChainValue c x) : 0 < x := by
   obtain ⟨j, rfl⟩ := h

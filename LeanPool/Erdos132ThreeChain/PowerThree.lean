@@ -23,7 +23,7 @@ This file isolates them.  Everything is stated over `ℤ`; the geometric files p
 corresponding real equations and transfer them by `exact_mod_cast`.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos132ThreeChain
 

@@ -42,14 +42,14 @@ satisfies `⟪B, w - v⟫ = |w - v|² / 2` while `⟪A, w - v⟫` and `⟪C, w -
 pairing Cramer's identity with `w - v` forces `|w - v|² ≤ 0`, i.e. `w = v`.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos132ThreeChain
 
 open Finset
 
 /-- Adjacency in the diameter graph: distinct points at squared distance exactly `D`. -/
-def DiameterAdj (D : ℝ) (p q : Point) : Prop := p ≠ q ∧ sqDist p q = D
+@[expose] def DiameterAdj (D : ℝ) (p q : Point) : Prop := p ≠ q ∧ sqDist p q = D
 
 noncomputable instance decidableDiameterAdj (D : ℝ) : DecidableRel (DiameterAdj D) := fun _ _ =>
   inferInstanceAs (Decidable (_ ∧ _))
