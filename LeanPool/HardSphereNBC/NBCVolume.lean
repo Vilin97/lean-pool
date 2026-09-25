@@ -29,62 +29,39 @@ namespace HsVirial
 
 
 
-/-- The recursive sum of a finite list of natural numbers. -/
-def sumNat : List Nat -> Nat
-  | [] => 0
-  | a :: as => a + sumNat as
+/-- Compatibility name for the standard sum of a list of natural numbers. -/
+def sumNat (xs : List Nat) : Nat := xs.sum
 
 theorem sumNat_replicate_zero (n : Nat) :
     sumNat (List.replicate n 0) = 0 := by
-  induction n with
-  | zero => rfl
-  | succ n ih =>
-      simp [List.replicate, sumNat, ih]
+  simp [sumNat]
 
 theorem sumNat_append {as bs : List Nat} :
     sumNat (as ++ bs) = sumNat as + sumNat bs := by
-  induction as with
-  | nil => simp [sumNat]
-  | cons a as ih =>
-      simp [sumNat, ih, Nat.add_assoc]
+  exact List.sum_append
 
 theorem sumNat_map_congr {X : Type} {xs : List X} {f g : X -> Nat}
     (h : forall x, f x = g x) :
     sumNat (xs.map f) = sumNat (xs.map g) := by
-  induction xs with
-  | nil => rfl
-  | cons x xs ih =>
-      simp [sumNat, h, ih]
+  exact congrArg sumNat (List.map_congr_left fun x _ => h x)
 
 theorem list_map_map {X Y Z : Type} (xs : List X) (f : X -> Y)
     (g : Y -> Z) :
     (xs.map f).map g = xs.map (fun x => g (f x)) := by
-  induction xs with
-  | nil => rfl
-  | cons x xs ih =>
-      simp [ih]
+  exact List.map_map
 
 theorem sumNat_map_add {X : Type} (xs : List X) (f g : X -> Nat) :
     sumNat (xs.map (fun x => f x + g x)) =
       sumNat (xs.map f) + sumNat (xs.map g) := by
-  induction xs with
-  | nil => rfl
-  | cons x xs ih =>
-       simp [sumNat, ih, Nat.add_assoc, Nat.add_left_comm]
+  exact List.sum_map_add
 
 theorem sumNat_map_zero {X : Type} (xs : List X) :
     sumNat (xs.map (fun _ => 0)) = 0 := by
-  induction xs with
-  | nil => rfl
-  | cons x xs ih =>
-      simp [sumNat, sumNat_replicate_zero]
+  simp [sumNat]
 
 theorem mul_sumNat {xs : List Nat} (a : Nat) :
     a * sumNat xs = sumNat (xs.map (fun b => a * b)) := by
-  induction xs with
-  | nil => rfl
-  | cons b bs ih =>
-      simp [sumNat, ih, Nat.mul_add]
+  simpa only [sumNat, List.map_id, id_eq] using (List.sum_map_mul_left xs id a).symm
 
 theorem sumNat_swap {X Y : Type} (xs : List X) (ys : List Y)
     (f : X -> Y -> Nat) :
@@ -92,7 +69,7 @@ theorem sumNat_swap {X Y : Type} (xs : List X) (ys : List Y)
       sumNat (ys.map (fun y => sumNat (xs.map (fun x => f x y)))) := by
   induction xs with
   | nil =>
-      simp [sumNat, sumNat_replicate_zero]
+      simp [sumNat]
   | cons x xs ih =>
       calc
         sumNat ((x :: xs).map (fun x => sumNat (ys.map (f x)))) =
@@ -189,10 +166,8 @@ theorem nbc_multiplicity_is_region_sum {X T : Type}
       sumNat (trees.map (nbcRegionWeight points weight region)) := by
   exact nbc_volume_identity points trees weight region
 
-/-- The recursive sum of a finite list of integers. -/
-def sumInt : List Int -> Int
-  | [] => 0
-  | a :: as => a + sumInt as
+/-- Compatibility name for the standard sum of a list of integers. -/
+def sumInt (xs : List Int) : Int := xs.sum
 
 /-- The alternating integer sign associated with a natural-number size. -/
 def paritySign : Nat -> Int
@@ -240,12 +215,12 @@ theorem signed_mayer_restriction {E : Type}
       cases h : allActive active graph with
       | false =>
           simp only [signedMayerSum, List.map_cons, signedMayerTerm, h, Bool.false_eq_true,
-            ↓reduceIte, ite_self, sumInt, zero_add, activeGraphSum, not_false_eq_true,
-            List.filter_cons_of_neg]
+            ↓reduceIte, ite_self, sumInt, List.sum_cons, zero_add, activeGraphSum,
+            not_false_eq_true, List.filter_cons_of_neg]
           exact ih
       | true =>
           simp only [signedMayerSum, List.map_cons, signedMayerTerm, h, ↓reduceIte, sumInt,
-            activeGraphSum, List.filter_cons_of_pos, add_right_inj]
+            List.sum_cons, activeGraphSum, List.filter_cons_of_pos, add_right_inj]
           exact ih
 
 /-!
@@ -263,18 +238,12 @@ def signedList {A : Type} (xs : List A) (size : A -> Nat) : Int :=
 
 theorem sumInt_append {as bs : List Int} :
     sumInt (as ++ bs) = sumInt as + sumInt bs := by
-  induction as with
-  | nil => simp [sumInt]
-  | cons a as ih =>
-      simp [sumInt, ih, Int.add_assoc]
+  exact List.sum_append
 
 theorem sumInt_map_congr {A : Type} {xs : List A} {f g : A -> Int}
     (h : forall a, f a = g a) :
     sumInt (xs.map f) = sumInt (xs.map g) := by
-  induction xs with
-  | nil => rfl
-  | cons a as ih =>
-      simp [sumInt, h, ih]
+  exact congrArg sumInt (List.map_congr_left fun x _ => h x)
 
 theorem signedList_eq_constant {A : Type} (xs : List A)
     (size : A -> Nat) (rank : Nat)
@@ -300,14 +269,7 @@ theorem signedList_eq_constant {A : Type} (xs : List A)
 
 theorem sumInt_perm {as bs : List Int} (h : as.Perm bs) :
     sumInt as = sumInt bs := by
-  induction h with
-  | nil => rfl
-  | cons a h ih =>
-      simp [sumInt, ih]
-  | swap a b as =>
-       simp [sumInt, Int.add_left_comm]
-  | trans h₁ h₂ ih₁ ih₂ =>
-      exact ih₁.trans ih₂
+  exact h.sum_eq
 
 theorem sumInt_pair_zero {A : Type} (pairs : List (A × A))
     (size : A -> Nat)
@@ -322,6 +284,7 @@ theorem sumInt_pair_zero {A : Type} (pairs : List (A × A))
       intro opposite
       have hp := opposite p (by simp)
       have hps := ih (fun q hq => opposite q (List.mem_cons_of_mem p hq))
+      simp only [sumInt] at hps
       simp [sumInt, hp, hps]
 
 /-- A decomposition into surviving objects and pairs with opposite parity contributions. -/
