@@ -31,6 +31,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/AndersonConjecture        https://github.com/frenzymath/Anderson-Conjecture
   LeanPool/Apportionment             https://github.com/mdbrnowski/apportionmentlib
   LeanPool/ArchonFirstProofResults   https://github.com/frenzymath/Archon-FirstProof-Results
+  LeanPool/AsymptoticTrianglePacking https://github.com/jtraverso/erdos-81-chordal-clique-partitions
   LeanPool/BannaiBannaiStanton       https://github.com/AntoineduFresne/Bannai-Bannai-Stanton_Theorem
   LeanPool/BlockSpectralSensitivity  https://github.com/Timeroot/BS_Lam
   LeanPool/BollobasNikiforov         https://github.com/ShengtongZhang-alt/BN
@@ -38,6 +39,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/BrauerGroupNew            https://github.com/Whysoserioushah/BrauerGroup
   LeanPool/BruhatTits                https://github.com/chrisflav/bruhat-tits
   LeanPool/Burkholder                https://github.com/SmaniaD/Burkholder
+  LeanPool/CaffarelliKohnNirenberg   https://github.com/scottnarmstrong/CaffarelliKohnNirenberg
   LeanPool/CencovPetz                https://github.com/abenenson/cencov-petz
   LeanPool/CenteredMaximal           https://github.com/CoolRmal/centered-maximal-constant
   LeanPool/ChannelCapacity           https://github.com/abenenson/channel-capacity
@@ -103,6 +105,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/GranvilleMoore            https://github.com/AxiomMath/GranvilleMoore
   LeanPool/HadwigerNelsonBounds      https://github.com/lyfar/hadwiger-nelson-bounds-lean
   LeanPool/HansonWright              https://github.com/Lean-MoDS/StatsMLlib
+  LeanPool/HasseMinkowski            https://github.com/jayyswan/hasse-minkowski
   LeanPool/HopfProblem               https://github.com/plby/HopfProblem
   LeanPool/Incompleteness            https://github.com/FormalizedFormalLogic/Incompleteness
   LeanPool/InfinitaryLogic           https://github.com/cameronfreer/infinitary-logic
