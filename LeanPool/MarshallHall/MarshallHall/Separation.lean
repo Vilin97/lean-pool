@@ -194,7 +194,7 @@ theorem word_action_of_generator_extensions {α : Type*}
 /-- Every finite set of coset states has a permutation representation agreeing with the
 coset action on words whose suffix action states remain in the set. -/
 theorem exists_finite_core_representation
-    (H : Subgroup (FreeGroup α)) (A : Set (LeftCosetQuotient H)) [Fintype A]
+    (H : Subgroup (FreeGroup α)) (A : Set (LeftCosetQuotient H)) [Finite A]
     (base : A) (hbase : base.1 = Quotient.mk'' (1 : FreeGroup α)) :
     ∃ rho : FreeGroup α →* Equiv.Perm A, ∀ w : List (α × Bool),
       (∀ u ∈ List.tails w, ∀ x ∈ actionStates u,
