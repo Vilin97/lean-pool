@@ -10118,6 +10118,7 @@ projects:
     entry_module: LeanPool.MarkoffModP
     authors:
     - Yuma Mizuno
+    - Guanghao Li
     source:
       url: https://github.com/yuma-mizuno/markoff-modp
       github_repo: yuma-mizuno/markoff-modp
