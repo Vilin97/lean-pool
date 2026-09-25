@@ -206,9 +206,23 @@ noncomputable def localBaseValuationSubringEquivDecompositionField :
   let eKZ : K ≃ₐ[K] Z :=
     (IntermediateField.botEquiv K (SeparableClosure K)).symm.trans
       (IntermediateField.equivOfEq hZ.symm)
-  refine
-    { toFun := fun x => ⟨eKZ (x : K), ?_⟩
-      invFun := fun z => ⟨eKZ.symm (z : Z), ?_⟩
+  exact
+    { toFun := fun x => ⟨eKZ (x : K), by
+        change ((eKZ x : Z) : SeparableClosure K) ∈ A
+        have he : ((eKZ x : Z) : SeparableClosure K) =
+            algebraMap K (SeparableClosure K) (x : K) := by
+          rfl
+        rw [he]
+        exact (localSeparableValuationSubring_pullback K (x : K)).2 x.property⟩
+      invFun := fun z => ⟨eKZ.symm (z : Z), by
+        change eKZ.symm (z : Z) ∈
+          (localCompleteDVF K).valuation.valuationSubring
+        apply (localSeparableValuationSubring_pullback K (eKZ.symm (z : Z))).1
+        have he : algebraMap K (SeparableClosure K) (eKZ.symm (z : Z)) =
+            ((z : Z) : SeparableClosure K) := by
+          exact congrArg Subtype.val (eKZ.apply_symm_apply (z : Z))
+        rw [he]
+        exact z.property⟩
       left_inv := fun x => by
         apply Subtype.ext
         exact eKZ.symm_apply_apply (x : K)
@@ -221,20 +235,6 @@ noncomputable def localBaseValuationSubringEquivDecompositionField :
       map_mul' := fun x y => by
         apply Subtype.ext
         exact map_mul eKZ (x : K) (y : K) }
-  · change ((eKZ x : Z) : SeparableClosure K) ∈ A
-    have he : ((eKZ x : Z) : SeparableClosure K) =
-        algebraMap K (SeparableClosure K) (x : K) := by
-      rfl
-    rw [he]
-    exact (localSeparableValuationSubring_pullback K (x : K)).2 x.property
-  · change eKZ.symm (z : Z) ∈
-      (localCompleteDVF K).valuation.valuationSubring
-    apply (localSeparableValuationSubring_pullback K (eKZ.symm (z : Z))).1
-    have he : algebraMap K (SeparableClosure K) (eKZ.symm (z : Z)) =
-        ((z : Z) : SeparableClosure K) := by
-      exact congrArg Subtype.val (eKZ.apply_symm_apply (z : Z))
-    rw [he]
-    exact z.property
 
 /-- The residue field in the residue-action exact sequence is canonically the finite residue
 field of the original local field. -/

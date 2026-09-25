@@ -170,8 +170,9 @@ def localizationRamificationGroupsLocalDecompositionGroupEquiv :
       RamificationTheory.HilbertRamification.ValuationSubring.decompositionGroup vK.Completion
         (algebraicLocalizationValuationSubring vK w hw) where
   toFun tau :=
-    ⟨tau, by exact local_mem_localizationValuationSubring_smul
-      vK (hvK := hvK) w hw tau⟩
+    ⟨tau, by
+      exact local_mem_localizationValuationSubring_smul
+        vK (hvK := hvK) w hw tau⟩
   invFun tau := tau
   left_inv tau := rfl
   right_inv tau := by

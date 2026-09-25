@@ -381,7 +381,7 @@ theorem herbrandQuotient_multiplicative_of_left_right_defined
     (σ : G) (hgen : ∀ g : G, g ∈ Subgroup.zpowers σ)
     [Finite (HerbrandH0 G A)] [Finite (HerbrandHMinusOne G A σ)]
     [Finite (HerbrandH0 G C)] [Finite (HerbrandHMinusOne G C σ)] :
-    ∃ hB : HerbrandQuotientDefined G B σ,
+    ∃ _ : HerbrandQuotientDefined G B σ,
       herbrandQuotient (G := G) (A := B) σ =
         herbrandQuotient (G := G) (A := A) σ *
           herbrandQuotient (G := G) (A := C) σ := by
@@ -408,7 +408,7 @@ theorem herbrandQuotient_multiplicative_of_left_middle_defined
     (σ : G) (hgen : ∀ g : G, g ∈ Subgroup.zpowers σ)
     [Finite (HerbrandH0 G A)] [Finite (HerbrandHMinusOne G A σ)]
     [Finite (HerbrandH0 G B)] [Finite (HerbrandHMinusOne G B σ)] :
-    ∃ hC : HerbrandQuotientDefined G C σ,
+    ∃ _ : HerbrandQuotientDefined G C σ,
       herbrandQuotient (G := G) (A := B) σ =
         herbrandQuotient (G := G) (A := A) σ *
           herbrandQuotient (G := G) (A := C) σ := by
@@ -435,7 +435,7 @@ theorem herbrandQuotient_multiplicative_of_middle_right_defined
     (σ : G) (hgen : ∀ g : G, g ∈ Subgroup.zpowers σ)
     [Finite (HerbrandH0 G B)] [Finite (HerbrandHMinusOne G B σ)]
     [Finite (HerbrandH0 G C)] [Finite (HerbrandHMinusOne G C σ)] :
-    ∃ hA : HerbrandQuotientDefined G A σ,
+    ∃ _ : HerbrandQuotientDefined G A σ,
       herbrandQuotient (G := G) (A := B) σ =
         herbrandQuotient (G := G) (A := A) σ *
           herbrandQuotient (G := G) (A := C) σ := by
