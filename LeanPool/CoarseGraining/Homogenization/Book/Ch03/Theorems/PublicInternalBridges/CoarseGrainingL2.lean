@@ -36,6 +36,123 @@ noncomputable section
 open MeasureTheory
 open scoped BigOperators ENNReal
 
+private theorem coarseGraining_scalar_dimension_bound
+    (s D oldMhalf oldM oldP oldL oldLinv Mhalf M P L Linv H E B W1 W Winv : ℝ)
+    (hD_nonneg : 0 ≤ D) (hD_le_sq : D ≤ D ^ 2)
+    (hs_inv_nonneg : 0 ≤ s⁻¹)
+    (hs_pow52_nonneg : 0 ≤ Real.rpow s (-(5 / 2 : ℝ)))
+    (hs_pow3_nonneg : 0 ≤ Real.rpow s (-3 : ℝ))
+    (hMhalf_nonneg : 0 ≤ Mhalf) (hM_nonneg : 0 ≤ M)
+    (holdL_nonneg : 0 ≤ oldL) (holdLinv_nonneg : 0 ≤ oldLinv)
+    (hP_nonneg : 0 ≤ P) (hH_nonneg' : 0 ≤ H)
+    (hE_nonneg : 0 ≤ E) (hforce_nonneg : 0 ≤ Winv * B)
+    (hW1_nonneg : 0 ≤ W1) (hW_nonneg : 0 ≤ W)
+    (hMhalf_le : oldMhalf ≤ D * Mhalf) (hM_le : oldM ≤ D * M)
+    (hP_le : oldP ≤ D * P) (hL_le : oldL ≤ D * L)
+    (hLinv_le : oldLinv ≤ D * Linv) :
+      s⁻¹ * oldMhalf * H * E +
+          (Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H +
+              Real.rpow s (-(5 / 2 : ℝ)) * W * oldP * oldL +
+            Real.rpow s (-3 : ℝ) * W * oldM * oldLinv) * (Winv * B) ≤
+        D ^ 2 *
+          (s⁻¹ * Mhalf * H * E +
+            (Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H +
+                Real.rpow s (-(5 / 2 : ℝ)) * W * P * L +
+              Real.rpow s (-3 : ℝ) * W * M * Linv) * (Winv * B)) := by
+  have hterm_energy :
+      s⁻¹ * oldMhalf * H * E ≤
+        D ^ 2 * (s⁻¹ * Mhalf * H * E) := by
+    calc
+      s⁻¹ * oldMhalf * H * E ≤ s⁻¹ * (D * Mhalf) * H * E := by
+        gcongr
+      _ = D * (s⁻¹ * Mhalf * H * E) := by ring
+      _ ≤ D ^ 2 * (s⁻¹ * Mhalf * H * E) := by
+        exact mul_le_mul_of_nonneg_right hD_le_sq
+          (mul_nonneg (mul_nonneg (mul_nonneg hs_inv_nonneg hMhalf_nonneg)
+            hH_nonneg') hE_nonneg)
+  have hterm_resp :
+      Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H ≤
+        D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H) := by
+    have hprod : oldMhalf * oldL ≤ (D * Mhalf) * (D * L) :=
+      mul_le_mul hMhalf_le hL_le holdL_nonneg
+        (mul_nonneg hD_nonneg hMhalf_nonneg)
+    calc
+      Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H =
+          Real.rpow s (-(5 / 2 : ℝ)) * W1 * (oldMhalf * oldL) * H := by ring
+      _ ≤
+          Real.rpow s (-(5 / 2 : ℝ)) * W1 * ((D * Mhalf) * (D * L)) * H := by
+            gcongr
+      _ = D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H) := by ring
+  have hterm_weak :
+      Real.rpow s (-(5 / 2 : ℝ)) * W * oldP * oldL ≤
+        D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * W * P * L) := by
+    have hprod : oldP * oldL ≤ (D * P) * (D * L) :=
+      mul_le_mul hP_le hL_le holdL_nonneg (mul_nonneg hD_nonneg hP_nonneg)
+    calc
+      Real.rpow s (-(5 / 2 : ℝ)) * W * oldP * oldL =
+          Real.rpow s (-(5 / 2 : ℝ)) * W * (oldP * oldL) := by ring
+      _ ≤ Real.rpow s (-(5 / 2 : ℝ)) * W * ((D * P) * (D * L)) := by
+            gcongr
+      _ = D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * W * P * L) := by ring
+  have hterm_poincare :
+      Real.rpow s (-3 : ℝ) * W * oldM * oldLinv ≤
+        D ^ 2 * (Real.rpow s (-3 : ℝ) * W * M * Linv) := by
+    have hprod : oldM * oldLinv ≤ (D * M) * (D * Linv) :=
+      mul_le_mul hM_le hLinv_le holdLinv_nonneg
+        (mul_nonneg hD_nonneg hM_nonneg)
+    calc
+      Real.rpow s (-3 : ℝ) * W * oldM * oldLinv =
+          Real.rpow s (-3 : ℝ) * W * (oldM * oldLinv) := by ring
+      _ ≤ Real.rpow s (-3 : ℝ) * W * ((D * M) * (D * Linv)) := by
+            gcongr
+      _ = D ^ 2 * (Real.rpow s (-3 : ℝ) * W * M * Linv) := by ring
+  have htail :
+      (Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H +
+          Real.rpow s (-(5 / 2 : ℝ)) * W * oldP * oldL +
+        Real.rpow s (-3 : ℝ) * W * oldM * oldLinv) * (Winv * B) ≤
+        D ^ 2 *
+          ((Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H +
+              Real.rpow s (-(5 / 2 : ℝ)) * W * P * L +
+            Real.rpow s (-3 : ℝ) * W * M * Linv) * (Winv * B)) := by
+    have hsum :
+        Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H +
+            Real.rpow s (-(5 / 2 : ℝ)) * W * oldP * oldL +
+          Real.rpow s (-3 : ℝ) * W * oldM * oldLinv ≤
+          D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H) +
+              D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * W * P * L) +
+            D ^ 2 * (Real.rpow s (-3 : ℝ) * W * M * Linv) := by
+      exact add_le_add (add_le_add hterm_resp hterm_weak) hterm_poincare
+    calc
+      (Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H +
+          Real.rpow s (-(5 / 2 : ℝ)) * W * oldP * oldL +
+        Real.rpow s (-3 : ℝ) * W * oldM * oldLinv) * (Winv * B) ≤
+        (D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H) +
+              D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * W * P * L) +
+            D ^ 2 * (Real.rpow s (-3 : ℝ) * W * M * Linv)) * (Winv * B) := by
+          exact mul_le_mul_of_nonneg_right hsum hforce_nonneg
+      _ =
+        D ^ 2 *
+          ((Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H +
+              Real.rpow s (-(5 / 2 : ℝ)) * W * P * L +
+            Real.rpow s (-3 : ℝ) * W * M * Linv) * (Winv * B)) := by ring
+  calc
+    s⁻¹ * oldMhalf * H * E +
+        (Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H +
+            Real.rpow s (-(5 / 2 : ℝ)) * W * oldP * oldL +
+          Real.rpow s (-3 : ℝ) * W * oldM * oldLinv) * (Winv * B) ≤
+      D ^ 2 * (s⁻¹ * Mhalf * H * E) +
+        D ^ 2 *
+          ((Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H +
+              Real.rpow s (-(5 / 2 : ℝ)) * W * P * L +
+            Real.rpow s (-3 : ℝ) * W * M * Linv) * (Winv * B)) :=
+        add_le_add hterm_energy htail
+    _ =
+      D ^ 2 *
+        (s⁻¹ * Mhalf * H * E +
+          (Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H +
+              Real.rpow s (-(5 / 2 : ℝ)) * W * P * L +
+            Real.rpow s (-3 : ℝ) * W * M * Linv) * (Winv * B)) := by ring
+
 /-- Scale-separated flux-defect version of the public/internal coarse-graining
 RHS bridge. -/
 theorem coarseGrainingL2FluxDefectBoundTwoExponent_publicCoeffField_le_dim_sq_mul_public_of_homogenizationErrorAtDepth_eq
@@ -163,82 +280,6 @@ theorem coarseGrainingL2FluxDefectBoundTwoExponent_publicCoeffField_le_dim_sq_mu
     simpa [E] using
       (h1EnergyNormOnCube_eq_sqrt_cubeAverage_coefficientEnergyDensity_publicCoeffField
         (Q := Q) (a := a) u).symm
-  have hterm_energy :
-      s⁻¹ * oldMhalf * H * E ≤
-        D ^ 2 * (s⁻¹ * Mhalf * H * E) := by
-    calc
-      s⁻¹ * oldMhalf * H * E ≤ s⁻¹ * (D * Mhalf) * H * E := by
-        gcongr
-      _ = D * (s⁻¹ * Mhalf * H * E) := by ring
-      _ ≤ D ^ 2 * (s⁻¹ * Mhalf * H * E) := by
-        exact mul_le_mul_of_nonneg_right hD_le_sq
-          (mul_nonneg (mul_nonneg (mul_nonneg hs_inv_nonneg hMhalf_nonneg)
-            hH_nonneg') hE_nonneg)
-  have hterm_resp :
-      Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H ≤
-        D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H) := by
-    have hprod : oldMhalf * oldL ≤ (D * Mhalf) * (D * L) :=
-      mul_le_mul hMhalf_le hL_le holdL_nonneg
-        (mul_nonneg hD_nonneg hMhalf_nonneg)
-    calc
-      Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H =
-          Real.rpow s (-(5 / 2 : ℝ)) * W1 * (oldMhalf * oldL) * H := by ring
-      _ ≤
-          Real.rpow s (-(5 / 2 : ℝ)) * W1 * ((D * Mhalf) * (D * L)) * H := by
-            gcongr
-      _ = D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H) := by ring
-  have hterm_weak :
-      Real.rpow s (-(5 / 2 : ℝ)) * W * oldP * oldL ≤
-        D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * W * P * L) := by
-    have hprod : oldP * oldL ≤ (D * P) * (D * L) :=
-      mul_le_mul hP_le hL_le holdL_nonneg (mul_nonneg hD_nonneg hP_nonneg)
-    calc
-      Real.rpow s (-(5 / 2 : ℝ)) * W * oldP * oldL =
-          Real.rpow s (-(5 / 2 : ℝ)) * W * (oldP * oldL) := by ring
-      _ ≤ Real.rpow s (-(5 / 2 : ℝ)) * W * ((D * P) * (D * L)) := by
-            gcongr
-      _ = D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * W * P * L) := by ring
-  have hterm_poincare :
-      Real.rpow s (-3 : ℝ) * W * oldM * oldLinv ≤
-        D ^ 2 * (Real.rpow s (-3 : ℝ) * W * M * Linv) := by
-    have hprod : oldM * oldLinv ≤ (D * M) * (D * Linv) :=
-      mul_le_mul hM_le hLinv_le holdLinv_nonneg
-        (mul_nonneg hD_nonneg hM_nonneg)
-    calc
-      Real.rpow s (-3 : ℝ) * W * oldM * oldLinv =
-          Real.rpow s (-3 : ℝ) * W * (oldM * oldLinv) := by ring
-      _ ≤ Real.rpow s (-3 : ℝ) * W * ((D * M) * (D * Linv)) := by
-            gcongr
-      _ = D ^ 2 * (Real.rpow s (-3 : ℝ) * W * M * Linv) := by ring
-  have htail :
-      (Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H +
-          Real.rpow s (-(5 / 2 : ℝ)) * W * oldP * oldL +
-        Real.rpow s (-3 : ℝ) * W * oldM * oldLinv) * (Winv * B) ≤
-        D ^ 2 *
-          ((Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H +
-              Real.rpow s (-(5 / 2 : ℝ)) * W * P * L +
-            Real.rpow s (-3 : ℝ) * W * M * Linv) * (Winv * B)) := by
-    have hsum :
-        Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H +
-            Real.rpow s (-(5 / 2 : ℝ)) * W * oldP * oldL +
-          Real.rpow s (-3 : ℝ) * W * oldM * oldLinv ≤
-          D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H) +
-              D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * W * P * L) +
-            D ^ 2 * (Real.rpow s (-3 : ℝ) * W * M * Linv) := by
-      exact add_le_add (add_le_add hterm_resp hterm_weak) hterm_poincare
-    calc
-      (Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H +
-          Real.rpow s (-(5 / 2 : ℝ)) * W * oldP * oldL +
-        Real.rpow s (-3 : ℝ) * W * oldM * oldLinv) * (Winv * B) ≤
-        (D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H) +
-              D ^ 2 * (Real.rpow s (-(5 / 2 : ℝ)) * W * P * L) +
-            D ^ 2 * (Real.rpow s (-3 : ℝ) * W * M * Linv)) * (Winv * B) := by
-          exact mul_le_mul_of_nonneg_right hsum hforce_nonneg
-      _ =
-        D ^ 2 *
-          ((Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H +
-              Real.rpow s (-(5 / 2 : ℝ)) * W * P * L +
-            Real.rpow s (-3 : ℝ) * W * M * Linv) * (Winv * B)) := by ring
   have hinner :
       s⁻¹ * oldMhalf * H * E +
           (Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H +
@@ -249,23 +290,11 @@ theorem coarseGrainingL2FluxDefectBoundTwoExponent_publicCoeffField_le_dim_sq_mu
             (Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H +
                 Real.rpow s (-(5 / 2 : ℝ)) * W * P * L +
               Real.rpow s (-3 : ℝ) * W * M * Linv) * (Winv * B)) := by
-    calc
-      s⁻¹ * oldMhalf * H * E +
-          (Real.rpow s (-(5 / 2 : ℝ)) * oldMhalf * W1 * oldL * H +
-              Real.rpow s (-(5 / 2 : ℝ)) * W * oldP * oldL +
-            Real.rpow s (-3 : ℝ) * W * oldM * oldLinv) * (Winv * B) ≤
-        D ^ 2 * (s⁻¹ * Mhalf * H * E) +
-          D ^ 2 *
-            ((Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H +
-                Real.rpow s (-(5 / 2 : ℝ)) * W * P * L +
-              Real.rpow s (-3 : ℝ) * W * M * Linv) * (Winv * B)) :=
-          add_le_add hterm_energy htail
-      _ =
-        D ^ 2 *
-          (s⁻¹ * Mhalf * H * E +
-            (Real.rpow s (-(5 / 2 : ℝ)) * Mhalf * W1 * L * H +
-                Real.rpow s (-(5 / 2 : ℝ)) * W * P * L +
-              Real.rpow s (-3 : ℝ) * W * M * Linv) * (Winv * B)) := by ring
+    exact coarseGraining_scalar_dimension_bound
+      s D oldMhalf oldM oldP oldL oldLinv Mhalf M P L Linv H E B W1 W Winv
+      hD_nonneg hD_le_sq hs_inv_nonneg hs_pow52_nonneg hs_pow3_nonneg
+      hMhalf_nonneg hM_nonneg holdL_nonneg holdLinv_nonneg hP_nonneg
+      hH_nonneg' hE_nonneg hforce_nonneg hW1_nonneg hW_nonneg hMhalf_le hM_le hP_le hL_le hLinv_le
   calc
     C * _root_.Homogenization.coarseGrainingL2FluxDefectBoundTwoExponent
         Q (publicCoeffField Q a) a0.matrix s t j u.grad g =
