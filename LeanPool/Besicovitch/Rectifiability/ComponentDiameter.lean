@@ -5,7 +5,7 @@ Authors: Yongxi Lin
 -/
 module
 
-public import LeanPool.Besicovitch.BPC.Basic
+public import LeanPool.Besicovitch.BesicovitchPairCondition.Basic
 public import LeanPool.Besicovitch.Measure.UniformDensity
 public import LeanPool.Besicovitch.Rectifiability.CompactAttachmentUnion
 public import LeanPool.Besicovitch.Topology.ConnectedComponent

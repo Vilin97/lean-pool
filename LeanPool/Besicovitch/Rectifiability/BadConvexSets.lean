@@ -5,7 +5,7 @@ Authors: Yongxi Lin
 -/
 module
 
-public import LeanPool.Besicovitch.BPC.Defs
+public import LeanPool.Besicovitch.BesicovitchPairCondition.Definitions
 public import LeanPool.Besicovitch.Geometry.ConvexEnlargement
 public import LeanPool.Besicovitch.Rectifiability.Selection
 

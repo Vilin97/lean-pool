@@ -5,7 +5,7 @@ Authors: Yongxi Lin
 -/
 module
 
-public import LeanPool.Besicovitch.BPC.Defs
+public import LeanPool.Besicovitch.BesicovitchPairCondition.Definitions
 public import Mathlib.MeasureTheory.Constructions.Polish.EmbeddingReal
 public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 public import Mathlib.MeasureTheory.Measure.Hausdorff

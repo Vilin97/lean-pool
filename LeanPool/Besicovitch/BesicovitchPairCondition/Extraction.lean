@@ -5,7 +5,7 @@ Authors: Yongxi Lin
 -/
 module
 
-public import LeanPool.Besicovitch.BPC.Basic
+public import LeanPool.Besicovitch.BesicovitchPairCondition.Basic
 
 /-!
 # Extracting separated children from density

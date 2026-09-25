@@ -4,102 +4,104 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yongxi Lin
 -/
 
-import LeanPool.Besicovitch.BPC.Basic
-import LeanPool.Besicovitch.BPC.Defs
-import LeanPool.Besicovitch.BPC.Extraction
-import LeanPool.Besicovitch.BPC.PackingMeasure
-import LeanPool.Besicovitch.BPC.Parameters
-import LeanPool.Besicovitch.BPC.Rectifiability
-import LeanPool.Besicovitch.BPC.RootBalls
-import LeanPool.Besicovitch.BPC.SixPointTransfer
-import LeanPool.Besicovitch.Certificates.DensePolynomial
-import LeanPool.Besicovitch.Certificates.EndpointBridge
-import LeanPool.Besicovitch.Certificates.EndpointIsolation
-import LeanPool.Besicovitch.Certificates.Krawczyk
-import LeanPool.Besicovitch.Certificates.RadicalInterval
-import LeanPool.Besicovitch.Certificates.RationalInterval
-import LeanPool.Besicovitch.Example.Avoid
-import LeanPool.Besicovitch.Example.Cover
-import LeanPool.Besicovitch.Example.Density
-import LeanPool.Besicovitch.Example.Graph
-import LeanPool.Besicovitch.Example.Hull
-import LeanPool.Besicovitch.Example.LowerBound
-import LeanPool.Besicovitch.Example.LowerDensity
-import LeanPool.Besicovitch.Example.Measurable
-import LeanPool.Besicovitch.Example.Plane
-import LeanPool.Besicovitch.Example.Recursion
-import LeanPool.Besicovitch.Example.Reduction
-import LeanPool.Besicovitch.Example.Zero
-import LeanPool.Besicovitch.Geometry.BallUnion
-import LeanPool.Besicovitch.Geometry.ConvexEnlargement
-import LeanPool.Besicovitch.Main.Bound
-import LeanPool.Besicovitch.Main.RationalBound
-import LeanPool.Besicovitch.Measure.CompactExhaustion
-import LeanPool.Besicovitch.Measure.DensityBasic
-import LeanPool.Besicovitch.Measure.DensityLocalization
-import LeanPool.Besicovitch.Measure.UniformDensity
-import LeanPool.Besicovitch.Measure.UniformDensityCompact
-import LeanPool.Besicovitch.Rectifiability.AttachmentLocalization
-import LeanPool.Besicovitch.Rectifiability.BadConvexLocalization
-import LeanPool.Besicovitch.Rectifiability.BadConvexPacking
-import LeanPool.Besicovitch.Rectifiability.BadConvexSets
-import LeanPool.Besicovitch.Rectifiability.BadConvexThickening
-import LeanPool.Besicovitch.Rectifiability.Basic
-import LeanPool.Besicovitch.Rectifiability.CompactAttachmentUnion
-import LeanPool.Besicovitch.Rectifiability.ComponentDiameter
-import LeanPool.Besicovitch.Rectifiability.Continuum
-import LeanPool.Besicovitch.Rectifiability.ContinuumSurgery
-import LeanPool.Besicovitch.Rectifiability.ConvexAttachment
-import LeanPool.Besicovitch.Rectifiability.Decomposition
-import LeanPool.Besicovitch.Rectifiability.DensityPoint
-import LeanPool.Besicovitch.Rectifiability.FiniteContinuum
-import LeanPool.Besicovitch.Rectifiability.HoleMerging
-import LeanPool.Besicovitch.Rectifiability.Selection
-import LeanPool.Besicovitch.Rectifiability.Straight
-import LeanPool.Besicovitch.Rectifiability.StraightReduction
-import LeanPool.Besicovitch.Sigma.Basic
-import LeanPool.Besicovitch.SixPoint.AlgebraicBasic
-import LeanPool.Besicovitch.SixPoint.BlueChildSwap
-import LeanPool.Besicovitch.SixPoint.CanonicalTriangle
-import LeanPool.Besicovitch.SixPoint.ChildSwapPacking
-import LeanPool.Besicovitch.SixPoint.Configuration
-import LeanPool.Besicovitch.SixPoint.EndpointFailureClosed
-import LeanPool.Besicovitch.SixPoint.EndpointGeometry
-import LeanPool.Besicovitch.SixPoint.EndpointPacking
-import LeanPool.Besicovitch.SixPoint.EndpointWeights
-import LeanPool.Besicovitch.SixPoint.FailureTree
-import LeanPool.Besicovitch.SixPoint.FiniteProperty
-import LeanPool.Besicovitch.SixPoint.FourChildren
-import LeanPool.Besicovitch.SixPoint.GramCertificateCore
-import LeanPool.Besicovitch.SixPoint.GramCertificateCover
-import LeanPool.Besicovitch.SixPoint.GramCertificateData
-import LeanPool.Besicovitch.SixPoint.GramWeightedBound
-import LeanPool.Besicovitch.SixPoint.LensEndpointBalancedE0S0
-import LeanPool.Besicovitch.SixPoint.Normalization
-import LeanPool.Besicovitch.SixPoint.Packing
-import LeanPool.Besicovitch.SixPoint.RationalChord
-import LeanPool.Besicovitch.SixPoint.Realization
-import LeanPool.Besicovitch.SixPoint.RootEdge
-import LeanPool.Besicovitch.SixPoint.RootEdgeClosed
-import LeanPool.Besicovitch.SixPoint.RootEdgeFailureTree
-import LeanPool.Besicovitch.SixPoint.RootEdgeType12
-import LeanPool.Besicovitch.SixPoint.RowColumnRescue
-import LeanPool.Besicovitch.SixPoint.Scaling
-import LeanPool.Besicovitch.SixPoint.Score
-import LeanPool.Besicovitch.SixPoint.SiblingFailureTree
-import LeanPool.Besicovitch.SixPoint.SiblingIncidence
-import LeanPool.Besicovitch.SixPoint.SiblingIncidenceClosed
-import LeanPool.Besicovitch.SixPoint.SiblingIncidenceLedger
-import LeanPool.Besicovitch.SixPoint.SiblingLens
-import LeanPool.Besicovitch.SixPoint.SiblingLensE1S0
-import LeanPool.Besicovitch.SixPoint.SiblingLensS0S0
-import LeanPool.Besicovitch.SixPoint.SiblingLensS0S3
-import LeanPool.Besicovitch.SixPoint.SiblingTangent
-import LeanPool.Besicovitch.SixPoint.SiblingTriangle
-import LeanPool.Besicovitch.SixPoint.WeightedFailure
-import LeanPool.Besicovitch.SixPoint.WeightedReduction
-import LeanPool.Besicovitch.Statement
-import LeanPool.Besicovitch.Topology.ConnectedComponent
+module
+
+public import LeanPool.Besicovitch.BesicovitchPairCondition.Basic
+public import LeanPool.Besicovitch.BesicovitchPairCondition.Definitions
+public import LeanPool.Besicovitch.BesicovitchPairCondition.Extraction
+public import LeanPool.Besicovitch.BesicovitchPairCondition.PackingMeasure
+public import LeanPool.Besicovitch.BesicovitchPairCondition.Parameters
+public import LeanPool.Besicovitch.BesicovitchPairCondition.Rectifiability
+public import LeanPool.Besicovitch.BesicovitchPairCondition.RootBalls
+public import LeanPool.Besicovitch.BesicovitchPairCondition.SixPointTransfer
+public import LeanPool.Besicovitch.Certificates.DensePolynomial
+public import LeanPool.Besicovitch.Certificates.EndpointBridge
+public import LeanPool.Besicovitch.Certificates.EndpointIsolation
+public import LeanPool.Besicovitch.Certificates.Krawczyk
+public import LeanPool.Besicovitch.Certificates.RadicalInterval
+public import LeanPool.Besicovitch.Certificates.RationalInterval
+public import LeanPool.Besicovitch.Example.Avoid
+public import LeanPool.Besicovitch.Example.Cover
+public import LeanPool.Besicovitch.Example.Density
+public import LeanPool.Besicovitch.Example.Graph
+public import LeanPool.Besicovitch.Example.Hull
+public import LeanPool.Besicovitch.Example.LowerBound
+public import LeanPool.Besicovitch.Example.LowerDensity
+public import LeanPool.Besicovitch.Example.Measurable
+public import LeanPool.Besicovitch.Example.Plane
+public import LeanPool.Besicovitch.Example.Recursion
+public import LeanPool.Besicovitch.Example.Reduction
+public import LeanPool.Besicovitch.Example.Zero
+public import LeanPool.Besicovitch.Geometry.BallUnion
+public import LeanPool.Besicovitch.Geometry.ConvexEnlargement
+public import LeanPool.Besicovitch.Main.Bound
+public import LeanPool.Besicovitch.Main.RationalBound
+public import LeanPool.Besicovitch.Measure.CompactExhaustion
+public import LeanPool.Besicovitch.Measure.DensityBasic
+public import LeanPool.Besicovitch.Measure.DensityLocalization
+public import LeanPool.Besicovitch.Measure.UniformDensity
+public import LeanPool.Besicovitch.Measure.UniformDensityCompact
+public import LeanPool.Besicovitch.Rectifiability.AttachmentLocalization
+public import LeanPool.Besicovitch.Rectifiability.BadConvexLocalization
+public import LeanPool.Besicovitch.Rectifiability.BadConvexPacking
+public import LeanPool.Besicovitch.Rectifiability.BadConvexSets
+public import LeanPool.Besicovitch.Rectifiability.BadConvexThickening
+public import LeanPool.Besicovitch.Rectifiability.Basic
+public import LeanPool.Besicovitch.Rectifiability.CompactAttachmentUnion
+public import LeanPool.Besicovitch.Rectifiability.ComponentDiameter
+public import LeanPool.Besicovitch.Rectifiability.Continuum
+public import LeanPool.Besicovitch.Rectifiability.ContinuumSurgery
+public import LeanPool.Besicovitch.Rectifiability.ConvexAttachment
+public import LeanPool.Besicovitch.Rectifiability.Decomposition
+public import LeanPool.Besicovitch.Rectifiability.DensityPoint
+public import LeanPool.Besicovitch.Rectifiability.FiniteContinuum
+public import LeanPool.Besicovitch.Rectifiability.HoleMerging
+public import LeanPool.Besicovitch.Rectifiability.Selection
+public import LeanPool.Besicovitch.Rectifiability.Straight
+public import LeanPool.Besicovitch.Rectifiability.StraightReduction
+public import LeanPool.Besicovitch.Sigma.Basic
+public import LeanPool.Besicovitch.SixPoint.AlgebraicBasic
+public import LeanPool.Besicovitch.SixPoint.BlueChildSwap
+public import LeanPool.Besicovitch.SixPoint.CanonicalTriangle
+public import LeanPool.Besicovitch.SixPoint.ChildSwapPacking
+public import LeanPool.Besicovitch.SixPoint.Configuration
+public import LeanPool.Besicovitch.SixPoint.EndpointFailureClosed
+public import LeanPool.Besicovitch.SixPoint.EndpointGeometry
+public import LeanPool.Besicovitch.SixPoint.EndpointPacking
+public import LeanPool.Besicovitch.SixPoint.EndpointWeights
+public import LeanPool.Besicovitch.SixPoint.FailureTree
+public import LeanPool.Besicovitch.SixPoint.FiniteProperty
+public import LeanPool.Besicovitch.SixPoint.FourChildren
+public import LeanPool.Besicovitch.SixPoint.GramCertificateCore
+public import LeanPool.Besicovitch.SixPoint.GramCertificateCover
+public import LeanPool.Besicovitch.SixPoint.GramCertificateData
+public import LeanPool.Besicovitch.SixPoint.GramWeightedBound
+public import LeanPool.Besicovitch.SixPoint.LensEndpointBalancedE0S0
+public import LeanPool.Besicovitch.SixPoint.Normalization
+public import LeanPool.Besicovitch.SixPoint.Packing
+public import LeanPool.Besicovitch.SixPoint.RationalChord
+public import LeanPool.Besicovitch.SixPoint.Realization
+public import LeanPool.Besicovitch.SixPoint.RootEdge
+public import LeanPool.Besicovitch.SixPoint.RootEdgeClosed
+public import LeanPool.Besicovitch.SixPoint.RootEdgeFailureTree
+public import LeanPool.Besicovitch.SixPoint.RootEdgeType12
+public import LeanPool.Besicovitch.SixPoint.RowColumnRescue
+public import LeanPool.Besicovitch.SixPoint.Scaling
+public import LeanPool.Besicovitch.SixPoint.Score
+public import LeanPool.Besicovitch.SixPoint.SiblingFailureTree
+public import LeanPool.Besicovitch.SixPoint.SiblingIncidence
+public import LeanPool.Besicovitch.SixPoint.SiblingIncidenceClosed
+public import LeanPool.Besicovitch.SixPoint.SiblingIncidenceLedger
+public import LeanPool.Besicovitch.SixPoint.SiblingLens
+public import LeanPool.Besicovitch.SixPoint.SiblingLensE1S0
+public import LeanPool.Besicovitch.SixPoint.SiblingLensS0S0
+public import LeanPool.Besicovitch.SixPoint.SiblingLensS0S3
+public import LeanPool.Besicovitch.SixPoint.SiblingTangent
+public import LeanPool.Besicovitch.SixPoint.SiblingTriangle
+public import LeanPool.Besicovitch.SixPoint.WeightedFailure
+public import LeanPool.Besicovitch.SixPoint.WeightedReduction
+public import LeanPool.Besicovitch.Statement
+public import LeanPool.Besicovitch.Topology.ConnectedComponent
 
 /-!
 # A machine-checked bound of 0.6934 for Besicovitch's 1/2-problem

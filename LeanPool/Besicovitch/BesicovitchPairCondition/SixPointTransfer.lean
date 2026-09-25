@@ -5,10 +5,10 @@ Authors: Yongxi Lin
 -/
 module
 
-public import LeanPool.Besicovitch.BPC.Extraction
-public import LeanPool.Besicovitch.BPC.PackingMeasure
-public import LeanPool.Besicovitch.BPC.Parameters
-public import LeanPool.Besicovitch.BPC.RootBalls
+public import LeanPool.Besicovitch.BesicovitchPairCondition.Extraction
+public import LeanPool.Besicovitch.BesicovitchPairCondition.PackingMeasure
+public import LeanPool.Besicovitch.BesicovitchPairCondition.Parameters
+public import LeanPool.Besicovitch.BesicovitchPairCondition.RootBalls
 public import LeanPool.Besicovitch.SixPoint.FiniteProperty
 public import LeanPool.Besicovitch.SixPoint.Normalization
 public import LeanPool.Besicovitch.SixPoint.Realization

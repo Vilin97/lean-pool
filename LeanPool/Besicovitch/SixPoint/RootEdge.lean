@@ -5,6 +5,8 @@ Authors: Yongxi Lin
 -/
 module
 
+import LeanPool.Besicovitch.SixPoint.NormEstimates
+
 public import LeanPool.Besicovitch.SixPoint.RationalChord
 public import LeanPool.Besicovitch.Certificates.EndpointBridge
 public import LeanPool.Besicovitch.SixPoint.EndpointGeometry
@@ -733,20 +735,6 @@ theorem blueRootEdgeRedTrianglePacking_virtualDiameter
     simp only [rootEdgeSplitDiameter, rootEdgeCrossMaximum, max_le_iff]
     exact ⟨hdiameterL, hdiameterRoot, hdiameterChild⟩
 
-private theorem norm_tangent {E : Type*} [SeminormedAddCommGroup E] (x : E) {r : ℝ}
-    (hr : 0 < r) : ‖x‖ ≤ (‖x‖ ^ 2 + r ^ 2) / (2 * r) := by
-  rw [le_div_iff₀ (by positivity : 0 < 2 * r)]
-  nlinarith [sq_nonneg (‖x‖ - r)]
-
-private theorem weighted_norm_sq {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    (x y : E) {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) :
-    ‖a • x + b • y‖ ^ 2 =
-      (a + b) * (a * ‖x‖ ^ 2 + b * ‖y‖ ^ 2) - a * b * ‖x - y‖ ^ 2 := by
-  rw [norm_add_sq_real, norm_sub_sq_real]
-  simp only [norm_smul, Real.norm_eq_abs, abs_of_nonneg ha, abs_of_nonneg hb,
-    real_inner_smul_left, real_inner_smul_right]
-  ring
-
 private def twoPointGain (A rho : ℝ) : ℝ := A / rho
 
 private def twoPointUpper (c A₁ A₂ rho₁ rho₂ sigma d₁ d₂ t₁ t₂ : ℝ) : ℝ :=
@@ -858,38 +846,6 @@ private theorem twoPointUpper_eq_quadratic
   simp only [twoPointUpper, twoPointBase, twoPointQuadratic1, twoPointQuadratic2,
     twoPointGain]
   ring
-
-private theorem quadratic_le_max_endpoints {a b d l x u : ℝ} (ha : 0 ≤ a)
-    (hlx : l ≤ x) (hxu : x ≤ u) :
-    a * x ^ 2 + b * x + d ≤
-      max (a * l ^ 2 + b * l + d) (a * u ^ 2 + b * u + d) := by
-  by_cases hlu : l = u
-  · subst u
-    have hx : x = l := le_antisymm hxu hlx
-    subst x
-    exact le_max_left _ _
-  have hwidth : 0 < u - l := sub_pos.mpr (lt_of_le_of_ne (hlx.trans hxu) hlu)
-  have hleft : a * l ^ 2 + b * l + d ≤
-      max (a * l ^ 2 + b * l + d) (a * u ^ 2 + b * u + d) := le_max_left _ _
-  have hright : a * u ^ 2 + b * u + d ≤
-      max (a * l ^ 2 + b * l + d) (a * u ^ 2 + b * u + d) := le_max_right _ _
-  have hcurve : a * (x - l) * (x - u) ≤ 0 :=
-    mul_nonpos_of_nonneg_of_nonpos (mul_nonneg ha (sub_nonneg.mpr hlx))
-      (sub_nonpos.mpr hxu)
-  have hleftWeight : 0 ≤ u - x := sub_nonneg.mpr hxu
-  have hrightWeight : 0 ≤ x - l := sub_nonneg.mpr hlx
-  have hsecant :
-      (u - l) * (a * x ^ 2 + b * x + d) ≤
-        (u - x) * (a * l ^ 2 + b * l + d) +
-          (x - l) * (a * u ^ 2 + b * u + d) := by
-    nlinarith
-  have hbound :
-      (u - x) * (a * l ^ 2 + b * l + d) +
-          (x - l) * (a * u ^ 2 + b * u + d) ≤
-        (u - l) * max (a * l ^ 2 + b * l + d) (a * u ^ 2 + b * u + d) := by
-    nlinarith [mul_le_mul_of_nonneg_left hleft hleftWeight,
-      mul_le_mul_of_nonneg_left hright hrightWeight]
-  exact (mul_le_mul_iff_of_pos_left hwidth).mp (hsecant.trans hbound)
 
 private theorem twoPointUpper_le_vertices
     {c A₁ A₂ rho₁ rho₂ sigma d₁ d₂ t₁ t₂ : ℝ}

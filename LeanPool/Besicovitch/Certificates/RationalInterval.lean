@@ -13,8 +13,8 @@ public import Mathlib.Tactic.NormNum
 # Exact rational interval arithmetic
 
 The intervals in this file have rational endpoints, while their semantics is over the real
-numbers. The expression evaluator therefore produces small, auditable certificates whose
-soundness is checked by the kernel.
+numbers. The operations provide the enclosure primitives used by the radical-expression evaluator,
+with soundness checked by the kernel.
 -/
 
 @[expose] public section
@@ -152,94 +152,5 @@ theorem inv_contains {I : RationalInterval} {x : ℝ} (hx : I.Contains x)
     · simpa [one_div] using one_div_le_one_div_of_neg_of_le hu hx.1
 
 end RationalInterval
-
-/-- Rational expressions supported by the exact interval evaluator. -/
-inductive RationalExpression (n : ℕ) where
-  | var : Fin n → RationalExpression n
-  | literal : ℚ → RationalExpression n
-  | add : RationalExpression n → RationalExpression n → RationalExpression n
-  | neg : RationalExpression n → RationalExpression n
-  | mul : RationalExpression n → RationalExpression n → RationalExpression n
-  | inv : RationalExpression n → RationalExpression n
-
-namespace RationalExpression
-
-/-- Evaluate a rational expression at a real environment. -/
-noncomputable def eval {n : ℕ} : RationalExpression n → (Fin n → ℝ) → ℝ
-  | var i, x => x i
-  | literal q, _ => q
-  | add f g, x => f.eval x + g.eval x
-  | neg f, x => -f.eval x
-  | mul f g, x => f.eval x * g.eval x
-  | inv f, x => (f.eval x)⁻¹
-
-/-- Evaluate an expression by exact interval arithmetic, failing only at an unsafe inverse. -/
-def enclosure {n : ℕ} : RationalExpression n → (Fin n → RationalInterval) →
-    Option RationalInterval
-  | var i, X => some (X i)
-  | literal q, _ => some (.singleton q)
-  | add f g, X => do
-      let I ← f.enclosure X
-      let J ← g.enclosure X
-      return I.add J
-  | neg f, X => do
-      let I ← f.enclosure X
-      return I.neg
-  | mul f g, X => do
-      let I ← f.enclosure X
-      let J ← g.enclosure X
-      return I.mul J
-  | inv f, X => do
-      let I ← f.enclosure X
-      if h : 0 < I.lower ∨ I.upper < 0 then return I.inv h else none
-
-/-- Every successful result of `enclosure` contains the real value of the expression. -/
-theorem enclosure_sound {n : ℕ} {f : RationalExpression n}
-    {X : Fin n → RationalInterval} {x : Fin n → ℝ}
-    (hx : ∀ i, (X i).Contains (x i)) {I : RationalInterval} (hI : f.enclosure X = some I) :
-    I.Contains (f.eval x) := by
-  induction f generalizing I with
-  | var i =>
-      simp only [enclosure, Option.some.injEq] at hI
-      subst I
-      exact hx i
-  | literal q =>
-      simp only [enclosure, Option.some.injEq] at hI
-      subst I
-      exact RationalInterval.singleton_contains q
-  | add f g hf hg =>
-      change ((f.enclosure X).bind fun If ↦
-        (g.enclosure X).bind fun Ig ↦ some (If.add Ig)) = some I at hI
-      obtain ⟨If, hfI, hI⟩ := Option.bind_eq_some_iff.mp hI
-      obtain ⟨Ig, hgI, hI⟩ := Option.bind_eq_some_iff.mp hI
-      cases Option.some.inj hI
-      exact RationalInterval.add_contains (hf hfI) (hg hgI)
-  | neg f hf =>
-      change ((f.enclosure X).bind fun If ↦ some If.neg) = some I at hI
-      obtain ⟨If, hfI, hI⟩ := Option.bind_eq_some_iff.mp hI
-      cases Option.some.inj hI
-      exact RationalInterval.neg_contains (hf hfI)
-  | mul f g hf hg =>
-      change ((f.enclosure X).bind fun If ↦
-        (g.enclosure X).bind fun Ig ↦ some (If.mul Ig)) = some I at hI
-      obtain ⟨If, hfI, hI⟩ := Option.bind_eq_some_iff.mp hI
-      obtain ⟨Ig, hgI, hI⟩ := Option.bind_eq_some_iff.mp hI
-      cases Option.some.inj hI
-      exact RationalInterval.mul_contains (hf hfI) (hg hgI)
-  | inv f hf =>
-      simp only [enclosure] at hI
-      cases hfI : f.enclosure X with
-      | none => simp [hfI] at hI
-      | some If =>
-          rw [hfI] at hI
-          dsimp at hI
-          split at hI
-          · rename_i h
-            simp only [Option.some.injEq] at hI
-            subst I
-            exact RationalInterval.inv_contains (hf hfI) h
-          · contradiction
-
-end RationalExpression
 
 end LeanPool.Besicovitch

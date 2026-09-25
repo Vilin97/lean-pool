@@ -5,7 +5,7 @@ Authors: Yongxi Lin
 -/
 module
 
-public import LeanPool.Besicovitch.BPC.Defs
+public import LeanPool.Besicovitch.BesicovitchPairCondition.Definitions
 
 /-!
 # Basic facts about the Besicovitch pair condition

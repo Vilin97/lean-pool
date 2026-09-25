@@ -6,8 +6,8 @@ Authors: Yongxi Lin
 module
 
 public import LeanPool.Besicovitch.SixPoint.RationalChord
-public import LeanPool.Besicovitch.BPC.Rectifiability
-public import LeanPool.Besicovitch.BPC.SixPointTransfer
+public import LeanPool.Besicovitch.BesicovitchPairCondition.Rectifiability
+public import LeanPool.Besicovitch.BesicovitchPairCondition.SixPointTransfer
 public import LeanPool.Besicovitch.Certificates.EndpointBridge
 
 /-!
