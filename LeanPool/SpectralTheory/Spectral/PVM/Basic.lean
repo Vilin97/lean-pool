@@ -3,8 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import Mathlib.Analysis.InnerProductSpace.Positive
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Positive
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+
 
 /-!
 # Projection-valued measures
@@ -12,6 +15,8 @@ import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 This file defines real projection-valued measures through strong-operator countable additivity
 and proves monotonicity of their associated scalar quadratic forms.
 -/
+
+@[expose] public section
 
 open Function
 

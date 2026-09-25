@@ -3,8 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import LeanPool.SpectralTheory.Spectral.Cayley.Basic
-import LeanPool.SpectralTheory.Spectral.PVM.Unbounded
+module
+
+public import LeanPool.SpectralTheory.Spectral.Cayley.Basic
+public import LeanPool.SpectralTheory.Spectral.PVM.Unbounded
+
 
 /-!
 # Cayley spectral calculus
@@ -13,6 +16,8 @@ This module connects the bounded Cayley transform with unbounded coordinate inte
 result turns a PVM representation of the scalar Cayley phase into containment of the original
 self-adjoint operator, after which self-adjoint maximality upgrades containment to equality.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

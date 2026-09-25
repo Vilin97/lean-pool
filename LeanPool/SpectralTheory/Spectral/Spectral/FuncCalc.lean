@@ -3,8 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import LeanPool.SpectralTheory.Spectral.Spectral.Existence
-import LeanPool.SpectralTheory.Spectral.PVM.Unbounded
+module
+
+public import LeanPool.SpectralTheory.Spectral.Spectral.Existence
+public import LeanPool.SpectralTheory.Spectral.PVM.Unbounded
+
 
 /-!
 # Measurable spectral functional calculus
@@ -14,6 +17,8 @@ by applying a self-adjoint operator's representing PVM's unbounded integral to
 a measurable function `f`, and shows it recovers `A` on the coordinate
 function.
 -/
+
+@[expose] public section
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]

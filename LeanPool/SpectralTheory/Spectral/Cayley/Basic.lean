@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import Mathlib.Analysis.InnerProductSpace.LinearPMap
+module
+
+public import Mathlib.Analysis.InnerProductSpace.LinearPMap
+
 
 /-!
 # The Cayley transform
@@ -14,15 +17,19 @@ can therefore be composed with `A - iI`, and the resulting everywhere-defined li
 isometry, hence continuous.
 -/
 
+@[expose] public section
+
 open scoped LinearPMap
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
-private def plusI (A : E →ₗ.[ℂ] E) : A.domain →ₗ[ℂ] E :=
+/-- The map `A + iI` on the domain of a partial linear operator. -/
+def plusI (A : E →ₗ.[ℂ] E) : A.domain →ₗ[ℂ] E :=
   A.toFun + Complex.I • A.domain.subtype
 
-private def minusI (A : E →ₗ.[ℂ] E) : A.domain →ₗ[ℂ] E :=
+/-- The map `A - iI` on the domain of a partial linear operator. -/
+def minusI (A : E →ₗ.[ℂ] E) : A.domain →ₗ[ℂ] E :=
   A.toFun - Complex.I • A.domain.subtype
 
 private theorem formalSelfAdjoint (A : E →ₗ.[ℂ] E) (hA : IsSelfAdjoint A) :
@@ -276,14 +283,17 @@ theorem sub_I_surjective_of_isSelfAdjoint (A : E →ₗ.[ℂ] E) (hA : IsSelfAdj
     Function.Surjective (fun x : A.domain => A x - Complex.I • (x : E)) := by
   exact minusI_surjective A hA
 
-private noncomputable def cayleyLinearMap (A : E →ₗ.[ℂ] E)
+/-- The linear map underlying the Cayley transform of a self-adjoint operator. -/
+noncomputable def cayleyLinearMap (A : E →ₗ.[ℂ] E)
     (hA : IsSelfAdjoint A) : E →ₗ[ℂ] E :=
-  let e := LinearEquiv.ofBijective (plusI A) ⟨plusI_injective A hA, plusI_surjective A hA⟩
+  let e := LinearEquiv.ofBijective (plusI A)
+    (by exact ⟨plusI_injective A hA, plusI_surjective A hA⟩)
   (minusI A).comp e.symm.toLinearMap
 
 private theorem cayleyLinearMap_norm_le (A : E →ₗ.[ℂ] E)
     (hA : IsSelfAdjoint A) (y : E) : ‖cayleyLinearMap A hA y‖ ≤ 1 * ‖y‖ := by
-  let e := LinearEquiv.ofBijective (plusI A) ⟨plusI_injective A hA, plusI_surjective A hA⟩
+  let e := LinearEquiv.ofBijective (plusI A)
+    (by exact ⟨plusI_injective A hA, plusI_surjective A hA⟩)
   let x : A.domain := e.symm y
   have hplus : plusI A x = y := by
     change e x = y
@@ -297,14 +307,15 @@ private theorem cayleyLinearMap_norm_le (A : E →ₗ.[ℂ] E)
 /-- The Cayley transform `(A - iI)(A + iI)⁻¹` of a self-adjoint partial linear map. -/
 noncomputable def cayleyTransform
     (A : E →ₗ.[ℂ] E) (hA : IsSelfAdjoint A) : E →L[ℂ] E :=
-  (cayleyLinearMap A hA).mkContinuous 1 (cayleyLinearMap_norm_le A hA)
+  (cayleyLinearMap A hA).mkContinuous 1 (by exact cayleyLinearMap_norm_le A hA)
 
 /-- The Cayley transform sends `(A + iI)x` to `(A - iI)x`. -/
 theorem cayleyTransform_apply_plus
     (A : E →ₗ.[ℂ] E) (hA : IsSelfAdjoint A) (x : A.domain) :
     cayleyTransform A hA (A x + Complex.I • (x : E)) =
       A x - Complex.I • (x : E) := by
-  let e := LinearEquiv.ofBijective (plusI A) ⟨plusI_injective A hA, plusI_surjective A hA⟩
+  let e := LinearEquiv.ofBijective (plusI A)
+    (by exact ⟨plusI_injective A hA, plusI_surjective A hA⟩)
   change minusI A (e.symm (plusI A x)) = minusI A x
   change minusI A (e.symm (e x)) = minusI A x
   rw [e.symm_apply_apply]
@@ -312,7 +323,8 @@ theorem cayleyTransform_apply_plus
 /-- The Cayley transform preserves the norm. -/
 theorem norm_cayleyTransform (A : E →ₗ.[ℂ] E) (hA : IsSelfAdjoint A)
     (y : E) : ‖cayleyTransform A hA y‖ = ‖y‖ := by
-  let e := LinearEquiv.ofBijective (plusI A) ⟨plusI_injective A hA, plusI_surjective A hA⟩
+  let e := LinearEquiv.ofBijective (plusI A)
+    (by exact ⟨plusI_injective A hA, plusI_surjective A hA⟩)
   let x : A.domain := e.symm y
   have hplus : plusI A x = y := by
     change e x = y

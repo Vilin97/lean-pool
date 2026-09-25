@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import LeanPool.SpectralTheory.Spectral.Cayley.Unitary
+module
+
+public import LeanPool.SpectralTheory.Spectral.Cayley.Unitary
+
 
 /-!
 # The inverse Cayley transform
@@ -13,13 +16,17 @@ surjective onto `1 - U`'s complement, giving the inverse construction used to
 recover the self-adjoint operator from its unitary Cayley transform.
 -/
 
+@[expose] public section
+
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
-private def oneSub (U : E →L[ℂ] E) : E →ₗ[ℂ] E :=
+/-- The linear map `I - U` associated to a continuous linear operator. -/
+def oneSub (U : E →L[ℂ] E) : E →ₗ[ℂ] E :=
   LinearMap.id - U.toLinearMap
 
-private def oneAdd (U : E →L[ℂ] E) : E →ₗ[ℂ] E :=
+/-- The linear map `I + U` associated to a continuous linear operator. -/
+def oneAdd (U : E →L[ℂ] E) : E →ₗ[ℂ] E :=
   LinearMap.id + U.toLinearMap
 
 omit [CompleteSpace E] in
@@ -39,7 +46,7 @@ noncomputable def inverseCayley
     (hInj : ∀ x, U x = x → x = 0)
     (_hDense : DenseRange (fun x => x - U x)) : E →ₗ.[ℂ] E :=
   let e : E ≃ₗ[ℂ] LinearMap.range (oneSub U) :=
-    LinearEquiv.ofInjective (oneSub U) (oneSub_injective U hInj)
+    LinearEquiv.ofInjective (oneSub U) (by exact oneSub_injective U hInj)
   { domain := LinearMap.range (oneSub U)
     toFun := Complex.I • (oneAdd U).comp e.symm.toLinearMap }
 

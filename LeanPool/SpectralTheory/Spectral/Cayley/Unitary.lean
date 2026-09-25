@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import LeanPool.SpectralTheory.Spectral.Cayley.Basic
+module
+
+public import LeanPool.SpectralTheory.Spectral.Cayley.Basic
+
 
 /-!
 # Unitarity of the Cayley transform
@@ -12,6 +15,8 @@ This file proves the Cayley transform of a self-adjoint operator is
 surjective, and combines this with its isometry (from `Spectral.Cayley.Basic`)
 to show it is unitary.
 -/
+
+@[expose] public section
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]

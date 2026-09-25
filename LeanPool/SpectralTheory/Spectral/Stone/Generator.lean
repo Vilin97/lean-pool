@@ -3,8 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import Mathlib.Analysis.InnerProductSpace.LinearPMap
-import Mathlib.Algebra.Star.Unitary
+module
+
+public import Mathlib.Analysis.InnerProductSpace.LinearPMap
+public import Mathlib.Algebra.Star.Unitary
+
 
 /-!
 # Strongly continuous unitary groups and their generators
@@ -13,6 +16,8 @@ This file defines strongly continuous one-parameter unitary groups and the
 infinitesimal-generator relation between such a group and a partial operator,
 via the Stone difference quotient.
 -/
+
+@[expose] public section
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
@@ -29,7 +34,8 @@ structure StrongContUnitary (E : Type*) [NormedAddCommGroup E]
 
 namespace StrongContUnitary
 
-private noncomputable def differenceQuotient (U : StrongContUnitary E) (x : E) (t : ℝ) : E :=
+/-- The difference quotient `(U(t)x - x) / (i * t)` of the unitary group. -/
+noncomputable def differenceQuotient (U : StrongContUnitary E) (x : E) (t : ℝ) : E :=
   (Complex.I * (t : ℂ))⁻¹ • (U.toFun t x - x)
 
 private theorem differenceQuotient_zero (U : StrongContUnitary E) :
@@ -48,7 +54,8 @@ private theorem differenceQuotient_smul (U : StrongContUnitary E) (c : ℂ) (x :
   funext t
   simp only [differenceQuotient, map_smul, ← smul_sub, smul_smul, Pi.smul_apply, mul_comm]
 
-private def generatorDomain (U : StrongContUnitary E) : Submodule ℂ E where
+/-- The vectors whose difference quotient converges at zero through nonzero times. -/
+def generatorDomain (U : StrongContUnitary E) : Submodule ℂ E where
   carrier := {x | ∃ y, Filter.Tendsto (differenceQuotient U x)
     (nhdsWithin 0 {0}ᶜ) (nhds y)}
   zero_mem' := by
@@ -73,9 +80,11 @@ private theorem mem_generatorDomain_iff (U : StrongContUnitary E) (x : E) :
         (nhdsWithin 0 {0}ᶜ) (nhds y) :=
   Iff.rfl
 
-private noncomputable def generatorLimit (U : StrongContUnitary E)
+/-- The chosen limit of the difference quotient on the generator domain. -/
+noncomputable def generatorLimit (U : StrongContUnitary E)
     (x : generatorDomain U) : E :=
-  Classical.choose ((mem_generatorDomain_iff U x).mp x.property)
+  Classical.choose (show ∃ y, Filter.Tendsto (differenceQuotient U x)
+      (nhdsWithin 0 {0}ᶜ) (nhds y) from x.property)
 
 private theorem generatorLimit_spec (U : StrongContUnitary E)
     (x : generatorDomain U) :

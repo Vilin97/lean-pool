@@ -3,17 +3,20 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import LeanPool.SpectralTheory.Spectral.PVM.Integral
-import Mathlib.Analysis.InnerProductSpace.LinearPMap
-import Mathlib.Algebra.Order.Module.Field
-import Mathlib.Data.EReal.Inv
-import Mathlib.Tactic.Measurability
-import Mathlib.Topology.Algebra.InfiniteSum.Order
-import Mathlib.MeasureTheory.Measure.WithDensity
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
-import Mathlib.MeasureTheory.Integral.Lebesgue.DominatedConvergence
-import Mathlib.MeasureTheory.Function.L2Space
+module
+
+public import LeanPool.SpectralTheory.Spectral.PVM.Integral
+public import Mathlib.Analysis.InnerProductSpace.LinearPMap
+public import Mathlib.Algebra.Order.Module.Field
+public import Mathlib.Data.EReal.Inv
+public import Mathlib.Tactic.Measurability
+public import Mathlib.Topology.Algebra.InfiniteSum.Order
+public import Mathlib.MeasureTheory.Measure.WithDensity
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import Mathlib.MeasureTheory.Integral.Lebesgue.DominatedConvergence
+public import Mathlib.MeasureTheory.Function.L2Space
+
 
 /-!
 # Unbounded spectral integration
@@ -22,6 +25,8 @@ This file extends the bounded spectral integral to unbounded measurable
 functions by a monotone-limit construction, giving the partial operator
 `E_pvm.unboundedIntegral f hf` for a PVM `E_pvm` and measurable `f`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open Function
@@ -449,8 +454,8 @@ private theorem PVM.spectralTruncation_tendsto (f : ℝ → ℂ) (t : ℝ) :
 noncomputable def PVM.truncatedIntegral (E_pvm : PVM E)
     (f : ℝ → ℂ) (hf : Measurable f) (n : ℕ) : E →L[ℂ] E :=
   E_pvm.integral (PVM.spectralTruncation f n)
-    (PVM.spectralTruncation_measurable f hf n)
-    ⟨n, PVM.norm_spectralTruncation_le f n⟩
+    (by exact PVM.spectralTruncation_measurable f hf n)
+    (by exact ⟨n, PVM.norm_spectralTruncation_le f n⟩)
 
 /-- The difference of two spectral truncations has the sum of their truncation levels as a
 uniform bound. -/
@@ -543,7 +548,7 @@ private theorem PVM.ofReal_norm_sq_truncatedIntegral_sub (E_pvm : PVM E)
   let hbddm : ∃ C, ∀ t, ‖gm t‖ ≤ C :=
     ⟨m, PVM.norm_spectralTruncation_le f m⟩
   let hbddn : ∃ C, ∀ t, ‖gn t‖ ≤ C :=
-    ⟨n, PVM.norm_spectralTruncation_le f n⟩
+    (by exact ⟨n, PVM.norm_spectralTruncation_le f n⟩)
   let hbddsub : ∃ C, ∀ t, ‖(gm - gn) t‖ ≤ C :=
     ⟨m + n, PVM.norm_spectralTruncation_sub_le f n m⟩
   have hid := E_pvm.ofReal_norm_sq_integral

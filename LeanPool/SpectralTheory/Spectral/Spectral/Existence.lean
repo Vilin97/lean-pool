@@ -3,18 +3,21 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import LeanPool.SpectralTheory.Spectral.Cayley.Inverse
-import LeanPool.SpectralTheory.Spectral.PVM.Unbounded
-import LeanPool.SpectralTheory.Spectral.Spectral.CayleyCalculus
-import LeanPool.SpectralTheory.Spectral.Spectral.Polarization
-import Mathlib.Analysis.CStarAlgebra.Spectrum
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unitary
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
-import Mathlib.Analysis.InnerProductSpace.StarOrder
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
-import Mathlib.MeasureTheory.Measure.Regular
-import Mathlib.Topology.MetricSpace.HausdorffDistance
+module
+
+public import LeanPool.SpectralTheory.Spectral.Cayley.Inverse
+public import LeanPool.SpectralTheory.Spectral.PVM.Unbounded
+public import LeanPool.SpectralTheory.Spectral.Spectral.CayleyCalculus
+public import LeanPool.SpectralTheory.Spectral.Spectral.Polarization
+public import Mathlib.Analysis.CStarAlgebra.Spectrum
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Unitary
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
+public import Mathlib.Analysis.InnerProductSpace.StarOrder
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
+public import Mathlib.MeasureTheory.Measure.Regular
+public import Mathlib.Topology.MetricSpace.HausdorffDistance
+
 
 /-!
 # Spectral theorem: existence
@@ -25,13 +28,16 @@ inverse Cayley coordinate, and proves that its unbounded coordinate integral is 
 self-adjoint operator.
 -/
 
+@[expose] public section
+
 open MeasureTheory
 open CompactlySupported
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
-private def realToComplexContinuousMap {X : Type*} [TopologicalSpace X]
+/-- View a compactly supported real continuous function as a complex continuous function. -/
+def realToComplexContinuousMap {X : Type*} [TopologicalSpace X]
     (f : C_c(X, ℝ)) : C(X, ℂ) where
   toFun z := f z
   continuous_toFun := Complex.continuous_ofReal.comp f.continuous
@@ -62,7 +68,8 @@ private def compactlySupportedContinuousMap {X : Type*} [TopologicalSpace X]
   toFun := f
   hasCompactSupport' := HasCompactSupport.of_compactSpace f
 
-private noncomputable def normalCfcQuadraticLinearMap
+/-- The real quadratic functional induced by continuous functional calculus at a vector. -/
+noncomputable def normalCfcQuadraticLinearMap
     (U : E →L[ℂ] E) (hU : IsStarNormal U) (x : E) :
     C_c(spectrum ℂ U, ℝ) →ₗ[ℝ] ℝ where
   toFun f := (@inner ℂ E _ x
@@ -116,7 +123,7 @@ noncomputable def normalCfcQuadraticFunctional
     (U : E →L[ℂ] E) (hU : IsStarNormal U) (x : E) :
     C_c(spectrum ℂ U, ℝ) →ₚ[ℝ] ℝ :=
   PositiveLinearMap.mk₀ (normalCfcQuadraticLinearMap U hU x)
-    (normalCfcQuadraticLinearMap_nonneg U hU x)
+    (by exact normalCfcQuadraticLinearMap_nonneg U hU x)
 
 /-- The Riesz measure representing the quadratic continuous-functional-calculus functional. -/
 noncomputable def normalCfcScalarMeasure
@@ -533,7 +540,8 @@ theorem normalCfcScalarMeasure_parallelogram
     inner_sub_left, inner_sub_right, Complex.add_re, Complex.sub_re]
   ring
 
-private noncomputable def normalCfcScalarContent
+/-- The real mass of a set under the scalar measure representing the normal CFC. -/
+noncomputable def normalCfcScalarContent
     (U : E →L[ℂ] E) (hU : IsStarNormal U)
     (S : Set (spectrum ℂ U)) (x : E) : ℝ :=
   (normalCfcScalarMeasure U hU x).real S
@@ -578,10 +586,10 @@ noncomputable def normalCfcSesquilinearForm
     (S : Set (spectrum ℂ U)) : E →L⋆[ℂ] E →L[ℂ] ℂ :=
   boundedSesquilinearFormOfQuadratic
     (normalCfcScalarContent U hU S)
-    (normalCfcScalarContent_smul U hU S)
-    (normalCfcScalarContent_parallelogram U hU S)
-    (normalCfcScalarContent_nonneg U hU S)
-    (normalCfcScalarContent_le_norm_sq U hU S)
+    (by exact normalCfcScalarContent_smul U hU S)
+    (by exact normalCfcScalarContent_parallelogram U hU S)
+    (by exact normalCfcScalarContent_nonneg U hU S)
+    (by exact normalCfcScalarContent_le_norm_sq U hU S)
 
 /-- Polarization preserves the scalar measure on the diagonal. -/
 theorem normalCfcSesquilinearForm_apply_self
@@ -591,10 +599,10 @@ theorem normalCfcSesquilinearForm_apply_self
       (normalCfcScalarMeasure U hU x).real S := by
   exact boundedSesquilinearFormOfQuadratic_apply_self
     (normalCfcScalarContent U hU S)
-    (normalCfcScalarContent_smul U hU S)
-    (normalCfcScalarContent_parallelogram U hU S)
-    (normalCfcScalarContent_nonneg U hU S)
-    (normalCfcScalarContent_le_norm_sq U hU S) x
+    (by exact normalCfcScalarContent_smul U hU S)
+    (by exact normalCfcScalarContent_parallelogram U hU S)
+    (by exact normalCfcScalarContent_nonneg U hU S)
+    (by exact normalCfcScalarContent_le_norm_sq U hU S) x
 
 /-- The positive operator represented by the polarized scalar CFC measures at a set. -/
 noncomputable def normalCfcOperator
@@ -1300,7 +1308,8 @@ theorem normalCfcPVM_scalarMeasure
     normalCfcScalarMeasure U hU x (g ⁻¹' S)
   rw [inner_normalCfcOperator_self, Complex.ofReal_re, ofReal_measureReal]
 
-private def unitPole (U : E →L[ℂ] E) : Set (spectrum ℂ U) :=
+/-- The subset of the spectrum at the singular point of the inverse Cayley transform. -/
+def unitPole (U : E →L[ℂ] E) : Set (spectrum ℂ U) :=
   {z | (z : ℂ) = 1}
 
 omit [CompleteSpace E] in
@@ -1407,7 +1416,7 @@ private theorem inverseCayleyCoordinate_measurable :
 noncomputable def cayleyCoordinate (t : ℝ) : ℂ :=
   ((t : ℂ) - Complex.I) / ((t : ℂ) + Complex.I)
 
-private theorem cayleyCoordinate_measurable : Measurable cayleyCoordinate := by
+theorem cayleyCoordinate_measurable : Measurable cayleyCoordinate := by
   exact (Complex.measurable_ofReal.sub measurable_const).div
     (Complex.measurable_ofReal.add measurable_const)
 
@@ -1428,7 +1437,7 @@ private theorem cayleyCoordinate_norm (t : ℝ) : ‖cayleyCoordinate t‖ = 1 :
     zero_sub, mul_neg, neg_mul, neg_neg, Complex.add_re, add_zero,
     Complex.add_im, zero_add]
 
-private theorem cayleyCoordinate_bounded :
+theorem cayleyCoordinate_bounded :
     ∃ C, ∀ t, ‖cayleyCoordinate t‖ ≤ C := by
   refine ⟨1, fun t => ?_⟩
   rw [cayleyCoordinate_norm]
@@ -1507,7 +1516,7 @@ private theorem cayleyCoordinate_inverseCayleyCoordinate
 noncomputable def inverseCayleyPVM
     (U : E →L[ℂ] E) (hU : IsStarNormal U) : PVM E :=
   normalCfcPVM U hU (fun z => inverseCayleyCoordinate z)
-    (inverseCayleyCoordinate_measurable.comp measurable_subtype_coe)
+    (by exact inverseCayleyCoordinate_measurable.comp measurable_subtype_coe)
 
 private theorem normalCfcScalarMeasure_unitPole_eq_zero
     (U : E →L[ℂ] E) (hU : IsStarNormal U)

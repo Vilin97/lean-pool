@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import LeanPool.SpectralTheory.Spectral.Spectral.Uniqueness
+module
+
+public import LeanPool.SpectralTheory.Spectral.Spectral.Uniqueness
+
 
 /-!
 # Intrinsic statement of the unbounded spectral theorem
@@ -14,6 +17,8 @@ measure of a vector is fixed by the PVM's diagonal matrix coefficients, the
 operator domain is exactly the finite-second-moment space, and the operator's
 diagonal matrix coefficient is the first moment.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

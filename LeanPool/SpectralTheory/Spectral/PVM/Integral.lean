@@ -3,11 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import LeanPool.SpectralTheory.Spectral.PVM.Basic
-import Mathlib.MeasureTheory.Function.SimpleFunc
-import Mathlib.MeasureTheory.Function.SimpleFuncDense
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
-import Mathlib.Topology.UniformSpace.Dini
+module
+
+public import LeanPool.SpectralTheory.Spectral.PVM.Basic
+public import Mathlib.MeasureTheory.Function.SimpleFunc
+public import Mathlib.MeasureTheory.Function.SimpleFuncDense
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
+public import Mathlib.Topology.UniformSpace.Dini
+
 
 /-!
 # Bounded spectral integration
@@ -15,6 +18,8 @@ import Mathlib.Topology.UniformSpace.Dini
 This file constructs the spectral integral first for complex-valued simple functions and then for
 bounded measurable functions.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 
@@ -226,9 +231,7 @@ theorem PVM.norm_sq_simpleIntegral (E_pvm : PVM E) (f : SimpleFunc ℝ ℂ) (x :
     have hrealstar (r : ℝ) : star (r : ℂ) = (r : ℂ) := by
       rw [Complex.star_def, Complex.conj_ofReal]
     rw [starRingEnd_apply, hrealstar]
-    change ‖z‖ ^ 2 * (@inner ℂ E _ (E_pvm.proj (f ⁻¹' {z}) x) x).re -
-        0 * (@inner ℂ E _ (E_pvm.proj (f ⁻¹' {z}) x) x).im = _
-    ring
+    simp only [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
   simpa only [] using
     (Finset.sum_congr (s₁ := f.range) (s₂ := f.range) rfl (fun z hz => hterm z))
 

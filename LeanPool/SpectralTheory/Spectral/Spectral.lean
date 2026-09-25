@@ -4,15 +4,19 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
 
-import LeanPool.SpectralTheory.Spectral.Spectral.CayleyCalculus
-import LeanPool.SpectralTheory.Spectral.Spectral.Existence
-import LeanPool.SpectralTheory.Spectral.Spectral.FuncCalc
-import LeanPool.SpectralTheory.Spectral.Spectral.Intrinsic
-import LeanPool.SpectralTheory.Spectral.Spectral.Polarization
-import LeanPool.SpectralTheory.Spectral.Spectral.Uniqueness
+module
+
+public import LeanPool.SpectralTheory.Spectral.Spectral.CayleyCalculus
+public import LeanPool.SpectralTheory.Spectral.Spectral.Existence
+public import LeanPool.SpectralTheory.Spectral.Spectral.FuncCalc
+public import LeanPool.SpectralTheory.Spectral.Spectral.Intrinsic
+public import LeanPool.SpectralTheory.Spectral.Spectral.Polarization
+public import LeanPool.SpectralTheory.Spectral.Spectral.Uniqueness
+
 
 /-!
 # Spectral
 
 Supporting modules for lean-spectral-theory.
 -/
+

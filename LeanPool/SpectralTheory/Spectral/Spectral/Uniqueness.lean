@@ -3,11 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import LeanPool.SpectralTheory.Spectral.Stone.Theorem
-import LeanPool.SpectralTheory.Spectral.Spectral.FuncCalc
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.RestrictScalars
+module
+
+public import LeanPool.SpectralTheory.Spectral.Stone.Theorem
+public import LeanPool.SpectralTheory.Spectral.Spectral.FuncCalc
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
+public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.RestrictScalars
+
 
 /-!
 # Spectral theorem: measurable uniqueness
@@ -17,6 +20,8 @@ set. It compares their phase unitary groups through their common generator, reco
 measures from characteristic functions, and then recovers projections. It also shows that every
 representing PVM computes the selected measurable functional calculus.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory
 

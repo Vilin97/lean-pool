@@ -3,10 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Analysis.Calculus.Deriv.Shift
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import LeanPool.SpectralTheory.Spectral.Stone.Generator
+module
+
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Analysis.Calculus.Deriv.Shift
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+public import LeanPool.SpectralTheory.Spectral.Stone.Generator
+
 
 /-!
 # Self-adjointness of the Stone generator
@@ -15,6 +18,8 @@ This file shows the infinitesimal generator of a strongly continuous
 one-parameter unitary group is self-adjoint, via the group's unitarity and
 the fundamental theorem of calculus for the difference quotient.
 -/
+
+@[expose] public section
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]

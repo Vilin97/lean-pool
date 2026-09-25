@@ -7,8 +7,11 @@ Authors: Ezzeri Esa
 Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.SpectralTheory.Spectral.Spectral.Intrinsic
-import LeanPool.SpectralTheory.Spectral.Stone.Intrinsic
+module
+
+public import LeanPool.SpectralTheory.Spectral.Spectral.Intrinsic
+public import LeanPool.SpectralTheory.Spectral.Stone.Intrinsic
+
 
 /-!
 # Spectral theorem for unbounded self-adjoint operators (Solution)
@@ -20,6 +23,8 @@ copies. `spectral_theorem_intrinsic` and `stone_theorem_intrinsic` are
 restated and closed by transporting the library's theorems across that
 conversion.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory
 

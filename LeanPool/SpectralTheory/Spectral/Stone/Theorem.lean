@@ -3,8 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import LeanPool.SpectralTheory.Spectral.Stone.SelfAdjoint
-import LeanPool.SpectralTheory.Spectral.Spectral.Existence
+module
+
+public import LeanPool.SpectralTheory.Spectral.Stone.SelfAdjoint
+public import LeanPool.SpectralTheory.Spectral.Spectral.Existence
+
 
 /-!
 # Stone's theorem: unitary groups from self-adjoint generators
@@ -16,12 +19,15 @@ Stone's theorem in the direction from self-adjoint operators to unitary
 groups.
 -/
 
+@[expose] public section
+
 open MeasureTheory Filter
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
-private noncomputable def stonePhase (t r : ℝ) : ℂ :=
+/-- The complex unit phase at time `t` and spectral coordinate `r`. -/
+noncomputable def stonePhase (t r : ℝ) : ℂ :=
   Complex.exp (Complex.I * (t : ℂ) * (r : ℂ))
 
 private theorem stonePhase_measurable (t : ℝ) : Measurable (stonePhase t) := by
@@ -116,8 +122,10 @@ private theorem PVM.integral_const_mul_local (E_pvm : PVM E)
       rw [show E_pvm.integral fc hfc hbddc = c • 1 by
         exact E_pvm.integral_const_local c, smul_mul_assoc, one_mul]
 
-private noncomputable def spectralEvolution (E_pvm : PVM E) (t : ℝ) : E →L[ℂ] E :=
-  E_pvm.integral (stonePhase t) (stonePhase_measurable t) ⟨1, stonePhase_bounded t⟩
+/-- The bounded evolution operator obtained by integrating the unit phase against a PVM. -/
+noncomputable def spectralEvolution (E_pvm : PVM E) (t : ℝ) : E →L[ℂ] E :=
+  E_pvm.integral (stonePhase t) (by exact stonePhase_measurable t)
+    (by exact ⟨1, stonePhase_bounded t⟩)
 
 private theorem spectralEvolution_zero (E_pvm : PVM E) :
     spectralEvolution E_pvm 0 = 1 := by
@@ -147,7 +155,8 @@ private theorem spectralEvolution_add (E_pvm : PVM E) (s t : ℝ) :
   change E_pvm.integral (stonePhase (s + t)) (stonePhase_measurable (s + t))
       ⟨1, stonePhase_bounded (s + t)⟩ =
     E_pvm.integral (stonePhase s) (stonePhase_measurable s) ⟨1, stonePhase_bounded s⟩ *
-      E_pvm.integral (stonePhase t) (stonePhase_measurable t) ⟨1, stonePhase_bounded t⟩
+      E_pvm.integral (stonePhase t) (by exact stonePhase_measurable t)
+    (by exact ⟨1, stonePhase_bounded t⟩)
   calc
     E_pvm.integral (stonePhase (s + t)) (stonePhase_measurable (s + t))
         ⟨1, stonePhase_bounded (s + t)⟩ =
@@ -317,13 +326,14 @@ private theorem spectralEvolution_stronglyContinuous (E_pvm : PVM E) (x : E) :
     (ENNReal.ofReal_lt_ofReal_iff (sq_pos_of_pos hε)).1 hofReal
   exact (sq_lt_sq₀ (norm_nonneg _) hε.le).1 hsquare
 
-private noncomputable def spectralUnitaryGroup (E_pvm : PVM E) :
+/-- The strongly continuous unitary group assembled from spectral evolution operators. -/
+noncomputable def spectralUnitaryGroup (E_pvm : PVM E) :
     StrongContUnitary E where
   toFun := spectralEvolution E_pvm
-  isUnitary := spectralEvolution_unitary E_pvm
-  zero := spectralEvolution_zero E_pvm
-  add := spectralEvolution_add E_pvm
-  stronglyContinuous := spectralEvolution_stronglyContinuous E_pvm
+  isUnitary := by exact spectralEvolution_unitary E_pvm
+  zero := by exact spectralEvolution_zero E_pvm
+  add := by exact spectralEvolution_add E_pvm
+  stronglyContinuous := by exact spectralEvolution_stronglyContinuous E_pvm
 
 private noncomputable def stoneQuotient (t r : ℝ) : ℂ :=
   (Complex.I * (t : ℂ))⁻¹ * (stonePhase t r - stonePhase 0 r)

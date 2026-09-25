@@ -3,11 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import Mathlib.Algebra.QuadraticDiscriminant
-import Mathlib.Topology.Instances.RealVectorSpace
-import Mathlib.Analysis.Complex.Norm
-import Mathlib.Analysis.Normed.Operator.Bilinear
-import Mathlib.Analysis.InnerProductSpace.Dual
+module
+
+public import Mathlib.Algebra.QuadraticDiscriminant
+public import Mathlib.Topology.Instances.RealVectorSpace
+public import Mathlib.Analysis.Complex.Norm
+public import Mathlib.Analysis.Normed.Operator.Bilinear
+public import Mathlib.Analysis.InnerProductSpace.Dual
+
 
 /-!
 # Polarization of bounded quadratic forms
@@ -17,11 +20,14 @@ satisfying complex homogeneity and the parallelogram law. The diagonal of the re
 is the original quadratic form.
 -/
 
+@[expose] public section
+
 open scoped ComplexConjugate
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℂ V]
 
-private noncomputable def realPolarization (q : V → ℝ) (x y : V) : ℝ :=
+/-- The real polarization of a real-valued quadratic function. -/
+noncomputable def realPolarization (q : V → ℝ) (x y : V) : ℝ :=
   (q (x + y) - q (x - y)) / 4
 
 section
@@ -190,7 +196,8 @@ private theorem realPolarization_real_smul_right (r : ℝ) (x y : V) :
     realPolarization_real_smul_left q hq_smul hq_para hq_nonneg hq_le,
     realPolarization_symm q hq_smul]
 
-private noncomputable def complexPolarization (q : V → ℝ) (x y : V) : ℂ :=
+/-- The complex polarization formed from the real polarization. -/
+noncomputable def complexPolarization (q : V → ℝ) (x y : V) : ℂ :=
   (realPolarization q x y : ℂ) +
     Complex.I * (realPolarization q (Complex.I • x) y : ℂ)
 
@@ -349,13 +356,14 @@ private theorem norm_complexPolarization_le (x y : V) :
           (Complex.I • x) y)
     _ = 2 * ‖x‖ * ‖y‖ := by rw [norm_smul, Complex.norm_I, one_mul]; ring
 
-private noncomputable def polarizationLinearMap :
+/-- The sesquilinear map obtained by polarizing the quadratic function. -/
+noncomputable def polarizationLinearMap :
     V →ₛₗ[starRingEnd ℂ] V →ₗ[ℂ] ℂ :=
   LinearMap.mk₂'ₛₗ (starRingEnd ℂ) (RingHom.id ℂ) (complexPolarization q)
-    (complexPolarization_add_left q hq_smul hq_para)
-    (complexPolarization_smul_left q hq_smul hq_para hq_nonneg hq_le)
-    (complexPolarization_add_right q hq_smul hq_para)
-    (complexPolarization_smul_right q hq_smul hq_para hq_nonneg hq_le)
+    (by exact complexPolarization_add_left q hq_smul hq_para)
+    (by exact complexPolarization_smul_left q hq_smul hq_para hq_nonneg hq_le)
+    (by exact complexPolarization_add_right q hq_smul hq_para)
+    (by exact complexPolarization_smul_right q hq_smul hq_para hq_nonneg hq_le)
 
 /-- Polarization turns a nonnegative, norm-bounded complex quadratic function into a bounded
 sesquilinear form. The first argument is conjugate-linear and the second is linear. -/
@@ -363,7 +371,7 @@ noncomputable def boundedSesquilinearFormOfQuadratic :
     V →L⋆[ℂ] V →L[ℂ] ℂ :=
   LinearMap.mkContinuous₂
     (polarizationLinearMap q hq_smul hq_para hq_nonneg hq_le) 2
-    (norm_complexPolarization_le q hq_smul hq_para hq_nonneg hq_le)
+    (by exact norm_complexPolarization_le q hq_smul hq_para hq_nonneg hq_le)
 
 private theorem complexPolarization_self (x : V) :
     complexPolarization q x x = q x := by

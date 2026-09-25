@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import LeanPool.SpectralTheory.Spectral.Stone.Theorem
+module
+
+public import LeanPool.SpectralTheory.Spectral.Stone.Theorem
+
 
 /-!
 # Intrinsic statement of Stone's generator relation
@@ -15,6 +18,8 @@ theorem in both directions: every strongly continuous unitary group has a
 self-adjoint generator, and every self-adjoint operator generates such a
 group.
 -/
+
+@[expose] public section
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
