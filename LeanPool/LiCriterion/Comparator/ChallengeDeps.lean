@@ -3,6 +3,8 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
+
 
 /-
 Copyright (c) 2026 Nicholas Bulka. All rights reserved.
@@ -10,7 +12,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 SPDX-License-Identifier: Apache-2.0
 Authors: Nicholas Bulka
 -/
-import Mathlib.NumberTheory.LSeries.RiemannZeta
+public import Mathlib.NumberTheory.LSeries.RiemannZeta
 
 /-!
 ChallengeDeps.lean — the solution-side mirror of the Li-criterion definitions
@@ -34,6 +36,8 @@ directly. The proof lives in the LiCriterion library and is checked against the 
 stated Challenge declarations by the comparator (statement equality + axiom audit + kernel
 replay), via `Solution.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

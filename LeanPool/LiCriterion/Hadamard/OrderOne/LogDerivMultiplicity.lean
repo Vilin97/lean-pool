@@ -3,9 +3,11 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import Mathlib.Topology.Algebra.InfiniteSum.Real
-import LeanPool.LiCriterion.Hadamard.OrderOne.LogDeriv
+
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
+public import LeanPool.LiCriterion.Hadamard.OrderOne.LogDeriv
 
 /-!
 Multiplicity-aware log-derivative formulas for genus‑1 canonical products.
@@ -14,6 +16,8 @@ We model multiplicity by repeating each zero index `i` exactly `m i` times via t
 `Σ i, Fin (m i)`. This keeps the analytic infrastructure unchanged, and the resulting
 log-derivative series carries the expected multiplicity coefficient.
 -/
+
+@[expose] public section
 
 open Complex Filter
 open scoped BigOperators

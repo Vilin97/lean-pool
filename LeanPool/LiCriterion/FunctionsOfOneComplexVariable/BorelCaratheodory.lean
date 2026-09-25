@@ -3,6 +3,8 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
+
 
 /-
   Borel–Carathéodory Theorem
@@ -16,18 +18,20 @@ Authors: Nicholas Bulka
   where A = sup{Re(g(ζ)) : ‖ζ‖ = R}.
 -/
 
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Analytic.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Topology.MetricSpace.Basic
-import Mathlib.Analysis.Complex.Schwarz
-import Mathlib.Analysis.Complex.AbsMax
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Basic
+public import Mathlib.Topology.MetricSpace.Basic
+public import Mathlib.Analysis.Complex.Schwarz
+public import Mathlib.Analysis.Complex.AbsMax
 
 /-!
 # The Borel–Carathéodory inequality
 
 A bound on `‖g‖` on a disk in terms of the supremum of `re g` on a larger disk.
 -/
+
+@[expose] public section
 
 open Complex Real Filter Topology
 open scoped BigOperators ComplexConjugate

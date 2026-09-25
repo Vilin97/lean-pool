@@ -3,6 +3,8 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
+
 
 /-
 Copyright (c) 2026 Nicholas Bulka. All rights reserved.
@@ -10,8 +12,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 SPDX-License-Identifier: Apache-2.0
 Authors: Nicholas Bulka
 -/
-import LeanPool.LiCriterion.Comparator.ChallengeDeps
-import LeanPool.LiCriterion.Lc.LiCriterion.Fidelity
+public import LeanPool.LiCriterion.Comparator.ChallengeDeps
+public import LeanPool.LiCriterion.Lc.LiCriterion.Fidelity
 
 /-!
 Solution.lean — the UNTRUSTED comparator solution module: the statement of `Challenge.lean`,
@@ -38,6 +40,8 @@ STATUS: unconditional.  The two order inputs of `LiCriterion.li_criterion_rh_iff
 (`xi_hasFiniteOrder`, `xi_order_le_one`) are proved in `Lc/LiCriterion/XiGrowth.lean`, and
 both compared theorems report `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 open LiChallenge
 

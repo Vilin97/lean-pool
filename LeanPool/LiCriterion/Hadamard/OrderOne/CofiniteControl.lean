@@ -3,11 +3,13 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Normed.Group.InfiniteSum
-import Mathlib.Order.Filter.Cofinite
-import Mathlib.Topology.Algebra.InfiniteSum.Order
+
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Normed.Group.InfiniteSum
+public import Mathlib.Order.Filter.Cofinite
+public import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 Finiteness/escape-to-infinity lemmas for genus‑1 style summability hypotheses.
@@ -16,6 +18,8 @@ These are the “cheap topology” inputs used repeatedly when working with cano
 from summability of `1 / ‖z i‖^2` (and a nonzero hypothesis), we get that only finitely many
 indices have `‖z i‖ ≤ R` for any fixed `R > 0`.
 -/
+
+@[expose] public section
 
 open Filter
 

@@ -3,6 +3,8 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
+
 
 /-
   Li's Criterion for the Riemann Hypothesis
@@ -44,49 +46,51 @@ Authors: Nicholas Bulka
   non-vanishing conditions, close algebra with `field_simp` + `ring`.
 -/
 
-import Mathlib.Algebra.Ring.GeomSum
-import Mathlib.NumberTheory.LSeries.RiemannZeta
-import Mathlib.NumberTheory.LSeries.HurwitzZetaValues
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Complex.CauchyIntegral
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.Analytic.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Mathlib.Topology.Algebra.InfiniteSum.Basic
-import Mathlib.Topology.Instances.ENNReal.Lemmas
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Analytic.IsolatedZeros
-import Mathlib.Analysis.Analytic.Uniqueness
-import Mathlib.Algebra.Order.Algebra
-import Mathlib.Algebra.Order.Field.Power
-import Mathlib.Algebra.Order.Module.Field
-import Mathlib.Analysis.Normed.Group.Basic
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.Complex.LocallyUniformLimit
-import Mathlib.Analysis.Calculus.LogDerivUniformlyOn
-import Mathlib.Analysis.Normed.Group.FunctionSeries
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
-import Mathlib.Data.EReal.Inv
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Topology.Algebra.InfiniteSum.Order
-import Mathlib.Topology.MetricSpace.Bounded
-import LeanPool.LiCriterion.Lc.XiZeros
-import LeanPool.LiCriterion.Hadamard.Basic
-import LeanPool.LiCriterion.Hadamard.OrderOne.MultipliableFactors
-import LeanPool.LiCriterion.Lc.LiCriterion.MobiusMap
-import LeanPool.LiCriterion.Lc.LiCriterion.GenusOne
-import LeanPool.LiCriterion.Lc.LiCriterion.Pringsheim
+public import Mathlib.Algebra.Ring.GeomSum
+public import Mathlib.NumberTheory.LSeries.RiemannZeta
+public import Mathlib.NumberTheory.LSeries.HurwitzZetaValues
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Complex.CauchyIntegral
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+public import Mathlib.Topology.Algebra.InfiniteSum.Basic
+public import Mathlib.Topology.Instances.ENNReal.Lemmas
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Analytic.IsolatedZeros
+public import Mathlib.Analysis.Analytic.Uniqueness
+public import Mathlib.Algebra.Order.Algebra
+public import Mathlib.Algebra.Order.Field.Power
+public import Mathlib.Algebra.Order.Module.Field
+public import Mathlib.Analysis.Normed.Group.Basic
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+public import Mathlib.Analysis.Complex.LocallyUniformLimit
+public import Mathlib.Analysis.Calculus.LogDerivUniformlyOn
+public import Mathlib.Analysis.Normed.Group.FunctionSeries
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+public import Mathlib.Data.EReal.Inv
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Topology.Algebra.InfiniteSum.Order
+public import Mathlib.Topology.MetricSpace.Bounded
+public import LeanPool.LiCriterion.Lc.XiZeros
+public import LeanPool.LiCriterion.Hadamard.Basic
+public import LeanPool.LiCriterion.Hadamard.OrderOne.MultipliableFactors
+public import LeanPool.LiCriterion.Lc.LiCriterion.MobiusMap
+public import LeanPool.LiCriterion.Lc.LiCriterion.GenusOne
+public import LeanPool.LiCriterion.Lc.LiCriterion.Pringsheim
 
 /-! ## Basic setup and the key geometric observation
 
 These geometric facts connect the critical line to the unit circle via the
 Möbius transform z ↦ 1 - 1/z. This is essential in Li's proof.
 -/
+
+@[expose] public section
 
 open Complex Real Set Function Filter
 open scoped Topology ComplexConjugate

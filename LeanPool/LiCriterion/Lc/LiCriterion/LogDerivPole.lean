@@ -3,12 +3,14 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Analytic.IsolatedZeros
-import Mathlib.Analysis.Calculus.LogDeriv
-import Mathlib.Analysis.Normed.Field.Lemmas
-import Mathlib.Topology.NhdsWithin
+
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Analytic.IsolatedZeros
+public import Mathlib.Analysis.Calculus.LogDeriv
+public import Mathlib.Analysis.Normed.Field.Lemmas
+public import Mathlib.Topology.NhdsWithin
 
 /-!
 Pole/unboundedness lemmas for logarithmic derivatives.
@@ -16,6 +18,8 @@ Pole/unboundedness lemmas for logarithmic derivatives.
 These are used in the reverse direction of Li's criterion to turn a zero of a holomorphic
 function into an unboundedness statement for its logarithmic derivative.
 -/
+
+@[expose] public section
 
 open scoped Topology
 open Filter

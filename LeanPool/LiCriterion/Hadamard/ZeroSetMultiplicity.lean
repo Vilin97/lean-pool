@@ -3,6 +3,8 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
+
 
 /-
 Zeros with multiplicity for Hadamard factorization.
@@ -12,7 +14,7 @@ zeros) by also recording a multiplicity for each zero. The primary use is to def
 product where each Weierstrass factor occurs with the appropriate multiplicity.
 -/
 
-import LeanPool.LiCriterion.Hadamard.ZeroSet
+public import LeanPool.LiCriterion.Hadamard.ZeroSet
 
 /-!
 # Zero sets with multiplicity
@@ -20,6 +22,8 @@ import LeanPool.LiCriterion.Hadamard.ZeroSet
 `ZeroSetMultiplicity` refines `ZeroSet` with a multiplicity function, and re-indexes the zeros
 as a sigma type so that the factorization theorem applies without assuming simple zeros.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

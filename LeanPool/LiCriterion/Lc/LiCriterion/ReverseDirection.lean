@@ -3,16 +3,18 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import LeanPool.LiCriterion.Lc.LiCriterion.Basic
-import LeanPool.LiCriterion.Lc.LiCriterion.LogDerivPole
-import Mathlib.Analysis.Complex.TaylorSeries
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Analysis.Normed.Group.InfiniteSum
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Analysis.Normed.Module.Connected
-import Mathlib.Topology.Order.Compact
-import Mathlib.Topology.Order.OrderClosed
+
+public import LeanPool.LiCriterion.Lc.LiCriterion.Basic
+public import LeanPool.LiCriterion.Lc.LiCriterion.LogDerivPole
+public import Mathlib.Analysis.Complex.TaylorSeries
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Analysis.Normed.Group.InfiniteSum
+public import Mathlib.Analysis.RCLike.Basic
+public import Mathlib.Analysis.Normed.Module.Connected
+public import Mathlib.Topology.Order.Compact
+public import Mathlib.Topology.Order.OrderClosed
 
 /-!
 # Li positivity implies RH
@@ -21,6 +23,8 @@ The unconditional half of Li's criterion: if every Li–Keiper coefficient has n
 part then `φ = ξ ∘ (z ↦ 1/(1-z))` is zero-free on the unit disk, by a Pringsheim-type argument,
 and the functional equation pins every nontrivial zero to the critical line.
 -/
+
+@[expose] public section
 
 open Complex Real Set Function Filter
 open scoped Topology

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import LeanPool.LiCriterion.Hadamard.Basic
-import Mathlib.Algebra.Polynomial.Degree.SmallDegree
+
+public import LeanPool.LiCriterion.Hadamard.Basic
+public import Mathlib.Algebra.Polynomial.Degree.SmallDegree
 
 /-!
 Helper results used by the Hadamard/Li development.
@@ -13,6 +15,8 @@ Helper results used by the Hadamard/Li development.
 This file intentionally contains no global axioms: the deep factorization theorem itself is
 handled elsewhere; here we only record consequences and clean lemmas that downstream files use.
 -/
+
+@[expose] public section
 
 open Filter Topology Set Metric
 

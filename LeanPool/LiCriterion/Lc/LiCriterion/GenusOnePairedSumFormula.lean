@@ -3,6 +3,8 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
+
 
 /-
   Genus-1 paired sum formula portion of the Li-criterion development.
@@ -11,8 +13,8 @@ Authors: Nicholas Bulka
   the M-test + Cauchy inequality steps more manageable.
 -/
 
-import LeanPool.LiCriterion.Lc.LiCriterion.Basic
-import LeanPool.LiCriterion.Lc.LiCriterion.ReverseDirection
+public import LeanPool.LiCriterion.Lc.LiCriterion.Basic
+public import LeanPool.LiCriterion.Lc.LiCriterion.ReverseDirection
 
 /-! ## Genus‑1 paired sum formulation
 
@@ -26,6 +28,8 @@ whose canonical factors are the quadratic terms
 `xiPairedFactor ρ s = 1 - ((s - 1/2)/(ρ - 1/2))^2 = E₁(w)E₁(-w)`.
 This removes the linear divergence and restores absolute convergence
 under the genus‑1 hypothesis `∑ 1/‖ρ‖² < ∞`. -/
+
+@[expose] public section
 
 open Complex Real Set Function Filter
 open scoped Topology

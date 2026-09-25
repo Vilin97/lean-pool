@@ -3,6 +3,8 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
+
 
 /-
   Hadamard's Factorization Theorem
@@ -34,24 +36,26 @@ Authors: Nicholas Bulka
  - Conway, Chapter XI: Entire Functions
 -/
 
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Analytic.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
-import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
-import Mathlib.Analysis.InnerProductSpace.Laplacian
-import Mathlib.MeasureTheory.Integral.CircleAverage
-import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
-import Mathlib.Analysis.Complex.TaylorSeries
-import Mathlib.Analysis.Analytic.Order
-import Mathlib.Analysis.Normed.Module.MultipliableUniformlyOn
-import Mathlib.Topology.Algebra.InfiniteSum.UniformOn
-import Mathlib.Analysis.Complex.LocallyUniformLimit
-import Mathlib.Algebra.Polynomial.Degree.Defs
-import LeanPool.LiCriterion.FunctionsOfOneComplexVariable.EntireLog
-import LeanPool.LiCriterion.FunctionsOfOneComplexVariable.BorelCaratheodory
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.RestrictScalars
+public import Mathlib.Analysis.InnerProductSpace.Laplacian
+public import Mathlib.MeasureTheory.Integral.CircleAverage
+public import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
+public import Mathlib.Analysis.Complex.TaylorSeries
+public import Mathlib.Analysis.Analytic.Order
+public import Mathlib.Analysis.Normed.Module.MultipliableUniformlyOn
+public import Mathlib.Topology.Algebra.InfiniteSum.UniformOn
+public import Mathlib.Analysis.Complex.LocallyUniformLimit
+public import Mathlib.Algebra.Polynomial.Degree.Defs
+public import LeanPool.LiCriterion.FunctionsOfOneComplexVariable.EntireLog
+public import LeanPool.LiCriterion.FunctionsOfOneComplexVariable.BorelCaratheodory
 
 /-! ### Maximum modulus definition -/
+
+@[expose] public section
 
 open Complex Real Filter Topology MeasureTheory
 open scoped BigOperators ComplexConjugate

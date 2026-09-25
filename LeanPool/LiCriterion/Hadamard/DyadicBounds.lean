@@ -3,12 +3,14 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Topology.Algebra.InfiniteSum.Real
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
+public import Mathlib.Tactic
 
 /-!
 # Weighted dyadic sum bounds
@@ -16,6 +18,8 @@ import Mathlib.Tactic
 Real-power identities, shell estimates, and cofinal finite-sum bounds shared by
 simple-zero and multiplicity-weighted Hadamard growth estimates.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

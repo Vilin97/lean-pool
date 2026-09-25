@@ -3,9 +3,11 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import LeanPool.LiCriterion.Lc.LiCriterion.Basic
-import LeanPool.LiCriterion.Hadamard.OrderOne.OrderFromMaxModulus
+
+public import LeanPool.LiCriterion.Lc.LiCriterion.Basic
+public import LeanPool.LiCriterion.Hadamard.OrderOne.OrderFromMaxModulus
 
 /-!
 # The order of the completed zeta function `ξ`
@@ -35,6 +37,8 @@ critical strip, no Stirling expansion, and no growth bound for `ζ`.
 The elementary majorant `u ^ A * exp (-p u) ≤ exp (A log (A/p))` (`rpow_mul_exp_neg_le`) does the
 work that Stirling would otherwise do; it is just `log t ≤ t - 1`.
 -/
+
+@[expose] public section
 
 namespace LiCriterion.XiGrowth
 

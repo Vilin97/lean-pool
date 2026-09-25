@@ -3,9 +3,11 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import LeanPool.LiCriterion.Lc.LiCriterion.Basic
-import LeanPool.LiCriterion.Hadamard.General
+
+public import LeanPool.LiCriterion.Lc.LiCriterion.Basic
+public import LeanPool.LiCriterion.Hadamard.General
 
 /-!
 # The Hadamard bridge for `ξ`
@@ -13,6 +15,8 @@ import LeanPool.LiCriterion.Hadamard.General
 Specializes the general genus-1 Hadamard factorization to `riemannXi`, with multiplicities:
 the zero set of `ξ` as a `Hadamard.ZeroSetMultiplicity`, and the resulting `E₁` product.
 -/
+
+@[expose] public section
 
 open Complex
 

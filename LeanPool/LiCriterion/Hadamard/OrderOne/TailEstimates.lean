@@ -3,21 +3,25 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.Order.Archimedean.Basic
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Finset.Max
-import Mathlib.Data.Set.Card
-import Mathlib.Topology.Algebra.InfiniteSum.Real
-import LeanPool.LiCriterion.Hadamard.DyadicBounds
-import LeanPool.LiCriterion.Hadamard.OrderOne.CofiniteControl
-import LeanPool.LiCriterion.Hadamard.OrderOne.ZeroCountingBounds
+
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.Order.Archimedean.Basic
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Data.Set.Card
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
+public import LeanPool.LiCriterion.Hadamard.DyadicBounds
+public import LeanPool.LiCriterion.Hadamard.OrderOne.CofiniteControl
+public import LeanPool.LiCriterion.Hadamard.OrderOne.ZeroCountingBounds
 
 /-! ### Dyadic ball finsets under `∑ 1/‖z ρ‖² < ∞` -/
+
+@[expose] public section
 
 open scoped BigOperators
 

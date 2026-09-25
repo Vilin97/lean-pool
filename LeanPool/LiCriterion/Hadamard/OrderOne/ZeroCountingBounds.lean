@@ -3,11 +3,13 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import Mathlib.Data.Set.Card
-import Mathlib.Analysis.Analytic.Order
-import LeanPool.LiCriterion.Hadamard.ZeroCounting
-import LeanPool.LiCriterion.Hadamard.ZeroSet
+
+public import Mathlib.Data.Set.Card
+public import Mathlib.Analysis.Analytic.Order
+public import LeanPool.LiCriterion.Hadamard.ZeroCounting
+public import LeanPool.LiCriterion.Hadamard.ZeroSet
 
 /-!
 Zero counting bounds for a `ZeroSet` enumeration, in the order‑`≤ 1` regime.
@@ -16,6 +18,8 @@ This file bridges the Jensen/divisor-based counting lemma in
 `LZC/HadamardFactorization/ZeroCounting.lean` to the `ZeroSet`-based canonical
 product development.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

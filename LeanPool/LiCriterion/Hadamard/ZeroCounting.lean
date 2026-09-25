@@ -3,9 +3,11 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import Mathlib.Analysis.Complex.JensenFormula
-import LeanPool.LiCriterion.Hadamard.Basic
+
+public import Mathlib.Analysis.Complex.JensenFormula
+public import LeanPool.LiCriterion.Hadamard.Basic
 
 /-!
 Zero counting bounds from Jensen's formula.
@@ -16,6 +18,8 @@ if `order f ≤ 1`, then the number of (distinct) zeros in a disk grows like `O(
 We express “distinct zeros” using the `MeromorphicOn.divisor` support on a closed ball; for an
 analytic function this support is exactly the set of zeros in the ball (no poles).
 -/
+
+@[expose] public section
 
 open Complex Real Filter Topology MeasureTheory
 open scoped BigOperators

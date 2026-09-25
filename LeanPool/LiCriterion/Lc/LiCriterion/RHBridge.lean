@@ -3,12 +3,14 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Gamma.Deligne
-import Mathlib.NumberTheory.LSeries.Nonvanishing
-import LeanPool.LiCriterion.Lc.LiCriterion.GenusOnePairedSumFormula
-import LeanPool.LiCriterion.Lc.LiCriterion.HadamardBridge
-import LeanPool.LiCriterion.Lc.LiCriterion.HadamardSummabilityBridge
+
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Deligne
+public import Mathlib.NumberTheory.LSeries.Nonvanishing
+public import LeanPool.LiCriterion.Lc.LiCriterion.GenusOnePairedSumFormula
+public import LeanPool.LiCriterion.Lc.LiCriterion.HadamardBridge
+public import LeanPool.LiCriterion.Lc.LiCriterion.HadamardSummabilityBridge
 
 /-!
 # RH / Li Bridge
@@ -17,6 +19,8 @@ This file connects the project-local Li-criterion theorems to mathlib's
 `RiemannHypothesis`, and packages the clean Hadamard-order-one route to the final
 biconditional.
 -/
+
+@[expose] public section
 
 open Complex
 open scoped Topology

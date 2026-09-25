@@ -3,6 +3,8 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
+
 
 /-
   Möbius map geometry for Li's criterion.
@@ -16,7 +18,7 @@ Authors: Nicholas Bulka
   for `ρ ≠ 0`.
 -/
 
-import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Complex.Basic
 
 /-!
 # The Möbius map `z ↦ 1 - 1/z`
@@ -24,6 +26,8 @@ import Mathlib.Analysis.Complex.Basic
 Elementary norm and real-part identities for the map carrying the critical line to the unit
 circle, used to turn RH into a statement about the closed unit disk.
 -/
+
+@[expose] public section
 
 namespace LiCriterion
 

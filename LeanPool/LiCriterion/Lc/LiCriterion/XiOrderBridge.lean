@@ -3,9 +3,11 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import LeanPool.LiCriterion.Lc.LiCriterion.RHBridge
-import LeanPool.LiCriterion.Lc.LiCriterion.XiGrowth
+
+public import LeanPool.LiCriterion.Lc.LiCriterion.RHBridge
+public import LeanPool.LiCriterion.Lc.LiCriterion.XiGrowth
 
 /-!
 # The ξ order bridge — the last analytic input to the unconditional Li criterion
@@ -41,6 +43,8 @@ exponentially at `∞`, and its functional equation transports that decay to `0`
 Mellin integral against the two exponentials gives `‖ξ(s)‖ ≤ exp (O (‖s‖ log ‖s‖))` for every `s`,
 with no case split on the strip and no appeal to Stirling.  See the module docstring there.
 -/
+
+@[expose] public section
 
 namespace LiCriterion
 

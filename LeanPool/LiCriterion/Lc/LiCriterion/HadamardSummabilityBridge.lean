@@ -3,9 +3,11 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import LeanPool.LiCriterion.Lc.LiCriterion.Basic
-import LeanPool.LiCriterion.Hadamard.OrderOne.SummabilityMultiplicity
+
+public import LeanPool.LiCriterion.Lc.LiCriterion.Basic
+public import LeanPool.LiCriterion.Hadamard.OrderOne.SummabilityMultiplicity
 
 /-!
 # Hadamard Summability Bridge
@@ -13,6 +15,8 @@ import LeanPool.LiCriterion.Hadamard.OrderOne.SummabilityMultiplicity
 This file builds the clean bridge from Hadamard order-`≤ 1` hypotheses for `riemannXi`
 to the genus-one summability statements used by the Li-criterion development.
 -/
+
+@[expose] public section
 
 open Complex
 open scoped Topology

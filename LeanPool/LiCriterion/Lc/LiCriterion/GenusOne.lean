@@ -3,6 +3,8 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
+
 
 /-
   Genus-1 estimates for Li's criterion.
@@ -19,8 +21,8 @@ Authors: Nicholas Bulka
   by `C(m) / ‖ρ‖^2`, matching the genus-1 hypothesis.
 -/
 
-import Mathlib.Algebra.Ring.GeomSum
-import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Algebra.Ring.GeomSum
+public import Mathlib.Analysis.Complex.Basic
 
 /-!
 # Genus-1 pairing of the Li summands
@@ -28,6 +30,8 @@ import Mathlib.Analysis.Complex.Basic
 The core term `2 - (wᵐ + w⁻ᵐ)` and the identity pairing a zero `ρ` with `1 - ρ`, which is what
 makes the sum over zeros converge at genus 1.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

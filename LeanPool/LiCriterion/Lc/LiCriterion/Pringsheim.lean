@@ -3,14 +3,16 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Calculus.Deriv.Star
-import Mathlib.Analysis.MellinTransform
-import Mathlib.Analysis.SpecialFunctions.Complex.Arg
-import Mathlib.Analysis.SpecialFunctions.Pow.Complex
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.NumberTheory.LSeries.RiemannZeta
+
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Star
+public import Mathlib.Analysis.MellinTransform
+public import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+public import Mathlib.Analysis.SpecialFunctions.Pow.Complex
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Mathlib.NumberTheory.LSeries.RiemannZeta
 
 /-!
 Pringsheim-style tools for the reverse direction of Li’s criterion.
@@ -22,6 +24,8 @@ This file collects small, reusable lemmas about complex conjugation and derivati
 needed to reduce “nonnegativity of real parts” to “nonnegativity of coefficients” once we prove
 that the relevant Taylor coefficients are real.
 -/
+
+@[expose] public section
 
 open Complex
 open scoped ComplexConjugate

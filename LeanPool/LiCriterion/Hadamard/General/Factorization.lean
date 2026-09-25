@@ -3,6 +3,8 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
+
 
 /-
 # General-order Hadamard Factorization Theorem
@@ -81,13 +83,13 @@ $\le \lfloor \lambda \rfloor = p$. \qed
 \end{proof}
 -/
 
-import LeanPool.LiCriterion.Hadamard.DyadicBounds
-import LeanPool.LiCriterion.Hadamard.OrderOne.LogDerivMultiplicity
-import LeanPool.LiCriterion.Hadamard.OrderOne.SummabilityMultiplicity
-import LeanPool.LiCriterion.Hadamard.OrderOne.QuotientCancellation
-import LeanPool.LiCriterion.Hadamard.OrderOne.OrderFromMaxModulus
-import LeanPool.LiCriterion.Hadamard.ZeroSetMultiplicity
-import LeanPool.LiCriterion.Hadamard.Theorem
+public import LeanPool.LiCriterion.Hadamard.DyadicBounds
+public import LeanPool.LiCriterion.Hadamard.OrderOne.LogDerivMultiplicity
+public import LeanPool.LiCriterion.Hadamard.OrderOne.SummabilityMultiplicity
+public import LeanPool.LiCriterion.Hadamard.OrderOne.QuotientCancellation
+public import LeanPool.LiCriterion.Hadamard.OrderOne.OrderFromMaxModulus
+public import LeanPool.LiCriterion.Hadamard.ZeroSetMultiplicity
+public import LeanPool.LiCriterion.Hadamard.Theorem
 
 /-!
 ## Step 0. Preliminaries
@@ -99,6 +101,8 @@ currently hard-coded to `weierstrassE 1`. The general theorem needs the
 rank-`p` variant. We introduce it here so downstream lemmas can refer to
 it; the genus-1 version is a special case.
 -/
+
+@[expose] public section
 
 
 open scoped BigOperators

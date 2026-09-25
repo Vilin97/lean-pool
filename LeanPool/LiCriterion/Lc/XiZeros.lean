@@ -3,6 +3,8 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
+
 
 /-
   Zeros of the Xi Function
@@ -23,10 +25,10 @@ Authors: Nicholas Bulka
   Reference: Mathlib.NumberTheory.LSeries.RiemannZeta
 -/
 
-import Mathlib.NumberTheory.LSeries.RiemannZeta
-import Mathlib.NumberTheory.LSeries.Nonvanishing
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
+public import Mathlib.NumberTheory.LSeries.RiemannZeta
+public import Mathlib.NumberTheory.LSeries.Nonvanishing
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
 
 /-! ## Key Identity: ξ(s) = (1/2) s(s-1) Λ(s)
 
@@ -43,6 +45,8 @@ Substituting:
        = (1/2) s(s-1) Λ(s) + 0
        = (1/2) s(s-1) Λ(s)
 -/
+
+@[expose] public section
 
 open Complex
 open scoped BigOperators

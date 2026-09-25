@@ -3,9 +3,11 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import Mathlib.Order.LiminfLimsup
-import LeanPool.LiCriterion.Hadamard.Basic
+
+public import Mathlib.Order.LiminfLimsup
+public import LeanPool.LiCriterion.Hadamard.Basic
 
 /-!
 Order bounds from max-modulus bounds.
@@ -20,6 +22,8 @@ into an order bound `order f ≤ ρ`, where `order` is the `limsup` definition f
 It is used in the order-`≤ 1` Hadamard factorization proof to show the quotient
 `Q := f / P` has `order Q < 2`, hence is an exponential of a linear function.
 -/
+
+@[expose] public section
 
 namespace Hadamard
 

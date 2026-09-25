@@ -3,9 +3,11 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Analytic.Order
+
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Analytic.Order
 
 /-!
 Local quotient cancellation at a zero, counting multiplicity.
@@ -17,6 +19,8 @@ piecewise definition that is analytic at `a`.
 This is the pointwise ingredient needed to upgrade the “simple zeros” quotient arguments to the
 general multiplicity regime.
 -/
+
+@[expose] public section
 
 open Complex Filter Topology
 open scoped Topology

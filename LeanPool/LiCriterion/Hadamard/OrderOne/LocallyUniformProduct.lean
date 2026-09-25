@@ -3,15 +3,19 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import LeanPool.LiCriterion.Hadamard.Basic
-import LeanPool.LiCriterion.Hadamard.OrderOne.CofiniteControl
+
+public import LeanPool.LiCriterion.Hadamard.Basic
+public import LeanPool.LiCriterion.Hadamard.OrderOne.CofiniteControl
 
 /-!
 Local-uniform convergence (and hence holomorphy) of the genus‑1 Weierstrass product
 `∏' i, weierstrassE 1 (s / z i)` under the standard hypothesis `∑ 1/‖z i‖² < ∞`
 and a nonzero condition on the `z i`.
 -/
+
+@[expose] public section
 
 open Complex Filter
 open scoped BigOperators

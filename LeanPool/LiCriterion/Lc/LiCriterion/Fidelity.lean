@@ -3,8 +3,10 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import LeanPool.LiCriterion.Lc.LiCriterion.XiOrderBridge
+
+public import LeanPool.LiCriterion.Lc.LiCriterion.XiOrderBridge
 
 /-!
 # Fidelity: the Taylor coefficients are Li's `λₙ`
@@ -37,6 +39,8 @@ symmetric summation convention under which Li's formula actually holds, and
 `analyticOrderNatAt_riemannXi_one_sub` together with `zero_pairing` shows the pairing really is
 a symmetry of the zero multiset.
 -/
+
+@[expose] public section
 
 namespace LiCriterion
 

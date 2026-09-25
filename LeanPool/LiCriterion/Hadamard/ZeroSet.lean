@@ -3,6 +3,8 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
+
 
 /-
 Zero sets and canonical products used in the Hadamard factorization development.
@@ -11,7 +13,7 @@ This is factored out so downstream files can talk about “a chosen enumeration 
 without importing the (WIP) factorization proof in `FullTheorem.lean`.
 -/
 
-import LeanPool.LiCriterion.Hadamard.Basic
+public import LeanPool.LiCriterion.Hadamard.Basic
 
 /-!
 # Zero sets of entire functions
@@ -19,6 +21,8 @@ import LeanPool.LiCriterion.Hadamard.Basic
 The `ZeroSet` structure packaging the zeros of an entire function together with the data the
 Hadamard factorization needs, and the associated canonical product.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

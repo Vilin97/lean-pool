@@ -3,12 +3,14 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import Mathlib.Analysis.Calculus.LogDerivUniformlyOn
-import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
-import Mathlib.Analysis.SpecialFunctions.Log.Summable
-import LeanPool.LiCriterion.Hadamard.OrderOne.MultipliableFactors
-import LeanPool.LiCriterion.Hadamard.OrderOne.LocallyUniformProduct
+
+public import Mathlib.Analysis.Calculus.LogDerivUniformlyOn
+public import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+public import Mathlib.Analysis.SpecialFunctions.Log.Summable
+public import LeanPool.LiCriterion.Hadamard.OrderOne.MultipliableFactors
+public import LeanPool.LiCriterion.Hadamard.OrderOne.LocallyUniformProduct
 
 /-!
 Log-derivative control for genus‑1 canonical products.
@@ -16,6 +18,8 @@ Log-derivative control for genus‑1 canonical products.
 The key output is a pointwise formula for the logarithmic derivative of
 `w ↦ ∏' i, weierstrassE 1 (w / z i)` in terms of a (provably summable) partial-fraction series.
 -/
+
+@[expose] public section
 
 open Complex Filter
 open scoped BigOperators

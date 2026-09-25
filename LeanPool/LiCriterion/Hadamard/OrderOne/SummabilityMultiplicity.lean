@@ -3,11 +3,13 @@ Copyright (c) 2026 Nicholas Bulka. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicholas Bulka
 -/
+module
 
-import Mathlib.Analysis.Normed.Group.InfiniteSum
-import Mathlib.Data.Finset.Max
-import Mathlib.Order.Filter.AtTopBot.Basic
-import LeanPool.LiCriterion.Hadamard.OrderOne.TailEstimates
+
+public import Mathlib.Analysis.Normed.Group.InfiniteSum
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Order.Filter.AtTopBot.Basic
+public import LeanPool.LiCriterion.Hadamard.OrderOne.TailEstimates
 
 /-!
 ## Summability of `∑ analyticOrderNatAt(f, ρ) / ‖ρ‖²` from order-≤1 bounds
@@ -19,6 +21,8 @@ The key input is the Jensen/divisor bound upgraded to multiplicities
 (`ZeroCounting.sum_zeros_multiplicity_le_of_max_one_maxModulus`) and the derived `O(r^(1+ε))`
 bound in `TailEstimates.sum_multiplicity_zeros_le_rpow`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 
