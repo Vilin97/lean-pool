@@ -10173,7 +10173,8 @@ projects:
   - title: Davis–Kahan rotation of eigenvectors
     summary: Formalizes the sin-Theta, tan-Theta, sin-two-Theta, and tan-two-Theta theorem families
       from Section 2 of Davis and Kahan (1970), for real or complex separable Hilbert spaces, including
-      common-domain unbounded operators and symmetric-norm estimates.
+      common-domain unbounded operators and symmetric-norm estimates. The tan-Theta endpoint requires
+      Rayleigh–Ritz trial data with residual orthogonal to the trial subspace.
     branch: operator theory
     main_declarations:
     - RotationOfEigenvectors.sinTheta
@@ -10186,8 +10187,10 @@ projects:
       informal: A spectral gap controls the symmetric norm of the sine of the subspace angle by the
         corresponding residual norm.
     - declaration: RotationOfEigenvectors.tanTheta
-      informal: A directed spectral gap gives the tangent-angle residual estimate together with tangent
-        pole exclusion.
+      informal: For Rayleigh–Ritz trial data with residual orthogonal to the trial subspace,
+        a positive directed spectral gap between the trial compression and the unwanted
+        reducing block gives the symmetric-norm tangent-angle residual estimate and
+        tangent pole exclusion, assuming the residual has finite symmetric norm.
     - declaration: RotationOfEigenvectors.sinTwoTheta_directed
       informal: Under the printed oriented gap and common-domain self-adjointness hypotheses, twice
         the residual norm bounds the gap times the sine-double-angle norm.
