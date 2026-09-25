@@ -3,7 +3,10 @@ Copyright (c) 2026 Dhyey Dharmendrakumar Mavani, Nathan Pflueger. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhyey Dharmendrakumar Mavani, Nathan Pflueger
 -/
-import LeanPool.ChipFiring.ChipFiringWithLean.Orientation
+module
+
+public import LeanPool.ChipFiring.ChipFiringWithLean.Orientation
+
 
 /-!
 ## Experimental computational algorithms for chip-firing
@@ -17,6 +20,8 @@ as exploratory code rather than certified implementations of the textbook algori
 In particular, the core mathematical statements about $q$-reduced divisors, superstability,
 and Dhar's algorithm are proved elsewhere in the library.
 -/
+
+@[expose] public section
 
 namespace ChipFiring
 
@@ -32,15 +37,15 @@ open Finset BigOperators List
 def isEffective (D : CFDiv G) : Bool := decide (∀ v, D v ≥ 0)
 
 /-- A small size measure used only to set conservative default loop fuel. -/
-private def divisorMagnitude (G : CFGraph) (D : CFDiv G) : Nat :=
+def divisorMagnitude (G : CFGraph) (D : CFDiv G) : Nat :=
   ∑ v : G.V, Int.natAbs (D v)
 
 /-- Default fuel for greedy routines, scaled by the actual chip counts in the input. -/
-private def greedyFuel (G : CFGraph) (D : CFDiv G) : Nat :=
+def greedyFuel (G : CFGraph) (D : CFDiv G) : Nat :=
   (Fintype.card G.V + 1) * (divisorMagnitude G D + 1) ^ 2 + 1
 
 /-- Number of chips away from the source, used for the q-reduction loop budget. -/
-private def nonSourceChipCount (G : CFGraph) (q : G.V) (D : CFDiv G) : Nat :=
+def nonSourceChipCount (G : CFGraph) (q : G.V) (D : CFDiv G) : Nat :=
   ∑ v ∈ Finset.univ.erase q, Int.toNat (D v)
 
 /-- Fuel-bounded greedy borrowing loop, recording vertices visited and the accumulated

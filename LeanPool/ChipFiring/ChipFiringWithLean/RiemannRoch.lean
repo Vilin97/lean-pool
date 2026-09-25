@@ -3,7 +3,10 @@ Copyright (c) 2026 Dhyey Dharmendrakumar Mavani, Nathan Pflueger. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhyey Dharmendrakumar Mavani, Nathan Pflueger
 -/
-import LeanPool.ChipFiring.ChipFiringWithLean.RRGHelpers
+module
+
+public import LeanPool.ChipFiring.ChipFiringWithLean.RRGHelpers
+
 
 /-!
 # Riemann-Roch for graphs
@@ -12,6 +15,8 @@ The Riemann-Roch theorem for graphs and its main corollaries.
 
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Chapter 5.
 -/
+
+@[expose] public section
 
 namespace ChipFiring
 

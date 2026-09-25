@@ -3,10 +3,13 @@ Copyright (c) 2026 Dhyey Dharmendrakumar Mavani, Nathan Pflueger. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhyey Dharmendrakumar Mavani, Nathan Pflueger
 -/
-import Mathlib.Algebra.CharP.Defs
-import Mathlib.Algebra.Group.Subgroup.Finite
-import Mathlib.Analysis.Normed.Ring.Lemmas
-import Mathlib.Data.Matrix.Mul
+module
+
+public import Mathlib.Algebra.CharP.Defs
+public import Mathlib.Algebra.Group.Subgroup.Finite
+public import Mathlib.Analysis.Normed.Ring.Lemmas
+public import Mathlib.Data.Matrix.Mul
+
 
 /-!
 ## Chip-firing graphs
@@ -23,6 +26,8 @@ Riemann-Roch theorem for graphs.
 Many main theorems in this library require connectivity; see `graphConnected`. In those cases, a
 proof of connectivity must be provided as an additional argument.
 -/
+
+@[expose] public section
 
 namespace ChipFiring
 

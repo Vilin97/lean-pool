@@ -4,16 +4,19 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhyey Dharmendrakumar Mavani, Nathan Pflueger
 -/
 
-import LeanPool.ChipFiring.ChipFiringWithLean
-import LeanPool.ChipFiring.ChipFiringWithLean.Algorithms
-import LeanPool.ChipFiring.ChipFiringWithLean.Basic
-import LeanPool.ChipFiring.ChipFiringWithLean.CFGraphExample
-import LeanPool.ChipFiring.ChipFiringWithLean.Config
-import LeanPool.ChipFiring.ChipFiringWithLean.Orientation
-import LeanPool.ChipFiring.ChipFiringWithLean.PalomarSolution
-import LeanPool.ChipFiring.ChipFiringWithLean.RRGHelpers
-import LeanPool.ChipFiring.ChipFiringWithLean.Rank
-import LeanPool.ChipFiring.ChipFiringWithLean.RiemannRoch
+module
+
+public import LeanPool.ChipFiring.ChipFiringWithLean
+public import LeanPool.ChipFiring.ChipFiringWithLean.Algorithms
+public import LeanPool.ChipFiring.ChipFiringWithLean.Basic
+public import LeanPool.ChipFiring.ChipFiringWithLean.CFGraphExample
+public import LeanPool.ChipFiring.ChipFiringWithLean.Config
+public import LeanPool.ChipFiring.ChipFiringWithLean.Orientation
+public import LeanPool.ChipFiring.ChipFiringWithLean.PalomarSolution
+public import LeanPool.ChipFiring.ChipFiringWithLean.RRGHelpers
+public import LeanPool.ChipFiring.ChipFiringWithLean.Rank
+public import LeanPool.ChipFiring.ChipFiringWithLean.RiemannRoch
+
 
 /-!
 # Chip-Firing with Lean 4
@@ -25,3 +28,5 @@ Main declarations: `ChipFiring.Propositions.riemann_roch`, `ChipFiring.Propositi
 Tags: combinatorics
 MSC: 05C57, 14T20
 -/
+
+@[expose] public section

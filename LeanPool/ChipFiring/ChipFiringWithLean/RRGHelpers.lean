@@ -3,8 +3,11 @@ Copyright (c) 2026 Dhyey Dharmendrakumar Mavani, Nathan Pflueger. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhyey Dharmendrakumar Mavani, Nathan Pflueger
 -/
-import LeanPool.ChipFiring.ChipFiringWithLean.Orientation
-import LeanPool.ChipFiring.ChipFiringWithLean.Rank
+module
+
+public import LeanPool.ChipFiring.ChipFiringWithLean.Orientation
+public import LeanPool.ChipFiring.ChipFiringWithLean.Rank
+
 
 /-!
 ## Maximal superstable configurations and maximal unwinnable divisors
@@ -19,6 +22,8 @@ maximal unwinnable divisors:
   (`maximal_unwinnable_char`).
 - Every maximal unwinnable divisor has degree $g - 1$ (`maximal_unwinnable_deg`).
 -/
+
+@[expose] public section
 
 namespace ChipFiring
 
@@ -42,7 +47,7 @@ private lemma qReducedRep_spec {G : CFGraph}
 zeroing out the chips at $q$. -/
 noncomputable def qReducedConfig {G : CFGraph}
     (h_conn : graphConnected G) (q : G.V) (D : CFDiv G) : Config G q :=
-  toConfig ⟨qReducedRep h_conn q D, (qReducedRep_spec h_conn q D).2.1⟩
+  toConfig ⟨qReducedRep h_conn q D, (by exact (qReducedRep_spec h_conn q D).2.1)⟩
 
 /-- The canonical configuration attached to $D$ is superstable. -/
 private lemma qReducedConfig_superstable {G : CFGraph}

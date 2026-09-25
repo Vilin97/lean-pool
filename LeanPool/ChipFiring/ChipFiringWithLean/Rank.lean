@@ -3,7 +3,10 @@ Copyright (c) 2026 Dhyey Dharmendrakumar Mavani, Nathan Pflueger. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhyey Dharmendrakumar Mavani, Nathan Pflueger
 -/
-import LeanPool.ChipFiring.ChipFiringWithLean.Basic
+module
+
+public import LeanPool.ChipFiring.ChipFiringWithLean.Basic
+
 
 /-!
 ## The rank function
@@ -25,6 +28,8 @@ The rank is well-defined (`rank_exists`, `rank_unique`) and realized by the nonc
 A divisor $D$ is *maximal unwinnable* if it is unwinnable but $D + \delta_v$ is winnable
 for every vertex $v$. Such divisors arise in the proof of the Riemann-Roch theorem.
 -/
+
+@[expose] public section
 
 namespace ChipFiring
 

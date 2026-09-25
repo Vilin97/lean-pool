@@ -3,8 +3,11 @@ Copyright (c) 2026 Dhyey Dharmendrakumar Mavani, Nathan Pflueger. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhyey Dharmendrakumar Mavani, Nathan Pflueger
 -/
-import LeanPool.ChipFiring.ChipFiringWithLean.Config
-import Mathlib.Data.DFinsupp.Multiset
+module
+
+public import LeanPool.ChipFiring.ChipFiringWithLean.Config
+public import Mathlib.Data.DFinsupp.Multiset
+
 
 /-!
 ## Orientations of chip-firing graphs
@@ -30,6 +33,8 @@ The main results are:
 
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Theorem 4.8.
 -/
+
+@[expose] public section
 
 namespace ChipFiring
 

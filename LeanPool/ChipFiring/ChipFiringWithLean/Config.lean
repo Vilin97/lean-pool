@@ -3,7 +3,10 @@ Copyright (c) 2026 Dhyey Dharmendrakumar Mavani, Nathan Pflueger. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhyey Dharmendrakumar Mavani, Nathan Pflueger
 -/
-import LeanPool.ChipFiring.ChipFiringWithLean.Basic
+module
+
+public import LeanPool.ChipFiring.ChipFiringWithLean.Basic
+
 
 /-!
 ## Configurations and superstable configurations
@@ -22,6 +25,8 @@ superstable configuration.
 The quantity `outdegS G S v` counts edges from $v$ to vertices outside $S$, and is the
 relevant threshold for the superstability condition.
 -/
+
+@[expose] public section
 
 namespace ChipFiring
 

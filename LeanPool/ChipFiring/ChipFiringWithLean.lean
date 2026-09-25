@@ -5,17 +5,22 @@ Authors: Dhyey Dharmendrakumar Mavani, Nathan Pflueger
 -/
 -- This module serves as the root of the `ChipFiringWithLean` library.
 -- Import modules here that should be built as part of the library.
-import LeanPool.ChipFiring.ChipFiringWithLean.Basic
-import LeanPool.ChipFiring.ChipFiringWithLean.CFGraphExample
-import LeanPool.ChipFiring.ChipFiringWithLean.Config
-import LeanPool.ChipFiring.ChipFiringWithLean.Orientation
-import LeanPool.ChipFiring.ChipFiringWithLean.Algorithms
-import LeanPool.ChipFiring.ChipFiringWithLean.Rank
-import LeanPool.ChipFiring.ChipFiringWithLean.RRGHelpers
-import LeanPool.ChipFiring.ChipFiringWithLean.RiemannRoch
+module
+
+public import LeanPool.ChipFiring.ChipFiringWithLean.Basic
+public import LeanPool.ChipFiring.ChipFiringWithLean.CFGraphExample
+public import LeanPool.ChipFiring.ChipFiringWithLean.Config
+public import LeanPool.ChipFiring.ChipFiringWithLean.Orientation
+public import LeanPool.ChipFiring.ChipFiringWithLean.Algorithms
+public import LeanPool.ChipFiring.ChipFiringWithLean.Rank
+public import LeanPool.ChipFiring.ChipFiringWithLean.RRGHelpers
+public import LeanPool.ChipFiring.ChipFiringWithLean.RiemannRoch
+
 
 /-!
 # ChipFiringWithLean
 
 Chip firing, graph divisors, and their combinatorial properties.
 -/
+
+@[expose] public section
