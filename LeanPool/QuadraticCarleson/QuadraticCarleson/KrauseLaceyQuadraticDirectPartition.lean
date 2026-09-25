@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyGenerationLayers
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximalProof
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyBadScaleInputs
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyGenerationLayers
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximalProof
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyBadScaleInputs
 
 /-!
 # Smallest-selected-interval partition for the direct quadratic proof
@@ -18,6 +20,8 @@ strictly smaller selected intervals contained in `J`. Laminarity makes these
 regions pairwise disjoint, and they partition the carrier of every selected
 root using only selected subintervals of that root.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

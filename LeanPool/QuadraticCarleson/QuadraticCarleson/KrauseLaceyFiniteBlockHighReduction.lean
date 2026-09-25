@@ -3,11 +3,13 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteBlockSmoothIdentity
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleOffsetPointwise
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyZeroPhaseLowControl
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNormalizedBlockRadii
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteBlockSmoothIdentity
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleOffsetPointwise
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyZeroPhaseLowControl
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNormalizedBlockRadii
 
 /-!
 # Direct comparison of the paper's finite height blocks with high suffixes
@@ -16,6 +18,8 @@ The two smooth endpoints are rounded in the original spatial coordinates.
 Their common maximal-function error is independent of the modulation. Only
 the retained high block is dilated to unit phase.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal

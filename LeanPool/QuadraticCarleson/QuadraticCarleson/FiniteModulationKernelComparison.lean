@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveDyadicKernel
-import LeanPool.QuadraticCarleson.QuadraticCarleson.IntervalMaximalComparison
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveDyadicKernel
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.IntervalMaximalComparison
 
 /-!
 # The finite low-modulation block versus maximal truncations
@@ -25,6 +27,8 @@ and the project currently only defines the abstract sparse premise in
 `FiniteSparseMaximal`. Accordingly, this file proves the concrete pointwise
 comparison without postulating that external theorem.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Metric Set
 open scoped ENNReal NNReal

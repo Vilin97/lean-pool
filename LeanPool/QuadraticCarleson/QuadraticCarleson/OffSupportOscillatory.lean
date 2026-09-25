@@ -3,12 +3,14 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.WavePacket
-import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
-import Mathlib.Analysis.Calculus.Deriv.Support
-import Mathlib.Analysis.Complex.RealDeriv
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.WavePacket
+public import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+public import Mathlib.Analysis.Calculus.Deriv.Support
+public import Mathlib.Analysis.Complex.RealDeriv
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 
 /-!
 # Two-fold nonstationary phase away from a wave packet
@@ -18,6 +20,8 @@ equation (3.2) of the paper. The proof differentiates the phase in the
 original kernel variable twice; it does not use the erroneous square-root
 substitution displayed in the paper.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped Interval

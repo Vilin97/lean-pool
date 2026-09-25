@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectExceptionalPairing
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectLowPairing
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectExceptionalPairing
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectLowPairing
 
 /-!
 # One-offset closure for the direct quadratic proof
@@ -14,6 +16,8 @@ This module combines the checked low and high estimates for the regular
 output subcollection at one fixed offset. Exceptional outputs and finite
 offset summation are kept as subsequent, separate steps.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

@@ -3,11 +3,13 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteBlockHighReduction
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyHighSuffixDilationResolved
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticBlockConjugation
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseCommonErrorWeak
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteBlockHighReduction
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyHighSuffixDilationResolved
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticBlockConjugation
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseCommonErrorWeak
 
 /-!
 # Arbitrary finite nonzero modulation blocks
@@ -17,6 +19,8 @@ uniform logarithm-squared weak bound for every finite set of nonzero real
 modulations. Conjugation handles negative modulations with the same constant.
 The common maximal-function error is paid once for the whole family.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal ComplexConjugate

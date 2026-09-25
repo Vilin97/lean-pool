@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryOscillatoryScaling
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionLimit
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryOscillatoryScaling
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionLimit
 
 /-!
 # The lacunary principal-value operator and its ordinary Hilbert remainder
@@ -15,6 +17,8 @@ Hardy--Littlewood term is estimated by its proved weak `(1,1)` bound. The
 remaining ordinary Hilbert maximal level set is kept literally in the
 endpoint estimate, rather than being replaced by an unproved weak bound.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped ENNReal Topology

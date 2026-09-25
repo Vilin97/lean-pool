@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleOffsetPointwise
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleOffsetPointwise
 
 /-!
 # Smooth cutoffs in the normalized oscillatory range
@@ -14,6 +16,8 @@ The paper's finite height blocks have normalized smooth radii at least
 at scale `1`. Rounding in physical coordinates keeps its maximal-function
 error common across all modulations.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal

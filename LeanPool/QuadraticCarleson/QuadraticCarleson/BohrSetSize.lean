@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.BohrUnion
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.BohrUnion
 
 /-!
 # Size of an arbitrary large-frequency localized Bohr set
@@ -13,6 +15,8 @@ The size observation preceding Lemma `l:bohrintersection` in the paper is
 proved for every natural frequency at least one hundred. No divisibility
 condition is imposed. The radius range here includes the paper's range.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

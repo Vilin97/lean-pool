@@ -3,14 +3,16 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HarmonicPhaseSum
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingAmplitude
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticSmoothProjection
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertRepresentativeBridge
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HarmonicPhaseSum
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingAmplitude
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticSmoothProjection
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertRepresentativeBridge
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # The smooth-projection remainder in the direct quadratic proof
@@ -28,6 +30,8 @@ with a fixed, explicitly defined finite constant `C`. The last section
 records the finite square-summation argument for the errors: the paper's
 per-scale `L∞` and `L¹` bounds imply an `O(2⁻²ˢ V^(1/2))` `L²` sum.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set FourierTransform Metric Convolution
 open scoped ENNReal NNReal ContDiff SchwartzMap ComplexConjugate

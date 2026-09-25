@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyEnergyClassification
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardCrossRows
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleMaximal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyEnergyClassification
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardCrossRows
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleMaximal
 
 /-!
 # Fixed-physical-scale source summation for the scalar-standard branch
@@ -18,6 +20,8 @@ The crucial preliminary statement is that the diagonal energy over *all*
 source gaps still has no multiplicity: distinct bad-scale inputs have
 disjoint spatial supports.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

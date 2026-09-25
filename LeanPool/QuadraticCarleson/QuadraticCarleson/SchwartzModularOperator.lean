@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleSchwartz
-import LeanPool.QuadraticCarleson.QuadraticCarleson.ModularFailure
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleSchwartz
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.ModularFailure
 
 /-!
 # The measurable lacunary operator and its Schwartz modular estimate
@@ -17,6 +19,8 @@ The modular estimate is tested on compactly supported Schwartz functions,
 the literal intersection of Schwartz space with the paper's `L0Infinity`
 test domain. No operator on arbitrary `L0Infinity` is defined here.
 -/
+
+@[expose] public section
 
 open MeasureTheory Filter Set Asymptotics
 open scoped SchwartzMap Topology ENNReal

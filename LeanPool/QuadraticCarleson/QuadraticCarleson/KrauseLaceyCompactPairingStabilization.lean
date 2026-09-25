@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFullDyadicSparseTransfer
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFullDyadicSparseTransfer
 
 /-!
 # Stabilization of compactly supported dyadic pairings
@@ -13,6 +15,8 @@ Compact support makes sufficiently high dyadic convolutions vanish uniformly on 
 domain. Infinite high-pass actions and maximal tails therefore agree with finite models there,
 allowing finite sparse bounds to pass to the full operators.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Set
 open scoped ENNReal NNReal Topology

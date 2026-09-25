@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathlib.MeasureTheory.Integral.Bochner.Set
+
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-!
 # The cancellative Calderón--Zygmund bad-part estimate in one dimension
@@ -16,6 +18,8 @@ author. It is the form needed for the low oscillatory part of the positive
 theorem: an atom supported on an interval has mean zero, so subtracting the
 kernel at the interval center converts cancellation into spatial decay.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 

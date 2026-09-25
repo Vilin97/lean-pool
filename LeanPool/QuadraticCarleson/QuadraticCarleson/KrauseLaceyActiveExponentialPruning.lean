@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyRemovedCarlesonMass
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPrunedPhysicalMaximal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyRemovedCarlesonMass
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPrunedPhysicalMaximal
 
 /-!
 # Actual active-family pruning at an exponential cutoff
@@ -16,6 +18,8 @@ the total discarded interval length has the corresponding exponential
 bound. The retained genuine physical maximal operator has the proved
 linear-in-`s` Rademacher--Menshov loss.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

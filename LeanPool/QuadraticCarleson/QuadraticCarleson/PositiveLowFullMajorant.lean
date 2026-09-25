@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelRealMaximal
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightFullEndpoint
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelRealMaximal
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightFullEndpoint
 
 /-!
 # A common measurable majorant for the full low contribution
@@ -14,6 +16,8 @@ The atomwise majorant is cut off on the complement of the triple interval.
 Its countable sum is measurable, unlike an arbitrary uncountable supremum.
 The paper's exceptional set uses the larger fivefold intervals.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Function

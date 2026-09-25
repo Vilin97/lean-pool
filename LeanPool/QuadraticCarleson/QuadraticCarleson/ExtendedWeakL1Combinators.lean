@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KaltonPaperApplication
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KaltonPaperApplication
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximal
 
 /-!
 # Elementary weak-L¹ combinators for extended nonnegative outputs
@@ -13,6 +15,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximal
 These lemmas transfer distribution estimates through the concrete pointwise
 comparison `F ≤ 2 H + 16 M` used for the finite low-modulation block.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

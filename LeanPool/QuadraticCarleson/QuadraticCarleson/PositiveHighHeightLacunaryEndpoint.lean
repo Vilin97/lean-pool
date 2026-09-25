@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightFullEndpoint
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightFullEndpoint
 
 /-!
 # The lacunary high contribution
@@ -14,6 +16,8 @@ The already proved real-parameter quadratic decay is stronger than needed for
 the lacunary modulation set. We first estimate that real-parameter high part,
 and then restrict the supremum to the paper's dyadic modulations.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Function

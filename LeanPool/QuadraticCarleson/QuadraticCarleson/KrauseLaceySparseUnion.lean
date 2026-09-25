@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingExtraction
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingExtraction
 
 /-!
 # Sparse unions over disjoint spatial branches
@@ -14,6 +16,8 @@ each pairwise-disjoint stopping child. This file proves that their union is
 sparse with exactly the same density. The proof transports the individual
 major subsets through the unique branch containing each interval.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

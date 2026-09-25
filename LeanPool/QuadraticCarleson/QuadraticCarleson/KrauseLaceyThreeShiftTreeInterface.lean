@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftGrid
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyBadScaleInputs
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingRecursion
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftGrid
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyBadScaleInputs
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingRecursion
 
 /-!
 # The finite three-shift grids satisfy the KL bad-scale tree interface
@@ -15,6 +17,8 @@ This file connects the concrete complete descendant trees in each of the
 three translated dyadic grids with the abstract parent-closure hypothesis
 used in the local Krause--Lacey bad-scale estimates.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

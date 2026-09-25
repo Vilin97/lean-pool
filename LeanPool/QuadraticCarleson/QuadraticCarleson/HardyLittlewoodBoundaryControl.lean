@@ -3,15 +3,17 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySharpSmoothAdapter
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximalLp
-import LeanPool.QuadraticCarleson.QuadraticCarleson.ExtendedWeakL1Combinators
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximalProof
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleSparseAdapter
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleBlockWeak
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryOscillatoryScaling
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositivePrincipalValueEndpoints
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySharpSmoothAdapter
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximalLp
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.ExtendedWeakL1Combinators
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximalProof
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleSparseAdapter
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleBlockWeak
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryOscillatoryScaling
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositivePrincipalValueEndpoints
 
 /-!
 # The Hardy--Littlewood boundary term in the sharp/smooth KL comparison
@@ -27,6 +29,8 @@ inside the individual Krause--Lacey sparse forms: after taking the finite
 modulation maximum it is still a single maximal function, hence incurs no
 cardinality loss.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Metric
 open scoped ENNReal NNReal Topology

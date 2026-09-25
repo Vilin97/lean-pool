@@ -3,12 +3,14 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-import Mathlib.MeasureTheory.Group.Integral
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
-import Mathlib.Analysis.Calculus.BumpFunction.Normed
+
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+public import Mathlib.MeasureTheory.Group.Integral
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
+public import Mathlib.Analysis.Calculus.BumpFunction.Normed
 
 /-!
 # The normalized wave packet used in the negative endpoint construction
@@ -17,6 +19,8 @@ Section 3 fixes an even, nonnegative, smooth function supported in
 `[-1/4, 1/4]` and having integral one. Mathlib's normalized smooth bump
 provides this function directly.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Metric Set
 open scoped ContDiff

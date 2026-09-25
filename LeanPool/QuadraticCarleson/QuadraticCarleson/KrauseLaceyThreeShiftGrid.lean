@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundDyadicStopping
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyShiftedLocalization
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundDyadicStopping
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyShiftedLocalization
 
 /-!
 # The finite three-shift grids in the Krause--Lacey reduction
@@ -17,6 +19,8 @@ central thirds partition the line. This file first establishes the exact
 laminar geometry within each translated grid. The finite support and
 three-grid reconstruction are developed from this representation below.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

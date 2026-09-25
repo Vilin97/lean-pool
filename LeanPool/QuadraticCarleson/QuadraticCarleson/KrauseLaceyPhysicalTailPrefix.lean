@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyActivePaperCutoff
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyActivePaperCutoff
 
 /-!
 # Physical length tails versus regenerated minimal-layer prefixes
@@ -14,6 +16,8 @@ that chain the actual regenerated labels respect inclusion. Thus every
 physical length tail is a full prefix minus one smaller prefix. Numerical
 labels from a different family are never identified.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

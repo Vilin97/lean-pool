@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Analysis.Real.Pi.Bounds
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticL2Decay
+
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticL2Decay
 
 /-!
 # Uniform quadratic correlation estimates
@@ -18,6 +20,8 @@ paper's exact `2π` exponential normalization and give an explicit dyadic
 decay specialization. The maximal L² operator estimate still requires the
 linearization, `TT*` representation, and maximal-function argument.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped Interval

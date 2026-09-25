@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import LeanPool.QuadraticCarleson.QuadraticCarleson.BohrIntersection
+
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.BohrIntersection
 
 /-!
 # Unions of consecutive dyadic Bohr sets
@@ -22,6 +24,8 @@ range includes the paper's `c < 10^(-10)`. The absolute lower-bound
 constants are `1/768` for integer blocks and `1/1536` for real windows. The
 uniform consequence quantifies an arbitrary fixed `a > 0` with `Bc ≥ a`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal InnerProductSpace

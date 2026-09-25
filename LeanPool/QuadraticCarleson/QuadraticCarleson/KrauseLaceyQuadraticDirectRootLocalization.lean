@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectOneOffset
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectOneOffset
 
 /-!
 # Root localization for the direct quadratic proof
@@ -13,6 +15,8 @@ The localized tail is supported in its root interval. This module replaces
 the test function by its root indicator, allowing the direct `L²` proof to use
 the paper's root-local `p`-mass hypothesis without imposing a global one.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

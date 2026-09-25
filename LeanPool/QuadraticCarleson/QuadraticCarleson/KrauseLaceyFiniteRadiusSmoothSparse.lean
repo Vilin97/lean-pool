@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyCompactPairingStabilization
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyCompactPairingStabilization
 
 /-!
 # Sparse control of finite-radius smooth maximal operators
@@ -13,6 +15,8 @@ A common lower dyadic index controls any finite collection of positive radii. Po
 domination by dyadic smooth high-pass maxima then yields sparse bounds for the finite-radius
 operator.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Set
 open scoped ENNReal NNReal Topology

@@ -3,15 +3,19 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.MeasureTheory.Function.Floor
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
+
+public import Mathlib.MeasureTheory.Function.Floor
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
 
 /-!
 # Elementary phase and Bohr-set lemmas
 
 These are the first checked ingredients for Section 3 of the paper.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 

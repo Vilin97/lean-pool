@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundLevelRecombination
-import Mathlib.MeasureTheory.Covering.DensityTheorem
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundLevelRecombination
+public import Mathlib.MeasureTheory.Covering.DensityTheorem
 
 /-!
 # A one-dimensional Calderón--Zygmund covering at height one
@@ -20,6 +22,8 @@ differentiation theorem. Selection of intervals with the additional upper
 average bound needed for the sharp height-two good part is deliberately left
 to a subsequent stopping-time refinement.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Metric Set
 open scoped ENNReal BigOperators Function Topology

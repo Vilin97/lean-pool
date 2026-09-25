@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticL2AdjointTransfer
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticL2AdjointTransfer
 
 /-!
 # Averaging the concrete fixed-height quadratic correlation majorant
@@ -15,6 +17,8 @@ width `2 * S`. Each term is a centered averaging kernel times a constant
 proportional to `u`. This file makes that conversion and the finite maximal
 linearization explicit.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Metric
 open scoped ENNReal NNReal

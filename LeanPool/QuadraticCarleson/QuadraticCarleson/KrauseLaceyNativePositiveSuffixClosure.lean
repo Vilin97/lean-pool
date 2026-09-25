@@ -3,11 +3,13 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyAnnularSparseTransfer
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveSuffixThreeShift
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseUnion
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftTreeInterface
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyAnnularSparseTransfer
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveSuffixThreeShift
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseUnion
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftTreeInterface
 
 /-!
 # Native positive suffix closure from the one-node good estimate
@@ -19,6 +21,8 @@ dyadic trees. Everything after that hypothesis is finite and deterministic:
 the threshold-ten recursion, preservation of `1 / 4` sparseness, union over
 disjoint roots, and the three-shift reduction.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal

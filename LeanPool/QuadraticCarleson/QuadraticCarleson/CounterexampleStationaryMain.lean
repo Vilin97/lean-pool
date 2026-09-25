@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleMainTerm
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleMainTerm
 
 /-!
 # Identification of the stationary kernel main term
@@ -14,6 +16,8 @@ uses `e(2λjx)`. For dyadic (hence integer) `λ`, the `λj²` phase is one and
 the sign change is complex conjugation. This file records the exact identity,
 so the two finite sums have precisely the same norm.
 -/
+
+@[expose] public section
 
 open Set
 open scoped ComplexConjugate

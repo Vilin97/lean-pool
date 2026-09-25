@@ -3,13 +3,15 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.Calculus.Deriv.Inv
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
-import Mathlib.Analysis.Complex.RealDeriv
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
+
+public import Mathlib.Analysis.Calculus.Deriv.Pow
+public import Mathlib.Analysis.Calculus.Deriv.Inv
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
+public import Mathlib.Analysis.Complex.RealDeriv
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 
 /-!
 # Quadratic analytic inputs for fixed-height L² decay
@@ -20,6 +22,8 @@ set in (6.8). The resulting genuine real-parameter maximal L² estimate is prove
 in `QuadraticFixedHeightAveragingNorm`, with L² stability and a Lipschitz operator
 form in `QuadraticFixedHeightL2Stability`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped Interval

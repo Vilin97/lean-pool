@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.BohrIntersection
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.BohrIntersection
 
 /-!
 # The paper's distance-to-integers norm
@@ -13,6 +15,8 @@ The fractional-part formula already used by the Bohr-set proofs agrees with
 the minimum of the distances to all integers. On the paper's chosen
 representative interval `[-1/2, 1/2)`, it is the ordinary absolute value.
 -/
+
+@[expose] public section
 
 open Set
 

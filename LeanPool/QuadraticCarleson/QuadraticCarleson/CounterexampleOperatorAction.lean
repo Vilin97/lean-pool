@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportKernel
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportOscillatory
-import LeanPool.QuadraticCarleson.QuadraticCarleson.SchwartzModularOperator
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportKernel
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportOscillatory
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.SchwartzModularOperator
 
 /-!
 # The canonical operator on the counterexample away from its packets
@@ -17,6 +19,8 @@ argument. No pointwise value is assigned by convention: the equality follows
 from the proved symmetric-truncation limit because the test function vanishes
 near the singularity.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped SchwartzMap Topology

@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleFinalSummation
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CanonicalScaleAtomIntegrals
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleFinalSummation
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CanonicalScaleAtomIntegrals
 
 /-!
 # Genuine middle-range and complete lacunary low assembly
@@ -14,6 +16,8 @@ The actual canonical low-kernel action is split into its finite middle scale
 range and the very-small remainder. The frozen-range error is bounded by the
 same already-estimated very-small triangle majorant.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

@@ -3,11 +3,13 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
-import Mathlib.Algebra.Order.Archimedean.Basic
-import Mathlib.Analysis.Calculus.BumpFunction.Basic
+
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
+public import Mathlib.Algebra.Order.Archimedean.Basic
+public import Mathlib.Analysis.Calculus.BumpFunction.Basic
 
 /-!
 # The dyadic kernels used in the positive estimate
@@ -17,6 +19,8 @@ the quadratic Hilbert kernel. The quotient defining a dyadic piece is given
 the value zero at the origin; this is not an arbitrary extension, since the
 numerator vanishes on a whole neighbourhood of the origin.
 -/
+
+@[expose] public section
 
 open Function Set
 open scoped ContDiff Topology

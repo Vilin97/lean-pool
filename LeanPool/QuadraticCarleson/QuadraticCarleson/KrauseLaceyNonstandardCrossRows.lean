@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardGenerations
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardGenerations
 
 /-!
 # Summable cross rows for the actual nonstandard bad pieces
@@ -13,6 +15,8 @@ The small intervals in a cross row need not be disjoint: their actual
 restricted bad-scale inputs have no multiplicity. This removes a potential
 generation-count loss from the two-scale correlation estimate.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ComplexConjugate

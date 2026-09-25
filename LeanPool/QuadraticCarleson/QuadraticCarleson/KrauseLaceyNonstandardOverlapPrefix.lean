@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardSubcollectionPrefix
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyGenerationOverlap
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardSubcollectionPrefix
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyGenerationOverlap
 
 /-!
 # Actual overlap bounds replace cardinality in the nonstandard prefix estimate
@@ -15,6 +17,8 @@ The transition from that count to a complete maximal-prefix bound is proved,
 including exact truncation of all higher generations. This is a composable
 consequence, not an assertion that the source's analytic pruning is finished.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

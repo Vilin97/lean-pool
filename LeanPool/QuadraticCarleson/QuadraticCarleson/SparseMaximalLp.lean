@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximalLp
-import LeanPool.QuadraticCarleson.QuadraticCarleson.IntervalMaximalComparison
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximalLp
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.IntervalMaximalComparison
 
 /-!
 # Strong bounds for the interval maximal averages in the sparse argument
@@ -14,6 +16,8 @@ This file combines the arbitrary-interval comparison with the genuine
 Hardy--Littlewood `L^q` theorem. It supplies the analytic maximal-function
 factor used in Lemma `l:weak11sparse` of the paper.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

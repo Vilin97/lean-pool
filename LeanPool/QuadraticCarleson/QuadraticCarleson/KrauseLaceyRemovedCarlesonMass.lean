@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyOverlapJohnNirenberg
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyOverlapJohnNirenberg
 
 /-!
 # Exponential control of the actual removed interval mass
@@ -14,6 +16,8 @@ of lengths of all removed intervals. This is stronger than just a weak
 bound for the overlap counting function and is the quantity used for the
 discarded contribution in KL18.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

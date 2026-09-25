@@ -3,11 +3,13 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleGeometry
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleLevelSet
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryPacketSum
-import LeanPool.QuadraticCarleson.QuadraticCarleson.StationaryPacketSum
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleGeometry
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleLevelSet
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryPacketSum
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.StationaryPacketSum
 
 /-!
 # Pointwise lower bound for the negative-endpoint counterexample
@@ -17,6 +19,8 @@ left tail, the stationary right tail, and the Bohr-set harmonic main term. The
 only remaining numerical input is a single inequality saying that the two
 proved errors fit inside half of the main-term lower bound.
 -/
+
+@[expose] public section
 
 open Finset Set
 

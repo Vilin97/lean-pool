@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingCountable
-import Mathlib.Topology.Instances.Rat
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingCountable
+public import Mathlib.Topology.Instances.Rat
 
 /-!
 # Fixed-scale parameter continuity and rational approximation of half-open bands
@@ -14,6 +16,8 @@ Continuity is asserted only with the spatial scale held fixed. The density
 lemma includes the lower endpoint by taking closure from inside the open
 band, so it never crosses a jump of the selected dyadic scale.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology

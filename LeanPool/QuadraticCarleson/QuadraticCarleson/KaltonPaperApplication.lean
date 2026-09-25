@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KaltonEndpoint
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KaltonEndpoint
 
 /-!
 # Countable block suprema followed by the paper's Kalton summation
@@ -15,6 +17,8 @@ apply the existing countable Kalton theorem to measurable, finitely supported,
 capped approximations. Their monotone limit recovers the exact countable
 expression, without assuming pointwise convergence of the original series.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped ENNReal Topology

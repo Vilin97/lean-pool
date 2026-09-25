@@ -3,11 +3,13 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteRadiusSmoothSparse
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseReflection
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFullDyadicSparseTransfer
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteRadiusSmoothSparse
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseReflection
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFullDyadicSparseTransfer
 
 /-!
 # The scale-offset bridge
@@ -27,6 +29,8 @@ bound for that comparison family is currently present in the project, so the
 premise is intentionally exposed rather than silently assuming the desired
 conclusion.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal Topology ComplexConjugate

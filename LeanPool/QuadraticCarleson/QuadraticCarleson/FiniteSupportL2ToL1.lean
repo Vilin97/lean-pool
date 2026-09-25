@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertPoissonFourier
-import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertPoissonFourier
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
 
 /-!
 # From L² approximation to L¹ on finite supports
@@ -13,6 +15,8 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
 Hölder's inequality bounds the L¹ norm by the L² norm times the square root of the support
 measure. The difference estimate preserves the common support in approximation arguments.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped ENNReal

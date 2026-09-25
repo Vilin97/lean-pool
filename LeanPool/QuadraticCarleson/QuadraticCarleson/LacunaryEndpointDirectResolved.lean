@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryFrozenBlockDirectResolved
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertMaximalWeakResolved
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryFrozenBlockDirectResolved
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertMaximalWeakResolved
 
 /-!
 # Unconditional lacunary principal-value endpoint
@@ -15,6 +17,8 @@ and exact frozen-block comparison discharge the last analytic input of the
 paper-facing endpoint. The theorem statement is the existing principal-value
 endpoint statement with its proved hypothesis supplied, not a modified bound.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal

@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStandardSourceSummation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStandardSourceSummation
 
 /-!
 # Regrouping the scalar-standard source gaps at a fixed physical scale
@@ -13,6 +15,8 @@ The finite identity below is the exact bookkeeping step used before the
 fixed-scale endpoint: the source-gap sum is regrouped by its parent interval.
 It does not use any cancellation or analytic estimate.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

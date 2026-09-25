@@ -3,12 +3,14 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.MeasureTheory.Group.Integral
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
+
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Mathlib.MeasureTheory.Group.Integral
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
 
 /-!
 # Interface to the Krause--Lacey sparse theorem
@@ -40,6 +42,8 @@ supremum is naturally extended-real-valued until almost-everywhere finiteness
 is established, while `TestOperator` is a total complex-valued function.
 Fixed truncations avoid that issue.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ComplexConjugate ENNReal Pointwise

@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseReflection
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFullDyadicSparseTransfer
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodBoundaryControl
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseReflection
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFullDyadicSparseTransfer
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodBoundaryControl
 
 /-!
 # Exact positive dilation and conjugation of smooth sparse bounds
@@ -27,6 +29,8 @@ from that latter input to this one still requires an annular comparison with
 a sparse maximal-average bound, or an extension of the unit analytic proof
 to arbitrary scale offsets; that additional implication is not assumed here.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal Topology ComplexConjugate

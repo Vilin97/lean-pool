@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingExtraction
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingExtraction
 
 /-!
 # Exact localized maximal recursion after Krause--Lacey stopping extraction
@@ -16,6 +18,8 @@ constructed good collection and the collections belonging to the selected
 children. This gives the actual pointwise and bilinear recursion without
 postulating any local oscillatory or sparse domination estimate.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryLowAssembly
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveFullOscillatoryEndpoint
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryLowAssembly
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveFullOscillatoryEndpoint
 
 /-!
 # Canonical lacunary oscillatory endpoint assembly
@@ -16,6 +18,8 @@ good-part estimate gives a universal-threshold endpoint for the original
 input. The individual frozen-block weak bound is the sole conditional
 analytic input; no operator decomposition is assumed.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

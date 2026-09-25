@@ -3,11 +3,13 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.WavePacket
-import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
-import Mathlib.Analysis.Calculus.ContDiff.Deriv
-import Mathlib.Analysis.Calculus.Deriv.Support
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.WavePacket
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.Analysis.Calculus.ContDiff.Deriv
+public import Mathlib.Analysis.Calculus.Deriv.Support
 
 /-!
 # All derivatives of the rescaled off-support packet
@@ -15,6 +17,8 @@ import Mathlib.Analysis.Calculus.Deriv.Support
 The packet's `r`-th derivative has the exact `L¹` scaling `t⁻¹ ^ r`.
 These facts provide the packet input for arbitrary-order integration by parts.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ContDiff

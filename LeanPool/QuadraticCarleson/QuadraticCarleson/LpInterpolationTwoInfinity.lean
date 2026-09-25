@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Integral
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 
 /-!
 # The special Marcinkiewicz interpolation step from `L²` to `L∞`
@@ -16,6 +18,8 @@ operator on measurable vector-valued functions, rather than postulating a
 bounded operator on an `Lp` completion. This is the interface satisfied by
 the concrete localized integral operator in the project.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Set
 open scoped ENNReal NNReal

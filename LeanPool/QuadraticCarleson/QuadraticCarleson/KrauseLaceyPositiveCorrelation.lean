@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyDyadicLocalization
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingCorrelation
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingSigned
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyDyadicLocalization
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingCorrelation
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingSigned
 
 /-!
 # The degree-two positive-half correlation in Krause--Lacey
@@ -23,6 +25,8 @@ integration-by-parts theorem. When the two modulations are both one, the
 quadratic term in the `TT*` phase cancels and its slope is the constant
 `4π(y-x)`. No local `L¹ → L^q` estimate or sparse bound is assumed here.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ComplexConjugate Interval

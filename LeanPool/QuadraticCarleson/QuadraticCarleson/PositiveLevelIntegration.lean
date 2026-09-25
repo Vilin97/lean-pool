@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveEndpointOptimization
-import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveEndpointOptimization
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 
 /-!
 # Measurable magnitude levels and endpoint-weight integration
@@ -15,6 +17,8 @@ in `PositiveEndpointOptimization` to the sums over the paper's magnitude sets
 `F_k`. Extended nonnegative integrals are used throughout, so no integrability
 or finiteness hypothesis is needed.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped ENNReal Topology

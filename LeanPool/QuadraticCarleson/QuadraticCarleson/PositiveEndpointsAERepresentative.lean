@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.L0InfinityAERepresentative
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryEndpointDirectResolved
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.L0InfinityAERepresentative
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryEndpointDirectResolved
 
 /-!
 # Endpoint bounds for arbitrary almost-everywhere measurable representatives
@@ -14,6 +16,8 @@ The paper's bounded compact-support input convention is insensitive to null
 sets. These statements supply actual principal values for raw inputs and the
 same modular bounds, without requiring the input itself to be Borel measurable.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal

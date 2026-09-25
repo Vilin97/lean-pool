@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleOperatorAction
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportOscillatoryAllOrders
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleOperatorAction
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportOscillatoryAllOrders
 
 /-!
 # The paper's off-support wave-packet lemma
@@ -15,6 +17,8 @@ operator applied to the fixed normalized packet. The approximation estimate
 includes zero modulation. The rapid-decay estimate applies to nonzero modulation,
 the natural domain of its inverse powers of the modulation parameter.
 -/
+
+@[expose] public section
 
 open Set
 open scoped SchwartzMap

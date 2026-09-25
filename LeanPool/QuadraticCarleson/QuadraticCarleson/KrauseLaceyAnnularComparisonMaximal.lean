@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleOffsetPointwise
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximalSparse
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleOffsetPointwise
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximalSparse
 
 /-!
 # The actual finite annular-comparison maximal operator
@@ -16,6 +18,8 @@ Its pointwise bound costs `24` copies of the centered maximal operator, and
 its sparse `(1,p)` bound is `11520 = 24 * 480` for every `p ≥ 1`.
 Neither estimate depends on the number of radii or on the modulation.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal Topology ComplexConjugate

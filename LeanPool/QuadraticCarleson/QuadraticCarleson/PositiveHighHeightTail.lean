@@ -3,12 +3,14 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightEstimate
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightL2Stability
-import Mathlib.Analysis.Convolution
-import Mathlib.Analysis.Normed.Group.FunctionSeries
-import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightEstimate
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightL2Stability
+public import Mathlib.Analysis.Convolution
+public import Mathlib.Analysis.Normed.Group.FunctionSeries
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
 
 /-!
 # The paper's strict high-height tail
@@ -17,6 +19,8 @@ The height parametrization `B + n + 1` is exactly `r > B`. The maximal tail
 is bounded by a measurable sum of the actual fixed-height maximal functions,
 whose L² norms form a geometric series with ratio `2^(-1/10)`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Function

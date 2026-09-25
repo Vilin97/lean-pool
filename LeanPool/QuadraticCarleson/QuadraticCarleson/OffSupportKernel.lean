@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
-import LeanPool.QuadraticCarleson.QuadraticCarleson.WavePacket
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.WavePacket
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-!
 # The quadratic kernel away from a wave packet
@@ -17,6 +19,8 @@ positive length `t`. The hypothesis that `x` is outside that interval makes
 the singular kernel an ordinary integrable function on the support of the
 packet.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

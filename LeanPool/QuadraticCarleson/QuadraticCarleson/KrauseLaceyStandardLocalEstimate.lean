@@ -3,11 +3,13 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyEnergyClassification
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPhysicalTailPrefix
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyRademacherMenshov
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPrunedPhysicalMaximal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyEnergyClassification
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPhysicalTailPrefix
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyRademacherMenshov
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPrunedPhysicalMaximal
 
 /-!
 # Scalar-standard local estimates
@@ -19,6 +21,8 @@ concrete minimal-generation `Lp` vectors, with the finite cardinality loss
 made explicit. Thus the result is a genuine finite physical-tail estimate,
 not a sparse or oscillatory conclusion.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

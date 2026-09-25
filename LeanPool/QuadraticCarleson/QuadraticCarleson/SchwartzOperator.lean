@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PVFourier
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticKernelLimit
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PVFourier
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticKernelLimit
 
 /-!
 # Quadratic Carleson operators on Schwartz functions
@@ -16,6 +18,8 @@ distribution with `y ↦ f (x - y)`. This file defines that action and proves
 that it is exactly the limit of the paper's symmetric truncations. It then
 defines the full and lacunary pointwise suprema.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory
 open scoped ENNReal SchwartzMap Topology

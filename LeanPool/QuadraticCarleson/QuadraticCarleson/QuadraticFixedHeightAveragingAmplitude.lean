@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveDyadicKernel
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingCorrelation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveDyadicKernel
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingCorrelation
 
 /-!
 # Concrete one-sided dyadic amplitudes for fixed-height quadratic decay
@@ -14,6 +16,8 @@ The positive half of the paper's annular dyadic kernel is a dilation of one
 fixed smooth compactly supported function. Uniform amplitude and derivative
 constants are derived from that fixed function, not supplied as assumptions.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal ContDiff

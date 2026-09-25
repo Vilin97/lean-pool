@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftTreeInterface
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftTreeInterface
 
 /-!
 # Finite compact-support localization into the three shifted grids
@@ -14,6 +16,8 @@ unique address in one of the three translated dyadic grids. This module
 turns that global partition into three finite subfamilies for a compactly
 supported input and proves exact reconstruction, including endpoints.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

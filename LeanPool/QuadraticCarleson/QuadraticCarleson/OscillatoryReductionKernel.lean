@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicKernelInfinite
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HarmonicPhaseSum
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicKernelInfinite
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HarmonicPhaseSum
 
 /-!
 # Exact scalar kernels for the oscillatory reduction
@@ -16,6 +18,8 @@ The high-pass kernel is exactly the sum of all nonnegative oscillatory heights.
 Subtracting two ordinary Hilbert truncations leaves a boundary annulus and a
 small-phase error supported in the inner interval.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Set
 open scoped ENNReal NNReal Topology

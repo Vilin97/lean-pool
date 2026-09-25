@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseCommonErrorWeak
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryFrozenInputL0
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleKalton
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseCommonErrorWeak
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryFrozenInputL0
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleKalton
 
 /-!
 # Passing a common-error finite maximum to the actual frozen block
@@ -16,6 +18,8 @@ logarithm-squared weak estimate for a finite family and a pointwise comparison
 with one common maximal-function error. The hypotheses are exposed until
 the concrete high-scale family is supplied.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

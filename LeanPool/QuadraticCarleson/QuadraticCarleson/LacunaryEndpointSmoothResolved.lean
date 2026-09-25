@@ -3,11 +3,13 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodBoundaryControl
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertMaximalWeakResolved
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySmoothSparseClosure
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodBoundaryControl
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertMaximalWeakResolved
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySmoothSparseClosure
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
 
 /-!
 # Lacunary endpoint with only the smooth sparse input remaining
@@ -16,6 +18,8 @@ This module combines the unconditional ordinary Hilbert maximal theorem with
 the smooth Krause--Lacey adapter. Thus the displayed theorem has exactly one
 analytic input: the genuine uniform finite-radius smooth sparse estimate.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal

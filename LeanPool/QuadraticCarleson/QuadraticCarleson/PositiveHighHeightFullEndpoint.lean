@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightWeighted
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightConvergence
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightWeighted
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightConvergence
 
 /-!
 # The full-operator high contribution is bounded by the L log L modular
@@ -16,6 +18,8 @@ summable. This theorem needs an explicit disjoint interval family, but no
 construction of a Calderón--Zygmund decomposition and no unproved operator
 estimate.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Function

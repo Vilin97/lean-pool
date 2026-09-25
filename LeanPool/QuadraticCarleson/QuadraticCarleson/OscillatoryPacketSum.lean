@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleMainTerm
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleOperatorAction
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleMainTerm
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleOperatorAction
 
 /-!
 # The oscillatory packet sum in the negative endpoint example
@@ -14,6 +16,8 @@ This file bounds the contribution of the packets to the left of an admissible
 observation point. The exact lower edge of the paper's exponent window turns
 the two-fold oscillatory estimate into a geometric series.
 -/
+
+@[expose] public section
 
 open Finset Set
 

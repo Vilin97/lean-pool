@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.MeasureTheory.Measure.Lebesgue.Integral
+
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Integral
 
 /-!
 # Antiderivatives of zero-integral Schwartz functions
@@ -19,6 +21,8 @@ All higher derivative bounds are inherited from the original function.
 Odd Schwartz functions have integral zero, and therefore have Schwartz
 antiderivatives.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Filter
 open scoped SchwartzMap Topology ContDiff

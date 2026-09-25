@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStandardSourceInterpolation
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPrunedPhysicalMaximal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStandardSourceInterpolation
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPrunedPhysicalMaximal
 
 /-!
 # Exact physical-scale recombination of the scalar-standard collection
@@ -20,6 +22,8 @@ retains precisely the layers with `ell ≤ j`. We also record the change of
 variables `ℓ = j - s`, under which the source-gap interval becomes exactly
 `k₀ ≤ ℓ ≤ j`.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

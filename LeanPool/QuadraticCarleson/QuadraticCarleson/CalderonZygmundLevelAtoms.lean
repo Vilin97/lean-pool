@@ -3,11 +3,13 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundBadPart
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveLevelIntegration
-import Mathlib.MeasureTheory.Integral.Average
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundBadPart
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveLevelIntegration
+public import Mathlib.MeasureTheory.Integral.Average
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 
 /-!
 # Calderón--Zygmund atoms on magnitude levels
@@ -20,6 +22,8 @@ used in the positive-endpoint argument. It does not assert the existence of
 a Calderón--Zygmund decomposition: the interval (or a disjoint family of
 intervals) is supplied explicitly.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal BigOperators Function

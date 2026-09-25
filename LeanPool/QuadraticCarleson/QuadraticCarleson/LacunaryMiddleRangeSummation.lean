@@ -3,11 +3,13 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleRange
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryVerySmallRange
-import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicAtomScales
-import Mathlib.Topology.Algebra.InfiniteSum.ENNReal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleRange
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryVerySmallRange
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicAtomScales
+public import Mathlib.Topology.Algebra.InfiniteSum.ENNReal
 
 /-!
 # Summation consequences for the lacunary middle range
@@ -29,6 +31,8 @@ the finite-modulation weak estimate on each `Q` block (and support vanishing
 for the too-large branch of the error); those are deliberately not encoded
 as arithmetic hypotheses here.
 -/
+
+@[expose] public section
 
 open Set
 open scoped ENNReal BigOperators

@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteRadiusSmoothSparse
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodBoundaryControl
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteRadiusSmoothSparse
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodBoundaryControl
 
 /-!
 # Arbitrary smooth radii versus adjacent dyadic radii
@@ -22,6 +24,8 @@ radii, so a common real scale offset is not incorrectly treated as preserving
 the original integer-dyadic lower index. Pairing comparisons use `normInput`
 on their right sides, avoiding cancellation of complex test functions.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal Topology ComplexConjugate

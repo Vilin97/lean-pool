@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyBadScaleInputs
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyBadScaleInputs
 
 /-!
 # Actual nonstandard intervals and their diagonal energy
@@ -14,6 +16,8 @@ the desired `L²` estimate. Its right side is the actual unit-window
 convolution of the restricted bad input. The diagonal estimate below is
 derived from this test and the proved stopping-cell local-mass bound.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ComplexConjugate

@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseInterface
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseInterface
 
 /-!
 # Reflection of sparse bounds
@@ -12,6 +14,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseInterface
 Reflection preserves the test-function class, interval lengths, sparsity, and local averages.
 These identities transfer sparse estimates between an operator and its reflected counterpart.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal Topology ComplexConjugate

@@ -3,11 +3,13 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertFiniteTruncationWeakOneOne
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.Topology.Order.IsLUB
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertFiniteTruncationWeakOneOne
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.Topology.Order.IsLUB
 
 /-!
 # Measurability of the quadratic maximal truncation
@@ -17,6 +19,8 @@ its positive radius. Hence its supremum over all positive real radii equals
 a supremum over one fixed countable dense family and is measurable. The
 argument applies to every measurable integrable input.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Set
 open scoped ENNReal Topology

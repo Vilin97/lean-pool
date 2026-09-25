@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
 
 /-!
 # Combining three sparse operator bounds
@@ -12,6 +14,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
 A pairing dominated by three component pairings inherits a sparse bound by combining the three
 sparse families and their quantitative estimates.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 

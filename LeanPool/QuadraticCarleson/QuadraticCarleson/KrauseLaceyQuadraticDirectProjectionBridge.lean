@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectProjectedTail
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticProjectionRemainder
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectScaleTails
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectProjectedTail
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticProjectionRemainder
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectScaleTails
 
 /-!
 # Projection bridge for the direct quadratic scale outputs
@@ -16,6 +18,8 @@ one convolution of the quadratic scale kernel against the corresponding
 assembled input. It also records the pointwise and local-mass estimates for
 that assembled input which are needed by the projection-remainder argument.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

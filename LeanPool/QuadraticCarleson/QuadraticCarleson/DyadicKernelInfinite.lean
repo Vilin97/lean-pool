@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveDyadicKernel
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveDyadicKernel
 
 /-!
 # Infinite telescoping of the positive-proof dyadic kernel
@@ -13,6 +15,8 @@ For a fixed nonzero spatial point, only finitely many of the dyadic pieces
 `ψ_{j+r}` with `r ≥ 0` are nonzero. Their infinite sum therefore telescopes
 exactly to the high-pass kernel used in the paper's oscillatory reduction.
 -/
+
+@[expose] public section
 
 open Filter Function Set
 open scoped Topology BigOperators

@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionSeries
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionSeries
 
 /-!
 # The exact oscillatory action on integrable inputs
@@ -13,6 +15,8 @@ The global annular amplitude bounds decay geometrically with the height.
 They justify the actual height series and its high-pass integral for every
 integrable input, without compact-support or convergence assumptions.
 -/
+
+@[expose] public section
 
 open MeasureTheory Filter Set
 open scoped ENNReal NNReal Topology

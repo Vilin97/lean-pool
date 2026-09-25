@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseInterface
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingAmplitude
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseInterface
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingAmplitude
 
 /-!
 # Dyadic localization in the Krause--Lacey sparse recursion
@@ -30,6 +32,8 @@ not asserted here: it is the remaining local oscillatory `L¹ → L^q` estimate.
 The results below prove its localization and stopping/packing framework, but
 do not replace that estimate by an assumption.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

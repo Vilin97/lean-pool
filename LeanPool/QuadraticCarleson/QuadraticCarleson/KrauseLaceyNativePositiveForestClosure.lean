@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNativePositiveSuffixClosure
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNativePositiveSuffixClosure
 
 /-!
 # Native positive sparse closure on a finite shifted forest
@@ -16,6 +18,8 @@ each component, and unite the resulting sparse families. Distinct roots in
 one shifted grid have disjoint carriers, so the sparsity density and analytic
 constant are unchanged.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal

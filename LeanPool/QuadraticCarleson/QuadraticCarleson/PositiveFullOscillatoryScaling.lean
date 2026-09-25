@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveFullOscillatoryEndpoint
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveFullOscillatoryEndpoint
 
 /-!
 # Arbitrary positive thresholds for the full oscillatory endpoint
@@ -13,6 +15,8 @@ Genuine scalar homogeneity of the proved oscillatory action reduces the
 threshold `α > 0` to the normalized theorem, with the exact source modular
 `∫ (|f|/α) log₁(|f|/α)` and the same universal constant.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

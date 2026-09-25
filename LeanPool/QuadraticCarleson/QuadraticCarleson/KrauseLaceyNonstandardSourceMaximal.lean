@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardPhysicalL2
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardPhysicalL2
 
 /-!
 # The exact source physical-suffix parameter range
@@ -14,6 +16,8 @@ nonstandard interval already has length at least `2^(k₀+s)`, so the
 all-integer maximal function is exactly this source-restricted maximum.
 No generation labels or reversed prefix convention enter this identity.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

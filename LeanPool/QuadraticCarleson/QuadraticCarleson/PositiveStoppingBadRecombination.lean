@@ -3,12 +3,16 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundStoppingIntervals
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundLevelRecombination
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightEstimate
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundStoppingIntervals
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundLevelRecombination
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightEstimate
 
 /-! # Exact canonical stopping bad-part recombination -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Function

@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyEnergyClassification
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyEnergyClassification
 
 /-!
 # The one-piece quadratic energy estimate
@@ -19,6 +21,8 @@ If a piece at physical length `R` has both bounds at size `M`, its squared
 `L²` norm is `O(M/R)` times its `L¹` mass. Substituting
 `M = A R 2^{-s}` gives the required `2^{-s}` gain.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

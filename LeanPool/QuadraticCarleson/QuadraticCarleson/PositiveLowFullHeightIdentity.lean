@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveLowFullEndpoint
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveLowFullEndpoint
 
 /-!
 # Exact agreement with the paper's finite low-height sum
@@ -13,6 +15,8 @@ This file commutes the finite height sum with the integral and changes
 variables to the paper's `b(x-t) ψ_j(t) e(λt²)` convention. Consequently the
 endpoint bound applies literally to the all-level finite-height formula.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Function

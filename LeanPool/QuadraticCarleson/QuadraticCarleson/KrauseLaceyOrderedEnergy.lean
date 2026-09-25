@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyRademacherMenshov
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyRademacherMenshov
 
 /-!
 # Ordered finite energy bookkeeping
@@ -13,6 +15,8 @@ An exact finite double-sum decomposition separates diagonal energy from
 strictly lower-rank cross rows. The result applies to arbitrary coefficients
 of absolute value at most one, without assuming a signed-sum estimate.
 -/
+
+@[expose] public section
 
 namespace QuadraticCarleson.KrauseLaceyOrderedEnergy
 

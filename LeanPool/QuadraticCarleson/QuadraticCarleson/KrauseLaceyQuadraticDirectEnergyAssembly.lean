@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectPartition
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticOnePieceEnergy
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectPartition
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticOnePieceEnergy
 
 /-!
 # Connecting the direct partition to quadratic one-piece energy
@@ -13,6 +15,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticOnePiece
 This file discharges the elementary geometric hypotheses of the direct
 quadratic energy estimate for the smallest-selected-interval scale pieces.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

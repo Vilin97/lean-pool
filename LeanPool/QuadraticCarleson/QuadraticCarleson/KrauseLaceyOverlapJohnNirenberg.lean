@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyOverlapStopping
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyOverlapStopping
 
 /-!
 # Exponential overlap decay from finite Carleson packing
@@ -13,6 +15,8 @@ A direct finite laminar-tree proof. No BMO or John--Nirenberg estimate is
 assumed: one-step Markov bounds and the maximal removed-interval geometry
 are iterated on actual descendant families.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

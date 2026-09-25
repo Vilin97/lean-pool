@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PVSymmetricLimit
-import Mathlib.MeasureTheory.Measure.Lebesgue.Integral
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PVSymmetricLimit
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Integral
 
 /-!
 # Differential prerequisites for the principal-value Fourier identity
@@ -22,6 +24,8 @@ to one explicitly stated generic prerequisite: every odd Schwartz function
 has a Schwartz antiderivative. The final conditional theorems expose that
 prerequisite; they do not assert an unconditional Fourier identification.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Filter FourierTransform LineDeriv
 open scoped SchwartzMap Topology

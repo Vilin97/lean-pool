@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportOscillatory
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportPacketDerivatives
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportOscillatory
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportPacketDerivatives
 
 /-!
 # Weighted off-support integration by parts
@@ -13,6 +15,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportPacketDerivatives
 The exact one-step recurrence for arbitrary packet derivatives and denominator
 powers. All integrations by parts take place strictly away from the pole.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped Interval

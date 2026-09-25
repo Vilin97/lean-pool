@@ -3,12 +3,14 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FullNegativeEndpoint
-import LeanPool.QuadraticCarleson.QuadraticCarleson.ExtendedWeakL1Combinators
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseInterface
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionMaximal
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveFullOscillatoryScaling
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FullNegativeEndpoint
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.ExtendedWeakL1Combinators
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseInterface
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionMaximal
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveFullOscillatoryScaling
 
 /-!
 # Passage from the oscillatory estimate to the full quadratic operator
@@ -17,6 +19,8 @@ The canonical truncation limsup at each modulation is bounded by the genuine
 maximal truncation. Combining this at modulation zero with the established
 oscillatory reduction gives a pointwise bound for the paper's full operator.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped ENNReal Topology

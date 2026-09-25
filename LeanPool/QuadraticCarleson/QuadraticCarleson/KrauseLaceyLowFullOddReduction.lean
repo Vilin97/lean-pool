@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyLowFullOddErrorKernel
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFullDyadicReflection
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyLowFullOddErrorKernel
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFullDyadicReflection
 
 /-!
 # The low full-odd quadratic block versus the ordinary Hilbert block
@@ -17,6 +19,8 @@ its unit quadratic phase with phase zero. Consecutive dyadic amplitudes
 telescopically cancel, so the phase error has a compactly supported kernel
 whose bound is independent of the number of low scales.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Metric Set
 open scoped ENNReal NNReal

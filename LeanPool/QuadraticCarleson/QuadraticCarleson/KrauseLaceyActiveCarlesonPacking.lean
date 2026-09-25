@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyActiveBadIntervals
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyActiveBadIntervals
 
 /-!
 # Carleson length packing for the genuine active nonstandard family
@@ -13,6 +15,8 @@ Every interval above the grouped base scale is charged to a contained
 selected bad cell, with exact length ratio `2^s`. No cell can be charged
 twice. The grouped base scale is handled separately by disjointness.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

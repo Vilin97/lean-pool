@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
 
 /-!
 # Conjugation of finite quadratic blocks
@@ -14,6 +16,8 @@ unchanged. Since the dyadic cutoff is real, conjugating the input therefore
 turns the negative-modulation block exactly into the conjugate of the
 positive-modulation block.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal ComplexConjugate

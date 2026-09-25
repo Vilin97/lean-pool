@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPStoppingRecursion
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNativePositiveSuffixClosure
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPStoppingRecursion
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNativePositiveSuffixClosure
 
 /-!
 # Positive one-node interface with genuine `p`-monitor stopping
@@ -13,6 +15,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNativePositiveSuf
 The good collection below is formed with `pStoppingMonitor g p hp`, while
 the pairing remains against the original `g`.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal

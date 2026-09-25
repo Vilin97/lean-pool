@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScalarNearLocalInterpolation
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleSummation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScalarNearLocalInterpolation
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleSummation
 
 /-!
 # Finite nonstandard one-node closure
@@ -19,6 +21,8 @@ The first theorem is the exact finite `p'` summation mechanism. It is
 separated from the operator-specific normalization so that no low-scale or
 whole-good-part estimate is smuggled into the statement.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal BigOperators

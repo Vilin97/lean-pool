@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardEnergy
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyGenerationLayers
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyRademacherMenshov
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardEnergy
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyGenerationLayers
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyRademacherMenshov
 
 /-!
 # Genuine nonstandard generation outputs in `L²`
@@ -15,6 +17,8 @@ The functions are the actual localized bad-scale operators, grouped by the
 proved minimal-generation construction. Disjoint output supports justify
 orthogonality within each generation. No signed-sum estimate is assumed.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ComplexConjugate

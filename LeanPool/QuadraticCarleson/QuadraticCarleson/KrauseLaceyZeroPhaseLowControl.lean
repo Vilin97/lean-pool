@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyLowFullOddReduction
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyCompactPairingStabilization
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyLowFullOddReduction
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyCompactPairingStabilization
 
 /-!
 # The phase-zero term in the low full-odd reduction
@@ -16,6 +18,8 @@ term common across all lacunary modulations and compares it directly with
 the ordinary maximal Hilbert transform. It therefore does not introduce an
 unnecessary sparse-domination theorem for the ordinary Hilbert transform.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal

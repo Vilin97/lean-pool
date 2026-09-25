@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectScaleEnergy
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticSmoothProjection
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectScaleEnergy
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticSmoothProjection
 
 /-!
 # Projected scale tails for the direct quadratic action
@@ -15,6 +17,8 @@ actual fixed-scale outputs of an arbitrary retained subcollection `A`. The
 smallest-selected-region partition continues to be formed from the ambient
 family `S`.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set FourierTransform
 open scoped ENNReal NNReal ContDiff SchwartzMap ComplexConjugate Convolution

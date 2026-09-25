@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.SchwartzModularOperator
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.SchwartzModularOperator
 
 /-!
 # The lacunary quadratic Carleson operator on the paper's full test domain
@@ -20,6 +22,8 @@ Whenever the symmetric principal value exists, the `limsup` equals its norm.
 In particular, the operator agrees pointwise with the distributionally defined
 operator on every Schwartz function.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped ENNReal SchwartzMap Topology

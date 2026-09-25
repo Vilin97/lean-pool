@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundLevelAtoms
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundLevelAtoms
 
 /-!
 # Recombining Calderón--Zygmund magnitude-level atoms
@@ -15,6 +17,8 @@ interval, local integrability justifies commuting the corresponding series
 with the interval integral and average, and hence recombining the level atoms
 into the ordinary centered atom.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal BigOperators Function Topology

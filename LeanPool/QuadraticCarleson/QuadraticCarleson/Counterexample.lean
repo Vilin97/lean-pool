@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.WavePacket
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.WavePacket
 
 /-!
 # The counterexample family for the negative endpoint theorem
@@ -12,6 +14,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.WavePacket
 This file formalizes the packet scales, intervals, and finite superposition
 `χ_N` introduced at the start of the proof of Theorem 1.
 -/
+
+@[expose] public section
 
 open Finset MeasureTheory Set
 

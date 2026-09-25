@@ -3,14 +3,16 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundDyadicStopping
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertFiniteTruncationWeakOneOne
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertL2Fourier
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionMaximal
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.Topology.Order.IsLUB
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundDyadicStopping
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertFiniteTruncationWeakOneOne
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertL2Fourier
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionMaximal
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.Topology.Order.IsLUB
 
 /-!
 # The ordinary maximally truncated Hilbert transform
@@ -20,6 +22,8 @@ countable reduction of the genuine supremum over all positive truncation
 radii. The reduction uses continuity in the truncation radius, proved
 directly from one-sided tail integrals.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Set
 open scoped ENNReal Topology

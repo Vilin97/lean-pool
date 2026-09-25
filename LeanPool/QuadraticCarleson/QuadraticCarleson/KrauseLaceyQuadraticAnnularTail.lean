@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximal
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertL2Fourier
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingNorm
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximal
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertL2Fourier
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingNorm
 
 /-!
 # Maximal tails of separated quadratic frequency pieces
@@ -24,6 +26,8 @@ The application-specific input may be supplied either pointwise through
 Fourier multipliers. No maximal-tail theorem or orthogonality principle is
 assumed here.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set FourierTransform Metric
 open scoped ENNReal NNReal ComplexConjugate

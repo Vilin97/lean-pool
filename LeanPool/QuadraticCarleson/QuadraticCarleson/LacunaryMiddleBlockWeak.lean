@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.ExtendedWeakL1Combinators
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleKalton
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.ExtendedWeakL1Combinators
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleKalton
 
 /-!
 # Reduction of a frozen middle block to a finite quadratic-Hilbert block
@@ -14,6 +16,8 @@ This file applies the smooth-kernel comparison to the genuine frozen inputs.
 It isolates the remaining finite-modulation estimate at precisely the sharp
 quadratic Hilbert maximal truncation occurring in the paper.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

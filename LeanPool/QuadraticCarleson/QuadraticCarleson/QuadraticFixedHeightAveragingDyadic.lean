@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingAmplitude
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingAmplitude
 
 /-!
 # Concrete fixed-height positive dyadic quadratic kernels
@@ -13,6 +15,8 @@ This is the dyadic-cutoff specialization of the finite annular maximal
 theorem. Every amplitude and height hypothesis is derived from the paper's
 actual cutoff and its exact oscillatory scale-selection rule.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

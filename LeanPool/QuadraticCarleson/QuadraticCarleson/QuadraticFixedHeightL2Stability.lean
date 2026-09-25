@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingNorm
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingNorm
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 
 /-!
 # Stability of the genuine fixed-height quadratic maximal operator
@@ -15,6 +17,8 @@ the input on a null set. Its real-valued representative has the same L² decay
 and satisfies a quantitative difference estimate. These are consequences of
 the proved c = 2 estimate, not additional hypotheses on the operator.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteRadiusAdapter
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryFrozenInputL0
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleFiniteRadiusLimit
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteRadiusAdapter
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryFrozenInputL0
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleFiniteRadiusLimit
 
 /-!
 # Applying a finite sparse maximum to the genuine frozen block
@@ -17,6 +19,8 @@ indexes the modulation block `Q B τ` by a finite type, applies the resulting
 finite maximum to the genuine compactly supported frozen input, and passes a
 uniform finite-radius weak bound to the full real-radius supremum.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

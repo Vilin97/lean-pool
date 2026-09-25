@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveCorrelation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveCorrelation
 
 /-!
 # Finite central-third localization at one dyadic scale
@@ -19,6 +21,8 @@ Grouping the tile index modulo three recovers the three shifted grids. The
 cross-scale nesting of each such group is left to the subsequent grid module;
 the results here close the finite, fixed-scale identity used before that step.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

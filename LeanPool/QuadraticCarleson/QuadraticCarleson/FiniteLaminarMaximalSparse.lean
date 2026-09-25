@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingExtraction
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximalProof
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingExtraction
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximalProof
 
 /-!
 # Sparse domination of a finite laminar maximal function
@@ -16,6 +18,8 @@ average more than ten times its average. This gives both a covering estimate
 and strict average separation of every nested pair of selected intervals.
 The actual maximal stopping children therefore supply the sparse major sets.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

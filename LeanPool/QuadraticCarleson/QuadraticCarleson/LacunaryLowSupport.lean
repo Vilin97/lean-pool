@@ -3,13 +3,15 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleRange
-import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicAtomScales
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundLevelAtoms
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelCalderonZygmund
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelLevelSummation
-import LeanPool.QuadraticCarleson.QuadraticCarleson.SchwartzOperator
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleRange
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicAtomScales
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundLevelAtoms
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelCalderonZygmund
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelLevelSummation
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.SchwartzOperator
 
 /-!
 # Support vanishing in the lacunary low branch
@@ -20,6 +22,8 @@ constant is stronger than the unspecified source constant: a low kernel at
 modulation `2^m` cannot connect an atom interval of length in scale `j` to a
 point outside its fivefold dilation when `m + 2j > 2B`.
 -/
+
+@[expose] public section
 
 open Function Set
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingRecursion
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingRecursion
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
 
 /-!
 # Stopping recursion with a separate `L^p` monitor
@@ -16,6 +18,8 @@ The children are selected using the compactly supported monitor
 `x ↦ ‖g x‖^p`, whereas the exact recursive pairing still contains the
 original test function `g`.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PrincipalValueDistribution
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PrincipalValueDistribution
 
 /-!
 # The quadratically modulated principal-value kernel
@@ -13,6 +15,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.PrincipalValueDistribution
 The kernel in the paper is the product of the smooth phase
 `y ↦ e(λ y²)` and the tempered distribution `p.v. (1 / y)`.
 -/
+
+@[expose] public section
 
 open scoped SchwartzMap
 

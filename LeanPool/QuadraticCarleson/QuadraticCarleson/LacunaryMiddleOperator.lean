@@ -3,11 +3,13 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryVerySmallOperator
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CanonicalScaleAtomIntegrals
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticHilbertMaximalMeasurable
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryVerySmallOperator
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CanonicalScaleAtomIntegrals
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticHilbertMaximalMeasurable
 
 /-!
 # Genuine inputs for the lacunary middle-range argument
@@ -18,6 +20,8 @@ signed error. It proves their exact algebraic recombination and the
 disjoint-scale `L¹` packing needed before the finite-modulation estimate and
 Kalton log-convexity are applied.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal BigOperators

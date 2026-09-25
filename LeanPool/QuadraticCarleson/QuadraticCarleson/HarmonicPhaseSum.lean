@@ -3,12 +3,14 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.NumberTheory.Harmonic.Bounds
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Analysis.Complex.ExponentialBounds
-import LeanPool.QuadraticCarleson.QuadraticCarleson.BohrIntersection
+
+public import Mathlib.NumberTheory.Harmonic.Bounds
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.BohrIntersection
 
 /-!
 # Almost constant phases in a harmonic sum
@@ -17,6 +19,8 @@ This file proves the arithmetic lower bound used after the construction of
 `E_N` in the negative endpoint argument. All sums are finite, and `phase`
 has the paper's exact normalization `exp(2π i s)`.
 -/
+
+@[expose] public section
 
 open Set
 

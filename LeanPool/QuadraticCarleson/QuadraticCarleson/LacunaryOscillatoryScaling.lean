@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryOscillatoryAssembly
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveFullOscillatoryScaling
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryOscillatoryAssembly
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveFullOscillatoryScaling
 
 /-!
 # Genuine lacunary homogeneity and arbitrary endpoint thresholds
@@ -15,6 +17,8 @@ Its individual frozen-block hypothesis is stated for that input, not
 transported through the nonlinear stopping decomposition. A uniform
 individual-block formulation is also supplied for the eventual KL theorem.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

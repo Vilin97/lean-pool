@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyActiveOverlapPruning
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyActiveOverlapPruning
 
 /-!
 # The source-size active overlap cutoff and its prefix estimate
@@ -14,6 +16,8 @@ at most `2s+1`. The pruned actual prefix estimate is unconditional. The
 exceptional-set result retained from the previous module is first-moment
 decay, not the stronger exponential tail needed to finish the source proof.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

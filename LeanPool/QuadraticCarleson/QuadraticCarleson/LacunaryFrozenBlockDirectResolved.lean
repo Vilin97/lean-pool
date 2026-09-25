@@ -3,12 +3,14 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteBlockHighReduction
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyHighSuffixDilationResolved
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryFrozenBlockCommonError
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleSparseAdapter
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryOscillatoryScaling
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteBlockHighReduction
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyHighSuffixDilationResolved
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryFrozenBlockCommonError
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleSparseAdapter
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryOscillatoryScaling
 
 /-!
 # The actual lacunary frozen-block estimate from the direct quadratic proof
@@ -17,6 +19,8 @@ The finite family contains only the paper's modulations. Each block is
 compared with a positive dilation of the proved high full-odd suffix maximum.
 The two endpoint errors stay outside this family as one common maximal term.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

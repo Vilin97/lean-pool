@@ -3,12 +3,14 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticAnnularTail
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveDyadicKernel
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertMaximalWeakOneOne
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertRepresentativeBridge
-import Mathlib.Analysis.Fourier.Convolution
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticAnnularTail
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveDyadicKernel
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertMaximalWeakOneOne
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertRepresentativeBridge
+public import Mathlib.Analysis.Fourier.Convolution
 
 /-!
 # Concrete smooth frequency cutoffs for the direct quadratic proof
@@ -19,6 +21,8 @@ which is identically one on the larger interval `[1/8, 2]` and is supported
 in `(1/16, 33/16)`. Its dyadic dilates are exactly disjoint after separating
 the scales into seven residue classes.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set FourierTransform Metric
 open scoped ENNReal NNReal ContDiff SchwartzMap ComplexConjugate Convolution

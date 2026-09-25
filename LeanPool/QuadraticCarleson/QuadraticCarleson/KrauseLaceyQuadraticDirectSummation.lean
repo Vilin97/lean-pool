@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleSummation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleSummation
 
 /-!
 # Numerical closure for the direct quadratic one-node proof
@@ -15,6 +17,8 @@ the two threshold identities used in the pairing argument, and the final
 geometric summation by comparison with the already verified project-wide
 scale ratio.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

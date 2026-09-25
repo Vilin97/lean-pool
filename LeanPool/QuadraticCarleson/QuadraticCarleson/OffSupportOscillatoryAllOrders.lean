@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportWeightedIBP
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportOscillatoryConstants
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportWeightedIBP
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportOscillatoryConstants
 
 /-!
 # Arbitrary-order off-support decay of the quadratic wave packet
@@ -14,6 +16,8 @@ This completes the full displayed off-support lemma, not only the two-fold
 estimate used by the negative endpoint. The proof iterates integration by parts
 in the original packet variable and includes both signs of nonzero modulation.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 

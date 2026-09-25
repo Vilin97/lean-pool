@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftForest
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftForest
 
 /-!
 # Exact finite multiscale action of the three shifted grids
@@ -13,6 +15,8 @@ This module records the disjointness needed to reorganize finite scale sums.
 The identities are for the genuine localized pieces and retain the actual
 length cutoff from the Krause--Lacey maximal partial sum.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

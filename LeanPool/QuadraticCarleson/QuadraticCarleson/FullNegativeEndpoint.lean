@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.NegativeEndpoint
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.NegativeEndpoint
 
 /-!
 # The full negative endpoint by pointwise domination
@@ -19,6 +21,8 @@ is slightly stronger than first bundling measurability: even the bare global
 outer-measure inequality is impossible. Whenever the operator is measurable,
 this predicate is definitionally the paper's `HasPhiModularEstimate`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

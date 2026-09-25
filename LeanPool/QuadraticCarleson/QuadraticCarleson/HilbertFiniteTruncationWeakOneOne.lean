@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
-import Mathlib.Analysis.Convolution
+
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
+public import Mathlib.Analysis.Convolution
 
 /-!
 # Weak `(1,1)` for finite annular Hilbert truncations
@@ -17,6 +19,8 @@ Hilbert kernel restricted to a finite annulus. Such a kernel is genuinely
 concrete weak `(1,1)` estimate. This is the finite-truncation statement; no
 maximal-singular-integral hypothesis is introduced.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped Convolution ENNReal

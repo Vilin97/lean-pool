@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionMaximal
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightConvergence
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionMaximal
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightConvergence
 
 /-!
 # All-height oscillatory L² estimates
@@ -15,6 +17,8 @@ The actual full-real and lacunary oscillatory suprema are dominated by this
 common measurable majorant. Its Markov estimate controls outer level sets
 without a measurability assumption on the real supremum.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicKernelInfinite
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicKernelInfinite
 
 /-!
 # The complete bilateral dyadic decomposition of the Hilbert kernel
@@ -13,6 +15,8 @@ At a fixed nonzero spatial point, all sufficiently low dyadic pieces vanish.
 The existing one-sided telescoping identity therefore extends to the exact
 sum over every integer scale in the paper's notation.
 -/
+
+@[expose] public section
 
 open Function Set
 open scoped BigOperators

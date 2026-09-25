@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleOperator
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleOperator
 
 /-!
 # The genuine frozen block input belongs to the paper's test domain
@@ -15,6 +17,8 @@ bounded enlargement of a compact set supporting the original input. Exact
 disjointness also gives a pointwise `2 A_k` bound for any frozen scale block,
 with no factor depending on its number of scales.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

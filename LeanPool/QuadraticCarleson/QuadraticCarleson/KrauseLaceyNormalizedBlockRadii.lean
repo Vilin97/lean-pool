@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveDyadicKernel
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveDyadicKernel
 
 /-!
 # Normalized radii for the paper's finite dyadic blocks
@@ -14,6 +16,8 @@ each endpoint of the finite block is within a factor of two of the desired
 fixed normalized radius. The integer exponents below retain the paper's
 exact indexing.
 -/
+
+@[expose] public section
 
 namespace QuadraticCarleson
 namespace KrauseLaceyNormalizedBlockRadii

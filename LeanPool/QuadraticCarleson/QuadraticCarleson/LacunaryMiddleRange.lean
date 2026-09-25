@@ -3,13 +3,15 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Algebra.Order.Field.Basic
-import Mathlib.Data.Int.Interval
-import Mathlib.Data.Int.ModEq
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
+
+public import Mathlib.Algebra.Order.Field.Basic
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Data.Int.ModEq
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
 
 /-!
 # Integer geometry for the lacunary middle range
@@ -29,6 +31,8 @@ All bounds below are explicit. In particular, `S` has between `2B + c` and
 `5B` elements as soon as `2c ≤ 5B`. The paper's sparsification modulo
 `10^10` gives pairwise disjoint frozen ranges.
 -/
+
+@[expose] public section
 
 namespace QuadraticCarleson.LacunaryMiddleRange
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleOperator
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KaltonPaperApplication
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryVerySmallEndpoint
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleOperator
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KaltonPaperApplication
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryVerySmallEndpoint
 
 /-!
 # Kalton applied to the genuine frozen modulation-block outputs
@@ -17,6 +19,8 @@ analytic input is an individual frozen-block weak-L¹ estimate. Countable
 suprema, level summation, measurability, and the fivefold exceptional-set
 contribution are all discharged here.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

@@ -3,12 +3,14 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.MeasureTheory.Covering.Vitali
-import Mathlib.MeasureTheory.Integral.Layercake
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
+
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.MeasureTheory.Covering.Vitali
+public import Mathlib.MeasureTheory.Integral.Layercake
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
 
 /-!
 # One-dimensional centered maximal estimates
@@ -17,6 +19,8 @@ The fixed-height quadratic `TT*` argument uses a one-dimensional centered
 maximal estimate. The covering argument below proves the needed weak estimate
 directly from Mathlib's Vitali theorem, with an explicit constant.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Metric
 open scoped ENNReal NNReal

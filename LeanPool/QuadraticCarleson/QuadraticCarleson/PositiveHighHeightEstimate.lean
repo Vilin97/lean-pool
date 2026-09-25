@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingNorm
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundLevelAtoms
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingNorm
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundLevelAtoms
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
 
 /-!
 # Genuine high-height estimate: disjoint level-atom inputs
@@ -16,6 +18,8 @@ The paper's high part uses the strict height range `r > B_k` and the input
 proves its L² input bound from the actual atom estimates, and invokes the
 proved real-parameter fixed-height quadratic maximal theorem.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Function

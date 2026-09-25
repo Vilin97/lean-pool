@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseInterface
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticHilbertMaximalMeasurable
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseInterface
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticHilbertMaximalMeasurable
 
 /-!
 # Finite-radius test operators for the Krause--Lacey argument
@@ -17,6 +19,8 @@ maximum of sharp truncations. Its value is an ordinary nonnegative real,
 embedded in `ℂ`, and this module verifies the exact sublinearity required by
 the sparse framework.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal

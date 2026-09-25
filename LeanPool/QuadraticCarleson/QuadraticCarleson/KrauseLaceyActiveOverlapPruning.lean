@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyActiveCarlesonPacking
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyActiveCarlesonPacking
 
 /-!
 # Concrete overlap pruning of the actual active family
@@ -14,6 +16,8 @@ family has the literal pointwise overlap cap, proved from laminarity. The
 exceptional-set estimate below is the proved first-moment bound; no
 exponential John--Nirenberg tail is asserted.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

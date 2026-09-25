@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySharpSmoothAdapter
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySharpSmoothAdapter
 
 /-!
 # Finite dyadic blocks as exact smooth high-pass differences
@@ -13,6 +15,8 @@ The sharp truncation boundary terms cancel in a consecutive smooth dyadic
 block. This identity also applies to the paper's modulation-dependent low
 block, without a pointwise majorization or any loss in constants.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal

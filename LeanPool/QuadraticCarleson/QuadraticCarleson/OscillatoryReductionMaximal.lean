@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionSeries
-import LeanPool.QuadraticCarleson.QuadraticCarleson.L0LacunaryOperator
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionSeries
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.L0LacunaryOperator
 
 /-!
 # Reduction of quadratic principal-value truncations to oscillatory heights
@@ -15,6 +17,8 @@ the ordinary (zero-modulation) Hilbert maximal truncation, and the measurable
 centered Hardy--Littlewood maximal function. No principal-value existence or
 Hilbert-transform boundedness assertion is used as a hypothesis.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Metric Set
 open scoped ENNReal NNReal Topology

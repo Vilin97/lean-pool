@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
-import LeanPool.QuadraticCarleson.QuadraticCarleson.ExtendedWeakL1Combinators
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.ExtendedWeakL1Combinators
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
 
 /-!
 # A finite sparse maximum with one common maximal-function error
@@ -15,6 +17,8 @@ The exact frozen block comparison leaves one Hardy--Littlewood error outside
 the finite modulation maximum. Its weak bound therefore costs one absolute
 constant, independently of the number of modulations.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

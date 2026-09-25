@@ -3,11 +3,13 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectProjectionBridge
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectProjectedTail
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectScaleTails
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticTailPerturbation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectProjectionBridge
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectProjectedTail
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectScaleTails
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticTailPerturbation
 
 /-!
 # Projection perturbations of direct quadratic tails
@@ -17,6 +19,8 @@ explicit quadratic projection remainder. This module only performs that
 finite pointwise bookkeeping; estimates for the remainder itself remain in
 the projection-remainder module.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

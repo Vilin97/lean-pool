@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticAveragingTTStar
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticAveragingTTStar
 
 /-!
 # Extending finite-range integral estimates beyond test inputs
@@ -13,6 +15,8 @@ Spatial truncations eventually leave each kernel row unchanged. Fatou's lemma
 therefore extends uniform second-moment bounds from integrable test functions
 to locally integrable functions, in particular to all measurable `L²` inputs.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal

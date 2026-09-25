@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingReal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingReal
 
 /-!
 # Conventional exponential L²-norm form
@@ -13,6 +15,8 @@ This file repackages the already proved maximal second-moment estimate as
 `‖M_h f‖₂ ≤ C 2^(-h/10) ‖f‖₂`, with a positive absolute constant and no
 restriction on the real modulation parameter.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

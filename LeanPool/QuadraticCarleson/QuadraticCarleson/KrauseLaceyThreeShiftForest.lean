@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftLocalization
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftLocalization
 
 /-!
 # Finite forests in one translated Krause--Lacey grid
@@ -15,6 +17,8 @@ the corresponding complete parent-closed trees. Thus the concrete
 three-shift localization can be fed root by root into the finite stopping
 recursion.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

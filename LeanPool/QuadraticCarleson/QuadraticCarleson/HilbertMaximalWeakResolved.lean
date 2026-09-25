@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertRepresentativeBridge
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositivePrincipalValueEndpoints
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertRepresentativeBridge
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositivePrincipalValueEndpoints
 
 /-!
 # Weak bounds and principal-value endpoint conclusions
@@ -14,6 +16,8 @@ The stopping good-part L² estimate and the maximal-function distribution bound 
 weak (1,1) constant for the ordinary Hilbert maximal operator. The resulting uniform bound
 closes the simultaneous principal-value existence and endpoint assertions.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Set FourierTransform
 open scoped ENNReal Topology

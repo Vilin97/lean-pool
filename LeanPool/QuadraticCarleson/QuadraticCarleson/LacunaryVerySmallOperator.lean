@@ -3,12 +3,14 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryLowSupport
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryVerySmallRange
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CanonicalScaleAtoms
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleRangeSummation
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveLowFullEndpoint
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryLowSupport
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryVerySmallRange
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CanonicalScaleAtoms
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleRangeSummation
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveLowFullEndpoint
 
 /-!
 # The genuine lacunary very-small low-kernel contribution
@@ -19,6 +21,8 @@ analytic step which produces the factor
 `2^(B + m/2) * length(I)` before the geometric summation in
 `LacunaryVerySmallRange`.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

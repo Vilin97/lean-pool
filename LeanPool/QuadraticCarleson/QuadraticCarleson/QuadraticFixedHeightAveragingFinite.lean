@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveraging
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveraging
 
 /-!
 # Finite maximal consequence of the fixed-height quadratic kernel estimate
@@ -14,6 +16,8 @@ to finite measurable linearization and the actual integral operator. The
 correlation estimate remains an explicit input in this intermediate theorem;
 the concrete annular cutoff specialization is not silently assumed.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal ComplexConjugate

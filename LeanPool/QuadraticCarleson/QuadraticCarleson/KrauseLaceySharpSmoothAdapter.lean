@@ -3,12 +3,14 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
-import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicAtomScales
-import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicKernelInfinite
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteRadiusAdapter
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftAction
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicAtomScales
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicKernelInfinite
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFiniteRadiusAdapter
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftAction
 
 /-!
 # From sharp truncations to the smooth Krause--Lacey pieces
@@ -28,6 +30,8 @@ What is *not* asserted here is the analytic Krause--Lacey sparse estimate for
 the smooth high-pass maximum. That is precisely the remaining oscillatory
 input, rather than an assumption hidden in this adapter.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Metric Set
 open scoped ENNReal NNReal

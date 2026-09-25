@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardLocalInterpolation
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectSummation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardLocalInterpolation
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectSummation
 
 /-!
 # Threshold pairing algebra for the direct quadratic proof
@@ -15,6 +17,8 @@ author. The low portion uses only Holder and the `L²` estimate; the high
 portion is the already-proved local-average pairing estimate. The final
 lemmas insert `A = δ^{-2}` and `Λ = δ^{-(p-1)}` exactly.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

@@ -3,11 +3,13 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PVFourierIdentity
-import Mathlib.Analysis.Fourier.LpSpace
-import Mathlib.Basic.Real.Sign
-import Mathlib.MeasureTheory.Function.LpSeminorm.Monotonicity
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PVFourierIdentity
+public import Mathlib.Analysis.Fourier.LpSpace
+public import Mathlib.Basic.Real.Sign
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Monotonicity
 
 /-!
 # The ordinary Hilbert transform on `L²`
@@ -16,6 +18,8 @@ This file constructs the Fourier-multiplier realization of convolution with
 the project's kernel `p.v. (1 / x)`. Mathlib's Fourier normalization makes
 the multiplier `-π i sign(ξ)`, so its `L²` operator norm is at most `π`.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Set FourierTransform
 open scoped ENNReal NNReal SchwartzMap

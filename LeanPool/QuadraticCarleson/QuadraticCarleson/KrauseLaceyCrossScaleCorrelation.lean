@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveCorrelation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveCorrelation
 
 /-!
 # Separated-scale quadratic correlation
@@ -14,6 +16,8 @@ The phase becomes linear. With small radius at least one, the existing
 first-derivative integration-by-parts estimate already gives the required
 large-radius squared decay; no unproved second-derivative bound is needed.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ComplexConjugate Interval

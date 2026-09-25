@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleMainTerm
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleOperatorAction
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleStationaryMain
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleMainTerm
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleOperatorAction
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleStationaryMain
 
 /-!
 # Stationary packet sum
@@ -15,6 +17,8 @@ The packets to the right of a translate are off support at `k + τ`, and their
 kernel actions can be replaced by their finite phase main terms. This file
 keeps the dyadic window and its resulting geometric decay explicit.
 -/
+
+@[expose] public section
 
 open Finset Set
 

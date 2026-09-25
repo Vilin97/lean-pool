@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundDyadicStopping
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundDyadicStopping
 
 /-!
 # Converting canonical dyadic stopping cells to centered intervals
@@ -14,6 +16,8 @@ stopping construction uses half-open dyadic cells. The project's centered
 interval convention is also half-open, so this file supplies an exact set
 identity and transfers literal pairwise disjointness without a boundary loss.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal BigOperators

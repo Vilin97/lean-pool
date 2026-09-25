@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyOverlapSecondMoment
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyOverlapSecondMoment
 
 /-!
 # The genuine removed bad-input operator
@@ -13,6 +15,8 @@ The kernel amplitude and actual stopping-cell averages give a uniform
 bound on each localized piece. The finite Carleson second-moment estimate
 then controls the entire removed-family maximal operator in `L²`.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

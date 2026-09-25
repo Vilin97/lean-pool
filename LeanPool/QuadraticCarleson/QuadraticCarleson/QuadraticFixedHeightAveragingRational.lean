@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingContinuity
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingContinuity
 
 /-!
 # Rational reduction without crossing scale-selection jumps
@@ -14,6 +16,8 @@ absolute modulation. Rational roots strictly inside that band yield rational
 nonzero modulations of either sign. Fixed-scale continuity then extends their
 bound to the lower endpoint of the half-open band as well.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology

@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleModular
-import Mathlib.Topology.Order.IntermediateValue
-import Mathlib.Order.Hom.Set
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleModular
+public import Mathlib.Topology.Order.IntermediateValue
+public import Mathlib.Order.Hom.Set
 
 /-!
 # Young functions are bijections of the nonnegative half-line
@@ -15,6 +17,8 @@ This proves the assertion preceding the inverse notation in Section 2.5 of
 the paper from the existing Young-function definition, including its identity
 exception. No additional growth or regularity hypothesis is imposed.
 -/
+
+@[expose] public section
 
 open Filter Set
 open scoped NNReal

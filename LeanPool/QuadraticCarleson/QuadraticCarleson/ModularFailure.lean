@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleModular
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleModular
 
 /-!
 # Modular-estimate failure from counterexamples
@@ -17,6 +19,8 @@ to every fixed positive factor, and the non-strict analytic lower level is
 converted to a strict level at half the height. The analytic lower bound
 remains an explicit hypothesis, not an assertion in this file.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Filter Asymptotics
 open scoped Topology ENNReal

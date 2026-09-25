@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryVerySmallOperator
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryVerySmallOperator
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
 
 /-!
 # The canonical lacunary very-small endpoint estimate
@@ -16,6 +18,8 @@ costs at most five times the input L¹ mass. Since the stopping decomposition
 is normalized at height one, the general global threshold bound retains this
 exceptional term; the paper uses the resulting threshold-one estimate.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

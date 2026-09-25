@@ -3,11 +3,13 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardLocalInterpolation
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardSourceMaximal
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingRecursion
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftMaximalAction
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardLocalInterpolation
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardSourceMaximal
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingRecursion
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftMaximalAction
 
 /-!
 # Local assembly for the Krause--Lacey sparse argument
@@ -26,6 +28,8 @@ left visible rather than being replaced by a purported local oscillatory
 estimate. In particular, the physical cutoff has the source orientation
 `ell ≥ k₀ + s` throughout.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

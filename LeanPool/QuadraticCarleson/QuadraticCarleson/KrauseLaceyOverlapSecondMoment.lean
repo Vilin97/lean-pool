@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyActiveExponentialPruning
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyActiveExponentialPruning
 
 /-!
 # The second moment of a finite Carleson counting function
@@ -13,6 +15,8 @@ Laminarity orders every intersecting pair. After integrating, each row
 of the ordered-pair sum is exactly a descendant length sum. This proves
 the second-moment bound required for the removed operator contribution.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

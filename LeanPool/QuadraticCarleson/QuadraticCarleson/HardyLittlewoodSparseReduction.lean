@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodBoundaryControl
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftAction
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseReflection
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodBoundaryControl
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftAction
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseReflection
 
 /-!
 # Finite three-grid reduction for Hardy--Littlewood sparse domination
@@ -16,6 +18,8 @@ to three actual finite laminar interval maxima. The radius enlargement
 costs eight, independently of the number of radii. Monotone convergence
 then permits a finite approximation to the full positive pairing.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set Metric
 open scoped ENNReal NNReal

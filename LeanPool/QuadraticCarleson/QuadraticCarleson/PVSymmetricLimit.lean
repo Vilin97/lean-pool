@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PrincipalValueDistribution
-import Mathlib.MeasureTheory.Group.Integral
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PrincipalValueDistribution
+public import Mathlib.MeasureTheory.Group.Integral
 
 /-!
 # Symmetric truncations of the principal-value distribution
@@ -17,6 +19,8 @@ change of variables `x ↦ -x`. The remaining error is the integral of the
 bounded cancelled integrand over `[-ε, ε]`, yielding an explicit bound by
 `2 * ε` times the first derivative Schwartz seminorm.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Filter
 open scoped SchwartzMap Topology

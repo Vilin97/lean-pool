@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleBohrPhase
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleBohrPhase
 
 /-!
 # A finite dyadic main-term level set for the negative endpoint
@@ -21,6 +23,8 @@ which already contains the entire translated Bohr set. No finiteness of an
 unlocalized level set is tacitly assumed. These are main-term estimates;
 passing to the singular integral requires the separate analytic error bounds.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

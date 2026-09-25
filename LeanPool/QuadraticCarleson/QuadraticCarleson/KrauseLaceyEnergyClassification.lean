@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardEnergy
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardGenerations
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardEnergy
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardGenerations
 
 /-!
 # An explicit energy classification for the Krause--Lacey argument
@@ -28,6 +30,8 @@ with displayed estimate (3.5). It cites the earlier monomial proof as
 reference [14]. The present degree-two modules implement that earlier
 specialized route; equation numbers (4.16)--(4.18) refer to it.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ComplexConjugate

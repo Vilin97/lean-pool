@@ -3,12 +3,14 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecificLimits.Normed
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleRange
-import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicAtomScales
-import Mathlib.Topology.Algebra.InfiniteSum.ENNReal
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleRange
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicAtomScales
+public import Mathlib.Topology.Algebra.InfiniteSum.ENNReal
 
 /-!
 # Geometric summation in the lacunary very-small range
@@ -23,6 +25,8 @@ The final theorem is stated in `ℝ≥0∞`, so the exchange of the two countabl
 sums is genuine Tonelli and requires no summability assumption on the
 nonnegative coefficients.
 -/
+
+@[expose] public section
 
 open Set
 

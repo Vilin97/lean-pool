@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingFinite
-import Mathlib.Analysis.Calculus.Deriv.Star
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingFinite
+public import Mathlib.Analysis.Calculus.Deriv.Star
 
 /-!
 # Annular amplitude products in the fixed-height quadratic correlation
@@ -15,6 +17,8 @@ actual product of two annular convolution amplitudes. Their uniform amplitude
 and derivative bounds are kept explicit, to be supplied by the dyadic cutoff
 lemmas rather than assumed in a headline theorem.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal ComplexConjugate

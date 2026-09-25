@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyEnergyClassification
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardCrossRows
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyEnergyClassification
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardCrossRows
 
 /-!
 # Cross-row aggregation for the scalar-standard family
@@ -17,6 +19,8 @@ two-scale correlation estimate and the restricted bad-input packing lemma;
 in particular, neither the number of intervals nor the number of scales is
 charged to the estimate.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ComplexConjugate

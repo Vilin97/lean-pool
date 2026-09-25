@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Analysis.Distribution.TemperedDistribution
+
+public import Mathlib.Analysis.Distribution.TemperedDistribution
 
 /-!
 # The principal-value distribution `p.v. (1 / x)`
@@ -21,6 +23,8 @@ that it is exactly the limit of symmetric truncations. We also define the
 Fourier-side candidate `-π i · 𝓕⁻ sign`; identifying it with the direct
 construction is kept as a theorem rather than assumed by definition.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open FourierTransform

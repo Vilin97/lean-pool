@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleLevelSet
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleLevelSet
 
 /-!
 # Parameters for endpoint counterexamples
@@ -13,6 +15,8 @@ The paper's amplitude and exponent shifts satisfy the eventual positivity and sc
 conditions needed for the modular counterexamples. The resulting height is expressed in terms of
 these parameters.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 

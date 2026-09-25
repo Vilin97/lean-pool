@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectScaleEnergy
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectThresholdClosure
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectThresholdPairing
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectScaleEnergy
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectThresholdClosure
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectThresholdPairing
 
 /-!
 # Exceptional pairing closure for the direct quadratic proof
@@ -16,6 +18,8 @@ maximal exceptional interval. It is the combinatorial step which lets the
 fixed-offset input mass under that interval be bounded by the mass of `f`
 on the interval itself, without redefining the ambient partition.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal BigOperators

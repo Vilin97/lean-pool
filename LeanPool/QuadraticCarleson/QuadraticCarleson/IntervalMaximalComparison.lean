@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximal
 
 /-!
 # Comparing interval averages with the measurable centered maximal operator
@@ -16,6 +18,8 @@ of positive rational radius. Every interval containing `x` lies in such a
 ball with radius less than twice the interval length. This file records the
 resulting pointwise comparison.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Metric
 open scoped ENNReal NNReal

@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximal
-import Mathlib.Analysis.SpecialFunctions.Pow.Integral
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximal
+public import Mathlib.Analysis.SpecialFunctions.Pow.Integral
 
 /-!
 # Strong `L^p` bounds for the centered Hardy--Littlewood maximal operator
@@ -13,6 +15,8 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Integral
 This extends the already checked weak `(1,1)` estimate by the layer-cake
 argument needed in the sparse finite-maximal lemma.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

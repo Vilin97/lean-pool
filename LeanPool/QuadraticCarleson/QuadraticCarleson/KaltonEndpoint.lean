@@ -3,13 +3,15 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Analysis.Complex.ExponentialBounds
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
-import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
-import Mathlib.Analysis.PSeries
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.MeasureTheory.Integral.Layercake
+
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+public import Mathlib.Analysis.PSeries
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.MeasureTheory.Integral.Layercake
 
 /-!
 # Kalton log-convexity at the weak `L^1` endpoint
@@ -35,6 +37,8 @@ The source paper writes `log₁(k+2)`, which under its convention is
 `log (10 + (k+2)) = log (k+12)`. This is not definitionally Kalton's weight.
 The comparison is proved explicitly below and is not silently identified.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped ENNReal NNReal Topology

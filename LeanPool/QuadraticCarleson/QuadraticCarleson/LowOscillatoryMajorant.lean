@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundBadPart
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundBadPart
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # The logarithmic low-oscillatory majorant
@@ -19,6 +21,8 @@ This file proves the exact one-dimensional integral behind the paper's
 `O(B)` estimate. The transition occurs at distance `D * ℓ`: the first part
 integrates to `log D`, and the inverse-square tail integrates to `1`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 

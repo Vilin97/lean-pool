@@ -3,11 +3,13 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Combinatorics.Additive.AP.Three.Behrend
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
+
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Combinatorics.Additive.AP.Three.Behrend
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
 
 /-!
 # Finite maxima of sparse operators
@@ -20,6 +22,8 @@ usable, and verifies the two quantitative finite-dimensional steps in the
 paper's proof: the Hölder estimate for the foliation by the linearizing index
 and the logarithmic choice of exponents.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped ENNReal NNReal Topology

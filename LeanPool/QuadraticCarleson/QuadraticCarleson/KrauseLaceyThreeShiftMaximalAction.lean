@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftAction
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftAction
 
 /-!
 # Maximal positive tails from the three shifted forests
@@ -14,6 +16,8 @@ Consequently the maximal finite global positive-half tail is pointwise bounded
 by the sum of the three genuine localized maximal tail operators. This is the
 maximal-operator form of the deterministic three-grid reduction.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

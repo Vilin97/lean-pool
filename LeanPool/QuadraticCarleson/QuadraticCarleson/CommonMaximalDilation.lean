@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
 
 /-!
 # Common maximal terms under positive dilation
@@ -13,6 +15,8 @@ The ordinary Hilbert maximal truncation is exactly invariant under positive
 dilation. We also record the positive change of variables for nonnegative
 Lebesgue integrals. No maximal-function dilation estimate is assumed here.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Metric
 open scoped ENNReal Topology

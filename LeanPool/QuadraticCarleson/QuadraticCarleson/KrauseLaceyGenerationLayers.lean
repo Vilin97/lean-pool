@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingExtraction
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingExtraction
 
 /-!
 # The actual finite minimal-generation decomposition
@@ -13,6 +15,8 @@ These are the successive inclusion-minimal layers used in KL18. Their
 disjointness and finite exhaustion are proved from laminarity and finiteness.
 No relative scale gap is inferred merely from a gap between layer labels.
 -/
+
+@[expose] public section
 
 open Function Set
 

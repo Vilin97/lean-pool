@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStandardPhysicalRecombination
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStandardSourceScaleSummation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStandardPhysicalRecombination
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStandardSourceScaleSummation
 
 /-!
 # The scalar-standard maximal-tail closure at one Krause--Lacey node
@@ -21,6 +23,8 @@ This is only the scalar-standard contribution of the bad input. It does not
 assert the complete one-node estimate, which additionally requires the exact
 good/bad input decomposition and the nonstandard contribution.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal BigOperators

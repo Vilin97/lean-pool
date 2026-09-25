@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightTail
-import Mathlib.MeasureTheory.Function.LpSeminorm.ChebyshevMarkov
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightTail
+public import Mathlib.MeasureTheory.Function.LpSeminorm.ChebyshevMarkov
 
 /-!
 # The high contribution summed over magnitude levels
@@ -15,6 +17,8 @@ majorant permits a level-set bound without assuming that their unrestricted
 real-parameter supremum is measurable. All fixed-height bounds are supplied
 by the proved quadratic theorem.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Function

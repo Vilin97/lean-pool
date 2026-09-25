@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardOverlapPrefix
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardOverlapPrefix
 
 /-!
 # Deleting inactive intervals from the actual bad-input operator
@@ -15,6 +17,8 @@ fixed weighted sums, including physical-scale truncations and generation
 prefixes whose original ordering is retained. Regenerating the filtered
 family need not preserve the original numerical generation labels.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

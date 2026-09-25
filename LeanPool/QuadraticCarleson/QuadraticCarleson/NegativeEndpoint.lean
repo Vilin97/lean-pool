@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleErrorBudget
-import LeanPool.QuadraticCarleson.QuadraticCarleson.L0LacunaryOperator
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleErrorBudget
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.L0LacunaryOperator
 
 /-!
 # Failure of sub-`L log₂ L` modular estimates
@@ -17,6 +19,8 @@ supported counterexamples. The abstract modular contradiction then gives
 failure for every Young function growing strictly slower than `t log₂ t`,
 together with the normalized unit-height witnesses stated in the paper.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped ENNReal SchwartzMap

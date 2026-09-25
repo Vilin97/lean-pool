@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyCrossScalePairing
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyCrossScalePairing
 
 /-!
 # Separated-generation pairings of the actual localized pieces
@@ -14,6 +16,8 @@ large interval, their actual local mass bounds, and the source scale gap.
 These hypotheses are exactly the facts used after KL18 (4.20); no cross
 pairing or signed-sum estimate is an input to the theorem.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ComplexConjugate

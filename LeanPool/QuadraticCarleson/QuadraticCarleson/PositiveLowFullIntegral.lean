@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelRealMaximal
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightFullEndpoint
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelRealMaximal
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightFullEndpoint
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # The low kernel applied to the genuine countable atom sum
@@ -16,6 +18,8 @@ The levelwise atom masses are summable for integrable input, so the Bochner
 integral commutes with their countable sum. No formal integral interchange
 is left as an assumption.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Function

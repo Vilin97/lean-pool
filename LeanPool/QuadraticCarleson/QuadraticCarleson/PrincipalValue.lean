@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
 
 /-!
 # Principal values for the quadratic Hilbert transform
@@ -12,6 +14,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
 This file establishes basic facts about the symmetric principal-value notion
 used in the definition of the quadratic Carleson operator.
 -/
+
+@[expose] public section
 
 open Filter Set
 open scoped Topology

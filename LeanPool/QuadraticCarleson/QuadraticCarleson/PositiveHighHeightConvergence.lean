@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightTail
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightTail
 
 /-!
 # Genuine convergence of the high complex series
@@ -14,6 +16,8 @@ Outside one null set, the strict high-height series converges absolutely for
 every real modulation simultaneously. Thus the tail definitions do not rely
 on the default value of a nonsummable complex `tsum`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Function

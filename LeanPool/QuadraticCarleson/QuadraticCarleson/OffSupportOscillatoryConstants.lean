@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportOscillatory
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportOscillatory
 
 /-!
 # Uniform constants for arbitrary-order off-support integration by parts
@@ -13,6 +15,8 @@ The recursion separates the original packet derivative seminorms from the
 modulation, interval length, and distance. It is used without changing any
 hypothesis of the paper's off-support lemma.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

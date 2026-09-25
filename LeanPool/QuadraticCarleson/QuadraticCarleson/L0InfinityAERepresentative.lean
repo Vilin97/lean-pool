@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.L0LacunaryOperator
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.L0LacunaryOperator
 
 /-!
 # Bounded compactly supported almost-everywhere measurable inputs
@@ -13,6 +15,8 @@ The core test domain uses Borel-measurable representatives. Every bounded,
 compactly supported a.e.-measurable input has a representative in that domain.
 This does not change any operator definition or its original test class.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal

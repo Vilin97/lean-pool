@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleMainTerm
-import LeanPool.QuadraticCarleson.QuadraticCarleson.SchwartzModularOperator
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleMainTerm
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.SchwartzModularOperator
 
 /-!
 # From a pointwise dyadic witness to the lacunary level-set lower bound
@@ -15,6 +17,8 @@ endpoint argument. Once the analytic packet estimates supply a dyadic
 modulation at every point of `E_N`, the actual lacunary operator has a level
 set of measure at least an explicit positive multiple of `N`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal SchwartzMap

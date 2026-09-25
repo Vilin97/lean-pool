@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertMaximalWeakResolved
-import Mathlib.Topology.Instances.Rat
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertMaximalWeakResolved
+public import Mathlib.Topology.Instances.Rat
 
 /-!
 # Measurability of the full real-modulation principal-value supremum
@@ -14,6 +16,8 @@ Subtracting the ordinary Hilbert principal value removes the singularity.
 The remaining integral depends continuously on the real modulation, which
 allows the full supremum to be recovered from countably many modulations.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Set
 open scoped ENNReal Topology

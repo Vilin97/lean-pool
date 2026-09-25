@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticL2Extension
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticL2Extension
 
 /-!
 # Transferring the adjoint bound to the integral operator
@@ -12,6 +14,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticL2Extension
 The elementary `TT*` duality argument is carried out on the actual integral
 actions, then extended to all measurable `L²` inputs by spatial truncation.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal ComplexConjugate

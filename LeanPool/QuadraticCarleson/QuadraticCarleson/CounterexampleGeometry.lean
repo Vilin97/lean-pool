@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleMainTerm
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleOperatorAction
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleMainTerm
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleOperatorAction
 
 /-!
 # Spatial geometry of the negative-endpoint packets
@@ -15,6 +17,8 @@ translate indices and `τ ∈ (1/4,1/2)`. This file records the elementary
 separation from all packet intervals, together with lower bounds that retain
 the integer separation from the packet centre.
 -/
+
+@[expose] public section
 
 open Finset MeasureTheory Set
 

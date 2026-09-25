@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertMaximalWeakOneOne
-import Mathlib.Analysis.Fourier.Inversion
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertMaximalWeakOneOne
+public import Mathlib.Analysis.Fourier.Inversion
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # Fourier formulas for the Poisson kernels
@@ -14,6 +16,8 @@ import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 This module isolates the Fourier computation needed by the genuine Cotlar
 inequality for the ordinary Hilbert maximal truncation.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Set FourierTransform
 open scoped ENNReal Real Topology

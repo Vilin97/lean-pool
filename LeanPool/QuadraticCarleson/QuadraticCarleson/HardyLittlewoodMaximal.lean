@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticCenteredMaximal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticCenteredMaximal
 
 /-!
 # The centered Hardy--Littlewood maximal operator on the real line
@@ -14,6 +16,8 @@ countable while retaining arbitrarily small and arbitrarily large intervals.
 The weak `(1,1)` estimate is obtained from the bounded-radius Vitali estimate
 in `QuadraticCenteredMaximal` and continuity of measure from below.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Metric
 open scoped ENNReal NNReal

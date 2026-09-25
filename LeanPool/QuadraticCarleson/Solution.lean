@@ -3,13 +3,15 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
+
 
 /-
 Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PaperTheorems
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PaperTheorems
 
 /-!
 # Statement solution surface
@@ -20,6 +22,8 @@ so Comparator can compare this module independently with `Challenge.lean`.
 Each theorem is then obtained by definitional transport from the canonical
 theorem in `QuadraticCarleson.PaperTheorems`.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped ENNReal Topology

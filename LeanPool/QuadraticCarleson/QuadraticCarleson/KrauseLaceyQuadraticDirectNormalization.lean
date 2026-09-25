@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectRootLocalization
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectRootLocalization
 
 /-!
 # Homogeneity for the direct quadratic one-node normalization
@@ -13,6 +15,8 @@ The direct estimate is proved after normalizing the two root averages. This
 file isolates the exact operator identity needed to restore the original
 scales. No stopping-time argument is used here.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal

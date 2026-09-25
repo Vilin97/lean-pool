@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleKalton
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightLacunaryEndpoint
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleKalton
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightLacunaryEndpoint
 
 /-!
 # Finite residue summation and the final lacunary middle Orlicz budget
@@ -14,6 +16,8 @@ The sparse modulus remains the paper's exact `10^10`. Summing a complete
 finite residue system contributes only that universal factor. The independent
 factor `20` occurs in the height cutoff `B_k = 20 · 2^(2^k)`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveStoppingBadEndpoint
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveStoppingGoodEstimate
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveStoppingBadEndpoint
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveStoppingGoodEstimate
 
 /-!
 # The full-real oscillatory endpoint theorem
@@ -14,6 +16,8 @@ The canonical stopping decomposition, the genuine good-part L² estimate,
 and the recombined low/high bad-part estimates give the normalized
 `L log₁ L` bound for the original input's oscillatory operator.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Function

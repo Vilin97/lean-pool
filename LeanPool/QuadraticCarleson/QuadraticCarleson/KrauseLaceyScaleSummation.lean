@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseInterface
-import Mathlib.Analysis.Complex.ExponentialBounds
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseInterface
+public import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 # Numerical summation in the nonstandard scale parameter
@@ -16,6 +18,8 @@ or infinite geometric tail with ratio `r` costs at most a constant multiple of
 the Holder conjugate `q`. The analytic estimate supplying the ratio is kept
 separate (and is not postulated here).
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

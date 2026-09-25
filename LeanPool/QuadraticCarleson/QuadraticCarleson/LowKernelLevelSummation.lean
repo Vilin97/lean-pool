@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelBadAtomSharp
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundLevelAtoms
-import Mathlib.MeasureTheory.Integral.Prod
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelBadAtomSharp
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundLevelAtoms
+public import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Summing the sharp low-kernel estimate over a magnitude level
@@ -18,6 +20,8 @@ atom `L¹` masses are then summed using the exact magnitude-level result from
 the atom's triple interval; this is stronger than the paper's required
 complement of `5I` after restriction.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal BigOperators Function

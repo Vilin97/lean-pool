@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScalarNearPhysicalL2
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardLocalInterpolation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScalarNearPhysicalL2
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardLocalInterpolation
 
 /-!
 # Local interpolation for the scalar near-energy family
@@ -19,6 +21,8 @@ The interpolation helpers for the high/low test-function split are reused
 unchanged. Every threshold, local p-mass hypothesis, and decay budget stays
 explicit; no desired local oscillatory or sparse estimate is assumed.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

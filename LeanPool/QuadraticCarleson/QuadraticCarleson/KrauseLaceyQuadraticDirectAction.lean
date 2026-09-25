@@ -3,11 +3,13 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import Mathlib.MeasureTheory.Function.L2Space
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectPartition
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingRecursion
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveCorrelation
+
+public import Mathlib.MeasureTheory.Function.L2Space
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectPartition
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingRecursion
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveCorrelation
 
 /-!
 # Finite offset grouping for the direct quadratic action
@@ -17,6 +19,8 @@ by the gap between the output kernel scale and the input scale. This file
 records only finite, exact identities. No maximal estimate or frequency
 projection is used here.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

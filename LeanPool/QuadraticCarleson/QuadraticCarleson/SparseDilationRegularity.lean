@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
 
 /-!
 # Regularity and sublinearity under positive dilation
@@ -14,6 +16,8 @@ modulations by positive spatial dilation. These elementary identities retain
 the original test-function addition, scalar multiplication and absolute-value
 operator, and transfer continuity and local integrability of the outputs.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory
 

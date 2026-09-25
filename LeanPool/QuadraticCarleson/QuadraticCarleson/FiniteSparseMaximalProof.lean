@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
-import LeanPool.QuadraticCarleson.QuadraticCarleson.SparseMaximalLp
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.SparseMaximalLp
 
 /-!
 # The finite sparse maximal weak `(1,1)` lemma
@@ -15,6 +17,8 @@ organized around the paper's two genuine measure-theoretic operations:
 excision of a maximal-function exceptional set and foliation by a measurable
 maximizing index.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Set
 open scoped ENNReal NNReal ComplexConjugate

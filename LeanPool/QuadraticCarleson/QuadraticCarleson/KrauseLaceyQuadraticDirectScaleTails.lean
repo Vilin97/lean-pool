@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectScaleEnergy
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticResidueArithmetic
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectScaleEnergy
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticResidueArithmetic
 
 /-!
 # Finite scale and residue tails for the direct quadratic action
@@ -14,6 +16,8 @@ This is the finite bookkeeping layer between the genuine direct action and
 the seven separated annular tail families. The ambient family `S` remains
 fixed in every definition; only `A` is filtered as an output family.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

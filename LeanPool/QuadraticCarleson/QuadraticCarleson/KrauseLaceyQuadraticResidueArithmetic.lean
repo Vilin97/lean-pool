@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticSmoothProjection
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticSmoothProjection
 
 /-!
 # Arithmetic for the seven separated frequency classes
@@ -14,6 +16,8 @@ residue classes. In each class, imposing a lower scale cutoff selects an
 ordinary suffix of the natural-number index. This file records that exact
 finite identity independently of the analytic estimates.
 -/
+
+@[expose] public section
 
 namespace QuadraticCarleson.KrauseLaceyQuadraticResidueArithmetic
 

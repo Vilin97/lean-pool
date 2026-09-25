@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPhysicalTailPrefix
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPhysicalTailPrefix
 
 /-!
 # Finite overlap stopping geometry
@@ -14,6 +16,8 @@ the high-overlap set. Inside each such interval at most `M` covering
 intervals are strict ancestors. These statements are deterministic and
 use only the actual finite laminar family.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

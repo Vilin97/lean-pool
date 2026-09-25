@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Order.CompletePartialOrder
+
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Order.CompletePartialOrder
 
 /-!
 # Exact dyadic scale classes for Calderón--Zygmund atoms
@@ -19,6 +21,8 @@ class and the upper endpoint belongs to the next class. This file develops
 that convention for an abstract atom type equipped with a positive real
 length.
 -/
+
+@[expose] public section
 
 open Set
 

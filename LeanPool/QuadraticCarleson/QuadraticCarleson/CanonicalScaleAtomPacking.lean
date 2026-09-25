@@ -3,11 +3,15 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CanonicalScaleAtoms
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleRangeSummation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CanonicalScaleAtoms
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleRangeSummation
 
 /-! # Actual scale-atom masses in the lacunary block-packing notation -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Function

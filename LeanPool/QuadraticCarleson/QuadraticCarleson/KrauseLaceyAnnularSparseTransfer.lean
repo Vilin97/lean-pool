@@ -3,11 +3,13 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyAnnularComparisonMaximal
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleOffsetBridge
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodSparseReduction
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximalSparse
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyAnnularComparisonMaximal
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleOffsetBridge
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodSparseReduction
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximalSparse
 
 /-!
 # Corrected sparse transfer through the actual annular comparison
@@ -17,6 +19,8 @@ majorant pairings use `normInput g`. These two corrections are essential:
 an unshifted lower index does not describe arbitrary scale offsets, and
 arbitrary complex test functions can cancel in the majorant pairings.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal

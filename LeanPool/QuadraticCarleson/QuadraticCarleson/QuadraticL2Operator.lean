@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticTTStar
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticTTStar
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
 
 /-!
 # Integral operators for the fixed-height quadratic argument
@@ -16,6 +18,8 @@ integral adjoints and `TT*` representation. The boundedness and finite-range
 constants here may depend on the finite family; the oscillatory estimates in
 `QuadraticTTStar` will be used to obtain constants independent of that family.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ComplexConjugate

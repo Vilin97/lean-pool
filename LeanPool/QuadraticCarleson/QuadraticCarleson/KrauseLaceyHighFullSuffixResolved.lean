@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectPStopping
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNativePositiveSuffixResolved
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyLowFullOddReduction
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectPStopping
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNativePositiveSuffixResolved
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyLowFullOddReduction
 
 /-!
 # Unconditional sparse bound for the high full-odd quadratic suffixes
@@ -16,6 +18,8 @@ with a factor three for the shifted grids. Reflection restores the full odd
 kernel with a further factor two. All constants are independent of the lower
 and upper high-scale cutoffs.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal

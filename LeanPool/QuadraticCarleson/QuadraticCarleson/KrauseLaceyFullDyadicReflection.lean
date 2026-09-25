@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySharpSmoothAdapter
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingSigned
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySharpSmoothAdapter
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingSigned
 
 /-!
 # Restoring the negative spatial half of the Krause--Lacey kernel
@@ -17,6 +19,8 @@ that symmetry exact. A finite full dyadic tail is the positive-half tail on
 reflected point. Thus no analytic estimate is duplicated for the negative
 half.
 -/
+
+@[expose] public section
 
 open Filter Function MeasureTheory Set
 open scoped ENNReal NNReal

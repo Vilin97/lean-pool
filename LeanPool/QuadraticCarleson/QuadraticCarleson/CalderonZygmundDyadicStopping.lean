@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import Mathlib.Tactic.DeriveEncodable
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundDecomposition
+
+public import Mathlib.Tactic.DeriveEncodable
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundDecomposition
 
 /-!
 # Dyadic stopping intervals for the Calderón--Zygmund decomposition
@@ -14,6 +16,8 @@ This module supplies an explicit global dyadic grid and proves the quantitative
 parent/child facts behind the height-one stopping rule. In particular, a
 child of a good parent has `‖f‖`-average at most two.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped ENNReal BigOperators Function Topology

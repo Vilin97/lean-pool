@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectOffsetEnergy
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectPositivePairing
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectOffsetEnergy
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectPositivePairing
 
 /-!
 # Fixed-output-scale energy for the direct offset action
@@ -13,6 +15,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectPo
 The output family may be any subcollection `A`; the smallest-region input
 partition is always the one attached to the ambient family `S`.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNativePositiveSuffixResolved
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPStoppingPositiveClosure
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryEndpointSmoothResolved
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNativePositiveSuffixResolved
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPStoppingPositiveClosure
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryEndpointSmoothResolved
 
 /-!
 # The native positive-suffix route to the lacunary endpoint
@@ -17,6 +19,8 @@ of each concrete localized shifted tail. Independently, the native unit
 positive-suffix sparse estimate feeds the proved annular, dilation, and
 principal-value adapters.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal

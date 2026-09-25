@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveCorrelation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveCorrelation
 
 /-!
 # The fixed-scale endpoint in Krause--Lacey Proposition 4.1
@@ -20,6 +22,8 @@ interpolation theorem in its `MemLp` API. Accordingly this file proves both
 actual endpoints but does not introduce the desired intermediate `L^q`
 operator estimate as a hypothesis.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal ComplexConjugate

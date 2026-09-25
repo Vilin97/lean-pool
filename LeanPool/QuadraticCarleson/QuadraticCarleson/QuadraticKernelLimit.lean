@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PVSymmetricLimit
-import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticKernelDistribution
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PVSymmetricLimit
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticKernelDistribution
 
 /-!
 # Symmetric truncations of the quadratic kernel
@@ -13,6 +15,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticKernelDistribution
 The distribution `e(λx²) · p.v. (1/x)` is the limit of its ordinary
 symmetric truncations on every Schwartz test function.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped SchwartzMap Topology

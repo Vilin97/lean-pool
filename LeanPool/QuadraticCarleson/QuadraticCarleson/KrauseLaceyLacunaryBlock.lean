@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyBlockHypothesis
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleBlockWeak
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositivePrincipalValueEndpoints
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyBlockHypothesis
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleBlockWeak
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositivePrincipalValueEndpoints
 
 /-!
 # From the two sparse inputs to the paper's frozen lacunary block
@@ -18,6 +20,8 @@ genuine all-radius frozen quadratic-Hilbert block. Thus neither truncation
 radii nor the finite modulation enumeration remain hidden assumptions in the
 positive endpoint assembly.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal

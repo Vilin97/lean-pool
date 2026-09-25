@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionMaximal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionMaximal
 
 /-!
 # The low full-odd quadratic phase-error kernel
@@ -12,6 +14,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionMaximal
 This file isolates the elementary kernel used to compare a complete odd
 dyadic block with its zero-phase (ordinary Hilbert) counterpart.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Metric Set
 open scoped ENNReal NNReal

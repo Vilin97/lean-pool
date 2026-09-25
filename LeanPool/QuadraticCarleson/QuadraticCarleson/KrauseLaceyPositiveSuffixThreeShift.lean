@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFullDyadicSparseTransfer
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftMaximalAction
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFullDyadicSparseTransfer
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftMaximalAction
 
 /-!
 # The positive finite suffix maximum through three shifted forests
@@ -16,6 +18,8 @@ The top scale is `j + N - 1`, depths are `range N`, and suffix `m` has the
 physical lower cutoff `j + m + 2`. In particular the complete maximum starts
 at `j + 2`. The empty case is included: when `N = 0`, both sides are zero.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal

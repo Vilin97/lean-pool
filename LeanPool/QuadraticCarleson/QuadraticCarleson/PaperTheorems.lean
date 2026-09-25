@@ -3,12 +3,14 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.NegativePrincipalValueEndpoints
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryEndpointDirectResolved
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationDirectBlockResolved
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveFullMaximalMeasurability
-import LeanPool.QuadraticCarleson.QuadraticCarleson.NegativeWeakOneOneCorollary
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.NegativePrincipalValueEndpoints
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryEndpointDirectResolved
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationDirectBlockResolved
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveFullMaximalMeasurability
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.NegativeWeakOneOneCorollary
 
 /-!
 # Paper-facing headline statements
@@ -22,6 +24,8 @@ This review-facing statement map identifies the claims formalized here. It does
 not assert that every auxiliary result cited by the article is formalized in
 this repository.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal

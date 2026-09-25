@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleParameters
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexamplePointwise
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleParameters
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexamplePointwise
 
 /-!
 # The asymptotic error budget in the negative endpoint example
@@ -16,6 +18,8 @@ geometrically, and the two-fold oscillatory error is `O((log N)⁻²)`. This
 module proves that their sum eventually fits below the unused half of the
 main-term lower bound.
 -/
+
+@[expose] public section
 
 open Filter
 

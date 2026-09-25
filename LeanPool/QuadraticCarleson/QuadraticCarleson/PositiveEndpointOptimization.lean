@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.SpecificLimits.Normed
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Analysis.SpecificLimits.Normed
 
 /-!
 # Scalar optimization in the positive endpoint argument
@@ -21,6 +23,8 @@ We use exponential notation for real powers of two. Thus
 `lacunaryScale k = 2^(2^k)` and
 `lacunaryAmplitude k = 2^(2^(2^k))`, exactly the paper's lacunary choice.
 -/
+
+@[expose] public section
 
 open Filter Set
 open scoped Topology

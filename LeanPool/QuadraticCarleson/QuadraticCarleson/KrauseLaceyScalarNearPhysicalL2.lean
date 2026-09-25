@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScalarNearSignedSum
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardSourceMaximal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScalarNearSignedSum
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardSourceMaximal
 
 /-!
 # Physical-suffix maximal bounds for the scalar near-energy branch
@@ -22,6 +24,8 @@ proofs from the original near-family modules, now with the scalar-family
 hypothesis. In particular, there is no conversion to the old pointwise
 predicate and no assumed overlap or Carleson budget in the final theorem.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

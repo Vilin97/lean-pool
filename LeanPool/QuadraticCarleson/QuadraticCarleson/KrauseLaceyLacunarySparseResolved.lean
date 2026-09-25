@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximalProof
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyLacunaryBlock
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximalProof
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyLacunaryBlock
 
 /-!
 # The finite sparse-maximal input in the lacunary endpoint
@@ -17,6 +19,8 @@ which are independent of that lemma: the individual Krause--Lacey sparse
 bound for finite-radius quadratic Hilbert transforms and the ordinary
 Hilbert maximal weak bound.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal

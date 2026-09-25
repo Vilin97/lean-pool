@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteLaminarMaximalSparse
-import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodSparseReduction
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteLaminarMaximalSparse
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodSparseReduction
 
 /-!
 # Sparse domination of the actual centered Hardy--Littlewood maximal operator
@@ -16,6 +18,8 @@ boundary operator has a genuine sparse `(1,1)` bound with constant `480`
 and exactly the approved `1/4` major-subset density. All `p ≥ 1` follow by
 monotonicity of normalized local averages.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

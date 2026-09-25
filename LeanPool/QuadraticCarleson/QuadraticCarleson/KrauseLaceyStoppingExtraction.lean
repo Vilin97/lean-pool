@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleMaximal
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleMaximal
 
 /-!
 # Actual finite stopping extraction for the Krause--Lacey recursion
@@ -16,6 +18,8 @@ averages on the remaining collection are conclusions, not supplied stopping
 or sparse hypotheses. The only structural input is laminarity of the finite
 interval collection, as holds in each source dyadic grid.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal

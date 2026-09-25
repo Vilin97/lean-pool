@@ -3,8 +3,10 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyZeroPhaseLowControl
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyZeroPhaseLowControl
 
 /-!
 # Splitting full dyadic suffixes at the unit scale
@@ -13,6 +15,8 @@ This file gives the exact finite-sum identities needed to separate the
 all-low part of a quadratic suffix from the already controlled positive-scale
 part. The identities introduce no analytic hypothesis or estimate.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal

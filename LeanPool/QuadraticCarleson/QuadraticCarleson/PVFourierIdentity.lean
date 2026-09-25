@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OddSchwartzAntiderivative
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PVFourier
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OddSchwartzAntiderivative
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PVFourier
 
 /-!
 # Fourier transform of the canonical principal-value distribution
@@ -15,6 +17,8 @@ This file closes the final uniqueness step in the Fourier characterization of
 `PVFourier`; the required one-dimensional Schwartz antiderivative theorem is
 proved in `OddSchwartzAntiderivative`.
 -/
+
+@[expose] public section
 
 open MeasureTheory FourierTransform
 open scoped SchwartzMap

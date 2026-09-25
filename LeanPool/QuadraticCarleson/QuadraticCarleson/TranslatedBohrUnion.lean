@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.BohrUnion
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.BohrUnion
 
 /-!
 # Integer translates of dyadic Bohr unions
@@ -14,6 +16,8 @@ The general result permits any finite set of integer translates and any
 logarithmic starting window depending on the translate. The specialization
 to `3N/5 ≤ k ≤ 7N/10` is given using an exact finite index set.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

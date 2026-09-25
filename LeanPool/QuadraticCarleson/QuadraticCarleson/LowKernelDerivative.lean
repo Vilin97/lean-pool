@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveDyadicKernel
-import Mathlib.Analysis.Calculus.Deriv.Support
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveDyadicKernel
+public import Mathlib.Analysis.Calculus.Deriv.Support
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # Derivative of the low oscillatory kernel
@@ -17,6 +19,8 @@ In the accompanying article ([arXiv:2609.04101v1](https://arxiv.org/abs/2609.041
 product/quotient-rule formula away from zero and derives its constants from
 the fixed smooth cutoff used by `PositiveDyadicKernel`.
 -/
+
+@[expose] public section
 
 open Function Set
 open scoped Topology

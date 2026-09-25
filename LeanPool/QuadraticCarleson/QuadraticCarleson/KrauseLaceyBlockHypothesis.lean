@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleSparseAdapter
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleSparseAdapter
 
 /-!
 # The exact Krause--Lacey input for a finite modulation block
@@ -15,6 +17,8 @@ proves that it gives the abstract finite-family hypothesis used by the
 logarithmic sparse-maximal lemma. It is deliberately below the desired weak
 endpoint: it asks only for the individual uniform sparse `(1,p)` estimate.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory
 

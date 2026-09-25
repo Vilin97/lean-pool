@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelLevelSummation
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelLevelSummation
 
 /-!
 # The genuine real-modulation supremum for a low-kernel bad atom
@@ -19,6 +21,8 @@ This is the form needed in the low-oscillation part of the positive endpoint
 proof. In particular, it does not replace the real supremum by a countable
 or rational one.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal BigOperators Function

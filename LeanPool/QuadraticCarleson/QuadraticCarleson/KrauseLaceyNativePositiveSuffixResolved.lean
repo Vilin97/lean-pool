@@ -3,11 +3,13 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNativePositiveForestClosure
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPStoppingPositiveClosure
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveSuffixThreeShift
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyAnnularSparseTransfer
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNativePositiveForestClosure
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPStoppingPositiveClosure
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveSuffixThreeShift
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyAnnularSparseTransfer
 
 /-!
 # Native positive suffixes from the one-node Krause--Lacey estimate
@@ -19,6 +21,8 @@ recursion supplies one sparse form for each shift. For each pair of test
 functions we choose the largest of those three forms, absorbing their sum
 with the exact factor `3`; no union of overlapping shifted grids is used.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal NNReal

@@ -3,10 +3,12 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyHighFullSuffixResolved
-import LeanPool.QuadraticCarleson.QuadraticCarleson.SparseDilationRegularity
-import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximalProof
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyHighFullSuffixResolved
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.SparseDilationRegularity
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximalProof
 
 /-!
 # Uniform weak bounds for finite families of dilated high suffixes
@@ -15,6 +17,8 @@ Positive spatial dilation preserves the sparse constant of the finite full
 quadratic suffix maximum. Combining that exact transfer with continuity and
 sublinearity verifies every premise of the finite sparse maximal theorem.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory
 

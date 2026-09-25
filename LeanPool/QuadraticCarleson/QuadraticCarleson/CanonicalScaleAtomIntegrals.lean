@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CanonicalScaleAtoms
-import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionL1
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CanonicalScaleAtoms
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.OscillatoryReductionL1
 
 /-!
 # Exact integration and oscillatory recombination of canonical scale slices
@@ -14,6 +16,8 @@ Disjoint spatial scales give equality of the total absolute integral, not
 just a bound. The resulting genuine Bochner interchange is specialized to
 each dyadic height, each finite low-height kernel, and the all-height action.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

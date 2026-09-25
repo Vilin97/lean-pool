@@ -3,12 +3,14 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardLocalInterpolation
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardSourceMaximal
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleSummation
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPStoppingRecursion
-import LeanPool.QuadraticCarleson.QuadraticCarleson.NonstandardThresholdAlgebra
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardLocalInterpolation
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardSourceMaximal
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleSummation
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPStoppingRecursion
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.NonstandardThresholdAlgebra
 
 /-!
 # Summation of the actual nonstandard good collection
@@ -23,6 +25,8 @@ Its polynomial factor is *inside* the `q`th root. Consequently it is bounded
 by a universal constant times `2^(-s/(5q))`, and summing costs only one Holder
 conjugate. This is the point of the threshold used in the source argument.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 open scoped ENNReal BigOperators

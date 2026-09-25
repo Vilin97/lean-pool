@@ -3,8 +3,10 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
 
 /-!
 # Intersection of localized Bohr sets
@@ -14,6 +16,8 @@ pairs near the line of slope `m / k`. The positive-frequency hypotheses
 follow the paper's explicit convention `ℕ = {1, 2, …}`. The final two lemmas
 record the zero-frequency behavior for Lean's different natural-number convention.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

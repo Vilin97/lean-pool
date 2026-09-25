@@ -3,9 +3,11 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.ExtendedWeakL1Combinators
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleOperator
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.ExtendedWeakL1Combinators
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleOperator
 
 /-!
 # Passing finite truncation-radius estimates to a genuine frozen block
@@ -16,6 +18,8 @@ recovers the paper's supremum over every positive truncation radius without
 losing the uniform weak constant. The limit uses the fixed countable dense
 family already proved to recover the full real-radius supremum.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped ENNReal

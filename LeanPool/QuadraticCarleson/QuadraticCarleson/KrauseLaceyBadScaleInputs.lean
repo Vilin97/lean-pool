@@ -3,9 +3,11 @@ Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingExtraction
-import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySeparatedGeneration
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingExtraction
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySeparatedGeneration
 
 /-!
 # Actual bad-scale inputs in the local Krause--Lacey argument
@@ -15,6 +17,8 @@ The bad intervals are the actual maximal threshold-ten children for `f`
 condition `max (2^k₀) |J| = 2^ℓ`, including every smaller child at the base
 scale. No cancellation is subtracted from these bad inputs.
 -/
+
+@[expose] public section
 
 open Function MeasureTheory Set
 

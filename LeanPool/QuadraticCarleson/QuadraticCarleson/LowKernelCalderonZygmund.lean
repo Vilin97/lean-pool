@@ -3,10 +3,12 @@ Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
+module
 
-import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelDerivative
-import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundBadPart
-import Mathlib.Analysis.Calculus.MeanValue
+
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelDerivative
+public import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundBadPart
+public import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
 # Calderón--Zygmund regularity of the low oscillatory kernel
@@ -17,6 +19,8 @@ mean-value theorem is applied on the segment joining `x - y` and `x - z`.
 When `y` belongs to the interval centered at `z` and `x` is outside its
 triple, every point of that segment stays quantitatively away from zero.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 
