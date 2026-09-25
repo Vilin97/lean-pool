@@ -115,7 +115,7 @@ theorem overlap_oscillation_congr_ae {p : ℝ≥0∞} {j : ℕ} {S : TriadicCube
     cubeBesovOverlapOscillation S p u = cubeBesovOverlapOscillation S p v := by
   unfold cubeBesovOverlapOscillation ScalarOverlap.cubeLpNorm
   congr 1
-  refine eLpNorm_congr_ae ?_
+  refine integralLpSeminorm_congr_ae ?_
   have hres := ae_overlap_of_ae_cube hS h
   have hresn : u =ᵐ[ScalarOverlap.normalizedCubeMeasure S] v := by
     rw [ScalarOverlap.normalizedCubeMeasure, ScalarOverlap.cubeMeasure]

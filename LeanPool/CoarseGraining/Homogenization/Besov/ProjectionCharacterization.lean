@@ -60,7 +60,7 @@ theorem cubeBesovOscillation_eq_cubeLpNorm_sub_cubeProjection_of_mem_descendants
     (hR : R ∈ descendantsAtDepth Q j) :
     cubeBesovOscillation R p u = cubeLpNorm R p (fun x => u x - cubeProjection Q j u x) := by
   unfold cubeBesovOscillation cubeLpNorm
-  rw [MeasureTheory.eLpNorm_congr_ae
+  rw [Gagliardo.integralLpSeminorm_congr_ae
     (cubeFluctuation_ae_eq_sub_cubeProjection_of_mem_descendantsAtDepth
       (Q := Q) (R := R) (j := j) u hR)]
 
@@ -199,7 +199,7 @@ theorem cubeLpNorm_cubeIncrement_eq_sub_cubeProjection_of_mem_descendantsAtDepth
     cubeLpNorm R p (cubeIncrement Q (j + 1) u) =
       cubeLpNorm R p (fun x => cubeAverage R u - cubeProjection Q j u x) := by
   unfold cubeLpNorm
-  rw [MeasureTheory.eLpNorm_congr_ae
+  rw [Gagliardo.integralLpSeminorm_congr_ae
     (cubeIncrement_ae_eq_sub_cubeProjection_of_mem_descendantsAtDepth
       (Q := Q) (R := R) (j := j) u hR)]
 
@@ -218,7 +218,7 @@ theorem cubeLpNorm_cubeProjectionGap_eq_sub_cubeProjection_of_mem_descendantsAtD
     cubeLpNorm R p (cubeProjectionGap Q j n u) =
       cubeLpNorm R p (fun x => cubeAverage R u - cubeProjection Q j u x) := by
   unfold cubeLpNorm
-  rw [MeasureTheory.eLpNorm_congr_ae
+  rw [Gagliardo.integralLpSeminorm_congr_ae
     (cubeProjectionGap_ae_eq_sub_cubeProjection_of_mem_descendantsAtDepth
       (Q := Q) (R := R) (j := j) (n := n) u hR)]
 

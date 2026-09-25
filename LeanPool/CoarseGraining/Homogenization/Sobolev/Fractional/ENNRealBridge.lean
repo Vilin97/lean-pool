@@ -40,7 +40,8 @@ theorem ofReal_oscillation_rpow_le (S : TriadicCube d) (p : ℝ≥0∞)
         (ScalarOverlap.normalizedCubeMeasure S)) ^ p.toReal := by
   unfold cubeBesovOverlapOscillation ScalarOverlap.cubeLpNorm
   rw [ENNReal.toReal_rpow]
-  exact ENNReal.ofReal_toReal_le
+  exact ENNReal.ofReal_toReal_le.trans
+    (ENNReal.rpow_le_rpow (integralLpSeminorm_le_eLpNorm _ _ _) ENNReal.toReal_nonneg)
 
 /-- BR3: the depth average crosses to `ℝ≥0∞` as an explicit averaged sum. -/
 theorem ofReal_depthAverage_eq (Q : TriadicCube d) (j : ℕ) (p : ℝ≥0∞)

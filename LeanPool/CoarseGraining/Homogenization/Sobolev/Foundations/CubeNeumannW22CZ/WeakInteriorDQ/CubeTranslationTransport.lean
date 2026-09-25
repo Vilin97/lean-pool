@@ -64,7 +64,9 @@ theorem cubeLpNorm_originCube_comp_addRight_eq_of_memLp {d : ℕ}
     cubeLpNorm (originCube d Q.scale) (2 : ℝ≥0∞)
         (fun x => F (x + triadicCubeShift Q)) =
       cubeLpNorm Q (2 : ℝ≥0∞) F := by
-  unfold cubeLpNorm
+  rw [cubeLpNorm_eq_eLpNorm_toReal _ _ _
+      (memLp_originCube_comp_addRight_of_memLp Q hF).aestronglyMeasurable,
+    cubeLpNorm_eq_eLpNorm_toReal _ _ _ hF.aestronglyMeasurable]
   exact congrArg ENNReal.toReal (by
     simpa [Function.comp] using!
       (MeasureTheory.eLpNorm_comp_measurePreserving
