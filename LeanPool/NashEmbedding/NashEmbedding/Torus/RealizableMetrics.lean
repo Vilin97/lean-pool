@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,11 +12,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Analysis.Calculus.ContDiff.Operations
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
 
 /-!
 # NashEmbedding: Realizable Metrics — Theorems
@@ -22,6 +24,8 @@ import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
 Closure properties, injective realization, flat torus, positive-definite metric closure,
 and stability under perturbation.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open Matrix NashEmbedding.Sobolev

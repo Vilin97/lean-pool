@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,9 +12,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.DualFrame
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.GuntherIdentitySeq
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.DualFrame
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.GuntherIdentitySeq
 
 /-!
 # Theorem B (Günther's perturbation theorem) for the flat torus
@@ -41,6 +43,8 @@ Proof shape:
 
 * `gunther_perturbation` — Günther's perturbation theorem (Wassermann's Theorem B).
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open Filter Topology NashEmbedding.Sobolev Matrix

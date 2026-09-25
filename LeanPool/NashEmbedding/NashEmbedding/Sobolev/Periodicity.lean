@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,8 +12,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Mathlib.Tactic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.Tactic
 
 /-!
 # Periodicity on ℝⁿ
@@ -21,6 +23,8 @@ The `2πℤⁿ`-periodicity predicate and the shift `2πk : ℝⁿ` for
 position-space analytic toolkit (mollifier theory, Riemann-sum
 position form) and by the NashEmbedding smooth-metric structures.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Real

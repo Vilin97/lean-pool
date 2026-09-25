@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,8 +12,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.SeqVector
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.SeqVector
 
 /-!
 # The Günther iteration, abstractly
@@ -39,6 +41,8 @@ limits (e.g. being the coefficients of a real-valued map) holds for `v`.
 Rellich compactness is not used. This is the analytic core of Theorem B; the concrete
 Günther operator is shown to satisfy (E1), (E2) in `GuntherOperator.lean`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Filter Topology NashEmbedding.Sobolev

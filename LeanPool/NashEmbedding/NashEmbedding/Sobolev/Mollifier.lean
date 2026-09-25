@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,13 +12,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-import Mathlib.Analysis.Calculus.BumpFunction.Normed
-import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.RiemannSum
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.IntegrationByParts
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import Mathlib.Analysis.Calculus.BumpFunction.Normed
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.RiemannSum
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.IntegrationByParts
 
 /-!
 # Mollifier existence, rescale technicalities, and Bridge Lemma 1
@@ -36,6 +38,8 @@ Smooth compactly supported infrastructure on ℝⁿ:
 * `convDistrib_memSobolevDistrib` — `convDistrib n φ u ∈ H^s_*` whenever
   `φ` is integrable and `u ∈ H^s_*`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open Complex Real MeasureTheory

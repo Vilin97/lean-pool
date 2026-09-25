@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,14 +12,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Approximation.RealizeMetric
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.Main
-import LeanPool.NashEmbedding.NashEmbedding.Torus.FreeEmbedding
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Assembly
+public import Mathlib.RingTheory.Etale.Weakly
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.TotallySplit
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Approximation.RealizeMetric
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.Main
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.FreeEmbedding
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Assembly
 
 /-!
 # Nash's isometric-embedding theorem for the flat torus `𝕋ⁿ`
@@ -44,6 +46,8 @@ The injective piece comes from adjoining a `√δ'`-scaled flat-torus embedding.
 * `nashTorus` — Nash's theorem for the flat torus: every positive-definite smooth
   `2πℤⁿ`-periodic metric is injectively realizable.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Matrix

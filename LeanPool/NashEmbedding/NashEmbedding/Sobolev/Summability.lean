@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,12 +12,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Analysis.PSeries
-import Mathlib.Analysis.RCLike.Lemmas
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Analysis.MeanInequalities
+public import Mathlib.Analysis.PSeries
+public import Mathlib.Analysis.RCLike.Lemmas
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
 
 /-!
 # Summability and Cauchy–Schwarz for Sobolev sequences
@@ -26,6 +28,8 @@ This file contains:
   with the bound `∑ |aₘ| ≤ C · ‖a‖_(s)`.
 * Absolute and uniform convergence of Fourier series under ℓ¹ summability.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open NashEmbedding.Sobolev

@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,8 +12,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import LeanPool.NashEmbedding.NashEmbedding.Torus.RealizableMetrics
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Approximation.SmoothMetricApprox
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.RealizableMetrics
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Approximation.SmoothMetricApprox
 
 /-!
 # NashEmbedding witness tests: realizable metrics + Theorem A
@@ -23,6 +25,8 @@ Concrete witness checks for `NashEmbedding/Torus/RealizableMetrics.lean` and
 - **TN3** — `injRealizable_posDef`: injectively realizable ⟹ pos-def smooth.
 - **TN4** — `convex_combination_approx` invocation on the flat metric.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open NashEmbedding NashEmbedding.Sobolev Matrix

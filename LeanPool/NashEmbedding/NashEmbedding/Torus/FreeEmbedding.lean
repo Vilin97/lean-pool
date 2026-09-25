@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,8 +12,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.Main
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.Main
 
 /-!
 # A free embedding of the flat torus
@@ -28,6 +30,8 @@ so `N = 2n + n(n-1) = n² + n`. Writing `zᵢ = exp(i xᵢ)`, a real relation
 vanish. The map is defined on a structured index type and transported to `Fin N` by
 `Fintype.equivFin`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Matrix

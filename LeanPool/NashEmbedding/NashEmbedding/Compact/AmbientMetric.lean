@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,15 +12,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Algebra.Order.Archimedean.Real.Hom
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-import Mathlib.Geometry.Manifold.Algebra.LieGroup
-import Mathlib.Geometry.Manifold.Sheaf.Basic
-import Mathlib.Geometry.Manifold.VectorBundle.Riemannian
-import Mathlib.Geometry.Manifold.VectorField.Pullback
-import Mathlib.Tactic
+public import Mathlib.Algebra.Order.Archimedean.Real.Hom
+public import Mathlib.Algebra.Ring.IsFormallyReal
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Mathlib.Geometry.Manifold.Algebra.LieGroup
+public import Mathlib.Geometry.Manifold.Sheaf.Basic
+public import Mathlib.Geometry.Manifold.VectorBundle.Riemannian
+public import Mathlib.Geometry.Manifold.VectorField.Pullback
+public import Mathlib.Tactic
 
 /-!
 # The ambient metric along an immersion
@@ -51,6 +53,8 @@ a smooth expression in `L_tilde x` and `g_tilde x` (leaves L1–L4 for `pinv`).
 
 Leaves L1–L7 and the assembly L8 were proved by Aristotle (project 6f927eaf, 2026-08-30).
 -/
+
+@[expose] public section
 
 open scoped Manifold ContDiff Topology InnerProduct
 open Set Function ContinuousLinearMap Bundle

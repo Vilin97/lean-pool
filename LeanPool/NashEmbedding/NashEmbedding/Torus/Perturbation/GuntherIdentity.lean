@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,9 +12,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
 
 /-!
 # Günther's identity
@@ -32,6 +34,8 @@ We use a generic coordinate partial derivative `pderiv` valid for any normed
 target so that scalar and vector-valued maps are handled uniformly;
 `NashEmbedding.partialDeriv` is its specialisation to `Fin N → ℝ`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff Matrix
 open Matrix

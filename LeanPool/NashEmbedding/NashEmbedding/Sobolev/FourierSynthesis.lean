@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,12 +12,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.MeasureTheory.Integral.Pi
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Summability
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Differentiation
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.MeasureTheory.Integral.Pi
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Summability
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Differentiation
 
 /-!
 # Fourier Synthesis: Smoothness, Sup-Norm Bound, and Basic Properties
@@ -28,6 +30,8 @@ function of class `Cᵏ` that is `2π`-periodic in each variable, and the map
 We prove a concrete bound: for each multi-index `α` with `|α| ≤ k`,
 `sup_θ |∂^α a_check(θ)| ≤ C · ‖a‖_(s+k)`, where `C` depends only on `n`, `s`, `k`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Real
 open NashEmbedding.Sobolev Complex

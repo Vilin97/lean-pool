@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,10 +12,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.Main
-import LeanPool.NashEmbedding.NashEmbedding.Torus.RealizableMetrics
+public import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.Main
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.RealizableMetrics
 
 /-!
 # Glue for the final assembly of Nash's theorem on the torus
@@ -29,6 +31,8 @@ Theorem B's smallness measure `hSize`, and the metric-splitting step of Wasserma
   `δ > 0` with `g - δ • g₀` still positive definite (compactness of the period cube and
   `posDefSmoothMetric_stability`).
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Matrix

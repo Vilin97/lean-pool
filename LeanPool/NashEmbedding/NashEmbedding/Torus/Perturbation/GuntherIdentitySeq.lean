@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,10 +12,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.GuntherIdentity
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.GuntherOperator
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.CoeffTransport
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.GuntherIdentity
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.GuntherOperator
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.CoeffTransport
 
 /-!
 # Günther's identity on the momentum side
@@ -32,6 +34,8 @@ Consequently the polarized pieces `Fb`, `Ub` of the Günther operator satisfy
 ansatz of Theorem B. The dictionary between real maps `ℝⁿ → ℝᴺ` and vector sequences
 (`vcoeff`, `vsynth`) is set up here as well.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Matrix

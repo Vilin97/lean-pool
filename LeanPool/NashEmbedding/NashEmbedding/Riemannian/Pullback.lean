@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,7 +12,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import LeanPool.NashEmbedding.NashEmbedding.Riemannian.Induced
+public import LeanPool.NashEmbedding.NashEmbedding.Riemannian.Induced
 
 /-!
 # Pullback metrics and product metrics
@@ -31,6 +33,8 @@ Applications: the flat torus `Circle × Circle` (so `nashCompact` can be compare
 `nashTorus`), products of spheres, and in general any product of manifolds that already
 carry metrics.
 -/
+
+@[expose] public section
 
 open scoped Manifold ContDiff Topology
 open Bundle Function ContinuousLinearMap Bornology Metric

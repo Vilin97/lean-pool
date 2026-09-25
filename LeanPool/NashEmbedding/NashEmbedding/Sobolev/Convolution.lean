@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,9 +12,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Distribution
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Distribution
 
 /-!
 # Convolution by a compactly supported smooth function
@@ -36,6 +38,8 @@ mollifier convergence theorem: `φ_ε * u → (∫ φ) · u` in `H^s` as `ε →
 * `ftRn_rescale` — the rescaling identity `(φ_ε)^(ξ) = φ̂(εξ)`.
 * `mollifier_convergence` — mollifier convergence theorem.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev MeasureTheory

@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,11 +12,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Algebra.Order.Archimedean.Real.Hom
-import Mathlib.Algebra.Order.Chebyshev
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Approximation.SmoothMetricApprox
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Approximation.BumpConstruction
+public import Mathlib.Algebra.Order.Archimedean.Real.Hom
+public import Mathlib.Algebra.Order.Chebyshev
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Approximation.SmoothMetricApprox
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Approximation.BumpConstruction
 
 /-!
 # Realization of `f·B` and Theorem A
@@ -30,6 +32,8 @@ positive-definite smooth metric is an `H^s`-limit of realizable ones.
 * `realizable_approx` — Theorem A for a fixed Sobolev index `s`;
 * `realizable_approx_all_s` — Theorem A for every `s` (the form used by `nashTorus`).
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open MeasureTheory Real Matrix

@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,14 +12,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Analysis.Fourier.AddCircleMulti
-import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.MeasureTheory.Integral.DivergenceTheorem
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-import Mathlib.Tactic
-import Mathlib.Topology.Separation.CompletelyRegular
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Distribution
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodicity
+public import Mathlib.Analysis.Fourier.AddCircleMulti
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.MeasureTheory.Integral.DivergenceTheorem
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+public import Mathlib.Tactic
+public import Mathlib.Topology.Separation.CompletelyRegular
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Distribution
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodicity
 
 /-!
 # Periodization and smooth-periodic Sobolev embeddings
@@ -60,6 +62,8 @@ on ℝⁿ to the momentum-side Sobolev structures of `DistributionSobolev`.
 * `smooth_periodic_memSobolevDistrib` — smooth `2πℤⁿ`-periodic ⟹
   in every `MemSobolevDistrib n s`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open Complex Real MeasureTheory

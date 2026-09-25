@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,9 +12,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Analysis.SpecialFunctions.SmoothTransition
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
-import LeanPool.NashEmbedding.NashEmbedding.Torus.RealizableMetrics
+public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.RealizableMetrics
 
 /-!
 # NashEmbedding tests: ContDiff encoding patch (smooth vs analytic)
@@ -33,6 +35,8 @@ Tests A1, W, Y, Z elaborate in either state — they exercise concrete
 witnesses (zero, `flatTorusEmb`, `flatMetric`) all of which happen to
 be analytic.
 -/
+
+@[expose] public section
 
 open scoped ContDiff
 open NashEmbedding NashEmbedding.Sobolev

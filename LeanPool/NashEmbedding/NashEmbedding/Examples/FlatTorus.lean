@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,9 +12,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Geometry.Manifold.Instances.Sphere
-import LeanPool.NashEmbedding.NashEmbedding.Riemannian.Pullback
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Main
+public import Mathlib.Geometry.Manifold.Instances.Sphere
+public import LeanPool.NashEmbedding.NashEmbedding.Riemannian.Pullback
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Main
 
 /-!
 # Cross-check: the flat torus 𝕋² via `nashCompact` vs. `nashTorus`
@@ -40,6 +42,8 @@ The nine leaves were proved by Aristotle (project 1c05ddd8, 2026-08-30); the
 assembly `torus2_matches_nashTorus` is by hand.  L7 is a general reusable fact
 (`Realizes u g` + pointwise `PosDef g` ⇒ `HasFullRankDeriv u`).
 -/
+
+@[expose] public section
 
 open scoped Manifold ContDiff Topology
 open Bundle Function ContinuousLinearMap Complex Matrix

@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,7 +12,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import LeanPool.NashEmbedding.NashEmbedding.Compact.Main
+public import LeanPool.NashEmbedding.NashEmbedding.Compact.Main
 
 /-!
 # A negative witness for `PullsBackEuclidean`
@@ -19,6 +21,8 @@ On a nonempty manifold with positive-dimensional model space, a constant map int
 Euclidean space cannot pull the Euclidean inner product back to a Riemannian metric —
 its differential is zero, so the pullback is degenerate.
 -/
+
+@[expose] public section
 
 open scoped Manifold ContDiff
 open Bundle Function

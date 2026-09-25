@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,7 +12,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request and direction of David Wiygul
 -/
-import LeanPool.NashEmbedding.NashEmbedding.Compact.Main
+public import LeanPool.NashEmbedding.NashEmbedding.Compact.Main
 
 /-!
 # Solution to the Challenge
@@ -23,6 +25,8 @@ predicate `PullsBackEuclidean`, whose definition unfolds to exactly the Challeng
 The underlying `NashEmbedding` development was substantially formalized by
 Aristotle (Harmonic); see the repository provenance record.
 -/
+
+@[expose] public section
 
 open scoped Manifold ContDiff
 open Bundle

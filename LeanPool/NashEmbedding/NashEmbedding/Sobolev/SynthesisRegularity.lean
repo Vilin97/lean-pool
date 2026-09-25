@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,15 +12,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Analysis.Calculus.SmoothSeries
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Summability
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Differentiation
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.FourierSynthesis
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodicity
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodization
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.MultiplicationSharp
+public import Mathlib.Analysis.Calculus.SmoothSeries
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Summability
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Differentiation
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.FourierSynthesis
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodicity
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodization
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.MultiplicationSharp
 
 /-!
 # Regularity and multiplicativity of Fourier synthesis
@@ -39,6 +41,8 @@ Conventions: `fourierSynthesis n a θ = ∑' m, a m * fourierExp n m θ` with
 `seqConv a b m = ∑' i, a i * b (m - i)`; `partialDeriv j g θ = fderiv ℝ g θ (eⱼ)`;
 smoothness is `ContDiff ℝ ∞` (`open scoped ContDiff`), never `⊤`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Complex

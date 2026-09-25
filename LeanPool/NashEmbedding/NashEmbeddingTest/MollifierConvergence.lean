@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,7 +12,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Convolution
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Convolution
 
 /-!
 # Sharp `mollifier_convergence` witness tests
@@ -23,6 +25,8 @@ momentum-space delta `δ_{m₀}`:
   coefficient `ftRn φ (ε • m₀)`.
 - **W3** — `mollifier_convergence` invoked on `δ_{m₀}`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open NashEmbedding.Sobolev MeasureTheory

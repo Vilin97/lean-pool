@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,12 +12,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.CompactInclusion
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Summability
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Differentiation
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.FourierSynthesis
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.CompactInclusion
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Summability
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Differentiation
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.FourierSynthesis
 
 /-!
 # Distribution-Side Sobolev Spaces on the Torus
@@ -55,6 +57,8 @@ from `ℓ²_(s)`.
 * `stdFourierCoeff_fourierSynthesis` — Fourier coefficient recovery
 * `sobolev_embedding_factorization` — `ι(ε(φ)) = φ` in `X_n^*`
 -/
+
+@[expose] public section
 
 open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev

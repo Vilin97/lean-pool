@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,12 +12,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodization
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Mollifier
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.PositionSpace
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Inequalities
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodization
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Mollifier
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.PositionSpace
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Inequalities
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
 
 /-!
 # NashEmbedding: Theorem A (convex-combination approximation)
@@ -43,6 +45,8 @@ bound applied per entry (combining Bridge Lemma 2, Fourier inversion,
 real-imaginary decomposition of `periodicExtension`, linearity of
 `integrationEmbed`, and `sobolevNormSqDistrib_triangle`).
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open Complex Real NashEmbedding.Sobolev MeasureTheory Matrix

@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,12 +12,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodization
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.SynthesisRegularity
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.ConvolutionAlgebra
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Limits
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Resolvent
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodization
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.SynthesisRegularity
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.ConvolutionAlgebra
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Limits
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Resolvent
 
 /-!
 # Transport between position space and momentum space
@@ -32,6 +34,8 @@ stated):
 * `fourierSynthesis` is linear on absolutely summable sequences;
 * `IsRapidDecay` is closed under all the momentum-side operations of the Günther operator.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ComplexConjugate ContDiff
 open Complex

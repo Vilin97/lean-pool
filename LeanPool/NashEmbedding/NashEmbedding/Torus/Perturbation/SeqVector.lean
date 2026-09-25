@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,8 +12,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Limits
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Limits
 
 /-!
 # Vector-valued coefficient sequences
@@ -24,6 +26,8 @@ are the pointwise `Pi` instances, so `(v + w) α m = v α m + w α m` definition
 This file lifts the scalar facts of `SobolevLimits` (quasi-triangle inequalities, Fatou,
 Cauchy limits) to vector sequences. They are consumed by the abstract Günther iteration.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Filter Topology NashEmbedding.Sobolev

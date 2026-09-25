@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,12 +12,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Data.Int.Star
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic
-import Mathlib.Topology.Separation.CompletelyRegular
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Convolution
+public import Mathlib.Data.Int.Star
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Tactic
+public import Mathlib.Topology.Separation.CompletelyRegular
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Convolution
 
 /-!
 # Riemann-Sum Approximation of Convolution
@@ -35,6 +37,8 @@ its convergence to the convolution `φ * u` in `H^s_{2πℤⁿ}(ℝⁿ)` as `M �
 * `memSobolevDistrib_riemannSumDistrib` — H^s closure of `R^φ_M u`
 * `riemannSum_convergence` — `R^φ_M u → φ * u` in `H^s` as `M → ∞`
 -/
+
+@[expose] public section
 
 open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev MeasureTheory

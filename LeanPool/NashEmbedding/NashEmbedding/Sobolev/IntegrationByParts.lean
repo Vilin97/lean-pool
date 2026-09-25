@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,11 +12,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Convolution
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodization
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.RiemannSum
+public import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Convolution
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodization
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.RiemannSum
 
 /-!
 # Fourier-transform Integration By Parts (Bridge Lemma 1)
@@ -42,6 +44,8 @@ estimate used in `cinfty_rapidDecay` (Bridge Lemma 1 for the assembly).
   the trivial sup bound `ftRn_norm_le` on `Δ^N φ`, and
   `memSobolev_of_rapid_decay`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open Complex Real MeasureTheory

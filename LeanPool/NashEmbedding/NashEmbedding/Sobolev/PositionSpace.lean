@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,9 +12,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodization
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Mollifier
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodization
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Mollifier
 
 /-!
 # Position-space form of the Riemann sum (Bridge Lemma 2)
@@ -40,6 +42,8 @@ its smoothness, periodicity, and non-negativity properties.
 * `convexComboScalar_contDiff`, `convexComboScalar_isPeriodic2Pi`,
   `convexComboScalar_nonneg` — properties of the scalar coefficient.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open Complex Real MeasureTheory

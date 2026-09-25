@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,10 +12,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.GuntherIteration
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.ConvolutionAlgebra
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.MultiplicationBootstrap
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.GuntherIteration
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.ConvolutionAlgebra
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.MultiplicationBootstrap
 
 /-!
 # The Günther operator on the momentum side
@@ -46,6 +48,8 @@ iteration (`GuntherIteration.lean`):
 
 All constants are explicit `def`s; no attempt is made to optimize them.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Filter Topology NashEmbedding.Sobolev

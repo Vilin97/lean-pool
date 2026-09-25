@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,13 +12,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Data.Int.Star
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-import Mathlib.Tactic
-import Mathlib.Topology.Separation.CompletelyRegular
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Distribution
+public import Mathlib.Algebra.Ring.IsFormallyReal
+public import Mathlib.Data.Int.Star
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.Tactic
+public import Mathlib.Topology.Separation.CompletelyRegular
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Distribution
 
 /-!
 # Sobolev Multiplication on the Torus
@@ -33,6 +35,8 @@ coefficient sequences).
 * `smoothMulDistrib` — Distribution-side product definition
 * `sobolev_mul_dist` — First multiplication theorem (distribution side)
 -/
+
+@[expose] public section
 
 open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev

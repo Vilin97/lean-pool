@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,15 +12,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
-import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.MeasureTheory.Integral.Pi
-import Mathlib.Tactic
-import Mathlib.Topology.UniformSpace.Uniformizable
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
+public import Mathlib.Algebra.Ring.IsFormallyReal
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+public import Mathlib.Analysis.Matrix.PosDef
+public import Mathlib.MeasureTheory.Integral.Pi
+public import Mathlib.Tactic
+public import Mathlib.Topology.UniformSpace.Uniformizable
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
 
 /-!
 # Bump construction for Theorem A
@@ -36,6 +38,8 @@ matrix `∫ ∂ᵢψ ∂ⱼψ` (diagonal, explicit).
 * `dil n β t = η (β t)`; `∫ (dil β)² = etaMass/β`, `∫ (dil β)'² = β·etaDerivMass`,
   `∫ dil β · (dil β)' = 0`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open MeasureTheory Real

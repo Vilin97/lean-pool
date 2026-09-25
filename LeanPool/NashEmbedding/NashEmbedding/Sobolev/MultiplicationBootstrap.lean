@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,13 +12,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Summability
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Distribution
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Multiplication
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.MultiplicationSharp
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Summability
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Distribution
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Multiplication
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.MultiplicationSharp
 
 /-!
 # Third Sobolev Multiplication Theorem
@@ -30,6 +32,8 @@ bootstrap inequality used in Nash's isometric embedding theorem.
 * `third_multiplication_theorem_seq` — sequence-side result
 * `third_multiplication_theorem` — distribution-side result
 -/
+
+@[expose] public section
 
 open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev

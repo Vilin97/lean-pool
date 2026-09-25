@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,12 +12,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import LeanPool.NashEmbedding.NashEmbedding.Compact.Main
-import LeanPool.NashEmbedding.NashEmbedding.Riemannian.Induced
-import LeanPool.NashEmbedding.NashEmbedding.Riemannian.Pullback
-import LeanPool.NashEmbedding.NashEmbedding.Examples.FlatTorus
-import LeanPool.NashEmbedding.NashEmbedding.Examples.Sphere
-import LeanPool.NashEmbedding.NashEmbedding.Examples.Negative
+public import LeanPool.NashEmbedding.NashEmbedding.Compact.Main
+public import LeanPool.NashEmbedding.NashEmbedding.Riemannian.Induced
+public import LeanPool.NashEmbedding.NashEmbedding.Riemannian.Pullback
+public import LeanPool.NashEmbedding.NashEmbedding.Examples.FlatTorus
+public import LeanPool.NashEmbedding.NashEmbedding.Examples.Sphere
+public import LeanPool.NashEmbedding.NashEmbedding.Examples.Negative
 
 /-!
 # NashCompact witness compile-checks
@@ -29,6 +31,8 @@ concrete manifolds.
 Axiom guards for the top-level results live in `scripts/axioms.lean`; this
 file has no `#print axioms` blocks.
 -/
+
+@[expose] public section
 
 open scoped Manifold ContDiff
 

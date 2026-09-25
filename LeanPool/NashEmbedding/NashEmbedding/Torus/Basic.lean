@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,12 +12,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Analysis.Calculus.ContDiff.Defs
-import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-import Mathlib.Analysis.RCLike.Lemmas
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodicity
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Mathlib.Analysis.RCLike.Lemmas
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodicity
 
 /-!
 # NashEmbedding: Basic Definitions
@@ -23,6 +25,8 @@ import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodicity
 Periodicity, smooth periodic functions, smooth metrics, realizable metrics,
 injective embeddings, flat torus embedding.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open Matrix NashEmbedding.Sobolev

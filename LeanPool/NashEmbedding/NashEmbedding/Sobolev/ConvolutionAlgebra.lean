@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,12 +12,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Differentiation
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.FourierSynthesis
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.MultiplicationSharp
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Resolvent
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Differentiation
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.FourierSynthesis
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.MultiplicationSharp
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Resolvent
 
 /-!
 # Algebra of coefficient convolution, and conjugate reflection
@@ -34,6 +36,8 @@ the momentum side. This file records:
 The Günther operator is built from these operations, so it preserves `conjReflect`-fixed
 sequences; this is how the fixed point of Theorem B is seen to be real (`ℝᴺ`-valued).
 -/
+
+@[expose] public section
 
 open scoped BigOperators ComplexConjugate
 open Complex

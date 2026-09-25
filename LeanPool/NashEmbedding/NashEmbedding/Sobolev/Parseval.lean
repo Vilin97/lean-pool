@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,7 +12,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodization
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodization
 
 /-!
 # Parseval's identity for continuous periodic functions
@@ -25,6 +27,8 @@ Mathlib's `hasSum_sq_mFourierCoeff` on `L²` (via `mFourierCoeff_toLp`) gives th
 with the torus integral of `|f|²`, which `integral_periodCube_eq_torus` converts to the
 cube integral.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Real MeasureTheory

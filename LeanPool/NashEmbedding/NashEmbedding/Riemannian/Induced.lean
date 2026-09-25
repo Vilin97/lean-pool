@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,7 +12,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import LeanPool.NashEmbedding.NashEmbedding.Compact.Main
+public import LeanPool.NashEmbedding.NashEmbedding.Compact.Main
 
 /-!
 # The metric induced by an immersion into an inner-product space
@@ -25,6 +27,8 @@ any other submanifold of Euclidean space Mathlib provides.
 Leaves L1–L4 (symmetry, positivity, von Neumann boundedness, section smoothness) were
 proved by Aristotle (project c61ad094, 2026-08-30); `inducedMetric` packages them.
 -/
+
+@[expose] public section
 
 open scoped Manifold ContDiff Topology
 open Bundle Function ContinuousLinearMap Bornology Metric

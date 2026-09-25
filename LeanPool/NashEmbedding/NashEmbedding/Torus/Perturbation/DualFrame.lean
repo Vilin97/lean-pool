@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,9 +12,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Analysis.Calculus.ContDiff.Operations
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
 
 /-!
 # Dual frames
@@ -29,6 +31,8 @@ In Theorem B (Günther's perturbation theorem) this is applied to the frame
 `aᵢ, b_{pq}` with which the ansatz `v ⬝ ∂ᵢu⁰ = -Fᵢ(v)`, `v ⬝ ∂ᵢ∂ⱼu⁰ = ½(Uᵢⱼ(v) - hᵢⱼ)`
 is solved pointwise. Periodicity of the dual frame is inherited pointwise.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Matrix

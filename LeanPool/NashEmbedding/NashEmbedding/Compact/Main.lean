@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,12 +12,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Tactic
-import Mathlib.Geometry.Manifold.Riemannian.Basic
-import LeanPool.NashEmbedding.NashEmbedding.Torus.Main
-import LeanPool.NashEmbedding.NashEmbedding.Compact.WhitneyExtension
-import LeanPool.NashEmbedding.NashEmbedding.Compact.AmbientMetric
-import LeanPool.NashEmbedding.NashEmbedding.Compact.Periodization
+public import Mathlib.Tactic
+public import Mathlib.Geometry.Manifold.Riemannian.Basic
+public import LeanPool.NashEmbedding.NashEmbedding.Torus.Main
+public import LeanPool.NashEmbedding.NashEmbedding.Compact.WhitneyExtension
+public import LeanPool.NashEmbedding.NashEmbedding.Compact.AmbientMetric
+public import LeanPool.NashEmbedding.NashEmbedding.Compact.Periodization
 
 /-!
 # Nash embedding for compact manifolds
@@ -45,6 +47,8 @@ proved by Aristotle (projects 564db993, 6f927eaf, bf61e09c, 7856eea9; 2026-08-30
 * `nashCompact_isClosedEmbedding`, `PullsBackEuclidean.injective_mfderiv` — the map is a
   closed embedding and an immersion.
 -/
+
+@[expose] public section
 
 open scoped Manifold ContDiff Topology
 open Bundle Set Function Matrix

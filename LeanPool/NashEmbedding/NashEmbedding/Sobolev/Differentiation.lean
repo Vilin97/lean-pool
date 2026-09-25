@@ -3,6 +3,8 @@ Copyright (c) 2026 David Wiygul. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wiygul
 -/
+module
+
 
 /-
 Copyright (c) 2026 David Wiygul. All rights reserved.
@@ -10,11 +12,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib.Analysis.Normed.Group.Tannery
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Tactic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
-import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Summability
+public import Mathlib.Analysis.Normed.Group.Tannery
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Tactic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
+public import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Summability
 
 /-!
 # Term-by-term differentiation of Fourier series
@@ -23,6 +25,8 @@ If `∑ |bₘ| < ∞` and `∑ |mⱼ| |bₘ| < ∞`, then the Fourier series
 `f(θ) = ∑ bₘ eₘ(θ)` is continuously differentiable with
 `∂f/∂θⱼ(θ) = ∑ i mⱼ bₘ eₘ(θ)`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open NashEmbedding.Sobolev Complex
