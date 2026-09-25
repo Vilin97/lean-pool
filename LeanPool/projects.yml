@@ -10173,19 +10173,22 @@ projects:
   - title: Coarse-graining theory for elliptic equations
     summary: Develops the function-space, deterministic, probabilistic, and homogenization-scale machinery
       of quantitative stochastic homogenization. Includes the quenched minimal-scale theorem and a uniformly
-      elliptic, isotropic specialization of the homogenization comparison estimate.
+      elliptic specialization of the homogenization comparison estimate in dimensions d ≥ 2, for stationary
+      unit-range isotropic laws invariant under adjoints.
     branch: partial differential equations
     main_declarations:
     - Homogenization.Book.MainResults.homogenizationComparison_uniformEllipticity
     - Homogenization.Book.MainResults.annealedConvergence_uniformEllipticity
     main_results:
     - declaration: Homogenization.Book.MainResults.homogenizationComparison_uniformEllipticity
-      informal: For a stationary unit-range isotropic uniformly elliptic coefficient law, heterogeneous
-        and homogenized elliptic solutions satisfy a quantitative comparison estimate above a random
-        minimal scale with stretched-exponential tails.
+      informal: In dimensions d ≥ 2, for a stationary unit-range isotropic adjoint-invariant uniformly
+        elliptic coefficient law, heterogeneous and homogenized weak elliptic solutions with common
+        forcing and boundary data satisfy the stated comparison-defect estimate above a random minimal
+        scale with stretched-exponential tails, assuming the stated fractional-Sobolev regularity of
+        the force.
     - declaration: Homogenization.Book.MainResults.annealedConvergence_uniformEllipticity
-      informal: Uniform ellipticity supplies quantitative annealed convergence at the homogenization
-        scale.
+      informal: For stationary unit-range isotropic adjoint-invariant uniformly elliptic laws in dimensions
+        d ≥ 2, the annealed contrast converges to 1 at an algebraic rate above the entry scale.
     tags:
     - elliptic-pde
     - stochastic-homogenization
