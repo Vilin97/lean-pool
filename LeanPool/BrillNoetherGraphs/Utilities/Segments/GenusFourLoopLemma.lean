@@ -220,6 +220,282 @@ marker.  Its depth is the length of the shorter path. -/
 def loopRampPotential {n : ℕ} (marker : Fin n) (depth : ℕ) : Fin n → ℤ :=
   fun vertex => if vertex = marker then -(depth : ℤ) else 0
 
+private theorem sum_two_ite {p : ℕ} (first second : Fin p)
+    (hFirstSecond : first ≠ second) (A B : ℤ) :
+    (∑ edge : Fin p,
+      if edge = first then A else if edge = second then B else 0) = A + B := by
+  calc
+    _ = ∑ edge : Fin p,
+        ((if edge = first then A else 0) +
+          (if edge = second then B else 0)) := by
+      apply Finset.sum_congr rfl
+      intro edge _
+      by_cases hEF : edge = first <;> by_cases hES : edge = second
+      · subst edge
+        exact (hFirstSecond hES).elim
+      · simp [hEF, hFirstSecond]
+      · simp [hES, hFirstSecond.symm]
+      · simp [hEF, hES]
+    _ = A + B := by
+      rw [Finset.sum_add_distrib]
+      simp only [Fintype.sum_ite_eq']
+
+private theorem twoChipReflection_of_ramp_equal
+    {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
+    (base marker : Fin n) (first second : Fin p)
+    (hFirstSecond : first ≠ second)
+    (hFirstTail : spec.core.tail first = base)
+    (hFirstHead : spec.core.head first = marker)
+    (hSecondTail : spec.core.tail second = base)
+    (hSecondHead : spec.core.head second = marker)
+    (hBaseMarker : base ≠ marker) (potential : Fin n → ℤ)
+    (hOtherRise : ∀ edge : Fin p, edge ≠ first → edge ≠ second →
+      spec.coreRise potential edge = 0)
+    (hFirstStep : ∀ i : ℕ,
+      SubdivisionArithmetic.step (spec.length first) (spec.coreRise potential first) i =
+        if i < spec.length first then -1 else 0)
+    (hSecondStep : ∀ i : ℕ,
+      SubdivisionArithmetic.step (spec.length second) (spec.coreRise potential second) i =
+        if i < spec.length first then -1 else 0)
+    (hFirstInitial :
+      SubdivisionArithmetic.step (spec.length first) (spec.coreRise potential first) 0 = -1)
+    (hFirstFinal : SubdivisionArithmetic.step (spec.length first)
+      (spec.coreRise potential first) (spec.length first - 1) = -1)
+    (hSecondInitial :
+      SubdivisionArithmetic.step (spec.length second) (spec.coreRise potential second) 0 = -1)
+    (hEqual : spec.length first = spec.length second) :
+    TwoChipReflection (G := spec.graph)
+      (spec.coreVertex base) (spec.coreVertex marker) := by
+  classical
+  let script : firingScript spec.graph := spec.interpolatedScript potential
+  refine ⟨spec.coreVertex marker, script, ?_⟩
+  funext vertex
+  rcases vertex with vertex | interior
+  · dsimp [script]
+    change prin spec.graph (spec.interpolatedScript potential)
+      (spec.coreVertex vertex) = _
+    rw [spec.prin_interpolatedScript_core_eq_endpointSum]
+    have hTerm (edge : Fin p) :
+        ((if spec.core.tail edge = vertex then
+            SubdivisionArithmetic.step (spec.length edge)
+              (spec.coreRise potential edge) 0 else 0) +
+          (if spec.core.head edge = vertex then
+            -SubdivisionArithmetic.step (spec.length edge)
+              (spec.coreRise potential edge)
+              (spec.length edge - 1) else 0)) =
+          if edge = first then
+            (if vertex = base then -1 else 0) +
+              (if vertex = marker then 1 else 0)
+          else if edge = second then
+            (if vertex = base then -1 else 0) +
+              (if vertex = marker then 1 else 0)
+          else 0 := by
+      by_cases hEF : edge = first
+      · subst edge
+        simp only [if_pos]
+        simp only [hFirstTail, hFirstHead, hFirstInitial,
+          hFirstFinal, neg_neg, eq_comm]
+      · by_cases hES : edge = second
+        · subst edge
+          simp only [if_pos]
+          have hLast : spec.length second - 1 < spec.length first := by
+            rw [hEqual]
+            exact Nat.sub_lt (spec.length_pos second) (by omega)
+          have hSecondFinal :
+              SubdivisionArithmetic.step (spec.length second)
+                  (spec.coreRise potential second)
+                  (spec.length second - 1) = -1 := by
+            rw [hSecondStep]
+            simp [hLast]
+          simp [hSecondTail, hSecondHead, hSecondInitial,
+            hSecondFinal, hFirstSecond.symm, eq_comm]
+        · simp only [if_neg hEF, if_neg hES]
+          rw [hOtherRise edge hEF hES]
+          have hLast : spec.length edge - 1 < spec.length edge :=
+            Nat.sub_lt (spec.length_pos edge) (by omega)
+          simp [SubdivisionArithmetic.step_zero_of_lt
+            (spec.length_pos edge),
+            SubdivisionArithmetic.step_zero_of_lt hLast]
+    simp_rw [hTerm]
+    rw [sum_two_ite first second hFirstSecond]
+    by_cases hVB : vertex = base <;> by_cases hVM : vertex = marker <;>
+      simp_all [oneChip, SubdivisionGraph.Spec.coreVertex]
+  · obtain ⟨edge, offset⟩ := interior
+    dsimp [script]
+    change prin spec.graph (spec.interpolatedScript potential)
+      (spec.interiorVertex edge offset) = _
+    rw [spec.prin_interpolatedScript_interior_eq_stepDifference]
+    by_cases hEF : edge = first
+    · subst edge
+      have hOffset : offset.val + 1 < spec.length first := by
+        have := offset.isLt
+        omega
+      have hOffset' : offset.val < spec.length first := by omega
+      rw [hFirstStep, hFirstStep]
+      simp [hOffset, hOffset', oneChip,
+        SubdivisionGraph.Spec.coreVertex]
+    · by_cases hES : edge = second
+      · subst edge
+        have hOffset : offset.val + 1 < spec.length first := by
+          have := offset.isLt
+          omega
+        have hOffset' : offset.val < spec.length first := by omega
+        rw [hSecondStep, hSecondStep]
+        simp [hOffset, hOffset', oneChip,
+          SubdivisionGraph.Spec.coreVertex]
+      · rw [hOtherRise edge hEF hES]
+        have hNext : offset.val + 1 < spec.length edge := by
+          have := offset.isLt
+          omega
+        have hHere : offset.val < spec.length edge := by omega
+        rw [SubdivisionArithmetic.step_zero_of_lt (L := spec.length edge)
+          (i := offset.val + 1) hNext]
+        rw [SubdivisionArithmetic.step_zero_of_lt (L := spec.length edge)
+          (i := offset.val) hHere]
+        simp [oneChip, SubdivisionGraph.Spec.coreVertex]
+
+private theorem twoChipReflection_of_ramp_strict
+    {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
+    (base marker : Fin n) (first second : Fin p)
+    (hFirstSecond : first ≠ second)
+    (hFirstTail : spec.core.tail first = base)
+    (hFirstHead : spec.core.head first = marker)
+    (hSecondTail : spec.core.tail second = base)
+    (hSecondHead : spec.core.head second = marker)
+    (hBaseMarker : base ≠ marker) (potential : Fin n → ℤ)
+    (hOtherRise : ∀ edge : Fin p, edge ≠ first → edge ≠ second →
+      spec.coreRise potential edge = 0)
+    (hFirstStep : ∀ i : ℕ,
+      SubdivisionArithmetic.step (spec.length first) (spec.coreRise potential first) i =
+        if i < spec.length first then -1 else 0)
+    (hSecondStep : ∀ i : ℕ,
+      SubdivisionArithmetic.step (spec.length second) (spec.coreRise potential second) i =
+        if i < spec.length first then -1 else 0)
+    (hFirstInitial :
+      SubdivisionArithmetic.step (spec.length first) (spec.coreRise potential first) 0 = -1)
+    (hFirstFinal : SubdivisionArithmetic.step (spec.length first)
+      (spec.coreRise potential first) (spec.length first - 1) = -1)
+    (hSecondInitial :
+      SubdivisionArithmetic.step (spec.length second) (spec.coreRise potential second) 0 = -1)
+    (hStrict : spec.length first < spec.length second) :
+    TwoChipReflection (G := spec.graph)
+      (spec.coreVertex base) (spec.coreVertex marker) := by
+  classical
+  let script : firingScript spec.graph := spec.interpolatedScript potential
+  have hFirstLength := spec.length_pos first
+  let offset : Fin (spec.length second - 1) :=
+    ⟨spec.length first - 1, by omega⟩
+  refine ⟨spec.interiorVertex second offset, script, ?_⟩
+  funext vertex
+  rcases vertex with vertex | interior
+  · dsimp [script]
+    change prin spec.graph (spec.interpolatedScript potential)
+      (spec.coreVertex vertex) = _
+    rw [spec.prin_interpolatedScript_core_eq_endpointSum]
+    have hTerm (edge : Fin p) :
+        ((if spec.core.tail edge = vertex then
+            SubdivisionArithmetic.step (spec.length edge)
+              (spec.coreRise potential edge) 0 else 0) +
+          (if spec.core.head edge = vertex then
+            -SubdivisionArithmetic.step (spec.length edge)
+              (spec.coreRise potential edge)
+              (spec.length edge - 1) else 0)) =
+          if edge = first then
+            (if vertex = base then -1 else 0) +
+              (if vertex = marker then 1 else 0)
+          else if edge = second then
+            (if vertex = base then -1 else 0)
+          else 0 := by
+      by_cases hEF : edge = first
+      · subst edge
+        simp only [if_pos]
+        simp only [hFirstTail, hFirstHead, hFirstInitial,
+          hFirstFinal, neg_neg, eq_comm]
+      · by_cases hES : edge = second
+        · subst edge
+          simp only [if_pos]
+          have hLast : ¬ spec.length second - 1 < spec.length first := by
+            omega
+          have hSecondFinal :
+              SubdivisionArithmetic.step (spec.length second)
+                  (spec.coreRise potential second)
+                  (spec.length second - 1) = 0 := by
+            rw [hSecondStep]
+            simp [hLast]
+          have hNot : second ≠ first := hFirstSecond.symm
+          simp [hSecondTail, hSecondHead, hSecondInitial,
+            hSecondFinal, hNot, eq_comm]
+        · simp only [if_neg hEF, if_neg hES]
+          rw [hOtherRise edge hEF hES]
+          have hLast : spec.length edge - 1 < spec.length edge :=
+            Nat.sub_lt (spec.length_pos edge) (by omega)
+          simp [SubdivisionArithmetic.step_zero_of_lt
+            (spec.length_pos edge),
+            SubdivisionArithmetic.step_zero_of_lt hLast]
+    simp_rw [hTerm]
+    rw [sum_two_ite first second hFirstSecond]
+    by_cases hVB : vertex = base <;> by_cases hVM : vertex = marker <;>
+      simp_all [oneChip, SubdivisionGraph.Spec.coreVertex,
+        SubdivisionGraph.Spec.interiorVertex]
+  · obtain ⟨edge, interiorOffset⟩ := interior
+    dsimp [script]
+    change prin spec.graph (spec.interpolatedScript potential)
+      (spec.interiorVertex edge interiorOffset) = _
+    rw [spec.prin_interpolatedScript_interior_eq_stepDifference]
+    by_cases hEF : edge = first
+    · subst edge
+      have hOffset : interiorOffset.val + 1 < spec.length first :=
+        by have := interiorOffset.isLt; omega
+      have hOffset' : interiorOffset.val < spec.length first := by omega
+      rw [hFirstStep, hFirstStep]
+      simp [hOffset, hOffset', oneChip, hFirstSecond,
+        SubdivisionGraph.Spec.coreVertex,
+        SubdivisionGraph.Spec.interiorVertex]
+    · by_cases hES : edge = second
+      · subst edge
+        by_cases hOffset : interiorOffset = offset
+        · subst interiorOffset
+          rw [hSecondStep, hSecondStep]
+          have hDepth : spec.length first - 1 + 1 = spec.length first := by
+            omega
+          simp [offset, hFirstLength, hDepth,
+            SubdivisionGraph.Spec.coreVertex,
+            SubdivisionGraph.Spec.interiorVertex]
+        · have hValNe : interiorOffset.val ≠ spec.length first - 1 := by
+            intro hVal
+            apply hOffset
+            apply Fin.ext
+            exact hVal
+          have hEither :
+              interiorOffset.val + 1 < spec.length first ∨
+                spec.length first ≤ interiorOffset.val := by
+            omega
+          rcases hEither with hBefore | hAfter
+          · have hBefore' : interiorOffset.val < spec.length first := by omega
+            rw [hSecondStep, hSecondStep]
+            simp [hBefore, hBefore', hOffset,
+              SubdivisionGraph.Spec.coreVertex,
+              SubdivisionGraph.Spec.interiorVertex]
+          · have hAfter' : ¬ interiorOffset.val + 1 < spec.length first := by
+              omega
+            have hAfter'' : ¬ interiorOffset.val < spec.length first := by
+              omega
+            rw [hSecondStep, hSecondStep]
+            simp [hAfter', hAfter'', hOffset,
+              SubdivisionGraph.Spec.coreVertex,
+              SubdivisionGraph.Spec.interiorVertex]
+      · rw [hOtherRise edge hEF hES]
+        have hNext : interiorOffset.val + 1 < spec.length edge := by
+          have := interiorOffset.isLt
+          omega
+        have hHere : interiorOffset.val < spec.length edge := by omega
+        rw [SubdivisionArithmetic.step_zero_of_lt (L := spec.length edge)
+          (i := interiorOffset.val + 1) hNext]
+        rw [SubdivisionArithmetic.step_zero_of_lt (L := spec.length edge)
+          (i := interiorOffset.val) hHere]
+        simp [SubdivisionGraph.Spec.coreVertex,
+          SubdivisionGraph.Spec.interiorVertex, hES]
+
 /-- Two parallel oriented core slots, with no other slot incident to their
 common head, realize the standard two-chip reflection.  The reflected chip
 lands at the marker when the paths have equal length; otherwise it lands on
@@ -249,7 +525,6 @@ theorem twoChipReflection_of_two_oriented_paths
     rw [hFirstTail, hFirstHead, h]
   let potential : Fin n → ℤ :=
     loopRampPotential marker (spec.length first)
-  let script : firingScript spec.graph := spec.interpolatedScript potential
   have hFirstRise :
       spec.coreRise potential first = -(spec.length first : ℤ) := by
     simp [SubdivisionGraph.Spec.coreRise, potential, loopRampPotential,
@@ -302,225 +577,14 @@ theorem twoChipReflection_of_two_oriented_paths
         (spec.coreRise potential second) 0 = -1 := by
     rw [hSecondStep]
     rw [if_pos (spec.length_pos first)]
-  have sum_two_ite (A B : ℤ) :
-      (∑ edge : Fin p,
-        if edge = first then A else if edge = second then B else 0) = A + B := by
-    calc
-      _ = ∑ edge : Fin p,
-          ((if edge = first then A else 0) +
-            (if edge = second then B else 0)) := by
-        apply Finset.sum_congr rfl
-        intro edge _
-        by_cases hEF : edge = first <;> by_cases hES : edge = second
-        · subst edge
-          exact (hFirstSecond hES).elim
-        · simp [hEF, hFirstSecond]
-        · simp [hES, hFirstSecond.symm]
-        · simp [hEF, hES]
-      _ = A + B := by
-        rw [Finset.sum_add_distrib]
-        simp only [Fintype.sum_ite_eq']
   by_cases hEqual : spec.length first = spec.length second
-  · refine ⟨spec.coreVertex marker, script, ?_⟩
-    funext vertex
-    rcases vertex with vertex | interior
-    · dsimp [script]
-      change prin spec.graph (spec.interpolatedScript potential)
-        (spec.coreVertex vertex) = _
-      rw [spec.prin_interpolatedScript_core_eq_endpointSum]
-      have hTerm (edge : Fin p) :
-          ((if spec.core.tail edge = vertex then
-              SubdivisionArithmetic.step (spec.length edge)
-                (spec.coreRise potential edge) 0 else 0) +
-            (if spec.core.head edge = vertex then
-              -SubdivisionArithmetic.step (spec.length edge)
-                (spec.coreRise potential edge)
-                (spec.length edge - 1) else 0)) =
-            if edge = first then
-              (if vertex = base then -1 else 0) +
-                (if vertex = marker then 1 else 0)
-            else if edge = second then
-              (if vertex = base then -1 else 0) +
-                (if vertex = marker then 1 else 0)
-            else 0 := by
-        by_cases hEF : edge = first
-        · subst edge
-          simp only [if_pos]
-          simp only [hFirstTail, hFirstHead, hFirstInitial,
-            hFirstFinal, neg_neg, eq_comm]
-        · by_cases hES : edge = second
-          · subst edge
-            simp only [if_pos]
-            have hLast : spec.length second - 1 < spec.length first := by
-              rw [hEqual]
-              exact Nat.sub_lt (spec.length_pos second) (by omega)
-            have hSecondFinal :
-                SubdivisionArithmetic.step (spec.length second)
-                    (spec.coreRise potential second)
-                    (spec.length second - 1) = -1 := by
-              rw [hSecondStep]
-              simp [hLast]
-            simp [hSecondTail, hSecondHead, hSecondInitial,
-              hSecondFinal, hFirstSecond.symm, eq_comm]
-          · simp only [if_neg hEF, if_neg hES]
-            rw [hOtherRise edge hEF hES]
-            have hLast : spec.length edge - 1 < spec.length edge :=
-              Nat.sub_lt (spec.length_pos edge) (by omega)
-            simp [SubdivisionArithmetic.step_zero_of_lt
-              (spec.length_pos edge),
-              SubdivisionArithmetic.step_zero_of_lt hLast]
-      simp_rw [hTerm]
-      rw [sum_two_ite]
-      by_cases hVB : vertex = base <;> by_cases hVM : vertex = marker <;>
-        simp_all [oneChip, SubdivisionGraph.Spec.coreVertex]
-    · obtain ⟨edge, offset⟩ := interior
-      dsimp [script]
-      change prin spec.graph (spec.interpolatedScript potential)
-        (spec.interiorVertex edge offset) = _
-      rw [spec.prin_interpolatedScript_interior_eq_stepDifference]
-      by_cases hEF : edge = first
-      · subst edge
-        have hOffset : offset.val + 1 < spec.length first := by
-          have := offset.isLt
-          omega
-        have hOffset' : offset.val < spec.length first := by omega
-        rw [hFirstStep, hFirstStep]
-        simp [hOffset, hOffset', oneChip,
-          SubdivisionGraph.Spec.coreVertex]
-      · by_cases hES : edge = second
-        · subst edge
-          have hOffset : offset.val + 1 < spec.length first := by
-            have := offset.isLt
-            omega
-          have hOffset' : offset.val < spec.length first := by omega
-          rw [hSecondStep, hSecondStep]
-          simp [hOffset, hOffset', oneChip,
-            SubdivisionGraph.Spec.coreVertex]
-        · rw [hOtherRise edge hEF hES]
-          have hNext : offset.val + 1 < spec.length edge := by
-            have := offset.isLt
-            omega
-          have hHere : offset.val < spec.length edge := by omega
-          rw [SubdivisionArithmetic.step_zero_of_lt (L := spec.length edge)
-            (i := offset.val + 1) hNext]
-          rw [SubdivisionArithmetic.step_zero_of_lt (L := spec.length edge)
-            (i := offset.val) hHere]
-          simp [oneChip, SubdivisionGraph.Spec.coreVertex]
-  · have hStrict : spec.length first < spec.length second :=
-      lt_of_le_of_ne hLengthOrder hEqual
-    have hFirstLength := spec.length_pos first
-    let offset : Fin (spec.length second - 1) :=
-      ⟨spec.length first - 1, by omega⟩
-    refine ⟨spec.interiorVertex second offset, script, ?_⟩
-    funext vertex
-    rcases vertex with vertex | interior
-    · dsimp [script]
-      change prin spec.graph (spec.interpolatedScript potential)
-        (spec.coreVertex vertex) = _
-      rw [spec.prin_interpolatedScript_core_eq_endpointSum]
-      have hTerm (edge : Fin p) :
-          ((if spec.core.tail edge = vertex then
-              SubdivisionArithmetic.step (spec.length edge)
-                (spec.coreRise potential edge) 0 else 0) +
-            (if spec.core.head edge = vertex then
-              -SubdivisionArithmetic.step (spec.length edge)
-                (spec.coreRise potential edge)
-                (spec.length edge - 1) else 0)) =
-            if edge = first then
-              (if vertex = base then -1 else 0) +
-                (if vertex = marker then 1 else 0)
-            else if edge = second then
-              (if vertex = base then -1 else 0)
-            else 0 := by
-        by_cases hEF : edge = first
-        · subst edge
-          simp only [if_pos]
-          simp only [hFirstTail, hFirstHead, hFirstInitial,
-            hFirstFinal, neg_neg, eq_comm]
-        · by_cases hES : edge = second
-          · subst edge
-            simp only [if_pos]
-            have hLast : ¬ spec.length second - 1 < spec.length first := by
-              omega
-            have hSecondFinal :
-                SubdivisionArithmetic.step (spec.length second)
-                    (spec.coreRise potential second)
-                    (spec.length second - 1) = 0 := by
-              rw [hSecondStep]
-              simp [hLast]
-            have hNot : second ≠ first := hFirstSecond.symm
-            simp [hSecondTail, hSecondHead, hSecondInitial,
-              hSecondFinal, hNot, eq_comm]
-          · simp only [if_neg hEF, if_neg hES]
-            rw [hOtherRise edge hEF hES]
-            have hLast : spec.length edge - 1 < spec.length edge :=
-              Nat.sub_lt (spec.length_pos edge) (by omega)
-            simp [SubdivisionArithmetic.step_zero_of_lt
-              (spec.length_pos edge),
-              SubdivisionArithmetic.step_zero_of_lt hLast]
-      simp_rw [hTerm]
-      rw [sum_two_ite]
-      by_cases hVB : vertex = base <;> by_cases hVM : vertex = marker <;>
-        simp_all [oneChip, SubdivisionGraph.Spec.coreVertex,
-          SubdivisionGraph.Spec.interiorVertex]
-    · obtain ⟨edge, interiorOffset⟩ := interior
-      dsimp [script]
-      change prin spec.graph (spec.interpolatedScript potential)
-        (spec.interiorVertex edge interiorOffset) = _
-      rw [spec.prin_interpolatedScript_interior_eq_stepDifference]
-      by_cases hEF : edge = first
-      · subst edge
-        have hOffset : interiorOffset.val + 1 < spec.length first :=
-          by have := interiorOffset.isLt; omega
-        have hOffset' : interiorOffset.val < spec.length first := by omega
-        rw [hFirstStep, hFirstStep]
-        simp [hOffset, hOffset', oneChip, hFirstSecond,
-          SubdivisionGraph.Spec.coreVertex,
-          SubdivisionGraph.Spec.interiorVertex]
-      · by_cases hES : edge = second
-        · subst edge
-          by_cases hOffset : interiorOffset = offset
-          · subst interiorOffset
-            rw [hSecondStep, hSecondStep]
-            have hDepth : spec.length first - 1 + 1 = spec.length first := by
-              omega
-            simp [offset, hFirstLength, hDepth,
-              SubdivisionGraph.Spec.coreVertex,
-              SubdivisionGraph.Spec.interiorVertex]
-          · have hValNe : interiorOffset.val ≠ spec.length first - 1 := by
-              intro hVal
-              apply hOffset
-              apply Fin.ext
-              exact hVal
-            have hEither :
-                interiorOffset.val + 1 < spec.length first ∨
-                  spec.length first ≤ interiorOffset.val := by
-              omega
-            rcases hEither with hBefore | hAfter
-            · have hBefore' : interiorOffset.val < spec.length first := by omega
-              rw [hSecondStep, hSecondStep]
-              simp [hBefore, hBefore', hOffset,
-                SubdivisionGraph.Spec.coreVertex,
-                SubdivisionGraph.Spec.interiorVertex]
-            · have hAfter' : ¬ interiorOffset.val + 1 < spec.length first := by
-                omega
-              have hAfter'' : ¬ interiorOffset.val < spec.length first := by
-                omega
-              rw [hSecondStep, hSecondStep]
-              simp [hAfter', hAfter'', hOffset,
-                SubdivisionGraph.Spec.coreVertex,
-                SubdivisionGraph.Spec.interiorVertex]
-        · rw [hOtherRise edge hEF hES]
-          have hNext : interiorOffset.val + 1 < spec.length edge := by
-            have := interiorOffset.isLt
-            omega
-          have hHere : interiorOffset.val < spec.length edge := by omega
-          rw [SubdivisionArithmetic.step_zero_of_lt (L := spec.length edge)
-            (i := interiorOffset.val + 1) hNext]
-          rw [SubdivisionArithmetic.step_zero_of_lt (L := spec.length edge)
-            (i := interiorOffset.val) hHere]
-          simp [SubdivisionGraph.Spec.coreVertex,
-            SubdivisionGraph.Spec.interiorVertex, hES]
+  · exact twoChipReflection_of_ramp_equal spec base marker first second hFirstSecond
+      hFirstTail hFirstHead hSecondTail hSecondHead hBaseMarker potential hOtherRise
+      hFirstStep hSecondStep hFirstInitial hFirstFinal hSecondInitial hEqual
+  · exact twoChipReflection_of_ramp_strict spec base marker first second hFirstSecond
+      hFirstTail hFirstHead hSecondTail hSecondHead hBaseMarker potential hOtherRise
+      hFirstStep hSecondStep hFirstInitial hFirstFinal hSecondInitial
+      (lt_of_le_of_ne hLengthOrder hEqual)
 
 /-- Order-free form of `twoChipReflection_of_two_oriented_paths`. -/
 theorem twoChipReflection_of_two_paths

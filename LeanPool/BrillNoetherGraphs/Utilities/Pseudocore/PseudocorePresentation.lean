@@ -154,13 +154,16 @@ end MergeData
 
 variable (spec : Spec (n + 1) (p + 1))
 
-/-- Suppressing a bivalent core vertex preserves the subdivided graph.  The
-smaller specification is obtained by concatenating the two slots at the
-vertex; the equality of graphs is read off from the canonical one-slot split
-of the smaller specification. -/
-theorem exists_merge (hn : 0 < n) (hp : 0 < p)
+private theorem exists_mergeGeometry (spec : Spec (n + 1) (p + 1))
     (data : MergeData spec.core) :
-    ∃ spec' : Spec n p, Nonempty (LaplacianEquiv spec.graph spec'.graph) := by
+    ∃ (v a b : Fin (n + 1)) (e₁ e₂ : Fin (p + 1)), e₁ ≠ e₂ ∧
+      ((spec.core.tail e₁ = v ∧ a = spec.core.head e₁) ∨
+        (spec.core.head e₁ = v ∧ a = spec.core.tail e₁)) ∧
+      ((spec.core.tail e₂ = v ∧ b = spec.core.head e₂) ∨
+        (spec.core.head e₂ = v ∧ b = spec.core.tail e₂)) ∧
+      a ≠ v ∧ b ≠ v ∧ a ≠ b ∧
+      (∀ E : Fin (p + 1), E ≠ e₁ → E ≠ e₂ →
+        spec.core.tail E ≠ v ∧ spec.core.head E ≠ v) := by
   classical
   set v : Fin (n + 1) := data.vertex with hv
   set e₁ : Fin (p + 1) := data.first.1 with he₁
@@ -197,6 +200,38 @@ theorem exists_merge (hn : 0 < n) (hp : 0 < p)
     · rw [hB, ← hT]; exact fun hEq => hLoopless e₂ hEq.symm
     · rw [hB, ← hH]; exact hLoopless e₂
   have habNe : a ≠ b := data.far_ne
+  -- other slots avoid the merged vertex
+  have hAvoid : ∀ E : Fin (p + 1), E ≠ e₁ → E ≠ e₂ →
+      spec.core.tail E ≠ v ∧ spec.core.head E ≠ v := by
+    intro E hE₁ hE₂
+    constructor
+    · intro hEq
+      rcases data.slot_eq_of_tail hLoopless hEq with h | h
+      · exact hE₁ h
+      · exact hE₂ h
+    · intro hEq
+      rcases data.slot_eq_of_head hLoopless hEq with h | h
+      · exact hE₁ h
+      · exact hE₂ h
+  exact ⟨v, a, b, e₁, e₂, hSlots, hFirstCase, hSecondCase,
+    haNe, hbNe, habNe, hAvoid⟩
+
+private theorem exists_mergeIndices (hp : 0 < p) (v : Fin (n + 1))
+    (e₁ e₂ : Fin (p + 1)) (hSlots : e₁ ≠ e₂) :
+    ∃ (σ : Equiv.Perm (Fin (n + 1))) (τ : Equiv.Perm (Fin (p + 1)))
+      (split : Fin p) (pre : Fin p → Fin (p + 1)),
+      σ v = Fin.last n ∧
+      (∀ x : Fin (n + 1), x ≠ v → σ x ≠ Fin.last n) ∧
+      τ e₂ = Fin.last p ∧
+      (∀ E : Fin (p + 1), E ≠ e₂ → τ E ≠ Fin.last p) ∧
+      τ e₁ = Fin.castSucc split ∧
+      (∀ edge : Fin p, τ (pre edge) = Fin.castSucc edge) ∧
+      pre split = e₁ ∧
+      (∀ edge : Fin p, pre edge ≠ e₂) ∧
+      (∀ edge : Fin p, edge ≠ split → pre edge ≠ e₁) ∧
+      (∀ E : Fin (p + 1), E = e₂ ∨ E = e₁ ∨
+        ∃ edge : Fin p, edge ≠ split ∧ τ E = Fin.castSucc edge ∧ pre edge = E) := by
+  classical
   -- index normalizations
   set σ : Equiv.Perm (Fin (n + 1)) := Equiv.swap v (Fin.last n) with hσ
   set τ : Equiv.Perm (Fin (p + 1)) := Equiv.swap e₂ (Fin.last p) with hτ
@@ -224,19 +259,42 @@ theorem exists_merge (hn : 0 < n) (hp : 0 < p)
     have : τ (pre edge) = τ (pre split) := by rw [hEq, hpreSplit]
     rw [hτpre, hτpre] at this
     exact Fin.castSucc_injective p this
-  -- other slots avoid the merged vertex
-  have hAvoid : ∀ E : Fin (p + 1), E ≠ e₁ → E ≠ e₂ →
-      spec.core.tail E ≠ v ∧ spec.core.head E ≠ v := by
-    intro E hE₁ hE₂
-    constructor
+  -- assemble the relabeling
+  have hCase : ∀ E : Fin (p + 1), E = e₂ ∨ E = e₁ ∨
+      (∃ edge : Fin p, edge ≠ split ∧ τ E = Fin.castSucc edge ∧ pre edge = E) := by
+    intro E
+    by_cases hE₂ : E = e₂
+    · exact Or.inl hE₂
+    by_cases hE₁ : E = e₁
+    · exact Or.inr (Or.inl hE₁)
+    refine Or.inr (Or.inr ⟨shrink hp (τ E), ?_, ?_, ?_⟩)
     · intro hEq
-      rcases data.slot_eq_of_tail hLoopless hEq with h | h
-      · exact hE₁ h
-      · exact hE₂ h
-    · intro hEq
-      rcases data.slot_eq_of_head hLoopless hEq with h | h
-      · exact hE₁ h
-      · exact hE₂ h
+      apply hE₁
+      have hcast : τ E = Fin.castSucc (shrink hp (τ E)) :=
+        (castSucc_shrink hp (hτNe E hE₂)).symm
+      have : τ E = τ e₁ := by rw [hcast, hEq, hτe₁]
+      exact τ.injective this
+    · exact (castSucc_shrink hp (hτNe E hE₂)).symm
+    · have hcast : τ E = Fin.castSucc (shrink hp (τ E)) :=
+        (castSucc_shrink hp (hτNe E hE₂)).symm
+      have : τ (pre (shrink hp (τ E))) = τ E := by rw [hτpre, ← hcast]
+      exact τ.injective this
+  exact ⟨σ, τ, split, pre, hσv, hσNe, hτe₂, hτNe, hτe₁, hτpre,
+    hpreSplit, hpreNe₂, hpreNe₁, hCase⟩
+
+/-- Suppressing a bivalent core vertex preserves the subdivided graph.  The
+smaller specification is obtained by concatenating the two slots at the
+vertex; the equality of graphs is read off from the canonical one-slot split
+of the smaller specification. -/
+theorem exists_merge (hn : 0 < n) (hp : 0 < p)
+    (data : MergeData spec.core) :
+    ∃ spec' : Spec n p, Nonempty (LaplacianEquiv spec.graph spec'.graph) := by
+  classical
+  obtain ⟨v, a, b, e₁, e₂, hSlots, hFirstCase, hSecondCase,
+    haNe, hbNe, habNe, hAvoid⟩ := exists_mergeGeometry spec data
+  have hLoopless := spec.core_loopless
+  obtain ⟨σ, τ, split, pre, hσv, hσNe, hτe₂, hτNe, hτe₁, hτpre,
+    hpreSplit, hpreNe₂, hpreNe₁, hCase⟩ := exists_mergeIndices hp v e₁ e₂ hSlots
   -- the merged specification
   set L₁ : ℕ := spec.length e₁ with hL₁
   set L₂ : ℕ := spec.length e₂ with hL₂
@@ -391,26 +449,6 @@ theorem exists_merge (hn : 0 < n) (hp : 0 < p)
     rw [hHead]
     exact castSucc_shrink hn
       (hσNe _ (hAvoid (pre edge) (hpreNe₁ edge hEdge) (hpreNe₂ edge)).2)
-  -- assemble the relabeling
-  have hCase : ∀ E : Fin (p + 1), E = e₂ ∨ E = e₁ ∨
-      (∃ edge : Fin p, edge ≠ split ∧ τ E = Fin.castSucc edge ∧ pre edge = E) := by
-    intro E
-    by_cases hE₂ : E = e₂
-    · exact Or.inl hE₂
-    by_cases hE₁ : E = e₁
-    · exact Or.inr (Or.inl hE₁)
-    refine Or.inr (Or.inr ⟨shrink hp (τ E), ?_, ?_, ?_⟩)
-    · intro hEq
-      apply hE₁
-      have hcast : τ E = Fin.castSucc (shrink hp (τ E)) :=
-        (castSucc_shrink hp (hτNe E hE₂)).symm
-      have : τ E = τ e₁ := by rw [hcast, hEq, hτe₁]
-      exact τ.injective this
-    · exact (castSucc_shrink hp (hτNe E hE₂)).symm
-    · have hcast : τ E = Fin.castSucc (shrink hp (τ E)) :=
-        (castSucc_shrink hp (hτNe E hE₂)).symm
-      have : τ (pre (shrink hp (τ E))) = τ E := by rw [hτpre, ← hcast]
-      exact τ.injective this
   refine ⟨source, ⟨(Spec.laplacianEquiv spec target
     { coreEquiv := σ
       slotEquiv := τ
@@ -1088,17 +1126,22 @@ theorem tail_eq_partner (v : Fin N) (hv : shape.isMarker v = true)
 
 end MarkedShape
 
-/-- **The pseudocore encoding.**  A marked-shape presentation of a connected
-genus-`g` graph is the loopless split of a valid pseudocore on at most
-`2 * (g - 1)` vertices. -/
-theorem pseudocorePresentation_of_markedShapeAt {N P g : ℕ} (spec : Spec N P)
-    (shape : MarkedShape spec) (hConnected : graphConnected spec.graph)
-    (hGenus : genus spec.graph = g) {G : CFGraph.{0}}
-    (hG : Nonempty (LaplacianEquiv G spec.graph)) :
-    ∃ (k : ℕ) (core : Pseudocore k) (split : core.SplitMetadata),
-      k ≤ 2 * (g - 1) ∧ core.ValidAt g ∧ PseudocoreSplitGlue.Compatible split ∧
-      ∃ spec' : Spec (k + core.loopCount) core.splitEdgeCount,
-        spec'.core = split.splitCore ∧ Nonempty (LaplacianEquiv G spec'.graph) := by
+private theorem exists_markedPartition {N P : ℕ} (spec : Spec N P)
+    (shape : MarkedShape spec) :
+    ∃ (k L : ℕ) (ρ : Fin N ≃ Fin k ⊕ Fin L)
+      (baseOf : Fin k → Fin N) (markOf : Fin L → Fin N) (fmap : Fin L → Fin k),
+      (∀ i : Fin k, ρ (baseOf i) = Sum.inl i) ∧
+      (∀ j : Fin L, ρ (markOf j) = Sum.inr j) ∧
+      (∀ i : Fin k, shape.isMarker (baseOf i) = false) ∧
+      (∀ j : Fin L, shape.isMarker (markOf j) = true) ∧
+      Function.Injective baseOf ∧
+      (∀ v : Fin N, (∃ i, v = baseOf i) ∨ ∃ j, v = markOf j) ∧
+      (∀ f : Fin N → ℕ, ∑ v : Fin N, f v =
+        (∑ i : Fin k, f (baseOf i)) + ∑ j : Fin L, f (markOf j)) ∧
+      N = k + L ∧
+      (∀ j : Fin L, baseOf (fmap j) = shape.partner (markOf j)) ∧
+      (∀ (j : Fin L) (i : Fin k), fmap j = i ↔
+        shape.partner (markOf j) = baseOf i) := by
   classical
   -- split the core vertices into bases and markers
   set isBase : Fin N → Prop := fun v => shape.isMarker v = false with hIsBase
@@ -1165,6 +1208,102 @@ theorem pseudocorePresentation_of_markedShapeAt {N P g : ℕ} (spec : Spec N P)
     constructor
     · intro h; rw [← hFmap j, h]
     · intro h; exact hBaseInj (by rw [hFmap j, h])
+  exact ⟨k, L, ρ, baseOf, markOf, fmap, hRhoBase, hRhoMark, hBaseMarker,
+    hMarkMarker, hBaseInj, hCases, hSplitSum, hCardN, hFmap, hFmapIff⟩
+
+private theorem pseudocore_connected_of_markedPartition {N P k L : ℕ}
+    (spec : Spec N P) (shape : MarkedShape spec)
+    (hConnected : graphConnected spec.graph) (pc : Pseudocore k)
+    (ρ : Fin N ≃ Fin k ⊕ Fin L) (baseOf : Fin k → Fin N)
+    (markOf : Fin L → Fin N) (fmap : Fin L → Fin k)
+    (hRhoBase : ∀ i : Fin k, ρ (baseOf i) = Sum.inl i)
+    (hRhoMark : ∀ j : Fin L, ρ (markOf j) = Sum.inr j)
+    (hMarkMarker : ∀ j : Fin L, shape.isMarker (markOf j) = true)
+    (hBaseInj : Function.Injective baseOf)
+    (hCases : ∀ v : Fin N, (∃ i, v = baseOf i) ∨ ∃ j, v = markOf j)
+    (hFmap : ∀ j : Fin L, baseOf (fmap j) = shape.partner (markOf j))
+    (hMarkMark : ∀ j j' : Fin L,
+      explicitCoreMultiplicity spec.core (markOf j) (markOf j') = 0)
+    (hMultiplicity : ∀ i i' : Fin k, pc.multiplicity i i' =
+      explicitCoreMultiplicity spec.core (baseOf i) (baseOf i')) : pc.Connected := by
+  classical
+  have hCoreConnected := core_connected_of_graph_connected spec hConnected
+  intro S hSplit
+  obtain ⟨i₀, i₁, hi₀, hi₁⟩ := hSplit
+  set T : Finset (Fin N) := Finset.univ.filter (fun v =>
+    match ρ v with
+    | Sum.inl i => i ∈ S
+    | Sum.inr j => fmap j ∈ S) with hT
+  have hMemBase : ∀ i : Fin k, (baseOf i ∈ T ↔ i ∈ S) := by
+    intro i; simp [hT, hRhoBase i]
+  have hMemMark : ∀ j : Fin L, (markOf j ∈ T ↔ fmap j ∈ S) := by
+    intro j; simp [hT, hRhoMark j]
+  obtain ⟨edge, hEdge⟩ := hCoreConnected T
+    ⟨baseOf i₀, baseOf i₁, (hMemBase i₀).mpr hi₀,
+      fun hMem => hi₁ ((hMemBase i₁).mp hMem)⟩
+  -- both endpoints of a crossing slot must be bases
+  have hBaseEnd : ∀ (v w : Fin N), spec.core.tail edge = v →
+      spec.core.head edge = w → (v ∈ T ↔ w ∈ T) ∨
+      ∃ i i' : Fin k, v = baseOf i ∧ w = baseOf i' := by
+    intro v w hv hw
+    rcases hCases v with ⟨i, rfl⟩ | ⟨j, rfl⟩
+    · rcases hCases w with ⟨i', rfl⟩ | ⟨j', rfl⟩
+      · exact Or.inr ⟨i, i', rfl, rfl⟩
+      · left
+        have hPartner := shape.tail_eq_partner (markOf j') (hMarkMarker j') edge hw
+        rw [hv, ← hFmap j'] at hPartner
+        have hEq : i = fmap j' := hBaseInj hPartner
+        rw [hMemBase, hMemMark, hEq]
+    · left
+      have hPartner := shape.head_eq_partner (markOf j) (hMarkMarker j) edge hv
+      rcases hCases w with ⟨i', rfl⟩ | ⟨j', rfl⟩
+      · rw [hw, ← hFmap j] at hPartner
+        have hEq : i' = fmap j := hBaseInj hPartner
+        rw [hMemMark, hMemBase, hEq]
+      · exfalso
+        have hZero := hMarkMark j j'
+        unfold explicitCoreMultiplicity at hZero
+        rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff] at hZero
+        exact hZero (Finset.mem_univ edge) (Or.inl ⟨hv, hw⟩)
+  rcases hEdge with ⟨hIn, hOut⟩ | ⟨hIn, hOut⟩
+  · rcases hBaseEnd _ _ rfl rfl with hIff | ⟨i, i', hvi, hwi⟩
+    · exact absurd (hIff.mp hIn) hOut
+    · refine ⟨i, ?_, i', ?_, ?_⟩
+      · rw [← hMemBase i, ← hvi]; exact hIn
+      · rw [← hMemBase i', ← hwi]; exact hOut
+      · change 0 < pc.multiplicity i i'
+        rw [hMultiplicity]
+        unfold explicitCoreMultiplicity
+        refine Finset.card_pos.mpr ⟨edge, ?_⟩
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+        exact Or.inl ⟨hvi, hwi⟩
+  · rcases hBaseEnd _ _ rfl rfl with hIff | ⟨i, i', hvi, hwi⟩
+    · exact absurd (hIff.mpr hIn) hOut
+    · refine ⟨i', ?_, i, ?_, ?_⟩
+      · rw [← hMemBase i', ← hwi]; exact hIn
+      · rw [← hMemBase i, ← hvi]; exact hOut
+      · change 0 < pc.multiplicity i' i
+        rw [hMultiplicity]
+        unfold explicitCoreMultiplicity
+        refine Finset.card_pos.mpr ⟨edge, ?_⟩
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+        exact Or.inr ⟨hvi, hwi⟩
+
+/-- **The pseudocore encoding.**  A marked-shape presentation of a connected
+genus-`g` graph is the loopless split of a valid pseudocore on at most
+`2 * (g - 1)` vertices. -/
+theorem pseudocorePresentation_of_markedShapeAt {N P g : ℕ} (spec : Spec N P)
+    (shape : MarkedShape spec) (hConnected : graphConnected spec.graph)
+    (hGenus : genus spec.graph = g) {G : CFGraph.{0}}
+    (hG : Nonempty (LaplacianEquiv G spec.graph)) :
+    ∃ (k : ℕ) (core : Pseudocore k) (split : core.SplitMetadata),
+      k ≤ 2 * (g - 1) ∧ core.ValidAt g ∧ PseudocoreSplitGlue.Compatible split ∧
+      ∃ spec' : Spec (k + core.loopCount) core.splitEdgeCount,
+        spec'.core = split.splitCore ∧ Nonempty (LaplacianEquiv G spec'.graph) := by
+  classical
+  obtain ⟨k, L, ρ, baseOf, markOf, fmap, hRhoBase, hRhoMark, hBaseMarker,
+    hMarkMarker, hBaseInj, hCases, hSplitSum, hCardN, hFmap, hFmapIff⟩ :=
+    exists_markedPartition spec shape
   -- the pseudocore
   set pc : Pseudocore k :=
     { loops := fun i => (Finset.univ.filter fun j : Fin L => fmap j = i).card
@@ -1257,67 +1396,9 @@ theorem pseudocorePresentation_of_markedShapeAt {N P g : ℕ} (spec : Spec N P)
       calc 3 * k = ∑ _i : Fin k, 3 := by simp [mul_comm]
         _ ≤ ∑ i : Fin k, pc.valence i := Finset.sum_le_sum (fun i _ => hStable i)
     omega
-  -- connectedness of the pseudocore
-  have hCoreConnected := core_connected_of_graph_connected spec hConnected
-  have hPcConnected : pc.Connected := by
-    intro S hSplit
-    obtain ⟨i₀, i₁, hi₀, hi₁⟩ := hSplit
-    set T : Finset (Fin N) := Finset.univ.filter (fun v =>
-      match ρ v with
-      | Sum.inl i => i ∈ S
-      | Sum.inr j => fmap j ∈ S) with hT
-    have hMemBase : ∀ i : Fin k, (baseOf i ∈ T ↔ i ∈ S) := by
-      intro i; simp [hT, hRhoBase i]
-    have hMemMark : ∀ j : Fin L, (markOf j ∈ T ↔ fmap j ∈ S) := by
-      intro j; simp [hT, hRhoMark j]
-    obtain ⟨edge, hEdge⟩ := hCoreConnected T
-      ⟨baseOf i₀, baseOf i₁, (hMemBase i₀).mpr hi₀,
-        fun hMem => hi₁ ((hMemBase i₁).mp hMem)⟩
-    -- both endpoints of a crossing slot must be bases
-    have hBaseEnd : ∀ (v w : Fin N), spec.core.tail edge = v →
-        spec.core.head edge = w → (v ∈ T ↔ w ∈ T) ∨
-        ∃ i i' : Fin k, v = baseOf i ∧ w = baseOf i' := by
-      intro v w hv hw
-      rcases hCases v with ⟨i, rfl⟩ | ⟨j, rfl⟩
-      · rcases hCases w with ⟨i', rfl⟩ | ⟨j', rfl⟩
-        · exact Or.inr ⟨i, i', rfl, rfl⟩
-        · left
-          have hPartner := shape.tail_eq_partner (markOf j') (hMarkMarker j') edge hw
-          rw [hv, ← hFmap j'] at hPartner
-          have hEq : i = fmap j' := hBaseInj hPartner
-          rw [hMemBase, hMemMark, hEq]
-      · left
-        have hPartner := shape.head_eq_partner (markOf j) (hMarkMarker j) edge hv
-        rcases hCases w with ⟨i', rfl⟩ | ⟨j', rfl⟩
-        · rw [hw, ← hFmap j] at hPartner
-          have hEq : i' = fmap j := hBaseInj hPartner
-          rw [hMemMark, hMemBase, hEq]
-        · exfalso
-          have hZero := hMarkMark j j'
-          unfold explicitCoreMultiplicity at hZero
-          rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff] at hZero
-          exact hZero (Finset.mem_univ edge) (Or.inl ⟨hv, hw⟩)
-    rcases hEdge with ⟨hIn, hOut⟩ | ⟨hIn, hOut⟩
-    · rcases hBaseEnd _ _ rfl rfl with hIff | ⟨i, i', hvi, hwi⟩
-      · exact absurd (hIff.mp hIn) hOut
-      · refine ⟨i, ?_, i', ?_, ?_⟩
-        · rw [← hMemBase i, ← hvi]; exact hIn
-        · rw [← hMemBase i', ← hwi]; exact hOut
-        · show 0 < explicitCoreMultiplicity spec.core (baseOf i) (baseOf i')
-          unfold explicitCoreMultiplicity
-          refine Finset.card_pos.mpr ⟨edge, ?_⟩
-          simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-          exact Or.inl ⟨hvi, hwi⟩
-    · rcases hBaseEnd _ _ rfl rfl with hIff | ⟨i, i', hvi, hwi⟩
-      · exact absurd (hIff.mpr hIn) hOut
-      · refine ⟨i', ?_, i, ?_, ?_⟩
-        · rw [← hMemBase i', ← hwi]; exact hIn
-        · rw [← hMemBase i, ← hvi]; exact hOut
-        · show 0 < explicitCoreMultiplicity spec.core (baseOf i') (baseOf i)
-          unfold explicitCoreMultiplicity
-          refine Finset.card_pos.mpr ⟨edge, ?_⟩
-          simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-          exact Or.inr ⟨hvi, hwi⟩
+  have hPcConnected : pc.Connected :=
+    pseudocore_connected_of_markedPartition spec shape hConnected pc ρ baseOf markOf fmap
+      hRhoBase hRhoMark hMarkMarker hBaseInj hCases hFmap hMarkMark (fun _ _ => rfl)
   have hValid : pc.ValidAt g :=
     ⟨hWellFormed, hPcConnected, hStable, hEdgeCountIdentity⟩
   -- the split metadata
