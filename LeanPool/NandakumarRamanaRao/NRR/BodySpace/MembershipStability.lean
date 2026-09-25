@@ -65,7 +65,8 @@ theorem exists_separating_unit {D : Set Plane} (hconv : Convex ℝ D)
       · rw [ norm_sub_rev ];
       · rw [ Metric.infDist_eq_iInf ];
         simp +decide only [dist_eq_norm];
-    simp_all? +decide [ inner_sub_left, inner_sub_right, inner_smul_right ];
+    simp_all +decide only [inner_sub_right, inner_sub_left, inner_self_eq_norm_sq_to_K,
+      Real.ringHom_apply, tsub_le_iff_right, zero_add, inner_smul_right];
     intro y hy; rw [ mul_le_mul_iff_right₀ ( inv_pos.mpr ( norm_pos_iff.mpr ( sub_ne_zero.mpr <| by
       aesop ) ) ) ]; simp_all +decide [ real_inner_comm ];
     nlinarith [ h_var y hy, norm_nonneg ( x - p ), norm_sub_sq_real x p,

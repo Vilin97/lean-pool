@@ -89,7 +89,8 @@ theorem norm_indicator_le_parent (C : ConvexSubbody K) (x : Plane) :
 theorem integrable_parent_indicator (K : Geometry.ConvexBody Plane) :
     Integrable (fun x => (K : Set Plane).indicator (fun _ => (1 : ℝ)) x) volume := by
   rw [ MeasureTheory.integrable_indicator_iff ];
-  · simp? +zetaDelta at *;
+  · simp +zetaDelta only [enorm_one, ne_eq, ENNReal.one_ne_top, not_false_eq_true,
+      integrableOn_const_iff, one_ne_zero, false_or] at *;
     exact K.isCompact.measure_lt_top;
   · exact K.isCompact.measurableSet
 
