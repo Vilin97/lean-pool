@@ -47,7 +47,8 @@ theorem cell_inter_subset_bisector (s : Fin n → E2) (w : Fin n → ℝ) {i j :
       {x : E2 | ⟪sepNormal s i j, x⟫ = sepOffset s w i j} := by
   intro x hx;
   simp_all +decide [ cell, powerDist, sepNormal, sepOffset ];
-  have := hx.1 j; have := hx.2 i; norm_num [ EuclideanSpace.norm_eq, Real.sq_sqrt <| add_nonneg ( sq_nonneg _ ) ( sq_nonneg _ ) ] at *;
+  have := hx.1 j; have := hx.2 i; norm_num [ EuclideanSpace.norm_eq, Real.sq_sqrt <| add_nonneg
+    ( sq_nonneg _ ) ( sq_nonneg _ ) ] at *;
   norm_num [ two_smul, inner ]; linarith!;
 
 /-- Pairwise overlaps of distinct nondegenerate cells are Lebesgue‑null: the overlap lies in a
@@ -55,22 +56,27 @@ hyperplane with nonzero normal, which is null. -/
 theorem cell_inter_null (s : Fin n → E2) (w : Fin n → ℝ) {i j : Fin n}
     (hij : sepNormal s i j ≠ 0) :
     volume (cell s w i ∩ cell s w j) = 0 := by
-  convert MeasureTheory.measure_mono_null ( cell_inter_subset_bisector s w ) ( NRR.Halfspace.hyperplane_null hij ( sepOffset s w i j ) ) using 1
+  convert MeasureTheory.measure_mono_null ( cell_inter_subset_bisector s w ) (
+    NRR.Halfspace.hyperplane_null hij ( sepOffset s w i j ) ) using 1
 
 /-- Distinct nondegenerate power cells have disjoint interiors: their intersection is an open
 set contained in a null hyperplane, hence empty. -/
 theorem interior_cell_disjoint (s : Fin n → E2) (w : Fin n → ℝ) {i j : Fin n}
     (hij : sepNormal s i j ≠ 0) :
     Disjoint (interior (cell s w i)) (interior (cell s w j)) := by
-  have h_interior_subset : interior (cell s w i) ∩ interior (cell s w j) ⊆ {x : E2 | ⟪sepNormal s i j, x⟫ = sepOffset s w i j} := by
-    exact Set.Subset.trans ( Set.inter_subset_inter interior_subset interior_subset ) ( cell_inter_subset_bisector s w );
+  have h_interior_subset : interior (cell s w i) ∩ interior (cell s w j) ⊆ {x : E2 | ⟪sepNormal
+    s i j, x⟫ = sepOffset s w i j} := by
+    exact Set.Subset.trans ( Set.inter_subset_inter interior_subset interior_subset ) (
+      cell_inter_subset_bisector s w );
   by_contra h_nonempty_interior;
   obtain ⟨x, hx⟩ : ∃ x, x ∈ interior (cell s w i) ∩ interior (cell s w j) := by
     exact Set.not_disjoint_iff.mp h_nonempty_interior;
   have h_open : IsOpen (interior (cell s w i) ∩ interior (cell s w j)) := by
     exact IsOpen.inter ( isOpen_interior ) ( isOpen_interior );
-  have h_measure_zero : MeasureTheory.volume (interior (cell s w i) ∩ interior (cell s w j)) = 0 := by
+  have h_measure_zero : MeasureTheory.volume (interior (cell s w i) ∩ interior (cell s w j)) = 0
+    := by
     exact MeasureTheory.measure_mono_null h_interior_subset ( NRR.Halfspace.hyperplane_null hij _ );
-  exact absurd h_measure_zero ( by exact ne_of_gt ( h_open.measure_pos ( MeasureTheory.MeasureSpace.volume ) ⟨ x, hx ⟩ ) )
+  exact absurd h_measure_zero ( by
+    exact ne_of_gt ( h_open.measure_pos ( MeasureTheory.MeasureSpace.volume ) ⟨ x, hx ⟩ ) )
 
 end NRR.PowerDiagram

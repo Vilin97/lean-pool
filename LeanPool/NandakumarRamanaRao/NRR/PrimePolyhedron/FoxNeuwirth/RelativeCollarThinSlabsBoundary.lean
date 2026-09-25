@@ -5,7 +5,8 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarThinSlabs
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismBoundary
+import
+  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismBoundary
 /-!
 # Signed boundary of a thin-time stack
 
@@ -145,7 +146,8 @@ theorem stackFacetOrbitIndicator_translate
     (s : (StackCells hp N m hm).Facet)
     (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
-    stackFacetOrbitIndicator hp N m hm s (EquivariantPrismNonhorizontalCancellation.translateFacetMap p g tau) =
+    stackFacetOrbitIndicator hp N m hm s
+      (EquivariantPrismNonhorizontalCancellation.translateFacetMap p g tau) =
       stackFacetOrbitIndicator hp N m hm s tau := by
   classical
   unfold stackFacetOrbitIndicator
@@ -153,7 +155,8 @@ theorem stackFacetOrbitIndicator_translate
       (∃ o : (StackCells hp N m hm).FacetOccurrence,
           (StackCells hp N m hm).facetClass o = s ∧
             ∃ h : PrimeSymmetry p,
-              EquivariantPrismNonhorizontalCancellation.mapVertexSignature (EquivariantPrismNonhorizontalCancellation.translateFacetMap p g tau) =
+              EquivariantPrismNonhorizontalCancellation.mapVertexSignature
+                (EquivariantPrismNonhorizontalCancellation.translateFacetMap p g tau) =
                 fun i => h • (StackCells hp N m hm).facetSignature o i) ↔
       (∃ o : (StackCells hp N m hm).FacetOccurrence,
           (StackCells hp N m hm).facetClass o = s ∧
@@ -165,13 +168,15 @@ theorem stackFacetOrbitIndicator_translate
       refine ⟨o, ho, g⁻¹ * h, ?_⟩
       funext i
       have hi := congrFun hh i
-      simp only [EquivariantPrismNonhorizontalCancellation.mapVertexSignature_translateFacetMap] at hi
+      simp only [EquivariantPrismNonhorizontalCancellation.mapVertexSignature_translateFacetMap]
+        at hi
       have hi' := congrArg (fun z : EquivariantPrismVertexParameters.CylinderPoint p => g⁻¹ • z) hi
       simpa [mul_smul] using hi'
     · rintro ⟨o, ho, h, hh⟩
       refine ⟨o, ho, g * h, ?_⟩
       funext i
-      simp [EquivariantPrismNonhorizontalCancellation.mapVertexSignature_translateFacetMap, hh, mul_smul]
+      simp [EquivariantPrismNonhorizontalCancellation.mapVertexSignature_translateFacetMap, hh,
+        mul_smul]
   simp only [hiff]
 
 /-- Pull the stack-facet characteristic weight back to the ordinary prism maps in slab `r`. -/
@@ -187,7 +192,8 @@ theorem slabFacetOrbitIndicator_translate
     (s : (StackCells hp N m hm).Facet) (r : Fin m)
     (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
-    slabFacetOrbitIndicator hp N m hm s r (EquivariantPrismNonhorizontalCancellation.translateFacetMap p g tau) =
+    slabFacetOrbitIndicator hp N m hm s r
+      (EquivariantPrismNonhorizontalCancellation.translateFacetMap p g tau) =
       slabFacetOrbitIndicator hp N m hm s r tau := by
   unfold slabFacetOrbitIndicator
   rw [slabFacetMap_translate]
@@ -201,7 +207,8 @@ theorem stackFacetOrbitIndicator_occurrence
     (s : (StackCells hp N m hm).Facet)
     (o : (StackCells hp N m hm).FacetOccurrence)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1)
-    (htau : EquivariantPrismNonhorizontalCancellation.mapVertexSignature tau = (StackCells hp N m hm).facetSignature o) :
+    (htau : EquivariantPrismNonhorizontalCancellation.mapVertexSignature tau = (StackCells hp N
+      m hm).facetSignature o) :
     stackFacetOrbitIndicator hp N m hm s tau =
       if (StackCells hp N m hm).facetClass o = s then 1 else 0 := by
   classical
@@ -240,7 +247,8 @@ theorem slabFacetOrbitIndicator_occurrence
     (hp : Nat.Prime p) (N m : Nat) (hm : 0 < m)
     (s : (StackCells hp N m hm).Facet) (r : Fin m)
     (o : (BaseCells hp N).FacetOccurrence) :
-    slabFacetOrbitIndicator hp N m hm s r (EquivariantPrismNonhorizontalCancellation.occurrenceFacetMap hp N 0 o) =
+    slabFacetOrbitIndicator hp N m hm s r
+      (EquivariantPrismNonhorizontalCancellation.occurrenceFacetMap hp N 0 o) =
       if (StackCells hp N m hm).facetClass
           (stackOccurrence hp N m hm r o) = s then 1 else 0 := by
   unfold slabFacetOrbitIndicator

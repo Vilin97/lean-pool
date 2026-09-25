@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainMap
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyOperator
+import
+  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainMap
+import
+  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyOperator
 import Mathlib.Tactic
 
 /-! # Barycentric Subdivision Homotopy Formula -/
@@ -88,7 +90,8 @@ theorem pushSimplex_stdSimplexId (X : TopCat.{0}) (n : ℕ) (σ : singularSimpli
   apply singularSimplices_ext
   rw [pushSimplex_continuousMap,
     show stdSimplexIdSingularSimplex n
-        = continuousMapAsSingularSimplex (TopCat.of (Delta n)) n (ContinuousMap.id (Delta n)) from rfl]
+        = continuousMapAsSingularSimplex (TopCat.of (Delta n)) n (ContinuousMap.id (Delta n))
+          from rfl]
   simp only [singularSimplexAsContinuousMap_continuousMapAsSingularSimplex, TopCat.hom_ofHom]
   ext x; rfl
 
@@ -157,7 +160,8 @@ theorem singularChainMap_barycentricHomotopy (R : Type) [CommRing R]
 theorem barycentricHomotopyUniversal_succ_eq (R : Type) [CommRing R] (m : ℕ) :
     barycentricHomotopyUniversal R (m+1)
       = (coneLinearMap R (m + 1) (m + 1) (deltaBarycenter (m + 1))).hom
-          (chainGenerator R (TopCat.of (Delta (m + 1))) (m + 1) (stdSimplexIdSingularSimplex (m + 1))
+          (chainGenerator R (TopCat.of (Delta (m + 1))) (m + 1) (stdSimplexIdSingularSimplex (m
+            + 1))
             - (barycentricSubdivisionLinearMap R (TopCat.of (Delta (m + 1))) (m + 1)).hom
                 (chainGenerator R (TopCat.of (Delta (m + 1))) (m + 1)
                   (stdSimplexIdSingularSimplex (m + 1)))
@@ -264,12 +268,14 @@ theorem barycentricSubdivisionHomotopy_boundary_formula (R : Type) [CommRing R]
       have hboundaryz : (singularBoundary R (TopCat.of (Delta (m+1))) m).hom z = 0 := by
         rw [hz, map_sub, map_sub,
             boundary_barycentricSubdivision_apply R (TopCat.of (Delta (m+1))) m
-              (chainGenerator R (TopCat.of (Delta (m+1))) (m+1) (stdSimplexIdSingularSimplex (m+1)))]
+              (chainGenerator R (TopCat.of (Delta (m+1))) (m+1) (stdSimplexIdSingularSimplex
+                (m+1)))]
         have hIH := IH (TopCat.of (Delta (m+1)))
           ((singularBoundary R (TopCat.of (Delta (m+1))) m).hom
             (chainGenerator R (TopCat.of (Delta (m+1))) (m+1) (stdSimplexIdSingularSimplex (m+1))))
         rw [homotopyBoundaryTerm_singularBoundary_eq_zero R (TopCat.of (Delta (m+1))) m
-              (chainGenerator R (TopCat.of (Delta (m+1))) (m+1) (stdSimplexIdSingularSimplex (m+1))),
+              (chainGenerator R (TopCat.of (Delta (m+1))) (m+1) (stdSimplexIdSingularSimplex
+                (m+1))),
             add_zero] at hIH
         rw [hIH]; abel
       have hcone := DFunLike.congr_fun
@@ -302,7 +308,8 @@ theorem barycentricSubdivisionHomotopy_boundary_formula (R : Type) [CommRing R]
           hι,
           singularChainMap_barycentricHomotopy R f m
             ((singularBoundary R (TopCat.of (Delta (m+1))) m).hom
-              (chainGenerator R (TopCat.of (Delta (m+1))) (m+1) (stdSimplexIdSingularSimplex (m+1)))),
+              (chainGenerator R (TopCat.of (Delta (m+1))) (m+1) (stdSimplexIdSingularSimplex
+                (m+1)))),
           ← singularChainMap_boundary_apply R f m
             (chainGenerator R (TopCat.of (Delta (m+1))) (m+1) (stdSimplexIdSingularSimplex (m+1))),
           hι]
@@ -337,7 +344,8 @@ theorem barycentricSubdivisionHomotopy_generator_boundary_formula (R : Type) [Co
     (singularBoundary R X n).hom
         ((barycentricSubdivisionHomotopyLinearMap R X n).hom (chainGenerator R X n σ))
       + homotopyBoundaryTerm R X n (chainGenerator R X n σ)
-    = chainGenerator R X n σ - (barycentricSubdivisionLinearMap R X n).hom (chainGenerator R X n σ) :=
+    = chainGenerator R X n σ - (barycentricSubdivisionLinearMap R X n).hom (chainGenerator R X n
+      σ) :=
   barycentricSubdivisionHomotopy_boundary_formula R X n (chainGenerator R X n σ)
 
 end AffineBarycentricSubdivision

@@ -71,26 +71,36 @@ theorem isClosed_canonicalCellLowerGraph
     IsClosed (CanonicalCellLowerGraph (K := K) sites hA hn i) := by
   refine' isSeqClosed_iff_isClosed.mp _;
   intro f hf a hlim y hy;
-  -- By `ConvexSubbody.exists_tendsto_points`, obtain a sequence of points `yseq` in the approximating subbodies converging to `y`.
-  obtain ⟨yseq, hyseq⟩ : ∃ yseq : ℕ → Plane, (∀ m, yseq m ∈ ((f m).2.body : Set Plane)) ∧ Filter.Tendsto yseq Filter.atTop (nhds y) := by
-    convert ConvexSubbody.exists_tendsto_points ( show Filter.Tendsto ( fun m => ( f m |>.2 ) ) Filter.atTop ( nhds hf.2 ) from ?_ ) hy;
+  -- By `ConvexSubbody.exists_tendsto_points`, obtain a sequence of points `yseq` in the
+  -- approximating subbodies converging to `y`.
+  obtain ⟨yseq, hyseq⟩ : ∃ yseq : ℕ → Plane, (∀ m, yseq m ∈ ((f m).2.body : Set Plane)) ∧
+    Filter.Tendsto yseq Filter.atTop (nhds y) := by
+    convert ConvexSubbody.exists_tendsto_points ( show Filter.Tendsto ( fun m => ( f m |>.2 ) )
+      Filter.atTop ( nhds hf.2 ) from ?_ ) hy;
     exact continuousAt_snd.tendsto.comp hlim;
-  -- By `mem_canonicalCell_iff`, we need to show that `y` is in the parent body and satisfies the wall inequalities.
+  -- By `mem_canonicalCell_iff`, we need to show that `y` is in the parent body and satisfies the
+  -- wall inequalities.
   have h_parent : y ∈ (hf.1.1.body : Set Plane) := by
-    have h_parent : Filter.Tendsto (fun m => ((f m).1.1).body) Filter.atTop (nhds (hf.1.1).body) := by
-      exact ( BodySpace.continuous_body.tendsto _ ).comp ( continuous_fst.tendsto _ |> Filter.Tendsto.comp <| continuous_fst.tendsto _ |> Filter.Tendsto.comp <| hlim );
+    have h_parent : Filter.Tendsto (fun m => ((f m).1.1).body) Filter.atTop (nhds (hf.1.1).body)
+      := by
+      exact ( BodySpace.continuous_body.tendsto _ ).comp ( continuous_fst.tendsto _ |>
+        Filter.Tendsto.comp <| continuous_fst.tendsto _ |> Filter.Tendsto.comp <| hlim );
     apply ConvexSubbody.mem_limit_of_tendsto h_parent hyseq.2;
     filter_upwards [ Filter.eventually_gt_atTop 0 ] with m hm;
     exact ( a m ) ( hyseq.1 m ) |> fun h => by simpa using h.1;
   refine' mem_canonicalCell_iff sites hA hn hf.1 i y |>.2 ⟨ h_parent, _ ⟩;
   intro j
-  have h_wall : ∀ m, ⟪sepNormal (sites (f m).1.2) i j.1, yseq m⟫ ≤ sepOffset (sites (f m).1.2) (normalizedWeight hA hn (f m).1.1 (sites (f m).1.2)) i j.1 := by
+  have h_wall : ∀ m, ⟪sepNormal (sites (f m).1.2) i j.1, yseq m⟫ ≤ sepOffset (sites (f m).1.2)
+    (normalizedWeight hA hn (f m).1.1 (sites (f m).1.2)) i j.1 := by
     intro m
     have h_wall : yseq m ∈ ((canonicalCell sites hA hn (f m).1 i).body : Set Plane) := by
       exact a m ( hyseq.1 m );
     exact ( mem_canonicalCell_iff sites hA hn ( f m |>.1 ) i ( yseq m ) ) |>.1 h_wall |>.2 j;
   refine' le_of_tendsto_of_tendsto' ( Filter.Tendsto.inner ( _ ) hyseq.2 ) ( _ ) fun m => h_wall m;
-  · exact Continuous.continuousAt ( continuous_sepNormal i j ) |> fun h => h.tendsto.comp ( Continuous.continuousAt ( sites.continuous ) |> fun h => h.tendsto.comp ( continuous_snd.continuousAt.tendsto.comp ( continuous_fst.continuousAt.tendsto.comp hlim ) ) );
+  · exact Continuous.continuousAt ( continuous_sepNormal i j ) |> fun h => h.tendsto.comp (
+      Continuous.continuousAt ( sites.continuous ) |> fun h => h.tendsto.comp (
+      continuous_snd.continuousAt.tendsto.comp ( continuous_fst.continuousAt.tendsto.comp hlim )
+      ) );
   · convert Filter.Tendsto.comp
         (continuous_sepOffset i j.1 |>.tendsto
           (sites hf.1.2, normalizedWeight hA hn hf.1.1 (sites hf.1.2)))

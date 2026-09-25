@@ -5,7 +5,8 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
+import
+  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Permutation
 
@@ -53,7 +54,8 @@ theorem stepVertexMatrix_eq
       intro j _
       by_cases hj : r = pi j
       · rw [ite_eq_left hj, ite_eq_left (by rw [hj, Equiv.symm_apply_apply])]
-      · rw [ite_eq_right hj, ite_eq_right (by intro heq; apply hj; rw [heq, Equiv.apply_symm_apply])]
+      · rw [ite_eq_right hj, ite_eq_right (by
+          intro heq; apply hj; rw [heq, Equiv.apply_symm_apply])]
     rw [heq]
     split_ifs with h
     · have hmem : pi.symm r ∈ Finset.Iic k := Finset.mem_Iic.mpr h
@@ -112,7 +114,8 @@ theorem iterVertexMatrix_succ
         stepVertexMatrix n (rho (Fin.last N)) := by
   ext r k
   dsimp [iterVertexMatrix, affineCompMap_succ, Matrix.mul_apply, stepVertexMatrix]
-  have h_affine : (affineSubdivMap n (rho (Fin.last N)) (SphereOddDegree.FiniteSimplex.vertex k)).val
+  have h_affine : (affineSubdivMap n (rho (Fin.last N)) (SphereOddDegree.FiniteSimplex.vertex
+    k)).val
       = (prefixBarycenter n (rho (Fin.last N)) k).val := by
     ext j
     rw [← affineSubdivLinear_coe, affineSubdivLinear_apply]
@@ -120,11 +123,14 @@ theorem iterVertexMatrix_succ
     simp only [Pi.single_apply]
     simp_rw [ite_mul, one_mul, zero_mul]
     simp
-  have h_coe := affineCompMap_coe n N (fun i => rho i.castSucc) (affineSubdivMap n (rho (Fin.last N)) (SphereOddDegree.FiniteSimplex.vertex k))
+  have h_coe := affineCompMap_coe n N (fun i => rho i.castSucc) (affineSubdivMap n (rho
+    (Fin.last N)) (SphereOddDegree.FiniteSimplex.vertex k))
   have h_coe_r := congr_fun h_coe r
   rw [h_coe_r, h_affine]
-  have h_sum : (affineCompLinear n N (fun i => rho i.castSucc)) (fun j => (prefixBarycenter n (rho (Fin.last N)) k).val j)
-      = ∑ j : Fin (n + 1), (prefixBarycenter n (rho (Fin.last N)) k).val j • (affineCompLinear n N (fun i => rho i.castSucc)) (stdVerts n j) := by
+  have h_sum : (affineCompLinear n N (fun i => rho i.castSucc)) (fun j => (prefixBarycenter n
+    (rho (Fin.last N)) k).val j)
+      = ∑ j : Fin (n + 1), (prefixBarycenter n (rho (Fin.last N)) k).val j • (affineCompLinear n
+        N (fun i => rho i.castSucc)) (stdVerts n j) := by
     have h_expand : (fun j => (prefixBarycenter n (rho (Fin.last N)) k).val j)
         = ∑ j : Fin (n + 1), (prefixBarycenter n (rho (Fin.last N)) k).val j • (stdVerts n j) := by
       ext a
@@ -142,7 +148,8 @@ theorem iterVertexMatrix_succ
   intro j _
   rw [mul_comm]
   congr 1
-  have h_vert := affineCompMap_coe n N (fun i => rho i.castSucc) (SphereOddDegree.FiniteSimplex.vertex j)
+  have h_vert := affineCompMap_coe n N (fun i => rho i.castSucc)
+    (SphereOddDegree.FiniteSimplex.vertex j)
   have h_vert_r := congr_fun h_vert r
   rw [h_vert_r]
   rfl

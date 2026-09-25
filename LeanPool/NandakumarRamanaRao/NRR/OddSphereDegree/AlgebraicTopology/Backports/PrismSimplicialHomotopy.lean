@@ -138,7 +138,8 @@ lemma prism_id_last (H : ContinuousMap.Homotopy f.hom g.hom) (n : ℕ) :
   · rw [yonedaEquiv_symm_natural,
       show (Δ[1] : SSet).map (SimplexCategory.δ (Fin.last (n + 1))).op
           (SSet.stdSimplex.objMk₁ ((Fin.last n).succ.castSucc))
-        = (Δ[1] : SSet).δ (Fin.last (n + 1)) (SSet.stdSimplex.objMk₁ ((Fin.last n).succ.castSucc)) from rfl,
+        = (Δ[1] : SSet).δ (Fin.last (n + 1)) (SSet.stdSimplex.objMk₁ ((Fin.last
+          n).succ.castSucc)) from rfl,
       SSet.stdSimplex.δ_objMk₁_of_le _ _ (by apply Fin.le_def.mpr; simp)]
     apply SSet.yonedaEquiv.injective
     rw [SSet.yonedaEquiv.apply_symm_apply, SSet.yonedaEquiv_comp, SSet.yonedaEquiv.apply_symm_apply]
@@ -156,7 +157,8 @@ lemma prism_id_succ_δ_castSucc_of_lt (H : ContinuousMap.Homotopy f.hom g.hom)
   refine congr_arg ((cylinder H).app _) (congr_arg SSet.yonedaEquiv ?_)
   refine congr_arg₂ Limits.prod.lift ?_ ?_
   · rw [← yonedaEquiv_symm_natural, ← Category.assoc, ← Category.assoc,
-      ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp, ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp, SimplexCategory.δ_comp_σ_of_le hij]
+      ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp, ← (SSet.stdSimplex :
+        SimplexCategory ⥤ SSet).map_comp, SimplexCategory.δ_comp_σ_of_le hij]
   · rw [yonedaEquiv_symm_natural]
     refine congr_arg SSet.yonedaEquiv.symm ?_
     rw [show (Δ[1] : SSet).map (SimplexCategory.δ i.castSucc).op
@@ -181,7 +183,8 @@ lemma prism_id_succ_δ_castSucc_succ (H : ContinuousMap.Homotopy f.hom g.hom)
     prod_lift_map, prod_lift_map]
   refine congr_arg ((cylinder H).app _) (congr_arg SSet.yonedaEquiv ?_)
   refine congr_arg₂ Limits.prod.lift ?_ ?_
-  · rw [← Category.assoc, ← Category.assoc, ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp, ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp,
+  · rw [← Category.assoc, ← Category.assoc, ← (SSet.stdSimplex : SimplexCategory ⥤
+      SSet).map_comp, ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp,
       SimplexCategory.δ_comp_σ_self' (by apply Fin.ext; simp),
       SimplexCategory.δ_comp_σ_succ' rfl]
   · rw [yonedaEquiv_symm_natural, yonedaEquiv_symm_natural]
@@ -191,7 +194,8 @@ lemma prism_id_succ_δ_castSucc_succ (H : ContinuousMap.Homotopy f.hom g.hom)
         = (Δ[1] : SSet).δ j.castSucc.succ (SSet.stdSimplex.objMk₁ j.succ.succ.castSucc) from rfl,
       show (Δ[1] : SSet).map (SimplexCategory.δ j.castSucc.succ).op
           (SSet.stdSimplex.objMk₁ j.castSucc.succ.castSucc)
-        = (Δ[1] : SSet).δ j.castSucc.succ (SSet.stdSimplex.objMk₁ j.castSucc.succ.castSucc) from rfl,
+        = (Δ[1] : SSet).δ j.castSucc.succ (SSet.stdSimplex.objMk₁ j.castSucc.succ.castSucc) from
+          rfl,
       SSet.stdSimplex.δ_objMk₁_of_lt _ _
         (Fin.castSucc_lt_castSucc_iff.mpr (by apply Fin.lt_def.mpr; simp)),
       SSet.stdSimplex.δ_objMk₁_of_le _ _ (le_of_eq (by apply Fin.ext; simp))]
@@ -207,7 +211,8 @@ lemma prism_id_castSucc_δ_succ_of_lt (H : ContinuousMap.Homotopy f.hom g.hom)
   refine congr_arg ((cylinder H).app _) (congr_arg SSet.yonedaEquiv ?_)
   refine congr_arg₂ Limits.prod.lift ?_ ?_
   · rw [← yonedaEquiv_symm_natural, ← Category.assoc, ← Category.assoc,
-      ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp, ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp, SimplexCategory.δ_comp_σ_of_gt hji]
+      ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp, ← (SSet.stdSimplex :
+        SimplexCategory ⥤ SSet).map_comp, SimplexCategory.δ_comp_σ_of_gt hji]
   · rw [yonedaEquiv_symm_natural]
     refine congr_arg SSet.yonedaEquiv.symm ?_
     rw [show (Δ[1] : SSet).map (SimplexCategory.δ i.succ).op
@@ -228,7 +233,8 @@ lemma prism_id_comp_σ_castSucc_of_le (H : ContinuousMap.Homotopy f.hom g.hom)
   refine congr_arg ((cylinder H).app _) (congr_arg SSet.yonedaEquiv ?_)
   refine congr_arg₂ Limits.prod.lift ?_ ?_
   · rw [← yonedaEquiv_symm_natural, ← Category.assoc, ← Category.assoc,
-      ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp, ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp, SimplexCategory.σ_comp_σ hij]
+      ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp, ← (SSet.stdSimplex :
+        SimplexCategory ⥤ SSet).map_comp, SimplexCategory.σ_comp_σ hij]
   · rw [yonedaEquiv_symm_natural]
     refine congr_arg SSet.yonedaEquiv.symm ?_
     rw [show (Δ[1] : SSet).map (SimplexCategory.σ i.castSucc).op
@@ -248,7 +254,8 @@ lemma prism_id_comp_σ_succ_of_lt (H : ContinuousMap.Homotopy f.hom g.hom)
   refine congr_arg ((cylinder H).app _) (congr_arg SSet.yonedaEquiv ?_)
   refine congr_arg₂ Limits.prod.lift ?_ ?_
   · rw [← yonedaEquiv_symm_natural, ← Category.assoc, ← Category.assoc,
-      ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp, ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp, SimplexCategory.σ_comp_σ hji]
+      ← (SSet.stdSimplex : SimplexCategory ⥤ SSet).map_comp, ← (SSet.stdSimplex :
+        SimplexCategory ⥤ SSet).map_comp, SimplexCategory.σ_comp_σ hji]
   · rw [yonedaEquiv_symm_natural]
     refine congr_arg SSet.yonedaEquiv.symm ?_
     rw [show (Δ[1] : SSet).map (SimplexCategory.σ i.succ).op

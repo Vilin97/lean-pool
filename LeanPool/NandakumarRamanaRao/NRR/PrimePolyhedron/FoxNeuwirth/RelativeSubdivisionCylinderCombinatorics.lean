@@ -5,8 +5,10 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyOperator
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionDiameter
+import
+  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyOperator
+import
+  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionDiameter
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.AffineSubdivisionDeterminant
 /-!
 # Recursive one-step subdivision cylinders
@@ -87,7 +89,8 @@ noncomputable def sidePoint
     (z : Delta d × Set.Icc (0 : Real) 1) (i : Fin (d + 1)) :
     (sidePoint d k z).1 (k.succAbove i) = z.1 i := by
   unfold sidePoint
-  change (SphereOddDegree.FiniteSimplex.map (S := Real) k.succAbove z.1 : Fin (d + 2) → Real) (k.succAbove i) = z.1 i
+  change (SphereOddDegree.FiniteSimplex.map (S := Real) k.succAbove z.1 : Fin (d + 2) → Real)
+    (k.succAbove i) = z.1 i
   rw [SphereOddDegree.FiniteSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
   have h_filter : (Finset.univ.filter (fun j => k.succAbove j = k.succAbove i)) = {i} := by
     ext j
@@ -149,7 +152,8 @@ noncomputable def spatialPoint
     constructor
     · intro c
       exact Finset.sum_nonneg fun i _ =>
-        mul_nonneg (SphereOddDegree.FiniteSimplex.zero_le w i) (SphereOddDegree.FiniteSimplex.zero_le (vertex d q i).1 c)
+        mul_nonneg (SphereOddDegree.FiniteSimplex.zero_le w i)
+          (SphereOddDegree.FiniteSimplex.zero_le (vertex d q i).1 c)
     · rw [Finset.sum_comm]
       calc
         ∑ i : Fin (d + 2), ∑ c : Fin (d + 1),
@@ -308,7 +312,8 @@ theorem chart_upper_injective
     have hdet := AffineSubdivisionDeterminant.det_stepVertexMatrix_ne_zero d pi
     have h_inv : Invertible (AffineSubdivisionDeterminant.stepVertexMatrix d pi) :=
       Matrix.invertibleOfIsUnitDet _ (isUnit_iff_ne_zero.mpr hdet)
-    exact Matrix.mulVec_injective_of_invertible (AffineSubdivisionDeterminant.stepVertexMatrix d pi) h_tail
+    exact Matrix.mulVec_injective_of_invertible (AffineSubdivisionDeterminant.stepVertexMatrix d
+      pi) h_tail
   exact funext fun i => Fin.cases h0 (fun i => congr_fun h_tail_eq i) i
 
 /-- Pairwise distinct vertices follow from injectivity of the affine chart. -/
@@ -466,7 +471,8 @@ theorem spatialPoint_side_succAbove_decompose
   rw [Fin.sum_univ_succ]
   simp only [vertex_zero, vertex_succ_side, apex, sidePoint_spatial_succAbove]
   congr 1
-  change (∑ j : Fin (d + 2), w j.succ * (vertex d q j).1 c) = (1 - w 0) * ∑ i : Fin (d + 2), (coneTail w) i * (vertex d q i).1 c
+  change (∑ j : Fin (d + 2), w j.succ * (vertex d q j).1 c) = (1 - w 0) * ∑ i : Fin (d + 2),
+    (coneTail w) i * (vertex d q i).1 c
   rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro i _
@@ -482,7 +488,8 @@ theorem timePoint_side_decompose
     (timePoint (d + 1) (sideCell d k q) w).1 =
       w 0 / 2 + (1 - w 0) * (timePoint d q (coneTail w)).1 := by
   rw [ timePoint_side, timePoint ];
-  simp +decide [ Finset.mul_sum _ _ _, mul_assoc, mul_left_comm,  hw, coneTail_apply, div_eq_inv_mul ];
+  simp +decide [ Finset.mul_sum _ _ _, mul_assoc, mul_left_comm,  hw, coneTail_apply,
+    div_eq_inv_mul ];
   grind
 
 /-
@@ -513,7 +520,8 @@ theorem chart_side_injective
     have h_tail : chart d q (coneTail x) = chart d q (coneTail y) := by
       apply Prod.ext
       · ext c
-        have hc := congrArg (fun z : Delta (d + 1) × Set.Icc (0 : Real) 1 => z.1 (k.succAbove c)) hxy
+        have hc := congrArg (fun z : Delta (d + 1) × Set.Icc (0 : Real) 1 => z.1 (k.succAbove
+          c)) hxy
         dsimp [chart] at hc
         rw [spatialPoint_side_succAbove_decompose _ _ _ _ hx,
             spatialPoint_side_succAbove_decompose _ _ _ _ hy] at hc
@@ -701,9 +709,11 @@ theorem baseFacetPairing_succ
   rw [Fintype.sum_prod_type]
   have h_low : baseFacetVertex (d + 1) (Sum.inl ()) = lowerBoundaryVertex (d + 1) := by
     funext i; rfl
-  have h_upp : ∀ pi, baseFacetVertex (d + 1) (Sum.inr (Sum.inl pi)) = upperBoundaryVertex (d + 1) pi := by
+  have h_upp : ∀ pi, baseFacetVertex (d + 1) (Sum.inr (Sum.inl pi)) = upperBoundaryVertex (d +
+    1) pi := by
     intro pi; funext i; rfl
-  have h_side : ∀ k q, baseFacetVertex (d + 1) (Sum.inr (Sum.inr (k, q))) = fun i => sidePoint d k (vertex d q i) := by
+  have h_side : ∀ k q, baseFacetVertex (d + 1) (Sum.inr (Sum.inr (k, q))) = fun i => sidePoint d
+    k (vertex d q i) := by
     intro k q; funext i; rfl
   simp_rw [h_low, h_upp, h_side]
   dsimp [coefficient]
@@ -734,7 +744,8 @@ theorem vertex_eq_lowerBoundaryVertex_of_time_eq_zero :
       norm_num at hz
     · exact fun h => absurd h <| ne_of_gt <| Subtype.mk_lt_mk.mpr <| by norm_num;
     · unfold upperBoundaryVertex; aesop;
-  · intro q i hi; rcases q with ( _ | _ | q ) <;> rcases i with ( _ | i ) <;> norm_num [ NRR.FoxNeuwirthOrderComplex.RelativeSubdivisionCylinderCombinatorics.vertex ] at hi ⊢;
+  · intro q i hi; rcases q with ( _ | _ | q ) <;> rcases i with ( _ | i ) <;> norm_num [
+      NRR.FoxNeuwirthOrderComplex.RelativeSubdivisionCylinderCombinatorics.vertex ] at hi ⊢;
     · exact absurd hi ( by erw [ Subtype.mk_eq_mk ]; norm_num );
     · exact absurd hi ( by exact ne_of_gt ( by exact Subtype.mk_lt_mk.mpr ( by norm_num ) ) );
     · unfold upperBoundaryVertex at hi; norm_num at hi;

@@ -6,8 +6,10 @@ Authors: Arseniy Akopyan
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrism
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismNonhorizontalCancellation
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismHorizontalEndpointIdentification
+import
+  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismNonhorizontalCancellation
+import
+  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismHorizontalEndpointIdentification
 /-!
 # Pointwise boundary formula for the common-level middle prism
 
@@ -53,7 +55,8 @@ def mapVertexSignature
     (hp : Nat.Prime p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
     Fin p → CylinderPoint p :=
-  fun i => CylinderPoint.ofProd (tau (SphereOddDegree.FiniteSimplex.vertex (S := Real) ((AffinePositiveRayBoundary.VertexMap.facetIndexEquiv hp).symm i)))
+  fun i => CylinderPoint.ofProd (tau (SphereOddDegree.FiniteSimplex.vertex (S := Real)
+    ((AffinePositiveRayBoundary.VertexMap.facetIndexEquiv hp).symm i)))
 
 /-- Prime translation of an affine facet map. -/
 def translateFacetMap
@@ -617,18 +620,23 @@ theorem arbitrarySpatialSide_scaled_boundary
   ring
 /-- The prime-orbit boundary pairing vanishes for each fixed refinement word. -/
 private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 + 1))
-  (W : (↑(Delta (n + 1 + 1 - 1)) → Realization (n + 1 + 1) × Set.Icc (0 : Real) 1) → ZMod (n + 1 + 1))
+  (W : (↑(Delta (n + 1 + 1 - 1)) → Realization (n + 1 + 1) × Set.Icc (0 : Real) 1) → ZMod (n + 1
+    + 1))
   (hW :
-    ∀ (g : ↥(PrimeSymmetry (n + 1 + 1))) (tau : ↑(Delta (n + 1 + 1 - 1)) → Realization (n + 1 + 1) × Set.Icc (0 : Real) 1),
+    ∀ (g : ↥(PrimeSymmetry (n + 1 + 1))) (tau : ↑(Delta (n + 1 + 1 - 1)) → Realization (n + 1 +
+      1) × Set.Icc (0 : Real) 1),
       W (translateFacetMap (n + 1 + 1) g tau) = W tau)
-  (eta : Fin L → Equiv.Perm (Fin (n + 1 + 1))) (h : Fin (n + 1)) (theta : Fin N → Equiv.Perm (Fin (n + 1))) :
+  (eta : Fin L → Equiv.Perm (Fin (n + 1 + 1))) (h : Fin (n + 1)) (theta : Fin N → Equiv.Perm
+    (Fin (n + 1))) :
   ∑ x,
       ∑ x_1,
-        (PrimeOrbitCycle.orbitCycle hp).coefficient x * iteratedSign (ZMod (n + 1 + 1)) L eta * (-1) ^ h.1 *
+        (PrimeOrbitCycle.orbitCycle hp).coefficient x * iteratedSign (ZMod (n + 1 + 1)) L eta *
+          (-1) ^ h.1 *
           (SimplicialChain.faceSign x_1 *
             (iteratedSign (ZMod (n + 1 + 1)) N theta *
               arbitrarySpatialSideWeight hp L (sideMapWeight W) eta h
-                (iteratedBoundaryMap n N (⇑(ReferenceAffineOrbitCount.topRepr hp x).realizationContinuousMap) x_1
+                (iteratedBoundaryMap n N (⇑(ReferenceAffineOrbitCount.topRepr hp
+                  x).realizationContinuousMap) x_1
                   theta))) =
     0 := by
   classical
@@ -1012,7 +1020,10 @@ theorem isLowerFacet_of_indicator_lower_ne_zero
     have hmap_i := congrFun hmap i
     rw [mapVertexSignature] at hmap_i
     -- LHS time = 0, RHS time = (Cells.facetSignature o i).time
-    have hlhs_time : (CylinderPoint.ofProd (lowerEndpointMap sigma (SphereOddDegree.FiniteSimplex.vertex ((AffinePositiveRayBoundary.VertexMap.facetIndexEquiv hp).symm i)))).time = ⟨0, by norm_num⟩ := by
+    have hlhs_time : (CylinderPoint.ofProd (lowerEndpointMap sigma
+      (SphereOddDegree.FiniteSimplex.vertex
+      ((AffinePositiveRayBoundary.VertexMap.facetIndexEquiv hp).symm i)))).time = ⟨0, by
+      norm_num⟩ := by
       rfl
     rw [hmap_i] at hlhs_time
     simp [CylinderPoint.smul_time] at hlhs_time

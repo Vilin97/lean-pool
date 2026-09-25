@@ -31,11 +31,13 @@ noncomputable def pathSimplex {a b : X} (p : Path a b) : singularSimplices X 1 :
       (⟨FiniteSimplex.homeomorphUnitInterval, FiniteSimplex.homeomorphUnitInterval.continuous⟩ :
         C(Delta 1, unitInterval)))
 
-theorem test_coface0 (x : Delta 0) : cofaceTop 0 0 x = ⟨Pi.single 1 1, SphereOddDegree.single_mem_finiteSimplex ℝ 1⟩ := by
+theorem test_coface0 (x : Delta 0) : cofaceTop 0 0 x = ⟨Pi.single 1 1,
+  SphereOddDegree.single_mem_finiteSimplex ℝ 1⟩ := by
   ext i
   fin_cases i <;> simp [cofaceTop, delta0_subsingleton x (SphereOddDegree.FiniteSimplex.vertex 0)]
 
-theorem test_coface1 (x : Delta 0) : cofaceTop 0 1 x = ⟨Pi.single 0 1, SphereOddDegree.single_mem_finiteSimplex ℝ 0⟩ := by
+theorem test_coface1 (x : Delta 0) : cofaceTop 0 1 x = ⟨Pi.single 0 1,
+  SphereOddDegree.single_mem_finiteSimplex ℝ 0⟩ := by
   ext i
   fin_cases i <;> simp [cofaceTop, delta0_subsingleton x (SphereOddDegree.FiniteSimplex.vertex 0)]
 
@@ -71,9 +73,11 @@ theorem boundary_pathSimplex {a b : X} (p : Path a b) :
   simp only [Fin.val_zero, pow_zero, Fin.val_one, pow_one, neg_smul] at key
   rw [sub_eq_add_neg]
   convert key using 2
-  · exact (@one_smul ℤ (singularChainGroup ℤ X 0) _ (singularChainGroup ℤ X 0).isModule.toMulAction _).symm
+  · exact (@one_smul ℤ (singularChainGroup ℤ X 0) _ (singularChainGroup ℤ X
+      0).isModule.toMulAction _).symm
   · congr 1
-    exact (@one_smul ℤ (singularChainGroup ℤ X 0) _ (singularChainGroup ℤ X 0).isModule.toMulAction _).symm
+    exact (@one_smul ℤ (singularChainGroup ℤ X 0) _ (singularChainGroup ℤ X
+      0).isModule.toMulAction _).symm
 
 theorem chainGenerator_sub_mem_range_of_path {a b : X} (p : Path a b) :
     chainGenerator ℤ X 0 (pointSimplex X b) - chainGenerator ℤ X 0 (pointSimplex X a)
@@ -81,7 +85,8 @@ theorem chainGenerator_sub_mem_range_of_path {a b : X} (p : Path a b) :
   ⟨chainGenerator ℤ X 1 (pathSimplex p), boundary_pathSimplex p⟩
 
 theorem pointSimplex_singularSimplex (σ : singularSimplices X 0) :
-    pointSimplex X ((singularSimplexAsContinuousMap X 0 σ) (SphereOddDegree.FiniteSimplex.vertex 0)) = σ := by
+    pointSimplex X ((singularSimplexAsContinuousMap X 0 σ) (SphereOddDegree.FiniteSimplex.vertex
+      0)) = σ := by
   apply singularSimplices_ext
   change singularSimplexAsContinuousMap X 0 _ = singularSimplexAsContinuousMap X 0 σ
   rw [pointSimplex, singularSimplexAsContinuousMap_continuousMapAsSingularSimplex]
@@ -131,9 +136,11 @@ theorem aug_boundary (c : singularChainGroup ℤ X 1) :
         chainGenerator ℤ X 0 (AlexanderWhitney.faceSimplex X 0 1 τ.as) := by
       rw [sub_eq_add_neg]
       convert key using 2
-      · exact (@one_smul ℤ (singularChainGroup ℤ X 0) _ (singularChainGroup ℤ X 0).isModule.toMulAction _).symm
+      · exact (@one_smul ℤ (singularChainGroup ℤ X 0) _ (singularChainGroup ℤ X
+          0).isModule.toMulAction _).symm
       · congr 1
-        exact (@one_smul ℤ (singularChainGroup ℤ X 0) _ (singularChainGroup ℤ X 0).isModule.toMulAction _).symm
+        exact (@one_smul ℤ (singularChainGroup ℤ X 0) _ (singularChainGroup ℤ X
+          0).isModule.toMulAction _).symm
     rw [h_bnd, map_sub, aug_generator, aug_generator, sub_self]
   have hc := DFunLike.congr_fun (congrArg ModuleCat.Hom.hom hf) c
   exact hc

@@ -71,25 +71,31 @@ theorem SupportFunctionContinuousFamily.of_continuous
         Metric.hausdorffDist (K x.1 : Set E) (K p.1 : Set E) * ‖x.2‖ :=
     Filter.Eventually.of_forall fun x =>
       NRR.Geometry.ConvexBody.abs_supportFunction_sub_le_hausdorffDist_mul_norm (K x.1) (K p.1) x.2
-  have hc : Continuous (fun x : ConvexBody E => Metric.hausdorffDist (x : Set E) (K p.1 : Set E)) := by
+  have hc : Continuous (fun x : ConvexBody E => Metric.hausdorffDist (x : Set E) (K p.1 : Set
+    E)) := by
     have h_mathlib : Continuous (fun x : _root_.ConvexBody E => dist x (K p.1).toMathlib) :=
       continuous_id.dist continuous_const
     have h_toMathlib : Continuous (fun x : ConvexBody E => x.toMathlib) := continuous_induced_dom
     have h_comp := h_mathlib.comp h_toMathlib
     have h_eq : (fun x : ConvexBody E => Metric.hausdorffDist (x : Set E) (K p.1 : Set E))
-        = (fun x : _root_.ConvexBody E => dist x (K p.1).toMathlib) ∘ (fun x : ConvexBody E => x.toMathlib) := by
+        = (fun x : _root_.ConvexBody E => dist x (K p.1).toMathlib) ∘ (fun x : ConvexBody E =>
+          x.toMathlib) := by
       ext x; rfl
     rw [h_eq]
     exact h_comp
-  have htend : Filter.Tendsto (fun x : α × E => Metric.hausdorffDist (K x.1 : Set E) (K p.1 : Set E) * ‖x.2‖) (𝓝 p) (𝓝 0) := by
-    have h1 : Continuous (fun x : α × E => Metric.hausdorffDist (K x.1 : Set E) (K p.1 : Set E) * ‖x.2‖) :=
+  have htend : Filter.Tendsto (fun x : α × E => Metric.hausdorffDist (K x.1 : Set E) (K p.1 :
+    Set E) * ‖x.2‖) (𝓝 p) (𝓝 0) := by
+    have h1 : Continuous (fun x : α × E => Metric.hausdorffDist (K x.1 : Set E) (K p.1 : Set E)
+      * ‖x.2‖) :=
       (hc.comp (hK.comp continuous_fst)).mul (continuous_norm.comp continuous_snd)
     have h2 := h1.tendsto p
     have h3 : Metric.hausdorffDist (K p.1 : Set E) (K p.1 : Set E) * ‖p.2‖ = (0 : ℝ) := by
       simp [Metric.hausdorffDist_self_zero]
     exact h3 ▸ h2
-  have hdir : Filter.Tendsto (fun x : α × E => (K p.1).supportFunction x.2 - (K p.1).supportFunction p.2) (𝓝 p) (𝓝 0) := by
-    have h1 : Continuous (fun x : α × E => (K p.1).supportFunction x.2 - (K p.1).supportFunction p.2) :=
+  have hdir : Filter.Tendsto (fun x : α × E => (K p.1).supportFunction x.2 - (K
+    p.1).supportFunction p.2) (𝓝 p) (𝓝 0) := by
+    have h1 : Continuous (fun x : α × E => (K p.1).supportFunction x.2 - (K p.1).supportFunction
+      p.2) :=
       ((K p.1).continuous_supportFunction.comp continuous_snd).sub continuous_const
     have h2 := h1.tendsto p
     have h3 : (K p.1).supportFunction p.2 - (K p.1).supportFunction p.2 = (0 : ℝ) := by ring
@@ -262,7 +268,8 @@ theorem continuous_supportFunction :
         Metric.hausdorffDist (x.1.body : Set Plane) (p.1.body : Set Plane) * ‖x.2‖) :=
       (hc.comp continuous_fst).mul (continuous_norm.comp continuous_snd)
     have h2 := h1.tendsto p
-    have h3 : Metric.hausdorffDist (p.1.body : Set Plane) (p.1.body : Set Plane) * ‖p.2‖ = (0 : ℝ) := by
+    have h3 : Metric.hausdorffDist (p.1.body : Set Plane) (p.1.body : Set Plane) * ‖p.2‖ = (0 :
+      ℝ) := by
       simp [Metric.hausdorffDist_self_zero]
     exact h3 ▸ h2
   have hdir : Tendsto (fun x : ConvexSubbody K × Plane =>

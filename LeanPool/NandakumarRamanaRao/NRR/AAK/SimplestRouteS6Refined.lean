@@ -136,7 +136,8 @@ theorem avvakumov_akopyan_karasev_of_stableRefinedPL
 
 /-- Relative stable-collar existence supplies the stable homotopy-invariance input used to prove the arbitrary-`n` AAK endpoint. -/
 theorem avvakumov_akopyan_karasev_of_relativeStableCollar
-    (HC : EquivariantPrismStableRelativeBoundary.StableCollarRelativeSubdivision.RelativeStableCollarExistenceTheorem) :
+    (HC :
+      EquivariantPrismStableRelativeBoundary.StableCollarRelativeSubdivision.RelativeStableCollarExistenceTheorem) :
     ∀ (K : Geometry.ConvexBody Plane) (n : Nat), 0 < n →
       ∃ P : ConvexPartition K n, P.IsFair :=
   avvakumov_akopyan_karasev_of_stableRefinedPL
@@ -149,7 +150,8 @@ facet/minor witnesses, and identify purely horizontal codimension-two faces with
 stable endpoint skeletons.  Compactness, horizontal facet regularity, polynomial nontriviality,
 relative perturbation, and finite Stokes are then automatic. -/
 theorem avvakumov_akopyan_karasev_of_relativeStableCollarConstruction
-    (HC : EquivariantPrismStableRelativeBoundary.StableCollarRelativeSubdivision.RelativeStableCollarConstructionTheorem) :
+    (HC :
+      EquivariantPrismStableRelativeBoundary.StableCollarRelativeSubdivision.RelativeStableCollarConstructionTheorem) :
     ∀ (K : Geometry.ConvexBody Plane) (n : Nat), 0 < n →
       ∃ P : ConvexPartition K n, P.IsFair :=
   avvakumov_akopyan_karasev_of_relativeStableCollar

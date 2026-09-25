@@ -63,11 +63,14 @@ For `n ≥ 1`, every point `e : S^n` is joined by a path to its antipode `-e`
 theorem joined_antipode (n : ℕ) (hn : 1 ≤ n) (e : Sphere n) : Joined e (-e) := by
   have h_path_connected : IsPathConnected (Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) :=
     isPathConnected_sphere (one_lt_rank_euclidean n hn) 0 (by norm_num)
-  have he_neg : (-e : EuclideanSpace ℝ (Fin (n + 1))) ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1 := by
+  have he_neg : (-e : EuclideanSpace ℝ (Fin (n + 1))) ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin
+    (n + 1))) 1 := by
     change ‖(-e : EuclideanSpace ℝ (Fin (n + 1))) - 0‖ = 1
     simp
-  have hj : JoinedIn (Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) (e : EuclideanSpace ℝ (Fin (n + 1))) (-e : EuclideanSpace ℝ (Fin (n + 1))) :=
-    h_path_connected.joinedIn (e : EuclideanSpace ℝ (Fin (n + 1))) e.2 (-e : EuclideanSpace ℝ (Fin (n + 1))) he_neg
+  have hj : JoinedIn (Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) (e : EuclideanSpace
+    ℝ (Fin (n + 1))) (-e : EuclideanSpace ℝ (Fin (n + 1))) :=
+    h_path_connected.joinedIn (e : EuclideanSpace ℝ (Fin (n + 1))) e.2 (-e : EuclideanSpace ℝ
+      (Fin (n + 1))) he_neg
   exact hj.joined_subtype
 
 /--
@@ -86,7 +89,8 @@ theorem projMonodromy_mk_of_lift (n : ℕ) {x y : RP n} (γ : Path x y)
   have h_eq : Γ = projLiftPath n γ (e : Sphere n) hstart :=
     eq_projLiftPath n γ (e : Sphere n) hstart hΓ hΓ0
   have h1 := congrArg (fun f : C(unitInterval, Sphere n) => f 1) h_eq.symm
-  have hmono : (projMonodromy n (⟦γ⟧ : Path.Homotopic.Quotient x y) e : Sphere n) = projLiftPath n γ (e : Sphere n) hstart 1 := rfl
+  have hmono : (projMonodromy n (⟦γ⟧ : Path.Homotopic.Quotient x y) e : Sphere n) = projLiftPath
+    n γ (e : Sphere n) hstart 1 := rfl
   exact hmono.trans h1
 
 /--
@@ -98,11 +102,13 @@ theorem exists_loop_projMonodromyPerm_ne_one (n : ℕ) (hn : 1 ≤ n) (x : RP n)
     ∃ γ : Path.Homotopic.Quotient x x, projMonodromyPerm n γ ≠ 1 := by
   obtain ⟨e, rfl⟩ := proj_surjective n x
   obtain ⟨p, -⟩ : ∃ p : Path e (-e), True := ⟨(joined_antipode n hn e).somePath, trivial⟩
-  set γ_path : Path (proj n e) (proj n e) := (p.map (proj n).continuous).cast rfl (proj_eq_proj_neg e)
+  set γ_path : Path (proj n e) (proj n e) := (p.map (proj n).continuous).cast rfl
+    (proj_eq_proj_neg e)
   refine ⟨⟦γ_path⟧, ?_⟩
   intro h
   have h_mono : (projMonodromy n ⟦γ_path⟧ ⟨e, rfl⟩ : Sphere n) = -e := by
-    have h_lift := projMonodromy_mk_of_lift n γ_path ⟨e, rfl⟩ p.toContinuousMap (by ext t; rfl) p.source
+    have h_lift := projMonodromy_mk_of_lift n γ_path ⟨e, rfl⟩ p.toContinuousMap (by
+      ext t; rfl) p.source
     exact h_lift.trans p.target
   have h_val : (projMonodromy n ⟦γ_path⟧ ⟨e, rfl⟩ : Sphere n) = e := by
     have h_app := congrArg Subtype.val (congrFun (congrArg Equiv.toFun h) ⟨e, rfl⟩)

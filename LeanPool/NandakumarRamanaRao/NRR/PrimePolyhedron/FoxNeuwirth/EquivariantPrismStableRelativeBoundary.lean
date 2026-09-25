@@ -6,10 +6,14 @@ Authors: Arseniy Akopyan
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
 import Mathlib.Topology.MetricSpace.Pseudo.Pi
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpointsCore
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpoints
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarStokes
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismSubdivisionMargin
+import
+  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpointsCore
+import
+  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RelativeCollarMiddlePrismEndpoints
+import
+  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.ExplicitAffineRelativeCollarStokes
+import
+  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismSubdivisionMargin
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RegularApproximationStability
 /-!
 # Stable endpoint approximations and a boundary-relative prism perturbation
@@ -552,7 +556,8 @@ noncomputable def stableEndpointApproximation
     (hcodim : ∀ q : PrismCell hp N L,
       AvoidsCodimTwoDeviationZero hp (localVertexMap hp N L a q))
     (hsafe : EndpointStraightLineSafe hp N L s (F₀ := F₀) (F₁ := F₁) a) :
-    StableRegularApproximation hp (EndpointSide.zeroFreeMap (hp := hp) (F₀ := F₀) (F₁ := F₁) s).map where
+    StableRegularApproximation hp (EndpointSide.zeroFreeMap (hp := hp) (F₀ := F₀) (F₁ := F₁)
+      s).map where
   toRegularApproximation := {
     level := N + L
     map := endpointInterpolant hp N L s a
@@ -855,7 +860,8 @@ theorem endpointInterpolant_homotopyAssignment_value
     (w : StandardSimplex (p - 1)) :
     RefinedAffineMap.value hp (N + L)
       (endpointInterpolant hp N L s (homotopyAssignment hp N L H)) q w =
-    RefinedAffineMap.value hp (N + L) (EndpointSide.zeroFreeMap (hp := hp) (F₀ := F₀) (F₁ := F₁) s).map q w := by
+    RefinedAffineMap.value hp (N + L) (EndpointSide.zeroFreeMap (hp := hp) (F₀ := F₀) (F₁ := F₁)
+      s).map q w := by
   funext j
   unfold RefinedAffineMap.value RefinedAffineMap.vertexValue
   apply Finset.sum_congr rfl
@@ -878,7 +884,8 @@ theorem endpointInterpolant_homotopyAssignment_value
           ((endpointOccurrence hp N L EndpointSide.lower q₀ eta).1,
             (endpointOccurrence hp N L EndpointSide.lower q₀ eta).2.succAbove i')) =
           (endpointSpatialMap hp N L q₀ eta
-            (SphereOddDegree.FiniteSimplex.vertex (Fin.cast (Nat.sub_add_cancel hp.pos).symm i')), 0) := by
+            (SphereOddDegree.FiniteSimplex.vertex (Fin.cast (Nat.sub_add_cancel hp.pos).symm
+              i')), 0) := by
       apply Prod.ext
       · simpa [slotPoint, RelativeCollarMiddlePrism.cellSystem,
           RelativeCollarMiddlePrism.vertex,
@@ -903,7 +910,8 @@ theorem endpointInterpolant_homotopyAssignment_value
           ((endpointOccurrence hp N L EndpointSide.upper q₀ eta).1,
             (endpointOccurrence hp N L EndpointSide.upper q₀ eta).2.succAbove i')) =
           (endpointSpatialMap hp N L q₀ eta
-            (SphereOddDegree.FiniteSimplex.vertex (Fin.cast (Nat.sub_add_cancel hp.pos).symm i')), 1) := by
+            (SphereOddDegree.FiniteSimplex.vertex (Fin.cast (Nat.sub_add_cancel hp.pos).symm
+              i')), 1) := by
       apply Prod.ext
       · simpa [slotPoint, RelativeCollarMiddlePrism.cellSystem,
           RelativeCollarMiddlePrism.vertex,
@@ -1303,7 +1311,8 @@ theorem RelativeResult.stable_zeroCount_eq
     R.lower.zeroCount = R.upper.zeroCount := by
   rw [R.lower_zeroCount_eq_endpointRefinedCount hp N L H m,
     R.upper_zeroCount_eq_endpointRefinedCount hp N L H m]
-  exact EquivariantPrismHorizontalEndpointIdentification.Result.lowerEndpointRefinedCount_eq_upperEndpointRefinedCount
+  exact
+    EquivariantPrismHorizontalEndpointIdentification.Result.lowerEndpointRefinedCount_eq_upperEndpointRefinedCount
     hp N L H m R.prism
 
 end EquivariantPrismStableRelativeBoundary

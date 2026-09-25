@@ -34,7 +34,8 @@ Mathlib *does* have a metric-space structure on nonempty compact subsets:
 
 However this instance is an *`EMetricSpace`* on `NonemptyCompacts`, not a `ConvexBody`-level
 topology, and wiring a `ConvexBody E → NonemptyCompacts E` map plus its induced topology in just to
-obtain joint continuity would be a much larger hyperspace development than downstream modules require.
+obtain joint continuity would be a much larger hyperspace development than downstream modules
+  require.
 We therefore take the two-pronged approach the design allows:
 
 * **Route A (quantitative Hausdorff bound).** We prove the sharp Lipschitz-type estimate
@@ -78,35 +79,41 @@ theorem abs_supportFunction_sub_le_hausdorffDist_mul_norm
       Metric.hausdorffDist (K : Set E) (L : Set E) * ‖u‖ := by
   refine' abs_sub_le_iff.mpr ⟨ _, _ ⟩;
   · -- By definition of $d_H$, we know that for any $x \in K$, $d(x, L) \leq d_H(K, L)$.
-    have h_dist_le : ∀ x ∈ K.carrier, Metric.infDist x L.carrier ≤ Metric.hausdorffDist K.carrier L.carrier := by
+    have h_dist_le : ∀ x ∈ K.carrier, Metric.infDist x L.carrier ≤ Metric.hausdorffDist
+      K.carrier L.carrier := by
       intro x hx;
       apply Metric.infDist_le_hausdorffDist_of_mem hx;
       grind +suggestions;
     obtain ⟨ x, hx, hx' ⟩ := K.exists_supportPoint u;
-    -- Since $L$ is compact and nonempty, there exists $y \in L$ such that $dist x y = Metric.infDist x L.carrier$.
+    -- Since $L$ is compact and nonempty, there exists $y \in L$ such that $dist x y =
+    -- Metric.infDist x L.carrier$.
     obtain ⟨ y, hy, hy' ⟩ : ∃ y ∈ L.carrier, dist x y = Metric.infDist x L.carrier := by
       have := L.isCompact.exists_infDist_eq_dist ( L.nonempty ) x; aesop;
     have h_inner_le : inner ℝ (x - y) u ≤ ‖x - y‖ * ‖u‖ := by
       exact real_inner_le_norm _ _;
     simp_all +decide [ dist_eq_norm, inner_sub_left ];
-    exact h_inner_le.trans ( add_le_add ( mul_le_mul_of_nonneg_right ( h_dist_le x hx ) ( norm_nonneg u ) ) ( L.inner_le_supportFunction hy ) );
+    exact h_inner_le.trans ( add_le_add ( mul_le_mul_of_nonneg_right ( h_dist_le x hx ) (
+      norm_nonneg u ) ) ( L.inner_le_supportFunction hy ) );
   · obtain ⟨ x, hx, hx' ⟩ := L.exists_supportPoint u;
     -- Since $x \in L$, we have $\text{dist}(x, K) \leq \text{hausdorffDist}(L, K)$.
     have h_dist : Metric.infDist x K.carrier ≤ Metric.hausdorffDist L.carrier K.carrier := by
       apply Metric.infDist_le_hausdorffDist_of_mem hx;
-      have h_bounded : Bornology.IsBounded (L.carrier : Set E) ∧ Bornology.IsBounded (K.carrier : Set E) := by
+      have h_bounded : Bornology.IsBounded (L.carrier : Set E) ∧ Bornology.IsBounded (K.carrier
+        : Set E) := by
         exact ⟨ L.isCompact.isBounded, K.isCompact.isBounded ⟩;
       have h_nonempty : (L.carrier : Set E).Nonempty ∧ (K.carrier : Set E).Nonempty := by
         exact ⟨ ⟨ x, hx ⟩, K.nonempty ⟩;
       grind +suggestions;
-    -- Since $K$ is compact and nonempty, there exists $y \in K$ such that $\text{dist}(x, y) = \text{infDist}(x, K)$.
+    -- Since $K$ is compact and nonempty, there exists $y \in K$ such that $\text{dist}(x, y) =
+    -- \text{infDist}(x, K)$.
     obtain ⟨ y, hy, hy' ⟩ : ∃ y ∈ K.carrier, dist x y = Metric.infDist x K.carrier := by
       have := K.isCompact.exists_infDist_eq_dist ( K.nonempty ) x; aesop;
     -- Using the triangle inequality and the definition of the support function, we have:
     have h_triangle : inner ℝ x u - inner ℝ y u ≤ ‖x - y‖ * ‖u‖ := by
       simpa [ inner_sub_left ] using abs_le.mp ( abs_real_inner_le_norm ( x - y ) u ) |>.2;
     simp_all +decide [ dist_eq_norm, Metric.hausdorffDist_comm ];
-    exact h_triangle.trans ( add_le_add ( mul_le_mul_of_nonneg_right h_dist ( norm_nonneg u ) ) ( ConvexBody.inner_le_supportFunction K hy ) )
+    exact h_triangle.trans ( add_le_add ( mul_le_mul_of_nonneg_right h_dist ( norm_nonneg u ) )
+      ( ConvexBody.inner_le_supportFunction K hy ) )
 
 /-! ### Route B — abstract family-continuity predicate -/
 

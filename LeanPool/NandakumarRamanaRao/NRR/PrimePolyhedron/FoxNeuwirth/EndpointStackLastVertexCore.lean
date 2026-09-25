@@ -102,7 +102,8 @@ theorem lastSupportIndex_ne_of_coordinate_eq_zero
 
 /-- Coarse endpoint vertex selected at a local vertex of the recursive one-step cylinder. -/
 noncomputable def localLastIndex
-    (d : Nat) (q : RelativeSubdivisionCylinderCombinatorics.Cell d) (i : Fin (d + 2)) : Fin (d + 1) :=
+    (d : Nat) (q : RelativeSubdivisionCylinderCombinatorics.Cell d) (i : Fin (d + 2)) : Fin (d +
+      1) :=
   lastSupportIndex (RelativeSubdivisionCylinderCombinatorics.vertex d q i).1
 
 /-- The selector fixes the coarse lower-boundary vertices. -/
@@ -114,16 +115,20 @@ noncomputable def localLastIndex
 /-- Local occurrences with the same spatial barycentric point have the same selected index. -/
 theorem localLastIndex_eq_of_spatial_eq
     {q r : RelativeSubdivisionCylinderCombinatorics.Cell d} {i j : Fin (d + 2)}
-    (h : (RelativeSubdivisionCylinderCombinatorics.vertex d q i).1 = (RelativeSubdivisionCylinderCombinatorics.vertex d r j).1) :
+    (h : (RelativeSubdivisionCylinderCombinatorics.vertex d q i).1 =
+      (RelativeSubdivisionCylinderCombinatorics.vertex d r j).1) :
     localLastIndex d q i = localLastIndex d r j := by
   exact lastSupportIndex_eq_of_eq h
 
 /-- Every non-apex vertex of a recursively embedded side selects a vertex of that side. -/
 theorem localLastIndex_side_ne_deleted
-    (d : Nat) (k : Fin (d + 2)) (q : RelativeSubdivisionCylinderCombinatorics.Cell d) (i : Fin (d + 2)) :
-    localLastIndex (d + 1) (RelativeSubdivisionCylinderCombinatorics.sideCell d k q) i.succ ≠ k := by
+    (d : Nat) (k : Fin (d + 2)) (q : RelativeSubdivisionCylinderCombinatorics.Cell d) (i : Fin
+      (d + 2)) :
+    localLastIndex (d + 1) (RelativeSubdivisionCylinderCombinatorics.sideCell d k q) i.succ ≠ k
+      := by
   apply lastSupportIndex_ne_of_coordinate_eq_zero
-  simp [ RelativeSubdivisionCylinderCombinatorics.vertex_succ_side, RelativeSubdivisionCylinderCombinatorics.sidePoint_spatial_deleted]
+  simp [ RelativeSubdivisionCylinderCombinatorics.vertex_succ_side,
+    RelativeSubdivisionCylinderCombinatorics.sidePoint_spatial_deleted]
 
 
 /-- Reinterpret the selected local index in the ambient `p`-vertex endpoint simplex. -/
@@ -164,7 +169,8 @@ noncomputable def endpointCylinderWeight
     constructor
     · intro i
       exact SphereOddDegree.FiniteSimplex.zero_le w _
-    · exact (Equiv.sum_comp (finCongr hcard.symm) w).trans (SphereOddDegree.FiniteSimplex.sum_eq_one w)⟩
+    · exact (Equiv.sum_comp (finCongr hcard.symm) w).trans
+        (SphereOddDegree.FiniteSimplex.sum_eq_one w)⟩
 
 /-- Retraction specialized to the ambient prime-cardinality simplex. -/
 noncomputable def endpointRetractedWeight
@@ -191,7 +197,8 @@ noncomputable def upperLastIndex
 
 @[simp] theorem localLastIndex_upper
     (d : Nat) (pi : Equiv.Perm (Fin (d + 1))) (i : Fin (d + 1)) :
-    localLastIndex d (RelativeSubdivisionCylinderCombinatorics.upperCell d pi) i.succ = upperLastIndex d pi i := by
+    localLastIndex d (RelativeSubdivisionCylinderCombinatorics.upperCell d pi) i.succ =
+      upperLastIndex d pi i := by
   simp [localLastIndex, upperLastIndex,
     RelativeSubdivisionCylinderCombinatorics.vertex_succ_upper,
     RelativeSubdivisionCylinderCombinatorics.upperBoundaryVertex]

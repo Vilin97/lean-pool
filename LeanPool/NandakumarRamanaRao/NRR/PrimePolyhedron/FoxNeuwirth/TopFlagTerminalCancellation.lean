@@ -328,7 +328,7 @@ theorem liftedTerminalChain_eq_of_terminalSource
     have hv_cast := terminalSource_castSucc hp target v r'
     -- For r'.castSucc: u.1 r'.castSucc = target r' = v.1 r'.castSucc
     -- For r'.succ: either r'.succ = i.castSucc for some i (then same as above)
-    --              or r'.succ = Fin.last ((p-2)+1) : Fin p (then both are top cells, barIndicator = 0)
+    -- or r'.succ = Fin.last ((p-2)+1) : Fin p (then both are top cells, barIndicator = 0)
     have h_u_castSucc : u.1 r'.castSucc = v.1 r'.castSucc := hu_cast.trans hv_cast.symm
     -- For r'.succ, we need to handle two cases
     -- First, check if r' = Fin.last (p-2) : Fin ((p-2)+1)
@@ -337,10 +337,14 @@ theorem liftedTerminalChain_eq_of_terminalSource
       have hr'_last : r'.succ = Fin.last ((p - 2) + 1) := by
         simp only [hr', Fin.succ_last]
       rw [hr'_last]
-      have hcdim : (u.1 (Fin.last ((p - 2) + 1))).dualDimension = p - 1 := terminalSource_last_dualDimension hp target u
-      have hctop : (u.1 (Fin.last ((p - 2) + 1))).IsTop := isTop_of_dualDimension_eq_top hp.pos _ hcdim
-      have hcdim' : (v.1 (Fin.last ((p - 2) + 1))).dualDimension = p - 1 := terminalSource_last_dualDimension hp target v
-      have hctop' : (v.1 (Fin.last ((p - 2) + 1))).IsTop := isTop_of_dualDimension_eq_top hp.pos _ hcdim'
+      have hcdim : (u.1 (Fin.last ((p - 2) + 1))).dualDimension = p - 1 :=
+        terminalSource_last_dualDimension hp target u
+      have hctop : (u.1 (Fin.last ((p - 2) + 1))).IsTop := isTop_of_dualDimension_eq_top hp.pos
+        _ hcdim
+      have hcdim' : (v.1 (Fin.last ((p - 2) + 1))).dualDimension = p - 1 :=
+        terminalSource_last_dualDimension hp target v
+      have hctop' : (v.1 (Fin.last ((p - 2) + 1))).IsTop := isTop_of_dualDimension_eq_top hp.pos
+        _ hcdim'
       simp [barIndicator_of_not_mem _ _ (by rw [hctop]; simp),
             barIndicator_of_not_mem _ _ (by rw [hctop']; simp)]
       -- Need to show barIndicators are equal for the castSucc case
@@ -364,7 +368,8 @@ theorem liftedTerminalChain_eq_of_terminalSource
       have hi_bar_eq : barIndicator (u.1 i.castSucc) k = barIndicator (v.1 i.castSucc) k := by
         rw [hi_castSucc_u, hi_castSucc_v]
       have h_castSucc_eq : (Fin.cast hpc r).castSucc = r'.castSucc := rfl
-      have h_castSucc_bar : barIndicator (u.1 (Fin.cast hpc r).castSucc) k = barIndicator (v.1 (Fin.cast hpc r).castSucc) k := by
+      have h_castSucc_bar : barIndicator (u.1 (Fin.cast hpc r).castSucc) k = barIndicator (v.1
+        (Fin.cast hpc r).castSucc) k := by
         rw [h_castSucc_eq, hu_cast, hv_cast]
       rw [← rsucc_cast_eq, hi_eq.symm]
       simp [hi_bar_eq, h_castSucc_bar]

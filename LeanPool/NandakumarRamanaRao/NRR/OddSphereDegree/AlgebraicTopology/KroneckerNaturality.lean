@@ -88,19 +88,24 @@ theorem kroneckerMap_naturality (f : X ⟶ Y) (n : ℕ) :
   obtain ⟨φ, hφ, rfl⟩ := cocycleClass_surjective Y n a
   change (kroneckerMap X n).hom ((cohPullback f n).hom (cocycleClass Y n φ hφ))
     = (homologyDualMap f n).hom ((kroneckerMap Y n).hom (cocycleClass Y n φ hφ))
-  rw [cohPullback_cocycleClass, kroneckerMap_cocycleClass, kroneckerMap_cocycleClass, homologyDualMap_hom_apply]
+  rw [cohPullback_cocycleClass, kroneckerMap_cocycleClass, kroneckerMap_cocycleClass,
+    homologyDualMap_hom_apply]
   apply LinearMap.ext
   intro z
   obtain ⟨c, rfl⟩ := (ModuleCat.epi_iff_surjective ((chainCxZMod2 X).homologyπ n)).1 inferInstance z
-  have h_lhs := kroneckerFunctional_apply X n (cochainPullback f n φ) (cochainPullback_cocycle f n φ hφ) c
+  have h_lhs := kroneckerFunctional_apply X n (cochainPullback f n φ) (cochainPullback_cocycle f
+    n φ hφ) c
   have h_push : (homologyPushZMod2 f n).hom (((chainCxZMod2 X).homologyπ n).hom c)
-      = ((chainCxZMod2 Y).homologyπ n).hom ((HomologicalComplex.cyclesMap (chainMapZMod2 f) n).hom c) := by
+      = ((chainCxZMod2 Y).homologyπ n).hom ((HomologicalComplex.cyclesMap (chainMapZMod2 f)
+        n).hom c) := by
     have h_nat := HomologicalComplex.homologyπ_naturality (chainMapZMod2 f) n
     have := congrArg (fun (m : (chainCxZMod2 X).cycles n ⟶ homologyZMod2 Y n) => m.hom c) h_nat
     exact this
-  have h_rhs := kroneckerFunctional_apply Y n φ hφ ((HomologicalComplex.cyclesMap (chainMapZMod2 f) n).hom c)
+  have h_rhs := kroneckerFunctional_apply Y n φ hφ ((HomologicalComplex.cyclesMap (chainMapZMod2
+    f) n).hom c)
   rw [LinearMap.comp_apply, h_push, h_rhs, h_lhs]
-  have h_cyc : ((chainCxZMod2 Y).iCycles n).hom ((HomologicalComplex.cyclesMap (chainMapZMod2 f) n).hom c)
+  have h_cyc : ((chainCxZMod2 Y).iCycles n).hom ((HomologicalComplex.cyclesMap (chainMapZMod2 f)
+    n).hom c)
       = ((chainMapZMod2 f).f n).hom (((chainCxZMod2 X).iCycles n).hom c) := by
     have h_i := HomologicalComplex.cyclesMap_i (chainMapZMod2 f) n
     have := congrArg (fun (m : (chainCxZMod2 X).cycles n ⟶ (chainCxZMod2 Y).X n) => m.hom c) h_i

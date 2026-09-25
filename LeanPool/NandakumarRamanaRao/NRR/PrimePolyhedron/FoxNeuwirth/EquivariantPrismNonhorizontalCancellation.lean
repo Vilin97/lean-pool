@@ -5,10 +5,13 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.FiniteSimplex
-import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGlobalCancellation
+import
+  LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.EquivariantPrismGlobalCancellation
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RefinedChartCarrierEquivariant
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryCancellation
-import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricFiniteCancellation
+import
+  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryCancellation
+import
+  LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricFiniteCancellation
 /-!
 # Cancellation of the nonhorizontal refined-prism boundary
 
@@ -2048,15 +2051,19 @@ theorem spatialSide_scaled_boundary
   intro r hr
   ring
 /-- The prime-orbit boundary pairing vanishes for each fixed refinement word. -/
-private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 + 1)) (a : Assignment hp N L)
-  (eta : Fin L → Equiv.Perm (Fin (n + 1 + 1))) (h : Fin (n + 1)) (theta : Fin N → Equiv.Perm (Fin (n + 1))) :
+private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 + 1)) (a :
+  Assignment hp N L)
+  (eta : Fin L → Equiv.Perm (Fin (n + 1 + 1))) (h : Fin (n + 1)) (theta : Fin N → Equiv.Perm
+    (Fin (n + 1))) :
   ∑ x,
       ∑ x_1,
-        (PrimeOrbitCycle.orbitCycle hp).coefficient x * iteratedSign (ZMod (n + 1 + 1)) L eta * (-1) ^ h.1 *
+        (PrimeOrbitCycle.orbitCycle hp).coefficient x * iteratedSign (ZMod (n + 1 + 1)) L eta *
+          (-1) ^ h.1 *
           (SimplicialChain.faceSign x_1 *
             (iteratedSign (ZMod (n + 1 + 1)) N theta *
               spatialSideWeight hp N L a eta h
-                (iteratedBoundaryMap n N (⇑(ReferenceAffineOrbitCount.topRepr hp x).realizationContinuousMap) x_1
+                (iteratedBoundaryMap n N (⇑(ReferenceAffineOrbitCount.topRepr hp
+                  x).realizationContinuousMap) x_1
                   theta))) =
     0 := by
   classical
