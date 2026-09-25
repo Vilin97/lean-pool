@@ -195,7 +195,7 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
 
 /-- Quadratic expansion identity for reflected arguments. -/
 lemma freeCovarianceFormR_reflection_expansion
-    (m : ℝ) [Fact (0 < m)] (f g : TestFunction) :
+    (m : ℝ) [Fact (0 < m)] (f g : OSforGFF.TestFunction) :
     freeCovarianceFormR m
         (f - QFT.compTimeReflectionReal g)
         (f - QFT.compTimeReflectionReal g)
@@ -208,12 +208,12 @@ lemma freeCovarianceFormR_reflection_expansion
   set Cf : ℝ := freeCovarianceFormR m f f
   set Cg : ℝ := freeCovarianceFormR m g g
   set Cfg : ℝ := freeCovarianceFormR m θf g
-  have h_neg_left : ∀ u v : TestFunction,
+  have h_neg_left : ∀ u v : OSforGFF.TestFunction,
       freeCovarianceFormR m (-u) v = -freeCovarianceFormR m u v := by
     intro u v
     simpa using
       (freeCovarianceFormR_smul_left (m := m) (c := (-1 : ℝ)) (f := u) (g := v))
-  have h_neg_right : ∀ u v : TestFunction,
+  have h_neg_right : ∀ u v : OSforGFF.TestFunction,
       freeCovarianceFormR m u (-v) = -freeCovarianceFormR m u v := by
     intro u v
     calc
@@ -295,7 +295,7 @@ lemma freeCovarianceFormR_reflection_expansion
 
 /-- Evaluate the real generating functional of the free field on a real test function. -/
 lemma gaussianFreeField_real_generating_re
-    (m : ℝ) [Fact (0 < m)] (h : TestFunction) :
+    (m : ℝ) [Fact (0 < m)] (h : OSforGFF.TestFunction) :
     (GJGeneratingFunctional (gaussianFreeFieldFree m) h).re
       = Real.exp (-(1 / 2 : ℝ) * freeCovarianceFormR m h h) := by
   classical
