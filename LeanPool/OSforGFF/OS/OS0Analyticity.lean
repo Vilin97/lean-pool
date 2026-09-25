@@ -159,7 +159,7 @@ lemma norm_exp_I_distributionPairingℂ_real (f : TestFunctionℂ) (ω : FieldCo
     This follows from the Gaussian nature: for centered Gaussian X with variance σ²,
     E[exp(-X)] = exp(σ²/2).
 -/
-lemma gff_exp_neg_pairing_integrable (f : TestFunction) :
+lemma gff_exp_neg_pairing_integrable (f : OSforGFF.TestFunction) :
     Integrable (fun ω : FieldConfiguration => Real.exp (-(ω f)))
       (muGFF m).toMeasure := by
   -- Fernique: exp(α x²) is integrable, and exp(-x) ≤ exp(1/(4α)) · exp(α x²) (Young, c = 1).
@@ -179,7 +179,7 @@ lemma gff_exp_neg_pairing_integrable (f : TestFunction) :
     This follows from Fernique's theorem: if exp(α x²) is integrable, then exp(|x|)^p is integrable
     for all p < ∞ because |x|^p ≤ C_p * exp(ε x²) for small ε.
 -/
-lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤) :
+lemma gff_exp_abs_pairing_memLp (f : OSforGFF.TestFunction) (p : ENNReal) (hp : p ≠ ⊤) :
     MemLp (fun ω : FieldConfiguration => Real.exp |ω f|) p (muGFF m).toMeasure := by
   -- By Fernique, ∃ α > 0 such that exp(α x²) is integrable
   obtain ⟨α, hα_pos, h_fernique⟩ := gaussianFreeField_pairing_expSq_integrable m f
@@ -220,7 +220,7 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
 /-- Integrability of exp(|ω f|) under the GFF measure.
     This is the L¹ special case of gff_exp_abs_pairing_memLp.
 -/
-lemma gff_exp_abs_pairing_integrable (f : TestFunction) :
+lemma gff_exp_abs_pairing_integrable (f : OSforGFF.TestFunction) :
     Integrable (fun ω : FieldConfiguration => Real.exp |ω f|) (muGFF m).toMeasure :=
   memLp_one_iff_integrable.mp (gff_exp_abs_pairing_memLp m f 1 ENNReal.one_ne_top)
 
@@ -229,7 +229,7 @@ lemma gff_exp_abs_pairing_integrable (f : TestFunction) :
     Each exp(|ω gᵢ|) ∈ L^(2k) by gff_exp_abs_pairing_memLp.
     By generalized Hölder (MemLp.fun_prod), a product of k functions in L^(2k) is in L².
 -/
-lemma gff_exp_abs_sum_memLp {ι : Type*} (s : Finset ι) (g : ι → TestFunction) :
+lemma gff_exp_abs_sum_memLp {ι : Type*} (s : Finset ι) (g : ι → OSforGFF.TestFunction) :
     MemLp (fun ω : FieldConfiguration => Real.exp (∑ i ∈ s, |ω (g i)|)) 2 (muGFF m).toMeasure := by
   -- Rewrite exp(sum) as product of exp
   have h_eq : (fun ω : FieldConfiguration => Real.exp (∑ i ∈ s, |ω (g i)|)) =
@@ -299,7 +299,7 @@ which equals exp(-½ C_ℂ(f,f)).
     integrable by Fernique's theorem (gaussianFreeField_pairing_memLp).
     Standard parameter-dependent holomorphy then gives analyticity of the integral.
 -/
-lemma gff_cf_slice_entire (f_re f_im : TestFunction) :
+lemma gff_cf_slice_entire (f_re f_im : OSforGFF.TestFunction) :
     AnalyticOnNhd ℂ (fun t : ℂ =>
       GJGeneratingFunctionalℂ (muGFF m) (toComplex f_re + t • toComplex f_im))
       Set.univ := by
