@@ -620,7 +620,7 @@ public import LeanPool.MarkoffModP.RiemannRoch.WeilDifferential.Basic
 # Markoff mod p
 
 Source: url:https://github.com/yuma-mizuno/markoff-modp
-Authors: Yuma Mizuno
+Authors: Yuma Mizuno, Guanghao Li
 Status: verified
 Main declarations: `BGS.Markoff.reduction_surjective_of_explicitBound`
 Tags: markoff-equation, strong-approximation, finite-fields
