@@ -243,7 +243,7 @@ def finiteDenseApproximationReindex {γ : Type*} {I : Finset NNReal}
     (q : I ↪o DenseTime) :
     (finiteDenseApproximationPhysicalSet q → γ) → I → γ :=
   fun path t ↦ path ⟨DenseTime.castOrderEmbedding (q t),
-    finiteDenseApproximation_mem q t⟩
+    by exact finiteDenseApproximation_mem q t⟩
 
 /-- The approximating-set reindexing map is measurable. -/
 theorem measurable_finiteDenseApproximationReindex
