@@ -739,7 +739,9 @@ theorem vertex_eq_lowerBoundaryVertex_of_time_eq_zero :
   intro d;
   induction d with
   | zero =>
-    rintro ( _ | _ ) ( _ | _ ) <;> simp? +decide [ vertex ];
+    rintro ( _ | _ ) ( _ | _ ) <;> simp +decide only [Nat.reduceAdd, vertex, Fin.cases_succ',
+      Set.Icc.coe_eq_zero, Fin.exists_fin_one, Fin.isValue, exists_apply_eq_apply', implies_true,
+      Fin.zero_eta, Fin.cases_zero];
     · unfold apex lowerBoundaryVertex
       simp only [Prod.mk.injEq]
       intro h

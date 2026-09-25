@@ -164,14 +164,13 @@ theorem chart_spatial_eq_linear
     funext i
     simp [spatialWeight, maximalCoordinateReindexLinear,
       staircaseSpatialLinear, Fin.ext_iff]
-  simp? [SubdivisionPrismCharts.chart, prismSpatialCoordinateLinear,
-    realizationCoordinateLinear, maximalCoordinateReindexLinear,
-    staircaseSpatialLinear,
-    RefinedAffineMap.chart, Simplex.refinedContinuousMap,
-    Simplex.realizationContinuousMap, Simplex.realizationPoint,
-     staircasePoint, spatialPoint,
-    StandardSimplex.toDelta, StandardSimplex.ofDelta, affineCompMap_coe,
-    Fin.ext_iff, Fin.val_cast, hspatial]
+  simp only [chart, RefinedAffineMap.chart, Simplex.refinedContinuousMap,
+    Simplex.realizationContinuousMap, Simplex.realizationPoint, StandardSimplex.ofDelta,
+    StandardSimplex.toDelta, staircasePoint, spatialPoint, affineCompMap_coe,
+    ContinuousMap.comp_apply, ContinuousMap.coe_mk, hspatial, maximalCoordinateReindexLinear,
+    Nat.succ_eq_add_one, Nat.reduceAdd, staircaseSpatialLinear, Fin.ext_iff, LinearMap.coe_mk,
+    AddHom.coe_mk, Fin.val_cast, prismSpatialCoordinateLinear, realizationCoordinateLinear,
+    LinearMap.coe_comp, Function.comp_apply]
   change (ReferenceAffineOrbitCount.topRepr hp q.1.1.1).chartWeight
       (StandardSimplex.ofDelta (affineCompMap (p - 1) N
         (fun k => Simplex.refinementIndexPerm (q.1.1.2 k)) _)) c = _

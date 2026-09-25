@@ -116,7 +116,8 @@ theorem positiveReference_localIndex_zero
         apply sub_eq_zero.mpr
         have hr := hdev r
         rw [value_zero_ofCoordinateAffineVertexMap hp F q w, chart_zero] at hr
-        simp? [Simplex.realizationContinuousMap] at hr
+        simp only [Simplex.realizationContinuousMap, ContinuousMap.coe_mk,
+          StandardSimplex.ofDelta_toDelta] at hr
         rw [CoordinateAffineVertexMap.globalValue_realizationPoint] at hr
         exact hr
       · rintro ⟨w, hw, hdev⟩
@@ -126,7 +127,8 @@ theorem positiveReference_localIndex_zero
           rw [CoordinateAffineVertexMap.deviation_value_apply] at hr
           apply sub_eq_zero.mp at hr
           rw [value_zero_ofCoordinateAffineVertexMap hp F q w, chart_zero]
-          simp? [Simplex.realizationContinuousMap]
+          simp only [Simplex.realizationContinuousMap, ContinuousMap.coe_mk,
+            StandardSimplex.ofDelta_toDelta]
           rw [CoordinateAffineVertexMap.globalValue_realizationPoint]
           exact hr
         · have hpos := AAK.positiveEquivariantReferenceCoordinateMap_global_pos hp

@@ -129,7 +129,9 @@ theorem sphere0_equiv_fin2 : Nonempty (Sphere 0 ≃ Fin 2) := by
         EuclideanSpace.single 0 1, by
       norm_num [ EuclideanSpace.norm_eq ] ⟩ <;> aesop;
   · intro x;
-    fin_cases x <;> simp? +decide;
+    fin_cases x <;> simp +decide only [Nat.reduceAdd, Fin.isValue, Fin.mk_one, ite_eq_right_iff,
+      imp_false, Subtype.exists, Subtype.mk.injEq, mem_sphere_iff_norm, sub_zero, exists_prop,
+      Fin.zero_eta, ite_eq_left_iff, Decidable.not_not, exists_eq];
     refine ⟨ EuclideanSpace.single 0 ( -1 ), ?_, ?_ ⟩ <;> norm_num;
     exact ne_of_apply_ne ( fun x => x 0 ) ( by norm_num )
 
@@ -157,7 +159,8 @@ theorem h0_sphere0_free_finrank :
       change (singularChainComplex ℤ (TopCat.of (Sphere 0))).homology 0 ≅ _ at hi
       exact hi ≪≫ ModuleCat.coprodIsoDirectSum _
     convert LinearEquiv.finrank_eq ( h_iso.toLinearEquiv ) using 1;
-    simp? +decide [ Module.finrank ];
+    simp +decide only [Module.finrank, rank_directSum, Module.rank_self, Cardinal.sum_const,
+      Cardinal.lift_eq_id, id_eq, mul_one];
     rw [ Cardinal.mk_congr e ]; norm_num
 
 /-
@@ -361,7 +364,7 @@ theorem sphereH1_iso_kerF0 :
     have := ( mvShortExact ℤ circU circV circUV_top ).homology_exact₃ 1 0 ( by
       simp [ ComplexShape.down_Rel ] );
     convert this.mono_g;
-    simp? +decide [  ];
+    simp +decide only [MorphismProperty.monomorphisms.iff, Classical.imp_iff_left_iff];
     exact Or.inl ( hδ_mono.eq_of_src _ _ );
   have hexact := (mvShortExact ℤ circU circV circUV_top).homology_exact₁ 1 0
     (by simp [ComplexShape.down_Rel])

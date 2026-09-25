@@ -238,7 +238,7 @@ theorem barycentricSubdivisionHomotopy_boundary_formula (R : Type) [CommRing R]
         intro f g h
         apply ModuleCat.hom_ext; apply LinearMap.ext; intro x
         have hf := f.hom.map_smul x (1 : R); have hg := g.hom.map_smul x (1 : R)
-        simp? at hf hg; rw [hf, hg, h]
+        simp only [smul_eq_mul, mul_one] at hf hg; rw [hf, hg, h]
       apply hval
       erw [ModuleCat.hom_comp, LinearMap.comp_apply,
            ModuleCat.hom_comp, LinearMap.comp_apply,
@@ -327,7 +327,7 @@ theorem barycentricSubdivisionHomotopy_boundary_formula (R : Type) [CommRing R]
         intro f g h
         apply ModuleCat.hom_ext; apply LinearMap.ext; intro x
         have hf := f.hom.map_smul x (1 : R); have hg := g.hom.map_smul x (1 : R)
-        simp? at hf hg; rw [hf, hg, h]
+        simp only [smul_eq_mul, mul_one] at hf hg; rw [hf, hg, h]
       apply hval
       erw [ModuleCat.hom_add, LinearMap.add_apply,
            ModuleCat.hom_comp, LinearMap.comp_apply,

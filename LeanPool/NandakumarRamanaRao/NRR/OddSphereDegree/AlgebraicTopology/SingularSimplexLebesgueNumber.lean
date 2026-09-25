@@ -88,7 +88,9 @@ theorem singularSimplex_hasLebesgueNumber_for_openCover
       lt_of_le_of_lt (Metric.dist_le_diam_of_mem (show Bornology.IsBounded A from ?_) hy hx)
       hA⟩
     exact isCompact_univ.isBounded.subset ( Set.subset_univ _ );
-  · simp_all? +decide [ Set.not_nonempty_iff_eq_empty.mp hA_empty ];
+  · simp_all +decide only [gt_iff_lt, Subtype.forall, Set.not_nonempty_iff_eq_empty.mp hA_empty,
+    Metric.diam_empty, Set.not_nonempty_empty, not_false_eq_true, Set.image_empty,
+    Set.empty_subset, and_true];
     exact Exists.elim ( hδ _ ( Classical.choose_spec ( show ∃ x : Fin ( n + 1 ) → ℝ, x ∈ Delta n
       from by
                                                         exact ⟨ fun _ => 1 / ( n + 1 ), fun _ => by

@@ -521,7 +521,7 @@ theorem singularBoundary_coneLinearMap (R : Type) [CommRing R] (n m : ℕ) (v : 
     intro x
     have hf := f.hom.map_smul x (1 : R)
     have hg := g.hom.map_smul x (1 : R)
-    simp? at hf hg
+    simp only [smul_eq_mul, mul_one] at hf hg
     rw [hf, hg, h]
   apply hval
   erw [ModuleCat.hom_add, LinearMap.add_apply,

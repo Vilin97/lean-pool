@@ -306,7 +306,7 @@ theorem liftedTerminalChain_eq_of_terminalSource
   rw [simplicialChain_cast_apply]
   apply chain_eq_of_head_matrix
   · -- head vertex
-    simp? [ simplex_cast_apply]
+    simp only [simplex_cast_apply, Fin.cast_zero]
     exact (terminalSource_castSucc hp target u 0).trans (terminalSource_castSucc hp target v 0).symm
   · -- barDifferenceMatrix
     ext k r
@@ -349,8 +349,8 @@ theorem liftedTerminalChain_eq_of_terminalSource
         terminalSource_last_dualDimension hp target v
       have hctop' : (v.1 (Fin.last ((p - 2) + 1))).IsTop := isTop_of_dualDimension_eq_top hp.pos
         _ hcdim'
-      simp? [barIndicator_of_not_mem _ _ (by rw [hctop]; simp),
-            barIndicator_of_not_mem _ _ (by rw [hctop']; simp)]
+      simp only [barIndicator_of_not_mem _ _ (by rw [hctop]; simp), sub_zero,
+        barIndicator_of_not_mem _ _ (by rw [hctop']; simp)]
       -- Need to show barIndicators are equal for the castSucc case
       have h_castSucc_eq : (Fin.cast hpc r).castSucc = r'.castSucc := rfl
       rw [h_castSucc_eq, hu_cast, hv_cast]

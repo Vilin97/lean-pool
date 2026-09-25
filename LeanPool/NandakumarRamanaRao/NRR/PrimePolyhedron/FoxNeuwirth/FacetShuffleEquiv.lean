@@ -196,7 +196,7 @@ theorem firstBlockPositions_shuffleToTopExtension
     firstBlockPositions hp a ha (shuffleToTopExtension hp a ha s).1 = s.1 := by
   unfold firstBlockPositions
   -- The TopCell.rank equals shuffleRank
-  simp? [shuffleToTopExtension, BarredPermutation.TopCell.ofPerm_rank]
+  simp only [shuffleToTopExtension, BarredPermutation.TopCell.ofPerm_rank]
   -- Use shuffleRank_apply_left to rewrite the image
   have himage : Finset.image (fun i : FirstBlockLabel hp a ha =>
       shuffleRank hp a ha s i.1) Finset.univ =
@@ -275,7 +275,7 @@ noncomputable def topExtensionLeftOrderEmb
     intro r s hrs
     have heq := (((c.1 : BarredPermutation.TopCell p) : BarredPermutation p).rank.injective hrs)
     have := congr_arg a.rank heq
-    simp? at this
+    simp only [Equiv.apply_symm_apply, Fin.mk.injEq] at this
     exact Fin.ext this
   map_rel_iff' := by
     intro r₁ r₂

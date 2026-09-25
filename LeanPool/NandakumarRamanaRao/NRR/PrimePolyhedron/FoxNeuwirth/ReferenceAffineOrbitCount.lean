@@ -394,7 +394,8 @@ theorem selected_stageBlock_sum_rank
     induction m with
     | zero =>
         intro hm
-        simp? [stageBlock, selectedCode]
+        simp only [stageBlock, selectedCode, Equiv.apply_symm_apply, not_lt_zero,
+          Finset.filter_false, Finset.card_empty, CharP.cast_eq_zero, Finset.sum_const_zero]
         change 0 = 0
         rfl
     | succ m ih =>

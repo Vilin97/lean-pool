@@ -85,8 +85,8 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
     (k : Fin (n + 1)) :
     (prefixBarycenter n π k).val = stepVertices n (stdVerts n) π k := by
   unfold prefixBarycenter stepVertices;
-  ext j; simp? +decide [ SphereOddDegree.FiniteSimplex.map,
-    SphereOddDegree.FiniteSimplex.barycenter,  stdVerts ];
+  ext j; simp +decide only [FiniteSimplex.map, FiniteSimplex.barycenter, Fintype.card_fin,
+    Nat.cast_add, Nat.cast_one, stdVerts, Pi.smul_apply, Finset.sum_apply, smul_eq_mul];
   unfold FunOnFinite.linearMap; simp +decide only
     [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
       Finsupp.lmapDomain_apply, Finsupp.linearEquivFunOnFinite_apply];
@@ -106,7 +106,8 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
 theorem affineSubdivLinear_stdVerts (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) :
     affineSubdivLinear n π (stdVerts n k) = stepVertices n (stdVerts n) π k := by
-  ext j; simp? +decide [ affineSubdivLinear_apply, stdVerts, Pi.single_apply ];
+  ext j; simp +decide only [stdVerts, affineSubdivLinear_apply, Pi.single_apply, ite_mul, one_mul,
+    zero_mul, sum_ite_eq', mem_univ, ↓reduceIte];
   exact congr_fun ( prefixBarycenter_val_eq_stepVertices n π k ) j
 
 /-- Compose the barycentric subdivision linear maps selected by a permutation word. -/
@@ -163,7 +164,9 @@ theorem affineCompMap_coe (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (n + 1)))
   induction N generalizing x with
   | zero => simp_all +decide
   | succ N ih =>
-    simp_all? +decide [affineCompMap_succ, affineCompLinear_succ]
+    simp_all +decide only [Subtype.forall, affineCompMap_succ, ContinuousMap.comp_apply,
+      affineSubdivContinuousMap_apply, affineCompLinear_succ, LinearMap.coe_comp,
+      Function.comp_apply]
     rw [← affineSubdivLinear_coe]
 
 theorem affineCompMap_snoc (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (n + 1)))

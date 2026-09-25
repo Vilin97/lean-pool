@@ -138,7 +138,7 @@ theorem subdivisionHomotopy_preserves_smallChains (R : Type) [CommRing R]
     · exact hσ;
   · simp +decide;
   · exact fun x y hx hy hx' hy' => by simpa using Submodule.add_mem _ hx' hy';
-  · simp? +zetaDelta at *;
+  · simp +zetaDelta only [map_smul] at *;
     exact fun a x hx hx' => Submodule.smul_mem _ _ hx'
 
 /-! ## 3. The accumulated homotopy preserves small chains -/

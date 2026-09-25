@@ -96,7 +96,8 @@ def subChainCorestrict (R : Type) [CommRing R] (X : TopCat.{0}) (S : Set X) :
     apply Subtype.ext
     have := singularChainMap_boundary_apply R (sInclusion S) j (c : singularChainGroup R
       (TopCat.of S) (j + 1))
-    simp_all? [singularBoundary]
+    simp_all only [singularBoundary, subChainComplex_X, colimit.cocone_x, subChainComplex_d,
+      SetLike.coe_eq_coe]
     change (subBoundary R X S j).hom ((LinearMap.codRestrict (subChainSubmodule R X S (j + 1))
       (singularChainMap R (sInclusion S) (j + 1)).hom (singularChainMap_sInclusion_mem S (j +
       1))) c) =

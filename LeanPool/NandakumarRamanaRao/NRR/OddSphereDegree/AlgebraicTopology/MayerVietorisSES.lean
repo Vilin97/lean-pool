@@ -135,7 +135,8 @@ theorem keepHom_small_mem_U (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ)
     (hc : c ∈ smallChainSubmodule R X (twoSetCover U V hUV) k) :
     (keepHom R X (IsSubordinate (U : Set X))).hom c ∈ subChainSubmodule R X (U : Set X) k := by
   refine Submodule.span_induction ?_ ?_ ?_ ?_ hc
-  · rintro _ ⟨σ, hσ, rfl⟩; rw [keepHom_generator]; split_ifs <;> simp_all? [IsSubordinate]
+  · rintro _ ⟨σ, hσ, rfl⟩; rw [keepHom_generator]; split_ifs <;> simp_all only [IsSubordinate,
+    zero_mem]
     exact chainGenerator_mem_subChainSubmodule ‹_›
   · simp [keepHom]
   · intro x y hx hy hx' hy'; rw [map_add]; exact Submodule.add_mem _ hx' hy'
@@ -147,7 +148,8 @@ theorem keepHom_small_mem_V (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ)
     (hc : c ∈ smallChainSubmodule R X (twoSetCover U V hUV) k) :
     (keepHom R X (IsSubVnotU U V)).hom c ∈ subChainSubmodule R X (V : Set X) k := by
   refine Submodule.span_induction ?_ ?_ ?_ ?_ hc
-  · rintro _ ⟨σ, hσ, rfl⟩; rw [keepHom_generator]; split_ifs <;> simp_all? [IsSubVnotU]
+  · rintro _ ⟨σ, hσ, rfl⟩; rw [keepHom_generator]; split_ifs <;> simp_all only [IsSubVnotU,
+    not_and, Decidable.not_not, zero_mem]
     exact chainGenerator_mem_subChainSubmodule (by tauto)
   · simp [keepHom]
   · intro x y hx hy hx' hy'; rw [map_add]; exact Submodule.add_mem _ hx' hy'
@@ -162,7 +164,8 @@ theorem keepHom_split_small (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ)
   refine Submodule.span_induction ?_ ?_ ?_ ?_ hc
   · rintro _ ⟨σ, hσ, rfl⟩
     rw [keepHom_generator, keepHom_generator]
-    split_ifs <;> simp_all? [IsSubordinate, IsSubVnotU]
+    split_ifs <;> simp_all only [IsSubordinate, IsSubVnotU, not_false_eq_true, and_true, add_zero,
+      zero_add, not_true_eq_false, and_false]
     contrapose! hσ
     simp_all [IsSmallSimplex, twoSetCover]
   · simp

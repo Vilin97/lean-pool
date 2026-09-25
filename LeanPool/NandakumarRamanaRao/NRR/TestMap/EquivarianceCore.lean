@@ -37,7 +37,8 @@ theorem PowerDiagram.cell_relabel
     PowerDiagram.cell (fun j => t (σ.symm j)) (fun j => u (σ.symm j)) i
       = PowerDiagram.cell t u (σ.symm i) := by
   convert Set.ext _;
-  intro x; constructor <;> intro hx <;> simp_all? +decide [ cell, PowerDiagram.powerDist ];
+  intro x; constructor <;> intro hx <;> simp_all +decide only [cell, powerDist, tsub_le_iff_right,
+    Set.mem_ofPred_eq, implies_true];
   exact fun j => by simpa using hx ( σ j );
 
 /--

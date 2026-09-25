@@ -495,7 +495,8 @@ Every point of the standard simplex is the barycentric sum of its standard verti
 theorem delta_val_eq_sum_smul_stdVerts
     (n : Nat) (z : Delta n) :
     z.1 = ∑ i : Fin (n + 1), z i • BarycentricSubdivisionDiameter.stdVerts n i := by
-  ext j; simp? [BarycentricSubdivisionDiameter.stdVerts];
+  ext j; simp only [BarycentricSubdivisionDiameter.stdVerts, Finset.sum_apply, Pi.smul_apply,
+    smul_eq_mul];
   rw [ Finset.sum_eq_single j ] <;> aesop
 
 /-- Two iterated affine charts agree at a point if they agree at every active standard vertex. -/

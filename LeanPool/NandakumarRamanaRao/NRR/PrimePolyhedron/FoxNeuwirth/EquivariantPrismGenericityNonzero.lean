@@ -208,7 +208,9 @@ theorem spatialWeight_pivot
       have := congrArg Fin.val h
       simp at this : (k.succ : Fin (p + 1)) ∈
         (Finset.univ : Finset (Fin (p + 1))) \ {k.castSucc})]
-  simp? [staircaseSpatial]
+  simp only [staircaseSpatial, Fin.val_castSucc, Std.le_refl, ↓reduceDIte, Fin.eta, ↓reduceIte,
+    Fin.val_succ, add_le_iff_nonpos_right, nonpos_iff_eq_zero, one_ne_zero, add_tsub_cancel_right,
+    add_right_inj, add_eq_left]
   apply Finset.sum_eq_zero
   intro j hj
   have hjmem := Finset.mem_sdiff.mp hj
@@ -598,9 +600,9 @@ theorem facetMatrix_witness
   generalize hr : AffinePositiveRayBoundary.VertexMap.augmentedRowEquiv hp r = r'
   refine Fin.lastCases ?_ (fun s => ?_) r'
   · simp
-  · simp? [AffinePositiveRayBoundary.VertexMap.deviation,
-      AffinePositiveRayBoundary.VertexMap.facetValue, localVertexMap,
-      facetWitnessTarget_succAbove]
+  · simp only [VertexMap.deviation, VertexMap.facetValue, localVertexMap,
+    localVertexValue_localRealizingAssignment, facetWitnessTarget_succAbove,
+    Fin.lastCases_castSucc]
     generalize hc : AffinePositiveRayBoundary.VertexMap.augmentedRowEquiv hp c = c'
     refine Fin.lastCases ?_ (fun t => ?_) c'
     · simp []

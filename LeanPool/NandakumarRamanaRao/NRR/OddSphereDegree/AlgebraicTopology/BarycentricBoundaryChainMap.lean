@@ -85,7 +85,7 @@ theorem barycentricSubdivisionLinearMap_commutes_boundary
     intro x
     have hf := f.hom.map_smul x (1 : R)
     have hg := g.hom.map_smul x (1 : R)
-    simp? at hf hg
+    simp only [smul_eq_mul, mul_one] at hf hg
     rw [hf, hg, h]
   apply hval
   -- Reduce (ι σ ≫ f).hom 1 to f.hom (chainGenerator σ) via erw to handle
