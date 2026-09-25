@@ -25,8 +25,8 @@ namespace RS
 /-- The `s × s` square Young diagram. -/
 def squareDiagram (s : ℕ) : YoungDiagram :=
   YoungDiagram.ofRowLens (List.replicate s s) <| by
-    intro i j _
-    simp
+    apply List.Pairwise.sortedGE
+    exact List.pairwise_replicate.mpr (Or.inr le_rfl)
 
 /-- Membership in the `(a, b)` hook: every row after the first `a`
 has length at most `b` (rows are indexed from `0`, so this reads

@@ -90,7 +90,7 @@ private theorem extPerm_adjTrans {n : ℕ} (i : Fin n) :
     - `k = 0`: identity, word = `[]`
     - `k+1`: `swap0WordAux k ++ [k] ++ swap0WordAux k`
       (conjugation: `swap 0 (k+1) = swap 0 k * swap k (k+1) * swap 0 k`) -/
-private def swap0WordAux (n : ℕ) : (k : ℕ) → k ≤ n → List (Fin n)
+def swap0WordAux (n : ℕ) : (k : ℕ) → k ≤ n → List (Fin n)
   | 0, _ => []
   | k + 1, hk =>
     let w := swap0WordAux n k (by omega)
@@ -129,7 +129,7 @@ private theorem swap0WordAux_spec (n : ℕ) :
         swap_comm]
 
 /-- Adjacent-transposition word for `swap 0 p`. -/
-private def swap0Word {n : ℕ} (p : Fin (n + 1)) : List (Fin n) :=
+def swap0Word {n : ℕ} (p : Fin (n + 1)) : List (Fin n) :=
   swap0WordAux n p.val (by omega)
 
 private theorem swap0Word_spec {n : ℕ} (p : Fin (n + 1)) :

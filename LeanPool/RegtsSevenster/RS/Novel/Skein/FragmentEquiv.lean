@@ -217,7 +217,7 @@ def gluePairClosedCongr
     Equiv (W₁.gluePairClosed i j h₁) (W₂.gluePairClosed i j h₂) where
   flagEquiv := e.survivingFlagEquiv i j
   vertexEquiv := e.vertexEquiv
-  attach_comm := fun f => e.survivingFlagEquiv_glueAttach i j f
+  attach_comm := fun f => by exact e.survivingFlagEquiv_glueAttach i j f
   pairing_comm := fun f => by
     apply Subtype.ext
     change e.flagEquiv (W₁.pairing f.val) = W₂.pairing (e.flagEquiv f.val)
@@ -312,9 +312,9 @@ def gluePairOpenCongr
       (W₂.gluePairOpen i j hij hopen₂) where
   flagEquiv := e.survivingFlagEquiv i j
   vertexEquiv := e.vertexEquiv
-  attach_comm := fun f => e.survivingFlagEquiv_glueAttach i j f
-  pairing_comm := fun f =>
-    e.survivingFlagEquiv_rewire hopen₁ hopen₂ f
+  attach_comm := fun f => by exact e.survivingFlagEquiv_glueAttach i j f
+  pairing_comm := fun f => by
+    exact e.survivingFlagEquiv_rewire hopen₁ hopen₂ f
   circles_eq := e.circles_eq
 
 /-- Single-pair gluing commutes with fragment equivalence. -/
@@ -349,7 +349,7 @@ def relabelRefl (W : Fragment α) :
     Equiv (W.relabel (_root_.Equiv.refl α)) W where
   flagEquiv := _root_.Equiv.refl _
   vertexEquiv := _root_.Equiv.refl _
-  attach_comm f := relabel_refl_attach_aux W f
+  attach_comm f := by exact relabel_refl_attach_aux W f
   pairing_comm := fun _ => rfl
   circles_eq := rfl
 
@@ -368,7 +368,7 @@ def relabelTrans (W : Fragment α) (e₁ : α ≃ β) {γ : Type}
     Equiv ((W.relabel e₁).relabel e₂) (W.relabel (e₁.trans e₂)) where
   flagEquiv := _root_.Equiv.refl _
   vertexEquiv := _root_.Equiv.refl _
-  attach_comm f := relabel_trans_attach_aux W e₁ e₂ f
+  attach_comm f := by exact relabel_trans_attach_aux W e₁ e₂ f
   pairing_comm := fun _ => rfl
   circles_eq := rfl
 

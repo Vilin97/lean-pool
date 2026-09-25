@@ -20,9 +20,7 @@ super vector spaces, the vocabulary of Deligne's hypotheses, and Deligne's
 theorem, which `RS/Classical/Deligne/` proves.
 
 This module imports only the Mathlib funnel (`RS/Common/MathlibDeps.lean`, an
-public import list with no content), so its meaning is determined by this file
-
-@[expose] public section
+import list with no content), so its meaning is determined by this file
 against Mathlib alone. It is the trusted surface of the comparator
 certification: `Challenge.lean` carries a copy of the sections below, against
 Mathlib alone, and states the theorems of record with `sorry`; `Solution.lean`
@@ -39,6 +37,8 @@ sign; fragments and gluing; fragment isomorphism; composition; connection
 pairings and the edge-rank hypothesis; Eulerian edge subsets; the mixed
 partition function; the named statements; super vector spaces; the vocabulary
 of Deligne's hypotheses; and Deligne's theorem. -/
+
+@[expose] public section
 
 namespace RS
 
@@ -2158,7 +2158,8 @@ private theorem koszulBraiding_naturality_right (X : SuperVect)
 braiding: swapping odd ⊗ odd elements picks up a factor of −1. -/
 instance instBraidedCategory : BraidedCategory SuperVect where
   braiding := koszulBraidingIso
-  braiding_naturality_right := fun X {_ _} f => koszulBraiding_naturality_right X f
+  braiding_naturality_right := fun X {_ _} f => by
+    exact koszulBraiding_naturality_right X f
   braiding_naturality_left := fun {X Y} f Z => by
     apply Hom.ext
     · -- even component

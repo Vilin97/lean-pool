@@ -158,31 +158,29 @@ private theorem rightUnit_inv_nat [Category.{v} C] [MonoidalCategory C]
 
 /-! ### Data: `MonoidalCategoryStruct` on `Karoubi C` -/
 
--- Raised budget: every field carries its own idempotent
--- compatibility proof, and they elaborate together.
 /-- The monoidal data on the Karoubi envelope: tensor of
 idempotents, conjugated structural isomorphisms. -/
 instance karoubiMonoidalStruct [Category.{v} C] [MonoidalCategory C] :
     MonoidalCategoryStruct (Karoubi C) where
   tensorObj X Y :=
-    ⟨X.X ⊗ Y.X, X.p ⊗ₘ Y.p, tensorHom_idem X.idem Y.idem⟩
+    ⟨X.X ⊗ Y.X, X.p ⊗ₘ Y.p, by exact tensorHom_idem X.idem Y.idem⟩
   whiskerLeft X _ _ f :=
-    ⟨X.p ⊗ₘ f.f, karoubi_tensorHom_comm (⟨X.p, by simp [X.idem]⟩ : X ⟶ X) f⟩
+    ⟨X.p ⊗ₘ f.f, by exact karoubi_tensorHom_comm (⟨X.p, by simp [X.idem]⟩ : X ⟶ X) f⟩
   whiskerRight f Y :=
-    ⟨f.f ⊗ₘ Y.p, karoubi_tensorHom_comm f (⟨Y.p, by simp [Y.idem]⟩ : Y ⟶ Y)⟩
-  tensorHom f g := ⟨f.f ⊗ₘ g.f, karoubi_tensorHom_comm f g⟩
+    ⟨f.f ⊗ₘ Y.p, by exact karoubi_tensorHom_comm f (⟨Y.p, by simp [Y.idem]⟩ : Y ⟶ Y)⟩
+  tensorHom f g := ⟨f.f ⊗ₘ g.f, by exact karoubi_tensorHom_comm f g⟩
   tensorUnit := ⟨𝟙_ C, 𝟙 (𝟙_ C), by simp⟩
   associator X Y Z :=
     { hom := ⟨((X.p ⊗ₘ Y.p) ⊗ₘ Z.p) ≫ (α_ X.X Y.X Z.X).hom,
-              conj_comm _ _
+              by exact (conj_comm _ _
                 (tensorHom_idem (tensorHom_idem X.idem Y.idem) Z.idem)
                 (tensorHom_idem X.idem (tensorHom_idem Y.idem Z.idem))
-                _ (assoc_nat X Y Z)⟩
+                _ (assoc_nat X Y Z))⟩
       inv := ⟨(X.p ⊗ₘ (Y.p ⊗ₘ Z.p)) ≫ (α_ X.X Y.X Z.X).inv,
-              conj_comm _ _
+              by exact (conj_comm _ _
                 (tensorHom_idem X.idem (tensorHom_idem Y.idem Z.idem))
                 (tensorHom_idem (tensorHom_idem X.idem Y.idem) Z.idem)
-                _ (assoc_inv_nat X Y Z)⟩
+                _ (assoc_inv_nat X Y Z))⟩
       hom_inv_id := by
         apply Karoubi.hom_ext; simp only [Karoubi.comp_f, Karoubi.id_f]
         exact conj_iso_hom_inv _ _
@@ -195,13 +193,13 @@ instance karoubiMonoidalStruct [Category.{v} C] [MonoidalCategory C] :
           _ (assoc_nat X Y Z) }
   leftUnitor X :=
     { hom := ⟨(𝟙 (𝟙_ C) ⊗ₘ X.p) ≫ (λ_ X.X).hom,
-              conj_comm _ _
+              by exact (conj_comm _ _
                 (tensorHom_idem (by simp) X.idem) X.idem
-                _ (leftUnit_nat X)⟩
+                _ (leftUnit_nat X))⟩
       inv := ⟨X.p ≫ (λ_ X.X).inv,
-              conj_comm _ _ X.idem
+              by exact (conj_comm _ _ X.idem
                 (tensorHom_idem (by simp) X.idem)
-                _ (leftUnit_inv_nat X)⟩
+                _ (leftUnit_inv_nat X))⟩
       hom_inv_id := by
         apply Karoubi.hom_ext; simp only [Karoubi.comp_f, Karoubi.id_f]
         exact conj_iso_hom_inv _ _
@@ -211,13 +209,13 @@ instance karoubiMonoidalStruct [Category.{v} C] [MonoidalCategory C] :
         exact conj_iso_inv_hom _ _ X.idem _ (leftUnit_nat X) }
   rightUnitor X :=
     { hom := ⟨(X.p ⊗ₘ 𝟙 (𝟙_ C)) ≫ (ρ_ X.X).hom,
-              conj_comm _ _
+              by exact (conj_comm _ _
                 (tensorHom_idem X.idem (by simp)) X.idem
-                _ (rightUnit_nat X)⟩
+                _ (rightUnit_nat X))⟩
       inv := ⟨X.p ≫ (ρ_ X.X).inv,
-              conj_comm _ _ X.idem
+              by exact (conj_comm _ _ X.idem
                 (tensorHom_idem X.idem (by simp))
-                _ (rightUnit_inv_nat X)⟩
+                _ (rightUnit_inv_nat X))⟩
       hom_inv_id := by
         apply Karoubi.hom_ext; simp only [Karoubi.comp_f, Karoubi.id_f]
         exact conj_iso_hom_inv _ _
@@ -497,21 +495,20 @@ private theorem karoubi_triangle [Category.{v} C] [MonoidalCategory C]
   -- Apply the C triangle (reassoc form).
   rw [tensorHom_triangle_eq_assoc]
 
--- Raised budget: `ofTensorHom` takes eleven axioms at once.
 /-- Those data satisfy the monoidal axioms, each inherited from the
 ambient category by conjugation. -/
 instance karoubiMonoidal
-    [Category.{v} C] [MonoidalCategory C] : MonoidalCategory (Karoubi C) :=
-  MonoidalCategory.ofTensorHom
-    (id_tensorHom_id := karoubi_id_tensorHom_id)
-    (id_tensorHom := karoubi_id_tensorHom)
-    (tensorHom_id := karoubi_tensorHom_id)
-    (tensorHom_comp_tensorHom := karoubi_tensorHom_comp)
-    (associator_naturality := karoubi_associator_naturality)
-    (leftUnitor_naturality := karoubi_leftUnitor_naturality)
-    (rightUnitor_naturality := karoubi_rightUnitor_naturality)
-    (pentagon := karoubi_pentagon)
-    (triangle := karoubi_triangle)
+    [Category.{v} C] [MonoidalCategory C] : MonoidalCategory (Karoubi C) := by
+  exact MonoidalCategory.ofTensorHom
+    (id_tensorHom_id := by exact karoubi_id_tensorHom_id)
+    (id_tensorHom := by exact karoubi_id_tensorHom)
+    (tensorHom_id := by exact karoubi_tensorHom_id)
+    (tensorHom_comp_tensorHom := by exact karoubi_tensorHom_comp)
+    (associator_naturality := by exact karoubi_associator_naturality)
+    (leftUnitor_naturality := by exact karoubi_leftUnitor_naturality)
+    (rightUnitor_naturality := by exact karoubi_rightUnitor_naturality)
+    (pentagon := by exact karoubi_pentagon)
+    (triangle := by exact karoubi_triangle)
 
 /-! ### The canonical functor `toKaroubi C` is strong monoidal -/
 
@@ -604,20 +601,20 @@ private theorem braid_inv_nat
 /-- The braiding isomorphism on Karoubi objects, defined prior to the instance
 so that simp lemmas for the `.f` projection are available inside the axiom
 proofs. -/
-private noncomputable def karoubiBraidingIso
+noncomputable def karoubiBraidingIso
     [Category.{v} C] [MonoidalCategory C] [BraidedCategory C]
     (X Y : Karoubi C) :
     tensorObj X Y ≅ tensorObj Y X where
   hom := ⟨(X.p ⊗ₘ Y.p) ≫ (β_ X.X Y.X).hom,
-          conj_comm _ _
+          by exact (conj_comm _ _
             (tensorHom_idem X.idem Y.idem)
             (tensorHom_idem Y.idem X.idem)
-            _ (braid_nat X Y)⟩
+            _ (braid_nat X Y))⟩
   inv := ⟨(Y.p ⊗ₘ X.p) ≫ (β_ X.X Y.X).inv,
-          conj_comm _ _
+          by exact (conj_comm _ _
             (tensorHom_idem Y.idem X.idem)
             (tensorHom_idem X.idem Y.idem)
-            _ (braid_inv_nat X Y)⟩
+            _ (braid_inv_nat X Y))⟩
   hom_inv_id := by
     apply Karoubi.hom_ext; simp only [Karoubi.comp_f, Karoubi.id_f]
     exact conj_iso_hom_inv _ _

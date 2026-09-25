@@ -49,7 +49,8 @@ source slots other than the top one and the target slots other than
 carries one to the other. -/
 def restPerm (σ : Perm (Fin (n + 1))) : Perm (Fin n) :=
   (finSuccAboveEquiv (Fin.last n)).trans
-    ((Equiv.subtypeEquiv σ (ne_last_iff σ)).trans
+    ((Equiv.subtypeEquiv σ
+      (show ∀ x, x ≠ Fin.last n ↔ σ x ≠ topImage σ from by exact ne_last_iff σ)).trans
       (finSuccAboveEquiv (topImage σ)).symm)
 
 /-- The defining property of `restPerm`: reinserting the compressed

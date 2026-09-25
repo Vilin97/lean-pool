@@ -32,7 +32,7 @@ private lemma sigmaFiberEquiv_symm_val {α : Type*} {β : Type*} (f : α → β)
 /-! ### Forward and backward maps -/
 
 /-- Forward: a fixing permutation restricts to each fibre. -/
-private def toFibrePerms (f : Fin n → Fin N) (π : Perm (Fin n))
+def toFibrePerms (f : Fin n → Fin N) (π : Perm (Fin n))
     (hπ : f ∘ π = f) (j : Fin N) : Perm {i : Fin n // f i = j} :=
   π.subtypePerm fun i => by
     have key : f (π i) = f i := congr_fun hπ i
