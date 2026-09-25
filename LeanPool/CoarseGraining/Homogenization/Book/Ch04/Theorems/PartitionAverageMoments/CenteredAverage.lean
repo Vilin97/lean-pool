@@ -25,6 +25,62 @@ open scoped BigOperators
 
 noncomputable section
 
+/-- A descendant at a nonnegative scale is an integer translate of the origin cube at that scale. -/
+theorem cubeSet_descendant_eq_translate_origin
+    {d : ℕ} {n : ℤ} {Q R : TriadicCube d}
+    (hn : 0 ≤ n) (hnQ : n ≤ Q.scale) (hR : R ∈ descendantsAtScale Q n) :
+    cubeSet R =
+      translateSet (intVecToRealVec (scaleTranslationShift n R))
+        (cubeSet (originCube d n)) := by
+  have hscaleR : R.scale = n := by
+    calc
+      R.scale = Q.scale - Int.toNat (Q.scale - n) := by
+        exact scale_eq_sub_of_mem_descendantsAtScale (Q := Q) hnQ hR
+      _ = n := by
+            rw [Int.toNat_of_nonneg (sub_nonneg.mpr hnQ)]
+            ring
+  have hshift :
+      cubeSet R =
+        translateSet (intVecToRealVec (scaleTranslationShift n R))
+          (cubeSet (originCube d n)) := by
+    have hscale_nonneg : 0 ≤ R.scale := by
+      simpa [hscaleR] using hn
+    calc
+      cubeSet R =
+          translateSet (intVecToRealVec (scaleTranslationShift R.scale R))
+            (cubeSet (originCube d R.scale)) :=
+        cubeSet_eq_translateSet_originCube_of_nonneg_scale hscale_nonneg
+      _ =
+          translateSet (intVecToRealVec (scaleTranslationShift n R))
+            (cubeSet (originCube d n)) := by
+            simp [hscaleR]
+  exact hshift
+
+/-- A stationary restriction law gives equal pushforward laws for a covariant observable on an
+integer-translated cube and its origin representative. Only the origin observable must be a.e.
+measurable. -/
+theorem restrictionCovariant_map_eq_of_cubeTranslation
+    {d : ℕ} {n : ℤ} {R : TriadicCube d} {P : RestrictionCoeffLaw d}
+    {Y : Set (Vec d) → RegCoeffField d → ℝ}
+    (hPstat : RestrictionStationaryLaw P) (hY_cov : IsRestrictionTranslationCovariant Y)
+    (hY0_aemeas : AEMeasurable (Y (cubeSet (originCube d n))) P)
+    (hshift : cubeSet R =
+      translateSet (intVecToRealVec (scaleTranslationShift n R))
+        (cubeSet (originCube d n))) :
+        Measure.map (Y (cubeSet R)) P =
+          Measure.map (Y (cubeSet (originCube d n))) P := by
+  calc
+    Measure.map (Y (cubeSet R)) P =
+        Measure.map
+          (Y
+            (translateSet (intVecToRealVec (scaleTranslationShift n R))
+              (cubeSet (originCube d n)))) P := by
+          rw [hshift]
+    _ = Measure.map (Y (cubeSet (originCube d n))) P := by
+          exact map_eq_map_translateReg_of_isRestrictionTranslationCovariant_aemeasurable
+            (P := P) hPstat (U := cubeSet (originCube d n)) hY0_aemeas hY_cov
+            (scaleTranslationShift n R)
+
 /-- Centered polynomial-moment fluctuation bound for restriction-centered
 descendant averages of a translation-covariant cube observable. -/
 theorem integral_abs_restrictionCenteredDescendantAverage_pow_rpow_inv_le_of_restrictionUnitRangeDependentLaw
@@ -117,46 +173,11 @@ theorem integral_abs_restrictionCenteredDescendantAverage_pow_rpow_inv_le_of_res
       ∀ R ∈ descendantsAtScale (originCube d m) n,
         Integrable (fun a => |Z R a| ^ p) P := by
     intro R hR
-    have hscaleR : R.scale = n := by
-      calc
-        R.scale = (originCube d m).scale - Int.toNat ((originCube d m).scale - n) := by
-          exact scale_eq_sub_of_mem_descendantsAtScale (Q := originCube d m) hnm hR
-        _ = m - Int.toNat (m - n) := by
-              rfl
-        _ = n := by
-              rw [Int.toNat_of_nonneg (sub_nonneg.mpr hnm)]
-              ring
-    have hshift :
-        cubeSet R =
-          translateSet (intVecToRealVec (scaleTranslationShift n R))
-            (cubeSet (originCube d n)) := by
-      have hscale_nonneg : 0 ≤ R.scale := by
-        simpa [hscaleR] using hn
-      calc
-        cubeSet R =
-            translateSet (intVecToRealVec (scaleTranslationShift R.scale R))
-              (cubeSet (originCube d R.scale)) :=
-          cubeSet_eq_translateSet_originCube_of_nonneg_scale hscale_nonneg
-        _ =
-            translateSet (intVecToRealVec (scaleTranslationShift n R))
-              (cubeSet (originCube d n)) := by
-              simp [hscaleR]
+    have hshift := cubeSet_descendant_eq_translate_origin hn hnm hR
     have hYR_aemeas : AEMeasurable (Y (cubeSet R)) P := by
       simpa [Y] using! (hX_desc_aemeas R hR).sub measurable_const.aemeasurable
-    have hmap :
-        Measure.map (Y (cubeSet R)) P =
-          Measure.map (Y (cubeSet (originCube d n))) P := by
-      calc
-        Measure.map (Y (cubeSet R)) P =
-            Measure.map
-              (Y
-                (translateSet (intVecToRealVec (scaleTranslationShift n R))
-                  (cubeSet (originCube d n)))) P := by
-              rw [hshift]
-        _ = Measure.map (Y (cubeSet (originCube d n))) P := by
-              exact map_eq_map_translateReg_of_isRestrictionTranslationCovariant_aemeasurable
-                (P := P) hPstat (U := cubeSet (originCube d n)) hY0_aemeas hY_cov
-                (scaleTranslationShift n R)
+    have hmap := restrictionCovariant_map_eq_of_cubeTranslation
+      hPstat hY_cov hY0_aemeas hshift
     have hYR_int :
         Integrable (fun a => |Y (cubeSet R) a| ^ p) P := by
       exact integrable_abs_pow_of_map_eq_map_aemeasurable hYR_aemeas hY0_aemeas hmap hY0Lp_int
@@ -164,30 +185,7 @@ theorem integral_abs_restrictionCenteredDescendantAverage_pow_rpow_inv_le_of_res
   have hZ_mean :
       ∀ R ∈ descendantsAtScale (originCube d m) n, ∫ a, Z R a ∂P = 0 := by
     intro R hR
-    have hscaleR : R.scale = n := by
-      calc
-        R.scale = (originCube d m).scale - Int.toNat ((originCube d m).scale - n) := by
-          exact scale_eq_sub_of_mem_descendantsAtScale (Q := originCube d m) hnm hR
-        _ = m - Int.toNat (m - n) := by
-              rfl
-        _ = n := by
-              rw [Int.toNat_of_nonneg (sub_nonneg.mpr hnm)]
-              ring
-    have hshift :
-        cubeSet R =
-          translateSet (intVecToRealVec (scaleTranslationShift n R))
-            (cubeSet (originCube d n)) := by
-      have hscale_nonneg : 0 ≤ R.scale := by
-        simpa [hscaleR] using hn
-      calc
-        cubeSet R =
-            translateSet (intVecToRealVec (scaleTranslationShift R.scale R))
-              (cubeSet (originCube d R.scale)) :=
-          cubeSet_eq_translateSet_originCube_of_nonneg_scale hscale_nonneg
-        _ =
-            translateSet (intVecToRealVec (scaleTranslationShift n R))
-              (cubeSet (originCube d n)) := by
-              simp [hscaleR]
+    have hshift := cubeSet_descendant_eq_translate_origin hn hnm hR
     have hint :
         ∫ a, Y (cubeSet R) a ∂P =
           ∫ a, Y (cubeSet (originCube d n)) a ∂P := by
@@ -207,46 +205,11 @@ theorem integral_abs_restrictionCenteredDescendantAverage_pow_rpow_inv_le_of_res
       ∀ R ∈ descendantsAtScale (originCube d m) n,
         (∫ a, |Z R a| ^ p ∂P) ^ (1 / (p : ℝ)) ≤ K := by
     intro R hR
-    have hscaleR : R.scale = n := by
-      calc
-        R.scale = (originCube d m).scale - Int.toNat ((originCube d m).scale - n) := by
-          exact scale_eq_sub_of_mem_descendantsAtScale (Q := originCube d m) hnm hR
-        _ = m - Int.toNat (m - n) := by
-              rfl
-        _ = n := by
-              rw [Int.toNat_of_nonneg (sub_nonneg.mpr hnm)]
-              ring
-    have hshift :
-        cubeSet R =
-          translateSet (intVecToRealVec (scaleTranslationShift n R))
-            (cubeSet (originCube d n)) := by
-      have hscale_nonneg : 0 ≤ R.scale := by
-        simpa [hscaleR] using hn
-      calc
-        cubeSet R =
-            translateSet (intVecToRealVec (scaleTranslationShift R.scale R))
-              (cubeSet (originCube d R.scale)) :=
-          cubeSet_eq_translateSet_originCube_of_nonneg_scale hscale_nonneg
-        _ =
-            translateSet (intVecToRealVec (scaleTranslationShift n R))
-              (cubeSet (originCube d n)) := by
-              simp [hscaleR]
+    have hshift := cubeSet_descendant_eq_translate_origin hn hnm hR
     have hYR_aemeas : AEMeasurable (Y (cubeSet R)) P := by
       simpa [Y] using! (hX_desc_aemeas R hR).sub measurable_const.aemeasurable
-    have hmap :
-        Measure.map (Y (cubeSet R)) P =
-          Measure.map (Y (cubeSet (originCube d n))) P := by
-      calc
-        Measure.map (Y (cubeSet R)) P =
-            Measure.map
-              (Y
-                (translateSet (intVecToRealVec (scaleTranslationShift n R))
-                  (cubeSet (originCube d n)))) P := by
-              rw [hshift]
-        _ = Measure.map (Y (cubeSet (originCube d n))) P := by
-              exact map_eq_map_translateReg_of_isRestrictionTranslationCovariant_aemeasurable
-                (P := P) hPstat (U := cubeSet (originCube d n)) hY0_aemeas hY_cov
-                (scaleTranslationShift n R)
+    have hmap := restrictionCovariant_map_eq_of_cubeTranslation
+      hPstat hY_cov hY0_aemeas hshift
     have hYR :
         (∫ a, |Y (cubeSet R) a| ^ p ∂P) ^ (1 / (p : ℝ)) ≤ K := by
       have hint :
