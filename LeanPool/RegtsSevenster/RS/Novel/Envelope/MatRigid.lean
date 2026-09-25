@@ -391,8 +391,8 @@ noncomputable def matExactPairing
     ExactPairing M (matRightDualObj M) where
   coevaluation' := matCoev M
   evaluation' := matEv M
-  coevaluation_evaluation' := mat_snake_one M
-  evaluation_coevaluation' := mat_snake_two M
+  coevaluation_evaluation' := by exact mat_snake_one M
+  evaluation_coevaluation' := by exact mat_snake_two M
 
 /-- Every object in `Mat_ C` has a right dual. -/
 noncomputable instance matHasRightDual

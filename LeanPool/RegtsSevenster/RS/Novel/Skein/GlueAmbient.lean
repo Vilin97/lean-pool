@@ -182,7 +182,7 @@ private theorem gluePairClosed_disjUnion_pairing_comm (W : Fragment α) (V :
 /-- The closed case of glue-in-ambient: when the two boundary flags
 bound a common edge in W, the LHS and RHS produce equivalent
 fragments. -/
-private noncomputable def gluePairClosed_disjUnion (W : Fragment α) (V :
+noncomputable def gluePairClosedDisjUnion (W : Fragment α) (V :
   Fragment β)
     {i j : α}
     (hclosed : W.pairing (W.boundaryFlag i) = W.boundaryFlag j) :
@@ -192,8 +192,8 @@ private noncomputable def gluePairClosed_disjUnion (W : Fragment α) (V :
         (ambientLabelEquiv i j)) where
   flagEquiv := ambientFlagEquiv W V i j
   vertexEquiv := _root_.Equiv.refl (W.Vertex ⊕ V.Vertex)
-  attach_comm := gluePairClosed_disjUnion_attach_comm W V hclosed
-  pairing_comm := gluePairClosed_disjUnion_pairing_comm W V hclosed
+  attach_comm := by exact gluePairClosed_disjUnion_attach_comm W V hclosed
+  pairing_comm := by exact gluePairClosed_disjUnion_pairing_comm W V hclosed
   circles_eq := by
     change (W.circles + 1) + V.circles = (W.circles + V.circles) + 1
     omega
@@ -327,7 +327,7 @@ private theorem gluePairOpen_disjUnion_pairing_comm (W : Fragment α) (V : Fragm
 /-- The open case of glue-in-ambient: when the two boundary flags
 bound distinct edges in W, the LHS and RHS produce equivalent
 fragments. -/
-private noncomputable def gluePairOpen_disjUnion (W : Fragment α) (V : Fragment
+noncomputable def gluePairOpenDisjUnion (W : Fragment α) (V : Fragment
   β)
     {i j : α} (hij : i ≠ j)
     (hopen : W.pairing (W.boundaryFlag i) ≠ W.boundaryFlag j) :
@@ -338,8 +338,8 @@ private noncomputable def gluePairOpen_disjUnion (W : Fragment α) (V : Fragment
         (ambientLabelEquiv i j)) where
   flagEquiv := ambientFlagEquiv W V i j
   vertexEquiv := _root_.Equiv.refl (W.Vertex ⊕ V.Vertex)
-  attach_comm := gluePairOpen_disjUnion_attach_comm W V hij hopen
-  pairing_comm := gluePairOpen_disjUnion_pairing_comm W V hij hopen
+  attach_comm := by exact gluePairOpen_disjUnion_attach_comm W V hij hopen
+  pairing_comm := by exact gluePairOpen_disjUnion_pairing_comm W V hij hopen
   circles_eq := by
     change W.circles + V.circles = (W.circles + V.circles)
     rfl
@@ -363,7 +363,7 @@ noncomputable def gluePairDisjUnion (W : Fragment α) (V : Fragment β)
         (W.disjUnion V).boundaryFlag (Sum.inl j) :=
       congrArg Sum.inl hclosed
     rw [dite_eq_left hunion]
-    exact gluePairClosed_disjUnion W V hclosed
+    exact gluePairClosedDisjUnion W V hclosed
   · -- open case: W's pair is open, so union's pair is open
     rename_i hopen
     have hunion : (W.disjUnion V).pairing
@@ -371,7 +371,7 @@ noncomputable def gluePairDisjUnion (W : Fragment α) (V : Fragment β)
         (W.disjUnion V).boundaryFlag (Sum.inl j) :=
       fun h => hopen (Sum.inl.inj h)
     rw [dite_eq_right hunion]
-    exact gluePairOpen_disjUnion W V hij hopen
+    exact gluePairOpenDisjUnion W V hij hopen
 
 /-- The label condition transported along a relabelling. -/
 private theorem relabelSurvIff (e : α ≃ β) (i j : β) (x : α) :
@@ -420,7 +420,7 @@ noncomputable def gluePairRelabel (W : Fragment α) (e : α ≃ β)
       ((W.gluePair (e.symm i) (e.symm j)
           (fun h => hij (by rw [← e.apply_symm_apply i,
             ← e.apply_symm_apply j, h]))).relabel
-        (e.subtypeEquiv (relabelSurvIff e i j)))
+        (e.subtypeEquiv (by exact relabelSurvIff e i j)))
     := by
   by_cases hclosed :
       W.pairing (W.boundaryFlag (e.symm i)) = W.boundaryFlag (e.symm j)

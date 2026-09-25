@@ -836,7 +836,7 @@ noncomputable def stdSuperLetters (p q : ℕ) :
             = 0
           exact Pi.single_eq_of_ne (M := fun _ : Fin (q + 1) => ℂ)
             (fun h => hkk' (congrArg Sum.inr h.symm)) (v 0)
-  total := stdSuper_total p q
+  total := by exact stdSuper_total p q
 
 /-- **Reconstruction in `SuperVect`**: vanishing colour sums force
 the block idempotent to kill the standard super object. -/

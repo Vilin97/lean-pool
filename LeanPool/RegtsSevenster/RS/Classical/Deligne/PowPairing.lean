@@ -339,9 +339,9 @@ theorem concat_peel_head [Category.{v} D] [MonoidalCategory D] (X : D)
       (α_ X (tensorPow D X p) (tensorPow D X q ⊗ X)).hom ≫
       (X ◁ ((α_ (tensorPow D X p) (tensorPow D X q) X).inv ≫
         ((tensorPowConcat X p q).hom ▷ X)))
-    rw [← powCast_whiskerRight]
-    all_goals simp only [Category.assoc]
-    show (α_ (tensorPow D X (p + 1)) (tensorPow D X q) X).inv ≫
+    rw [← powCast_whiskerRight X (by omega : p + 1 + q = p + q + 1)]
+    simp only [Category.assoc]
+    change (α_ (tensorPow D X (p + 1)) (tensorPow D X q) X).inv ≫
       ((tensorPowConcat X (p + 1) q).hom ▷ X) ≫
       (powCast X (by omega : p + 1 + q = p + q + 1) ▷ X) ≫
       ((powPeel X (p + q)).hom ▷ X) ≫
@@ -577,7 +577,6 @@ theorem rawPair_actRight_last
   conv_lhs => rw [← whisker_exchange_assoc,
     associator_naturality_middle_assoc]
   conv_lhs => simp only [← MonoidalCategory.whiskerLeft_comp_assoc]
-  conv_lhs => simp only [Category.assoc]
   conv_lhs => rw [inner_extract A M M' d (tensorPow D M.X n)]
   conv_rhs =>
     change ((α_ (tensorPow D M'.X n) M'.X A).inv ▷
@@ -631,7 +630,6 @@ theorem pairStep_actRight
   conv_lhs => rw [pairStep]
   conv_lhs => rw [associator_naturality_middle_assoc]
   conv_lhs => rw [← MonoidalCategory.whiskerLeft_comp_assoc]
-  conv_lhs => simp only [Category.assoc]
   conv_lhs => rw [inner_extract A M M' d R]
   conv_rhs => rw [pairStep]
   conv_rhs => simp only [comp_whiskerRight,
@@ -660,7 +658,6 @@ theorem pairStep_actHead
   conv_lhs => rw [pairStep]
   conv_lhs => rw [associator_naturality_right_assoc]
   conv_lhs => rw [← MonoidalCategory.whiskerLeft_comp_assoc]
-  conv_lhs => simp only [Category.assoc]
   conv_lhs => rw [inner_extract_snd A M M' d R]
   conv_rhs => rw [pairStep]
   conv_rhs => simp only [comp_whiskerRight,
@@ -1082,7 +1079,6 @@ theorem pairStep_slide_snd
   conv_lhs => rw [winLegM, pairStep]
   conv_lhs => rw [associator_naturality_right_assoc]
   conv_lhs => rw [← MonoidalCategory.whiskerLeft_comp_assoc]
-  conv_lhs => simp only [Category.assoc]
   conv_lhs => rw [hM]
   conv_rhs => rw [pairStep]
   conv_rhs => simp only [comp_whiskerRight,
@@ -1697,8 +1693,9 @@ noncomputable def pairPowStage
     modPow A M'.X n ⊗ tensorPow D M.X n ⟶ A :=
   modPowWhiskerRightDesc A M'.X n (tensorPow D M.X n)
     (rawPair A M M' d n)
-    (legs_whiskerRight_cond' A (rawPair A M M' d n)
-      (fun a b hab => rawPair_rel_fst' A M M' d a b hab))
+    (by
+      exact legs_whiskerRight_cond' A (rawPair A M M' d n)
+        (fun a b hab => rawPair_rel_fst' A M M' d a b hab))
 
 /-- Defining equation of the first stage. -/
 @[reassoc (attr := simp)]

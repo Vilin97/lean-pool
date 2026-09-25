@@ -386,6 +386,7 @@ theorem throughSummand_congr [LinearOrder α] {k ℓ : ℕ}
     (n : ℕ) :
     F.throughSummand hM st hbnd o₁ n =
       F.throughSummand hM st hbnd o₂ n := by
+  classical
   unfold EdgeSubset.throughSummand
   refine congrArg _ (Finset.sum_congr rfl (fun ψ _ => ?_))
   refine if_congr Iff.rfl (Finset.sum_congr rfl (fun φ _ => ?_)) rfl
@@ -811,6 +812,7 @@ theorem throughSummand_transportRepair
         (RelTransitionSystem.Orientation.transportRepair hsq o
           hflip) n =
       -F.throughSummand hM st hbnd o n := by
+  classical
   have hprod : ∀ (ψ : F.EvenColouring k)
       (φ : F.CoreOddColouring ℓ),
       (∏ vv : W.Vertex,

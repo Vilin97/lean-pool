@@ -104,6 +104,7 @@ theorem projFormula_cover
       (whiskerLeft_collapseMid A B φ (baseChangeMod φ M) N)
       h) ?_
     rw [collapseCover]
+    simp only [Category.assoc]
   rw [hpf]
   refine Eq.trans (hmid _) ?_
   refine whisker_eq _ (whisker_eq _ ?_)
@@ -654,7 +655,6 @@ theorem projFormula_assoc_core
     erw [← MonoidalCategory.whiskerLeft_comp, hcov,
       MonoidalCategory.whiskerLeft_comp,
       MonoidalCategory.whiskerLeft_comp]
-    simp only [Category.assoc]
     rw [reassoc_of% (baseAssoc B M.X N.X P.X)]
   conv_rhs =>
     rw [MonoidalCategory.whiskerLeft_comp]

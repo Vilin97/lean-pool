@@ -92,6 +92,7 @@ theorem pathSign_of_allInternal [LinearOrder α] {W : Fragment α}
     {F : EdgeSubset W}
     (hall : F.allInternal) (κ : F.RelTransitionSystem) :
     pathSign κ = 1 := by
+  classical
   unfold pathSign chordCrossingCount
   rw [show ((F.boundaryFlags.attach ×ˢ F.boundaryFlags.attach).filter
       (fun bb => ChordCross κ bb.1 bb.2)) = ∅ from

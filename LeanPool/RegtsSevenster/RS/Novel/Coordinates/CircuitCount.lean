@@ -196,7 +196,7 @@ edge pairing. -/
 noncomputable def outToIn (κ : F.TransitionSystem) (o : κ.Orientation) :
     {x : {g : W.Flag // g ∈ F.flags} // o.isOut x.val = true} ≃
     {x : {g : W.Flag // g ∈ F.flags} // ¬(o.isOut x.val = true)} :=
-  F.pairingPerm.subtypeEquiv (fun a => κ.pairingPerm_isOut_flip o a)
+  F.pairingPerm.subtypeEquiv (fun a => by exact κ.pairingPerm_isOut_flip o a)
 
 /-- The reverse conjugation identity: sigma * walk^{-1} * sigma = walk. -/
 private theorem conj_eq_walkPerm (κ : F.TransitionSystem) :
