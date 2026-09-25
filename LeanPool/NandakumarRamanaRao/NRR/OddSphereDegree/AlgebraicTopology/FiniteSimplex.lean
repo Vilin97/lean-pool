@@ -215,7 +215,10 @@ noncomputable def FiniteSimplex.homeomorphUnitInterval :
     apply Subtype.ext
     funext i
     have hsum : s.val 0 + s.val 1 = 1 := by simpa using s.2.2
-    fin_cases i <;> (simp; linarith)
+    fin_cases i
+    · simp
+      linarith
+    · simp
   right_inv t := by apply Subtype.ext; rfl
   continuous_toFun := ((continuous_apply 1).comp continuous_subtype_val).subtype_mk _
   continuous_invFun := by fun_prop
