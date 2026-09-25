@@ -3,11 +3,13 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib.Tactic
-import LeanPool.SalemTheorem.PdtSalemCircle
-import LeanPool.SalemTheorem.PdtSalemArith
-import LeanPool.SalemTheorem.PdtSalemMinus
-import LeanPool.SalemTheorem.PdtSalemEndgame
+module
+
+public import Mathlib.Tactic
+public import LeanPool.SalemTheorem.PdtSalemCircle
+public import LeanPool.SalemTheorem.PdtSalemArith
+public import LeanPool.SalemTheorem.PdtSalemMinus
+public import LeanPool.SalemTheorem.PdtSalemEndgame
 
 /-!
 # PdtSalemQuadUnit — the reciprocal-quadratic case and the pattern-form theorem
@@ -58,6 +60,8 @@ Main results:
 
 The reduction lemma is proved without conjugation-closure.
 -/
+
+@[expose] public section
 
 namespace PDT
 namespace SalemQuadUnit

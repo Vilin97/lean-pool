@@ -3,11 +3,13 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.Analysis.CStarAlgebra.Classes
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Tactic
 
 /-!
 # PdtSalemCircle — the circle count
@@ -52,6 +54,8 @@ stated without the hypothesis `1 ≤ m` — it is not needed (for the
 count, `3 ≤ m + p` alone drives the phase climb); the trichotomy
 carries both `1 ≤ m` and `3 ≤ m + p`.
 -/
+
+@[expose] public section
 
 namespace PDT
 namespace SalemCircle

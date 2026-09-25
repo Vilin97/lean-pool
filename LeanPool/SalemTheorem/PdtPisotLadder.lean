@@ -3,12 +3,14 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Polynomial.Basic
-import Mathlib.Topology.Algebra.Polynomial
-import Mathlib.Topology.GDelta.MetrizableSpace
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Polynomial.Basic
+public import Mathlib.Topology.Algebra.Polynomial
+public import Mathlib.Topology.GDelta.MetrizableSpace
+public import Mathlib.Tactic
 
 /-!
 # PdtPisotLadder — the general Pisot ladder
@@ -44,6 +46,8 @@ is mathematically redundant (it follows from `hc : 1 < c` and
 `hca : c < alpha`); it is kept for interface symmetry with
 `pisot_ladder_pos_eventually`, where it is essential.
 -/
+
+@[expose] public section
 
 namespace PDT
 namespace PisotLadder

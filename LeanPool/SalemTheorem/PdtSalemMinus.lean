@@ -3,9 +3,11 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib.Tactic
-import LeanPool.SalemTheorem.PdtSalemCircle
-import LeanPool.SalemTheorem.PdtSalemArith
+module
+
+public import Mathlib.Tactic
+public import LeanPool.SalemTheorem.PdtSalemCircle
+public import LeanPool.SalemTheorem.PdtSalemArith
 
 /-!
 # PdtSalemMinus — the minus family
@@ -37,6 +39,8 @@ The arithmetic certificate `salem_certificate_minus` is the verbatim
 port of `PdtSalemArith.salem_certificate` with the family
 `Rz = X^m·Pz − Qz`.
 -/
+
+@[expose] public section
 
 namespace PDT
 namespace SalemMinus

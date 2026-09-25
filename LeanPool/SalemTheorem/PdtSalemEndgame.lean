@@ -3,11 +3,13 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib.Tactic
-import LeanPool.SalemTheorem.PdtPisotLadder
-import LeanPool.SalemTheorem.PdtSalemCircle
-import LeanPool.SalemTheorem.PdtSalemArith
-import LeanPool.SalemTheorem.PdtSalemMinus
+module
+
+public import Mathlib.Tactic
+public import LeanPool.SalemTheorem.PdtPisotLadder
+public import LeanPool.SalemTheorem.PdtSalemCircle
+public import LeanPool.SalemTheorem.PdtSalemArith
+public import LeanPool.SalemTheorem.PdtSalemMinus
 
 /-!
 # PdtSalemEndgame — the two-sided assembly
@@ -52,6 +54,8 @@ Structure:
 `P(1/α) ≠ 0`; the conjugation closure of `inside` is retained as a
 hypothesis although it follows from the integer coefficients.
 -/
+
+@[expose] public section
 
 namespace PDT
 namespace SalemEndgame
