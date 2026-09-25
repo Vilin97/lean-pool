@@ -47,18 +47,6 @@ theorem stableHomotopyInvariance_affinePullback :
   intro p hp F₀ F₁ H A₀ A₁
   exact zeroCount_eq hp F₀ F₁ H A₀ A₁
 
-/-- The same result, explicitly derived through the generic exact-collar adapter. -/
-theorem stableHomotopyInvariance_affinePullback_viaConstruction :
-    StableHomotopyInvarianceTheorem :=
-  stableHomotopyInvariance_of_exactRelativeStableCollarConstruction
-    exactRelativeStableCollarConstruction_affinePullback
-
-/-- The direct and generic-adapter formulations agree propositionally. -/
-theorem stableHomotopyInvariance_affinePullback_eq_viaConstruction :
-    stableHomotopyInvariance_affinePullback (p := p) =
-      stableHomotopyInvariance_affinePullback_viaConstruction (p := p) :=
-  Subsingleton.elim _ _
-
 end StableHomotopyInvarianceAffinePullback
 end EquivariantPrismStableRelativeBoundary
 end FoxNeuwirthOrderComplex

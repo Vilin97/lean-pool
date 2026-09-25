@@ -7,6 +7,7 @@ module
 
 
 public import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.SeparatorCertificate
+public import LeanPool.NandakumarRamanaRao.NRR.PrimeRefinement.FlexibleCore
 public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth
 
 /-!
@@ -35,6 +36,12 @@ def PrimeRefinementTheorem : Prop :=
           (foxNeuwirthTopCellModel hp) hA φ)
 
 namespace PrimeRefinementTheorem
+
+/-- A separator for the fixed Fox--Neuwirth model is a model-independent refinement step. -/
+theorem toFlexible (H : PrimeRefinementTheorem) : FlexiblePrimeRefinementTheorem := by
+  intro p hp K A hA _ phi
+  obtain ⟨certificate⟩ := H p hp K A hA phi
+  exact ⟨⟨foxNeuwirthTopCellModel hp, certificate⟩⟩
 
 /-- A prime-refinement separator witness yields the refined nice multivalued function together with
 its
