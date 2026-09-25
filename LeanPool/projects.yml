@@ -10259,9 +10259,12 @@ projects:
 
   - slug: lean-malliavin
     title: Malliavin calculus and the Clark–Ocone representation
-    summary: Constructs the Malliavin derivative, Gaussian integration by parts, closability, Wiener chaos,
-      Brownian Itô integration and martingale representation, culminating in Clark–Ocone for a generating
-      pre-Brownian process on an abstract Gaussian Banach space.
+    summary: Constructs the Malliavin derivative, Gaussian integration by parts, closability,
+      Wiener chaos, Brownian Itô integration and martingale representation. The Clark–Ocone
+      endpoint uses a generating pre-Brownian process with continuous linear coordinates
+      on a separable real Gaussian Banach space, its natural filtration, and pairs in the
+      closed Malliavin graph; the conditional-expectation sections agree almost everywhere
+      at positive times.
     branch: stochastic analysis
     entry_module: LeanPool.Malliavin
     authors:
@@ -10277,8 +10280,13 @@ projects:
     - PalomarClarkOcone.generated_clark_ocone
     main_results:
     - declaration: PalomarClarkOcone.generated_clark_ocone
-      informal: A generating pre-Brownian process admits a closed Malliavin time derivative and Itô isometry
-        realizing the Clark–Ocone conditional-expectation representation.
+      informal: For a generating pre-Brownian process on a separable real Gaussian Banach
+        space whose coordinates are pointwise represented by continuous linear functionals,
+        constructs a time realization of the Malliavin derivative and an Itô isometry for
+        the natural filtration, with martingale representation for every terminal L² variable.
+        For pairs in the closed Malliavin graph, the Clark–Ocone formula identifies the
+        derivative's predictable projection with its conditional-expectation sections for
+        almost every positive time.
     tags:
     - probability
     - malliavin-calculus

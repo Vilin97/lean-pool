@@ -303,12 +303,14 @@ private theorem clarkOcone_of_graphClosure
   rw [hderiv] at hGae hsection hformula
   exact ⟨G, hG, hGae, hsection, hformula⟩
 
-/-- **Generated-space martingale representation and textbook Clark--Ocone.** There are
+/-- **Generated-space martingale representation and textbook Clark--Ocone.**
+For a generating pre-Brownian process with continuous linear coordinates on a
+separable real Gaussian Banach space, using its natural filtration, there are
 a time realization of the closed Malliavin derivative and a Brownian Itô
 isometry such that every terminal `L²` variable has a stochastic-integral
 representation. For every pair in the closed Malliavin graph, the predictable
 projection of the derivative has a representative whose time sections are the
-conditional expectations in the textbook Clark--Ocone identity. The Brownian
+conditional expectations for almost every positive time in the Clark--Ocone identity. The Brownian
 coordinate directions are total in the Cameron--Martin space, so the displayed
 generator law determines the continuous time realization. -/
 theorem generated_clark_ocone
