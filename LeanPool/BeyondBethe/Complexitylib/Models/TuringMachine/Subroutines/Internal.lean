@@ -1684,6 +1684,148 @@ theorem copyWorkToWorkTM_started_hoareTime {n : ℕ}
       (Nat.zero_le _)
   refine ⟨c', x.length + 1, le_rfl, hreach, hhalt, hsrc_cells, hsrc_head, hprefix⟩
 
+private theorem copyWorkToWork_idleTape : ∀ (t : Tape), t.read ≠ Γ.start → t.head ≥ 1 →
+    t.writeAndMove (readBackWrite t.read) (idleDir t.read) = t := by
+  intro t hns hh
+  simp only [Tape.writeAndMove, idleDir, hns, ↓reduceIte, Tape.move, Tape.write]
+  split
+  · omega
+  · simp only [Tape.read] at hns ⊢
+    rw [toΓ_readBackWrite_of_ne_start hns, Function.update_eq_self]
+
+private theorem copyWorkToWork_idleInput : ∀ (t : Tape), t.read ≠ Γ.start →
+    t.move (idleDir t.read) = t := by
+  intro t hns
+  simp [idleDir, hns, Tape.move]
+
+/-- A single copying step advances both tape heads and preserves the complete outside frame. -/
+private theorem copyWorkToWork_copyStep {n : ℕ}
+    (src dst : Fin n) (hne : src ≠ dst) (x : List Bool) (k : ℕ) (hk_lt : k < x.length)
+    (inp : Tape) (work : Fin n → Tape) (out : Tape)
+    (hinp_ns : inp.read ≠ Γ.start) (hout_ns : out.read ≠ Γ.start) (hout_h : out.head ≥ 1)
+    (hother_wf : ∀ i, i ≠ src → i ≠ dst → (work i).read ≠ Γ.start ∧ (work i).head ≥ 1)
+    (c : Cfg n (copyWorkToWorkTM src dst).Q) (hstate : c.state = CopyPhase.copying)
+    (hsrc_cells : (c.work src).cells = (Tape.init (x.map Γ.ofBool)).cells)
+    (hsrc_head : (c.work src).head = k + 1)
+    (hprefix : (c.work dst).HasBinaryPrefix (x.take k))
+    (hdst_cell0 : (c.work dst).cells 0 = Γ.start)
+    (hinp_c : c.input = inp) (hout_c : c.output = out)
+    (hw_c : ∀ i, i ≠ src → i ≠ dst → c.work i = work i) :
+    ∃ c1 : Cfg n (copyWorkToWorkTM src dst).Q,
+      (copyWorkToWorkTM src dst).step c = some c1 ∧ c1.state = CopyPhase.copying ∧
+      (c1.work src).cells = (Tape.init (x.map Γ.ofBool)).cells ∧
+      (c1.work src).head = k + 2 ∧ (c1.work dst).HasBinaryPrefix (x.take (k + 1)) ∧
+      (c1.work dst).cells 0 = Γ.start ∧ c1.input = inp ∧ c1.output = out ∧
+      (∀ i, i ≠ src → i ≠ dst → c1.work i = work i) := by
+  have hsrc_read : (c.work src).read = Γ.ofBool (x[k]'hk_lt) := by
+    simp [Tape.read, hsrc_head, hsrc_cells, Tape.init_ofBool_cells_lt x k hk_lt]
+  have hprefix_next :
+      ((c.work dst).writeAndMove (Γ.ofBool (x[k]'hk_lt)) Dir3.right).HasBinaryPrefix
+        (x.take (k + 1)) := by
+    have hwrite := Tape.hasBinaryPrefix_write_bit (x[k]'hk_lt) hprefix
+    simpa [List.take_concat_get' x k hk_lt] using hwrite
+  cases hbit : x[k]'hk_lt with
+  | false =>
+      have hread0 : (c.work src).read = Γ.zero := by
+        simpa [hbit] using! hsrc_read
+      let c1 : Cfg n (copyWorkToWorkTM src dst).Q :=
+        { state := CopyPhase.copying
+          input := c.input.move (TM.idleDir c.input.read)
+          work := fun i =>
+            (c.work i).writeAndMove
+              ((if i = dst then Γw.zero else TM.readBackWrite ((c.work i).read)).toΓ)
+              (if i = dst then Dir3.right else if i = src then Dir3.right
+                else TM.idleDir ((c.work i).read))
+          output := c.output.writeAndMove (TM.readBackWrite c.output.read).toΓ
+            (TM.idleDir c.output.read) }
+      have hstep1 : (copyWorkToWorkTM src dst).step c = some c1 := by
+        simp [TM.step, hstate, copyWorkToWorkTM, hread0, c1, TM.readBackWrite]
+      have hinput_keep : c1.input = inp := by
+        simpa [c1, hinp_c] using copyWorkToWork_idleInput inp hinp_ns
+      have houtput_keep : c1.output = out := by
+        simpa [c1, hout_c] using copyWorkToWork_idleTape out hout_ns hout_h
+      have hother_keep : ∀ i, i ≠ src → i ≠ dst → c1.work i = work i := by
+        intro i hi_src hi_dst
+        simpa [c1, hi_src, hi_dst, hw_c i hi_src hi_dst] using
+          copyWorkToWork_idleTape (work i) (hother_wf i hi_src hi_dst).1
+            (hother_wf i hi_src hi_dst).2
+      have hsrc_cells1 : (c1.work src).cells = (Tape.init (x.map Γ.ofBool)).cells := by
+        have hsrc_ne : (c.work src).read ≠ Γ.start := by
+          rw [hread0]
+          decide
+        have hsrc_pres :
+            (c1.work src).cells = (c.work src).cells := by
+          simpa [c1, hread0, hne, TM.readBackWrite] using
+            (TM.tape_readBackWrite_preserves (c.work src) Dir3.right (Or.inr hsrc_ne))
+        rw [hsrc_pres]
+        exact hsrc_cells
+      have hsrc_head1 : (c1.work src).head = k + 2 := by
+        simp [c1, hsrc_head, hne, Tape.writeAndMove, Tape.move, Tape.write_head]
+      have hdst_prefix1 : (c1.work dst).HasBinaryPrefix (x.take (k + 1)) := by
+        have hdst :
+            c1.work dst = (c.work dst).writeAndMove Γ.zero Dir3.right := by
+          simp [c1]
+        rw [hdst]
+        simpa [hbit] using! hprefix_next
+      have hdst_cell01 : (c1.work dst).cells 0 = Γ.start := by
+        have hdst :
+            c1.work dst = (c.work dst).writeAndMove Γ.zero Dir3.right := by
+          simp [c1]
+        rw [hdst]
+        exact Tape.hasBinaryPrefix_write_bit_cell0 false hprefix hdst_cell0
+      exact ⟨c1, hstep1, rfl, hsrc_cells1, hsrc_head1, hdst_prefix1, hdst_cell01,
+        hinput_keep, houtput_keep, hother_keep⟩
+  | true =>
+      have hread1 : (c.work src).read = Γ.one := by
+        simpa [hbit] using! hsrc_read
+      let c1 : Cfg n (copyWorkToWorkTM src dst).Q :=
+        { state := CopyPhase.copying
+          input := c.input.move (TM.idleDir c.input.read)
+          work := fun i =>
+            (c.work i).writeAndMove
+              ((if i = dst then Γw.one else TM.readBackWrite ((c.work i).read)).toΓ)
+              (if i = dst then Dir3.right else if i = src then Dir3.right
+                else TM.idleDir ((c.work i).read))
+          output := c.output.writeAndMove (TM.readBackWrite c.output.read).toΓ
+            (TM.idleDir c.output.read) }
+      have hstep1 : (copyWorkToWorkTM src dst).step c = some c1 := by
+        simp [TM.step, hstate, copyWorkToWorkTM, hread1, c1, TM.readBackWrite]
+      have hinput_keep : c1.input = inp := by
+        simpa [c1, hinp_c] using copyWorkToWork_idleInput inp hinp_ns
+      have houtput_keep : c1.output = out := by
+        simpa [c1, hout_c] using copyWorkToWork_idleTape out hout_ns hout_h
+      have hother_keep : ∀ i, i ≠ src → i ≠ dst → c1.work i = work i := by
+        intro i hi_src hi_dst
+        simpa [c1, hi_src, hi_dst, hw_c i hi_src hi_dst] using
+          copyWorkToWork_idleTape (work i) (hother_wf i hi_src hi_dst).1
+            (hother_wf i hi_src hi_dst).2
+      have hsrc_cells1 : (c1.work src).cells = (Tape.init (x.map Γ.ofBool)).cells := by
+        have hsrc_ne : (c.work src).read ≠ Γ.start := by
+          rw [hread1]
+          decide
+        have hsrc_pres :
+            (c1.work src).cells = (c.work src).cells := by
+          simpa [c1, hread1, hne, TM.readBackWrite] using
+            (TM.tape_readBackWrite_preserves (c.work src) Dir3.right (Or.inr hsrc_ne))
+        rw [hsrc_pres]
+        exact hsrc_cells
+      have hsrc_head1 : (c1.work src).head = k + 2 := by
+        simp [c1, hsrc_head, hne, Tape.writeAndMove, Tape.move, Tape.write_head]
+      have hdst_prefix1 : (c1.work dst).HasBinaryPrefix (x.take (k + 1)) := by
+        have hdst :
+            c1.work dst = (c.work dst).writeAndMove Γ.one Dir3.right := by
+          simp [c1]
+        rw [hdst]
+        simpa [hbit] using! hprefix_next
+      have hdst_cell01 : (c1.work dst).cells 0 = Γ.start := by
+        have hdst :
+            c1.work dst = (c.work dst).writeAndMove Γ.one Dir3.right := by
+          simp [c1]
+        rw [hdst]
+        exact Tape.hasBinaryPrefix_write_bit_cell0 true hprefix hdst_cell0
+      exact ⟨c1, hstep1, rfl, hsrc_cells1, hsrc_head1, hdst_prefix1, hdst_cell01,
+        hinput_keep, houtput_keep, hother_keep⟩
+
 /-- Rich HoareTime for `copyWorkToWorkTM`: copy a started Boolean work tape to
 another started blank work tape while preserving arbitrary frame data on the
 input tape, output tape, and all unrelated work tapes. The source cells are
@@ -1721,18 +1863,6 @@ theorem copyWorkToWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
       (x.length + 1) := by
   intro inp work out hpre
   rcases hpre with ⟨hsrc, hdst, hinp_ns, hout_ns, hout_h, hother_wf, hP⟩
-  have tape_idle_preserve : ∀ (t : Tape), t.read ≠ Γ.start → t.head ≥ 1 →
-      t.writeAndMove (readBackWrite t.read) (idleDir t.read) = t := by
-    intro t hns hh
-    simp only [Tape.writeAndMove, idleDir, hns, ↓reduceIte, Tape.move, Tape.write]
-    split
-    · omega
-    · simp only [Tape.read] at hns ⊢
-      rw [toΓ_readBackWrite_of_ne_start hns, Function.update_eq_self]
-  have input_idle_preserve : ∀ (t : Tape), t.read ≠ Γ.start →
-      t.move (idleDir t.read) = t := by
-    intro t hns
-    simp [idleDir, hns, Tape.move]
   suffices h_loop : ∀ rem k (c : Cfg n (copyWorkToWorkTM src dst).Q),
       rem = x.length - k →
       c.state = CopyPhase.copying →
@@ -1809,13 +1939,13 @@ theorem copyWorkToWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
       have hstep1 : (copyWorkToWorkTM src dst).step c = some c1 := by
         simp [TM.step, hstate, copyWorkToWorkTM, hsrc_read, c1, allIdle]
       have hinput_keep : c1.input = inp := by
-        simpa [c1, hinp_c] using input_idle_preserve inp hinp_ns
+        simpa [c1, hinp_c] using copyWorkToWork_idleInput inp hinp_ns
       have houtput_keep : c1.output = out := by
-        simpa [c1, hout_c] using tape_idle_preserve out hout_ns hout_h
+        simpa [c1, hout_c] using copyWorkToWork_idleTape out hout_ns hout_h
       have hother_keep : ∀ i, i ≠ src → i ≠ dst → c1.work i = work i := by
         intro i hi_src hi_dst
         simpa [c1, hi_src, hi_dst, hw_c i hi_src hi_dst] using
-          tape_idle_preserve (work i) (hother_wf i hi_src hi_dst).1 (hother_wf i hi_src hi_dst).2
+          copyWorkToWork_idleTape (work i) (hother_wf i hi_src hi_dst).1 (hother_wf i hi_src hi_dst).2
       have hsrc_keep : c1.work src = c.work src := by
         have hsrc_ne : (c.work src).read ≠ Γ.start := by
           rw [hsrc_read]
@@ -1843,126 +1973,18 @@ theorem copyWorkToWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
       intro k c hrem hstate hsrc_cells hsrc_head hprefix hdst_cell0 hk_le hinp_c hout_c hw_c
       have hk_lt : k < x.length := by
         omega
-      have hsrc_read : (c.work src).read = Γ.ofBool (x[k]'hk_lt) := by
-        simp [Tape.read, hsrc_head, hsrc_cells, Tape.init_ofBool_cells_lt x k hk_lt]
-      have hprefix_next :
-          ((c.work dst).writeAndMove (Γ.ofBool (x[k]'hk_lt)) Dir3.right).HasBinaryPrefix
-            (x.take (k + 1)) := by
-        have hwrite := Tape.hasBinaryPrefix_write_bit (x[k]'hk_lt) hprefix
-        simpa [List.take_concat_get' x k hk_lt] using hwrite
-      cases hbit : x[k]'hk_lt with
-      | false =>
-          have hread0 : (c.work src).read = Γ.zero := by
-            simpa [hbit] using! hsrc_read
-          let c1 : Cfg n (copyWorkToWorkTM src dst).Q :=
-            { state := CopyPhase.copying
-              input := c.input.move (TM.idleDir c.input.read)
-              work := fun i =>
-                (c.work i).writeAndMove
-                  ((if i = dst then Γw.zero else TM.readBackWrite ((c.work i).read)).toΓ)
-                  (if i = dst then Dir3.right else if i = src then Dir3.right
-                    else TM.idleDir ((c.work i).read))
-              output := c.output.writeAndMove (TM.readBackWrite c.output.read).toΓ
-                (TM.idleDir c.output.read) }
-          have hstep1 : (copyWorkToWorkTM src dst).step c = some c1 := by
-            simp [TM.step, hstate, copyWorkToWorkTM, hread0, c1, TM.readBackWrite]
-          have hinput_keep : c1.input = inp := by
-            simpa [c1, hinp_c] using input_idle_preserve inp hinp_ns
-          have houtput_keep : c1.output = out := by
-            simpa [c1, hout_c] using tape_idle_preserve out hout_ns hout_h
-          have hother_keep : ∀ i, i ≠ src → i ≠ dst → c1.work i = work i := by
-            intro i hi_src hi_dst
-            simpa [c1, hi_src, hi_dst, hw_c i hi_src hi_dst] using
-              tape_idle_preserve (work i) (hother_wf i hi_src hi_dst).1
-                (hother_wf i hi_src hi_dst).2
-          have hsrc_cells1 : (c1.work src).cells = (Tape.init (x.map Γ.ofBool)).cells := by
-            have hsrc_ne : (c.work src).read ≠ Γ.start := by
-              rw [hread0]
-              decide
-            have hsrc_pres :
-                (c1.work src).cells = (c.work src).cells := by
-              simpa [c1, hread0, hne, TM.readBackWrite] using
-                (TM.tape_readBackWrite_preserves (c.work src) Dir3.right (Or.inr hsrc_ne))
-            rw [hsrc_pres]
-            exact hsrc_cells
-          have hsrc_head1 : (c1.work src).head = k + 2 := by
-            simp [c1, hsrc_head, hne, Tape.writeAndMove, Tape.move, Tape.write_head]
-          have hdst_prefix1 : (c1.work dst).HasBinaryPrefix (x.take (k + 1)) := by
-            have hdst :
-                c1.work dst = (c.work dst).writeAndMove Γ.zero Dir3.right := by
-              simp [c1]
-            rw [hdst]
-            simpa [hbit] using! hprefix_next
-          have hdst_cell01 : (c1.work dst).cells 0 = Γ.start := by
-            have hdst :
-                c1.work dst = (c.work dst).writeAndMove Γ.zero Dir3.right := by
-              simp [c1]
-            rw [hdst]
-            exact Tape.hasBinaryPrefix_write_bit_cell0 false hprefix hdst_cell0
-          have hrem1 : rem = x.length - (k + 1) := by
-            omega
-          obtain ⟨c', hreach, hhalt, hsrc_cells', hsrc_head', hprefix', hcell0', hinp',
-            hout', hwork'⟩ :=
-            ih (k + 1) c1 hrem1 rfl hsrc_cells1 hsrc_head1 hdst_prefix1 hdst_cell01
-              (by omega) hinput_keep houtput_keep hother_keep
-          exact ⟨c', .step hstep1 hreach, hhalt, hsrc_cells', hsrc_head', hprefix', hcell0',
-            hinp', hout', hwork'⟩
-      | true =>
-          have hread1 : (c.work src).read = Γ.one := by
-            simpa [hbit] using! hsrc_read
-          let c1 : Cfg n (copyWorkToWorkTM src dst).Q :=
-            { state := CopyPhase.copying
-              input := c.input.move (TM.idleDir c.input.read)
-              work := fun i =>
-                (c.work i).writeAndMove
-                  ((if i = dst then Γw.one else TM.readBackWrite ((c.work i).read)).toΓ)
-                  (if i = dst then Dir3.right else if i = src then Dir3.right
-                    else TM.idleDir ((c.work i).read))
-              output := c.output.writeAndMove (TM.readBackWrite c.output.read).toΓ
-                (TM.idleDir c.output.read) }
-          have hstep1 : (copyWorkToWorkTM src dst).step c = some c1 := by
-            simp [TM.step, hstate, copyWorkToWorkTM, hread1, c1, TM.readBackWrite]
-          have hinput_keep : c1.input = inp := by
-            simpa [c1, hinp_c] using input_idle_preserve inp hinp_ns
-          have houtput_keep : c1.output = out := by
-            simpa [c1, hout_c] using tape_idle_preserve out hout_ns hout_h
-          have hother_keep : ∀ i, i ≠ src → i ≠ dst → c1.work i = work i := by
-            intro i hi_src hi_dst
-            simpa [c1, hi_src, hi_dst, hw_c i hi_src hi_dst] using
-              tape_idle_preserve (work i) (hother_wf i hi_src hi_dst).1
-                (hother_wf i hi_src hi_dst).2
-          have hsrc_cells1 : (c1.work src).cells = (Tape.init (x.map Γ.ofBool)).cells := by
-            have hsrc_ne : (c.work src).read ≠ Γ.start := by
-              rw [hread1]
-              decide
-            have hsrc_pres :
-                (c1.work src).cells = (c.work src).cells := by
-              simpa [c1, hread1, hne, TM.readBackWrite] using
-                (TM.tape_readBackWrite_preserves (c.work src) Dir3.right (Or.inr hsrc_ne))
-            rw [hsrc_pres]
-            exact hsrc_cells
-          have hsrc_head1 : (c1.work src).head = k + 2 := by
-            simp [c1, hsrc_head, hne, Tape.writeAndMove, Tape.move, Tape.write_head]
-          have hdst_prefix1 : (c1.work dst).HasBinaryPrefix (x.take (k + 1)) := by
-            have hdst :
-                c1.work dst = (c.work dst).writeAndMove Γ.one Dir3.right := by
-              simp [c1]
-            rw [hdst]
-            simpa [hbit] using! hprefix_next
-          have hdst_cell01 : (c1.work dst).cells 0 = Γ.start := by
-            have hdst :
-                c1.work dst = (c.work dst).writeAndMove Γ.one Dir3.right := by
-              simp [c1]
-            rw [hdst]
-            exact Tape.hasBinaryPrefix_write_bit_cell0 true hprefix hdst_cell0
-          have hrem1 : rem = x.length - (k + 1) := by
-            omega
-          obtain ⟨c', hreach, hhalt, hsrc_cells', hsrc_head', hprefix', hcell0', hinp',
-            hout', hwork'⟩ :=
-            ih (k + 1) c1 hrem1 rfl hsrc_cells1 hsrc_head1 hdst_prefix1 hdst_cell01
-              (by omega) hinput_keep houtput_keep hother_keep
-          exact ⟨c', .step hstep1 hreach, hhalt, hsrc_cells', hsrc_head', hprefix', hcell0',
-            hinp', hout', hwork'⟩
+      obtain ⟨c1, hstep1, hstate1, hsrc_cells1, hsrc_head1, hdst_prefix1, hdst_cell01,
+          hinput_keep, houtput_keep, hother_keep⟩ :=
+        copyWorkToWork_copyStep src dst hne x k hk_lt inp work out
+          hinp_ns hout_ns hout_h hother_wf c hstate hsrc_cells hsrc_head
+          hprefix hdst_cell0 hinp_c hout_c hw_c
+      have hrem1 : rem = x.length - (k + 1) := by omega
+      obtain ⟨c', hreach, hhalt, hsrc_cells', hsrc_head', hprefix', hcell0', hinp',
+          hout', hwork'⟩ :=
+        ih (k + 1) c1 hrem1 hstate1 hsrc_cells1 hsrc_head1 hdst_prefix1 hdst_cell01
+          (by omega) hinput_keep houtput_keep hother_keep
+      exact ⟨c', .step hstep1 hreach, hhalt, hsrc_cells', hsrc_head', hprefix', hcell0',
+        hinp', hout', hwork'⟩
 
 end TM
 

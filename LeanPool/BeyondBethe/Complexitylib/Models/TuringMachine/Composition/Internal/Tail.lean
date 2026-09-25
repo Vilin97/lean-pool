@@ -60,27 +60,35 @@ def CompositionTailPre (nf ng : ℕ) (y : List Bool) (B : ℕ)
   (∀ i : Fin nf, Tape.StartInvariant (work (compositionPrefixIdx nf ng i)) ∧
     1 ≤ (work (compositionPrefixIdx nf ng i)).head)
 
-/-- Generic post-first-computation tail driven by a virtual-input run contract.
-
-The prefix tapes are arbitrary stable frame tapes. The raw tape may initially
-have any head up to `B`, and cells after its first output delimiter may contain
-arbitrary junk. The virtual-input tape, second-machine scratch block, and real
-output begin in their canonical parked blank shapes. -/
-private theorem compositionTailTM_hoareTime_of_virtualRun_internal
-    {nf ng : ℕ} (tmG : TM ng) {G : ℕ → ℕ}
-    (y : List Bool) (B : ℕ) (P : Tape → Prop)
-    (hG : ∀ realInput : Tape,
-      ∃ (c' : Cfg (ng + 1) tmG.Q) (t : ℕ),
-        t ≤ G y.length ∧
-        (retargetInputStarted tmG).reachesIn t
-          (retargetInputStartedCfg tmG y realInput) c' ∧
-        (retargetInputStarted tmG).halted c' ∧ P c'.output) :
-    (compositionTailTM nf ng tmG).HoareTime
-      (CompositionTailPre nf ng y B)
-      (fun _inp _work out => P out)
-      ((B + 2) + 1 + ((y.length + 1) + 1 +
-        ((y.length + 1 + 2) + 1 + G y.length))) := by
-  intro inp work out hpre
+/-- Rewind raw output while preserving the input, output, and stable work-tape frame. -/
+private theorem compositionTail_rewindRawFrame
+    {nf ng : ℕ} (y : List Bool) (B : ℕ)
+    (inp : Tape) (work : Fin (compositionTapeCount nf ng) → Tape) (out : Tape)
+    (hpre : CompositionTailPre nf ng y B inp work out) :
+    let raw := compositionRawOutputIdx nf ng
+    let source : Tape := { head := 1, cells := (work raw).cells }
+    ∃ (c₁ : Cfg (compositionTapeCount nf ng) (rewindWorkTM raw).Q) (t₁ : ℕ),
+      (t₁ ≤ B + 2) ∧
+      ((rewindWorkTM raw).reachesIn t₁
+        { state := (rewindWorkTM raw).qstart,
+          input := inp, work := work, output := out } c₁) ∧
+      ((rewindWorkTM raw).halted c₁) ∧
+      (c₁.input = inp) ∧
+      (c₁.output = out) ∧
+      (∀ i, i ≠ raw → c₁.work i = work i) ∧
+      (Tape.StartInvariant out) ∧
+      (1 ≤ out.head) ∧
+      (∀ i, i ≠ raw →
+      Tape.StartInvariant (work i) ∧ 1 ≤ (work i).head) ∧
+      (c₁.work raw = source) ∧
+      (Tape.StartInvariant source) ∧
+      (source.HasOutput y) ∧
+      (∀ i, Tape.StartInvariant (c₁.work i) ∧
+      1 ≤ (c₁.work i).head) ∧
+      (transitionInput c₁.input = c₁.input) ∧
+      (transitionTape c₁.output = c₁.output) ∧
+      (∀ i, transitionTape (c₁.work i) = c₁.work i) := by
+  dsimp only
   rcases hpre with
     ⟨hrawOutput, hrawInv, hrawBound, hvinBlank, hgBlank, houtBlank,
       hinv, hinputHead, hprefix⟩
@@ -192,6 +200,62 @@ private theorem compositionTailTM_hoareTime_of_virtualRun_internal
     intro i
     exact transitionTape_eq_of_startInvariant (hc₁WorkStable i).1
       (hc₁WorkStable i).2
+  exact ⟨c₁, t₁,
+    ht₁, hreach₁, hhalt₁, hc₁Input, hc₁Output, hc₁Other,
+    houtInv, houtHead, hotherStable, hc₁Raw, hsourceInv,
+    hsourceOutput, hc₁WorkStable, hc₁InputTr, hc₁OutputTr, hc₁WorkTr⟩
+
+/-- Copy raw output to the virtual input and preserve the stable frame for rewinding. -/
+private theorem compositionTail_copyFrame
+    {nf ng : ℕ} {Q : Type} (y : List Bool)
+    (inp : Tape) (work : Fin (compositionTapeCount nf ng) → Tape) (out : Tape)
+    (c₁ : Cfg (compositionTapeCount nf ng) Q)
+    (hinv : Tape.StartInvariant inp) (hinputHead : 1 ≤ inp.head)
+    (hvinBlank : work (compositionVirtualInputIdx nf ng) =
+      (Tape.init []).move Dir3.right) :
+    let raw := compositionRawOutputIdx nf ng
+    let vin := compositionVirtualInputIdx nf ng
+    let source : Tape := { head := 1, cells := (work raw).cells }
+    (c₁.input = inp) →
+    (c₁.output = out) →
+    (∀ i, i ≠ raw → c₁.work i = work i) →
+    (Tape.StartInvariant out) →
+    (1 ≤ out.head) →
+    (∀ i, i ≠ raw →
+      Tape.StartInvariant (work i) ∧ 1 ≤ (work i).head) →
+    (c₁.work raw = source) →
+    (Tape.StartInvariant source) →
+    (source.HasOutput y) →
+    (transitionInput c₁.input = c₁.input) →
+    (transitionTape c₁.output = c₁.output) →
+    (∀ i, transitionTape (c₁.work i) = c₁.work i) →
+    ∃ (c₂ : Cfg (compositionTapeCount nf ng) (copyWorkToWorkTM raw vin).Q) (t₂ : ℕ),
+      (t₂ ≤ y.length + 1) ∧
+      ((copyWorkToWorkTM raw vin).reachesIn t₂
+        { state := (copyWorkToWorkTM raw vin).qstart,
+          input := transitionInput c₁.input,
+          work := fun i => transitionTape (c₁.work i),
+          output := transitionTape c₁.output } c₂) ∧
+      ((copyWorkToWorkTM raw vin).halted c₂) ∧
+      (c₂.input = inp) ∧
+      (c₂.output = out) ∧
+      (∀ i, i ≠ raw → i ≠ vin → c₂.work i = work i) ∧
+      ((c₂.work vin).cells =
+      (Tape.init (y.map Γ.ofBool)).cells) ∧
+      (Tape.StartInvariant (c₂.work vin)) ∧
+      (∀ i, Tape.StartInvariant (c₂.work i) ∧
+      1 ≤ (c₂.work i).head) ∧
+      (transitionInput c₂.input = c₂.input) ∧
+      (transitionTape c₂.output = c₂.output) ∧
+      (∀ i, transitionTape (c₂.work i) = c₂.work i) ∧
+      ((c₂.work vin).head = y.length + 1) := by
+  dsimp only
+  intro hc₁Input hc₁Output hc₁Other houtInv houtHead hotherStable
+    hc₁Raw hsourceInv hsourceOutput hc₁InputTr hc₁OutputTr hc₁WorkTr
+  let raw := compositionRawOutputIdx nf ng
+  let vin := compositionVirtualInputIdx nf ng
+  let source : Tape := { head := 1, cells := (work raw).cells }
+  have hrawVin : raw ≠ vin := compositionRawOutputIdx_ne_virtualInputIdx nf ng
   let FrameCopy : TapePred (compositionTapeCount nf ng) :=
     fun inp' work' out' =>
       inp' = inp ∧ out' = out ∧
@@ -284,6 +348,166 @@ private theorem compositionTailTM_hoareTime_of_virtualRun_internal
     intro i
     exact transitionTape_eq_of_startInvariant (hc₂WorkStable i).1
       (hc₂WorkStable i).2
+  exact ⟨c₂, t₂, ht₂, hreach₂, hhalt₂, hc₂Input, hc₂Output, hc₂Other,
+    hc₂VinCells, hc₂VinInv, hc₂WorkStable, hc₂InputTr, hc₂OutputTr, hc₂WorkTr,
+    hc₂VinPrefix.1⟩
+
+/-- The placed virtual-input configuration equals the restored composition entry frame. -/
+private theorem compositionTail_placedEntry
+    {nf ng : ℕ} (tmG : TM ng) (y : List Bool)
+    (work work₂ work₃ : Fin (compositionTapeCount nf ng) → Tape)
+    (out out₃ input₃ : Tape)
+    (hgBlank : ∀ j : Fin ng, work (compositionSecondWorkIdx nf ng j) =
+      (Tape.init []).move Dir3.right)
+    (hc₂Other : ∀ i, i ≠ compositionRawOutputIdx nf ng →
+      i ≠ compositionVirtualInputIdx nf ng → work₂ i = work i)
+    (hc₃Other : ∀ i, i ≠ compositionVirtualInputIdx nf ng → work₃ i = work₂ i)
+    (hc₃WorkTr : ∀ i, transitionTape (work₃ i) = work₃ i)
+    (hc₃Vin : work₃ (compositionVirtualInputIdx nf ng) =
+      (Tape.init (y.map Γ.ofBool)).move Dir3.right)
+    (houtBlank : out = (Tape.init []).move Dir3.right)
+    (hc₃Output : out₃ = out) (hc₃OutputTr : transitionTape out₃ = out₃) :
+    let raw := compositionRawOutputIdx nf ng
+    let vin := compositionVirtualInputIdx nf ng
+    let secondPre := 0 + (nf + 1)
+    let extras : Fin (secondPre + (ng + 1) + 0) → Tape :=
+      fun i => transitionTape (work₃ i)
+    let realInput := transitionInput input₃
+    let gEntry : Cfg (compositionTapeCount nf ng) (compositionSecondTM nf tmG).Q :=
+      { state := (compositionSecondTM nf tmG).qstart
+        input := transitionInput input₃
+        work := fun i => transitionTape (work₃ i)
+        output := transitionTape out₃ }
+    placeWorkCfg (retargetInputStarted tmG) secondPre 0 extras
+          (retargetInputStartedCfg tmG y realInput) = gEntry := by
+  dsimp only
+  let raw := compositionRawOutputIdx nf ng
+  let vin := compositionVirtualInputIdx nf ng
+  let secondPre := 0 + (nf + 1)
+  let extras : Fin (secondPre + (ng + 1) + 0) → Tape :=
+    fun i => transitionTape (work₃ i)
+  let realInput := transitionInput input₃
+  let gEntry : Cfg (compositionTapeCount nf ng) (compositionSecondTM nf tmG).Q :=
+    { state := (compositionSecondTM nf tmG).qstart
+      input := transitionInput input₃
+      work := fun i => transitionTape (work₃ i)
+      output := transitionTape out₃ }
+  refine Cfg.ext rfl rfl ?_ ?_
+  · funext i
+    by_cases hmid : placeWorkInMiddle secondPre (ng + 1) i
+    · let j := placeWorkCoord secondPre (ng + 1) i hmid
+      have hphys : placeWorkIdx secondPre 0 j = i :=
+        placeWorkIdx_placeWorkCoord i hmid
+      by_cases hj : j.val < ng
+      · let jG : Fin ng := ⟨j.val, hj⟩
+        have hjcast : Fin.castSucc jG = j := by
+          apply Fin.ext
+          rfl
+        have hiVal : i.val = secondPre + j.val := by
+          have hv := congrArg Fin.val hphys
+          simp only [placeWorkIdx_val] at hv
+          omega
+        have hiRaw : i ≠ raw := by
+          change i ≠ compositionRawOutputIdx nf ng
+          intro heq
+          have hv := congrArg Fin.val heq
+          simp only [compositionRawOutputIdx_val] at hv
+          dsimp only [secondPre] at hiVal
+          omega
+        have hiVin : i ≠ vin := by
+          change i ≠ compositionVirtualInputIdx nf ng
+          intro heq
+          have hv := congrArg Fin.val heq
+          simp only [compositionVirtualInputIdx_val] at hv
+          dsimp only [secondPre] at hiVal
+          omega
+        have hblank : work₃ i = (Tape.init []).move Dir3.right := by
+          calc
+            work₃ i = work₂ i := hc₃Other i hiVin
+            _ = work i := hc₂Other i hiRaw hiVin
+            _ = (Tape.init []).move Dir3.right := by
+              rw [← hphys, ← hjcast]
+              exact hgBlank jG
+        change
+          (placeWorkCfg (retargetInputStarted tmG) secondPre 0 extras
+            (retargetInputStartedCfg tmG y realInput)).work i =
+            transitionTape (work₃ i)
+        calc
+          _ = (retargetInputStartedCfg tmG y realInput).work j := by
+            rw [← hphys, placeWorkCfg_work_middle]
+          _ = (Tape.init []).move Dir3.right := by
+            exact retargetInputStartedCfg_work_lt tmG y realInput j hj
+          _ = transitionTape (work₃ i) := by
+            rw [hc₃WorkTr i, hblank]
+      · have hjval : j.val = ng := by
+          have := j.isLt
+          omega
+        have hjlast : j = Fin.last ng := by
+          apply Fin.ext
+          simpa using! hjval
+        have hiVin : i = vin := by
+          rw [← hphys, hjlast]
+          exact (compositionVirtualInputIdx_eq_secondPlacedLast nf ng).symm
+        change
+          (placeWorkCfg (retargetInputStarted tmG) secondPre 0 extras
+            (retargetInputStartedCfg tmG y realInput)).work i =
+            transitionTape (work₃ i)
+        calc
+          _ = (retargetInputStartedCfg tmG y realInput).work j := by
+            rw [← hphys, placeWorkCfg_work_middle]
+          _ = (Tape.init (y.map Γ.ofBool)).move Dir3.right := by
+            rw [hjlast]
+            simp [Fin.last]
+          _ = transitionTape (work₃ i) := by
+            rw [hiVin, hc₃WorkTr vin, hc₃Vin]
+    · change
+        (placeWorkCfg (retargetInputStarted tmG) secondPre 0 extras
+          (retargetInputStartedCfg tmG y realInput)).work i =
+          transitionTape (work₃ i)
+      rw [placeWorkCfg_work_extra _ _ _ _ _ i hmid]
+  · change (retargetInputStartedCfg tmG y realInput).output =
+        transitionTape out₃
+    rw [retargetInputStartedCfg_output, hc₃OutputTr, hc₃Output, houtBlank]
+
+/-- Generic post-first-computation tail driven by a virtual-input run contract.
+
+The prefix tapes are arbitrary stable frame tapes. The raw tape may initially
+have any head up to `B`, and cells after its first output delimiter may contain
+arbitrary junk. The virtual-input tape, second-machine scratch block, and real
+output begin in their canonical parked blank shapes. -/
+private theorem compositionTailTM_hoareTime_of_virtualRun_internal
+    {nf ng : ℕ} (tmG : TM ng) {G : ℕ → ℕ}
+    (y : List Bool) (B : ℕ) (P : Tape → Prop)
+    (hG : ∀ realInput : Tape,
+      ∃ (c' : Cfg (ng + 1) tmG.Q) (t : ℕ),
+        t ≤ G y.length ∧
+        (retargetInputStarted tmG).reachesIn t
+          (retargetInputStartedCfg tmG y realInput) c' ∧
+        (retargetInputStarted tmG).halted c' ∧ P c'.output) :
+    (compositionTailTM nf ng tmG).HoareTime
+      (CompositionTailPre nf ng y B)
+      (fun _inp _work out => P out)
+      ((B + 2) + 1 + ((y.length + 1) + 1 +
+        ((y.length + 1 + 2) + 1 + G y.length))) := by
+  intro inp work out hpre
+  let raw := compositionRawOutputIdx nf ng
+  let vin := compositionVirtualInputIdx nf ng
+  let source : Tape := { head := 1, cells := (work raw).cells }
+  obtain ⟨c₁, t₁,
+    ht₁, hreach₁, hhalt₁, hc₁Input, hc₁Output, hc₁Other,
+    houtInv, houtHead, hotherStable, hc₁Raw, hsourceInv,
+    hsourceOutput, hc₁WorkStable, hc₁InputTr, hc₁OutputTr, hc₁WorkTr⟩ :=
+    compositionTail_rewindRawFrame y B inp work out hpre
+  rcases hpre with
+    ⟨hrawOutput, hrawInv, hrawBound, hvinBlank, hgBlank, houtBlank,
+      hinv, hinputHead, hprefix⟩
+  have hrawVin : raw ≠ vin := compositionRawOutputIdx_ne_virtualInputIdx nf ng
+  obtain ⟨c₂, t₂, ht₂, hreach₂, hhalt₂, hc₂Input, hc₂Output, hc₂Other,
+      hc₂VinCells, hc₂VinInv, hc₂WorkStable, hc₂InputTr, hc₂OutputTr, hc₂WorkTr,
+      hc₂VinHead⟩ :=
+    compositionTail_copyFrame y inp work out c₁ hinv hinputHead hvinBlank
+      hc₁Input hc₁Output hc₁Other houtInv houtHead hotherStable
+      hc₁Raw hsourceInv hsourceOutput hc₁InputTr hc₁OutputTr hc₁WorkTr
   let FrameVin : TapePred (compositionTapeCount nf ng) :=
     fun inp' work' out' =>
       (work' vin).cells = (Tape.init (y.map Γ.ofBool)).cells ∧
@@ -318,7 +542,7 @@ private theorem compositionTailTM_hoareTime_of_virtualRun_internal
       rw [hc₂WorkTr vin]
       exact hc₂VinInv.2 j hj
     · change (transitionTape (c₂.work vin)).head ≤ y.length + 1
-      rw [hc₂WorkTr vin, hc₂VinPrefix.1]
+      rw [hc₂WorkTr vin, hc₂VinHead]
     · rw [hc₂InputTr, hc₂Input]
       exact read_ne_start_of_startInvariant hinv hinputHead
     · rw [hc₂OutputTr, hc₂Output]
@@ -404,82 +628,9 @@ private theorem compositionTailTM_hoareTime_of_virtualRun_internal
   have hEntry :
       placeWorkCfg (retargetInputStarted tmG) secondPre 0 extras
           (retargetInputStartedCfg tmG y realInput) = gEntry := by
-    refine Cfg.ext rfl rfl ?_ ?_
-    · funext i
-      by_cases hmid : placeWorkInMiddle secondPre (ng + 1) i
-      · let j := placeWorkCoord secondPre (ng + 1) i hmid
-        have hphys : placeWorkIdx secondPre 0 j = i :=
-          placeWorkIdx_placeWorkCoord i hmid
-        by_cases hj : j.val < ng
-        · let jG : Fin ng := ⟨j.val, hj⟩
-          have hjcast : Fin.castSucc jG = j := by
-            apply Fin.ext
-            rfl
-          have hiVal : i.val = secondPre + j.val := by
-            have hv := congrArg Fin.val hphys
-            simp only [placeWorkIdx_val] at hv
-            omega
-          have hiRaw : i ≠ raw := by
-            change i ≠ compositionRawOutputIdx nf ng
-            intro heq
-            have hv := congrArg Fin.val heq
-            simp only [compositionRawOutputIdx_val] at hv
-            dsimp only [secondPre] at hiVal
-            omega
-          have hiVin : i ≠ vin := by
-            change i ≠ compositionVirtualInputIdx nf ng
-            intro heq
-            have hv := congrArg Fin.val heq
-            simp only [compositionVirtualInputIdx_val] at hv
-            dsimp only [secondPre] at hiVal
-            omega
-          have hblank : c₃.work i = (Tape.init []).move Dir3.right := by
-            calc
-              c₃.work i = c₂.work i := hc₃Other i hiVin
-              _ = work i := hc₂Other i hiRaw hiVin
-              _ = (Tape.init []).move Dir3.right := by
-                rw [← hphys, ← hjcast]
-                exact hgBlank jG
-          change
-            (placeWorkCfg (retargetInputStarted tmG) secondPre 0 extras
-              (retargetInputStartedCfg tmG y realInput)).work i =
-              transitionTape (c₃.work i)
-          calc
-            _ = (retargetInputStartedCfg tmG y realInput).work j := by
-              rw [← hphys, placeWorkCfg_work_middle]
-            _ = (Tape.init []).move Dir3.right := by
-              exact retargetInputStartedCfg_work_lt tmG y realInput j hj
-            _ = transitionTape (c₃.work i) := by
-              rw [hc₃WorkTr i, hblank]
-        · have hjval : j.val = ng := by
-            have := j.isLt
-            omega
-          have hjlast : j = Fin.last ng := by
-            apply Fin.ext
-            simpa using! hjval
-          have hiVin : i = vin := by
-            rw [← hphys, hjlast]
-            exact (compositionVirtualInputIdx_eq_secondPlacedLast nf ng).symm
-          change
-            (placeWorkCfg (retargetInputStarted tmG) secondPre 0 extras
-              (retargetInputStartedCfg tmG y realInput)).work i =
-              transitionTape (c₃.work i)
-          calc
-            _ = (retargetInputStartedCfg tmG y realInput).work j := by
-              rw [← hphys, placeWorkCfg_work_middle]
-            _ = (Tape.init (y.map Γ.ofBool)).move Dir3.right := by
-              rw [hjlast]
-              simp [Fin.last]
-            _ = transitionTape (c₃.work i) := by
-              rw [hiVin, hc₃WorkTr vin, hc₃Vin]
-      · change
-          (placeWorkCfg (retargetInputStarted tmG) secondPre 0 extras
-            (retargetInputStartedCfg tmG y realInput)).work i =
-            transitionTape (c₃.work i)
-        rw [placeWorkCfg_work_extra _ _ _ _ _ i hmid]
-    · change (retargetInputStartedCfg tmG y realInput).output =
-          transitionTape c₃.output
-      rw [retargetInputStartedCfg_output, hc₃OutputTr, hc₃Output, houtBlank]
+    exact compositionTail_placedEntry (nf := nf) tmG y work c₂.work c₃.work
+      out c₃.output c₃.input hgBlank hc₂Other hc₃Other hc₃WorkTr hc₃Vin
+      houtBlank hc₃Output hc₃OutputTr
   have hreach₄' : (compositionSecondTM nf tmG).reachesIn t₄ gEntry C₄ := by
     change (placeWorkTM secondPre 0 (retargetInputStarted tmG)).reachesIn t₄ gEntry C₄
     rw [← hEntry]
