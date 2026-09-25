@@ -20,12 +20,15 @@ its two smooth cutoffs by sharp cutoffs produces the difference of two
 quadratic Hilbert truncations; the two transition annuli are controlled by
 the centered Hardy--Littlewood maximal function.
 
-The later sparse input in the paper is [Krause--Lacey, Theorem 1.1], namely a
-uniform sparse `(1,p)` estimate for the maximally truncated quadratic Hilbert
-transform. Mathlib has no Carleson or oscillatory sparse-bound development,
-and the project currently only defines the abstract sparse premise in
-`FiniteSparseMaximal`. Accordingly, this file proves the concrete pointwise
-comparison without postulating that external theorem.
+The later sparse input in the paper is reference [7], Theorem 1.1 of
+Krause--Lacey's *Sparse bounds for maximally truncated oscillatory singular
+integrals* ([arXiv:1701.05249v2](https://arxiv.org/abs/1701.05249v2)),
+specialized to the quadratic Hilbert transform. It gives a sparse `(1,p)`
+estimate for each fixed modulation, uniform in that modulation.
+`FiniteSparseMaximal` packages the abstract sparse premise; the separate
+degree-two proof route is described in `KrauseLaceySparseInterface`.
+This file proves the concrete pointwise comparison without postulating
+the external theorem.
 -/
 
 @[expose] public section

@@ -15,18 +15,25 @@ public import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
 /-!
 # Interface to the Krause--Lacey sparse theorem
 
-The result cited as `KL18`, Theorem 1.1, in the endpoint paper is Ben Krause
-and Michael T. Lacey, *Sparse bounds for maximal monomial oscillatory Hilbert
-transforms*, Studia Math. 242 (2018), 217--229, arXiv:1609.01564. In the
-arXiv version the main statement is Theorem 1.6: for `d ≥ 2` the maximal
-truncation with phase `exp (2 π i y^d)` has sparse `(1,r)` norm
-`O(1 / (r - 1))`, for `1 < r ≤ 2`.
+The endpoint paper [arXiv:2609.04101v1](https://arxiv.org/abs/2609.04101v1),
+in the proof of Corollary 3, cites reference [7], Theorem 1.1 of Ben Krause
+and Michael T. Lacey, *Sparse bounds for maximally truncated oscillatory
+singular integrals*, [arXiv:1701.05249v2](https://arxiv.org/abs/1701.05249v2).
+That theorem bounds the sparse `(1,r)` norm of each fixed polynomial-phase
+maximal truncation uniformly over coefficients, for bounded degree and
+`1 < r < 2`.
 
-That theorem is not present in Mathlib. Its proof uses oscillatory `TT*`, a
+This degree-two development instead follows their earlier specialized paper,
+*Sparse bounds for maximal monomial oscillatory Hilbert transforms*,
+[arXiv:1609.01564v2](https://arxiv.org/abs/1609.01564v2). Its Theorem 1.6
+gives sparse `(1,r)` norm `O(1 / (r - 1))` for the maximal truncation with
+phase `exp (2 π i y^d)`, for `d ≥ 2` and `1 < r ≤ 2`. References to `KL18`
+and its local estimates in this development refer to this monomial route.
+
+The specialized proof uses oscillatory `TT*`, a
 three-shift dyadic localization, a Calderón--Zygmund stopping recursion,
-Carleson packing, John--Nirenberg, and Rademacher--Menshov. This file begins
-the missing branch with the exact project-facing pieces that can be proved
-without postulating the analytic theorem:
+Carleson packing, John--Nirenberg, and Rademacher--Menshov. This file provides
+the project-facing adapters without postulating the analytic theorem:
 
 * identification of the source's `1/4` sparseness convention with the
   project's approved `1/4` convention;
