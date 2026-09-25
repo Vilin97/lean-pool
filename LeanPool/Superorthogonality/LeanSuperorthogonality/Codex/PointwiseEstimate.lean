@@ -139,59 +139,60 @@ private lemma Q_two_sub_prod_eq_neg_diagonal (a : Fin 2 → ι → ℂ)
   abel
 
 /-
-The analytic estimate in the base case: the diagonal sum is controlled by
-Cauchy-Schwarz and the largest l^2 norm.
+The base case and collision step use the same counting-measure Cauchy-Schwarz
+estimate and largest l^2 norm.
 -/
+omit [Countable ι] in
+private lemma eLpNorm_coord_le_B {k : ℕ} (hk : 2 ≤ k)
+    (a : Fin k → ι → ℂ) (i : Fin k) :
+    eLpNorm (a i) 2 ≤ B hk a := by
+  unfold B
+  exact Finset.le_max' _ _ (by simp)
+
+
+private lemma lintegral_enorm_mul_count_le (f g : ι → ℂ) :
+    (∫⁻ j : ι, ‖f j‖ₑ * ‖g j‖ₑ ∂(Measure.count : Measure ι)) ≤
+      eLpNorm f 2 (Measure.count : Measure ι) *
+        eLpNorm g 2 (Measure.count : Measure ι) := by
+  have hpq : (2 : ℝ).HolderConjugate 2 := by
+    rw [Real.holderConjugate_iff]
+    norm_num
+  have h0 : AEMeasurable (fun j : ι ↦ ‖f j‖ₑ) (Measure.count : Measure ι) :=
+    (measurable_of_countable _).aemeasurable
+  have h1 : AEMeasurable (fun j : ι ↦ ‖g j‖ₑ) (Measure.count : Measure ι) :=
+    (measurable_of_countable _).aemeasurable
+  have h := ENNReal.lintegral_mul_le_Lp_mul_Lq
+    (μ := (Measure.count : Measure ι)) hpq h0 h1
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal
+      (by norm_num : (2 : ENNReal) ≠ 0)
+      (by norm_num : (2 : ENNReal) ≠ ⊤)
+      Measurable.of_discrete.aestronglyMeasurable,
+    eLpNorm_eq_lintegral_rpow_enorm_toReal
+      (by norm_num : (2 : ENNReal) ≠ 0)
+      (by norm_num : (2 : ENNReal) ≠ ⊤)
+      Measurable.of_discrete.aestronglyMeasurable]
+  simpa [one_div] using h
+
+private lemma pair_enorm_tsum_le_B_sq {k : ℕ} (hk : 2 ≤ k)
+    (a : Fin k → ι → ℂ) (i i' : Fin k) :
+    ‖(∑' j, a i j * a i' j)‖ₑ ≤ (B hk a) ^ 2 := by
+  calc
+    ‖(∑' j, a i j * a i' j)‖ₑ ≤ ∑' j, ‖a i j * a i' j‖ₑ :=
+      enorm_tsum_le_tsum_enorm
+    _ = ∫⁻ j : ι, ‖a i j‖ₑ * ‖a i' j‖ₑ ∂(Measure.count : Measure ι) := by
+      simp only [enorm_mul, lintegral_count]
+    _ ≤ eLpNorm (a i) 2 (Measure.count : Measure ι) *
+        eLpNorm (a i') 2 (Measure.count : Measure ι) :=
+      lintegral_enorm_mul_count_le (a i) (a i')
+    _ ≤ (B hk a) ^ 2 := by
+      simpa only [pow_two] using
+        mul_le_mul' (eLpNorm_coord_le_B hk a i) (eLpNorm_coord_le_B hk a i')
+
 private lemma diagonal_enorm_tsum_le_B_sq (a : Fin 2 → ι → ℂ)
     (_ha : ∀ i, Summable (fun j ↦ ‖a i j‖)) :
     ‖(∑' j, a 0 j * a 1 j)‖ₑ ≤
       (B (by norm_num : 2 ≤ (2 : ℕ)) a) ^ 2 := by
-  have hvolume : (volume : Measure ι) = Measure.count := rfl
-  have hholder :
-      (∫⁻ j : ι, ‖a 0 j‖ₑ * ‖a 1 j‖ₑ ∂(Measure.count : Measure ι)) ≤
-        eLpNorm (a 0) 2 (Measure.count : Measure ι) *
-          eLpNorm (a 1) 2 (Measure.count : Measure ι) := by
-    have hpq : (2 : ℝ).HolderConjugate 2 := by
-      rw [Real.holderConjugate_iff]
-      norm_num
-    have h0 : AEMeasurable (fun j : ι ↦ ‖a 0 j‖ₑ) (Measure.count : Measure ι) :=
-      (measurable_of_countable _).aemeasurable
-    have h1 : AEMeasurable (fun j : ι ↦ ‖a 1 j‖ₑ) (Measure.count : Measure ι) :=
-      (measurable_of_countable _).aemeasurable
-    have h := ENNReal.lintegral_mul_le_Lp_mul_Lq
-      (μ := (Measure.count : Measure ι)) hpq h0 h1
-    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal
-        (by norm_num : (2 : ENNReal) ≠ 0)
-        (by norm_num : (2 : ENNReal) ≠ ⊤)
-        Measurable.of_discrete.aestronglyMeasurable,
-      eLpNorm_eq_lintegral_rpow_enorm_toReal
-        (by norm_num : (2 : ENNReal) ≠ 0)
-        (by norm_num : (2 : ENNReal) ≠ ⊤)
-        Measurable.of_discrete.aestronglyMeasurable]
-    simpa [one_div] using h
-  have hB0 :
-      eLpNorm (a 0) 2 (Measure.count : Measure ι) ≤
-        B (by norm_num : 2 ≤ (2 : ℕ)) a := by
-    rw [← hvolume]
-    unfold B
-    exact Finset.le_max' _ _ (by simp)
-  have hB1 :
-      eLpNorm (a 1) 2 (Measure.count : Measure ι) ≤
-        B (by norm_num : 2 ≤ (2 : ℕ)) a := by
-    rw [← hvolume]
-    unfold B
-    exact Finset.le_max' _ _ (by simp)
-  calc
-    ‖(∑' j, a 0 j * a 1 j)‖ₑ ≤ ∑' j, ‖a 0 j * a 1 j‖ₑ :=
-      enorm_tsum_le_tsum_enorm
-    _ = ∑' j, ‖a 0 j‖ₑ * ‖a 1 j‖ₑ := by
-      simp [enorm_mul]
-    _ = ∫⁻ j : ι, ‖a 0 j‖ₑ * ‖a 1 j‖ₑ ∂(Measure.count : Measure ι) := by
-      exact (lintegral_count (fun j : ι ↦ ‖a 0 j‖ₑ * ‖a 1 j‖ₑ)).symm
-    _ ≤ eLpNorm (a 0) 2 (Measure.count : Measure ι) *
-        eLpNorm (a 1) 2 (Measure.count : Measure ι) := hholder
-    _ ≤ (B (by norm_num : 2 ≤ (2 : ℕ)) a) ^ 2 := by
-      simpa [pow_two] using mul_le_mul' hB0 hB1
+  exact pair_enorm_tsum_le_B_sq (by norm_num) a 0 1
 
 private lemma pointwise_estimate_normalized_base (a : Fin 2 → ι → ℂ)
     (ha : ∀ i, Summable (fun j ↦ ‖a i j‖))
@@ -648,70 +649,15 @@ private lemma collision_sum_enorm_le_one {k : ℕ} (hk : 2 ≤ k)
     (_ha : ∀ i, Summable (fun j ↦ ‖a i j‖))
     (hB : B (by omega : 2 ≤ k + 1) a ≤ 1) (i : Fin k) :
     ‖s (fun j ↦ a (Fin.castSucc i) j * a (Fin.last k) j)‖ₑ ≤ 1 := by
-  have hvolume : (volume : Measure ι) = Measure.count := rfl
-  have hholder :
-      (∫⁻ j : ι, ‖a (Fin.castSucc i) j‖ₑ * ‖a (Fin.last k) j‖ₑ
-          ∂(Measure.count : Measure ι)) ≤
-        eLpNorm (a (Fin.castSucc i)) 2 (Measure.count : Measure ι) *
-          eLpNorm (a (Fin.last k)) 2 (Measure.count : Measure ι) := by
-    have hpq : (2 : ℝ).HolderConjugate 2 := by
-      rw [Real.holderConjugate_iff]
-      norm_num
-    have h0 : AEMeasurable (fun j : ι ↦ ‖a (Fin.castSucc i) j‖ₑ)
-        (Measure.count : Measure ι) :=
-      (measurable_of_countable _).aemeasurable
-    have h1 : AEMeasurable (fun j : ι ↦ ‖a (Fin.last k) j‖ₑ)
-        (Measure.count : Measure ι) :=
-      (measurable_of_countable _).aemeasurable
-    have h := ENNReal.lintegral_mul_le_Lp_mul_Lq
-      (μ := (Measure.count : Measure ι)) hpq h0 h1
-    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal
-        (by norm_num : (2 : ENNReal) ≠ 0)
-        (by norm_num : (2 : ENNReal) ≠ ⊤)
-        Measurable.of_discrete.aestronglyMeasurable,
-      eLpNorm_eq_lintegral_rpow_enorm_toReal
-        (by norm_num : (2 : ENNReal) ≠ 0)
-        (by norm_num : (2 : ENNReal) ≠ ⊤)
-        Measurable.of_discrete.aestronglyMeasurable]
-    simpa [one_div] using h
-  have hBi :
-      eLpNorm (a (Fin.castSucc i)) 2 (Measure.count : Measure ι) ≤
-        B (by omega : 2 ≤ k + 1) a := by
-    rw [← hvolume]
-    unfold B
-    exact Finset.le_max' _ _ (by simp)
-  have hBlast :
-      eLpNorm (a (Fin.last k)) 2 (Measure.count : Measure ι) ≤
-        B (by omega : 2 ≤ k + 1) a := by
-    rw [← hvolume]
-    unfold B
-    exact Finset.le_max' _ _ (by simp)
   calc
     ‖s (fun j ↦ a (Fin.castSucc i) j * a (Fin.last k) j)‖ₑ ≤
-        ∑' j, ‖a (Fin.castSucc i) j * a (Fin.last k) j‖ₑ := by
-      exact enorm_tsum_le_tsum_enorm
-    _ = ∑' j, ‖a (Fin.castSucc i) j‖ₑ * ‖a (Fin.last k) j‖ₑ := by
-      simp [enorm_mul]
-    _ = ∫⁻ j : ι, ‖a (Fin.castSucc i) j‖ₑ * ‖a (Fin.last k) j‖ₑ
-        ∂(Measure.count : Measure ι) := by
-      exact (lintegral_count
-        (fun j : ι ↦ ‖a (Fin.castSucc i) j‖ₑ * ‖a (Fin.last k) j‖ₑ)).symm
-    _ ≤ eLpNorm (a (Fin.castSucc i)) 2 (Measure.count : Measure ι) *
-        eLpNorm (a (Fin.last k)) 2 (Measure.count : Measure ι) := hholder
-    _ ≤ (B (by omega : 2 ≤ k + 1) a) ^ 2 := by
-      simpa [pow_two] using mul_le_mul' hBi hBlast
+        (B (by omega : 2 ≤ k + 1) a) ^ 2 :=
+      pair_enorm_tsum_le_B_sq (by omega) a (Fin.castSucc i) (Fin.last k)
     _ ≤ 1 := by
       calc
         (B (by omega : 2 ≤ k + 1) a) ^ 2 ≤ (1 : ENNReal) ^ 2 :=
           ENNReal.pow_le_pow_left hB
         _ = 1 := by norm_num
-
-omit [Countable ι] in
-private lemma eLpNorm_coord_le_B {k : ℕ} (hk : 2 ≤ k)
-    (a : Fin k → ι → ℂ) (i : Fin k) :
-    eLpNorm (a i) 2 ≤ B hk a := by
-  unfold B
-  exact Finset.le_max' _ _ (by simp)
 
 omit [Countable ι] in
 private lemma eLpNorm_two_lt_top_of_summable_norm (a : ι → ℂ)

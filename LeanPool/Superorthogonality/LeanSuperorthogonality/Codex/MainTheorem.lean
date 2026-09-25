@@ -580,28 +580,12 @@ private lemma ennreal_pow_two_mul_one_sub_inv (hr : 1 ≤ r) (x : ENNReal) :
 omit [MeasurableSpace α] in
 private lemma ennreal_rpow_two_mul_inv (hr : 1 ≤ r) (x : ENNReal) :
     (x ^ ((2 * r : ℕ) : ℝ)) ^ (1 / (r : ℝ)) = x ^ 2 := by
-  rw [← ENNReal.rpow_mul]
-  rw [show ((2 * r : ℕ) : ℝ) * (1 / (r : ℝ)) = 2 by
-    have hr0 : (r : ℝ) ≠ 0 := by exact_mod_cast (ne_of_gt hr)
-    rw [Nat.cast_mul]
-    field_simp [hr0]
-    norm_num]
-  exact ENNReal.rpow_natCast x 2
+  simpa only [ENNReal.rpow_natCast] using ennreal_pow_two_mul_inv hr x
 
 omit [MeasurableSpace α] in
 private lemma ennreal_rpow_two_mul_one_sub_inv (hr : 1 ≤ r) (x : ENNReal) :
     (x ^ ((2 * r : ℕ) : ℝ)) ^ (1 - 1 / (r : ℝ)) = x ^ (2 * r - 2) := by
-  rw [← ENNReal.rpow_mul]
-  rw [show ((2 * r : ℕ) : ℝ) * (1 - 1 / (r : ℝ)) = ((2 * r - 2 : ℕ) : ℝ) by
-    have hr0 : (r : ℝ) ≠ 0 := by exact_mod_cast (ne_of_gt hr)
-    have hcast : ((2 * r - 2 : ℕ) : ℝ) = (2 : ℝ) * r - 2 := by
-      rw [Nat.cast_sub (by omega : 2 ≤ 2 * r)]
-      norm_num [Nat.cast_mul]
-    rw [hcast]
-    rw [Nat.cast_mul]
-    field_simp [hr0]
-    ring]
-  exact ENNReal.rpow_natCast x (2 * r - 2)
+  simpa only [ENNReal.rpow_natCast] using ennreal_pow_two_mul_one_sub_inv hr x
 
 private lemma lintegral_pointwise_bound_le_split [Finite ι] {f : ι → α → ℂ}
     (hr : 1 ≤ r) (hf : TypeIVSuperorthogonal μ f r) (hsq : MemLp (sqfct f) (2 * r) μ) :
