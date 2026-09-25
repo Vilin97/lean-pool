@@ -1254,23 +1254,7 @@ open Filter
 private theorem PVM.integral_const_for_symmetry (E_pvm : PVM E) (z : ℂ) :
     E_pvm.integral (fun _ : ℝ => z) measurable_const
       ⟨‖z‖, fun _ => le_refl _⟩ = z • 1 := by
-  have hUniform : TendstoUniformly
-      (fun (_n : ℕ) (t : ℝ) => SimpleFunc.const ℝ z t)
-      (fun _t : ℝ => z) atTop := by
-    rw [Metric.tendstoUniformly_iff]
-    intro ε hε
-    filter_upwards [] with n
-    intro t
-    change dist z z < ε
-    rw [dist_self]
-    exact hε
-  have hlim := E_pvm.tendsto_simpleIntegral_of_tendstoUniformly
-    (fun _ : ℝ => z) measurable_const ⟨‖z‖, fun _ => le_refl _⟩
-    (fun _n => SimpleFunc.const ℝ z) hUniform
-  have hconst : Tendsto (fun _n : ℕ => z • (1 : E →L[ℂ] E)) atTop
-      (nhds (z • 1)) := tendsto_const_nhds
-  apply tendsto_nhds_unique hlim
-  simpa only [E_pvm.simpleIntegral_const] using hconst
+  exact E_pvm.integral_const z
 
 private theorem coordinateImaginaryDistances (r : ℝ) :
     ‖Complex.I - (r : ℂ)‖₊ ^ 2 = ‖-Complex.I - (r : ℂ)‖₊ ^ 2 := by

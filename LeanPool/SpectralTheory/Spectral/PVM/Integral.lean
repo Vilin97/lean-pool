@@ -719,3 +719,39 @@ theorem PVM.integral_sub (E_pvm : PVM E)
       (E_pvm.tendsto_integralApprox f hf hbddf).sub
         (E_pvm.tendsto_integralApprox g hg hbddg)
   exact tendsto_nhds_unique hsubLimit hrightLimit
+
+/-- Bounded spectral integration depends only on the function, independently of witnesses. -/
+theorem PVM.integral_congr (E_pvm : PVM E) {f g : ℝ → ℂ}
+    (hfg : f = g) (hf : Measurable f) (hg : Measurable g)
+    (hbddf : ∃ C, ∀ r, ‖f r‖ ≤ C) (hbddg : ∃ C, ∀ r, ‖g r‖ ≤ C) :
+    E_pvm.integral f hf hbddf = E_pvm.integral g hg hbddg := by
+  subst g
+  rfl
+
+/-- Integrating a constant gives the corresponding scalar multiple of the identity. -/
+theorem PVM.integral_const (E_pvm : PVM E) (z : ℂ) :
+    E_pvm.integral (fun _ : ℝ => z) measurable_const
+      ⟨‖z‖, fun _ => le_refl _⟩ = z • 1 := by
+  have hUniform : TendstoUniformly
+      (fun (_n : ℕ) (r : ℝ) => SimpleFunc.const ℝ z r)
+      (fun _r : ℝ => z) Filter.atTop := by
+    rw [Metric.tendstoUniformly_iff]
+    intro ε hε
+    apply Filter.Eventually.of_forall
+    intro n r
+    change dist z z < ε
+    rw [dist_self]
+    exact hε
+  have hlim := E_pvm.tendsto_simpleIntegral_of_tendstoUniformly
+    (fun _ : ℝ => z) measurable_const ⟨‖z‖, fun _ => le_refl _⟩
+    (fun _n => SimpleFunc.const ℝ z) hUniform
+  have hconst : Filter.Tendsto (fun _n : ℕ => z • (1 : E →L[ℂ] E))
+      Filter.atTop (nhds (z • 1)) := tendsto_const_nhds
+  apply tendsto_nhds_unique hlim
+  simpa only [E_pvm.simpleIntegral_const] using hconst
+
+/-- Integrating the constant one gives the identity operator. -/
+theorem PVM.integral_one (E_pvm : PVM E) :
+    E_pvm.integral (fun _ : ℝ => (1 : ℂ)) measurable_const
+      ⟨1, fun _ => by rw [norm_one]⟩ = 1 := by
+  simpa only [one_smul] using E_pvm.integral_const 1

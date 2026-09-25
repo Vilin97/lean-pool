@@ -10136,8 +10136,8 @@ projects:
         real projection-valued measure representing its domain and scalar moments, unique on
         Borel sets.
     - declaration: PalomarSpectralStone.stone_theorem_intrinsic
-      informal: Strongly continuous one-parameter unitary groups correspond to self-adjoint
-        generators.
+      informal: Every strongly continuous one-parameter unitary group has a self-adjoint
+        generator, and every self-adjoint operator generates such a group.
     tags:
     - functional-analysis
     msc:

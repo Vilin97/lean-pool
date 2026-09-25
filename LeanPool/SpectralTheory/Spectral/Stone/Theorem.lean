@@ -51,55 +51,6 @@ private theorem stonePhase_add (s t r : ℝ) :
 private theorem stonePhase_bounded (t : ℝ) : ∀ r, ‖stonePhase t r‖ ≤ 1 :=
   fun r => (stonePhase_norm t r).le
 
-private theorem PVM.integral_congr_local (E_pvm : PVM E) {f g : ℝ → ℂ}
-    (hfg : f = g) (hf : Measurable f) (hg : Measurable g)
-    (hbddf : ∃ C, ∀ r, ‖f r‖ ≤ C) (hbddg : ∃ C, ∀ r, ‖g r‖ ≤ C) :
-    E_pvm.integral f hf hbddf = E_pvm.integral g hg hbddg := by
-  subst g
-  rfl
-
-private theorem PVM.integral_one_local (E_pvm : PVM E) :
-    E_pvm.integral (fun _ : ℝ => (1 : ℂ)) measurable_const
-      ⟨1, fun _ => by rw [norm_one]⟩ = 1 := by
-  have hUniform : TendstoUniformly
-      (fun (_n : ℕ) (t : ℝ) => (1 : SimpleFunc ℝ ℂ) t)
-      (fun _t : ℝ => (1 : ℂ)) atTop := by
-    rw [Metric.tendstoUniformly_iff]
-    intro ε hε
-    filter_upwards [] with n
-    intro t
-    change dist (1 : ℂ) 1 < ε
-    rw [dist_self]
-    exact hε
-  have hlim := E_pvm.tendsto_simpleIntegral_of_tendstoUniformly
-    (fun _ : ℝ => (1 : ℂ)) measurable_const
-    ⟨1, fun _ => by rw [norm_one]⟩ (fun _n => (1 : SimpleFunc ℝ ℂ)) hUniform
-  have hone : Tendsto (fun _n : ℕ => (1 : E →L[ℂ] E)) atTop (nhds 1) :=
-    tendsto_const_nhds
-  apply tendsto_nhds_unique hlim
-  simpa only [E_pvm.simpleIntegral_one] using hone
-
-private theorem PVM.integral_const_local (E_pvm : PVM E) (z : ℂ) :
-    E_pvm.integral (fun _ : ℝ => z) measurable_const
-      ⟨‖z‖, fun _ => le_refl _⟩ = z • 1 := by
-  have hUniform : TendstoUniformly
-      (fun (_n : ℕ) (t : ℝ) => SimpleFunc.const ℝ z t)
-      (fun _t : ℝ => z) atTop := by
-    rw [Metric.tendstoUniformly_iff]
-    intro ε hε
-    filter_upwards [] with n
-    intro t
-    change dist z z < ε
-    rw [dist_self]
-    exact hε
-  have hlim := E_pvm.tendsto_simpleIntegral_of_tendstoUniformly
-    (fun _ : ℝ => z) measurable_const ⟨‖z‖, fun _ => le_refl _⟩
-    (fun _n => SimpleFunc.const ℝ z) hUniform
-  have hconst : Tendsto (fun _n : ℕ => z • (1 : E →L[ℂ] E)) atTop
-      (nhds (z • 1)) := tendsto_const_nhds
-  apply tendsto_nhds_unique hlim
-  simpa only [E_pvm.simpleIntegral_const] using hconst
-
 private theorem PVM.integral_const_mul_local (E_pvm : PVM E)
     (c : ℂ) (f : ℝ → ℂ) (hf : Measurable f)
     (hbddf : ∃ C, ∀ r, ‖f r‖ ≤ C)
@@ -115,12 +66,12 @@ private theorem PVM.integral_const_mul_local (E_pvm : PVM E)
   calc
     E_pvm.integral (fun r => c * f r) (measurable_const.mul hf) hbddMul =
         E_pvm.integral (fc * f) (hfc.mul hf) hbddMul :=
-      E_pvm.integral_congr_local hfun _ _ _ _
+      E_pvm.integral_congr hfun _ _ _ _
     _ = E_pvm.integral fc hfc hbddc * E_pvm.integral f hf hbddf :=
       E_pvm.integral_mul fc f hfc hf hbddc hbddf hbddMul
     _ = c • E_pvm.integral f hf hbddf := by
       rw [show E_pvm.integral fc hfc hbddc = c • 1 by
-        exact E_pvm.integral_const_local c, smul_mul_assoc, one_mul]
+        exact E_pvm.integral_const c, smul_mul_assoc, one_mul]
 
 /-- The bounded evolution operator obtained by integrating the unit phase against a PVM. -/
 noncomputable def spectralEvolution (E_pvm : PVM E) (t : ℝ) : E →L[ℂ] E :=
@@ -139,8 +90,8 @@ private theorem spectralEvolution_zero (E_pvm : PVM E) :
         ⟨1, stonePhase_bounded 0⟩ =
       E_pvm.integral (fun _ : ℝ => (1 : ℂ)) measurable_const
         ⟨1, fun _ => by rw [norm_one]⟩ :=
-      E_pvm.integral_congr_local hfun _ _ _ _
-    _ = 1 := E_pvm.integral_one_local
+      E_pvm.integral_congr hfun _ _ _ _
+    _ = 1 := E_pvm.integral_one
 
 private theorem spectralEvolution_add (E_pvm : PVM E) (s t : ℝ) :
     spectralEvolution E_pvm (s + t) =
@@ -162,7 +113,7 @@ private theorem spectralEvolution_add (E_pvm : PVM E) (s t : ℝ) :
         ⟨1, stonePhase_bounded (s + t)⟩ =
       E_pvm.integral (stonePhase s * stonePhase t)
         ((stonePhase_measurable s).mul (stonePhase_measurable t)) ⟨1, hbddMul⟩ :=
-      E_pvm.integral_congr_local hfun _ _ _ _
+      E_pvm.integral_congr hfun _ _ _ _
     _ = E_pvm.integral (stonePhase s) (stonePhase_measurable s)
           ⟨1, stonePhase_bounded s⟩ *
         E_pvm.integral (stonePhase t) (stonePhase_measurable t)
@@ -392,7 +343,7 @@ private theorem integral_stoneQuotient (E_pvm : PVM E) (t : ℝ) :
   calc
     E_pvm.integral (stoneQuotient t) (stoneQuotient_measurable t) hbddMul =
         E_pvm.integral (fun r => c * f r) (measurable_const.mul hf) hbddMul :=
-      E_pvm.integral_congr_local hfun _ _ _ _
+      E_pvm.integral_congr hfun _ _ _ _
     _ = c • E_pvm.integral f hf hbddf :=
       E_pvm.integral_const_mul_local c f hf hbddf hbddMul
     _ = c • (spectralEvolution E_pvm t - spectralEvolution E_pvm 0) := by

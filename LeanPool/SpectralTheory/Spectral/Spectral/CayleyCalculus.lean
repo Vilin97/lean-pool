@@ -24,56 +24,6 @@ open MeasureTheory
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
-private theorem PVM.integral_congr (E_pvm : PVM E) {f g : ℝ → ℂ}
-    (hfg : f = g) (hf : Measurable f) (hg : Measurable g)
-    (hbddf : ∃ C, ∀ r, ‖f r‖ ≤ C) (hbddg : ∃ C, ∀ r, ‖g r‖ ≤ C) :
-    E_pvm.integral f hf hbddf = E_pvm.integral g hg hbddg := by
-  subst g
-  rfl
-
-private theorem PVM.integral_one (E_pvm : PVM E) :
-    E_pvm.integral (fun _ : ℝ => (1 : ℂ)) measurable_const
-      ⟨1, fun _ => by rw [norm_one]⟩ = 1 := by
-  have hUniform : TendstoUniformly
-      (fun (_n : ℕ) (r : ℝ) => (1 : SimpleFunc ℝ ℂ) r)
-      (fun _r : ℝ => (1 : ℂ)) Filter.atTop := by
-    rw [Metric.tendstoUniformly_iff]
-    intro ε hε
-    apply Filter.Eventually.of_forall
-    intro n r
-    change dist (1 : ℂ) 1 < ε
-    rw [dist_self]
-    exact hε
-  have hlim := E_pvm.tendsto_simpleIntegral_of_tendstoUniformly
-    (fun _ : ℝ => (1 : ℂ)) measurable_const
-    ⟨1, fun _ => by rw [norm_one]⟩
-    (fun _n => (1 : SimpleFunc ℝ ℂ)) hUniform
-  have hone : Filter.Tendsto (fun _n : ℕ => (1 : E →L[ℂ] E))
-      Filter.atTop (nhds 1) := tendsto_const_nhds
-  apply tendsto_nhds_unique hlim
-  simpa only [E_pvm.simpleIntegral_one] using hone
-
-private theorem PVM.integral_const (E_pvm : PVM E) (z : ℂ) :
-    E_pvm.integral (fun _ : ℝ => z) measurable_const
-      ⟨‖z‖, fun _ => le_refl _⟩ = z • 1 := by
-  have hUniform : TendstoUniformly
-      (fun (_n : ℕ) (r : ℝ) => SimpleFunc.const ℝ z r)
-      (fun _r : ℝ => z) Filter.atTop := by
-    rw [Metric.tendstoUniformly_iff]
-    intro ε hε
-    apply Filter.Eventually.of_forall
-    intro n r
-    change dist z z < ε
-    rw [dist_self]
-    exact hε
-  have hlim := E_pvm.tendsto_simpleIntegral_of_tendstoUniformly
-    (fun _ : ℝ => z) measurable_const ⟨‖z‖, fun _ => le_refl _⟩
-    (fun _n => SimpleFunc.const ℝ z) hUniform
-  have hconst : Filter.Tendsto (fun _n : ℕ => z • (1 : E →L[ℂ] E))
-      Filter.atTop (nhds (z • 1)) := tendsto_const_nhds
-  apply tendsto_nhds_unique hlim
-  simpa only [E_pvm.simpleIntegral_const] using hconst
-
 private theorem sub_bounded
     (f g : ℝ → ℂ) (hf : ∃ C, ∀ r, ‖f r‖ ≤ C)
     (hg : ∃ C, ∀ r, ‖g r‖ ≤ C) :
