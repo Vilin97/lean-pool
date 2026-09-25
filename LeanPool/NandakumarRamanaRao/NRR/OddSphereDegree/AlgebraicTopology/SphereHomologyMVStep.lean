@@ -217,11 +217,13 @@ theorem gFun_mem_sphere (y : Sphere n) :
 
 theorem gFun_mem_band (y : Sphere n) :
     (⟨gFun n y, gFun_mem_sphere n y⟩ : Sphere (n + 1)) ∈ sphereBand n := by
-      constructor <;> intro h <;> simp_all +decide only [Set.mem_singleton_iff];
-      · injection h with h; replace h := congr_arg ( fun z => z 0 ) h; simp_all? +decide [ gFun ];
-        exact absurd h ( by erw [ PiLp.single_apply ]; norm_num );
-      · injection h with h; have := congr_arg ( fun x => x 0 ) h; norm_num [ southPole ] at this;
-        simp +decide [ gFun, northVec ] at this
+  constructor <;> intro h
+  · have hcoord := congrArg (fun z : Sphere (n + 1) => z.val 0)
+      (Set.mem_singleton_iff.mp h)
+    simp [northPole, northVec, gFun] at hcoord
+  · have hcoord := congrArg (fun z : Sphere (n + 1) => z.val 0)
+      (Set.mem_singleton_iff.mp h)
+    simp [southPole, northVec, gFun] at hcoord
 
 theorem continuous_gFun :
     Continuous (fun y : Sphere n =>

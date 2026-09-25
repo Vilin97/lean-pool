@@ -81,9 +81,12 @@ noncomputable def deltaCast {m n : Nat} (h : m = n) : Delta m → Delta n :=
     (n : Nat) (k : Fin (n + 2)) (x : Delta n) (i : Fin (n + 1)) :
     cofacePoint n k x (k.succAbove i) = x i := by
   unfold cofacePoint
-  simp? +decide [ ]
-  simp +decide [FunOnFinite.linearMap]
-  simp +decide [Finsupp.mapDomain, Finsupp.single_apply]
+  simp +decide only [FiniteSimplex.map_coe]
+  simp +decide only [FunOnFinite.linearMap, LinearMap.coe_comp, LinearEquiv.coe_coe,
+    Function.comp_apply, Finsupp.lmapDomain_apply, Finsupp.linearEquivFunOnFinite_apply]
+  simp +decide only [Finsupp.mapDomain, Finsupp.sum_apply, Finsupp.single_apply,
+    Fin.succAbove_inj, Finsupp.sum_ite_eq', Finsupp.mem_support_iff,
+    Finsupp.linearEquivFunOnFinite_symm_apply, ne_eq, ite_not, ite_eq_right_iff]
   exact fun h => h.symm
 
 @[simp] theorem cofacePoint_apply_deleted

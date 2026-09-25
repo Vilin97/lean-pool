@@ -147,8 +147,7 @@ theorem chart_spatial_affine
   change (RelativeSubdivisionCylinderCombinatorics.chart
     p q.2 (localWeight hp w)).1 r = _
   rw [RelativeSubdivisionCylinderCombinatorics.chart_spatial_affine]
-  simp [localWeight, localPoint, vertex, chart, liftPoint, CylinderPoint.ofProd,
-    RelativeSubdivisionCylinderCombinatorics.chart_vertex]
+  simp [localWeight, localPoint, RelativeSubdivisionCylinderCombinatorics.chart_vertex]
 
 /-- The time component of the lifted chart is affine in the source barycentric coordinates. -/
 theorem chart_time_affine
@@ -162,8 +161,7 @@ theorem chart_time_affine
     p q.2 (localWeight hp w)).2.1 = _
   rw [RelativeSubdivisionCylinderCombinatorics.chart_time_affine]
   simp [localWeight, localPoint, vertex, chart, liftPoint, CylinderPoint.ofProd,
-    RelativeSubdivisionCylinderCombinatorics.chart_vertex,
-    Nat.sub_add_cancel hp.pos]
+    RelativeSubdivisionCylinderCombinatorics.chart_vertex]
 
 /-- A prime translate of two points of the same refined spatial simplex can agree only for the
 identity symmetry. -/

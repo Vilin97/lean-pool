@@ -87,17 +87,22 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
   unfold prefixBarycenter stepVertices;
   ext j; simp +decide only [FiniteSimplex.map, FiniteSimplex.barycenter, Fintype.card_fin,
     Nat.cast_add, Nat.cast_one, stdVerts, Pi.smul_apply, Finset.sum_apply, smul_eq_mul];
-  unfold FunOnFinite.linearMap; simp +decide only
-    [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
-      Finsupp.lmapDomain_apply, Finsupp.linearEquivFunOnFinite_apply];
-  simp +decide [ Finsupp.mapDomain, Finsupp.linearEquivFunOnFinite, Pi.single_apply ];
-  simp +decide [ Finsupp.sum_fintype, prefixVertex ];
+  unfold FunOnFinite.linearMap
+  simp +decide only [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
+    Finsupp.lmapDomain_apply, Finsupp.linearEquivFunOnFinite_apply, Finset.mul_sum _ _ _]
+  simp +decide only [Finsupp.mapDomain, Finsupp.linearEquivFunOnFinite, Equiv.invFun_as_coe,
+    LinearEquiv.symm_mk, LinearEquiv.coe_mk, LinearMap.coe_mk, AddHom.coe_mk, Finsupp.sum_apply,
+    Pi.single_apply, mul_ite, mul_one, mul_zero];
+  simp +decide only [prefixVertex, Finsupp.single_zero, Finsupp.coe_zero, Pi.zero_apply,
+    implies_true, Finsupp.sum_fintype, Finsupp.equivFunOnFinite_symm_apply_apply,
+    FiniteSimplex.mk_apply];
   rw [ ← Finset.sum_subset ( show Finset.image ( fun x : Fin ( k.val + 1 ) => ⟨ x, by
     linarith [ Fin.is_lt x, Fin.is_lt k ] ⟩ ) Finset.univ ⊆ Finset.Iic k from ?_ ) ];
   · rw [ Finset.sum_image ] <;> norm_num;
     · exact Finset.sum_congr rfl fun _ _ => by rw [ Finsupp.single_apply ]; aesop;
     · exact fun x y h => by simpa [ Fin.ext_iff ] using h;
-  · simp +decide [ Fin.ext_iff ];
+  · simp +decide only [mem_Iic, mem_image, mem_univ, true_and, not_exists,
+      ite_eq_right_iff, inv_eq_zero];
     exact fun x hx₁ hx₂ hx₃ => False.elim <| hx₂ ⟨ x, by
       linarith [ Fin.is_lt x, Fin.is_lt k, show ( x : ℕ ) ≤ k from hx₁ ] ⟩ rfl;
   · exact Finset.image_subset_iff.mpr fun x _ => Finset.mem_Iic.mpr ( Nat.le_trans (
@@ -162,7 +167,7 @@ theorem affineCompMap_succ (n N : ℕ) (ρs : Fin (N + 1) → Equiv.Perm (Fin (n
 theorem affineCompMap_coe (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (n + 1))) (x : Delta n) :
     (affineCompMap n N ρs x).val = affineCompLinear n N ρs x.val := by
   induction N generalizing x with
-  | zero => simp_all +decide
+  | zero => rfl
   | succ N ih =>
     simp_all +decide only [Subtype.forall, affineCompMap_succ, ContinuousMap.comp_apply,
       affineSubdivContinuousMap_apply, affineCompLinear_succ, LinearMap.coe_comp,
