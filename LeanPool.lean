@@ -1616,6 +1616,7 @@ public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Block
 public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.CoeffRestriction
 public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Definitions
 public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Dilation
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Dilation.Basic
 public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.DoubledResponse
 public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.HomogenizationError
 public import LeanPool.CoarseGraining.Homogenization.Book.Ch02.Interfaces
@@ -1706,6 +1707,7 @@ public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarse
 public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.LocalCoarseGrainingResponseOrder
 public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.ABK26.NegativeBesov
 public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Definitions.Basic
 public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems
 public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoli
 public import LeanPool.CoarseGraining.Homogenization.Book.Ch03.Theorems.CoarseCaccioppoli.Interface

@@ -78,77 +78,20 @@ private theorem sqrt_const_mul_fourth_mul_sq_mul_sq_mul_sq
         rw [Real.sqrt_sq (mul_nonneg hz hw)]
     _ = Real.sqrt A * x ^ 2 * y * z * w := by ring
 
-private theorem coarsePoincareRHSGradientExpanded_le_publicRHS
-    {d : ℕ} [NeZero d] {C : ℝ}
+private theorem coarsePoincareGradient_scalar_sqrt_bound
+    (d : ℕ) (C s L E B D : ℝ)
     (hC_nonneg : 0 ≤ C) (hC_energy : Real.sqrt 250 ≤ C)
-    (hC_force :
-      Real.sqrt 15000 *
-          ((d : ℝ) *
-            (Real.rpow (3 : ℝ) ((d : ℝ) + 1) * Real.sqrt 2)) ≤ C)
-    {Q : TriadicCube d} {a : CoeffFamily d} {s : ℝ}
-    {g : Vec d → Vec d} (u : ForcedCubeSolution Q a g)
-    (hs : 0 < s) (hs_lt : s < 1) (hg : ForceBesovRegularity Q s g) :
+    (hC_force : Real.sqrt 15000 *
+      ((d : ℝ) * (Real.rpow (3 : ℝ) ((d : ℝ) + 1) * Real.sqrt 2)) ≤ C)
+    (hs : 0 < s) (hs_le : s ≤ 1)
+    (hL_inv_nonneg : 0 ≤ L⁻¹) (hs_inv_nonneg : 0 ≤ s⁻¹)
+    (hE_nonneg : 0 ≤ E) (hB_nonneg : 0 ≤ B) (hD_nonneg : 0 ≤ D)
+    (hD_le : D ≤ (d : ℝ) * (Real.rpow (3 : ℝ) ((d : ℝ) + 1) * Real.sqrt 2)) :
     Real.sqrt
-      (250 * (s⁻¹) ^ 2 *
-          (lambdaSq Q (s / 2) (MultiscaleExponent.finite 2)
-            (publicCoeffField Q a))⁻¹ *
-          cubeAverage Q
-            (coefficientEnergyDensity (publicCoeffField Q a)
-              (forcedSolutionGradientField u)) +
-        15000 * (s⁻¹) ^ 4 *
-          ((lambdaSq Q (s / 2) (MultiscaleExponent.finite 2)
-            (publicCoeffField Q a))⁻¹) ^ 2 *
-          ((d : ℝ) *
-              (Real.rpow (3 : ℝ) ((d : ℝ) + s) * Real.sqrt 2)) ^ 2 *
-          (cubeBesovPositiveVectorSeminormTwo Q s g) ^ 2) ≤
-      coarsePoincareWithRHSGradientRHS ((d : ℝ) * C) Q a s g u := by
-  let L : ℝ := lambdaSq Q (s / 2) (MultiscaleExponent.finite 2)
-    (publicCoeffField Q a)
-  let Lpub : ℝ := Ch02.lambdaSq Q (s / 2) (Ch02.MultiscaleExponent.finite 2) a
-  let E : ℝ :=
-    cubeAverage Q
-      (coefficientEnergyDensity (publicCoeffField Q a)
-        (forcedSolutionGradientField u))
-  let B : ℝ := cubeBesovPositiveVectorSeminormTwo Q s g
-  let D : ℝ :=
-    (d : ℝ) * (Real.rpow (3 : ℝ) ((d : ℝ) + s) * Real.sqrt 2)
-  have hs_le : s ≤ 1 := hs_lt.le
-  have hs_half : 0 < s / 2 := by nlinarith
-  have hL_nonneg : 0 ≤ L := by
-    dsimp [L]
-    exact
-      multiscale_ellipticity_lambdaSq_finite_nonneg
-        Q (s / 2) 2 (publicCoeffField Q a)
-        (by norm_num : (0 : ℝ) ≤ 2)
-        (by positivity : 0 ≤ (s / 2) * (2 : ℝ))
-  have hL_inv_nonneg : 0 ≤ L⁻¹ := inv_nonneg.mpr hL_nonneg
-  have hs_inv_nonneg : 0 ≤ s⁻¹ := inv_nonneg.mpr hs.le
-  have hE_nonneg : 0 ≤ E := by
-    exact cubeAverage_nonneg_of_nonneg_on
-      (coefficientEnergyDensity_nonneg_of_isEllipticFieldOn
-        (publicCoeffField_isEllipticFieldOn_cubeSet Q a)
-        (forcedSolutionGradientField u))
-  have hB_nonneg : 0 ≤ B := by
-    simpa [B, scaleNormalizedPositiveBesovVectorSeminormTwo] using
-      scaleNormalizedPositiveBesovVectorSeminormTwo_nonneg_of_forceBesovRegularity
-        (Q := Q) (s := s) (g := g) hg
-  have hD_nonneg : 0 ≤ D := by
-    dsimp [D]
-    positivity
-  have hD_le :
-      D ≤
-        (d : ℝ) *
-          (Real.rpow (3 : ℝ) ((d : ℝ) + 1) * Real.sqrt 2) := by
-    dsimp [D]
-    have hpow :
-        Real.rpow (3 : ℝ) ((d : ℝ) + s) ≤
-          Real.rpow (3 : ℝ) ((d : ℝ) + 1) := by
-      exact rpow_three_nat_add_le_nat_add_one d hs_le
-    have hinner :
-        Real.rpow (3 : ℝ) ((d : ℝ) + s) * Real.sqrt 2 ≤
-          Real.rpow (3 : ℝ) ((d : ℝ) + 1) * Real.sqrt 2 :=
-      mul_le_mul_of_nonneg_right hpow (Real.sqrt_nonneg 2)
-    exact mul_le_mul_of_nonneg_left hinner (by exact_mod_cast Nat.zero_le d)
+      (250 * (s⁻¹) ^ 2 * L⁻¹ * E +
+        15000 * (s⁻¹) ^ 4 * (L⁻¹) ^ 2 * D ^ 2 * B ^ 2) ≤
+      C * Real.rpow s (-(3 / 2 : ℝ)) * Real.sqrt L⁻¹ * Real.sqrt E +
+        C * Real.rpow s (-3 : ℝ) * L⁻¹ * B := by
   have hs_inv_le :
       s⁻¹ ≤ Real.rpow s (-(3 / 2 : ℝ)) := by
     exact inv_le_rpow_neg_three_halves hs hs_le
@@ -239,6 +182,93 @@ private theorem coarsePoincareRHSGradientExpanded_le_publicRHS
       _ ≤ (C * Real.rpow s (-3 : ℝ)) * (L⁻¹ * B) :=
           mul_le_mul_of_nonneg_right hforce_coeff htail
       _ = C * Real.rpow s (-3 : ℝ) * L⁻¹ * B := by ring
+  calc
+    Real.sqrt
+      (250 * (s⁻¹) ^ 2 * L⁻¹ * E +
+        15000 * (s⁻¹) ^ 4 * (L⁻¹) ^ 2 * D ^ 2 * B ^ 2) ≤
+      Real.sqrt (250 * (s⁻¹) ^ 2 * L⁻¹ * E) +
+        Real.sqrt (15000 * (s⁻¹) ^ 4 * (L⁻¹) ^ 2 * D ^ 2 * B ^ 2) :=
+        sqrt_add_le_add_sqrt_of_nonneg hA_nonneg hF_nonneg
+    _ =
+      Real.sqrt 250 * s⁻¹ * Real.sqrt L⁻¹ * Real.sqrt E +
+        Real.sqrt 15000 * (s⁻¹) ^ 2 * L⁻¹ * D * B := by
+        rw [hsqrtA, hsqrtF]
+    _ ≤
+      C * Real.rpow s (-(3 / 2 : ℝ)) * Real.sqrt L⁻¹ * Real.sqrt E +
+        C * Real.rpow s (-3 : ℝ) * L⁻¹ * B :=
+        add_le_add henergy_term hforce_term
+
+private theorem coarsePoincareRHSGradientExpanded_le_publicRHS
+    {d : ℕ} [NeZero d] {C : ℝ}
+    (hC_nonneg : 0 ≤ C) (hC_energy : Real.sqrt 250 ≤ C)
+    (hC_force :
+      Real.sqrt 15000 *
+          ((d : ℝ) *
+            (Real.rpow (3 : ℝ) ((d : ℝ) + 1) * Real.sqrt 2)) ≤ C)
+    {Q : TriadicCube d} {a : CoeffFamily d} {s : ℝ}
+    {g : Vec d → Vec d} (u : ForcedCubeSolution Q a g)
+    (hs : 0 < s) (hs_lt : s < 1) (hg : ForceBesovRegularity Q s g) :
+    Real.sqrt
+      (250 * (s⁻¹) ^ 2 *
+          (lambdaSq Q (s / 2) (MultiscaleExponent.finite 2)
+            (publicCoeffField Q a))⁻¹ *
+          cubeAverage Q
+            (coefficientEnergyDensity (publicCoeffField Q a)
+              (forcedSolutionGradientField u)) +
+        15000 * (s⁻¹) ^ 4 *
+          ((lambdaSq Q (s / 2) (MultiscaleExponent.finite 2)
+            (publicCoeffField Q a))⁻¹) ^ 2 *
+          ((d : ℝ) *
+              (Real.rpow (3 : ℝ) ((d : ℝ) + s) * Real.sqrt 2)) ^ 2 *
+          (cubeBesovPositiveVectorSeminormTwo Q s g) ^ 2) ≤
+      coarsePoincareWithRHSGradientRHS ((d : ℝ) * C) Q a s g u := by
+  let L : ℝ := lambdaSq Q (s / 2) (MultiscaleExponent.finite 2)
+    (publicCoeffField Q a)
+  let Lpub : ℝ := Ch02.lambdaSq Q (s / 2) (Ch02.MultiscaleExponent.finite 2) a
+  let E : ℝ :=
+    cubeAverage Q
+      (coefficientEnergyDensity (publicCoeffField Q a)
+        (forcedSolutionGradientField u))
+  let B : ℝ := cubeBesovPositiveVectorSeminormTwo Q s g
+  let D : ℝ :=
+    (d : ℝ) * (Real.rpow (3 : ℝ) ((d : ℝ) + s) * Real.sqrt 2)
+  have hs_le : s ≤ 1 := hs_lt.le
+  have hs_half : 0 < s / 2 := by nlinarith
+  have hL_nonneg : 0 ≤ L := by
+    dsimp [L]
+    exact
+      multiscale_ellipticity_lambdaSq_finite_nonneg
+        Q (s / 2) 2 (publicCoeffField Q a)
+        (by norm_num : (0 : ℝ) ≤ 2)
+        (by positivity : 0 ≤ (s / 2) * (2 : ℝ))
+  have hL_inv_nonneg : 0 ≤ L⁻¹ := inv_nonneg.mpr hL_nonneg
+  have hs_inv_nonneg : 0 ≤ s⁻¹ := inv_nonneg.mpr hs.le
+  have hE_nonneg : 0 ≤ E := by
+    exact cubeAverage_nonneg_of_nonneg_on
+      (coefficientEnergyDensity_nonneg_of_isEllipticFieldOn
+        (publicCoeffField_isEllipticFieldOn_cubeSet Q a)
+        (forcedSolutionGradientField u))
+  have hB_nonneg : 0 ≤ B := by
+    simpa [B, scaleNormalizedPositiveBesovVectorSeminormTwo] using
+      scaleNormalizedPositiveBesovVectorSeminormTwo_nonneg_of_forceBesovRegularity
+        (Q := Q) (s := s) (g := g) hg
+  have hD_nonneg : 0 ≤ D := by
+    dsimp [D]
+    positivity
+  have hD_le :
+      D ≤
+        (d : ℝ) *
+          (Real.rpow (3 : ℝ) ((d : ℝ) + 1) * Real.sqrt 2) := by
+    dsimp [D]
+    have hpow :
+        Real.rpow (3 : ℝ) ((d : ℝ) + s) ≤
+          Real.rpow (3 : ℝ) ((d : ℝ) + 1) := by
+      exact rpow_three_nat_add_le_nat_add_one d hs_le
+    have hinner :
+        Real.rpow (3 : ℝ) ((d : ℝ) + s) * Real.sqrt 2 ≤
+          Real.rpow (3 : ℝ) ((d : ℝ) + 1) * Real.sqrt 2 :=
+      mul_le_mul_of_nonneg_right hpow (Real.sqrt_nonneg 2)
+    exact mul_le_mul_of_nonneg_left hinner (by exact_mod_cast Nat.zero_le d)
   have hsqrtL_public :
       Real.sqrt L⁻¹ ≤
         (d : ℝ) *
@@ -322,17 +352,11 @@ private theorem coarsePoincareRHSGradientExpanded_le_publicRHS
           15000 * (s⁻¹) ^ 4 * (L⁻¹) ^ 2 * D ^ 2 * B ^ 2) := by
         rfl
     _ ≤
-      Real.sqrt (250 * (s⁻¹) ^ 2 * L⁻¹ * E) +
-        Real.sqrt (15000 * (s⁻¹) ^ 4 * (L⁻¹) ^ 2 * D ^ 2 * B ^ 2) :=
-        sqrt_add_le_add_sqrt_of_nonneg hA_nonneg hF_nonneg
-    _ =
-      Real.sqrt 250 * s⁻¹ * Real.sqrt L⁻¹ * Real.sqrt E +
-        Real.sqrt 15000 * (s⁻¹) ^ 2 * L⁻¹ * D * B := by
-        rw [hsqrtA, hsqrtF]
-    _ ≤
       C * Real.rpow s (-(3 / 2 : ℝ)) * Real.sqrt L⁻¹ * Real.sqrt E +
         C * Real.rpow s (-3 : ℝ) * L⁻¹ * B :=
-        add_le_add henergy_term hforce_term
+      coarsePoincareGradient_scalar_sqrt_bound d C s L E B D
+        hC_nonneg hC_energy hC_force hs hs_le hL_inv_nonneg hs_inv_nonneg
+        hE_nonneg hB_nonneg hD_nonneg hD_le
     _ ≤
       C * Real.rpow s (-(3 / 2 : ℝ)) *
           ((d : ℝ) *

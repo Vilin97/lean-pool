@@ -272,25 +272,11 @@ theorem section52LargeScalarAbsorptionConst_absorbs
           40 * B * Ch04.rosenthalBennettIntegralConst * Real.sqrt A) *
           ((ξ : ℝ) * δ⁻¹) := by
     calc
-      (2 * Ch04.rosenthalDescendantsAtScaleLpConst d 0 ξ *
-            geometricDiscount s 1) *
-          (geometricDiscount ((d : ℝ) - s) 1)⁻¹ +
-        (2 * Ch04.rosenthalDescendantsAtScaleSqrtConst d 0 ξ *
-            geometricDiscount s 1) *
-          (geometricDiscount δ 1)⁻¹ =
-        ((2 * Ch04.rosenthalDescendantsAtScaleLpConst d 0 ξ) *
-            geometricDiscount s 1) *
-          (geometricDiscount ((d : ℝ) - s) 1)⁻¹ +
-        ((2 * Ch04.rosenthalDescendantsAtScaleSqrtConst d 0 ξ) *
-            geometricDiscount s 1) *
-          (geometricDiscount δ 1)⁻¹ := by ring
-      _ ≤
-        20 * B * A * ((ξ : ℝ) * δ⁻¹) +
+      _ ≤ 20 * B * A * ((ξ : ℝ) * δ⁻¹) +
           40 * B * Ch04.rosenthalBennettIntegralConst * Real.sqrt A *
             ((ξ : ℝ) * δ⁻¹) :=
-          add_le_add hLp_term hSqrt_term
-      _ =
-        (20 * B * A +
+        add_le_add hLp_term hSqrt_term
+      _ = (20 * B * A +
           40 * B * Ch04.rosenthalBennettIntegralConst * Real.sqrt A) *
           ((ξ : ℝ) * δ⁻¹) := by ring
   have hentry_nonneg :
