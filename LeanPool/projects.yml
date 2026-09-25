@@ -10263,8 +10263,7 @@ projects:
       displacement-moment bound yields a unique measurable kernel from each starting point to
       continuous-path space, with the prescribed finite-dimensional distributions. The library
       also develops strong Markov properties, generators and resolvents, stopping and killing,
-      and Brownian motion as an example. The existence and uniqueness theorem is independently
-      checked using Audit/ContinuousMarkovProcess/comparator.json.
+      and Brownian motion as an example.
     branch: probability
     entry_module: LeanPool.MarkovProcess
     authors:
