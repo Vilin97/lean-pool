@@ -503,6 +503,7 @@ theorem relabel_throughProduct
 
 /-! ## The through summand and value under a monotone relabel -/
 
+open scoped Classical in
 /-- The corrected constrained summand transports along a monotone
 relabel, at converted transition data. -/
 theorem relabel_throughSummand

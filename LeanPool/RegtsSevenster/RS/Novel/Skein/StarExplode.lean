@@ -399,7 +399,7 @@ noncomputable def explodeAtGluePair (W : ClosedFragment)
         · rfl
         · rfl
     -- ═══════ PAIRING ═══════
-    pairing_comm := explodeAt_rewire_pairing W C hC f₀ h₀ hopen
+    pairing_comm := by exact explodeAt_rewire_pairing W C hC f₀ h₀ hopen
   }
 
 end GlueStep

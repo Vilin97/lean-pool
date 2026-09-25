@@ -721,8 +721,8 @@ noncomputable def leftRotNormalRight
       (leftRotQ3 s t u) :=
     Fragment.mapPairs_wf i'.symm _ wfq2
   let wfq4 : Fragment.PairsWF
-      (leftRotQ4 s t u) :=
-    leftRotQ4_wf s t u
+      (leftRotQ4 s t u) := by
+    exact leftRotQ4_wf s t u
   let A := (W.disjUnion F).disjUnion K
   let XWK := Fragment.glueList
     (W.disjUnion K) (wkPairs s t u)
@@ -875,7 +875,7 @@ noncomputable def leftRotNormalRight
 
 /-- Swapping each pair in a liftPairs list amounts to
 lifting the swapped suffix. -/
-private theorem liftPairs_map_swap
+theorem leftRotate_liftPairs_map_swap
     {α : Type}
     (ps : List (α × α)) :
     ∀ (qs : List (α × α))
@@ -891,11 +891,11 @@ private theorem liftPairs_map_swap
     congrArg₂ List.cons
       (Prod.ext (Subtype.ext rfl)
         (Subtype.ext rfl))
-      (liftPairs_map_swap ps qs _ _)
+      (leftRotate_liftPairs_map_swap ps qs _ _)
 
 /-- Permutation from rotatePairsL to the
 intermediate form mBlock ++ (pBlock ++ nBlock). -/
-private theorem leftRotPairs_perm
+theorem leftRotatePairs_perm
     (s t u : ℕ) :
     (nBlock s t u ++
       (pBlock s t u ++
@@ -1011,10 +1011,11 @@ theorem leftRot_surv_empty (s t u : ℕ)
 
 /-! ### The final theorem -/
 
-private theorem leftRotPairs_assoc_wf (s t u : ℕ) :
+/-- The reassociated left-rotation pairs form a well-formed gluing list. -/
+theorem leftRotatePairs_assoc_wf (s t u : ℕ) :
     Fragment.PairsWF ((mBlock s t u ++ pBlock s t u) ++ nBlock s t u) := by
   simpa only [List.append_assoc] using
-    (rotatePairsL_wf s t u).perm (leftRotPairs_perm s t u)
+    (rotatePairsL_wf s t u).perm (leftRotatePairs_perm s t u)
 
 /-- **Mirror rotation of closures**: the closure of
 a composite equals the closure of the second factor
@@ -1044,7 +1045,7 @@ noncomputable def pairCloseComposeRotateLeft
           (pBlock s t u ++
             nBlock s t u)) :=
     (rotatePairsL_wf s t u).perm
-      (leftRotPairs_perm s t u)
+      (leftRotatePairs_perm s t u)
   have hassocM :
       mBlock s t u ++
         (pBlock s t u ++ nBlock s t u) =
@@ -1052,8 +1053,8 @@ noncomputable def pairCloseComposeRotateLeft
     (List.append_assoc _ _ _).symm
   have wf_MA :
       Fragment.PairsWF
-        (mp ++ nBlock s t u) :=
-    leftRotPairs_assoc_wf s t u
+        (mp ++ nBlock s t u) := by
+    exact leftRotatePairs_assoc_wf s t u
   have hassocR :
       mp ++ nBlockSwap s t u =
       mBlock s t u ++
@@ -1080,7 +1081,7 @@ noncomputable def pairCloseComposeRotateLeft
     wf_RA.append_right
     wf_RA.append_sep
   have lPeq :=
-    liftPairs_map_swap mp (nBlock s t u)
+    leftRotate_liftPairs_map_swap mp (nBlock s t u)
       wf_MA.append_sep wf_RA.append_sep
   -- ═══════ STAGE 1: THE SUFFIX SWAP, IN SIX STEPS ═══════
   -- h1: GL_M → GL_MA (assoc)
@@ -1153,7 +1154,7 @@ noncomputable def pairCloseComposeRotateLeft
         (hnb ▸ List.Perm.refl _))).trans
     ((Fragment.Equiv.relabelCongr
       ((Fragment.glueListPerm A
-        (leftRotPairs_perm s t u)
+        (leftRotatePairs_perm s t u)
         (rotatePairsL_wf s t u)).trans
       ((Fragment.Equiv.relabelCongr
         suffix_swap _).trans

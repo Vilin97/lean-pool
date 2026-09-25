@@ -56,6 +56,7 @@ theorem attach_inl_of_allInternal (hall : F.allInternal) {f : W.Flag}
     (hf : f ∈ F.flags) : ∃ v : W.Vertex, W.attach f = Sum.inl v :=
   F.attach_internal_of_mem (mem_internalFlags_of_allInternal hall hf)
 
+open scoped Classical in
 /-- On an all-internal subset, there are no through-flags. -/
 theorem throughFlags_eq_empty_of_allInternal (hall : F.allInternal) :
     F.throughFlags = ∅ := by
@@ -250,6 +251,7 @@ theorem openCircuitCount_toRel (κ : F.TransitionSystem) :
 
 /-! ## The through summand at an even state -/
 
+open scoped Classical in
 /-- **Fibre bridge**: the through summand at the state of `ψ₀`
 equals the circuit-signed colouring sum over the fibre of `ψ₀`. -/
 theorem throughSummand_evenState [LinearOrder α]

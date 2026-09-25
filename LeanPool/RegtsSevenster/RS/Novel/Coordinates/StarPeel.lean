@@ -346,8 +346,8 @@ noncomputable def multiStarPeel {n : ℕ} (d S c : ℕ)
   -- ═══════ ATTACHMENT ═══════
   -- Flags below `d` sit on the peeled star, the rest on the
   -- remaining ones; each side keeps its own vertex.
-  attach_comm := multiStarPeel_attach_comm d S c rest a ha_low ha_high
-  pairing_comm := multiStarPeel_pairing_comm d S c rest a
+  attach_comm := by exact multiStarPeel_attach_comm d S c rest a ha_low ha_high
+  pairing_comm := by exact multiStarPeel_pairing_comm d S c rest a
   circles_eq := by
     change c = 0 + c
     omega

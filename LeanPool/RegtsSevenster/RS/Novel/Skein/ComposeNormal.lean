@@ -449,7 +449,7 @@ noncomputable def glueInterfaceNormal (s u : ℕ) :
               (tailPairs s t u) hwf_cons.sep
               (Sum.inl ⟨s + (a.val - s), by omega⟩,
                 Sum.inr ⟨a.val - s, by omega⟩)
-              (mem_tailPairs s t u (a.val - s) (by omega))
+              (by exact mem_tailPairs s t u (a.val - s) (by omega))
             refine absurd (Subtype.ext ?_ : x.val = r.1) (x.prop r hr).1
             rw [hr1, hval]
             exact congrArg Sum.inl (Fin.ext
@@ -486,7 +486,7 @@ noncomputable def glueInterfaceNormal (s u : ℕ) :
               (tailPairs s t u) hwf_cons.sep
               (Sum.inl ⟨s + b.val, by omega⟩,
                 Sum.inr ⟨b.val, by omega⟩)
-              (mem_tailPairs s t u b.val h)
+              (by exact mem_tailPairs s t u b.val h)
             refine absurd (Subtype.ext ?_ : x.val = r.2) (x.prop r hr).2
             rw [hr2, hval]
           · rcases Nat.lt_or_ge t b.val with h' | h'
@@ -530,10 +530,16 @@ noncomputable def glueInterfaceNormal (s u : ℕ) :
       (Fragment.Equiv.relabelTrans _ _ _) ?_
     have heqG : (Fragment.foldSurvivingPermEquiv
           (by rw [interfacePairs_succ s t u] :
-            (interfacePairs s (t + 1) u).Perm _)).trans
+            (interfacePairs s (t + 1) u).Perm
+              ((Sum.inl ⟨s + t, Nat.lt_succ_self _⟩,
+                Sum.inr ⟨t, Nat.lt_of_lt_of_le (Nat.lt_succ_self t)
+                  (Nat.le_add_right _ _)⟩) :: tailPairs s t u))).trans
           ((Fragment.foldSurvivingPermEquiv
               (by rw [interfacePairs_succ s t u] :
-                (interfacePairs s (t + 1) u).Perm _)).symm.trans
+                (interfacePairs s (t + 1) u).Perm
+              ((Sum.inl ⟨s + t, Nat.lt_succ_self _⟩,
+                Sum.inr ⟨t, Nat.lt_of_lt_of_le (Nat.lt_succ_self t)
+                  (Nat.le_add_right _ _)⟩) :: tailPairs s t u))).symm.trans
             (interfaceSurvEquiv s (t + 1) u)) =
         interfaceSurvEquiv s (t + 1) u :=
       Equiv.ext (fun x => by simp)

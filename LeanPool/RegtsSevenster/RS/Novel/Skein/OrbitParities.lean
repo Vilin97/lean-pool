@@ -97,11 +97,12 @@ private theorem sameCycle_swap_mul_pow_left [DecidableEq Y]
 
 /-- `SameCycle` out of a swapped point transfers to the
 swap-multiplied permutation, up to landing in either swap orbit. -/
-private theorem sameCycle_swap_mul_of_left [Fintype Y] [DecidableEq Y]
+private theorem sameCycle_swap_mul_of_left [Finite Y] [DecidableEq Y]
     {g : Perm Y} {x y u : Y}
     (h : g.SameCycle x u) :
     (Equiv.swap x y * g).SameCycle x u ∨
       (Equiv.swap x y * g).SameCycle y u := by
+  let : Fintype Y := Fintype.ofFinite Y
   obtain ⟨i, _, _, hiu⟩ := Equiv.Perm.SameCycle.exists_pow_eq _ h
   rw [← hiu]
   exact sameCycle_swap_mul_pow_left g x y i

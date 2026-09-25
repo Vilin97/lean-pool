@@ -36,6 +36,7 @@ namespace RS
 
 /-! ## The two-label `∂`-relabel of a boundary state -/
 
+open scoped Classical in
 /-- Apply the odd-partner involution to the (odd) state entries at
 two labels, leaving all other labels untouched. -/
 noncomputable def stateOddFlip {k ℓ : ℕ} {α : Type}
@@ -49,16 +50,19 @@ section StateFlip
 variable {k ℓ : ℕ} {α : Type} {st : GenBoundaryState k ℓ α}
   {i₁ i₂ : α}
 
+open scoped Classical in
 /-- Away from the two labels the state is unchanged. -/
 theorem stateOddFlip_of_ne {i : α} (h1 : i ≠ i₁) (h2 : i ≠ i₂) :
     stateOddFlip st i₁ i₂ i = st i :=
   ite_eq_right (fun h => h.elim h1 h2)
 
+open scoped Classical in
 /-- At the first label the state entry is `∂`-flipped. -/
 theorem stateOddFlip_left :
     stateOddFlip st i₁ i₂ i₁ = Sum.map id (oddPartner ℓ) (st i₁) :=
   ite_eq_left (Or.inl rfl)
 
+open scoped Classical in
 /-- At the second label likewise. -/
 theorem stateOddFlip_right :
     stateOddFlip st i₁ i₂ i₂ = Sum.map id (oddPartner ℓ) (st i₂) :=
@@ -79,6 +83,7 @@ theorem stateOddFlip_right_odd {c : Fin (2 * ℓ)}
   rw [stateOddFlip_right, hc]
   rfl
 
+open scoped Classical in
 /-- The relabel preserves odd-ness of every entry. -/
 theorem stateOddFlip_isInr (i : α) :
     (∃ c, stateOddFlip st i₁ i₂ i = Sum.inr c) ↔
@@ -97,6 +102,7 @@ theorem stateOddFlip_isInr (i : α) :
         fun _ => ⟨oddPartner ℓ b, rfl⟩⟩
   · rw [ite_eq_right h]
 
+open scoped Classical in
 /-- The relabel fixes every even entry. -/
 theorem stateOddFlip_isInl (i : α) (a : Fin k) :
     stateOddFlip st i₁ i₂ i = Sum.inl a ↔ st i = Sum.inl a := by
@@ -121,6 +127,7 @@ theorem genBoundarySubsetMatches_stateOddFlip {W : Fragment α}
     genBoundarySubsetMatches W s (stateOddFlip st i₁ i₂) :=
   fun i => (hbnd i).trans (stateOddFlip_isInr i).symm
 
+open scoped Classical in
 /-- **The relabel is an involution.** -/
 theorem stateOddFlip_stateOddFlip :
     stateOddFlip (stateOddFlip st i₁ i₂) i₁ i₂ = st := by
@@ -692,10 +699,12 @@ private theorem inb_portFlip (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
 
 /-! ### The flip set split by vertex -/
 
+open scoped Classical in
 private noncomputable def diffAtP (S : Finset W.Flag)
     (vv : W.Vertex) : Finset W.Flag :=
   S.filter (fun g => W.attach g = Sum.inl vv)
 
+open scoped Classical in
 private theorem mem_diffAtP {vv : W.Vertex} {g : W.Flag} :
     g ∈ diffAtP S vv ↔ g ∈ S ∧ W.attach g = Sum.inl vv :=
   Finset.mem_filter
@@ -1126,6 +1135,7 @@ private theorem inSign_pin₂ (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
 
 /-! ### The colouring-sum and even-sum identities -/
 
+open scoped Classical in
 private theorem phiSum_portFlip (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
     (hM : MixedFunctional k ℓ) (st : GenBoundaryState k ℓ α)
     {c₁ c₂ : Fin (2 * ℓ)} (hc₁ : st i₁ = Sum.inr c₁)
@@ -1205,6 +1215,7 @@ private theorem throughProduct_eq_body [LinearOrder α]
   unfold EdgeSubset.throughProduct
   exact Finset.prod_attach _ (tBody st)
 
+open scoped Classical in
 private theorem tBody_stateOddFlip [LinearOrder α]
     (h : PortedFlipSet κ S p₁ p₂ i₁ i₂)
     (st : GenBoundaryState k ℓ α) {f : W.Flag}
@@ -1281,6 +1292,7 @@ private theorem throughProduct_stateOddFlip [LinearOrder α]
 
 /-! ### The chain-flip ledger -/
 
+open scoped Classical in
 /-- **The chain-flip ledger at the colouring sum**: flipping the
 orientation of a ported chain multiplies the sum over colourings by
 the two chain-end colour signs and flips the state there.  This is

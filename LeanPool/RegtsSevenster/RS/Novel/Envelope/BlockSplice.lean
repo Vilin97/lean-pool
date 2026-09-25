@@ -73,7 +73,7 @@ private theorem blockRot_symm_val (a b : ℕ) (x : Fin (a + b)) :
 /-- The outer boundary permutation for the block splice:
 `w < n ↦ (K+K+n)+w`, `w ≥ n ↦ w-n`.  At `K = 0` this is the
 reversal `(finRotate (2n)).symm`. -/
-private def blockOuterPerm (K n : ℕ) :
+def blockOuterPerm (K n : ℕ) :
     Equiv.Perm (Fin ((K + n) + (K + n))) where
   toFun w :=
     if h : w.val < n then ⟨K + K + n + w.val, by have := w.isLt; omega⟩
@@ -191,7 +191,7 @@ private theorem block_label_val (K n : ℕ)
 
 /-- The flag identification of the block splice: wires 0..n-1 and
 K+n..K+2n-1 are the 2n through-strands, wires n..K+n-1 are the K cups. -/
-private def blockSpliceFlagEquiv (K n : ℕ) :
+def blockSpliceFlagEquiv (K n : ℕ) :
     (Fin (K + n + n) × Bool) ≃
       ((Fin (n + n) × Bool) ⊕ (Fin K × Bool)) where
   toFun p :=
@@ -320,7 +320,7 @@ private theorem block_ER_val (K n : ℕ)
 /-! ### Collapsing a value-identity recast -/
 
 /-- Collapse a value-identity recast. -/
-private noncomputable def relabel_defeq_collapse {a : ℕ}
+noncomputable def relabelDefeqCollapse {a : ℕ}
     (F : Fragment (Fin a)) (p : a = a) :
     (F.relabel (finCongr p)).Equiv F :=
   (Fragment.Equiv.relabelEq F
@@ -328,7 +328,7 @@ private noncomputable def relabel_defeq_collapse {a : ℕ}
     (Fragment.Equiv.relabelRefl F)
 
 /-- Composition against an outer-boundary recast. -/
-private noncomputable def compose_relabel_castOut
+noncomputable def composeRelabelCastOut
     {s t u u' : ℕ} (h : u = u')
     (F : Fragment (Fin (s + t))) (G : Fragment (Fin (t + u))) :
     (F.compose (G.relabel
@@ -337,8 +337,8 @@ private noncomputable def compose_relabel_castOut
         (finCongr (by rw [h] : s + u = s + u'))) := by
   cases h
   exact (Fragment.composeCongr (Fragment.Equiv.refl F)
-      (relabel_defeq_collapse G _)).trans
-    (relabel_defeq_collapse (F.compose G) _).symm
+      (relabelDefeqCollapse G _)).trans
+    (relabelDefeqCollapse (F.compose G) _).symm
 
 /-! ### The bridge: the rotation as through-strands and cups -/
 
@@ -629,7 +629,7 @@ private theorem blockSpliceFlagEquiv_pairing (K n : ℕ)
 /-- **The bridge**: the reshuffled big block rotation, as a
 relabelled bundle, is the through-strands tensored with K cups,
 up to the outer boundary permutation. -/
-private noncomputable def block_bridge (K n : ℕ) :
+noncomputable def blockBridge (K n : ℕ) :
     ((strandBundle (K + n + n)).relabel
         ((permHighEquiv (blockRot (K + n) n).symm).trans
           (pcReshuffle (K + n) (K + n) n n))).Equiv
@@ -648,9 +648,9 @@ private noncomputable def block_bridge (K n : ℕ) :
       ⟨fun x => x.elim Empty.elim Empty.elim⟩
     show (Empty : Type) ≃ (Empty ⊕ Empty : Type) from
       _root_.Equiv.equivOfIsEmpty _ _
-  attach_comm := block_bridge_attach_comm K n
-  pairing_comm := fun f =>
-    blockSpliceFlagEquiv_pairing K n f.1 f.2
+  attach_comm := by exact block_bridge_attach_comm K n
+  pairing_comm := fun f => by
+    exact blockSpliceFlagEquiv_pairing K n f.1 f.2
   circles_eq := rfl
 
 /-! ### The reshuffle decomposition -/
@@ -658,7 +658,7 @@ private noncomputable def block_bridge (K n : ℕ) :
 /-- The reshuffle decomposition: the reshuffled big block rotation
 is the through-strands tensored with K cups, up to the outer
 boundary permutation. -/
-private noncomputable def block_reshuffle_decomp (K n : ℕ) :
+noncomputable def blockReshuffleDecomp (K n : ℕ) :
     ((permFragment (blockRot (K + n) n).symm).relabel
         (pcReshuffle (K + n) (K + n) n n)).Equiv
       (((tensorFragment (s := n + n) (t := n + n) (u := 0) (v := K + K)
@@ -676,13 +676,13 @@ private noncomputable def block_reshuffle_decomp (K n : ℕ) :
     ((Fragment.Equiv.relabelTrans (strandBundle (K + n + n))
         (permHighEquiv (blockRot (K + n) n).symm)
         (pcReshuffle (K + n) (K + n) n n)).trans
-      (block_bridge K n))
+      (blockBridge K n))
 
 /-! ### The final flag map and bridge -/
 
 /-- The flag map of the final comparison: the G-flags cross
 sides, the cups flip into through-strands. -/
-private def blockFinalFlagEquiv (K n : ℕ)
+def blockFinalFlagEquiv (K n : ℕ)
     (𝔊 : Fragment (Fin (n + n))) :
     (𝔊.Flag ⊕ (Fin K × Bool)) ≃ ((Fin K × Bool) ⊕ 𝔊.Flag) where
   toFun := Sum.elim (fun g : 𝔊.Flag => Sum.inr g)
@@ -915,7 +915,7 @@ private theorem block_splice_bridge_circles (K n : ℕ)
 
 /-- The last comparison of the block splice: the leg-extended
 tensor against the rotated through-tensor. -/
-private noncomputable def block_splice_bridge (K n : ℕ)
+noncomputable def blockSpliceBridge (K n : ℕ)
     (𝔊 : Fragment (Fin (n + n))) :
     ((tensorFragment (s := 0) (t := n + n) (u := 0) (v := K + K)
         (𝔊.relabel
@@ -937,12 +937,12 @@ private noncomputable def block_splice_bridge (K n : ℕ)
     show (𝔊.Vertex ⊕ (Empty : Type)) ≃
         ((Empty : Type) ⊕ 𝔊.Vertex) from
       _root_.Equiv.sumComm _ _
-  attach_comm := block_splice_bridge_attach_comm K n 𝔊
+  attach_comm := by exact block_splice_bridge_attach_comm K n 𝔊
   pairing_comm := by
     rintro (g | ⟨k, c⟩)
     · rfl
     · rfl
-  circles_eq := block_splice_bridge_circles K n 𝔊
+  circles_eq := by exact block_splice_bridge_circles K n 𝔊
 
 /-! ### The splice -/
 
@@ -963,7 +963,7 @@ noncomputable def partialCloseBlockSplice (K n : ℕ)
   refine (Fragment.Equiv.relabelCongr
     (Fragment.composeCongr
       (Fragment.Equiv.refl _)
-      (block_reshuffle_decomp K n))
+      (blockReshuffleDecomp K n))
     (finCongr (by omega :
       0 + ((K + n) + (K + n)) = (K + n) + (K + n)))).trans ?_
   -- Step 3: composeRelabelOut (absorb outer perm into composition)
@@ -980,10 +980,10 @@ noncomputable def partialCloseBlockSplice (K n : ℕ)
             (n + n) + ((K + n) + (K + n))))))
     (finCongr (by omega :
       0 + ((K + n) + (K + n)) = (K + n) + (K + n)))).trans ?_
-  -- Step 4: compose_relabel_castOut (collapse the recast)
+  -- Step 4: composeRelabelCastOut (collapse the recast)
   refine (Fragment.Equiv.relabelCongr
     (Fragment.Equiv.relabelCongr
-      (compose_relabel_castOut
+      (composeRelabelCastOut
         (by omega : (n + n) + (K + K) = (K + n) + (K + n))
         (𝔊.relabel (finCongr (by omega : n + n = 0 + (n + n))))
         (tensorFragment (s := n + n) (t := n + n) (u := 0) (v := K + K)
@@ -1008,7 +1008,7 @@ noncomputable def partialCloseBlockSplice (K n : ℕ)
     (Fragment.composeCongr
         ((tensorFragmentUnitRight (𝔊.relabel
             (finCongr (by omega : n + n = 0 + (n + n))))).trans
-          (relabel_defeq_collapse _ _)).symm
+          (relabelDefeqCollapse _ _)).symm
         (Fragment.Equiv.refl _)).trans
       ((Fragment.tensorComposeInterchange
           (𝔊.relabel
@@ -1044,6 +1044,6 @@ noncomputable def partialCloseBlockSplice (K n : ℕ)
         ((tensorFragment (strandBundle K) 𝔊).relabel
           (transposeEquiv (K + n) (K + n)))).trans
       (Fragment.Equiv.relabelTrans _ _ _)).symm
-  exact block_splice_bridge K n 𝔊
+  exact blockSpliceBridge K n 𝔊
 
 end RS

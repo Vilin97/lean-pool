@@ -73,7 +73,7 @@ noncomputable def snakeFragLEquiv :
   flagEquiv := _root_.Equiv.ofBijective
     (fun g : Fin 1 × Bool =>
       snakeFragL.boundaryFlag (if g.2 then 1 else 0))
-    ((Fintype.bijective_iff_injective_and_card _).mpr
+    (by exact (Fintype.bijective_iff_injective_and_card _).mpr
       ⟨by
         intro a b h
         obtain ⟨i, ba⟩ := a
@@ -92,7 +92,7 @@ noncomputable def snakeFragLEquiv :
         · exact absurd h (by decide)
         · rfl,
         by decide⟩)
-  vertexEquiv := _root_.Equiv.equivOfIsEmpty _ _
+  vertexEquiv := @_root_.Equiv.equivOfIsEmpty _ _ (by infer_instance) (by infer_instance)
   attach_comm := fun g => by
     obtain ⟨i, b⟩ := g
     have hi : i = ⟨0, Nat.zero_lt_one⟩ := Fin.ext (by
@@ -115,7 +115,7 @@ noncomputable def snakeFragREquiv :
   flagEquiv := _root_.Equiv.ofBijective
     (fun g : Fin 1 × Bool =>
       snakeFragR.boundaryFlag (if g.2 then 1 else 0))
-    ((Fintype.bijective_iff_injective_and_card _).mpr
+    (by exact (Fintype.bijective_iff_injective_and_card _).mpr
       ⟨by
         intro a b h
         obtain ⟨i, ba⟩ := a
@@ -134,7 +134,7 @@ noncomputable def snakeFragREquiv :
         · exact absurd h (by decide)
         · rfl,
         by decide⟩)
-  vertexEquiv := _root_.Equiv.equivOfIsEmpty _ _
+  vertexEquiv := @_root_.Equiv.equivOfIsEmpty _ _ (by infer_instance) (by infer_instance)
   attach_comm := fun g => by
     obtain ⟨i, b⟩ := g
     have hi : i = ⟨0, Nat.zero_lt_one⟩ := Fin.ext (by

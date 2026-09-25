@@ -768,7 +768,8 @@ noncomputable def absLabelL (s t u v : ℕ) :
   ((interfaceSurvEquiv 0 ((s + u) + (t + v)) 0).trans
     finSumFinEquiv))))))))))
 
-private theorem absPs0_wf (s t u v : ℕ) :
+/-- The pulled-back absorption pairs form a well-formed gluing list. -/
+theorem absorptionPairs_wf (s t u v : ℕ) :
     Fragment.PairsWF (absPs0 s t u v) := by
   apply Fragment.mapPairs_wf
   exact Fragment.liftPairs_wf _ _ (tensorPairsA_wf s t u v).append_right
@@ -809,8 +810,8 @@ noncomputable def absNormalLeft {s t u v : ℕ}
         xCrossPairs s t u v) := tensorPairsA_wf s t u v
   have wfLift : Fragment.PairsWF (absQsLift s t u v) :=
     Fragment.liftPairs_wf _ _ wfA.append_right wfA.append_sep
-  have wfPs0 : Fragment.PairsWF (absPs0 s t u v) :=
-    absPs0_wf s t u v
+  have wfPs0 : Fragment.PairsWF (absPs0 s t u v) := by
+    exact absorptionPairs_wf s t u v
   let Zg := Fragment.glueList (z.disjUnion G)
     (zClosePairs s t u v) (zClosePairs_wf s t u v)
   let AmbL := (X.disjUnion z).disjUnion G

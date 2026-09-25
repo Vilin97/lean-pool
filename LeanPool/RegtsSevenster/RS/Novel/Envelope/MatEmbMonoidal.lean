@@ -400,17 +400,17 @@ private theorem matEmb_right_unitality
 `εIso : 𝟙_ (Mat_ C) ≅ (Mat_.embedding C).obj (𝟙_ C)`, the identity since
 these coincide, and `μIso X Y : emb X ⊗ emb Y ≅ emb (X ⊗ Y)` from
 `matEmbTensorIso`. -/
-private noncomputable def matEmbCoreMonoidal
+noncomputable def matEmbCoreMonoidal
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [MonoidalPreadditive C] :
     (Mat_.embedding C).CoreMonoidal where
   εIso := Iso.refl _
   μIso X Y := matEmbTensorIso X Y
-  μIso_hom_natural_left := matEmb_μ_natural_left
-  μIso_hom_natural_right := matEmb_μ_natural_right
-  associativity := matEmb_associativity
-  left_unitality := matEmb_left_unitality
-  right_unitality := matEmb_right_unitality
+  μIso_hom_natural_left := by exact matEmb_μ_natural_left
+  μIso_hom_natural_right := by exact matEmb_μ_natural_right
+  associativity := by exact matEmb_associativity
+  left_unitality := by exact matEmb_left_unitality
+  right_unitality := by exact matEmb_right_unitality
 
 /-- The embedding `Mat_.embedding C` is strong monoidal.  The full `Monoidal`
 structure, `OplaxMonoidal` coherence included, comes from `CoreMonoidal`. -/

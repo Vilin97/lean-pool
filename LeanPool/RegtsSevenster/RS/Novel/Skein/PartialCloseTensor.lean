@@ -358,8 +358,8 @@ noncomputable def pcTensorNormal {s t u v : ℕ}
         (pcTensorLabel s t u v)) := by
   let eP := pcTensorPeel s t u v
   let qsP := pcTensorQs s t u v
-  have wfqsP : Fragment.PairsWF qsP :=
-    pcTensorQs_wf s t u v
+  have wfqsP : Fragment.PairsWF qsP := by
+    exact pcTensorQs_wf s t u v
   let shufE := sumShuffleEquiv (Fin (u + v)) (Fin (s + t))
     (Fin (u + v))
   let ps₂ := Fragment.inrPairs (α := Fin (s + t))

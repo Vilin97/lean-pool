@@ -731,12 +731,12 @@ noncomputable def interchangeNormalRight
   have L2B := Equiv.relabelFlip'
     (glueListEqEquiv
       ((GL₁.disjUnion (F₂.disjUnion G₂)).relabel e_l)
-      (liftPairs_inlPairs_inrPairs ips₁ ips₂ wf_lr.append_sep)
+      (by exact liftPairs_inlPairs_inrPairs ips₁ ips₂ wf_lr.append_sep)
       (liftPairs_wf _ _ wf_lr.append_right wf_lr.append_sep)
       (Fragment.mapPairs_wf e_l _
         (inrPairs_wf ips₂ wf₂))
       (List.Perm.of_eq
-        (liftPairs_inlPairs_inrPairs ips₁ ips₂
+        (by exact liftPairs_inlPairs_inrPairs ips₁ ips₂
           wf_lr.append_sep)))
   -- L2R: peel e_l through second-stage glueList
   have L2R := glueListRelabel
@@ -774,7 +774,7 @@ noncomputable def interchangeNormalRight
     (tensorFragment G₁ G₂)).trans
     ((Equiv.relabelCongr C_total surv_c).trans
       ((Equiv.relabelTrans _ _ _).trans
-        (Equiv.relabelEq _ (interchange_survivor_relabel_eq _
+        (Equiv.relabelEq _ (by exact interchange_survivor_relabel_eq _
           (fun x => by cases x <;> rfl)))))
 
 /-! ### Final assembly -/

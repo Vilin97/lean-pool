@@ -429,8 +429,8 @@ noncomputable def capPeelEquiv (m : ℕ) :
     show Empty ≃ (Empty ⊕ Empty) from
       _root_.Equiv.equivOfIsEmpty _ _
   -- ═══════ ATTACHMENT ═══════
-  attach_comm := capPeelEquiv_attach_comm m
-  pairing_comm := capPeelEquiv_pairing_comm m
+  attach_comm := by exact capPeelEquiv_attach_comm m
+  pairing_comm := by exact capPeelEquiv_pairing_comm m
   circles_eq := rfl
 
 variable {R : ℕ} (f : EdgeRankParameter R)

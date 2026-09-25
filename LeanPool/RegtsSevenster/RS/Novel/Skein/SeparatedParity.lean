@@ -128,10 +128,11 @@ private theorem swap_mul_pow_eq [DecidableEq Y]
 
 /-- **Untouched orbits**: `SameCycle` from a point in neither
 swapped orbit transfers across the swap-multiplication. -/
-theorem sameCycle_swap_mul_iff [Fintype Y] [DecidableEq Y]
+theorem sameCycle_swap_mul_iff [Finite Y] [DecidableEq Y]
     {g : Perm Y} {x y u : Y}
     (hux : ¬ g.SameCycle u x) (huy : ¬ g.SameCycle u y) (v : Y) :
     (Equiv.swap x y * g).SameCycle u v ↔ g.SameCycle u v := by
+  let : Fintype Y := Fintype.ofFinite Y
   have hx : ∀ k : ℕ, (g ^ k) u ≠ x := by
     intro k hk
     exact hux (sameCycle_of_pow_eq hk)
@@ -221,10 +222,11 @@ private theorem swap_mul_support_subset [Fintype Y] [DecidableEq Y]
 
 /-- **No crossover**: swapping two points of one cycle separates
 them. -/
-private theorem not_sameCycle_swap_mul [Fintype Y] [DecidableEq Y]
+private theorem not_sameCycle_swap_mul [Finite Y] [DecidableEq Y]
     {g : Perm Y} {x y : Y}
     (hxy : x ≠ y) (hsc : g.SameCycle x y) :
     ¬ (Equiv.swap x y * g).SameCycle x y := by
+  let : Fintype Y := Fintype.ofFinite Y
   have hex : ∃ i, 0 < i ∧ (g ^ i) x = y := by
     obtain ⟨i, hi0, _, hiy⟩ := Equiv.Perm.SameCycle.exists_pow_eq _ hsc
     exact ⟨i, hi0, hiy⟩
@@ -280,10 +282,11 @@ private theorem not_sameCycle_swap_mul [Fintype Y] [DecidableEq Y]
 
 /-- **Merging**: swapping two points of different orbits joins
 them. -/
-theorem sameCycle_swap_mul_of_not [Fintype Y] [DecidableEq Y]
+theorem sameCycle_swap_mul_of_not [Finite Y] [DecidableEq Y]
     {g : Perm Y} {x y : Y}
     (_hxy : x ≠ y) (hsc : ¬ g.SameCycle x y) :
     (Equiv.swap x y * g).SameCycle x y := by
+  let : Fintype Y := Fintype.ofFinite Y
   have hex : ∃ i, 0 < i ∧ (g ^ i) x = x := by
     refine ⟨orderOf g, ?_, ?_⟩
     · exact orderOf_pos g

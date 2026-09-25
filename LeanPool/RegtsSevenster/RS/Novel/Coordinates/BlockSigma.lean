@@ -20,21 +20,21 @@ block to enumerate the concatenated total.
 namespace RS
 
 /-- Split the sigma over a cons list into head + tail. -/
-private def blockSigmaSplitFun (d : ℕ) (ds : List ℕ) :
+def blockSigmaSplitFun (d : ℕ) (ds : List ℕ) :
     (Σ v : Fin (ds.length + 1), Fin ((d :: ds).get v)) →
       Fin d ⊕ (Σ w : Fin ds.length, Fin (ds.get w))
   | ⟨⟨0, _⟩, j⟩ => Sum.inl j
   | ⟨⟨v + 1, hv⟩, j⟩ => Sum.inr ⟨⟨v, by omega⟩, j⟩
 
 /-- Inverse of the split. -/
-private def blockSigmaSplitInv (d : ℕ) (ds : List ℕ) :
+def blockSigmaSplitInv (d : ℕ) (ds : List ℕ) :
     Fin d ⊕ (Σ w : Fin ds.length, Fin (ds.get w)) →
       (Σ v : Fin (ds.length + 1), Fin ((d :: ds).get v))
   | Sum.inl j => ⟨⟨0, by omega⟩, j⟩
   | Sum.inr ⟨w, j⟩ => ⟨w.succ, j⟩
 
 /-- The sigma over a cons list splits as head + tail. -/
-private def blockSigmaSplit (d : ℕ) (ds : List ℕ) :
+def blockSigmaSplit (d : ℕ) (ds : List ℕ) :
     (Σ v : Fin (ds.length + 1), Fin ((d :: ds).get v)) ≃
       Fin d ⊕ (Σ w : Fin ds.length, Fin (ds.get w)) where
   toFun := blockSigmaSplitFun d ds

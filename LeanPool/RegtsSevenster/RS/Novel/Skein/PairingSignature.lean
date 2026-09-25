@@ -38,6 +38,7 @@ theorem chordCross_of_samePairing
   unfold ChordCross
   rw [h b.val b.prop, h b'.val b'.prop]
 
+open scoped Classical in
 /-- **The crossing count is a pairing invariant.** -/
 theorem chordCrossingCount_of_samePairing
     [LinearOrder α] {W : Fragment α} {F : EdgeSubset W}

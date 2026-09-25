@@ -22,7 +22,8 @@ namespace RS
 
 namespace Fragment
 
-private def pcSwapFun (t : ℕ) :
+/-- Swap the two boundary summands in the comparison of opposite pair closures. -/
+def pairCloseSwapFun (t : ℕ) :
     Fin (0 + t) ⊕ Fin (t + 0) →
       Fin (0 + t) ⊕ Fin (t + 0) :=
   Sum.elim
@@ -31,19 +32,19 @@ private def pcSwapFun (t : ℕ) :
 
 /-- Self-inverse sum-swap equivalence used in the
 `pairClose` commutativity proof. -/
-private def pairCloseSwap (t : ℕ) :
+def pairCloseSwap (t : ℕ) :
     Fin (0 + t) ⊕ Fin (t + 0) ≃
       Fin (0 + t) ⊕ Fin (t + 0) where
-  toFun := pcSwapFun t
-  invFun := pcSwapFun t
+  toFun := pairCloseSwapFun t
+  invFun := pairCloseSwapFun t
   left_inv x := by
-    rcases x with a | b <;> simp [pcSwapFun, finCongr]
+    rcases x with a | b <;> simp [pairCloseSwapFun, finCongr]
   right_inv x := by
-    rcases x with a | b <;> simp [pcSwapFun, finCongr]
+    rcases x with a | b <;> simp [pairCloseSwapFun, finCongr]
 
 /-- The disjoint-union ambients of `pairClose F G`
 and `pairClose G F` are related by `pairCloseSwap`. -/
-private noncomputable def pairCloseAmbient
+noncomputable def pairCloseAmbient
     {t : ℕ} (F G : Fragment (Fin t)) :
     (disjUnion
       (F.relabel (finCongr (by omega : t = 0 + t)))
@@ -91,7 +92,7 @@ private noncomputable def pairCloseAmbient
 
 /-- `mapPairs` through `(pairCloseSwap t).symm` on
 the interface pairs yields the swap of each pair. -/
-private theorem mapPairs_pcs_symm (t : ℕ) :
+theorem mapPairs_pairCloseSwap_symm (t : ℕ) :
     mapPairs (pairCloseSwap t).symm
       (interfacePairs 0 t 0) =
       (interfacePairs 0 t 0).map Prod.swap := by
@@ -100,12 +101,12 @@ private theorem mapPairs_pcs_symm (t : ℕ) :
   refine congrArg List.reverse
     (List.map_congr_left fun k _ => ?_)
   -- Each pair: (Sum.inl ⟨0+k, _⟩, Sum.inr ⟨k, _⟩)
-  -- .symm acts as pcSwapFun since self-inverse
-  change (pcSwapFun t (Sum.inl ⟨0 + k.val, _⟩),
-        pcSwapFun t (Sum.inr ⟨k.val, _⟩)) =
+  -- .symm acts as pairCloseSwapFun since self-inverse
+  change (pairCloseSwapFun t (Sum.inl ⟨0 + k.val, _⟩),
+        pairCloseSwapFun t (Sum.inr ⟨k.val, _⟩)) =
     (Sum.inr ⟨k.val, _⟩,
      Sum.inl ⟨0 + k.val, _⟩)
-  simp only [pcSwapFun, Sum.elim_inl,
+  simp only [pairCloseSwapFun, Sum.elim_inl,
     Sum.elim_inr]
   exact Prod.ext
     (congrArg Sum.inr (Fin.ext (by simp)))
@@ -152,8 +153,8 @@ noncomputable def pairCloseComm {t : ℕ}
   -- glueListRelabel pulls e through
   have rl := glueListRelabel A_GF e mips wf_m
   -- mips = ips.map Prod.swap
-  have hswap : mips = ips.map Prod.swap :=
-    mapPairs_pcs_symm t
+  have hswap : mips = ips.map Prod.swap := by
+    exact mapPairs_pairCloseSwap_symm t
   have wf_sw := swapPairs_wf ips wf
   -- Bridge mips to ips.map Prod.swap
   have eq2 := glueListEqEquiv A_GF hswap

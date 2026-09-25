@@ -37,6 +37,7 @@ namespace RS
 
 /-! ## Membership characterizations (any fragment) -/
 
+open scoped Classical in
 private theorem mem_throughFlags_iff {γ : Type} {W : Fragment γ}
     {F : EdgeSubset W} {f : W.Flag} :
     f ∈ F.throughFlags ↔ f ∈ F.flags ∧
@@ -455,24 +456,26 @@ variable {α β : Type} {W₁ : Fragment α} {W₂ : Fragment β}
 
 /-! ### Restriction to the components -/
 
-private noncomputable def leftDescend (κ : F.RelTransitionSystem)
+/-- Restrict a union matching to a left flag, fixing it if the image lies on the right. -/
+noncomputable def factorLeftDescend (κ : F.RelTransitionSystem)
     (g : W₁.Flag) : W₁.Flag :=
   Sum.elim id (fun _ => g) (κ.match_ (Sum.inl g))
 
-private noncomputable def rightDescend (κ : F.RelTransitionSystem)
+/-- Restrict a union matching to a right flag, fixing it if the image lies on the left. -/
+noncomputable def factorRightDescend (κ : F.RelTransitionSystem)
     (g : W₂.Flag) : W₂.Flag :=
   Sum.elim (fun _ => g) id (κ.match_ (Sum.inr g))
 
 private theorem leftDescend_spec (κ : F.RelTransitionSystem)
     {g : W₁.Flag} (hg : g ∈ (leftSub F).internalFlags) :
-    κ.match_ (Sum.inl g) = Sum.inl (leftDescend κ g) := by
+    κ.match_ (Sum.inl g) = Sum.inl (factorLeftDescend κ g) := by
   have hgU : (Sum.inl g : (W₁.disjUnion W₂).Flag) ∈ F.internalFlags :=
     inl_mem_internal.mpr hg
   obtain ⟨w, hw⟩ := (leftSub F).attach_internal_of_mem hg
   have hvert := κ.match_vertex _ hgU (Sum.inl w)
     (attach_inl_eq_inl.mpr hw)
   rcases hm : κ.match_ (Sum.inl g) with g' | g'
-  · unfold leftDescend
+  · unfold factorLeftDescend
     rw [hm]
     rfl
   · rw [hm] at hvert
@@ -480,7 +483,7 @@ private theorem leftDescend_spec (κ : F.RelTransitionSystem)
 
 private theorem rightDescend_spec (κ : F.RelTransitionSystem)
     {g : W₂.Flag} (hg : g ∈ (rightSub F).internalFlags) :
-    κ.match_ (Sum.inr g) = Sum.inr (rightDescend κ g) := by
+    κ.match_ (Sum.inr g) = Sum.inr (factorRightDescend κ g) := by
   have hgU : (Sum.inr g : (W₁.disjUnion W₂).Flag) ∈ F.internalFlags :=
     inr_mem_internal.mpr hg
   obtain ⟨w, hw⟩ := (rightSub F).attach_internal_of_mem hg
@@ -489,20 +492,20 @@ private theorem rightDescend_spec (κ : F.RelTransitionSystem)
   rcases hm : κ.match_ (Sum.inr g) with g' | g'
   · rw [hm] at hvert
     exact absurd hvert attach_inl_ne_inr
-  · unfold rightDescend
+  · unfold factorRightDescend
     rw [hm]
     rfl
 
 private theorem leftDescend_mem (κ : F.RelTransitionSystem)
     {g : W₁.Flag} (hg : g ∈ (leftSub F).internalFlags) :
-    leftDescend κ g ∈ (leftSub F).internalFlags := by
+    factorLeftDescend κ g ∈ (leftSub F).internalFlags := by
   have h := κ.match_mem _ (inl_mem_internal.mpr hg)
   rw [leftDescend_spec κ hg] at h
   exact inl_mem_internal.mp h
 
 private theorem rightDescend_mem (κ : F.RelTransitionSystem)
     {g : W₂.Flag} (hg : g ∈ (rightSub F).internalFlags) :
-    rightDescend κ g ∈ (rightSub F).internalFlags := by
+    factorRightDescend κ g ∈ (rightSub F).internalFlags := by
   have h := κ.match_mem _ (inr_mem_internal.mpr hg)
   rw [rightDescend_spec κ hg] at h
   exact inr_mem_internal.mp h
@@ -512,7 +515,7 @@ component: the matching never crosses between components, so it
 restricts. -/
 noncomputable def leftRel (κ : F.RelTransitionSystem) :
     (leftSub F).RelTransitionSystem where
-  match_ := leftDescend κ
+  match_ := factorLeftDescend κ
   match_invol g hg := by
     have h := κ.match_invol _ (inl_mem_internal.mpr hg)
     rw [leftDescend_spec κ hg,
@@ -522,7 +525,7 @@ noncomputable def leftRel (κ : F.RelTransitionSystem) :
     have h := κ.match_ne _ (inl_mem_internal.mpr hg)
     rw [leftDescend_spec κ hg, heq] at h
     exact h rfl
-  match_mem g hg := leftDescend_mem κ hg
+  match_mem g hg := by exact leftDescend_mem κ hg
   match_vertex g hg v hv := by
     have h := κ.match_vertex _ (inl_mem_internal.mpr hg)
       (Sum.inl v) (attach_inl_eq_inl.mpr hv)
@@ -532,7 +535,7 @@ noncomputable def leftRel (κ : F.RelTransitionSystem) :
 /-- The restriction to the right component. -/
 noncomputable def rightRel (κ : F.RelTransitionSystem) :
     (rightSub F).RelTransitionSystem where
-  match_ := rightDescend κ
+  match_ := factorRightDescend κ
   match_invol g hg := by
     have h := κ.match_invol _ (inr_mem_internal.mpr hg)
     rw [rightDescend_spec κ hg,
@@ -542,7 +545,7 @@ noncomputable def rightRel (κ : F.RelTransitionSystem) :
     have h := κ.match_ne _ (inr_mem_internal.mpr hg)
     rw [rightDescend_spec κ hg, heq] at h
     exact h rfl
-  match_mem g hg := rightDescend_mem κ hg
+  match_mem g hg := by exact rightDescend_mem κ hg
   match_vertex g hg v hv := by
     have h := κ.match_vertex _ (inr_mem_internal.mpr hg)
       (Sum.inr v) (attach_inr_eq_inr.mpr hv)

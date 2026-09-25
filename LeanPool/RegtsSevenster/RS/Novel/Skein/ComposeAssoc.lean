@@ -728,8 +728,8 @@ noncomputable def assocNormalLeft {s t u v : ℕ}
   let ps'' := Fragment.mapPairs i.symm ps'
   let wfps' : Fragment.PairsWF ps' :=
     Fragment.mapPairs_wf σ.symm _ (interfacePairs_wf s u v)
-  let wfps'' : Fragment.PairsWF ps'' :=
-    lhsOuterPairs_wf s t u v
+  let wfps'' : Fragment.PairsWF ps'' := by
+    exact lhsOuterPairs_wf s t u v
   let A := (F.disjUnion G).disjUnion H
   let X := Fragment.glueList A
     (Fragment.inlPairs (interfacePairs s t u))
@@ -938,12 +938,12 @@ noncomputable def assocNormalRight {s t u v : ℕ}
     (interfacePairs t u v)
   let e2a := (_root_.Equiv.sumAssoc (Fin (s + t)) (Fin (t + u))
     (Fin (u + v))).symm.symm
-  let wfqs1 : Fragment.PairsWF (rhsQs1 s t u v) :=
-    rhsQs1_wf s t u v
+  let wfqs1 : Fragment.PairsWF (rhsQs1 s t u v) := by
+    exact rhsQs1_wf s t u v
   let wfqs2 : Fragment.PairsWF (rhsQs2 s t u v) :=
     Fragment.mapPairs_wf i'.symm _ wfqs1
-  let wfqs3 : Fragment.PairsWF (rhsQs3 s t u v) :=
-    rhsQs3_wf s t u v
+  let wfqs3 : Fragment.PairsWF (rhsQs3 s t u v) := by
+    exact rhsQs3_wf s t u v
   let uA' := Fragment.mapPairs e2a.symm
     (Fragment.inrPairs (α := Fin (s + t)) (interfacePairs t u v))
   let wfuA' : Fragment.PairsWF uA' :=

@@ -103,7 +103,6 @@ private theorem superVectMu_associativity_evenMap
       svWhiskerRight_evenMap_inl,
       svWhiskerLeft_evenMap_inl,
       svAssoc_evenMap_ee,
-
       superVectMu_evenMap_ee,
       superVectHom_evenMap_apply,
       LinearEquiv.symm_apply_apply]
@@ -126,7 +125,6 @@ private theorem superVectMu_associativity_evenMap
       svWhiskerRight_evenMap_inl,
        svWhiskerLeft_evenMap_inr,
        svAssoc_evenMap_oo,
-
       superVectMu_evenMap_ee, superVectMu_evenMap_oo,
        superVectMu_oddMap_oe,
       superVectHom_evenMap_apply,
@@ -150,7 +148,6 @@ private theorem superVectMu_associativity_evenMap
        svWhiskerRight_evenMap_inr,
       svWhiskerLeft_evenMap_inl,
         svAssoc_evenMap_eo,
-
        superVectMu_evenMap_oo,
       superVectMu_oddMap_eo,
       superVectHom_evenMap_apply,
@@ -174,7 +171,6 @@ private theorem superVectMu_associativity_evenMap
     simp only [svComp_evenMap_apply,
        svWhiskerRight_evenMap_inr,
        svWhiskerLeft_evenMap_inr,
-
       svAssoc_evenMap_oe,
        superVectMu_evenMap_oo,
       superVectMu_oddMap_eo, superVectMu_oddMap_oe,
@@ -270,7 +266,6 @@ private theorem superVectMu_associativity_oddMap
     simp only [ svComp_oddMap_apply,
        svWhiskerRight_oddMap_inr,
       svWhiskerLeft_oddMap_inl,
-
       svAssoc_oddMap_eo,
       superVectMu_oddMap_eo, superVectMu_oddMap_oe,
        superVectHom_oddMap_apply,
@@ -293,7 +288,6 @@ private theorem superVectMu_associativity_oddMap
     simp only [ svComp_oddMap_apply,
        svWhiskerRight_oddMap_inr,
        svWhiskerLeft_oddMap_inr,
-
        svAssoc_oddMap_oe,
       superVectMu_evenMap_ee,
        superVectMu_oddMap_oe,

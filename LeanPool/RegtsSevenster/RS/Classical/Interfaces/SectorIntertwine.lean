@@ -109,7 +109,7 @@ theorem oddInversions_allEvenEmb (k ℓ n : ℕ)
 /-! ## Colour-model basis vectors -/
 
 /-- A basis vector of the even colour model at an even colouring. -/
-private noncomputable def evenBasis (k ℓ n : ℕ)
+noncomputable def evenBasis (k ℓ n : ℕ)
     (c : {c : MixedColouring k ℓ n // c.IsEven}) :
     (superPow (stdSuperPair k ℓ) n).even :=
   (colourPowerEquiv k ℓ n).evenEquiv.symm

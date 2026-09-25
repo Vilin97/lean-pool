@@ -931,8 +931,8 @@ noncomputable def rotateNormalLeft {m n p : ℕ}
     (interfacePairs m n p)
   let wfqs1 : Fragment.PairsWF (lhsQs1 m n p) :=
     Fragment.mapPairs_wf σL.symm _ (interfacePairs_wf 0 (m + p) 0)
-  let wfqs2 : Fragment.PairsWF (lhsQs2 m n p) :=
-    lhsQs2_wf m n p
+  let wfqs2 : Fragment.PairsWF (lhsQs2 m n p) := by
+    exact lhsQs2_wf m n p
   let A := (F.disjUnion H).disjUnion K
   let X := Fragment.glueList A
     (Fragment.inlPairs (interfacePairs m n p))
@@ -1139,8 +1139,8 @@ noncomputable def rotateNormalRight {m n p : ℕ}
         M₂).symm _ wfq1
   let wfq3 : Fragment.PairsWF (rotQ3 m n p) :=
     Fragment.mapPairs_wf i'.symm _ wfq2
-  let wfq4 : Fragment.PairsWF (rotQ4 m n p) :=
-    rotQ4_wf m n p
+  let wfq4 : Fragment.PairsWF (rotQ4 m n p) := by
+    exact rotQ4_wf m n p
   let A := (F.disjUnion H).disjUnion K
   let XKH := Fragment.glueList (K.disjUnion H) (hkPairs m n p)
     (hkPairs_wf m n p)
