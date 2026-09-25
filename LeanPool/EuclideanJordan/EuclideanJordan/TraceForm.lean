@@ -8,9 +8,12 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.Spectral
-import Mathlib.LinearAlgebra.Trace
-import Mathlib.LinearAlgebra.Projection
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.Spectral
+public import Mathlib.LinearAlgebra.Trace
+public import Mathlib.LinearAlgebra.Projection
+
 
 
 /-!
@@ -78,6 +81,8 @@ normalisation, and
     associative positive
 definite form rather than a normalised one, so `traceForm` is admissible there as it stands.
 -/
+
+@[expose] public section
 
 noncomputable section
 

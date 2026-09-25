@@ -8,7 +8,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.Power
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.Power
+
 
 
 /-!
@@ -55,6 +58,8 @@ exists with two users. Supplying the `Pow J ℕ+` instance and transporting `jpo
 across it is the upstream contribution. **Not done here** — that translation is unwritten, and
 this file should not be read as providing it.
 -/
+
+@[expose] public section
 
 namespace EuclideanJordan
 

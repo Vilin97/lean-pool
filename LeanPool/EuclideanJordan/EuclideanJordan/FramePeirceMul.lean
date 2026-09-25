@@ -8,7 +8,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.FramePeirce
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.FramePeirce
+
 
 
 /-!
@@ -106,6 +109,8 @@ The durable part is the one below.
 bounds a frame's cardinality by the rank and by the dimension, and nothing anywhere converts
 `dim V_{ii} = 1` into a statement about `rank J`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

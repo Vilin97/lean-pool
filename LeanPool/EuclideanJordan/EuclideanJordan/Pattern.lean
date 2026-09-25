@@ -8,7 +8,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.Block
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.Block
+
 
 
 /-!
@@ -42,6 +45,8 @@ one-line consequence is written out above so a reader can check it rather than t
 ★ **What is still not built:** the assembled direct sum `J = ⊕_{i ≤ j} J_{ij}`. These
 constraints say what the summands can be, not that every element decomposes into them.
 -/
+
+@[expose] public section
 
 namespace EuclideanJordan
 

@@ -8,7 +8,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.PeirceMul
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.PeirceMul
+
 
 
 /-!
@@ -40,6 +43,8 @@ and `EuclideanJordan/Frame.lean` assembles it (`opCommute_scalarOn_frame`).
 
 * Faraut and Korányi, *Analysis on Symmetric Cones*, Ch. IV.
 -/
+
+@[expose] public section
 
 namespace EuclideanJordan
 

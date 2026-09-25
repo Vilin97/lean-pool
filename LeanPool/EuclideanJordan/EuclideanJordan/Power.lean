@@ -8,7 +8,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.Frame
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.Frame
+
 
 
 /-!
@@ -55,6 +58,8 @@ this vocabulary, and because `commuteAt_two` is what made the general pattern vi
 ★ **Do not read `sq_mul_jpow` as power associativity.** It is the `m = 1` row of the table
 above and nothing more.
 -/
+
+@[expose] public section
 
 namespace EuclideanJordan
 

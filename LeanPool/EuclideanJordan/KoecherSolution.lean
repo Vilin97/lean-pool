@@ -8,11 +8,14 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Module.LinearMap.Defs
-import Mathlib.Analysis.Normed.Module.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import LeanPool.EuclideanJordan.EuclideanJordan.OrderAuto
+module
+
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.Module.LinearMap.Defs
+public import Mathlib.Analysis.Normed.Module.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import LeanPool.EuclideanJordan.EuclideanJordan.OrderAuto
+
 
 
 /-!
@@ -73,6 +76,8 @@ Repeats the definition and the theorem statement of `KoecherChallenge.lean` verb
 reference library, and discharges the theorem from `EuclideanJordan.orderIso_preservesJordan`.  The
 local `IsSoS` is the same existential as `EuclideanJordan.IsSoS`, so the bridge is definitional.
 -/
+
+@[expose] public section
 
 namespace KoecherAlfsenShultz
 

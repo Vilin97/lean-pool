@@ -8,7 +8,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.Pattern
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.Pattern
+
 
 
 /-!
@@ -43,6 +46,8 @@ alone cross over; anything whose statement needs the ring instance — `jpow`, a
 power-associativity theorem — cannot be bridged this way, because the instance would have to
 exist before the statement elaborates.
 -/
+
+@[expose] public section
 namespace EuclideanJordan
 
 section Bridge

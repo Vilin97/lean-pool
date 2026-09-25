@@ -8,18 +8,21 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import Mathlib.Algebra.Jordan.Basic
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.DirectSum.Module
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Basic.Real.Basic
-import Mathlib.Data.Sym.Sym2
-import Mathlib.LinearAlgebra.BilinearMap
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.LinearAlgebra.Trace
-import LeanPool.EuclideanJordan.EuclideanJordan.TraceForm
-import LeanPool.EuclideanJordan.EuclideanJordan.FramePeirceMul
+module
+
+public import Mathlib.Algebra.Jordan.Basic
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.DirectSum.Module
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.Sym.Sym2
+public import Mathlib.LinearAlgebra.BilinearMap
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.LinearAlgebra.Trace
+public import LeanPool.EuclideanJordan.EuclideanJordan.TraceForm
+public import LeanPool.EuclideanJordan.EuclideanJordan.FramePeirceMul
+
 
 
 /-!
@@ -37,6 +40,8 @@ Neither part's vocabulary appears in the other's statements, no theorem of one i
 proof of the other, and the binders of all six statements are exactly those of the challenge
 file.  The part-level docstrings below are the originals and describe each bridge in detail.
 -/
+
+@[expose] public section
 
 /-! # Part I: the Jordan trace form -/
 

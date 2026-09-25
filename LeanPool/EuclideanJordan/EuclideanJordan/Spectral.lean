@@ -8,13 +8,16 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.Subalgebra
-import LeanPool.EuclideanJordan.EuclideanJordan.FormallyReal
-import LeanPool.EuclideanJordan.EuclideanJordan.Witness
-import LeanPool.EuclideanJordan.EuclideanJordan.Bridge
-import Mathlib.LinearAlgebra.Lagrange
-import Mathlib.Analysis.Complex.Polynomial.Basic
-import Mathlib.RingTheory.PrincipalIdealDomain
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.Subalgebra
+public import LeanPool.EuclideanJordan.EuclideanJordan.FormallyReal
+public import LeanPool.EuclideanJordan.EuclideanJordan.Witness
+public import LeanPool.EuclideanJordan.EuclideanJordan.Bridge
+public import Mathlib.LinearAlgebra.Lagrange
+public import Mathlib.Analysis.Complex.Polynomial.Basic
+public import Mathlib.RingTheory.PrincipalIdealDomain
+
 
 
 /-!
@@ -89,6 +92,8 @@ because of step 3. Multiplicities never enter, and neither does `Mathlib`'s `rad
 * Nothing here is a functional calculus: the resolution is produced, but no continuous or
   polynomial calculus is built on it.
 -/
+
+@[expose] public section
 
 namespace EuclideanJordan
 

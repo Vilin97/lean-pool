@@ -8,13 +8,16 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.DirectSum.Module
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Data.Sym.Sym2
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import LeanPool.EuclideanJordan.EuclideanJordan.FramePeirceMul
+module
+
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.DirectSum.Module
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Data.Sym.Sym2
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import LeanPool.EuclideanJordan.EuclideanJordan.FramePeirceMul
+
 
 
 /-!
@@ -136,6 +139,8 @@ resulting type is definitionally equal to, but not syntactically the same as, th
 challenge file states.  The contract here is that the two files' declaration types agree on the
 nose, so the extra instance is kept out of every statement.
 -/
+
+@[expose] public section
 
 noncomputable section
 

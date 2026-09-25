@@ -8,10 +8,13 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.FormallyReal
-import LeanPool.EuclideanJordan.EuclideanJordan.Block
-import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.HermitianMat.Jordan
-import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.HermitianMat.Inner
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.FormallyReal
+public import LeanPool.EuclideanJordan.EuclideanJordan.Block
+public import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.HermitianMat.Jordan
+public import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.HermitianMat.Inner
+
 
 
 /-!
@@ -55,6 +58,8 @@ theorem is live rather than conditional on an uninhabited hypothesis.
 with all three components nonzero, and nothing more. The rank-two carrier is used because it
 is the smallest place where a `1/2`-eigenvector exists, not because rank two matters here.
 -/
+
+@[expose] public section
 
 open HermMul EuclideanJordan
 

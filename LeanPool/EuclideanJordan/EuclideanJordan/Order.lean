@@ -8,9 +8,12 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.OrderUnitSpace
-import LeanPool.EuclideanJordan.EuclideanJordan.Spectral
-import LeanPool.EuclideanJordan.EuclideanJordan.HermitianBilin
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.OrderUnitSpace
+public import LeanPool.EuclideanJordan.EuclideanJordan.Spectral
+public import LeanPool.EuclideanJordan.EuclideanJordan.HermitianBilin
+
 
 
 /-!
@@ -83,6 +86,8 @@ Two deliberate choices, both forced by diamonds.
   `HermitianMat.inner_ge_zero` makes `⟪q i, A⟫ ≥ 0` and `inner_left_coeff` reads the
   coefficient off.
 -/
+
+@[expose] public section
 
 noncomputable section
 

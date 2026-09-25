@@ -8,7 +8,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.FramePeirceMul
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.FramePeirceMul
+
 
 
 /-!
@@ -69,6 +72,8 @@ carried as data and its cardinality bounds the rank from below, nothing more.
 The statement "a simple `J` has every block nonzero" is **not proved anywhere in this
 library**, which has no notion of a Jordan ideal to state simplicity with.
 -/
+
+@[expose] public section
 
 noncomputable section
 

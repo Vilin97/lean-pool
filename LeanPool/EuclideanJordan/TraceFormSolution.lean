@@ -8,13 +8,16 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import Mathlib.Algebra.Jordan.Basic
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.LinearAlgebra.BilinearMap
-import Mathlib.LinearAlgebra.Trace
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.Basic.Real.Basic
-import LeanPool.EuclideanJordan.EuclideanJordan.TraceForm
+module
+
+public import Mathlib.Algebra.Jordan.Basic
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.LinearAlgebra.BilinearMap
+public import Mathlib.LinearAlgebra.Trace
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.Basic.Real.Basic
+public import LeanPool.EuclideanJordan.EuclideanJordan.TraceForm
+
 
 /-!
 # Solution: the Jordan trace form
@@ -32,6 +35,8 @@ The one piece of real work is formal reality. The challenge states it as a hypot
 `EuclideanJordan.IsFormallyReal` is a class quantifying over an arbitrary `Finset`. The two differ
 only by reindexing along `Finset.equivFin`, done inline in each of the two positivity proofs.
 -/
+
+@[expose] public section
 
 namespace JordanTraceForm
 

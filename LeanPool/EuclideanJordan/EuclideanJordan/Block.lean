@@ -8,7 +8,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.Frame
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.Frame
+
 
 
 /-!
@@ -54,6 +57,8 @@ visible in the argument above: every claim about `q` is derived from
 they just stop being a Peirce decomposition. Callers wanting the FK reading should have `hq`
 in hand from `IsOrthIdemFamily`; the theorem simply does not need to be told.
 -/
+
+@[expose] public section
 
 namespace EuclideanJordan
 

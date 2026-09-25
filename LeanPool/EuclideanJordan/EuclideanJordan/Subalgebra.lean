@@ -8,8 +8,11 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.PowerAssoc
-import Mathlib.LinearAlgebra.Dimension.Finite
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.PowerAssoc
+public import Mathlib.LinearAlgebra.Dimension.Finite
+
 
 
 /-!
@@ -53,6 +56,8 @@ actually supplies to that proof is `exists_jpow_relation` (the nonzero annihilat
 development deliberately does not assume. The two theorems below say exactly what a bundled
 version would, without the bundling.
 -/
+
+@[expose] public section
 
 namespace EuclideanJordan
 

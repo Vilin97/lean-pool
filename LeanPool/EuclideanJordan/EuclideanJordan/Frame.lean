@@ -8,8 +8,11 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.Orthogonal
-import Mathlib.Algebra.BigOperators.Ring.Finset
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.Orthogonal
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+
 
 
 /-!
@@ -60,6 +63,8 @@ so only one `AddCommGroup` is ever in play. Concrete carriers are unaffected —
 facts needs it; it is what the *spectral* theorem produces and what the rank argument
 consumes. Keeping it out makes visible which results are independent of the spectral theorem.
 -/
+
+@[expose] public section
 
 namespace EuclideanJordan
 

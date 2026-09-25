@@ -8,10 +8,13 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import Mathlib.Basic.Real.Basic
-import Mathlib.Analysis.Normed.Module.Basic
-import Mathlib.Algebra.Order.Group.Defs
-import Mathlib.Tactic.Linarith
+module
+
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Analysis.Normed.Module.Basic
+public import Mathlib.Algebra.Order.Group.Defs
+public import Mathlib.Tactic.Linarith
+
 
 
 /-!
@@ -34,6 +37,8 @@ structure, not derived here as the order-unit norm.
 * Alfsen-Shultz, Geometry of State Spaces of Operator Algebras
 * van de Wetering, arXiv:1803.11139
 -/
+
+@[expose] public section
 
 noncomputable section
 

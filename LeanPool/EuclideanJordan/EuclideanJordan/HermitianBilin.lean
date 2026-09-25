@@ -8,8 +8,11 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.HermitianMat.Jordan
-import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.HermitianMat.Inner
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.HermitianMat.Jordan
+public import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.HermitianMat.Inner
+
 
 
 /-!
@@ -26,6 +29,8 @@ The bilinearity proofs go through `symmMul_toMat` and `symmMul_comm`; the ℝ-li
 than 𝕜-linearity) is the right statement because `HermitianMat n 𝕜` is only an ℝ-module —
 a 𝕜-multiple of a Hermitian matrix need not be Hermitian.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
 
-import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.Tactic.Commutes
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.Tactic.Commutes
+
 
 /-!
 # Tactic
@@ -12,3 +15,5 @@ import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.Tactic.Commutes
 Supporting modules for Euclidean Jordan algebras: power associativity, the spectral theorem, the
     trace form, Koecher/Alfsen-Shultz, and the frame Peirce decomposition.
 -/
+
+@[expose] public section

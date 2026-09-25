@@ -8,7 +8,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.PeirceSubalgebra
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.PeirceSubalgebra
+
 
 
 /-!
@@ -56,6 +59,8 @@ without restating it.
 ## Scope
 
 -/
+
+@[expose] public section
 
 noncomputable section
 

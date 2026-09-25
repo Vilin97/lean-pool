@@ -8,10 +8,13 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import Mathlib.Algebra.Jordan.Basic
-import Mathlib.Analysis.Normed.Module.Basic
-import Mathlib.Basic.Real.Basic
-import Mathlib.Tactic.LinearCombination
+module
+
+public import Mathlib.Algebra.Jordan.Basic
+public import Mathlib.Analysis.Normed.Module.Basic
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Tactic.LinearCombination
+
 
 
 /-!
@@ -75,6 +78,8 @@ searched them systematically.
 * Faraut and Korányi, *Analysis on Symmetric Cones*, Prop. IV.1.1.
 * McCrimmon, *A Taste of Jordan Algebras*, §II.8.
 -/
+
+@[expose] public section
 
 namespace EuclideanJordan
 

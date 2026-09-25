@@ -8,7 +8,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.PowerAssoc
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.PowerAssoc
+
 
 
 /-!
@@ -50,6 +53,8 @@ conclusion whose connecting lemma was already in the tree (after row 35 and the 
 **When a file's own docstring declares an exposure, try to close it before writing the sentence
 that documents it.**
 -/
+
+@[expose] public section
 
 namespace EuclideanJordan
 

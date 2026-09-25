@@ -8,12 +8,15 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.LinearAlgebra.BilinearMap
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Basic.Real.Basic
-import LeanPool.EuclideanJordan.EuclideanJordan.Spectral
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.LinearAlgebra.BilinearMap
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Basic.Real.Basic
+public import LeanPool.EuclideanJordan.EuclideanJordan.Spectral
+
 
 /-!
 # Solution: the single-element spectral theorem for a Euclidean Jordan algebra
@@ -27,6 +30,8 @@ exist before the statement elaborates. The instances the proof needs (a non-unit
 ring on `J`, `IsCommJordan`, `IsScalarTower ℝ J J`, `IsFormallyReal J`) are built inside the
 library from `m`, `hcomm`, `hjordan` and `hfr`, and none of them escapes into the statement.
 -/
+
+@[expose] public section
 
 namespace JordanSpectral
 

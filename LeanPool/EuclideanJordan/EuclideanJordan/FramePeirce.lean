@@ -8,7 +8,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.FrameExists
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.FrameExists
+
 
 
 /-!
@@ -102,6 +105,8 @@ existentially quantified.  Note what that does and does not settle: see the rank
 ## Scope
 
 -/
+
+@[expose] public section
 
 noncomputable section
 

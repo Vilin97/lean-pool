@@ -8,7 +8,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.Rank
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.Rank
+
 
 
 /-!
@@ -76,6 +79,8 @@ and bounding such a family by a frame's cardinality needs the frame Peirce decom
 frame conjugacy.  Nothing here is a step towards it.  Do not read `exists_jordanFrame` as
 "`J` has rank `n`".
 -/
+
+@[expose] public section
 
 noncomputable section
 

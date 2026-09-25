@@ -8,8 +8,11 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.Order
-import LeanPool.EuclideanJordan.EuclideanJordan.Pattern
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.Order
+public import LeanPool.EuclideanJordan.EuclideanJordan.Pattern
+
 
 
 /-!
@@ -106,6 +109,8 @@ carrying `EuclideanJordanAlgebra`, and `HermitianMat d 𝕜` already carries a `
 if one is ever declared, that scoped instance and this class's `toMul` will both be in scope
 inside `open HermMul` sections and one of them has to give way.
 -/
+
+@[expose] public section
 
 noncomputable section
 

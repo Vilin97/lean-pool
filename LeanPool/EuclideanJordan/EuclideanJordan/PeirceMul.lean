@@ -8,7 +8,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.Peirce
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.Peirce
+
 
 
 /-!
@@ -60,6 +63,8 @@ characterisation of the rank-two block.
 * Faraut and Korányi, *Analysis on Symmetric Cones*, Prop. IV.1.1 and Lemma IV.1.3.
 * McCrimmon, *A Taste of Jordan Algebras*, §II.8.
 -/
+
+@[expose] public section
 
 namespace EuclideanJordan
 

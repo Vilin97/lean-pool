@@ -8,8 +8,11 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.TraceForm
-import LeanPool.EuclideanJordan.EuclideanJordan.Order
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.TraceForm
+public import LeanPool.EuclideanJordan.EuclideanJordan.Order
+
 
 
 /-!
@@ -89,6 +92,8 @@ arXiv:1803.11139, Prop 5.3), the upgrade of a unital linear order isomorphism to
 automorphism, and the fixing and cocycle properties (vdW Props 5.5, 5.7).  **Only the upgrade is
 proved here.**  The other two are cited, not formalized, and nothing below establishes them.
 -/
+
+@[expose] public section
 
 noncomputable section
 

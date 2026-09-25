@@ -8,9 +8,12 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.EuclideanJordan.EuclideanJordan.FramePeirce
-import LeanPool.EuclideanJordan.EuclideanJordan.Witness
-import LeanPool.EuclideanJordan.EuclideanJordan.HermitianBilin
+module
+
+public import LeanPool.EuclideanJordan.EuclideanJordan.FramePeirce
+public import LeanPool.EuclideanJordan.EuclideanJordan.Witness
+public import LeanPool.EuclideanJordan.EuclideanJordan.HermitianBilin
+
 
 
 /-!
@@ -118,6 +121,8 @@ matrix entry.)  ★ Note what primitivity is **not**: it is not
 which is **not** proved to be the rank — `EuclideanJordan/Rank.lean` proves only `card ≤ rank` and
 `card ≤ finrank`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
