@@ -74,21 +74,21 @@ private theorem euclideanTrial_exists (eps M D : ℝ)
 noncomputable def euclideanM (eps M D : ℝ)
     (heps : 0 < eps) (hM : 0 < M) (hD : 0 < D)
     (x0 : Point d) (cached : CachedPair d) : ℕ :=
-  Classical.choose (euclideanTrial_exists eps M D heps hM hD x0 cached)
+  Classical.choose ((Classical.choose_spec V7.euclideanTrial).2 d eps M D heps hM hD x0 cached)
 
 /-- The selected horizon of the Euclidean OGM-G phase. -/
 noncomputable def euclideanN (eps M D : ℝ)
     (heps : 0 < eps) (hM : 0 < M) (hD : 0 < D)
     (x0 : Point d) (cached : CachedPair d) : ℕ :=
   Classical.choose (Classical.choose_spec
-    (euclideanTrial_exists eps M D heps hM hD x0 cached))
+    ((Classical.choose_spec V7.euclideanTrial).2 d eps M D heps hM hD x0 cached))
 
 /-- A Euclidean local trial selected with its certified two-phase horizons. -/
 noncomputable def euclideanTrialFor (eps M D : ℝ)
     (heps : 0 < eps) (hM : 0 < M) (hD : 0 < D)
     (x0 : Point d) (cached : CachedPair d) : LocalTrial d :=
   Classical.choose (Classical.choose_spec (Classical.choose_spec
-    (euclideanTrial_exists eps M D heps hM hD x0 cached)))
+    ((Classical.choose_spec V7.euclideanTrial).2 d eps M D heps hM hD x0 cached)))
 
 theorem euclideanTrialFor_spec (eps M D : ℝ)
     (heps : 0 < eps) (hM : 0 < M) (hD : 0 < D)
@@ -149,7 +149,7 @@ private theorem aboveTrial_exists (p : ℝ) (hp : 2 < p)
 noncomputable def aboveTrialFor (p : ℝ) (hp : 2 < p)
     (eps M D : ℝ) (heps : 0 < eps) (hM : 0 < M) (hD : 0 < D)
     (x0 : Point d) (cached : CachedPair d) : LocalTrial d :=
-  Classical.choose (aboveTrial_exists p hp eps M D heps hM hD x0 cached)
+  Classical.choose ((Classical.choose_spec (V7.aboveTrial p hp)).2 d eps M D heps hM hD x0 cached)
 
 theorem aboveTrialFor_spec (p : ℝ) (hp : 2 < p)
     (eps M D : ℝ) (heps : 0 < eps) (hM : 0 < M) (hD : 0 < D)
