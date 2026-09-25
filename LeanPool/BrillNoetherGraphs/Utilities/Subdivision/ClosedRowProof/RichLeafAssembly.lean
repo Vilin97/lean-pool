@@ -488,37 +488,34 @@ open Utilities
 open Utilities.Certificate.ContractionForestCensusGeneral
 variable {m n p : ℕ}
 
-/-- **The rich leaf's script reaches its plan's vertex, at any multiplicity.**
-
-The body of this lemma used to sit inline inside `richLeaf_sound`, specialised
-to one chip.  It is stated for `mult` chips because a legged rich leaf needs
-exactly the same argument at the doubled anchor: `mult = 1` is a rank anchor,
-`mult = m` is the `(comp x …)` plan certifying `D − m·1_x` winnable.  Nothing
-in the argument cared how many chips were withdrawn — only that W5 stays
-nonnegative after withdrawing them, which is the `hW5m` hypothesis. -/
-theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
-    (w : RichWitness) (Γ : Context) (hn : 0 < n)
+/-- The decoded census script realizes at least the certified endpoint contributions,
+including the case where the entire slot contracts to length zero. -/
+private theorem richCensusEndpoint_bounds
+    (core : ExplicitPotential.Core n p) (w : RichWitness) (Γ : Context) (hn : 0 < n)
     (x : List ℤ) (hx : Γ.Holds x)
     (hW1 : w.w1Checks core Γ = true) (hW2 : w.w2Checks core Γ = true)
-    (hW3 : w.w3Checks core = true) (hW4 : w.w4Checks core Γ = true)
-    (ℓ : Fin p → ℕ) (hCoord : ∀ e : Fin p, eval (coordForm e.val) x = (ℓ e : ℤ))
-    (hForest : IsForest core (zeroSet ℓ))
-    (hNotLoopy : ¬ IsLoopy core (zeroSet ℓ))
-    (fallback : Fin n) (mult : ℤ) (anchor : Fin n)
-    (hW5m : ∀ v : Fin n, 0 ≤ w.w5MultResidual core mult anchor.val v.val) :
-    winnable (censusSpec core hn ℓ hForest hNotLoopy).graph
-      (w.richDivisor (censusSpec core hn ℓ hForest hNotLoopy) fallback x -
-        mult • oneChip
-          ((censusSpec core hn ℓ hForest hNotLoopy).coreVertex anchor)) := by
+    (hW3 : w.w3Checks core = true) (ℓ : Fin p → ℕ)
+    (hCoord : ∀ e : Fin p, eval (coordForm e.val) x = (ℓ e : ℤ))
+    (hForest : IsForest core (zeroSet ℓ)) (hNotLoopy : ¬ IsLoopy core (zeroSet ℓ))
+    (anchor : Fin n) :
+    let d := censusSpec core hn ℓ hForest hNotLoopy
+    let data := w.richCensusPiecewiseData core Γ x hW1 hW2 hx ℓ hCoord hn
+      hForest hNotLoopy anchor
+    let tail : Fin p → ℤ := fun e =>
+      if d.length e = 0 then (w.block anchor.val e.val 0).lo
+      else w.rawChipMassAt x e.val 0 +
+        Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e 0
+    let head : Fin p → ℤ := fun e =>
+      if d.length e = 0 then -(w.block anchor.val e.val 0).hi
+      else w.rawChipMassAt x e.val (d.length e) -
+        Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e
+          (d.length e - 1)
+    (∀ e, w.tailContribution anchor.val e.val ≤ tail e) ∧
+      (∀ e, w.headContribution anchor.val e.val ≤ head e) := by
   classical
-  set d := censusSpec core hn ℓ hForest hNotLoopy with hd
-  have hCore : d.core = core := rfl
+  let d := censusSpec core hn ℓ hForest hNotLoopy
   let data := w.richCensusPiecewiseData core Γ x hW1 hW2 hx ℓ hCoord hn
     hForest hNotLoopy anchor
-  let script := w.richCensusPiecewiseScript core Γ x hW1 hW2 hx ℓ hCoord hn
-    hForest hNotLoopy anchor
-  have hInv := w.repInvariant_of_w1w2_census core Γ x hW1 hW2 hx anchor hn ℓ
-    hCoord hForest hNotLoopy
   let tail : Fin p → ℤ := fun e =>
     if d.length e = 0 then (w.block anchor.val e.val 0).lo
     else w.rawChipMassAt x e.val 0 +
@@ -528,6 +525,8 @@ theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
     else w.rawChipMassAt x e.val (d.length e) -
       Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e
         (d.length e - 1)
+  change (∀ e, w.tailContribution anchor.val e.val ≤ tail e) ∧
+      (∀ e, w.headContribution anchor.val e.val ≤ head e)
   have hTail : ∀ e, w.tailContribution anchor.val e.val ≤ tail e := by
     intro e
     by_cases hz : d.length e = 0
@@ -599,6 +598,53 @@ theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
       dsimp only [head]
       rw [if_neg hz]
       omega
+  exact ⟨hTail, hHead⟩
+
+/-- **The rich leaf's script reaches its plan's vertex, at any multiplicity.**
+
+The body of this lemma used to sit inline inside `richLeaf_sound`, specialised
+to one chip.  It is stated for `mult` chips because a legged rich leaf needs
+exactly the same argument at the doubled anchor: `mult = 1` is a rank anchor,
+`mult = m` is the `(comp x …)` plan certifying `D − m·1_x` winnable.  Nothing
+in the argument cared how many chips were withdrawn — only that W5 stays
+nonnegative after withdrawing them, which is the `hW5m` hypothesis. -/
+theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
+    (w : RichWitness) (Γ : Context) (hn : 0 < n)
+    (x : List ℤ) (hx : Γ.Holds x)
+    (hW1 : w.w1Checks core Γ = true) (hW2 : w.w2Checks core Γ = true)
+    (hW3 : w.w3Checks core = true) (hW4 : w.w4Checks core Γ = true)
+    (ℓ : Fin p → ℕ) (hCoord : ∀ e : Fin p, eval (coordForm e.val) x = (ℓ e : ℤ))
+    (hForest : IsForest core (zeroSet ℓ))
+    (hNotLoopy : ¬ IsLoopy core (zeroSet ℓ))
+    (fallback : Fin n) (mult : ℤ) (anchor : Fin n)
+    (hW5m : ∀ v : Fin n, 0 ≤ w.w5MultResidual core mult anchor.val v.val) :
+    winnable (censusSpec core hn ℓ hForest hNotLoopy).graph
+      (w.richDivisor (censusSpec core hn ℓ hForest hNotLoopy) fallback x -
+        mult • oneChip
+          ((censusSpec core hn ℓ hForest hNotLoopy).coreVertex anchor)) := by
+  classical
+  set d := censusSpec core hn ℓ hForest hNotLoopy with hd
+  have hCore : d.core = core := rfl
+  let data := w.richCensusPiecewiseData core Γ x hW1 hW2 hx ℓ hCoord hn
+    hForest hNotLoopy anchor
+  let script := w.richCensusPiecewiseScript core Γ x hW1 hW2 hx ℓ hCoord hn
+    hForest hNotLoopy anchor
+  have hInv := w.repInvariant_of_w1w2_census core Γ x hW1 hW2 hx anchor hn ℓ
+    hCoord hForest hNotLoopy
+  let tail : Fin p → ℤ := fun e =>
+    if d.length e = 0 then (w.block anchor.val e.val 0).lo
+    else w.rawChipMassAt x e.val 0 +
+      Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e 0
+  let head : Fin p → ℤ := fun e =>
+    if d.length e = 0 then -(w.block anchor.val e.val 0).hi
+    else w.rawChipMassAt x e.val (d.length e) -
+      Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e
+        (d.length e - 1)
+  have hEndpointBounds := richCensusEndpoint_bounds core w Γ hn x hx hW1 hW2 hW3
+    ℓ hCoord hForest hNotLoopy anchor
+  change (∀ e, w.tailContribution anchor.val e.val ≤ tail e) ∧
+    (∀ e, w.headContribution anchor.val e.val ≤ head e) at hEndpointBounds
+  obtain ⟨hTail, hHead⟩ := hEndpointBounds
   refine ⟨w.richDivisor d fallback x - mult • oneChip (d.coreVertex anchor) +
     prin d.graph script, ?_, ?_⟩
   · intro vertex
