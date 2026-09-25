@@ -62,7 +62,7 @@ precisely the image of `oldIndex`. -/
 def oldTangentialVarEquiv (n : ℕ) :
     (Fin n ⊕ Fin n) ≃ TangentialVar n :=
   Equiv.ofBijective (oldTangentialVar n)
-    ⟨oldTangentialVar_injective n, oldTangentialVar_surjective n⟩
+    (by exact ⟨oldTangentialVar_injective n, oldTangentialVar_surjective n⟩)
 
 @[simp]
 theorem oldTangentialVarEquiv_apply (n : ℕ) (i : Fin n ⊕ Fin n) :

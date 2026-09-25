@@ -129,7 +129,7 @@ def tangentialPageOperator
     (hax : a * presentedCoordinate k n = presentedCoordinate k n * a) :
     PageOperator k n N d (e : ℤ) where
   g := rightMulLinearMap k (CanonicalIdeal k n N d) a
-  commute := rightMul_commute k n N d a hax
+  commute := by exact rightMul_commute k n N d a hax
   shift := by
     intro p q hq
     by_cases hp : p ≤ 0

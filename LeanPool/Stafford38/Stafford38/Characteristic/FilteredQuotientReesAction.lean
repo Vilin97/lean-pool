@@ -286,8 +286,8 @@ def orderPieceOpDirectSumToReesOp :
     OppositeOrderPieceSum (n := n) k →+*
       (OrderReesRing (n := n) k)ᵐᵒᵖ :=
   DirectSum.toSemiring (fun N => orderPieceOpToReesOp (n := n) k N)
-    (orderPieceOpToReesOp_one (n := n) k)
-    (orderPieceOpToReesOp_mul (n := n) k)
+    (by exact orderPieceOpToReesOp_one (n := n) k)
+    (by exact orderPieceOpToReesOp_mul (n := n) k)
 
 @[simp]
 theorem orderPieceOpDirectSumToReesOp_of
