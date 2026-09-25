@@ -19,4 +19,3 @@ public import LeanPool.SpectralTheory.Spectral.Spectral.Uniqueness
 
 Supporting modules for lean-spectral-theory.
 -/
-

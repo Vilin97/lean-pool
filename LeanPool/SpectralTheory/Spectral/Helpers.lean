@@ -15,4 +15,3 @@ public import Mathlib.Analysis.InnerProductSpace.Adjoint
 Re-exports the Mathlib inner-product-space and adjoint imports common to the
 rest of the library.
 -/
-

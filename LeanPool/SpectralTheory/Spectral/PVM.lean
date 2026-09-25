@@ -16,4 +16,3 @@ public import LeanPool.SpectralTheory.Spectral.PVM.Unbounded
 
 Supporting modules for lean-spectral-theory.
 -/
-

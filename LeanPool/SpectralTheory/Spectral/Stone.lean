@@ -17,4 +17,3 @@ public import LeanPool.SpectralTheory.Spectral.Stone.Theorem
 
 Supporting modules for lean-spectral-theory.
 -/
-

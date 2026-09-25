@@ -21,4 +21,3 @@ public import LeanPool.SpectralTheory.Spectral.Stone.Generator
 public import LeanPool.SpectralTheory.Spectral.Stone.SelfAdjoint
 public import LeanPool.SpectralTheory.Spectral.Stone.Theorem
 public import LeanPool.SpectralTheory.Spectral.Stone.Intrinsic
-

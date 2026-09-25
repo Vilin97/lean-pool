@@ -16,4 +16,3 @@ public import LeanPool.SpectralTheory.Spectral.Cayley.Unitary
 
 Supporting modules for lean-spectral-theory.
 -/
-

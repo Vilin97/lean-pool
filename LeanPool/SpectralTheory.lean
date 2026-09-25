@@ -41,4 +41,3 @@ Main declarations: `PalomarSpectralStone.spectral_theorem_intrinsic`
 Tags: functional-analysis
 MSC: 47A10, 47B15
 -/
-
