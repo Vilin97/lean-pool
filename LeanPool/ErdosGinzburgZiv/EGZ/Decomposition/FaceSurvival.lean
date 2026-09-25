@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceRefinement
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedDecomposition
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ReducedRepresentative
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceRefinement
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedDecomposition
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ReducedRepresentative
 
 /-!
 # Survival of the upper anchor in a proper-face refinement
@@ -15,6 +17,8 @@ An unselected cumulative atom supplies an upper-layer local generator. The
 other generators witnessing old reducedness still have active copies, so
 their join together with this upper generator is the old upper node.
 -/
+
+@[expose] public section
 
 
 namespace EGZ.FlagDecomposition.FaceRefinement

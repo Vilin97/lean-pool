@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Basic
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Basic
 
 /-!
 # Statement of relative expansion
@@ -22,6 +24,8 @@ modulo `p`; it can always be absorbed into the prime threshold.
 The paper's "linear functions" are affine functionals, consistently with
 its slab definition and with the functional constructed in its proof.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

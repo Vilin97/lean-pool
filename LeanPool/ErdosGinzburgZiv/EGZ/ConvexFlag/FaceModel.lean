@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.FaceCombinations
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Basic
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.FaceCombinations
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Basic
 
 /-!
 # The canonical face flag of a rational polytope
@@ -20,6 +22,8 @@ of the analytic characterization by relative interior.  That characterization
 is only needed when the final centerpoint is stated as lying in a relative
 interior.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -259,7 +263,8 @@ noncomputable abbrev faceProper {d : ℕ} (P : RationalPolytope d) :
         hcomb.nonnegative hcomb.sum_eq_one hbary hresultG hi
     exact (hpoints i).2 G hpointG
 
-private def facePhysical {d : ℕ} (P : RationalPolytope d)
+/-- Send a proper face-flag point to its physical point in the polytope. -/
+def facePhysical {d : ℕ} (P : RationalPolytope d)
     (q : {q : (faceFlag P).Point // q ∈ faceProper P}) :
     {x : RealCoord d // x ∈ P.carrier} := by
   refine ⟨q.1.val, ?_⟩
@@ -267,7 +272,8 @@ private def facePhysical {d : ℕ} (P : RationalPolytope d)
   change RationalPolytope.Face.IsLeastFaceAt P q.1.val q.1.base at hq
   exact q.1.base.subset_polytope hq.1
 
-private noncomputable def facePhysicalEquiv {d : ℕ} (P : RationalPolytope d) :
+/-- Identify proper face-flag points with points of the polytope. -/
+noncomputable def facePhysicalEquiv {d : ℕ} (P : RationalPolytope d) :
     {q : (faceFlag P).Point // q ∈ faceProper P} ≃
       {x : RealCoord d // x ∈ P.carrier} :=
   Equiv.ofBijective (facePhysical P) (by

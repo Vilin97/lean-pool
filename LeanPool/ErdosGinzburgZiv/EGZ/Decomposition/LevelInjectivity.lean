@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Levels
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ModularRank
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Levels
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ModularRank
 
 /-!
 # Injective coordinate transport at equal levels
@@ -15,6 +17,8 @@ coordinate map factors the old representation through the new one, equal
 levels force equal spaces and equal ranks. The factor is then bijective
 modulo the prime, injective on integer lattices, and bijective over the reals.
 -/
+
+@[expose] public section
 
 namespace EGZ.FpRepresentation
 

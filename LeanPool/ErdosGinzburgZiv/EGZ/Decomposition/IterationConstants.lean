@@ -3,11 +3,15 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationBounds
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IntervalCapacity
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationBounds
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IntervalCapacity
 
 /-! # Uniform constants for the bounded decomposition iteration -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.Iteration
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import Mathlib.Order.KonigLemma
-import Mathlib.Data.Finset.Interval
-import Mathlib.Data.Set.Finite.Lattice
-import Mathlib.Tactic
+
+public import Mathlib.Order.KonigLemma
+public import Mathlib.Data.Finset.Interval
+public import Mathlib.Data.Set.Finite.Lattice
+public import Mathlib.Tactic
 
 /-!
 # The finite-color interval lemma used for termination
@@ -17,6 +19,8 @@ decrease.  The combinatorial input instead finds an interval with many
 occurrences of its least color.  The required number of occurrences may
 depend arbitrarily on the first index of the interval.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

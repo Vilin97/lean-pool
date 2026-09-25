@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartFlag
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LargeFaceGeometry
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartFlag
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LargeFaceGeometry
 
 /-!
 # Real affine dimension of support-generated lattice coordinates
@@ -15,6 +17,8 @@ support-generated chart has rank equal to the real affine dimension of its
 support polytope. A chart for support in a proper face of a minimal node has
 strictly smaller rank.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

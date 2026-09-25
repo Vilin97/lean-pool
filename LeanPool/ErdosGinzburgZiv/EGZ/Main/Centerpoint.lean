@@ -3,12 +3,14 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Centerpoint
-import LeanPool.ErdosGinzburgZiv.EGZ.Consistency.PropositionSevenOne
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LiftedMass
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapCleanup
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Completeness
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Centerpoint
+public import LeanPool.ErdosGinzburgZiv.EGZ.Consistency.PropositionSevenOne
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LiftedMass
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapCleanup
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Completeness
 
 /-!
 # From the flag centerpoint to a cumulative fibre
@@ -18,6 +20,8 @@ generating points retain their separate masses; the centerpoint theorem
 does not require the family to be injective. Compatibility and centered
 integer transitions identify its upper masses with cumulative lifted mass.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.AffineRelations
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Sampling
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ExchangePattern
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.AffineRelations
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Sampling
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ExchangePattern
 
 /-!
 # Reconstructing relative thinness from concentrated exchanges
@@ -14,6 +16,8 @@ import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ExchangePattern
 Concentration of the individual exchange components gives centres in each
 fibre. Integer affine relations turn these centres into one affine slab.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Matrix
 

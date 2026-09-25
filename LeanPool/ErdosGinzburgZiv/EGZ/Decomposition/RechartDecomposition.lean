@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartRepresentation
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartMass
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Faces
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartRepresentation
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartMass
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Faces
 
 /-!
 # A decomposition in support-generated lattice coordinates
@@ -17,6 +19,8 @@ chart image to an old local generator produces a new proper point over that
 face. All weights and lifted masses are preserved, and the new decomposition
 has minimal ambient affine spaces and integer lattices.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

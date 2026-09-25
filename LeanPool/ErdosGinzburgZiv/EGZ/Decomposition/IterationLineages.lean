@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationEvents
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LineageMassMaps
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationEvents
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LineageMassMaps
 
 /-!
 # Lineage systems associated with certified progress sequences
@@ -14,6 +16,8 @@ The progress certificate supplies every field of the geometric mass-map
 sequence. A lower bound on event colors supplies the uniform cutoff needed
 for low-level ancestor bookkeeping.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.Iteration
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedDiagram
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportDiagramRepresentation
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedDiagram
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportDiagramRepresentation
 
 /-!
 # The represented augmented support flag
@@ -14,6 +16,8 @@ After choosing integer lattice charts with injective reductions modulo `p`,
 the augmented support diagram admits a representation on the old cumulative
 support spans. Its maps are the modular chart inverses of the augmented maps.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.Augmented
 

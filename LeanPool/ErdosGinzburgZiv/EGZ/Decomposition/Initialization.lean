@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Reduction
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Reduction
 
 /-!
 # The initial flag decomposition
@@ -14,6 +16,8 @@ lattice fibre.  Its ambient affine space is the affine span of the support.
 It retains all the input mass and is reduced and minimal.  This is the
 starting object for the refinement argument.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

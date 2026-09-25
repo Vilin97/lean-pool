@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.WeakHull
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.ConvexHull
-import Mathlib.Data.Fintype.Sigma
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.WeakHull
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.ConvexHull
+public import Mathlib.Data.Fintype.Sigma
 
 /-!
 # Helly number of a convex flag
@@ -16,6 +18,8 @@ theorem for convex flags).  The maximum in `hellyConstant` is an actual
 bounded maximum: the cutoff is the number of integral points in all fibre
 polytopes, which is finite by local finiteness of the fibre lattices.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

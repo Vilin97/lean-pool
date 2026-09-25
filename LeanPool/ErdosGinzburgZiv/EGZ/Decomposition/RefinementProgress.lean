@@ -3,12 +3,14 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationEvents
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedOperations
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedMassMaps
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LineageOperations
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceMassChain
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationEvents
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedOperations
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedMassMaps
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LineageOperations
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceMassChain
 
 /-!
 # Progress certificates for face and complete-element refinements
@@ -16,6 +18,8 @@ import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceMassChain
 The concrete normalized operations satisfy the iteration's level, stable
 mass transport, parent injectivity, resolution, and numerical requirements.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.Iteration
 

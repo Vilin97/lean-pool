@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Basic
-import Mathlib.Algebra.Group.Action.Pointwise.Finset
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.LinearAlgebra.Basis.VectorSpace
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Basic
+public import Mathlib.Algebra.Group.Action.Pointwise.Finset
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
 
 /-!
 # Growth under translations
@@ -18,6 +20,8 @@ among short words in a set of generators.  In particular this gives the
 basis growth estimate needed in relative expansion without using
 Loomis--Whitney.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Module

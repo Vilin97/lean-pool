@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Basic
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Basic
 
 /-!
 # Convex closure for flag convex hulls
@@ -15,6 +17,8 @@ flattening of a convex combination of convex combinations.  Strictly
 positive supports are used throughout, so the least-upper-bound base is
 preserved by flattening.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

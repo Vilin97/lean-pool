@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Faces
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Faces
 
 /-!
 # Faces as hulls of lifted support points
@@ -14,6 +16,8 @@ The stored generators of a polytope need not be the stored lifted support.
 The support/polytope invariant nevertheless identifies every face with the
 convex hull of precisely the lifted support points lying on that face.
 -/
+
+@[expose] public section
 
 
 namespace EGZ.FlagDecomposition

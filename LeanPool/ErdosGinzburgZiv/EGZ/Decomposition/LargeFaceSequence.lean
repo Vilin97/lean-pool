@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LargeFaceGeometry
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.WeightedIncidence
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LargeFaceGeometry
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.WeightedIncidence
 
 /-!
 # A uniform bound for successive large faces
@@ -15,6 +17,8 @@ faces which each carry a fixed positive fraction of a common finite weight
 and lose a fixed fraction of that mass on every proper subface. The bound
 depends only on the dimension and these two fractions.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
 
 /-!
 # Regression checks for flag convex closure
@@ -13,6 +15,8 @@ The implementation lives in `EGZ.ConvexFlag.ConvexHull`.  These checks keep
 the two downstream consequences used by decomposition visible at the
 consistency layer.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

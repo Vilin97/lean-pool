@@ -3,15 +3,17 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import Mathlib.Analysis.Convex.Hull
-import Mathlib.Analysis.Convex.Combination
-import Mathlib.Analysis.Convex.Intrinsic
-import Mathlib.Analysis.Convex.Extreme
-import Mathlib.Analysis.Convex.Topology
-import Mathlib.Data.ZMod.Basic
-import Mathlib.LinearAlgebra.AffineSpace.AffineSubspace.Basic
-import Mathlib.Topology.DiscreteSubset
+
+public import Mathlib.Analysis.Convex.Hull
+public import Mathlib.Analysis.Convex.Combination
+public import Mathlib.Analysis.Convex.Intrinsic
+public import Mathlib.Analysis.Convex.Extreme
+public import Mathlib.Analysis.Convex.Topology
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.LinearAlgebra.AffineSpace.AffineSubspace.Basic
+public import Mathlib.Topology.DiscreteSubset
 
 /-!
 # Coordinate models for the convex part of the paper
@@ -27,6 +29,8 @@ particularly useful later: an integral-affine transition has compatible real,
 integer, and modulo-`p` realizations.  This is the compatibility needed in the
 proof of Proposition 7.1.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.Constants
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Mass
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.Constants
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Mass
 
 /-!
 # Zero sums in natural-valued multiplicities
@@ -14,6 +16,8 @@ The decomposition and expansion arguments use multiplicity functions.  The
 EGZ constant uses sequences with distinct selected positions.  This file
 supplies the bridge between these two models.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

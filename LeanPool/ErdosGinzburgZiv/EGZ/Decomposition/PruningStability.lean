@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Completeness
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Completeness
 
 /-!
 # Completeness after pruning local weights
@@ -13,6 +15,8 @@ The cumulative atoms at a node form a subset of all local atoms.  Hence
 their mass loss is at most the global retained mass loss.  This connects the
 gap-pruning estimate to the thickness estimate at every old large node.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

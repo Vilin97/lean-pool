@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
-import Mathlib.Data.ZMod.ValMinAbs
-import Mathlib.Data.Int.Interval
-import Mathlib.Data.Fintype.BigOperators
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
+public import Mathlib.Data.ZMod.ValMinAbs
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Data.Fintype.BigOperators
 
 /-!
 # Centered coordinate lifts
@@ -16,6 +18,8 @@ For odd moduli, reduction identifies the centered integer box with the whole
 finite coordinate space.  The finite boxes also supply explicit support sets
 for the lifted weights used in flag decompositions.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

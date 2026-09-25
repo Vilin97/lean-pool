@@ -3,14 +3,18 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NodeMassMap
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartPreservation
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedDecomposition
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LowerTransfer
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapCleanup
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NodeMassMap
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartPreservation
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedDecomposition
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LowerTransfer
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapCleanup
 
 /-! # Coordinate and mass maps for the elementary constructions -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition
 

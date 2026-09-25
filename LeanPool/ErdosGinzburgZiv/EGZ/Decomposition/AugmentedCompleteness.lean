@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SlabPruning
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SlabPruning
 
 /-!
 # Thickness on fibres of augmented representations
@@ -14,6 +16,8 @@ on every added direction. They therefore agree on the whole enlarged space
 of fibre-constant affine functionals. A functional distinguishing them lies
 outside that space, where maximality supplies thickness after slab pruning.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

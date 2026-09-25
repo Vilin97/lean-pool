@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SetGrowth
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Algebra.Order.Ring.Abs
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SetGrowth
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Algebra.Order.Ring.Abs
 
 /-!
 # Finite growth with disjoint exchange supports
@@ -15,6 +17,8 @@ Binary sums grow by adding one translate. A polynomial initial stage and
 a multiplicative stage produce more than half of the group; two disjoint
 such families then cover the whole group.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Pointwise
 open Module

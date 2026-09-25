@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SetGrowth
-import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SetGrowth
+public import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
 
 /-!
 # Fourier energy of translation boundaries
@@ -14,6 +16,8 @@ The character basis diagonalizes translation.  This file develops the
 finite sum identities used in the spectral growth estimate directly,
 without introducing a weighted graph or its eigenvalues.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ComplexConjugate
 open RCLike

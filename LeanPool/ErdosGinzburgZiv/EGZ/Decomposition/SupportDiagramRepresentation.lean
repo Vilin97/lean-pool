@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportDiagram
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportRepresentation
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportRechartMass
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportDiagram
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportRepresentation
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportRechartMass
 
 /-!
 # Representing a charted support diagram
@@ -15,6 +17,8 @@ The old affine maps need only realize the support residues and commute on
 supported atoms. Injective modular lattice charts then give a surjective
 representation of the charted flag on its minimal ambient affine spaces.
 -/
+
+@[expose] public section
 
 namespace EGZ.LatticeSupportDiagram
 

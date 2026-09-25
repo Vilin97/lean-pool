@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SampleAvailability
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.FibreSlots
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ResourceCompletion
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.PrescribedCounts
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SampleAvailability
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.FibreSlots
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ResourceCompletion
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.PrescribedCounts
 
 /-!
 # Relative expansion
@@ -16,6 +18,8 @@ The thresholds are first chosen for a fixed finite lattice support, then
 made uniform over every support in the prescribed box. All sampling and
 deletion arguments retain the positions of repeated vectors.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Matrix
 open Module

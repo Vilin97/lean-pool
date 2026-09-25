@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Basic
-import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
-import Mathlib.Algebra.Module.ZMod
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Basic
+public import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
+public import Mathlib.Algebra.Module.ZMod
 
 /-!
 # Finite-field characters as linear functionals
@@ -15,6 +17,8 @@ Restricting a character to scalar multiples of a vector and using the
 one-dimensional character equivalence recovers its finite-field linear
 functional.  This gives the exact normalization needed for geometric sums.
 -/
+
+@[expose] public section
 
 namespace EGZ.Expansion
 

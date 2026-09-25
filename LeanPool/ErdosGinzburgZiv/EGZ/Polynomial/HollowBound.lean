@@ -3,13 +3,16 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.Constants
-import Mathlib.Algebra.MvPolynomial.CommRing
-import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.RingTheory.MvPolynomial.Basic
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.Constants
+public import Mathlib.Algebra.MvPolynomial.CommRing
+public import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
+public import Mathlib.Data.Sym.Card
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.RingTheory.MvPolynomial.Basic
 
 /-!
 # A polynomial bound for hollow families
@@ -30,6 +33,8 @@ zero-sum detector polynomial in all but its last vector block is constant in
 that last block, while hollowness identifies it with `h(t)^q`; these two facts
 contradict the choice of `h`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

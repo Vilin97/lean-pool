@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceRefinement
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ReducedRepresentative
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceRefinement
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ReducedRepresentative
 
 /-!
 # Moving all local mass below an anchor to a lower layer
@@ -14,6 +16,8 @@ After slab pruning, the completeness refinement transfers every surviving
 local summand below the anchor to the lower layer. The lower anchor keeps
 the same cumulative function, while its upper copy ceases to be reduced.
 -/
+
+@[expose] public section
 
 
 namespace EGZ.FlagDecomposition.LowerTransfer

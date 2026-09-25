@@ -3,12 +3,14 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Main.Centerpoint
-import LeanPool.ErdosGinzburgZiv.EGZ.Main.Interior
-import LeanPool.ErdosGinzburgZiv.EGZ.BalancedCombination
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeCoordinates
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceMassChain
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Main.Centerpoint
+public import LeanPool.ErdosGinzburgZiv.EGZ.Main.Interior
+public import LeanPool.ErdosGinzburgZiv.EGZ.BalancedCombination
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeCoordinates
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceMassChain
 
 /-!
 # The selected cumulative lattice configuration
@@ -17,6 +19,8 @@ These bridges package an integral interior centerpoint and the cumulative
 lift at its base in the finite integer-coordinate language used by balanced
 combinations. The bounds retain the selected node's own radius.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

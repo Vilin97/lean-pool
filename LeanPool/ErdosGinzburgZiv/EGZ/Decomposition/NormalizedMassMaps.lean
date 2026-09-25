@@ -3,13 +3,17 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.OperationMassMaps
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedFace
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedComplete
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedGap
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.OperationMassMaps
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedFace
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedComplete
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedGap
 
 /-! # Stable mass maps for normalized refinement steps -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition
 

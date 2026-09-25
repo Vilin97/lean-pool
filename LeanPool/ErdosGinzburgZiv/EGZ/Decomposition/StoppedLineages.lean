@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationLineages
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationLineages
 
 /-!
 # Geometric lineages for finite progress intervals
@@ -13,6 +15,8 @@ Finite comparisons extend by identity maps after their endpoint. The
 extension requires no progress certificate, event, or unsatisfied condition
 at the constant stages.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition
 

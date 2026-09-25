@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.FiniteProbability
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ThickSupport
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.FiniteProbability
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ThickSupport
 
 /-!
 # Mixtures of valid finite samples
@@ -14,6 +16,8 @@ Each component has total mass at most one.  Removing a small exceptional
 set from every sample space retains positive mass and preserves thickness
 provided one component witnesses escape from each central slab.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

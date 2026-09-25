@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.AffineLattice
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.AffineLattice
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
 
 /-!
 # Balanced integer convex combinations
@@ -19,6 +21,8 @@ Relative interior includes lower-dimensional supports and the singleton
 case. The constants are chosen before the centrality parameter, as required
 by the paper's uniformity in the main proof.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

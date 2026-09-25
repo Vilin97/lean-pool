@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.BalancedCombination
-import Mathlib.Algebra.Order.Floor.Semiring
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.BalancedCombination
+public import Mathlib.Algebra.Order.Floor.Semiring
 
 /-!
 # Rounding bounded weights before choosing balanced coefficients
@@ -15,6 +17,8 @@ fibre weight by only a prescribed relative fraction. Consequently centrality
 and coefficient upper bounds transfer quantitatively. Bounded rounded weights
 belong to a finite family before the prime or original masses are fixed.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Analysis.Asymptotics.Defs
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Order.Lattice.Nat
-import LeanPool.ErdosGinzburgZiv.EGZ.MainTheorem
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Analysis.Asymptotics.Defs
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Order.Lattice.Nat
+public import LeanPool.ErdosGinzburgZiv.EGZ.MainTheorem
 
 /-!
 # Checked proofs of the independent Palomar statements
@@ -17,6 +19,8 @@ This module deliberately does not import `Challenge`. The definitions below
 are the same independent definitions, and the bridge lemmas identify their
 constants with the ones used by the full EGZ proof.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

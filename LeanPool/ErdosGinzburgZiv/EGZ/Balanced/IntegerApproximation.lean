@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.BalancedCombination
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeCoordinates
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.BalancedCombination
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeCoordinates
 
 /-!
 # Integer approximation with an exact affine barycenter
@@ -15,6 +17,8 @@ one produce integer combinations of every sufficiently large weight. The
 integer correction depends only on the remainder modulo one common
 denominator, and therefore has uniformly bounded error.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

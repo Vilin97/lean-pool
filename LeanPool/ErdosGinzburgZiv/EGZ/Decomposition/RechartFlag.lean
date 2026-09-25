@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeCoordinates
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeTransition
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ScalarExtension
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.PruningData
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeCoordinates
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeTransition
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ScalarExtension
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.PruningData
 
 /-!
 # The convex flag in minimal lattice coordinates
@@ -16,6 +18,8 @@ Choose a support-generated integer lattice chart at every node. Rebuilding
 the support polytopes and factoring the old transitions through these charts
 gives a convex flag on the same node poset with standard coordinate lattices.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition
 

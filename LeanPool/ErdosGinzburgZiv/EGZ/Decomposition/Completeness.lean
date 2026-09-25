@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Cleanup
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Cleanup
 
 /-!
 # Stability of decomposition completeness
@@ -12,6 +14,8 @@ import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Cleanup
 These monotonicity and mass identities are used when normalizing epsilon,
 choosing the final uniform delta, and transferring thickness through cleanup.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

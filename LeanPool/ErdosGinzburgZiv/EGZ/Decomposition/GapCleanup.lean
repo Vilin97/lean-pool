@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.PruningData
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Rebuild
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FacePreservation
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.PruningStability
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.PruningData
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Rebuild
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FacePreservation
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.PruningStability
 
 /-!
 # Geometric gap cleanup
@@ -16,6 +18,8 @@ Surviving local weights first give a flag of their nonempty cumulative support
 hulls. Restricting that flag to reduced nodes finishes the geometric cleanup.
 The construction retains exactly the mass supplied by numerical pruning.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

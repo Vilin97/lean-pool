@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
-import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
+public import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-!
 # Character sums away from a centered slab
@@ -15,6 +17,8 @@ Jordan's inequality bounds a nontrivial root of unity away from one in
 terms of its centered residue. The finite geometric-series identity then
 bounds every partial character sum independently of its length.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

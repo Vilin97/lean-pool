@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Levels
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CompleteRefinement
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Levels
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CompleteRefinement
 
 /-!
 # Levels after complete-element refinement
@@ -15,6 +17,8 @@ never decrease. If at least one direction was added, its independence from
 the old fibre-constant functionals forces every lower level above the old
 anchor. In particular this applies to the reduced complete representative.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.CompletePreparation
 

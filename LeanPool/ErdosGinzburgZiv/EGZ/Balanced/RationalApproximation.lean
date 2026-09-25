@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.BalancedCombination
-import Mathlib.LinearAlgebra.Dimension.LinearMap
-import Mathlib.LinearAlgebra.Matrix.ToLin
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.BalancedCombination
+public import Mathlib.LinearAlgebra.Dimension.LinearMap
+public import Mathlib.LinearAlgebra.Matrix.ToLin
 
 /-!
 # Rational approximation within rational affine constraints
@@ -15,6 +17,8 @@ A generalized inverse over the rationals gives an affine projection onto
 any consistent rational system. Its real extension allows approximation
 by rational solutions while retaining open inequalities.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Matrix
 

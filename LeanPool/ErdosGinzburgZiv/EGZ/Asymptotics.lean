@@ -3,13 +3,17 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Polynomial.HollowBound
-import Mathlib.Analysis.Asymptotics.Defs
-import Mathlib.Algebra.Order.Archimedean.Basic
-import Mathlib.Order.Filter.AtTopBot.Basic
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Polynomial.HollowBound
+public import Mathlib.Analysis.Asymptotics.Defs
+public import Mathlib.Algebra.Order.Archimedean.Basic
+public import Mathlib.Order.Filter.AtTopBot.Basic
 
 /-! ## Consequences of the polynomial bound -/
+
+@[expose] public section
 
 namespace EGZ
 

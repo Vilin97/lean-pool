@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Thickness
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedCoordinates
-import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.Multiplicity
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Thickness
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedCoordinates
+public import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.Multiplicity
 
 /-!
 # Multiplicities and relative thickness
@@ -15,6 +17,8 @@ The expansion argument counts positions in a multiset.  Natural-valued
 weights retain these multiplicities when several positions have the same
 vector.  Affine changes of coordinates preserve zero sums of length `p`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

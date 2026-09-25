@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Termination
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Termination
 
 /-!
 # Termination from bounds on least-color occurrences
@@ -13,6 +15,8 @@ A uniform capacity for each interval's least color turns the finite-color
 interval lemma into a uniform bound on operation-sequence length. The bound
 depends only on the number of colors and the capacity function.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

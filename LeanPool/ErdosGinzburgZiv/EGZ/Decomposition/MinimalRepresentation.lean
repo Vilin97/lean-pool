@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
-import Mathlib.LinearAlgebra.Basis.VectorSpace
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
 
 /-!
 # Finite-field coordinates for minimal representations
@@ -14,6 +16,8 @@ An injective affine chart has an affine left inverse on the whole ambient
 vector space. Its retraction identity extends from the support to its affine
 span. Integer affine generation also implies affine generation modulo `p`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

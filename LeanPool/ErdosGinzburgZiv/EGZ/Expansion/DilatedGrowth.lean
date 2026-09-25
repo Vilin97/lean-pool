@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.FourierEnergy
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.CharacterLinear
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.CharacterSum
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.FourierEnergy
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.CharacterLinear
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.CharacterSum
 
 /-!
 # Thickness and dilated translation growth
@@ -15,6 +17,8 @@ The geometric sum estimate outside a central slab supplies a uniform
 spectral gap for short integer multiples of the available translations.
 Subadditivity then transfers growth back to an original translation.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

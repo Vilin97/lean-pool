@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NodeMassMap
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LevelInjectivity
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NodeMassMap
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LevelInjectivity
 
 /-!
 # Level comparison for mass-transport maps
@@ -15,6 +17,8 @@ extends to its whole represented affine space. Thus a node mass map already
 contains all data needed for level monotonicity and equal-level coordinate
 injectivity; no extra transport fields are required.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.NodeMassMap
 

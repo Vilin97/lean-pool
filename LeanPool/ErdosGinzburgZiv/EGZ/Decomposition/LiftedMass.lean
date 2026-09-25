@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Pullback
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Thickness
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Pullback
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Thickness
 
 /-!
 # Lifted set mass as an ambient finite sum
@@ -14,6 +16,8 @@ The centered lift assigns each nonzero cumulative ambient atom to a unique
 integer support coordinate. Thus mass on any set of real fibre coordinates
 can be computed directly on the ambient finite-field space.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

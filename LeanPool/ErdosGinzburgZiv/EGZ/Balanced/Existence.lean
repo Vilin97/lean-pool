@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.IntegerApproximation
-import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.RationalCoefficients
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.IntegerApproximation
+public import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.RationalCoefficients
 
 /-!
 # The balanced-combination lemma
@@ -14,6 +16,8 @@ The positive rational barycenter is chosen at the largest centrality.
 Bounded integer correction then supplies every sufficiently large weight,
 with its lower fraction and threshold independent of centrality.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

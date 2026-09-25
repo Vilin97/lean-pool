@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartDecomposition
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FacePreservation
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartDecomposition
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FacePreservation
 
 /-!
 # Properties preserved by changing lattice coordinates
@@ -14,6 +16,8 @@ The chart and its affine left inverse identify the node polytopes and their
 proper points.  These maps preserve reducedness, realized faces, and
 completeness of individual elements.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.Rechart
 

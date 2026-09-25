@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Main.Coefficients
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.AffineApplication
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Existence
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Main.Coefficients
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.AffineApplication
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Existence
 
 /-!
 # The main theorem from the two remaining analytic inputs
@@ -16,6 +18,8 @@ deduction are the relative expansion statement and the balanced-combination
 statement.  Thresholds are selected before the decomposition, with the final
 prime bound taken over its uniformly bounded node radii.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

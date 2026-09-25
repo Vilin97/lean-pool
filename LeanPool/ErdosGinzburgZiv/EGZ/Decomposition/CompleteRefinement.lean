@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CompleteBounds
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedDecomposition
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Thickness
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CompleteBounds
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedDecomposition
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Thickness
 
 /-!
 # The complete-element refinement
@@ -16,6 +18,8 @@ minimal lattice coordinates. Its anchor is complete by maximality of the
 thin directions. Passing to the face index of its whole polytope supplies a
 reduced complete representative with exactly the same cumulative function.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.CompletePreparation
 

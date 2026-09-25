@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Mass
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Mass
 
 /-!
 # A finite weighted incidence bound
@@ -14,6 +16,8 @@ uniformly positive mass outside its closure, and adjoining such an outside
 point increases a bounded rank, the number of sets containing a point is
 uniformly bounded. This is the counting induction used for large faces.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

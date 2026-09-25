@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalLattice
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalLattice
 
 /-!
 # Supports in minimal lattice coordinates
@@ -14,6 +16,8 @@ support to a support that generates the full new coordinate lattice. The
 generation statement uses the finitely supported integer weights required by
 `FlagDecomposition.IsMinimal`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

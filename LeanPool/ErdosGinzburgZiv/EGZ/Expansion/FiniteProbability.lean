@@ -3,17 +3,21 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import Mathlib.Algebra.Order.BigOperators.Expect
-import Mathlib.Logic.Equiv.Prod
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Order.BigOperators.Expect
+public import Mathlib.Logic.Equiv.Prod
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Tactic
 
 /-!
 # Elementary uniform probabilities on finite sample spaces
 
 These lemmas keep the sampling estimates for exchanges finite and explicit.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.FiniteHull
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.FiniteHull
 
 /-!
 # Convex combinations and minimal faces of rational polytopes
@@ -15,6 +17,8 @@ that face.  Relative-interior membership consequently implies that the face
 is the least face containing the point.  Independently, finiteness of the
 face poset constructs such a least face for every point of the polytope.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

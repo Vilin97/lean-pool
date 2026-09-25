@@ -3,12 +3,14 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceLevels
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CompleteLevels
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LevelInjectivity
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedFace
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedComplete
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceLevels
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CompleteLevels
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LevelInjectivity
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedFace
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedComplete
 
 /-!
 # Levels and coordinate injectivity of normalized operations
@@ -17,6 +19,8 @@ Reduced restriction leaves the level calculations intact. These wrappers
 state the comparisons using the actual normalized subdivision maps, ready
 for tracking persistent nodes through an iteration.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition
 

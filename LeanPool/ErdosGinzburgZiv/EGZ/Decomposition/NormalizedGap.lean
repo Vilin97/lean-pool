@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapCleanup
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Minimalization
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapCleanup
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Minimalization
 
 /-!
 # Gap cleanup followed by minimalization
@@ -15,6 +17,8 @@ decomposition. Its weights, mass, gaps, and node count are unchanged by
 the coordinate change. Increasing the coordinate bounds only weakens the
 required inverse-power gap threshold.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

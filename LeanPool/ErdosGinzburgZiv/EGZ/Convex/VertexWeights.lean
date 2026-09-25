@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.FaceCombinations
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.VertexHull
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.FaceCombinations
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.VertexHull
 
 /-!
 # Finite convex combinations of polytope vertices
@@ -20,6 +22,8 @@ vertex families.  A positive summand of a combination lying on an exposed
 face lies on that face, and a positive summand of a combination equal to a
 vertex must be that vertex.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

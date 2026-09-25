@@ -3,14 +3,18 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Main.Assembly
-import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.Existence
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.RelativeProof
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Main.Assembly
+public import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.Existence
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.RelativeProof
 
 /-!
 # Main Theorem
 -/
+
+@[expose] public section
 
 namespace EGZ
 

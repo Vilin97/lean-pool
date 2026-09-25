@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartPreservation
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapCleanup
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ThinDirections
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartPreservation
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapCleanup
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ThinDirections
 
 /-!
 # Levels of represented flag nodes
@@ -16,6 +18,8 @@ rank is encoded by a natural number. Levels are antitone along flag nodes
 and increase under restriction of the represented space when the old map
 factors through the new map. This includes minimalization.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

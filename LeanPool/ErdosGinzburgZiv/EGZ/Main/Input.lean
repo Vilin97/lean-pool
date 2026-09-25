@@ -3,13 +3,17 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Main.UpperBound
-import LeanPool.ErdosGinzburgZiv.EGZ.Main.Parameters
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Main.UpperBound
+public import LeanPool.ErdosGinzburgZiv.EGZ.Main.Parameters
 
 /-!
 # Input
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

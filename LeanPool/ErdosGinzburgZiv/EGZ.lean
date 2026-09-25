@@ -3,14 +3,16 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.MainTheorem
-import LeanPool.ErdosGinzburgZiv.EGZ.Polynomial.HollowBound
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition
-import LeanPool.ErdosGinzburgZiv.EGZ.Consistency
-import LeanPool.ErdosGinzburgZiv.EGZ.TheoremOneTwelve
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.MainTheorem
+public import LeanPool.ErdosGinzburgZiv.EGZ.Polynomial.HollowBound
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition
+public import LeanPool.ErdosGinzburgZiv.EGZ.Consistency
+public import LeanPool.ErdosGinzburgZiv.EGZ.TheoremOneTwelve
 
 /-!
 # Convex geometry and the Erdős--Ginzburg--Ziv problem

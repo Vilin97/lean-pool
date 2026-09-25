@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.FaceCombinations
-import Mathlib.Analysis.LocallyConvex.Separation
-import Mathlib.Analysis.LocallyConvex.HahnBanach
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.FaceCombinations
+public import Mathlib.Analysis.LocallyConvex.Separation
+public import Mathlib.Analysis.LocallyConvex.HahnBanach
 
 /-!
 # Least exposed faces and relative interior
@@ -19,6 +21,8 @@ space, a finite lexicographic perturbation of the functional exposing the
 original face produces a strictly smaller exposed face through the point,
 contradicting leastness.
 -/
+
+@[expose] public section
 
 namespace EGZ.RationalPolytope.Face
 

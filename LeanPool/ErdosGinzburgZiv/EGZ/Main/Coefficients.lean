@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.BalancedRounding
-import LeanPool.ErdosGinzburgZiv.EGZ.Main.Input
-import LeanPool.ErdosGinzburgZiv.EGZ.Main.Selection
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Cleanup
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.BalancedRounding
+public import LeanPool.ErdosGinzburgZiv.EGZ.Main.Input
+public import LeanPool.ErdosGinzburgZiv.EGZ.Main.Selection
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Cleanup
 
 /-!
 # Uniform balanced coefficients at the selected flag node
@@ -18,6 +20,8 @@ The normalized input and gap estimates place the selected cumulative weight
 within their scope. The centrality identity then gives the reserve required
 by relative expansion.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

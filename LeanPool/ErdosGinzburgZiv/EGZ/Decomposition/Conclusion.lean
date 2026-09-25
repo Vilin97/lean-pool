@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Initialization
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Completeness
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Initialization
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Completeness
 
 /-!
 # Conclusions and the zero-dimensional flag decomposition
@@ -21,6 +23,8 @@ and zero-dimensional case. The asymptotic dependencies are:
 The zero-dimensional case is proved by the initial one-node decomposition.
 The positive-dimensional existence proof is assembled in `Existence.lean`.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

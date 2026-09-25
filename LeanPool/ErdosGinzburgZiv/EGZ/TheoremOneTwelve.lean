@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.HollowReduction
-import LeanPool.ErdosGinzburgZiv.EGZ.Consistency.TheoremOneTwelve
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.HollowReduction
+public import LeanPool.ErdosGinzburgZiv.EGZ.Consistency.TheoremOneTwelve
 
 /-!
 # The polytope centerpoint theorem
@@ -14,6 +16,8 @@ This module assembles the canonical support-hull face flag, Flag Helly and
 its centerpoint corollary, and the prime-reduction bound for hollow rational
 polytopes into Theorem 1.12.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

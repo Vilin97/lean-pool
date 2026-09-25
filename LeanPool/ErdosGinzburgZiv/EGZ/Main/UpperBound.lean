@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Asymptotics
-import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.Multiplicity
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Asymptotics
+public import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.Multiplicity
 
 /-!
 # The exact finite target for the main theorem
@@ -14,6 +16,8 @@ The final section first proves a zero-sum assertion at a ceiling length. This is
 enough for `MainUpperBound`, but the ceiling must be absorbed using a smaller
 internal error parameter.  It cannot simply be dropped.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

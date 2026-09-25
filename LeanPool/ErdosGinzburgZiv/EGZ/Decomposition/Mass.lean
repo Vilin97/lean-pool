@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
 
 /-!
 # Mass estimates for decomposition cleanup
@@ -12,6 +14,8 @@ import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
 The cleanup operations delete local atoms. These finite-sum estimates keep
 track of the lost mass and of the resulting deterioration of thickness.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

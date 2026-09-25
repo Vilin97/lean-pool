@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Basic
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Basic
 
 /-!
 # Selecting submultisets with prescribed fibre masses
@@ -12,6 +14,8 @@ import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Basic
 All selections are made in natural multiplicities, so coincident vector
 values are still allowed to occupy distinct positions.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

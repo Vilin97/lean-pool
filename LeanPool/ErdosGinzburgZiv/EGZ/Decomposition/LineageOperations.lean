@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.OperationLevels
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.OperationLevels
 
 /-!
 # Injective parent maps below the selected level
@@ -14,6 +16,8 @@ level. Thus nodes at or below that level come from upper copies, on which
 the parent map is injective. Complete refinement additionally removes the
 upper anchor, so no such low node can have the selected anchor as parent.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

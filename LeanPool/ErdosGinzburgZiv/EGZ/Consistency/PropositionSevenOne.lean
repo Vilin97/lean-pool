@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Helly
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
-import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.Constants
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Helly
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
+public import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.Constants
 
 /-!
 # Regression checks for Proposition 7.1
@@ -22,6 +24,8 @@ of the long flag-decomposition argument:
 Keeping these as standalone, proved lemmas prevents the later flag interface
 from hiding either step in an axiom.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

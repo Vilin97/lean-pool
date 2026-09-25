@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Reduction
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Reduction
 
 /-!
 # Support polytopes stay in the centered box
@@ -14,6 +16,8 @@ box is convex, so the whole support polytope lies in it.  In particular,
 integer transitions of nonzero local lifts are centered without any
 additional coordinate bound or large-modulus hypothesis.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Coordinate
-import Mathlib.Algebra.BigOperators.Finprod
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Coordinate
+public import Mathlib.Algebra.BigOperators.Finprod
 
 /-!
 # Intrinsic integer points and the polytope centerpoint statement
@@ -18,6 +20,8 @@ be rational.  Without that requirement a finite set such as
 `{0, 1, sqrt 2}` need not lie in any discrete affine lattice, so the phrase
 "the lattice spanned by the support" would be undefined.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

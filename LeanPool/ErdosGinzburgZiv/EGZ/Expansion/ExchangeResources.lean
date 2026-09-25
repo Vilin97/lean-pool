@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ExchangePattern
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SetGrowth
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedCoordinates
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ExchangePattern
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SetGrowth
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedCoordinates
 
 /-!
 # Finite exchanges and their consumed positions
@@ -15,6 +17,8 @@ An exchange uses two disjoint sets of atom positions, with equal sizes and
 equal first-coordinate sums.  Its shift lies in the remaining coordinates.
 Injective samples of a balanced pattern produce such exchanges.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

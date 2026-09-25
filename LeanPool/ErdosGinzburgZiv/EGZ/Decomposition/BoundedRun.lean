@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationBounds
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapProgress
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RefinementProgress
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationBounds
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapProgress
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RefinementProgress
 
 /-!
 # Actual finite refinement runs
@@ -16,6 +18,8 @@ built. Unfinished states advance by concrete normalized operations; finished
 states and stages beyond the horizon keep their state. No infinite sequence
 of progress certificates is assumed.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

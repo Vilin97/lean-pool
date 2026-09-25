@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.RationalApproximation
-import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.IntegerApproximation
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Basic
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SlabArithmetic
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.RationalApproximation
+public import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.IntegerApproximation
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Basic
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SlabArithmetic
 
 /-!
 # Integer affine relations
@@ -16,6 +18,8 @@ Clearing denominators in a rational generalized inverse produces a finite
 family of integer relations. Their evaluations measure the discrepancy
 from a function that factors through the original constraint matrix.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Matrix
 

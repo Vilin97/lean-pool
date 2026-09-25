@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartFlag
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalRepresentation
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartFlag
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalRepresentation
 
 /-!
 # Minimal finite-field representations after changing lattice coordinates
@@ -14,6 +16,8 @@ Restrict each ambient affine space to the span of its cumulative support.
 An affine left inverse of the modular lattice chart then gives a surjective
 representation in the new coordinates, compatible with all transitions.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.Rechart
 

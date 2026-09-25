@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Relative
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalRepresentation
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.Algebra.Field.ZMod
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Relative
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalRepresentation
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.Algebra.Field.ZMod
 
 /-!
 # Coordinates adapted to an affine projection
@@ -16,6 +18,8 @@ The coordinate change used in the final expansion argument is proved here.
 An affine surjection from an affine subspace becomes first-coordinate
 projection after choosing coordinates on its kernel.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

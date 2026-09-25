@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Coordinate
-import Mathlib.LinearAlgebra.Pi
-import Mathlib.LinearAlgebra.LinearIndependent.BaseChange
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Coordinate
+public import Mathlib.LinearAlgebra.Pi
+public import Mathlib.LinearAlgebra.LinearIndependent.BaseChange
 
 /-!
 # Scalar extension of integer affine maps
@@ -16,6 +18,8 @@ zero and the images of the standard basis under its linear part. Casting
 these integer coefficients constructs compatible affine maps over the real
 numbers and modulo every natural number.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

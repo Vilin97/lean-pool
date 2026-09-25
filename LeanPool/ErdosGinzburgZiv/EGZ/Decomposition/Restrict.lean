@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Reduction
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Faces
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Reduction
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Faces
 
 /-!
 # Restriction to reduced nodes
@@ -15,6 +17,8 @@ this set preserves every local contribution, since a non-reduced base has
 zero local weight.  The resulting flag has the same proper points, viewed
 through the inclusion of its nodes in the original flag.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

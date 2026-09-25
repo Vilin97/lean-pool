@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ScalarExtension
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalRepresentation
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FacePreservation
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ScalarExtension
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalRepresentation
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FacePreservation
 
 /-!
 # Rational affine images and their faces
@@ -17,6 +19,8 @@ between the source and image face lattices, with explicit carrier formulas.
 These constructions place a lineage's varying coordinate spaces inside its
 initial coordinate space for the common-measure face-counting argument.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AffineImages
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CommonMeasure
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NodeMassMap
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapCleanup
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AffineImages
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CommonMeasure
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NodeMassMap
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapCleanup
 
 /-!
 # Counting large faces along a stable lineage
@@ -17,6 +19,8 @@ coordinate space. Stable node maps transport their masses and bound their
 loss by global mass loss. Passing to the final cumulative weight then gives
 the uniform common-measure large-face bound.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

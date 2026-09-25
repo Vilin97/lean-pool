@@ -3,11 +3,15 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationConstants
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationGapCapacity
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationConstants
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationGapCapacity
 
 /-! # Combining the three event capacities -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.Iteration
 

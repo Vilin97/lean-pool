@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.HollowReduction
-import Mathlib.LinearAlgebra.Dimension.Free
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.HollowReduction
+public import Mathlib.LinearAlgebra.Dimension.Free
 
 /-!
 # Coordinates for support-generated integer lattices
@@ -15,6 +17,8 @@ Every nonempty finite integer support admits affine integer coordinates in
 its own generated lattice. Finiteness of the collection of bounded supports
 then makes coordinate and prime-saturation bounds uniform in the support.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

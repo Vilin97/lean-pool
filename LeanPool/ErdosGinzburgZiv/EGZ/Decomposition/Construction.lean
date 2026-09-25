@@ -3,12 +3,16 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.BoundedRun
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ConclusionBridge
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationColorCapacity
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.BoundedRun
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ConclusionBridge
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationColorCapacity
 
 /-! # Extracting the decomposition from the bounded iteration -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.Iteration.boundedRun
 

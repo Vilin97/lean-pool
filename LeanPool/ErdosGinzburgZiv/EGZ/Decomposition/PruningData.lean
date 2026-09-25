@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Cleanup
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LocalToCumulative
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredPolytope
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Cleanup
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LocalToCumulative
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredPolytope
 
 /-!
 # Surviving weights and their lifted supports
@@ -15,6 +17,8 @@ The support lemmas here prepare the geometric rebuilding after numerical
 pruning. A surviving collection is pointwise below the old local weights and
 has at least one nonzero atom.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

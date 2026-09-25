@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalParameters
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartPreservation
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalParameters
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartPreservation
 
 /-!
 # The minimal decomposition lemma
@@ -17,6 +19,8 @@ reducedness, element completeness, and realized faces under chart pullback.
 The coordinate growth function depends only on dimension, and the prime
 threshold depends only on dimension and the original uniform box bound.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.ConvexHull
-import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.ConvexHull
+public import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
 
 /-!
 # Flag decompositions
@@ -19,6 +21,8 @@ below `x`; `localLift` uses only the summand based at `x`.  Proper-point
 generators are defined from `localLift`.  This distinction is the correction
 integrated into the current version of the paper.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -306,7 +310,7 @@ private theorem faceBases_nonempty (Φ : FlagDecomposition p d f) (x : Φ.flag.N
 face.  Every face of a flag decomposition is visible. -/
 noncomputable def faceIndex (Φ : FlagDecomposition p d f) (x : Φ.flag.Node)
     (Γ : (Φ.flag.polytope x).Face) : Φ.flag.Node :=
-  (Φ.faceBases x Γ).sup' (faceBases_nonempty Φ x Γ) id
+  (Φ.faceBases x Γ).sup' (by exact faceBases_nonempty Φ x Γ) id
 
 theorem faceIndex_le (Φ : FlagDecomposition p d f) (x : Φ.flag.Node)
     (Γ : (Φ.flag.polytope x).Face) : Φ.faceIndex x Γ ≤ x := by

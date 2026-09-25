@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedFace
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedGap
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedComplete
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedFace
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedGap
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedComplete
 
 /-!
 # Uniform providers for normalized refinement operations
@@ -15,6 +17,8 @@ The three concrete operations share a single increasing radius bound and a
 monotone prime threshold. A finite radius horizon therefore fixes the prime
 before any choices in the refinement run are made.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

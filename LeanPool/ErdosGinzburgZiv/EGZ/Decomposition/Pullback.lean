@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Rebuild
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartFlag
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FacePreservation
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Rebuild
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartFlag
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FacePreservation
 
 /-!
 # Splitting local weights over a new node poset
@@ -16,6 +18,8 @@ representation. Local pieces dominated by the corresponding old summands
 can then be rebuilt on their active nodes. This construction permits the
 two-layer face refinement before the subsequent minimalization.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

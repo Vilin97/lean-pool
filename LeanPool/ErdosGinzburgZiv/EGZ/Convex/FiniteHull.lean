@@ -3,12 +3,14 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Faces
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Polytope
-import Mathlib.Analysis.Convex.Exposed
-import Mathlib.Analysis.Convex.Independent
-import Mathlib.Analysis.LocallyConvex.Separation
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Faces
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Polytope
+public import Mathlib.Analysis.Convex.Exposed
+public import Mathlib.Analysis.Convex.Independent
+public import Mathlib.Analysis.LocallyConvex.Separation
 
 /-!
 # Finite convex hulls in convex position
@@ -18,6 +20,8 @@ proof of Theorem 1.12 with mathlib's `ConvexIndependent`, and constructs the
 rational polytope whose vertices are exactly a given rational family in
 convex position.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

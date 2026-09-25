@@ -3,12 +3,14 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Pullback
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.TwoLayer
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceSelection
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceSupport
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.FaceCombinations
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Pullback
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.TwoLayer
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceSelection
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceSupport
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.FaceCombinations
 
 /-!
 # Realizing a face by splitting local weights
@@ -17,6 +19,8 @@ The positive generators of a proper point over an exposed face also lie over
 that face. This allows a refinement that moves the selected local atoms to
 a lower layer to realize the face while retaining the old upper fibres.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

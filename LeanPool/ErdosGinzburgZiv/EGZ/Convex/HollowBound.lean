@@ -3,13 +3,15 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.AffineLattice
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Faces
-import LeanPool.ErdosGinzburgZiv.EGZ.Polynomial.HollowBound
-import Mathlib.Algebra.EuclideanDomain.Int
-import Mathlib.Data.Nat.Prime.Int
-import Mathlib.LinearAlgebra.FreeModule.PID
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.AffineLattice
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Faces
+public import LeanPool.ErdosGinzburgZiv.EGZ.Polynomial.HollowBound
+public import Mathlib.Algebra.EuclideanDomain.Int
+public import Mathlib.Data.Nat.Prime.Int
+public import Mathlib.LinearAlgebra.FreeModule.PID
 
 /-!
 # Bounding hollow rational polytopes
@@ -18,6 +20,8 @@ This module isolates the exact bridge from Proposition `wl` to boundedness of
 the vertex counts defining `hollowPolytopeNumber`.  It also develops the
 Smith-normal-form saturation lemma needed to prove that bridge.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

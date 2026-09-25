@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Pullback
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartMass
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Pullback
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartMass
 
 /-!
 # Selecting local atoms over a face
@@ -14,6 +16,8 @@ The face refinement splits every local summand below its anchor using the
 same predicate on ambient points. Compatibility of centered lifts identifies
 the selected cumulative support with the inverse image of the target face.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

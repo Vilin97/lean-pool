@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeCoordinates
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeTransition
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ScalarExtension
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeCoordinates
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeTransition
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ScalarExtension
 
 /-!
 # Convex flags from finite lattice-support diagrams
@@ -16,6 +18,8 @@ transitions already determine a convex flag. No finite-field representation
 is required. Choosing the support-generated lattice charts gives a new diagram
 and a convex flag in minimal integer lattice coordinates.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

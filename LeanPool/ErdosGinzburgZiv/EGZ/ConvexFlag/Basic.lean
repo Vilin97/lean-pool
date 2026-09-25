@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.AffineLattice
-import Mathlib.Order.Fin.Basic
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.AffineLattice
+public import Mathlib.Order.Fin.Basic
 
 /-!
 # Convex flags
@@ -19,6 +21,8 @@ The base of a point is retained as data.  This is intentional: points with
 the same coordinate at an upper node but different domains are distinct (the
 `0` versus `0'` phenomenon in the examples following Proposition 3.11).
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

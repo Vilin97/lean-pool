@@ -3,15 +3,19 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import Mathlib.Combinatorics.Additive.ErdosGinzburgZiv
-import Lean.Elab.Tactic.Omega
+
+public import Mathlib.Combinatorics.Additive.ErdosGinzburgZiv
+public import Lean.Elab.Tactic.Omega
 
 /-!
 This completed file is a regression example, not the paper's Theorem 1.2.
 It proves the classical one-dimensional Erdős--Ginzburg--Ziv theorem already
 supported by Mathlib.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

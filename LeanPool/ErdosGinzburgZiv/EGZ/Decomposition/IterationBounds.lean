@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationEvents
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedOperations
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Initialization
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationEvents
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedOperations
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Initialization
 
 /-!
 # Numerical invariants of finite refinement runs
@@ -14,6 +16,8 @@ import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Initialization
 The state at stage `i` has at most `2^i` nodes, lies within the predetermined
 radius horizon, and has lost at most the first `i` explicit mass budgets.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

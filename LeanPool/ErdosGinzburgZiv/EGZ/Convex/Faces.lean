@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Coordinate
-import Mathlib.Data.Fintype.OfMap
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Coordinate
+public import Mathlib.Data.Fintype.OfMap
 
 /-!
 # Finite exposed-face API for rational polytopes
@@ -15,6 +17,8 @@ hull of the generators which it contains.  Consequently the custom face
 type used by this project is finite, even though an exposure is stored using
 arbitrary real affine data.
 -/
+
+@[expose] public section
 
 namespace EGZ.RationalPolytope
 
@@ -180,10 +184,12 @@ private theorem exists_commonUpper_card {n : ℕ} {P : RationalPolytope n}
   refine ⟨(⊤ : P.Face).generatorFinset.card, ⊤, le_top, le_top, rfl⟩
 
 /-- The least number of generators among common upper faces. -/
-private noncomputable def commonUpperMinCard {n : ℕ}
+noncomputable def commonUpperMinCard {n : ℕ}
     {P : RationalPolytope n} (F G : P.Face) : ℕ := by
   classical
-  exact Nat.find (exists_commonUpper_card F G)
+  exact Nat.find (show ∃ k : ℕ, ∃ H : P.Face,
+    F ≤ H ∧ G ≤ H ∧ H.generatorFinset.card = k from by
+      exact exists_commonUpper_card F G)
 
 private theorem commonUpperMinCard_spec {n : ℕ}
     {P : RationalPolytope n} (F G : P.Face) :
@@ -204,7 +210,9 @@ private theorem commonUpperMinCard_min {n : ℕ}
 with any other common upper face proves that it is the least one. -/
 noncomputable def supFace {n : ℕ} {P : RationalPolytope n}
     (F G : P.Face) : P.Face :=
-  Classical.choose (commonUpperMinCard_spec F G)
+  Classical.choose (show ∃ H : P.Face, F ≤ H ∧ G ≤ H ∧
+    H.generatorFinset.card = commonUpperMinCard F G from by
+      exact commonUpperMinCard_spec F G)
 
 private theorem supFace_spec {n : ℕ} {P : RationalPolytope n}
     (F G : P.Face) :

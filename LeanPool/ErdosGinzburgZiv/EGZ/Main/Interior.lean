@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.LeastFaceInterior
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceMassChain
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.LeastFaceInterior
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceMassChain
 
 /-!
 # Why the selected flag centerpoint is interior
@@ -14,6 +16,8 @@ On a finite support, a sufficiently large multiple of a face's exposing
 functional suppresses all points outside that face.  This gives the
 halfspaces needed to show that the centerpoint's least face is large.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

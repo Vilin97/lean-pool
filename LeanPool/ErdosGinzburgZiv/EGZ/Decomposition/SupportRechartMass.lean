@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartMass
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartMass
 
 /-!
 # Recharting supported fibre masses without a representation
@@ -13,6 +15,8 @@ Exact centered-mass transport uses only a support-generated lattice chart,
 modular injectivity, and containment of the supported centered lifts in the
 old support. The original finite-field affine map need not be surjective.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

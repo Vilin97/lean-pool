@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Tactic
+
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Tactic
 
 /-!
 # Parameters for the Flag Decomposition Lemma
@@ -14,6 +16,8 @@ The explicit initial scale `ε² / (16 * 3^(d+1))` satisfies the parameter
 choices in the paper.  The geometric estimates include arbitrary tails,
 so they also control every finite execution of the refinement procedure.
 -/
+
+@[expose] public section
 
 namespace EGZ.DecompositionParameters
 

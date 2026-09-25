@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.QuotientMass
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Reduction
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.QuotientMass
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Reduction
 
 /-!
 # Exact local-to-cumulative identity
@@ -16,6 +18,8 @@ integer-transition identity in Section 4.  Only local lifted weights occur
 on the right-hand side.  Boundedness at the upper node prevents a transition
 of a nonzero local lift from wrapping around modulo `p`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

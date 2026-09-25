@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
 
 /-!
 # Error margins and the driving function in the main argument
@@ -13,6 +15,8 @@ These estimates use a uniform bound `C` for the hollow constant.  They avoid
 the particular exponential constants in the paper; only a positive margin
 after rounding and balancing is needed.
 -/
+
+@[expose] public section
 
 namespace EGZ.MainProof
 

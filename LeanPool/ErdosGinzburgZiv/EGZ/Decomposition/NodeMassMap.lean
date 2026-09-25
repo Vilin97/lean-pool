@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LiftedMass
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.PruningStability
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LiftedMass
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.PruningStability
 
 /-!
 # Mass transport at surviving nodes
@@ -15,6 +17,8 @@ transports centered lifts exactly.  A stable node map additionally bounds
 the loss at the node by the loss of the entire decomposition. These data
 compose, so the same estimates apply along a surviving lineage.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

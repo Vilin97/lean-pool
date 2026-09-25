@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Rebuild
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Faces
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Rebuild
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Faces
 
 /-!
 # Decompositions on a prescribed support diagram
@@ -14,6 +16,8 @@ An exact nonempty cumulative support at every node permits packaging a
 decomposition on the given flag itself. Integer transitions preserving these
 supports imply face visibility, so visibility is not an extra input.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

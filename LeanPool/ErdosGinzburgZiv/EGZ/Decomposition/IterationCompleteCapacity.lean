@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.StoppedLineages
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationIntervalBounds
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.StoppedLineages
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationIntervalBounds
 
 /-!
 # Capacity of complete-event lineages
@@ -15,6 +17,8 @@ intervening event colors are at least that level's color, no lineage can
 return. A finite family of such events therefore has cardinality bounded by
 the initial node population.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.Iteration
 

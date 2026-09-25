@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Relative
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ExchangeCompletion
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Relative
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ExchangeCompletion
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
 
 /-!
 # Prescribed quotient counts
@@ -14,6 +16,8 @@ import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
 The integer coefficients give a natural multiplicity on the quotient.
 For a zero-dimensional fibre, this already proves relative expansion.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CompleteBounds
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CompleteRefinement
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RefinementGrowth
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CompleteBounds
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CompleteRefinement
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RefinementGrowth
 
 /-!
 # Uniform parameters for complete-element refinements
@@ -15,6 +17,8 @@ The coordinate growth function is selected using only the ambient dimension.
 Iterating a growth step gives all slab widths and a prime threshold uniform
 over the input decomposition, its local masses, and the selected anchor.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ScalarExtension
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeCoordinates
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalRepresentation
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Reduction
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ScalarExtension
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LatticeCoordinates
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalRepresentation
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Reduction
 
 /-!
 # Lifted mass in new lattice coordinates
@@ -17,6 +19,8 @@ old and new centered fibres on every ambient atom carrying cumulative mass.
 Summing that pointwise identification proves exact transport for every weight
 bounded by the cumulative weight, including the local summand.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

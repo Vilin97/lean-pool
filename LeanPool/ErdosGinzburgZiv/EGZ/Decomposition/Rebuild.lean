@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Restrict
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LocalToCumulative
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Restrict
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LocalToCumulative
 
 /-!
 # Rebuilding a flag after deleting local mass
@@ -14,6 +16,8 @@ Nonzero cumulative supports are closed under transition.  Keeping the active
 nodes and replacing their polytopes by these support hulls reconstructs a
 flag decomposition, including visibility of every face.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

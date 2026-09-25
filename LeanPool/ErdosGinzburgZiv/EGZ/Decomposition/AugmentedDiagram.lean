@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedCoordinates
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportDiagram
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceSelection
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SlabPruning
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedCoordinates
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportDiagram
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceSelection
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SlabPruning
 
 /-!
 # Support diagrams with additional slab coordinates
@@ -18,6 +20,8 @@ coordinates ensures that transitions retain exactly the available prefix.
 Centered lifts of cumulative atoms give a finite support diagram, even when
 the augmented finite-field maps are not surjective.
 -/
+
+@[expose] public section
 
 
 namespace EGZ.FlagDecomposition.Augmented

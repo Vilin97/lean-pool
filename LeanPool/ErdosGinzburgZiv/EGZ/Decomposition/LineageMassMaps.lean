@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NodeMassMapLevels
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Lineages
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NodeMassMapLevels
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Lineages
 
 /-!
 # Composed geometric and mass transport along low-level lineages
@@ -15,6 +17,8 @@ data compose without changing parent-node identifications. Iterating them
 gives the geometric and measure comparison between any two stages, while
 the parent agrees with the abstract lineage ancestor.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition
 

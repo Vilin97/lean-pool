@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Basic
-import Mathlib.Analysis.LocallyConvex.Separation
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Basic
+public import Mathlib.Analysis.LocallyConvex.Separation
 
 /-!
 # Weak convex hulls of flag points
@@ -14,6 +16,8 @@ This is Definition 3.10 and the elementary closure API around equation
 `wcabsorb`.  Proposition 3.11, the finite weak-hull/projection
 characterization, is stated as the geometric proof target.
 -/
+
+@[expose] public section
 
 namespace EGZ.ConvexFlag
 

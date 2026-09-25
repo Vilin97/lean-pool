@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CompletePreparation
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedDiagram
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportParameters
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CompletePreparation
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedDiagram
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportParameters
 
 /-!
 # Bounds for the augmented completeness diagram
@@ -16,6 +18,8 @@ atoms lie in the selected slab intersection. Consequently the augmented
 support has rank at most twice the ambient dimension and lies in the last
 selected width box.
 -/
+
+@[expose] public section
 
 
 namespace EGZ.FlagDecomposition.CompletePreparation

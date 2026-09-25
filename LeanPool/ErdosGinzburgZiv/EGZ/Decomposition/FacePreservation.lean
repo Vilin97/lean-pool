@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Restrict
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Restrict
 
 /-!
 # Preservation of realized faces
@@ -17,6 +19,8 @@ proper. Under these concrete conditions every old realized face restricts to
 a realized face whenever its pullback is nonempty. The key order inequality
 compares the new face index with the old one.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

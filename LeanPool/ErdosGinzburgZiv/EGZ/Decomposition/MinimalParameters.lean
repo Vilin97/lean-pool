@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartFlag
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartFlag
 
 /-!
 # Uniform parameters for minimal lattice coordinates
@@ -14,6 +16,8 @@ single prime threshold depending on that dimension and the old uniform box
 bound makes all chosen chart reductions injective and all new supports
 centered, simultaneously for every input decomposition.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

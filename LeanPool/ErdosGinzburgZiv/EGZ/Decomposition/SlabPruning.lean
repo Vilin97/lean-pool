@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ThinDirections
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Mass
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ThinDirections
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Mass
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
 
 /-!
 # Restricting a weight to selected thin slabs
@@ -16,6 +18,8 @@ The stage errors form a geometric sum, leaving enough thickness outside the
 maximal space of selected directions. Retained points also have bounded
 integer coordinates in the selected directions.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

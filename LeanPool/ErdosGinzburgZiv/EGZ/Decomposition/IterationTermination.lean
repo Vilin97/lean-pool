@@ -3,12 +3,16 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationColorCapacity
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationCompleteCapacity
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationFaceCapacity
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationColorCapacity
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationCompleteCapacity
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationFaceCapacity
 
 /-! # Uniform termination of certified finite refinement runs -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.Iteration
 

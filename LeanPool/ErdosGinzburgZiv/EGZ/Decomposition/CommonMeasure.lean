@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LargeFaceSequence
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LargeFaceSequence
 
 /-!
 # Large faces after passing to a common measure
@@ -14,6 +16,8 @@ and makes every old `ε`-large face `ε / 2`-large for the retained measure.
 The estimates apply to finite real weights, including natural weights by
 `WeightedIncidence.mass_natCast`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

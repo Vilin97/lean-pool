@@ -3,12 +3,14 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.BalancedCombination
-import Mathlib.Analysis.LocallyConvex.Separation
-import Mathlib.Analysis.Convex.Combination
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.FiniteHull
-import Mathlib.Algebra.BigOperators.Field
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.BalancedCombination
+public import Mathlib.Analysis.LocallyConvex.Separation
+public import Mathlib.Analysis.Convex.Combination
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.FiniteHull
+public import Mathlib.Algebra.BigOperators.Field
 
 /-!
 # Real balanced coefficients
@@ -17,6 +19,8 @@ The geometric part of balanced rounding: centrality puts the center in the
 image of a capped simplex. The cap can be selected at the largest centrality,
 so the resulting coefficients do not depend on the centrality parameter.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

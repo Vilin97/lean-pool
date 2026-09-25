@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceSurvival
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Minimalization
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceSurvival
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Minimalization
 
 /-!
 # Minimal and reduced face refinements
@@ -14,6 +16,8 @@ Minimalizing the active face split and then restricting to reduced nodes
 keeps the upper anchor for every proper selected face of a reduced old node.
 This gives a normalized operation with unchanged mass and uniform bounds.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.Rechart
 

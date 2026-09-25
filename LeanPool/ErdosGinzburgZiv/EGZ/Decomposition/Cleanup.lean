@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Mass
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Mass
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
 
 /-!
 # Finite gap cleanup
@@ -15,6 +17,8 @@ its positive mass is at most its threshold. Each fibre can be charged only
 once: after deletion its mass remains zero. Strong induction on the remaining
 finite set of fibres proves termination and the total mass bound together.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

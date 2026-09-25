@@ -3,11 +3,15 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Construction
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationTermination
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Construction
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationTermination
 
 /-! # The positive-dimensional Flag Decomposition Lemma -/
+
+@[expose] public section
 
 namespace EGZ
 

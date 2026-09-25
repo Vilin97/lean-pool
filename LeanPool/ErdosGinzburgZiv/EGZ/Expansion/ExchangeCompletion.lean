@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Subweights
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Subweights
 
 /-!
 # Completing a family of disjoint exchanges to a zero sum
@@ -13,6 +15,8 @@ A family of exchanges which covers a quotient fibre can be combined with
 prescribed filler counts. Disjointness of multiset positions is expressed by
 a pointwise capacity bound on all reserved multiplicities.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

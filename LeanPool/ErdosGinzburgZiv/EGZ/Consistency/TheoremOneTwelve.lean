@@ -3,12 +3,14 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Polytope
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.LeastFaceInterior
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Centerpoint
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.FaceModel
-import LeanPool.ErdosGinzburgZiv.EGZ.Consistency.FaceFlagHellyBound
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.Polytope
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.LeastFaceInterior
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Centerpoint
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.FaceModel
+public import LeanPool.ErdosGinzburgZiv.EGZ.Consistency.FaceFlagHellyBound
 
 /-!
 # Regression check for Theorem 1.12
@@ -24,6 +26,8 @@ it verifies, without any local `sorry`, that the explicit construction
 obligations below suffice.  In particular, the Helly bound is derived from
 the three-case check in `FaceFlagHellyBound`, rather than stored as a field.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

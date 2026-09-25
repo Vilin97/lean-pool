@@ -3,13 +3,15 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedDiagram
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedRepresentation
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportRechartMass
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportDecomposition
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportParameters
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FacePreservation
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedDiagram
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedRepresentation
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportRechartMass
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportDecomposition
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportParameters
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FacePreservation
 
 /-!
 # Decompositions with additional affine coordinates
@@ -19,6 +21,8 @@ integer lattice charts yields an actual minimal decomposition on the same
 nodes and with the same local weights. Forgetting the additional coordinates
 maps its proper points to the original decomposition.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

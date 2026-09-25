@@ -3,12 +3,14 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Basic
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.WeakHull
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Helly
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Centerpoint
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.ConvexHull
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.FaceModel
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Basic
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.WeakHull
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Helly
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Centerpoint
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.ConvexHull
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.FaceModel
 
 /-! Public import surface for convex flags, weak hulls, Helly, and centerpoints. -/

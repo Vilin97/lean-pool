@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ScalarExtension
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ScalarExtension
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
 /-!
 # Injectivity over the reals from injectivity modulo a prime
@@ -15,6 +17,8 @@ For a square integer matrix, injectivity modulo a prime implies that the
 integer determinant is nonzero. Its real scalar extension is therefore
 injective. This applies to integral affine maps between equal-rank fibres.
 -/
+
+@[expose] public section
 
 namespace EGZ.IntegralAffineMap
 

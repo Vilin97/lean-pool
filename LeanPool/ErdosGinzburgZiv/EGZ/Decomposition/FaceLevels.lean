@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Levels
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RealSupportRank
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceRefinement
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Levels
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RealSupportRank
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceRefinement
 
 /-!
 # Strict level increase after face refinement and minimalization
@@ -16,6 +18,8 @@ Minimalizing the resulting lower anchor identifies its lattice rank with
 the dimension of the selected proper face. Its represented space must then
 shrink, giving the strict level increase used in termination.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.FaceRefinement
 

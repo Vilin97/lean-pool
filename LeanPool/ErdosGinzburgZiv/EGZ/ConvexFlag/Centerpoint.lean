@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Helly
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Helly
 
 /-!
 # Centerpoints in convex flags
@@ -14,6 +16,8 @@ Helly theorem.  We use a finite indexed weight function rather than measure
 theory, exactly matching the finite weighted set in the paper and its later
 application to local lifted mass.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

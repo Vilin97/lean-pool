@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
 
 /-!
 # Local-to-cumulative mass over residue classes
@@ -19,6 +21,8 @@ fibre of the upper representation map.  Passing from this quotient-level
 identity to the paper's sum over local flag points additionally uses uniqueness
 of centered representatives for odd `p`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

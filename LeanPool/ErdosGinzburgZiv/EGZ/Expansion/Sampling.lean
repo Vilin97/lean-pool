@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.FiniteProbability
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SlabArithmetic
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.FiniteProbability
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SlabArithmetic
 
 /-!
 # Concentration of finite exchange samples
@@ -14,6 +16,8 @@ Pair differences find centres in the individual fibres. Product sampling
 then turns concentration of an exchange sum into a bounded relation among
 those centres.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

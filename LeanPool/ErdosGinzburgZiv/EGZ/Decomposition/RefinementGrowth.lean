@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
-import Mathlib.Order.Iterate
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
+public import Mathlib.Order.Iterate
 
 /-!
 # Growth functions for completeness refinements
@@ -14,6 +16,8 @@ One step of the width sequence dominates the requested width after changing
 to the bounded lattice coordinates. The same sequence bounds every possible
 number of added directions up to the ambient dimension.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

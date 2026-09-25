@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.RelativeConcentration
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SampleDistribution
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ExchangeResources
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.RelativeConcentration
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.SampleDistribution
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ExchangeResources
 
 /-!
 # Thick distributions of available disjoint exchanges
@@ -15,6 +17,8 @@ An equal mixture of diagonal and affine-relation samples is thick.
 The collision estimate permits restriction to injective samples, which
 are actual exchanges on the unused atom positions.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Matrix
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.DilatedGrowth
-import Mathlib.LinearAlgebra.Dimension.Finrank
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.DilatedGrowth
+public import Mathlib.LinearAlgebra.Dimension.Finrank
 
 /-!
 # A thick support contains a basis
@@ -14,6 +16,8 @@ Positive central thickness rules out containment in a proper linear
 subspace.  A basis selected from the positive support can therefore be
 used in the initial growth phase.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Module

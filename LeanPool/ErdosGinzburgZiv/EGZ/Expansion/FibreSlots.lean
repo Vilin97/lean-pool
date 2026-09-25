@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Subweights
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Subweights
 
 /-!
 # Remaining multiset positions in each fibre
@@ -13,6 +15,8 @@ Deletion is performed on labelled positions, so coincident vectors retain
 their separate multiplicities. The remaining fibres reconstruct exactly
 the remaining natural-valued weight.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

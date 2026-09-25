@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.RealCoefficients
-import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.RationalApproximation
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.RealCoefficients
+public import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.RationalApproximation
 
 /-!
 # Rational balanced coefficients
@@ -14,6 +16,8 @@ Approximation inside the strict caps preserves the exact rational affine
 equations. The largest centrality keeps the resulting coefficients uniform
 over every admissible centrality parameter.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Matrix
 

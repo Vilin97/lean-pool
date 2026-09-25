@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapCleanup
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Pullback
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SlabPruning
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapCleanup
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Pullback
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SlabPruning
 
 /-!
 # Pruning only below one node
@@ -15,6 +17,8 @@ Restrict the local weights below an anchor to a fixed set of ambient points.
 The lost total mass is exactly the lost cumulative mass at the anchor. The
 surviving weights can be rebuilt using the geometric pruning construction.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

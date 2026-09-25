@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FacePreservation
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FacePreservation
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # Geometric rank bounds for repeated large faces
@@ -14,6 +16,8 @@ For a fixed nonempty set of points, faces which are least among the faces
 containing that set have strictly decreasing dimension in a nested polytope
 sequence satisfying the no-repetition condition.
 -/
+
+@[expose] public section
 
 namespace EGZ.RationalPolytope.Face
 

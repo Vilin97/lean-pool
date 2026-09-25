@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.Data.Nat.Find
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Basic
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.Data.Nat.Find
 
 /-!
 # Maximal independent thin directions
@@ -17,6 +19,8 @@ A greedy extension by thin functionals therefore stops after at most `d`
 steps. The selected directions have the prescribed stage-dependent widths,
 and every direction outside the final submodule is thick at the next stage.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

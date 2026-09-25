@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NodeMassMapLevels
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Parameters
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NodeMassMapLevels
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Parameters
 
 /-!
 # States and progress certificates for the decomposition iteration
@@ -14,6 +16,8 @@ States are minimal and reduced, with a positive constant coordinate radius.
 An event records an unsatisfied conclusion. Its color orders completeness
 and face events by the represented level, with gap cleanup last.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition
 

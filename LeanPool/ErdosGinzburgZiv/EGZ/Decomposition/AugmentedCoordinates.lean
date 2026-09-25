@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ScalarExtension
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.ScalarExtension
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
 
 /-!
 # Adding slab coordinates to a flag fibre
@@ -15,6 +17,8 @@ functionals. These coordinate maps project to the old fibre, retain the
 additional coordinates along lower transitions, and commute with scalar
 extension and reduction modulo every modulus.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

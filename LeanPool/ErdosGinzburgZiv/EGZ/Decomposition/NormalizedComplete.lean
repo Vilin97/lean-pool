@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.UniformCompleteRefinement
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.UniformCompleteRefinement
 
 /-!
 # Reduced complete-element refinements
@@ -13,6 +15,8 @@ Restricting the constructed complete-element refinement to its reduced nodes
 retains the explicit complete representative and removes the old upper
 anchor. Minimality, all mass bounds, and the subdivision map survive.
 -/
+
+@[expose] public section
 
 namespace EGZ.FlagDecomposition.CompletePreparation
 

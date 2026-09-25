@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LocalizedPruning
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LowerTransfer
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedCompleteness
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LocalizedPruning
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LowerTransfer
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.AugmentedCompleteness
 
 /-!
 # Preparing a complete-element refinement
@@ -16,6 +18,8 @@ and transfer its surviving local mass to a lower layer. This produces an
 actual flag decomposition, with controlled mass loss and a non-reduced old
 upper anchor, before adjoining the new slab coordinates.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

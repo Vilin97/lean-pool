@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Convex.AffineLattice
-import Mathlib.Analysis.Convex.KreinMilman
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Convex.AffineLattice
+public import Mathlib.Analysis.Convex.KreinMilman
 
 /-!
 # A polytope is the convex hull of its vertices
@@ -13,6 +15,8 @@ import Mathlib.Analysis.Convex.KreinMilman
 This finite-dimensional consequence of Krein--Milman is used when a hollow
 rational polytope is converted into a finite `p`-hollow family.
 -/
+
+@[expose] public section
 
 namespace EGZ.RationalPolytope
 

@@ -3,14 +3,18 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Combinatorics.Pigeonhole
-import Mathlib.Data.ZMod.Basic
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Combinatorics.Pigeonhole
+public import Mathlib.Data.ZMod.Basic
 
 /-!
 # Basic
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalLattice
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.MinimalLattice
 
 /-!
 # Transition maps in support-generated lattice coordinates
@@ -13,6 +15,8 @@ An affine map taking the source generators into the target generated lattice
 factors uniquely through their integer coordinate charts.  Uniqueness then
 supplies the identity and composition laws for recharted flag transitions.
 -/
+
+@[expose] public section
 
 namespace EGZ.IntegerLatticeChart
 

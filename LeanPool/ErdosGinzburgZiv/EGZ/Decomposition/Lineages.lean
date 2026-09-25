@@ -3,11 +3,13 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import Mathlib.Data.Fintype.Card
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Nat.Basic
-import Mathlib.Tactic
+
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Data.Nat.Basic
+public import Mathlib.Tactic
 
 /-!
 # Lineages of nodes below a fixed level
@@ -17,6 +19,8 @@ the low-level nodes, embed every later low-level population in the initial
 one. Event counts therefore reduce to counts for initial ancestor labels.
 A killed lineage cannot label any later event.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

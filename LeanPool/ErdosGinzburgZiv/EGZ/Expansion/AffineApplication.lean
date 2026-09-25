@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Affine
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartMass
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartFlag
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Affine
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartMass
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.RechartFlag
 
 /-!
 # Applying relative expansion to affine fibres
@@ -15,6 +17,8 @@ The relative expansion statement implies an affine-subspace version with
 uniform thresholds in the original ambient dimension.  Translating the
 integer centre doubles the box radius and changes the weighted sum to zero.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Order.Hom.Lattice
-import Mathlib.Order.Fin.Basic
+
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Order.Hom.Lattice
+public import Mathlib.Order.Fin.Basic
 
 /-!
 # Two-layer refinements of a finite node poset
@@ -16,6 +18,8 @@ lower copy. The product order preserves joins. A global selector moves the
 selected atoms below the anchor to the lower layer; this preserves all total
 mass and every upper cumulative weight.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Pullback
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Pullback
 
 /-!
 # A reduced representative with the same cumulative weight
@@ -13,6 +15,8 @@ The face index of the whole polytope is the join of all proper bases below
 the node. Every nonzero local summand has such a base, so passing to this
 reduced node preserves the entire cumulative function.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportDiagram
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.SupportDiagram
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.CenteredLift
 
 /-!
 # Uniform chart parameters for support diagrams
@@ -14,6 +16,8 @@ These bounds apply before a finite-field representation has been constructed.
 Only the ranks and integer support boxes enter the coordinate growth function
 and the prime threshold.
 -/
+
+@[expose] public section
 
 namespace EGZ
 

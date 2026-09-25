@@ -3,10 +3,12 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Sampling
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Subweights
-import Mathlib.Data.Fintype.Sum
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Sampling
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Subweights
+public import Mathlib.Data.Fintype.Sum
 
 /-!
 # Bounded exchange patterns and their independent samples
@@ -15,6 +17,8 @@ A pattern prescribes the number of positive and negative positions in each
 fibre. Sampling all these positions independently gives exact uniform
 marginals; injective samples are the disjoint exchanges used later.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

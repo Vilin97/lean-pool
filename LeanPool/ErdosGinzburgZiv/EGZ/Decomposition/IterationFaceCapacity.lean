@@ -3,13 +3,15 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationEvents
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LineageMassMaps
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceMassChain
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationConstants
-import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationIntervalBounds
-import Mathlib.Data.Finset.Sort
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationEvents
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.LineageMassMaps
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FaceMassChain
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationConstants
+public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationIntervalBounds
+public import Mathlib.Data.Finset.Sort
 
 /-!
 # Face events on a surviving lineage
@@ -19,6 +21,8 @@ parent injectivity identifies the surviving child with the resolved target,
 and composed subdivisions preserve realization. This is the geometric
 no-repeat input for the uniform face-chain bound.
 -/
+
+@[expose] public section
 
 namespace EGZ.Lineages
 

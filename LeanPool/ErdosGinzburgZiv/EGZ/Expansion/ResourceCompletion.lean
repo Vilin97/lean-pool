@@ -3,15 +3,19 @@ Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dmitrii Zakharov
 -/
+module
 
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ExchangeResources
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ExchangeCompletion
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.GrowthIteration
-import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.PrescribedCounts
+
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ExchangeResources
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.ExchangeCompletion
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.GrowthIteration
+public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.PrescribedCounts
 
 /-!
 # Converting exchange coverage to multiplicity bounds
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 
