@@ -32,7 +32,7 @@ TODO: if those lemmas land in Mathlib, delete this file and switch uses to the u
 
 open MeasureTheory MeasurableEquiv
 
-public noncomputable section
+@[expose] public noncomputable section
 
 namespace MeasureTheory.Measure
 

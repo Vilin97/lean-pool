@@ -9,13 +9,13 @@ public import LeanPool.CarlsonFunctions.Dirichlet.Beta.Complex.Basic
 
 public import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
 
-import Mathlib.MeasureTheory.Integral.Pi
-import LeanPool.CarlsonFunctions.Pochhammer.Gamma
-import LeanPool.CarlsonFunctions.Pochhammer.BetaIntegral
-import LeanPool.CarlsonFunctions.Pochhammer.ComplexPowMeasurable
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.FiniteDimensionalHyperplane
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.PiSnoc
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.ProdSlices
+public import Mathlib.MeasureTheory.Integral.Pi
+public import LeanPool.CarlsonFunctions.Pochhammer.Gamma
+public import LeanPool.CarlsonFunctions.Pochhammer.BetaIntegral
+public import LeanPool.CarlsonFunctions.Pochhammer.ComplexPowMeasurable
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.FiniteDimensionalHyperplane
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.PiSnoc
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.ProdSlices
 
 /-! # Solid-simplex integral evaluation of multivariate beta -/
 

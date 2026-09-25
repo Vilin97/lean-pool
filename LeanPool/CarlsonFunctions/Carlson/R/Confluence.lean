@@ -8,8 +8,8 @@ module
 public import LeanPool.CarlsonFunctions.Carlson.R.Integral
 public import LeanPool.CarlsonFunctions.Carlson.S
 
-import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Confluence of Carlson's R-function to the S-function

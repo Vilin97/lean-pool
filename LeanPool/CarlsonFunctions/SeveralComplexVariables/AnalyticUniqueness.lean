@@ -8,7 +8,7 @@ module
 public import Mathlib.Analysis.Analytic.IsolatedZeros
 public import Mathlib.Analysis.Complex.CauchyIntegral
 
-import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
 # Analytic uniqueness from positive real parameters

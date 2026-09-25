@@ -9,7 +9,7 @@ module
 
 public import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
 
-import LeanPool.CarlsonFunctions.Pochhammer.Gamma
+public import LeanPool.CarlsonFunctions.Pochhammer.Gamma
 
 /-! # The complex multivariate beta function -/
 

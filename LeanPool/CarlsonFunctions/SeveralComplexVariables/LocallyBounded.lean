@@ -16,7 +16,7 @@ separately holomorphic functions. This supplies the continuity hypothesis of Osg
 theorem and the equicontinuity estimate used in Montel's theorem.
 -/
 
-public section
+@[expose] public section
 
 open Complex Filter Function Metric Set
 open scoped NNReal Topology

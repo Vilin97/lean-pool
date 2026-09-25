@@ -17,7 +17,7 @@ proved here. The polydisc Cauchy formula and its series construction live in the
 modules and remain available through this file.
 -/
 
-public section
+@[expose] public section
 
 open Complex Filter Function MeasureTheory Metric Set
 open scoped ENNReal NNReal Real Topology

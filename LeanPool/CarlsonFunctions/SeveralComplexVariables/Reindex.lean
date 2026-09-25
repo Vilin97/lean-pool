@@ -16,7 +16,7 @@ is transported along any enumeration of a finite index type; its value is indepe
 of that enumeration whenever the Cauchy hypotheses hold.
 -/
 
-public section
+@[expose] public section
 
 open Complex Function MeasureTheory Set
 open scoped Real

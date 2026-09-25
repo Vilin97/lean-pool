@@ -10,8 +10,8 @@ module
 public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Binomial
 public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Differential
 
-import LeanPool.CarlsonFunctions.Pochhammer.Gamma
-import LeanPool.CarlsonFunctions.Pochhammer.Vandermonde
+public import LeanPool.CarlsonFunctions.Pochhammer.Gamma
+public import LeanPool.CarlsonFunctions.Pochhammer.Vandermonde
 
 /-!
 # Linear transformations of Carlson's R-polynomials

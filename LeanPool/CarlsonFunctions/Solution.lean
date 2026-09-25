@@ -3,15 +3,17 @@ Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bastiaan J Braams
 -/
+module
+
 
 /- Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bastiaan J Braams -/
-import LeanPool.CarlsonFunctions.Pochhammer
-import LeanPool.CarlsonFunctions.SeveralComplexVariables
-import LeanPool.CarlsonFunctions.StdSimplexMeasure
-import LeanPool.CarlsonFunctions.Dirichlet
-import LeanPool.CarlsonFunctions.Carlson
+public import LeanPool.CarlsonFunctions.Pochhammer
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure
+public import LeanPool.CarlsonFunctions.Dirichlet
+public import LeanPool.CarlsonFunctions.Carlson
 
 /-!
 # Proved counterparts of Statement.lean
@@ -21,6 +23,8 @@ Comparator compares the PalomarSnapshot declarations in these two independent
 environments. The elementary definitions are intentionally repeated verbatim;
 each theorem below points to an existing project proof. See PALOMAR.md.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set
 open scoped Topology Matrix

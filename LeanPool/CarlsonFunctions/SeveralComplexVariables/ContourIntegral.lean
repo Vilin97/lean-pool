@@ -24,7 +24,7 @@ It does not assert a Jordan-curve theorem or homotopy invariance of contours.
 
 open Complex MeasureTheory Filter Metric Set
 open scoped Topology
-public section
+@[expose] public section
 variable {E α : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
   [FiniteDimensional ℂ E] [MeasurableSpace α] [TopologicalSpace α]
   [BorelSpace α] [T2Space α]

@@ -10,7 +10,7 @@ public import LeanPool.CarlsonFunctions.Dirichlet.Average.Deriv
 public import LeanPool.CarlsonFunctions.Dirichlet.Average.Bridge
 public import LeanPool.CarlsonFunctions.SeveralComplexVariables.AnalyticUniqueness
 
-import Mathlib.Analysis.Analytic.Uniqueness
+public import Mathlib.Analysis.Analytic.Uniqueness
 
 /-!
 # Analytic continuation of Carlson's Dirichlet averages

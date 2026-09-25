@@ -12,7 +12,7 @@ public import Mathlib.LinearAlgebra.Finsupp.Pi
 public import Mathlib.MeasureTheory.Integral.Bochner.Set
 public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.ProdSlices
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.ProdSlices
 
 /-! # Aggregation of solid-simplex volume -/
 

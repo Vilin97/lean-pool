@@ -8,19 +8,19 @@ module
 
 
 public import Mathlib.MeasureTheory.Integral.Bochner.Set
-public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 public import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex.Basic
 
-import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.EuclideanCrossSection
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.EuclideanCrossSection
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 import all LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 
 /-! # Basic integration with the affine-hyperplane coordinate measure -/
 
 open Fintype (card)
 
-public noncomputable section StdSimplexIntegral
+@[expose] public noncomputable section StdSimplexIntegral
 
 namespace MeasureTheory
 

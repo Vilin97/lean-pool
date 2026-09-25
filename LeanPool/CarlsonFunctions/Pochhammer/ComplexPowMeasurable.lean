@@ -16,7 +16,7 @@ This file is a temporary home for a measurability result intended for the Mathli
 complex powers. It is independent of the multivariate Beta function.
 -/
 
-public noncomputable section
+@[expose] public noncomputable section
 
 namespace Complex
 

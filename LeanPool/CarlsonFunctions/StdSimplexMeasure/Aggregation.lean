@@ -8,7 +8,7 @@ module
 public import Mathlib.Geometry.Convex.ConvexSpace.Defs
 public import Mathlib.Topology.Algebra.Monoid.FunOnFinite
 
-import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Fintype.BigOperators
 
 /-!
 # Aggregation of finite coordinates

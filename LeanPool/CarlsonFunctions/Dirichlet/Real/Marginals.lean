@@ -12,8 +12,9 @@ public import Mathlib.Probability.Moments.Variance
 public import LeanPool.CarlsonFunctions.Dirichlet.Real
 public import LeanPool.CarlsonFunctions.StdSimplexMeasure.MomentDetermination
 
-import LeanPool.CarlsonFunctions.Pochhammer.Gamma
-import LeanPool.CarlsonFunctions.Pochhammer.Vandermonde
+public import LeanPool.CarlsonFunctions.Pochhammer.Gamma
+public import LeanPool.CarlsonFunctions.Pochhammer.Vandermonde
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 import all LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 
 /-! # Beta marginals of the real Dirichlet distribution -/

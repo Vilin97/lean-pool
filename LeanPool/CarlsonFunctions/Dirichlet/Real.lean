@@ -11,7 +11,8 @@ public import Mathlib.Probability.Distributions.Beta
 public import LeanPool.CarlsonFunctions.Dirichlet.Integral.Real
 public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Interior
 
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 import all LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 
 /-!

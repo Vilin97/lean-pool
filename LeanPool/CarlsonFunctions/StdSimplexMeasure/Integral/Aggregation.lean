@@ -12,16 +12,17 @@ public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure
 public import LeanPool.CarlsonFunctions.Pochhammer.BetaIntegral
 public import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex
 
-import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.EuclideanCrossSection
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.EuclideanCrossSection
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 import all LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 
 /-! # Coordinate aggregation in standard-simplex integrals -/
 
 open Fintype (card)
 
-public noncomputable section StdSimplexIntegral
+@[expose] public noncomputable section StdSimplexIntegral
 
 namespace MeasureTheory
 

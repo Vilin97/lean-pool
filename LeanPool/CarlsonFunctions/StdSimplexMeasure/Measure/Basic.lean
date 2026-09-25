@@ -13,14 +13,14 @@ public import Mathlib.MeasureTheory.Measure.WithDensity
 public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 public import LeanPool.CarlsonFunctions.StdSimplexMeasure.CoordinateRealization
 
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.MeasureTheory.Measure.Dirac.Basic
-import Mathlib.MeasureTheory.Measure.Dirac.Def
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex.Basic
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+public import Mathlib.MeasureTheory.Measure.Dirac.Basic
+public import Mathlib.MeasureTheory.Measure.Dirac.Def
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex.Basic
 
 /-! # The ambient affine-hyperplane coordinate measure -/
 
-public noncomputable section StdSimplexCoordinateMeasure
+@[expose] public noncomputable section StdSimplexCoordinateMeasure
 
 namespace MeasureTheory.Measure
 

@@ -28,7 +28,7 @@ TODO: if those lemmas land in Mathlib, delete this file and switch uses to the u
 
 open Finset Polynomial
 
-public noncomputable section
+@[expose] public noncomputable section
 
 variable {R : Type*}
 

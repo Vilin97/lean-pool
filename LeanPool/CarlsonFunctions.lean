@@ -3,217 +3,219 @@ Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bastiaan J Braams
 -/
+module
 
-import LeanPool.CarlsonFunctions.Carlson
-import LeanPool.CarlsonFunctions.Carlson.Aggregation
-import LeanPool.CarlsonFunctions.Carlson.Associated.LinearDependence
-import LeanPool.CarlsonFunctions.Carlson.Associated.Shift
-import LeanPool.CarlsonFunctions.Carlson.L
-import LeanPool.CarlsonFunctions.Carlson.L.Associated
-import LeanPool.CarlsonFunctions.Carlson.L.Basic
-import LeanPool.CarlsonFunctions.Carlson.L.Continuation
-import LeanPool.CarlsonFunctions.Carlson.L.Deriv
-import LeanPool.CarlsonFunctions.Carlson.L.EulerPoisson
-import LeanPool.CarlsonFunctions.Carlson.L.JointRecurrence
-import LeanPool.CarlsonFunctions.Carlson.L.Properties
-import LeanPool.CarlsonFunctions.Carlson.L.Relations
-import LeanPool.CarlsonFunctions.Carlson.L.Series
-import LeanPool.CarlsonFunctions.Carlson.L.SlitContinuation
-import LeanPool.CarlsonFunctions.Carlson.L.SlitDeriv
-import LeanPool.CarlsonFunctions.Carlson.L.SlitIntegral
-import LeanPool.CarlsonFunctions.Carlson.L.SlitProperties
-import LeanPool.CarlsonFunctions.Carlson.L.SlitRelations
-import LeanPool.CarlsonFunctions.Carlson.R
-import LeanPool.CarlsonFunctions.Carlson.R.Associated.ExponentReduction
-import LeanPool.CarlsonFunctions.Carlson.R.AssociatedDependence
-import LeanPool.CarlsonFunctions.Carlson.R.AssociatedRecurrence
-import LeanPool.CarlsonFunctions.Carlson.R.Basic
-import LeanPool.CarlsonFunctions.Carlson.R.Confluence
-import LeanPool.CarlsonFunctions.Carlson.R.Continuation
-import LeanPool.CarlsonFunctions.Carlson.R.ContinuedRecurrence
-import LeanPool.CarlsonFunctions.Carlson.R.Contour
-import LeanPool.CarlsonFunctions.Carlson.R.Deriv
-import LeanPool.CarlsonFunctions.Carlson.R.EulerPoisson
-import LeanPool.CarlsonFunctions.Carlson.R.EulerTransform
-import LeanPool.CarlsonFunctions.Carlson.R.Exponent
-import LeanPool.CarlsonFunctions.Carlson.R.IntegerParameters
-import LeanPool.CarlsonFunctions.Carlson.R.Integral
-import LeanPool.CarlsonFunctions.Carlson.R.IntegralEvaluation
-import LeanPool.CarlsonFunctions.Carlson.R.JointParameter
-import LeanPool.CarlsonFunctions.Carlson.R.JointRecurrence
-import LeanPool.CarlsonFunctions.Carlson.R.Laplace
-import LeanPool.CarlsonFunctions.Carlson.R.RayKernel
-import LeanPool.CarlsonFunctions.Carlson.R.Recurrence.Coefficients
-import LeanPool.CarlsonFunctions.Carlson.R.Recurrence.JointCoefficients
-import LeanPool.CarlsonFunctions.Carlson.R.Relations
-import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral
-import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral.Continuation
-import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral.PositiveRay
-import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral.Series
-import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral.UnitInterval
-import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegralAnalytic
-import LeanPool.CarlsonFunctions.Carlson.R.SlitAssociated
-import LeanPool.CarlsonFunctions.Carlson.R.SlitContinuation
-import LeanPool.CarlsonFunctions.Carlson.R.SlitDeriv
-import LeanPool.CarlsonFunctions.Carlson.R.SlitIntegral
-import LeanPool.CarlsonFunctions.Carlson.R.SlitJointAnalytic
-import LeanPool.CarlsonFunctions.Carlson.R.SlitPlane
-import LeanPool.CarlsonFunctions.Carlson.R.SlitRecurrence
-import LeanPool.CarlsonFunctions.Carlson.R.SlitRelations
-import LeanPool.CarlsonFunctions.Carlson.R.SmallVariable
-import LeanPool.CarlsonFunctions.Carlson.R.ZeroParameter
-import LeanPool.CarlsonFunctions.Carlson.RPolynomial
-import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Basic
-import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Binomial
-import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Coefficients
-import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Differential
-import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Estimates
-import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Generating
-import LeanPool.CarlsonFunctions.Carlson.RPolynomial.PowerSeries
-import LeanPool.CarlsonFunctions.Carlson.RPolynomial.SharpEstimates
-import LeanPool.CarlsonFunctions.Carlson.RPolynomial.TaylorContinuation
-import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Transform
-import LeanPool.CarlsonFunctions.Carlson.S
-import LeanPool.CarlsonFunctions.Carlson.S.Analytic
-import LeanPool.CarlsonFunctions.Carlson.S.Basic
-import LeanPool.CarlsonFunctions.Carlson.S.Deriv
-import LeanPool.CarlsonFunctions.Carlson.S.Properties
-import LeanPool.CarlsonFunctions.Carlson.S.Series
-import LeanPool.CarlsonFunctions.Carlson.T
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Associated
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Basic
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.EqualParameter
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Inversion
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.L
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.L.Associated
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.L.Inversion
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.LQuadratic
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.ParameterSymmetry
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.PolynomialDifferential
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Quadratic
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Quadratic.Geometry
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Quadratic.Integral
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Quadratic.Polynomial
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.QuadraticContinuation
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.QuadraticSeries
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.QuadraticSlit
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.R
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.R.Associated
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.R.Basic
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.R.Inversion
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.RPolynomial
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.RPolynomial.Basic
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.S
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.S.Basic
-import LeanPool.CarlsonFunctions.Carlson.TwoVariable.T
-import LeanPool.CarlsonFunctions.Carlson.ZeroParameter
-import LeanPool.CarlsonFunctions.Dirichlet
-import LeanPool.CarlsonFunctions.Dirichlet.Average
-import LeanPool.CarlsonFunctions.Dirichlet.Average.Aggregation
-import LeanPool.CarlsonFunctions.Dirichlet.Average.Associated
-import LeanPool.CarlsonFunctions.Dirichlet.Average.Associated.Analytic
-import LeanPool.CarlsonFunctions.Dirichlet.Average.Associated.Deriv
-import LeanPool.CarlsonFunctions.Dirichlet.Average.Associated.Relations
-import LeanPool.CarlsonFunctions.Dirichlet.Average.Basic
-import LeanPool.CarlsonFunctions.Dirichlet.Average.Bridge
-import LeanPool.CarlsonFunctions.Dirichlet.Average.Cauchy
-import LeanPool.CarlsonFunctions.Dirichlet.Average.CauchyContinuation
-import LeanPool.CarlsonFunctions.Dirichlet.Average.Continuation
-import LeanPool.CarlsonFunctions.Dirichlet.Average.ContinuedRelations
-import LeanPool.CarlsonFunctions.Dirichlet.Average.Deriv
-import LeanPool.CarlsonFunctions.Dirichlet.Average.DifferentialOperators
-import LeanPool.CarlsonFunctions.Dirichlet.Average.HolomorphicDomain
-import LeanPool.CarlsonFunctions.Dirichlet.Average.IntegralDomain
-import LeanPool.CarlsonFunctions.Dirichlet.Average.JointContinuation
-import LeanPool.CarlsonFunctions.Dirichlet.Average.Kernel
-import LeanPool.CarlsonFunctions.Dirichlet.Average.NewtonTaylor
-import LeanPool.CarlsonFunctions.Dirichlet.Average.PowerSeries
-import LeanPool.CarlsonFunctions.Dirichlet.Average.Real
-import LeanPool.CarlsonFunctions.Dirichlet.Average.ResolventContinuation
-import LeanPool.CarlsonFunctions.Dirichlet.Beta.Complex
-import LeanPool.CarlsonFunctions.Dirichlet.Beta.Complex.Basic
-import LeanPool.CarlsonFunctions.Dirichlet.Beta.Complex.Integral
-import LeanPool.CarlsonFunctions.Dirichlet.Beta.Real
-import LeanPool.CarlsonFunctions.Dirichlet.Bridge
-import LeanPool.CarlsonFunctions.Dirichlet.Complex
-import LeanPool.CarlsonFunctions.Dirichlet.Complex.Analytic
-import LeanPool.CarlsonFunctions.Dirichlet.Complex.Parametric
-import LeanPool.CarlsonFunctions.Dirichlet.Gamma
-import LeanPool.CarlsonFunctions.Dirichlet.Integral.Complex
-import LeanPool.CarlsonFunctions.Dirichlet.Integral.Real
-import LeanPool.CarlsonFunctions.Dirichlet.IntegrationByParts
-import LeanPool.CarlsonFunctions.Dirichlet.Moments
-import LeanPool.CarlsonFunctions.Dirichlet.ParameterShift
-import LeanPool.CarlsonFunctions.Dirichlet.Polynomial
-import LeanPool.CarlsonFunctions.Dirichlet.Real
-import LeanPool.CarlsonFunctions.Dirichlet.Real.Aggregation
-import LeanPool.CarlsonFunctions.Dirichlet.Real.Marginals
-import LeanPool.CarlsonFunctions.Dirichlet.Real.Moments
-import LeanPool.CarlsonFunctions.Dirichlet.Transform
-import LeanPool.CarlsonFunctions.Dirichlet.Transform.Parametric
-import LeanPool.CarlsonFunctions.Main
-import LeanPool.CarlsonFunctions.Pochhammer
-import LeanPool.CarlsonFunctions.Pochhammer.BetaIntegral
-import LeanPool.CarlsonFunctions.Pochhammer.BinomialSeries
-import LeanPool.CarlsonFunctions.Pochhammer.ComplexPowMeasurable
-import LeanPool.CarlsonFunctions.Pochhammer.Estimates
-import LeanPool.CarlsonFunctions.Pochhammer.Gamma
-import LeanPool.CarlsonFunctions.Pochhammer.Identities
-import LeanPool.CarlsonFunctions.Pochhammer.IncompleteMellin
-import LeanPool.CarlsonFunctions.Pochhammer.PochhammerTransform
-import LeanPool.CarlsonFunctions.Pochhammer.PositiveCpow
-import LeanPool.CarlsonFunctions.Pochhammer.Vandermonde
-import LeanPool.CarlsonFunctions.SeveralComplexVariables
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.AnalyticUniqueness
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.Basic
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.CauchyCoefficients
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.CauchyDerivatives
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.CauchyEstimates
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.CauchyIntegral
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.CauchyRiemann
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.CauchySeries
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.ContourIntegral
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.Derivatives
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.DominatedIntegral
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.FunctionSpace
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.LocallyBounded
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.LocallyUniform
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.Montel
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.Osgood
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.ParametricIntegral
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.Polydisc
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.PolydiscTaylor
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.PolynomialDerivatives
-import LeanPool.CarlsonFunctions.SeveralComplexVariables.Reindex
-import LeanPool.CarlsonFunctions.Solution
-import LeanPool.CarlsonFunctions.StdSimplexMeasure
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Aggregation
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.CoordinateRealization
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Coordinates
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.EuclideanCrossSection
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.FiniteDimensionalHyperplane
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Integral
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Integral.Aggregation
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Integral.Basic
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Integral.Monomial
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Integral.Slicing
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Interior
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Intrinsic
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.IntrinsicMeasure
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Aggregation
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.MomentDetermination
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.PiSnoc
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex.Aggregation
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex.Basic
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex.SumIntegral
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.ProdSlices
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Radial
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.SimplexFTC
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.Smooth
+
+public import LeanPool.CarlsonFunctions.Carlson
+public import LeanPool.CarlsonFunctions.Carlson.Aggregation
+public import LeanPool.CarlsonFunctions.Carlson.Associated.LinearDependence
+public import LeanPool.CarlsonFunctions.Carlson.Associated.Shift
+public import LeanPool.CarlsonFunctions.Carlson.L
+public import LeanPool.CarlsonFunctions.Carlson.L.Associated
+public import LeanPool.CarlsonFunctions.Carlson.L.Basic
+public import LeanPool.CarlsonFunctions.Carlson.L.Continuation
+public import LeanPool.CarlsonFunctions.Carlson.L.Deriv
+public import LeanPool.CarlsonFunctions.Carlson.L.EulerPoisson
+public import LeanPool.CarlsonFunctions.Carlson.L.JointRecurrence
+public import LeanPool.CarlsonFunctions.Carlson.L.Properties
+public import LeanPool.CarlsonFunctions.Carlson.L.Relations
+public import LeanPool.CarlsonFunctions.Carlson.L.Series
+public import LeanPool.CarlsonFunctions.Carlson.L.SlitContinuation
+public import LeanPool.CarlsonFunctions.Carlson.L.SlitDeriv
+public import LeanPool.CarlsonFunctions.Carlson.L.SlitIntegral
+public import LeanPool.CarlsonFunctions.Carlson.L.SlitProperties
+public import LeanPool.CarlsonFunctions.Carlson.L.SlitRelations
+public import LeanPool.CarlsonFunctions.Carlson.R
+public import LeanPool.CarlsonFunctions.Carlson.R.Associated.ExponentReduction
+public import LeanPool.CarlsonFunctions.Carlson.R.AssociatedDependence
+public import LeanPool.CarlsonFunctions.Carlson.R.AssociatedRecurrence
+public import LeanPool.CarlsonFunctions.Carlson.R.Basic
+public import LeanPool.CarlsonFunctions.Carlson.R.Confluence
+public import LeanPool.CarlsonFunctions.Carlson.R.Continuation
+public import LeanPool.CarlsonFunctions.Carlson.R.ContinuedRecurrence
+public import LeanPool.CarlsonFunctions.Carlson.R.Contour
+public import LeanPool.CarlsonFunctions.Carlson.R.Deriv
+public import LeanPool.CarlsonFunctions.Carlson.R.EulerPoisson
+public import LeanPool.CarlsonFunctions.Carlson.R.EulerTransform
+public import LeanPool.CarlsonFunctions.Carlson.R.Exponent
+public import LeanPool.CarlsonFunctions.Carlson.R.IntegerParameters
+public import LeanPool.CarlsonFunctions.Carlson.R.Integral
+public import LeanPool.CarlsonFunctions.Carlson.R.IntegralEvaluation
+public import LeanPool.CarlsonFunctions.Carlson.R.JointParameter
+public import LeanPool.CarlsonFunctions.Carlson.R.JointRecurrence
+public import LeanPool.CarlsonFunctions.Carlson.R.Laplace
+public import LeanPool.CarlsonFunctions.Carlson.R.RayKernel
+public import LeanPool.CarlsonFunctions.Carlson.R.Recurrence.Coefficients
+public import LeanPool.CarlsonFunctions.Carlson.R.Recurrence.JointCoefficients
+public import LeanPool.CarlsonFunctions.Carlson.R.Relations
+public import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral
+public import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral.Continuation
+public import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral.PositiveRay
+public import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral.Series
+public import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral.UnitInterval
+public import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegralAnalytic
+public import LeanPool.CarlsonFunctions.Carlson.R.SlitAssociated
+public import LeanPool.CarlsonFunctions.Carlson.R.SlitContinuation
+public import LeanPool.CarlsonFunctions.Carlson.R.SlitDeriv
+public import LeanPool.CarlsonFunctions.Carlson.R.SlitIntegral
+public import LeanPool.CarlsonFunctions.Carlson.R.SlitJointAnalytic
+public import LeanPool.CarlsonFunctions.Carlson.R.SlitPlane
+public import LeanPool.CarlsonFunctions.Carlson.R.SlitRecurrence
+public import LeanPool.CarlsonFunctions.Carlson.R.SlitRelations
+public import LeanPool.CarlsonFunctions.Carlson.R.SmallVariable
+public import LeanPool.CarlsonFunctions.Carlson.R.ZeroParameter
+public import LeanPool.CarlsonFunctions.Carlson.RPolynomial
+public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Basic
+public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Binomial
+public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Coefficients
+public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Differential
+public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Estimates
+public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Generating
+public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.PowerSeries
+public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.SharpEstimates
+public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.TaylorContinuation
+public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Transform
+public import LeanPool.CarlsonFunctions.Carlson.S
+public import LeanPool.CarlsonFunctions.Carlson.S.Analytic
+public import LeanPool.CarlsonFunctions.Carlson.S.Basic
+public import LeanPool.CarlsonFunctions.Carlson.S.Deriv
+public import LeanPool.CarlsonFunctions.Carlson.S.Properties
+public import LeanPool.CarlsonFunctions.Carlson.S.Series
+public import LeanPool.CarlsonFunctions.Carlson.T
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Associated
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Basic
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.EqualParameter
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Inversion
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.L
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.L.Associated
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.L.Inversion
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.LQuadratic
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.ParameterSymmetry
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.PolynomialDifferential
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Quadratic
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Quadratic.Geometry
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Quadratic.Integral
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.Quadratic.Polynomial
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.QuadraticContinuation
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.QuadraticSeries
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.QuadraticSlit
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.R
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.R.Associated
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.R.Basic
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.R.Inversion
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.RPolynomial
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.RPolynomial.Basic
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.S
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.S.Basic
+public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.T
+public import LeanPool.CarlsonFunctions.Carlson.ZeroParameter
+public import LeanPool.CarlsonFunctions.Dirichlet
+public import LeanPool.CarlsonFunctions.Dirichlet.Average
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.Aggregation
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.Associated
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.Associated.Analytic
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.Associated.Deriv
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.Associated.Relations
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.Basic
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.Bridge
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.Cauchy
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.CauchyContinuation
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.Continuation
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.ContinuedRelations
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.Deriv
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.DifferentialOperators
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.HolomorphicDomain
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.IntegralDomain
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.JointContinuation
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.Kernel
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.NewtonTaylor
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.PowerSeries
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.Real
+public import LeanPool.CarlsonFunctions.Dirichlet.Average.ResolventContinuation
+public import LeanPool.CarlsonFunctions.Dirichlet.Beta.Complex
+public import LeanPool.CarlsonFunctions.Dirichlet.Beta.Complex.Basic
+public import LeanPool.CarlsonFunctions.Dirichlet.Beta.Complex.Integral
+public import LeanPool.CarlsonFunctions.Dirichlet.Beta.Real
+public import LeanPool.CarlsonFunctions.Dirichlet.Bridge
+public import LeanPool.CarlsonFunctions.Dirichlet.Complex
+public import LeanPool.CarlsonFunctions.Dirichlet.Complex.Analytic
+public import LeanPool.CarlsonFunctions.Dirichlet.Complex.Parametric
+public import LeanPool.CarlsonFunctions.Dirichlet.Gamma
+public import LeanPool.CarlsonFunctions.Dirichlet.Integral.Complex
+public import LeanPool.CarlsonFunctions.Dirichlet.Integral.Real
+public import LeanPool.CarlsonFunctions.Dirichlet.IntegrationByParts
+public import LeanPool.CarlsonFunctions.Dirichlet.Moments
+public import LeanPool.CarlsonFunctions.Dirichlet.ParameterShift
+public import LeanPool.CarlsonFunctions.Dirichlet.Polynomial
+public import LeanPool.CarlsonFunctions.Dirichlet.Real
+public import LeanPool.CarlsonFunctions.Dirichlet.Real.Aggregation
+public import LeanPool.CarlsonFunctions.Dirichlet.Real.Marginals
+public import LeanPool.CarlsonFunctions.Dirichlet.Real.Moments
+public import LeanPool.CarlsonFunctions.Dirichlet.Transform
+public import LeanPool.CarlsonFunctions.Dirichlet.Transform.Parametric
+public import LeanPool.CarlsonFunctions.Main
+public import LeanPool.CarlsonFunctions.Pochhammer
+public import LeanPool.CarlsonFunctions.Pochhammer.BetaIntegral
+public import LeanPool.CarlsonFunctions.Pochhammer.BinomialSeries
+public import LeanPool.CarlsonFunctions.Pochhammer.ComplexPowMeasurable
+public import LeanPool.CarlsonFunctions.Pochhammer.Estimates
+public import LeanPool.CarlsonFunctions.Pochhammer.Gamma
+public import LeanPool.CarlsonFunctions.Pochhammer.Identities
+public import LeanPool.CarlsonFunctions.Pochhammer.IncompleteMellin
+public import LeanPool.CarlsonFunctions.Pochhammer.PochhammerTransform
+public import LeanPool.CarlsonFunctions.Pochhammer.PositiveCpow
+public import LeanPool.CarlsonFunctions.Pochhammer.Vandermonde
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.AnalyticUniqueness
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.Basic
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.CauchyCoefficients
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.CauchyDerivatives
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.CauchyEstimates
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.CauchyIntegral
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.CauchyRiemann
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.CauchySeries
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.ContourIntegral
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.Derivatives
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.DominatedIntegral
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.FunctionSpace
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.LocallyBounded
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.LocallyUniform
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.Montel
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.Osgood
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.ParametricIntegral
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.Polydisc
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.PolydiscTaylor
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.PolynomialDerivatives
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.Reindex
+public import LeanPool.CarlsonFunctions.Solution
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Aggregation
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.CoordinateRealization
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Coordinates
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.EuclideanCrossSection
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.FiniteDimensionalHyperplane
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Integral
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Integral.Aggregation
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Integral.Basic
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Integral.Monomial
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Integral.Slicing
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Interior
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Intrinsic
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.IntrinsicMeasure
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Aggregation
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.MomentDetermination
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.PiSnoc
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex.Aggregation
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex.Basic
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex.SumIntegral
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.ProdSlices
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Radial
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.SimplexFTC
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Smooth
 
 /-!
 # Carlson special functions and complex Dirichlet averages

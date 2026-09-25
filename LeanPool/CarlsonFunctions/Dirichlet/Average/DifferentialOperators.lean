@@ -9,7 +9,7 @@ public import LeanPool.CarlsonFunctions.Dirichlet.Average.Basic
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import LeanPool.CarlsonFunctions.SeveralComplexVariables.Derivatives
 
-import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 
 /-!
 # Differential operators and pointwise Carlson kernels

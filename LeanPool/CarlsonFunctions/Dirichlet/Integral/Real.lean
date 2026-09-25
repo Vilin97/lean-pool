@@ -8,6 +8,7 @@ module
 public import LeanPool.CarlsonFunctions.Dirichlet.Beta.Real
 public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Integral
 
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 import all LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 
 /-!

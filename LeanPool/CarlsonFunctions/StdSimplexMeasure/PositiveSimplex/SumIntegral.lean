@@ -12,7 +12,7 @@ public import Mathlib.LinearAlgebra.Finsupp.Pi
 public import Mathlib.MeasureTheory.Integral.Bochner.Set
 public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.ProdSlices
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.ProdSlices
 
 /-! # Solid simplex integration by coordinate sum -/
 

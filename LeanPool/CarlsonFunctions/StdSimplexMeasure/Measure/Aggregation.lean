@@ -13,14 +13,14 @@ public import Mathlib.MeasureTheory.Measure.WithDensity
 public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 public import LeanPool.CarlsonFunctions.StdSimplexMeasure.CoordinateRealization
 
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.MeasureTheory.Measure.Dirac.Basic
-import Mathlib.MeasureTheory.Measure.Dirac.Def
-import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex.Aggregation
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
+public import Mathlib.MeasureTheory.Measure.Dirac.Basic
+public import Mathlib.MeasureTheory.Measure.Dirac.Def
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex.Aggregation
 
 /-! # Aggregation pushforward of simplex coordinate measure -/
 
-public noncomputable section StdSimplexCoordinateMeasure
+@[expose] public noncomputable section StdSimplexCoordinateMeasure
 
 namespace MeasureTheory.Measure
 
@@ -28,7 +28,7 @@ variable {ι : Type*} [Fintype ι]
 
 
 /-- Density associated with the cardinalities of the fibers of a coordinate aggregation map. -/
-@[expose] def stdSimplexAggregateDensity
+def stdSimplexAggregateDensity
     {κ : Type*} [Fintype κ] (f : ι → κ) (v : κ → ℝ) : ENNReal := by
   classical
   exact ∏ k,

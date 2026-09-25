@@ -12,7 +12,7 @@ public import Mathlib.RingTheory.Polynomial.Pochhammer
 # Elementary bounds for ascending Pochhammer symbols
 -/
 
-public noncomputable section
+@[expose] public noncomputable section
 
 namespace Complex
 

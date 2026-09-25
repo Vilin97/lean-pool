@@ -16,7 +16,7 @@ valid at zeros of the Pochhammer symbols.
 
 open Polynomial
 
-public noncomputable section
+@[expose] public noncomputable section
 
 /-- A division-free shift identity for ascending Pochhammer symbols. -/
 theorem ascPochhammer_eval_shift {R : Type*} [CommSemiring R] (p : R) (n : ℕ) :

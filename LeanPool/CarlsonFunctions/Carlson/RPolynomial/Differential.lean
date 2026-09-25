@@ -10,8 +10,8 @@ module
 public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Coefficients
 public import LeanPool.CarlsonFunctions.Dirichlet.Average.Continuation
 
-import Mathlib.Analysis.Calculus.Deriv.Pi
-import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Analysis.Calculus.Deriv.Pi
+public import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-! # Differentiation of Carlson's Pochhammer numerators
 

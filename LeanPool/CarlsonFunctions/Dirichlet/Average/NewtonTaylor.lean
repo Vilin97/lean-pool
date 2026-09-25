@@ -9,7 +9,7 @@ public import LeanPool.CarlsonFunctions.Dirichlet.Average.Deriv
 public import LeanPool.CarlsonFunctions.Dirichlet.Average.Real
 public import LeanPool.CarlsonFunctions.StdSimplexMeasure.SimplexFTC
 
-import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 
 /-!
 # Newton--Taylor formulas from Carlson's Dirichlet averages

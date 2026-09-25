@@ -12,8 +12,8 @@ public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
 public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 public import Mathlib.MeasureTheory.Integral.Prod
 
-import Mathlib.Analysis.Analytic.IsolatedZeros
-import Mathlib.Analysis.Convex.PathConnected
+public import Mathlib.Analysis.Analytic.IsolatedZeros
+public import Mathlib.Analysis.Convex.PathConnected
 
 /-!
 # The Laplace representation of Carlson's R-function

@@ -7,7 +7,7 @@ module
 
 public import LeanPool.CarlsonFunctions.Dirichlet.Average.Continuation
 
-import Mathlib.Topology.Maps.Proper.Basic
+public import Mathlib.Topology.Maps.Proper.Basic
 
 /-!
 # Carlson's multivariate T-function

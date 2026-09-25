@@ -11,9 +11,9 @@ public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Coefficients
 public import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
 public import Mathlib.Data.Nat.Choose.Multinomial
 
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Topology.Algebra.InfiniteSum.TsumUniformlyOn
-import LeanPool.CarlsonFunctions.Pochhammer.Estimates
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import Mathlib.Topology.Algebra.InfiniteSum.TsumUniformlyOn
+public import LeanPool.CarlsonFunctions.Pochhammer.Estimates
 public import LeanPool.CarlsonFunctions.Pochhammer.Gamma
 
 /-! # Estimates for Carlson's R-polynomials

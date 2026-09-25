@@ -18,7 +18,7 @@ domain is equicontinuous. For finite-dimensional targets it has compact closure 
 compact-open topology. Compactness is supplied by Mathlib's Arzelà–Ascoli theorem.
 -/
 
-public section
+@[expose] public section
 
 open Complex Filter Function Metric Set
 open scoped Topology

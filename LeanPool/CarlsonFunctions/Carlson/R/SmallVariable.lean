@@ -10,7 +10,7 @@ module
 public import LeanPool.CarlsonFunctions.Carlson.R.IntegralEvaluation
 public import LeanPool.CarlsonFunctions.Carlson.R.Relations
 
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Dependence of Carlson's R-function on a small variable

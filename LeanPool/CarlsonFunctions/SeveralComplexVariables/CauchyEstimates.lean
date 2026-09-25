@@ -15,7 +15,7 @@ These estimates reuse the one-variable Cauchy estimate on coordinate slices. The
 has the supremum norm, so a coordinate disc fits in the ball of the same radius.
 -/
 
-public section
+@[expose] public section
 
 open Complex Function Metric Set
 

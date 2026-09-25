@@ -7,7 +7,7 @@ module
 
 public import LeanPool.CarlsonFunctions.Dirichlet.Average.Basic
 
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Averages of uniformly summable series

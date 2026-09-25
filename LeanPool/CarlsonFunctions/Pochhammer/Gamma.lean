@@ -17,7 +17,7 @@ Pochhammer polynomials. The reciprocal formulation remains valid at the poles of
 
 open Finset Polynomial
 
-public noncomputable section
+@[expose] public noncomputable section
 
 namespace Complex
 

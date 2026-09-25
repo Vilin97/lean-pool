@@ -35,7 +35,7 @@ derivative identification is already Mathlib's `hasFDerivAt_integral_of_dominate
 The integral theorem names remain in the root namespace, consistently with that API.
 -/
 
-public section
+@[expose] public section
 
 open Filter MeasureTheory Set
 open scoped Topology

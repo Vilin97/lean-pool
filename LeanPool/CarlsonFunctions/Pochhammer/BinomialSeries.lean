@@ -18,7 +18,7 @@ Mathlib's `ascPochhammer` and `Ring.multichoose` language.
 
 open scoped Topology
 
-public noncomputable section
+@[expose] public noncomputable section
 
 namespace Complex
 

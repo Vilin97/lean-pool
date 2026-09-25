@@ -17,7 +17,7 @@ This file is a temporary home for results intended to accompany
 
 open MeasureTheory
 
-public noncomputable section
+@[expose] public noncomputable section
 
 namespace Complex
 

@@ -27,7 +27,7 @@ TODO: If PR #37910 is merged into Mathlib, remove this file and replace uses of
 open MeasureTheory Measure Module Submodule AffineSubspace
 open scoped ENNReal NNReal
 
-public noncomputable section
+@[expose] public noncomputable section
 
 namespace EuclideanGeometry
 

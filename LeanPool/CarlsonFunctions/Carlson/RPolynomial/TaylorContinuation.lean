@@ -9,7 +9,7 @@ public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.PowerSeries
 public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.SharpEstimates
 public import LeanPool.CarlsonFunctions.Dirichlet.Average.Continuation
 public import LeanPool.CarlsonFunctions.SeveralComplexVariables.LocallyUniform
-import Mathlib.Analysis.Complex.TaylorSeries
+public import Mathlib.Analysis.Complex.TaylorSeries
 
 /-!
 # Carlson's continued Taylor representation

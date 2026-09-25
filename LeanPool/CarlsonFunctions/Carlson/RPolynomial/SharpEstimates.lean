@@ -7,10 +7,10 @@ module
 
 public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Estimates
 public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Generating
-import LeanPool.CarlsonFunctions.Pochhammer.Vandermonde
-import LeanPool.CarlsonFunctions.Pochhammer.Estimates
-import LeanPool.CarlsonFunctions.Pochhammer.BinomialSeries
-import LeanPool.CarlsonFunctions.Pochhammer.Identities
+public import LeanPool.CarlsonFunctions.Pochhammer.Vandermonde
+public import LeanPool.CarlsonFunctions.Pochhammer.Estimates
+public import LeanPool.CarlsonFunctions.Pochhammer.BinomialSeries
+public import LeanPool.CarlsonFunctions.Pochhammer.Identities
 
 /-!
 # Sharp bounds for Carlson polynomials

@@ -34,7 +34,7 @@ is proved first and then transported along a linear equivalence; this proof orde
 no choice of coordinates on the general statements.
 -/
 
-public section
+@[expose] public section
 
 open Set
 

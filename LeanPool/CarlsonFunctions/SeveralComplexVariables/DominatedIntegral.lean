@@ -21,7 +21,7 @@ separate hypothesis so that the integration space needs no topology.
 
 open Complex MeasureTheory Filter Metric Set
 open scoped Topology
-public section
+@[expose] public section
 variable {α ι : Type*} [MeasurableSpace α] [Fintype ι]
 
 /-- A locally dominated holomorphic integrand has a holomorphic integral. The derivative

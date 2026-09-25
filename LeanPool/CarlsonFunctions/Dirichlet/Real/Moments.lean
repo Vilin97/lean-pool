@@ -10,7 +10,8 @@ module
 public import Mathlib.Probability.Moments.Variance
 public import LeanPool.CarlsonFunctions.Dirichlet.Real
 
-import LeanPool.CarlsonFunctions.Pochhammer.Gamma
+public import LeanPool.CarlsonFunctions.Pochhammer.Gamma
+public import LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 import all LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 
 /-! # Moments, means, variances, and covariances of the real Dirichlet distribution -/

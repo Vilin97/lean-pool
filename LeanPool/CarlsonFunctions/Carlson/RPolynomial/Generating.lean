@@ -13,7 +13,7 @@ public import Mathlib.Algebra.Order.Antidiag.Pi
 public import Mathlib.Analysis.Normed.Ring.InfiniteSum
 public import Mathlib.Data.Nat.Choose.Multinomial
 
-import LeanPool.CarlsonFunctions.Pochhammer.BinomialSeries
+public import LeanPool.CarlsonFunctions.Pochhammer.BinomialSeries
 
 /-!
 # Generating functions of Carlson's R-polynomials
