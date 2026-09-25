@@ -154,7 +154,7 @@ differences of spacetime points.
 
 /-- Assumption: The covariance is invariant under Euclidean transformations -/
 def CovarianceEuclideanInvariant (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
-  ∀ (g : QFT.E) (f h : TestFunction),
+  ∀ (g : QFT.E) (f h : OSforGFF.TestFunction),
     SchwingerFunction₂ dμ_config (QFT.euclideanActionReal g f) (QFT.euclideanActionReal g h) =
     SchwingerFunction₂ dμ_config f h
 
