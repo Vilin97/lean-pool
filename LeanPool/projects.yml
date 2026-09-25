@@ -10126,6 +10126,16 @@ projects:
       commit: 2efdf7f86085972bd758449ca43c76a2e7bdf4af
     license: Apache-2.0
     status: verified
+    provenance: AI
+    provenance_note: >-
+      Inferred from explicit Copilot coauthor trailers in the pinned upstream history:
+      83.5% of surviving noncomment Lean code lines, including 94.8% of the core
+      localization lemmas and 96.6% of the theorem module, trace to those commits.
+      Commits 5b1698879b05fc76597723347544cb0b02c268c4 and
+      ef73ee27e4b0a8d1260350801c6915bfb56b6658 add substantial new proofs, including
+      prime-generated descent and the fraction-field polynomial application.
+      Coauthorship records support this classification but do not identify who
+      wrote each individual line.
     main_declarations:
     - NagataFactoriality.nagata_theorem
     main_results:
