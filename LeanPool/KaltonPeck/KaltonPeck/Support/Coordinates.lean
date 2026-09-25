@@ -3,14 +3,16 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.Definitions
-import Mathlib.Analysis.InnerProductSpace.l2Space
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Definitions
+public import Mathlib.Analysis.InnerProductSpace.l2Space
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # Coordinates for the real Kalton--Peck space
@@ -18,6 +20,8 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 This file develops coordinate presentations of the real Kalton--Peck space, constructs the
 canonical model and quotient map, and compares arbitrary complete presented models.
 -/
+
+@[expose] public section
 
 
 namespace KaltonPeck.Support
@@ -318,9 +322,11 @@ def CanonicalRealKaltonPeck : Type := by
 open scoped ENNReal NNReal Topology lp
 open Filter Topology
 
-private abbrev L2 := lp (fun _ : ℕ => ℝ) 2
+/-- The real Hilbert space of square-summable sequences used in the coordinate model. -/
+abbrev L2 := lp (fun _ : ℕ => ℝ) 2
 
-private def toL2 (x : ℕ → ℝ) (hx : IsSquareSummable x) : L2 :=
+/-- View a square-summable real sequence as a vector of the Hilbert sequence space. -/
+def toL2 (x : ℕ → ℝ) (hx : IsSquareSummable x) : L2 :=
   ⟨x, by
     apply memℓp_gen
     simpa [IsSquareSummable, Real.norm_eq_abs, sq_abs] using hx⟩
@@ -589,15 +595,18 @@ private lemma abs_mul_log_sub_log_le_sq_add_sq (a b : ℝ) :
       _ = a ^ 2 := by field_simp; exact sq_abs a
       _ ≤ a ^ 2 + b ^ 2 := by nlinarith [sq_nonneg b]
 
-private def rawSubmodule : Submodule ℝ ((ℕ → ℝ) × (ℕ → ℝ)) where
+/-- The linear subspace of admissible Kalton–Peck coordinate pairs. -/
+def rawSubmodule : Submodule ℝ ((ℕ → ℝ) × (ℕ → ℝ)) where
   carrier := {p | IsAdmissiblePair p}
-  zero_mem' := admissible_zero
-  add_mem' := admissible_add
-  smul_mem' := admissible_smul
+  zero_mem' := by exact admissible_zero
+  add_mem' := by exact admissible_add
+  smul_mem' := by exact admissible_smul
 
-private abbrev Raw : Type := rawSubmodule
+/-- The carrier of the admissible-coordinate model before its norm is installed. -/
+abbrev Raw : Type := rawSubmodule
 
-private def secondL2 : Raw →ₗ[ℝ] L2 where
+/-- The second coordinate of an admissible pair as a Hilbert-space vector. -/
+def secondL2 : Raw →ₗ[ℝ] L2 where
   toFun p := toL2 p.1.2 p.2.1
   map_add' p q := by
     apply Subtype.ext
@@ -755,7 +764,8 @@ private lemma centralizer_commutator_tsum_bound (x y : ℕ → ℝ)
       mul_le_mul_of_nonneg_left hnorm_tsum (mul_nonneg hnx.le hny.le)
     _ = 4 * l2Norm x * l2Norm y := by ring
 
-private def sectionPairingTerm (p : Raw) (y : L2) (n : ℕ) : ℝ :=
+/-- The coordinate summand in the pairing with a Hilbert-space vector. -/
+def sectionPairingTerm (p : Raw) (y : L2) (n : ℕ) : ℝ :=
   p.1.1 n * y n - p.1.2 n * centralizer (fun k ↦ y k) n
 
 private lemma sectionPairingTerm_summable (p : Raw) (y : L2) :
@@ -779,7 +789,8 @@ private lemma sectionPairingTerm_summable (p : Raw) (y : L2) :
   simp [sectionPairingTerm, commutatorTerm, r]
   ring
 
-private def sectionPairing (p : Raw) (y : L2) : ℝ :=
+/-- The pairing of an admissible coordinate pair with a Hilbert-space vector. -/
+def sectionPairing (p : Raw) (y : L2) : ℝ :=
   ∑' n, sectionPairingTerm p y n
 
 private lemma sectionPairing_decomp (p : Raw) (y : L2) :
@@ -856,9 +867,11 @@ private lemma sectionPairing_bound (p : Raw) (y : L2) :
     _ ≤ l2Norm r * ‖y‖ + 4 * l2Norm p.1.2 * ‖y‖ := add_le_add hinner hcomm
     _ = (l2Norm r + 4 * l2Norm p.1.2) * ‖y‖ := by ring
 
-private abbrev UnitL2 := {y : L2 // ‖y‖ ≤ 1}
+/-- The closed unit ball of the real Hilbert sequence space. -/
+abbrev UnitL2 := {y : L2 // ‖y‖ ≤ 1}
 
-private abbrev Features := lp (fun _ : UnitL2 ↦ ℝ) ⊤
+/-- The space of bounded functions on the Hilbert-space unit ball. -/
+abbrev Features := lp (fun _ : UnitL2 ↦ ℝ) ⊤
 
 private lemma sectionPairing_add (p q : Raw) (y : L2) :
     sectionPairing (p + q) y = sectionPairing p y + sectionPairing q y := by
@@ -894,8 +907,9 @@ private lemma feature_mem (p : Raw) :
     _ ≤ C * 1 := mul_le_mul_of_nonneg_left y.2 hC
     _ = C := mul_one C
 
-private def featureLinear : Raw →ₗ[ℝ] Features where
-  toFun p := ⟨fun y ↦ sectionPairing p y.1, feature_mem p⟩
+/-- Send an admissible pair to its bounded pairing function on the unit ball. -/
+def featureLinear : Raw →ₗ[ℝ] Features where
+  toFun p := ⟨fun y ↦ sectionPairing p y.1, (by exact feature_mem p)⟩
   map_add' p q := by
     apply Subtype.ext
     funext y
@@ -920,7 +934,8 @@ private lemma featureLinear_norm_le (p : Raw) :
     _ ≤ C * 1 := mul_le_mul_of_nonneg_left y.2 hC
     _ = C := mul_one C
 
-private def modelLinear : Raw →ₗ[ℝ] L2 × Features :=
+/-- Embed admissible pairs using their second coordinate and bounded pairing function. -/
+def modelLinear : Raw →ₗ[ℝ] L2 × Features :=
   secondL2.prod featureLinear
 
 private lemma modelLinear_eq_zero (p : Raw) (hp : modelLinear p = 0) : p = 0 := by
@@ -968,8 +983,9 @@ private lemma modelLinear_injective : Function.Injective modelLinear := by
   apply modelLinear_eq_zero
   rw [map_sub, hpq, sub_self]
 
-@[reducible] private noncomputable def rawNormedAddCommGroup : NormedAddCommGroup Raw :=
-  NormedAddCommGroup.induced Raw (L2 × Features) modelLinear modelLinear_injective
+/-- The norm on admissible pairs induced by the coordinate-and-pairing embedding. -/
+@[reducible] noncomputable def rawNormedAddCommGroup : NormedAddCommGroup Raw :=
+  NormedAddCommGroup.induced Raw (L2 × Features) modelLinear (by exact modelLinear_injective)
 
 /-- The induced normed additive structure during construction of the canonical carrier. -/
 local instance rawNormedAddCommGroupInst : NormedAddCommGroup Raw :=
@@ -987,7 +1003,8 @@ local instance rawUniformSpaceInst : UniformSpace Raw :=
 local instance rawTopologicalSpaceInst : TopologicalSpace Raw :=
   rawNormedAddCommGroup.toMetricSpace.toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
 
-@[reducible] private noncomputable def rawNormedSpace : NormedSpace ℝ Raw :=
+/-- The real normed-space structure induced by the coordinate-and-pairing embedding. -/
+@[reducible] noncomputable def rawNormedSpace : NormedSpace ℝ Raw :=
   NormedSpace.induced ℝ Raw (L2 × Features) modelLinear
 
 /-- The induced real normed-space structure during construction of the canonical carrier. -/
@@ -1070,7 +1087,8 @@ private lemma quasiNorm_le_model_norm (p : Raw) :
   nlinarith [hres, hfeature, hcomm, second_norm_le_model_norm p,
     feature_norm_le_model_norm p]
 
-private def secondLinear : Raw →ₗ[ℝ] L2 where
+/-- The linear second-coordinate map on the normed admissible-pair model. -/
+def secondLinear : Raw →ₗ[ℝ] L2 where
   toFun p := toL2 p.1.2 p.2.1
   map_add' p q := by
     apply Subtype.ext
@@ -1079,7 +1097,8 @@ private def secondLinear : Raw →ₗ[ℝ] L2 where
     apply Subtype.ext
     rfl
 
-private def secondCLM : Raw →L[ℝ] L2 :=
+/-- The bounded second-coordinate map from the admissible-pair model to Hilbert space. -/
+def secondCLM : Raw →L[ℝ] L2 :=
   secondLinear.mkContinuous 1 fun p ↦ by
     rw [one_mul]
     change ‖toL2 p.1.2 p.2.1‖ ≤ ‖p‖
@@ -1306,7 +1325,8 @@ theorem canonicalPairingData :
     rw [← l2Norm_eq_norm_toL2 y hy] at h
     exact h
 
-private def rawPresentation : RealKaltonPeckPresentation Raw := by
+/-- The canonical coordinate presentation with the proved two-sided norm bounds. -/
+def rawPresentation : RealKaltonPeckPresentation Raw := by
   let coords : Raw →ₗ[ℝ] (ℕ → ℝ) × (ℕ → ℝ) :=
     { toFun := fun p ↦ p.1
       map_add' := by intro p q; rfl
@@ -1323,17 +1343,18 @@ private def rawPresentation : RealKaltonPeckPresentation Raw := by
     exact p.2
   · intro p hp
     exact ⟨⟨p, hp⟩, rfl⟩
-  · refine ⟨1 / 6, 4, by norm_num, by norm_num, ?_⟩
-    intro p
-    have hlower := quasiNorm_le_model_norm p
-    have hupper := model_norm_le_quasiNorm p
-    have hqnonneg : 0 ≤ kaltonPeckQuasiNorm p.1 := by
-      exact add_nonneg (l2Norm_nonneg _) (l2Norm_nonneg _)
-    change (1 / 6 : ℝ) * kaltonPeckQuasiNorm p.1 ≤ ‖p‖ ∧
-      ‖p‖ ≤ 4 * kaltonPeckQuasiNorm p.1
-    constructor
-    · nlinarith
-    · exact hupper
+  · exact (by
+      refine ⟨1 / 6, 4, by norm_num, by norm_num, ?_⟩
+      intro p
+      have hlower := quasiNorm_le_model_norm p
+      have hupper := model_norm_le_quasiNorm p
+      have hqnonneg : 0 ≤ kaltonPeckQuasiNorm p.1 := by
+        exact add_nonneg (l2Norm_nonneg _) (l2Norm_nonneg _)
+      change (1 / 6 : ℝ) * kaltonPeckQuasiNorm p.1 ≤ ‖p‖ ∧
+        ‖p‖ ≤ 4 * kaltonPeckQuasiNorm p.1
+      constructor
+      · nlinarith
+      · exact hupper)
 
 /-- The additive normed-space structure on the canonical model.
 Blueprint label: `thm:kp-canonical-banach`. -/
@@ -1631,16 +1652,18 @@ def presentationEquiv {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     Classical.choose_spec (Classical.choose_spec hY.norm_equivalent)
   refine e.toContinuousLinearEquivOfBounds (CY / cX) (CX / cY) ?_ ?_
   · intro x
-    exact norm_le_mul_of_coordinate_match hX hY hX_data.1 hY_data.2.1.le
-      (fun z => (hX_data.2.2 z).1) (fun z => (hY_data.2.2 z).2) x (e x)
-      (he_coordinates x)
+    exact (by
+      exact norm_le_mul_of_coordinate_match hX hY hX_data.1 hY_data.2.1.le
+        (fun z => (hX_data.2.2 z).1) (fun z => (hY_data.2.2 z).2) x (e x)
+        (he_coordinates x))
   · intro y
     have he_symm_coordinates : hX.coordinates (e.symm y) = hY.coordinates y := by
       symm
       simpa using he_coordinates (e.symm y)
-    exact norm_le_mul_of_coordinate_match hY hX hY_data.1 hX_data.2.1.le
-      (fun z => (hY_data.2.2 z).1) (fun z => (hX_data.2.2 z).2) y (e.symm y)
-      he_symm_coordinates
+    exact (by
+      exact norm_le_mul_of_coordinate_match hY hX hY_data.1 hX_data.2.1.le
+        (fun z => (hY_data.2.2 z).1) (fun z => (hX_data.2.2 z).2) y (e.symm y)
+        he_symm_coordinates)
 
 /-- Coordinate identity, algebraic uniqueness, and the two explicit presentation bounds.
 Blueprint label: `thm:presentation-equivalence`; audit IDs

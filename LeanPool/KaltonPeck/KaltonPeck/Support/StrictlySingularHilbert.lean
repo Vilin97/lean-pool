@@ -3,13 +3,15 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingular
-import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingular
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 /-!
 # Strict singularity and Hilbert-space adjoints
@@ -17,6 +19,8 @@ import Mathlib.Analysis.InnerProductSpace.Adjoint
 This file proves that strict singularity of bounded operators between real Hilbert spaces is
 preserved by, and hence invariant under, the Hilbert-space adjoint.
 -/
+
+@[expose] public section
 
 
 namespace KaltonPeck.Support.StrictlySingular

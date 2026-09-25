@@ -3,16 +3,18 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.Coordinates
-import LeanPool.KaltonPeck.KaltonPeck.Support.Forms
-import Mathlib.Analysis.InnerProductSpace.Dual
-import Mathlib.Analysis.InnerProductSpace.l2Space
-import Mathlib.Analysis.Normed.Operator.Banach
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Coordinates
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Forms
+public import Mathlib.Analysis.InnerProductSpace.Dual
+public import Mathlib.Analysis.InnerProductSpace.l2Space
+public import Mathlib.Analysis.Normed.Operator.Banach
 
 /-!
 # The canonical symplectic structure
@@ -20,6 +22,8 @@ import Mathlib.Analysis.Normed.Operator.Banach
 This file constructs the canonical Kalton--Swanson symplectic form, transports it to arbitrary
 Kalton--Peck presentations, and develops the associated block-operator theory.
 -/
+
+@[expose] public section
 
 
 namespace KaltonPeck.Support.Symplectic
@@ -38,9 +42,10 @@ private theorem memlpTwoIff (x : ℕ → ℝ) : Memℓp x 2 ↔ IsSquareSummable
   simpa [IsSquareSummable, Real.norm_eq_abs, sq_abs] using
     (memℓp_gen_iff (p := (2 : ENNReal)) (f := x) (by norm_num))
 
-private def toL2 (x : ℕ → ℝ) (hx : IsSquareSummable x) :
+/-- View a square-summable real sequence as a Hilbert-space vector. -/
+def toL2 (x : ℕ → ℝ) (hx : IsSquareSummable x) :
     lp (fun _ : ℕ ↦ ℝ) 2 :=
-  ⟨(x : PreLp (fun _ : ℕ ↦ ℝ)), (memlpTwoIff x).2 hx⟩
+  ⟨(x : PreLp (fun _ : ℕ ↦ ℝ)), (by exact (memlpTwoIff x).2 hx)⟩
 
 private theorem l2Norm_toL2 (x : ℕ → ℝ) (hx : IsSquareSummable x) :
     l2Norm x = ‖toL2 x hx‖ := by
@@ -55,9 +60,11 @@ private theorem l2Norm_toL2 (x : ℕ → ℝ) (hx : IsSquareSummable x) :
     x n ^ (2 : ℕ) = |x n| ^ (2 : ℕ) := (sq_abs (x n)).symm
     _ = |x n| ^ (2 : ℝ) := (Real.rpow_natCast |x n| 2).symm
 
-private abbrev L2 := lp (fun _ : ℕ ↦ ℝ) 2
+/-- The real Hilbert space of square-summable sequences. -/
+abbrev L2 := lp (fun _ : ℕ ↦ ℝ) 2
 
-private structure StrongPairingData where
+/-- Summability and bounds for the coordinate pairing used to construct the symplectic duality. -/
+structure StrongPairingData : Prop where
   sectionSummable : ∀ (p : (ℕ → ℝ) × (ℕ → ℝ)) (y : ℕ → ℝ),
     IsAdmissiblePair p → IsSquareSummable y →
       Summable (fun n ↦ p.1 n * y n - p.2 n * centralizer y n)
@@ -70,11 +77,13 @@ private theorem strongPairingData : StrongPairingData where
   sectionSummable := canonicalPairingData.1
   sectionBound := canonicalPairingData.2
 
-private def canonicalPairingTerm
+/-- The alternating coordinate summand for two Kalton–Peck coordinate pairs. -/
+def canonicalPairingTerm
     (p q : (ℕ → ℝ) × (ℕ → ℝ)) (n : ℕ) : ℝ :=
   p.1 n * q.2 n - q.1 n * p.2 n
 
-private def canonicalPairing
+/-- The sum of the alternating coordinate pairing. -/
+def canonicalPairing
     (p q : (ℕ → ℝ) × (ℕ → ℝ)) : ℝ :=
   ∑' n, canonicalPairingTerm p q n
 
@@ -137,7 +146,8 @@ private theorem canonicalPairing_bound (D : StrongPairingData)
     _ = 5 * kaltonPeckQuasiNorm p * kaltonPeckQuasiNorm q := by
       rfl
 
-private def pairingLinearMap (D : StrongPairingData) :
+/-- The alternating coordinate pairing as a bilinear map on the canonical model. -/
+def pairingLinearMap (D : StrongPairingData) :
     CanonicalRealKaltonPeck →ₗ[ℝ] CanonicalRealKaltonPeck →ₗ[ℝ] ℝ :=
   { toFun := fun z ↦
       { toFun := fun w ↦ canonicalPairing
@@ -256,7 +266,8 @@ private def pairingLinearMap (D : StrongPairingData) :
       simpa only [smul_eq_mul, RingHom.id_apply] using tsum_mul_left
       }
 
-private def pairingContinuousLinearMap (D : StrongPairingData) :
+/-- The bounded map to the strong dual supplied by the coordinate pairing. -/
+def pairingContinuousLinearMap (D : StrongPairingData) :
     CanonicalRealKaltonPeck →L[ℝ] StrongDual ℝ CanonicalRealKaltonPeck := by
   let c : ℝ := Classical.choose canonicalRealKaltonPeckPresentation.norm_equivalent
   let C : ℝ := Classical.choose
@@ -268,34 +279,35 @@ private def pairingContinuousLinearMap (D : StrongPairingData) :
     Classical.choose_spec (Classical.choose_spec
       canonicalRealKaltonPeckPresentation.norm_equivalent)
   refine (pairingLinearMap D).mkContinuous₂ (5 / c ^ 2) ?_
-  intro z w
-  have hzq : kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates z) ≤
-      ‖z‖ / c := (le_div_iff₀ hdata.1).2 (by
-    simpa [mul_comm] using (hdata.2.2 z).1)
-  have hwq : kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates w) ≤
-      ‖w‖ / c := (le_div_iff₀ hdata.1).2 (by
-    simpa [mul_comm] using (hdata.2.2 w).1)
-  have hqz : 0 ≤ kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates z) :=
-    add_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
-  have hqw : 0 ≤ kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates w) :=
-    add_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
-  calc
-    ‖pairingLinearMap D z w‖ = |canonicalPairing
-        (canonicalRealKaltonPeckPresentation.coordinates z)
-        (canonicalRealKaltonPeckPresentation.coordinates w)| := Real.norm_eq_abs _
-    _ ≤ 5 * kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates z) *
-        kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates w) :=
-      canonicalPairing_bound D _ _
-        (canonicalRealKaltonPeckPresentation.coordinates_mem z)
-        (canonicalRealKaltonPeckPresentation.coordinates_mem w)
-    _ ≤ 5 * (‖z‖ / c) * kaltonPeckQuasiNorm
-        (canonicalRealKaltonPeckPresentation.coordinates w) := by
-      exact mul_le_mul_of_nonneg_right
-        (mul_le_mul_of_nonneg_left hzq (by norm_num)) hqw
-    _ ≤ 5 * (‖z‖ / c) * (‖w‖ / c) := by
-      exact mul_le_mul_of_nonneg_left hwq
-        (mul_nonneg (by norm_num) (div_nonneg (norm_nonneg _) hdata.1.le))
-    _ = (5 / c ^ 2) * ‖z‖ * ‖w‖ := by field_simp
+  exact (by
+    intro z w
+    have hzq : kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates z) ≤
+        ‖z‖ / c := (le_div_iff₀ hdata.1).2 (by
+      simpa [mul_comm] using (hdata.2.2 z).1)
+    have hwq : kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates w) ≤
+        ‖w‖ / c := (le_div_iff₀ hdata.1).2 (by
+      simpa [mul_comm] using (hdata.2.2 w).1)
+    have hqz : 0 ≤ kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates z) :=
+      add_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
+    have hqw : 0 ≤ kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates w) :=
+      add_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
+    calc
+      ‖pairingLinearMap D z w‖ = |canonicalPairing
+          (canonicalRealKaltonPeckPresentation.coordinates z)
+          (canonicalRealKaltonPeckPresentation.coordinates w)| := Real.norm_eq_abs _
+      _ ≤ 5 * kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates z) *
+          kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates w) :=
+        canonicalPairing_bound D _ _
+          (canonicalRealKaltonPeckPresentation.coordinates_mem z)
+          (canonicalRealKaltonPeckPresentation.coordinates_mem w)
+      _ ≤ 5 * (‖z‖ / c) * kaltonPeckQuasiNorm
+          (canonicalRealKaltonPeckPresentation.coordinates w) := by
+        exact mul_le_mul_of_nonneg_right
+          (mul_le_mul_of_nonneg_left hzq (by norm_num)) hqw
+      _ ≤ 5 * (‖z‖ / c) * (‖w‖ / c) := by
+        exact mul_le_mul_of_nonneg_left hwq
+          (mul_nonneg (by norm_num) (div_nonneg (norm_nonneg _) hdata.1.le))
+      _ = (5 / c ^ 2) * ‖z‖ * ‖w‖ := by field_simp)
 
 private theorem fromL2SquareSummable (x : L2) : IsSquareSummable (fun n ↦ x n) :=
   (memlpTwoIff (fun n ↦ x n)).1 x.2
@@ -304,7 +316,8 @@ private theorem centralizer_zeroS : centralizer (0 : ℕ → ℝ) = 0 := by
   funext n
   simp [centralizer]
 
-private def kernelPair (x : L2) : (ℕ → ℝ) × (ℕ → ℝ) :=
+/-- The coordinate pair representing the Hilbert-space inclusion into the first coordinate. -/
+def kernelPair (x : L2) : (ℕ → ℝ) × (ℕ → ℝ) :=
   ((fun n ↦ x n), 0)
 
 private def sectionPair (x : L2) : (ℕ → ℝ) × (ℕ → ℝ) :=
@@ -322,14 +335,15 @@ private theorem sectionPair_mem (x : L2) : IsAdmissiblePair (sectionPair x) := b
   · exact fromL2SquareSummable x
   · simp [sectionPair, IsSquareSummable]
 
-private def kernelVector (x : L2) : CanonicalRealKaltonPeck :=
+/-- The canonical vector with the given Hilbert-space first coordinate and zero second coordinate. -/
+def kernelVector (x : L2) : CanonicalRealKaltonPeck :=
   Classical.choose (canonicalRealKaltonPeckPresentation.coordinates_surjective
-    (kernelPair x) (kernelPair_mem x))
+    (kernelPair x) (by exact kernelPair_mem x))
 
 private theorem kernelVector_coordinates (x : L2) :
     canonicalRealKaltonPeckPresentation.coordinates (kernelVector x) = kernelPair x :=
   Classical.choose_spec (canonicalRealKaltonPeckPresentation.coordinates_surjective
-    (kernelPair x) (kernelPair_mem x))
+    (kernelPair x) (by exact kernelPair_mem x))
 
 private def sectionVector (x : L2) : CanonicalRealKaltonPeck :=
   Classical.choose (canonicalRealKaltonPeckPresentation.coordinates_surjective
@@ -340,7 +354,8 @@ private theorem sectionVector_coordinates (x : L2) :
   Classical.choose_spec (canonicalRealKaltonPeckPresentation.coordinates_surjective
     (sectionPair x) (sectionPair_mem x))
 
-private def kernelLinearMap : L2 →ₗ[ℝ] CanonicalRealKaltonPeck :=
+/-- The first-coordinate Hilbert-space inclusion as a linear map. -/
+def kernelLinearMap : L2 →ₗ[ℝ] CanonicalRealKaltonPeck :=
   { toFun := kernelVector
     map_add' := by
       intro x y
@@ -373,7 +388,8 @@ private def kernelLinearMap : L2 →ₗ[ℝ] CanonicalRealKaltonPeck :=
           rw [map_smul]
           }
 
-private def kernelContinuousLinearMap : L2 →L[ℝ] CanonicalRealKaltonPeck := by
+/-- The bounded first-coordinate Hilbert-space inclusion. -/
+def kernelContinuousLinearMap : L2 →L[ℝ] CanonicalRealKaltonPeck := by
   let C : ℝ := Classical.choose
     (Classical.choose_spec canonicalRealKaltonPeckPresentation.norm_equivalent)
   let c : ℝ := Classical.choose canonicalRealKaltonPeckPresentation.norm_equivalent
@@ -384,21 +400,22 @@ private def kernelContinuousLinearMap : L2 →L[ℝ] CanonicalRealKaltonPeck := 
     Classical.choose_spec (Classical.choose_spec
       canonicalRealKaltonPeckPresentation.norm_equivalent)
   refine kernelLinearMap.mkContinuous C ?_
-  intro x
-  calc
-    ‖kernelLinearMap x‖ ≤ C * kaltonPeckQuasiNorm
-        (canonicalRealKaltonPeckPresentation.coordinates (kernelLinearMap x)) :=
-      (hdata.2.2 _).2
-    _ = C * l2Norm (fun n ↦ x n) := by
-      change C * kaltonPeckQuasiNorm
-        (canonicalRealKaltonPeckPresentation.coordinates (kernelVector x)) = _
-      rw [kernelVector_coordinates]
-      change C * (l2Norm ((fun n ↦ x n) - centralizer 0) + l2Norm 0) = _
-      rw [centralizer_zeroS]
-      simp [l2Norm]
-    _ = C * ‖x‖ := by
-      rw [l2Norm_toL2 _ (fromL2SquareSummable x)]
-      congr 1
+  exact (by
+    intro x
+    calc
+      ‖kernelLinearMap x‖ ≤ C * kaltonPeckQuasiNorm
+          (canonicalRealKaltonPeckPresentation.coordinates (kernelLinearMap x)) :=
+        (hdata.2.2 _).2
+      _ = C * l2Norm (fun n ↦ x n) := by
+        change C * kaltonPeckQuasiNorm
+          (canonicalRealKaltonPeckPresentation.coordinates (kernelVector x)) = _
+        rw [kernelVector_coordinates]
+        change C * (l2Norm ((fun n ↦ x n) - centralizer 0) + l2Norm 0) = _
+        rw [centralizer_zeroS]
+        simp [l2Norm]
+      _ = C * ‖x‖ := by
+        rw [l2Norm_toL2 _ (fromL2SquareSummable x)]
+        congr 1)
 
 private theorem sectionVector_norm_bound (x : L2) :
     ‖sectionVector x‖ ≤
@@ -681,23 +698,25 @@ private theorem pairing_surjective (D : StrongPairingData) :
   change f v - pairingContinuousLinearMap D p0 v = inner ℝ a y at hresidual
   linarith
 
-private def strongFormOfData (D : StrongPairingData) :
+/-- The strong symplectic form obtained from the proved coordinate-pairing bounds. -/
+def strongFormOfData (D : StrongPairingData) :
     StrongSymplecticForm CanonicalRealKaltonPeck := by
   let e : CanonicalRealKaltonPeck ≃L[ℝ] StrongDual ℝ CanonicalRealKaltonPeck :=
     ContinuousLinearEquiv.ofBijective (pairingContinuousLinearMap D)
-      (LinearMap.ker_eq_bot.mpr (pairing_injective D))
-      (LinearMap.range_eq_top.mpr (pairing_surjective D))
+      (by exact LinearMap.ker_eq_bot.mpr (pairing_injective D))
+      (by exact LinearMap.range_eq_top.mpr (pairing_surjective D))
   refine { toDual := e, alternating := ?_ }
-  intro z
-  change pairingContinuousLinearMap D z z = 0
-  rw [pairingContinuousLinearMap_apply, canonicalPairing]
-  have hzero : canonicalPairingTerm
-      (canonicalRealKaltonPeckPresentation.coordinates z)
-      (canonicalRealKaltonPeckPresentation.coordinates z) = 0 := by
-    funext n
-    simp [canonicalPairingTerm]
-  rw [hzero]
-  exact tsum_zero
+  exact (by
+    intro z
+    change pairingContinuousLinearMap D z z = 0
+    rw [pairingContinuousLinearMap_apply, canonicalPairing]
+    have hzero : canonicalPairingTerm
+        (canonicalRealKaltonPeckPresentation.coordinates z)
+        (canonicalRealKaltonPeckPresentation.coordinates z) = 0 := by
+      funext n
+      simp [canonicalPairingTerm]
+    rw [hzero]
+    exact tsum_zero)
 
 
 /-- The standard unit vector in the real sequence space.
@@ -815,7 +834,7 @@ theorem canonicalL2Inclusion_range :
 /-- The strong Kalton--Swanson form on the fixed project-normalized canonical model.
 Blueprint label: `thm:ks-primary`; audit IDs `EXT-KS-PRIMARY` and `INF-KP-L2-PAIRING`. -/
 def canonicalKaltonSwansonForm : StrongSymplecticForm CanonicalRealKaltonPeck := by
-  exact strongFormOfData strongPairingData
+  exact strongFormOfData (by exact strongPairingData)
 
 /-- On finite-coordinate vectors, the canonical form is the single combined coordinate sum.
 Blueprint label: `thm:ks-primary`; audit IDs `EXT-KS-PRIMARY`, `INF-KP-L2-PAIRING`, and
@@ -890,10 +909,11 @@ private theorem blockSquareSummable (w : ℕ → ℕ → ℝ)
   rw [Function.HasFiniteSupport]
   exact hw.1 n |>.1.subset (by simp)
 
-private def blockL2 (w : ℕ → ℕ → ℝ)
+/-- One normalized block viewed as a Hilbert-space vector. -/
+def blockL2 (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) (n : ℕ) :
     lp (fun _ : ℕ ↦ ℝ) 2 :=
-  toL2 (w n) (blockSquareSummable w hw n)
+  toL2 (w n) (by exact blockSquareSummable w hw n)
 
 private theorem blockSupportBefore (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) {n m : ℕ} (hnm : n < m)
@@ -928,8 +948,8 @@ private theorem blocksOrthonormal (w : ℕ → ℕ → ℝ)
   by_cases hnm : n = m
   · subst m
     rw [ite_eq_left rfl, inner_self_eq_norm_sq_to_K]
-    change ‖toL2 (w n) (blockSquareSummable w hw n)‖ ^ 2 = 1
-    rw [← l2Norm_toL2 (w n) (blockSquareSummable w hw n), hw.2.1]
+    change ‖toL2 (w n) (by exact blockSquareSummable w hw n)‖ ^ 2 = 1
+    rw [← l2Norm_toL2 (w n) (by exact blockSquareSummable w hw n), hw.2.1]
     norm_num
   · rw [ite_eq_right hnm, lp.inner_eq_tsum]
     have hzfun : (fun k ↦ inner ℝ (blockL2 w hw n k) (blockL2 w hw m k)) =
@@ -944,15 +964,19 @@ private theorem blocksOrthonormal (w : ℕ → ℕ → ℝ)
     rw [hzfun]
     exact tsum_zero
 
-private def blockIsometry (w : ℕ → ℕ → ℝ)
+/-- The Hilbert-space isometry induced by the orthonormal successive blocks. -/
+def blockIsometry (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) :
     lp (fun _ : ℕ ↦ ℝ) 2 →ₗᵢ[ℝ] lp (fun _ : ℕ ↦ ℝ) 2 :=
-  (blocksOrthonormal w hw).orthogonalFamily.linearIsometry
+  (show Orthonormal ℝ (blockL2 w hw) from by
+    exact blocksOrthonormal w hw).orthogonalFamily.linearIsometry
 
-private def HasActiveBlock (w : ℕ → ℕ → ℝ) (k : ℕ) : Prop :=
+/-- A coordinate lies in the support of at least one block. -/
+def HasActiveBlock (w : ℕ → ℕ → ℝ) (k : ℕ) : Prop :=
   ∃ n, w n k ≠ 0
 
-private def activeBlockIndex (w : ℕ → ℕ → ℝ) (k : ℕ) : ℕ :=
+/-- The index of the block active at a coordinate, defaulting to zero off the block supports. -/
+def activeBlockIndex (w : ℕ → ℕ → ℝ) (k : ℕ) : ℕ :=
   if hk : HasActiveBlock w k then Classical.choose hk else 0
 
 private theorem activeBlockIndex_spec (w : ℕ → ℕ → ℝ) {k : ℕ}
@@ -968,7 +992,8 @@ private theorem activeBlockIndex_eq (w : ℕ → ℕ → ℝ)
   exact Set.disjoint_left.1 (blockSupportDisjoint w hw hne)
     (activeBlockIndex_spec w hk) hnk
 
-private def rawBlockTransform (w : ℕ → ℕ → ℝ) (x : ℕ → ℝ) : ℕ → ℝ :=
+/-- Replace each sequence coordinate by its coefficient on the corresponding block. -/
+def rawBlockTransform (w : ℕ → ℕ → ℝ) (x : ℕ → ℝ) : ℕ → ℝ :=
   fun k ↦ if _hk : HasActiveBlock w k then
     x (activeBlockIndex w k) * w (activeBlockIndex w k) k
   else 0
@@ -1018,7 +1043,8 @@ private theorem rawBlockTransform_eq_isometry (w : ℕ → ℕ → ℝ)
   have hsk := (lp.evalCLM ℝ (fun _ : ℕ ↦ ℝ) 2 k).hasSum hs
   have hsum : HasSum (fun n ↦ x n * w n k) (blockIsometry w hw (toL2 x hx) k) := by
     have hsk' : HasSum (fun n ↦ x n * w n k)
-        ((blocksOrthonormal w hw).orthogonalFamily.linearIsometry (toL2 x hx) k) := by
+        ((show Orthonormal ℝ (blockL2 w hw) from by
+    exact blocksOrthonormal w hw).orthogonalFamily.linearIsometry (toL2 x hx) k) := by
       apply hsk.congr
       intro s
       apply Finset.sum_congr rfl
@@ -1065,7 +1091,8 @@ private theorem rawBlockTransform_l2Norm (w : ℕ → ℕ → ℝ)
   rw [heq]
   exact LinearIsometry.norm_map _ _
 
-private def rawBlockCorrection (w : ℕ → ℕ → ℝ) (x : ℕ → ℝ) : ℕ → ℝ :=
+/-- The centralizer correction associated with the block transform. -/
+def rawBlockCorrection (w : ℕ → ℕ → ℝ) (x : ℕ → ℝ) : ℕ → ℝ :=
   fun k ↦ if _hk : HasActiveBlock w k then
     x (activeBlockIndex w k) * centralizer (w (activeBlockIndex w k)) k
   else 0
@@ -1165,7 +1192,8 @@ private theorem centralizer_rawBlockTransform (w : ℕ → ℕ → ℝ)
       rawBlockTransform_apply_of_not_mem w (centralizer x) hk
     simp [centralizer, hBw, hBKw, rawBlockCorrection, hk]
 
-private def blockTargetPair (w : ℕ → ℕ → ℝ)
+/-- The pair of transformed coordinates, including the centralizer correction. -/
+def blockTargetPair (w : ℕ → ℕ → ℝ)
     (p : (ℕ → ℝ) × (ℕ → ℝ)) : (ℕ → ℝ) × (ℕ → ℝ) :=
   (rawBlockTransform w p.1 + rawBlockCorrection w p.2, rawBlockTransform w p.2)
 
@@ -1225,13 +1253,15 @@ private theorem blockTargetPair_quasiNorm (w : ℕ → ℕ → ℝ)
   rw [rawBlockTransform_l2Norm w hw _ ha, rawBlockTransform_l2Norm w hw _ hx]
   rfl
 
-private def blockTargetVector (w : ℕ → ℕ → ℝ)
+/-- The canonical vector with the transformed block coordinates. -/
+def blockTargetVector (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) (z : CanonicalRealKaltonPeck) :
     CanonicalRealKaltonPeck :=
   Classical.choose (canonicalRealKaltonPeckPresentation.coordinates_surjective
     (blockTargetPair w (canonicalRealKaltonPeckPresentation.coordinates z))
-    (blockTargetPair_mem w hw _
-      (canonicalRealKaltonPeckPresentation.coordinates_mem z)))
+    (by
+      exact blockTargetPair_mem w hw _
+        (canonicalRealKaltonPeckPresentation.coordinates_mem z)))
 
 private theorem blockTargetVector_coordinates (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) (z : CanonicalRealKaltonPeck) :
@@ -1239,10 +1269,12 @@ private theorem blockTargetVector_coordinates (w : ℕ → ℕ → ℝ)
       blockTargetPair w (canonicalRealKaltonPeckPresentation.coordinates z) :=
   Classical.choose_spec (canonicalRealKaltonPeckPresentation.coordinates_surjective
     (blockTargetPair w (canonicalRealKaltonPeckPresentation.coordinates z))
-    (blockTargetPair_mem w hw _
-      (canonicalRealKaltonPeckPresentation.coordinates_mem z)))
+    (by
+      exact blockTargetPair_mem w hw _
+        (canonicalRealKaltonPeckPresentation.coordinates_mem z)))
 
-private def canonicalBlockLinearMap (w : ℕ → ℕ → ℝ)
+/-- The block transformation as a linear map on the canonical Kalton–Peck model. -/
+def canonicalBlockLinearMap (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) :
     CanonicalRealKaltonPeck →ₗ[ℝ] CanonicalRealKaltonPeck :=
   { toFun := blockTargetVector w hw
@@ -1308,18 +1340,19 @@ def canonicalBlockOperator (w : ℕ → ℕ → ℝ)
     Classical.choose_spec (Classical.choose_spec
       canonicalRealKaltonPeckPresentation.norm_equivalent)
   refine (canonicalBlockLinearMap w hw).mkContinuous (C / c) ?_
-  intro z
-  have hq : kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates z) ≤
-      ‖z‖ / c := (le_div_iff₀ hdata.1).2 (by
-    simpa [mul_comm] using (hdata.2.2 z).1)
-  calc
-    ‖canonicalBlockLinearMap w hw z‖ ≤ C * kaltonPeckQuasiNorm
-        (canonicalRealKaltonPeckPresentation.coordinates (canonicalBlockLinearMap w hw z)) :=
-      (hdata.2.2 _).2
-    _ = C * kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates z) := by
-      rw [canonicalBlockLinearMap_quasiNorm]
-    _ ≤ C * (‖z‖ / c) := mul_le_mul_of_nonneg_left hq hdata.2.1.le
-    _ = (C / c) * ‖z‖ := by ring
+  exact (by
+    intro z
+    have hq : kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates z) ≤
+        ‖z‖ / c := (le_div_iff₀ hdata.1).2 (by
+      simpa [mul_comm] using (hdata.2.2 z).1)
+    calc
+      ‖canonicalBlockLinearMap w hw z‖ ≤ C * kaltonPeckQuasiNorm
+          (canonicalRealKaltonPeckPresentation.coordinates (canonicalBlockLinearMap w hw z)) :=
+        (hdata.2.2 _).2
+      _ = C * kaltonPeckQuasiNorm (canonicalRealKaltonPeckPresentation.coordinates z) := by
+        rw [canonicalBlockLinearMap_quasiNorm]
+      _ ≤ C * (‖z‖ / c) := mul_le_mul_of_nonneg_left hq hdata.2.1.le
+      _ = (C / c) * ‖z‖ := by ring)
 
 /-- The Hilbert-space isometry induced by a successive normalized block family.
 Blueprint support for `thm:block-primary`; audit ID `EXT-CGP-UPPER-SEMI-PRIMARY`. -/
@@ -1347,7 +1380,8 @@ theorem canonicalL2BlockEmbedding_single_apply (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) (n k : ℕ) :
     canonicalL2BlockEmbedding w hw (lp.single 2 n 1) k = w n k := by
   have h :=
-    (blocksOrthonormal w hw).orthogonalFamily.linearIsometry_apply_single
+    (show Orthonormal ℝ (blockL2 w hw) from by
+    exact blocksOrthonormal w hw).orthogonalFamily.linearIsometry_apply_single
       (i := n) (1 : ℝ)
   have hv :
       blockIsometry w hw (lp.single 2 n 1) = blockL2 w hw n := by

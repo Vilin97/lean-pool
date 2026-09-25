@@ -3,23 +3,25 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.Symplectic
-import LeanPool.KaltonPeck.KaltonPeck.Support.CanonicalPairing
-import LeanPool.KaltonPeck.KaltonPeck.Support.CgpBlockExtraction
-import LeanPool.KaltonPeck.KaltonPeck.Support.CgpCompactRestriction
-import LeanPool.KaltonPeck.KaltonPeck.Support.CgpStrictlySingularLifting
-import LeanPool.KaltonPeck.KaltonPeck.Support.Fredholm
-import LeanPool.KaltonPeck.KaltonPeck.Support.HilbertGlidingHump
-import LeanPool.KaltonPeck.KaltonPeck.Support.KernelNuclearCorrection
-import LeanPool.KaltonPeck.KaltonPeck.Support.PathParity
-import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingularAdd
-import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingularHilbert
-import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingularHilbertCompact
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Symplectic
+public import LeanPool.KaltonPeck.KaltonPeck.Support.CanonicalPairing
+public import LeanPool.KaltonPeck.KaltonPeck.Support.CgpBlockExtraction
+public import LeanPool.KaltonPeck.KaltonPeck.Support.CgpCompactRestriction
+public import LeanPool.KaltonPeck.KaltonPeck.Support.CgpStrictlySingularLifting
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Fredholm
+public import LeanPool.KaltonPeck.KaltonPeck.Support.HilbertGlidingHump
+public import LeanPool.KaltonPeck.KaltonPeck.Support.KernelNuclearCorrection
+public import LeanPool.KaltonPeck.KaltonPeck.Support.PathParity
+public import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingularAdd
+public import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingularHilbert
+public import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingularHilbertCompact
 
 /-!
 # Fredholm analysis of canonical graph operators
@@ -27,6 +29,8 @@ import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingularHilbertCompact
 This file combines strict singularity, block extraction, and compact-factorization arguments to
 establish the main Fredholm results for canonical operators on the Kalton--Peck space.
 -/
+
+@[expose] public section
 
 
 namespace KaltonPeck.Support.GraphFredholm

@@ -3,14 +3,16 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import Mathlib.Analysis.Normed.Operator.Compact.FiniteDimension
-import Mathlib.Analysis.Normed.Operator.Banach
-import Mathlib.Analysis.LocallyConvex.HahnBanach
+public import Mathlib.Analysis.Normed.Operator.Compact.FiniteDimension
+public import Mathlib.Analysis.Normed.Operator.Banach
+public import Mathlib.Analysis.LocallyConvex.HahnBanach
 
 /-!
 # Strictly singular operators
@@ -18,6 +20,8 @@ import Mathlib.Analysis.LocallyConvex.HahnBanach
 This file defines strictly singular bounded operators and proves their basic behavior under
 composition, together with strict singularity of compact operators.
 -/
+
+@[expose] public section
 
 
 namespace KaltonPeck.Support.StrictlySingular

@@ -3,15 +3,17 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.Symplectic
-import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingularHilbert
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.Normed.Lp.lpHolder
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Symplectic
+public import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingularHilbert
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.Normed.Lp.lpHolder
 
 /-!
 # Strict singularity implies compactness on the canonical Hilbert space
@@ -19,6 +21,8 @@ import Mathlib.Analysis.Normed.Lp.lpHolder
 This file proves that every strictly singular endomorphism of the canonical real Hilbert space
 is compact by approximation with finite-dimensional compressions.
 -/
+
+@[expose] public section
 
 
 namespace KaltonPeck.Support.StrictlySingular

@@ -3,16 +3,18 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.Symplectic
-import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
-import Mathlib.Analysis.Normed.Module.Bases
-import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Symplectic
+public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
+public import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
+public import Mathlib.Analysis.Normed.Module.Bases
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
 
 /-!
 # Compact block extraction for the canonical Hilbert space
@@ -20,6 +22,8 @@ import Mathlib.Analysis.Normed.Operator.Compact.Basic
 This file extracts a successive normalized finite-support block family on which an operator
 that is not upper semi-Fredholm becomes compact.
 -/
+
+@[expose] public section
 
 
 namespace KaltonPeck.Support.CgpBlockExtraction

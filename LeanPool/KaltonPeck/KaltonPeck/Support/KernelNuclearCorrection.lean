@@ -3,13 +3,15 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.CanonicalPairing
-import Mathlib.Analysis.Normed.Operator.Compact.FiniteDimension
+public import LeanPool.KaltonPeck.KaltonPeck.Support.CanonicalPairing
+public import Mathlib.Analysis.Normed.Operator.Compact.FiniteDimension
 
 /-!
 # Compact kernel corrections
@@ -17,6 +19,8 @@ import Mathlib.Analysis.Normed.Operator.Compact.FiniteDimension
 This file extends summable errors on the canonical Hilbert-kernel basis to a compact ambient
 operator whose symplectic adjoint is also compact.
 -/
+
+@[expose] public section
 
 
 namespace KaltonPeck.Support.GraphFredholm

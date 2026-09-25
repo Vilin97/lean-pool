@@ -3,13 +3,15 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.Definitions
-import Mathlib.LinearAlgebra.Matrix.BilinearForm
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Definitions
+public import Mathlib.LinearAlgebra.Matrix.BilinearForm
 
 /-!
 # Finite-dimensional parity
@@ -17,6 +19,8 @@ import Mathlib.LinearAlgebra.Matrix.BilinearForm
 This file proves the parity results for finite-dimensional alternating forms and complex
 structures that underlie the later rank-parity arguments.
 -/
+
+@[expose] public section
 
 namespace KaltonPeck.Support.FiniteParity
 

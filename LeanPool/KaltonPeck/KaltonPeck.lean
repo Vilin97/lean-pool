@@ -3,22 +3,24 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.Definitions
-import LeanPool.KaltonPeck.KaltonPeck.Support.Forms
-import LeanPool.KaltonPeck.KaltonPeck.Support.Fredholm
-import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteParity
-import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteCodim
-import LeanPool.KaltonPeck.KaltonPeck.Support.PathParity
-import LeanPool.KaltonPeck.KaltonPeck.Support.GeneralRank
-import LeanPool.KaltonPeck.KaltonPeck.Support.Coordinates
-import LeanPool.KaltonPeck.KaltonPeck.Support.Symplectic
-import LeanPool.KaltonPeck.KaltonPeck.Support.GraphFredholm
-import LeanPool.KaltonPeck.KaltonPeck.Support.TargetSupport
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Definitions
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Forms
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Fredholm
+public import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteParity
+public import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteCodim
+public import LeanPool.KaltonPeck.KaltonPeck.Support.PathParity
+public import LeanPool.KaltonPeck.KaltonPeck.Support.GeneralRank
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Coordinates
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Symplectic
+public import LeanPool.KaltonPeck.KaltonPeck.Support.GraphFredholm
+public import LeanPool.KaltonPeck.KaltonPeck.Support.TargetSupport
 
 /-!
 # The Kalton--Peck rank-parity obstruction
@@ -26,6 +28,8 @@ import LeanPool.KaltonPeck.KaltonPeck.Support.TargetSupport
 This file exposes the project-level definitions and the main rank-parity and hyperplane
 obstruction theorems.
 -/
+
+@[expose] public section
 
 namespace KaltonPeck
 

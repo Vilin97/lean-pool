@@ -3,15 +3,17 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.Definitions
-import LeanPool.KaltonPeck.KaltonPeck.Support.Forms
-import Mathlib.Algebra.Module.LinearMap.Index
-import Mathlib.Analysis.Normed.Module.ContinuousInverse
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Definitions
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Forms
+public import Mathlib.Algebra.Module.LinearMap.Index
+public import Mathlib.Analysis.Normed.Module.ContinuousInverse
 
 /-!
 # Fredholm operator calculus
@@ -19,6 +21,8 @@ import Mathlib.Analysis.Normed.Module.ContinuousInverse
 This file develops quotient-by-kernel descriptions of ranges and proves invariance, composition,
 index, and range results for Fredholm operators.
 -/
+
+@[expose] public section
 
 namespace KaltonPeck.Support.Fredholm
 
@@ -346,9 +350,8 @@ theorem fredholmIndex_comp {X Y Z : Type*} [NormedAddCommGroup X]
   let : FiniteDimensional ℝ B.toLinearMap.ker := hB.1
   let : FiniteDimensional ℝ (Y ⧸ A.toLinearMap.range) := hA.2.2
   let : FiniteDimensional ℝ (Z ⧸ B.toLinearMap.range) := hB.2.2
-  change (B.toLinearMap.comp A.toLinearMap).index =
-    B.toLinearMap.index + A.toLinearMap.index
-  exact LinearMap.index_comp B.toLinearMap A.toLinearMap
+  simpa only [LinearMap.index_eq_finrank_sub, fredholmIndex, nullity,
+    ContinuousLinearMap.toLinearMap_comp] using! LinearMap.index_comp B.toLinearMap A.toLinearMap
 
 /-- A bounded left inverse gives zero kernel, finite-dimensional kernel, and closed range.
 

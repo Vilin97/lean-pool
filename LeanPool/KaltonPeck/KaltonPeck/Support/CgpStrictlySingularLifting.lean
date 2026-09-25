@@ -3,13 +3,15 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.CgpCompactRestriction
-import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingularAdd
+public import LeanPool.KaltonPeck.KaltonPeck.Support.CgpCompactRestriction
+public import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingularAdd
 
 /-!
 # Strictly singular lifting on the canonical Kalton--Peck space
@@ -17,6 +19,8 @@ import LeanPool.KaltonPeck.KaltonPeck.Support.StrictlySingularAdd
 This file uses biorthogonal interpolation to lift strict singularity from the canonical Hilbert
 kernel and quotient to operators on the full canonical Kalton--Peck space.
 -/
+
+@[expose] public section
 
 
 namespace KaltonPeck.Support.GraphFredholm

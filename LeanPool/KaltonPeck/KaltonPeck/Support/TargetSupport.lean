@@ -3,12 +3,14 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.Definitions
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Definitions
 
 /-!
 # Hyperplane extensions of complex structures
@@ -16,6 +18,8 @@ import LeanPool.KaltonPeck.KaltonPeck.Support.Definitions
 This file extends a complex structure from a closed hyperplane to the ambient Banach space and
 computes the rank of the resulting square defect.
 -/
+
+@[expose] public section
 
 
 namespace KaltonPeck.Support.TargetSupport

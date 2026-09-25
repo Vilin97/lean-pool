@@ -3,15 +3,17 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteCodim
-import LeanPool.KaltonPeck.KaltonPeck.Support.Forms
-import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteParity
-import LeanPool.KaltonPeck.KaltonPeck.Support.Fredholm
+public import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteCodim
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Forms
+public import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteParity
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Fredholm
 
 /-!
 # General rank-parity reduction
@@ -19,6 +21,8 @@ import LeanPool.KaltonPeck.KaltonPeck.Support.Fredholm
 This file analyzes the kernel of a finite-rank polynomial defect, constructs the associated
 rank-parity form, and proves evenness of its restricted radical.
 -/
+
+@[expose] public section
 
 namespace KaltonPeck.Support.GeneralRank
 

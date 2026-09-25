@@ -3,14 +3,16 @@ Copyright (c) 2026 Avik Das. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Avik Das
 -/
+module
+
 /-
 Copyright (c) 2026 adas1236. All rights reserved.
 Released under MIT license as described in the file LICENSE.
 Authors: adas1236
 -/
-import LeanPool.KaltonPeck.KaltonPeck.Support.Fredholm
-import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteParity
-import Mathlib.Analysis.Normed.Ring.Units
+public import LeanPool.KaltonPeck.KaltonPeck.Support.Fredholm
+public import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteParity
+public import Mathlib.Analysis.Normed.Ring.Units
 
 /-!
 # Parity along paths of alternating forms
@@ -18,6 +20,8 @@ import Mathlib.Analysis.Normed.Ring.Units
 This file constructs kernel splittings and local Schur reductions and proves the mod-two
 invariance result for paths of Fredholm alternating forms.
 -/
+
+@[expose] public section
 
 namespace KaltonPeck.Support.PathParity
 
