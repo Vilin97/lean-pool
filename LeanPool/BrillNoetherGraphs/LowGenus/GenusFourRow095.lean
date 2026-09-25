@@ -67,7 +67,7 @@ abbrev Spec
 
 variable (length : Fin 9 → ℕ) (hLength : ∀ edge, 0 < length edge)
 
-theorem graph_connected : graph_connected (Spec length hLength).graph := by
+theorem graphConnected : graphConnected (Spec length hLength).graph := by
   exact (Spec length hLength).graph_connected_of_coreConnected core_connected
 
 /-- The comparison parameters used in the paper's first-family picture. -/
@@ -182,10 +182,10 @@ def abProfile (hNorm : length 0 ≤ length 5) :
 /-- Exact sparse principal divisor of the common `a/b` profile. -/
 theorem abProfile_endpointDivisors (hNorm : length 0 ≤ length 5) :
     (abProfile length hLength hNorm).endpointDivisors =
-      one_chip ((Spec length hLength).coreVertex 0) +
-        one_chip ((Spec length hLength).coreVertex 5) -
-        one_chip ((Spec length hLength).coreVertex 4) -
-        one_chip (q length hLength hNorm) := by
+      oneChip ((Spec length hLength).coreVertex 0) +
+        oneChip ((Spec length hLength).coreVertex 5) -
+        oneChip ((Spec length hLength).coreVertex 4) -
+        oneChip (q length hLength hNorm) := by
   classical
   rw [WindowProfile.Data.endpointDivisors]
   simp [Fin.sum_univ_succ, abProfile_slope, abProfile_start_zero,
@@ -202,7 +202,7 @@ theorem reaches_zero
   apply (abProfile length hLength hNorm).reaches_of_effective_endpointDivisors
   rw [abProfile_endpointDivisors]
   intro vertex
-  simp [AtanasovRanganathan.Configurations.threeChipDivisor, one_chip]
+  simp [AtanasovRanganathan.Configurations.threeChipDivisor, oneChip]
   split_ifs <;> omega
 
 /-- The same common profile reaches `b=5`. -/
@@ -215,7 +215,7 @@ theorem reaches_five
   apply (abProfile length hLength hNorm).reaches_of_effective_endpointDivisors
   rw [abProfile_endpointDivisors]
   intro vertex
-  simp [AtanasovRanganathan.Configurations.threeChipDivisor, one_chip]
+  simp [AtanasovRanganathan.Configurations.threeChipDivisor, oneChip]
   split_ifs <;> omega
 
 end LowGenus.GenusFourRow095

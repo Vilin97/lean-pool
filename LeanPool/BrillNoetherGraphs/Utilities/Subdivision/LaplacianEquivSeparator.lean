@@ -18,7 +18,7 @@ the one remaining ingredient of the rank-one pipeline: the finite
 predicate assembled from it.
 
 This file adds exactly that.  Every field of `ExpansionCell` is phrased in
-`num_edges` and `Finset` membership, which is precisely the structure a
+`numEdges` and `Finset` membership, which is precisely the structure a
 `LaplacianEquiv` preserves, so the transport is a pure relabeling: no graph
 theory is redeveloped and no new hypothesis appears.
 
@@ -115,7 +115,7 @@ variable {G : CFGraph.{u}} {H : CFGraph.{v}}
 /-- `LaplacianEquiv.symm` reading, with the equivalence written on the target
 side.  Stated separately so `rw` finds it without unfolding `symm`. -/
 theorem num_edges_toEquiv_symm (φ : LaplacianEquiv G H) (x y : H.V) :
-    num_edges G (φ.toEquiv.symm x) (φ.toEquiv.symm y) = num_edges H x y :=
+    numEdges G (φ.toEquiv.symm x) (φ.toEquiv.symm y) = numEdges H x y :=
   φ.symm.num_edges_eq x y
 
 theorem intoMultiplicity_image (φ : LaplacianEquiv G H) (C : Finset G.V)
@@ -142,7 +142,7 @@ theorem isBoundary_image (φ : LaplacianEquiv G H) (C : Finset G.V) (v : G.V) :
 /-! ## Transport of an expansion cell -/
 
 /-- Relabel a complementary cell along a Laplacian equivalence.  Every field is
-a `num_edges`/membership statement, so nothing but the labels changes. -/
+a `numEdges`/membership statement, so nothing but the labels changes. -/
 def ExpansionCell.map (φ : LaplacianEquiv G H) {R : Finset G.V}
     (cell : ExpansionCell G R) : ExpansionCell H (R.image φ.toEquiv) where
   carrier := cell.carrier.image φ.toEquiv

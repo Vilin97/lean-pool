@@ -49,7 +49,7 @@ theorem satisfiesTransmission_wedgeAddDivisor_star
     have hRightRaw := hE.2 ell b
     unfold TransmissionInequality at hRightRaw
     have hRight :
-        rank H (E - b • one_chip v + ell • one_chip y) ≥
+        rank H (E - b • oneChip v + ell • oneChip y) ≥
           beta.s (ell + 1) b - 1 := by
       simpa only [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using hRightRaw
     have hStar : (alpha ⋆ beta).s (a + 1) b ≤
@@ -77,9 +77,9 @@ def BoundedDemazureFactorization (tau : AspPerm) (gG gH : ℤ) : Prop :=
   ∃ alpha beta : AspPerm,
     tau = alpha ⋆ beta ∧
       FiniteTransmissionPerm alpha ∧
-      ((inv_set alpha).ncard : ℤ) ≤ gG ∧
+      ((invSet alpha).ncard : ℤ) ≤ gG ∧
       FiniteTransmissionPerm beta ∧
-      ((inv_set beta).ncard : ℤ) ≤ gH
+      ((invSet beta).ncard : ℤ) ≤ gH
 
 /-- The bounded finite Demazure-factorization assertion needed for vertex
 wedge gluing.  It is isolated here because `Demazure.Submodular` proves the
@@ -87,7 +87,7 @@ min-plus product formula but does not provide this length-budgeted
 factorization theorem. -/
 def HasBoundedDemazureFactorizations (gG gH : ℤ) : Prop :=
   ∀ tau : AspPerm, FiniteTransmissionPerm tau ->
-    ((inv_set tau).ncard : ℤ) ≤ gG + gH ->
+    ((invSet tau).ncard : ℤ) ≤ gG + gH ->
     BoundedDemazureFactorization tau gG gH
 
 /-- Conditional gluing for the full finite-length transmission-existence

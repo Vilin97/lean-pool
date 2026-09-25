@@ -99,7 +99,7 @@ theorem bnExists_face_of_two_three_cut
   have hTransportedConnected : d.contractedSpec.core.Connected :=
     d.canonicalContraction.target_core_connected hConnected
   let graphCut := transported.toOneVertexCut d.contractedSpec hTransportedValid
-  have hContractedConnected : graph_connected d.contractedSpec.graph :=
+  have hContractedConnected : graphConnected d.contractedSpec.graph :=
     d.contractedSpec.graph_connected_of_coreConnected hTransportedConnected
   have hFaceGenus : genus d.graph = 5 := by
     rw [d.genus_graph]

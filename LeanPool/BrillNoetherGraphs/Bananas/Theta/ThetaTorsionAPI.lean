@@ -34,9 +34,9 @@ A path position and its reflection add to the banana canonical divisor. -/
 theorem path_reflection_linear_equiv
     (B : Banana 2) (α : Fin 3)
     (p : B.PathPosition α) :
-    linear_equiv B.graph (canonical_divisor B.graph)
-      (one_chip (strandVertex B α p) +
-        one_chip (strandVertex B α (strandMirror B α p))) := by
+    linearEquiv B.graph (canonicalDivisor B.graph)
+      (oneChip (strandVertex B α p) +
+        oneChip (strandVertex B α (strandMirror B α p))) := by
   rw [canonical_divisor_eq_endpoints B]
   norm_num
   exact endpoint_sum_linearEquiv_strand_reflection B α p
@@ -70,10 +70,10 @@ def EvenlyMarkedThetaMultiplePrincipalContract : Prop :=
     (i : B.PathPosition α) (j : B.PathPosition β),
     EvenlyMarkedTheta B α β i j →
     let k := B.length α / Nat.gcd (B.length α) i.val;
-      linear_equiv B.graph
+      linearEquiv B.graph
       ((k : ℤ) •
-        (one_chip (strandVertex B α i) -
-          one_chip (strandVertex B β j))) 0
+        (oneChip (strandVertex B α i) -
+          oneChip (strandVertex B β j))) 0
 
 /-- The missing multi-strand firing identity immediately yields the positive
 torsion witness used by the transmission API.  This adapter deliberately does
@@ -95,10 +95,10 @@ theorem torsionWitness_of_evenlyMarkedTheta_contract
     exact Nat.div_pos
       (Nat.gcd_le_left _ (B.length_pos α)) hgcd
   refine ⟨hk, ?_⟩
-  change linear_equiv B.graph
+  change linearEquiv B.graph
     ((k : ℤ) •
-      (one_chip (strandVertex B α i) -
-        one_chip (strandVertex B β j))) 0
+      (oneChip (strandVertex B α i) -
+        oneChip (strandVertex B β j))) 0
   exact hContract B α β i j
     ⟨hαβ, hiPos, hiLt, hjPos, hjLt, hRatio⟩
 

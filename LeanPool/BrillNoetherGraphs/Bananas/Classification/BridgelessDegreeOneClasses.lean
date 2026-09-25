@@ -23,43 +23,43 @@ open Utilities
 /-- Lemma 2.3(1): on a connected graph with no one-edge cut, two vertices
 are equal exactly when their degree-one divisors are linearly equivalent. -/
 theorem vertex_eq_iff_one_chip_linear_equiv_of_twoEdgeCutCondition
-    (G : CFGraph) (hConnected : _root_.graph_connected G)
+    (G : CFGraph) (hConnected : _root_.graphConnected G)
     (hCut : TwoEdgeCutCondition G) (u v : G.V) :
-    u = v ↔ linear_equiv G (one_chip u) (one_chip v) := by
+    u = v ↔ linearEquiv G (oneChip u) (oneChip v) := by
   constructor
   · rintro rfl
-    exact linear_equiv.refl G (one_chip u)
+    exact linearEquiv.refl G (oneChip u)
   · intro hEquiv
     by_contra huv
     apply not_linear_equiv_one_chip_sub_of_twoEdgeCutCondition
       hConnected hCut (Ne.symm huv)
-    unfold linear_equiv at hEquiv ⊢
+    unfold linearEquiv at hEquiv ⊢
     simpa using hEquiv
 
 /-- On a nontrivial connected graph with no one-edge cut, every one-chip
 divisor has rank exactly zero. -/
 theorem rank_one_chip_eq_zero_of_twoEdgeCutCondition
-    (G : CFGraph) (hConnected : _root_.graph_connected G)
+    (G : CFGraph) (hConnected : _root_.graphConnected G)
     (hCut : TwoEdgeCutCondition G)
     (hNontrivial : ∃ p q : G.V, p ≠ q) (x : G.V) :
-    rank G (one_chip x) = 0 := by
+    rank G (oneChip x) = 0 := by
   obtain ⟨p, q, hpq⟩ := hNontrivial
   obtain ⟨y, hyx⟩ : ∃ y : G.V, y ≠ x := by
     by_cases hxp : x = p
     · subst x
       exact ⟨q, hpq.symm⟩
     · exact ⟨p, Ne.symm hxp⟩
-  have hNonnegative : 0 ≤ rank G (one_chip x) := by
-    apply (rank_geq_iff G (one_chip x) 0).1
-    apply (rank_nonneg_iff_winnable G (one_chip x)).2
-    exact winnable_of_effective G (one_chip x) (eff_one_chip x)
-  have hNotOne : ¬1 ≤ rank G (one_chip x) := by
+  have hNonnegative : 0 ≤ rank G (oneChip x) := by
+    apply (rank_geq_iff G (oneChip x) 0).1
+    apply (rank_nonneg_iff_winnable G (oneChip x)).2
+    exact winnable_of_effective G (oneChip x) (eff_one_chip x)
+  have hNotOne : ¬1 ≤ rank G (oneChip x) := by
     intro hOne
-    have hResidual : winnable G (one_chip x - one_chip y) :=
-      (rank_ge_one_iff_winnable_sub_one_chip G (one_chip x)).1 hOne y
-    have hDegree : deg (one_chip x - one_chip y) = 0 := by simp
+    have hResidual : winnable G (oneChip x - oneChip y) :=
+      (rank_ge_one_iff_winnable_sub_one_chip G (oneChip x)).1 hOne y
+    have hDegree : deg (oneChip x - oneChip y) = 0 := by simp
     have hPrincipal := linear_equiv_zero_of_winnable_deg_zero G
-      (one_chip x - one_chip y) hResidual hDegree
+      (oneChip x - oneChip y) hResidual hDegree
     exact (not_linear_equiv_one_chip_sub_of_twoEdgeCutCondition
       hConnected hCut hyx) hPrincipal
   omega
@@ -67,20 +67,20 @@ theorem rank_one_chip_eq_zero_of_twoEdgeCutCondition
 /-- The rank-zero part of the degree-one Picard component, represented in
 the additive quotient model used throughout the formalization. -/
 def RankZeroDegreeOneClass (G : CFGraph) :=
-  {c : CFDiv G ⧸ principal_divisors G //
+  {c : CFDiv G ⧸ principalDivisors G //
     ∃ D : CFDiv G,
-      QuotientAddGroup.mk' (principal_divisors G) D = c ∧
+      QuotientAddGroup.mk' (principalDivisors G) D = c ∧
       rank G D = 0 ∧ deg D = 1}
 
 /-- The Abel--Jacobi vertex map, with codomain restricted to rank-zero
 degree-one divisor classes. -/
 def bridgelessDegreeOneClassMap
-    (G : CFGraph) (hConnected : _root_.graph_connected G)
+    (G : CFGraph) (hConnected : _root_.graphConnected G)
     (hCut : TwoEdgeCutCondition G)
     (hNontrivial : ∃ p q : G.V, p ≠ q) :
     G.V → RankZeroDegreeOneClass G := fun x =>
-  ⟨QuotientAddGroup.mk' (principal_divisors G) (one_chip x),
-    ⟨one_chip x, rfl,
+  ⟨QuotientAddGroup.mk' (principalDivisors G) (oneChip x),
+    ⟨oneChip x, rfl,
       rank_one_chip_eq_zero_of_twoEdgeCutCondition G hConnected hCut
         hNontrivial x,
       deg_one_chip x⟩⟩
@@ -88,7 +88,7 @@ def bridgelessDegreeOneClassMap
 /-- Lemma 2.3(2): vertices are in bijection with rank-zero divisor classes
 of degree one. -/
 theorem bridgelessDegreeOneClassMap_bijective
-    (G : CFGraph) (hConnected : _root_.graph_connected G)
+    (G : CFGraph) (hConnected : _root_.graphConnected G)
     (hCut : TwoEdgeCutCondition G)
     (hNontrivial : ∃ p q : G.V, p ≠ q) :
     Function.Bijective
@@ -99,14 +99,14 @@ theorem bridgelessDegreeOneClassMap_bijective
       G hConnected hCut x y).2
     have hValues := congrArg Subtype.val hxy
     have hRelation := QuotientAddGroup.eq_iff_sub_mem.mp hValues
-    unfold linear_equiv
-    simpa using (principal_divisors G).neg_mem hRelation
+    unfold linearEquiv
+    simpa using (principalDivisors G).neg_mem hRelation
   · rintro ⟨c, D, hClass, hRank, hDegree⟩
     obtain ⟨x, hRepresentative⟩ :=
       exists_one_chip_representative_of_rank_zero_degree_one
         G D hRank hDegree
     refine ⟨x, Subtype.ext ?_⟩
-    change QuotientAddGroup.mk' (principal_divisors G) (one_chip x) = c
+    change QuotientAddGroup.mk' (principalDivisors G) (oneChip x) = c
     rw [← hClass]
     apply QuotientAddGroup.eq_iff_sub_mem.mpr
     exact hRepresentative

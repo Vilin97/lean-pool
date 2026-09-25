@@ -165,7 +165,7 @@ the northwest quadrant at the graph of `tau`. -/
 noncomputable def kInversionsBySecondEquivNorthwestSigma
     (k : ℕ) (tau : ℤ → ℤ) :
     {p // p ∈ kInversionsBySecond k tau} ≃
-      Σ b : Fin k, {m // m ∈ northwest_set tau (tau b + 1) b} where
+      Σ b : Fin k, {m // m ∈ northwestSet tau (tau b + 1) b} where
   toFun p := by
     have hp0 : 0 ≤ p.val.2 := p.property.2.2.1
     have hpCast : (p.val.2.toNat : ℤ) = p.val.2 :=
@@ -207,21 +207,21 @@ noncomputable def kInversionsBySecondEquivNorthwestSigma
 with one summand for each value in a fundamental period. -/
 theorem kInversionCount_eq_sum_northwest
     (M : TwiceMarked) (D : CFDiv M.graph)
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : _root_.graphConnected M.graph)
     (k : ℕ) (tau : ℤ → ℤ)
     (hk : 0 < k) (hTau : IsTransmissionPermutation M D tau)
     (hAffine : IsKAffine k tau) :
     kInversionCount k tau =
-      ∑ b : Fin k, (northwest_set tau (tau b + 1) b).ncard := by
+      ∑ b : Fin k, (northwestSet tau (tau b + 1) b).ncard := by
   obtain ⟨sigma, hSigmaTau, -⟩ :=
     transmissionPermutation_rankSlipFace M D hconn tau hTau
   have hFinite : ∀ b : Fin k,
-      (northwest_set tau (tau b + 1) b).Finite := by
+      (northwestSet tau (tau b + 1) b).Finite := by
     intro b
     rw [← hSigmaTau]
     exact sigma.nw_finite _ _
   let (b : Fin k) : Fintype
-      {m // m ∈ northwest_set tau (tau b + 1) b} :=
+      {m // m ∈ northwestSet tau (tau b + 1) b} :=
     (hFinite b).fintype
   calc
     kInversionCount k tau = (kInversionsBySecond k tau).ncard :=
@@ -229,13 +229,13 @@ theorem kInversionCount_eq_sum_northwest
     _ = Nat.card {p // p ∈ kInversionsBySecond k tau} := by
       rw [Nat.card_coe_set_eq]
     _ = Nat.card (Σ b : Fin k,
-        {m // m ∈ northwest_set tau (tau b + 1) b}) :=
+        {m // m ∈ northwestSet tau (tau b + 1) b}) :=
       Nat.card_congr (kInversionsBySecondEquivNorthwestSigma k tau)
     _ = ∑ b : Fin k,
-        Nat.card {m // m ∈ northwest_set tau (tau b + 1) b} :=
+        Nat.card {m // m ∈ northwestSet tau (tau b + 1) b} :=
       Nat.card_sigma
     _ = ∑ b : Fin k,
-        (northwest_set tau (tau b + 1) b).ncard := by
+        (northwestSet tau (tau b + 1) b).ncard := by
       apply Finset.sum_congr rfl
       intro b _
       exact Nat.card_coe_set_eq _
@@ -246,15 +246,15 @@ This is the finite, Lean-ready starting point for the inclusion--exclusion
 calculation in Lemma 4.10. -/
 theorem intCast_kInversionCount_eq_sum_complement_rank
     (M : TwiceMarked) (D : CFDiv M.graph)
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : _root_.graphConnected M.graph)
     (k : ℕ) (tau : ℤ → ℤ)
     (hk : 0 < k) (hTau : IsTransmissionPermutation M D tau)
     (hAffine : IsKAffine k tau) :
     (kInversionCount k tau : ℤ) =
       ∑ b : Fin k,
         (rank M.graph
-          (canonical_divisor M.graph - D -
-            (tau b) • one_chip M.u + (b : ℤ) • one_chip M.v) + 1) := by
+          (canonicalDivisor M.graph - D -
+            (tau b) • oneChip M.u + (b : ℤ) • oneChip M.v) + 1) := by
   rw [kInversionCount_eq_sum_northwest M D hconn k tau hk hTau hAffine]
   push_cast
   apply Finset.sum_congr rfl

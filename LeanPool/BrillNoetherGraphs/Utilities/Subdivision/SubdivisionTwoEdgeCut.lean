@@ -32,11 +32,11 @@ certificate can be substituted. -/
 theorem cutMultiplicity_eq_double_sum (K : CFGraph) (S : Finset K.V) :
     cutMultiplicity K S =
       ∑ v : K.V, ∑ w : K.V,
-        if v ∈ S ∧ w ∉ S then (num_edges K v w : ℤ) else 0 := by
+        if v ∈ S ∧ w ∉ S then (numEdges K v w : ℤ) else 0 := by
   classical
   have hInner : ∀ v : K.V,
-      (∑ w : K.V, if v ∈ S ∧ w ∉ S then (num_edges K v w : ℤ) else 0)
-        = if v ∈ S then outdeg_S K S v else 0 := by
+      (∑ w : K.V, if v ∈ S ∧ w ∉ S then (numEdges K v w : ℤ) else 0)
+        = if v ∈ S then outdegreeSet K S v else 0 := by
     intro v
     by_cases hv : v ∈ S
     · simp [hv, outdeg_S_eq_sum_filter, Finset.sum_filter]
@@ -92,19 +92,19 @@ theorem cutMultiplicity_preimageFinset (c : GraphContractionCertificate G H)
   classical
   rw [cutMultiplicity_eq_double_sum, cutMultiplicity_eq_double_sum]
   have hEdge : ∀ a b : H.V, a ≠ b →
-      (num_edges H a b : ℤ) =
+      (numEdges H a b : ℤ) =
         ∑ q : G.V × G.V,
           if c.vertexMap q.1 = a ∧ c.vertexMap q.2 = b then
-            (num_edges G q.1 q.2 : ℤ) else 0 := by
+            (numEdges G q.1 q.2 : ℤ) else 0 := by
     intro a b hab
     rw [Fintype.sum_prod_type]
     exact_mod_cast hValid.2 a b hab
   -- the summand of the target double sum, expanded along fibres
   have hTargetTerm : ∀ a b : H.V,
-      (if a ∈ S ∧ b ∉ S then (num_edges H a b : ℤ) else 0) =
+      (if a ∈ S ∧ b ∉ S then (numEdges H a b : ℤ) else 0) =
         ∑ q : G.V × G.V,
           if c.vertexMap q.1 = a ∧ c.vertexMap q.2 = b then
-            (if a ∈ S ∧ b ∉ S then (num_edges G q.1 q.2 : ℤ) else 0) else 0 := by
+            (if a ∈ S ∧ b ∉ S then (numEdges G q.1 q.2 : ℤ) else 0) else 0 := by
     intro a b
     by_cases hMem : a ∈ S ∧ b ∉ S
     · have hab : a ≠ b := fun h => hMem.2 (h ▸ hMem.1)
@@ -118,42 +118,42 @@ theorem cutMultiplicity_preimageFinset (c : GraphContractionCertificate G H)
   have hSwapInner : ∀ a : H.V,
       (∑ b : H.V, ∑ q : G.V × G.V,
         (if c.vertexMap q.1 = a ∧ c.vertexMap q.2 = b then
-          (if a ∈ S ∧ b ∉ S then (num_edges G q.1 q.2 : ℤ) else 0) else 0)) =
+          (if a ∈ S ∧ b ∉ S then (numEdges G q.1 q.2 : ℤ) else 0) else 0)) =
       ∑ q : G.V × G.V, ∑ b : H.V,
         (if c.vertexMap q.1 = a ∧ c.vertexMap q.2 = b then
-          (if a ∈ S ∧ b ∉ S then (num_edges G q.1 q.2 : ℤ) else 0) else 0) :=
+          (if a ∈ S ∧ b ∉ S then (numEdges G q.1 q.2 : ℤ) else 0) else 0) :=
     fun _ => Finset.sum_comm
   have hCollapse : ∀ q : G.V × G.V,
       (∑ a : H.V, ∑ b : H.V,
         (if c.vertexMap q.1 = a ∧ c.vertexMap q.2 = b then
-          (if a ∈ S ∧ b ∉ S then (num_edges G q.1 q.2 : ℤ) else 0) else 0)) =
+          (if a ∈ S ∧ b ∉ S then (numEdges G q.1 q.2 : ℤ) else 0) else 0)) =
       (if c.vertexMap q.1 ∈ S ∧ c.vertexMap q.2 ∉ S then
-        (num_edges G q.1 q.2 : ℤ) else 0) := by
+        (numEdges G q.1 q.2 : ℤ) else 0) := by
     intro q
     simp [ite_and, Finset.sum_ite_eq]
   calc
     (∑ v : G.V, ∑ w : G.V,
         if v ∈ c.preimageFinset S ∧ w ∉ c.preimageFinset S then
-          (num_edges G v w : ℤ) else 0)
+          (numEdges G v w : ℤ) else 0)
         = ∑ q : G.V × G.V,
             if c.vertexMap q.1 ∈ S ∧ c.vertexMap q.2 ∉ S then
-              (num_edges G q.1 q.2 : ℤ) else 0 := by
+              (numEdges G q.1 q.2 : ℤ) else 0 := by
           rw [Fintype.sum_prod_type]
           simp [mem_preimageFinset]
     _ = ∑ q : G.V × G.V, ∑ a : H.V, ∑ b : H.V,
             (if c.vertexMap q.1 = a ∧ c.vertexMap q.2 = b then
-              (if a ∈ S ∧ b ∉ S then (num_edges G q.1 q.2 : ℤ) else 0) else 0) := by
+              (if a ∈ S ∧ b ∉ S then (numEdges G q.1 q.2 : ℤ) else 0) else 0) := by
           exact Finset.sum_congr rfl fun q _ => (hCollapse q).symm
     _ = ∑ a : H.V, ∑ q : G.V × G.V, ∑ b : H.V,
             (if c.vertexMap q.1 = a ∧ c.vertexMap q.2 = b then
-              (if a ∈ S ∧ b ∉ S then (num_edges G q.1 q.2 : ℤ) else 0) else 0) :=
+              (if a ∈ S ∧ b ∉ S then (numEdges G q.1 q.2 : ℤ) else 0) else 0) :=
           Finset.sum_comm
     _ = ∑ a : H.V, ∑ b : H.V, ∑ q : G.V × G.V,
             (if c.vertexMap q.1 = a ∧ c.vertexMap q.2 = b then
-              (if a ∈ S ∧ b ∉ S then (num_edges G q.1 q.2 : ℤ) else 0) else 0) :=
+              (if a ∈ S ∧ b ∉ S then (numEdges G q.1 q.2 : ℤ) else 0) else 0) :=
           Finset.sum_congr rfl fun a _ => (hSwapInner a).symm
     _ = ∑ a : H.V, ∑ b : H.V,
-            if a ∈ S ∧ b ∉ S then (num_edges H a b : ℤ) else 0 := by
+            if a ∈ S ∧ b ∉ S then (numEdges H a b : ℤ) else 0 := by
           exact Finset.sum_congr rfl fun a _ =>
             Finset.sum_congr rfl fun b _ => (hTargetTerm a b).symm
 
@@ -251,7 +251,7 @@ theorem cutMultiplicity_eq_card_crossingSteps (A : Finset spec.Vertex) :
     cutMultiplicity spec.graph A = ((spec.crossingSteps A).card : ℤ) := by
   classical
   rw [cutMultiplicity_eq_double_sum]
-  have hnum : ∀ v w : spec.Vertex, (num_edges spec.graph v w : ℤ) =
+  have hnum : ∀ v w : spec.Vertex, (numEdges spec.graph v w : ℤ) =
       ∑ step : spec.Step,
         if spec.unitEdge step = (v, w) ∨ spec.unitEdge step = (w, v) then
           (1 : ℤ) else 0 := by
@@ -335,7 +335,7 @@ theorem cutMultiplicity_eq_card_crossingSteps (A : Finset spec.Vertex) :
       by_cases hR : spec.stepRight step.1 step.2 ∈ A <;> simp [hL, hR]
   calc
     (∑ v : spec.Vertex, ∑ w : spec.Vertex,
-        if v ∈ A ∧ w ∉ A then (num_edges spec.graph v w : ℤ) else 0)
+        if v ∈ A ∧ w ∉ A then (numEdges spec.graph v w : ℤ) else 0)
         = ∑ v : spec.Vertex, ∑ w : spec.Vertex, ∑ step : spec.Step,
             (if v ∈ A ∧ w ∉ A then
               (if spec.unitEdge step = (v, w) ∨

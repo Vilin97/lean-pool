@@ -423,8 +423,8 @@ theorem sum_chipWeight : ∑ v : Fin 8, chipWeight v = 2 := by decide
 /-- AR's divisor on chamber A: chips at the two square vertices `2` and `5`,
 and one chip inside each of the two marked legs. -/
 def rowDivisor (d : DegSpec 8 12) : CFDiv d.graph :=
-  d.coreClassDivisor chipWeight + one_chip (d.pathAt 3 (rowMark d 3))
-    + one_chip (d.pathAt 8 (rowMark d 8))
+  d.coreClassDivisor chipWeight + oneChip (d.pathAt 3 (rowMark d 3))
+    + oneChip (d.pathAt 8 (rowMark d 8))
 
 theorem rowDivisor_effective (d : DegSpec 8 12) : effective (rowDivisor d) :=
   (Eff d.graph).add_mem
@@ -456,8 +456,8 @@ theorem rowDivisor_coreVertex_eq (d : DegSpec 8 12) (r : Fin 8) :
         baseWeight d v := by
   classical
   show d.coreClassDivisor chipWeight (d.coreVertex r)
-      + one_chip (G := d.graph) (d.pathAt 3 (rowMark d 3)) (d.coreVertex r)
-      + one_chip (G := d.graph) (d.pathAt 8 (rowMark d 8)) (d.coreVertex r) = _
+      + oneChip (G := d.graph) (d.pathAt 3 (rowMark d 3)) (d.coreVertex r)
+      + oneChip (G := d.graph) (d.pathAt 8 (rowMark d 8)) (d.coreVertex r) = _
   rw [d.coreClassDivisor_coreVertex, markChip_classSum_eq d (rowMark d) 3 r,
     markChip_classSum_eq d (rowMark d) 8 r]
   unfold baseWeight
@@ -466,8 +466,8 @@ theorem rowDivisor_coreVertex_eq (d : DegSpec 8 12) (r : Fin 8) :
 theorem rowDivisor_interiorVertex (d : DegSpec 8 12) (e : Fin 12)
     (o : Fin (d.length e - 1)) :
     rowDivisor d (d.interiorVertex e o) =
-      one_chip (G := d.graph) (d.pathAt 3 (rowMark d 3)) (d.interiorVertex e o)
-        + one_chip (G := d.graph) (d.pathAt 8 (rowMark d 8)) (d.interiorVertex e o) := by
+      oneChip (G := d.graph) (d.pathAt 3 (rowMark d 3)) (d.interiorVertex e o)
+        + oneChip (G := d.graph) (d.pathAt 8 (rowMark d 8)) (d.interiorVertex e o) := by
   show d.coreClassDivisor chipWeight (d.interiorVertex e o) + _ + _ = _
   rw [d.coreClassDivisor_interiorVertex]
   ring
@@ -1290,7 +1290,7 @@ theorem residual_effective {d : DegSpec 8 12} (hCore : d.core = row05Core)
     {center owner : Fin 8} (hOwnerRep : d.rep owner = d.rep center)
     (hLocal : ∀ v : Fin 8,
       0 ≤ alloc v - indicatorWeight v owner + contribForm d h v) :
-    effective (rowDivisor d - one_chip (d.coreVertex center)
+    effective (rowDivisor d - oneChip (d.coreVertex center)
       + prin d.graph
         (d.splitScript (rowPotential d h) (rowMark d) (rowMarkValue d h))) := by
   classical
@@ -1304,7 +1304,7 @@ theorem residual_effective {d : DegSpec 8 12} (hCore : d.core = row05Core)
       exact Subtype.ext hr.symm
     rw [hVertex]
     change 0 ≤ rowDivisor d (d.coreVertex r)
-      - one_chip (G := d.graph) (d.coreVertex center) (d.coreVertex r)
+      - oneChip (G := d.graph) (d.coreVertex center) (d.coreVertex r)
       + prin d.graph
           (d.splitScript (rowPotential d h) (rowMark d) (rowMarkValue d h))
           (d.coreVertex r)
@@ -1312,11 +1312,11 @@ theorem residual_effective {d : DegSpec 8 12} (hCore : d.core = row05Core)
       ← positiveEndpointContribution_classSum_eq d hMarks r]
     have hIndicator := sum_indicatorWeight_class d owner r
     have hOneChip :
-        one_chip (G := d.graph) (d.coreVertex center) (d.coreVertex r) =
+        oneChip (G := d.graph) (d.coreVertex center) (d.coreVertex r) =
           ∑ v ∈ Finset.univ.filter (fun v : Fin 8 => d.rep v = d.rep r),
             indicatorWeight v owner := by
       rw [hIndicator]
-      simp only [one_chip, d.coreVertex_eq_iff]
+      simp only [oneChip, d.coreVertex_eq_iff]
       rw [hOwnerRep]
       simp only [eq_comm]
     rw [hOneChip, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
@@ -1329,15 +1329,15 @@ theorem residual_effective {d : DegSpec 8 12} (hCore : d.core = row05Core)
         d.interiorVertex edge offset := rfl
     rw [hVertex]
     change 0 ≤ rowDivisor d (d.interiorVertex edge offset)
-      - one_chip (G := d.graph) (d.coreVertex center) (d.interiorVertex edge offset)
+      - oneChip (G := d.graph) (d.coreVertex center) (d.interiorVertex edge offset)
       + prin d.graph
           (d.splitScript (rowPotential d h) (rowMark d) (rowMarkValue d h))
           (d.interiorVertex edge offset)
     have hNe : (d.coreVertex center) ≠ d.interiorVertex edge offset := by
       simp [DegSpec.coreVertex, DegSpec.interiorVertex]
-    have hZeroChip : one_chip (G := d.graph) (d.coreVertex center)
+    have hZeroChip : oneChip (G := d.graph) (d.coreVertex center)
         (d.interiorVertex edge offset) = 0 := by
-      simp only [one_chip, if_neg hNe.symm]
+      simp only [oneChip, if_neg hNe.symm]
     rw [hZeroChip]
     by_cases hmark : offset.val + 1 = rowMark d edge
     · have hlt : rowMark d edge < d.length edge := by
@@ -1445,7 +1445,7 @@ theorem rowDivisor_reaches_coreVertex {d : DegSpec 8 12}
         (by rw [lbCoeff_eq hCore 1]; exact lbCoeff_owner_one)))).reaches
   · -- vertex 2 carries a chip
     exact reaches_of_effective_representative
-      (linear_equiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
+      (linearEquiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
       (one_le_rowDivisor_at_chip d (c := 2) (by norm_num [chipWeight]))
   · -- vertex 3: the configuration-3 pair
     exact (DharMove.ofScript _ (residual_effective hCore hRepT3 hL
@@ -1471,7 +1471,7 @@ theorem rowDivisor_reaches_coreVertex {d : DegSpec 8 12}
         (by rw [t4Coeff_eq hCore hL hR (ownerFour d)]; exact t4Coeff_owner)))).reaches
   · -- vertex 5 carries a chip
     exact reaches_of_effective_representative
-      (linear_equiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
+      (linearEquiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
       (one_le_rowDivisor_at_chip d (c := 5) (by norm_num [chipWeight]))
   · -- vertex 6: the right banana pair
     exact (DharMove.ofScript _ (residual_effective hCore hRepRB hL

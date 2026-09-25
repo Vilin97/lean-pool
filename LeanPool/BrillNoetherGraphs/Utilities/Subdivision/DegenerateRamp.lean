@@ -90,7 +90,7 @@ structure RampData (d : DegSpec n p) (pot : Fin n → ℤ) (sgn : Fin p → ℤ)
 
 /-- The ramp firing script. -/
 def rampScript (d : DegSpec n p) (pot : Fin n → ℤ) (sgn : Fin p → ℤ)
-    (lo : Fin p → ℕ) (t : ℕ) : firing_script d.graph :=
+    (lo : Fin p → ℕ) (t : ℕ) : firingScript d.graph :=
   d.slotValueScript pot (d.rampValue pot sgn lo t)
 
 variable {d : DegSpec n p} {pot : Fin n → ℤ} {sgn : Fin p → ℤ}
@@ -317,7 +317,7 @@ theorem prin_ramp_coreVertex_of_pos (h : RampData d pot sgn lo t)
 /-! ## Pointwise bookkeeping on the degenerate subdivision
 
 Everything below is the closed-orthant replacement for the "`divisor_ext` plus
-`one_chip` at a path position" bookkeeping of `GenusFourCore100.lean`.  The one
+`oneChip` at a path position" bookkeeping of `GenusFourCore100.lean`.  The one
 structural change is that a value at a **core class** is the class sum of the
 uncontracted per-core-vertex value; that is stated once here, and a row then
 never has to mention classes again. -/
@@ -386,7 +386,7 @@ theorem sum_class_indicator (r u : Fin n) (c : ℤ) :
 
 theorem one_chip_pathVertex_coreVertex (e : Fin p) (k : d.PathPosition e)
     (r : Fin n) :
-    one_chip (G := d.graph) (d.pathVertex e k) (d.coreVertex r) =
+    oneChip (G := d.graph) (d.pathVertex e k) (d.coreVertex r) =
       ∑ v ∈ Finset.univ.filter (fun v : Fin n => d.rep v = d.rep r),
         d.chipCore e k.val v := by
   classical
@@ -400,7 +400,7 @@ theorem one_chip_pathVertex_coreVertex (e : Fin p) (k : d.PathPosition e)
     rw [hk]
     simp only [hchip]
     rw [d.sum_class_indicator r (d.core.tail e) 1]
-    simp only [one_chip, d.coreVertex_eq_iff]
+    simp only [oneChip, d.coreVertex_eq_iff]
     by_cases h : d.rep (d.core.tail e) = d.rep r
     · rw [if_pos h.symm, if_pos h]
     · rw [if_neg fun hh => h hh.symm, if_neg h]
@@ -414,7 +414,7 @@ theorem one_chip_pathVertex_coreVertex (e : Fin p) (k : d.PathPosition e)
       rw [hk]
       simp only [hchip]
       rw [d.sum_class_indicator r (d.core.head e) 1]
-      simp only [one_chip, d.coreVertex_eq_iff]
+      simp only [oneChip, d.coreVertex_eq_iff]
       by_cases h : d.rep (d.core.head e) = d.rep r
       · rw [if_pos h.symm, if_pos h]
       · rw [if_neg fun hh => h hh.symm, if_neg h]
@@ -422,17 +422,17 @@ theorem one_chip_pathVertex_coreVertex (e : Fin p) (k : d.PathPosition e)
         simp only [chipCore]; rw [if_neg hz, if_neg hl]
       rw [d.pathVertex_interior e k hz hl]
       simp only [hchip, Finset.sum_const_zero]
-      simp only [one_chip]
+      simp only [oneChip]
       exact if_neg (d.coreVertex_ne_interiorVertex r e _)
 
 theorem one_chip_pathVertex_interiorVertex (e : Fin p) (k : d.PathPosition e)
     (e' : Fin p) (o : Fin (d.length e' - 1)) :
-    one_chip (G := d.graph) (d.pathVertex e k) (d.interiorVertex e' o) =
+    oneChip (G := d.graph) (d.pathVertex e k) (d.interiorVertex e' o) =
       d.chipInt e k.val e' o.val := by
   classical
   have ho := o.isLt
   have hk1 := k.isLt
-  simp only [one_chip, chipInt]
+  simp only [oneChip, chipInt]
   by_cases hz : k.val = 0
   · have hk : d.pathVertex e k = d.coreVertex (d.core.tail e) := by
       rw [d.pathVertex_eq_of_val_eq e (j := k) (k := ⟨0, by omega⟩) hz,
@@ -534,8 +534,8 @@ harmless. -/
 theorem prin_ramp_eq (h : RampData d pot sgn lo t) :
     prin d.graph (d.rampScript pot sgn lo t) =
       ∑ e : Fin p, sgn e •
-        (one_chip (G := d.graph) (d.pathAt e (lo e)) -
-          one_chip (G := d.graph) (d.pathAt e (lo e + t))) := by
+        (oneChip (G := d.graph) (d.pathAt e (lo e)) -
+          oneChip (G := d.graph) (d.pathAt e (lo e + t))) := by
   classical
   refine d.divisor_ext ?_ ?_
   · intro r
@@ -555,14 +555,14 @@ theorem prin_ramp_eq (h : RampData d pot sgn lo t) :
 /-! ### Chips at a clamped position, read at the two kinds of vertex -/
 
 theorem one_chip_pathAt_coreVertex (e : Fin p) (k : ℕ) (r : Fin n) :
-    one_chip (G := d.graph) (d.pathAt e k) (d.coreVertex r) =
+    oneChip (G := d.graph) (d.pathAt e k) (d.coreVertex r) =
       ∑ v ∈ Finset.univ.filter (fun v : Fin n => d.rep v = d.rep r),
         d.chipCore e (min k (d.length e)) v :=
   d.one_chip_pathVertex_coreVertex e (d.clampPos e k) r
 
 theorem one_chip_pathAt_interiorVertex (e : Fin p) (k : ℕ) (e' : Fin p)
     (o : Fin (d.length e' - 1)) :
-    one_chip (G := d.graph) (d.pathAt e k) (d.interiorVertex e' o) =
+    oneChip (G := d.graph) (d.pathAt e k) (d.interiorVertex e' o) =
       d.chipInt e (min k (d.length e)) e' o.val :=
   d.one_chip_pathVertex_interiorVertex e (d.clampPos e k) e' o
 

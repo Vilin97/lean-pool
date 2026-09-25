@@ -86,7 +86,7 @@ private lemma sigmaFun_surjective {S : Set ℤ} (hS : NoConsecutive S) :
     Function.Surjective (sigmaFun S) :=
   (sigmaFun_involutive hS).surjective
 
-private lemma sigmaFun_asp (S : Set ℤ) : is_asp (sigmaFun S) := by
+private lemma sigmaFun_asp (S : Set ℤ) : isAsp (sigmaFun S) := by
   -- Proof written by GPT 5.5.
   apply Set.Finite.subset (Set.finite_empty (α := ℤ))
   intro n hn
@@ -186,7 +186,7 @@ private lemma sigma_s_diag (S : Set ℤ) (hS : NoConsecutive S) (b : ℤ) :
   -- Proof written by GPT 5.5.
   by_cases hb : b - 1 ∈ S
   · rw [(sigma S hS).s_eq_se_card]
-    have hset : (sigma S hS).se_finset b b = {b} := by
+    have hset : (sigma S hS).seFinset b b = {b} := by
       ext n
       simp only [AspPerm.mem_se, ge_iff_le, Finset.mem_singleton]
       constructor
@@ -202,7 +202,7 @@ private lemma sigma_s_diag (S : Set ℤ) (hS : NoConsecutive S) (b : ℤ) :
     simp only [hset, Finset.card_singleton, Nat.cast_one]
     simp only [Utils.oneIf, hb, if_true]
   · rw [(sigma S hS).s_eq_se_card]
-    have hset : (sigma S hS).se_finset b b = ∅ := by
+    have hset : (sigma S hS).seFinset b b = ∅ := by
       ext n
       simp only [AspPerm.mem_se, ge_iff_le, Finset.notMem_empty, iff_false, not_and,
         not_lt]
@@ -241,16 +241,16 @@ private lemma sigma_slipface (S : Set ℤ) (hS : NoConsecutive S) (a b : ℤ) :
     simp only [hmax, Utils.oneIf, hne, false_and, if_false, add_zero]
 
 private lemma bend_set_sigma_cases (S : Set ℤ) (hS : NoConsecutive S) (b : ℤ) :
-    SlipFace.bend_set (sigma S hS).s b =
+    SlipFace.bendSet (sigma S hS).s b =
       {l : ℤ |
         (b - 1 ∉ S ∧ l = b) ∨
           (b - 1 ∈ S ∧ (l = b - 1 ∨ l = b + 1))} := by
   -- Proof written by GPT 5.5.
   ext l
   have hmem_iff :
-      l ∈ SlipFace.bend_set (sigma S hS).s b ↔
+      l ∈ SlipFace.bendSet (sigma S hS).s b ↔
         sigma S hS (l - 1) < b ∧ b ≤ sigma S hS l := by
-    simp only [SlipFace.bend_set, Set.mem_ofPred_eq]
+    simp only [SlipFace.bendSet, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨hflat, hright⟩
       constructor
@@ -363,7 +363,7 @@ This is one case of the computation of `L` in the proof of Lemma 3.17 (`lem:star
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 1/6.* -/
 private lemma bend_set_sigma_of_not_pred_mem (S : Set ℤ) (hS : NoConsecutive S) {b : ℤ}
     (hb : b - 1 ∉ S) :
-    SlipFace.bend_set (sigma S hS).s b = {b} := by
+    SlipFace.bendSet (sigma S hS).s b = {b} := by
   -- Proof written by GPT 5.5.
   rw [bend_set_sigma_cases S hS b]
   ext l
@@ -380,7 +380,7 @@ This is one case of the computation of `L` in the proof of Lemma 3.17 (`lem:star
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 2/6.* -/
 private lemma bend_set_sigma_of_pred_mem (S : Set ℤ) (hS : NoConsecutive S) {b : ℤ}
     (hb : b - 1 ∈ S) :
-    SlipFace.bend_set (sigma S hS).s b = {l : ℤ | l = b - 1 ∨ l = b + 1} := by
+    SlipFace.bendSet (sigma S hS).s b = {l : ℤ | l = b - 1 ∨ l = b + 1} := by
   -- Proof written by GPT 5.5.
   rw [bend_set_sigma_cases S hS b]
   ext l
@@ -718,9 +718,9 @@ private lemma fallingSet_singleton_of_lt (α : AspPerm) (n : ℤ)
 /-- The inversion set of $\sigma_S$ is exactly the adjacent pairs
 $(n,n+1)$ with $n \in S$. -/
 private lemma sigma_inv_set_iff (S : Set ℤ) (hS : NoConsecutive S) (u v : ℤ) :
-    ⟨u, v⟩ ∈ inv_set (sigma S hS).func ↔ u ∈ S ∧ v = u + 1 := by
+    ⟨u, v⟩ ∈ invSet (sigma S hS).func ↔ u ∈ S ∧ v = u + 1 := by
   -- Proof written by GPT 5.5.
-  simp only [inv_set, Set.mem_ofPred_eq, sigma_apply]
+  simp only [invSet, Set.mem_ofPred_eq, sigma_apply]
   constructor
   · rintro ⟨huv, hσ⟩
     have hupper : sigmaFun S u ≤ u + 1 := by
@@ -754,7 +754,7 @@ private lemma sigma_inv_set_iff (S : Set ℤ) (hS : NoConsecutive S) (u v : ℤ)
       omega
 
 private lemma inv_set_sigma_singleton (n : ℤ) :
-    inv_set (sigma ({n} : Set ℤ) (noConsecutive_singleton n)) = {⟨n, n + 1⟩} := by
+    invSet (sigma ({n} : Set ℤ) (noConsecutive_singleton n)) = {⟨n, n + 1⟩} := by
   -- Proof written by GPT 5.5.
   ext p
   rcases p with ⟨u, v⟩
@@ -770,7 +770,7 @@ private lemma inv_set_sigma_singleton (n : ℤ) :
 
 private lemma eq_sigma_singleton_of_chi_eq_zero_of_inv_set_eq_singleton
     (σ : AspPerm) (n : ℤ) (hχ : σ.χ = 0)
-    (hInv : inv_set σ = {⟨n, n + 1⟩}) :
+    (hInv : invSet σ = {⟨n, n + 1⟩}) :
     σ = sigma ({n} : Set ℤ) (noConsecutive_singleton n) := by
   -- Proof written by GPT 5.5.
   apply AspPerm.eq_of_inv_set_eq_of_chi_eq
@@ -859,7 +859,7 @@ private lemma reducedProduct_alpha_sigma (α : AspPerm) (S : Set ℤ)
   rintro ⟨u, v⟩ hαinv hσinv
   rw [sigma_inv hS] at hσinv
   rw [sigma_inv_set_iff S hS u v] at hσinv
-  simp only [inv_set, Set.mem_ofPred_eq] at hαinv
+  simp only [invSet, Set.mem_ofPred_eq] at hαinv
   rcases hσinv with ⟨hu, rfl⟩
   have hascent := hα u hu
   omega
@@ -873,7 +873,7 @@ private lemma sigma_le_weak_L_of_falling (α : AspPerm) (S : Set ℤ)
   rw [sigma_inv hS] at hp
   rw [sigma_inv_set_iff S hS u v] at hp
   rcases hp with ⟨hu, rfl⟩
-  simp only [inv_set, Set.mem_ofPred_eq]
+  simp only [invSet, Set.mem_ofPred_eq]
   exact ⟨by omega, hα u hu⟩
 
 private lemma star_sigma_eq_self (α : AspPerm) (S : Set ℤ) (hS : NoConsecutive S)
@@ -1004,7 +1004,7 @@ This is the last sentence of *Theorem A* of
 *Theorem 8.7 (`thm:alphaStarSigma`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 3/4.* -/
 theorem star_simple (α σ : AspPerm) (n : ℤ)
-    (hχ : σ.χ = 0) (hInv : inv_set σ = {⟨n, n + 1⟩}) :
+    (hχ : σ.χ = 0) (hInv : invSet σ = {⟨n, n + 1⟩}) :
     α ⋆ σ = if α n < α (n + 1) then α * σ else α := by
   -- Proof written by GPT 5.5.
   let T : Set ℤ := {n}
@@ -1041,7 +1041,7 @@ This is the last sentence of *Theorem 1.1 (`thm:resL`)* of
 *Theorem 8.7 (`thm:alphaStarSigma`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 4/4.* -/
 theorem residual_simple (α σ : AspPerm) (n : ℤ)
-    (hχ : σ.χ = 0) (hInv : inv_set σ = {⟨n, n + 1⟩}) :
+    (hχ : σ.χ = 0) (hInv : invSet σ = {⟨n, n + 1⟩}) :
     α ◃ σ = if α (n + 1) < α n then α * σ else α := by
   -- Proof written by GPT 5.5.
   let T : Set ℤ := {n}

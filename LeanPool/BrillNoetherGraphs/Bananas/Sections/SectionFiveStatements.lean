@@ -37,7 +37,7 @@ theorem sectionFive_swap_value_iff
 /-- Lemma 5.2(3): canonical duality gives the inverse transmission
 permutation at the exchanged marks. -/
 theorem sectionFive_dual_transmission
-    {G : CFGraph} (hconn : _root_.graph_connected G) (u v : G.V)
+    {G : CFGraph} (hconn : _root_.graphConnected G) (u v : G.V)
     {D : CFDiv G} {tau : ℤ → ℤ}
     (hTau : IsTransmissionPermutation (mark G u v) D tau) :
     IsTransmissionPermutation (mark G v u)
@@ -59,11 +59,11 @@ theorem sectionFive_map_transmission
 with the canonical dual forces the raw transmission permutation to be an
 involution. -/
 theorem sectionFive_tau_involutive_of_dual_automorphism
-    {M : TwiceMarked} (hconn : _root_.graph_connected M.graph)
+    {M : TwiceMarked} (hconn : _root_.graphConnected M.graph)
     (phi : MarkedPointSwap M)
     {D : CFDiv M.graph} {tau : ℤ → ℤ}
     (hTau : IsTransmissionPermutation M D tau)
-    (hDual : linear_equiv M.graph
+    (hDual : linearEquiv M.graph
       (phi.toMarkedPointAutomorphism.iso.mapDiv D)
       (transmissionDualDivisor M.u M.v D)) :
     ∀ a b : ℤ, tau b = a ↔ tau a = b := by
@@ -76,9 +76,9 @@ theorem sectionFive_tau_reflection_of_twisted_automorphism
     {M : TwiceMarked} (phi : MarkedPointSwap M)
     {D : CFDiv M.graph} {tau : ℤ → ℤ} (n : ℤ)
     (hTau : IsTransmissionPermutation M D tau)
-    (hTwist : linear_equiv M.graph
+    (hTwist : linearEquiv M.graph
       (phi.toMarkedPointAutomorphism.iso.mapDiv D - D)
-      (n • (one_chip M.u - one_chip M.v))) :
+      (n • (oneChip M.u - oneChip M.v))) :
     ∀ a b : ℤ, tau b = a ↔ tau (n - a) = n - b := by
   exact sectionFive_tau_reflection_of_twisted_automorphism_proved
     phi n hTau hTwist
@@ -88,7 +88,7 @@ hypothesis is intentionally separate: Lemma 5.3(1) supplies it from a
 marked-point automorphism. -/
 theorem sectionFive_inversion_lower_bound_of_involutive_transmission
     {M : TwiceMarked} {D : CFDiv M.graph} {tau : ℤ → ℤ} {k : ℕ}
-    (hk : 0 < k) (hconn : _root_.graph_connected M.graph)
+    (hk : 0 < k) (hconn : _root_.graphConnected M.graph)
     (hTau : IsTransmissionPermutation M D tau)
     (hAffine : IsKAffine k tau)
     (hInvolutive : ∀ a b : ℤ, tau b = a ↔ tau a = b) :

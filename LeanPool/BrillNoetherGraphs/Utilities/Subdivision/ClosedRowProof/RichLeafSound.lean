@@ -824,7 +824,7 @@ noncomputable def richCensusPiecewiseScript (w : RichWitness)
     (hCoord : ∀ e : Fin p, eval (coordForm e.val) x = ℓ e)
     (hn : 0 < n) (hForest : IsForest core (zeroSet ℓ))
     (hNotLoopy : ¬ IsLoopy core (zeroSet ℓ)) (a : Fin n) :
-    firing_script (censusSpec core hn ℓ hForest hNotLoopy).graph :=
+    firingScript (censusSpec core hn ℓ hForest hNotLoopy).graph :=
   (censusSpec core hn ℓ hForest hNotLoopy).piecewiseScript
     (w.richCensusPiecewiseData core Γ x hW1 hW2 hx ℓ hCoord hn hForest hNotLoopy a)
 

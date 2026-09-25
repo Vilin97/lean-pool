@@ -504,7 +504,7 @@ theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
     (hW5m : ∀ v : Fin n, 0 ≤ w.w5MultResidual core mult anchor.val v.val) :
     winnable (censusSpec core hn ℓ hForest hNotLoopy).graph
       (w.richDivisor (censusSpec core hn ℓ hForest hNotLoopy) fallback x -
-        mult • one_chip
+        mult • oneChip
           ((censusSpec core hn ℓ hForest hNotLoopy).coreVertex anchor)) := by
   classical
   set d := censusSpec core hn ℓ hForest hNotLoopy with hd
@@ -595,17 +595,17 @@ theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
       dsimp only [head]
       rw [if_neg hz]
       omega
-  refine ⟨w.richDivisor d fallback x - mult • one_chip (d.coreVertex anchor) +
+  refine ⟨w.richDivisor d fallback x - mult • oneChip (d.coreVertex anchor) +
     prin d.graph script, ?_, ?_⟩
   · intro vertex
     rcases vertex with c | interior
     · have hInl : (Sum.inl c : d.Vertex) = d.coreVertex c.val :=
         (congrArg Sum.inl (Subtype.ext c.property)).symm
       rw [hInl]
-      have hChip : (mult • one_chip (G := d.graph) (d.coreVertex anchor))
+      have hChip : (mult • oneChip (G := d.graph) (d.coreVertex anchor))
           (d.coreVertex c.val) =
           (if d.rep anchor = d.rep c.val then mult else 0) := by
-        unfold one_chip
+        unfold oneChip
         rw [Pi.smul_apply]
         by_cases hr : d.rep anchor = d.rep c.val
         · rw [if_pos ((d.coreVertex_eq_iff c.val anchor).mpr hr.symm), if_pos hr]
@@ -703,9 +703,9 @@ theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
       omega
     · rcases interior with ⟨e, o⟩
       simp only [ge_iff_le, Pi.add_apply, Pi.sub_apply]
-      have hChip : (mult • one_chip (G := d.graph) (d.coreVertex anchor))
+      have hChip : (mult • oneChip (G := d.graph) (d.coreVertex anchor))
           (d.interiorVertex e o) = 0 := by
-        unfold one_chip
+        unfold oneChip
         rw [Pi.smul_apply, if_neg]
         · simp
         · exact fun h => interiorVertex_ne_coreVertex d e o anchor h
@@ -713,7 +713,7 @@ theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
       rw [Pi.add_apply]
       change 0 ≤ w.richCoreDivisor d (d.interiorVertex e o) +
         w.rawChipDivisor d (evaluatedChipVertex d fallback x) (d.interiorVertex e o) -
-        (mult • one_chip (G := d.graph) (d.coreVertex anchor)) (d.interiorVertex e o) +
+        (mult • oneChip (G := d.graph) (d.coreVertex anchor)) (d.interiorVertex e o) +
         prin d.graph script (d.interiorVertex e o)
       rw [w.richCoreDivisor_interiorVertex d e o,
         w.rawChipDivisor_interiorVertex_eq_rawChipMassAt d core Γ x hW1 hW3 hx
@@ -761,7 +761,7 @@ theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
         unfold w4Actual at hW4actual
         omega
   · exact StrongSeparator.linearEquiv_add_prin
-      (w.richDivisor d fallback x - mult • one_chip (d.coreVertex anchor)) script
+      (w.richDivisor d fallback x - mult • oneChip (d.coreVertex anchor)) script
 
 
 theorem richLeaf_sound (core : ExplicitPotential.Core n p) (w : RichWitness)

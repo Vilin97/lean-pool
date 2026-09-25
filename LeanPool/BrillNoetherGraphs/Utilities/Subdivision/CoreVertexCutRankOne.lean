@@ -29,7 +29,7 @@ theorem bnExists_one_three_of_left_three_right_rigid
     (hRightRigid : cutData.RightRigidConditions) :
     BNExists spec.graph 1 3 := by
   let cut := cutData.toOneVertexCut spec hRightRigid.1
-  have hConnected : graph_connected spec.graph :=
+  have hConnected : graphConnected spec.graph :=
     spec.graph_connected_of_coreConnected hRightRigid.2.1
   have hLeftGraphGenus : genus cut.leftGraph = 3 := by
     dsimp only [cut]

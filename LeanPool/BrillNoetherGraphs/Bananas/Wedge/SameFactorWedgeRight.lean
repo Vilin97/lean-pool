@@ -27,7 +27,7 @@ theorem same_rightFactor_marks_of_allSubmodular
     (p = y ∨ q = y) ∧ Fintype.card H.V ≤ 2 := by
   let W := vertexWedge G H x y
   let W' := vertexWedge H G y x
-  let phi : CFGraphIso W W' := vertexWedge_comm G H x y
+  let phi : CFGraphIso W W' := vertexWedgeComm G H x y
   let M := mark W (wedgeRightVertex G H x y p) (wedgeRightVertex G H x y q)
   let N := mark W' (Sum.inl p) (Sum.inl q)
   have hp : phi.vertexEquiv M.u = N.u := by
@@ -65,7 +65,7 @@ theorem same_rightFactor_wedge_twoGeneral
       (wedgeRightVertex G H x y y) (wedgeRightVertex G H x y p)) 2 := by
   let W := vertexWedge G H x y
   let W' := vertexWedge H G y x
-  let phi : CFGraphIso W W' := vertexWedge_comm G H x y
+  let phi : CFGraphIso W W' := vertexWedgeComm G H x y
   let M := mark W (wedgeRightVertex G H x y y) (wedgeRightVertex G H x y p)
   let N := mark W' (Sum.inl y) (Sum.inl p)
   have hy : phi.vertexEquiv M.u = N.u := by
@@ -95,7 +95,7 @@ theorem same_rightFactor_wedge_twoGeneral_of_card_eq_two
       (wedgeRightVertex G H x y y) (wedgeRightVertex G H x y p)) 2 := by
   let W := vertexWedge G H x y
   let W' := vertexWedge H G y x
-  let phi : CFGraphIso W W' := vertexWedge_comm G H x y
+  let phi : CFGraphIso W W' := vertexWedgeComm G H x y
   let M := mark W (wedgeRightVertex G H x y y) (wedgeRightVertex G H x y p)
   let N := mark W' (Sum.inl y) (Sum.inl p)
   have hy : phi.vertexEquiv M.u = N.u := by
@@ -121,7 +121,7 @@ theorem same_rightFactor_wedge_isTorsionOrder_two
       (wedgeRightVertex G H x y y) (wedgeRightVertex G H x y p)) 2 := by
   let W := vertexWedge G H x y
   let W' := vertexWedge H G y x
-  let phi : CFGraphIso W W' := vertexWedge_comm G H x y
+  let phi : CFGraphIso W W' := vertexWedgeComm G H x y
   let M := mark W (wedgeRightVertex G H x y y) (wedgeRightVertex G H x y p)
   let N := mark W' (Sum.inl y) (Sum.inl p)
   have hy : phi.vertexEquiv M.u = N.u := by

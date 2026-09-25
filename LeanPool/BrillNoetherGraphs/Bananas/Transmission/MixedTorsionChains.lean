@@ -33,7 +33,7 @@ used by Corollary 6.16. -/
 structure KGeneralChainFactor where
   marked : MarkedGraph
   period : ℕ
-  connected : _root_.graph_connected marked.graph
+  connected : _root_.graphConnected marked.graph
   kGeneral : KGeneralTransmission
     (mark marked.graph marked.left marked.right) period
 
@@ -67,7 +67,7 @@ The extra left mark is retained only because Theorem 6.6 uses it to compose
 the exact transmission permutations. -/
 theorem onceMarkedBrillNoetherGeneral_chain_aux
     (M : MarkedGraph)
-    (hMconn : _root_.graph_connected M.graph)
+    (hMconn : _root_.graphConnected M.graph)
     (hMsub : AllSubmodular (mark M.graph M.left M.right))
     (hMgeneral : OnceMarkedBrillNoetherGeneral M.graph M.right)
     (L : List KGeneralChainFactor)

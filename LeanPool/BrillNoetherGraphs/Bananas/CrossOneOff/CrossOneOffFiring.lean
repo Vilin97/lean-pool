@@ -33,17 +33,17 @@ open Utilities
 
 
 private theorem linearEquiv_zsmul {G : CFGraph} {D E : CFDiv G}
-    (h : linear_equiv G D E) (q : ℤ) :
-    linear_equiv G (q • D) (q • E) := by
-  unfold linear_equiv at h ⊢
+    (h : linearEquiv G D E) (q : ℤ) :
+    linearEquiv G (q • D) (q • E) := by
+  unfold linearEquiv at h ⊢
   simpa [smul_sub] using
-    (AddSubgroup.zsmul_mem (principal_divisors G) h q)
+    (AddSubgroup.zsmul_mem (principalDivisors G) h q)
 
 private theorem linearEquiv_sub {G : CFGraph} {A B C D : CFDiv G}
-    (h₁ : linear_equiv G A B) (h₂ : linear_equiv G C D) :
-    linear_equiv G (A - C) (B - D) := by
-  unfold linear_equiv at h₁ h₂ ⊢
-  have h := (principal_divisors G).sub_mem h₁ h₂
+    (h₁ : linearEquiv G A B) (h₂ : linearEquiv G C D) :
+    linearEquiv G (A - C) (B - D) := by
+  unfold linearEquiv at h₁ h₂ ⊢
+  have h := (principalDivisors G).sub_mem h₁ h₂
   convert h using 1 ; abel
 
 /-- A multiple of the first off-endpoint mark can be replaced by one chip at
@@ -52,13 +52,13 @@ This is the `α`-strand part of Lemma 4.30. -/
 theorem crossOneOff_first_mark_multiple
     {g : ℕ} (B : Banana g) (α : Fin (g + 1)) (a : ℕ)
     (ha : a ≤ B.length α) :
-    linear_equiv B.graph
-      ((a : ℤ) • one_chip
+    linearEquiv B.graph
+      ((a : ℤ) • oneChip
         (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩))
-      (((a : ℤ) - 1) • one_chip (leftEndpoint B) +
-        one_chip (strandVertex B α ⟨a, by omega⟩)) := by
+      (((a : ℤ) - 1) • oneChip (leftEndpoint B) +
+        oneChip (strandVertex B α ⟨a, by omega⟩)) := by
   have h := strand_prefix_linearEquiv B α ⟨a, by omega⟩
-  unfold linear_equiv at h ⊢
+  unfold linearEquiv at h ⊢
   convert h using 1 ;
     simp only [smul_sub   ] ;
     ring
@@ -68,18 +68,18 @@ strand shifts that chip one step toward the left endpoint. -/
 theorem crossOneOff_sub_first_mark_shift
     {g : ℕ} (B : Banana g) (α : Fin (g + 1)) (p : ℕ)
     (hpLo : 1 ≤ p) (hpHi : p ≤ B.length α) :
-    linear_equiv B.graph
-      (one_chip (strandVertex B α ⟨p, by omega⟩) -
-        one_chip (strandVertex B α ⟨1, by
+    linearEquiv B.graph
+      (oneChip (strandVertex B α ⟨p, by omega⟩) -
+        oneChip (strandVertex B α ⟨1, by
           have := B.length_pos α; omega⟩))
-      (one_chip (strandVertex B α ⟨p - 1, by omega⟩) -
-        one_chip (leftEndpoint B)) := by
+      (oneChip (strandVertex B α ⟨p - 1, by omega⟩) -
+        oneChip (leftEndpoint B)) := by
   have hp := strand_prefix_linearEquiv B α ⟨p, by omega⟩
   have hpPrev := strand_prefix_linearEquiv B α ⟨p - 1, by omega⟩
   have hStep := linearEquiv_sub hp hpPrev
   have hStepSymm := hStep.symm
   have hpPred : ((p - 1 : ℕ) : ℤ) = (p : ℤ) - 1 := by omega
-  unfold linear_equiv at hStepSymm ⊢
+  unfold linearEquiv at hStepSymm ⊢
   convert hStepSymm using 1 ;
     ext z ;
     simp only [smul_sub, Pi.smul_apply, Pi.sub_apply ] ;
@@ -91,12 +91,12 @@ strand shifts that chip one step toward the right endpoint. -/
 theorem crossOneOff_sub_second_mark_shift
     {g : ℕ} (B : Banana g) (β : Fin (g + 1)) (q : ℕ)
     (hq : q < B.length β) :
-    linear_equiv B.graph
-      (one_chip (strandVertex B β ⟨q, by omega⟩) -
-        one_chip (strandVertex B β ⟨B.length β - 1, by
+    linearEquiv B.graph
+      (oneChip (strandVertex B β ⟨q, by omega⟩) -
+        oneChip (strandVertex B β ⟨B.length β - 1, by
           have := B.length_pos β; omega⟩))
-      (one_chip (strandVertex B β ⟨q + 1, by omega⟩) -
-        one_chip (rightEndpoint B)) := by
+      (oneChip (strandVertex B β ⟨q + 1, by omega⟩) -
+        oneChip (rightEndpoint B)) := by
   have hqPrefix := strand_prefix_linearEquiv B β ⟨q, by omega⟩
   have hPenultimate := strand_prefix_linearEquiv B β
     ⟨B.length β - 1, by have := B.length_pos β; omega⟩
@@ -110,21 +110,21 @@ theorem crossOneOff_sub_second_mark_shift
     have := B.length_pos β
     omega
   have hScalars :
-      linear_equiv B.graph
+      linearEquiv B.graph
         ((q : ℤ) •
-            (one_chip (strandVertex B β ⟨1, by
-              have := B.length_pos β; omega⟩) - one_chip (leftEndpoint B)) -
+            (oneChip (strandVertex B β ⟨1, by
+              have := B.length_pos β; omega⟩) - oneChip (leftEndpoint B)) -
           ((B.length β - 1 : ℕ) : ℤ) •
-            (one_chip (strandVertex B β ⟨1, by
-              have := B.length_pos β; omega⟩) - one_chip (leftEndpoint B)))
+            (oneChip (strandVertex B β ⟨1, by
+              have := B.length_pos β; omega⟩) - oneChip (leftEndpoint B)))
         (((q + 1 : ℕ) : ℤ) •
-            (one_chip (strandVertex B β ⟨1, by
-              have := B.length_pos β; omega⟩) - one_chip (leftEndpoint B)) -
+            (oneChip (strandVertex B β ⟨1, by
+              have := B.length_pos β; omega⟩) - oneChip (leftEndpoint B)) -
           (B.length β : ℤ) •
-            (one_chip (strandVertex B β ⟨1, by
-              have := B.length_pos β; omega⟩) - one_chip (leftEndpoint B))) := by
-    unfold linear_equiv
-    convert (principal_divisors B.graph).zero_mem using 1
+            (oneChip (strandVertex B β ⟨1, by
+              have := B.length_pos β; omega⟩) - oneChip (leftEndpoint B))) := by
+    unfold linearEquiv
+    convert (principalDivisors B.graph).zero_mem using 1
     ext z
     simp only [Pi.sub_apply, Pi.smul_apply]
     push_cast
@@ -132,7 +132,7 @@ theorem crossOneOff_sub_second_mark_shift
     ring_nf
     simp
   have h := hLeft.symm.trans (hScalars.trans hRight)
-  unfold linear_equiv at h ⊢
+  unfold linearEquiv at h ⊢
   convert h using 1 ; abel
 
 /-- If `b = mN+r`, a multiple of the second off-endpoint mark has the
@@ -141,16 +141,16 @@ canonical endpoint-plus-residue representative.  This is the common
 theorem crossOneOff_second_mark_multiple
     {g : ℕ} (B : Banana g) (β : Fin (g + 1)) (b m r : ℕ)
     (hb : b = m * B.length β + r) (hr : r ≤ B.length β) :
-    linear_equiv B.graph
-      ((b : ℤ) • one_chip
+    linearEquiv B.graph
+      ((b : ℤ) • oneChip
         (strandVertex B β ⟨B.length β - 1, by
           have := B.length_pos β; omega⟩))
-      (((m : ℤ) + 1) • one_chip (leftEndpoint B) +
-        ((b : ℤ) - (m : ℤ)) • one_chip (rightEndpoint B) -
-          one_chip (strandVertex B β ⟨r, by omega⟩)) := by
+      (((m : ℤ) + 1) • oneChip (leftEndpoint B) +
+        ((b : ℤ) - (m : ℤ)) • oneChip (rightEndpoint B) -
+          oneChip (strandVertex B β ⟨r, by omega⟩)) := by
   let e : CFDiv B.graph :=
-    one_chip (strandVertex B β ⟨1, by
-      have := B.length_pos β; omega⟩) - one_chip (leftEndpoint B)
+    oneChip (strandVertex B β ⟨1, by
+      have := B.length_pos β; omega⟩) - oneChip (leftEndpoint B)
   have hPenultimate := strand_prefix_linearEquiv B β
     ⟨B.length β - 1, by have := B.length_pos β; omega⟩
   have hEnd := strand_prefix_linearEquiv B β
@@ -171,29 +171,29 @@ theorem crossOneOff_second_mark_multiple
         ((b : ℤ) - (m : ℤ)) * (B.length β : ℤ) - (r : ℤ) := by
     rw [hLengthPred, hbInt]
     ring
-  have hMiddle : linear_equiv B.graph
+  have hMiddle : linearEquiv B.graph
       ((b : ℤ) • ((B.length β - 1 : ℕ) : ℤ) • e)
       (((b : ℤ) - (m : ℤ)) •
-          (one_chip (rightEndpoint B) - one_chip (leftEndpoint B)) -
-        (one_chip (strandVertex B β ⟨r, by omega⟩) -
-          one_chip (leftEndpoint B))) := by
+          (oneChip (rightEndpoint B) - oneChip (leftEndpoint B)) -
+        (oneChip (strandVertex B β ⟨r, by omega⟩) -
+          oneChip (leftEndpoint B))) := by
     convert hCombined using 1 ;
       ext z ;
       simp only [e, smul_sub, smul_smul, Pi.smul_apply, Pi.sub_apply,
         ] ;
       rw [hCoefficient] ;
       ring
-  have hDifference : linear_equiv B.graph
+  have hDifference : linearEquiv B.graph
       ((b : ℤ) •
-        (one_chip
+        (oneChip
           (strandVertex B β ⟨B.length β - 1, by
-            have := B.length_pos β; omega⟩) - one_chip (leftEndpoint B)))
+            have := B.length_pos β; omega⟩) - oneChip (leftEndpoint B)))
       (((b : ℤ) - (m : ℤ)) •
-          (one_chip (rightEndpoint B) - one_chip (leftEndpoint B)) -
-        (one_chip (strandVertex B β ⟨r, by omega⟩) -
-          one_chip (leftEndpoint B))) := by
+          (oneChip (rightEndpoint B) - oneChip (leftEndpoint B)) -
+        (oneChip (strandVertex B β ⟨r, by omega⟩) -
+          oneChip (leftEndpoint B))) := by
     exact hPenultimateScaled.symm.trans hMiddle
-  unfold linear_equiv at hDifference ⊢
+  unfold linearEquiv at hDifference ⊢
   convert hDifference using 1 ;
     simp only [smul_sub   ] ;
     ring
@@ -203,22 +203,22 @@ theorem crossOneOff_firing_identity
     {g : ℕ} (B : Banana g) (α β : Fin (g + 1)) (a b m r : ℕ)
     (ha : a ≤ B.length α) (hb : b = m * B.length β + r)
     (hr : r ≤ B.length β) :
-    linear_equiv B.graph
-      ((g : ℤ) • one_chip (rightEndpoint B) +
-        (a : ℤ) • one_chip
+    linearEquiv B.graph
+      ((g : ℤ) • oneChip (rightEndpoint B) +
+        (a : ℤ) • oneChip
           (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩) -
-        (b : ℤ) • one_chip
+        (b : ℤ) • oneChip
           (strandVertex B β ⟨B.length β - 1, by
             have := B.length_pos β; omega⟩))
-      (((a : ℤ) - (m : ℤ) - 2) • one_chip (leftEndpoint B) +
+      (((a : ℤ) - (m : ℤ) - 2) • oneChip (leftEndpoint B) +
         ((g : ℤ) + (m : ℤ) - (b : ℤ)) •
-          one_chip (rightEndpoint B) +
-        one_chip (strandVertex B α ⟨a, by omega⟩) +
-        one_chip (strandVertex B β ⟨r, by omega⟩)) := by
+          oneChip (rightEndpoint B) +
+        oneChip (strandVertex B α ⟨a, by omega⟩) +
+        oneChip (strandVertex B β ⟨r, by omega⟩)) := by
   have hFirst := crossOneOff_first_mark_multiple B α a ha
   have hSecond := crossOneOff_second_mark_multiple B β b m r hb hr
-  unfold linear_equiv at hFirst hSecond ⊢
-  have h := (principal_divisors B.graph).sub_mem hFirst hSecond
+  unfold linearEquiv at hFirst hSecond ⊢
+  have h := (principalDivisors B.graph).sub_mem hFirst hSecond
   convert h using 1 ;
     ext z ;
     simp only [Pi.smul_apply, Pi.sub_apply, Pi.add_apply] ;
@@ -232,20 +232,20 @@ transmission value are deliberately kept separate. -/
 theorem crossOneOff_firing_multiple
     {g : ℕ} (B : Banana g) (α β : Fin (g + 1)) (b m : ℕ)
     (hb : b = m * B.length β) (ha : m + 1 ≤ B.length α) :
-    linear_equiv B.graph
-      ((g : ℤ) • one_chip (rightEndpoint B) +
-        ((m + 1 : ℕ) : ℤ) • one_chip
+    linearEquiv B.graph
+      ((g : ℤ) • oneChip (rightEndpoint B) +
+        ((m + 1 : ℕ) : ℤ) • oneChip
           (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩) -
-        (b : ℤ) • one_chip
+        (b : ℤ) • oneChip
           (strandVertex B β ⟨B.length β - 1, by
             have := B.length_pos β; omega⟩))
-      (one_chip (strandVertex B α ⟨m + 1, by omega⟩) +
+      (oneChip (strandVertex B α ⟨m + 1, by omega⟩) +
         ((g : ℤ) + (m : ℤ) - (b : ℤ)) •
-          one_chip (rightEndpoint B)) := by
+          oneChip (rightEndpoint B)) := by
   have h := crossOneOff_firing_identity B α β (m + 1) b m 0 ha
     (by simp [hb]) (by omega)
   rw [strandVertex_zero B β] at h
-  unfold linear_equiv at h ⊢
+  unfold linearEquiv at h ⊢
   convert h using 1 ;
     ext z ;
     simp only [Pi.smul_apply, Pi.sub_apply, Pi.add_apply] ;
@@ -259,18 +259,18 @@ theorem crossOneOff_firing_complement_residue
     {g : ℕ} (B : Banana g) (α β : Fin (g + 1)) (b m : ℕ)
     (hm : 1 ≤ m) (hb : b + 1 = m * B.length β)
     (ha : g + m ≤ B.length α) :
-    linear_equiv B.graph
-      ((g : ℤ) • one_chip (rightEndpoint B) +
-        ((g + m : ℕ) : ℤ) • one_chip
+    linearEquiv B.graph
+      ((g : ℤ) • oneChip (rightEndpoint B) +
+        ((g + m : ℕ) : ℤ) • oneChip
           (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩) -
-        (b : ℤ) • one_chip
+        (b : ℤ) • oneChip
           (strandVertex B β ⟨B.length β - 1, by
             have := B.length_pos β; omega⟩))
-      (((g : ℤ) - 1) • one_chip (leftEndpoint B) +
+      (((g : ℤ) - 1) • oneChip (leftEndpoint B) +
         ((g : ℤ) - (m : ℤ) * ((B.length β : ℤ) - 1)) •
-          one_chip (rightEndpoint B) +
-        one_chip (strandVertex B α ⟨g + m, by omega⟩) +
-        one_chip
+          oneChip (rightEndpoint B) +
+        oneChip (strandVertex B α ⟨g + m, by omega⟩) +
+        oneChip
           (strandVertex B β ⟨B.length β - 1, by
             have := B.length_pos β; omega⟩)) := by
   have hN : 0 < B.length β := B.length_pos β
@@ -290,7 +290,7 @@ theorem crossOneOff_firing_complement_residue
     have hbInt : (b : ℤ) + 1 = (m : ℤ) * (B.length β : ℤ) := by
       exact_mod_cast hb
     omega
-  unfold linear_equiv at h ⊢
+  unfold linearEquiv at h ⊢
   convert h using 1 ;
     ext z ;
     simp only [Pi.smul_apply, Pi.sub_apply, Pi.add_apply] ;
@@ -308,23 +308,23 @@ theorem crossOneOff_firing_positive_residue
     (_hrLo : 1 ≤ r) (hrHi : r + 1 < B.length β)
     (hCandidate : b ≤ g + 2 * m + 2)
     (ha : g + 2 * m + 2 - b ≤ B.length α) :
-    linear_equiv B.graph
-      ((g : ℤ) • one_chip (rightEndpoint B) +
-        ((g + 2 * m + 2 - b : ℕ) : ℤ) • one_chip
+    linearEquiv B.graph
+      ((g : ℤ) • oneChip (rightEndpoint B) +
+        ((g + 2 * m + 2 - b : ℕ) : ℤ) • oneChip
           (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩) -
-        (b : ℤ) • one_chip
+        (b : ℤ) • oneChip
           (strandVertex B β ⟨B.length β - 1, by omega⟩))
       (((g : ℤ) + (m : ℤ) - (b : ℤ)) •
-          (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) +
-        one_chip
+          (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) +
+        oneChip
           (strandVertex B α ⟨g + 2 * m + 2 - b, by omega⟩) +
-        one_chip (strandVertex B β ⟨r, by omega⟩)) := by
+        oneChip (strandVertex B β ⟨r, by omega⟩)) := by
   have h := crossOneOff_firing_identity B α β
     (g + 2 * m + 2 - b) b m r ha hb (by omega)
   have hCandidateCast : ((g + 2 * m + 2 - b : ℕ) : ℤ) =
       (g : ℤ) + 2 * (m : ℤ) + 2 - (b : ℤ) := by
     omega
-  unfold linear_equiv at h ⊢
+  unfold linearEquiv at h ⊢
   convert h using 1 ;
     ext z ;
     simp only [Pi.smul_apply, Pi.sub_apply, Pi.add_apply] ;

@@ -36,15 +36,15 @@ theorem bananaPositionCoordinateDivisor_eq_of_paperReduced_mod_displayed
   rw [bananaCoordinateRelations, AddMonoidHom.mem_ker] at hKernel
   have hPrincipal : bananaCoordinateDivisorHom B
       (bananaPositionCoordinates B p - bananaPositionCoordinates B q) ∈
-        principal_divisors B.graph :=
+        principalDivisors B.graph :=
     (QuotientAddGroup.eq_zero_iff _).mp hKernel
   rw [map_sub] at hPrincipal
-  have hCoordinates : linear_equiv B.graph
+  have hCoordinates : linearEquiv B.graph
       (bananaCoordinateDivisorHom B (bananaPositionCoordinates B p))
       (bananaCoordinateDivisorHom B (bananaPositionCoordinates B q)) := by
-    unfold linear_equiv
-    simpa only [neg_sub] using (principal_divisors B.graph).neg_mem hPrincipal
-  have hPosition : linear_equiv B.graph
+    unfold linearEquiv
+    simpa only [neg_sub] using (principalDivisors B.graph).neg_mem hPrincipal
+  have hPosition : linearEquiv B.graph
       (bananaPositionCoordinateDivisor B p)
       (bananaPositionCoordinateDivisor B q) :=
     (bananaCoordinateDivisorHom_linearEquiv_positionDivisor B p).symm.trans

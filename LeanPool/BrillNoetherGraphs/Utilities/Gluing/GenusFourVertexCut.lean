@@ -23,7 +23,7 @@ namespace Utilities
 
 universe u v
 
-private theorem genusTwo_bnExists {G : CFGraph} (hConnected : graph_connected G)
+private theorem genusTwo_bnExists {G : CFGraph} (hConnected : graphConnected G)
     (hGenus : genus G = 2) : BNExists G 1 2 := by
   apply BNExists_elementary hConnected
   · norm_num
@@ -35,7 +35,7 @@ private theorem genusTwo_bnExists {G : CFGraph} (hConnected : graph_connected G)
 vertex wedge. -/
 theorem BNExists_vertexWedge_rankOneDegreeThree_of_genus_two_two
     (G : CFGraph.{u}) (H : CFGraph.{v})
-    (hG : graph_connected G) (hH : graph_connected H)
+    (hG : graphConnected G) (hH : graphConnected H)
     (hGenusG : genus G = 2) (hGenusH : genus H = 2)
     (x : G.V) (y : H.V) :
     BNExists (vertexWedge G H x y) 1 3 := by
@@ -55,7 +55,7 @@ variable {K : CFGraph.{u}} (cut : OneVertexCut K)
 /-- A connected graph split into two genus-two induced factors carries a
 degree-three rank-one divisor. -/
 theorem BNExists_rankOneDegreeThree_of_genus_two_two
-    (hK : graph_connected K)
+    (hK : graphConnected K)
     (hLeftGenus : genus cut.leftGraph = 2)
     (hRightGenus : genus cut.rightGraph = 2) :
     BNExists K 1 3 := by
@@ -69,7 +69,7 @@ theorem BNExists_rankOneDegreeThree_of_genus_two_two
 /-- A connected genus-three left factor and a pointed rigid genus-one right
 factor give the ambient degree-three pencil. -/
 theorem BNExists_rankOneDegreeThree_of_left_three_right_rigid_one
-    (hK : graph_connected K)
+    (hK : graphConnected K)
     (hLeftGenus : genus cut.leftGraph = 3)
     (hRightRigid : PointedGenusOneRigid cut.rightGraph cut.rightGlue) :
     BNExists K 1 3 := by
@@ -80,7 +80,7 @@ theorem BNExists_rankOneDegreeThree_of_left_three_right_rigid_one
 
 /-- Symmetric `(1,3)` form, obtained by exchanging the two sides. -/
 theorem BNExists_rankOneDegreeThree_of_left_rigid_one_right_three
-    (hK : graph_connected K)
+    (hK : graphConnected K)
     (hLeftRigid : PointedGenusOneRigid cut.leftGraph cut.leftGlue)
     (hRightGenus : genus cut.rightGraph = 3) :
     BNExists K 1 3 := by

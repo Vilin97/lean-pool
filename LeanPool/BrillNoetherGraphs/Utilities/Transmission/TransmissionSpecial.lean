@@ -31,11 +31,11 @@ namespace Utilities
 
 /-- Universal Riemann--Roch lower bound `r(D) ≥ deg(D)-g`. -/
 theorem rank_ge_degree_sub_genus
-    {G : CFGraph} (hconn : graph_connected G) (D : CFDiv G) :
+    {G : CFGraph} (hconn : graphConnected G) (D : CFDiv G) :
     rank G D ≥ deg D - (genus G : ℤ) := by
   have hRR := riemann_roch_for_graphs hconn D
-  have hDual : rank G (canonical_divisor G - D) ≥ -1 :=
-    rank_geq_neg_one G (canonical_divisor G - D)
+  have hDual : rank G (canonicalDivisor G - D) ≥ -1 :=
+    rank_geq_neg_one G (canonicalDivisor G - D)
   linarith
 
 /-- A row is special when its ASP slipface lies strictly above the generic
@@ -60,7 +60,7 @@ theorem slipface_eq_baseline_of_not_special
 /-- Every nonspecial row is automatic for a connected graph once the divisor has
 transmission degree. -/
 theorem transmissionInequality_of_not_special
-    {G : CFGraph} (hconn : graph_connected G)
+    {G : CFGraph} (hconn : graphConnected G)
     (u v : G.V) (τ : AspPerm) (D : CFDiv G)
     (hDegree : deg D = (genus G : ℤ) + τ.χ)
     (a b : ℤ) (h : ¬ SpecialTransmissionPair τ a b) :
@@ -73,22 +73,22 @@ theorem transmissionInequality_of_not_special
       max_eq_right (le_of_lt hPos)
     rw [hMax]
     have hTwistDegree :
-        deg (D + a • one_chip u - b • one_chip v) =
+        deg (D + a • oneChip u - b • oneChip v) =
           (genus G : ℤ) + τ.χ + a - b := by
       rw [deg_add_marked_twist, hDegree]
     have hRank := rank_ge_degree_sub_genus hconn
-      (D + a • one_chip u - b • one_chip v)
+      (D + a • oneChip u - b • oneChip v)
     rw [hTwistDegree] at hRank
     omega
   · have hNonpos : a + 1 - b + τ.χ ≤ 0 := le_of_not_gt hPos
     have hMax : max 0 (a + 1 - b + τ.χ) = 0 := max_eq_left hNonpos
     rw [hMax]
-    simpa using rank_geq_neg_one G (D + a • one_chip u - b • one_chip v)
+    simpa using rank_geq_neg_one G (D + a • oneChip u - b • oneChip v)
 
 /-- Full transmission is equivalent, on a connected graph, to checking only the
 special slipface rows together with the degree equation. -/
 theorem satisfiesTransmission_iff_special
-    {G : CFGraph} (hconn : graph_connected G)
+    {G : CFGraph} (hconn : graphConnected G)
     (u v : G.V) (τ : AspPerm) (D : CFDiv G) :
     SatisfiesTransmission G u v τ D ↔
       deg D = (genus G : ℤ) + τ.χ ∧
@@ -106,7 +106,7 @@ theorem satisfiesTransmission_iff_special
 
 /-- Set-level special-row formulation. -/
 theorem satisfiesTransmission_iff_specialSet
-    {G : CFGraph} (hconn : graph_connected G)
+    {G : CFGraph} (hconn : graphConnected G)
     (u v : G.V) (τ : AspPerm) (D : CFDiv G) :
     SatisfiesTransmission G u v τ D ↔
       deg D = (genus G : ℤ) + τ.χ ∧

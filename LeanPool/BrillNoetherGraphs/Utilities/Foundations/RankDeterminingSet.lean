@@ -148,7 +148,7 @@ The forward implication is trivial for every `A` (`winnable_sub_of_rank_ge`);
 the content is the backward one, and `rankDeterminingSet_iff` repackages the
 definition as that half.
 
-Note the quantifier is over all `r : ℤ`, matching `rank_geq`.  For `r < 0` both
+Note the quantifier is over all `r : ℤ`, matching `rankGeq`.  For `r < 0` both
 sides hold vacuously, so nothing is claimed there. -/
 def RankDeterminingSet (G : CFGraph) (A : Finset G.V) : Prop :=
   ∀ (D : CFDiv G) (r : ℤ),
@@ -208,10 +208,10 @@ theorem rankDeterminingSet_univ (G : CFGraph) :
 
 /-- A one-chip divisor is supported on any set containing its vertex. -/
 theorem supportedOn_one_chip {G : CFGraph} {A : Finset G.V} {v : G.V}
-    (hv : v ∈ A) : SupportedOn A (one_chip v) := by
+    (hv : v ∈ A) : SupportedOn A (oneChip v) := by
   intro w hw
   have hne : w ≠ v := fun h => hw (h ▸ hv)
-  simp [one_chip, hne]
+  simp [oneChip, hne]
 
 /-- At `r = 1` a rank-determining set gives a vertexwise reachability test:
 rank at least one is decided by subtracting one chip at each vertex **of
@@ -219,25 +219,25 @@ rank at least one is decided by subtracting one chip at each vertex **of
 theorem rank_ge_one_iff_forall_mem_winnable_sub_one_chip
     {G : CFGraph} {A : Finset G.V} (hSet : RankDeterminingSet G A)
     (D : CFDiv G) :
-    rank G D ≥ 1 ↔ ∀ v ∈ A, winnable G (D - one_chip v) := by
+    rank G D ≥ 1 ↔ ∀ v ∈ A, winnable G (D - oneChip v) := by
   rw [hSet D 1]
   constructor
   · intro hTests v hv
-    exact hTests (one_chip v) (eff_one_chip v) (deg_one_chip v)
+    exact hTests (oneChip v) (eff_one_chip v) (deg_one_chip v)
       (supportedOn_one_chip hv)
   · intro hVertex E hEffective hDegree hSupport
     obtain ⟨v, rfl⟩ := effective_degree_one_eq_one_chip E hEffective hDegree
     refine hVertex v ?_
     by_contra hv
-    have hZero : one_chip v v = 0 := hSupport v hv
-    simp [one_chip] at hZero
+    have hZero : oneChip v v = 0 := hSupport v hv
+    simp [oneChip] at hZero
 
 /-- Sanity check that the definition specializes correctly: at `A = univ` the
 `r = 1` criterion is exactly `rank_ge_one_iff_winnable_sub_one_chip` from
 `Foundations/RankOne.lean`. -/
 theorem rank_ge_one_iff_winnable_sub_one_chip_of_univ
     (G : CFGraph) (D : CFDiv G) :
-    rank G D ≥ 1 ↔ ∀ v : G.V, winnable G (D - one_chip v) := by
+    rank G D ≥ 1 ↔ ∀ v : G.V, winnable G (D - oneChip v) := by
   rw [rank_ge_one_iff_forall_mem_winnable_sub_one_chip
     (rankDeterminingSet_univ G) D]
   simp
@@ -284,12 +284,12 @@ theorem exists_chip_of_effective_of_deg_pos {G : CFGraph} {E : CFDiv G}
 actually sits leaves an effective divisor. -/
 theorem effective_sub_one_chip {G : CFGraph} {E : CFDiv G} {v : G.V}
     (hEffective : effective E) (hChip : 1 ≤ E v) :
-    effective (E - one_chip v) := by
+    effective (E - oneChip v) := by
   intro w
   by_cases hw : w = v
   · subst w
-    simp [one_chip, hChip]
-  · simpa [one_chip, hw] using hEffective w
+    simp [oneChip, hChip]
+  · simpa [oneChip, hw] using hEffective w
 
 /-- **The one-chip step up.**  If every one-chip subtraction has rank at least
 `k ≥ 0`, then the divisor itself has rank at least `k + 1`.  This is the
@@ -298,19 +298,19 @@ converse of `rank_sub_one_chip_ge_of_rank_ge_succ` from
 rank-determining-set statement into the general one. -/
 theorem rank_ge_add_one_of_forall_rank_sub_one_chip_ge {G : CFGraph}
     {D : CFDiv G} {k : ℤ} (hk : 0 ≤ k)
-    (hChips : ∀ v : G.V, rank G (D - one_chip v) ≥ k) :
+    (hChips : ∀ v : G.V, rank G (D - oneChip v) ≥ k) :
     rank G D ≥ k + 1 := by
   rw [← rank_geq_iff]
   intro E hE
   obtain ⟨hEffective, hDegree⟩ := hE
   obtain ⟨v, hv⟩ :=
     exists_chip_of_effective_of_deg_pos hEffective (by rw [hDegree]; omega)
-  have hSubDegree : deg (E - one_chip v) = k := by
+  have hSubDegree : deg (E - oneChip v) = k := by
     rw [deg.map_sub, deg_one_chip, hDegree]
     ring
-  have hWin := (rank_geq_iff G (D - one_chip v) k).mpr (hChips v)
-    (E - one_chip v) ⟨effective_sub_one_chip hEffective hv, hSubDegree⟩
-  have hRewrite : D - one_chip v - (E - one_chip v) = D - E := by abel
+  have hWin := (rank_geq_iff G (D - oneChip v) k).mpr (hChips v)
+    (E - oneChip v) ⟨effective_sub_one_chip hEffective hv, hSubDegree⟩
+  have hRewrite : D - oneChip v - (E - oneChip v) = D - E := by abel
   rwa [hRewrite] at hWin
 
 /-- **The `r = 1` case is the whole content of `RankDeterminingSet`.**
@@ -322,7 +322,7 @@ rank-determining at every `r`.
 This is the reduction that lets a geometric input be supplied only once, at
 `r = 1`; see `Spec.rankDeterminingSet_coreVertices`. -/
 theorem rankDeterminingSet_of_rank_ge_one {G : CFGraph} {A : Finset G.V}
-    (hOne : ∀ D : CFDiv G, (∀ v ∈ A, winnable G (D - one_chip v)) →
+    (hOne : ∀ D : CFDiv G, (∀ v ∈ A, winnable G (D - oneChip v)) →
       rank G D ≥ 1) :
     RankDeterminingSet G A := by
   have key : ∀ k : ℕ, ∀ D : CFDiv G,
@@ -346,30 +346,30 @@ theorem rankDeterminingSet_of_rank_ge_one {G : CFGraph} {A : Finset G.V}
           refine hTests E hEffective ?_ hSupport
           push_cast
           exact hDegree
-        have hChips : ∀ w : G.V, rank G (D - one_chip w) ≥ (k : ℤ) := by
+        have hChips : ∀ w : G.V, rank G (D - oneChip w) ≥ (k : ℤ) := by
           intro w
-          refine ih (D - one_chip w) ?_
+          refine ih (D - oneChip w) ?_
           intro E hEffective hDegree hSupport
           have hRankOne : rank G (D - E) ≥ 1 := by
             refine hOne (D - E) ?_
             intro v hv
-            have hAddEffective : effective (E + one_chip v) := fun x =>
+            have hAddEffective : effective (E + oneChip v) := fun x =>
               add_nonneg (hEffective x) (eff_one_chip v x)
-            have hAddDegree : deg (E + one_chip v) = (k : ℤ) + 1 := by
+            have hAddDegree : deg (E + oneChip v) = (k : ℤ) + 1 := by
               rw [map_add, hDegree, deg_one_chip]
-            have hAddSupport : SupportedOn A (E + one_chip v) := by
+            have hAddSupport : SupportedOn A (E + oneChip v) := by
               intro x hx
               have hEx := hSupport x hx
               have hOneChipx := supportedOn_one_chip hv x hx
               simp [Pi.add_apply, hEx, hOneChipx]
-            have hWin := hTests' (E + one_chip v) hAddEffective hAddDegree
+            have hWin := hTests' (E + oneChip v) hAddEffective hAddDegree
               hAddSupport
-            have hRewrite : D - (E + one_chip v) = D - E - one_chip v := by
+            have hRewrite : D - (E + oneChip v) = D - E - oneChip v := by
               abel
             rwa [hRewrite] at hWin
           have hWin :=
             (rank_ge_one_iff_winnable_sub_one_chip G (D - E)).mp hRankOne w
-          have hRewrite : D - E - one_chip w = D - one_chip w - E := by abel
+          have hRewrite : D - E - oneChip w = D - oneChip w - E := by abel
           rwa [hRewrite] at hWin
         have hStep := rank_ge_add_one_of_forall_rank_sub_one_chip_ge
           (Int.natCast_nonneg k) hChips
@@ -413,22 +413,22 @@ complementary degree `g - 1 - deg D` supported on a rank-determining set.
 
 Thus only one rank-determining-set hypothesis is required. -/
 theorem winnable_iff_forall_add_supported_effective
-    {G : CFGraph} {A : Finset G.V} (hConnected : graph_connected G)
+    {G : CFGraph} {A : Finset G.V} (hConnected : graphConnected G)
     (hSet : RankDeterminingSet G A) (D : CFDiv G) :
     winnable G D ↔
       ∀ F : CFDiv G, effective F → deg F = genus G - 1 - deg D →
         SupportedOn A F → winnable G (D + F) := by
   have hDual :
       winnable G D ↔
-        rank G (canonical_divisor G - D) ≥ genus G - 1 - deg D :=
+        rank G (canonicalDivisor G - D) ≥ genus G - 1 - deg D :=
     (canonical_sub_rank_ge_iff_winnable_of_degree hConnected D
       (genus G - 1 - deg D) (by ring)).symm
-  rw [hDual, hSet (canonical_divisor G - D) (genus G - 1 - deg D)]
+  rw [hDual, hSet (canonicalDivisor G - D) (genus G - 1 - deg D)]
   refine forall_congr' fun F => ?_
   refine imp_congr_right fun _hEffective => ?_
   refine imp_congr_right fun hDegree => ?_
   refine imp_congr_right fun _hSupport => ?_
-  have hSum : canonical_divisor G - D - F = canonical_divisor G - (D + F) := by
+  have hSum : canonicalDivisor G - D - F = canonicalDivisor G - (D + F) := by
     abel
   have hDegSum : deg (D + F) = genus G - 1 := by
     rw [map_add, hDegree]
@@ -446,7 +446,7 @@ It follows from a single rank-determining-set hypothesis: the `E`-side is
 that hypothesis, and the `F`-side is
 `winnable_iff_forall_add_supported_effective`. -/
 theorem rank_ge_iff_forall_sub_add_supported
-    {G : CFGraph} {A : Finset G.V} (hConnected : graph_connected G)
+    {G : CFGraph} {A : Finset G.V} (hConnected : graphConnected G)
     (hSet : RankDeterminingSet G A) (D : CFDiv G) (r : ℤ) :
     rank G D ≥ r ↔
       ∀ E : CFDiv G, effective E → deg E = r → SupportedOn A E →
@@ -519,9 +519,9 @@ it is used twice in the chain above: `stepLeft_ne_stepRight` needs it to build
 carrying a loop slot of length `≥ 2` has **two** edges into that slot's
 interior, so the interior is not a strong-separator cell. -/
 theorem Spec.rank_ge_one_of_forall_mem_coreVertices (spec : Spec n p)
-    (hConnected : graph_connected spec.graph) (D : CFDiv spec.graph)
+    (hConnected : graphConnected spec.graph) (D : CFDiv spec.graph)
     (hReaches : ∀ x ∈ spec.coreVertices,
-      winnable spec.graph (D - one_chip x)) :
+      winnable spec.graph (D - oneChip x)) :
     rank spec.graph D ≥ 1 := by
   refine StrongSeparator.rank_ge_one_of_strongSeparatorCertificate hConnected
     (ExplicitPotential.Certificate.coreVertices_nonempty spec)
@@ -567,7 +567,7 @@ have rank zero, with the obstruction living in the loop chain's interior.
 strong-separator lemma and by the Riemann--Roch argument. -/
 theorem Spec.rankDeterminingSet_coreVertices (spec : Spec n p)
     (hLoopless : ∀ edge : Fin p, spec.core.tail edge ≠ spec.core.head edge)
-    (hConnected : graph_connected spec.graph) :
+    (hConnected : graphConnected spec.graph) :
     RankDeterminingSet spec.graph spec.coreVertices := by
   -- `hLoopless` is *literally* the structure field `spec.core_loopless`, which
   -- is what the separator construction below consumes (through the `oneEdge`
@@ -584,9 +584,9 @@ core vertex has rank at least one.
 Proved, via `Spec.rankDeterminingSet_coreVertices`. -/
 theorem Spec.rank_ge_one_of_reaches_coreVertices (spec : Spec n p)
     (hLoopless : ∀ edge : Fin p, spec.core.tail edge ≠ spec.core.head edge)
-    (hConnected : graph_connected spec.graph) (D : CFDiv spec.graph)
+    (hConnected : graphConnected spec.graph) (D : CFDiv spec.graph)
     (hReaches : ∀ v : Fin n,
-      winnable spec.graph (D - one_chip (spec.coreVertex v))) :
+      winnable spec.graph (D - oneChip (spec.coreVertex v))) :
     rank spec.graph D ≥ 1 := by
   rw [rank_ge_one_iff_forall_mem_winnable_sub_one_chip
     (spec.rankDeterminingSet_coreVertices hLoopless hConnected) D]
@@ -600,7 +600,7 @@ with the Riemann--Roch reduction (for the `F`-quantifier).  Both inputs are
 proved above. -/
 theorem Spec.rank_ge_iff_core_criterion (spec : Spec n p)
     (hLoopless : ∀ edge : Fin p, spec.core.tail edge ≠ spec.core.head edge)
-    (hConnected : graph_connected spec.graph) (D : CFDiv spec.graph) (r : ℤ) :
+    (hConnected : graphConnected spec.graph) (D : CFDiv spec.graph) (r : ℤ) :
     rank spec.graph D ≥ r ↔
       ∀ E : CFDiv spec.graph, effective E → deg E = r →
           SupportedOn spec.coreVertices E →

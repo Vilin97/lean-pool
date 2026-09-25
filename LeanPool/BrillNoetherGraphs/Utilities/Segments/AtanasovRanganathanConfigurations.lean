@@ -47,9 +47,9 @@ variable {G : CFGraph}
 /-- One local Dhar calculation: after removing the target chip, the displayed
 integral firing script leaves an effective residual. -/
 structure DharMove (G : CFGraph) (D : CFDiv G) (target : G.V) where
-  script : firing_script G
+  script : firingScript G
   residual_effective :
-    effective (D - one_chip target + prin G script)
+    effective (D - oneChip target + prin G script)
 
 namespace DharMove
 
@@ -58,14 +58,14 @@ theorem reaches {D : CFDiv G} {target : G.V}
     (move : DharMove G D target) :
     Reaches G D target := by
   unfold Reaches winnable
-  refine ⟨D - one_chip target + prin G move.script,
+  refine ⟨D - oneChip target + prin G move.script,
     move.residual_effective, ?_⟩
-  exact linearEquiv_add_prin (D - one_chip target) move.script
+  exact linearEquiv_add_prin (D - oneChip target) move.script
 
 /-- Conversely, an explicit effective representative and its firing script
 can be packaged as a local move without mentioning linear equivalence again. -/
-def ofScript {D : CFDiv G} {target : G.V} (script : firing_script G)
-    (hEffective : effective (D - one_chip target + prin G script)) :
+def ofScript {D : CFDiv G} {target : G.V} (script : firingScript G)
+    (hEffective : effective (D - oneChip target + prin G script)) :
     DharMove G D target :=
   ⟨script, hEffective⟩
 
@@ -80,14 +80,14 @@ noncomputable def ofReaches {D : CFDiv G} {target : G.V}
   let E : CFDiv G := Classical.choose hReach
   have hE := Classical.choose_spec hReach
   have hEffective : effective E := hE.1
-  have hEquiv : linear_equiv G (D - one_chip target) E := hE.2
-  let script : firing_script G := Classical.choose
-    ((principal_iff_eq_prin G (E - (D - one_chip target))).mp hEquiv)
-  have hScript : E - (D - one_chip target) = prin G script :=
+  have hEquiv : linearEquiv G (D - oneChip target) E := hE.2
+  let script : firingScript G := Classical.choose
+    ((principal_iff_eq_prin G (E - (D - oneChip target))).mp hEquiv)
+  have hScript : E - (D - oneChip target) = prin G script :=
     Classical.choose_spec
-      ((principal_iff_eq_prin G (E - (D - one_chip target))).mp hEquiv)
+      ((principal_iff_eq_prin G (E - (D - oneChip target))).mp hEquiv)
   refine ⟨script, ?_⟩
-  have hResidual : D - one_chip target + prin G script = E := by
+  have hResidual : D - oneChip target + prin G script = E := by
     rw [← hScript]
     abel
   rwa [hResidual]
@@ -133,7 +133,7 @@ theorem bnExists_one_three_of_dharMoves_off_support
 /-- The degree-three divisor used throughout the genus-four pictures.  The
 three vertices need not be distinct. -/
 def threeChipDivisor (first second third : G.V) : CFDiv G :=
-  one_chip first + one_chip second + one_chip third
+  oneChip first + oneChip second + oneChip third
 
 theorem threeChipDivisor_effective (first second third : G.V) :
     effective (threeChipDivisor first second third) := by
@@ -147,17 +147,17 @@ theorem threeChipDivisor_effective (first second third : G.V) :
 
 theorem threeChipDivisor_has_chip_first (first second third : G.V) :
     1 ≤ threeChipDivisor first second third first := by
-  simp only [threeChipDivisor, Pi.add_apply, one_chip, ↓reduceIte]
+  simp only [threeChipDivisor, Pi.add_apply, oneChip, ↓reduceIte]
   omega
 
 theorem threeChipDivisor_has_chip_second (first second third : G.V) :
     1 ≤ threeChipDivisor first second third second := by
-  simp only [threeChipDivisor, Pi.add_apply, one_chip, ↓reduceIte]
+  simp only [threeChipDivisor, Pi.add_apply, oneChip, ↓reduceIte]
   omega
 
 theorem threeChipDivisor_has_chip_third (first second third : G.V) :
     1 ≤ threeChipDivisor first second third third := by
-  simp only [threeChipDivisor, Pi.add_apply, one_chip, ↓reduceIte, le_add_iff_nonneg_left]
+  simp only [threeChipDivisor, Pi.add_apply, oneChip, ↓reduceIte, le_add_iff_nonneg_left]
   omega
 
 /-- Every displayed chip position is automatically reached; Dhar moves are
@@ -168,7 +168,7 @@ theorem threeChipDivisor_reaches_of_eq
     Reaches G (threeChipDivisor first second third) target := by
   have hEffective := threeChipDivisor_effective first second third
   apply reaches_of_effective_representative
-    (linear_equiv.refl G (threeChipDivisor first second third)) hEffective
+    (linearEquiv.refl G (threeChipDivisor first second third)) hEffective
   rcases hTarget with hTarget | hTarget | hTarget
   · rw [hTarget]
     exact threeChipDivisor_has_chip_first first second third
@@ -271,26 +271,26 @@ end MovingDivisor
 /-- An exact reflection starting with one chip at each of two endpoints.  The
 second output chip is allowed to coincide with the requested target. -/
 def TwoEndpointReflection (left right target : G.V) : Prop :=
-  ∃ (reflected : G.V) (script : firing_script G),
+  ∃ (reflected : G.V) (script : firingScript G),
     prin G script =
-      -one_chip left - one_chip right +
-        one_chip target + one_chip reflected
+      -oneChip left - oneChip right +
+        oneChip target + oneChip reflected
 
 theorem effective_sub_two_distinct_chips
     {D : CFDiv G} {left right : G.V}
     (hEffective : effective D) (hLeft : 1 ≤ D left)
     (hRight : 1 ≤ D right) (hDistinct : left ≠ right) :
-    effective (D - one_chip left - one_chip right) := by
+    effective (D - oneChip left - oneChip right) := by
   intro vertex
   by_cases hVL : vertex = left
   · subst vertex
-    simp only [Pi.sub_apply, one_chip, ↓reduceIte, hDistinct, sub_zero, Int.sub_nonneg]
+    simp only [Pi.sub_apply, oneChip, ↓reduceIte, hDistinct, sub_zero, Int.sub_nonneg]
     omega
   · by_cases hVR : vertex = right
     · subst vertex
-      simp only [Pi.sub_apply, one_chip, hDistinct.symm, ↓reduceIte, sub_zero, Int.sub_nonneg]
+      simp only [Pi.sub_apply, oneChip, hDistinct.symm, ↓reduceIte, sub_zero, Int.sub_nonneg]
       omega
-    · simpa [one_chip, hVL, hVR] using hEffective vertex
+    · simpa [oneChip, hVL, hVR] using hEffective vertex
 
 /-- The first pictured configuration, abstracted to its exact principal
 identity: endpoint chips plus a segment reflection reach the requested point. -/
@@ -302,13 +302,13 @@ theorem reaches_of_endpoint_chips_of_twoEndpointReflection
     Reaches G D target := by
   obtain ⟨reflected, script, hScript⟩ := hReflection
   let residual : CFDiv G :=
-    D - one_chip left - one_chip right + one_chip reflected
+    D - oneChip left - oneChip right + oneChip reflected
   have hResidualEffective : effective residual := by
     exact (Eff G).add_mem
       (effective_sub_two_distinct_chips hEffective hLeft hRight hDistinct)
       (eff_one_chip reflected)
   have hRewrite :
-      D - one_chip target + prin G script = residual := by
+      D - oneChip target + prin G script = residual := by
     rw [hScript]
     dsimp [residual]
     abel
@@ -398,7 +398,7 @@ theorem reaches_parallelPathMarker_of_two_chips
     Reaches spec.graph D (spec.coreVertex marker) := by
   have hRepresentative :
       HasTwoChipsRepresentative D (spec.coreVertex base) :=
-    ⟨D, hEffective, linear_equiv.refl spec.graph D, hTwo⟩
+    ⟨D, hEffective, linearEquiv.refl spec.graph D, hTwo⟩
   apply reaches_of_twoChipsRepresentative_of_twoChipReflection hRepresentative
   exact twoChipReflection_of_two_paths spec base marker first second
     hFirstSecond hFirstTail hFirstHead hSecondTail hSecondHead hOnly
@@ -407,7 +407,7 @@ theorem reaches_parallelPathMarker_of_two_chips
 the only core reachability test not discharged elsewhere. -/
 theorem bnExists_one_three_of_parallelPathMarker
     {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
-    (hConnected : graph_connected spec.graph)
+    (hConnected : graphConnected spec.graph)
     (base marker : Fin n) (first second : Fin p)
     (hFirstSecond : first ≠ second)
     (hFirstTail : spec.core.tail first = base)

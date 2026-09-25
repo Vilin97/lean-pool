@@ -41,7 +41,7 @@ universe u
 /-- Two vertices belong to the same fossil class when their one-chip
 divisors are linearly equivalent. -/
 def chipEquivalent (G : CFGraph.{u}) (v w : G.V) : Prop :=
-  linear_equiv G (one_chip v) (one_chip w)
+  linearEquiv G (oneChip v) (oneChip w)
 
 /-- Linear equivalence of one-chip divisors, packaged as a setoid. -/
 def chipSetoid (G : CFGraph.{u}) : Setoid G.V where
@@ -49,11 +49,11 @@ def chipSetoid (G : CFGraph.{u}) : Setoid G.V where
   iseqv := by
     constructor
     · intro v
-      exact linear_equiv.refl G (one_chip v)
+      exact linearEquiv.refl G (oneChip v)
     · intro v w h
-      exact linear_equiv.symm h
+      exact linearEquiv.symm h
     · intro v w z hvw hwz
-      exact linear_equiv.trans hvw hwz
+      exact linearEquiv.trans hvw hwz
 
 /-- A vertex of the fossil is a linear-equivalence class of vertices. -/
 abbrev FossilVertex (G : CFGraph.{u}) := Quotient (chipSetoid G)
@@ -321,7 +321,7 @@ noncomputable def fossilPushforward (G : CFGraph.{u}) (D : CFDiv G) :
   exact (fossilContraction G).pushDiv_sub D E
 
 @[simp] theorem fossilPushforward_one_chip (G : CFGraph.{u}) (v : G.V) :
-    fossilPushforward G (one_chip v) = one_chip (fossilVertex G v) := by
+    fossilPushforward G (oneChip v) = oneChip (fossilVertex G v) := by
   exact (fossilContraction G).pushDiv_one_chip v
 
 theorem effective_fossilPushforward (G : CFGraph.{u}) {D : CFDiv G}
@@ -362,16 +362,16 @@ noncomputable def fossilRepresentative (G : CFGraph.{u})
 
 /-- Every divisor is the coefficient-weighted sum of its one-chip divisors. -/
 theorem divisor_eq_sum_smul_oneChip {K : CFGraph.{u}} (D : CFDiv K) :
-    D = ∑ v : K.V, D v • one_chip v := by
+    D = ∑ v : K.V, D v • oneChip v := by
   classical
   funext w
-  simp [one_chip]
+  simp [oneChip]
 
 /-- Lift a fossil divisor by placing the coefficient of each class at its
 chosen representative. -/
 noncomputable def fossilLift (G : CFGraph.{u})
     (D : CFDiv (fossil G)) : CFDiv G :=
-  ∑ q : FossilVertex G, D q • one_chip (fossilRepresentative G q)
+  ∑ q : FossilVertex G, D q • oneChip (fossilRepresentative G q)
 
 /-- The chosen lift is a right inverse to fibre summation. -/
 @[simp] theorem fossilPushforward_lift (G : CFGraph.{u})
@@ -380,7 +380,7 @@ noncomputable def fossilLift (G : CFGraph.{u})
   classical
   change fossilPushforwardHom G
       (∑ q : FossilVertex G,
-        D q • one_chip (fossilRepresentative G q)) = D
+        D q • oneChip (fossilRepresentative G q)) = D
   rw [map_sum]
   simp_rw [map_zsmul, fossilPushforwardHom_apply,
     fossilPushforward_one_chip, fossilVertex_representative]
@@ -388,16 +388,16 @@ noncomputable def fossilLift (G : CFGraph.{u})
 
 /-- Pull a fossil firing script back to the original graph. -/
 noncomputable def fossilPullScript (G : CFGraph.{u})
-    (tau : firing_script (fossil G)) : firing_script G :=
+    (tau : firingScript (fossil G)) : firingScript G :=
   (fossilContraction G).pullScript tau
 
 @[simp] theorem fossilPullScript_apply (G : CFGraph.{u})
-    (tau : firing_script (fossil G)) (v : G.V) :
+    (tau : firingScript (fossil G)) (v : G.V) :
     fossilPullScript G tau v = tau (fossilVertex G v) := rfl
 
 /-- The quotient Laplacian identity for the fossil. -/
 theorem fossilPushforward_prin_pullScript (G : CFGraph.{u})
-    (tau : firing_script (fossil G)) :
+    (tau : firingScript (fossil G)) :
     fossilPushforward G (prin G (fossilPullScript G tau)) =
       prin (fossil G) tau :=
   (fossilContraction G).pushDiv_prin_pullScript
@@ -407,38 +407,38 @@ theorem fossilPushforward_prin_pullScript (G : CFGraph.{u})
 
 /-- Linear equivalence is preserved by integer scaling. -/
 theorem linear_equiv_zsmul {K : CFGraph.{u}} {D E : CFDiv K}
-    (h : linear_equiv K D E) (n : ℤ) :
-    linear_equiv K (n • D) (n • E) := by
-  unfold linear_equiv at h ⊢
-  simpa [smul_sub] using (principal_divisors K).zsmul_mem h n
+    (h : linearEquiv K D E) (n : ℤ) :
+    linearEquiv K (n • D) (n • E) := by
+  unfold linearEquiv at h ⊢
+  simpa [smul_sub] using (principalDivisors K).zsmul_mem h n
 
 /-- A finite sum of termwise linearly equivalent divisors is linearly
 equivalent. -/
 theorem linear_equiv_sum {K : CFGraph.{u}} {ι : Type*} [Fintype ι]
-    {D E : ι → CFDiv K} (h : ∀ i, linear_equiv K (D i) (E i)) :
-    linear_equiv K (∑ i, D i) (∑ i, E i) := by
+    {D E : ι → CFDiv K} (h : ∀ i, linearEquiv K (D i) (E i)) :
+    linearEquiv K (∑ i, D i) (∑ i, E i) := by
   classical
-  unfold linear_equiv at h ⊢
+  unfold linearEquiv at h ⊢
   rw [← Finset.sum_sub_distrib]
-  exact (principal_divisors K).sum_mem (fun i _ => h i)
+  exact (principalDivisors K).sum_mem (fun i _ => h i)
 
 /-- Each vertex is linearly equivalent, as a one-chip divisor, to the chosen
 representative of its fossil class. -/
 theorem linear_equiv_one_chip_representative (G : CFGraph.{u}) (v : G.V) :
-    linear_equiv G (one_chip v)
-      (one_chip (fossilRepresentative G (fossilVertex G v))) := by
+    linearEquiv G (oneChip v)
+      (oneChip (fossilRepresentative G (fossilVertex G v))) := by
   apply (fossilVertex_eq_iff G _ _).mp
   rw [fossilVertex_representative]
 
 private theorem sum_smul_representative_eq_lift_pushforward
     (G : CFGraph.{u}) (D : CFDiv G) :
     (∑ v : G.V, D v •
-      one_chip (fossilRepresentative G (fossilVertex G v))) =
+      oneChip (fossilRepresentative G (fossilVertex G v))) =
         fossilLift G (fossilPushforward G D) := by
   classical
   funext w
   simp only [fossilLift, fossilPushforward_apply, Finset.sum_apply,
-    Pi.smul_apply, one_chip]
+    Pi.smul_apply, oneChip]
   simp_rw [Finset.sum_smul]
   rw [Finset.sum_comm]
   apply Finset.sum_congr rfl
@@ -457,7 +457,7 @@ private theorem sum_smul_representative_eq_lift_pushforward
 pushforward: redistributing chips inside a fossil fibre only moves them
 between linearly equivalent vertices. -/
 theorem linear_equiv_lift_fossilPushforward (G : CFGraph.{u}) (D : CFDiv G) :
-    linear_equiv G D (fossilLift G (fossilPushforward G D)) := by
+    linearEquiv G D (fossilLift G (fossilPushforward G D)) := by
   conv_lhs => rw [divisor_eq_sum_smul_oneChip D]
   rw [← sum_smul_representative_eq_lift_pushforward G D]
   apply linear_equiv_sum
@@ -468,8 +468,8 @@ theorem linear_equiv_lift_fossilPushforward (G : CFGraph.{u}) (D : CFDiv G) :
 Their only difference is redistribution inside the quotient fibres. -/
 theorem linear_equiv_of_fossilPushforward_eq (G : CFGraph.{u})
     {D E : CFDiv G} (h : fossilPushforward G D = fossilPushforward G E) :
-    linear_equiv G D E := by
-  apply linear_equiv.trans (linear_equiv_lift_fossilPushforward G D)
+    linearEquiv G D E := by
+  apply linearEquiv.trans (linear_equiv_lift_fossilPushforward G D)
   rw [h]
   exact (linear_equiv_lift_fossilPushforward G E).symm
 
@@ -478,10 +478,10 @@ formal version of pulling a quotient firing script back and observing that
 the remaining discrepancy only moves chips inside quotient fibres. -/
 theorem linear_equiv_of_fossilPushforward (G : CFGraph.{u})
     {D E : CFDiv G}
-    (h : linear_equiv (fossil G)
+    (h : linearEquiv (fossil G)
       (fossilPushforward G D) (fossilPushforward G E)) :
-    linear_equiv G D E := by
-  unfold linear_equiv at h ⊢
+    linearEquiv G D E := by
+  unfold linearEquiv at h ⊢
   obtain ⟨tau, hTau⟩ :=
     (principal_iff_eq_prin (fossil G)
       (fossilPushforward G E - fossilPushforward G D)).mp h
@@ -495,13 +495,13 @@ theorem linear_equiv_of_fossilPushforward (G : CFGraph.{u})
       _ = fossilPushforward G P := by
         symm
         exact fossilPushforward_prin_pullScript G tau
-  have hKernel : linear_equiv G (E - D) P :=
+  have hKernel : linearEquiv G (E - D) P :=
     linear_equiv_of_fossilPushforward_eq G hPush
-  have hP : P ∈ principal_divisors G := by
+  have hP : P ∈ principalDivisors G := by
     apply (principal_iff_eq_prin G P).mpr
     exact ⟨fossilPullScript G tau, rfl⟩
-  have hDifference : P - (E - D) ∈ principal_divisors G := hKernel
-  have hRecovered := (principal_divisors G).sub_mem hP hDifference
+  have hDifference : P - (E - D) ∈ principalDivisors G := hKernel
+  have hRecovered := (principalDivisors G).sub_mem hP hDifference
   convert hRecovered using 1
   abel
 
@@ -517,15 +517,15 @@ theorem fossil_chipEquivalent_iff_eq (G : CFGraph.{u})
       | _ w =>
           constructor
           · intro hEquivalent
-            change linear_equiv (fossil G)
-              (one_chip (fossilVertex G v))
-              (one_chip (fossilVertex G w)) at hEquivalent
+            change linearEquiv (fossil G)
+              (oneChip (fossilVertex G v))
+              (oneChip (fossilVertex G w)) at hEquivalent
             apply (fossilVertex_eq_iff G v w).2
             apply linear_equiv_of_fossilPushforward G
             simpa only [fossilPushforward_one_chip] using hEquivalent
           · intro hEqual
             rw [hEqual]
-            exact linear_equiv.refl (fossil G) (one_chip (fossilVertex G w))
+            exact linearEquiv.refl (fossil G) (oneChip (fossilVertex G w))
 
 /-- Consequently the second fossil quotient has singleton fibres. -/
 theorem fossilVertex_fossil_injective (G : CFGraph.{u}) :
@@ -540,7 +540,7 @@ theorem fossilVertex_fossil_injective (G : CFGraph.{u}) :
 not change the fossil pushforward of the principal divisor. -/
 theorem fossilPushforward_prin_normalizeScript (G : CFGraph.{u})
     {x y : G.V} (cut : SeparatingEdgeCut G x y)
-    (sigma : firing_script G) :
+    (sigma : firingScript G) :
     fossilPushforward G (prin G (cut.normalizeScript sigma)) =
       fossilPushforward G (prin G sigma) := by
   rw [cut.prin_normalizeScript, fossilPushforward_add,
@@ -554,14 +554,14 @@ theorem fossilPushforward_prin_normalizeScript (G : CFGraph.{u})
 values.  Orienting both ways is harmless and avoids making an arbitrary
 orientation part of the API. -/
 noncomputable def separatingBadPairs (G : CFGraph.{u})
-    (sigma : firing_script G) : Finset (G.V × G.V) := by
+    (sigma : firingScript G) : Finset (G.V × G.V) := by
   classical
   exact Finset.univ.filter fun pair =>
     Nonempty (SeparatingEdgeCut G pair.1 pair.2) ∧
       sigma pair.1 ≠ sigma pair.2
 
 @[simp] theorem mem_separatingBadPairs_iff (G : CFGraph.{u})
-    (sigma : firing_script G) (pair : G.V × G.V) :
+    (sigma : firingScript G) (pair : G.V × G.V) :
     pair ∈ separatingBadPairs G sigma ↔
       Nonempty (SeparatingEdgeCut G pair.1 pair.2) ∧
         sigma pair.1 ≠ sigma pair.2 := by
@@ -573,16 +573,16 @@ whose values agree across every separating edge.  The corrections never
 destroy an equality already achieved, because separating cuts do not cross;
 therefore the finite set of bad endpoint pairs strictly shrinks. -/
 theorem exists_separating_normalization (G : CFGraph.{u})
-    (sigma : firing_script G) :
-    ∃ normalized : firing_script G,
+    (sigma : firingScript G) :
+    ∃ normalized : firingScript G,
       (∀ {x y : G.V}, (cut : SeparatingEdgeCut G x y) →
         normalized x = normalized y) ∧
       fossilPushforward G (prin G normalized) =
         fossilPushforward G (prin G sigma) := by
   classical
   let P : ℕ → Prop := fun n =>
-    ∀ rho : firing_script G, (separatingBadPairs G rho).card = n →
-      ∃ normalized : firing_script G,
+    ∀ rho : firingScript G, (separatingBadPairs G rho).card = n →
+      ∃ normalized : firingScript G,
         (∀ {x y : G.V}, (cut : SeparatingEdgeCut G x y) →
           normalized x = normalized y) ∧
         fossilPushforward G (prin G normalized) =
@@ -597,7 +597,7 @@ theorem exists_separating_normalization (G : CFGraph.{u})
         · exact ⟨rho, hNormalized, rfl⟩
         · push Not at hNormalized
           obtain ⟨x, y, cut, hxy⟩ := hNormalized
-          let rho' : firing_script G := cut.normalizeScript rho
+          let rho' : firingScript G := cut.normalizeScript rho
           have hSubset : separatingBadPairs G rho' ⊆ separatingBadPairs G rho := by
             intro pair hPair
             rw [mem_separatingBadPairs_iff] at hPair ⊢
@@ -630,12 +630,12 @@ theorem exists_separating_normalization (G : CFGraph.{u})
 separating-edge cuts so that it is constant on fossil fibres.  Pushing its
 principal divisor then gives the principal divisor of the descended script. -/
 theorem exists_fossilScript_pushforward_prin (G : CFGraph.{u})
-    (hConnected : graph_connected G) (sigma : firing_script G) :
-    ∃ tau : firing_script (fossil G),
+    (hConnected : graphConnected G) (sigma : firingScript G) :
+    ∃ tau : firingScript (fossil G),
       fossilPushforward G (prin G sigma) = prin (fossil G) tau := by
   obtain ⟨normalized, hNormalized, hPush⟩ :=
     exists_separating_normalization G sigma
-  let tau : firing_script (fossil G) := fun q =>
+  let tau : firingScript (fossil G) := fun q =>
     normalized (fossilRepresentative G q)
   have hFactor : normalized = fossilPullScript G tau := by
     funext v
@@ -655,11 +655,11 @@ theorem exists_fossilScript_pushforward_prin (G : CFGraph.{u})
 
 /-- Linear equivalence descends to the fossil. -/
 theorem linear_equiv_fossilPushforward (G : CFGraph.{u})
-    (hConnected : graph_connected G)
-    {D E : CFDiv G} (h : linear_equiv G D E) :
-    linear_equiv (fossil G)
+    (hConnected : graphConnected G)
+    {D E : CFDiv G} (h : linearEquiv G D E) :
+    linearEquiv (fossil G)
       (fossilPushforward G D) (fossilPushforward G E) := by
-  unfold linear_equiv at h ⊢
+  unfold linearEquiv at h ⊢
   obtain ⟨sigma, hSigma⟩ :=
     (principal_iff_eq_prin G (E - D)).mp h
   obtain ⟨tau, hTau⟩ :=
@@ -677,9 +677,9 @@ theorem linear_equiv_fossilPushforward (G : CFGraph.{u})
 /-- On a connected graph, the fossil pushforward identifies divisor classes
 exactly. -/
 theorem linear_equiv_fossil_iff (G : CFGraph.{u})
-    (hConnected : graph_connected G) (D E : CFDiv G) :
-    linear_equiv G D E ↔
-      linear_equiv (fossil G)
+    (hConnected : graphConnected G) (D E : CFDiv G) :
+    linearEquiv G D E ↔
+      linearEquiv (fossil G)
         (fossilPushforward G D) (fossilPushforward G E) :=
   ⟨linear_equiv_fossilPushforward G hConnected,
     linear_equiv_of_fossilPushforward G⟩
@@ -692,7 +692,7 @@ theorem effective_fossilLift (G : CFGraph.{u})
   classical
   intro v
   unfold fossilLift
-  simp only [Finset.sum_apply, Pi.smul_apply, one_chip]
+  simp only [Finset.sum_apply, Pi.smul_apply, oneChip]
   apply Finset.sum_nonneg
   intro q _
   by_cases hv : v = fossilRepresentative G q
@@ -701,7 +701,7 @@ theorem effective_fossilLift (G : CFGraph.{u})
 
 /-- Winnability is invariant under passage to the fossil. -/
 theorem winnable_fossil_iff (G : CFGraph.{u})
-    (hConnected : graph_connected G) (D : CFDiv G) :
+    (hConnected : graphConnected G) (D : CFDiv G) :
     winnable G D ↔ winnable (fossil G) (fossilPushforward G D) := by
   constructor
   · rintro ⟨E, hEEffective, hDE⟩
@@ -710,17 +710,17 @@ theorem winnable_fossil_iff (G : CFGraph.{u})
       linear_equiv_fossilPushforward G hConnected hDE⟩
   · rintro ⟨E, hEEffective, hDE⟩
     refine ⟨fossilLift G E, effective_fossilLift G hEEffective, ?_⟩
-    exact linear_equiv.trans
+    exact linearEquiv.trans
       (linear_equiv_lift_fossilPushforward G D)
       (linear_equiv_of_fossilPushforward G (by simpa using hDE))
 
 /-- Every rank inequality is invariant under passage to the fossil. -/
 theorem rank_geq_fossil_iff (G : CFGraph.{u})
-    (hConnected : graph_connected G) (D : CFDiv G) (k : ℤ) :
-    rank_geq G D k ↔ rank_geq (fossil G) (fossilPushforward G D) k := by
+    (hConnected : graphConnected G) (D : CFDiv G) (k : ℤ) :
+    rankGeq G D k ↔ rankGeq (fossil G) (fossilPushforward G D) k := by
   constructor
   · intro hRank E hE
-    have hLiftE : fossilLift G E ∈ eff_of_degree G k := by
+    have hLiftE : fossilLift G E ∈ effOfDegree G k := by
       exact ⟨effective_fossilLift G hE.1, by
         rw [← deg_fossilPushforward G (fossilLift G E),
           fossilPushforward_lift]
@@ -731,7 +731,7 @@ theorem rank_geq_fossil_iff (G : CFGraph.{u})
     simpa only [fossilPushforward_sub, fossilPushforward_lift] using hPushWin
   · intro hRank E hE
     have hPushE : fossilPushforward G E ∈
-        eff_of_degree (fossil G) k :=
+        effOfDegree (fossil G) k :=
       ⟨effective_fossilPushforward G hE.1, by simpa using hE.2⟩
     have hWin := hRank (fossilPushforward G E) hPushE
     apply (winnable_fossil_iff G hConnected (D - E)).mpr
@@ -739,7 +739,7 @@ theorem rank_geq_fossil_iff (G : CFGraph.{u})
 
 /-- Baker--Norine rank is unchanged by passing to the fossil. -/
 theorem rank_fossilPushforward (G : CFGraph.{u})
-    (hConnected : graph_connected G) (D : CFDiv G) :
+    (hConnected : graphConnected G) (D : CFDiv G) :
     rank (fossil G) (fossilPushforward G D) = rank G D := by
   apply le_antisymm
   · apply (rank_geq_iff G D
@@ -754,7 +754,7 @@ theorem rank_fossilPushforward (G : CFGraph.{u})
 
 /-- Brill--Noether existence is invariant under passage to the fossil. -/
 theorem BNExists_fossil_iff (G : CFGraph.{u})
-    (hConnected : graph_connected G) (r d : ℤ) :
+    (hConnected : graphConnected G) (r d : ℤ) :
     BNExists G r d ↔ BNExists (fossil G) r d := by
   constructor
   · rintro ⟨D, hDegree, hRank⟩

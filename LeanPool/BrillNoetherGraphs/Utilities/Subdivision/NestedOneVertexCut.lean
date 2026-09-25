@@ -116,9 +116,9 @@ noncomputable def restrictRight
 /-- Connectivity of the restricted-cut factors follows from connectivity of
 the original ambient graph. -/
 theorem restrictRight_graph_connected_factors
-    (hLeft : second.left ⊆ first.right) (hK : graph_connected K) :
-    graph_connected (first.restrictRight second hLeft).leftGraph ∧
-      graph_connected (first.restrictRight second hLeft).rightGraph := by
+    (hLeft : second.left ⊆ first.right) (hK : graphConnected K) :
+    graphConnected (first.restrictRight second hLeft).leftGraph ∧
+      graphConnected (first.restrictRight second hLeft).rightGraph := by
   exact (first.restrictRight second hLeft).graph_connected_factors
     (first.graph_connected_right_of_connected hK)
 
@@ -166,17 +166,17 @@ noncomputable def restrictRightLeftIso
   map_num_edges := by
     intro x y
     calc
-      num_edges second.leftGraph _ _ =
-          num_edges K
+      numEdges second.leftGraph _ _ =
+          numEdges K
             (first.restrictRightLeftVertex second hLeft x).val
             (first.restrictRightLeftVertex second hLeft y).val :=
         num_edges_inducedSubgraph K second.left second.left_nonempty _ _
-      _ = num_edges K x.val.val y.val.val := by rfl
-      _ = num_edges first.rightGraph x.val y.val := by
+      _ = numEdges K x.val.val y.val.val := by rfl
+      _ = numEdges first.rightGraph x.val y.val := by
             symm
             exact num_edges_inducedSubgraph K first.right first.right_nonempty
               x.val y.val
-      _ = num_edges (first.restrictRight second hLeft).leftGraph x y := by
+      _ = numEdges (first.restrictRight second hLeft).leftGraph x y := by
             symm
             exact num_edges_inducedSubgraph first.rightGraph
               (first.restrictRight second hLeft).left

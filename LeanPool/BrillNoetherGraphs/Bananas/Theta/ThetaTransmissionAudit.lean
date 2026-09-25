@@ -96,7 +96,7 @@ theorem evenlyMarkedTheta_kGeneral_of_uniform_inversion_bound
   intro D
   obtain ⟨τ, hτ, hAffine, hFinite⟩ :=
     exists_affine_transmission_of_allSubmodular
-      (graph_connected B) hk hsub D
+      (graphConnected B) hk hsub D
   refine ⟨τ, hτ, hAffine, hFinite, ?_⟩
   dsimp [M, k] at hτ hAffine ⊢
   exact hBound D τ hτ hAffine

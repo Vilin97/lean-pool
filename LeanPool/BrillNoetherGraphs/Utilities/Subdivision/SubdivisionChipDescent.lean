@@ -341,26 +341,26 @@ end Chip
 /-- The fine divisor of a family of chips. -/
 def fineChips {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) :
     CFDiv (spec.scale N hN).graph :=
-  ∑ i, one_chip ((chips i).fineVertex hN)
+  ∑ i, oneChip ((chips i).fineVertex hN)
 
 /-- The rounded coarse divisor of a family of chips. -/
 def coarseChips {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) : CFDiv spec.graph :=
-  ∑ i, one_chip (chips i).coarseVertex
+  ∑ i, oneChip (chips i).coarseVertex
 
 /-! ## Slot values of a fine script -/
 
 /-- The value of a fine script at fine offset `j` of slot `edge` (and `0`
 beyond the head, which is never used). -/
-def fineValue (σ : firing_script (spec.scale N hN).graph) (edge : Fin p) (j : ℕ) : ℤ :=
+def fineValue (σ : firingScript (spec.scale N hN).graph) (edge : Fin p) (j : ℕ) : ℤ :=
   if h : j ≤ N * spec.length edge then
     σ ((spec.scale N hN).pathVertex edge ⟨j, by simp only [scale_length]; omega⟩)
   else 0
 
 /-- The fine slope across fine step `j` of slot `edge`. -/
-def fineSlope (σ : firing_script (spec.scale N hN).graph) (edge : Fin p) (j : ℕ) : ℤ :=
+def fineSlope (σ : firingScript (spec.scale N hN).graph) (edge : Fin p) (j : ℕ) : ℤ :=
   spec.fineValue N hN σ edge (j + 1) - spec.fineValue N hN σ edge j
 
-theorem isStepSlope_fineSlope (σ : firing_script (spec.scale N hN).graph) :
+theorem isStepSlope_fineSlope (σ : firingScript (spec.scale N hN).graph) :
     (spec.scale N hN).IsStepSlope σ (spec.fineSlope N hN σ) := by
   intro edge offset
   have hlt : offset.val < N * spec.length edge := offset.isLt
@@ -372,19 +372,19 @@ theorem isStepSlope_fineSlope (σ : firing_script (spec.scale N hN).graph) :
 
 /-- The rounded coarse script: common-offset rounding of the fine values at
 the images of the coarse vertices. -/
-def roundedScript (κ : Fin N) (σ : firing_script (spec.scale N hN).graph) :
-    firing_script spec.graph :=
+def roundedScript (κ : Fin N) (σ : firingScript (spec.scale N hN).graph) :
+    firingScript spec.graph :=
   fun v => round N κ (σ (spec.fineOf N hN v))
 
 /-- The coarse slope of the rounded script across coarse step `k` of slot
 `edge`. -/
-def roundedSlope (κ : Fin N) (σ : firing_script (spec.scale N hN).graph)
+def roundedSlope (κ : Fin N) (σ : firingScript (spec.scale N hN).graph)
     (edge : Fin p) (k : ℕ) : ℤ :=
   round N κ (spec.fineValue N hN σ edge (N * (k + 1))) -
     round N κ (spec.fineValue N hN σ edge (N * k))
 
 theorem isStepSlope_roundedSlope (κ : Fin N)
-    (σ : firing_script (spec.scale N hN).graph) :
+    (σ : firingScript (spec.scale N hN).graph) :
     spec.IsStepSlope (spec.roundedScript N hN κ σ) (spec.roundedSlope N hN κ σ) := by
   intro edge offset
   have hk : offset.val < spec.length edge := offset.isLt

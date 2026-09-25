@@ -257,18 +257,18 @@ theorem effective_wedgeAddDivisor
 /-- Glue firing scripts by requiring their values to agree at the identified
 vertex. -/
 def wedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
-    (x : G.V) (y : H.V) (σ : firing_script G) (τ : firing_script H)
-    (_hxy : σ x = τ y) : firing_script (vertexWedge G H x y) :=
+    (x : G.V) (y : H.V) (σ : firingScript G) (τ : firingScript H)
+    (_hxy : σ x = τ y) : firingScript (vertexWedge G H x y) :=
   Sum.elim σ (fun b => τ b.1)
 
 @[simp] theorem wedgeScript_left
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script G) (τ : firing_script H) (hxy : σ x = τ y) (a : G.V) :
+    (σ : firingScript G) (τ : firingScript H) (hxy : σ x = τ y) (a : G.V) :
     wedgeScript G H x y σ τ hxy (Sum.inl a) = σ a := rfl
 
 @[simp] theorem wedgeScript_right
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script G) (τ : firing_script H) (hxy : σ x = τ y)
+    (σ : firingScript G) (τ : firingScript H) (hxy : σ x = τ y)
     (b : { b : H.V // b ≠ y }) :
     wedgeScript G H x y σ τ hxy (Sum.inr b) = τ b.1 := rfl
 
@@ -307,9 +307,9 @@ by wedging on the right factor. -/
 @[simp] theorem num_edges_vertexWedge_left
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (a b : G.V) :
-    num_edges (vertexWedge G H x y) (Sum.inl a) (Sum.inl b) =
-      num_edges G a b := by
-  unfold num_edges
+    numEdges (vertexWedge G H x y) (Sum.inl a) (Sum.inl b) =
+      numEdges G a b := by
+  unfold numEdges
   rw [vertexWedge_edges]
   change
     (Multiset.filter
@@ -354,9 +354,9 @@ unchanged by the wedge. -/
 @[simp] theorem num_edges_vertexWedge_right
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (a b : { z : H.V // z ≠ y }) :
-    num_edges (vertexWedge G H x y) (Sum.inr a) (Sum.inr b) =
-      num_edges H a.1 b.1 := by
-  unfold num_edges
+    numEdges (vertexWedge G H x y) (Sum.inr a) (Sum.inr b) =
+      numEdges H a.1 b.1 := by
+  unfold numEdges
   rw [vertexWedge_edges]
   change
     (Multiset.filter
@@ -403,9 +403,9 @@ the edges from the right marked vertex before identification. -/
 @[simp] theorem num_edges_vertexWedge_marked_right
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (b : { z : H.V // z ≠ y }) :
-    num_edges (vertexWedge G H x y) (Sum.inl x) (Sum.inr b) =
-      num_edges H y b.1 := by
-  unfold num_edges
+    numEdges (vertexWedge G H x y) (Sum.inl x) (Sum.inr b) =
+      numEdges H y b.1 := by
+  unfold numEdges
   rw [vertexWedge_edges]
   change
     (Multiset.filter
@@ -456,8 +456,8 @@ unmarked part of the right factor. -/
 @[simp] theorem num_edges_vertexWedge_left_right_of_ne
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (a : G.V) (b : { z : H.V // z ≠ y }) (hax : a ≠ x) :
-    num_edges (vertexWedge G H x y) (Sum.inl a) (Sum.inr b) = 0 := by
-  unfold num_edges
+    numEdges (vertexWedge G H x y) (Sum.inl a) (Sum.inr b) = 0 := by
+  unfold numEdges
   rw [vertexWedge_edges]
   change
     (Multiset.filter
@@ -495,8 +495,8 @@ unmarked part of the right factor. -/
 @[simp] theorem num_edges_vertexWedge_left_right
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (a : G.V) (b : { z : H.V // z ≠ y }) :
-    num_edges (vertexWedge G H x y) (Sum.inl a) (Sum.inr b) =
-      if a = x then num_edges H y b.1 else 0 := by
+    numEdges (vertexWedge G H x y) (Sum.inl a) (Sum.inr b) =
+      if a = x then numEdges H y b.1 else 0 := by
   by_cases hax : a = x
   · subst a
     simp
@@ -511,9 +511,9 @@ the right factor (including those incident to the marked vertex). -/
 @[simp] theorem num_edges_vertexWedge_rightVertex
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (a b : H.V) :
-    num_edges (vertexWedge G H x y)
+    numEdges (vertexWedge G H x y)
       (wedgeRightVertex G H x y a) (wedgeRightVertex G H x y b) =
-      num_edges H a b := by
+      numEdges H a b := by
   by_cases ha : a = y
   · subst a
     by_cases hb : b = y
@@ -525,14 +525,14 @@ the right factor (including those incident to the marked vertex). -/
   · by_cases hb : b = y
     · subst b
       calc
-        num_edges (vertexWedge G H x y)
+        numEdges (vertexWedge G H x y)
             (wedgeRightVertex G H x y a) (wedgeRightVertex G H x y y) =
-            num_edges (vertexWedge G H x y) (Sum.inl x) (Sum.inr ⟨a, ha⟩) := by
+            numEdges (vertexWedge G H x y) (Sum.inl x) (Sum.inr ⟨a, ha⟩) := by
               rw [num_edges_symmetric]
               simp [wedgeRightVertex, ha]
-        _ = num_edges H y a :=
+        _ = numEdges H y a :=
           num_edges_vertexWedge_marked_right G H x y ⟨a, ha⟩
-        _ = num_edges H a y := num_edges_symmetric H y a
+        _ = numEdges H a y := num_edges_symmetric H y a
     · rw [wedgeRightVertex_unmarked G H x y a ha,
         wedgeRightVertex_unmarked G H x y b hb]
       exact num_edges_vertexWedge_right G H x y ⟨a, ha⟩ ⟨b, hb⟩
@@ -547,7 +547,7 @@ the right factor (including those incident to the marked vertex). -/
 /-- Compatible firing scripts glue to the sum of their principal divisors. -/
 theorem prin_wedgeScript
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script G) (τ : firing_script H) (hxy : σ x = τ y) :
+    (σ : firingScript G) (τ : firingScript H) (hxy : σ x = τ y) :
     prin (vertexWedge G H x y) (wedgeScript G H x y σ τ hxy) =
       wedgeAddDivisor G H x y (prin G σ) (prin H τ) := by
   funext z
@@ -556,7 +556,7 @@ theorem prin_wedgeScript
       change
         (∑ w : Sum G.V { b : H.V // b ≠ y },
           (wedgeScript G H x y σ τ hxy w - σ a) *
-            (num_edges (vertexWedge G H x y) (Sum.inl a) w : ℤ)) =
+            (numEdges (vertexWedge G H x y) (Sum.inl a) w : ℤ)) =
           wedgeAddDivisor G H x y (prin G σ) (prin H τ) (Sum.inl a)
       rw [Fintype.sum_sum_type]
       simp only [wedgeScript_left, wedgeScript_right,
@@ -566,9 +566,9 @@ theorem prin_wedgeScript
         rw [hxy]
         simp only [if_pos]
         have hMarked :
-            (τ y - τ y) * (num_edges H y y : ℤ) = 0 := by simp
+            (τ y - τ y) * (numEdges H y y : ℤ) = 0 := by simp
         have hRight := sum_unmarked_eq_sum_of_marked_zero H y
-          (fun b => (τ b - τ y) * (num_edges H y b : ℤ)) hMarked
+          (fun b => (τ b - τ y) * (numEdges H y b : ℤ)) hMarked
         rw [hRight]
         rw [wedgeAddDivisor_left]
         simp only [prin, AddMonoidHom.coe_mk, ZeroHom.coe_mk, ↓reduceIte, add_left_inj]
@@ -580,7 +580,7 @@ theorem prin_wedgeScript
       change
         (∑ w : Sum G.V { c : H.V // c ≠ y },
           (wedgeScript G H x y σ τ hxy w - τ b.1) *
-            (num_edges (vertexWedge G H x y) (Sum.inr b) w : ℤ)) =
+            (numEdges (vertexWedge G H x y) (Sum.inr b) w : ℤ)) =
           wedgeAddDivisor G H x y (prin G σ) (prin H τ) (Sum.inr b)
       rw [Fintype.sum_sum_type]
       simp only [wedgeScript_left, wedgeScript_right,
@@ -588,8 +588,8 @@ theorem prin_wedgeScript
       simp_rw [num_edges_vertexWedge_left_right]
       have hLeft :
           (∑ a : G.V, (σ a - τ b.1) *
-            ((if a = x then num_edges H y b.1 else 0 : ℕ) : ℤ)) =
-            (τ y - τ b.1) * (num_edges H b.1 y : ℤ) := by
+            ((if a = x then numEdges H y b.1 else 0 : ℕ) : ℤ)) =
+            (τ y - τ b.1) * (numEdges H b.1 y : ℤ) := by
         simp_rw [Nat.cast_ite, mul_ite]
         simp_rw [Nat.cast_zero, mul_zero]
         rw [Finset.sum_ite_eq' Finset.univ x]
@@ -597,10 +597,10 @@ theorem prin_wedgeScript
         simp
       rw [hLeft]
       have hMarked :
-          (τ y - τ b.1) * (num_edges H b.1 y : ℤ) =
-            (τ y - τ b.1) * (num_edges H b.1 y : ℤ) := rfl
+          (τ y - τ b.1) * (numEdges H b.1 y : ℤ) =
+            (τ y - τ b.1) * (numEdges H b.1 y : ℤ) := rfl
       have hRight := sum_unmarked_add_marked H y
-        (fun c => (τ c - τ b.1) * (num_edges H b.1 c : ℤ))
+        (fun c => (τ c - τ b.1) * (numEdges H b.1 c : ℤ))
       rw [add_comm, hRight]
       rw [wedgeAddDivisor_right]
       rfl
@@ -612,19 +612,19 @@ theorem prin_wedgeScript
   simp [prin]
 
 /-- Add a constant to a firing script.  This changes no principal divisor. -/
-def shiftScript (G : CFGraph.{u}) (σ : firing_script G) (c : ℤ) :
-    firing_script G := fun v => σ v + c
+def shiftScript (G : CFGraph.{u}) (σ : firingScript G) (c : ℤ) :
+    firingScript G := fun v => σ v + c
 
 @[simp] theorem shiftScript_apply
-    (G : CFGraph.{u}) (σ : firing_script G) (c : ℤ) (v : G.V) :
+    (G : CFGraph.{u}) (σ : firingScript G) (c : ℤ) (v : G.V) :
     shiftScript G σ c v = σ v + c := rfl
 
 @[simp] theorem prin_shiftScript
-    (G : CFGraph.{u}) (σ : firing_script G) (c : ℤ) :
+    (G : CFGraph.{u}) (σ : firingScript G) (c : ℤ) :
     prin G (shiftScript G σ c) = prin G σ := by
   funext v
-  change (∑ u : G.V, ((σ u + c) - (σ v + c)) * (num_edges G v u : ℤ)) =
-    ∑ u : G.V, (σ u - σ v) * (num_edges G v u : ℤ)
+  change (∑ u : G.V, ((σ u + c) - (σ v + c)) * (numEdges G v u : ℤ)) =
+    ∑ u : G.V, (σ u - σ v) * (numEdges G v u : ℤ)
   apply Finset.sum_congr rfl
   intro u _hu
   ring
@@ -633,9 +633,9 @@ def shiftScript (G : CFGraph.{u}) (σ : firing_script G) (c : ℤ) :
 theorem linear_equiv_wedgeAddDivisor_of_prin
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D D' : CFDiv G) (E E' : CFDiv H)
-    (σ : firing_script G) (τ : firing_script H) (hxy : σ x = τ y)
+    (σ : firingScript G) (τ : firingScript H) (hxy : σ x = τ y)
     (hG : prin G σ = D' - D) (hH : prin H τ = E' - E) :
-    linear_equiv (vertexWedge G H x y)
+    linearEquiv (vertexWedge G H x y)
       (wedgeAddDivisor G H x y D E) (wedgeAddDivisor G H x y D' E') := by
   apply (principal_iff_eq_prin (vertexWedge G H x y)
     (wedgeAddDivisor G H x y D' E' - wedgeAddDivisor G H x y D E)).mpr
@@ -661,8 +661,8 @@ at the identified vertex. -/
 theorem linear_equiv_wedgeAddDivisor
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D D' : CFDiv G) (E E' : CFDiv H)
-    (hG : linear_equiv G D D') (hH : linear_equiv H E E') :
-    linear_equiv (vertexWedge G H x y)
+    (hG : linearEquiv G D D') (hH : linearEquiv H E E') :
+    linearEquiv (vertexWedge G H x y)
       (wedgeAddDivisor G H x y D E) (wedgeAddDivisor G H x y D' E') := by
   obtain ⟨σ, hσ⟩ := (principal_iff_eq_prin G (D' - D)).mp hG
   obtain ⟨τ, hτ⟩ := (principal_iff_eq_prin H (E' - E)).mp hH
@@ -678,7 +678,7 @@ winnable. -/
 theorem winnable_wedgeAddDivisor_of_prin
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D D' : CFDiv G) (E E' : CFDiv H)
-    (σ : firing_script G) (τ : firing_script H) (hxy : σ x = τ y)
+    (σ : firingScript G) (τ : firingScript H) (hxy : σ x = τ y)
     (hG : prin G σ = D' - D) (hH : prin H τ = E' - E)
     (hD' : effective D') (hE' : effective E') :
     winnable (vertexWedge G H x y) (wedgeAddDivisor G H x y D E) := by
@@ -715,15 +715,15 @@ theorem winnable_of_rank_ge_one
     (G : CFGraph.{u}) (D : CFDiv G) (hD : rank G D ≥ 1) : winnable G D := by
   classical
   let q : G.V := Classical.choice (inferInstance : Nonempty G.V)
-  have hSub : winnable G (D - one_chip (G := G) q) :=
+  have hSub : winnable G (D - oneChip (G := G) q) :=
     (rank_ge_one_iff_winnable_sub_one_chip G D).mp hD q
-  have hOne : effective (one_chip (G := G) q) := by
+  have hOne : effective (oneChip (G := G) q) := by
     intro v
     by_cases hv : v = q
-    · simp [one_chip, hv]
-    · simp [one_chip, hv]
+    · simp [oneChip, hv]
+    · simp [oneChip, hv]
   have hWin := winnable_add_effective_divisor G
-    (D - one_chip (G := G) q) (one_chip (G := G) q) hSub hOne
+    (D - oneChip (G := G) q) (oneChip (G := G) q) hSub hOne
   convert hWin using 1
   abel
 
@@ -738,19 +738,19 @@ theorem rank_vertexWedge_ge_one
   intro z
   cases z with
   | inl a =>
-      have hDa : winnable G (D - one_chip a) :=
+      have hDa : winnable G (D - oneChip a) :=
         (rank_ge_one_iff_winnable_sub_one_chip G D).mp hD a
       have hEw : winnable H E := winnable_of_rank_ge_one H E hE
-      have hWin := winnable_wedgeAddDivisor G H x y (D - one_chip a) E hDa hEw
+      have hWin := winnable_wedgeAddDivisor G H x y (D - oneChip a) E hDa hEw
       have hEq :
-          wedgeAddDivisor G H x y D E - one_chip (Sum.inl a) =
-            wedgeAddDivisor G H x y (D - one_chip a) E := by
+          wedgeAddDivisor G H x y D E - oneChip (Sum.inl a) =
+            wedgeAddDivisor G H x y (D - oneChip a) E := by
         funext w
         cases w with
         | inl v =>
             change wedgeAddDivisor G H x y D E (Sum.inl v) -
-              one_chip (G := vertexWedge G H x y) (Sum.inl a) (Sum.inl v) =
-              wedgeAddDivisor G H x y (D - one_chip a) E (Sum.inl v)
+              oneChip (G := vertexWedge G H x y) (Sum.inl a) (Sum.inl v) =
+              wedgeAddDivisor G H x y (D - oneChip a) E (Sum.inl v)
             rw [wedgeAddDivisor_left, wedgeAddDivisor_left]
             change (D v + if v = x then E y else 0) -
               (if (Sum.inl v : Sum G.V { z : H.V // z ≠ y }) = Sum.inl a then 1 else 0) =
@@ -759,26 +759,26 @@ theorem rank_vertexWedge_ge_one
             ring
         | inr b =>
             change wedgeAddDivisor G H x y D E (Sum.inr b) -
-              one_chip (G := vertexWedge G H x y) (Sum.inl a) (Sum.inr b) =
-              wedgeAddDivisor G H x y (D - one_chip a) E (Sum.inr b)
+              oneChip (G := vertexWedge G H x y) (Sum.inl a) (Sum.inr b) =
+              wedgeAddDivisor G H x y (D - oneChip a) E (Sum.inr b)
             rw [wedgeAddDivisor_right, wedgeAddDivisor_right]
-            simp [one_chip]
+            simp [oneChip]
       rw [hEq]
       exact hWin
   | inr b =>
-      have hEb : winnable H (E - one_chip b.1) :=
+      have hEb : winnable H (E - oneChip b.1) :=
         (rank_ge_one_iff_winnable_sub_one_chip H E).mp hE b.1
       have hDw : winnable G D := winnable_of_rank_ge_one G D hD
-      have hWin := winnable_wedgeAddDivisor G H x y D (E - one_chip b.1) hDw hEb
+      have hWin := winnable_wedgeAddDivisor G H x y D (E - oneChip b.1) hDw hEb
       have hEq :
-          wedgeAddDivisor G H x y D E - one_chip (Sum.inr b) =
-            wedgeAddDivisor G H x y D (E - one_chip b.1) := by
+          wedgeAddDivisor G H x y D E - oneChip (Sum.inr b) =
+            wedgeAddDivisor G H x y D (E - oneChip b.1) := by
         funext w
         cases w with
         | inl v =>
             change wedgeAddDivisor G H x y D E (Sum.inl v) -
-              one_chip (G := vertexWedge G H x y) (Sum.inr b) (Sum.inl v) =
-              wedgeAddDivisor G H x y D (E - one_chip b.1) (Sum.inl v)
+              oneChip (G := vertexWedge G H x y) (Sum.inr b) (Sum.inl v) =
+              wedgeAddDivisor G H x y D (E - oneChip b.1) (Sum.inl v)
             rw [wedgeAddDivisor_left, wedgeAddDivisor_left]
             change (D v + if v = x then E y else 0) -
               (if (Sum.inl v : Sum G.V { z : H.V // z ≠ y }) = Sum.inr b then 1 else 0) =
@@ -786,8 +786,8 @@ theorem rank_vertexWedge_ge_one
             simp [Ne.symm b.2]
         | inr q =>
             change wedgeAddDivisor G H x y D E (Sum.inr q) -
-              one_chip (G := vertexWedge G H x y) (Sum.inr b) (Sum.inr q) =
-              wedgeAddDivisor G H x y D (E - one_chip b.1) (Sum.inr q)
+              oneChip (G := vertexWedge G H x y) (Sum.inr b) (Sum.inr q) =
+              wedgeAddDivisor G H x y D (E - oneChip b.1) (Sum.inr q)
             rw [wedgeAddDivisor_right, wedgeAddDivisor_right]
             change E q.1 -
               (if (Sum.inr q : Sum G.V { z : H.V // z ≠ y }) = Sum.inr b then 1 else 0) =
@@ -812,34 +812,34 @@ theorem BNExists_vertexWedge_rank_one
 
 /-- Restrict a wedge firing script to the left factor. -/
 def restrictLeftWedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
-    (x : G.V) (y : H.V) (σ : firing_script (vertexWedge G H x y)) :
-    firing_script G := fun a => σ (Sum.inl a)
+    (x : G.V) (y : H.V) (σ : firingScript (vertexWedge G H x y)) :
+    firingScript G := fun a => σ (Sum.inl a)
 
 /-- Restrict a wedge firing script to the right factor, reading the common
 vertex at `y`. -/
 def restrictRightWedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
-    (x : G.V) (y : H.V) (σ : firing_script (vertexWedge G H x y)) :
-    firing_script H := fun b => σ (wedgeRightVertex G H x y b)
+    (x : G.V) (y : H.V) (σ : firingScript (vertexWedge G H x y)) :
+    firingScript H := fun b => σ (wedgeRightVertex G H x y b)
 
 @[simp] theorem restrictLeftWedgeScript_apply
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (vertexWedge G H x y)) (a : G.V) :
+    (σ : firingScript (vertexWedge G H x y)) (a : G.V) :
     restrictLeftWedgeScript G H x y σ a = σ (Sum.inl a) := rfl
 
 @[simp] theorem restrictRightWedgeScript_apply
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (vertexWedge G H x y)) (b : H.V) :
+    (σ : firingScript (vertexWedge G H x y)) (b : H.V) :
     restrictRightWedgeScript G H x y σ b = σ (wedgeRightVertex G H x y b) := rfl
 
 @[simp] theorem restrictWedgeScripts_agree
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (vertexWedge G H x y)) :
+    (σ : firingScript (vertexWedge G H x y)) :
     restrictLeftWedgeScript G H x y σ x = restrictRightWedgeScript G H x y σ y := by
   simp [restrictLeftWedgeScript, restrictRightWedgeScript]
 
 @[simp] theorem wedgeScript_restrictWedgeScripts
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (vertexWedge G H x y)) :
+    (σ : firingScript (vertexWedge G H x y)) :
     wedgeScript G H x y (restrictLeftWedgeScript G H x y σ)
       (restrictRightWedgeScript G H x y σ) (restrictWedgeScripts_agree G H x y σ) = σ := by
   funext z
@@ -851,18 +851,18 @@ def restrictRightWedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
 
 /-- Add a prescribed integral number of chips at a vertex. -/
 def chipShift (G : CFGraph.{u}) (D : CFDiv G) (v : G.V) (t : ℤ) : CFDiv G :=
-  D + t • one_chip v
+  D + t • oneChip v
 
 @[simp] theorem chipShift_apply
     (G : CFGraph.{u}) (D : CFDiv G) (v w : G.V) (t : ℤ) :
     chipShift G D v t w = D w + if w = v then t else 0 := by
-  simp [chipShift, one_chip]
+  simp [chipShift, oneChip]
 
 /-- Principal shifts of a divisor remain linearly equivalent after adding the
 same chip shift to both representatives. -/
 theorem linear_equiv_chipShift_of_prin
-    (G : CFGraph.{u}) (D : CFDiv G) (σ : firing_script G) (v : G.V) (t : ℤ) :
-    linear_equiv G (chipShift G D v t) (chipShift G (D + prin G σ) v t) := by
+    (G : CFGraph.{u}) (D : CFDiv G) (σ : firingScript G) (v : G.V) (t : ℤ) :
+    linearEquiv G (chipShift G D v t) (chipShift G (D + prin G σ) v t) := by
   apply (principal_iff_eq_prin G
     (chipShift G (D + prin G σ) v t - chipShift G D v t)).mpr
   refine ⟨σ, ?_⟩
@@ -903,8 +903,8 @@ theorem winnable_vertexWedge_iff_exists_chipShift
     obtain ⟨σ, hσ⟩ :=
       (principal_iff_eq_prin (vertexWedge G H x y)
         (F - wedgeAddDivisor G H x y D E)).mp hFEquiv
-    let σG : firing_script G := restrictLeftWedgeScript G H x y σ
-    let σH : firing_script H := restrictRightWedgeScript G H x y σ
+    let σG : firingScript G := restrictLeftWedgeScript G H x y σ
+    let σH : firingScript H := restrictRightWedgeScript G H x y σ
     let DG : CFDiv G := D + prin G σG
     let EH : CFDiv H := E + prin H σH
     have hPrin : prin (vertexWedge G H x y) σ =
@@ -966,8 +966,8 @@ theorem winnable_vertexWedge_iff_exists_chipShift
 /-- Wedging two connected graphs at a vertex produces a connected graph. -/
 theorem graph_connected_vertexWedge
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (hG : graph_connected G) (hH : graph_connected H) :
-    graph_connected (vertexWedge G H x y) := by
+    (hG : graphConnected G) (hH : graphConnected H) :
+    graphConnected (vertexWedge G H x y) := by
   intro S hS
   change Finset (Sum G.V { b : H.V // b ≠ y }) at S
   let SL : Finset G.V := Finset.univ.filter (fun a => Sum.inl a ∈ S)
@@ -976,7 +976,7 @@ theorem graph_connected_vertexWedge
   have hLeftCross : ∀ a b : G.V,
       Sum.inl a ∈ S → Sum.inl b ∉ S →
         ∃ z ∈ S, ∃ w ∉ S,
-          num_edges (vertexWedge G H x y) z w > 0 := by
+          numEdges (vertexWedge G H x y) z w > 0 := by
     intro a b ha hb
     obtain ⟨p, hp, q, hq, hpq⟩ := hG SL
       ⟨a, b, by simpa [SL] using ha, by simpa [SL] using hb⟩
@@ -986,7 +986,7 @@ theorem graph_connected_vertexWedge
   have hRightCross : ∀ a b : H.V,
       wedgeRightVertex G H x y a ∈ S → wedgeRightVertex G H x y b ∉ S →
         ∃ z ∈ S, ∃ w ∉ S,
-          num_edges (vertexWedge G H x y) z w > 0 := by
+          numEdges (vertexWedge G H x y) z w > 0 := by
     intro a b ha hb
     obtain ⟨p, hp, q, hq, hpq⟩ := hH SR
       ⟨a, b, by simpa [SR] using ha, by simpa [SR] using hb⟩

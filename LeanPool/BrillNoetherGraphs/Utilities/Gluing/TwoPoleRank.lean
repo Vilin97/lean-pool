@@ -32,50 +32,50 @@ theorem sumDivisor_sub_zsmul_one_chip_inl
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
     (D : CFDiv A) (E : CFDiv B) (a : A.V) (n : ℤ) :
     sumDivisor A B p q D E -
-        n • one_chip (Sum.inl a : (join A B p q).V) =
-      sumDivisor A B p q (D - n • one_chip a) E := by
+        n • oneChip (Sum.inl a : (join A B p q).V) =
+      sumDivisor A B p q (D - n • oneChip a) E := by
   funext z
   cases z with
   | inl c =>
       by_cases hc : c = a
       · subst c
-        simp [one_chip]
+        simp [oneChip]
       · have hSum :
             (Sum.inl c : (join A B p q).V) ≠ Sum.inl a :=
           fun h => hc (Sum.inl.inj h)
-        simp [one_chip, hc, hSum]
-  | inr b => simp [one_chip]
+        simp [oneChip, hc, hSum]
+  | inr b => simp [oneChip]
 /-- Subtracting a pile at a right vertex stays entirely in the right factor. -/
 theorem sumDivisor_sub_zsmul_one_chip_inr
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
     (D : CFDiv A) (E : CFDiv B) (b : B.V) (n : ℤ) :
     sumDivisor A B p q D E -
-        n • one_chip (Sum.inr b : (join A B p q).V) =
-      sumDivisor A B p q D (E - n • one_chip b) := by
+        n • oneChip (Sum.inr b : (join A B p q).V) =
+      sumDivisor A B p q D (E - n • oneChip b) := by
   funext z
   cases z with
-  | inl a => simp [one_chip]
+  | inl a => simp [oneChip]
   | inr c =>
       by_cases hc : c = b
       · subst c
-        simp [one_chip]
+        simp [oneChip]
       · have hSum :
             (Sum.inr c : (join A B p q).V) ≠ Sum.inr b :=
           fun h => hc (Sum.inr.inj h)
-        simp [one_chip, hc, hSum]
+        simp [oneChip, hc, hSum]
 
 theorem sumDivisor_sub_one_chip_inl
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
     (D : CFDiv A) (E : CFDiv B) (a : A.V) :
-    sumDivisor A B p q D E - one_chip (Sum.inl a) =
-      sumDivisor A B p q (D - one_chip a) E := by
+    sumDivisor A B p q D E - oneChip (Sum.inl a) =
+      sumDivisor A B p q (D - oneChip a) E := by
   simpa using sumDivisor_sub_zsmul_one_chip_inl A B p q D E a 1
 
 theorem sumDivisor_sub_one_chip_inr
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
     (D : CFDiv A) (E : CFDiv B) (b : B.V) :
-    sumDivisor A B p q D E - one_chip (Sum.inr b) =
-      sumDivisor A B p q D (E - one_chip b) := by
+    sumDivisor A B p q D E - oneChip (Sum.inr b) =
+      sumDivisor A B p q D (E - oneChip b) := by
   simpa using sumDivisor_sub_zsmul_one_chip_inr A B p q D E b 1
 
 /-- The exact factor-response data for rank one of a factor sum.  The first
@@ -85,12 +85,12 @@ def HasRankOneResponseCover
     {A : CFGraph.{u}} {B : CFGraph.{v}}
     (p : TwoPole A) (q : TwoPole B) (D : CFDiv A) (E : CFDiv B) : Prop :=
   (∀ a : A.V, ∃ c₁ c₂ s t : ℤ,
-      IsDebitResponse p (D - one_chip a) c₁ c₂ s ∧
+      IsDebitResponse p (D - oneChip a) c₁ c₂ s ∧
       IsCreditResponse q E c₁ c₂ t ∧
       s - t = c₁ - c₂) ∧
   (∀ b : B.V, ∃ c₁ c₂ s t : ℤ,
       IsDebitResponse p D c₁ c₂ s ∧
-      IsCreditResponse q (E - one_chip b) c₁ c₂ t ∧
+      IsCreditResponse q (E - oneChip b) c₁ c₂ t ∧
       s - t = c₁ - c₂)
 
 /-- **Exact rank-one response criterion.** -/
@@ -107,22 +107,22 @@ theorem rank_sumDivisor_ge_one_iff_responseCover
       have hWin := hRank (Sum.inl a)
       rw [sumDivisor_sub_one_chip_inl] at hWin
       exact (winnable_sumDivisor_iff_exists_responses
-        A B p q (D - one_chip a) E).mp hWin
+        A B p q (D - oneChip a) E).mp hWin
     · intro b
       have hWin := hRank (Sum.inr b)
       rw [sumDivisor_sub_one_chip_inr] at hWin
       exact (winnable_sumDivisor_iff_exists_responses
-        A B p q D (E - one_chip b)).mp hWin
+        A B p q D (E - oneChip b)).mp hWin
   · rintro ⟨hLeft, hRight⟩ z
     cases z with
     | inl a =>
         rw [sumDivisor_sub_one_chip_inl]
         exact (winnable_sumDivisor_iff_exists_responses
-          A B p q (D - one_chip a) E).mpr (hLeft a)
+          A B p q (D - oneChip a) E).mpr (hLeft a)
     | inr b =>
         rw [sumDivisor_sub_one_chip_inr]
         exact (winnable_sumDivisor_iff_exists_responses
-          A B p q D (E - one_chip b)).mpr (hRight b)
+          A B p q D (E - oneChip b)).mpr (hRight b)
 
 /-- The same exact rank-one criterion at an arbitrary seam phase. -/
 theorem rank_phase_sumDivisor_ge_one_iff_responseCover
@@ -130,7 +130,7 @@ theorem rank_phase_sumDivisor_ge_one_iff_responseCover
     (D : CFDiv A) (E : CFDiv B) (n : ℤ) :
     rank (join A B p q) (phase A B p q (sumDivisor A B p q D E) n) ≥ 1 ↔
       HasRankOneResponseCover p q
-        (D + n • one_chip p.second) (E - n • one_chip q.second) := by
+        (D + n • oneChip p.second) (E - n • oneChip q.second) := by
   rw [phase_sumDivisor]
   exact rank_sumDivisor_ge_one_iff_responseCover A B p q _ _
 
@@ -140,14 +140,14 @@ theorem winnable_sumDivisor_sub_two_inl_iff_responses
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
     (D : CFDiv A) (E : CFDiv B) (a : A.V) :
     winnable (join A B p q)
-        (sumDivisor A B p q D E - (2 : ℤ) • one_chip (Sum.inl a)) ↔
+        (sumDivisor A B p q D E - (2 : ℤ) • oneChip (Sum.inl a)) ↔
       ∃ c₁ c₂ s t : ℤ,
-        IsDebitResponse p (D - (2 : ℤ) • one_chip a) c₁ c₂ s ∧
+        IsDebitResponse p (D - (2 : ℤ) • oneChip a) c₁ c₂ s ∧
         IsCreditResponse q E c₁ c₂ t ∧
         s - t = c₁ - c₂ := by
   rw [sumDivisor_sub_zsmul_one_chip_inl]
   exact winnable_sumDivisor_iff_exists_responses
-    A B p q (D - (2 : ℤ) • one_chip a) E
+    A B p q (D - (2 : ℤ) • oneChip a) E
 
 /-- A doubled right target is winnable exactly when its two factor residuals
 have a compatible response. -/
@@ -155,14 +155,14 @@ theorem winnable_sumDivisor_sub_two_inr_iff_responses
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
     (D : CFDiv A) (E : CFDiv B) (b : B.V) :
     winnable (join A B p q)
-        (sumDivisor A B p q D E - (2 : ℤ) • one_chip (Sum.inr b)) ↔
+        (sumDivisor A B p q D E - (2 : ℤ) • oneChip (Sum.inr b)) ↔
       ∃ c₁ c₂ s t : ℤ,
         IsDebitResponse p D c₁ c₂ s ∧
-        IsCreditResponse q (E - (2 : ℤ) • one_chip b) c₁ c₂ t ∧
+        IsCreditResponse q (E - (2 : ℤ) • oneChip b) c₁ c₂ t ∧
         s - t = c₁ - c₂ := by
   rw [sumDivisor_sub_zsmul_one_chip_inr]
   exact winnable_sumDivisor_iff_exists_responses
-    A B p q D (E - (2 : ℤ) • one_chip b)
+    A B p q D (E - (2 : ℤ) • oneChip b)
 
 /-- The doubled-left test at an arbitrary seam phase. -/
 theorem winnable_phase_sumDivisor_sub_two_inl_iff_responses
@@ -170,12 +170,12 @@ theorem winnable_phase_sumDivisor_sub_two_inl_iff_responses
     (D : CFDiv A) (E : CFDiv B) (n : ℤ) (a : A.V) :
     winnable (join A B p q)
         (phase A B p q (sumDivisor A B p q D E) n -
-          (2 : ℤ) • one_chip (Sum.inl a)) ↔
+          (2 : ℤ) • oneChip (Sum.inl a)) ↔
       ∃ c₁ c₂ s t : ℤ,
         IsDebitResponse p
-            (D + n • one_chip p.second - (2 : ℤ) • one_chip a)
+            (D + n • oneChip p.second - (2 : ℤ) • oneChip a)
             c₁ c₂ s ∧
-        IsCreditResponse q (E - n • one_chip q.second) c₁ c₂ t ∧
+        IsCreditResponse q (E - n • oneChip q.second) c₁ c₂ t ∧
         s - t = c₁ - c₂ := by
   rw [phase_sumDivisor, winnable_sumDivisor_sub_two_inl_iff_responses]
 
@@ -185,11 +185,11 @@ theorem winnable_phase_sumDivisor_sub_two_inr_iff_responses
     (D : CFDiv A) (E : CFDiv B) (n : ℤ) (b : B.V) :
     winnable (join A B p q)
         (phase A B p q (sumDivisor A B p q D E) n -
-          (2 : ℤ) • one_chip (Sum.inr b)) ↔
+          (2 : ℤ) • oneChip (Sum.inr b)) ↔
       ∃ c₁ c₂ s t : ℤ,
-        IsDebitResponse p (D + n • one_chip p.second) c₁ c₂ s ∧
+        IsDebitResponse p (D + n • oneChip p.second) c₁ c₂ s ∧
         IsCreditResponse q
-            (E - n • one_chip q.second - (2 : ℤ) • one_chip b)
+            (E - n • oneChip q.second - (2 : ℤ) • oneChip b)
             c₁ c₂ t ∧
         s - t = c₁ - c₂ := by
   rw [phase_sumDivisor, winnable_sumDivisor_sub_two_inr_iff_responses]
@@ -200,9 +200,9 @@ the phase obligation that the one-pole Riemann--Roch argument does not see. -/
 theorem rank_canonicalSum_ge_one_iff_responseCover
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B) :
     rank (join A B p q) (canonicalSum A B p q) ≥ 1 ↔
-      HasRankOneResponseCover p q (canonical_divisor A) (canonical_divisor B) := by
+      HasRankOneResponseCover p q (canonicalDivisor A) (canonicalDivisor B) := by
   exact rank_sumDivisor_ge_one_iff_responseCover
-    A B p q (canonical_divisor A) (canonical_divisor B)
+    A B p q (canonicalDivisor A) (canonicalDivisor B)
 
 end TwoPole
 end Utilities

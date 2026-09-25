@@ -17,7 +17,7 @@ is a cut certificate on the ordered core slots, and
 `SubdivisionGraph.Spec.graph_connected_of_coreConnected` proves that every
 positive subdivision of such a core is connected.
 
-The proof uses only the cut definition of `graph_connected`.  If no subdivided
+The proof uses only the cut definition of `graphConnected`.  If no subdivided
 unit edge crosses a cut, membership is constant along each subdivided path.
 It is therefore constant on the core by core connectedness, and then constant
 on every interior vertex as well.
@@ -63,7 +63,7 @@ variable {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
 subdivided core edge. -/
 theorem coreEndpoints_mem_iff_of_noCrossing
     (A : Finset spec.graph.V)
-    (hNoCrossing : ∀ x ∈ A, ∀ y ∉ A, num_edges spec.graph x y = 0)
+    (hNoCrossing : ∀ x ∈ A, ∀ y ∉ A, numEdges spec.graph x y = 0)
     (edge : Fin p) :
     spec.coreVertex (spec.core.tail edge) ∈ A ↔
       spec.coreVertex (spec.core.head edge) ∈ A := by
@@ -112,7 +112,7 @@ theorem coreEndpoints_mem_iff_of_noCrossing
 as the tail of its core edge. -/
 theorem coreTail_mem_iff_interior_mem_of_noCrossing
     (A : Finset spec.graph.V)
-    (hNoCrossing : ∀ x ∈ A, ∀ y ∉ A, num_edges spec.graph x y = 0)
+    (hNoCrossing : ∀ x ∈ A, ∀ y ∉ A, numEdges spec.graph x y = 0)
     (edge : Fin p) (offset : Fin (spec.length edge - 1)) :
     spec.coreVertex (spec.core.tail edge) ∈ A ↔
       spec.interiorVertex edge offset ∈ A := by
@@ -161,12 +161,12 @@ theorem coreTail_mem_iff_interior_mem_of_noCrossing
 /-- Positive subdivision preserves connectedness of the ordered core. -/
 theorem graph_connected_of_coreConnected
     (hCoreConnected : spec.core.Connected) :
-    graph_connected spec.graph := by
+    graphConnected spec.graph := by
   intro A hSplit
   by_contra hCrossing
   push Not at hCrossing
   have hNoCrossing :
-      ∀ x ∈ A, ∀ y ∉ A, num_edges spec.graph x y = 0 := by
+      ∀ x ∈ A, ∀ y ∉ A, numEdges spec.graph x y = 0 := by
     intro x hx y hy
     have hNotPositive := hCrossing x hx y hy
     omega

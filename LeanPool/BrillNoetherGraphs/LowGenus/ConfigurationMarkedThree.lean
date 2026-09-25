@@ -363,16 +363,16 @@ theorem markChipWeight_nonneg (mark : Fin 12 → ℕ) (e : Fin 12) (v : Fin 8) :
   split_ifs <;> norm_num
 
 theorem markChip_classSum_eq (mark : Fin 12 → ℕ) (e : Fin 12) (r : Fin 8) :
-    one_chip (G := d.graph) (d.pathAt e (mark e)) (d.coreVertex r) =
+    oneChip (G := d.graph) (d.pathAt e (mark e)) (d.coreVertex r) =
       ∑ v ∈ Finset.univ.filter (fun v : Fin 8 => d.rep v = d.rep r),
         markChipWeight d mark e v := by
   classical
   have hcore (u : Fin 8) :
-      one_chip (G := d.graph) (d.coreVertex u) (d.coreVertex r) =
+      oneChip (G := d.graph) (d.coreVertex u) (d.coreVertex r) =
         ∑ v ∈ Finset.univ.filter (fun v : Fin 8 => d.rep v = d.rep r),
           (if v = u then (1 : ℤ) else 0) := by
     rw [Finset.sum_ite_eq' (Finset.univ.filter (fun v : Fin 8 => d.rep v = d.rep r))]
-    simp only [one_chip, Finset.mem_filter, Finset.mem_univ, true_and]
+    simp only [oneChip, Finset.mem_filter, Finset.mem_univ, true_and]
     by_cases h : d.rep u = d.rep r
     · rw [if_pos h, if_pos ((d.coreVertex_eq_iff r u).mpr h.symm)]
     · rw [if_neg h, if_neg (fun hx => h ((d.coreVertex_eq_iff r u).mp hx).symm)]
@@ -389,7 +389,7 @@ theorem markChip_classSum_eq (mark : Fin 12 → ℕ) (e : Fin 12) (r : Fin 8) :
         intro v
         simp [markChipWeight, hZero, hLe]
       simp only [hAll, Finset.sum_const_zero]
-      simp [one_chip, DegSpec.coreVertex, DegSpec.interiorVertex]
+      simp [oneChip, DegSpec.coreVertex, DegSpec.interiorVertex]
 
 /-! ## Redistributing chips inside a contracted class
 

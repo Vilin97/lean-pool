@@ -87,10 +87,10 @@ theorem reaches_coreVertex_of_induced_script (d : DegSpec n p)
     (weight : Fin n → ℤ) (hWeight : ∀ v, 0 ≤ weight v)
     {A : Finset d.Vertex} (hA : A.Nonempty)
     {v : Fin n} (hv : d.coreVertex v ∈ A)
-    {t : firing_script (inducedSubgraph d.graph A hA)} (ht : SupportInterior t)
+    {t : firingScript (inducedSubgraph d.graph A hA)} (ht : SupportInterior t)
     (hEff : effective
       ((fun x : (inducedSubgraph d.graph A hA).V => d.coreClassDivisor weight x.val)
-        - one_chip (⟨d.coreVertex v, hv⟩ : (inducedSubgraph d.graph A hA).V)
+        - oneChip (⟨d.coreVertex v, hv⟩ : (inducedSubgraph d.graph A hA).V)
         + prin (inducedSubgraph d.graph A hA) t)) :
     Reaches d.graph (d.coreClassDivisor weight) (d.coreVertex v) :=
   reaches_of_induced_script hA

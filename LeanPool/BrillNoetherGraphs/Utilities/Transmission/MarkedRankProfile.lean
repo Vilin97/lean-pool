@@ -23,14 +23,14 @@ universe u v
 /-- A function which records every integral one-point twist rank of `D`. -/
 def PointedRankProfile (G : CFGraph.{u}) (D : CFDiv G) (q : G.V)
     (F : ℤ → ℤ) : Prop :=
-  ∀ t : ℤ, rank G (D + t • one_chip q) = F t
+  ∀ t : ℤ, rank G (D + t • oneChip q) = F t
 
 /-- Subtractive form of a realized pointed rank profile. -/
 theorem rank_sub_zsmul_one_chip_eq_of_pointedRankProfile
     (G : CFGraph.{u}) (D : CFDiv G) (q : G.V) (F : ℤ → ℤ)
     (hF : PointedRankProfile G D q F) (t : ℤ) :
-    rank G (D - t • one_chip q) = F (-t) := by
-  have hDivisor : D - t • one_chip q = D + (-t) • one_chip q := by
+    rank G (D - t • oneChip q) = F (-t) := by
+  have hDivisor : D - t • oneChip q = D + (-t) • oneChip q := by
     funext z
     simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
     ring
@@ -43,16 +43,16 @@ theorem vertexWedge_rank_eq_iff_profile_inequalities_and_attained
     (D : CFDiv G) (E : CFDiv H) (r : ℤ) :
     rank (vertexWedge G H x y) (wedgeAddDivisor G H x y D E) = r ↔
       (∀ ell : ℤ,
-        rank G (D - (ell + 1) • one_chip x) +
-            rank H (E + ell • one_chip y) + 1 ≥ r) ∧
+        rank G (D - (ell + 1) • oneChip x) +
+            rank H (E + ell • oneChip y) + 1 ≥ r) ∧
       ∃ ell : ℤ,
-        rank G (D - (ell + 1) • one_chip x) +
-            rank H (E + ell • one_chip y) + 1 = r := by
+        rank G (D - (ell + 1) • oneChip x) +
+            rank H (E + ell • oneChip y) + 1 = r := by
   constructor
   · intro hRank
     have hLower : ∀ ell : ℤ,
-        rank G (D - (ell + 1) • one_chip x) +
-            rank H (E + ell • one_chip y) + 1 ≥ r :=
+        rank G (D - (ell + 1) • oneChip x) +
+            rank H (E + ell • oneChip y) + 1 ≥ r :=
       (vertexWedge_rank_ge_iff_profile_inequalities_all_int
         G H x y D E r).mp (by omega)
     refine ⟨hLower, ?_⟩
@@ -60,8 +60,8 @@ theorem vertexWedge_rank_eq_iff_profile_inequalities_and_attained
         (wedgeAddDivisor G H x y D E) ≥ r + 1 := by
       omega
     have hNotAll : ¬ ∀ ell : ℤ,
-        rank G (D - (ell + 1) • one_chip x) +
-            rank H (E + ell • one_chip y) + 1 ≥ r + 1 := by
+        rank G (D - (ell + 1) • oneChip x) +
+            rank H (E + ell • oneChip y) + 1 ≥ r + 1 := by
       intro hAll
       exact hNotNext
         ((vertexWedge_rank_ge_iff_profile_inequalities_all_int
@@ -130,8 +130,8 @@ def WedgeSameLeftTransmissionProfileWithRightProfile
   deg D + deg E = (genus G : ℤ) + (genus H : ℤ) + tau.χ ∧
     ∀ a b ell : ℤ,
       rank G
-          (D + a • one_chip p - b • one_chip q -
-            (ell + 1) • one_chip x) +
+          (D + a • oneChip p - b • oneChip q -
+            (ell + 1) • oneChip x) +
         Q ell + 1 ≥ tau.s (a + 1) b - 1
 
 /-- A realized right-factor profile rewrites the exact same-left transmission
@@ -167,7 +167,7 @@ def WedgeSameRightTransmissionProfileWithLeftProfile
     ∀ a b ell : ℤ,
       F (-(ell + 1)) +
         rank H
-          (E + a • one_chip p - b • one_chip q + ell • one_chip y) + 1 ≥
+          (E + a • oneChip p - b • oneChip q + ell • oneChip y) + 1 ≥
       tau.s (a + 1) b - 1
 
 /-- A realized left-factor profile rewrites the exact same-right transmission

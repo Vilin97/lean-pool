@@ -27,25 +27,25 @@ section Generic
 /-- On a connected genus-one graph every positive-degree divisor has the
 Riemann--Roch rank `deg D - 1`. -/
 theorem genusOne_rank_eq_degree_sub_one
-    {G : CFGraph} (hG : _root_.graph_connected G) (hGenus : genus G = 1)
+    {G : CFGraph} (hG : _root_.graphConnected G) (hGenus : genus G = 1)
     (D : CFDiv G) (hDegree : 0 < deg D) :
     rank G D = deg D - 1 := by
-  have hDualDegree : deg (canonical_divisor G - D) < 0 := by
+  have hDualDegree : deg (canonicalDivisor G - D) < 0 := by
     rw [deg.map_sub, degree_of_canonical_divisor, hGenus]
     omega
   have hDualRank := rank_neg_one_of_deg_neg G
-    (canonical_divisor G - D) hDualDegree
+    (canonicalDivisor G - D) hDualDegree
   have hRR := riemann_roch_for_graphs hG D
   rw [hDualRank, hGenus] at hRR
   omega
 
 private theorem mark_difference_principal_of_two_residuals
     {G : CFGraph} {D U V : CFDiv G}
-    (hU : linear_equiv G (D - U) 0)
-    (hV : linear_equiv G (D - V) 0) :
-    linear_equiv G (U - V) 0 := by
-  unfold linear_equiv at hU hV ⊢
-  have hSub := AddSubgroup.sub_mem (principal_divisors G) hV hU
+    (hU : linearEquiv G (D - U) 0)
+    (hV : linearEquiv G (D - V) 0) :
+    linearEquiv G (U - V) 0 := by
+  unfold linearEquiv at hU hV ⊢
+  have hSub := AddSubgroup.sub_mem (principalDivisors G) hV hU
   convert hSub using 1
   abel_nf
 
@@ -53,29 +53,29 @@ private theorem mark_difference_principal_of_two_residuals
 divisor submodular.  This is the factor-level submodularity input for the
 opposite-side vertex-wedge branch of the genus-two classification. -/
 theorem allSubmodular_of_connected_genus_one_distinct_classes
-    {G : CFGraph} (hG : _root_.graph_connected G) (hGenus : genus G = 1)
+    {G : CFGraph} (hG : _root_.graphConnected G) (hGenus : genus G = 1)
     (u v : G.V)
-    (hMarks : ¬ linear_equiv G (one_chip u - one_chip v) 0) :
+    (hMarks : ¬ linearEquiv G (oneChip u - oneChip v) 0) :
     AllSubmodular (mark G u v) := by
   apply allSubmodular_mark_of_rankDelta_nonneg
   intro D
   let d := deg D
-  have hDegU : deg (D - one_chip u) = d - 1 := by
+  have hDegU : deg (D - oneChip u) = d - 1 := by
     dsimp [d]
     rw [deg.map_sub, deg_one_chip]
-  have hDegV : deg (D - one_chip v) = d - 1 := by
+  have hDegV : deg (D - oneChip v) = d - 1 := by
     dsimp [d]
     rw [deg.map_sub, deg_one_chip]
-  have hDegUV : deg (D - one_chip u - one_chip v) = d - 2 := by
+  have hDegUV : deg (D - oneChip u - oneChip v) = d - 2 := by
     dsimp [d]
     rw [deg.map_sub, deg.map_sub, deg_one_chip, deg_one_chip]
     omega
   by_cases hdNeg : d < 0
   · have hD := rank_neg_one_of_deg_neg G D (by simpa [d] using hdNeg)
-    have hU := rank_neg_one_of_deg_neg G (D - one_chip u) (by omega)
-    have hV := rank_neg_one_of_deg_neg G (D - one_chip v) (by omega)
+    have hU := rank_neg_one_of_deg_neg G (D - oneChip u) (by omega)
+    have hV := rank_neg_one_of_deg_neg G (D - oneChip v) (by omega)
     have hUV := rank_neg_one_of_deg_neg G
-      (D - one_chip u - one_chip v) (by omega)
+      (D - oneChip u - oneChip v) (by omega)
     unfold rankDelta mark
     rw [hD, hU, hV, hUV]
     norm_num
@@ -90,10 +90,10 @@ theorem allSubmodular_of_connected_genus_one_distinct_classes
           omega
         · right
           omega
-      have hU := rank_neg_one_of_deg_neg G (D - one_chip u) (by omega)
-      have hV := rank_neg_one_of_deg_neg G (D - one_chip v) (by omega)
+      have hU := rank_neg_one_of_deg_neg G (D - oneChip u) (by omega)
+      have hV := rank_neg_one_of_deg_neg G (D - oneChip v) (by omega)
       have hUV := rank_neg_one_of_deg_neg G
-        (D - one_chip u - one_chip v) (by omega)
+        (D - oneChip u - oneChip v) (by omega)
       unfold rankDelta mark
       rcases hDich with hD | hD <;> rw [hD, hU, hV, hUV] <;> norm_num
     · by_cases hdOne : d = 1
@@ -102,32 +102,32 @@ theorem allSubmodular_of_connected_genus_one_distinct_classes
           rw [hD]
           dsimp [d] at hdOne
           omega
-        have hDegUZero : deg (D - one_chip u) = 0 := by omega
-        have hDegVZero : deg (D - one_chip v) = 0 := by omega
-        have hUDich : rank G (D - one_chip u) = 0 ∨
-            rank G (D - one_chip u) = -1 := by
-          have hLower := rank_geq_neg_one G (D - one_chip u)
-          by_cases hNonneg : 0 ≤ rank G (D - one_chip u)
+        have hDegUZero : deg (D - oneChip u) = 0 := by omega
+        have hDegVZero : deg (D - oneChip v) = 0 := by omega
+        have hUDich : rank G (D - oneChip u) = 0 ∨
+            rank G (D - oneChip u) = -1 := by
+          have hLower := rank_geq_neg_one G (D - oneChip u)
+          by_cases hNonneg : 0 ≤ rank G (D - oneChip u)
           · left
-            have hUpper := rank_le_degree G (D - one_chip u)
-              (rank G (D - one_chip u)) hNonneg
+            have hUpper := rank_le_degree G (D - oneChip u)
+              (rank G (D - oneChip u)) hNonneg
               ((rank_geq_iff G _ _).mpr le_rfl)
             omega
           · right
             omega
-        have hVDich : rank G (D - one_chip v) = 0 ∨
-            rank G (D - one_chip v) = -1 := by
-          have hLower := rank_geq_neg_one G (D - one_chip v)
-          by_cases hNonneg : 0 ≤ rank G (D - one_chip v)
+        have hVDich : rank G (D - oneChip v) = 0 ∨
+            rank G (D - oneChip v) = -1 := by
+          have hLower := rank_geq_neg_one G (D - oneChip v)
+          by_cases hNonneg : 0 ≤ rank G (D - oneChip v)
           · left
-            have hUpper := rank_le_degree G (D - one_chip v)
-              (rank G (D - one_chip v)) hNonneg
+            have hUpper := rank_le_degree G (D - oneChip v)
+              (rank G (D - oneChip v)) hNonneg
               ((rank_geq_iff G _ _).mpr le_rfl)
             omega
           · right
             omega
         have hUV := rank_neg_one_of_deg_neg G
-          (D - one_chip u - one_chip v) (by omega)
+          (D - oneChip u - oneChip v) (by omega)
         rcases hUDich with hU | hU <;> rcases hVDich with hV | hV
         · exfalso
           apply hMarks
@@ -145,17 +145,17 @@ theorem allSubmodular_of_connected_genus_one_distinct_classes
       · by_cases hdTwo : d = 2
         · have hD := genusOne_rank_eq_degree_sub_one hG hGenus D (by omega)
           have hU := genusOne_rank_eq_degree_sub_one hG hGenus
-            (D - one_chip u) (by omega)
+            (D - oneChip u) (by omega)
           have hV := genusOne_rank_eq_degree_sub_one hG hGenus
-            (D - one_chip v) (by omega)
-          have hUVDich : rank G (D - one_chip u - one_chip v) = 0 ∨
-              rank G (D - one_chip u - one_chip v) = -1 := by
-            have hLower := rank_geq_neg_one G (D - one_chip u - one_chip v)
-            by_cases hNonneg : 0 ≤ rank G (D - one_chip u - one_chip v)
+            (D - oneChip v) (by omega)
+          have hUVDich : rank G (D - oneChip u - oneChip v) = 0 ∨
+              rank G (D - oneChip u - oneChip v) = -1 := by
+            have hLower := rank_geq_neg_one G (D - oneChip u - oneChip v)
+            by_cases hNonneg : 0 ≤ rank G (D - oneChip u - oneChip v)
             · left
               have hUpper := rank_le_degree G
-                (D - one_chip u - one_chip v)
-                (rank G (D - one_chip u - one_chip v)) hNonneg
+                (D - oneChip u - oneChip v)
+                (rank G (D - oneChip u - oneChip v)) hNonneg
                 ((rank_geq_iff G _ _).mpr le_rfl)
               omega
             · right
@@ -165,11 +165,11 @@ theorem allSubmodular_of_connected_genus_one_distinct_classes
             rw [hD, hU, hV, hUV] <;> omega
         · have hD := genusOne_rank_eq_degree_sub_one hG hGenus D (by omega)
           have hU := genusOne_rank_eq_degree_sub_one hG hGenus
-            (D - one_chip u) (by omega)
+            (D - oneChip u) (by omega)
           have hV := genusOne_rank_eq_degree_sub_one hG hGenus
-            (D - one_chip v) (by omega)
+            (D - oneChip v) (by omega)
           have hUV := genusOne_rank_eq_degree_sub_one hG hGenus
-            (D - one_chip u - one_chip v) (by omega)
+            (D - oneChip u - oneChip v) (by omega)
           unfold rankDelta mark
           rw [hD, hU, hV, hUV]
           omega
@@ -198,9 +198,9 @@ private theorem rank_wedgeLiftLeft_eq_zero_of_rank_zero
 
 theorem wedge_left_difference
     (G H : CFGraph) (x : G.V) (y : H.V) (a b : G.V) :
-    one_chip (G := vertexWedge G H x y) (Sum.inl a) -
-        one_chip (G := vertexWedge G H x y) (Sum.inl b) =
-      wedgeLiftLeftDivisor G H x y (one_chip a - one_chip b) := by
+    oneChip (G := vertexWedge G H x y) (Sum.inl a) -
+        oneChip (G := vertexWedge G H x y) (Sum.inl b) =
+      wedgeLiftLeftDivisor G H x y (oneChip a - oneChip b) := by
   rw [← wedgeAddDivisor_one_chip_left G H x y a,
     ← wedgeAddDivisor_one_chip_left G H x y b,
     wedgeAddDivisor_sub]
@@ -210,9 +210,9 @@ theorem wedge_left_difference
 left-factor divisor. -/
 theorem wedge_left_pair
     (G H : CFGraph) (x : G.V) (y : H.V) (a b : G.V) :
-    one_chip (G := vertexWedge G H x y) (Sum.inl a) +
-        one_chip (G := vertexWedge G H x y) (Sum.inl b) =
-      wedgeLiftLeftDivisor G H x y (one_chip a + one_chip b) := by
+    oneChip (G := vertexWedge G H x y) (Sum.inl a) +
+        oneChip (G := vertexWedge G H x y) (Sum.inl b) =
+      wedgeLiftLeftDivisor G H x y (oneChip a + oneChip b) := by
   rw [← wedgeAddDivisor_one_chip_left G H x y a,
     ← wedgeAddDivisor_one_chip_left G H x y b,
     wedgeAddDivisor_add]
@@ -221,17 +221,17 @@ theorem wedge_left_pair
 theorem left_mark_difference_not_principal
     (G H : CFGraph) (x u : G.V) (y : H.V)
     (hG : PointedGenusOneRigid G x) (hu : u ≠ x) :
-    ¬ linear_equiv (vertexWedge G H x y)
-      (one_chip (Sum.inl x) - one_chip (Sum.inl u)) 0 := by
+    ¬ linearEquiv (vertexWedge G H x y)
+      (oneChip (Sum.inl x) - oneChip (Sum.inl u)) 0 := by
   intro hPrin
   have hWin : winnable (vertexWedge G H x y)
-      (wedgeLiftLeftDivisor G H x y (one_chip x - one_chip u)) := by
+      (wedgeLiftLeftDivisor G H x y (oneChip x - oneChip u)) := by
     rw [← wedge_left_difference G H x y x u]
     exact winnable_equiv_winnable _ _ _
       (winnable_of_effective _ 0 (by intro z; simp)) hPrin.symm
   obtain ⟨t, hLeft, hRight⟩ :=
     (winnable_vertexWedge_iff_exists_chipShift G H x y
-      (one_chip x - one_chip u) 0).mp hWin
+      (oneChip x - oneChip u) 0).mp hWin
   have htNonneg : 0 ≤ t := by
     have hDeg := deg_nonneg_of_winnable G _ hLeft
     rw [chipShift, deg.map_add, map_zsmul, deg.map_sub,
@@ -245,7 +245,7 @@ theorem left_mark_difference_not_principal
     omega
   have ht : t = 0 := by omega
   subst t
-  have hLeftZero : linear_equiv G (one_chip x - one_chip u) 0 :=
+  have hLeftZero : linearEquiv G (oneChip x - oneChip u) 0 :=
     linear_equiv_zero_of_winnable_deg_zero G _
       (by simpa [chipShift] using hLeft)
       (by rw [deg.map_sub, deg_one_chip, deg_one_chip]; norm_num)
@@ -253,17 +253,17 @@ theorem left_mark_difference_not_principal
 
 private theorem swapped_difference_not_principal
     {G : CFGraph} (x u : G.V)
-    (h : ¬ linear_equiv G (one_chip x - one_chip u) 0) :
-    ¬ linear_equiv G (one_chip u - one_chip x) 0 := by
+    (h : ¬ linearEquiv G (oneChip x - oneChip u) 0) :
+    ¬ linearEquiv G (oneChip u - oneChip x) 0 := by
   intro hSwap
   apply h
-  unfold linear_equiv at hSwap ⊢
+  unfold linearEquiv at hSwap ⊢
   simpa [sub_eq_add_neg, add_comm] using
-    AddSubgroup.neg_mem (principal_divisors G) hSwap
+    AddSubgroup.neg_mem (principalDivisors G) hSwap
 
 private theorem wedgeLiftLeft_not_winnable_of_degree_zero_not_principal
     (G H : CFGraph) (x : G.V) (y : H.V) (D : CFDiv G)
-    (hDegree : deg D = 0) (hNotPrincipal : ¬ linear_equiv G D 0) :
+    (hDegree : deg D = 0) (hNotPrincipal : ¬ linearEquiv G D 0) :
     ¬ winnable (vertexWedge G H x y) (wedgeLiftLeftDivisor G H x y D) := by
   intro hWin
   obtain ⟨t, hLeft, hRight⟩ :=
@@ -289,14 +289,14 @@ the divisor consisting of the gluing mark and that third vertex has negative
 marked second difference after attaching a rigid genus-one right factor. -/
 theorem rankDelta_wedgeLiftLeft_pair_neg
     (G H : CFGraph) (x u w : G.V) (y : H.V)
-    (hGconn : _root_.graph_connected G) (hGgenus : genus G = 1)
+    (hGconn : _root_.graphConnected G) (hGgenus : genus G = 1)
     (hGx : PointedGenusOneRigid G x) (hGu : PointedGenusOneRigid G u)
     (hH : PointedGenusOneRigid H y)
     (hwx : w ≠ x) (hwu : w ≠ u) :
     rankDelta
         (mark (vertexWedge G H x y) (Sum.inl x) (Sum.inl u))
-        (wedgeLiftLeftDivisor G H x y (one_chip x + one_chip w)) < 0 := by
-  let A : CFDiv G := one_chip x + one_chip w
+        (wedgeLiftLeftDivisor G H x y (oneChip x + oneChip w)) < 0 := by
+  let A : CFDiv G := oneChip x + oneChip w
   have hRankALeft : rank G A = 1 := by
     have h := genusOne_rank_eq_degree_sub_one hGconn hGgenus A (by
       dsimp [A]
@@ -307,13 +307,13 @@ theorem rankDelta_wedgeLiftLeft_pair_neg
       rw [deg.map_add, deg_one_chip, deg_one_chip]
       norm_num] at h
     exact h
-  have hResidualEq : A - (2 : ℤ) • one_chip x = one_chip w - one_chip x := by
+  have hResidualEq : A - (2 : ℤ) • oneChip x = oneChip w - oneChip x := by
     dsimp [A]
     abel
   have hResidualNotPrincipal :
-      ¬ linear_equiv G (one_chip w - one_chip x) 0 :=
+      ¬ linearEquiv G (oneChip w - oneChip x) 0 :=
     swapped_difference_not_principal x w (hGx.nontrivial w hwx)
-  have hResidualNotWin : ¬ winnable G (A - (2 : ℤ) • one_chip x) := by
+  have hResidualNotWin : ¬ winnable G (A - (2 : ℤ) • oneChip x) := by
     rw [hResidualEq]
     intro hWin
     apply hResidualNotPrincipal
@@ -340,7 +340,7 @@ theorem rankDelta_wedgeLiftLeft_pair_neg
         ((rank_nonneg_iff_winnable _ _).mpr
           (winnable_of_effective _ _ hEffectiveWedge))
     omega
-  let Ax : CFDiv G := A - one_chip x
+  let Ax : CFDiv G := A - oneChip x
   have hRankAxLeft : rank G Ax = 0 := by
     have h := genusOne_rank_eq_degree_sub_one hGconn hGgenus Ax (by
       dsimp [Ax, A]
@@ -352,7 +352,7 @@ theorem rankDelta_wedgeLiftLeft_pair_neg
   have hRankAx : rank (vertexWedge G H x y)
       (wedgeLiftLeftDivisor G H x y Ax) = 0 :=
     rank_wedgeLiftLeft_eq_zero_of_rank_zero G H x y hH Ax hRankAxLeft
-  let Au : CFDiv G := A - one_chip u
+  let Au : CFDiv G := A - oneChip u
   have hRankAuLeft : rank G Au = 0 := by
     have h := genusOne_rank_eq_degree_sub_one hGconn hGgenus Au (by
       dsimp [Au, A]
@@ -364,14 +364,14 @@ theorem rankDelta_wedgeLiftLeft_pair_neg
   have hRankAu : rank (vertexWedge G H x y)
       (wedgeLiftLeftDivisor G H x y Au) = 0 :=
     rank_wedgeLiftLeft_eq_zero_of_rank_zero G H x y hH Au hRankAuLeft
-  let Axu : CFDiv G := A - one_chip x - one_chip u
-  have hAxuEq : Axu = one_chip w - one_chip u := by
+  let Axu : CFDiv G := A - oneChip x - oneChip u
+  have hAxuEq : Axu = oneChip w - oneChip u := by
     dsimp [Axu, A]
     abel
   have hAxuDegree : deg Axu = 0 := by
     rw [hAxuEq, deg.map_sub, deg_one_chip, deg_one_chip]
     norm_num
-  have hAxuNotPrincipal : ¬ linear_equiv G Axu 0 := by
+  have hAxuNotPrincipal : ¬ linearEquiv G Axu 0 := by
     rw [hAxuEq]
     exact swapped_difference_not_principal u w (hGu.nontrivial w hwu)
   have hAxuNotWin := wedgeLiftLeft_not_winnable_of_degree_zero_not_principal
@@ -388,21 +388,21 @@ theorem rankDelta_wedgeLiftLeft_pair_neg
         ((rank_geq_iff _ _ 0).mpr h)
     omega
   have hSubX :
-      wedgeLiftLeftDivisor G H x y A - one_chip (Sum.inl x) =
+      wedgeLiftLeftDivisor G H x y A - oneChip (Sum.inl x) =
         wedgeLiftLeftDivisor G H x y Ax := by
     exact wedgeLiftLeft_sub_left G H x y A x
   have hSubU :
-      wedgeLiftLeftDivisor G H x y A - one_chip (Sum.inl u) =
+      wedgeLiftLeftDivisor G H x y A - oneChip (Sum.inl u) =
         wedgeLiftLeftDivisor G H x y Au := by
     exact wedgeLiftLeft_sub_left G H x y A u
   have hSubXU :
-      wedgeLiftLeftDivisor G H x y A - one_chip (Sum.inl x) -
-          one_chip (Sum.inl u) =
+      wedgeLiftLeftDivisor G H x y A - oneChip (Sum.inl x) -
+          oneChip (Sum.inl u) =
         wedgeLiftLeftDivisor G H x y Axu := by
     rw [hSubX]
     exact wedgeLiftLeft_sub_left G H x y Ax u
   have hSubAxU :
-      wedgeLiftLeftDivisor G H x y Ax - one_chip (Sum.inl u) =
+      wedgeLiftLeftDivisor G H x y Ax - oneChip (Sum.inl u) =
         wedgeLiftLeftDivisor G H x y Axu := by
     exact wedgeLiftLeft_sub_left G H x y Ax u
   unfold rankDelta mark
@@ -413,24 +413,24 @@ theorem rankDelta_wedgeLiftLeft_pair_neg
 the auxiliary chip in the paper's negative-second-difference witness. -/
 theorem rankDelta_wedgeLiftLeft_mark_add_glue_neg
     (G H : CFGraph) (x p q : G.V) (y : H.V)
-    (hGconn : _root_.graph_connected G) (hGgenus : genus G = 1)
+    (hGconn : _root_.graphConnected G) (hGgenus : genus G = 1)
     (hGx : PointedGenusOneRigid G x) (hGq : PointedGenusOneRigid G q)
     (hH : PointedGenusOneRigid H y)
     (hpx : p ≠ x) (hqx : q ≠ x) :
     rankDelta
         (mark (vertexWedge G H x y) (Sum.inl p) (Sum.inl q))
-        (wedgeLiftLeftDivisor G H x y (one_chip p + one_chip x)) < 0 := by
-  let A : CFDiv G := one_chip p + one_chip x
+        (wedgeLiftLeftDivisor G H x y (oneChip p + oneChip x)) < 0 := by
+  let A : CFDiv G := oneChip p + oneChip x
   have hRankALeft : rank G A = 1 := by
     have h := genusOne_rank_eq_degree_sub_one hGconn hGgenus A (by
       dsimp [A]
       norm_num)
     rw [show deg A = 2 by dsimp [A]; norm_num] at h
     exact h
-  have hResidualEq : A - (2 : ℤ) • one_chip x = one_chip p - one_chip x := by
+  have hResidualEq : A - (2 : ℤ) • oneChip x = oneChip p - oneChip x := by
     dsimp [A]
     abel
-  have hResidualNotWin : ¬ winnable G (A - (2 : ℤ) • one_chip x) := by
+  have hResidualNotWin : ¬ winnable G (A - (2 : ℤ) • oneChip x) := by
     rw [hResidualEq]
     intro hWin
     have hPrin := linear_equiv_zero_of_winnable_deg_zero G _ hWin (by
@@ -455,7 +455,7 @@ theorem rankDelta_wedgeLiftLeft_mark_add_glue_neg
           (winnable_of_effective _ _
             ((effective_wedgeLiftLeftDivisor_iff G H x y A).mpr hEffectiveA)))
     omega
-  let Ap : CFDiv G := A - one_chip p
+  let Ap : CFDiv G := A - oneChip p
   have hRankApLeft : rank G Ap = 0 := by
     have h := genusOne_rank_eq_degree_sub_one hGconn hGgenus Ap (by
       dsimp [Ap, A]
@@ -465,7 +465,7 @@ theorem rankDelta_wedgeLiftLeft_mark_add_glue_neg
   have hRankAp : rank (vertexWedge G H x y)
       (wedgeLiftLeftDivisor G H x y Ap) = 0 :=
     rank_wedgeLiftLeft_eq_zero_of_rank_zero G H x y hH Ap hRankApLeft
-  let Aq : CFDiv G := A - one_chip q
+  let Aq : CFDiv G := A - oneChip q
   have hRankAqLeft : rank G Aq = 0 := by
     have h := genusOne_rank_eq_degree_sub_one hGconn hGgenus Aq (by
       dsimp [Aq, A]
@@ -475,14 +475,14 @@ theorem rankDelta_wedgeLiftLeft_mark_add_glue_neg
   have hRankAq : rank (vertexWedge G H x y)
       (wedgeLiftLeftDivisor G H x y Aq) = 0 :=
     rank_wedgeLiftLeft_eq_zero_of_rank_zero G H x y hH Aq hRankAqLeft
-  let Apq : CFDiv G := A - one_chip p - one_chip q
-  have hApqEq : Apq = one_chip x - one_chip q := by
+  let Apq : CFDiv G := A - oneChip p - oneChip q
+  have hApqEq : Apq = oneChip x - oneChip q := by
     dsimp [Apq, A]
     abel
   have hApqDegree : deg Apq = 0 := by
     rw [hApqEq, deg.map_sub, deg_one_chip, deg_one_chip]
     norm_num
-  have hApqNotPrincipal : ¬ linear_equiv G Apq 0 := by
+  have hApqNotPrincipal : ¬ linearEquiv G Apq 0 := by
     rw [hApqEq]
     exact swapped_difference_not_principal q x
       (hGq.nontrivial x hqx.symm)
@@ -500,15 +500,15 @@ theorem rankDelta_wedgeLiftLeft_mark_add_glue_neg
         ((rank_geq_iff _ _ 0).mpr h)
     omega
   have hSubP :
-      wedgeLiftLeftDivisor G H x y A - one_chip (Sum.inl p) =
+      wedgeLiftLeftDivisor G H x y A - oneChip (Sum.inl p) =
         wedgeLiftLeftDivisor G H x y Ap :=
     wedgeLiftLeft_sub_left G H x y A p
   have hSubQ :
-      wedgeLiftLeftDivisor G H x y A - one_chip (Sum.inl q) =
+      wedgeLiftLeftDivisor G H x y A - oneChip (Sum.inl q) =
         wedgeLiftLeftDivisor G H x y Aq :=
     wedgeLiftLeft_sub_left G H x y A q
   have hSubApQ :
-      wedgeLiftLeftDivisor G H x y Ap - one_chip (Sum.inl q) =
+      wedgeLiftLeftDivisor G H x y Ap - oneChip (Sum.inl q) =
         wedgeLiftLeftDivisor G H x y Apq :=
     wedgeLiftLeft_sub_left G H x y Ap q
   unfold rankDelta mark
@@ -518,10 +518,10 @@ theorem rankDelta_wedgeLiftLeft_mark_add_glue_neg
 private theorem wedge_right_aux_pair
     (G H : CFGraph) (x u : G.V) (y : H.V)
     (b : {z : H.V // z ≠ y}) :
-    one_chip (G := vertexWedge G H x y) (Sum.inr b) +
-        one_chip (G := vertexWedge G H x y) (Sum.inl x) -
-        one_chip (G := vertexWedge G H x y) (Sum.inl u) =
-      wedgeAddDivisor G H x y (one_chip x - one_chip u) (one_chip b.1) := by
+    oneChip (G := vertexWedge G H x y) (Sum.inr b) +
+        oneChip (G := vertexWedge G H x y) (Sum.inl x) -
+        oneChip (G := vertexWedge G H x y) (Sum.inl u) =
+      wedgeAddDivisor G H x y (oneChip x - oneChip u) (oneChip b.1) := by
   rw [← wedgeRightVertex_unmarked G H x y b.1 b.2,
     ← wedgeAddDivisor_one_chip_right G H x y b.1,
     ← wedgeAddDivisor_one_chip_left G H x y x,
@@ -536,12 +536,12 @@ theorem wedge_right_aux_pair_not_winnable
     (hG : PointedGenusOneRigid G x) (hH : PointedGenusOneRigid H y)
     (hu : u ≠ x) (b : {z : H.V // z ≠ y}) :
     ¬ winnable (vertexWedge G H x y)
-      (one_chip (Sum.inr b) + one_chip (Sum.inl x) - one_chip (Sum.inl u)) := by
+      (oneChip (Sum.inr b) + oneChip (Sum.inl x) - oneChip (Sum.inl u)) := by
   rw [wedge_right_aux_pair G H x u y b]
   intro hWin
   obtain ⟨t, hLeft, hRight⟩ :=
     (winnable_vertexWedge_iff_exists_chipShift G H x y
-      (one_chip x - one_chip u) (one_chip b.1)).mp hWin
+      (oneChip x - oneChip u) (oneChip b.1)).mp hWin
   have htNonneg : 0 ≤ t := by
     have hDeg := deg_nonneg_of_winnable G _ hLeft
     rw [chipShift, deg.map_add, map_zsmul, deg.map_sub,
@@ -555,14 +555,14 @@ theorem wedge_right_aux_pair_not_winnable
     omega
   by_cases ht : t = 0
   · subst t
-    have hPrin : linear_equiv G (one_chip x - one_chip u) 0 :=
+    have hPrin : linearEquiv G (oneChip x - oneChip u) 0 :=
       linear_equiv_zero_of_winnable_deg_zero G _
         (by simpa [chipShift] using hLeft)
         (by rw [deg.map_sub, deg_one_chip, deg_one_chip]; norm_num)
     exact hG.nontrivial u hu hPrin
   · have htOne : t = 1 := by omega
     subst t
-    have hPrin : linear_equiv H (one_chip b.1 - one_chip y) 0 :=
+    have hPrin : linearEquiv H (oneChip b.1 - oneChip y) 0 :=
       linear_equiv_zero_of_winnable_deg_zero H _
         (by
           convert hRight using 1
@@ -635,15 +635,15 @@ theorem chainTwoLoops_allSubmodular_same_left_iff
   let G := (TwoPathCycle.spec leftLength hLeftLength).graph
   let H := (TwoPathCycle.spec rightLength hRightLength).graph
   let W := vertexWedge G H leftGlue rightGlue
-  have hGconn : _root_.graph_connected G :=
+  have hGconn : _root_.graphConnected G :=
     TwoPathCycle.connected leftLength hLeftLength
-  have hHconn : _root_.graph_connected H :=
+  have hHconn : _root_.graphConnected H :=
     TwoPathCycle.connected rightLength hRightLength
   have hGgenus : genus G = 1 :=
     TwoPathCycle.genus_one leftLength hLeftLength
   have hHgenus : genus H = 1 :=
     TwoPathCycle.genus_one rightLength hRightLength
-  have hWconn : _root_.graph_connected W :=
+  have hWconn : _root_.graphConnected W :=
     graph_connected_vertexWedge G H leftGlue rightGlue hGconn hHconn
   have hWgenus : genus W = 2 := by
     dsimp [W]
@@ -655,8 +655,8 @@ theorem chainTwoLoops_allSubmodular_same_left_iff
     TwoPathCycle.pointedGenusOneRigid leftLength hLeftLength u
   have hH : PointedGenusOneRigid H rightGlue :=
     TwoPathCycle.pointedGenusOneRigid rightLength hRightLength rightGlue
-  have hDistinct : ¬ linear_equiv W
-      (one_chip (Sum.inl leftGlue) - one_chip (Sum.inl u)) 0 :=
+  have hDistinct : ¬ linearEquiv W
+      (oneChip (Sum.inl leftGlue) - oneChip (Sum.inl u)) 0 :=
     left_mark_difference_not_principal G H leftGlue u rightGlue hGx hu
   constructor
   · intro hSub
@@ -675,11 +675,11 @@ theorem chainTwoLoops_allSubmodular_same_left_iff
       G H leftGlue u w rightGlue hGconn hGgenus hGx hGu hH hwGlue hwu
     change rankDelta (mark W (Sum.inl leftGlue) (Sum.inl u))
       (wedgeLiftLeftDivisor G H leftGlue rightGlue
-        (one_chip leftGlue + one_chip w)) < 0 at hNeg
+        (oneChip leftGlue + oneChip w)) < 0 at hNeg
     have hNonneg := (allSubmodular_iff_rankDelta_nonneg
       (mark W (Sum.inl leftGlue) (Sum.inl u))).mp hSub
       (wedgeLiftLeftDivisor G H leftGlue rightGlue
-        (one_chip leftGlue + one_chip w))
+        (oneChip leftGlue + oneChip w))
     omega
   · intro hLengthTwo
     change AllSubmodular (mark W (Sum.inl leftGlue) (Sum.inl u))
@@ -709,18 +709,18 @@ theorem chainTwoLoops_allSubmodular_same_left_iff
         have ha : a = leftGlue :=
           eq_of_ne_of_card_eq_two hCardTwo hu.symm hau
         subst a
-        have hDPair : linear_equiv W D
-            (one_chip (Sum.inl leftGlue) + one_chip (Sum.inl leftGlue)) := by
-          unfold linear_equiv at hRep ⊢
+        have hDPair : linearEquiv W D
+            (oneChip (Sum.inl leftGlue) + oneChip (Sum.inl leftGlue)) := by
+          unfold linearEquiv at hRep ⊢
           have hEq :
-              (one_chip (Sum.inl leftGlue) + one_chip (Sum.inl leftGlue) - D :
+              (oneChip (Sum.inl leftGlue) + oneChip (Sum.inl leftGlue) - D :
                 CFDiv W) =
-              one_chip (Sum.inl leftGlue) -
-                (D - one_chip (Sum.inl leftGlue)) := by
+              oneChip (Sum.inl leftGlue) -
+                (D - oneChip (Sum.inl leftGlue)) := by
             abel
           rw [hEq]
           exact hRep
-        let A : CFDiv G := one_chip leftGlue + one_chip leftGlue
+        let A : CFDiv G := oneChip leftGlue + oneChip leftGlue
         have hRankALeft : rank G A = 1 := by
           have h := genusOne_rank_eq_degree_sub_one hGconn hGgenus A (by
             dsimp [A]
@@ -729,8 +729,8 @@ theorem chainTwoLoops_allSubmodular_same_left_iff
             dsimp [A]
             norm_num] at h
           exact h
-        have hResidual : winnable G (A - (2 : ℤ) • one_chip leftGlue) := by
-          have hZero : A - (2 : ℤ) • one_chip leftGlue = 0 := by
+        have hResidual : winnable G (A - (2 : ℤ) • oneChip leftGlue) := by
+          have hZero : A - (2 : ℤ) • oneChip leftGlue = 0 := by
             dsimp [A]
             abel
           rw [hZero]
@@ -740,8 +740,8 @@ theorem chainTwoLoops_allSubmodular_same_left_iff
           (rank_wedgeLiftLeft_ge_one_iff G H leftGlue rightGlue hH A).mpr
             ⟨by omega, hResidual⟩
         have hPairEq :
-            one_chip (G := W) (Sum.inl leftGlue) +
-                one_chip (G := W) (Sum.inl leftGlue) =
+            oneChip (G := W) (Sum.inl leftGlue) +
+                oneChip (G := W) (Sum.inl leftGlue) =
               wedgeLiftLeftDivisor G H leftGlue rightGlue A := by
           exact wedge_left_pair G H leftGlue rightGlue leftGlue leftGlue
         have hRankEq := rank_eq_of_linear_equiv W hDPair
@@ -833,7 +833,7 @@ theorem chainTwoLoops_not_allSubmodular_same_left_of_two_lt_length
         leftLength rightLength hLeftLength hRightLength leftGlue p rightGlue
         hpq).mp hSwapped
       omega
-    · have hGconn : _root_.graph_connected G :=
+    · have hGconn : _root_.graphConnected G :=
         TwoPathCycle.connected leftLength hLeftLength
       have hGgenus : genus G = 1 :=
         TwoPathCycle.genus_one leftLength hLeftLength
@@ -847,11 +847,11 @@ theorem chainTwoLoops_not_allSubmodular_same_left_of_two_lt_length
         G H leftGlue p q rightGlue hGconn hGgenus hGx hGq hH hp hq
       change rankDelta (mark W (Sum.inl p) (Sum.inl q))
         (wedgeLiftLeftDivisor G H leftGlue rightGlue
-          (one_chip p + one_chip leftGlue)) < 0 at hNeg
+          (oneChip p + oneChip leftGlue)) < 0 at hNeg
       have hNonneg := (allSubmodular_iff_rankDelta_nonneg
         (mark W (Sum.inl p) (Sum.inl q))).mp hSub
         (wedgeLiftLeftDivisor G H leftGlue rightGlue
-          (one_chip p + one_chip leftGlue))
+          (oneChip p + oneChip leftGlue))
       omega
 
 /-- Full same-loop clause of Proposition 3.7 for arbitrary distinct marks on

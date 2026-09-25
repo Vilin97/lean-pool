@@ -20,10 +20,10 @@ namespace Bananas
 open Utilities
 
 private theorem rank_eq_zero_of_degree_one_genus_one
-    (H : CFGraph) (hConnected : _root_.graph_connected H)
+    (H : CFGraph) (hConnected : _root_.graphConnected H)
     (hGenus : genus H = 1) (E : CFDiv H) (hDegree : deg E = 1) :
     rank H E = 0 := by
-  have hNeg : rank H (canonical_divisor H - E) = -1 :=
+  have hNeg : rank H (canonicalDivisor H - E) = -1 :=
     rank_neg_one_of_deg_neg H _ (by
       rw [deg.map_sub, degree_of_canonical_divisor, hGenus, hDegree]
       norm_num)
@@ -33,37 +33,37 @@ private theorem rank_eq_zero_of_degree_one_genus_one
 
 private theorem linearEquiv_marked_multiple
     (G : CFGraph) (u x : G.V) (a : ℕ)
-    (h : linear_equiv G ((a : ℤ) • (one_chip u - one_chip x)) 0) :
-    linear_equiv G ((a : ℤ) • one_chip u) ((a : ℤ) • one_chip x) := by
-  unfold linear_equiv at h ⊢
+    (h : linearEquiv G ((a : ℤ) • (oneChip u - oneChip x)) 0) :
+    linearEquiv G ((a : ℤ) • oneChip u) ((a : ℤ) • oneChip x) := by
+  unfold linearEquiv at h ⊢
   rw [smul_sub] at h
   convert h using 1
   abel
 
 private theorem wedge_vertex_twist_eq_factor_sum
     (G H : CFGraph) (x : G.V) (y : H.V) (u : G.V) (v : H.V) (a : ℕ) :
-    one_chip (G := vertexWedge G H x y) (wedgeRightVertex G H x y v) +
+    oneChip (G := vertexWedge G H x y) (wedgeRightVertex G H x y v) +
         (a : ℤ) •
-          (one_chip (G := vertexWedge G H x y) (Sum.inl u) -
-            one_chip (G := vertexWedge G H x y)
+          (oneChip (G := vertexWedge G H x y) (Sum.inl u) -
+            oneChip (G := vertexWedge G H x y)
               (wedgeRightVertex G H x y v)) =
-      wedgeAddDivisor G H x y ((a : ℤ) • one_chip u)
-        ((1 - (a : ℤ)) • one_chip v) := by
+      wedgeAddDivisor G H x y ((a : ℤ) • oneChip u)
+        ((1 - (a : ℤ)) • oneChip v) := by
   have h := wedgeAddDivisor_transmissionTwist G H x y
-    (0 : CFDiv G) (one_chip v) u v (a : ℤ) (a : ℤ)
-  have hE : (1 - (a : ℤ)) • one_chip v =
-      one_chip v - (a : ℤ) • one_chip v := by
+    (0 : CFDiv G) (oneChip v) u v (a : ℤ) (a : ℤ)
+  have hE : (1 - (a : ℤ)) • oneChip v =
+      oneChip v - (a : ℤ) • oneChip v := by
     rw [sub_smul, one_smul]
   rw [wedgeAddDivisor_one_chip_right G H x y v] at h
   have hL :
-      one_chip (G := vertexWedge G H x y) (wedgeRightVertex G H x y v) +
+      oneChip (G := vertexWedge G H x y) (wedgeRightVertex G H x y v) +
           (a : ℤ) •
-            (one_chip (G := vertexWedge G H x y) (Sum.inl u) -
-              one_chip (G := vertexWedge G H x y)
+            (oneChip (G := vertexWedge G H x y) (Sum.inl u) -
+              oneChip (G := vertexWedge G H x y)
                 (wedgeRightVertex G H x y v)) =
-        one_chip (G := vertexWedge G H x y) (wedgeRightVertex G H x y v) +
-          (a : ℤ) • one_chip (G := vertexWedge G H x y) (Sum.inl u) -
-          (a : ℤ) • one_chip (G := vertexWedge G H x y)
+        oneChip (G := vertexWedge G H x y) (wedgeRightVertex G H x y v) +
+          (a : ℤ) • oneChip (G := vertexWedge G H x y) (Sum.inl u) -
+          (a : ℤ) • oneChip (G := vertexWedge G H x y)
             (wedgeRightVertex G H x y v) := by
       rw [smul_sub]
       abel
@@ -72,19 +72,19 @@ private theorem wedge_vertex_twist_eq_factor_sum
 
 private theorem wedge_factor_transfer_eq
     (G H : CFGraph) (x : G.V) (y : H.V) (v : H.V) (a : ℕ) :
-    wedgeAddDivisor G H x y ((a : ℤ) • one_chip x)
-      ((1 - (a : ℤ)) • one_chip v) =
+    wedgeAddDivisor G H x y ((a : ℤ) • oneChip x)
+      ((1 - (a : ℤ)) • oneChip v) =
       wedgeAddDivisor G H x y 0
-        ((a : ℤ) • one_chip y + (1 - (a : ℤ)) • one_chip v) := by
-  let F : CFDiv H := (a : ℤ) • one_chip y + (1 - (a : ℤ)) • one_chip v
+        ((a : ℤ) • oneChip y + (1 - (a : ℤ)) • oneChip v) := by
+  let F : CFDiv H := (a : ℤ) • oneChip y + (1 - (a : ℤ)) • oneChip v
   have h := wedgeAddDivisor_chipShift_cancel G H x y
     (0 : CFDiv G) F (a : ℤ)
   have hLeft : chipShift G (0 : CFDiv G) x (a : ℤ) =
-      (a : ℤ) • one_chip x := by
+      (a : ℤ) • oneChip x := by
     unfold chipShift
     abel
   have hRight : chipShift H F y (-((a : ℤ))) =
-      (1 - (a : ℤ)) • one_chip v := by
+      (1 - (a : ℤ)) • oneChip v := by
     funext z
     simp [chipShift, F]
   rw [hLeft, hRight] at h
@@ -95,7 +95,7 @@ than the wedge period produces two distinct effective twists of the right
 marked vertex.  Hence the wedge difference is recurrent. -/
 theorem not_nonRecurrent_of_left_torsionWitness_lt_wedge_period
     (G H : CFGraph) (x : G.V) (y : H.V) (u : G.V) (v : H.V)
-    (a k : ℕ) (hHConnected : _root_.graph_connected H)
+    (a k : ℕ) (hHConnected : _root_.graphConnected H)
     (hHGenus : genus H = 1)
     (ha : TorsionWitness (mark G u x) a)
     (haOne : 1 < a) (haK : a < k) :
@@ -104,16 +104,16 @@ theorem not_nonRecurrent_of_left_torsionWitness_lt_wedge_period
         (wedgeRightVertex G H x y v)) k := by
   let W := vertexWedge G H x y
   let w : W.V := wedgeRightVertex G H x y v
-  let A : CFDiv G := (a : ℤ) • one_chip u
-  let AX : CFDiv G := (a : ℤ) • one_chip x
-  let E : CFDiv H := (1 - (a : ℤ)) • one_chip v
-  let F : CFDiv H := (a : ℤ) • one_chip y + E
-  have hAUx : linear_equiv G A AX :=
+  let A : CFDiv G := (a : ℤ) • oneChip u
+  let AX : CFDiv G := (a : ℤ) • oneChip x
+  let E : CFDiv H := (1 - (a : ℤ)) • oneChip v
+  let F : CFDiv H := (a : ℤ) • oneChip y + E
+  have hAUx : linearEquiv G A AX :=
     linearEquiv_marked_multiple G u x a ha.2
-  have hEquiv : linear_equiv W
+  have hEquiv : linearEquiv W
       (wedgeAddDivisor G H x y A E)
       (wedgeAddDivisor G H x y AX E) :=
-    linear_equiv_wedgeAddDivisor G H x y A AX E E hAUx (linear_equiv.refl H E)
+    linear_equiv_wedgeAddDivisor G H x y A AX E E hAUx (linearEquiv.refl H E)
   have hFdegree : deg F = 1 := by
     dsimp [F, E]
     rw [deg.map_add, map_zsmul, map_zsmul, deg_one_chip, deg_one_chip]
@@ -130,18 +130,18 @@ theorem not_nonRecurrent_of_left_torsionWitness_lt_wedge_period
   have hAEwin : winnable W (wedgeAddDivisor G H x y A E) :=
     winnable_equiv_winnable W _ _ hAXEwin hEquiv.symm
   have hOne : 0 ≤ rank W
-      (one_chip (G := W) w + (1 : ℤ) •
-        (one_chip (G := W) (Sum.inl u) - one_chip (G := W) w)) := by
-    have hEq : one_chip (G := W) w + (1 : ℤ) •
-        (one_chip (G := W) (Sum.inl u) - one_chip (G := W) w) =
-        one_chip (G := W) (Sum.inl u) := by abel
+      (oneChip (G := W) w + (1 : ℤ) •
+        (oneChip (G := W) (Sum.inl u) - oneChip (G := W) w)) := by
+    have hEq : oneChip (G := W) w + (1 : ℤ) •
+        (oneChip (G := W) (Sum.inl u) - oneChip (G := W) w) =
+        oneChip (G := W) (Sum.inl u) := by abel
     rw [hEq]
     exact (rank_geq_iff W _ 0).mp
       ((rank_nonneg_iff_winnable W _).mpr
         (winnable_of_effective W _ (eff_one_chip _)))
   have hA : 0 ≤ rank W
-      (one_chip (G := W) w + (a : ℤ) •
-        (one_chip (G := W) (Sum.inl u) - one_chip (G := W) w)) := by
+      (oneChip (G := W) w + (a : ℤ) •
+        (oneChip (G := W) (Sum.inl u) - oneChip (G := W) w)) := by
     rw [wedge_vertex_twist_eq_factor_sum G H x y u v a]
     exact (rank_geq_iff W _ 0).mp
       ((rank_nonneg_iff_winnable W _).mpr hAEwin)
@@ -156,7 +156,7 @@ coincide.  The hypotheses `1 < a` and genus one on the right are exactly the
 nondegenerate cycle conditions used by the paper's period comparison. -/
 theorem left_torsionOrder_eq_of_nonRecurrent_of_le
     (G H : CFGraph) (x : G.V) (y : H.V) (u : G.V) (v : H.V)
-    (a b k : ℕ) (hHConnected : _root_.graph_connected H)
+    (a b k : ℕ) (hHConnected : _root_.graphConnected H)
     (hHGenus : genus H = 1)
     (hA : IsTorsionOrder (mark G u x) a)
     (hB : IsTorsionOrder (mark H y v) b)

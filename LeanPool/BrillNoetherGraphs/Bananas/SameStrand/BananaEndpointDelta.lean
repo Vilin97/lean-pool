@@ -38,13 +38,13 @@ theorem rankDelta_endpointPencil_nsmul
       rw [map_nsmul, degree_endpointPencilDivisor]
       ring
     have hDegreeLeft :
-        deg (D - one_chip (leftEndpoint B)) = 2 * (a : ℤ) - 1 := by
+        deg (D - oneChip (leftEndpoint B)) = 2 * (a : ℤ) - 1 := by
       rw [deg.map_sub, hDegreeD, deg_one_chip]
     have hDegreeRight :
-        deg (D - one_chip (rightEndpoint B)) = 2 * (a : ℤ) - 1 := by
+        deg (D - oneChip (rightEndpoint B)) = 2 * (a : ℤ) - 1 := by
       rw [deg.map_sub, hDegreeD, deg_one_chip]
     have hDegreeBoth :
-        deg (D - one_chip (leftEndpoint B) - one_chip (rightEndpoint B)) =
+        deg (D - oneChip (leftEndpoint B) - oneChip (rightEndpoint B)) =
           2 * (a : ℤ) - 2 := by
       rw [deg.map_sub, hDegreeLeft, deg_one_chip]
       omega
@@ -55,29 +55,29 @@ theorem rankDelta_endpointPencil_nsmul
       rw [hDegreeD, banana_genus] at h
       exact h
     have hRankLeft :
-        rank B.graph (D - one_chip (leftEndpoint B)) =
+        rank B.graph (D - oneChip (leftEndpoint B)) =
           2 * (a : ℤ) - 1 - (g : ℤ) := by
       have h := (rank_nonspecial_range (banana_graph_connected B)
-        (D - one_chip (leftEndpoint B))).2.2 (by
+        (D - oneChip (leftEndpoint B))).2.2 (by
           rw [hDegreeLeft, banana_genus]
           omega)
       rw [hDegreeLeft, banana_genus] at h
       exact h
     have hRankRight :
-        rank B.graph (D - one_chip (rightEndpoint B)) =
+        rank B.graph (D - oneChip (rightEndpoint B)) =
           2 * (a : ℤ) - 1 - (g : ℤ) := by
       have h := (rank_nonspecial_range (banana_graph_connected B)
-        (D - one_chip (rightEndpoint B))).2.2 (by
+        (D - oneChip (rightEndpoint B))).2.2 (by
           rw [hDegreeRight, banana_genus]
           omega)
       rw [hDegreeRight, banana_genus] at h
       exact h
     have hRankBoth :
         rank B.graph
-            (D - one_chip (leftEndpoint B) - one_chip (rightEndpoint B)) =
+            (D - oneChip (leftEndpoint B) - oneChip (rightEndpoint B)) =
           2 * (a : ℤ) - 2 - (g : ℤ) := by
       have h := (rank_nonspecial_range (banana_graph_connected B)
-        (D - one_chip (leftEndpoint B) - one_chip (rightEndpoint B))).2.2 (by
+        (D - oneChip (leftEndpoint B) - oneChip (rightEndpoint B))).2.2 (by
           rw [hDegreeBoth, banana_genus]
           omega)
       rw [hDegreeBoth, banana_genus] at h

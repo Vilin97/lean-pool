@@ -220,23 +220,23 @@ theorem effective_bridgePushforward
 /-- Restrict a firing script on the bridge graph to the left factor. -/
 def restrictLeftBridgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V)
-    (σ : firing_script (bridgeGraph G H x y)) : firing_script G :=
+    (σ : firingScript (bridgeGraph G H x y)) : firingScript G :=
   fun a => σ (Sum.inl a)
 
 /-- Restrict a firing script on the bridge graph to the right factor. -/
 def restrictRightBridgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V)
-    (σ : firing_script (bridgeGraph G H x y)) : firing_script H :=
+    (σ : firingScript (bridgeGraph G H x y)) : firingScript H :=
   fun b => σ (Sum.inr b)
 
 @[simp] theorem restrictLeftBridgeScript_apply
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (bridgeGraph G H x y)) (a : G.V) :
+    (σ : firingScript (bridgeGraph G H x y)) (a : G.V) :
     restrictLeftBridgeScript G H x y σ a = σ (Sum.inl a) := rfl
 
 @[simp] theorem restrictRightBridgeScript_apply
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (bridgeGraph G H x y)) (b : H.V) :
+    (σ : firingScript (bridgeGraph G H x y)) (b : H.V) :
     restrictRightBridgeScript G H x y σ b = σ (Sum.inr b) := rfl
 
 /-- After bridge contraction, normalize the right restriction of a firing
@@ -244,8 +244,8 @@ script by a constant so that its value at `y` agrees with the left value at
 `x`, then glue the two restrictions. -/
 def contractBridgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V)
-    (σ : firing_script (bridgeGraph G H x y)) :
-    firing_script (vertexWedge G H x y) :=
+    (σ : firingScript (bridgeGraph G H x y)) :
+    firingScript (vertexWedge G H x y) :=
   let σG := restrictLeftBridgeScript G H x y σ
   let σH := restrictRightBridgeScript G H x y σ
   let c := σ (Sum.inl x) - σ (Sum.inr y)
@@ -258,10 +258,10 @@ def contractBridgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
 factor extensions and a multiple of the left-side indicator. -/
 theorem bridge_script_decomposition
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (bridgeGraph G H x y)) :
+    (σ : firingScript (bridgeGraph G H x y)) :
     extendLeftScript G H x y (restrictLeftBridgeScript G H x y σ) +
         extendRightScript G H x y (restrictRightBridgeScript G H x y σ) +
-        @SMul.smul ℤ (firing_script (bridgeGraph G H x y)) inferInstance
+        @SMul.smul ℤ (firingScript (bridgeGraph G H x y)) inferInstance
           (σ (Sum.inl x) - σ (Sum.inr y)) (leftSideIndicator G H x y) =
       shiftScript (bridgeGraph G H x y) σ (σ (Sum.inl x)) := by
   funext z
@@ -285,7 +285,7 @@ theorem bridge_script_decomposition
 single elementary transfer across the bridge. -/
 theorem prin_bridge_decomposition
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (bridgeGraph G H x y)) :
+    (σ : firingScript (bridgeGraph G H x y)) :
     prin (bridgeGraph G H x y) σ =
       liftLeftDivisor G H x y
           (prin G (restrictLeftBridgeScript G H x y σ)) +
@@ -293,11 +293,11 @@ theorem prin_bridge_decomposition
           (prin H (restrictRightBridgeScript G H x y σ)) +
         @SMul.smul ℤ (CFDiv (bridgeGraph G H x y)) inferInstance
           (σ (Sum.inl x) - σ (Sum.inr y))
-          (one_chip (G := bridgeGraph G H x y) (Sum.inr y) -
-            one_chip (G := bridgeGraph G H x y) (Sum.inl x)) := by
+          (oneChip (G := bridgeGraph G H x y) (Sum.inr y) -
+            oneChip (G := bridgeGraph G H x y) (Sum.inl x)) := by
   have hScale :
       prin (bridgeGraph G H x y)
-          (@SMul.smul ℤ (firing_script (bridgeGraph G H x y)) inferInstance
+          (@SMul.smul ℤ (firingScript (bridgeGraph G H x y)) inferInstance
             (σ (Sum.inl x) - σ (Sum.inr y))
             (leftSideIndicator G H x y)) =
         @SMul.smul ℤ (CFDiv (bridgeGraph G H x y)) inferInstance
@@ -312,7 +312,7 @@ theorem prin_bridge_decomposition
     _ = prin (bridgeGraph G H x y)
           (extendLeftScript G H x y (restrictLeftBridgeScript G H x y σ) +
             extendRightScript G H x y (restrictRightBridgeScript G H x y σ) +
-            @SMul.smul ℤ (firing_script (bridgeGraph G H x y)) inferInstance
+            @SMul.smul ℤ (firingScript (bridgeGraph G H x y)) inferInstance
               (σ (Sum.inl x) - σ (Sum.inr y))
               (leftSideIndicator G H x y)) := by
           rw [bridge_script_decomposition G H x y σ]
@@ -352,8 +352,8 @@ identified. -/
 @[simp] theorem bridgePushforward_endpoint_difference
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) :
     bridgePushforward G H x y
-        (one_chip (G := bridgeGraph G H x y) (Sum.inr y) -
-          one_chip (G := bridgeGraph G H x y) (Sum.inl x)) = 0 := by
+        (oneChip (G := bridgeGraph G H x y) (Sum.inr y) -
+          oneChip (G := bridgeGraph G H x y) (Sum.inl x)) = 0 := by
   funext z
   cases z with
   | inl a =>
@@ -390,7 +390,7 @@ theorem wedgeLiftLeft_add_wedgeLiftRight
 /-- The contracted firing script has exactly the two factor-principal parts. -/
 theorem prin_contractBridgeScript
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (bridgeGraph G H x y)) :
+    (σ : firingScript (bridgeGraph G H x y)) :
     prin (vertexWedge G H x y) (contractBridgeScript G H x y σ) =
       wedgeAddDivisor G H x y
         (prin G (restrictLeftBridgeScript G H x y σ))
@@ -402,24 +402,24 @@ theorem prin_contractBridgeScript
 with an explicit contracted firing script. -/
 theorem bridgePushforward_prin
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (bridgeGraph G H x y)) :
+    (σ : firingScript (bridgeGraph G H x y)) :
     bridgePushforward G H x y (prin (bridgeGraph G H x y) σ) =
       prin (vertexWedge G H x y) (contractBridgeScript G H x y σ) := by
   have hScale :
       bridgePushforward G H x y
           (@SMul.smul ℤ (CFDiv (bridgeGraph G H x y)) inferInstance
             (σ (Sum.inl x) - σ (Sum.inr y))
-            (one_chip (G := bridgeGraph G H x y) (Sum.inr y) -
-              one_chip (G := bridgeGraph G H x y) (Sum.inl x))) =
+            (oneChip (G := bridgeGraph G H x y) (Sum.inr y) -
+              oneChip (G := bridgeGraph G H x y) (Sum.inl x))) =
         @SMul.smul ℤ (CFDiv (vertexWedge G H x y)) inferInstance
           (σ (Sum.inl x) - σ (Sum.inr y))
           (bridgePushforward G H x y
-            (one_chip (G := bridgeGraph G H x y) (Sum.inr y) -
-              one_chip (G := bridgeGraph G H x y) (Sum.inl x))) :=
+            (oneChip (G := bridgeGraph G H x y) (Sum.inr y) -
+              oneChip (G := bridgeGraph G H x y) (Sum.inl x))) :=
     AddMonoidHom.map_zsmul (bridgePushforward G H x y)
       (σ (Sum.inl x) - σ (Sum.inr y))
-      (one_chip (G := bridgeGraph G H x y) (Sum.inr y) -
-        one_chip (G := bridgeGraph G H x y) (Sum.inl x))
+      (oneChip (G := bridgeGraph G H x y) (Sum.inr y) -
+        oneChip (G := bridgeGraph G H x y) (Sum.inl x))
   have hZero :
       @SMul.smul ℤ (CFDiv (vertexWedge G H x y)) inferInstance
           (σ (Sum.inl x) - σ (Sum.inr y)) 0 = 0 := by
@@ -434,14 +434,14 @@ bridge, witnessed by `leftSideIndicator`. -/
 theorem linear_equiv_bridgeCanonicalLift_pushforward
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv (bridgeGraph G H x y)) :
-    linear_equiv (bridgeGraph G H x y) D
+    linearEquiv (bridgeGraph G H x y) D
       (bridgeCanonicalLift G H x y (bridgePushforward G H x y D)) := by
-  unfold linear_equiv
+  unfold linearEquiv
   apply (principal_iff_eq_prin (bridgeGraph G H x y)
     (bridgeCanonicalLift G H x y (bridgePushforward G H x y D) - D)).mpr
   let n : ℤ := -D (Sum.inr y)
-  let τ : firing_script (bridgeGraph G H x y) :=
-    @SMul.smul ℤ (firing_script (bridgeGraph G H x y)) inferInstance n
+  let τ : firingScript (bridgeGraph G H x y) :=
+    @SMul.smul ℤ (firingScript (bridgeGraph G H x y)) inferInstance n
       (leftSideIndicator G H x y)
   refine ⟨τ, ?_⟩
   have hScale :
@@ -453,10 +453,10 @@ theorem linear_equiv_bridgeCanonicalLift_pushforward
   rw [hScale, prin_leftSideIndicator]
   have hScaleApply (z : (bridgeGraph G H x y).V) :
       (@SMul.smul ℤ (CFDiv (bridgeGraph G H x y)) inferInstance n
-        (one_chip (G := bridgeGraph G H x y) (Sum.inr y) -
-          one_chip (G := bridgeGraph G H x y) (Sum.inl x))) z =
-        n • ((one_chip (G := bridgeGraph G H x y) (Sum.inr y) -
-          one_chip (G := bridgeGraph G H x y) (Sum.inl x)) z) := by
+        (oneChip (G := bridgeGraph G H x y) (Sum.inr y) -
+          oneChip (G := bridgeGraph G H x y) (Sum.inl x))) z =
+        n • ((oneChip (G := bridgeGraph G H x y) (Sum.inr y) -
+          oneChip (G := bridgeGraph G H x y) (Sum.inl x)) z) := by
     rfl
   funext z
   cases z with
@@ -464,27 +464,27 @@ theorem linear_equiv_bridgeCanonicalLift_pushforward
       rw [hScaleApply]
       by_cases ha : a = x
       · subst a
-        simp [n, one_chip]
+        simp [n, oneChip]
       · have hax : (Sum.inl a : Sum G.V H.V) ≠ Sum.inl x :=
           fun h => ha (Sum.inl.inj h)
-        simp [n, one_chip, ha]
+        simp [n, oneChip, ha]
   | inr b =>
       rw [hScaleApply]
       by_cases hb : b = y
       · subst b
-        simp [n, one_chip]
+        simp [n, oneChip]
       · have hby : (Sum.inr b : Sum G.V H.V) ≠ Sum.inr y :=
           fun h => hb (Sum.inr.inj h)
-        simp [n, one_chip, hb]
+        simp [n, oneChip, hb]
 
 /-- Linear equivalence descends through bridge contraction. -/
 theorem linear_equiv_bridgePushforward
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     {D E : CFDiv (bridgeGraph G H x y)}
-    (hDE : linear_equiv (bridgeGraph G H x y) D E) :
-    linear_equiv (vertexWedge G H x y)
+    (hDE : linearEquiv (bridgeGraph G H x y) D E) :
+    linearEquiv (vertexWedge G H x y)
       (bridgePushforward G H x y D) (bridgePushforward G H x y E) := by
-  unfold linear_equiv at hDE ⊢
+  unfold linearEquiv at hDE ⊢
   obtain ⟨σ, hσ⟩ :=
     (principal_iff_eq_prin (bridgeGraph G H x y) (E - D)).mp hDE
   apply (principal_iff_eq_prin (vertexWedge G H x y)
@@ -496,19 +496,19 @@ theorem linear_equiv_bridgePushforward
 common wedge value to both bridge endpoints. -/
 def expandWedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V)
-    (σ : firing_script (vertexWedge G H x y)) :
-    firing_script (bridgeGraph G H x y) :=
+    (σ : firingScript (vertexWedge G H x y)) :
+    firingScript (bridgeGraph G H x y) :=
   Sum.elim (fun a => σ (Sum.inl a))
     (fun b => σ (wedgeRightVertex G H x y b))
 
 @[simp] theorem expandWedgeScript_inl
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (vertexWedge G H x y)) (a : G.V) :
+    (σ : firingScript (vertexWedge G H x y)) (a : G.V) :
     expandWedgeScript G H x y σ (Sum.inl a) = σ (Sum.inl a) := rfl
 
 @[simp] theorem expandWedgeScript_inr
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (vertexWedge G H x y)) (b : H.V) :
+    (σ : firingScript (vertexWedge G H x y)) (b : H.V) :
     expandWedgeScript G H x y σ (Sum.inr b) =
       σ (wedgeRightVertex G H x y b) := rfl
 
@@ -516,7 +516,7 @@ def expandWedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
 wedge script literally. -/
 @[simp] theorem contractBridgeScript_expandWedgeScript
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (vertexWedge G H x y)) :
+    (σ : firingScript (vertexWedge G H x y)) :
     contractBridgeScript G H x y (expandWedgeScript G H x y σ) = σ := by
   funext z
   cases z with
@@ -529,37 +529,37 @@ wedge script literally. -/
 graph. -/
 theorem principal_bridgeCanonicalLift_prin
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script (vertexWedge G H x y)) :
+    (σ : firingScript (vertexWedge G H x y)) :
     bridgeCanonicalLift G H x y (prin (vertexWedge G H x y) σ) ∈
-      principal_divisors (bridgeGraph G H x y) := by
+      principalDivisors (bridgeGraph G H x y) := by
   let τ := expandWedgeScript G H x y σ
   have hZeroPrin :
-      linear_equiv (bridgeGraph G H x y) 0
+      linearEquiv (bridgeGraph G H x y) 0
         (prin (bridgeGraph G H x y) τ) := by
-    unfold linear_equiv
+    unfold linearEquiv
     apply (principal_iff_eq_prin (bridgeGraph G H x y)
       (prin (bridgeGraph G H x y) τ - 0)).mpr
     exact ⟨τ, by simp⟩
   have hCanonical := linear_equiv_bridgeCanonicalLift_pushforward G H x y
     (prin (bridgeGraph G H x y) τ)
-  have hTrans := linear_equiv.trans hZeroPrin hCanonical
+  have hTrans := linearEquiv.trans hZeroPrin hCanonical
   have hPush :
       bridgePushforward G H x y (prin (bridgeGraph G H x y) τ) =
         prin (vertexWedge G H x y) σ := by
     rw [bridgePushforward_prin]
     simp [τ]
   rw [hPush] at hTrans
-  unfold linear_equiv at hTrans
+  unfold linearEquiv at hTrans
   simpa using hTrans
 
 /-- Canonical lift preserves linear equivalence from the wedge to the bridge. -/
 theorem linear_equiv_bridgeCanonicalLift
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     {D E : CFDiv (vertexWedge G H x y)}
-    (hDE : linear_equiv (vertexWedge G H x y) D E) :
-    linear_equiv (bridgeGraph G H x y)
+    (hDE : linearEquiv (vertexWedge G H x y) D E) :
+    linearEquiv (bridgeGraph G H x y)
       (bridgeCanonicalLift G H x y D) (bridgeCanonicalLift G H x y E) := by
-  unfold linear_equiv at hDE ⊢
+  unfold linearEquiv at hDE ⊢
   obtain ⟨σ, hσ⟩ :=
     (principal_iff_eq_prin (vertexWedge G H x y) (E - D)).mp hDE
   rw [← map_sub, hσ]
@@ -570,17 +570,17 @@ the contracted divisors. -/
 theorem linear_equiv_bridge_iff_pushforward
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D E : CFDiv (bridgeGraph G H x y)) :
-    linear_equiv (bridgeGraph G H x y) D E ↔
-      linear_equiv (vertexWedge G H x y)
+    linearEquiv (bridgeGraph G H x y) D E ↔
+      linearEquiv (vertexWedge G H x y)
         (bridgePushforward G H x y D) (bridgePushforward G H x y E) := by
   constructor
   · exact linear_equiv_bridgePushforward G H x y
   · intro hDE
-    exact linear_equiv.trans
+    exact linearEquiv.trans
       (linear_equiv_bridgeCanonicalLift_pushforward G H x y D)
-      (linear_equiv.trans
+      (linearEquiv.trans
         (linear_equiv_bridgeCanonicalLift G H x y hDE)
-        (linear_equiv.symm
+        (linearEquiv.symm
           (linear_equiv_bridgeCanonicalLift_pushforward G H x y E)))
 
 /-- Winnability is invariant under contraction of a separating bridge. -/
@@ -597,7 +597,7 @@ theorem winnable_bridge_iff_pushforward
   · rintro ⟨E, hEEffective, hDE⟩
     refine ⟨bridgeCanonicalLift G H x y E,
       (effective_bridgeCanonicalLift_iff G H x y E).mpr hEEffective, ?_⟩
-    exact linear_equiv.trans
+    exact linearEquiv.trans
       (linear_equiv_bridgeCanonicalLift_pushforward G H x y D)
       (linear_equiv_bridgeCanonicalLift G H x y hDE)
 
@@ -606,13 +606,13 @@ bridge. -/
 theorem rank_geq_bridge_iff_pushforward
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv (bridgeGraph G H x y)) (k : ℤ) :
-    rank_geq (bridgeGraph G H x y) D k ↔
-      rank_geq (vertexWedge G H x y) (bridgePushforward G H x y D) k := by
+    rankGeq (bridgeGraph G H x y) D k ↔
+      rankGeq (vertexWedge G H x y) (bridgePushforward G H x y D) k := by
   constructor
   · intro hRank E hE
     have hLiftE :
         bridgeCanonicalLift G H x y E ∈
-          eff_of_degree (bridgeGraph G H x y) k := by
+          effOfDegree (bridgeGraph G H x y) k := by
       exact ⟨(effective_bridgeCanonicalLift_iff G H x y E).mpr hE.1,
         by simpa using hE.2⟩
     have hWin := hRank (bridgeCanonicalLift G H x y E) hLiftE
@@ -623,7 +623,7 @@ theorem rank_geq_bridge_iff_pushforward
   · intro hRank E hE
     have hPushE :
         bridgePushforward G H x y E ∈
-          eff_of_degree (vertexWedge G H x y) k := by
+          effOfDegree (vertexWedge G H x y) k := by
       exact ⟨effective_bridgePushforward G H x y hE.1,
         by simpa using hE.2⟩
     have hWin := hRank (bridgePushforward G H x y E) hPushE

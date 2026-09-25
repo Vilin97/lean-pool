@@ -26,10 +26,10 @@ namespace Bananas
 open Utilities
 
 private theorem linear_equiv_zsmul {G : CFGraph} {D E : CFDiv G}
-    (h : linear_equiv G D E) (n : ℤ) :
-    linear_equiv G (n • D) (n • E) := by
-  unfold linear_equiv at h ⊢
-  simpa [smul_sub] using (principal_divisors G).zsmul_mem h n
+    (h : linearEquiv G D E) (n : ℤ) :
+    linearEquiv G (n • D) (n • E) := by
+  unfold linearEquiv at h ⊢
+  simpa [smul_sub] using (principalDivisors G).zsmul_mem h n
 
 private theorem zero_isSemibreak {g : ℕ} (B : Banana g) : IsSemibreak B 0 := by
   refine ⟨fun _ => none, ?_⟩
@@ -44,7 +44,7 @@ private theorem normalForm_not_linearEquiv_zero {g : ℕ} (B : Banana g)
     (a b : ℤ) (E : CFDiv B.graph) (hE : IsSemibreak B E)
     (h : (a < 0 ∧ 0 ≤ b ∧ b + deg E ≤ g) ∨
       (b < 0 ∧ 0 ≤ a ∧ a + deg E ≤ g)) :
-    ¬ linear_equiv B.graph (bananaNormalForm B a b E) 0 := by
+    ¬ linearEquiv B.graph (bananaNormalForm B a b E) 0 := by
   intro heq
   have hRank : rank B.graph (bananaNormalForm B a b E) = -1 := by
     rcases h with ⟨ha, hb, hdeg⟩ | ⟨hb, ha, hdeg⟩
@@ -63,9 +63,9 @@ theorem midpoint_not_linearEquiv_even_multiple
     (hi : 2 * i.val = B.length α) (hj : B.IsInteriorPosition β j)
     (hmid : 2 * j.val ≠ B.length β)
     (hk : 0 < k) (heven : Even k) (hbound : k ≤ 2 * g - 2) :
-    ¬ linear_equiv B.graph
-      ((k : ℤ) • one_chip (strandVertex B α i))
-      ((k : ℤ) • one_chip (strandVertex B β j)) := by
+    ¬ linearEquiv B.graph
+      ((k : ℤ) • oneChip (strandVertex B α i))
+      ((k : ℤ) • oneChip (strandVertex B β j)) := by
   obtain ⟨t, rfl⟩ := heven
   have ht : 0 < t := by omega
   have htg : t < g := by omega
@@ -91,12 +91,12 @@ theorem midpoint_not_linearEquiv_even_multiple
   intro heq
   -- For k = 2t, the marked difference is equivalent to
   -- (t - q - 1)L + (q - t)R + v_{β,r}.
-  have hprincipal : linear_equiv B.graph
+  have hprincipal : linearEquiv B.graph
       (bananaNormalForm B ((t : ℤ) - q - 1) ((q : ℤ) - t)
-        (one_chip (strandVertex B β p))) 0 := by
-    unfold linear_equiv at hmidrel hprefix heq ⊢
-    have h := (principal_divisors B.graph).sub_mem
-      ((principal_divisors B.graph).sub_mem hmidrel heq) hprefix
+        (oneChip (strandVertex B β p))) 0 := by
+    unfold linearEquiv at hmidrel hprefix heq ⊢
+    have h := (principalDivisors B.graph).sub_mem
+      ((principalDivisors B.graph).sub_mem hmidrel heq) hprefix
     convert h using 1
     simp only [bananaNormalForm, Nat.cast_add, smul_sub, smul_add, smul_smul]
     module
@@ -105,7 +105,7 @@ theorem midpoint_not_linearEquiv_even_multiple
   · have hp : p = ⟨0, by omega⟩ := Fin.ext hrzero
     rw [hp, strandVertex_zero] at hprincipal
     have hform : bananaNormalForm B ((t : ℤ) - q - 1) ((q : ℤ) - t)
-        (one_chip (leftEndpoint B)) =
+        (oneChip (leftEndpoint B)) =
         bananaNormalForm B ((t : ℤ) - q) ((q : ℤ) - t) 0 := by
       unfold bananaNormalForm
       module
@@ -144,9 +144,9 @@ theorem midpoint_not_linearEquiv_small_multiple
     (i : B.PathPosition α) (j : B.PathPosition β)
     (hi : 2 * i.val = B.length α) (hj : B.IsInteriorPosition β j)
     (hmid : 2 * j.val ≠ B.length β) (hk : 0 < k) (hbound : k < g) :
-    ¬ linear_equiv B.graph
-      ((k : ℤ) • one_chip (strandVertex B α i))
-      ((k : ℤ) • one_chip (strandVertex B β j)) := by
+    ¬ linearEquiv B.graph
+      ((k : ℤ) • oneChip (strandVertex B α i))
+      ((k : ℤ) • oneChip (strandVertex B β j)) := by
   intro heq
   have hdouble := linear_equiv_zsmul heq (2 : ℤ)
   apply midpoint_not_linearEquiv_even_multiple B α β i j hi hj hmid
@@ -175,9 +175,9 @@ theorem length_two_cross_torsion_dichotomy
     apply midpoint_not_linearEquiv_small_multiple B α β i j hiMid hjInt hjMid
       hTO.1.1 (by omega)
     have h := hTO.1.2
-    change linear_equiv B.graph
-      ((k : ℤ) • (one_chip (strandVertex B α i) - one_chip (strandVertex B β j))) 0 at h
-    unfold linear_equiv at h ⊢
+    change linearEquiv B.graph
+      ((k : ℤ) • (oneChip (strandVertex B α i) - oneChip (strandVertex B β j))) 0 at h
+    unfold linearEquiv at h ⊢
     convert h using 1
     module
 

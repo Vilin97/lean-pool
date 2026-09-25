@@ -53,9 +53,9 @@ instance decidableEffective {G : CFGraph} (D : CFDiv G) : Decidable (effective D
 
 /-- An explicit firing script witnessing winnability. -/
 theorem winnable_of_effective_add_prin {G : CFGraph} (D : CFDiv G)
-    (x : firing_script G) (h : effective (D + prin G x)) : winnable G D := by
+    (x : firingScript G) (h : effective (D + prin G x)) : winnable G D := by
   refine ⟨D + prin G x, h, ?_⟩
-  show (D + prin G x) - D ∈ principal_divisors G
+  show (D + prin G x) - D ∈ principalDivisors G
   rw [principal_iff_eq_prin]
   exact ⟨x, by ring⟩
 
@@ -67,10 +67,10 @@ def Tm : Spec 7 15 := tricycleSpec (fun _ => 1) (fun _ => Nat.one_pos)
 /-- Its `2`-subdivision `σ₂(T_m)`. -/
 def Tm2 : Spec 7 15 := tricycleSpec (fun _ => 2) (fun _ => by omega)
 
-theorem Tm_connected : graph_connected Tm.graph :=
+theorem Tm_connected : graphConnected Tm.graph :=
   tricycleSpec_connected _ _
 
-theorem Tm2_connected : graph_connected Tm2.graph :=
+theorem Tm2_connected : graphConnected Tm2.graph :=
   tricycleSpec_connected _ _
 
 /-! ## Theorem 3.9, upper half: `dgon(T_m) ≤ 6` -/
@@ -94,7 +94,7 @@ theorem sixChips_rank : rank Tm.graph sixChips ≥ 1 := by
   intro x hx
   obtain ⟨v, rfl⟩ := (Tm.mem_coreVertices x).mp hx
   fin_cases v
-  · exact winnable_of_effective_add_prin _ (indicator_script Tm.graph TmOuterRing) (by decide)
+  · exact winnable_of_effective_add_prin _ (indicatorScript Tm.graph TmOuterRing) (by decide)
   · exact winnable_of_effective_add_prin _ 0 (by decide)
   · exact winnable_of_effective_add_prin _ 0 (by decide)
   · exact winnable_of_effective_add_prin _ 0 (by decide)
@@ -148,19 +148,19 @@ theorem specialDivisor_rank : rank Tm2.graph specialDivisor ≥ 1 := by
   · exact winnable_of_effective_add_prin _ 0 (by decide)
   -- `v₁⁻`, `v₁⁺`: fire the complement of `S₁`.
   · exact winnable_of_effective_add_prin _
-      (indicator_script Tm2.graph (cycleComponentCompl 0)) (by decide)
+      (indicatorScript Tm2.graph (cycleComponentCompl 0)) (by decide)
   · exact winnable_of_effective_add_prin _
-      (indicator_script Tm2.graph (cycleComponentCompl 0)) (by decide)
+      (indicatorScript Tm2.graph (cycleComponentCompl 0)) (by decide)
   -- `v₂⁻`, `v₂⁺`: fire the complement of `S₂`.
   · exact winnable_of_effective_add_prin _
-      (indicator_script Tm2.graph (cycleComponentCompl 1)) (by decide)
+      (indicatorScript Tm2.graph (cycleComponentCompl 1)) (by decide)
   · exact winnable_of_effective_add_prin _
-      (indicator_script Tm2.graph (cycleComponentCompl 1)) (by decide)
+      (indicatorScript Tm2.graph (cycleComponentCompl 1)) (by decide)
   -- `v₃⁻`, `v₃⁺`: fire the complement of `S₃`.
   · exact winnable_of_effective_add_prin _
-      (indicator_script Tm2.graph (cycleComponentCompl 2)) (by decide)
+      (indicatorScript Tm2.graph (cycleComponentCompl 2)) (by decide)
   · exact winnable_of_effective_add_prin _
-      (indicator_script Tm2.graph (cycleComponentCompl 2)) (by decide)
+      (indicatorScript Tm2.graph (cycleComponentCompl 2)) (by decide)
 
 /-- **Proposition 3.3.**  The `2`-subdivision of the minimal tricycle has
 divisorial gonality at most five. -/

@@ -431,7 +431,7 @@ variable (certificate : Certificate m n p) (point : Fin m → ℤ)
 /-- The firing script attached to a core anchor, assembled on the contracted
 subdivision by canonical integral interpolation. -/
 def degenerateAnchorScript (anchor : Fin n) :
-    firing_script (certificate.degenerateSpec point core_nonempty rep rep_idem
+    firingScript (certificate.degenerateSpec point core_nonempty rep rep_idem
       rep_zero rep_loopless forest).graph :=
   Utilities.Certificate.DegenerateSpec.DegSpec.interpolatedScript
     (certificate.degenerateSpec point core_nonempty rep rep_idem rep_zero
@@ -473,7 +473,7 @@ theorem effective_degenerateAnchorResidual {degree : ℤ}
       (certificate.degenerateDivisor
           (certificate.degenerateSpec point core_nonempty rep rep_idem rep_zero
             rep_loopless forest) -
-        one_chip
+        oneChip
           ((certificate.degenerateSpec point core_nonempty rep rep_idem rep_zero
             rep_loopless forest).coreVertex anchor) +
         prin (certificate.degenerateSpec point core_nonempty rep rep_idem rep_zero
@@ -492,9 +492,9 @@ theorem effective_degenerateAnchorResidual {degree : ℤ}
     rw [hInl, degenerateDivisor_coreVertex,
       certificate.prin_degenerateAnchorScript_coreVertex point core_nonempty rep
         rep_idem rep_zero rep_loopless forest anchor c.val hInv]
-    have hChip : one_chip (G := d.graph) (d.coreVertex anchor) (d.coreVertex c.val) =
+    have hChip : oneChip (G := d.graph) (d.coreVertex anchor) (d.coreVertex c.val) =
         (if rep anchor = rep c.val then 1 else 0) := by
-      unfold one_chip
+      unfold oneChip
       by_cases h : rep anchor = rep c.val
       · rw [if_pos ((d.coreVertex_eq_iff c.val anchor).mpr h.symm), if_pos h]
       · rw [if_neg (fun hEq => h (((d.coreVertex_eq_iff c.val anchor).mp hEq)).symm),
@@ -511,9 +511,9 @@ theorem effective_degenerateAnchorResidual {degree : ℤ}
     simp only [ge_iff_le, Pi.add_apply, Pi.sub_apply]
     have hInr : (Sum.inr ⟨e, o⟩ : d.Vertex) = d.interiorVertex e o := rfl
     rw [hInr]
-    have hChip : one_chip (G := d.graph) (d.coreVertex anchor)
+    have hChip : oneChip (G := d.graph) (d.coreVertex anchor)
         (d.interiorVertex e o) = 0 := by
-      unfold one_chip Utilities.Certificate.DegenerateSpec.DegSpec.coreVertex
+      unfold oneChip Utilities.Certificate.DegenerateSpec.DegSpec.coreVertex
         Utilities.Certificate.DegenerateSpec.DegSpec.interiorVertex
       simp
     rw [degenerateDivisor_interiorVertex, hChip]
@@ -542,13 +542,13 @@ theorem reaches_degenerateCoreVertex {degree : ℤ}
         rep_loopless forest).coreVertex anchor) := by
   set d := certificate.degenerateSpec point core_nonempty rep rep_idem rep_zero
     rep_loopless forest with hd
-  refine ⟨certificate.degenerateDivisor d - one_chip (d.coreVertex anchor) +
+  refine ⟨certificate.degenerateDivisor d - oneChip (d.coreVertex anchor) +
     prin d.graph (certificate.degenerateAnchorScript point core_nonempty rep
       rep_idem rep_zero rep_loopless forest anchor),
     certificate.effective_degenerateAnchorResidual point core_nonempty rep
       rep_idem rep_zero rep_loopless forest hValid hCone anchor hInv, ?_⟩
   exact StrongSeparator.linearEquiv_add_prin
-    (certificate.degenerateDivisor d - one_chip (d.coreVertex anchor))
+    (certificate.degenerateDivisor d - oneChip (d.coreVertex anchor))
     (certificate.degenerateAnchorScript point core_nonempty rep rep_idem rep_zero
       rep_loopless forest anchor)
 
@@ -597,7 +597,7 @@ theorem bnExists_of_validClosed_of_strongSeparator
       (certificate.degenerateSpec point core_nonempty rep rep_idem rep_zero
         rep_loopless forest).RepInvariant
           (certificate.evaluatedPotential anchor point))
-    (hConnected : graph_connected
+    (hConnected : graphConnected
       (certificate.degenerateSpec point core_nonempty rep rep_idem rep_zero
         rep_loopless forest).graph)
     (hSeparator : StrongSeparator.StrongSeparatorCertificate

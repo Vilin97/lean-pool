@@ -52,7 +52,7 @@ private theorem length_lt_mirror_sum {n i k j : ℕ}
 degree-zero divisor, hence a divisor of rank `-1`. -/
 theorem rank_one_chip_sub_one_chip_eq_neg_one_of_ne_banana_generic
     {g : ℕ} (hg : 1 ≤ g) (B : Banana g) (x y : B.graph.V) (hxy : x ≠ y) :
-    rank B.graph (one_chip x - one_chip y) = -1 := by
+    rank B.graph (oneChip x - oneChip y) = -1 := by
   apply rank_eq_neg_one_of_degree_zero_not_linear_equiv B.graph
   · simp [deg.map_sub, deg_one_chip]
   · exact marks_not_linearEquiv hg B hxy
@@ -91,7 +91,7 @@ theorem exists_rankDelta_neg_same_strand_interior_generic
     have hVal := congrArg Fin.val (strandVertex_injective B alpha h)
     exact (ne_of_lt hkLtJ) hVal
   let D : CFDiv B.graph :=
-    one_chip (strandVertex B alpha i) + one_chip (strandVertex B alpha k)
+    oneChip (strandVertex B alpha i) + oneChip (strandVertex B alpha k)
   have hRankD : rank B.graph D = 0 := by
     by_cases hTail : B.core.tail alpha = 0
     · have hI : strandVertex B alpha i = B.pathVertex alpha i := by
@@ -120,16 +120,16 @@ theorem exists_rankDelta_neg_same_strand_interior_generic
       simp only [strandMirror]
       exact ne_of_gt (length_lt_mirror_sum hi.2 hk.2 hIK hj.2)
   have hRankU : rank B.graph
-      (D - one_chip (strandVertex B alpha i)) = 0 := by
+      (D - oneChip (strandVertex B alpha i)) = 0 := by
     have hCancel :
-        D - one_chip (strandVertex B alpha i) =
-          one_chip (G := B.graph) (strandVertex B alpha k) := by
+        D - oneChip (strandVertex B alpha i) =
+          oneChip (G := B.graph) (strandVertex B alpha k) := by
       dsimp [D]
       abel
     rw [hCancel]
     exact rank_one_chip_zero_of_banana (by omega) B _
   have hRankV : rank B.graph
-      (D - one_chip (strandVertex B alpha j)) = 0 := by
+      (D - oneChip (strandVertex B alpha j)) = 0 := by
     by_cases hTail : B.core.tail alpha = 0
     · have hI : strandVertex B alpha i = B.pathVertex alpha i := by
         unfold strandVertex
@@ -146,9 +146,9 @@ theorem exists_rankDelta_neg_same_strand_interior_generic
         hSlide (B.pathVertex alpha j)
       have hRankEq := rank_eq_of_linear_equiv B.graph hShift
       have hRight : rank B.graph
-          (one_chip (B.coreVertex (B.core.tail alpha)) +
-              one_chip (B.pathVertex alpha ⟨i.val + k.val, by omega⟩) -
-            one_chip (B.pathVertex alpha j)) = 0 := by
+          (oneChip (B.coreVertex (B.core.tail alpha)) +
+              oneChip (B.pathVertex alpha ⟨i.val + k.val, by omega⟩) -
+            oneChip (B.pathVertex alpha j)) = 0 := by
         have hPath : B.pathVertex alpha ⟨i.val + k.val, by omega⟩ =
             B.pathVertex alpha j := by
           rw [B.pathVertex_eq_iff_val_eq]
@@ -197,10 +197,10 @@ theorem exists_rankDelta_neg_same_strand_interior_generic
         dsimp [i', k', j', strandMirror]
         omega
       have hRight : rank B.graph
-          (one_chip (B.pathVertex alpha
+          (oneChip (B.pathVertex alpha
               ⟨i'.val + k'.val - B.length alpha, by omega⟩) +
-              one_chip (B.coreVertex (B.core.head alpha)) -
-            one_chip (B.pathVertex alpha j')) = 0 := by
+              oneChip (B.coreVertex (B.core.head alpha)) -
+            oneChip (B.pathVertex alpha j')) = 0 := by
         rw [hExcess, add_sub_left_divisor]
         exact rank_one_chip_zero_of_banana (by omega) B _
       rw [hRight] at hRankEq
@@ -208,15 +208,15 @@ theorem exists_rankDelta_neg_same_strand_interior_generic
       rw [hI, hK, hJ]
       exact hRankEq
   have hRankUV : rank B.graph
-      (D - one_chip (strandVertex B alpha i) -
-        one_chip (strandVertex B alpha j)) = -1 := by
+      (D - oneChip (strandVertex B alpha i) -
+        oneChip (strandVertex B alpha j)) = -1 := by
     have hRank := rank_one_chip_sub_one_chip_eq_neg_one_of_ne_banana_generic
       (by omega) B (strandVertex B alpha k) (strandVertex B alpha j) hKJ
     have hCancel :
-        D - one_chip (strandVertex B alpha i) -
-            one_chip (strandVertex B alpha j) =
-          one_chip (strandVertex B alpha k) -
-            one_chip (strandVertex B alpha j) := by
+        D - oneChip (strandVertex B alpha i) -
+            oneChip (strandVertex B alpha j) =
+          oneChip (strandVertex B alpha k) -
+            oneChip (strandVertex B alpha j) := by
       dsimp [D]
       exact pair_sub_first_sub_third _ _ _
     rw [hCancel]
@@ -248,7 +248,7 @@ theorem exists_rankDelta_neg_same_strand_interior_self_generic
     dsimp [z] at hVal
     exact (Nat.ne_of_gt hi.1) hVal
   let D : CFDiv B.graph :=
-    one_chip (strandVertex B alpha i) + one_chip (leftEndpoint B)
+    oneChip (strandVertex B alpha i) + oneChip (leftEndpoint B)
   have hRankD : rank B.graph D = 0 := by
     by_cases hTail : B.core.tail alpha = 0
     · have hI : strandVertex B alpha i = B.pathVertex alpha i := by
@@ -292,24 +292,24 @@ theorem exists_rankDelta_neg_same_strand_interior_self_generic
       have hPos : 0 < B.length alpha - i.val := Nat.sub_pos_of_lt hi.2
       omega
   have hRankU : rank B.graph
-      (D - one_chip (strandVertex B alpha i)) = 0 := by
+      (D - oneChip (strandVertex B alpha i)) = 0 := by
     have hCancel :
-        D - one_chip (strandVertex B alpha i) =
-          one_chip (G := B.graph) (leftEndpoint B) := by
+        D - oneChip (strandVertex B alpha i) =
+          oneChip (G := B.graph) (leftEndpoint B) := by
       dsimp [D]
       abel
     rw [hCancel]
     exact rank_one_chip_zero_of_banana (by omega) B _
   have hRankUU : rank B.graph
-      (D - one_chip (strandVertex B alpha i) -
-        one_chip (strandVertex B alpha i)) = -1 := by
+      (D - oneChip (strandVertex B alpha i) -
+        oneChip (strandVertex B alpha i)) = -1 := by
     have hRank := rank_one_chip_sub_one_chip_eq_neg_one_of_ne_banana_generic
       (by omega) B (leftEndpoint B) (strandVertex B alpha i) hIZ.symm
     have hCancel :
-        D - one_chip (strandVertex B alpha i) -
-            one_chip (strandVertex B alpha i) =
-          one_chip (leftEndpoint B) -
-            one_chip (strandVertex B alpha i) := by
+        D - oneChip (strandVertex B alpha i) -
+            oneChip (strandVertex B alpha i) =
+          oneChip (leftEndpoint B) -
+            oneChip (strandVertex B alpha i) := by
       dsimp [D]
       abel
     rw [hCancel]
@@ -323,8 +323,8 @@ theorem exists_rankDelta_neg_same_strand_interior_self_generic
 private theorem rankDelta_swap_marks_generic
     (G : CFGraph) (u v : G.V) (D : CFDiv G) :
     rankDelta (mark G u v) D = rankDelta (mark G v u) D := by
-  have hSub : D - one_chip u - one_chip v =
-      D - one_chip v - one_chip u := by
+  have hSub : D - oneChip u - oneChip v =
+      D - oneChip v - oneChip u := by
     abel
   unfold rankDelta mark
   rw [hSub]

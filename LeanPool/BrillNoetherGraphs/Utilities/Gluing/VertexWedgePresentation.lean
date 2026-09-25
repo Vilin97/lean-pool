@@ -31,10 +31,10 @@ structure VertexWedgePresentation (K : CFGraph.{w})
   marked_eq : leftMap x = rightMap y
   only_overlap : ∀ a b, leftMap a = rightMap b → a = x ∧ b = y
   vertex_cover : ∀ z, (∃ a, leftMap a = z) ∨ ∃ b, rightMap b = z
-  num_edges_left : ∀ a b, num_edges K (leftMap a) (leftMap b) = num_edges G a b
-  num_edges_right : ∀ a b, num_edges K (rightMap a) (rightMap b) = num_edges H a b
+  num_edges_left : ∀ a b, numEdges K (leftMap a) (leftMap b) = numEdges G a b
+  num_edges_right : ∀ a b, numEdges K (rightMap a) (rightMap b) = numEdges H a b
   num_edges_cross : ∀ a b, b ≠ y →
-    num_edges K (leftMap a) (rightMap b) = if a = x then num_edges H y b else 0
+    numEdges K (leftMap a) (rightMap b) = if a = x then numEdges H y b else 0
 
 namespace VertexWedgePresentation
 
@@ -163,14 +163,14 @@ noncomputable def graphIso (P : VertexWedgePresentation K G H x y) :
         cases q with
         | inl b =>
             calc
-              num_edges K (P.rightMap a.1) (P.leftMap b) =
-                  num_edges K (P.leftMap b) (P.rightMap a.1) :=
+              numEdges K (P.rightMap a.1) (P.leftMap b) =
+                  numEdges K (P.leftMap b) (P.rightMap a.1) :=
                 num_edges_symmetric K _ _
-              _ = if b = x then num_edges H y a.1 else 0 :=
+              _ = if b = x then numEdges H y a.1 else 0 :=
                 P.num_edges_cross b a.1 a.2
-              _ = num_edges (vertexWedge G H x y) (Sum.inl b) (Sum.inr a) :=
+              _ = numEdges (vertexWedge G H x y) (Sum.inl b) (Sum.inr a) :=
                 (num_edges_vertexWedge_left_right G H x y b a).symm
-              _ = num_edges (vertexWedge G H x y) (Sum.inr a) (Sum.inl b) :=
+              _ = numEdges (vertexWedge G H x y) (Sum.inr a) (Sum.inl b) :=
                 num_edges_symmetric _ _ _
         | inr b => simpa [vertexEquiv, map] using P.num_edges_right a.1 b.1
 
@@ -194,14 +194,14 @@ theorem genus_eq (P : VertexWedgePresentation K G H x y) :
 /-- Connectivity of the presented graph is equivalent to connectivity of its
 concrete wedge. -/
 theorem graph_connected_iff (P : VertexWedgePresentation K G H x y) :
-    graph_connected K ↔ graph_connected (vertexWedge G H x y) :=
+    graphConnected K ↔ graphConnected (vertexWedge G H x y) :=
   P.graphIso.graph_connected_iff
 
 /-- Connected factors give a connected presented ambient graph. -/
 theorem graph_connected_of_factors
     (P : VertexWedgePresentation K G H x y)
-    (hG : graph_connected G) (hH : graph_connected H) :
-    graph_connected K :=
+    (hG : graphConnected G) (hH : graphConnected H) :
+    graphConnected K :=
   P.graphIso.graph_connected_map
     (graph_connected_vertexWedge G H x y hG hH)
 

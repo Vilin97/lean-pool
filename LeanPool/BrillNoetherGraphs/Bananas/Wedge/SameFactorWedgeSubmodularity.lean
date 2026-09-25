@@ -23,7 +23,7 @@ open Utilities
 /-- On a bridgeless genus-one factor, pointed rigidity is available at every
 vertex, not merely at the wedge attachment. -/
 theorem pointedGenusOneRigid_of_any_vertex
-    (G : CFGraph) (x : G.V) (hConnected : _root_.graph_connected G)
+    (G : CFGraph) (x : G.V) (hConnected : _root_.graphConnected G)
     (hGenus : genus G = 1) (hCut : TwoEdgeCutCondition G) :
     PointedGenusOneRigid G x :=
   pointedGenusOneRigid_of_twoEdgeCutCondition x hConnected hGenus
@@ -48,7 +48,7 @@ theorem card_leftFactor_le_two_of_allSubmodular
     hG.connected hG.genus_one hG hGu hH hwx hwu
   have hNonneg := (allSubmodular_iff_rankDelta_nonneg
     (mark (vertexWedge G H x y) (Sum.inl x) (Sum.inl u))).mp hSub
-    (wedgeLiftLeftDivisor G H x y (one_chip x + one_chip w))
+    (wedgeLiftLeftDivisor G H x y (oneChip x + oneChip w))
   omega
 
 /-- The only all-submodular marking supported on one factor of a bridgeless
@@ -78,10 +78,10 @@ theorem same_leftFactor_marks_of_allSubmodular
       hG.connected hG.genus_one hG hGu hH hwx hwu
     have hNonneg := (allSubmodular_iff_rankDelta_nonneg
       (mark W (Sum.inl u) (Sum.inl x))).mp hSub
-      (wedgeLiftLeftDivisor G H x y (one_chip x + one_chip w))
+      (wedgeLiftLeftDivisor G H x y (oneChip x + oneChip w))
     change 0 ≤ rankDelta
       (mark (vertexWedge G H x y) (Sum.inl u) (Sum.inl x))
-      (wedgeLiftLeftDivisor G H x y (one_chip x + one_chip w)) at hNonneg
+      (wedgeLiftLeftDivisor G H x y (oneChip x + oneChip w)) at hNonneg
     rw [← rankDelta_swap_marks (vertexWedge G H x y) (Sum.inl x) (Sum.inl u)] at hNonneg
     exact (by omega : False).elim
   exfalso
@@ -91,7 +91,7 @@ theorem same_leftFactor_marks_of_allSubmodular
     hG.connected hG.genus_one hG hGu hH hux hvx
   have hNonneg := (allSubmodular_iff_rankDelta_nonneg
     (mark (vertexWedge G H x y) (Sum.inl u) (Sum.inl v))).mp hSub
-    (wedgeLiftLeftDivisor G H x y (one_chip u + one_chip x))
+    (wedgeLiftLeftDivisor G H x y (oneChip u + oneChip x))
   omega
 
 /-- The necessary same-factor conclusion for a general-transmission wedge is

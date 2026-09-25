@@ -22,16 +22,16 @@ universe u v
 /-- A pointed genus-one graph for which no other vertex is linearly
 equivalent to the marked point in degree zero. -/
 structure PointedGenusOneRigid (H : CFGraph.{v}) (y : H.V) : Prop where
-  connected : graph_connected H
+  connected : graphConnected H
   genus_one : genus H = 1
   exists_ne : ∃ p : H.V, p ≠ y
   nontrivial : ∀ p : H.V, p ≠ y →
-    ¬ linear_equiv H (one_chip y - one_chip p) 0
+    ¬ linearEquiv H (oneChip y - oneChip p) 0
 
 /-- A winnable divisor of degree zero is linearly equivalent to zero. -/
 theorem linear_equiv_zero_of_winnable_deg_zero
     (K : CFGraph.{u}) (A : CFDiv K)
-    (hWin : winnable K A) (hDeg : deg A = 0) : linear_equiv K A 0 := by
+    (hWin : winnable K A) (hDeg : deg A = 0) : linearEquiv K A 0 := by
   obtain ⟨B, hB, hAB⟩ := hWin
   have hDegB : deg B = 0 := by
     rw [← linear_equiv_preserves_deg K A B hAB, hDeg]
@@ -56,19 +56,19 @@ theorem deg_nonneg_of_winnable
 /-- A nonnegative integral pile of chips at one vertex is effective. -/
 theorem effective_marked_pile_of_nonneg
     (K : CFGraph.{u}) (q : K.V) (t : ℤ) (ht : 0 ≤ t) :
-    effective (t • one_chip q) := by
+    effective (t • oneChip q) := by
   intro z
-  by_cases hz : z = q <;> simp [one_chip, hz, ht]
+  by_cases hz : z = q <;> simp [oneChip, hz, ht]
 
 /-- Adding chips at one marked vertex preserves winnability. -/
 theorem winnable_chipShift_mono
     (K : CFGraph.{u}) (A : CFDiv K) (q : K.V) {s t : ℤ}
     (hst : s ≤ t) (hWin : winnable K (chipShift K A q s)) :
     winnable K (chipShift K A q t) := by
-  have hAdded : effective ((t - s) • one_chip q) :=
+  have hAdded : effective ((t - s) • oneChip q) :=
     effective_marked_pile_of_nonneg K q (t - s) (by omega)
   have h := winnable_add_effective_divisor K
-    (chipShift K A q s) ((t - s) • one_chip q) hWin hAdded
+    (chipShift K A q s) ((t - s) • oneChip q) hWin hAdded
   convert h using 1
   funext z
   simp only [chipShift, zsmul_eq_mul, Pi.add_apply, Pi.mul_apply, Pi.intCast_apply, Int.cast_eq,
@@ -81,14 +81,14 @@ theorem wedgeLiftLeft_sub_left
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (a : G.V) :
     wedgeLiftLeftDivisor G H x y D -
-        one_chip (G := vertexWedge G H x y) (Sum.inl a) =
-      wedgeAddDivisor G H x y (D - one_chip a) 0 := by
+        oneChip (G := vertexWedge G H x y) (Sum.inl a) =
+      wedgeAddDivisor G H x y (D - oneChip a) 0 := by
   funext z
   cases z with
   | inl q =>
       change wedgeAddDivisor G H x y D 0 (Sum.inl q) -
-          one_chip (G := vertexWedge G H x y) (Sum.inl a) (Sum.inl q) =
-        wedgeAddDivisor G H x y (D - one_chip a) 0 (Sum.inl q)
+          oneChip (G := vertexWedge G H x y) (Sum.inl a) (Sum.inl q) =
+        wedgeAddDivisor G H x y (D - oneChip a) 0 (Sum.inl q)
       rw [wedgeAddDivisor_left, wedgeAddDivisor_left]
       change (D q + if q = x then 0 else 0) -
           (if (Sum.inl q : Sum G.V {z : H.V // z ≠ y}) = Sum.inl a then 1 else 0) =
@@ -97,10 +97,10 @@ theorem wedgeLiftLeft_sub_left
       ring
   | inr q =>
       change wedgeAddDivisor G H x y D 0 (Sum.inr q) -
-          one_chip (G := vertexWedge G H x y) (Sum.inl a) (Sum.inr q) =
-        wedgeAddDivisor G H x y (D - one_chip a) 0 (Sum.inr q)
+          oneChip (G := vertexWedge G H x y) (Sum.inl a) (Sum.inr q) =
+        wedgeAddDivisor G H x y (D - oneChip a) 0 (Sum.inr q)
       rw [wedgeAddDivisor_right, wedgeAddDivisor_right]
-      simp [one_chip]
+      simp [oneChip]
 
 /-- Subtracting a non-marked right-factor chip from a left-supported wedge
 divisor puts exactly its negative on the right factor. -/
@@ -108,14 +108,14 @@ theorem wedgeLiftLeft_sub_right
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (p : {z : H.V // z ≠ y}) :
     wedgeLiftLeftDivisor G H x y D -
-        one_chip (G := vertexWedge G H x y) (Sum.inr p) =
-      wedgeAddDivisor G H x y D (-one_chip p.1) := by
+        oneChip (G := vertexWedge G H x y) (Sum.inr p) =
+      wedgeAddDivisor G H x y D (-oneChip p.1) := by
   funext z
   cases z with
   | inl q =>
       change wedgeAddDivisor G H x y D 0 (Sum.inl q) -
-          one_chip (G := vertexWedge G H x y) (Sum.inr p) (Sum.inl q) =
-        wedgeAddDivisor G H x y D (-one_chip p.1) (Sum.inl q)
+          oneChip (G := vertexWedge G H x y) (Sum.inr p) (Sum.inl q) =
+        wedgeAddDivisor G H x y D (-oneChip p.1) (Sum.inl q)
       rw [wedgeAddDivisor_left, wedgeAddDivisor_left]
       change (D q + if q = x then 0 else 0) -
           (if (Sum.inl q : Sum G.V {z : H.V // z ≠ y}) = Sum.inr p then 1 else 0) =
@@ -123,8 +123,8 @@ theorem wedgeLiftLeft_sub_right
       simp [Ne.symm p.2]
   | inr q =>
       change wedgeAddDivisor G H x y D 0 (Sum.inr q) -
-          one_chip (G := vertexWedge G H x y) (Sum.inr p) (Sum.inr q) =
-        wedgeAddDivisor G H x y D (-one_chip p.1) (Sum.inr q)
+          oneChip (G := vertexWedge G H x y) (Sum.inr p) (Sum.inr q) =
+        wedgeAddDivisor G H x y D (-oneChip p.1) (Sum.inr q)
       rw [wedgeAddDivisor_right, wedgeAddDivisor_right]
       change 0 -
           (if (Sum.inr q : Sum G.V {z : H.V // z ≠ y}) = Sum.inr p then 1 else 0) =
@@ -139,7 +139,7 @@ theorem rank_wedgeLiftLeft_ge_one_iff
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (hH : PointedGenusOneRigid H y) (D : CFDiv G) :
     rank (vertexWedge G H x y) (wedgeLiftLeftDivisor G H x y D) ≥ 1 ↔
-      rank G D ≥ 1 ∧ winnable G (D - (2 : ℤ) • one_chip x) := by
+      rank G D ≥ 1 ∧ winnable G (D - (2 : ℤ) • oneChip x) := by
   constructor
   · intro hRank
     have hTests :=
@@ -152,7 +152,7 @@ theorem rank_wedgeLiftLeft_ge_one_iff
       rw [wedgeLiftLeft_sub_left] at hWa
       obtain ⟨t, hLeft, hRight⟩ :=
         (winnable_vertexWedge_iff_exists_chipShift
-          G H x y (D - one_chip a) 0).mp hWa
+          G H x y (D - oneChip a) 0).mp hWa
       have ht : t ≤ 0 := by
         have hDegree := deg_nonneg_of_winnable H
           (chipShift H 0 y (-t)) hRight
@@ -161,7 +161,7 @@ theorem rank_wedgeLiftLeft_ge_one_iff
         simp only [smul_eq_mul, mul_one] at hDegree
         omega
       have hMonotone := winnable_chipShift_mono G
-        (D - one_chip a) x ht hLeft
+        (D - oneChip a) x ht hLeft
       simpa [chipShift] using hMonotone
     · obtain ⟨p, hp⟩ := hH.exists_ne
       let p' : {z : H.V // z ≠ y} := ⟨p, hp⟩
@@ -169,10 +169,10 @@ theorem rank_wedgeLiftLeft_ge_one_iff
       rw [wedgeLiftLeft_sub_right] at hWp
       obtain ⟨t, hLeft, hRight⟩ :=
         (winnable_vertexWedge_iff_exists_chipShift
-          G H x y D (-one_chip p)).mp hWp
+          G H x y D (-oneChip p)).mp hWp
       have htOne : t ≤ -1 := by
         have hDegree := deg_nonneg_of_winnable H
-          (chipShift H (-one_chip p) y (-t)) hRight
+          (chipShift H (-oneChip p) y (-t)) hRight
         rw [chipShift, deg.map_add, map_zsmul, map_neg, deg_one_chip] at hDegree
         rw [deg_one_chip y] at hDegree
         simp only [smul_eq_mul, mul_one] at hDegree
@@ -182,12 +182,12 @@ theorem rank_wedgeLiftLeft_ge_one_iff
         have htEq : t = -1 := by omega
         subst t
         have hZero := linear_equiv_zero_of_winnable_deg_zero H
-          (chipShift H (-one_chip p) y (-(-1))) hRight (by
+          (chipShift H (-oneChip p) y (-(-1))) hRight (by
             simp [chipShift])
         apply hH.nontrivial p hp
         have hRewrite :
-            chipShift H (-one_chip p) y (-(-1)) =
-              one_chip y - one_chip p := by
+            chipShift H (-oneChip p) y (-(-1)) =
+              oneChip y - oneChip p := by
           unfold chipShift
           abel
         rw [hRewrite] at hZero
@@ -203,7 +203,7 @@ theorem rank_wedgeLiftLeft_ge_one_iff
     | inl a =>
         rw [wedgeLiftLeft_sub_left]
         apply (winnable_vertexWedge_iff_exists_chipShift
-          G H x y (D - one_chip a) 0).mpr
+          G H x y (D - oneChip a) 0).mpr
         refine ⟨0, ?_, ?_⟩
         · simpa [chipShift] using
             ((rank_ge_one_iff_winnable_sub_one_chip G D).mp hRankG a)
@@ -213,7 +213,7 @@ theorem rank_wedgeLiftLeft_ge_one_iff
     | inr p =>
         rw [wedgeLiftLeft_sub_right]
         apply (winnable_vertexWedge_iff_exists_chipShift
-          G H x y D (-one_chip p.1)).mpr
+          G H x y D (-oneChip p.1)).mpr
         refine ⟨-2, ?_, ?_⟩
         · convert hTwo using 1
           unfold chipShift

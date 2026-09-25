@@ -101,7 +101,7 @@ theorem transmission_crossOneOff_simple_block
       (mark B.graph
         (strandVertex B alpha ⟨1, by omega⟩)
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau) :
+      (g • oneChip (rightEndpoint B)) tau) :
     ∀ i : ℕ, i ≤ g - 3 → tau (2 + i : ℕ) = (g - i : ℕ) := by
   intro i hi
   let b := 2 + i
@@ -141,7 +141,7 @@ theorem crossOneOff_simple_inversion_lower_bound
       (mark B.graph
         (strandVertex B alpha ⟨1, by omega⟩)
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau)
+      (g • oneChip (rightEndpoint B)) tau)
     (hSeparate : g ≤ k)
     (hfinite : (kInversions k tau).Finite) :
     Nat.choose (g - 2) 2 ≤ kInversionCount k tau := by

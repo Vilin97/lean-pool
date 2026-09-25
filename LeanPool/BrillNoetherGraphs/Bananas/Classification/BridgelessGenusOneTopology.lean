@@ -22,17 +22,17 @@ open Utilities
 theorem vertex_degree_eq_two_of_bridgeless_genus_one
     (G : CFGraph) (hCut : TwoEdgeCutCondition G)
     (hNontrivial : ∃ p q : G.V, p ≠ q) (hGenus : genus G = 1)
-    (vertex : G.V) : vertex_degree G vertex = 2 := by
+    (vertex : G.V) : vertexDegree G vertex = 2 := by
   let hMin := hasMinimumValenceTwo_of_twoEdgeCutCondition G hCut hNontrivial
   have hSum := sum_vertex_degree_sub_two G
   rw [hGenus] at hSum
   have hNonneg : ∀ v ∈ (Finset.univ : Finset G.V),
-      0 ≤ vertex_degree G v - 2 := by
+      0 ≤ vertexDegree G v - 2 := by
     intro v _
     have hLower := hMin v
     omega
   have hEach := (Finset.sum_eq_zero_iff_of_nonneg hNonneg).mp hSum
-  have hZero : vertex_degree G vertex - 2 = 0 :=
+  have hZero : vertexDegree G vertex - 2 = 0 :=
     hEach vertex (Finset.mem_univ _)
   have hLower := hMin vertex
   omega

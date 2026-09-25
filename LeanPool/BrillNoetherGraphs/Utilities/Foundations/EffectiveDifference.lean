@@ -18,7 +18,7 @@ below is purely in terms of divisors and linear equivalence.
 
 ## Proof sketch
 
-Write `K` for `canonical_divisor G` and `g` for `genus G`.
+Write `K` for `canonicalDivisor G` and `g` for `genus G`.
 
 1. `rank G γ ≥ -1` always, and `g ≥ 2` forces `-1 ≥ 1 - g`, so
    `rank G γ ≥ 1 - g`.  Since `deg γ = 0 = (g - 1) + (1 - g)`, Riemann--Roch
@@ -38,12 +38,12 @@ namespace Utilities
 every degree-zero divisor class `γ` is the difference `F - E` of two effective
 divisors `E, F` of degree `g - 1`. -/
 theorem exists_effective_difference_of_deg_zero
-    {G : CFGraph} (hG : graph_connected G) (hg : genus G ≥ 2)
+    {G : CFGraph} (hG : graphConnected G) (hg : genus G ≥ 2)
     (γ : CFDiv G) (hγ : deg γ = 0) :
     ∃ E F : CFDiv G,
       effective E ∧ effective F ∧
       deg E = genus G - 1 ∧ deg F = genus G - 1 ∧
-      linear_equiv G (F - E) γ := by
+      linearEquiv G (F - E) γ := by
   -- Step 1: an effective representative `M` of `K - γ`, of degree `2g - 2`.
   have hRankGamma : rank G γ ≥ 1 - genus G := by
     have h1 := rank_geq_neg_one G γ
@@ -53,7 +53,7 @@ theorem exists_effective_difference_of_deg_zero
     (rank_ge_iff_exists_effective_canonical_complement hG γ (1 - genus G)
       hDegGamma).mp hRankGamma
   have hMDeg : deg M = 2 * genus G - 2 := by
-    have hEq := linear_equiv_preserves_deg G (canonical_divisor G - γ) M hMEquiv
+    have hEq := linear_equiv_preserves_deg G (canonicalDivisor G - γ) M hMEquiv
     rw [deg.map_sub, degree_of_canonical_divisor, hγ] at hEq
     omega
   -- Step 2: split `M` into effective `E, F*` of degree `g - 1` each.
@@ -67,25 +67,25 @@ theorem exists_effective_difference_of_deg_zero
   -- its canonical complement `K - F*` is winnable too.  Let `F` be an
   -- effective representative of it.
   have hFstarWinnable : winnable G Fstar := winnable_of_effective G Fstar hFstarEff
-  have hFwinnable : winnable G (canonical_divisor G - Fstar) :=
+  have hFwinnable : winnable G (canonicalDivisor G - Fstar) :=
     (degree_genus_sub_one_winnable_iff_complement_winnable hG Fstar hFstarDeg').mp
       hFstarWinnable
   obtain ⟨F, hFEff, hFEquiv⟩ :=
-    (winnable_iff_exists_effective G (canonical_divisor G - Fstar)).mp hFwinnable
+    (winnable_iff_exists_effective G (canonicalDivisor G - Fstar)).mp hFwinnable
   have hFDeg : deg F = genus G - 1 := by
-    have hEq := linear_equiv_preserves_deg G (canonical_divisor G - Fstar) F hFEquiv
+    have hEq := linear_equiv_preserves_deg G (canonicalDivisor G - Fstar) F hFEquiv
     rw [deg.map_sub, degree_of_canonical_divisor, hFstarDeg'] at hEq
     omega
   -- Step 4: `F - E = K - (E + F*) = K - M ~ K - (K - γ) = γ`.
   refine ⟨E, F, hEEff, hFEff, hEDeg', hFDeg, ?_⟩
-  unfold linear_equiv at hMEquiv hFEquiv ⊢
+  unfold linearEquiv at hMEquiv hFEquiv ⊢
   have hDifference :
       γ - (F - E) =
-        (M - (canonical_divisor G - γ)) - (F - (canonical_divisor G - Fstar)) := by
+        (M - (canonicalDivisor G - γ)) - (F - (canonicalDivisor G - Fstar)) := by
     rw [hMSplit]; abel
   rw [hDifference]
   simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using
-    AddSubgroup.add_mem (principal_divisors G) hMEquiv
-      (AddSubgroup.neg_mem (principal_divisors G) hFEquiv)
+    AddSubgroup.add_mem (principalDivisors G) hMEquiv
+      (AddSubgroup.neg_mem (principalDivisors G) hFEquiv)
 
 end Utilities

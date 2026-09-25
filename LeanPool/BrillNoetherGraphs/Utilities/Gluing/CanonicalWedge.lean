@@ -33,36 +33,36 @@ universe u v
 right marked degree added at the common vertex. -/
 theorem vertex_degree_vertexWedge_inl
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) (a : G.V) :
-    vertex_degree (vertexWedge G H x y) (Sum.inl a) =
-      vertex_degree G a + if a = x then vertex_degree H y else 0 := by
-  unfold vertex_degree
+    vertexDegree (vertexWedge G H x y) (Sum.inl a) =
+      vertexDegree G a + if a = x then vertexDegree H y else 0 := by
+  unfold vertexDegree
   change
     (∑ z : Sum G.V {b : H.V // b ≠ y},
-        (num_edges (vertexWedge G H x y) (Sum.inl a) z : ℤ)) = _
+        (numEdges (vertexWedge G H x y) (Sum.inl a) z : ℤ)) = _
   rw [Fintype.sum_sum_type]
   simp_rw [num_edges_vertexWedge_left, num_edges_vertexWedge_left_right]
   by_cases ha : a = x
   · subst a
     simp only [if_pos]
     have hSplit := sum_unmarked_eq_sum_of_marked_zero H y
-      (fun b => (num_edges H y b : ℤ)) (by simp)
+      (fun b => (numEdges H y b : ℤ)) (by simp)
     rw [hSplit]
   · simp [ha]
 /-- A strictly-right vertex keeps its right-factor degree in a wedge. -/
 theorem vertex_degree_vertexWedge_inr
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (b : {b : H.V // b ≠ y}) :
-    vertex_degree (vertexWedge G H x y) (Sum.inr b) =
-      vertex_degree H b.1 := by
-  unfold vertex_degree
+    vertexDegree (vertexWedge G H x y) (Sum.inr b) =
+      vertexDegree H b.1 := by
+  unfold vertexDegree
   change
     (∑ z : Sum G.V {c : H.V // c ≠ y},
-        (num_edges (vertexWedge G H x y) (Sum.inr b) z : ℤ)) = _
+        (numEdges (vertexWedge G H x y) (Sum.inr b) z : ℤ)) = _
   rw [Fintype.sum_sum_type]
   have hLeft :
       (∑ a : G.V,
-        (num_edges (vertexWedge G H x y) (Sum.inr b) (Sum.inl a) : ℤ)) =
-        (num_edges H b.1 y : ℤ) := by
+        (numEdges (vertexWedge G H x y) (Sum.inr b) (Sum.inl a) : ℤ)) =
+        (numEdges H b.1 y : ℤ) := by
     simp_rw [num_edges_symmetric (vertexWedge G H x y) (Sum.inr b),
       num_edges_vertexWedge_left_right]
     simp_rw [Nat.cast_ite, Nat.cast_zero]
@@ -71,49 +71,49 @@ theorem vertex_degree_vertexWedge_inr
   rw [hLeft]
   simp_rw [num_edges_vertexWedge_right]
   have hSplit := sum_unmarked_add_marked H y
-    (fun c => (num_edges H b.1 c : ℤ))
+    (fun c => (numEdges H b.1 c : ℤ))
   linarith
 
 /-- The sum of the two factor canonical divisors on their vertex wedge. -/
 def wedgeCanonicalSum
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) :
     CFDiv (vertexWedge G H x y) :=
-  wedgeAddDivisor G H x y (canonical_divisor G) (canonical_divisor H)
+  wedgeAddDivisor G H x y (canonicalDivisor G) (canonicalDivisor H)
 
 /-- The doubled common vertex of a wedge. -/
 def wedgeGlueDouble
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) :
     CFDiv (vertexWedge G H x y) :=
-  (2 : ℤ) • one_chip (Sum.inl x)
+  (2 : ℤ) • oneChip (Sum.inl x)
 /-- **Canonical wedge formula.**  Identifying two vertices contributes two
 additional canonical chips at the common vertex. -/
 theorem canonical_divisor_vertexWedge
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) :
-    canonical_divisor (vertexWedge G H x y) =
+    canonicalDivisor (vertexWedge G H x y) =
       wedgeCanonicalSum G H x y + wedgeGlueDouble G H x y := by
   funext z
   cases z with
   | inl a =>
-      unfold canonical_divisor wedgeCanonicalSum wedgeGlueDouble
+      unfold canonicalDivisor wedgeCanonicalSum wedgeGlueDouble
       rw [vertex_degree_vertexWedge_inl]
       by_cases ha : a = x
       · subst a
-        simp [canonical_divisor, one_chip]
+        simp [canonicalDivisor, oneChip]
         ring
       · have hSum :
             (Sum.inl a : (vertexWedge G H x y).V) ≠ Sum.inl x :=
           fun h => ha (Sum.inl.inj h)
-        simp [canonical_divisor, one_chip, ha, hSum]
+        simp [canonicalDivisor, oneChip, ha, hSum]
   | inr b =>
-      unfold canonical_divisor wedgeCanonicalSum wedgeGlueDouble
+      unfold canonicalDivisor wedgeCanonicalSum wedgeGlueDouble
       rw [vertex_degree_vertexWedge_inr]
-      simp [canonical_divisor, one_chip]
+      simp [canonicalDivisor, oneChip]
 
 /-- The doubled glue point is literally the canonical complement of the
 factor-canonical sum. -/
 theorem canonical_sub_wedgeCanonicalSum
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) :
-    canonical_divisor (vertexWedge G H x y) - wedgeCanonicalSum G H x y =
+    canonicalDivisor (vertexWedge G H x y) - wedgeCanonicalSum G H x y =
       wedgeGlueDouble G H x y := by
   rw [canonical_divisor_vertexWedge]
   abel
@@ -135,7 +135,7 @@ theorem canonical_sub_wedgeCanonicalSum
 point on a connected wedge. -/
 theorem rank_wedgeCanonicalSum_sub_rank_wedgeGlueDouble
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (hG : graph_connected G) (hH : graph_connected H) :
+    (hG : graphConnected G) (hH : graphConnected H) :
     rank (vertexWedge G H x y) (wedgeCanonicalSum G H x y) -
         rank (vertexWedge G H x y) (wedgeGlueDouble G H x y) =
       genus G + genus H - 3 := by
@@ -148,7 +148,7 @@ theorem rank_wedgeCanonicalSum_sub_rank_wedgeGlueDouble
 canonical divisors has rank at least one. -/
 theorem rank_wedgeCanonicalSum_ge_one_of_genus_sum_four
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (hG : graph_connected G) (hH : graph_connected H)
+    (hG : graphConnected G) (hH : graphConnected H)
     (hGenus : genus G + genus H = 4) :
     rank (vertexWedge G H x y) (wedgeCanonicalSum G H x y) ≥ 1 := by
   have hCompare :=
@@ -162,8 +162,8 @@ theorem rank_wedgeCanonicalSum_ge_one_of_genus_sum_four
     simp only [Pi.smul_apply, smul_eq_mul]
     by_cases hz : z = Sum.inl x
     · subst z
-      simp [one_chip]
-    · simp [one_chip, hz]
+      simp [oneChip]
+    · simp [oneChip, hz]
   rw [hGenus] at hCompare
   omega
 

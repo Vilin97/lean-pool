@@ -30,13 +30,13 @@ structure ScriptGluing (A : CFGraph.{u}) (B : CFGraph.{v}) (G : CFGraph.{w})
   right_injective : Function.Injective right
   disjoint : ∀ a b, left a ≠ right b
   length_pos : 0 < L
-  glue : ∀ (f : firing_script A) (g : firing_script B) (h : ℕ → ℤ),
+  glue : ∀ (f : firingScript A) (g : firingScript B) (h : ℕ → ℤ),
     h 0 = f p.first →
     h L = g q.first →
     f p.second = g q.second →
     (∀ j : ℕ, 0 < j → j < L →
       0 ≤ h (j - 1) - 2 * h j + h (j + 1)) →
-    ∃ σ : firing_script G,
+    ∃ σ : firingScript G,
       (∀ a, prin G σ (left a) = prin A f a +
         if a = p.first then h 1 - h 0 else 0) ∧
       (∀ b, prin G σ (right b) = prin B g b +
@@ -90,46 +90,46 @@ theorem winnable_sub_left_first_of_scripts
     (hDA : ∀ a, D (J.left a) = CA a)
     (hDB : ∀ b, D (J.right b) = CB b)
     (hOutside : ∀ z, (∀ a, z ≠ J.left a) → (∀ b, z ≠ J.right b) → 0 ≤ D z)
-    (f : firing_script A) (g : firing_script B) (h : ℕ → ℤ)
+    (f : firingScript A) (g : firingScript B) (h : ℕ → ℤ)
     (h0 : h 0 = f p.first) (hL : h L = g q.first)
     (hSecond : f p.second = g q.second)
     (hConvex : ∀ j : ℕ, 0 < j → j < L →
       0 ≤ h (j - 1) - 2 * h j + h (j + 1))
-    (hLeft : ∀ a, 0 ≤ CA a - one_chip p.first a + prin A f a +
+    (hLeft : ∀ a, 0 ≤ CA a - oneChip p.first a + prin A f a +
       if a = p.first then h 1 - h 0 else 0)
     (hRight : ∀ b, 0 ≤ CB b + prin B g b +
       if b = q.first then h (L - 1) - h L else 0) :
-    winnable G (D - one_chip (J.left p.first)) := by
+    winnable G (D - oneChip (J.left p.first)) := by
   obtain ⟨σ, hσA, hσB, hσOutside⟩ := J.glue f g h h0 hL hSecond hConvex
-  have hEff : effective (D - one_chip (J.left p.first) + prin G σ) := by
+  have hEff : effective (D - oneChip (J.left p.first) + prin G σ) := by
     intro z
     by_cases hzA : ∃ a, z = J.left a
     · obtain ⟨a, rfl⟩ := hzA
-      have hChip : one_chip (J.left p.first) (J.left a) = one_chip p.first a := by
-        simp only [one_chip, J.left_injective.eq_iff]
+      have hChip : oneChip (J.left p.first) (J.left a) = oneChip p.first a := by
+        simp only [oneChip, J.left_injective.eq_iff]
       simp only [Pi.add_apply, Pi.sub_apply, hDA, hChip, hσA]
       have := hLeft a
       omega
     · have hnA : ∀ a, z ≠ J.left a := by simpa only [not_exists] using hzA
       by_cases hzB : ∃ b, z = J.right b
       · obtain ⟨b, rfl⟩ := hzB
-        have hChip : one_chip (J.left p.first) (J.right b) = 0 := by
-          simp only [one_chip, if_neg (J.disjoint p.first b).symm]
+        have hChip : oneChip (J.left p.first) (J.right b) = 0 := by
+          simp only [oneChip, if_neg (J.disjoint p.first b).symm]
         simpa only [Pi.add_apply, Pi.sub_apply, hDB, hChip, sub_zero, hσB, add_assoc]
           using hRight b
       · have hnB : ∀ b, z ≠ J.right b := by simpa only [not_exists] using hzB
-        have hChip : one_chip (J.left p.first) z = 0 := by
-          simp only [one_chip, if_neg (hnA p.first)]
+        have hChip : oneChip (J.left p.first) z = 0 := by
+          simp only [oneChip, if_neg (hnA p.first)]
         simp only [Pi.add_apply, Pi.sub_apply, hChip, sub_zero]
         exact add_nonneg (hOutside z hnA hnB) (hσOutside z hnA hnB)
-  refine ⟨D - one_chip (J.left p.first) + prin G σ, hEff, ?_⟩
+  refine ⟨D - oneChip (J.left p.first) + prin G σ, hEff, ?_⟩
   apply (principal_iff_eq_prin G _).mpr
   refine ⟨σ, ?_⟩
   abel
 
 private theorem effective_add_prin_of_sub_one_chip
-    {H : CFGraph} {C : CFDiv H} {f : firing_script H} {a : H.V}
-    (h : effective (C - one_chip a + prin H f)) :
+    {H : CFGraph} {C : CFDiv H} {f : firingScript H} {a : H.V}
+    (h : effective (C - oneChip a + prin H f)) :
     effective (C + prin H f) := by
   intro v
   have hv := h v
@@ -146,9 +146,9 @@ theorem winnable_sub_left_first
     (hDB : ∀ b, D (J.right b) = CB b)
     (hOutside : ∀ z, (∀ a, z ≠ J.left a) → (∀ b, z ≠ J.right b) → 0 ≤ D z)
     (hCA : effective CA) (hCB : effective CB)
-    (hWinA : winnable A (CA - one_chip p.first))
-    (hWinB : winnable B (CB - one_chip q.first)) :
-    winnable G (D - one_chip (J.left p.first)) := by
+    (hWinA : winnable A (CA - oneChip p.first))
+    (hWinB : winnable B (CB - oneChip q.first)) :
+    winnable G (D - oneChip (J.left p.first)) := by
   obtain ⟨f, hfp, hfNonneg, hf⟩ :=
     exists_nonneg_firing_script_sub_one_chip p.first hCA hWinA
   obtain ⟨g, hgq, hgNonneg, hg⟩ :=
@@ -214,7 +214,7 @@ theorem winnable_sub_left_first
         rw [hpenult, hlast]
         have hb := hg b
         by_cases hbq : b = q.first <;>
-          simp only [Pi.add_apply, Pi.sub_apply, one_chip, hbq, ↓reduceIte] at hb ⊢ <;> omega
+          simp only [Pi.add_apply, Pi.sub_apply, oneChip, hbq, ↓reduceIte] at hb ⊢ <;> omega
     · -- A linear connector pays for the demanded chip on the left.
       let a : ℤ := t - s - (L : ℤ)
       let f' := clampScript f a
@@ -242,12 +242,12 @@ theorem winnable_sub_left_first
         rw [prin_sub_const, hone]
         have hz := hf'Eff z
         by_cases hzp : z = p.first <;>
-          simp only [Pi.add_apply, one_chip, hzp, ↓reduceIte] at hz ⊢ <;> omega
+          simp only [Pi.add_apply, oneChip, hzp, ↓reduceIte] at hz ⊢ <;> omega
       · intro b
         rw [hpenult]
         have hb := hg b
         by_cases hbq : b = q.first <;>
-          simp only [Pi.add_apply, Pi.sub_apply, one_chip, hbq, ↓reduceIte] at hb ⊢ <;> omega
+          simp only [Pi.add_apply, Pi.sub_apply, oneChip, hbq, ↓reduceIte] at hb ⊢ <;> omega
 
 /-- The symmetric attachment-vertex conclusion, using the same gluing data. -/
 theorem winnable_sub_right_first
@@ -257,9 +257,9 @@ theorem winnable_sub_right_first
     (hDB : ∀ b, D (J.right b) = CB b)
     (hOutside : ∀ z, (∀ a, z ≠ J.left a) → (∀ b, z ≠ J.right b) → 0 ≤ D z)
     (hCA : effective CA) (hCB : effective CB)
-    (hWinA : winnable A (CA - one_chip p.first))
-    (hWinB : winnable B (CB - one_chip q.first)) :
-    winnable G (D - one_chip (J.right q.first)) := by
+    (hWinA : winnable A (CA - oneChip p.first))
+    (hWinB : winnable B (CB - oneChip q.first)) :
+    winnable G (D - oneChip (J.right q.first)) := by
   exact J.symm.winnable_sub_left_first D CB CA hDB hDA
     (fun z hnB hnA => hOutside z hnA hnB) hCB hCA hWinB hWinA
 

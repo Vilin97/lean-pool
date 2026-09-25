@@ -82,7 +82,7 @@ variable (c : CoreVertexCut.Data spec.core)
 /-- Accepted genus-four cut data makes every positive subdivision connected. -/
 theorem graph_connected_of_genusFourRankOneConditions
     (h : c.GenusFourRankOneConditions) :
-    graph_connected spec.graph :=
+    graphConnected spec.graph :=
   spec.graph_connected_of_coreConnected h.2.1
 
 /-- The finite factor alternatives force ambient genus four, independently of
@@ -102,7 +102,7 @@ theorem bnExists_one_three_of_genusFourRankOneConditions
     (h : c.GenusFourRankOneConditions) :
     BNExists spec.graph 1 3 := by
   let cut := c.toOneVertexCut spec h.1
-  have hConnected : graph_connected spec.graph :=
+  have hConnected : graphConnected spec.graph :=
     c.graph_connected_of_genusFourRankOneConditions spec h
   rcases h.2.2 with hTwoTwo | hThreeOne | hOneThree
   · have hLeftGenus : genus cut.leftGraph = 2 := by

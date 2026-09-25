@@ -32,7 +32,7 @@ def GrassmannianTransmissionExistence
 /-- The universal Grassmannian transmission statement is exactly the
 once-marked Brill--Noether statement. -/
 theorem grassmannianTransmissionExistence_iff_onceMarkedBNExistence
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V) :
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V) :
     GrassmannianTransmissionExistence G u v ↔
       OnceMarkedBNExistence G u := by
   constructor

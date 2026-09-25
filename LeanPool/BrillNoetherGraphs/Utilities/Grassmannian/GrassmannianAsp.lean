@@ -137,7 +137,7 @@ noncomputable def grassmannianPermOfYoungDiagram
 
 /-- The reconstructed permutation has exactly the Ferrers inversion set. -/
 theorem inv_set_grassmannianPerm (lambda : YoungDiagram) :
-    inv_set (grassmannianPermOfYoungDiagram lambda) =
+    invSet (grassmannianPermOfYoungDiagram lambda) =
       grassmannianInvSet lambda := by
   exact AspSet.invSet_of_toAspPerm (grassmannianAspSet lambda) 0
 
@@ -265,11 +265,11 @@ theorem grassmannianPerm_strictMono_nonnegative (lambda : YoungDiagram)
 interval from its lower endpoint through its maximum. -/
 theorem grassmannianPerm_se_finset_eq_Icc_max
     (lambda : YoungDiagram) {a b : ℤ} (hb : 0 ≤ b)
-    (hNonempty : ((grassmannianPermOfYoungDiagram lambda).se_finset a b).Nonempty) :
-    (grassmannianPermOfYoungDiagram lambda).se_finset a b =
+    (hNonempty : ((grassmannianPermOfYoungDiagram lambda).seFinset a b).Nonempty) :
+    (grassmannianPermOfYoungDiagram lambda).seFinset a b =
       Finset.Icc b
-        (((grassmannianPermOfYoungDiagram lambda).se_finset a b).max' hNonempty) := by
-  let S := (grassmannianPermOfYoungDiagram lambda).se_finset a b
+        (((grassmannianPermOfYoungDiagram lambda).seFinset a b).max' hNonempty) := by
+  let S := (grassmannianPermOfYoungDiagram lambda).seFinset a b
   let top := S.max' hNonempty
   have hTop : top ∈ S := S.max'_mem hNonempty
   have hTopData : b ≤ top ∧ grassmannianPermOfYoungDiagram lambda top < a := by
@@ -295,10 +295,10 @@ theorem grassmannianPerm_se_finset_eq_Icc_max
 its cardinality. -/
 theorem grassmannianPerm_se_card_last_mem
     (lambda : YoungDiagram) {a b : ℤ} (hb : 0 ≤ b)
-    (hNonempty : ((grassmannianPermOfYoungDiagram lambda).se_finset a b).Nonempty) :
-    b + (((grassmannianPermOfYoungDiagram lambda).se_finset a b).card : ℤ) - 1 ∈
-      (grassmannianPermOfYoungDiagram lambda).se_finset a b := by
-  let S := (grassmannianPermOfYoungDiagram lambda).se_finset a b
+    (hNonempty : ((grassmannianPermOfYoungDiagram lambda).seFinset a b).Nonempty) :
+    b + (((grassmannianPermOfYoungDiagram lambda).seFinset a b).card : ℤ) - 1 ∈
+      (grassmannianPermOfYoungDiagram lambda).seFinset a b := by
+  let S := (grassmannianPermOfYoungDiagram lambda).seFinset a b
   let top := S.max' hNonempty
   have hEq := grassmannianPerm_se_finset_eq_Icc_max lambda hb hNonempty
   have hTop : top ∈ S := S.max'_mem hNonempty
@@ -311,14 +311,14 @@ theorem grassmannianPerm_se_card_last_mem
     rw [hEq', Int.card_Icc]
     rw [Int.toNat_of_nonneg (by omega)]
   have hLast : b + (S.card : ℤ) - 1 = top := by omega
-  rw [show (grassmannianPermOfYoungDiagram lambda).se_finset a b = S by rfl,
+  rw [show (grassmannianPermOfYoungDiagram lambda).seFinset a b = S by rfl,
     hLast]
   exact hTop
 
 /-- At the row threshold of `i`, the southeast set is exactly the first
 `i+1` nonnegative integers. -/
 theorem grassmannianPerm_se_finset_at_row (lambda : YoungDiagram) (i : ℕ) :
-    (grassmannianPermOfYoungDiagram lambda).se_finset
+    (grassmannianPermOfYoungDiagram lambda).seFinset
         ((i : ℤ) + 1 - (lambda.rowLen i : ℤ)) 0 =
       Finset.Ico 0 ((i : ℤ) + 1) := by
   ext n
@@ -431,7 +431,7 @@ theorem grassmannianInvSet_finite (lambda : YoungDiagram) :
 /-- The inversion number of the Grassmannian permutation is the number of
 boxes of its Young diagram. -/
 theorem ncard_inv_set_grassmannianPerm (lambda : YoungDiagram) :
-    (inv_set (grassmannianPermOfYoungDiagram lambda)).ncard = lambda.card := by
+    (invSet (grassmannianPermOfYoungDiagram lambda)).ncard = lambda.card := by
   rw [inv_set_grassmannianPerm, grassmannianInvSet_eq_image_cells,
     Set.ncard_image_of_injective _ grassmannianCellEmbedding_injective]
   rw [Set.ncard_coe_finset]
@@ -463,7 +463,7 @@ theorem grassmannianPerm_cornersDominate_of_nonnegative_b
       (grassmannianPermOfYoungDiagram lambda).s (a + 1) b - 1 ≤
         cornerBound c a b := by
   let tau := grassmannianPermOfYoungDiagram lambda
-  let S := tau.se_finset (a + 1) b
+  let S := tau.seFinset (a + 1) b
   have hSlip : tau.s (a + 1) b = (S.card : ℤ) := by
     simpa [S] using AspPerm.s_eq_se_card tau (a + 1) b
   rw [hSlip]

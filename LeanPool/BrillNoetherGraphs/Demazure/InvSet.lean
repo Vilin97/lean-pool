@@ -25,9 +25,9 @@ structure AspSet_prop (I : Set (ℤ × ℤ)) where
     (∀ u v w : ℤ, (u, v) ∈ I → (v, w) ∈ I → ⟨u, w⟩ ∈ I)
   coclosed:
     (∀ u v w : ℤ, (u < v) → (v < w) → (u, v) ∉ I → (v, w) ∉ I → ⟨u, w⟩ ∉ I)
-  finite_outdegree:
+  finiteOutdegree:
     (∀ u : ℤ, { v : ℤ | ⟨u, v⟩ ∈ I }.Finite)
-  finite_indegree:
+  finiteIndegree:
     (∀ v : ℤ, { u : ℤ | ⟨u, v⟩ ∈ I }.Finite)
 
 /-- An abstract ASP inversion set: a set of boxes equipped with the axioms of
@@ -58,8 +58,8 @@ theorem ext {A B : AspSet} (hI : A.I = B.I) : A = B := by
 abbrev directed (asps : AspSet) := asps.prop.directed
 abbrev closed (asps : AspSet) := asps.prop.closed
 abbrev coclosed (asps : AspSet) := asps.prop.coclosed
-abbrev finite_outdegree (asps : AspSet) := asps.prop.finite_outdegree
-abbrev finite_indegree (asps : AspSet) := asps.prop.finite_indegree
+abbrev finiteOutdegree (asps : AspSet) := asps.prop.finiteOutdegree
+abbrev finiteIndegree (asps : AspSet) := asps.prop.finiteIndegree
 
 private lemma not_mem_of_ge (asps : AspSet) {m n : ℤ} (n_le_m : n ≤ m) : ⟨m, n⟩ ∉ asps := by
   intro h
@@ -136,7 +136,7 @@ instance (asps : AspSet) : IsStrictTotalOrder ℤ asps.post_lt where
   trans _ _ _ := post_lt_trans asps
 
 /-- The inversion set of an ASP permutation forms an ASP set. -/
-lemma AspSet_InvSet_of_AspPerm (τ : AspPerm) : AspSet_prop (inv_set τ) := by
+lemma AspSet_InvSet_of_AspPerm (τ : AspPerm) : AspSet_prop (invSet τ) := by
   constructor
   · intro u v uv_inv
     exact uv_inv.1
@@ -158,14 +158,14 @@ lemma AspSet_InvSet_of_AspPerm (τ : AspPerm) : AspSet_prop (inv_set τ) := by
   · exact τ.outset_finite
   · exact τ.inset_finite
 
-def of_AspPerm (τ : AspPerm) : AspSet :=
-  ⟨inv_set τ, AspSet_InvSet_of_AspPerm τ⟩
+def ofAspPerm (τ : AspPerm) : AspSet :=
+  ⟨invSet τ, AspSet_InvSet_of_AspPerm τ⟩
 
 noncomputable abbrev inset (asps : AspSet) (n : ℤ) : Finset ℤ :=
-  (asps.finite_indegree n).toFinset
+  (asps.finiteIndegree n).toFinset
 
 noncomputable abbrev outset (asps : AspSet) (n : ℤ) : Finset ℤ :=
-  (asps.finite_outdegree n).toFinset
+  (asps.finiteOutdegree n).toFinset
 
 @[simp] lemma mem_inset (asps : AspSet) (n x : ℤ) :
     x ∈ asps.inset n ↔ ⟨x, n⟩ ∈ asps := by
@@ -498,7 +498,7 @@ section OfAspSet
 variable (asps : AspSet) (χ : ℤ)
 
 /-- The reconstructed function from an inversion set has that inversion set. -/
-theorem invSet_func : inv_set (asps.recon χ) = asps := by
+theorem invSet_func : invSet (asps.recon χ) = asps := by
   ext ⟨u, v⟩
   wlog u_lt_v : u < v
   · exact iff_of_false (fun h => u_lt_v h.1) (fun h => u_lt_v (asps.directed u v h))
@@ -509,10 +509,10 @@ theorem invSet_func : inv_set (asps.recon χ) = asps := by
     exact ⟨u_lt_v, (mem_iff_lt asps u v χ (le_of_lt u_lt_v)).mp h⟩
 
 private lemma inset_eq_nw (n : ℤ) : ↑(asps.inset n)
-   = northwest_set (asps.σ χ) ((asps.σ χ n) + 1) n := by
+   = northwestSet (asps.σ χ) ((asps.σ χ n) + 1) n := by
   ext x
-  unfold northwest_set
-  have hmem : ⟨x, n⟩ ∈ asps ↔ ⟨x, n⟩ ∈ inv_set (asps.σ χ) :=
+  unfold northwestSet
+  have hmem : ⟨x, n⟩ ∈ asps ↔ ⟨x, n⟩ ∈ invSet (asps.σ χ) :=
     (Set.ext_iff.mp (invSet_func asps χ) ⟨x, n⟩).symm
   simp only [Finset.mem_coe, mem_inset, Set.mem_ofPred_eq]
   constructor
@@ -523,10 +523,10 @@ private lemma inset_eq_nw (n : ℤ) : ↑(asps.inset n)
     exact hmem.mpr ⟨hxn, by omega⟩
 
 private lemma outset_eq_se (n : ℤ) : ↑(asps.outset n)
-   = southeast_set (asps.σ χ) (asps.σ χ n) (n+1) := by
+   = southeastSet (asps.σ χ) (asps.σ χ n) (n+1) := by
   ext x
-  unfold southeast_set
-  have hmem : ⟨n, x⟩ ∈ asps ↔ ⟨n, x⟩ ∈ inv_set (asps.σ χ) :=
+  unfold southeastSet
+  have hmem : ⟨n, x⟩ ∈ asps ↔ ⟨n, x⟩ ∈ invSet (asps.σ χ) :=
     (Set.ext_iff.mp (invSet_func asps χ) ⟨n, x⟩).symm
   simp only [Finset.mem_coe, mem_outset, Set.mem_ofPred_eq]
   constructor
@@ -609,20 +609,20 @@ private theorem func_bijective : Function.Bijective (asps.recon χ) :=
   ⟨func_injective χ asps, func_surjective asps χ⟩
 
 /-- The function reconstructed from an ASP set is an ASP permutation. -/
-theorem func_asp : is_asp (asps.recon χ) := by
+theorem func_asp : isAsp (asps.recon χ) := by
   let τ := asps.recon χ
-  let se := southeast_set τ (τ 0) 1
+  let se := southeastSet τ (τ 0) 1
   have se_fin : se.Finite := by
     suffices se = outset asps 0 by
       rw [this]
-      simp only [Set.Finite.coe_toFinset, asps.finite_outdegree 0]
+      simp only [Set.Finite.coe_toFinset, asps.finiteOutdegree 0]
     rw [outset_eq_se asps χ 0]
     congr
-  let nw := northwest_set τ ((τ 0) + 1) 0
+  let nw := northwestSet τ ((τ 0) + 1) 0
   have nw_fin : nw.Finite := by
     suffices nw = inset asps 0 by
       rw [this]
-      simp only [Set.Finite.coe_toFinset, asps.finite_indegree 0]
+      simp only [Set.Finite.coe_toFinset, asps.finiteIndegree 0]
     rw [inset_eq_nw asps χ 0]
   apply asp_of_finite_quadrants (func_injective χ asps) se_fin nw_fin
 
@@ -631,13 +631,13 @@ theorem func_asp : is_asp (asps.recon χ) := by
 noncomputable def toAspPerm : AspPerm :=
   ⟨asps.recon χ, func_bijective asps χ, func_asp asps χ⟩
 
-lemma invSet_of_toAspPerm : inv_set (toAspPerm asps χ)= asps := invSet_func asps χ
+lemma invSet_of_toAspPerm : invSet (toAspPerm asps χ)= asps := invSet_func asps χ
 
 lemma inset_of_toAspPerm (n : ℤ) : (toAspPerm asps χ).inset n = asps.inset n := by
   ext x
-  have h1 : x ∈ (toAspPerm asps χ).inset n ↔ ⟨x, n⟩ ∈ inv_set (toAspPerm asps χ) := by
+  have h1 : x ∈ (toAspPerm asps χ).inset n ↔ ⟨x, n⟩ ∈ invSet (toAspPerm asps χ) := by
     apply AspPerm.invset_iff_inset
-  have h2 : x ∈ ↑(asps.inset n) ↔ ⟨x, n⟩ ∈ inv_set (toAspPerm asps χ) := by
+  have h2 : x ∈ ↑(asps.inset n) ↔ ⟨x, n⟩ ∈ invSet (toAspPerm asps χ) := by
     have := asps.inset_eq_nw χ n
     rw [invSet_of_toAspPerm asps χ]
     simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, SetLike.mem_coe, mem_AspSet]
@@ -646,9 +646,9 @@ lemma inset_of_toAspPerm (n : ℤ) : (toAspPerm asps χ).inset n = asps.inset n 
 
 lemma outset_of_toAspPerm (n : ℤ) : (toAspPerm asps χ).outset n = asps.outset n := by
   ext x
-  have h1 : x ∈ (toAspPerm asps χ).outset n ↔ ⟨n, x⟩ ∈ inv_set (toAspPerm asps χ) := by
+  have h1 : x ∈ (toAspPerm asps χ).outset n ↔ ⟨n, x⟩ ∈ invSet (toAspPerm asps χ) := by
     apply AspPerm.invset_iff_outset
-  have h2 : x ∈ ↑(asps.outset n) ↔ ⟨n, x⟩ ∈ inv_set (toAspPerm asps χ) := by
+  have h2 : x ∈ ↑(asps.outset n) ↔ ⟨n, x⟩ ∈ invSet (toAspPerm asps χ) := by
     have := asps.outset_eq_se χ n
     rw [invSet_of_toAspPerm asps χ]
     simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, SetLike.mem_coe, mem_AspSet]
@@ -675,38 +675,38 @@ end OfAspSet
 /-- ASP permutations are equivalent to abstract ASP inversion sets together
 with a shift parameter. *Theorem 2.13 (`thm:aspSetReconstruction`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
-noncomputable def AspPerm_equiv_AspSet :
+noncomputable def AspPermEquivAspSet :
   AspPerm ≃ AspSet × ℤ where
-  toFun τ := (⟨inv_set τ, AspSet_InvSet_of_AspPerm τ⟩, τ.χ)
+  toFun τ := (⟨invSet τ, AspSet_InvSet_of_AspPerm τ⟩, τ.χ)
   invFun := fun ⟨asps, χ⟩ => asps.toAspPerm χ
   left_inv := by
     intro τ
     refine AspPerm.eq_of_inv_set_eq_of_chi_eq _ _ ?_ ?_
-    · have h_inv := invSet_of_toAspPerm ⟨inv_set τ, AspSet_InvSet_of_AspPerm τ⟩ τ.χ
-      change inv_set (toAspPerm ⟨inv_set τ, AspSet_InvSet_of_AspPerm τ⟩ τ.χ) = inv_set τ
+    · have h_inv := invSet_of_toAspPerm ⟨invSet τ, AspSet_InvSet_of_AspPerm τ⟩ τ.χ
+      change invSet (toAspPerm ⟨invSet τ, AspSet_InvSet_of_AspPerm τ⟩ τ.χ) = invSet τ
       exact h_inv
-    · have h_chi := chi_of_toAspPerm ⟨inv_set τ, AspSet_InvSet_of_AspPerm τ⟩ τ.χ
+    · have h_chi := chi_of_toAspPerm ⟨invSet τ, AspSet_InvSet_of_AspPerm τ⟩ τ.χ
       simpa using h_chi
   right_inv := by
     intro ⟨asps, χ⟩
     apply Prod.ext
     · apply SetLike.coe_injective
-      change inv_set (asps.toAspPerm χ) = asps
+      change invSet (asps.toAspPerm χ) = asps
       exact invSet_of_toAspPerm asps χ
     · simpa using chi_of_toAspPerm asps χ
 
 @[simp] lemma AspPerm_equiv_AspSet_toFun_fst (τ : AspPerm) :
-    ((AspPerm_equiv_AspSet τ).1 : Set (ℤ × ℤ)) = inv_set τ := rfl
+    ((AspPermEquivAspSet τ).1 : Set (ℤ × ℤ)) = invSet τ := rfl
 
 @[simp] lemma AspPerm_equiv_AspSet_toFun_snd (τ : AspPerm) :
-    (AspPerm_equiv_AspSet τ).2 = τ.χ := rfl
+    (AspPermEquivAspSet τ).2 = τ.χ := rfl
 
 @[simp] lemma inv_set_AspPerm_equiv_AspSet_invFun (asps : AspSet) (χ : ℤ) :
-    inv_set (AspPerm_equiv_AspSet.invFun (asps, χ)) = asps :=
+    invSet (AspPermEquivAspSet.invFun (asps, χ)) = asps :=
   invSet_of_toAspPerm asps χ
 
 @[simp] lemma chi_AspPerm_equiv_AspSet_invFun (asps : AspSet) (χ : ℤ) :
-    (AspPerm_equiv_AspSet.invFun (asps, χ)).χ = χ :=
+    (AspPermEquivAspSet.invFun (asps, χ)).χ = χ :=
   chi_of_toAspPerm asps χ
 
 /-!
@@ -714,7 +714,7 @@ A set $I \subseteq \mathbb{Z} \times \mathbb{Z}$ is the inversion set of an ASP 
 with shift parameter $\chi$ if and only if it satisfies the ASP set properties.
 *Theorem 2.13* (`thm:aspSetReconstruction`) from [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
 theorem invSets_of_AspPerms (I : Set (ℤ × ℤ)) (χ : ℤ) :
-  (∃ τ : AspPerm, inv_set τ = I ∧ τ.χ = χ) ↔  (AspSet_prop I) := by
+  (∃ τ : AspPerm, invSet τ = I ∧ τ.χ = χ) ↔  (AspSet_prop I) := by
   constructor
   · intro h
     rcases h with ⟨τ, τ_inv_eq, τ_chi_eq⟩

@@ -44,10 +44,10 @@ theorem torsionWitness_of_dvd
     subst q
     simp at hm
   refine ⟨by positivity, ?_⟩
-  unfold linear_equiv at hkEq ⊢
+  unfold linearEquiv at hkEq ⊢
   have hmul :
-      ((k * q : ℕ) : ℤ) • (one_chip M.u - one_chip M.v) =
-        (q : ℤ) • ((k : ℤ) • (one_chip M.u - one_chip M.v)) := by
+      ((k * q : ℕ) : ℤ) • (oneChip M.u - oneChip M.v) =
+        (q : ℤ) • ((k : ℤ) • (oneChip M.u - oneChip M.v)) := by
     push_cast
     rw [smul_smul]
     ring
@@ -62,13 +62,13 @@ theorem torsionWitness_diagonal (G : CFGraph) (u : G.V) {k : ℕ}
     (hk : 0 < k) :
     TorsionWitness (mark G u u) k := by
   refine ⟨hk, ?_⟩
-  unfold linear_equiv
-  change (0 : CFDiv G) - (k : ℤ) • (one_chip u - one_chip u) ∈
-    principal_divisors G
+  unfold linearEquiv
+  change (0 : CFDiv G) - (k : ℤ) • (oneChip u - oneChip u) ∈
+    principalDivisors G
   have hzero : (0 : CFDiv G) - (k : ℤ) •
-      (one_chip u - one_chip u) = 0 := by simp
+      (oneChip u - oneChip u) = 0 := by simp
   rw [hzero]
-  exact AddSubgroup.zero_mem (principal_divisors G)
+  exact AddSubgroup.zero_mem (principalDivisors G)
 
 /-- `IsTorsionOrder` is the missing minimality wrapper around a witness. -/
 theorem isTorsionOrder_iff_minimalWitness
@@ -139,7 +139,7 @@ theorem KGeneralTransmission_iff_without_finiteness
 each submodular divisor from a torsion witness.  This is the mechanical
 transmission step needed before any theta-specific inversion count. -/
 theorem exists_affine_transmission_of_allSubmodular
-    {M : TwiceMarked} (hconn : _root_.graph_connected M.graph)
+    {M : TwiceMarked} (hconn : _root_.graphConnected M.graph)
     {k : ℕ} (hk : TorsionWitness M k) (hsub : AllSubmodular M)
     (D : CFDiv M.graph) :
     ∃ τ : ℤ → ℤ,

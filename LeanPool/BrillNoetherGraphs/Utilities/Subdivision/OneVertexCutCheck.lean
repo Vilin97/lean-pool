@@ -36,7 +36,7 @@ def Valid (c : Data K) : Prop :=
   (∀ z : K.V, z ∈ c.left ∨ z ∈ c.right) ∧
   (∀ z : K.V, z ∈ c.left → z ∈ c.right → z = c.glue) ∧
   ∀ a : K.V, a ∈ c.left → a ≠ c.glue →
-    ∀ b : K.V, b ∈ c.right → b ≠ c.glue → num_edges K a b = 0
+    ∀ b : K.V, b ∈ c.right → b ≠ c.glue → numEdges K a b = 0
 
 /-- Executable replay of `Valid`. -/
 def check (c : Data K) : Bool :=
@@ -47,7 +47,7 @@ def check (c : Data K) : Bool :=
   (@decide (∀ z : K.V, z ∈ c.left → z ∈ c.right → z = c.glue)
     Fintype.decidableForallFintype) &&
   (@decide (∀ a : K.V, a ∈ c.left → a ≠ c.glue →
-    ∀ b : K.V, b ∈ c.right → b ≠ c.glue → num_edges K a b = 0)
+    ∀ b : K.V, b ∈ c.right → b ≠ c.glue → numEdges K a b = 0)
     Fintype.decidableForallFintype)
 
 @[simp] theorem check_eq_true_iff (c : Data K) : c.check = true ↔ c.Valid := by
@@ -83,9 +83,9 @@ noncomputable def graphIsoOfCheck (c : Data K) (h : c.check = true) :
 /-- Connectedness of the ambient graph automatically supplies connectedness
 of both checked induced factors. -/
 theorem graph_connected_factors_of_check
-    (c : Data K) (h : c.check = true) (hK : graph_connected K) :
-    graph_connected (c.cutOfCheck h).leftGraph ∧
-      graph_connected (c.cutOfCheck h).rightGraph :=
+    (c : Data K) (h : c.check = true) (hK : graphConnected K) :
+    graphConnected (c.cutOfCheck h).leftGraph ∧
+      graphConnected (c.cutOfCheck h).rightGraph :=
   (c.cutOfCheck h).graph_connected_factors hK
 
 /-- Brill--Noether existence transfers across an accepted cut check. -/

@@ -86,7 +86,7 @@ theorem crossOneOff_not_kGeneral_of_seven_le_genus
   have hPeriod : g ≤ k := crossOneOff_kGeneral_period_ge_genus
     B alpha beta (by omega) hab hAlpha hBetaLong hK
   obtain ⟨tau, hTau, _hAffine, hFinite, hUpper⟩ :=
-    hK.2.2 (g • one_chip (rightEndpoint B))
+    hK.2.2 (g • oneChip (rightEndpoint B))
   have hLower := crossOneOff_simple_inversion_lower_bound
     B alpha beta tau (by omega) hab hAlpha hBetaLong hLong hTau hPeriod hFinite
   have hGenus : Int.toNat (genus

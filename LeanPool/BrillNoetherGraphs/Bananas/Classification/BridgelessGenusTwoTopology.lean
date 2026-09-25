@@ -22,11 +22,11 @@ open Utilities
 
 private theorem cutMultiplicity_singleton_eq_vertex_degree
     (G : CFGraph) (v : G.V) :
-    cutMultiplicity G ({v} : Finset G.V) = vertex_degree G v := by
+    cutMultiplicity G ({v} : Finset G.V) = vertexDegree G v := by
   classical
   unfold cutMultiplicity
   rw [Finset.sum_singleton, outdeg_S_eq_sum_filter]
-  unfold vertex_degree
+  unfold vertexDegree
   refine Finset.sum_subset (Finset.filter_subset _ _) ?_
   intro w _ hw
   simp only [Finset.mem_filter, Finset.mem_univ, true_and, not_not,
@@ -80,18 +80,18 @@ theorem topologicalVertices_nonempty_of_bridgeless_genus_two
   let hMin : HasMinimumValenceTwo G :=
     hasMinimumValenceTwo_of_twoEdgeCutCondition G hCut hNontrivial
   by_contra hEmpty
-  have hNoTop : ∀ v : G.V, ¬ 3 ≤ vertex_degree G v := by
+  have hNoTop : ∀ v : G.V, ¬ 3 ≤ vertexDegree G v := by
     intro v hv
     have : v ∈ topologicalVertices G := by
       simp [topologicalVertices, hv]
     simp [Finset.not_nonempty_iff_eq_empty.mp hEmpty] at this
-  have hDegTwo : ∀ v : G.V, vertex_degree G v = 2 := by
+  have hDegTwo : ∀ v : G.V, vertexDegree G v = 2 := by
     intro v
     have hLower := hMin v
     have hUpper := hNoTop v
     omega
   have hSum := sum_vertex_degree_sub_two G
-  have hZero : (∑ v : G.V, (vertex_degree G v - 2)) = 0 := by
+  have hZero : (∑ v : G.V, (vertexDegree G v - 2)) = 0 := by
     apply Finset.sum_eq_zero
     intro v _
     rw [hDegTwo]

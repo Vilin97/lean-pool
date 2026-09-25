@@ -22,8 +22,8 @@ open Utilities
 /-- The marked second rank difference is symmetric in the two marks. -/
 theorem rankDelta_swap_marks (G : CFGraph) (u v : G.V) (D : CFDiv G) :
     rankDelta (mark G u v) D = rankDelta (mark G v u) D := by
-  have hSub : D - one_chip u - one_chip v =
-      D - one_chip v - one_chip u := by
+  have hSub : D - oneChip u - oneChip v =
+      D - oneChip v - oneChip u := by
     abel
   unfold rankDelta mark
   rw [hSub]
@@ -33,12 +33,12 @@ theorem rankDelta_swap_marks (G : CFGraph) (u v : G.V) (D : CFDiv G) :
 rank `-1`. -/
 theorem rank_one_chip_sub_one_chip_eq_neg_one_of_ne_banana
     (B : Banana 2) (x y : B.graph.V) (hxy : x ≠ y) :
-    rank B.graph (one_chip x - one_chip y) = -1 := by
-  have hLower := rank_geq_neg_one B.graph (one_chip x - one_chip y)
+    rank B.graph (oneChip x - oneChip y) = -1 := by
+  have hLower := rank_geq_neg_one B.graph (oneChip x - oneChip y)
   by_contra hNot
-  have hNonneg : 0 ≤ rank B.graph (one_chip x - one_chip y) := by omega
+  have hNonneg : 0 ≤ rank B.graph (oneChip x - oneChip y) := by omega
   obtain ⟨E, hEff, hEquiv⟩ :=
-    (rank_nonneg_iff_winnable B.graph (one_chip x - one_chip y)).mp
+    (rank_nonneg_iff_winnable B.graph (oneChip x - oneChip y)).mp
       ((rank_geq_iff B.graph _ 0).mpr hNonneg)
   have hEDeg : deg E = 0 := by
     rw [← linear_equiv_preserves_deg B.graph _ E hEquiv,
@@ -92,32 +92,32 @@ theorem exists_rankDelta_neg_same_strand_interior
     have hJLength : j.val = B.length alpha := hIK.symm.trans hSumLength
     exact (ne_of_lt hj.2) hJLength
   let D : CFDiv B.graph :=
-    one_chip (strandVertex B alpha i) + one_chip (strandVertex B alpha k)
+    oneChip (strandVertex B alpha i) + oneChip (strandVertex B alpha k)
   have hRankD : rank B.graph D = 0 := by
     dsimp [D]
     exact rank_same_strand_pair_zero_of_not_reflection B alpha i k hNotReflect
   have hRankU : rank B.graph
-      (D - one_chip (strandVertex B alpha i)) = 0 := by
+      (D - oneChip (strandVertex B alpha i)) = 0 := by
     have hUpper := rank_sub_one_chip_le_rank B.graph D
       (strandVertex B alpha i)
     have hEffective : effective
-        (D - one_chip (strandVertex B alpha i)) := by
+        (D - oneChip (strandVertex B alpha i)) := by
       have hCancel :
-          D - one_chip (strandVertex B alpha i) =
-            one_chip (G := B.graph) (strandVertex B alpha k) := by
+          D - oneChip (strandVertex B alpha i) =
+            oneChip (G := B.graph) (strandVertex B alpha k) := by
         dsimp [D]
         abel
       rw [hCancel]
       exact eff_one_chip _
     have hNonneg : 0 ≤ rank B.graph
-        (D - one_chip (strandVertex B alpha i)) :=
+        (D - oneChip (strandVertex B alpha i)) :=
       (rank_geq_iff B.graph _ 0).mp
         ((rank_nonneg_iff_winnable B.graph _).mpr
           (winnable_of_effective B.graph _ hEffective))
     rw [hRankD] at hUpper
     omega
   have hRankV : rank B.graph
-      (D - one_chip (strandVertex B alpha j)) = 0 := by
+      (D - oneChip (strandVertex B alpha j)) = 0 := by
     by_cases hTail : B.core.tail alpha = 0
     · have hI : strandVertex B alpha i = B.pathVertex alpha i := by
         unfold strandVertex
@@ -165,15 +165,15 @@ theorem exists_rankDelta_neg_same_strand_interior
       simp only [strandMirror]
       constructor <;> omega
   have hRankUV : rank B.graph
-      (D - one_chip (strandVertex B alpha i) -
-        one_chip (strandVertex B alpha j)) = -1 := by
+      (D - oneChip (strandVertex B alpha i) -
+        oneChip (strandVertex B alpha j)) = -1 := by
     have hRank := rank_one_chip_sub_one_chip_eq_neg_one_of_ne_banana B
       (strandVertex B alpha k) (strandVertex B alpha j) hKJ
     have hCancel :
-        D - one_chip (strandVertex B alpha i) -
-            one_chip (strandVertex B alpha j) =
-          one_chip (strandVertex B alpha k) -
-            one_chip (strandVertex B alpha j) := by
+        D - oneChip (strandVertex B alpha i) -
+            oneChip (strandVertex B alpha j) =
+          oneChip (strandVertex B alpha k) -
+            oneChip (strandVertex B alpha j) := by
       dsimp [D]
       abel
     rw [hCancel]

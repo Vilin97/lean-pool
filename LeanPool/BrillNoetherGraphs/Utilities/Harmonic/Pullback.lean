@@ -150,15 +150,15 @@ The equation is the precise condition needed by the marked rank formulas and
 is often cheaper to check than separately spelling singleton and local-degree
 conditions. -/
 def PullsBackMark (f : IndexedHarmonicData G H) (u : G.V) (p : H.V) : Prop :=
-  f.pullback (one_chip p) = one_chip u
+  f.pullback (oneChip p) = oneChip u
 
 /-- Marked twists commute with pullback at two exact marked fibres. -/
 theorem pullback_markedTwist
     (f : IndexedHarmonicData G H) {u v : G.V} {p q : H.V}
     (hu : f.PullsBackMark u p) (hv : f.PullsBackMark v q)
     (A : CFDiv H) (a b : ℤ) :
-    f.pullback (A + a • one_chip p - b • one_chip q) =
-      f.pullback A + a • one_chip u - b • one_chip v := by
+    f.pullback (A + a • oneChip p - b • oneChip q) =
+      f.pullback A + a • oneChip u - b • oneChip v := by
   rw [f.pullback_sub, f.pullback_add, f.pullback_zsmul,
     f.pullback_zsmul, hu, hv]
 
@@ -176,7 +176,7 @@ theorem transmissionInequality_pullback
   rw [← f.pullback_markedTwist hu hv A a b]
   exact le_trans hRow
     (f.rank_pullback_ge hPullback
-      (A + a • one_chip p - b • one_chip q))
+      (A + a • oneChip p - b • oneChip q))
 
 /-- Adding an effective correction after pullback still preserves every
 marked transmission row. -/
@@ -194,7 +194,7 @@ theorem transmissionInequality_pullback_add_effective
     τ A a b hRow
   unfold TransmissionInequality at hBase
   have hAdd := rank_add_effective_ge G
-    (f.pullback A + a • one_chip u - b • one_chip v)
+    (f.pullback A + a • oneChip u - b • oneChip v)
     E hE (τ.s (a + 1) b - 1) hBase
   convert hAdd using 1
   abel_nf
@@ -267,8 +267,8 @@ def HarmonicTransmissionProfile
     (τ : AspPerm) (A : CFDiv H) (D : CFDiv G) : Prop :=
   deg D = (genus G : ℤ) + τ.χ ∧
     ∀ a b : ℤ, ∃ E : CFDiv G, effective E ∧
-      D + a • one_chip u - b • one_chip v =
-        f.pullback (A + a • one_chip p - b • one_chip q) + E
+      D + a • oneChip u - b • oneChip v =
+        f.pullback (A + a • oneChip p - b • oneChip q) + E
 
 /-- A harmonic transmission profile and a target transmission witness give a
 source witness for the same arbitrary ASP permutation. -/
@@ -289,7 +289,7 @@ theorem satisfiesTransmission_of_harmonicProfile
   exact rank_add_effective_ge G _ E hEEffective _
     (le_trans hTargetRow
       (f.rank_pullback_ge hPullback
-        (A + a • one_chip p - b • one_chip q)))
+        (A + a • oneChip p - b • oneChip q)))
 
 /-- Existence wrapper for an arbitrary-ASP harmonic transmission profile. -/
 theorem transmissionExists_of_harmonicProfile

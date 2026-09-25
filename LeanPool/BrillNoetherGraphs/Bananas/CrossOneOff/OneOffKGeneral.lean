@@ -32,7 +32,7 @@ theorem oneOff_not_kGeneral_of_inversion_bound_gt_genus
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩)) k := by
   intro hK
   obtain ⟨tau, hTau, hAffine, hFinite, hUpper⟩ :=
-    hK.2.2 (g • one_chip (rightEndpoint B))
+    hK.2.2 (g • oneChip (rightEndpoint B))
   have hk : 0 < k := hK.1.1
   have hLower := oneOff_inversion_lower_bound
     B alpha tau hg hk hLength hTau hAffine hFinite

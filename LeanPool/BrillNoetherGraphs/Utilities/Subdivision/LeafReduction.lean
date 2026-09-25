@@ -37,8 +37,8 @@ variable {G : CFGraph.{u}} {H : CFGraph.{v}}
 
 /-- A Laplacian-preserving vertex equivalence preserves every vertex degree. -/
 theorem vertexDegree_eq (equivalence : LaplacianEquiv G H) (x : G.V) :
-    vertex_degree H (equivalence x) = vertex_degree G x := by
-  unfold vertex_degree
+    vertexDegree H (equivalence x) = vertexDegree G x := by
+  unfold vertexDegree
   apply Fintype.sum_equiv equivalence.toEquiv.symm
   intro y
   simpa using
@@ -48,8 +48,8 @@ theorem vertexDegree_eq (equivalence : LaplacianEquiv G H) (x : G.V) :
 theorem cardEdges_eq (equivalence : LaplacianEquiv G H) :
     H.edges.card = G.edges.card := by
   have hDegrees :
-      (∑ y : H.V, vertex_degree H y) =
-        ∑ x : G.V, vertex_degree G x := by
+      (∑ y : H.V, vertexDegree H y) =
+        ∑ x : G.V, vertexDegree G x := by
     symm
     apply Fintype.sum_equiv equivalence.toEquiv
     intro x
@@ -79,8 +79,8 @@ variable (H : CFGraph.{u}) (root : H.V)
 graph was connected.  In the lifted cut, the new leaf is placed on the same
 side as its root, so the new edge cannot witness the cut. -/
 theorem graph_connected_of_addLeaf
-    (hExtended : graph_connected (addLeaf H root)) :
-    graph_connected H := by
+    (hExtended : graphConnected (addLeaf H root)) :
+    graphConnected H := by
   intro S hS
   let lifted : Finset (Option H.V) :=
     if root ∈ S then insert none (S.map Function.Embedding.some)
@@ -131,7 +131,7 @@ theorem graph_connected_of_addLeaf
 
 /-- Connectivity is equivalent before and after adjoining one leaf. -/
 theorem graph_connected_addLeaf_iff :
-    graph_connected (addLeaf H root) ↔ graph_connected H :=
+    graphConnected (addLeaf H root) ↔ graphConnected H :=
   ⟨graph_connected_of_addLeaf H root,
     graph_connected_addLeaf H root⟩
 
@@ -140,7 +140,7 @@ variable (G : CFGraph.{u}) (leaf : G.V)
 /-- Deleting one leaf removes exactly one vertex.  This is the decreasing
 measure needed by a future well-founded pruning loop. -/
 theorem card_vertices_deleteLeaf_add_one
-    (hDegree : vertex_degree G leaf = 1) :
+    (hDegree : vertexDegree G leaf = 1) :
     Fintype.card (deleteLeaf G leaf hDegree).V + 1 =
       Fintype.card G.V := by
   have hCard :=
@@ -151,7 +151,7 @@ theorem card_vertices_deleteLeaf_add_one
 
 /-- The pruned graph is strictly smaller in its number of vertices. -/
 theorem card_vertices_deleteLeaf_lt
-    (hDegree : vertex_degree G leaf = 1) :
+    (hDegree : vertexDegree G leaf = 1) :
     Fintype.card (deleteLeaf G leaf hDegree).V <
       Fintype.card G.V := by
   rw [← card_vertices_deleteLeaf_add_one G leaf hDegree]
@@ -159,30 +159,30 @@ theorem card_vertices_deleteLeaf_lt
 
 /-- Deleting a degree-one vertex preserves genus. -/
 @[simp] theorem genus_deleteLeaf
-    (hDegree : vertex_degree G leaf = 1) :
+    (hDegree : vertexDegree G leaf = 1) :
     genus (deleteLeaf G leaf hDegree) = genus G := by
   have hEquivGenus :=
-    (laplacianEquiv_deleteLeaf_addLeaf G leaf hDegree).genus_eq
+    (laplacianEquivDeleteLeafAddLeaf G leaf hDegree).genus_eq
   simpa using hEquivGenus
 
 /-- Deleting a degree-one vertex from a connected graph leaves a connected
 graph.  No positive-genus assumption is required. -/
 theorem graph_connected_deleteLeaf
-    (hG : graph_connected G)
-    (hDegree : vertex_degree G leaf = 1) :
-    graph_connected (deleteLeaf G leaf hDegree) := by
+    (hG : graphConnected G)
+    (hDegree : vertexDegree G leaf = 1) :
+    graphConnected (deleteLeaf G leaf hDegree) := by
   have hExtended :
-      graph_connected
+      graphConnected
         (addLeaf (deleteLeaf G leaf hDegree)
           (rootInDeleteLeaf G leaf hDegree)) :=
-    (laplacianEquiv_deleteLeaf_addLeaf G leaf hDegree).graphConnected hG
+    (laplacianEquivDeleteLeafAddLeaf G leaf hDegree).graphConnected hG
   exact graph_connected_of_addLeaf _ _ hExtended
 
 /-- Under the exact degree-one hypothesis, connectivity is equivalent before
 and after deleting the leaf. -/
 theorem graph_connected_deleteLeaf_iff
-    (hDegree : vertex_degree G leaf = 1) :
-    graph_connected (deleteLeaf G leaf hDegree) ↔ graph_connected G := by
+    (hDegree : vertexDegree G leaf = 1) :
+    graphConnected (deleteLeaf G leaf hDegree) ↔ graphConnected G := by
   constructor
   · intro hPruned
     have hExtended :=
@@ -190,7 +190,7 @@ theorem graph_connected_deleteLeaf_iff
         (deleteLeaf G leaf hDegree) (rootInDeleteLeaf G leaf hDegree)
         hPruned
     exact
-      (laplacianEquiv_deleteLeaf_addLeaf G leaf hDegree).graphConnected_iff.mpr
+      (laplacianEquivDeleteLeafAddLeaf G leaf hDegree).graphConnected_iff.mpr
         hExtended
   · intro hG
     exact graph_connected_deleteLeaf G leaf hG hDegree
@@ -200,11 +200,11 @@ theorem graph_connected_deleteLeaf_iff
 The recursive continuation receives the smaller graph together with the two
 invariants normally needed by a genus-fixed core classification. -/
 theorem bnExists_rank_one_leafStep
-    (hG : graph_connected G)
-    (hDegree : vertex_degree G leaf = 1)
+    (hG : graphConnected G)
+    (hDegree : vertexDegree G leaf = 1)
     {d : ℤ}
     (recursive :
-      graph_connected (deleteLeaf G leaf hDegree) →
+      graphConnected (deleteLeaf G leaf hDegree) →
       genus (deleteLeaf G leaf hDegree) = genus G →
       BNExists (deleteLeaf G leaf hDegree) 1 d) :
     BNExists G 1 d := by
@@ -215,11 +215,11 @@ theorem bnExists_rank_one_leafStep
 
 /-- Genus-four specialization of the recursive leaf-removal step. -/
 theorem bnExists_rank_one_degree_three_genus_four_leafStep
-    (hG : graph_connected G)
+    (hG : graphConnected G)
     (hGenus : genus G = 4)
-    (hDegree : vertex_degree G leaf = 1)
+    (hDegree : vertexDegree G leaf = 1)
     (recursive :
-      graph_connected (deleteLeaf G leaf hDegree) →
+      graphConnected (deleteLeaf G leaf hDegree) →
       genus (deleteLeaf G leaf hDegree) = 4 →
       BNExists (deleteLeaf G leaf hDegree) 1 3) :
     BNExists G 1 3 := by
@@ -234,18 +234,18 @@ Atanasov--Ranganathan genus-five argument. -/
 theorem bnExists_rank_one_of_leafless
     (targetGenus degree : ℤ)
     (terminal : ∀ H : CFGraph.{u},
-      graph_connected H →
+      graphConnected H →
       genus H = targetGenus →
-      (∀ vertex : H.V, vertex_degree H vertex ≠ 1) →
+      (∀ vertex : H.V, vertexDegree H vertex ≠ 1) →
       BNExists H 1 degree)
     (G : CFGraph.{u})
-    (hG : graph_connected G)
+    (hG : graphConnected G)
     (hGenus : genus G = targetGenus) :
     BNExists G 1 degree := by
   let statement : ℕ → Prop := fun bound =>
     ∀ H : CFGraph.{u},
       Fintype.card H.V = bound →
-      graph_connected H →
+      graphConnected H →
       genus H = targetGenus →
       BNExists H 1 degree
   have recurse : ∀ bound, statement bound := by
@@ -253,7 +253,7 @@ theorem bnExists_rank_one_of_leafless
     induction bound using Nat.strong_induction_on with
     | h bound inductionHypothesis =>
         intro H hCard hConnected hTargetGenus
-        by_cases hLeaf : ∃ leaf : H.V, vertex_degree H leaf = 1
+        by_cases hLeaf : ∃ leaf : H.V, vertexDegree H leaf = 1
         · obtain ⟨leaf, hDegree⟩ := hLeaf
           apply bnExists_rank_one_leafStep H leaf hConnected hDegree
           intro hPrunedConnected hSameGenus
@@ -279,12 +279,12 @@ the strictly decreasing vertex count of `deleteLeaf`; callers never need to
 choose or expose a globally pruned graph. -/
 theorem bnExists_rank_one_degree_three_genus_four_of_leafless
     (terminal : ∀ H : CFGraph.{u},
-      graph_connected H →
+      graphConnected H →
       genus H = 4 →
-      (∀ vertex : H.V, vertex_degree H vertex ≠ 1) →
+      (∀ vertex : H.V, vertexDegree H vertex ≠ 1) →
       BNExists H 1 3)
     (G : CFGraph.{u})
-    (hG : graph_connected G)
+    (hG : graphConnected G)
     (hGenus : genus G = 4) :
     BNExists G 1 3 := by
   exact bnExists_rank_one_of_leafless 4 3 terminal G hG hGenus

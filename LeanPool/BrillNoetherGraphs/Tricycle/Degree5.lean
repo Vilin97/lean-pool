@@ -312,7 +312,7 @@ theorem burnedInd_of_not_mem {v : Fin 7}
 
 theorem helper_b_sum (hcore : spec.core = tricycleCore)
     (hEff : effective D)
-    (hred : q_reduced spec.graph (spec.coreVertex centre) D)
+    (hred : qReduced spec.graph (spec.coreVertex centre) D)
     (hrank : rank spec.graph D ≥ 1) (hw : D w = 0) :
     burnedInd spec D w 1 + burnedInd spec D w 2 + burnedInd spec D w 3
         + burnedInd spec D w 4 + burnedInd spec D w 5 + burnedInd spec D w 6
@@ -421,7 +421,7 @@ theorem three_le_backward (hcore : spec.core = tricycleCore) (hEff : effective D
 
 theorem one_le_transitionPathChips (hcore : spec.core = tricycleCore)
     (hEff : effective D)
-    (hred : q_reduced spec.graph (spec.coreVertex centre) D)
+    (hred : qReduced spec.graph (spec.coreVertex centre) D)
     (hrank : rank spec.graph D ≥ 1) (hdeg : deg D ≤ 5) (i : Fin 3) :
     1 ≤ transitionPathChips spec D i := by
   by_contra hcon
@@ -468,7 +468,7 @@ vertices are burned, and Lemma 3.5(b) charges two chips to the centre and those
 two spokes. -/
 theorem two_le_centre_add_spokePair (hcore : spec.core = tricycleCore)
     (hEff : effective D)
-    (hred : q_reduced spec.graph (spec.coreVertex centre) D)
+    (hred : qReduced spec.graph (spec.coreVertex centre) D)
     (hrank : rank spec.graph D ≥ 1) (i : Fin 3)
     (hcy : cycleChips spec D i ≤ 1) :
     2 ≤ D (spec.coreVertex 0) + spokePairChips spec D i := by
@@ -514,7 +514,7 @@ theorem two_le_centre_add_spokePair (hcore : spec.core = tricycleCore)
 /-- The disjunctive form fed to the eight-way case split below. -/
 theorem centre_spokePair_or_cycle (hcore : spec.core = tricycleCore)
     (hEff : effective D)
-    (hred : q_reduced spec.graph (spec.coreVertex centre) D)
+    (hred : qReduced spec.graph (spec.coreVertex centre) D)
     (hrank : rank spec.graph D ≥ 1) (i : Fin 3) :
     2 ≤ D (spec.coreVertex 0) + spokePairChips spec D i ∨ 2 ≤ cycleChips spec D i := by
   rcases le_or_gt (cycleChips spec D i) 1 with h | h
@@ -528,7 +528,7 @@ theorem centre_spokePair_or_cycle (hcore : spec.core = tricycleCore)
 exactly one chip on each of the three transition paths. -/
 theorem lemma_graad5 (hcore : spec.core = tricycleCore)
     (hEff : effective D)
-    (hred : q_reduced spec.graph (spec.coreVertex centre) D)
+    (hred : qReduced spec.graph (spec.coreVertex centre) D)
     (hrank : rank spec.graph D ≥ 1) (hdeg : deg D ≤ 5) :
     D (spec.coreVertex 0) = 2 ∧ transitionPathChips spec D 0 = 1
       ∧ transitionPathChips spec D 1 = 1 ∧ transitionPathChips spec D 2 = 1 := by
@@ -568,7 +568,7 @@ divisorial gonality at least five — for every length vector, hence for every
 `σ_k`.  This is what makes the left-hand side of the tricycle gap a minimum
 rather than a bound at one `k`. -/
 theorem five_le_divisorialGonality (hcore : spec.core = tricycleCore)
-    (hconn : graph_connected spec.graph) :
+    (hconn : graphConnected spec.graph) :
     5 ≤ divisorialGonality spec.graph := by
   refine le_divisorialGonality_of_no_small hconn ?_
   intro E hEeff hEdeg hErank

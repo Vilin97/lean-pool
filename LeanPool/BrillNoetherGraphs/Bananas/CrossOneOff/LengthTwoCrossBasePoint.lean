@@ -37,7 +37,7 @@ theorem basePointDrop_bananaNormalForm_eq_zero_of_midpoint_mem
       (bananaNormalForm B a b E) = 0 := by
   change rank B.graph (bananaNormalForm B a b E) -
       rank B.graph (bananaNormalForm B a b E -
-        one_chip (strandVertex B α i)) = 0
+        oneChip (strandVertex B α i)) = 0
   rw [rank_bananaNormalForm_remove_midpoint_chip B E hE α i hα hi
     a b ha hb hLowDeg hmem]
   ring
@@ -49,7 +49,7 @@ theorem semibreakDivisor_add_chip {g : ℕ} (B : Banana g)
     (β : Fin (g + 1)) (newChip : Fin (B.length β - 1)) :
     semibreakDivisor B (replaceSemibreakChip B chips β (some newChip)) =
       semibreakDivisor B (replaceSemibreakChip B chips β none) +
-        one_chip (B.interiorVertex β newChip) := by
+        oneChip (B.interiorVertex β newChip) := by
   rw [semibreakDivisor_remove_chip B chips β newChip]
   abel
 
@@ -60,7 +60,7 @@ theorem isSemibreak_add_midpoint_chip_of_eq_zero
     (hE : IsSemibreak B E) (α : Fin (g + 1))
     (i : B.PathPosition α) (hα : B.length α = 2) (hi : i.val = 1)
     (hzero : E (strandVertex B α i) = 0) :
-    IsSemibreak (B := B) (E + one_chip (strandVertex B α i)) := by
+    IsSemibreak (B := B) (E + oneChip (strandVertex B α i)) := by
   rcases hE with ⟨chips, rfl⟩
   have hmid : strandVertex B α i = B.interiorVertex α ⟨0, by omega⟩ := by
     unfold strandVertex
@@ -102,13 +102,13 @@ theorem bananaNormalForm_sub_midpoint_linearEquiv
     {g : ℕ} (B : Banana g) (α : Fin (g + 1))
     (i : B.PathPosition α) (a b : ℤ) (E : CFDiv B.graph)
     (hα : B.length α = 2) (hi : i.val = 1) :
-    linear_equiv B.graph
-      (bananaNormalForm B a b E - one_chip (strandVertex B α i))
+    linearEquiv B.graph
+      (bananaNormalForm B a b E - oneChip (strandVertex B α i))
       (bananaNormalForm B (a - 1) (b - 1)
-        (E + one_chip (strandVertex B α i))) := by
+        (E + oneChip (strandVertex B α i))) := by
   have hmid :=
     (two_smul_midpoint_linearEquiv_endpoints B α i hα hi).symm
-  unfold linear_equiv at hmid ⊢
+  unfold linearEquiv at hmid ⊢
   convert hmid using 1
   unfold bananaNormalForm
   rw [sub_smul, sub_smul]
@@ -128,7 +128,7 @@ theorem basePointDrop_bananaNormalForm_eq_one_of_midpoint_eq_zero
       (mark B.graph (strandVertex B α i) v)
       (bananaNormalForm B a b E) = 1 := by
   let u := strandVertex B α i
-  let Eplus : CFDiv B.graph := E + one_chip u
+  let Eplus : CFDiv B.graph := E + oneChip u
   have hEplus : IsSemibreak B Eplus := by
     dsimp [Eplus, u]
     exact isSemibreak_add_midpoint_chip_of_eq_zero B E hE α i hα hi hzero
@@ -140,8 +140,8 @@ theorem basePointDrop_bananaNormalForm_eq_one_of_midpoint_eq_zero
     rw [rank_bananaNormalForm B a b E hE (by omega) hb hNormalDeg]
     rw [max_eq_left (by omega :
       a + b + deg E - (g : ℤ) ≤ min a b)]
-  have hEquiv : linear_equiv B.graph
-      (bananaNormalForm B a b E - one_chip u)
+  have hEquiv : linearEquiv B.graph
+      (bananaNormalForm B a b E - oneChip u)
       (bananaNormalForm B (a - 1) (b - 1) Eplus) := by
     dsimp [u, Eplus]
     exact bananaNormalForm_sub_midpoint_linearEquiv B α i a b E hα hi
@@ -153,12 +153,12 @@ theorem basePointDrop_bananaNormalForm_eq_one_of_midpoint_eq_zero
     by_cases haZero : a = 0
     · subst a
       have hRankSub : rank B.graph
-          (bananaNormalForm B 0 0 E - one_chip u) = -1 := by
+          (bananaNormalForm B 0 0 E - oneChip u) = -1 := by
         have hSupport := rank_semibreak_sub_vertex_eq_neg_one B E hE
           (by omega : deg E ≤ (g : ℤ)) u (by simpa [u] using hzero)
         simpa [bananaNormalForm] using hSupport
       change rank B.graph (bananaNormalForm B 0 0 E) -
-          rank B.graph (bananaNormalForm B 0 0 E - one_chip u) = 1
+          rank B.graph (bananaNormalForm B 0 0 E - oneChip u) = 1
       rw [hRankDZero, hRankSub]
       ring
     · have haPos : 0 < a := by omega
@@ -174,10 +174,10 @@ theorem basePointDrop_bananaNormalForm_eq_one_of_midpoint_eq_zero
         rw [bananaNormalForm_rightEndpoint B (a - 1) (-1) Eplus hEplus]
         omega
       have hRankSub : rank B.graph
-          (bananaNormalForm B a 0 E - one_chip u) = -1 := by
+          (bananaNormalForm B a 0 E - oneChip u) = -1 := by
         exact hRankEquiv.trans hRankNormal
       change rank B.graph (bananaNormalForm B a 0 E) -
-          rank B.graph (bananaNormalForm B a 0 E - one_chip u) = 1
+          rank B.graph (bananaNormalForm B a 0 E - oneChip u) = 1
       rw [hRankDZero, hRankSub]
       ring
   · have hbPos : 0 < b := by omega
@@ -197,10 +197,10 @@ theorem basePointDrop_bananaNormalForm_eq_one_of_midpoint_eq_zero
         omega
       rw [max_eq_left hTop, min_sub_sub_right]
     have hRankSub : rank B.graph
-        (bananaNormalForm B a b E - one_chip u) = min a b - 1 :=
+        (bananaNormalForm B a b E - oneChip u) = min a b - 1 :=
       hRankEquiv.trans hRankNormal
     change rank B.graph (bananaNormalForm B a b E) -
-        rank B.graph (bananaNormalForm B a b E - one_chip u) = 1
+        rank B.graph (bananaNormalForm B a b E - oneChip u) = 1
     rw [hRankD, hRankSub]
     ring
 

@@ -107,14 +107,14 @@ theorem deg_effectiveDegreeOneTwistResidue
 /-- Rebase a degree-one twist family at any one of its representatives. -/
 theorem degreeTwistInt_rebase_linearEquiv
     {M : TwiceMarked} (D : CFDiv M.graph) (b c : ℤ) (w : M.graph.V)
-    (hc : linear_equiv M.graph (degreeTwistInt M D 1 c) (one_chip w)) :
-    linear_equiv M.graph (degreeTwistInt M D 1 b)
-      (one_chip w + (b - c) • (one_chip M.u - one_chip M.v)) := by
-  unfold degreeTwistInt linear_equiv at hc ⊢
+    (hc : linearEquiv M.graph (degreeTwistInt M D 1 c) (oneChip w)) :
+    linearEquiv M.graph (degreeTwistInt M D 1 b)
+      (oneChip w + (b - c) • (oneChip M.u - oneChip M.v)) := by
+  unfold degreeTwistInt linearEquiv at hc ⊢
   have hDiff :
-      (one_chip w + (b - c) • (one_chip M.u - one_chip M.v)) -
-          (D + (1 - deg D + b) • one_chip M.u - b • one_chip M.v) =
-        (one_chip w - (D + (1 - deg D + c) • one_chip M.u - c • one_chip M.v)) := by
+      (oneChip w + (b - c) • (oneChip M.u - oneChip M.v)) -
+          (D + (1 - deg D + b) • oneChip M.u - b • oneChip M.v) =
+        (oneChip w - (D + (1 - deg D + c) • oneChip M.u - c • oneChip M.v)) := by
     ext x
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply]
     ring
@@ -126,9 +126,9 @@ period. -/
 theorem degreeTwistInt_rebase_mod_period_linearEquiv
     {M : TwiceMarked} {k : ℕ} (hk : TorsionWitness M k)
     (D : CFDiv M.graph) (b c : ℤ) (w : M.graph.V)
-    (hc : linear_equiv M.graph (degreeTwistInt M D 1 c) (one_chip w)) :
-    linear_equiv M.graph (degreeTwistInt M D 1 b)
-      (one_chip w + ((b - c) % k) • (one_chip M.u - one_chip M.v)) := by
+    (hc : linearEquiv M.graph (degreeTwistInt M D 1 c) (oneChip w)) :
+    linearEquiv M.graph (degreeTwistInt M D 1 b)
+      (oneChip w + ((b - c) % k) • (oneChip M.u - oneChip M.v)) := by
   have hRebase := degreeTwistInt_rebase_linearEquiv D b c w hc
   have hMod := marked_difference_mod_period_linearEquiv hk (b - c)
   exact hRebase.trans (linearEquiv_add_left_of_linearEquiv hMod)
@@ -138,11 +138,11 @@ residue twist at any chosen vertex representative. -/
 theorem rank_nonneg_rebased_residue_of_effectiveDegreeOneTwist
     {M : TwiceMarked} {k : ℕ} (hk : TorsionWitness M k)
     (D : CFDiv M.graph) (b c : Fin k) (w : M.graph.V)
-    (hc : linear_equiv M.graph (degreeTwistInt M D 1 c.val) (one_chip w))
+    (hc : linearEquiv M.graph (degreeTwistInt M D 1 c.val) (oneChip w))
     (hb : b ∈ effectiveDegreeOneTwistResidues M D k) :
     0 ≤ rank M.graph
-      (one_chip w + ((b.val - c.val : ℤ) % k) •
-        (one_chip M.u - one_chip M.v)) := by
+      (oneChip w + ((b.val - c.val : ℤ) % k) •
+        (oneChip M.u - oneChip M.v)) := by
   have hEq := degreeTwistInt_rebase_mod_period_linearEquiv
     hk D b.val c.val w hc
   have hRankEq := rank_eq_of_linear_equiv M.graph hEq
@@ -200,14 +200,14 @@ theorem effectiveDegreeOneTwistResidues_ncard_le_two_of_nonRecurrent
       (degreeTwistInt M D 1 c.val) hRankC
       (deg_effectiveDegreeOneTwistResidue M D k c)
   let T : Set (Fin k) := {r | 0 ≤ rank B.graph
-    (one_chip w + (r.val : ℤ) • (one_chip u - one_chip v))}
+    (oneChip w + (r.val : ℤ) • (oneChip u - oneChip v))}
   have hMap : ∀ b ∈ S, residueShift k b c ∈ T := by
     intro b hb
     have h := rank_nonneg_rebased_residue_of_effectiveDegreeOneTwist
       hk.1 D b c w hw (by simpa [S] using hb)
     change 0 ≤ rank B.graph
-      (one_chip w + ((residueShift k b c).val : ℤ) •
-        (one_chip u - one_chip v))
+      (oneChip w + ((residueShift k b c).val : ℤ) •
+        (oneChip u - oneChip v))
     rw [residueShift_val]
     exact h
   have hTtwo : T.ncard ≤ 2 := by
@@ -215,9 +215,9 @@ theorem effectiveDegreeOneTwistResidues_ncard_le_two_of_nonRecurrent
     apply Set.ncard_le_two_of_zero_or_eq T z
     intro x y hx hy
     have hx' : 0 ≤ rank B.graph
-        (one_chip w + (x.val : ℤ) • (one_chip u - one_chip v)) := hx
+        (oneChip w + (x.val : ℤ) • (oneChip u - oneChip v)) := hx
     have hy' : 0 ≤ rank B.graph
-        (one_chip w + (y.val : ℤ) • (one_chip u - one_chip v)) := hy
+        (oneChip w + (y.val : ℤ) • (oneChip u - oneChip v)) := hy
     rcases hNonrec.zero_or_eq_of_two_rank_nonneg w x y hx' hy' with hx0 | hy0 | hxy
     · exact Or.inl (Fin.ext (by simpa [z] using hx0))
     · exact Or.inr (Or.inl (Fin.ext (by simpa [z] using hy0)))
@@ -238,42 +238,42 @@ the northwest and southeast quadrants at `(a+1,b)`; Riemann--Roch makes both
 cardinalities equal to one. -/
 theorem degree_one_rank_zero_twist_unique_crossing_inversion
     (M : TwiceMarked) (D : CFDiv M.graph)
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : _root_.graphConnected M.graph)
     (hGenus : genus M.graph = 2)
     (tau : ℤ → ℤ) (hTau : IsTransmissionPermutation M D tau)
     (a b : ℤ)
-    (hDegree : deg (D + a • one_chip M.u - b • one_chip M.v) = 1)
+    (hDegree : deg (D + a • oneChip M.u - b • oneChip M.v) = 1)
     (hRank : rank M.graph
-        (D + a • one_chip M.u - b • one_chip M.v) = 0) :
+        (D + a • oneChip M.u - b • oneChip M.v) = 0) :
     ∃! p : ℤ × ℤ,
       p.1 < b ∧ b ≤ p.2 ∧ tau p.1 > a ∧ tau p.2 ≤ a := by
   let X : CFDiv M.graph :=
-    D + a • one_chip M.u - b • one_chip M.v
+    D + a • oneChip M.u - b • oneChip M.v
   have hRR := riemann_roch_for_graphs hconn X
   have hComplementRank :
-      rank M.graph (canonical_divisor M.graph - X) = 0 := by
+      rank M.graph (canonicalDivisor M.graph - X) = 0 := by
     rw [hGenus, hDegree, hRank] at hRR
     omega
-  have hSECard : (southeast_set tau (a + 1) b).ncard = 1 := by
+  have hSECard : (southeastSet tau (a + 1) b).ncard = 1 := by
     have h := transmission_rank_eq_southeast_ncard M D hconn tau hTau a b
     rw [hRank] at h
     exact_mod_cast h.symm
-  have hNWCard : (northwest_set tau (a + 1) b).ncard = 1 := by
+  have hNWCard : (northwestSet tau (a + 1) b).ncard = 1 := by
     have h := transmission_complement_rank_eq_northwest_ncard
       M D hconn tau hTau a b
     have hRewrite :
-        canonical_divisor M.graph - D - a • one_chip M.u +
-            b • one_chip M.v = canonical_divisor M.graph - X := by
+        canonicalDivisor M.graph - D - a • oneChip M.u +
+            b • oneChip M.v = canonicalDivisor M.graph - X := by
       dsimp [X]
       abel
     rw [hRewrite, hComplementRank] at h
     exact_mod_cast h.symm
   obtain ⟨n, hSE⟩ := Set.ncard_eq_one.mp hSECard
   obtain ⟨m, hNW⟩ := Set.ncard_eq_one.mp hNWCard
-  have hmMem : m ∈ northwest_set tau (a + 1) b := by
+  have hmMem : m ∈ northwestSet tau (a + 1) b := by
     rw [hNW]
     simp
-  have hnMem : n ∈ southeast_set tau (a + 1) b := by
+  have hnMem : n ∈ southeastSet tau (a + 1) b := by
     rw [hSE]
     simp
   refine ⟨(m, n), ?_, ?_⟩
@@ -285,9 +285,9 @@ theorem degree_one_rank_zero_twist_unique_crossing_inversion
     rcases p' with ⟨m', n'⟩
     change m' < b ∧ b ≤ n' ∧ tau m' > a ∧ tau n' ≤ a at hp'
     rcases hp' with ⟨hm'b, hbn', hm'Tau, hn'Tau⟩
-    have hm'Mem : m' ∈ northwest_set tau (a + 1) b := by
+    have hm'Mem : m' ∈ northwestSet tau (a + 1) b := by
       exact ⟨hm'b, by omega⟩
-    have hn'Mem : n' ∈ southeast_set tau (a + 1) b := by
+    have hn'Mem : n' ∈ southeastSet tau (a + 1) b := by
       exact ⟨hbn', by omega⟩
     have hm' : m' = m := by
       rw [hNW] at hm'Mem
@@ -304,15 +304,15 @@ theorem degree_one_rank_zero_twist_unique_crossing_inversion
 ordinary inversion of the transmission permutation. -/
 theorem degree_one_rank_zero_twist_exists_inversion
     (M : TwiceMarked) (D : CFDiv M.graph)
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : _root_.graphConnected M.graph)
     (hGenus : genus M.graph = 2)
     (tau : ℤ → ℤ) (hTau : IsTransmissionPermutation M D tau)
     (a b : ℤ)
-    (hDegree : deg (D + a • one_chip M.u - b • one_chip M.v) = 1)
+    (hDegree : deg (D + a • oneChip M.u - b • oneChip M.v) = 1)
     (hRank : rank M.graph
-        (D + a • one_chip M.u - b • one_chip M.v) = 0) :
+        (D + a • oneChip M.u - b • oneChip M.v) = 0) :
     ∃ m n : ℤ,
-      (m, n) ∈ inv_set tau ∧ m < b ∧ b ≤ n ∧
+      (m, n) ∈ invSet tau ∧ m < b ∧ b ≤ n ∧
         tau m > a ∧ tau n ≤ a := by
   obtain ⟨⟨m, n⟩, hmn, -⟩ :=
     degree_one_rank_zero_twist_unique_crossing_inversion
@@ -342,7 +342,7 @@ fundamental range used by `kInversions`. -/
 theorem inversion_normalize_first_coordinate
     {k : ℕ} {tau : ℤ → ℤ} (hk : 0 < k)
     (hAffine : IsKAffine k tau) {m n : ℤ}
-    (hInv : (m, n) ∈ inv_set tau) :
+    (hInv : (m, n) ∈ invSet tau) :
     (m % k, n - (m / k) * k) ∈ kInversions k tau := by
   rcases hInv with ⟨hmn, hTau⟩
   have hkZ : 0 < (k : ℤ) := by exact_mod_cast hk
@@ -372,7 +372,7 @@ proof of Lemma 4.10. -/
 theorem inversion_normalize_second_coordinate
     {k : ℕ} {tau : ℤ → ℤ} (hk : 0 < k)
     (hAffine : IsKAffine k tau) {m n : ℤ}
-    (hInv : (m, n) ∈ inv_set tau) :
+    (hInv : (m, n) ∈ invSet tau) :
     (m - (n / k) * k, n % k) ∈ kInversionsBySecond k tau := by
   rcases hInv with ⟨hmn, hTau⟩
   have hkZ : 0 < (k : ℤ) := by exact_mod_cast hk

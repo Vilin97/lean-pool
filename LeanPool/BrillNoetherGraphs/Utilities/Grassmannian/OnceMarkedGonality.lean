@@ -16,15 +16,15 @@ the Young-diagram divisor census of a once-marked graph `(G, u)`.  This file rel
 two standard statements, both
 from the dependency `ChipFiringWithLean.RiemannRoch`:
 
-* `gonality_conjecture h_conn : gonality h_conn ≤ (genus G + 3) / 2`
-* `brill_noether_conjecture h_conn r d : 0 ≤ ρ → ∃ D, rank G D ≥ r ∧ deg D = d`
+* `gonalityConjecture h_conn : gonality h_conn ≤ (genus G + 3) / 2`
+* `brillNoetherConjecture h_conn r d : 0 ≤ ρ → ∃ D, rank G D ≥ r ∧ deg D = d`
 
 ## The rectangular Young diagram
 
 The row form `onceMarkedBNExists_iff_rank_rows` gives, for a normalized `D` (`deg D = g`)
 and `i < lambda.rowLens.length`,
 
-`rank G (D + (i - lambda.rowLens[i]) • one_chip u) ≥ i`.
+`rank G (D + (i - lambda.rowLens[i]) • oneChip u) ≥ i`.
 
 The index `i` here is the *target rank*, not merely a label: to extract a rank-`≥ r`
 conclusion one must plug in `i = r`, and `lambda.rowLens` is `0`-indexed with only
@@ -38,7 +38,7 @@ The right shape is the standard Brill--Noether rectangle: `r + 1` rows, each of 
 Parameters.lean`). Its row `r` is exactly the `n`-length row (`rowLens[r] = n`, since all
 `r + 1` rows are equal), so the row-form condition at `i = r` reads
 
-`rank G (D + (r - n) • one_chip u) ≥ r`,  of degree `g + r - n = d`.
+`rank G (D + (r - n) • oneChip u) ≥ r`,  of degree `g + r - n = d`.
 
 The diagram's cardinality is `(r + 1) * n`, so `OnceMarkedBNExistence` supplies this
 witness exactly when `(r + 1) * n ≤ g`, i.e. `bnNumber G r d ≥ 0` — the Brill--Noether
@@ -48,7 +48,7 @@ number `ρ`. This is *not* the `1 ≤ d` bound from the single-row guess; it is 
 below go through with no slack.
 
 When `n ≤ 0` (`d ≥ genus G + r`) the rectangle degenerates and no census input is needed
-at all: `deg (d • one_chip u) = d ≥ genus G + r` makes Riemann's inequality
+at all: `deg (d • oneChip u) = d ≥ genus G + r` makes Riemann's inequality
 (`rank_ge_deg_sub_genus`) alone give `rank ≥ r`. `bnExists_of_onceMarkedBNExistence`
 below case-splits exactly on this sign.
 -/
@@ -101,21 +101,21 @@ theorem bnRectangle_getD_of_pos {r n : ℕ} (hn : 0 < n) :
 end Rectangle
 
 /-- The general bridging lemma: `OnceMarkedBNExistence` supplies a rank-`≥ r` divisor of
-every degree `d` with `ρ(r, d) ≥ 0`, matching `brill_noether_conjecture`'s hypothesis
+every degree `d` with `ρ(r, d) ≥ 0`, matching `brillNoetherConjecture`'s hypothesis
 exactly (via `bnNumber`). No hypothesis on the sign of `rectangleWidth G r d` is needed:
 the proof case-splits on it internally (see the module docstring). -/
 theorem bnExists_of_onceMarkedBNExistence
-    {G : CFGraph} (hG : graph_connected G) (u : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u : G.V)
     (hCensus : OnceMarkedBNExistence G u) (r : ℕ) (d : ℤ)
     (hBN : 0 ≤ bnNumber G (r : ℤ) d) :
     BNExists G (r : ℤ) d := by
   rcases le_or_gt (rectangleWidth G (r : ℤ) d) 0 with hnle | hnpos
   · -- `d ≥ genus G + r`: Riemann's inequality alone gives rank `≥ r`, no census needed.
-    refine ⟨d • one_chip u, ?_, ?_⟩
-    · have hDeg : deg (d • one_chip u) = d := by rw [map_zsmul, deg_one_chip]; ring
+    refine ⟨d • oneChip u, ?_, ?_⟩
+    · have hDeg : deg (d • oneChip u) = d := by rw [map_zsmul, deg_one_chip]; ring
       exact hDeg
-    · have hDeg : deg (d • one_chip u) = d := by rw [map_zsmul, deg_one_chip]; ring
-      have hRR := rank_ge_deg_sub_genus hG (d • one_chip u)
+    · have hDeg : deg (d • oneChip u) = d := by rw [map_zsmul, deg_one_chip]; ring
+      have hRR := rank_ge_deg_sub_genus hG (d • oneChip u)
       rw [hDeg] at hRR
       unfold rectangleWidth at hnle
       linarith
@@ -144,7 +144,7 @@ theorem bnExists_of_onceMarkedBNExistence
       exact hge
     have hrow := hRows r hLen
     rw [hval] at hrow
-    refine ⟨D + ((r : ℤ) - (n : ℤ)) • one_chip u, ?_, hrow⟩
+    refine ⟨D + ((r : ℤ) - (n : ℤ)) • oneChip u, ?_, hrow⟩
     rw [deg.map_add, map_zsmul, deg_one_chip, hDegree, hn_cast]
     unfold rectangleWidth
     ring
@@ -152,7 +152,7 @@ theorem bnExists_of_onceMarkedBNExistence
 /-- The `r = 1` specialization, phrased exactly as the reader-recognisable
 `BNExists G 1 d` (`Utilities/Foundations/Parameters.lean`). -/
 theorem bnExists_one_of_onceMarkedBNExistence
-    {G : CFGraph} (hG : graph_connected G) (u : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u : G.V)
     (hCensus : OnceMarkedBNExistence G u) (d : ℤ)
     (hBN : 0 ≤ bnNumber G (1 : ℤ) d) :
     BNExists G 1 d := by
@@ -160,36 +160,36 @@ theorem bnExists_one_of_onceMarkedBNExistence
   simpa using h
 
 /-- A public replacement for the dependency's `private lemma gonality_le_genus_add_one`'s
-proof pattern: any witness of `gonality_leq G k` bounds the noncomputable `gonality`
+proof pattern: any witness of `gonalityLeq G k` bounds the noncomputable `gonality`
 above by `k`. The dependency does not export a lemma of this shape (its own version is
 `private`), so this re-derives the two ingredients (`BddBelow` and `csInf_le`) from the
 public `rank_geq_iff` / `rank_le_degree`. -/
-theorem gonality_le_of_gonality_leq {G : CFGraph} (h_conn : graph_connected G) {k : ℤ}
-    (hk : gonality_leq G k) : gonality h_conn ≤ k := by
+theorem gonality_le_of_gonality_leq {G : CFGraph} (h_conn : graphConnected G) {k : ℤ}
+    (hk : gonalityLeq G k) : gonality h_conn ≤ k := by
   unfold gonality
   refine csInf_le ?_ hk
   refine ⟨1, ?_⟩
   rintro l ⟨D, hRank, hDeg⟩
-  have hRankGeq : rank_geq G D 1 := (rank_geq_iff G D 1).mpr hRank
+  have hRankGeq : rankGeq G D 1 := (rank_geq_iff G D 1).mpr hRank
   have hDegLower : (1 : ℤ) ≤ deg D := rank_le_degree G D 1 (by norm_num) hRankGeq
   simpa [hDeg] using hDegLower
 
 /-- The gonality conjecture in this genus follows from once-marked Brill--Noether
 existence: the minimal degree `d = (genus G + 3) / 2` with `ρ(1, d) ≥ 0` is a rank-`≥ 1`
 divisor degree by `bnExists_one_of_onceMarkedBNExistence`, and `gonality_le_of_
-gonality_leq` transports that into a bound on the dependency's noncomputable
+gonalityLeq` transports that into a bound on the dependency's noncomputable
 `gonality`. -/
 theorem gonalityConjecture_of_onceMarkedBNExistence
-    {G : CFGraph} (hG : graph_connected G) (u : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u : G.V)
     (hCensus : OnceMarkedBNExistence G u) :
-    gonality_conjecture hG := by
+    gonalityConjecture hG := by
   have hgnn := genus_nonneg_of_graph_connected G hG
   set d : ℤ := (genus G + 3) / 2 with hd_def
   have hBN : 0 ≤ bnNumber G (1 : ℤ) d := by
     unfold bnNumber rectangleWidth
     omega
   obtain ⟨D, hDeg, hRank⟩ := bnExists_one_of_onceMarkedBNExistence hG u hCensus d hBN
-  have hgle : gonality_leq G d := ⟨D, hRank, hDeg⟩
+  have hgle : gonalityLeq G d := ⟨D, hRank, hDeg⟩
   have hle := gonality_le_of_gonality_leq hG hgle
   show gonality hG ≤ (genus G + 3) / 2
   omega
@@ -199,9 +199,9 @@ existence, for every `r d : ℤ`. The `r ≥ 0` case is `bnExists_of_onceMarkedB
 after `lift`ing `r` to `ℕ`; the `r < 0` case is trivial, since `rank G D ≥ -1` always
 (`rank_geq_neg_one`) and `r ≤ -1`. -/
 theorem brillNoetherConjecture_of_onceMarkedBNExistence
-    {G : CFGraph} (hG : graph_connected G) (u : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u : G.V)
     (hCensus : OnceMarkedBNExistence G u) (r d : ℤ) :
-    brill_noether_conjecture hG r d := by
+    brillNoetherConjecture hG r d := by
   show 0 ≤ genus G - (r + 1) * (genus G - d + r) → ∃ D : CFDiv G, rank G D ≥ r ∧ deg D = d
   intro hrho
   rcases le_or_gt 0 r with hr0 | hrneg
@@ -211,8 +211,8 @@ theorem brillNoetherConjecture_of_onceMarkedBNExistence
       exact hrho
     obtain ⟨D, hDeg, hRank⟩ := bnExists_of_onceMarkedBNExistence hG u hCensus rNat d hBN
     exact ⟨D, hRank, hDeg⟩
-  · refine ⟨d • one_chip u, ?_, ?_⟩
-    · have hge : rank G (d • one_chip u) ≥ -1 := rank_geq_neg_one G (d • one_chip u)
+  · refine ⟨d • oneChip u, ?_, ?_⟩
+    · have hge : rank G (d • oneChip u) ≥ -1 := rank_geq_neg_one G (d • oneChip u)
       omega
     · rw [map_zsmul, deg_one_chip]; ring
 

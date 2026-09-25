@@ -26,7 +26,7 @@ open Certificate
 
 /-- The contribution to the degree of `v` from vertices inside `S`. -/
 def internalDegree (H : CFGraph) (S : Finset H.V) (v : H.V) : ℤ :=
-  ∑ w ∈ S, (num_edges H v w : ℤ)
+  ∑ w ∈ S, (numEdges H v w : ℤ)
 
 /-- The sum of all directed internal edge multiplicities of `S`. -/
 def internalMultiplicity (H : CFGraph) (S : Finset H.V) : ℤ :=
@@ -34,8 +34,8 @@ def internalMultiplicity (H : CFGraph) (S : Finset H.V) : ℤ :=
 
 theorem vertex_degree_eq_internalDegree_add_outdeg_S
     (H : CFGraph) (S : Finset H.V) (v : H.V) :
-    vertex_degree H v = internalDegree H S v + outdeg_S H S v := by
-  let f : H.V → ℤ := fun w => (num_edges H v w : ℤ)
+    vertexDegree H v = internalDegree H S v + outdegreeSet H S v := by
+  let f : H.V → ℤ := fun w => (numEdges H v w : ℤ)
   have hSplit := Finset.sum_filter_add_sum_filter_not
     (Finset.univ : Finset H.V) (fun w => w ∈ S) f
   have hInside :
@@ -47,7 +47,7 @@ theorem vertex_degree_eq_internalDegree_add_outdeg_S
         Finset.univ.filter fun w : H.V => w ∉ S := by
     rfl
   rw [hInside, hOutside] at hSplit
-  simpa [vertex_degree, internalDegree, outdeg_S_eq_sum_filter, f] using hSplit.symm
+  simpa [vertexDegree, internalDegree, outdeg_S_eq_sum_filter, f] using hSplit.symm
 
 /-- Restricted handshaking: the directed internal multiplicity is even. -/
 theorem internalMultiplicity_even (H : CFGraph) (S : Finset H.V) :
@@ -57,9 +57,9 @@ theorem internalMultiplicity_even (H : CFGraph) (S : Finset H.V) :
   | empty =>
       exact Even.zero
   | @insert a S ha inductionHypothesis =>
-      let cross : ℤ := ∑ w ∈ S, (num_edges H a w : ℤ)
+      let cross : ℤ := ∑ w ∈ S, (numEdges H a w : ℤ)
       have hSymm :
-          (∑ v ∈ S, (num_edges H v a : ℤ)) = cross := by
+          (∑ v ∈ S, (numEdges H v a : ℤ)) = cross := by
         unfold cross
         apply Finset.sum_congr rfl
         intro v _hv
@@ -72,9 +72,9 @@ theorem internalMultiplicity_even (H : CFGraph) (S : Finset H.V) :
         rw [Finset.sum_insert ha]
         simp only [num_edges_self_zero, Nat.cast_zero, zero_add]
         have hInner (v : H.V) :
-            (∑ w ∈ insert a S, (num_edges H v w : ℤ)) =
-              (num_edges H v a : ℤ) +
-                ∑ w ∈ S, (num_edges H v w : ℤ) := by
+            (∑ w ∈ insert a S, (numEdges H v w : ℤ)) =
+              (numEdges H v a : ℤ) +
+                ∑ w ∈ S, (numEdges H v w : ℤ) := by
           rw [Finset.sum_insert ha]
         simp_rw [hInner]
         rw [Finset.sum_add_distrib, hSymm]
@@ -89,11 +89,11 @@ theorem internalMultiplicity_even (H : CFGraph) (S : Finset H.V) :
 /-- Sum the degree decomposition over a vertex set. -/
 theorem sum_vertex_degree_eq_internalMultiplicity_add_cutMultiplicity
     (H : CFGraph) (S : Finset H.V) :
-    (∑ v ∈ S, vertex_degree H v) =
+    (∑ v ∈ S, vertexDegree H v) =
       internalMultiplicity H S + cutMultiplicity H S := by
   calc
-    (∑ v ∈ S, vertex_degree H v) =
-        ∑ v ∈ S, (internalDegree H S v + outdeg_S H S v) := by
+    (∑ v ∈ S, vertexDegree H v) =
+        ∑ v ∈ S, (internalDegree H S v + outdegreeSet H S v) := by
       apply Finset.sum_congr rfl
       intro v _hv
       exact vertex_degree_eq_internalDegree_add_outdeg_S H S v
@@ -104,7 +104,7 @@ theorem sum_vertex_degree_eq_internalMultiplicity_add_cutMultiplicity
 /-- A nontrivial cut in a connected graph has positive outgoing
 multiplicity. -/
 theorem cutMultiplicity_pos_of_connected
-    {H : CFGraph} (hConnected : graph_connected H)
+    {H : CFGraph} (hConnected : graphConnected H)
     (S : Finset H.V) (hNonempty : S.Nonempty) (hProper : S ≠ Finset.univ) :
     0 < cutMultiplicity H S := by
   obtain ⟨inside, hInside⟩ := hNonempty
@@ -118,32 +118,32 @@ theorem cutMultiplicity_pos_of_connected
   obtain ⟨x, hxS, y, hyS, hxy⟩ :=
     hConnected S ⟨inside, outside, hInside, hOutside⟩
   have hEdgeOut :
-      (num_edges H x y : ℤ) ≤ outdeg_S H S x := by
-    unfold outdeg_S
+      (numEdges H x y : ℤ) ≤ outdegreeSet H S x := by
+    unfold outdegreeSet
     apply Finset.single_le_sum
-      (fun z _ => Int.natCast_nonneg (num_edges H x z))
+      (fun z _ => Int.natCast_nonneg (numEdges H x z))
     simp [hyS]
-  have hVertexOut : outdeg_S H S x ≤ cutMultiplicity H S := by
+  have hVertexOut : outdegreeSet H S x ≤ cutMultiplicity H S := by
     unfold cutMultiplicity
     apply Finset.single_le_sum
       (fun z _ => outdeg_S_nonneg H S z) hxS
-  have hEdgePositive : 0 < (num_edges H x y : ℤ) := by
+  have hEdgePositive : 0 < (numEdges H x y : ℤ) := by
     exact_mod_cast hxy
   omega
 
 /-- Every connected two-regular loopless multigraph satisfies the two-edge
 cut condition. -/
 theorem twoEdgeCutCondition_of_connected_vertexDegree_two
-    {H : CFGraph} (hConnected : graph_connected H)
-    (hDegree : ∀ vertex : H.V, vertex_degree H vertex = 2) :
+    {H : CFGraph} (hConnected : graphConnected H)
+    (hDegree : ∀ vertex : H.V, vertexDegree H vertex = 2) :
     TwoEdgeCutCondition H := by
   intro S hNonempty hProper
   have hPositive := cutMultiplicity_pos_of_connected
     hConnected S hNonempty hProper
   have hDegreeSum :
-      (∑ v ∈ S, vertex_degree H v) = 2 * (S.card : ℤ) := by
+      (∑ v ∈ S, vertexDegree H v) = 2 * (S.card : ℤ) := by
     calc
-      (∑ v ∈ S, vertex_degree H v) = ∑ _v ∈ S, (2 : ℤ) := by
+      (∑ v ∈ S, vertexDegree H v) = ∑ _v ∈ S, (2 : ℤ) := by
         apply Finset.sum_congr rfl
         intro v _hv
         exact hDegree v
@@ -183,7 +183,7 @@ def spec (length : Fin 2 → ℕ) (hLength : ∀ edge, 0 < length edge) :
 
 variable (length : Fin 2 → ℕ) (hLength : ∀ edge, 0 < length edge)
 
-theorem connected : graph_connected (spec length hLength).graph := by
+theorem connected : graphConnected (spec length hLength).graph := by
   apply (spec length hLength).graph_connected_of_coreConnected
   exact core_connected
 
@@ -202,12 +202,12 @@ variable {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
 /-- A core vertex has one incident unit edge for every core slot incident to
 it.  Parallel slots are retained separately. -/
 theorem vertex_degree_coreVertex_eq_incidentSlots (vertex : Fin n) :
-    vertex_degree spec.graph (spec.coreVertex vertex) =
+    vertexDegree spec.graph (spec.coreVertex vertex) =
       ∑ edge : Fin p,
         ((if spec.core.tail edge = vertex then 1 else 0) +
           if spec.core.head edge = vertex then 1 else 0) := by
   classical
-  rw [vertex_degree]
+  rw [vertexDegree]
   simp_rw [spec.num_edges_eq_sum_steps]
   push_cast
   rw [Finset.sum_comm]
@@ -303,38 +303,38 @@ theorem vertex_degree_coreVertex_eq_incidentSlots (vertex : Fin n) :
 /-- Every interior subdivision vertex has valence exactly two. -/
 theorem vertex_degree_interiorVertex_eq_two
     (edge : Fin p) (offset : Fin (spec.length edge - 1)) :
-    vertex_degree spec.graph (spec.interiorVertex edge offset) = 2 := by
+    vertexDegree spec.graph (spec.interiorVertex edge offset) = 2 := by
   classical
   let previous := spec.previousVertex edge offset
   let next := spec.nextVertex edge offset
   have hDistinct : previous ≠ next :=
     spec.previousVertex_ne_nextVertex edge offset
   have hPreviousPositive :
-      0 < num_edges spec.graph (spec.interiorVertex edge offset) previous := by
+      0 < numEdges spec.graph (spec.interiorVertex edge offset) previous := by
     exact spec.previous_num_edges_pos edge offset
   have hNextPositive :
-      0 < num_edges spec.graph (spec.interiorVertex edge offset) next := by
+      0 < numEdges spec.graph (spec.interiorVertex edge offset) next := by
     exact spec.next_num_edges_pos edge offset
   have hPreviousLe := spec.num_edges_interior_le_one edge offset previous
   have hNextLe := spec.num_edges_interior_le_one edge offset next
   have hPrevious :
-      num_edges spec.graph (spec.interiorVertex edge offset) previous = 1 := by
+      numEdges spec.graph (spec.interiorVertex edge offset) previous = 1 := by
     omega
   have hNext :
-      num_edges spec.graph (spec.interiorVertex edge offset) next = 1 := by
+      numEdges spec.graph (spec.interiorVertex edge offset) next = 1 := by
     omega
   have hOther (vertex : spec.Vertex)
       (hPrev : vertex ≠ previous) (hNextVertex : vertex ≠ next) :
-      num_edges spec.graph (spec.interiorVertex edge offset) vertex = 0 := by
+      numEdges spec.graph (spec.interiorVertex edge offset) vertex = 0 := by
     apply Nat.eq_zero_of_not_pos
     intro hPositive
     rcases (spec.interior_num_edges_pos_iff edge offset vertex).mp hPositive with
       h | h
     · exact hPrev h
     · exact hNextVertex h
-  rw [vertex_degree]
+  rw [vertexDegree]
   have hTerm (vertex : spec.Vertex) :
-      (num_edges spec.graph (spec.interiorVertex edge offset) vertex : ℤ) =
+      (numEdges spec.graph (spec.interiorVertex edge offset) vertex : ℤ) =
         if vertex = previous then 1 else if vertex = next then 1 else 0 := by
     by_cases hPrev : vertex = previous
     · subst vertex
@@ -370,9 +370,9 @@ variable (length : Fin 2 → ℕ) (hLength : ∀ edge, 0 < length edge)
 
 theorem vertex_degree_two
     (vertex : (spec length hLength).graph.V) :
-    vertex_degree (spec length hLength).graph vertex = 2 := by
+    vertexDegree (spec length hLength).graph vertex = 2 := by
   rcases vertex with coreVertex | interior
-  · change vertex_degree (spec length hLength).graph
+  · change vertexDegree (spec length hLength).graph
       ((spec length hLength).coreVertex coreVertex) = 2
     rw [(spec length hLength).vertex_degree_coreVertex_eq_incidentSlots]
     fin_cases coreVertex <;> simp [spec, core]

@@ -34,7 +34,7 @@ variable {G : CFGraph}
 def SourceFree (O : CFOrientation G) : Prop := ∀ v : G.V, 1 ≤ indeg G O v
 
 /-- `O` is *in-heavy at `q`*: source-free, and `q` receives at least two edges. This is
-exactly the condition making `ordiv G O - one_chip q` effective. -/
+exactly the condition making `ordiv G O - oneChip q` effective. -/
 def InHeavyAt (O : CFOrientation G) (q : G.V) : Prop :=
   SourceFree O ∧ 2 ≤ indeg G O q
 
@@ -52,27 +52,27 @@ theorem effective_ordiv_of_sourceFree {O : CFOrientation G} (h : SourceFree O) :
 /-- `rank (ordiv G O) ≥ 0` for a source-free orientation. -/
 theorem winnable_ordiv_of_sourceFree {O : CFOrientation G} (h : SourceFree O) :
     winnable G (ordiv G O) :=
-  ⟨ordiv G O, effective_ordiv_of_sourceFree h, linear_equiv.refl G _⟩
+  ⟨ordiv G O, effective_ordiv_of_sourceFree h, linearEquiv.refl G _⟩
 
-/-- In-heaviness at `q` is exactly effectivity of `ordiv G O - one_chip q`. -/
+/-- In-heaviness at `q` is exactly effectivity of `ordiv G O - oneChip q`. -/
 theorem effective_ordiv_sub_one_chip_of_inHeavyAt {O : CFOrientation G} {q : G.V}
-    (h : InHeavyAt O q) : effective (ordiv G O - one_chip q) := by
+    (h : InHeavyAt O q) : effective (ordiv G O - oneChip q) := by
   intro v
   by_cases hv : v = q
   · subst hv
     have := h.2
-    simp only [Pi.sub_apply, ordiv, one_chip]
+    simp only [Pi.sub_apply, ordiv, oneChip]
     omega
   · have := h.1 v
-    simp only [Pi.sub_apply, ordiv, one_chip, if_neg hv]
+    simp only [Pi.sub_apply, ordiv, oneChip, if_neg hv]
     omega
 
 /-! ## The surviving statement: in-heavy reachability certifies rank one -/
 
 /-- Subtracting the same chip from both sides of a linear equivalence. -/
-private theorem linear_equiv_sub_one_chip {D D' : CFDiv G} (h : linear_equiv G D D')
-    (q : G.V) : linear_equiv G (D - one_chip q) (D' - one_chip q) := by
-  simpa only [linear_equiv, sub_sub_sub_cancel_right] using h
+private theorem linear_equiv_sub_one_chip {D D' : CFDiv G} (h : linearEquiv G D D')
+    (q : G.V) : linearEquiv G (D - oneChip q) (D' - oneChip q) := by
+  simpa only [linearEquiv, sub_sub_sub_cancel_right] using h
 
 /-- **In-heavy reachability certifies rank one.**  If the divisor class of `ordiv G O`
 contains, for every vertex `q`, an orientation divisor that is source-free and in-heavy at
@@ -83,11 +83,11 @@ such an orientation from `O` in the cycle–cocycle reversal system, which is th
 distillation note states.  The converse fails — see the module docstring. -/
 theorem rank_ge_one_of_inHeavyReachable (O : CFOrientation G)
     (h : ∀ q : G.V, ∃ O' : CFOrientation G,
-      linear_equiv G (ordiv G O) (ordiv G O') ∧ InHeavyAt O' q) :
+      linearEquiv G (ordiv G O) (ordiv G O') ∧ InHeavyAt O' q) :
     rank G (ordiv G O) ≥ 1 := by
   refine rank_ge_one_of_vertex_certificates G (ordiv G O) fun q => ?_
   obtain ⟨O', hequiv, hheavy⟩ := h q
-  exact ⟨ordiv G O' - one_chip q, effective_ordiv_sub_one_chip_of_inHeavyAt hheavy,
+  exact ⟨ordiv G O' - oneChip q, effective_ordiv_sub_one_chip_of_inHeavyAt hheavy,
     linear_equiv_sub_one_chip hequiv q⟩
 
 /-- The same statement with the reachability hypothesis phrased through the reversal
@@ -95,7 +95,7 @@ system, using Gioan's theorem in the direction already proved in
 `Utilities/Foundations/OrientationReversal.lean`. -/
 theorem rank_ge_one_of_inHeavyReachable' (O : CFOrientation G)
     (h : ∀ q : G.V, ∃ O' : CFOrientation G,
-      linear_equiv G (ordiv G O) (ordiv G O') ∧ SourceFree O' ∧ 2 ≤ indeg G O' q) :
+      linearEquiv G (ordiv G O) (ordiv G O') ∧ SourceFree O' ∧ 2 ≤ indeg G O' q) :
     rank G (ordiv G O) ≥ 1 :=
   rank_ge_one_of_inHeavyReachable O fun q =>
     let ⟨O', he, hs, hq⟩ := h q; ⟨O', he, ⟨hs, hq⟩⟩
@@ -116,17 +116,17 @@ def arcsOut (O : CFOrientation G) (U : Finset G.V) : ℕ :=
 
 `u ∈ U` can pay its whole boundary out of `ordiv G O` exactly when it receives strictly
 more arcs from inside `U` than it sends outside `U`.  The arcs entering `u` *from outside*
-`U` cancel: they are counted once by `indeg` and once by `outdeg_S`.
+`U` cancel: they are counted once by `indeg` and once by `outdegreeSet`.
 
 The characterization is expressed entirely in terms of arc counts inside and
 across the boundary of `U`. -/
 theorem legal_of_ordiv_iff (O : CFOrientation G) (U : Finset G.V) (u : G.V) :
-    outdeg_S G U u ≤ ordiv G O u ↔
+    outdegreeSet G U u ≤ ordiv G O u ↔
       (∑ w ∈ Uᶜ, flow O u w) + 1 ≤ ∑ w ∈ U, flow O w u := by
   classical
-  have hout : outdeg_S G U u
+  have hout : outdegreeSet G U u
       = (∑ w ∈ Uᶜ, (flow O u w : ℤ)) + ∑ w ∈ Uᶜ, (flow O w u : ℤ) := by
-    rw [outdeg_S, ← Finset.sum_add_distrib]
+    rw [outdegreeSet, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun w _ => ?_
     rw [← flow_add_flow_rev O u w]
     push_cast
@@ -157,7 +157,7 @@ least two once the boundary is counted.  On sparse graphs (cubic cores, say) suc
 rare, `ordiv G O` is already `q`-reduced at the in-degree-one vertices, and the rank is
 zero.  That is the whole failure. -/
 theorem card_add_arcsOut_le_arcsWithin_of_legal (O : CFOrientation G) (U : Finset G.V)
-    (h : ∀ u ∈ U, outdeg_S G U u ≤ ordiv G O u) :
+    (h : ∀ u ∈ U, outdegreeSet G U u ≤ ordiv G O u) :
     U.card + arcsOut O U ≤ arcsWithin O U := by
   classical
   have hpt : ∀ u ∈ U, 1 + ∑ w ∈ Uᶜ, flow O u w ≤ ∑ w ∈ U, flow O w u := by
@@ -174,7 +174,7 @@ theorem card_add_arcsOut_le_arcsWithin_of_legal (O : CFOrientation G) (U : Finse
 leaking too many arcs, cannot be unburnt. -/
 theorem not_legal_of_arcsWithin_lt (O : CFOrientation G) (U : Finset G.V)
     (h : arcsWithin O U < U.card + arcsOut O U) :
-    ¬ (∀ u ∈ U, outdeg_S G U u ≤ ordiv G O u) := fun hlegal =>
+    ¬ (∀ u ∈ U, outdegreeSet G U u ≤ ordiv G O u) := fun hlegal =>
   absurd (card_add_arcsOut_le_arcsWithin_of_legal O U hlegal) (by omega)
 
 end Utilities.Gonality

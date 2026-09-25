@@ -33,7 +33,7 @@ positions on their respective strands. -/
 def bananaPositionCoordinateDivisor {g : ℕ} (B : Banana g)
     (p : ∀ alpha : Fin (g + 1), B.PathPosition alpha) : CFDiv B.graph :=
   ∑ alpha : Fin (g + 1),
-    (one_chip (strandVertex B alpha (p alpha)) - one_chip (leftEndpoint B))
+    (oneChip (strandVertex B alpha (p alpha)) - oneChip (leftEndpoint B))
 
 /-- Regard a vector of strand positions as the corresponding nonnegative
 integer coordinate vector. -/
@@ -54,12 +54,12 @@ def IsPaperReducedPositionCoordinates {g : ℕ} (B : Banana g)
 section Generic
 
 private theorem linearEquiv_sum {G : CFGraph} {ι : Type*} [Fintype ι]
-    {D E : ι → CFDiv G} (h : ∀ i, linear_equiv G (D i) (E i)) :
-    linear_equiv G (∑ i, D i) (∑ i, E i) := by
+    {D E : ι → CFDiv G} (h : ∀ i, linearEquiv G (D i) (E i)) :
+    linearEquiv G (∑ i, D i) (∑ i, E i) := by
   classical
-  unfold linear_equiv at h ⊢
+  unfold linearEquiv at h ⊢
   rw [← Finset.sum_sub_distrib]
-  exact (principal_divisors G).sum_mem (fun i _ => h i)
+  exact (principalDivisors G).sum_mem (fun i _ => h i)
 
 end Generic
 
@@ -67,7 +67,7 @@ end Generic
 the coordinate homomorphism. -/
 theorem bananaCoordinateDivisorHom_linearEquiv_positionDivisor {g : ℕ}
     (B : Banana g) (p : ∀ alpha : Fin (g + 1), B.PathPosition alpha) :
-    linear_equiv B.graph
+    linearEquiv B.graph
       (bananaCoordinateDivisorHom B (bananaPositionCoordinates B p))
       (bananaPositionCoordinateDivisor B p) := by
   unfold bananaCoordinateDivisorHom bananaPositionCoordinates
@@ -87,7 +87,7 @@ private theorem zero_isSemibreak {g : ℕ} (B : Banana g) :
   · simp [semibreakDivisor, chips]
 
 private theorem zero_q_reduced_at_left {g : ℕ} (B : Banana g) :
-    q_reduced B.graph (leftEndpoint B) 0 := by
+    qReduced B.graph (leftEndpoint B) 0 := by
   have h := q_reduced_bananaNormalForm B 0 0 0 (zero_isSemibreak B)
     (by omega) (by simp)
   simpa [bananaNormalForm] using h
@@ -103,21 +103,21 @@ semibreak API. -/
 theorem bananaPositionCoordinates_eq_zero_of_qReduced_of_mem_relations
     {g : ℕ} (B : Banana g)
     (p : ∀ alpha : Fin (g + 1), B.PathPosition alpha)
-    (hReduced : q_reduced B.graph (leftEndpoint B)
+    (hReduced : qReduced B.graph (leftEndpoint B)
       (bananaPositionCoordinateDivisor B p))
     (hKernel : bananaPositionCoordinates B p ∈ bananaCoordinateRelations B) :
     bananaPositionCoordinates B p = 0 := by
   have hPrefix :=
     bananaCoordinateDivisorHom_linearEquiv_positionDivisor B p
-  have hCoordinateZero : linear_equiv B.graph
+  have hCoordinateZero : linearEquiv B.graph
       (bananaCoordinateDivisorHom B (bananaPositionCoordinates B p)) 0 := by
     rw [bananaCoordinateRelations, AddMonoidHom.mem_ker] at hKernel
     have hPrincipal :
         bananaCoordinateDivisorHom B (bananaPositionCoordinates B p) ∈
-          principal_divisors B.graph := by
+          principalDivisors B.graph := by
       exact (QuotientAddGroup.eq_zero_iff _).mp hKernel
-    unfold linear_equiv
-    simpa using (principal_divisors B.graph).neg_mem hPrincipal
+    unfold linearEquiv
+    simpa using (principalDivisors B.graph).neg_mem hPrincipal
   have hPositionZero : bananaPositionCoordinateDivisor B p = 0 :=
     q_reduced_unique B.graph (leftEndpoint B)
       (bananaPositionCoordinateDivisor B p) 0
@@ -127,8 +127,8 @@ theorem bananaPositionCoordinates_eq_zero_of_qReduced_of_mem_relations
   have hLeft := congrFun hPositionZero (leftEndpoint B)
   simp only [Pi.zero_apply] at hLeft
   have hTerm : ∀ beta : Fin (g + 1),
-      (one_chip (strandVertex B beta (p beta)) -
-          one_chip (leftEndpoint B)) (leftEndpoint B) =
+      (oneChip (strandVertex B beta (p beta)) -
+          oneChip (leftEndpoint B)) (leftEndpoint B) =
         if (p beta).val = 0 then 0 else (-1 : ℤ) := by
     intro beta
     by_cases hpZero : (p beta).val = 0
@@ -137,12 +137,12 @@ theorem bananaPositionCoordinates_eq_zero_of_qReduced_of_mem_relations
       simp
     · have hpPos : 0 < (p beta).val := Nat.pos_of_ne_zero hpZero
       have hVertex := strandVertex_ne_leftEndpoint B beta (p beta) hpPos
-      simp [one_chip, hpZero, hVertex.symm]
+      simp [oneChip, hpZero, hVertex.symm]
   unfold bananaPositionCoordinateDivisor at hLeft
   rw [Finset.sum_apply] at hLeft
   change (∑ beta : Fin (g + 1),
-      (one_chip (strandVertex B beta (p beta)) -
-        one_chip (leftEndpoint B)) (leftEndpoint B)) = 0 at hLeft
+      (oneChip (strandVertex B beta (p beta)) -
+        oneChip (leftEndpoint B)) (leftEndpoint B)) = 0 at hLeft
   rw [Finset.sum_congr rfl (fun beta _ => hTerm beta)] at hLeft
   have hEach := (Finset.sum_eq_zero_iff_of_nonpos (s := Finset.univ)
     (f := fun beta : Fin (g + 1) =>

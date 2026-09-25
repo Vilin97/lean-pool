@@ -32,17 +32,17 @@ theorem oneOff_firing_positive_residue
     (hb : b = m * B.length alpha + r)
     (_hrLo : 1 ≤ r) (hrHi : r + 1 < B.length alpha)
     (hbm : b ≤ g + m) (hc : c = g + m - b) :
-    linear_equiv B.graph
-      (g • one_chip (rightEndpoint B) +
-        ((g + 2 * m + 1 - b : ℕ) : ℤ) • one_chip (leftEndpoint B) -
-        (b : ℤ) • one_chip
+    linearEquiv B.graph
+      (g • oneChip (rightEndpoint B) +
+        ((g + 2 * m + 1 - b : ℕ) : ℤ) • oneChip (leftEndpoint B) -
+        (b : ℤ) • oneChip
           (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      ((c : ℤ) • one_chip (leftEndpoint B) +
-        (c : ℤ) • one_chip (rightEndpoint B) +
-        one_chip (strandVertex B alpha ⟨r, by omega⟩)) := by
+      ((c : ℤ) • oneChip (leftEndpoint B) +
+        (c : ℤ) • oneChip (rightEndpoint B) +
+        oneChip (strandVertex B alpha ⟨r, by omega⟩)) := by
   have hMark := crossOneOff_second_mark_multiple B alpha b m r hb (by omega)
-  unfold linear_equiv at hMark ⊢
-  have hNeg := (principal_divisors B.graph).neg_mem hMark
+  unfold linearEquiv at hMark ⊢
+  have hNeg := (principalDivisors B.graph).neg_mem hMark
   convert hNeg using 1
   ext z
   simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, Pi.neg_apply,
@@ -64,22 +64,22 @@ private theorem oneOff_positive_sub_mark_linearEquiv
     {g : ℕ} (B : Banana g) (alpha : Fin (g + 1))
     (c r : ℕ) (hLength : 1 < B.length alpha)
     (_hrLo : 1 ≤ r) (hrHi : r + 1 < B.length alpha) :
-    linear_equiv B.graph
-      ((c : ℤ) • one_chip (leftEndpoint B) +
-        (c : ℤ) • one_chip (rightEndpoint B) +
-        one_chip (strandVertex B alpha ⟨r, by omega⟩) -
-        one_chip
+    linearEquiv B.graph
+      ((c : ℤ) • oneChip (leftEndpoint B) +
+        (c : ℤ) • oneChip (rightEndpoint B) +
+        oneChip (strandVertex B alpha ⟨r, by omega⟩) -
+        oneChip
           (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
       (bananaNormalForm B (c : ℤ) ((c : ℤ) - 1)
-        (one_chip (strandVertex B alpha ⟨r + 1, by omega⟩))) := by
+        (oneChip (strandVertex B alpha ⟨r + 1, by omega⟩))) := by
   have hPenultimate := oneOff_sub_penultimate_linearEquiv_normalForm
     B alpha c hLength
   have hSlide := strand_one_add_position_linearEquiv_left_succ B alpha
     (⟨r, by omega⟩ : B.PathPosition alpha) (by
       change r + 1 ≤ B.length alpha
       omega)
-  unfold linear_equiv at hPenultimate hSlide ⊢
-  have hSum := (principal_divisors B.graph).add_mem hPenultimate hSlide
+  unfold linearEquiv at hPenultimate hSlide ⊢
+  have hSum := (principalDivisors B.graph).add_mem hPenultimate hSlide
   convert hSum using 1
   ext z
   simp only [bananaNormalForm, Pi.add_apply, Pi.sub_apply, Pi.smul_apply,
@@ -90,23 +90,23 @@ private theorem oneOff_positive_sub_both_linearEquiv
     {g : ℕ} (B : Banana g) (alpha : Fin (g + 1))
     (c r : ℕ) (hLength : 1 < B.length alpha)
     (_hrLo : 1 ≤ r) (hrHi : r + 1 < B.length alpha) :
-    linear_equiv B.graph
-      ((c : ℤ) • one_chip (leftEndpoint B) +
-        (c : ℤ) • one_chip (rightEndpoint B) +
-        one_chip (strandVertex B alpha ⟨r, by omega⟩) -
-        one_chip (leftEndpoint B) -
-        one_chip
+    linearEquiv B.graph
+      ((c : ℤ) • oneChip (leftEndpoint B) +
+        (c : ℤ) • oneChip (rightEndpoint B) +
+        oneChip (strandVertex B alpha ⟨r, by omega⟩) -
+        oneChip (leftEndpoint B) -
+        oneChip
           (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
       (bananaNormalForm B ((c : ℤ) - 1) ((c : ℤ) - 1)
-        (one_chip (strandVertex B alpha ⟨r + 1, by omega⟩))) := by
+        (oneChip (strandVertex B alpha ⟨r + 1, by omega⟩))) := by
   have hPenultimate := oneOff_sub_penultimate_linearEquiv_normalForm
     B alpha c hLength
   have hSlide := strand_one_add_position_linearEquiv_left_succ B alpha
     (⟨r, by omega⟩ : B.PathPosition alpha) (by
       change r + 1 ≤ B.length alpha
       omega)
-  unfold linear_equiv at hPenultimate hSlide ⊢
-  have hSum := (principal_divisors B.graph).add_mem hPenultimate hSlide
+  unfold linearEquiv at hPenultimate hSlide ⊢
+  have hSum := (principalDivisors B.graph).add_mem hPenultimate hSlide
   convert hSum using 1
   ext z
   simp only [bananaNormalForm, Pi.add_apply, Pi.sub_apply, Pi.smul_apply,
@@ -123,14 +123,14 @@ theorem rankDelta_oneOff_positive_normalForm_eq_one
     rankDelta
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      ((c : ℤ) • one_chip (leftEndpoint B) +
-        (c : ℤ) • one_chip (rightEndpoint B) +
-        one_chip (strandVertex B alpha ⟨r, by omega⟩)) = 1 := by
+      ((c : ℤ) • oneChip (leftEndpoint B) +
+        (c : ℤ) • oneChip (rightEndpoint B) +
+        oneChip (strandVertex B alpha ⟨r, by omega⟩)) = 1 := by
   let p : B.PathPosition alpha := ⟨r, by omega⟩
   let pNext : B.PathPosition alpha := ⟨r + 1, by omega⟩
   let v : B.PathPosition alpha := ⟨B.length alpha - 1, by omega⟩
-  let E : CFDiv B.graph := one_chip (strandVertex B alpha p)
-  let ENext : CFDiv B.graph := one_chip (strandVertex B alpha pNext)
+  let E : CFDiv B.graph := oneChip (strandVertex B alpha p)
+  let ENext : CFDiv B.graph := oneChip (strandVertex B alpha pNext)
   have hp : B.IsInteriorPosition alpha p := by
     change 0 < r ∧ r < B.length alpha
     omega
@@ -163,29 +163,29 @@ theorem rankDelta_oneOff_positive_normalForm_eq_one
     have hRankV := rank_semibreak_sub_vertex_eq_neg_one B E hE
       (by rw [hdegE]; omega) (strandVertex B alpha v) hSupportV
     have hBothDeg : deg
-        (E - one_chip (leftEndpoint B) - one_chip (strandVertex B alpha v)) < 0 := by
+        (E - oneChip (leftEndpoint B) - oneChip (strandVertex B alpha v)) < 0 := by
       rw [deg.map_sub, deg.map_sub, hdegE, deg_one_chip, deg_one_chip]
       norm_num
     have hRankBoth := rank_neg_one_of_deg_neg B.graph _ hBothDeg
     unfold rankDelta mark
     simp only [Nat.cast_zero, zero_smul, zero_add]
     change rank B.graph E -
-      rank B.graph (E - one_chip (leftEndpoint B)) -
-      rank B.graph (E - one_chip (strandVertex B alpha v)) +
-      rank B.graph (E - one_chip (leftEndpoint B) -
-        one_chip (strandVertex B alpha v)) = 1
+      rank B.graph (E - oneChip (leftEndpoint B)) -
+      rank B.graph (E - oneChip (strandVertex B alpha v)) +
+      rank B.graph (E - oneChip (leftEndpoint B) -
+        oneChip (strandVertex B alpha v)) = 1
     rw [hRankE, hRankLeft, hRankV, hRankBoth]
     norm_num
   · have hcPos : 0 < c := Nat.pos_of_ne_zero hcZero
     have hRange : (c : ℤ) + 1 ≤ (g : ℤ) := by exact_mod_cast (show c + 1 ≤ g by omega)
-    have hD : (c : ℤ) • one_chip (leftEndpoint B) +
-        (c : ℤ) • one_chip (rightEndpoint B) + E =
+    have hD : (c : ℤ) • oneChip (leftEndpoint B) +
+        (c : ℤ) • oneChip (rightEndpoint B) + E =
         bananaNormalForm B c c E := by
       unfold bananaNormalForm
       rfl
-    have hDU : (c : ℤ) • one_chip (leftEndpoint B) +
-        (c : ℤ) • one_chip (rightEndpoint B) + E -
-        one_chip (leftEndpoint B) = bananaNormalForm B (c - 1) c E := by
+    have hDU : (c : ℤ) • oneChip (leftEndpoint B) +
+        (c : ℤ) • oneChip (rightEndpoint B) + E -
+        oneChip (leftEndpoint B) = bananaNormalForm B (c - 1) c E := by
       unfold bananaNormalForm
       ext z
       simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
@@ -206,41 +206,41 @@ theorem rankDelta_oneOff_positive_normalForm_eq_one
     have hRankBoth := rank_bananaNormalForm B (c - 1) (c - 1) ENext hENext
       (by omega) (by omega) hRangeNext
     have hRankD' : rank B.graph
-        ((c : ℤ) • one_chip (leftEndpoint B) +
-          (c : ℤ) • one_chip (rightEndpoint B) + E) = c := by
+        ((c : ℤ) • oneChip (leftEndpoint B) +
+          (c : ℤ) • oneChip (rightEndpoint B) + E) = c := by
       rw [hD, hRankD, hdegE]
       omega
     have hRankDU' : rank B.graph
-        ((c : ℤ) • one_chip (leftEndpoint B) +
-          (c : ℤ) • one_chip (rightEndpoint B) + E -
-          one_chip (leftEndpoint B)) = (c : ℤ) - 1 := by
+        ((c : ℤ) • oneChip (leftEndpoint B) +
+          (c : ℤ) • oneChip (rightEndpoint B) + E -
+          oneChip (leftEndpoint B)) = (c : ℤ) - 1 := by
       rw [hDU, hRankDU, hdegE]
       omega
     have hRankDV' : rank B.graph
-        ((c : ℤ) • one_chip (leftEndpoint B) +
-          (c : ℤ) • one_chip (rightEndpoint B) + E -
-          one_chip (strandVertex B alpha v)) = (c : ℤ) - 1 := by
+        ((c : ℤ) • oneChip (leftEndpoint B) +
+          (c : ℤ) • oneChip (rightEndpoint B) + E -
+          oneChip (strandVertex B alpha v)) = (c : ℤ) - 1 := by
       rw [rank_eq_of_linear_equiv B.graph hDV, hRankDV, hdegENext]
       omega
     have hRankBoth' : rank B.graph
-        ((c : ℤ) • one_chip (leftEndpoint B) +
-          (c : ℤ) • one_chip (rightEndpoint B) + E -
-          one_chip (leftEndpoint B) -
-          one_chip (strandVertex B alpha v)) = (c : ℤ) - 1 := by
+        ((c : ℤ) • oneChip (leftEndpoint B) +
+          (c : ℤ) • oneChip (rightEndpoint B) + E -
+          oneChip (leftEndpoint B) -
+          oneChip (strandVertex B alpha v)) = (c : ℤ) - 1 := by
       rw [rank_eq_of_linear_equiv B.graph hBoth, hRankBoth, hdegENext]
       omega
     unfold rankDelta mark
-    change rank B.graph ((c : ℤ) • one_chip (leftEndpoint B) +
-        (c : ℤ) • one_chip (rightEndpoint B) + E) -
-      rank B.graph ((c : ℤ) • one_chip (leftEndpoint B) +
-        (c : ℤ) • one_chip (rightEndpoint B) + E -
-          one_chip (leftEndpoint B)) -
-      rank B.graph ((c : ℤ) • one_chip (leftEndpoint B) +
-        (c : ℤ) • one_chip (rightEndpoint B) + E -
-          one_chip (strandVertex B alpha v)) +
-      rank B.graph ((c : ℤ) • one_chip (leftEndpoint B) +
-        (c : ℤ) • one_chip (rightEndpoint B) + E -
-          one_chip (leftEndpoint B) - one_chip (strandVertex B alpha v)) = 1
+    change rank B.graph ((c : ℤ) • oneChip (leftEndpoint B) +
+        (c : ℤ) • oneChip (rightEndpoint B) + E) -
+      rank B.graph ((c : ℤ) • oneChip (leftEndpoint B) +
+        (c : ℤ) • oneChip (rightEndpoint B) + E -
+          oneChip (leftEndpoint B)) -
+      rank B.graph ((c : ℤ) • oneChip (leftEndpoint B) +
+        (c : ℤ) • oneChip (rightEndpoint B) + E -
+          oneChip (strandVertex B alpha v)) +
+      rank B.graph ((c : ℤ) • oneChip (leftEndpoint B) +
+        (c : ℤ) • oneChip (rightEndpoint B) + E -
+          oneChip (leftEndpoint B) - oneChip (strandVertex B alpha v)) = 1
     rw [hRankD', hRankDU', hRankDV', hRankBoth']
     omega
 
@@ -255,7 +255,7 @@ theorem transmission_oneOff_positive_residue
     (hTau : IsTransmissionPermutation
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau) :
+      (g • oneChip (rightEndpoint B)) tau) :
     tau (b : ℤ) = (g + 2 * m + 1 - b : ℕ) := by
   let c := g + m - b
   have hc : c = g + m - b := rfl

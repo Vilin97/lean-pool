@@ -46,7 +46,7 @@ theorem endpoint_has_quadratic_inversion_lower_bound
   obtain ⟨tau, hTau, hAffine, hBlock⟩ :=
     exists_endpoint_transmission_block B hSub hTO.1
   let hFinite := kInversions_finite_of_isKAffine hTO.1.1 hAffine
-  refine ⟨g • one_chip (rightEndpoint B), tau, hTau, hAffine, hFinite, ?_⟩
+  refine ⟨g • oneChip (rightEndpoint B), tau, hTau, hAffine, hFinite, ?_⟩
   exact endpoint_block_inversion_lower_bound hTO.1.1 hAffine hBlock hFinite
 
 /-- Same-strand one-off branch of Theorem 4.18 / Proposition 4.25. -/
@@ -62,7 +62,7 @@ theorem oneOff_has_quadratic_inversion_lower_bound
       (Nat.choose g 2 + g / (B.length alpha - 1)) := by
   let M := mark B.graph (leftEndpoint B)
     (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩)
-  let D : CFDiv B.graph := g • one_chip (rightEndpoint B)
+  let D : CFDiv B.graph := g • oneChip (rightEndpoint B)
   obtain ⟨tau, hTau, hAffine⟩ :=
     exists_affineTransmissionPermutation_of_submodular M D
       (banana_graph_connected B) (hSub D) hTO.1
@@ -94,7 +94,7 @@ theorem crossOneOff_has_quadratic_inversion_lower_bound
   let M := mark B.graph
     (strandVertex B alpha ⟨1, by omega⟩)
     (strandVertex B beta ⟨B.length beta - 1, by omega⟩)
-  let D : CFDiv B.graph := g • one_chip (rightEndpoint B)
+  let D : CFDiv B.graph := g • oneChip (rightEndpoint B)
   obtain ⟨tau, hTau, hAffine⟩ :=
     exists_affineTransmissionPermutation_of_submodular M D
       (banana_graph_connected B) (hSub D) hTO.1
@@ -131,7 +131,7 @@ theorem crossOneOff_has_quadratic_inversion_lower_bound_of_not_both_two
   let M := mark B.graph
     (strandVertex B alpha ⟨1, by omega⟩)
     (strandVertex B beta ⟨B.length beta - 1, by omega⟩)
-  let D : CFDiv B.graph := g • one_chip (rightEndpoint B)
+  let D : CFDiv B.graph := g • oneChip (rightEndpoint B)
   obtain ⟨tau, hTau, hAffine⟩ :=
     exists_affineTransmissionPermutation_of_submodular M D
       (banana_graph_connected B) (hSub D) hTO.1

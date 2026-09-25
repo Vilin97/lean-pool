@@ -393,8 +393,8 @@ theorem IsKAffine.swapTransmissionPermutation
 theorem rankDelta_mark_swap
     (G : CFGraph) (u v : G.V) (D : CFDiv G) :
     rankDelta (mark G v u) D = rankDelta (mark G u v) D := by
-  have hSub : D - one_chip v - one_chip u =
-      D - one_chip u - one_chip v := by
+  have hSub : D - oneChip v - oneChip u =
+      D - oneChip u - oneChip v := by
     abel
   unfold rankDelta mark
   rw [hSub]
@@ -410,7 +410,7 @@ theorem IsTransmissionPermutation.swap_marks
   refine ⟨swapTransmissionPermutation_bijective hTau.1, ?_⟩
   intro a b
   change (if swapTransmissionPermutation tau b = a then (1 : ℤ) else 0) =
-    rankDelta (mark G v u) (D + a • one_chip v - b • one_chip u)
+    rankDelta (mark G v u) (D + a • oneChip v - b • oneChip u)
   have hCondition : swapTransmissionPermutation tau b = a ↔
       tau (-a) = -b := by
     unfold swapTransmissionPermutation rawAffineReflection
@@ -433,8 +433,8 @@ theorem IsTransmissionPermutation.swap_marks
   rw [neg_zsmul, neg_zsmul]
   dsimp [mark]
   funext z
-  change D z + -(b * one_chip u z) - -(a * one_chip v z) =
-    D z + a * one_chip v z - b * one_chip u z
+  change D z + -(b * oneChip u z) - -(a * oneChip v z) =
+    D z + a * oneChip v z - b * oneChip u z
   ring
 
 /-- A torsion period is unchanged when the two marked vertices are exchanged. -/
@@ -444,19 +444,19 @@ theorem torsionWitness_swap
     TorsionWitness (mark G v u) k := by
   rcases h with ⟨hk, hPrincipal⟩
   refine ⟨hk, ?_⟩
-  unfold linear_equiv at hPrincipal ⊢
+  unfold linearEquiv at hPrincipal ⊢
   change (0 : CFDiv G) -
-    (k : ℤ) • (one_chip u - one_chip v) ∈ principal_divisors G at hPrincipal
+    (k : ℤ) • (oneChip u - oneChip v) ∈ principalDivisors G at hPrincipal
   change (0 : CFDiv G) -
-    (k : ℤ) • (one_chip v - one_chip u) ∈ principal_divisors G
+    (k : ℤ) • (oneChip v - oneChip u) ∈ principalDivisors G
   have hEq : (0 : CFDiv G) -
-      (k : ℤ) • (one_chip v - one_chip u) =
-      -((0 : CFDiv G) - (k : ℤ) • (one_chip u - one_chip v)) := by
+      (k : ℤ) • (oneChip v - oneChip u) =
+      -((0 : CFDiv G) - (k : ℤ) • (oneChip u - oneChip v)) := by
     ext z
     simp only [Pi.zero_apply, Pi.sub_apply, Pi.smul_apply, Pi.neg_apply]
     ring
   rw [hEq]
-  exact AddSubgroup.neg_mem (principal_divisors G) hPrincipal
+  exact AddSubgroup.neg_mem (principalDivisors G) hPrincipal
 
 theorem torsionWitness_swap_iff
     {G : CFGraph} (u v : G.V) {k : ℕ} :

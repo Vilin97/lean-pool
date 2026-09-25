@@ -123,7 +123,7 @@ def piecewiseValue (data : d.PiecewiseData potential) : Fin p → ℕ → ℤ :=
     ∑ j ∈ Finset.range k, blockSlope data.blockAt data.blockEnd data.blockRise e j
 
 /-- The resulting firing script on the contracted subdivision. -/
-def piecewiseScript (data : d.PiecewiseData potential) : firing_script d.graph :=
+def piecewiseScript (data : d.PiecewiseData potential) : firingScript d.graph :=
   d.slotValueScript potential (d.piecewiseValue data)
 
 @[simp] theorem piecewiseValue_zero (e : Fin p) :

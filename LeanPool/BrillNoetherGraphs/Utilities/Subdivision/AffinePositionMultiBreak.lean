@@ -274,7 +274,7 @@ def divisorOf (certificate : ExplicitPotential.Certificate m n p)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) :
     CFDiv (certificate.subdivisionSpec point core_nonempty hValid hCone).graph :=
   ∑ index : Fin d,
-    one_chip (family.vertex certificate point core_nonempty hValid hBounds hCone index)
+    oneChip (family.vertex certificate point core_nonempty hValid hBounds hCone index)
 
 theorem divisorOf_apply
     (certificate : ExplicitPotential.Certificate m n p)
@@ -291,14 +291,14 @@ theorem divisorOf_apply
   have hSum :
       family.divisorOf certificate point core_nonempty hValid hBounds hCone target =
         ∑ index : Fin d,
-          (one_chip
+          (oneChip
               (family.vertex certificate point core_nonempty hValid hBounds hCone index) :
             CFDiv (certificate.subdivisionSpec point core_nonempty hValid hCone).graph)
             target := by
     simp [divisorOf, Finset.sum_apply]
   rw [hSum]
   have hTerm : ∀ index : Fin d,
-      (one_chip
+      (oneChip
             (family.vertex certificate point core_nonempty hValid hBounds hCone index) :
           CFDiv (certificate.subdivisionSpec point core_nonempty hValid hCone).graph)
           target =
@@ -307,9 +307,9 @@ theorem divisorOf_apply
     intro index
     by_cases hEq :
         family.vertex certificate point core_nonempty hValid hBounds hCone index = target
-    · simp [one_chip, hEq]
+    · simp [oneChip, hEq]
     · rw [if_neg hEq]
-      simp only [one_chip]
+      simp only [oneChip]
       exact if_neg fun hAbsurd => hEq hAbsurd.symm
   simp only [hTerm]
   exact Finset.sum_boole _ _
@@ -403,7 +403,7 @@ theorem bnExists_of_reaches_coreVertices
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hBounds : family.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
-    (hConnected : graph_connected
+    (hConnected : graphConnected
       (certificate.subdivisionSpec point core_nonempty hValid hCone).graph)
     (hReaches : ∀ vertex : Fin n,
       Certificate.StrongSeparator.Reaches
@@ -501,7 +501,7 @@ def breakValue (potential : Fin n → ℤ) (breaks : Fin p → List (ℕ × ℤ)
 
 /-- The multi-break firing script. -/
 def breakScript (potential : Fin n → ℤ) (breaks : Fin p → List (ℕ × ℤ)) :
-    firing_script spec.graph :=
+    firingScript spec.graph :=
   spec.slotValueScript potential (spec.breakValue potential breaks)
 
 /-- The single closing condition on multi-break data: on every slot the total
@@ -673,7 +673,7 @@ def firingScript (certificate : ExplicitPotential.Certificate m n p)
     (script : SlopeScript m p b) (potential : Fin n → ℤ) (point : Fin m → ℤ)
     (core_nonempty : 0 < n) {degree : ℤ} (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) :
-    firing_script
+    firingScript
       (certificate.subdivisionSpec point core_nonempty hValid hCone).graph :=
   (certificate.subdivisionSpec point core_nonempty hValid hCone).breakScript
     potential (script.breaks certificate point)

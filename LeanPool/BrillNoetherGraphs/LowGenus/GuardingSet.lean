@@ -149,7 +149,7 @@ theorem classChip_reaches {d : DegSpec n p} {v : Fin n}
     (hClass : 1 ≤ G.divisor d (d.coreVertex v)) :
     Reaches d.graph (G.divisor d) (d.coreVertex v) :=
   reaches_of_effective_representative
-    (linear_equiv.refl d.graph (G.divisor d)) (G.divisor_effective d) hClass
+    (linearEquiv.refl d.graph (G.divisor d)) (G.divisor_effective d) hClass
 
 /-- **A vertex carrying a chip needs no picture.** -/
 theorem chip_reaches {d : DegSpec n p} {v : Fin n} (hv : 1 ≤ G.chips v) :
@@ -259,7 +259,7 @@ theorem coreClassDivisor_eq_fourChipDivisor (d : DegSpec n p) {a b c e : Fin n}
     rw [Finset.sum_congr rfl fun v _ => hstep v,
       sum_over_four_chips hab hac hae hbc hbe hce
         (fun v => if d.rep v = d.rep r then (1 : ℤ) else 0)]
-    simp only [fourChipDivisor, one_chip, Pi.add_apply, d.coreVertex_eq_iff,
+    simp only [fourChipDivisor, oneChip, Pi.add_apply, d.coreVertex_eq_iff,
       eq_comm]
   funext vertex
   rcases vertex with cls | interior
@@ -272,7 +272,7 @@ theorem coreClassDivisor_eq_fourChipDivisor (d : DegSpec n p) {a b c e : Fin n}
     exact hclass r
   · obtain ⟨f, o⟩ := interior
     change d.coreClassDivisor (fourChipWeight a b c e) (d.interiorVertex f o) = _
-    simp [DegSpec.coreClassDivisor, fourChipDivisor, one_chip,
+    simp [DegSpec.coreClassDivisor, fourChipDivisor, oneChip,
       DegSpec.coreVertex, DegSpec.interiorVertex]
 
 end AtanasovRanganathan.Guarding

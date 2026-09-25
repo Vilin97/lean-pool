@@ -31,13 +31,13 @@ variable {G : CFGraph.{u}}
 /-- The positive endpoint of a nontrivial principal one-chip difference is
 never in the maximum level set of its witnessing script. -/
 theorem target_not_mem_topSet_of_prin_eq_oneChip_sub
-    {sigma : firing_script G} {x y : G.V} (hxy : x ≠ y)
-    (hPrincipal : prin G sigma = one_chip y - one_chip x) :
+    {sigma : firingScript G} {x y : G.V} (hxy : x ≠ y)
+    (hPrincipal : prin G sigma = oneChip y - oneChip x) :
     y ∉ topSet sigma := by
   intro hyTop
   have hAtY : prin G sigma y = 1 := by
     rw [hPrincipal]
-    simp [one_chip, hxy.symm]
+    simp [oneChip, hxy.symm]
   have hUpper := prin_le_neg_outdeg_S (H := G) hyTop
   have hNonnegative := outdeg_S_nonneg G (topSet sigma) y
   omega
@@ -45,27 +45,27 @@ theorem target_not_mem_topSet_of_prin_eq_oneChip_sub
 /-- In a connected graph, the negative endpoint of a principal one-chip
 difference lies in the maximum level set of every witnessing script. -/
 theorem source_mem_topSet_of_prin_eq_oneChip_sub
-    (hConnected : graph_connected G) {sigma : firing_script G} {x y : G.V}
+    (hConnected : graphConnected G) {sigma : firingScript G} {x y : G.V}
     (hxy : x ≠ y)
-    (hPrincipal : prin G sigma = one_chip y - one_chip x) :
+    (hPrincipal : prin G sigma = oneChip y - oneChip x) :
     x ∈ topSet sigma := by
   have hyNotTop : y ∉ topSet sigma :=
     target_not_mem_topSet_of_prin_eq_oneChip_sub hxy hPrincipal
   by_contra hxNotTop
-  have hZero : ∀ v ∈ topSet sigma, outdeg_S G (topSet sigma) v = 0 := by
+  have hZero : ∀ v ∈ topSet sigma, outdegreeSet G (topSet sigma) v = 0 := by
     intro v hvTop
     have hvx : v ≠ x := fun h => hxNotTop (h ▸ hvTop)
     have hvy : v ≠ y := fun h => hyNotTop (h ▸ hvTop)
     have hAtV : prin G sigma v = 0 := by
       rw [hPrincipal]
-      simp [one_chip, hvx, hvy]
+      simp [oneChip, hvx, hvy]
     exact outdeg_S_topSet_eq_zero_of_prin_eq_zero hvTop hAtV
   obtain ⟨v, hvTop⟩ := topSet_nonempty sigma
   obtain ⟨a, haTop, b, hbTop, hab⟩ :=
     hConnected (topSet sigma) ⟨v, y, hvTop, hyNotTop⟩
   have hEdgeLe := edge_le_outdeg_S (G := G) (A := topSet sigma)
     (v := a) (x := b) hbTop
-  have hEdgePositive : 0 < (num_edges G a b : ℤ) := by
+  have hEdgePositive : 0 < (numEdges G a b : ℤ) := by
     exact_mod_cast hab
   rw [hZero a haTop] at hEdgeLe
   omega
@@ -73,9 +73,9 @@ theorem source_mem_topSet_of_prin_eq_oneChip_sub
 /-- The maximum-set peel of a one-chip equivalence exposes a separating edge
 at the negative endpoint. -/
 theorem exists_separatingEdgeCut_of_prin_eq_oneChip_sub
-    (hConnected : graph_connected G) {sigma : firing_script G} {x y : G.V}
+    (hConnected : graphConnected G) {sigma : firingScript G} {x y : G.V}
     (hxy : x ≠ y)
-    (hPrincipal : prin G sigma = one_chip y - one_chip x) :
+    (hPrincipal : prin G sigma = oneChip y - oneChip x) :
     ∃ z : G.V, ∃ cut : SeparatingEdgeCut G x z,
       cut.side = topSet sigma := by
   let S : Finset G.V := topSet sigma
@@ -87,16 +87,16 @@ theorem exists_separatingEdgeCut_of_prin_eq_oneChip_sub
     intro hyTop
     have hAtY : prin G sigma y = 1 := by
       rw [hPrincipal]
-      simp [one_chip, hxy.symm]
+      simp [oneChip, hxy.symm]
     have hUpper := prin_le_neg_outdeg_S (H := G) hyTop
     have hNonnegative := outdeg_S_nonneg G (topSet sigma) y
     omega
-  have hZeroAwayX : ∀ v ∈ S, v ≠ x → outdeg_S G S v = 0 := by
+  have hZeroAwayX : ∀ v ∈ S, v ≠ x → outdegreeSet G S v = 0 := by
     intro v hvTop hvx
     have hvy : v ≠ y := fun h => hyNotTop (h ▸ hvTop)
     have hAtV : prin G sigma v = 0 := by
       rw [hPrincipal]
-      simp [one_chip, hvx, hvy]
+      simp [oneChip, hvx, hvy]
     exact outdeg_S_topSet_eq_zero_of_prin_eq_zero hvTop hAtV
   obtain ⟨a, haTop, z, hzTop, haz⟩ :=
     hConnected S ⟨x, y, hxTop, hyNotTop⟩
@@ -104,27 +104,27 @@ theorem exists_separatingEdgeCut_of_prin_eq_oneChip_sub
     by_contra hax
     have hEdgeLe := edge_le_outdeg_S (G := G) (A := S)
       (v := a) (x := z) hzTop
-    have hEdgePositive : 0 < (num_edges G a z : ℤ) := by
+    have hEdgePositive : 0 < (numEdges G a z : ℤ) := by
       exact_mod_cast haz
     rw [hZeroAwayX a haTop hax] at hEdgeLe
     omega
   subst a
   have hAtX : prin G sigma x = -1 := by
     rw [hPrincipal]
-    simp [one_chip, hxy]
-  have hOutUpper : outdeg_S G S x ≤ 1 := by
+    simp [oneChip, hxy]
+  have hOutUpper : outdegreeSet G S x ≤ 1 := by
     have hUpper := prin_le_neg_outdeg_S (H := G) hxTopRaw
     rw [hAtX] at hUpper
-    change -1 ≤ -outdeg_S G S x at hUpper
+    change -1 ≤ -outdegreeSet G S x at hUpper
     omega
   have hEdgeLeOut := edge_le_outdeg_S (G := G) (A := S)
     (v := x) (x := z) hzTop
-  have hEdgePositive : 0 < (num_edges G x z : ℤ) := by
+  have hEdgePositive : 0 < (numEdges G x z : ℤ) := by
     exact_mod_cast haz
-  have hOutEq : outdeg_S G S x = 1 := by
+  have hOutEq : outdegreeSet G S x = 1 := by
     omega
-  have hxzOne : num_edges G x z = 1 := by
-    exact_mod_cast (show (num_edges G x z : ℤ) = 1 by omega)
+  have hxzOne : numEdges G x z = 1 := by
+    exact_mod_cast (show (numEdges G x z : ℤ) = 1 by omega)
   refine ⟨z, {
     side := S
     left_mem := hxTop
@@ -141,33 +141,33 @@ theorem exists_separatingEdgeCut_of_prin_eq_oneChip_sub
       have hqErase : q ∈ (Finset.univ \ S).erase z := by
         simp [hqMem, hqz]
       have hDecompose := (Finset.univ \ S).sum_erase_add
-        (fun w => (num_edges G x w : ℤ)) hzMem
+        (fun w => (numEdges G x w : ℤ)) hzMem
       have hRestNonnegative :
           0 ≤ ∑ w ∈ (Finset.univ \ S).erase z,
-            (num_edges G x w : ℤ) :=
+            (numEdges G x w : ℤ) :=
         Finset.sum_nonneg fun _ _ => Int.natCast_nonneg _
       have hTotal :
-          (∑ w ∈ Finset.univ \ S, (num_edges G x w : ℤ)) = 1 := by
+          (∑ w ∈ Finset.univ \ S, (numEdges G x w : ℤ)) = 1 := by
         exact hOutEq
       have hRestZero :
           (∑ w ∈ (Finset.univ \ S).erase z,
-            (num_edges G x w : ℤ)) = 0 := by
-        have hxzCast : (num_edges G x z : ℤ) = 1 := by exact_mod_cast hxzOne
+            (numEdges G x w : ℤ)) = 0 := by
+        have hxzCast : (numEdges G x z : ℤ) = 1 := by exact_mod_cast hxzOne
         omega
-      have hEdgeLeRest : (num_edges G x q : ℤ) ≤
+      have hEdgeLeRest : (numEdges G x q : ℤ) ≤
           ∑ w ∈ (Finset.univ \ S).erase z,
-            (num_edges G x w : ℤ) := by
+            (numEdges G x w : ℤ) := by
         exact Finset.single_le_sum
-          (fun w _ => Int.natCast_nonneg (num_edges G x w)) hqErase
-      have hxqZero : num_edges G x q = 0 := by
-        exact_mod_cast (show (num_edges G x q : ℤ) = 0 by omega)
+          (fun w _ => Int.natCast_nonneg (numEdges G x w)) hqErase
+      have hxqZero : numEdges G x q = 0 := by
+        exact_mod_cast (show (numEdges G x q : ℤ) = 0 by omega)
       simp [hqz, hxqZero]
   · have hOutZero := hZeroAwayX p hp hpx
     have hEdgeLe := edge_le_outdeg_S (G := G) (A := S)
       (v := p) (x := q) hq
-    have hpqZero : num_edges G p q = 0 := by
-      exact_mod_cast (show (num_edges G p q : ℤ) = 0 by
-        have hNonnegative : 0 ≤ (num_edges G p q : ℤ) := Int.natCast_nonneg _
+    have hpqZero : numEdges G p q = 0 := by
+      exact_mod_cast (show (numEdges G p q : ℤ) = 0 by
+        have hNonnegative : 0 ≤ (numEdges G p q : ℤ) := Int.natCast_nonneg _
         omega)
     simp [hpx, hpqZero]
 
@@ -176,18 +176,18 @@ every degree-one divisor class of a connected graph.  The proof peels the
 maximum set of a one-chip-equivalence witness and inducts on its endpoint
 height difference. -/
 theorem eq_of_chipEquivalent_of_separating_normalized
-    (hConnected : graph_connected G) (rho : firing_script G)
+    (hConnected : graphConnected G) (rho : firingScript G)
     (hNormalized : ∀ {a b : G.V}, (cut : SeparatingEdgeCut G a b) →
       rho a = rho b)
-    {x y : G.V} (hEquivalent : linear_equiv G (one_chip x) (one_chip y)) :
+    {x y : G.V} (hEquivalent : linearEquiv G (oneChip x) (oneChip y)) :
     rho x = rho y := by
-  unfold linear_equiv at hEquivalent
+  unfold linearEquiv at hEquivalent
   obtain ⟨sigma, hSigma⟩ :=
-    (principal_iff_eq_prin G (one_chip y - one_chip x)).mp hEquivalent
-  have hPrincipal : prin G sigma = one_chip y - one_chip x := hSigma.symm
+    (principal_iff_eq_prin G (oneChip y - oneChip x)).mp hEquivalent
+  have hPrincipal : prin G sigma = oneChip y - oneChip x := hSigma.symm
   let P : ℕ → Prop := fun n =>
-    ∀ (a b : G.V) (tau : firing_script G),
-      prin G tau = one_chip b - one_chip a →
+    ∀ (a b : G.V) (tau : firingScript G),
+      prin G tau = oneChip b - oneChip a →
       (tau a - tau b).toNat = n → rho a = rho b
   have hP : ∀ n, P n := by
     intro n
@@ -206,9 +206,9 @@ theorem eq_of_chipEquivalent_of_separating_normalized
           have haz : rho a = rho z := hNormalized cut
           by_cases hzb : z = b
           · exact haz.trans (congrArg rho hzb)
-          · let tau' : firing_script G :=
-              tau - indicator_script G cut.side
-            have hTau' : prin G tau' = one_chip b - one_chip z := by
+          · let tau' : firingScript G :=
+              tau - indicatorScript G cut.side
+            have hTau' : prin G tau' = oneChip b - oneChip z := by
               dsimp [tau']
               rw [map_sub, cut.prin_indicator_script, hTau]
               abel
@@ -228,9 +228,9 @@ theorem eq_of_chipEquivalent_of_separating_normalized
               rw [hSide]
               exact hbNotTop
             have hTauZ : tau' z = tau z := by
-              simp [tau', indicator_script, cut.right_not_mem]
+              simp [tau', indicatorScript, cut.right_not_mem]
             have hTauB : tau' b = tau b := by
-              simp [tau', indicator_script, hbOutside]
+              simp [tau', indicatorScript, hbOutside]
             have hOldPositive : 0 < tau a - tau b := by
               have hlt := lt_of_not_mem_topSet haTop hbNotTop
               omega

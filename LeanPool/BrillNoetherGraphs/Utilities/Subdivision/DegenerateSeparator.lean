@@ -241,8 +241,8 @@ theorem target_core_connected (c : Contraction d target)
 /-- **Connectivity, on the closed orthant.**  The finite trust boundary is the
 same `Core.Connected` cut certificate the open orthant uses, on the
 uncontracted core. -/
-theorem graph_connected (c : Contraction d target)
-    (hCore : d.core.Connected) : graph_connected d.graph :=
+theorem graphConnected (c : Contraction d target)
+    (hCore : d.core.Connected) : graphConnected d.graph :=
   c.laplacianEquiv.graphConnected
     (target.graph_connected_of_coreConnected (c.target_core_connected hCore))
 
@@ -261,8 +261,8 @@ theorem strongSeparatorCertificate :
 /-- **Connectivity for any degenerate spec** from the finite core cut
 certificate on the uncontracted core. -/
 theorem graph_connected_of_coreConnected (hCore : d.core.Connected) :
-    graph_connected d.graph :=
-  d.canonicalContraction.graph_connected hCore
+    graphConnected d.graph :=
+  d.canonicalContraction.graphConnected hCore
 
 /-- The contracted core classes determine rank one on a closed subdivision.
 
@@ -395,7 +395,7 @@ Nothing above weakens the existing statement: on the open orthant the closed
 wrapper *proves* `bnExists_on_subdivision_of_valid`'s conclusion, about the
 very same `subdivisionSpec`.  The only difference in the hypotheses is that
 connectivity is asked for as the finite core cut certificate rather than as
-`graph_connected` of the built graph — which is how the open orthant obtains
+`graphConnected` of the built graph — which is how the open orthant obtains
 it anyway, through `graph_connected_of_coreConnected`. -/
 
 /-- At a strictly positive point the degenerate spec's `toSpec` *is*

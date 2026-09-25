@@ -137,7 +137,7 @@ def tricycleSpec (length : Fin 15 → ℕ) (hpos : ∀ e, 0 < length e) : Spec 7
     (e : Fin 15) : (tricycleSpec length hpos).length e = length e := rfl
 
 theorem tricycleSpec_connected (length : Fin 15 → ℕ) (hpos : ∀ e, 0 < length e) :
-    graph_connected (tricycleSpec length hpos).graph :=
+    graphConnected (tricycleSpec length hpos).graph :=
   (tricycleSpec length hpos).graph_connected_of_coreConnected tricycleCore_connected
 
 /-- Every subdivision of the minimal tricycle has genus nine; in particular the

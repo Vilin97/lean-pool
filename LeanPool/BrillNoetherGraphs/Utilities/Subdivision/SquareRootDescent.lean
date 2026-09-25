@@ -207,13 +207,13 @@ private theorem embed_sum {n p : ℕ} (spec : Spec n p) (N : ℕ) (hN : 0 < N)
   · exact Finset.sum_const_zero.symm
 
 private theorem effective_sum_one_chip {G : CFGraph} {ι : Type*} [Fintype ι] (v : ι → G.V) :
-    effective (∑ i, one_chip (v i) : CFDiv G) := by
+    effective (∑ i, oneChip (v i) : CFDiv G) := by
   intro w
   rw [Finset.sum_apply]
   exact Finset.sum_nonneg fun i _ => eff_one_chip (v i) w
 
 private theorem deg_sum_one_chip {G : CFGraph} {ι : Type*} [Fintype ι] (v : ι → G.V) :
-    deg (∑ i, one_chip (v i) : CFDiv G) = (Fintype.card ι : ℤ) := by
+    deg (∑ i, oneChip (v i) : CFDiv G) = (Fintype.card ι : ℤ) := by
   rw [map_sum]
   simp
 
@@ -238,10 +238,10 @@ private theorem exists_coarse_double_of_split {n p : ℕ} (spec : Spec n p) (N :
     (hbudget : (∑ i : {i : ι // P i},
       |∑ k : Fin 2, ((chips0 i).double k).signedCost|) < (N : ℤ))
     (hrank : rank (spec.scale N hN).graph
-      ((∑ i, one_chip (ys i)) + ∑ i, one_chip (ys i)) ≥ r) :
+      ((∑ i, oneChip (ys i)) + ∑ i, oneChip (ys i)) ≥ r) :
     ∃ D : CFDiv spec.graph, effective D ∧ deg D = 2 * (Fintype.card ι : ℤ) ∧
       rank spec.graph D ≥ r := by
-  refine ⟨(∑ q : {i : ι // ¬ P i} × Fin 2, (one_chip (lefts q.1) : CFDiv spec.graph))
+  refine ⟨(∑ q : {i : ι // ¬ P i} × Fin 2, (oneChip (lefts q.1) : CFDiv spec.graph))
       + spec.coarseChips N (fun q : {i : ι // P i} × Fin 2 => (chips0 q.1).double q.2),
     ?_, ?_, ?_⟩
   · have h₁ := effective_sum_one_chip (G := spec.graph) (fun q : {i : ι // ¬ P i} × Fin 2 => lefts q.1)
@@ -253,7 +253,7 @@ private theorem exists_coarse_double_of_split {n p : ℕ} (spec : Spec n p) (N :
       have h := Fintype.sum_subtype_add_sum_subtype P (fun _ : ι => (1 : ℤ))
       simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one] at h
       exact h
-    have h₁ : deg (∑ q : {i : ι // ¬ P i} × Fin 2, (one_chip (lefts q.1) : CFDiv spec.graph))
+    have h₁ : deg (∑ q : {i : ι // ¬ P i} × Fin 2, (oneChip (lefts q.1) : CFDiv spec.graph))
         = (Fintype.card ({i : ι // ¬ P i} × Fin 2) : ℤ) :=
       deg_sum_one_chip (G := spec.graph) (fun q : {i : ι // ¬ P i} × Fin 2 => lefts q.1)
     have h₂ : deg (spec.coarseChips N
@@ -287,28 +287,28 @@ private theorem exists_coarse_double_of_split {n p : ℕ} (spec : Spec n p) (N :
       refine lt_of_le_of_lt (le_of_eq ?_) hbudget
       exact Finset.sum_congr rfl fun i _ => by rw [hfilter i]
     -- The fine divisor is the embedding of the padding plus the chips.
-    have hE : spec.embed N hN (∑ q : {i : ι // ¬ P i} × Fin 2, (one_chip (lefts q.1) : CFDiv spec.graph))
-        = ∑ q : {i : ι // ¬ P i} × Fin 2, one_chip (ys q.1.1) := by
+    have hE : spec.embed N hN (∑ q : {i : ι // ¬ P i} × Fin 2, (oneChip (lefts q.1) : CFDiv spec.graph))
+        = ∑ q : {i : ι // ¬ P i} × Fin 2, oneChip (ys q.1.1) := by
       rw [embed_sum]
       exact Finset.sum_congr rfl fun q _ => by
         rw [spec.embed_one_chip N hN, ← hlefts q.1]
     have hF : spec.fineChips N hN
           (fun q : {i : ι // P i} × Fin 2 => (chips0 q.1).double q.2)
-        = ∑ q : {i : ι // P i} × Fin 2, one_chip (ys q.1.1) := by
+        = ∑ q : {i : ι // P i} × Fin 2, oneChip (ys q.1.1) := by
       unfold fineChips
       exact Finset.sum_congr rfl fun q _ => by
         rw [Chip.double_fineVertex, ← hchips q.1]
-    have hfine : spec.embed N hN (∑ q : {i : ι // ¬ P i} × Fin 2, (one_chip (lefts q.1) : CFDiv spec.graph))
+    have hfine : spec.embed N hN (∑ q : {i : ι // ¬ P i} × Fin 2, (oneChip (lefts q.1) : CFDiv spec.graph))
           + spec.fineChips N hN
             (fun q : {i : ι // P i} × Fin 2 => (chips0 q.1).double q.2)
-        = (∑ i, one_chip (ys i)) + ∑ i, one_chip (ys i) := by
+        = (∑ i, oneChip (ys i)) + ∑ i, oneChip (ys i) := by
       have hsplit := Fintype.sum_subtype_add_sum_subtype P
-        (fun i => (one_chip (ys i) : CFDiv (spec.scale N hN).graph))
+        (fun i => (oneChip (ys i) : CFDiv (spec.scale N hN).graph))
       rw [hE, hF,
         sum_prod_fin_two (M := CFDiv (spec.scale N hN).graph)
-          (fun i : {i : ι // ¬ P i} => one_chip (ys i.1)),
+          (fun i : {i : ι // ¬ P i} => oneChip (ys i.1)),
         sum_prod_fin_two (M := CFDiv (spec.scale N hN).graph)
-          (fun i : {i : ι // P i} => one_chip (ys i.1)), ← hsplit]
+          (fun i : {i : ι // P i} => oneChip (ys i.1)), ← hsplit]
       abel
     exact spec.rank_ge_of_rank_scale_ge_cost N hN
       (fun q : {i : ι // P i} × Fin 2 => (chips0 q.1).double q.2) _ r hcost
@@ -327,11 +327,11 @@ theorem rank_ge_of_rank_scale_two_smul_two (hodd : Odd N)
   obtain ⟨m, hm⟩ := hodd
   obtain ⟨y₁, y₂, hCeq⟩ := exists_chip_pair_of_effective_deg_two _ C hC hdeg
   set ys : Fin 2 → (spec.scale N hN).Vertex := ![y₁, y₂] with hysdef
-  have hsum : (∑ i : Fin 2, one_chip (ys i) : CFDiv (spec.scale N hN).graph) = C := by
+  have hsum : (∑ i : Fin 2, oneChip (ys i) : CFDiv (spec.scale N hN).graph) = C := by
     rw [Fin.sum_univ_two, hCeq, hysdef]
     simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
   have hrank2 : rank (spec.scale N hN).graph
-      ((∑ i : Fin 2, one_chip (ys i)) + ∑ i : Fin 2, one_chip (ys i)) ≥ r := by
+      ((∑ i : Fin 2, oneChip (ys i)) + ∑ i : Fin 2, oneChip (ys i)) ≥ r := by
     rw [hsum, ← two_nsmul]
     exact hrank
   set P : Fin 2 → Prop := fun i => (spec.roundData N hN (ys i)).isRight = true with hP

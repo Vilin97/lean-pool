@@ -34,7 +34,7 @@ open Finset
 theorem effective_degree_one_eq_one_chip
     {G : CFGraph} {E : CFDiv G}
     (hEffective : effective E) (hDegree : deg E = 1) :
-    ∃ q : G.V, E = one_chip q := by
+    ∃ q : G.V, E = oneChip q := by
   have hSum : ∑ q : G.V, E q = 1 := by
     simpa [deg] using hDegree
   have hSumNe : ∑ q : G.V, E q ≠ 0 := by
@@ -48,23 +48,23 @@ theorem effective_degree_one_eq_one_chip
   have hq : E q = 1 := by
     rw [hSum] at hqLe
     omega
-  have hSubEffective : effective (E - one_chip q) := by
+  have hSubEffective : effective (E - oneChip q) := by
     intro v
     by_cases hv : v = q
     · subst v
-      simp [one_chip, hq]
-    · simp [one_chip, hv, hEffective v]
-  have hSubDegree : deg (E - one_chip q) = 0 := by
+      simp [oneChip, hq]
+    · simp [oneChip, hv, hEffective v]
+  have hSubDegree : deg (E - oneChip q) = 0 := by
     rw [deg.map_sub, deg_one_chip, hDegree]
     norm_num
-  have hSubZero : E - one_chip q = 0 :=
-    eff_degree_zero (E - one_chip q) hSubEffective hSubDegree
+  have hSubZero : E - oneChip q = 0 :=
+    eff_degree_zero (E - oneChip q) hSubEffective hSubDegree
   exact ⟨q, sub_eq_zero.mp hSubZero⟩
 
 /-- Passive certificate data for a rank-one divisor on a fixed graph. -/
 structure RankOne (G : CFGraph) where
   divisor : CFDiv G
-  scripts : G.V → firing_script G
+  scripts : G.V → firingScript G
 
 namespace RankOne
 
@@ -72,7 +72,7 @@ variable {G : CFGraph}
 
 /-- The result of removing the chip at `q` and applying its certificate script. -/
 def residual (certificate : RankOne G) (q : G.V) : CFDiv G :=
-  certificate.divisor - one_chip q + prin G (certificate.scripts q)
+  certificate.divisor - oneChip q + prin G (certificate.scripts q)
 
 /-- Propositional validity at one vertex. -/
 def ValidAt (certificate : RankOne G) (q : G.V) : Prop :=
@@ -114,9 +114,9 @@ def check (certificate : RankOne G) (d : ℤ) : Bool :=
 `D - q` to its residual. -/
 theorem sub_one_chip_linear_equiv_residual
     (certificate : RankOne G) (q : G.V) :
-    linear_equiv G (certificate.divisor - one_chip q)
+    linearEquiv G (certificate.divisor - oneChip q)
       (certificate.residual q) := by
-  unfold linear_equiv residual
+  unfold linearEquiv residual
   rw [principal_iff_eq_prin]
   refine ⟨certificate.scripts q, ?_⟩
   abel
@@ -126,7 +126,7 @@ winnable. -/
 theorem winnable_sub_one_chip_of_validAt
     (certificate : RankOne G) (q : G.V)
     (hValid : certificate.ValidAt q) :
-    winnable G (certificate.divisor - one_chip q) := by
+    winnable G (certificate.divisor - oneChip q) := by
   exact ⟨certificate.residual q, hValid,
     certificate.sub_one_chip_linear_equiv_residual q⟩
 

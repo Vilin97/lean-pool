@@ -32,7 +32,7 @@ variable {n p : ℕ}
   (cutData : CoreBridgeCut.Data spec.core)
 
 private theorem genusTwo_bnExists
-    {G : CFGraph} (hConnected : graph_connected G) (hGenus : genus G = 2) :
+    {G : CFGraph} (hConnected : graphConnected G) (hGenus : genus G = 2) :
     BNExists G 1 2 := by
   apply BNExists_elementary hConnected
   · norm_num
@@ -43,7 +43,7 @@ private theorem genusTwo_bnExists
 /-- A valid separating core edge with two genus-two sides gives a
 degree-three rank-one divisor on every positive subdivision of that core. -/
 theorem bnExists_one_three_of_two_two
-    (hValid : cutData.Valid) (hConnected : graph_connected spec.graph)
+    (hValid : cutData.Valid) (hConnected : graphConnected spec.graph)
     (hLeft : cutData.toCoreVertexCut.leftGenus = 2)
     (hRight : cutData.toCoreVertexCut.rightGenus = 2) :
     BNExists spec.graph 1 3 := by

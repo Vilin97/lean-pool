@@ -14,16 +14,16 @@ namespace Bananas
 open Utilities
 
 private theorem linear_equiv_zsmul {G : CFGraph} {D E : CFDiv G}
-    (h : linear_equiv G D E) (q : ℤ) :
-    linear_equiv G (q • D) (q • E) := by
-  unfold linear_equiv at h ⊢
-  have hq := AddSubgroup.zsmul_mem (principal_divisors G) h q
+    (h : linearEquiv G D E) (q : ℤ) :
+    linearEquiv G (q • D) (q • E) := by
+  unfold linearEquiv at h ⊢
+  have hq := AddSubgroup.zsmul_mem (principalDivisors G) h q
   simpa [smul_sub] using hq
 
 private theorem linear_equiv_sub_common {G : CFGraph} {D E F : CFDiv G}
-    (h : linear_equiv G D E) :
-    linear_equiv G (D - F) (E - F) := by
-  unfold linear_equiv at h ⊢
+    (h : linearEquiv G D E) :
+    linearEquiv G (D - F) (E - F) := by
+  unfold linearEquiv at h ⊢
   convert h using 1 ; abel
 
 /-! Paper source: `eq:multDiffMarkedPts` and `cor:evenlyMarkedKGT`.
@@ -34,10 +34,10 @@ theorem evenlyMarkedTheta_multiple_principal
     (B : Banana 2) (α β : Fin 3)
     (i : B.PathPosition α) (j : B.PathPosition β)
     (hEven : EvenlyMarkedTheta B α β i j) :
-    linear_equiv B.graph
+    linearEquiv B.graph
       (((B.length α / Nat.gcd (B.length α) i.val : ℕ) : ℤ) •
-        (one_chip (strandVertex B α i) -
-          one_chip (strandVertex B β j))) 0 := by
+        (oneChip (strandVertex B α i) -
+          oneChip (strandVertex B β j))) 0 := by
   rcases hEven with ⟨hαβ, hi, hiLt, hj, hjLt, hcross⟩
   let k : ℕ := B.length α / Nat.gcd (B.length α) i.val
   let q : ℕ := i.val / Nat.gcd (B.length α) i.val
@@ -66,37 +66,37 @@ theorem evenlyMarkedTheta_multiple_principal
     ⟨B.length α, by omega⟩
   have hA1 := linear_equiv_zsmul hPrefixA (k : ℤ)
   have hA2 := linear_equiv_zsmul hEndA (q : ℤ)
-  have hA : linear_equiv B.graph
+  have hA : linearEquiv B.graph
       ((k : ℤ) •
-        (one_chip (strandVertex B α i) - one_chip (leftEndpoint B)))
+        (oneChip (strandVertex B α i) - oneChip (leftEndpoint B)))
       ((q : ℤ) •
-        (one_chip (rightEndpoint B) - one_chip (leftEndpoint B))) := by
-    have hA2' : linear_equiv B.graph
+        (oneChip (rightEndpoint B) - oneChip (leftEndpoint B))) := by
+    have hA2' : linearEquiv B.graph
         ((q : ℤ) •
           ((B.length α : ℤ) •
-            (one_chip (strandVertex B α ⟨1, by omega⟩) -
-              one_chip (leftEndpoint B))))
+            (oneChip (strandVertex B α ⟨1, by omega⟩) -
+              oneChip (leftEndpoint B))))
         ((q : ℤ) •
-          (one_chip (rightEndpoint B) - one_chip (leftEndpoint B))) := by
+          (oneChip (rightEndpoint B) - oneChip (leftEndpoint B))) := by
       simpa [smul_smul, strandVertex_length] using hA2
     have hScale :
         (q : ℤ) • ((B.length α : ℤ) •
-          (one_chip (strandVertex B α ⟨1, by omega⟩) -
-            one_chip (leftEndpoint B))) =
+          (oneChip (strandVertex B α ⟨1, by omega⟩) -
+            oneChip (leftEndpoint B))) =
           (k : ℤ) • ((i.val : ℤ) •
-            (one_chip (strandVertex B α ⟨1, by omega⟩) -
-              one_chip (leftEndpoint B))) := by
+            (oneChip (strandVertex B α ⟨1, by omega⟩) -
+              oneChip (leftEndpoint B))) := by
       rw [smul_smul, smul_smul]
       congr 1
       exact_mod_cast hkA.symm
     rw [hScale] at hA2'
     have hChain := hA1.symm.trans hA2'
     simpa [smul_smul] using hChain
-  have hB : linear_equiv B.graph
+  have hB : linearEquiv B.graph
       ((k : ℤ) •
-        (one_chip (strandVertex B β j) - one_chip (leftEndpoint B)))
+        (oneChip (strandVertex B β j) - oneChip (leftEndpoint B)))
       ((q : ℤ) •
-        (one_chip (rightEndpoint B) - one_chip (leftEndpoint B))) := by
+        (oneChip (rightEndpoint B) - oneChip (leftEndpoint B))) := by
     have hqB : q = j.val / Nat.gcd (B.length β) j.val := hqEq
     have hB1 := linear_equiv_zsmul (strand_prefix_linearEquiv B β j) (k : ℤ)
     have hB2 := linear_equiv_zsmul
@@ -125,21 +125,21 @@ theorem evenlyMarkedTheta_multiple_principal
         _ = Nat.gcd (B.length α) i.val *
               ((j.val / Nat.gcd (B.length β) j.val) * B.length β) := by
                 rw [← hqEq]
-    have hB2' : linear_equiv B.graph
+    have hB2' : linearEquiv B.graph
         ((q : ℤ) •
           ((B.length β : ℤ) •
-            (one_chip (strandVertex B β ⟨1, by omega⟩) -
-              one_chip (leftEndpoint B))))
+            (oneChip (strandVertex B β ⟨1, by omega⟩) -
+              oneChip (leftEndpoint B))))
         ((q : ℤ) •
-          (one_chip (rightEndpoint B) - one_chip (leftEndpoint B))) := by
+          (oneChip (rightEndpoint B) - oneChip (leftEndpoint B))) := by
       simpa [hqB, smul_smul, strandVertex_length] using hB2
     have hScaleB :
         (q : ℤ) • ((B.length β : ℤ) •
-          (one_chip (strandVertex B β ⟨1, by omega⟩) -
-            one_chip (leftEndpoint B))) =
+          (oneChip (strandVertex B β ⟨1, by omega⟩) -
+            oneChip (leftEndpoint B))) =
           (k : ℤ) • ((j.val : ℤ) •
-            (one_chip (strandVertex B β ⟨1, by omega⟩) -
-              one_chip (leftEndpoint B))) := by
+            (oneChip (strandVertex B β ⟨1, by omega⟩) -
+              oneChip (leftEndpoint B))) := by
       rw [smul_smul, smul_smul]
       congr 1
       rw [hqB]
@@ -149,8 +149,8 @@ theorem evenlyMarkedTheta_multiple_principal
     simpa [smul_smul, hqB] using hChain
   have hAB := hA.trans hB.symm
   have hZero := linear_equiv_sub_common (F :=
-    (k : ℤ) • (one_chip (strandVertex B β j) - one_chip (leftEndpoint B))) hAB
-  unfold linear_equiv at hZero ⊢
+    (k : ℤ) • (oneChip (strandVertex B β j) - oneChip (leftEndpoint B))) hAB
+  unfold linearEquiv at hZero ⊢
   simpa [k, smul_sub, sub_eq_add_neg] using hZero
 
 end Bananas

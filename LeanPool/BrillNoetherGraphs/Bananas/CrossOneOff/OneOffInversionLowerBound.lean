@@ -180,7 +180,7 @@ theorem oneOff_inversion_lower_bound
     (hTau : IsTransmissionPermutation
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau)
+      (g • oneChip (rightEndpoint B)) tau)
     (hAffine : IsKAffine k tau)
     (hfinite : (kInversions k tau).Finite) :
     Nat.choose

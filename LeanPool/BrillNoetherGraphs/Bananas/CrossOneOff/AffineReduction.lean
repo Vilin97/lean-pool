@@ -505,7 +505,7 @@ theorem exists_affineReflection_reduction
   have hnonempty : (kInversions k β.func).Nonempty :=
     (Set.ncard_pos hfin).mp hpos
   obtain ⟨⟨x, y⟩, hxy⟩ := hnonempty
-  have hinv : (x, y) ∈ inv_set β.func := ⟨hxy.1, hxy.2.1⟩
+  have hinv : (x, y) ∈ invSet β.func := ⟨hxy.1, hxy.2.1⟩
   have hinvInv := (β.inv_set_inverse x y).mp hinv
   obtain ⟨i, -, -, hi⟩ :=
     AspPerm.exists_adjacent_descent_of_mem_invSet (β⁻¹) hinvInv
@@ -525,7 +525,7 @@ theorem affineReductionData (k : ℕ) : AffineReductionData k := by
   have hnonempty : (kInversions k β.func).Nonempty :=
     (Set.ncard_pos hfin).mp hpos
   obtain ⟨⟨x, y⟩, hxy⟩ := hnonempty
-  have hinv : (x, y) ∈ inv_set β.func := ⟨hxy.1, hxy.2.1⟩
+  have hinv : (x, y) ∈ invSet β.func := ⟨hxy.1, hxy.2.1⟩
   have hinvInv := (β.inv_set_inverse x y).mp hinv
   obtain ⟨i, -, -, hi⟩ :=
     AspPerm.exists_adjacent_descent_of_mem_invSet (β⁻¹) hinvInv

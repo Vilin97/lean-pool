@@ -56,7 +56,7 @@ theorem bnExists_of_loopCount_pos
   let factor := MarkerPackage.factor split spec marker hCore hCompatible
   let attachment := MarkerPackage.attachment split spec marker hCore hCompatible
   let root := MarkerPackage.root split spec marker hCore hCompatible
-  have hBaseConnected : graph_connected base :=
+  have hBaseConnected : graphConnected base :=
     MarkerPackage.base_connected split spec marker hCore hCompatible hSplitConnected
   have hSpecGenus : genus spec.graph = 5 := genus_eq hValid spec
   have hBaseGenus : genus base = 4 := by
@@ -106,8 +106,8 @@ theorem bnExists_or_bridge_of_loopCount_zero
       rfl
     rw [← hVertex, hCore, slotValence_baseVertex split hCompatible base]
     exact hValid.2.2.1 base
-  have hConnected : graph_connected spec.graph :=
-    PseudocoreSubdivisionProperties.graph_connected split hValid hCompatible spec hCore
+  have hConnected : graphConnected spec.graph :=
+    PseudocoreSubdivisionProperties.graphConnected split hValid hCompatible spec hCore
   have hCoreConnected : spec.core.Connected :=
     core_connected_of_graph_connected spec hConnected
   have hGenus : genus spec.graph = 5 := genus_eq hValid spec
@@ -153,8 +153,8 @@ theorem bnExists_of_loopCount_zero
       rfl
     rw [← hVertex, hCore, slotValence_baseVertex split hCompatible base]
     exact hValid.2.2.1 base
-  have hConnected : graph_connected spec.graph :=
-    PseudocoreSubdivisionProperties.graph_connected split hValid hCompatible spec hCore
+  have hConnected : graphConnected spec.graph :=
+    PseudocoreSubdivisionProperties.graphConnected split hValid hCompatible spec hCore
   have hCoreConnected : spec.core.Connected :=
     core_connected_of_graph_connected spec hConnected
   have hGenus : genus spec.graph = 5 := genus_eq hValid spec

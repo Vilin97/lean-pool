@@ -25,19 +25,19 @@ bounded-difference material from Section 7, of
 \tau(u) > \tau(v)\}$.
 *Definition 2.5 (`defn:Inv`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
-def inv_set (τ : ℤ → ℤ) : Set (ℤ × ℤ) :=
+def invSet (τ : ℤ → ℤ) : Set (ℤ × ℤ) :=
   {(i,j) : ℤ × ℤ | i < j ∧ τ j < τ i}
 
-def southeast_set (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | n ≤ k ∧ τ k < m }
+def southeastSet (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | n ≤ k ∧ τ k < m }
 
-def northwest_set (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | k < n ∧ m ≤ τ k }
+def northwestSet (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | k < n ∧ m ≤ τ k }
 
-abbrev flip_func (f : ℤ → ℤ) : ℤ → ℤ := fun k => -1 - f (-1 - k)
+abbrev flipFunction (f : ℤ → ℤ) : ℤ → ℤ := fun k => -1 - f (-1 - k)
 
 lemma flip_quadrant (f : ℤ → ℤ) (a b : ℤ) :
-  (-1 - ·) '' (southeast_set f a b) = northwest_set (flip_func f) (-a) (-b) := by
+  (-1 - ·) '' (southeastSet f a b) = northwestSet (flipFunction f) (-a) (-b) := by
   ext n
-  simp only [Set.mem_image, southeast_set, northwest_set, Set.mem_ofPred_eq, flip_func]
+  simp only [Set.mem_image, southeastSet, northwestSet, Set.mem_ofPred_eq, flipFunction]
   constructor
   · rintro ⟨m, ⟨hm1, hm2⟩, rfl⟩
     constructor
@@ -49,9 +49,9 @@ lemma flip_quadrant (f : ℤ → ℤ) (a b : ℤ) :
     exact ⟨-1 - n, ⟨by omega, by omega⟩, by ring_nf⟩
 
 private lemma se_finite_of_finite {τ : ℤ → ℤ} (h_inj : Function.Injective τ) (m n m' n' : ℤ) :
-  (southeast_set τ m n).Finite → (southeast_set τ m' n').Finite := by
-  let A := southeast_set τ m n
-  let B := southeast_set τ m' n'
+  (southeastSet τ m n).Finite → (southeastSet τ m' n').Finite := by
+  let A := southeastSet τ m n
+  let B := southeastSet τ m' n'
   let V := SetLike.coe (Finset.Ico n' n)
   let H₀ := SetLike.coe (Finset.Ico m m')
   let H := τ⁻¹' H₀
@@ -63,7 +63,7 @@ private lemma se_finite_of_finite {τ : ℤ → ℤ} (h_inj : Function.Injective
   have h : B ⊆ A ∪ (H ∪ V) := by
     intro k hk
     simp only [A, B] at hk ⊢
-    unfold southeast_set at *
+    unfold southeastSet at *
     by_cases k_lt_n : k < n
     · right; right
       simp only [V]
@@ -81,18 +81,18 @@ private lemma se_finite_of_finite {τ : ℤ → ℤ} (h_inj : Function.Injective
   exact Set.Finite.union fin_A (Set.Finite.union fin_H fin_V)
 
 private lemma nw_finite_of_finite {τ : ℤ → ℤ} (h_inj : Function.Injective τ) (m n m' n' : ℤ) :
-  (northwest_set τ m n).Finite → (northwest_set τ m' n').Finite := by
-  have hff : flip_func (flip_func τ) = τ := by
+  (northwestSet τ m n).Finite → (northwestSet τ m' n').Finite := by
+  have hff : flipFunction (flipFunction τ) = τ := by
     funext n
-    simp only [flip_func, Int.reduceNeg, sub_sub_cancel]
-  have hf_inj : Function.Injective (flip_func τ) := fun x y h => by
-    unfold flip_func at h
+    simp only [flipFunction, Int.reduceNeg, sub_sub_cancel]
+  have hf_inj : Function.Injective (flipFunction τ) := fun x y h => by
+    unfold flipFunction at h
     linarith [h_inj (show τ (-1 - x) = τ (-1 - y) from by omega)]
-  have key : ∀ a b : ℤ, (northwest_set τ a b).Finite ↔
-      (southeast_set (flip_func τ) (-a) (-b)).Finite := fun a b => by
-    have hq := flip_quadrant (flip_func τ) (-a) (-b)
+  have key : ∀ a b : ℤ, (northwestSet τ a b).Finite ↔
+      (southeastSet (flipFunction τ) (-a) (-b)).Finite := fun a b => by
+    have hq := flip_quadrant (flipFunction τ) (-a) (-b)
     simp only [hff, neg_neg] at hq
-    rw [show northwest_set τ a b = (-1 - ·) '' southeast_set (flip_func τ) (-a) (-b) from
+    rw [show northwestSet τ a b = (-1 - ·) '' southeastSet (flipFunction τ) (-a) (-b) from
       hq.symm]
     exact
       ⟨fun h => h.of_finite_image (Set.injOn_of_injective (fun x y h => by omega)),
@@ -104,50 +104,50 @@ private lemma nw_finite_of_finite {τ : ℤ → ℤ} (h_inj : Function.Injective
 $\{ n \in \mathbb{Z} : n \tau(n) < 0 \}$ is finite.
 
 Equivalently, only finitely many integers change sign under `τ`. -/
-def is_asp (τ : ℤ → ℤ) : Prop :=
+def isAsp (τ : ℤ → ℤ) : Prop :=
   { n : ℤ | n * (τ n) < 0 }.Finite
 
 lemma se_finite_of_asp {τ : ℤ → ℤ} (h_inj : Function.Injective τ) (m n : ℤ) :
-  is_asp τ → (southeast_set τ m n).Finite := by
+  isAsp τ → (southeastSet τ m n).Finite := by
   intro h_asp
-  have h_se : (southeast_set τ 0 1).Finite := by
-    unfold is_asp at h_asp
-    have : southeast_set τ 0 1 ⊆ { n : ℤ | n * (τ n) < 0 } := by
+  have h_se : (southeastSet τ 0 1).Finite := by
+    unfold isAsp at h_asp
+    have : southeastSet τ 0 1 ⊆ { n : ℤ | n * (τ n) < 0 } := by
       intro k hk
-      simp only [southeast_set] at hk
+      simp only [southeastSet] at hk
       obtain ⟨k_pos, τk_neg⟩ := hk
       exact mul_neg_of_pos_of_neg k_pos τk_neg
     exact Set.Finite.subset h_asp this
   exact se_finite_of_finite h_inj 0 1 m n h_se
 
 lemma nw_finite_of_asp {τ : ℤ → ℤ} (h_inj : Function.Injective τ) (m n : ℤ) :
-  is_asp τ → (northwest_set τ m n).Finite := by
+  isAsp τ → (northwestSet τ m n).Finite := by
   intro h_asp
-  have h_nw : (northwest_set τ 1 0).Finite := by
-    unfold is_asp at h_asp
-    have : northwest_set τ 1 0 ⊆ { n : ℤ | n * (τ n) < 0 } := by
+  have h_nw : (northwestSet τ 1 0).Finite := by
+    unfold isAsp at h_asp
+    have : northwestSet τ 1 0 ⊆ { n : ℤ | n * (τ n) < 0 } := by
       intro k hk
-      simp only[northwest_set] at hk
+      simp only[northwestSet] at hk
       obtain ⟨k_neg, τk_pos⟩ := hk
       exact mul_neg_of_neg_of_pos k_neg τk_pos
     exact Set.Finite.subset h_asp this
   exact nw_finite_of_finite h_inj 1 0 m n h_nw
 
 lemma asp_of_finite_quadrants {τ : ℤ → ℤ} (h_inj : Function.Injective τ)
-  {m n m' n' : ℤ} (fin_se : (southeast_set τ m n).Finite)
-  (fin_nw : (northwest_set τ m' n').Finite) :
-  is_asp τ := by
-  unfold is_asp
-  have : { n : ℤ | n * (τ n) < 0 } ⊆ (southeast_set τ 0 1) ∪ (northwest_set τ 1 0) := by
+  {m n m' n' : ℤ} (fin_se : (southeastSet τ m n).Finite)
+  (fin_nw : (northwestSet τ m' n').Finite) :
+  isAsp τ := by
+  unfold isAsp
+  have : { n : ℤ | n * (τ n) < 0 } ⊆ (southeastSet τ 0 1) ∪ (northwestSet τ 1 0) := by
     intro n hn
     simp only [Set.mem_ofPred_eq] at hn
     have := mul_neg_iff.mp hn
     rcases this with (pos_neg | neg_pos)
     · left
-      unfold southeast_set
+      unfold southeastSet
       simp only [Set.mem_ofPred_eq]; congr
     · right
-      unfold northwest_set
+      unfold northwestSet
       simp only [Set.mem_ofPred_eq]; congr
   refine Set.Finite.subset ?_ this
   apply Set.Finite.union
@@ -162,7 +162,7 @@ together with proofs of bijectivity and the ASP condition. -/
 structure AspPerm where
   func : ℤ → ℤ
   bijective : Function.Bijective func
-  asp : is_asp func
+  asp : isAsp func
 
 instance : CoeFun AspPerm (fun _ => ℤ → ℤ) :=
   ⟨AspPerm.func⟩
@@ -176,8 +176,8 @@ lemma surjective : Function.Surjective τ.func := τ.bijective.surjective
 
 -- Lemmas for convenience, to handle edge cases involving i = j
 lemma inv_iff_lt {i j : ℤ} (i_le_j : i ≤ j) :
-  ⟨i, j⟩ ∈ inv_set τ ↔  τ j < τ i := by
-  rw [inv_set]
+  ⟨i, j⟩ ∈ invSet τ ↔  τ j < τ i := by
+  rw [invSet]
   wlog i_lt_j : i < j
   · have i_eq_j : i = j := le_antisymm i_le_j (le_of_not_gt i_lt_j)
     rw [i_eq_j]; simp only [Set.mem_ofPred_eq, lt_self_iff_false, and_self]
@@ -187,7 +187,7 @@ lemma inv_iff_lt {i j : ℤ} (i_le_j : i ≤ j) :
   · intro τ_j_lt_i
     exact ⟨i_lt_j, τ_j_lt_i⟩
 lemma inv_iff_le {i j : ℤ} (i_lt_j : i < j) :
-  ⟨i, j⟩ ∈ inv_set τ ↔ τ j ≤ τ i := by
+  ⟨i, j⟩ ∈ invSet τ ↔ τ j ≤ τ i := by
   constructor
   · intro ij_inv
     exact le_of_lt ij_inv.2
@@ -271,7 +271,7 @@ def id : AspPerm where
     have : {n:ℤ | n * _root_.id n < 0} = ∅ := by
       ext n; simp only [id_eq, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_lt]
       exact mul_self_nonneg n
-    unfold is_asp; rw [this]
+    unfold isAsp; rw [this]
     exact Set.finite_empty
 
 noncomputable instance : Group AspPerm where
@@ -299,24 +299,24 @@ noncomputable instance : Group AspPerm where
   change τ.func (Function.invFun τ.func n) = n
   exact Function.rightInverse_invFun τ.surjective n
 
-lemma se_finite (a b : ℤ) : (southeast_set τ a b).Finite :=
+lemma se_finite (a b : ℤ) : (southeastSet τ a b).Finite :=
   se_finite_of_asp τ.injective a b τ.asp
 
-lemma nw_finite (a b : ℤ) : (northwest_set τ a b).Finite :=
+lemma nw_finite (a b : ℤ) : (northwestSet τ a b).Finite :=
   nw_finite_of_asp τ.injective a b τ.asp
 
-noncomputable def se_finset (a b : ℤ) : Finset ℤ := (τ.se_finite a b).toFinset
+noncomputable def seFinset (a b : ℤ) : Finset ℤ := (τ.se_finite a b).toFinset
 
-@[simp] lemma mem_se (a b n : ℤ) : n ∈ (τ.se_finset a b) ↔ n ≥ b ∧ τ n < a := by
-  simp only [se_finset, southeast_set, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, ge_iff_le]
+@[simp] lemma mem_se (a b n : ℤ) : n ∈ (τ.seFinset a b) ↔ n ≥ b ∧ τ n < a := by
+  simp only [seFinset, southeastSet, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, ge_iff_le]
 
-noncomputable def nw_finset (a b : ℤ) : Finset ℤ := (τ.nw_finite a b).toFinset
+noncomputable def nwFinset (a b : ℤ) : Finset ℤ := (τ.nw_finite a b).toFinset
 
-@[simp] lemma mem_nw (a b n : ℤ) : n ∈ (τ.nw_finset a b) ↔ n < b ∧ τ n ≥ a := by
-  simp only [nw_finset, northwest_set, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, ge_iff_le]
+@[simp] lemma mem_nw (a b n : ℤ) : n ∈ (τ.nwFinset a b) ↔ n < b ∧ τ n ≥ a := by
+  simp only [nwFinset, northwestSet, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, ge_iff_le]
 
 lemma inv_set_inverse (u v : ℤ) :
-    ⟨u, v⟩ ∈ inv_set τ ↔ ⟨τ v, τ u⟩ ∈ inv_set τ⁻¹.func := by
+    ⟨u, v⟩ ∈ invSet τ ↔ ⟨τ v, τ u⟩ ∈ invSet τ⁻¹.func := by
   constructor
   · intro h
     obtain ⟨u_lt_v, τv_lt_τu⟩ := h
@@ -327,75 +327,75 @@ lemma inv_set_inverse (u v : ℤ) :
     simp only [inv_mul_cancel_eval] at u_lt_v
     exact ⟨u_lt_v, τv_lt_τu⟩
 
-def rev_map : ℤ × ℤ → ℤ × ℤ := fun ⟨i, j⟩ => ⟨τ j, τ i⟩
+def revMap : ℤ × ℤ → ℤ × ℤ := fun ⟨i, j⟩ => ⟨τ j, τ i⟩
 
 /-- The slipface associated to an ASP permutation is defined by
 $s_\tau(a,b) = \#\{n \geq b : \tau(n) < a\}$, in the notation of
 *Equation (4)* (`eq:sa`) in [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 In the repository, this is denoted as `τ.s_raw a b`. -/
-private noncomputable def s_raw (a b : ℤ) : ℤ := ↑(southeast_set τ a b).ncard
+private noncomputable def s_raw (a b : ℤ) : ℤ := ↑(southeastSet τ a b).ncard
 
 /-- The companion counting function $s_{\tau^{-1}}(b,a)$.
 
 In Lean this is written `τ.s'_raw b a`; later `dual_inverse_raw` identifies it with
 `(τ⁻¹).s_raw`. -/
-private noncomputable def s'_raw (b a : ℤ) : ℤ := ↑(northwest_set τ a b).ncard
+private noncomputable def s'_raw (b a : ℤ) : ℤ := ↑(northwestSet τ a b).ncard
 
 private lemma dual_inverse_raw : τ.s'_raw = (τ⁻¹).s_raw := by
   funext b a
   calc
-    τ.s'_raw b a = (northwest_set τ a b).ncard := by rfl
-    _ = ( τ.func '' (northwest_set τ a b)).ncard := by
-      rw [Set.ncard_image_of_injective (northwest_set τ a b) τ.injective]
-    _ = (southeast_set τ⁻¹.func b a).ncard := by
+    τ.s'_raw b a = (northwestSet τ a b).ncard := by rfl
+    _ = ( τ.func '' (northwestSet τ a b)).ncard := by
+      rw [Set.ncard_image_of_injective (northwestSet τ a b) τ.injective]
+    _ = (southeastSet τ⁻¹.func b a).ncard := by
       congr
       ext n
       constructor
-      · intro h; unfold southeast_set
+      · intro h; unfold southeastSet
         rcases h with ⟨m, hm, rfl⟩; simp only [Set.mem_ofPred_eq, inv_mul_cancel_eval]
         exact ⟨hm.2, hm.1⟩
       · intro h
         use τ⁻¹ n
-        unfold northwest_set; unfold southeast_set at h
+        unfold northwestSet; unfold southeastSet at h
         obtain ⟨a_le_n, τin_lt_b⟩ := h
         simpa using ⟨τin_lt_b, a_le_n⟩
     _ = (τ⁻¹).s_raw b a := by rfl
 
-private lemma flip_bij (τ : AspPerm) : Function.Bijective (flip_func τ.func) := by
+private lemma flip_bij (τ : AspPerm) : Function.Bijective (flipFunction τ.func) := by
   constructor
   · intro x y h; simp only [sub_right_inj, Int.reduceNeg] at h
     apply τ.injective at h
     omega
   · intro y
     use -1 - τ⁻¹ (-1 - y)
-    simp only [flip_func, Int.reduceNeg, sub_sub_cancel, mul_inv_cancel_eval]
+    simp only [flipFunction, Int.reduceNeg, sub_sub_cancel, mul_inv_cancel_eval]
 
 private def flip : AspPerm := {
   func := fun n => -1 - τ (-1 - n)
   bijective := flip_bij τ
   asp := by
-    let f := flip_func τ
+    let f := flipFunction τ
     let g := fun n => -1 - n
-    change is_asp f
+    change isAsp f
     have hinj : Function.Injective f := (flip_bij τ).injective
-    have : g '' (southeast_set τ 0 0) = northwest_set f 0 0 := by
+    have : g '' (southeastSet τ 0 0) = northwestSet f 0 0 := by
       exact flip_quadrant τ 0 0
-    have nw_finite : (northwest_set f 0 0).Finite := by
+    have nw_finite : (northwestSet f 0 0).Finite := by
       rw [← this]
       apply Set.Finite.image g
       exact se_finite_of_asp τ.injective 0 0 τ.asp
-    have : g '' (southeast_set f 0 0) = northwest_set τ 0 0 := by
+    have : g '' (southeastSet f 0 0) = northwestSet τ 0 0 := by
       have h := flip_quadrant f 0 0
-      have : flip_func f = τ := by
+      have : flipFunction f = τ := by
         funext n
-        simp only [flip_func, Int.reduceNeg, sub_sub_cancel, f]
+        simp only [flipFunction, Int.reduceNeg, sub_sub_cancel, f]
       rw [this] at h
       exact h
-    have se_finite : (southeast_set f 0 0).Finite := by
-      have h : (g '' (southeast_set f 0 0)).Finite := by
+    have se_finite : (southeastSet f 0 0).Finite := by
+      have h : (g '' (southeastSet f 0 0)).Finite := by
         rw [this]
         exact nw_finite_of_asp τ.injective 0 0 τ.asp
-      have h_inj : Set.InjOn g (southeast_set f 0 0) := by
+      have h_inj : Set.InjOn g (southeastSet f 0 0) := by
         intro x _ y _ h
         linarith
       exact Set.Finite.of_finite_image h h_inj
@@ -418,12 +418,12 @@ private lemma flip_flip : τ.flip.flip = τ := by
 
 private lemma flip_s (a b : ℤ) : τ.flip.s_raw a b = τ.s'_raw (-b) (-a) := by
   unfold AspPerm.s_raw AspPerm.s'_raw
-  let A := southeast_set τ.flip a b
-  let B := northwest_set τ (-a) (-b)
+  let A := southeastSet τ.flip a b
+  let B := northwestSet τ (-a) (-b)
   suffices A.ncard = B.ncard by congr
-  have hflip : flip_func τ.flip = τ := by
+  have hflip : flipFunction τ.flip = τ := by
     funext n
-    simp only [flip_func, Int.reduceNeg, flip, sub_sub_cancel]
+    simp only [flipFunction, Int.reduceNeg, flip, sub_sub_cancel]
   have himage : (-1 - ·) '' A = B := by
     dsimp [A, B]
     simpa [hflip] using (flip_quadrant τ.flip a b)
@@ -439,22 +439,22 @@ private lemma flip_s (a b : ℤ) : τ.flip.s_raw a b = τ.s'_raw (-b) (-a) := by
 $\chi_\tau$; Lean writes it as `τ.χ`. -/
 noncomputable def χ : ℤ := τ.s_raw 0 0 - τ.s'_raw 0 0
 
-private lemma s_eq_se_card_raw (a b : ℤ) : τ.s_raw a b = (τ.se_finset a b).card := by
-  unfold AspPerm.s_raw se_finset
+private lemma s_eq_se_card_raw (a b : ℤ) : τ.s_raw a b = (τ.seFinset a b).card := by
+  unfold AspPerm.s_raw seFinset
   rw [Set.ncard_eq_toFinset_card _ (τ.se_finite a b)]
 
 private lemma s_nonneg_raw (a b : ℤ) : τ.s_raw a b ≥ 0 := by
   unfold s_raw
   exact Nat.cast_nonneg _
 
-private lemma s'_eq_nw_card_raw (b a : ℤ) : τ.s'_raw b a = (τ.nw_finset a b).card := by
-  unfold AspPerm.s'_raw nw_finset
+private lemma s'_eq_nw_card_raw (b a : ℤ) : τ.s'_raw b a = (τ.nwFinset a b).card := by
+  unfold AspPerm.s'_raw nwFinset
   rw [Set.ncard_eq_toFinset_card _ (τ.nw_finite a b)]
 
 -- Helper: the number of elements of se(a',b) \ se(a,b) equals the number of
 -- elements of Ico a a' whose τ-preimage is ≥ b, via the bijection k ↦ τ k.
 private lemma se_diff_card (a a' b : ℤ) :
-    ((τ.se_finset a' b) \ (τ.se_finset a b)).card =
+    ((τ.seFinset a' b) \ (τ.seFinset a b)).card =
       ((Finset.Ico a a').filter (τ⁻¹ · ≥ b)).card := by
   apply Finset.card_bij (fun k _ => τ k)
   · intro k hk
@@ -475,19 +475,19 @@ private lemma se_diff_card (a a' b : ℤ) :
 
 private lemma a_move_up_raw (a a' b : ℤ) (a_le_a' : a ≤ a') :
     τ.s_raw a' b = τ.s_raw a b + ((Finset.Ico a a').filter (τ⁻¹ · ≥ b)).card := by
-  have h_sub : τ.se_finset a b ⊆ τ.se_finset a' b := fun k hk => by
+  have h_sub : τ.seFinset a b ⊆ τ.seFinset a' b := fun k hk => by
     simp only [mem_se] at *; exact ⟨hk.1, lt_of_lt_of_le hk.2 a_le_a'⟩
-  suffices (τ.se_finset a' b).card
-    = (τ.se_finset a b).card + ((Finset.Ico a a').filter (τ⁻¹ · ≥ b)).card by
-    have hcard : ((τ.se_finset a' b).card : ℤ) =
-        (τ.se_finset a b).card + ((Finset.Ico a a').filter (τ⁻¹ · ≥ b)).card := by
+  suffices (τ.seFinset a' b).card
+    = (τ.seFinset a b).card + ((Finset.Ico a a').filter (τ⁻¹ · ≥ b)).card by
+    have hcard : ((τ.seFinset a' b).card : ℤ) =
+        (τ.seFinset a b).card + ((Finset.Ico a a').filter (τ⁻¹ · ≥ b)).card := by
       exact_mod_cast this
     rw [τ.s_eq_se_card_raw, τ.s_eq_se_card_raw]
     omega
   rw [← se_diff_card τ a a' b]
-  have h_disj : Disjoint (τ.se_finset a b) (τ.se_finset a' b \ τ.se_finset a b) :=
+  have h_disj : Disjoint (τ.seFinset a b) (τ.seFinset a' b \ τ.seFinset a b) :=
     disjoint_sdiff_self_right
-  have h_union : τ.se_finset a b ∪ τ.se_finset a' b \ τ.se_finset a b = τ.se_finset a' b :=
+  have h_union : τ.seFinset a b ∪ τ.seFinset a' b \ τ.seFinset a b = τ.seFinset a' b :=
     Finset.union_sdiff_of_subset h_sub
   have h_card := Finset.card_union_of_disjoint h_disj
   rw [h_union] at h_card
@@ -495,12 +495,12 @@ private lemma a_move_up_raw (a a' b : ℤ) (a_le_a' : a ≤ a') :
 
 private lemma b_move_up_raw (a b b' : ℤ) (b_le_b' : b ≤ b') :
   τ.s_raw a b' = τ.s_raw a b - ((Finset.Ico b b').filter (τ · < a)).card := by
-  let A := τ.se_finset a b'
-  let B := τ.se_finset a b
+  let A := τ.seFinset a b'
+  let B := τ.seFinset a b
   let C := (Finset.Ico b b').filter (τ · < a)
   suffices B.card = A.card + C.card by
     unfold A B at this
-    have hcard : ((τ.se_finset a b).card : ℤ) = (τ.se_finset a b').card + C.card := by
+    have hcard : ((τ.seFinset a b).card : ℤ) = (τ.seFinset a b').card + C.card := by
       exact_mod_cast this
     rw [τ.s_eq_se_card_raw, τ.s_eq_se_card_raw]
     linarith
@@ -654,14 +654,14 @@ private lemma s_ge_raw (a b : ℤ) : τ.s_raw a b ≥ a - b + τ.χ := by
 private lemma tend_zero_a_raw (b : ℤ) : ∃ a : ℤ, τ.s_raw a b = 0 := by
   by_cases h : τ.s_raw 0 b = 0
   · use 0
-  · let S := Finset.image τ (τ.se_finset 0 b)
+  · let S := Finset.image τ (τ.seFinset 0 b)
     have S_nonempty : S.Nonempty := by
-      have h_ne : (southeast_set τ 0 b).ncard ≠ 0 := by
+      have h_ne : (southeastSet τ 0 b).ncard ≠ 0 := by
         simpa [AspPerm.s_raw] using h
-      have h_nonempty : (southeast_set τ 0 b).Nonempty := Set.nonempty_of_ncard_ne_zero h_ne
-      have h_se_nonempty : (τ.se_finset 0 b).Nonempty := by
+      have h_nonempty : (southeastSet τ 0 b).Nonempty := Set.nonempty_of_ncard_ne_zero h_ne
+      have h_se_nonempty : (τ.seFinset 0 b).Nonempty := by
         rcases h_nonempty with ⟨n, hn⟩
-        exact ⟨n, by simpa [se_finset] using hn⟩
+        exact ⟨n, by simpa [seFinset] using hn⟩
       unfold S
       exact Finset.image_nonempty.mpr h_se_nonempty
     let a := Finset.min' S S_nonempty
@@ -672,17 +672,17 @@ private lemma tend_zero_a_raw (b : ℤ) : ∃ a : ℤ, τ.s_raw a b = 0 := by
       have := ((τ.mem_se 0 b n).mp n_se).2
       rwa [n_eq] at this
     use a
-    suffices southeast_set τ (Finset.min' S S_nonempty) b = ∅ by
-      have h_ncard : (southeast_set τ (Finset.min' S S_nonempty) b).ncard = 0 := by
+    suffices southeastSet τ (Finset.min' S S_nonempty) b = ∅ by
+      have h_ncard : (southeastSet τ (Finset.min' S S_nonempty) b).ncard = 0 := by
         exact (Set.ncard_eq_zero
-          (s := southeast_set τ (Finset.min' S S_nonempty) b)
+          (s := southeastSet τ (Finset.min' S S_nonempty) b)
           (hs := τ.se_finite (Finset.min' S S_nonempty) b)).2 this
       unfold AspPerm.s_raw
       exact_mod_cast h_ncard
     apply Set.eq_empty_iff_forall_notMem.mpr
     rintro n ⟨b_le_n, τn_lt_min⟩
     have : τ n < 0 := lt_trans τn_lt_min a_lt_0
-    have : n ∈ τ.se_finset 0 b := (τ.mem_se 0 b n).mpr ⟨b_le_n, this⟩
+    have : n ∈ τ.seFinset 0 b := (τ.mem_se 0 b n).mpr ⟨b_le_n, this⟩
     have : τ n ∈ S := Finset.mem_image.mpr ⟨n, this, rfl⟩
     have : a ≤ τ n := Finset.min'_le S (τ n) this
     exact lt_irrefl (τ n) <| lt_of_lt_of_le τn_lt_min this
@@ -796,12 +796,12 @@ noncomputable def s : SlipFace := {
 
 /-! ### Basic properties of the slipface of a permutation -/
 
-lemma s_eq_ncard (a b : ℤ) : τ.s a b = ↑(southeast_set τ a b).ncard := by rfl
-lemma s'_eq_ncard (b a : ℤ) : (τ⁻¹).s b a = ↑(northwest_set τ a b).ncard := by
+lemma s_eq_ncard (a b : ℤ) : τ.s a b = ↑(southeastSet τ a b).ncard := by rfl
+lemma s'_eq_ncard (b a : ℤ) : (τ⁻¹).s b a = ↑(northwestSet τ a b).ncard := by
   change (τ⁻¹).s_raw b a = _
   rw [← dual_inverse_raw]
   rfl
-lemma s_eq_se_card (a b : ℤ) : τ.s a b = (τ.se_finset a b).card := τ.s_eq_se_card_raw a b
+lemma s_eq_se_card (a b : ℤ) : τ.s a b = (τ.seFinset a b).card := τ.s_eq_se_card_raw a b
 lemma s_nonneg (a b : ℤ) : τ.s a b ≥ 0 := τ.s_nonneg_raw a b
 lemma s_ge (a b : ℤ) : τ.s a b ≥ a - b + τ.χ := τ.s_ge_raw a b
 lemma a_step (a b : ℤ) :
@@ -832,22 +832,22 @@ lemma b_move_up (a b b' : ℤ) (b_le_b' : b ≤ b') :
   τ.b_move_up_raw a b b' b_le_b'
 
 /-- The shift as a difference of southeast and northwest cardinalities. -/
-lemma chi_eq_card : τ.χ = ((τ.se_finset 0 0).card : ℤ) - (τ.nw_finset 0 0).card := by
+lemma chi_eq_card : τ.χ = ((τ.seFinset 0 0).card : ℤ) - (τ.nwFinset 0 0).card := by
   dsimp [AspPerm.χ]
   rw [s_eq_se_card_raw, s'_eq_nw_card_raw]
 
 -- Note: use of _raw definitions and statements should stop here
 
 @[simp] lemma id_chi : AspPerm.id.χ = 0 := by
-  have h_se : southeast_set AspPerm.id 0 0 = ∅ := by
+  have h_se : southeastSet AspPerm.id 0 0 = ∅ := by
     apply Set.eq_empty_iff_forall_notMem.mpr
     intro k hk
-    dsimp [southeast_set, AspPerm.id] at hk
+    dsimp [southeastSet, AspPerm.id] at hk
     omega
-  have h_nw : northwest_set AspPerm.id 0 0 = ∅ := by
+  have h_nw : northwestSet AspPerm.id 0 0 = ∅ := by
     apply Set.eq_empty_iff_forall_notMem.mpr
     intro k hk
-    dsimp [northwest_set, AspPerm.id] at hk
+    dsimp [northwestSet, AspPerm.id] at hk
     omega
   have := id.duality 0 0
   simp only [id.s_eq_ncard, id.s'_eq_ncard, h_se, h_nw, Set.ncard_empty] at this
@@ -868,12 +868,12 @@ $\chi_{\alpha\beta} = \chi_\alpha + \chi_\beta$.
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
 lemma chi_mul (α β : AspPerm) : (α * β).χ = α.χ + β.χ := by
   -- Proof written by Codex.
-  let A := Finset.image β (β.se_finset 0 0)
-  let B := Finset.image β (β.nw_finset 0 0)
-  let P := α.se_finset 0 0
-  let Q := α.nw_finset 0 0
-  let R := Finset.image β ((α * β).se_finset 0 0)
-  let S := Finset.image β ((α * β).nw_finset 0 0)
+  let A := Finset.image β (β.seFinset 0 0)
+  let B := Finset.image β (β.nwFinset 0 0)
+  let P := α.seFinset 0 0
+  let Q := α.nwFinset 0 0
+  let R := Finset.image β ((α * β).seFinset 0 0)
+  let S := Finset.image β ((α * β).nwFinset 0 0)
   have hA (n : ℤ) : n ∈ A ↔ 0 ≤ β⁻¹ n ∧ n < 0 := by
     simp only [A, Finset.mem_image, mem_se, ge_iff_le]
     constructor
@@ -986,16 +986,16 @@ lemma chi_mul (α β : AspPerm) : (α * β).χ = α.χ + β.χ := by
       simp only [Finset.mem_filter, not_lt]
     simpa only [hnot] using hsplit.symm
   have hse_image :
-      (β.se_finset 0 0).card = A.card :=
+      (β.seFinset 0 0).card = A.card :=
     (Finset.card_image_of_injective _ β.injective).symm
   have hnw_image :
-      (β.nw_finset 0 0).card = B.card :=
+      (β.nwFinset 0 0).card = B.card :=
     (Finset.card_image_of_injective _ β.injective).symm
   have hmul_se_image :
-      ((α * β).se_finset 0 0).card = R.card :=
+      ((α * β).seFinset 0 0).card = R.card :=
     (Finset.card_image_of_injective _ β.injective).symm
   have hmul_nw_image :
-      ((α * β).nw_finset 0 0).card = S.card :=
+      ((α * β).nwFinset 0 0).card = S.card :=
     (Finset.card_image_of_injective _ β.injective).symm
   have hcards :
       (R.card : ℤ) - S.card =
@@ -1083,9 +1083,9 @@ lemma a_step_eq_iff' (u b : ℤ) : τ.s (τ u + 1) b = τ.s (τ u) b ↔ u < b :
   have := a_step_eq_iff τ (τ u) b
   simpa [τ.mul_inv_cancel_eval] using this
 
-def inset (v : ℤ) : Set ℤ := {u | ⟨u, v⟩ ∈ inv_set τ}
+def inset (v : ℤ) : Set ℤ := {u | ⟨u, v⟩ ∈ invSet τ}
 
-lemma inset_eq_nw (v : ℤ) : τ.inset v = northwest_set τ (τ v) v := by
+lemma inset_eq_nw (v : ℤ) : τ.inset v = northwestSet τ (τ v) v := by
   ext u
   constructor
   · intro uv_inv
@@ -1095,8 +1095,8 @@ lemma inset_eq_nw (v : ℤ) : τ.inset v = northwest_set τ (τ v) v := by
     obtain ⟨u_lt_v, τv_le_τu⟩ := uv_se
     exact (τ.inv_iff_le u_lt_v).mpr τv_le_τu
 
-lemma invset_iff_inset (u v : ℤ) : ⟨u, v⟩ ∈ inv_set τ ↔ u ∈ τ.inset v := by
-  simp only [inset_eq_nw, northwest_set, Set.mem_ofPred_eq]
+lemma invset_iff_inset (u v : ℤ) : ⟨u, v⟩ ∈ invSet τ ↔ u ∈ τ.inset v := by
+  simp only [inset_eq_nw, northwestSet, Set.mem_ofPred_eq]
   constructor
   · intro ⟨u_lt, τ_le⟩
     exact ⟨u_lt, le_of_lt τ_le⟩
@@ -1107,9 +1107,9 @@ lemma inset_finite (v : ℤ) : (τ.inset v).Finite := by
   rw [τ.inset_eq_nw v]
   apply τ.nw_finite
 
-def outset (u : ℤ) : Set ℤ := {v | ⟨u, v⟩ ∈ inv_set τ}
+def outset (u : ℤ) : Set ℤ := {v | ⟨u, v⟩ ∈ invSet τ}
 
-lemma outset_eq_se (u : ℤ) : τ.outset u = southeast_set τ (τ u) u := by
+lemma outset_eq_se (u : ℤ) : τ.outset u = southeastSet τ (τ u) u := by
   ext v
   constructor
   · intro uv_inv
@@ -1119,8 +1119,8 @@ lemma outset_eq_se (u : ℤ) : τ.outset u = southeast_set τ (τ u) u := by
     obtain ⟨u_le_v, τv_lt_τu⟩ := uv_se
     exact (τ.inv_iff_lt u_le_v).mpr τv_lt_τu
 
-lemma invset_iff_outset (u v : ℤ) : ⟨u, v⟩ ∈ inv_set τ ↔ v ∈ τ.outset u := by
-  simp only [outset_eq_se, southeast_set, Set.mem_ofPred_eq]
+lemma invset_iff_outset (u v : ℤ) : ⟨u, v⟩ ∈ invSet τ ↔ v ∈ τ.outset u := by
+  simp only [outset_eq_se, southeastSet, Set.mem_ofPred_eq]
   constructor
   · intro ⟨u_lt, τ_le⟩
     exact ⟨le_of_lt u_lt, τ_le⟩
@@ -1152,7 +1152,7 @@ theorem reconstruction : ∀ n : ℤ,
 same shift. *Proposition 2.11 (`prop:reconstruction`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), consequence, part 2/2.* -/
 theorem eq_of_inv_set_eq_of_chi_eq (σ τ : AspPerm)
-    (h_inv : inv_set σ = inv_set τ) (h_χ : σ.χ = τ.χ) : σ = τ := by
+    (h_inv : invSet σ = invSet τ) (h_χ : σ.χ = τ.χ) : σ = τ := by
   apply AspPerm.ext.mpr
   ext n
   rw [reconstruction σ n, reconstruction τ n, h_χ]
@@ -1168,7 +1168,7 @@ theorem eq_of_inv_set_eq_of_chi_eq (σ τ : AspPerm)
 
 /-- An ASP permutation with empty inversion set and zero shift is the identity. -/
 theorem eq_id_of_inv_set_eq_empty_of_chi_eq_zero (τ : AspPerm)
-    (h_inv : inv_set τ = ∅) (h_χ : τ.χ = 0) : τ = AspPerm.id := by
+    (h_inv : invSet τ = ∅) (h_χ : τ.χ = 0) : τ = AspPerm.id := by
   apply AspPerm.ext.mpr
   ext n
   rw [reconstruction τ n, h_χ]
@@ -1181,9 +1181,9 @@ theorem eq_id_of_inv_set_eq_empty_of_chi_eq_zero (τ : AspPerm)
   simp only [sub_zero, h_out, Set.ncard_empty, Nat.cast_zero, add_zero, h_in, id, id_eq]
 
 @[simp]
-lemma inv_set_id : inv_set AspPerm.id = ∅ := by
+lemma inv_set_id : invSet AspPerm.id = ∅ := by
   ext ⟨u, v⟩
-  simp only [inv_set, id, id_eq, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and,
+  simp only [invSet, id, id_eq, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and,
     not_lt]
   intro u_lt_v
   exact le_of_lt u_lt_v
@@ -1199,9 +1199,9 @@ lemma s_dual : τ.s.dual = (τ⁻¹).s := by
 
 /-- The northwest count `(τ⁻¹).s b a` (the slipface dual value) equals the
 cardinality of the northwest set. The slipface replacement for `s'_eq_nw_card`. -/
-lemma s_dual_eq_nw_card (b a : ℤ) : (τ⁻¹).s b a = (τ.nw_finset a b).card := by
+lemma s_dual_eq_nw_card (b a : ℤ) : (τ⁻¹).s b a = (τ.nwFinset a b).card := by
   rw [s'_eq_ncard]
-  unfold nw_finset
+  unfold nwFinset
   rw [Set.ncard_eq_toFinset_card _ (τ.nw_finite a b)]
 
 /-- The bend set is a finite set on which the minimum defining the Demazure product is always
@@ -1209,10 +1209,10 @@ obtained. It is characterized in
 *Lemma 3.13 (`lem:setL`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 5/5.* -/
 lemma bend_set_sf (β : AspPerm) (b : ℤ) :
-    SlipFace.bend_set β.s b = {l : ℤ | β⁻¹ (l - 1) < b ∧ b ≤ β⁻¹ l} := by
+    SlipFace.bendSet β.s b = {l : ℤ | β⁻¹ (l - 1) < b ∧ b ≤ β⁻¹ l} := by
   -- Proof written by GPT 5.5.
   ext l
-  simp only [SlipFace.bend_set, Set.mem_ofPred_eq]
+  simp only [SlipFace.bendSet, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hflat, hne⟩
     constructor
@@ -1520,7 +1520,7 @@ lemma s'_b_τu (b : ℤ) {n : ℤ} (n_pos : n > 0) :
   exact ((τ.u_crit b n_pos (τ.u b n_pos)).mp rfl).1
 
 lemma s'_pos_of_lt {u b : ℤ} (u_lt_b : u < b) : τ⁻¹.s b (τ u) ≥ 1 := by
-  have h_pos : 0 < (τ.nw_finset (τ u) b).card := by
+  have h_pos : 0 < (τ.nwFinset (τ u) b).card := by
     apply Finset.card_pos.mpr
     exact ⟨u, (τ.mem_nw (τ u) b u).mpr ⟨u_lt_b, le_rfl⟩⟩
   rw [τ.s_dual_eq_nw_card]
@@ -1535,16 +1535,16 @@ lemma τu_ge (b : ℤ) {n : ℤ} (n_pos : n > 0)
   have hu_ge : a ≤ τ (τ.u b n_pos) := (τ.u_spec b n_pos).2 a s_ge_n
   omega
 
-/-- A box lies in the ramp exactly when a specific inversion belongs to `inv_set τ`,
+/-- A box lies in the ramp exactly when a specific inversion belongs to `invSet τ`,
 given by the functions `u` and `v` above. -/
 theorem inv_ramp_correspondence (b : ℤ) {m n : ℤ} (m_pos : m > 0) (n_pos : n > 0) :
-  ⟨m, n⟩ ∈ τ.ramp b ↔ ⟨τ.u b n_pos, τ.v b m_pos⟩ ∈ inv_set τ := by
+  ⟨m, n⟩ ∈ τ.ramp b ↔ ⟨τ.u b n_pos, τ.v b m_pos⟩ ∈ invSet τ := by
   let u := τ.u b n_pos
   let v := τ.v b m_pos
   have u_lt_b : u < b := τ.u_lt b n_pos
   have v_gt_b : b ≤ v := τ.v_ge b m_pos
-  have inv_simp : ⟨u, v⟩ ∈ inv_set τ ↔ τ v < τ u := by
-    simp only [inv_set, Set.mem_ofPred_eq, lt_of_lt_of_le u_lt_b v_gt_b, true_and]
+  have inv_simp : ⟨u, v⟩ ∈ invSet τ ↔ τ v < τ u := by
+    simp only [invSet, Set.mem_ofPred_eq, lt_of_lt_of_le u_lt_b v_gt_b, true_and]
   suffices ⟨m, n⟩ ∈ τ.ramp b ↔ τ v < τ u by
     rw [this, inv_simp]
   let a := b + m - n - τ.χ
@@ -1582,20 +1582,20 @@ $\operatorname{Inv}(\alpha) \cap \operatorname{Inv}(\beta^{-1})$ is empty.
 *Definition 2.7 (`defn:reducedProduct`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
 def ReducedProduct (α β : AspPerm) : Prop :=
-  Disjoint (inv_set α) (inv_set (β⁻¹).func)
+  Disjoint (invSet α) (invSet (β⁻¹).func)
 
 /-- The left weak order: `σ ≤L τ` if and only if $\operatorname{Inv} \sigma \subseteq
 \operatorname{Inv} \tau$. *Definition 2.6 (`defn:weakOrders`), part 1/2, of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
-def le_weak_L (σ τ : AspPerm) : Prop := inv_set σ ⊆ inv_set τ
-infix:50 " ≤L " => le_weak_L
+def leWeakL (σ τ : AspPerm) : Prop := invSet σ ⊆ invSet τ
+infix:50 " ≤L " => leWeakL
 
 /-- The right weak order: `σ ≤R τ` if and only if
 $\operatorname{Inv}(\sigma^{-1}) \subseteq \operatorname{Inv}(\tau^{-1})$.
 *Definition 2.6 (`defn:weakOrders`), part 2/2, of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
-def le_weak_R (σ τ : AspPerm) : Prop := inv_set (σ⁻¹).func ⊆ inv_set (τ⁻¹).func
-infix:50 " ≤R " => le_weak_R
+def leWeakR (σ τ : AspPerm) : Prop := invSet (σ⁻¹).func ⊆ invSet (τ⁻¹).func
+infix:50 " ≤R " => leWeakR
 
 lemma le_weak_L_of_R {σ τ : AspPerm} (h_R : σ ≤R τ) : σ⁻¹ ≤L τ⁻¹ := h_R
 
@@ -1616,11 +1616,11 @@ lemma reduced_iff_leR (α β : AspPerm) :
     refine ⟨p_lt_q, ?_⟩
     have hnot : ¬ β⁻¹ (α⁻¹ p) < β⁻¹ (α⁻¹ q) := by
       intro hβ
-      have hα : ⟨α⁻¹ q, α⁻¹ p⟩ ∈ inv_set α := by
+      have hα : ⟨α⁻¹ q, α⁻¹ p⟩ ∈ invSet α := by
         refine ⟨hαpq, ?_⟩
         simp only [mul_inv_cancel_eval]
         exact p_lt_q
-      have hβ' : ⟨α⁻¹ q, α⁻¹ p⟩ ∈ inv_set (β⁻¹).func :=
+      have hβ' : ⟨α⁻¹ q, α⁻¹ p⟩ ∈ invSet (β⁻¹).func :=
         ⟨hαpq, hβ⟩
       exact Set.disjoint_left.mp hred hα hβ'
     have hne : β⁻¹ (α⁻¹ q) ≠ β⁻¹ (α⁻¹ p) := by
@@ -1634,7 +1634,7 @@ lemma reduced_iff_leR (α β : AspPerm) :
   · intro hweak
     apply Set.disjoint_left.mpr
     rintro ⟨u, v⟩ huv hβ
-    have hαinv : ⟨α v, α u⟩ ∈ inv_set (α⁻¹).func :=
+    have hαinv : ⟨α v, α u⟩ ∈ invSet (α⁻¹).func :=
       (α.inv_set_inverse u v).mp huv
     have hmul := hweak hαinv
     obtain ⟨-, hmul⟩ := hmul
@@ -1657,8 +1657,8 @@ lemma reduced_iff_leL (α β : AspPerm) :
     refine ⟨p_lt_q, ?_⟩
     have hnot : ¬ α (β p) < α (β q) := by
       intro hα
-      have hα' : ⟨β q, β p⟩ ∈ inv_set α := ⟨hβpq, hα⟩
-      have hβ' : ⟨β q, β p⟩ ∈ inv_set (β⁻¹).func := by
+      have hα' : ⟨β q, β p⟩ ∈ invSet α := ⟨hβpq, hα⟩
+      have hβ' : ⟨β q, β p⟩ ∈ invSet (β⁻¹).func := by
         refine ⟨hβpq, ?_⟩
         simp only [inv_mul_cancel_eval]
         exact p_lt_q
@@ -1672,7 +1672,7 @@ lemma reduced_iff_leL (α β : AspPerm) :
   · intro hweak
     apply Set.disjoint_left.mpr
     rintro ⟨u, v⟩ huv hβ
-    have hβinv : ⟨β⁻¹ v, β⁻¹ u⟩ ∈ inv_set β := by
+    have hβinv : ⟨β⁻¹ v, β⁻¹ u⟩ ∈ invSet β := by
       refine ⟨hβ.2, ?_⟩
       simp only [mul_inv_cancel_eval]
       exact huv.1
@@ -1694,7 +1694,7 @@ noncomputable def sr (τ α : AspPerm) : (ℤ × ℤ) → (ℤ × ℤ) := fun x 
   ⟨τ⁻¹ (α x.1), τ⁻¹ (α x.2)⟩
 
 lemma sr_crit (τ α : AspPerm) : ∀ (u v : ℤ),
-  ⟨u, v⟩ ∈ (τ.sr α) '' inv_set α ↔ ⟨τ v, τ u⟩ ∈ inv_set α⁻¹.func := by
+  ⟨u, v⟩ ∈ (τ.sr α) '' invSet α ↔ ⟨τ v, τ u⟩ ∈ invSet α⁻¹.func := by
   intro u v
   constructor
   · intro h
@@ -1709,7 +1709,7 @@ lemma sr_crit (τ α : AspPerm) : ∀ (u v : ℤ),
     · unfold sr
       simp only [mul_inv_cancel_eval, inv_mul_cancel_eval]
 
-lemma sr_subset (τ α : AspPerm) (h_R : α ≤R τ) : (τ.sr α) '' inv_set α ⊆ inv_set τ := by
+lemma sr_subset (τ α : AspPerm) (h_R : α ≤R τ) : (τ.sr α) '' invSet α ⊆ invSet τ := by
   intro x hx; obtain ⟨u, v⟩ := x
   apply (sr_crit τ α u v).mp at hx
   apply h_R at hx
@@ -1717,22 +1717,22 @@ lemma sr_subset (τ α : AspPerm) (h_R : α ≤R τ) : (τ.sr α) '' inv_set α 
   simp only [inv_mul_cancel_eval] at u_lt_v
   exact ⟨u_lt_v, τu_gt_τv⟩
 
-def dprod_val_ge (α β : AspPerm) (a b n : ℤ) : Prop :=
+def dprodValGe (α β : AspPerm) (a b n : ℤ) : Prop :=
   ∀ l : ℤ, α.s a l + β.s l b ≥ n
 
-def le_dprod (τ α β : AspPerm) : Prop :=
-  ∀ a b : ℤ, dprod_val_ge α β a b (τ.s a b)
+def leDprod (τ α β : AspPerm) : Prop :=
+  ∀ a b : ℤ, dprodValGe α β a b (τ.s a b)
 
-def dprod_val_le (α β : AspPerm) (a b n : ℤ) : Prop :=
+def dprodValLe (α β : AspPerm) (a b n : ℤ) : Prop :=
   ∃ l : ℤ, α.s a l + β.s l b ≤ n
 
-def ge_dprod (τ α β : AspPerm) : Prop :=
-  ∀ a b : ℤ, dprod_val_le α β a b (τ.s a b)
+def geDprod (τ α β : AspPerm) : Prop :=
+  ∀ a b : ℤ, dprodValLe α β a b (τ.s a b)
 
-def eq_dprod (τ α β : AspPerm) : Prop :=
-  τ.le_dprod α β ∧ τ.ge_dprod α β
+def eqDprod (τ α β : AspPerm) : Prop :=
+  τ.leDprod α β ∧ τ.geDprod α β
 
-lemma chi_ge_of_dprod_ge {α β τ : AspPerm} (h_ge : τ.le_dprod α β) :
+lemma chi_ge_of_dprod_ge {α β τ : AspPerm} (h_ge : τ.leDprod α β) :
   α.χ + β.χ ≥ τ.χ := by
   rcases α⁻¹.tend_zero_a 0 with ⟨l, hl⟩
   rcases β⁻¹.tend_zero_a l with ⟨c, hc⟩
@@ -1740,19 +1740,19 @@ lemma chi_ge_of_dprod_ge {α β τ : AspPerm} (h_ge : τ.le_dprod α β) :
   rw [α.s_eq, β.s_eq] at eq
   linarith [τ.s_ge 0 c]
 
-lemma chi_le_of_dprod_le {α β τ : AspPerm} (h_le : τ.ge_dprod α β) :
+lemma chi_le_of_dprod_le {α β τ : AspPerm} (h_le : τ.geDprod α β) :
   α.χ + β.χ ≤ τ.χ := by
   rcases τ⁻¹.tend_zero_a 0 with ⟨c, hc⟩
   rcases h_le 0 c with ⟨l, hl⟩
   rw [τ.s_eq] at hl
   linarith [α.s_ge 0 l, β.s_ge l c]
 
-lemma chi_eq_of_drop_eq {τ α β : AspPerm} (h_eq : τ.eq_dprod α β) :
+lemma chi_eq_of_drop_eq {τ α β : AspPerm} (h_eq : τ.eqDprod α β) :
   α.χ + β.χ = τ.χ :=
   Int.le_antisymm (chi_le_of_dprod_le h_eq.2) (chi_ge_of_dprod_ge h_eq.1)
 
-lemma dprod_inv_eq_inv_dprod (τ α β : AspPerm) (h_eq : τ.eq_dprod α β) :
-  τ⁻¹.eq_dprod (β⁻¹) (α⁻¹) := by
+lemma dprod_inv_eq_inv_dprod (τ α β : AspPerm) (h_eq : τ.eqDprod α β) :
+  τ⁻¹.eqDprod (β⁻¹) (α⁻¹) := by
   have hχ : α.χ + β.χ = τ.χ := chi_eq_of_drop_eq h_eq
   constructor
   · intro a b l
@@ -1778,7 +1778,7 @@ of 321-avoiding permutations.
 This theorem is not present in [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
 theorem ramp_dprod_legos (α β : AspPerm) (a b M N : ℤ)
   (habMN : a - b + α.χ + β.χ = M - N) :
-  dprod_val_ge α β a b M ↔
+  dprodValGe α β a b M ↔
   ∀ m ∈ Set.Icc 1 M, ∀ n ∈ Set.Icc 1 N,
   ⟨m, n⟩ ∈ β.ramp b ∨ ⟨M+1-m, N+1-n⟩ ∈ α.lamp a
   := by
@@ -1874,7 +1874,7 @@ lemma ess_asp_eq_ess_sf (τ : AspPerm) : τ.ess = τ.s.ess := by
     rw [b_step_eq_iff] at h4
     exact ⟨h3, h4, h2, h1⟩
 
-def is_bdiff : Prop := ∃ (M : ℤ), ∀ (n : ℤ), abs (n - τ n) ≤ M
+def isBdiff : Prop := ∃ (M : ℤ), ∀ (n : ℤ), abs (n - τ n) ≤ M
 
 private def width_bound (N : ℤ) : Prop :=
   ∀ (a b : ℤ), N ≤ abs (a - b) → τ.s a b = max 0 (a - b + τ.χ)
@@ -1957,7 +1957,7 @@ private lemma M_sub_M'' : τ.M ⊆ τ.M'' := by
   rw [τ.s_eq_se_card, gt_iff_lt] at hpos
   rw [Nat.cast_pos, Finset.card_pos] at hpos
   let n := Finset.max' _ hpos
-  have hn : n ∈ τ.se_finset a b := Finset.max'_mem _ hpos
+  have hn : n ∈ τ.seFinset a b := Finset.max'_mem _ hpos
   obtain ⟨nge, τnlt⟩ := (τ.mem_se a b n).mp hn
   have s_zero : τ.s (τ n + 1) n = 1 := by
     calc
@@ -1966,13 +1966,13 @@ private lemma M_sub_M'' : τ.M ⊆ τ.M'' := by
         simp only [τ.inv_mul_cancel_eval, le_refl]
       _ = 1 := by
         rw [τ.s_eq_se_card]
-        have : τ.se_finset (τ n) n = ∅ := by
+        have : τ.seFinset (τ n) n = ∅ := by
           rw [Finset.eq_empty_iff_forall_notMem]
           intro m hm
           rw [τ.mem_se] at hm
           have b_le_m : b ≤ m := le_trans nge hm.1
           have τm_lt_a : τ m < a:= lt_trans hm.2 τnlt
-          have m_se : m ∈ τ.se_finset a b := by
+          have m_se : m ∈ τ.seFinset a b := by
             rw [τ.mem_se]
             exact ⟨b_le_m, τm_lt_a⟩
           have : m ≤ n := Finset.le_max' _ m m_se
@@ -2035,7 +2035,7 @@ private lemma bdiff_width_helper (M : ℤ) :
 $\max\{0, a-b+\chi(\tau)\}$ for all $|a-b| \gg 0$. *Proposition 7.7*
 (`prop:cliffordPerms`) of [An extended Demazure product](https://arxiv.org/abs/2206.14227),
 part 1/2.* -/
-theorem bdiff_iff_width : τ.is_bdiff ↔ ∃ N, τ.width_bound N := by
+theorem bdiff_iff_width : τ.isBdiff ↔ ∃ N, τ.width_bound N := by
   constructor
   · intro bdiff
     rcases bdiff with ⟨M, hM⟩
@@ -2085,7 +2085,7 @@ theorem bdiff_iff_width : τ.is_bdiff ↔ ∃ N, τ.width_bound N := by
 /-- A permutation $\tau$ has bounded difference if and only if $s_\tau$ is a Clifford slipface.
 *Proposition 7.7* (`prop:cliffordPerms`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 2/2.* -/
-theorem bdiff_iff_clifford : τ.is_bdiff ↔ τ.s.is_clifford := by
+theorem bdiff_iff_clifford : τ.isBdiff ↔ τ.s.isClifford := by
   constructor
   · rintro ⟨M, hM⟩
     have M_nonneg : 0 ≤ M := (abs_nonneg (0 - τ 0)).trans (hM 0)

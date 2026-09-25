@@ -34,17 +34,17 @@ variable (hYsmall : Y length < min (X length) (Delta length))
 /-- Sparse endpoint expansion of the Case-3 profile reaching `d=1`. -/
 theorem dProfile_endpointDivisors :
     (dProfile length hLength hBC hYsmall).endpointDivisors =
-      (one_chip ((Spec length hLength).pathVertex 4
+      (oneChip ((Spec length hLength).pathVertex 4
           ((dProfile length hLength hBC hYsmall).startPosition 4)) -
-        one_chip ((Spec length hLength).pathVertex 4
+        oneChip ((Spec length hLength).pathVertex 4
           ((dProfile length hLength hBC hYsmall).stopPosition 4))) +
-      (one_chip ((Spec length hLength).pathVertex 5
+      (oneChip ((Spec length hLength).pathVertex 5
           ((dProfile length hLength hBC hYsmall).startPosition 5)) -
-        one_chip ((Spec length hLength).pathVertex 5
+        oneChip ((Spec length hLength).pathVertex 5
           ((dProfile length hLength hBC hYsmall).stopPosition 5))) +
-      (one_chip ((Spec length hLength).pathVertex 8
+      (oneChip ((Spec length hLength).pathVertex 8
           ((dProfile length hLength hBC hYsmall).startPosition 8)) -
-        one_chip ((Spec length hLength).pathVertex 8
+        oneChip ((Spec length hLength).pathVertex 8
           ((dProfile length hLength hBC hYsmall).stopPosition 8))) := by
   rw [WindowProfile.Data.endpointDivisors]
   simp [Fin.sum_univ_succ, dProfile]
@@ -118,21 +118,21 @@ theorem reaches_one :
 /-- Raw sparse endpoint expansion of the shared Case-3 `e/f` profile. -/
 private theorem efProfile_sparse :
     (efProfile length hLength hBC hYsmall).endpointDivisors =
-      -(one_chip ((Spec length hLength).pathVertex 3
+      -(oneChip ((Spec length hLength).pathVertex 3
           ((efProfile length hLength hBC hYsmall).startPosition 3)) -
-        one_chip ((Spec length hLength).pathVertex 3
+        oneChip ((Spec length hLength).pathVertex 3
           ((efProfile length hLength hBC hYsmall).stopPosition 3))) +
-      (one_chip ((Spec length hLength).pathVertex 4
+      (oneChip ((Spec length hLength).pathVertex 4
           ((efProfile length hLength hBC hYsmall).startPosition 4)) -
-        one_chip ((Spec length hLength).pathVertex 4
+        oneChip ((Spec length hLength).pathVertex 4
           ((efProfile length hLength hBC hYsmall).stopPosition 4))) +
-      (one_chip ((Spec length hLength).pathVertex 5
+      (oneChip ((Spec length hLength).pathVertex 5
           ((efProfile length hLength hBC hYsmall).startPosition 5)) -
-        one_chip ((Spec length hLength).pathVertex 5
+        oneChip ((Spec length hLength).pathVertex 5
           ((efProfile length hLength hBC hYsmall).stopPosition 5))) +
-      (one_chip ((Spec length hLength).pathVertex 8
+      (oneChip ((Spec length hLength).pathVertex 8
           ((efProfile length hLength hBC hYsmall).startPosition 8)) -
-        one_chip ((Spec length hLength).pathVertex 8
+        oneChip ((Spec length hLength).pathVertex 8
           ((efProfile length hLength hBC hYsmall).stopPosition 8))) := by
   rw [WindowProfile.Data.endpointDivisors]
   simp [Fin.sum_univ_succ, efProfile]
@@ -225,13 +225,13 @@ private theorem ef_stop_eight_eq_four :
 /-- Simplified endpoint divisor of the shared Case-3 `e/f` profile. -/
 theorem efProfile_endpointDivisors :
     (efProfile length hLength hBC hYsmall).endpointDivisors =
-      one_chip ((Spec length hLength).coreVertex 3) -
-        one_chip (s length hLength hYsmall) +
-      one_chip ((Spec length hLength).pathVertex 5
+      oneChip ((Spec length hLength).coreVertex 3) -
+        oneChip (s length hLength hYsmall) +
+      oneChip ((Spec length hLength).pathVertex 5
         ((efProfile length hLength hBC hYsmall).startPosition 5)) -
-        one_chip (q length hLength hNorm) +
-      one_chip ((Spec length hLength).coreVertex 2) -
-        one_chip ((Spec length hLength).coreVertex 4) := by
+        oneChip (q length hLength hNorm) +
+      oneChip ((Spec length hLength).coreVertex 2) -
+        oneChip ((Spec length hLength).coreVertex 4) := by
   rw [efProfile_sparse length hLength hBC hYsmall,
     ef_start_three_eq_one length hLength hBC hYsmall,
     ef_stop_three_eq_three length hLength hBC hYsmall,
@@ -280,7 +280,7 @@ include hNorm hBC hYsmall in
 /-- The short Core-095 chamber proves the genus-four degree-three pencil. -/
 theorem bnExists_one_three : BNExists (Spec length hLength).graph 1 3 := by
   refine CoreVertexReachability.bnExists_of_reaches_coreVertices
-    (Spec length hLength) (graph_connected length hLength)
+    (Spec length hLength) (graphConnected length hLength)
     (threeChipDivisor ((Spec length hLength).coreVertex 4)
       (q length hLength hNorm)
       (s length hLength hYsmall)) 3 ?_ ?_

@@ -39,7 +39,7 @@ inductive BridgelessGenusTwoCoreNormalForm (G : CFGraph.{0}) : Prop
   | theta (B : Banana 2) (equivalence : LaplacianEquiv G B.graph) :
       BridgelessGenusTwoCoreNormalForm G
   | rigidWedge (base factor : CFGraph.{0}) (attachment : base.V) (root : factor.V)
-      (baseConnected : _root_.graph_connected base) (baseGenus : genus base = 1)
+      (baseConnected : _root_.graphConnected base) (baseGenus : genus base = 1)
       (baseCut : TwoEdgeCutCondition base) (factorCut : TwoEdgeCutCondition factor)
       (wedgeCut : TwoEdgeCutCondition (vertexWedge base factor attachment root))
       (baseRigid : PointedGenusOneRigid base attachment)
@@ -58,7 +58,7 @@ inductive MarkedBridgelessGenusTwoCoreNormalForm
       MarkedBridgelessGenusTwoCoreNormalForm G u v
   | rigidWedge (base factor : CFGraph.{0}) (attachment : base.V) (root : factor.V)
       (u' v' : (vertexWedge base factor attachment root).V)
-      (baseConnected : _root_.graph_connected base) (baseGenus : genus base = 1)
+      (baseConnected : _root_.graphConnected base) (baseGenus : genus base = 1)
       (baseCut : TwoEdgeCutCondition base) (factorCut : TwoEdgeCutCondition factor)
       (wedgeCut : TwoEdgeCutCondition (vertexWedge base factor attachment root))
       (baseRigid : PointedGenusOneRigid base attachment)
@@ -149,7 +149,7 @@ theorem thetaPresentation_of_loopFree_twoBasePseudocore
 positive subdivision of the loopless split of a valid genus-two pseudocore
 with at most two base vertices. -/
 theorem bridgelessGenusTwo_pseudocorePresentation
-    (G : CFGraph.{0}) (hConnected : _root_.graph_connected G)
+    (G : CFGraph.{0}) (hConnected : _root_.graphConnected G)
     (hCut : TwoEdgeCutCondition G) (hNontrivial : ∃ p q : G.V, p ≠ q)
     (hGenus : genus G = 2) :
     ∃ (k : ℕ) (core : Pseudocore k) (split : core.SplitMetadata),
@@ -157,7 +157,7 @@ theorem bridgelessGenusTwo_pseudocorePresentation
       ∃ spec : Spec (k + core.loopCount) core.splitEdgeCount,
         spec.core = split.splitCore ∧ Nonempty (LaplacianEquiv G spec.graph) := by
   classical
-  have hDeg : ∀ vertex : G.V, 2 ≤ vertex_degree G vertex :=
+  have hDeg : ∀ vertex : G.V, 2 ≤ vertexDegree G vertex :=
     hasMinimumValenceTwo_of_twoEdgeCutCondition G hCut hNontrivial
   obtain ⟨N, P, spec, hPresent, hReduced⟩ :=
     exists_reduced (Fintype.card G.V) G.edges.card
@@ -165,7 +165,7 @@ theorem bridgelessGenusTwo_pseudocorePresentation
   obtain ⟨reduction⟩ := hPresent
   have equivalence : LaplacianEquiv G spec.graph :=
     (UnitSubdivisionPresentation.laplacianEquiv G).trans reduction
-  have hSpecConnected : _root_.graph_connected spec.graph :=
+  have hSpecConnected : _root_.graphConnected spec.graph :=
     equivalence.graphConnected hConnected
   have hSpecGenus : genus spec.graph = 2 := by
     rw [equivalence.genus_eq, hGenus]
@@ -187,14 +187,14 @@ theorem bridgelessGenusTwo_pseudocorePresentation
 /-- Construct the theta-or-rigid-wedge structural form of every nontrivial
 bridgeless genus-two graph. -/
 theorem bridgelessGenusTwo_coreNormalForm
-    (G : CFGraph.{0}) (hConnected : _root_.graph_connected G)
+    (G : CFGraph.{0}) (hConnected : _root_.graphConnected G)
     (hCut : TwoEdgeCutCondition G) (hNontrivial : ∃ p q : G.V, p ≠ q)
     (hGenus : genus G = 2) : BridgelessGenusTwoCoreNormalForm G := by
   obtain ⟨k, core, split, hBound, hValid, hCompatible, spec, hCore,
     hPresentation⟩ := bridgelessGenusTwo_pseudocorePresentation
       G hConnected hCut hNontrivial hGenus
   obtain ⟨presentation⟩ := hPresentation
-  have hSpecConnected : _root_.graph_connected spec.graph :=
+  have hSpecConnected : _root_.graphConnected spec.graph :=
     presentation.graphConnected hConnected
   have hSpecGenus : genus spec.graph = 2 := by
     rw [presentation.genus_eq, hGenus]
@@ -285,7 +285,7 @@ theorem bridgelessGenusTwo_coreNormalForm
 
 /-- Transport the two marks through the structural core normal form. -/
 theorem marked_bridgelessGenusTwo_coreNormalForm
-    (G : CFGraph.{0}) (u v : G.V) (hConnected : _root_.graph_connected G)
+    (G : CFGraph.{0}) (u v : G.V) (hConnected : _root_.graphConnected G)
     (hCut : TwoEdgeCutCondition G) (hNontrivial : ∃ p q : G.V, p ≠ q)
     (hGenus : genus G = 2) :
     MarkedBridgelessGenusTwoCoreNormalForm G u v := by

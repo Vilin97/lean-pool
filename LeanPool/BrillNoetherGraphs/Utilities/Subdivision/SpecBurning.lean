@@ -77,7 +77,7 @@ theorem two_le_sum_of_double_chip (hEff : effective D) {S : Finset G.V} {x : G.V
 /-- Two distinct burned neighbours of an unburned vertex cost it two chips. -/
 theorem two_le_of_two_burned_neighbours {q : G.V} {x u₁ u₂ : G.V}
     (hx : x ∉ burned G D q) (h1 : u₁ ∈ burned G D q) (h2 : u₂ ∈ burned G D q)
-    (hne : u₁ ≠ u₂) (hp1 : 0 < num_edges G x u₁) (hp2 : 0 < num_edges G x u₂) :
+    (hne : u₁ ≠ u₂) (hp1 : 0 < numEdges G x u₁) (hp2 : 0 < numEdges G x u₂) :
     2 ≤ D x := by
   classical
   have hle := sum_burned_le_of_not_mem_burned hx
@@ -85,34 +85,34 @@ theorem two_le_of_two_burned_neighbours {q : G.V} {x u₁ u₂ : G.V}
     intro z hz
     simp only [Finset.mem_insert, Finset.mem_singleton] at hz
     rcases hz with rfl | rfl <;> assumption
-  have hpair : ∑ v ∈ ({u₁, u₂} : Finset G.V), (num_edges G x v : ℤ)
-      ≤ ∑ v ∈ burned G D q, (num_edges G x v : ℤ) :=
+  have hpair : ∑ v ∈ ({u₁, u₂} : Finset G.V), (numEdges G x v : ℤ)
+      ≤ ∑ v ∈ burned G D q, (numEdges G x v : ℤ) :=
     Finset.sum_le_sum_of_subset_of_nonneg hsub fun _ _ _ => Int.natCast_nonneg _
   rw [Finset.sum_pair hne] at hpair
   omega
 
 /-- A doubled edge to the fire costs an unburned vertex two chips. -/
 theorem two_le_of_double_burned_edge {q : G.V} {x u : G.V}
-    (hx : x ∉ burned G D q) (hu : u ∈ burned G D q) (hp : 2 ≤ num_edges G x u) :
+    (hx : x ∉ burned G D q) (hu : u ∈ burned G D q) (hp : 2 ≤ numEdges G x u) :
     2 ≤ D x := by
   classical
   have hle := sum_burned_le_of_not_mem_burned hx
   have hsub : ({u} : Finset G.V) ⊆ burned G D q := by simpa using hu
-  have hpair : ∑ v ∈ ({u} : Finset G.V), (num_edges G x v : ℤ)
-      ≤ ∑ v ∈ burned G D q, (num_edges G x v : ℤ) :=
+  have hpair : ∑ v ∈ ({u} : Finset G.V), (numEdges G x v : ℤ)
+      ≤ ∑ v ∈ burned G D q, (numEdges G x v : ℤ) :=
     Finset.sum_le_sum_of_subset_of_nonneg hsub fun _ _ _ => Int.natCast_nonneg _
   rw [Finset.sum_singleton] at hpair
   omega
 
 /-- One burned neighbour costs an unburned vertex a chip. -/
 theorem one_le_of_burned_neighbour {q : G.V} {x u : G.V}
-    (hx : x ∉ burned G D q) (hu : u ∈ burned G D q) (hp : 0 < num_edges G x u) :
+    (hx : x ∉ burned G D q) (hu : u ∈ burned G D q) (hp : 0 < numEdges G x u) :
     1 ≤ D x := by
   classical
   have hle := sum_burned_le_of_not_mem_burned hx
   have hsub : ({u} : Finset G.V) ⊆ burned G D q := by simpa using hu
-  have hpair : ∑ v ∈ ({u} : Finset G.V), (num_edges G x v : ℤ)
-      ≤ ∑ v ∈ burned G D q, (num_edges G x v : ℤ) :=
+  have hpair : ∑ v ∈ ({u} : Finset G.V), (numEdges G x v : ℤ)
+      ≤ ∑ v ∈ burned G D q, (numEdges G x v : ℤ) :=
     Finset.sum_le_sum_of_subset_of_nonneg hsub fun _ _ _ => Int.natCast_nonneg _
   rw [Finset.sum_singleton] at hpair
   omega
@@ -197,7 +197,7 @@ theorem slotVertex_injOn {edge : Fin p} {k k' : ℕ} (hk : k ≤ spec.length edg
 /-- Consecutive positions along a slot are adjacent. -/
 theorem slotVertex_num_edges_pos {edge : Fin p} {k : ℕ}
     (hk : k < spec.length edge) :
-    0 < num_edges spec.graph (spec.slotVertex edge k)
+    0 < numEdges spec.graph (spec.slotVertex edge k)
       (spec.slotVertex edge (k + 1)) := by
   have h := spec.consecutive_num_edges_pos edge ⟨k, hk⟩
   rwa [show spec.pathVertex edge (spec.stepLeftPosition edge ⟨k, hk⟩)
@@ -209,7 +209,7 @@ theorem slotVertex_num_edges_pos {edge : Fin p} {k : ℕ}
 
 theorem slotVertex_num_edges_pos' {edge : Fin p} {k : ℕ}
     (hk : k < spec.length edge) :
-    0 < num_edges spec.graph (spec.slotVertex edge (k + 1))
+    0 < numEdges spec.graph (spec.slotVertex edge (k + 1))
       (spec.slotVertex edge k) := by
   rw [num_edges_symmetric]
   exact slotVertex_num_edges_pos hk
@@ -220,7 +220,7 @@ theorem two_le_num_edges_of_parallel_unit {e₁ e₂ : Fin p} (hne : e₁ ≠ e�
     (h1 : spec.length e₁ = 1) (h2 : spec.length e₂ = 1)
     (htail : spec.core.tail e₂ = spec.core.tail e₁)
     (hhead : spec.core.head e₂ = spec.core.head e₁) :
-    2 ≤ num_edges spec.graph (spec.coreVertex (spec.core.head e₁))
+    2 ≤ numEdges spec.graph (spec.coreVertex (spec.core.head e₁))
       (spec.coreVertex (spec.core.tail e₁)) := by
   classical
   rw [spec.num_edges_eq_card_filter_steps]
@@ -481,13 +481,13 @@ theorem two_le_chips_of_cycle_tail_burned (hEff : effective D) {e₁ e₂ : Fin 
         hk₁prev
       have hp2 : spec.slotVertex e₂ (spec.length e₂ - 1) ∈ burned spec.graph D w :=
         hk₂prev
-      have hadj1 : 0 < num_edges spec.graph (spec.coreVertex (spec.core.head e₁))
+      have hadj1 : 0 < numEdges spec.graph (spec.coreVertex (spec.core.head e₁))
           (spec.slotVertex e₁ (spec.length e₁ - 1)) := by
         have h := slotVertex_num_edges_pos' (spec := spec) (edge := e₁)
           (k := spec.length e₁ - 1) (by have := spec.length_pos e₁; omega)
         rwa [show spec.length e₁ - 1 + 1 = spec.length e₁ from by
           have := spec.length_pos e₁; omega, slotVertex_length] at h
-      have hadj2 : 0 < num_edges spec.graph (spec.coreVertex (spec.core.head e₁))
+      have hadj2 : 0 < numEdges spec.graph (spec.coreVertex (spec.core.head e₁))
           (spec.slotVertex e₂ (spec.length e₂ - 1)) := by
         have h := slotVertex_num_edges_pos' (spec := spec) (edge := e₂)
           (k := spec.length e₂ - 1) (by have := spec.length_pos e₂; omega)
@@ -565,11 +565,11 @@ theorem two_le_chips_of_cycle_head_burned (hEff : effective D) {e₁ e₂ : Fin 
     · have := htail1 h1; omega
     · subst h1
       subst h2
-      have hadj1 : 0 < num_edges spec.graph (spec.coreVertex (spec.core.tail e₁))
+      have hadj1 : 0 < numEdges spec.graph (spec.coreVertex (spec.core.tail e₁))
           (spec.slotVertex e₁ 1) := by
         have h := slotVertex_num_edges_pos (spec := spec) (edge := e₁) (k := 0) hk₁lt
         rwa [slotVertex_zero] at h
-      have hadj2 : 0 < num_edges spec.graph (spec.coreVertex (spec.core.tail e₁))
+      have hadj2 : 0 < numEdges spec.graph (spec.coreVertex (spec.core.tail e₁))
           (spec.slotVertex e₂ 1) := by
         have h := slotVertex_num_edges_pos (spec := spec) (edge := e₂) (k := 0) hk₂lt
         rwa [slotVertex_zero, htail] at h

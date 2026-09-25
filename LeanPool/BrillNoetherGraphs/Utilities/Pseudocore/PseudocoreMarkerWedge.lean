@@ -119,7 +119,7 @@ theorem base_connected (marker : Fin core.loopCount)
     (hCore : spec.core = split.splitCore)
     (hCompatible : PseudocoreSplitGlue.Compatible split)
     (hConnected : split.splitCore.Connected) :
-    graph_connected (base split spec marker hCore hCompatible) := by
+    graphConnected (base split spec marker hCore hCompatible) := by
   exact (cut split spec marker hCore hCompatible).graph_connected_right_of_connected
     (spec.graph_connected_of_coreConnected (by
       rw [hCore]
@@ -264,7 +264,7 @@ theorem restricted_base_connected
       hCore hCompatible hNe
     let restricted := (cut split spec first hCore hCompatible).restrictRight
       (cut split spec second hCore hCompatible) hSubset
-    graph_connected restricted.rightGraph := by
+    graphConnected restricted.rightGraph := by
   dsimp only
   exact ((cut split spec first hCore hCompatible).restrictRight_graph_connected_factors
     (cut split spec second hCore hCompatible)

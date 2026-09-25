@@ -42,20 +42,20 @@ chips at `base`.  This is the exact pointed input needed to enter an attached
 topological loop. -/
 def HasTwoChipsRepresentative (D : CFDiv G) (base : G.V) : Prop :=
   ∃ E : CFDiv G,
-    effective E ∧ linear_equiv G D E ∧ 2 ≤ E base
+    effective E ∧ linearEquiv G D E ∧ 2 ≤ E base
 
 /-- The genus-two algebraic heart of the Atanasov--Ranganathan loop lemma.
 For any two prospective loop bases, one degree-three class has effective
 representatives carrying two chips at either base. -/
 theorem exists_common_two_chip_class_genus_two
-    (hConnected : graph_connected G) (hGenus : genus G = 2)
+    (hConnected : graphConnected G) (hGenus : genus G = 2)
     (first second : G.V) :
     ∃ D : CFDiv G,
       effective D ∧ deg D = 3 ∧ rank G D ≥ 1 ∧
       HasTwoChipsRepresentative D first ∧
       HasTwoChipsRepresentative D second := by
   let gamma : CFDiv G :=
-    (2 : ℤ) • one_chip first - (2 : ℤ) • one_chip second
+    (2 : ℤ) • oneChip first - (2 : ℤ) • oneChip second
   have hGammaDegree : deg gamma = 0 := by
     dsimp [gamma]
     rw [deg.map_sub, map_zsmul, map_zsmul, deg_one_chip, deg_one_chip]
@@ -63,8 +63,8 @@ theorem exists_common_two_chip_class_genus_two
   obtain ⟨E, F, hEEffective, hFEffective, hEDegree, hFDegree, hDifference⟩ :=
     exists_effective_difference_of_deg_zero hConnected (by omega)
       gamma hGammaDegree
-  let D : CFDiv G := (2 : ℤ) • one_chip first + E
-  let Dsecond : CFDiv G := (2 : ℤ) • one_chip second + F
+  let D : CFDiv G := (2 : ℤ) • oneChip first + E
+  let Dsecond : CFDiv G := (2 : ℤ) • oneChip second + F
   have hDEffective : effective D := by
     exact (Eff G).add_mem
       ((Eff G).nsmul_mem (eff_one_chip first) 2)
@@ -81,22 +81,22 @@ theorem exists_common_two_chip_class_genus_two
     dsimp [Dsecond]
     rw [deg.map_add, map_zsmul, deg_one_chip, hFDegree, hGenus]
     norm_num
-  have hEquivSecond : linear_equiv G D Dsecond := by
-    unfold linear_equiv at hDifference ⊢
+  have hEquivSecond : linearEquiv G D Dsecond := by
+    unfold linearEquiv at hDifference ⊢
     have hRewrite :
         Dsecond - D = -(gamma - (F - E)) := by
       dsimp [D, Dsecond, gamma]
       abel
     rw [hRewrite]
-    exact AddSubgroup.neg_mem (principal_divisors G) hDifference
+    exact AddSubgroup.neg_mem (principalDivisors G) hDifference
   have hFirstTwo : 2 ≤ D first := by
     have := hEEffective first
-    simp only [zsmul_eq_mul, Int.cast_ofNat, Pi.add_apply, Pi.mul_apply, Pi.ofNat_apply, one_chip,
+    simp only [zsmul_eq_mul, Int.cast_ofNat, Pi.add_apply, Pi.mul_apply, Pi.ofNat_apply, oneChip,
       ↓reduceIte, mul_one, le_add_iff_nonneg_right, ge_iff_le, D]
     omega
   have hSecondTwo : 2 ≤ Dsecond second := by
     have := hFEffective second
-    simp only [zsmul_eq_mul, Int.cast_ofNat, Pi.add_apply, Pi.mul_apply, Pi.ofNat_apply, one_chip,
+    simp only [zsmul_eq_mul, Int.cast_ofNat, Pi.add_apply, Pi.mul_apply, Pi.ofNat_apply, oneChip,
       ↓reduceIte, mul_one, le_add_iff_nonneg_right, ge_iff_le, Dsecond]
     omega
   have hRank : rank G D ≥ 1 := by
@@ -104,7 +104,7 @@ theorem exists_common_two_chip_class_genus_two
     rw [hDDegree, hGenus] at hRiemann
     exact hRiemann
   exact ⟨D, hDEffective, hDDegree, hRank,
-    ⟨D, hDEffective, linear_equiv.refl G D, hFirstTwo⟩,
+    ⟨D, hDEffective, linearEquiv.refl G D, hFirstTwo⟩,
     ⟨Dsecond, hDsecondEffective, hEquivSecond, hSecondTwo⟩⟩
 
 /-- A two-chip reflection move from `base` through `target`.  On a cycle,
@@ -112,14 +112,14 @@ the second output chip is the reflection of `target` in `base`.  Writing the
 move as an exact principal divisor keeps this interface independent of any
 particular cycle coordinates. -/
 def TwoChipReflection (base target : G.V) : Prop :=
-  ∃ (reflected : G.V) (script : firing_script G),
+  ∃ (reflected : G.V) (script : firingScript G),
     prin G script =
-      (-2 : ℤ) • one_chip base + one_chip target + one_chip reflected
+      (-2 : ℤ) • oneChip base + oneChip target + oneChip reflected
 
 /-- Borrow once at a loop marker.  When the marker is joined to its base by
 two unit edges and has no other neighbors, this is the complete two-chip
 reflection script. -/
-def markerBorrowScript (target : G.V) : firing_script G :=
+def markerBorrowScript (target : G.V) : firingScript G :=
   fun vertex => if vertex = target then -1 else 0
 
 /-- The split model's unsubdivided double edge realizes a two-chip reflection:
@@ -128,9 +128,9 @@ This is the length-one endpoint of the arbitrary-length cycle bridge still
 needed for the full loop lemma. -/
 theorem twoChipReflection_of_doubleEdgeMarker
     {base target : G.V} (hDistinct : base ≠ target)
-    (hDouble : num_edges G base target = 2)
+    (hDouble : numEdges G base target = 2)
     (hNoOther : ∀ vertex : G.V, vertex ≠ base →
-      num_edges G target vertex = 0) :
+      numEdges G target vertex = 0) :
     TwoChipReflection base target := by
   refine ⟨target, markerBorrowScript target, ?_⟩
   funext vertex
@@ -140,18 +140,18 @@ theorem twoChipReflection_of_doubleEdgeMarker
       (∑ neighbor : G.V,
         (markerBorrowScript target neighbor -
           markerBorrowScript target target) *
-          (num_edges G target neighbor : ℤ)) = _
+          (numEdges G target neighbor : ℤ)) = _
     have hSum :
         (∑ neighbor : G.V,
           (markerBorrowScript target neighbor -
             markerBorrowScript target target) *
-            (num_edges G target neighbor : ℤ)) =
-          (num_edges G target base : ℤ) := by
+            (numEdges G target neighbor : ℤ)) =
+          (numEdges G target base : ℤ) := by
       classical
       calc
         _ = (markerBorrowScript target base -
               markerBorrowScript target target) *
-              (num_edges G target base : ℤ) := by
+              (numEdges G target base : ℤ) := by
           apply Fintype.sum_eq_single base
           intro neighbor hNeighbor
           have hZero := hNoOther neighbor hNeighbor
@@ -161,44 +161,44 @@ theorem twoChipReflection_of_doubleEdgeMarker
           · simp [markerBorrowScript, hNeighborTarget, hZero]
         _ = _ := by simp [markerBorrowScript, hDistinct]
     rw [hSum, num_edges_symmetric, hDouble]
-    simp [one_chip, hDistinct.symm]
+    simp [oneChip, hDistinct.symm]
   · by_cases hBase : vertex = base
     · subst vertex
       change
         (∑ neighbor : G.V,
           (markerBorrowScript target neighbor -
             markerBorrowScript target base) *
-            (num_edges G base neighbor : ℤ)) = _
+            (numEdges G base neighbor : ℤ)) = _
       have hSum :
           (∑ neighbor : G.V,
             (markerBorrowScript target neighbor -
               markerBorrowScript target base) *
-              (num_edges G base neighbor : ℤ)) =
-            -(num_edges G base target : ℤ) := by
+              (numEdges G base neighbor : ℤ)) =
+            -(numEdges G base target : ℤ) := by
         classical
         calc
           _ = (markerBorrowScript target target -
                 markerBorrowScript target base) *
-                (num_edges G base target : ℤ) := by
+                (numEdges G base target : ℤ) := by
             apply Fintype.sum_eq_single target
             intro neighbor hNeighbor
             simp [markerBorrowScript, hNeighbor, hDistinct]
           _ = _ := by simp [markerBorrowScript, hDistinct]
       rw [hSum, hDouble]
-      simp [one_chip, hDistinct]
+      simp [oneChip, hDistinct]
     · change
         (∑ neighbor : G.V,
           (markerBorrowScript target neighbor -
             markerBorrowScript target vertex) *
-            (num_edges G vertex neighbor : ℤ)) = _
-      have hVertexTargetZero : num_edges G vertex target = 0 := by
+            (numEdges G vertex neighbor : ℤ)) = _
+      have hVertexTargetZero : numEdges G vertex target = 0 := by
         rw [num_edges_symmetric]
         exact hNoOther vertex hBase
       have hSum :
           (∑ neighbor : G.V,
             (markerBorrowScript target neighbor -
               markerBorrowScript target vertex) *
-              (num_edges G vertex neighbor : ℤ)) = 0 := by
+              (numEdges G vertex neighbor : ℤ)) = 0 := by
         classical
         apply Finset.sum_eq_zero
         intro neighbor _hNeighbor
@@ -207,7 +207,7 @@ theorem twoChipReflection_of_doubleEdgeMarker
           simp [markerBorrowScript, hTarget, hVertexTargetZero]
         · simp [markerBorrowScript, hTarget, hNeighborTarget]
       rw [hSum]
-      simp [one_chip, hTarget, hBase]
+      simp [oneChip, hTarget, hBase]
 
 /-! ## Reflection through two arbitrarily subdivided paths -/
 
@@ -245,7 +245,7 @@ theorem twoChipReflection_of_two_oriented_paths
     rw [hFirstTail, hFirstHead, h]
   let potential : Fin n → ℤ :=
     loopRampPotential marker (spec.length first)
-  let script : firing_script spec.graph := spec.interpolatedScript potential
+  let script : firingScript spec.graph := spec.interpolatedScript potential
   have hFirstRise :
       spec.coreRise potential first = -(spec.length first : ℤ) := by
     simp [SubdivisionGraph.Spec.coreRise, potential, loopRampPotential,
@@ -368,7 +368,7 @@ theorem twoChipReflection_of_two_oriented_paths
       simp_rw [hTerm]
       rw [sum_two_ite]
       by_cases hVB : vertex = base <;> by_cases hVM : vertex = marker <;>
-        simp_all [one_chip, SubdivisionGraph.Spec.coreVertex]
+        simp_all [oneChip, SubdivisionGraph.Spec.coreVertex]
     · obtain ⟨edge, offset⟩ := interior
       dsimp [script]
       change prin spec.graph (spec.interpolatedScript potential)
@@ -381,7 +381,7 @@ theorem twoChipReflection_of_two_oriented_paths
           omega
         have hOffset' : offset.val < spec.length first := by omega
         rw [hFirstStep, hFirstStep]
-        simp [hOffset, hOffset', one_chip,
+        simp [hOffset, hOffset', oneChip,
           SubdivisionGraph.Spec.coreVertex]
       · by_cases hES : edge = second
         · subst edge
@@ -390,7 +390,7 @@ theorem twoChipReflection_of_two_oriented_paths
             omega
           have hOffset' : offset.val < spec.length first := by omega
           rw [hSecondStep, hSecondStep]
-          simp [hOffset, hOffset', one_chip,
+          simp [hOffset, hOffset', oneChip,
             SubdivisionGraph.Spec.coreVertex]
         · rw [hOtherRise edge hEF hES]
           have hNext : offset.val + 1 < spec.length edge := by
@@ -401,7 +401,7 @@ theorem twoChipReflection_of_two_oriented_paths
             (i := offset.val + 1) hNext]
           rw [SubdivisionArithmetic.step_zero_of_lt (L := spec.length edge)
             (i := offset.val) hHere]
-          simp [one_chip, SubdivisionGraph.Spec.coreVertex]
+          simp [oneChip, SubdivisionGraph.Spec.coreVertex]
   · have hStrict : spec.length first < spec.length second :=
       lt_of_le_of_ne hLengthOrder hEqual
     have hFirstLength := spec.length_pos first
@@ -457,7 +457,7 @@ theorem twoChipReflection_of_two_oriented_paths
       simp_rw [hTerm]
       rw [sum_two_ite]
       by_cases hVB : vertex = base <;> by_cases hVM : vertex = marker <;>
-        simp_all [one_chip, SubdivisionGraph.Spec.coreVertex,
+        simp_all [oneChip, SubdivisionGraph.Spec.coreVertex,
           SubdivisionGraph.Spec.interiorVertex]
     · obtain ⟨edge, interiorOffset⟩ := interior
       dsimp [script]
@@ -470,7 +470,7 @@ theorem twoChipReflection_of_two_oriented_paths
           by have := interiorOffset.isLt; omega
         have hOffset' : interiorOffset.val < spec.length first := by omega
         rw [hFirstStep, hFirstStep]
-        simp [hOffset, hOffset', one_chip, hFirstSecond,
+        simp [hOffset, hOffset', oneChip, hFirstSecond,
           SubdivisionGraph.Spec.coreVertex,
           SubdivisionGraph.Spec.interiorVertex]
       · by_cases hES : edge = second
@@ -548,14 +548,14 @@ at least two there remains effective. -/
 theorem effective_sub_two_chips
     {E : CFDiv G} {base : G.V}
     (hEffective : effective E) (hTwo : 2 ≤ E base) :
-    effective (E - (2 : ℤ) • one_chip base) := by
+    effective (E - (2 : ℤ) • oneChip base) := by
   intro vertex
   by_cases hVertex : vertex = base
   · subst vertex
-    simp only [zsmul_eq_mul, Int.cast_ofNat, Pi.sub_apply, Pi.mul_apply, Pi.ofNat_apply, one_chip,
+    simp only [zsmul_eq_mul, Int.cast_ofNat, Pi.sub_apply, Pi.mul_apply, Pi.ofNat_apply, oneChip,
       ↓reduceIte, mul_one, Int.sub_nonneg]
     omega
-  · simp [one_chip, hVertex, hEffective vertex]
+  · simp [oneChip, hVertex, hEffective vertex]
 
 /-- A two-chip representative and a loop reflection make the divisor reach
 the chosen loop vertex. -/
@@ -567,23 +567,23 @@ theorem reaches_of_twoChipsRepresentative_of_twoChipReflection
   obtain ⟨E, hEEffective, hDE, hTwo⟩ := hRepresentative
   obtain ⟨reflected, script, hScript⟩ := hReflection
   let F : CFDiv G :=
-    E - (2 : ℤ) • one_chip base + one_chip reflected
+    E - (2 : ℤ) • oneChip base + oneChip reflected
   have hFEffective : effective F := by
     exact (Eff G).add_mem
       (effective_sub_two_chips hEEffective hTwo)
       (eff_one_chip reflected)
   have hRewrite :
-      E - one_chip target + prin G script = F := by
+      E - oneChip target + prin G script = F := by
     rw [hScript]
     dsimp [F]
     abel
   have hSubEquiv :
-      linear_equiv G (D - one_chip target) (E - one_chip target) :=
+      linearEquiv G (D - oneChip target) (E - oneChip target) :=
     StrongSeparator.linearEquiv_sub_one_chip hDE target
   have hFireEquiv :
-      linear_equiv G (E - one_chip target)
-        (E - one_chip target + prin G script) :=
-    StrongSeparator.linearEquiv_add_prin (E - one_chip target) script
+      linearEquiv G (E - oneChip target)
+        (E - oneChip target + prin G script) :=
+    StrongSeparator.linearEquiv_add_prin (E - oneChip target) script
   rw [hRewrite] at hFireEquiv
   exact ⟨F, hFEffective, hSubEquiv.trans hFireEquiv⟩
 
@@ -593,7 +593,7 @@ independently of loops and avoids forcing callers through the affine-potential
 certificate format. -/
 theorem bnExists_of_reaches_coreVertices
     {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
-    (hConnected : graph_connected spec.graph)
+    (hConnected : graphConnected spec.graph)
     (D : CFDiv spec.graph) (degree : ℤ)
     (hDegree : deg D = degree)
     (hReaches : ∀ vertex : Fin n,
@@ -649,7 +649,7 @@ theorem bnExists_three_of_two_loop_split_witness
             (core.markerVertex marker))) :
     BNExists (splitSubdivisionSpec data hValid length hLength).graph 1 3 := by
   let spec := splitSubdivisionSpec data hValid length hLength
-  have hConnected : graph_connected spec.graph := by
+  have hConnected : graphConnected spec.graph := by
     exact spec.graph_connected_of_coreConnected
       (data.splitCore_connected_of_valid hValid)
   apply bnExists_of_reaches_coreVertices spec hConnected D 3 hDegree

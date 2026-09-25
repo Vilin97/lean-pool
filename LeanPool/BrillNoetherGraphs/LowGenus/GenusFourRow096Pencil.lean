@@ -205,8 +205,8 @@ theorem kPos_le (htri : spec.length 0 ≤ spec.length 3 + spec.length 8) :
 /-- The regime-1 divisor. -/
 def pencil1 (htri : spec.length 0 ≤ spec.length 3 + spec.length 8) :
     CFDiv spec.graph :=
-  one_chip (spec.coreVertex 0) + one_chip (spec.coreVertex 5) +
-    one_chip (spec.pathVertex 3 ⟨kPos spec, by
+  oneChip (spec.coreVertex 0) + oneChip (spec.coreVertex 5) +
+    oneChip (spec.pathVertex 3 ⟨kPos spec, by
       have := kPos_le spec htri; omega⟩)
 
 theorem deg_pencil1 (htri : spec.length 0 ≤ spec.length 3 + spec.length 8) :
@@ -225,8 +225,8 @@ def sPos : ℕ :=
 No hypothesis is needed to state it: the offset `length e6 - s` is a path
 position of `e6` whatever the lengths are. -/
 def pencil2 : CFDiv spec.graph :=
-  one_chip (spec.coreVertex 0) + one_chip (spec.coreVertex 5) +
-    one_chip (spec.pathVertex 6 ⟨spec.length 6 - sPos spec, by omega⟩)
+  oneChip (spec.coreVertex 0) + oneChip (spec.coreVertex 5) +
+    oneChip (spec.pathVertex 6 ⟨spec.length 6 - sPos spec, by omega⟩)
 
 theorem deg_pencil2 : deg (pencil2 spec) = 3 := by
   unfold pencil2
@@ -243,7 +243,7 @@ Laplacian carries one chip forward by `t` along the first slot and one chip
 back by `t` along the second, so it preserves the total depth `τ`.  Proving
 that once, for an arbitrary spec, is what keeps the rest of this file short.
 
-The two `one_chip` readings below are stated with *nested* conditionals rather
+The two `oneChip` readings below are stated with *nested* conditionals rather
 than conjunctive ones on purpose: `split_ifs` treats a conjunction as a single
 atom, so the conjunctive form makes the case split in `prin_twoSlotRamp`
 exponentially larger than it needs to be. -/
@@ -256,7 +256,7 @@ variable {n p : ℕ} {spec : SubdivisionGraph.Spec n p}
 only at the two ends of its own slot. -/
 theorem one_chip_pathVertex_core (e : Fin p) (q : spec.PathPosition e)
     (v : Fin n) :
-    one_chip (G := spec.graph) (spec.pathVertex e q) (spec.coreVertex v) =
+    oneChip (G := spec.graph) (spec.pathVertex e q) (spec.coreVertex v) =
       (if q.val = 0 then (if spec.core.tail e = v then 1 else 0) else 0) +
         (if q.val = spec.length e then
           (if spec.core.head e = v then 1 else 0) else 0) := by
@@ -265,20 +265,20 @@ theorem one_chip_pathVertex_core (e : Fin p) (q : spec.PathPosition e)
   by_cases hz : q.val = 0
   · rw [dif_pos hz, if_neg (show ¬(q.val = spec.length e) by omega), add_zero,
       if_pos hz]
-    simp [one_chip, SubdivisionGraph.Spec.coreVertex, eq_comm]
+    simp [oneChip, SubdivisionGraph.Spec.coreVertex, eq_comm]
   · rw [dif_neg hz, if_neg hz, zero_add]
     by_cases hl : q.val = spec.length e
     · rw [dif_pos hl, if_pos hl]
-      simp [one_chip, SubdivisionGraph.Spec.coreVertex, eq_comm]
+      simp [oneChip, SubdivisionGraph.Spec.coreVertex, eq_comm]
     · rw [dif_neg hl, if_neg hl]
-      simp only [one_chip]
+      simp only [oneChip]
       exact if_neg (coreVertex_ne_interiorVertex spec v e _)
 
 /-- The same reading at an interior vertex: the chip registers exactly when the
 slot matches and the depth matches. -/
 theorem one_chip_pathVertex_int (e : Fin p) (q : spec.PathPosition e)
     (e' : Fin p) (off : Fin (spec.length e' - 1)) :
-    one_chip (G := spec.graph) (spec.pathVertex e q)
+    oneChip (G := spec.graph) (spec.pathVertex e q)
         (spec.interiorVertex e' off) =
       if e = e' then (if off.val + 1 = q.val then 1 else 0) else 0 := by
   have hpos := spec.length_pos e
@@ -286,7 +286,7 @@ theorem one_chip_pathVertex_int (e : Fin p) (q : spec.PathPosition e)
   unfold SubdivisionGraph.Spec.pathVertex
   by_cases hz : q.val = 0
   · rw [dif_pos hz]
-    simp only [one_chip]
+    simp only [oneChip]
     rw [if_neg fun hEq => (coreVertex_ne_interiorVertex spec _ e' off) hEq.symm]
     by_cases he : e = e'
     · rw [if_pos he, if_neg (by omega)]
@@ -294,7 +294,7 @@ theorem one_chip_pathVertex_int (e : Fin p) (q : spec.PathPosition e)
   · rw [dif_neg hz]
     by_cases hl : q.val = spec.length e
     · rw [dif_pos hl]
-      simp only [one_chip]
+      simp only [oneChip]
       rw [if_neg fun hEq =>
         (coreVertex_ne_interiorVertex spec _ e' off) hEq.symm]
       by_cases he : e = e'
@@ -302,7 +302,7 @@ theorem one_chip_pathVertex_int (e : Fin p) (q : spec.PathPosition e)
         rw [if_pos rfl, if_neg (by omega)]
       · rw [if_neg he]
     · rw [dif_neg hl]
-      simp only [one_chip]
+      simp only [oneChip]
       by_cases he : e = e'
       · subst he
         rw [if_pos rfl]
@@ -358,8 +358,8 @@ theorem prin_cutRamp {pot : Fin n → ℤ} {sgn : Fin p → ℤ} {lo : Fin p →
     (hpos' : ∀ e ∈ A, (pos' e).val = lo e + t) :
     prin spec.graph (rampScript spec pot sgn lo t) =
       ∑ e ∈ A, sgn e •
-        (one_chip (spec.pathVertex e (pos e)) -
-          one_chip (spec.pathVertex e (pos' e))) := by
+        (oneChip (spec.pathVertex e (pos e)) -
+          oneChip (spec.pathVertex e (pos' e))) := by
   refine divisor_ext (fun v => ?_) (fun e' off => ?_)
   · -- Core vertices: only the active slots contribute to the endpoint sum, and
     -- there the two sides match term by term.
@@ -418,9 +418,9 @@ theorem prin_twoSlotRamp {pot : Fin n → ℤ} {sgn : Fin p → ℤ} {lo : Fin p
     (hpα : pα.val = lo α) (hpα' : pα'.val = lo α + t)
     (hpβ : pβ.val = lo β) (hpβ' : pβ'.val = lo β + t) :
     prin spec.graph (rampScript spec pot sgn lo t) =
-      one_chip (spec.pathVertex α pα') - one_chip (spec.pathVertex α pα)
-        + one_chip (spec.pathVertex β pβ)
-        - one_chip (spec.pathVertex β pβ') := by
+      oneChip (spec.pathVertex α pα') - oneChip (spec.pathVertex α pα)
+        + oneChip (spec.pathVertex β pβ)
+        - oneChip (spec.pathVertex β pβ') := by
   -- Total position functions agreeing with the two supplied pairs on `{α, β}`;
   -- the `min` keeps them in range on the inactive slots.
   have hmem : ∀ e ∈ ({α, β} : Finset (Fin p)), e = α ∨ e = β := by
@@ -472,10 +472,10 @@ theorem prin_threeSlotRampNeg {pot : Fin n → ℤ} {sgn : Fin p → ℤ}
     (hpβ : pβ.val = lo β) (hpβ' : pβ'.val = lo β + t)
     (hpγ : pγ.val = lo γ) (hpγ' : pγ'.val = lo γ + t) :
     prin spec.graph (rampScript spec pot sgn lo t) =
-      one_chip (spec.pathVertex α pα') - one_chip (spec.pathVertex α pα)
-        + (one_chip (spec.pathVertex β pβ') - one_chip (spec.pathVertex β pβ))
-        + (one_chip (spec.pathVertex γ pγ') -
-            one_chip (spec.pathVertex γ pγ)) := by
+      oneChip (spec.pathVertex α pα') - oneChip (spec.pathVertex α pα)
+        + (oneChip (spec.pathVertex β pβ') - oneChip (spec.pathVertex β pβ))
+        + (oneChip (spec.pathVertex γ pγ') -
+            oneChip (spec.pathVertex γ pγ)) := by
   have hmem : ∀ e ∈ ({α, β, γ} : Finset (Fin p)), e = α ∨ e = β ∨ e = γ := by
     intro e he
     simpa using he
@@ -525,25 +525,25 @@ variable {n p : ℕ}
 /-- Three chips, at arbitrary vertices of a subdivision. -/
 def cfg (spec : SubdivisionGraph.Spec n p) (u v w : spec.graph.V) :
     CFDiv spec.graph :=
-  one_chip u + one_chip v + one_chip w
+  oneChip u + oneChip v + oneChip w
 
 theorem effective_cfg (spec : SubdivisionGraph.Spec n p)
     (u v w : spec.graph.V) : effective (cfg spec u v w) := by
   intro z
-  simp only [cfg, Pi.add_apply, one_chip]
+  simp only [cfg, Pi.add_apply, oneChip]
   split_ifs <;> norm_num
 
 /-- A configuration carries a chip at `z` as soon as one of its three vertices
 is `z`. -/
 theorem one_le_cfg (spec : SubdivisionGraph.Spec n p) (u v w z : spec.graph.V)
     (h : u = z ∨ v = z ∨ w = z) : 1 ≤ cfg spec u v w z := by
-  have hnn : ∀ y : spec.graph.V, 0 ≤ one_chip (G := spec.graph) y z := by
+  have hnn : ∀ y : spec.graph.V, 0 ≤ oneChip (G := spec.graph) y z := by
     intro y
-    simp only [one_chip]
+    simp only [oneChip]
     split_ifs <;> norm_num
-  have hone : ∀ y : spec.graph.V, y = z → one_chip (G := spec.graph) y z = 1 := by
+  have hone : ∀ y : spec.graph.V, y = z → oneChip (G := spec.graph) y z = 1 := by
     intro y hy
-    simp [one_chip, hy]
+    simp [oneChip, hy]
   simp only [cfg, Pi.add_apply]
   rcases h with h | h | h
   · have h1 := hone _ h
@@ -610,14 +610,14 @@ variable {spec : SubdivisionGraph.Spec 6 9}
 /-- The `τ`-family: one chip on each single slot. -/
 def tauDiv (spec : SubdivisionGraph.Spec 6 9) (j : spec.PathPosition 0)
     (k : spec.PathPosition 3) (m : spec.PathPosition 8) : CFDiv spec.graph :=
-  one_chip (spec.pathVertex 0 j) + one_chip (spec.pathVertex 3 k) +
-    one_chip (spec.pathVertex 8 m)
+  oneChip (spec.pathVertex 0 j) + oneChip (spec.pathVertex 3 k) +
+    oneChip (spec.pathVertex 8 m)
 
 theorem effective_tauDiv (spec : SubdivisionGraph.Spec 6 9)
     (j : spec.PathPosition 0) (k : spec.PathPosition 3)
     (m : spec.PathPosition 8) : effective (tauDiv spec j k m) := by
   intro v
-  simp only [tauDiv, Pi.add_apply, one_chip]
+  simp only [tauDiv, Pi.add_apply, oneChip]
   split_ifs <;> norm_num
 
 /-- A `τ`-family member carries a chip at `u` as soon as one of its three
@@ -630,14 +630,14 @@ theorem one_le_tauDiv_of_eq (spec : SubdivisionGraph.Spec 6 9)
       spec.pathVertex 8 m = spec.coreVertex u) :
     1 ≤ tauDiv spec j k m (spec.coreVertex u) := by
   have hnn : ∀ w : spec.graph.V,
-      0 ≤ one_chip (G := spec.graph) w (spec.coreVertex u) := by
+      0 ≤ oneChip (G := spec.graph) w (spec.coreVertex u) := by
     intro w
-    simp only [one_chip]
+    simp only [oneChip]
     split_ifs <;> norm_num
   have hone : ∀ w : spec.graph.V, w = spec.coreVertex u →
-      one_chip (G := spec.graph) w (spec.coreVertex u) = 1 := by
+      oneChip (G := spec.graph) w (spec.coreVertex u) = 1 := by
     intro w hw
-    simp [one_chip, hw]
+    simp [oneChip, hw]
   simp only [tauDiv, Pi.add_apply]
   rcases h with h | h | h
   · have h1 := hone _ h
@@ -844,7 +844,7 @@ member one of whose three positions names `u` proves that the pencil reaches
 `one_le_tauDiv_of_eq`. -/
 private theorem reaches_of_tau
     (htri : spec.length 0 ≤ spec.length 3 + spec.length 8)
-    (script : firing_script spec.graph) (j : spec.PathPosition 0)
+    (script : firingScript spec.graph) (j : spec.PathPosition 0)
     (k : spec.PathPosition 3) (m : spec.PathPosition 8)
     (heq : pencil1 spec htri + prin spec.graph script = tauDiv spec j k m)
     (u : Fin 6)
@@ -1023,7 +1023,7 @@ def sideD : Fin 6 → Bool := ![true, true, true, true, false, true]
 
 /-- Coverage bookkeeping for configurations, once. -/
 theorem reaches_of_cfg (D : CFDiv spec.graph)
-    (script : firing_script spec.graph) (u v w z : spec.graph.V)
+    (script : firingScript spec.graph) (u v w z : spec.graph.V)
     (heq : D + prin spec.graph script = cfg spec u v w)
     (hz : u = z ∨ v = z ∨ w = z) :
     Certificate.StrongSeparator.Reaches spec.graph D z :=
@@ -1195,7 +1195,7 @@ at the head of `e0`, or the star march at `v4` runs for
 `t = min(a₄, a₅, a₀ − j)` steps and whichever of the three slots attains the
 minimum delivers its chip to `v4`. -/
 theorem reaches_v4_of_star (hn : IsNecklace spec) (D : CFDiv spec.graph)
-    (script : firing_script spec.graph) (j : spec.PathPosition 0)
+    (script : firingScript spec.graph) (j : spec.PathPosition 0)
     (heq : D + prin spec.graph script =
       cfg spec (spec.pathVertex 0 j) (spec.coreVertex 1) (spec.coreVertex 1)) :
     Certificate.StrongSeparator.Reaches spec.graph D (spec.coreVertex 4) := by

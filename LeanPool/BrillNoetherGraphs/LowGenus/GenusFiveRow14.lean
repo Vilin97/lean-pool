@@ -576,7 +576,7 @@ theorem residual_effective
     (hRepReach : ∀ x y : Fin 8,
       d.rep x = d.rep y ↔ ReachIn row14Core F x y)
     (hFZero : ∀ e : Fin 12, e ∈ F ↔ d.length e = 0) :
-    effective (rowDivisor d - one_chip (d.coreVertex 6) +
+    effective (rowDivisor d - oneChip (d.coreVertex 6) +
       prin d.graph (d.interpolatedScript (firingPotential d))) := by
   have hInv : d.RepInvariant (firingPotential d) :=
     firingPotential_repInvariant d
@@ -589,7 +589,7 @@ theorem residual_effective
       exact Subtype.ext hr.symm
     rw [hVertex]
     change 0 ≤ rowDivisor d (d.coreVertex r) -
-      one_chip (G := d.graph) (d.coreVertex 6) (d.coreVertex r) +
+      oneChip (G := d.graph) (d.coreVertex 6) (d.coreVertex r) +
       prin d.graph (d.interpolatedScript (firingPotential d)) (d.coreVertex r)
     rw [rowDivisor, d.coreClassDivisor_coreVertex]
     rw [← allocated_class_sum_eq d hCore r]
@@ -597,11 +597,11 @@ theorem residual_effective
     have hOwner := targetOwner_rep_eq_center d hCore
     have hIndicator := sum_indicatorWeight_class d (targetOwner d) r
     have hOneChip :
-        one_chip (G := d.graph) (d.coreVertex 6) (d.coreVertex r) =
+        oneChip (G := d.graph) (d.coreVertex 6) (d.coreVertex r) =
           ∑ v ∈ Finset.univ.filter (fun v : Fin 8 => d.rep v = d.rep r),
             indicatorWeight v (targetOwner d) := by
       rw [hIndicator]
-      simp only [one_chip, d.coreVertex_eq_iff]
+      simp only [oneChip, d.coreVertex_eq_iff]
       rw [hOwner]
       simp only [eq_comm]
     rw [hOneChip]
@@ -612,14 +612,14 @@ theorem residual_effective
       localResidual_nonneg d hCore F hRepReach hFZero v
   · obtain ⟨edge, offset⟩ := interior
     change 0 ≤ rowDivisor d (d.interiorVertex edge offset) -
-      one_chip (G := d.graph) (d.coreVertex 6)
+      oneChip (G := d.graph) (d.coreVertex 6)
         (d.interiorVertex edge offset) +
       prin d.graph (d.interpolatedScript (firingPotential d))
         (d.interiorVertex edge offset)
     rw [rowDivisor, d.coreClassDivisor_interiorVertex]
     have hNe : d.coreVertex 6 ≠ d.interiorVertex edge offset := by
       simp [DegSpec.coreVertex, DegSpec.interiorVertex]
-    simp only [one_chip, if_neg hNe.symm, zero_sub, neg_zero, zero_add]
+    simp only [oneChip, if_neg hNe.symm, zero_sub, neg_zero, zero_add]
     exact d.prin_interpolatedScript_interiorVertex_nonneg hInv edge offset
 
 /-! ## Combining the two families -/

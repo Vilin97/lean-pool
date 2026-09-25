@@ -31,16 +31,16 @@ theorem vertexWedge_rank_ge_iff_profile_inequalities_all_int
     (D : CFDiv G) (E : CFDiv H) (k : ℤ) :
     rank (vertexWedge G H x y) (wedgeAddDivisor G H x y D E) ≥ k ↔
       ∀ ell : ℤ,
-        rank G (D - (ell + 1) • one_chip x) +
-            rank H (E + ell • one_chip y) + 1 ≥ k := by
+        rank G (D - (ell + 1) • oneChip x) +
+            rank H (E + ell • oneChip y) + 1 ≥ k := by
   by_cases hk : 0 ≤ k
   · exact vertexWedge_rank_ge_iff_profile_inequalities G H x y D E k hk
   · have hk' : k ≤ -1 := by omega
     constructor
     · intro _ ell
       have hLeft := rank_geq_neg_one G
-        (D - (ell + 1) • one_chip x)
-      have hRight := rank_geq_neg_one H (E + ell • one_chip y)
+        (D - (ell + 1) • oneChip x)
+      have hRight := rank_geq_neg_one H (E + ell • oneChip y)
       omega
     · intro _
       have hRank := rank_geq_neg_one (vertexWedge G H x y)
@@ -55,17 +55,17 @@ theorem wedgeAddDivisor_transmissionTwist_sameLeft
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (E : CFDiv H) (p q : G.V) (a b : ℤ) :
     wedgeAddDivisor G H x y D E +
-        a • one_chip (G := vertexWedge G H x y) (Sum.inl p) -
-        b • one_chip (G := vertexWedge G H x y) (Sum.inl q) =
+        a • oneChip (G := vertexWedge G H x y) (Sum.inl p) -
+        b • oneChip (G := vertexWedge G H x y) (Sum.inl q) =
       wedgeAddDivisor G H x y
-        (D + a • one_chip p - b • one_chip q) E := by
-  have hP : a • one_chip (G := vertexWedge G H x y) (Sum.inl p) =
-      wedgeAddDivisor G H x y (a • one_chip p) 0 := by
+        (D + a • oneChip p - b • oneChip q) E := by
+  have hP : a • oneChip (G := vertexWedge G H x y) (Sum.inl p) =
+      wedgeAddDivisor G H x y (a • oneChip p) 0 := by
     rw [← wedgeAddDivisor_one_chip_left G H x y p,
       wedgeAddDivisor_zsmul]
     simp
-  have hQ : b • one_chip (G := vertexWedge G H x y) (Sum.inl q) =
-      wedgeAddDivisor G H x y (b • one_chip q) 0 := by
+  have hQ : b • oneChip (G := vertexWedge G H x y) (Sum.inl q) =
+      wedgeAddDivisor G H x y (b • oneChip q) 0 := by
     rw [← wedgeAddDivisor_one_chip_left G H x y q,
       wedgeAddDivisor_zsmul]
     simp
@@ -79,9 +79,9 @@ def WedgeSameLeftTransmissionRowProfile
     (D : CFDiv G) (E : CFDiv H) (p q : G.V)
     (tau : AspPerm) (a b ell : ℤ) : Prop :=
   rank G
-        (D + a • one_chip p - b • one_chip q -
-          (ell + 1) • one_chip x) +
-      rank H (E + ell • one_chip y) + 1 ≥
+        (D + a • oneChip p - b • oneChip q -
+          (ell + 1) • oneChip x) +
+      rank H (E + ell • oneChip y) + 1 ≥
     tau.s (a + 1) b - 1
 
 /-- Exact row criterion when both transmission marks lie on the left factor. -/
@@ -150,21 +150,21 @@ theorem wedgeAddDivisor_transmissionTwist_sameRight
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (E : CFDiv H) (p q : H.V) (a b : ℤ) :
     wedgeAddDivisor G H x y D E +
-        a • one_chip (G := vertexWedge G H x y)
+        a • oneChip (G := vertexWedge G H x y)
           (wedgeRightVertex G H x y p) -
-        b • one_chip (G := vertexWedge G H x y)
+        b • oneChip (G := vertexWedge G H x y)
           (wedgeRightVertex G H x y q) =
       wedgeAddDivisor G H x y D
-        (E + a • one_chip p - b • one_chip q) := by
-  have hP : a • one_chip (G := vertexWedge G H x y)
+        (E + a • oneChip p - b • oneChip q) := by
+  have hP : a • oneChip (G := vertexWedge G H x y)
       (wedgeRightVertex G H x y p) =
-      wedgeAddDivisor G H x y 0 (a • one_chip p) := by
+      wedgeAddDivisor G H x y 0 (a • oneChip p) := by
     rw [← wedgeAddDivisor_one_chip_right G H x y p,
       wedgeAddDivisor_zsmul]
     simp
-  have hQ : b • one_chip (G := vertexWedge G H x y)
+  have hQ : b • oneChip (G := vertexWedge G H x y)
       (wedgeRightVertex G H x y q) =
-      wedgeAddDivisor G H x y 0 (b • one_chip q) := by
+      wedgeAddDivisor G H x y 0 (b • oneChip q) := by
     rw [← wedgeAddDivisor_one_chip_right G H x y q,
       wedgeAddDivisor_zsmul]
     simp
@@ -177,9 +177,9 @@ def WedgeSameRightTransmissionRowProfile
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (E : CFDiv H) (p q : H.V)
     (tau : AspPerm) (a b ell : ℤ) : Prop :=
-  rank G (D - (ell + 1) • one_chip x) +
+  rank G (D - (ell + 1) • oneChip x) +
       rank H
-        (E + a • one_chip p - b • one_chip q + ell • one_chip y) + 1 ≥
+        (E + a • oneChip p - b • oneChip q + ell • oneChip y) + 1 ≥
     tau.s (a + 1) b - 1
 
 /-- Exact row criterion when both transmission marks lie on the right factor. -/

@@ -38,10 +38,10 @@ noncomputable def sectionFiveRankDropSum
     (M : TwiceMarked) (D : CFDiv M.graph) (k : ℕ) : ℤ :=
   ∑ m : Fin k,
     (rank M.graph
-        (D + ((((m : ℕ) : ℤ) - 1) • one_chip M.u) -
-          ((m : ℕ) : ℤ) • one_chip M.v) -
+        (D + ((((m : ℕ) : ℤ) - 1) • oneChip M.u) -
+          ((m : ℕ) : ℤ) • oneChip M.v) -
       rank M.graph
-        (D + ((((m : ℕ) : ℤ) - 2) • one_chip M.u) -
-          ((m : ℕ) : ℤ) • one_chip M.v))
+        (D + ((((m : ℕ) : ℤ) - 2) • oneChip M.u) -
+          ((m : ℕ) : ℤ) • oneChip M.v))
 
 end Bananas

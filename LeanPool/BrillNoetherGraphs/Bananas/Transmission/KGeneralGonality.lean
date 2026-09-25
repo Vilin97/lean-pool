@@ -36,7 +36,7 @@ deeper quadrant. -/
 theorem normalizeFirstInversion_injective_on_crossing_of_deep_empty
     {k : ℕ} {tau : ℤ → ℤ} (hk : 0 < k)
     (hAffine : IsKAffine k tau)
-    (hDeep : southeast_set tau (1 - (k : ℤ)) 0 = ∅) :
+    (hDeep : southeastSet tau (1 - (k : ℤ)) 0 = ∅) :
     Set.InjOn (normalizeFirstInversion k) (crossingInversions tau) := by
   rintro ⟨a, b⟩ hp ⟨a', b'⟩ hp' hSame
   rcases hp with ⟨ha, hb⟩
@@ -68,7 +68,7 @@ theorem normalizeFirstInversion_injective_on_crossing_of_deep_empty
     · have hShift := hAffine.iterate_int b' (-q)
       have hArg : b' + (-q) * (k : ℤ) = b := by rw [hbb']; ring
       rw [hArg] at hShift
-      have hDeepMem : b' ∈ southeast_set tau (1 - (k : ℤ)) 0 := by
+      have hDeepMem : b' ∈ southeastSet tau (1 - (k : ℤ)) 0 := by
         change 0 ≤ b' ∧ tau b' < 1 - (k : ℤ)
         constructor
         · exact hb'.1
@@ -79,7 +79,7 @@ theorem normalizeFirstInversion_injective_on_crossing_of_deep_empty
     · have hShift := hAffine.iterate_int b q
       have hArg : b + q * (k : ℤ) = b' := hbb'.symm
       rw [hArg] at hShift
-      have hDeepMem : b ∈ southeast_set tau (1 - (k : ℤ)) 0 := by
+      have hDeepMem : b ∈ southeastSet tau (1 - (k : ℤ)) 0 := by
         change 0 ≤ b ∧ tau b < 1 - (k : ℤ)
         constructor
         · exact hb.1
@@ -98,29 +98,29 @@ Brill--Noether rectangle to inject into the `k`-inversions. -/
 theorem crossingInversions_ncard_le_kInversionCount_of_degree_lt_period
     {M : TwiceMarked} {D : CFDiv M.graph} {d : ℤ} {k : ℕ}
     (hk : 0 < k)
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : _root_.graphConnected M.graph)
     (hdeg : deg D = d) (hdk : d < k)
     {tau : ℤ → ℤ} (hTau : IsTransmissionPermutation M D tau)
     (hAffine : IsKAffine k tau) :
     (crossingInversions tau).ncard ≤ kInversionCount k tau := by
   have hTwistDeg :
-      deg (D + (-(k : ℤ)) • one_chip M.u - (0 : ℤ) • one_chip M.v) < 0 := by
+      deg (D + (-(k : ℤ)) • oneChip M.u - (0 : ℤ) • oneChip M.v) < 0 := by
     rw [deg.map_sub, deg.map_add, map_zsmul, map_zsmul,
       deg_one_chip, deg_one_chip, hdeg]
     simp
     omega
   have hTwistRank :
       rank M.graph
-        (D + (-(k : ℤ)) • one_chip M.u - (0 : ℤ) • one_chip M.v) = -1 :=
+        (D + (-(k : ℤ)) • oneChip M.u - (0 : ℤ) • oneChip M.v) = -1 :=
     rank_neg_one_of_deg_neg M.graph _ hTwistDeg
   have hDeepCard := transmission_rank_eq_southeast_ncard
     M D hconn tau hTau (-(k : ℤ)) 0
-  have hDeepFinite : (southeast_set tau (1 - (k : ℤ)) 0).Finite := by
+  have hDeepFinite : (southeastSet tau (1 - (k : ℤ)) 0).Finite := by
     obtain ⟨sigma, hSigmaTau, -⟩ :=
       transmissionPermutation_rankSlipFace M D hconn tau hTau
     rw [← hSigmaTau]
     exact sigma.se_finite _ _
-  have hDeep : southeast_set tau (1 - (k : ℤ)) 0 = ∅ := by
+  have hDeep : southeastSet tau (1 - (k : ℤ)) 0 = ∅ := by
     apply (Set.ncard_eq_zero hDeepFinite).mp
     rw [show -(k : ℤ) + 1 = 1 - (k : ℤ) by ring] at hDeepCard
     omega
@@ -137,8 +137,8 @@ theorem crossingInversions_ncard_le_kInversionCount_of_degree_lt_period
 supplies the degree-`k` pencil `k u`. -/
 theorem KGeneralTransmission.rank_period_smul_one_chip_ge_one
     {M : TwiceMarked} {k : ℕ} (hK : KGeneralTransmission M k)
-    (hconn : _root_.graph_connected M.graph) :
-    rank M.graph ((k : ℤ) • one_chip M.u) ≥ 1 := by
+    (hconn : _root_.graphConnected M.graph) :
+    rank M.graph ((k : ℤ) • oneChip M.u) ≥ 1 := by
   obtain ⟨tau, hTau, hAffine, _hfinite, _hCount⟩ :=
     hK.2.2 (0 : CFDiv M.graph)
   have hk : 0 < k := hK.1.1
@@ -146,27 +146,27 @@ theorem KGeneralTransmission.rank_period_smul_one_chip_ge_one
     M 0 hconn tau hTau 0 0
   have hZeroRank : rank M.graph (0 : CFDiv M.graph) = 0 :=
     zero_divisor_rank M.graph
-  have hCardOne : (southeast_set tau 1 0).ncard = 1 := by
+  have hCardOne : (southeastSet tau 1 0).ncard = 1 := by
     simpa [hZeroRank] using hZero.symm
-  have hFinite : (southeast_set tau 1 0).Finite := by
+  have hFinite : (southeastSet tau 1 0).Finite := by
     obtain ⟨sigma, hSigmaTau, -⟩ :=
       transmissionPermutation_rankSlipFace M 0 hconn tau hTau
     rw [← hSigmaTau]
     exact sigma.se_finite _ _
-  have hNonempty : (southeast_set tau 1 0).Nonempty := by
+  have hNonempty : (southeastSet tau 1 0).Nonempty := by
     apply Set.nonempty_of_ncard_ne_zero
     omega
   obtain ⟨m, hm⟩ := hNonempty
   have hm' : 0 ≤ m ∧ tau m < 1 := hm
-  have hmk : m + k ∈ southeast_set tau ((k : ℤ) + 1) 0 := by
+  have hmk : m + k ∈ southeastSet tau ((k : ℤ) + 1) 0 := by
     change 0 ≤ m + (k : ℤ) ∧ tau (m + k) < (k : ℤ) + 1
     rw [hAffine m]
     omega
-  have hmBig : m ∈ southeast_set tau ((k : ℤ) + 1) 0 := by
+  have hmBig : m ∈ southeastSet tau ((k : ℤ) + 1) 0 := by
     change 0 ≤ m ∧ tau m < (k : ℤ) + 1
     omega
   have hPair : ({m, m + (k : ℤ)} : Set ℤ) ⊆
-      southeast_set tau ((k : ℤ) + 1) 0 := by
+      southeastSet tau ((k : ℤ) + 1) 0 := by
     intro x hx
     rcases hx with (rfl | rfl)
     · exact hmBig
@@ -174,19 +174,19 @@ theorem KGeneralTransmission.rank_period_smul_one_chip_ge_one
   have hPairCard : ({m, m + (k : ℤ)} : Set ℤ).ncard = 2 := by
     rw [Set.ncard_pair]
     omega
-  have hBigFinite : (southeast_set tau ((k : ℤ) + 1) 0).Finite := by
+  have hBigFinite : (southeastSet tau ((k : ℤ) + 1) 0).Finite := by
     obtain ⟨sigma, hSigmaTau, -⟩ :=
       transmissionPermutation_rankSlipFace M 0 hconn tau hTau
     rw [← hSigmaTau]
     exact sigma.se_finite _ _
-  have hTwo : 2 ≤ (southeast_set tau ((k : ℤ) + 1) 0).ncard := by
+  have hTwo : 2 ≤ (southeastSet tau ((k : ℤ) + 1) 0).ncard := by
     rw [← hPairCard]
     exact Set.ncard_le_ncard hPair hBigFinite
   have hRank := transmission_rank_eq_southeast_ncard
     M 0 hconn tau hTau (k : ℤ) 0
   simpa using (show rank M.graph
-      ((0 : CFDiv M.graph) + (k : ℤ) • one_chip M.u -
-        (0 : ℤ) • one_chip M.v) ≥ 1 by
+      ((0 : CFDiv M.graph) + (k : ℤ) • oneChip M.u -
+        (0 : ℤ) • oneChip M.v) ≥ 1 by
     omega)
 
 /-- A `k`-general twice-marked graph has no positive-rank divisor of degree
@@ -194,7 +194,7 @@ below `k`, provided `k` is no larger than the generic gonality
 `floor((g+3)/2)`. -/
 theorem KGeneralTransmission.no_rank_one_below_period
     {M : TwiceMarked} {g k : ℕ}
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : _root_.graphConnected M.graph)
     (hgenus : genus M.graph = g)
     (hK : KGeneralTransmission M k)
     (hsmall : k ≤ (g + 3) / 2)
@@ -210,13 +210,13 @@ theorem KGeneralTransmission.no_rank_one_below_period
   have hNW := transmission_complement_rank_eq_northwest_ncard
     M D hconn tau hTau 0 0
   have hRR := riemann_roch_for_graphs hconn D
-  have hSEcard : ((southeast_set tau 1 0).ncard : ℤ) =
+  have hSEcard : ((southeastSet tau 1 0).ncard : ℤ) =
       rank M.graph D + 1 := by simpa using hSE.symm
-  have hNWcard : ((northwest_set tau 1 0).ncard : ℤ) =
+  have hNWcard : ((northwestSet tau 1 0).ncard : ℤ) =
       genus M.graph - d + rank M.graph D := by
-    have hComplement : canonical_divisor M.graph - D -
-        (0 : ℤ) • one_chip M.u + (0 : ℤ) • one_chip M.v =
-          canonical_divisor M.graph - D := by simp
+    have hComplement : canonicalDivisor M.graph - D -
+        (0 : ℤ) • oneChip M.u + (0 : ℤ) • oneChip M.v =
+          canonicalDivisor M.graph - D := by simp
     rw [hComplement] at hNW
     norm_num at hNW
     rw [hdeg] at hRR
@@ -253,14 +253,14 @@ theorem KGeneralTransmission.no_rank_one_below_period
 special range. -/
 theorem KGeneralTransmission.exact_gonality
     {M : TwiceMarked} {g k : ℕ}
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : _root_.graphConnected M.graph)
     (hgenus : genus M.graph = g)
     (hK : KGeneralTransmission M k)
     (hsmall : k ≤ (g + 3) / 2) :
     BNExists M.graph 1 (k : ℤ) ∧
       ∀ d : ℤ, d < k → ¬ BNExists M.graph 1 d := by
   constructor
-  · refine ⟨(k : ℤ) • one_chip M.u, ?_, ?_⟩
+  · refine ⟨(k : ℤ) • oneChip M.u, ?_, ?_⟩
     · rw [map_zsmul, deg_one_chip]
       simp
     · exact hK.rank_period_smul_one_chip_ge_one hconn

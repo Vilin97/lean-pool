@@ -48,21 +48,21 @@ variable {G H : CFGraph}
 /-- Propositional validity of the finite edge-index data.
 
 `edgeIndex x y` is the *total* index of the parallel bundle between `x` and
-`y`.  The lower bound by `num_edges G x y` says that each source edge has a
+`y`.  The lower bound by `numEdges G x y` says that each source edge has a
 positive integral index; the target-adjacency condition says that no edge is
 contracted.  The local equation is harmonicity, expressed after aggregating
 parallel edges. -/
 def Valid (c : IndexedHarmonicCertificate G H) : Prop :=
   (∀ x, 0 < c.localDegree x) ∧
   (∀ p : G.V × G.V, c.edgeIndex p.1 p.2 = c.edgeIndex p.2 p.1) ∧
-  (∀ p : G.V × G.V, num_edges G p.1 p.2 = 0 → c.edgeIndex p.1 p.2 = 0) ∧
-  (∀ p : G.V × G.V, num_edges G p.1 p.2 ≤ c.edgeIndex p.1 p.2) ∧
-  (∀ p : G.V × G.V, num_edges G p.1 p.2 > 0 →
+  (∀ p : G.V × G.V, numEdges G p.1 p.2 = 0 → c.edgeIndex p.1 p.2 = 0) ∧
+  (∀ p : G.V × G.V, numEdges G p.1 p.2 ≤ c.edgeIndex p.1 p.2) ∧
+  (∀ p : G.V × G.V, numEdges G p.1 p.2 > 0 →
     c.vertexMap p.1 ≠ c.vertexMap p.2 ∧
-      num_edges H (c.vertexMap p.1) (c.vertexMap p.2) > 0) ∧
+      numEdges H (c.vertexMap p.1) (c.vertexMap p.2) > 0) ∧
   (∀ p : G.V × H.V,
     (∑ y : G.V, if c.vertexMap y = p.2 then c.edgeIndex p.1 y else 0) =
-      c.localDegree p.1 * num_edges H (c.vertexMap p.1) p.2)
+      c.localDegree p.1 * numEdges H (c.vertexMap p.1) p.2)
 
 end IndexedHarmonicCertificate
 
@@ -71,15 +71,15 @@ structure IndexedHarmonicData (G H : CFGraph) extends IndexedHarmonicCertificate
   localDegree_pos : ∀ x, 0 < localDegree x
   edgeIndex_symmetric : ∀ x y, edgeIndex x y = edgeIndex y x
   edgeIndex_zero_of_no_source_edge : ∀ x y,
-    num_edges G x y = 0 → edgeIndex x y = 0
+    numEdges G x y = 0 → edgeIndex x y = 0
   sourceMultiplicity_le_edgeIndex : ∀ x y,
-    num_edges G x y ≤ edgeIndex x y
+    numEdges G x y ≤ edgeIndex x y
   maps_source_edges_to_target_edges : ∀ x y,
-    num_edges G x y > 0 →
-      vertexMap x ≠ vertexMap y ∧ num_edges H (vertexMap x) (vertexMap y) > 0
+    numEdges G x y > 0 →
+      vertexMap x ≠ vertexMap y ∧ numEdges H (vertexMap x) (vertexMap y) > 0
   harmonic : ∀ x z,
     (∑ y : G.V, if vertexMap y = z then edgeIndex x y else 0) =
-      localDegree x * num_edges H (vertexMap x) z
+      localDegree x * numEdges H (vertexMap x) z
 
 namespace IndexedHarmonicCertificate
 
@@ -88,7 +88,7 @@ index of a parallel source bundle is its ordinary edge multiplicity.  General
 metric dilation indices require a weighted Laplacian and are intentionally not
 silently accepted by this predicate. -/
 def UnitIndexed (c : IndexedHarmonicCertificate G H) : Prop :=
-  ∀ p : G.V × G.V, c.edgeIndex p.1 p.2 = num_edges G p.1 p.2
+  ∀ p : G.V × G.V, c.edgeIndex p.1 p.2 = numEdges G p.1 p.2
 
 /-- Degree of one raw fibre, computed without constructing a divisor. -/
 def fibreDegree (c : IndexedHarmonicCertificate G H) (z : H.V) : ℤ :=
@@ -105,25 +105,25 @@ def check (c : IndexedHarmonicCertificate G H) : Bool :=
   (@decide (∀ p : G.V × G.V, c.edgeIndex p.1 p.2 = c.edgeIndex p.2 p.1)
     Fintype.decidableForallFintype) &&
   (@decide (∀ p : G.V × G.V,
-    num_edges G p.1 p.2 = 0 → c.edgeIndex p.1 p.2 = 0)
+    numEdges G p.1 p.2 = 0 → c.edgeIndex p.1 p.2 = 0)
     Fintype.decidableForallFintype) &&
   (@decide (∀ p : G.V × G.V,
-    num_edges G p.1 p.2 ≤ c.edgeIndex p.1 p.2)
+    numEdges G p.1 p.2 ≤ c.edgeIndex p.1 p.2)
     Fintype.decidableForallFintype) &&
-  (@decide (∀ p : G.V × G.V, num_edges G p.1 p.2 > 0 →
+  (@decide (∀ p : G.V × G.V, numEdges G p.1 p.2 > 0 →
     c.vertexMap p.1 ≠ c.vertexMap p.2 ∧
-      num_edges H (c.vertexMap p.1) (c.vertexMap p.2) > 0)
+      numEdges H (c.vertexMap p.1) (c.vertexMap p.2) > 0)
     Fintype.decidableForallFintype) &&
   (@decide (∀ p : G.V × H.V,
     (∑ y : G.V, if c.vertexMap y = p.2 then c.edgeIndex p.1 y else 0) =
-      c.localDegree p.1 * num_edges H (c.vertexMap p.1) p.2)
+      c.localDegree p.1 * numEdges H (c.vertexMap p.1) p.2)
     Fintype.decidableForallFintype)
 
 /-- Executable unit-index check, to be combined with `check` when the
 certificate is intended to act on the ordinary source Laplacian. -/
 def checkUnitIndexed (c : IndexedHarmonicCertificate G H) : Bool :=
   @decide (∀ p : G.V × G.V,
-    c.edgeIndex p.1 p.2 = num_edges G p.1 p.2)
+    c.edgeIndex p.1 p.2 = numEdges G p.1 p.2)
     Fintype.decidableForallFintype
 
 /-- Executable constant-fibre-degree check. -/
@@ -187,13 +187,13 @@ def pullback (f : IndexedHarmonicData G H) (A : CFDiv H) : CFDiv G :=
   fun x => (f.localDegree x : ℤ) * A (f.vertexMap x)
 
 /-- Pull a target firing script back along the vertex map. -/
-def pullbackScript (f : IndexedHarmonicData G H) (σ : firing_script H) :
-    firing_script G :=
+def pullbackScript (f : IndexedHarmonicData G H) (σ : firingScript H) :
+    firingScript G :=
   fun x => σ (f.vertexMap x)
 
 /-- The indexed data uses the ordinary unweighted source Laplacian. -/
 def UnitIndexed (f : IndexedHarmonicData G H) : Prop :=
-  ∀ x y, f.edgeIndex x y = num_edges G x y
+  ∀ x y, f.edgeIndex x y = numEdges G x y
 
 /-- A checked unit-index condition survives conversion from raw certificate
 data. -/
@@ -215,30 +215,30 @@ back a target principal divisor is the principal divisor of the pulled-back
 script on the ordinary source graph. -/
 theorem pullback_prin_of_unitIndexed
     (f : IndexedHarmonicData G H) (hUnit : f.UnitIndexed)
-    (σ : firing_script H) :
+    (σ : firingScript H) :
     f.pullback (prin H σ) = prin G (f.pullbackScript σ) := by
   funext x
   have hHarmonic (z : H.V) :
       (∑ y : G.V,
           if f.vertexMap y = z then (f.edgeIndex x y : ℤ) else 0) =
-        (f.localDegree x : ℤ) * (num_edges H (f.vertexMap x) z : ℤ) := by
+        (f.localDegree x : ℤ) * (numEdges H (f.vertexMap x) z : ℤ) := by
     exact_mod_cast f.harmonic x z
   have hUnitInt (y : G.V) :
-      (f.edgeIndex x y : ℤ) = (num_edges G x y : ℤ) := by
+      (f.edgeIndex x y : ℤ) = (numEdges G x y : ℤ) := by
     exact_mod_cast hUnit x y
   change
     (f.localDegree x : ℤ) *
         (∑ z : H.V, (σ z - σ (f.vertexMap x)) *
-          (num_edges H (f.vertexMap x) z : ℤ)) =
+          (numEdges H (f.vertexMap x) z : ℤ)) =
       ∑ y : G.V, (σ (f.vertexMap y) - σ (f.vertexMap x)) *
-        (num_edges G x y : ℤ)
+        (numEdges G x y : ℤ)
   calc
     (f.localDegree x : ℤ) *
           (∑ z : H.V, (σ z - σ (f.vertexMap x)) *
-            (num_edges H (f.vertexMap x) z : ℤ)) =
+            (numEdges H (f.vertexMap x) z : ℤ)) =
         ∑ z : H.V, (σ z - σ (f.vertexMap x)) *
           ((f.localDegree x : ℤ) *
-            (num_edges H (f.vertexMap x) z : ℤ)) := by
+            (numEdges H (f.vertexMap x) z : ℤ)) := by
               rw [Finset.mul_sum]
               apply Finset.sum_congr rfl
               intro z _
@@ -272,7 +272,7 @@ theorem pullback_prin_of_unitIndexed
               simp
     _ = ∑ y : G.V,
           (σ (f.vertexMap y) - σ (f.vertexMap x)) *
-            (num_edges G x y : ℤ) := by
+            (numEdges G x y : ℤ) := by
               apply Finset.sum_congr rfl
               intro y _
               rw [hUnitInt y]
@@ -287,9 +287,9 @@ the finite double-counting identity behind the usual assertion that the
 degree of a harmonic map is independent of the target point. -/
 theorem fibre_degree_eq_of_target_edge
     (f : IndexedHarmonicData G H) {z w : H.V}
-    (hzw : num_edges H z w > 0) :
+    (hzw : numEdges H z w > 0) :
     deg (f.fibre z) = deg (f.fibre w) := by
-  let m : ℤ := (num_edges H z w : ℤ)
+  let m : ℤ := (numEdges H z w : ℤ)
   have hleft : m * deg (f.fibre z) =
       ∑ x : G.V, if f.vertexMap x = z then
         ∑ y : G.V, if f.vertexMap y = w then (f.edgeIndex x y : ℤ) else 0
@@ -315,7 +315,7 @@ theorem fibre_degree_eq_of_target_edge
                     (∑ y : G.V,
                       if f.vertexMap y = w then (f.edgeIndex x y : ℤ) else 0) =
                     (f.localDegree x : ℤ) *
-                      (num_edges H (f.vertexMap x) w : ℤ) := by
+                      (numEdges H (f.vertexMap x) w : ℤ) := by
                       exact_mod_cast f.harmonic x w
                 rw [hx] at h
                 simp only [hx, ite_true]
@@ -348,7 +348,7 @@ theorem fibre_degree_eq_of_target_edge
                     (∑ x : G.V,
                       if f.vertexMap x = z then (f.edgeIndex y x : ℤ) else 0) =
                     (f.localDegree y : ℤ) *
-                      (num_edges H (f.vertexMap y) z : ℤ) := by
+                      (numEdges H (f.vertexMap y) z : ℤ) := by
                       exact_mod_cast f.harmonic y z
                 rw [hy, num_edges_symmetric H w z] at h
                 simp only [hy, ite_true]
@@ -397,11 +397,11 @@ theorem fibre_degree_eq_of_target_edge
 
 /-- A function on the vertices of a connected graph which is constant across
 every target edge is constant everywhere.  The cut-based definition of
-`graph_connected` makes this a short finite proof. -/
+`graphConnected` makes this a short finite proof. -/
 theorem eq_of_graph_connected_of_eq_on_edges
     {α : Type} [DecidableEq α] (F : H.V → α)
-    (hConnected : graph_connected H)
-    (hEdge : ∀ z w : H.V, num_edges H z w > 0 → F z = F w)
+    (hConnected : graphConnected H)
+    (hEdge : ∀ z w : H.V, numEdges H z w > 0 → F z = F w)
     (z₀ z : H.V) : F z = F z₀ := by
   by_contra hz
   let S : Finset H.V := Finset.univ.filter fun u => F u = F z₀
@@ -415,7 +415,7 @@ theorem eq_of_graph_connected_of_eq_on_edges
 /-- Harmonicity makes the fibre degree locally constant on the target, and
 therefore constant on every connected target. -/
 theorem fibre_degree_eq_of_target_connected
-    (f : IndexedHarmonicData G H) (hConnected : graph_connected H)
+    (f : IndexedHarmonicData G H) (hConnected : graphConnected H)
     (z w : H.V) :
     deg (f.fibre z) = deg (f.fibre w) :=
   eq_of_graph_connected_of_eq_on_edges (fun u => deg (f.fibre u)) hConnected
@@ -424,7 +424,7 @@ theorem fibre_degree_eq_of_target_connected
 /-- One fibre-degree calculation suffices for a harmonic map to a connected
 target. -/
 theorem hasDegree_of_fibre_degree_at
-    (f : IndexedHarmonicData G H) (hConnected : graph_connected H)
+    (f : IndexedHarmonicData G H) (hConnected : graphConnected H)
     (z₀ : H.V) {d : ℤ} (hDegree : deg (f.fibre z₀) = d) :
     f.HasDegree d := by
   intro z
@@ -453,7 +453,7 @@ theorem fibreDegree_toData
 connected target: checking one raw fibre determines all of them. -/
 theorem hasDegree_toData_of_fibreDegree_at
     (c : IndexedHarmonicCertificate G H) (hValid : c.Valid)
-    (hConnected : graph_connected H) (z₀ : H.V) {d : ℤ}
+    (hConnected : graphConnected H) (z₀ : H.V) {d : ℤ}
     (hDegree : c.fibreDegree z₀ = d) :
     (c.toData hValid).HasDegree d := by
   apply (c.toData hValid).hasDegree_of_fibre_degree_at hConnected z₀
@@ -462,7 +462,7 @@ theorem hasDegree_toData_of_fibreDegree_at
 
 /-- `fibre` really is pullback of a one-chip divisor. -/
 theorem pullback_one_chip (f : IndexedHarmonicData G H) (z : H.V) :
-    f.pullback (one_chip z) = f.fibre z := by
+    f.pullback (oneChip z) = f.fibre z := by
   funext x
   by_cases hx : f.vertexMap x = z
   · simp [pullback, fibre, hx]
@@ -479,29 +479,29 @@ theorem fibre_effective (f : IndexedHarmonicData G H) (z : H.V) :
 Nondegeneracy is exactly the needed fact here. -/
 theorem fibre_sub_one_chip_effective
     (f : IndexedHarmonicData G H) (x : G.V) :
-    effective (f.fibre (f.vertexMap x) - one_chip x) := by
+    effective (f.fibre (f.vertexMap x) - oneChip x) := by
   intro y
-  change 0 ≤ f.fibre (f.vertexMap x) y - one_chip x y
+  change 0 ≤ f.fibre (f.vertexMap x) y - oneChip x y
   by_cases hxy : y = x
   · subst y
-    simp only [fibre, one_chip, if_pos]
+    simp only [fibre, oneChip, if_pos]
     exact sub_nonneg.mpr (by
       exact_mod_cast (Nat.succ_le_iff.mpr (f.localDegree_pos x)))
   · have hEffective := f.fibre_effective (f.vertexMap x) y
-    simpa [one_chip, hxy] using hEffective
+    simpa [oneChip, hxy] using hEffective
 
 /-- The target condition actually used by the rank-one proof. -/
 def TargetOneChipEquivalent (H : CFGraph) : Prop :=
-  ∀ y z : H.V, linear_equiv H (one_chip y) (one_chip z)
+  ∀ y z : H.V, linearEquiv H (oneChip y) (oneChip z)
 
 /-- A connected genus-zero target has trivial degree-zero chip-firing class
 group.  This is the graph-theoretic content of the usual phrase “target is a
 tree”; it is stated in the invariant form available in `CFGraph`. -/
 theorem targetOneChipEquivalent_of_connected_genus_zero
-    (H : CFGraph) (hConnected : graph_connected H) (hGenus : genus H = 0) :
+    (H : CFGraph) (hConnected : graphConnected H) (hGenus : genus H = 0) :
     TargetOneChipEquivalent H := by
   intro y z
-  let A : CFDiv H := one_chip y - one_chip z
+  let A : CFDiv H := oneChip y - oneChip z
   have hDegree : deg A = 0 := by
     simp [A]
   have hRank : rank H A ≥ 0 := by
@@ -509,15 +509,15 @@ theorem targetOneChipEquivalent_of_connected_genus_zero
     rw [hDegree, hGenus] at h
     exact h
   obtain ⟨E, hEffective, hAE⟩ : ∃ E : CFDiv H,
-      effective E ∧ linear_equiv H A E :=
+      effective E ∧ linearEquiv H A E :=
     (winnable_iff_exists_effective H A).mp
       ((rank_nonneg_iff_winnable H A).mp ((rank_geq_iff H A 0).mpr hRank))
   have hEDegree : deg E = 0 := by
     rw [← linear_equiv_preserves_deg H A E hAE, hDegree]
   have hEZero : E = 0 := eff_degree_zero E hEffective hEDegree
   subst E
-  unfold linear_equiv at hAE ⊢
-  have hDifference : one_chip z - one_chip y = 0 - A := by
+  unfold linearEquiv at hAE ⊢
+  have hDifference : oneChip z - oneChip y = 0 - A := by
     dsimp [A]
     abel
   rw [hDifference]
@@ -527,8 +527,8 @@ theorem targetOneChipEquivalent_of_connected_genus_zero
 finite data.  The unit-indexed checker implies it below; non-unit metric
 dilations still need a future weighted-Laplacian development. -/
 def PullbackPrincipalCompatible (f : IndexedHarmonicData G H) : Prop :=
-  ∀ A B : CFDiv H, linear_equiv H A B →
-    linear_equiv G (f.pullback A) (f.pullback B)
+  ∀ A B : CFDiv H, linearEquiv H A B →
+    linearEquiv G (f.pullback A) (f.pullback B)
 
 /-- The checked harmonicity equations plus unit edge indices imply the
 previously abstract pullback-principal compatibility hypothesis. -/
@@ -536,7 +536,7 @@ theorem pullbackPrincipalCompatible_of_unitIndexed
     (f : IndexedHarmonicData G H) (hUnit : f.UnitIndexed) :
     f.PullbackPrincipalCompatible := by
   intro A B hAB
-  unfold linear_equiv at hAB ⊢
+  unfold linearEquiv at hAB ⊢
   rw [principal_iff_eq_prin] at hAB ⊢
   obtain ⟨σ, hσ⟩ := hAB
   refine ⟨f.pullbackScript σ, ?_⟩
@@ -562,8 +562,8 @@ theorem pullbackPrincipalCompatible_of_checks
 equivalence of fibres. -/
 theorem fibre_linear_equiv_of_target
     (f : IndexedHarmonicData G H) (hPullback : f.PullbackPrincipalCompatible)
-    {y z : H.V} (hyz : linear_equiv H (one_chip y) (one_chip z)) :
-    linear_equiv G (f.fibre y) (f.fibre z) := by
+    {y z : H.V} (hyz : linearEquiv H (oneChip y) (oneChip z)) :
+    linearEquiv G (f.fibre y) (f.fibre z) := by
   rw [← f.pullback_one_chip y, ← f.pullback_one_chip z]
   exact hPullback _ _ hyz
 
@@ -576,16 +576,16 @@ theorem rank_ge_one_of_target_one_chip_equiv
     rank G (f.fibre z) ≥ 1 := by
   apply rank_ge_one_of_vertex_certificates G (f.fibre z)
   intro x
-  refine ⟨f.fibre (f.vertexMap x) - one_chip x,
+  refine ⟨f.fibre (f.vertexMap x) - oneChip x,
     f.fibre_sub_one_chip_effective x, ?_⟩
-  have hFibre : linear_equiv G (f.fibre z) (f.fibre (f.vertexMap x)) :=
+  have hFibre : linearEquiv G (f.fibre z) (f.fibre (f.vertexMap x)) :=
     f.fibre_linear_equiv_of_target hPullback (hTarget z (f.vertexMap x))
-  have hSub : linear_equiv G
-      (f.fibre z - one_chip x)
-      (f.fibre (f.vertexMap x) - one_chip x) := by
-    unfold linear_equiv at hFibre ⊢
+  have hSub : linearEquiv G
+      (f.fibre z - oneChip x)
+      (f.fibre (f.vertexMap x) - oneChip x) := by
+    unfold linearEquiv at hFibre ⊢
     have hEq :
-        (f.fibre (f.vertexMap x) - one_chip x) - (f.fibre z - one_chip x) =
+        (f.fibre (f.vertexMap x) - oneChip x) - (f.fibre z - oneChip x) =
           f.fibre (f.vertexMap x) - f.fibre z := by abel
     rw [hEq]
     exact hFibre
@@ -614,7 +614,7 @@ instead of exposing the target Picard-group condition. -/
 theorem bnExists_rank_one_of_connected_genus_zero_target
     (f : IndexedHarmonicData G H) {d : ℤ} (hDegree : f.HasDegree d)
     (hPullback : f.PullbackPrincipalCompatible)
-    (hConnected : graph_connected H) (hGenus : genus H = 0) (z : H.V) :
+    (hConnected : graphConnected H) (hGenus : genus H = 0) (z : H.V) :
     BNExists G 1 d :=
   f.bnExists_rank_one_of_target_one_chip_equiv hDegree hPullback
     (targetOneChipEquivalent_of_connected_genus_zero H hConnected hGenus) z
@@ -627,7 +627,7 @@ theorem bnExists_rank_one_of_checked_harmonic_tree
     (hCheck : c.check = true)
     (hUnitCheck : c.checkUnitIndexed = true)
     (hDegreeCheck : c.checkDegree d = true)
-    (hConnected : graph_connected H) (hGenus : genus H = 0) (z : H.V) :
+    (hConnected : graphConnected H) (hGenus : genus H = 0) (z : H.V) :
     BNExists G 1 d := by
   let hValid : c.Valid := (c.check_eq_true_iff).mp hCheck
   let f : IndexedHarmonicData G H := c.toData hValid
@@ -649,7 +649,7 @@ theorem bnExists_rank_one_of_checked_harmonic_tree_one_degree
     (hCheck : c.check = true)
     (hUnitCheck : c.checkUnitIndexed = true)
     (hDegreeCheck : c.checkDegreeAt z₀ d = true)
-    (hConnected : graph_connected H) (hGenus : genus H = 0) (z : H.V) :
+    (hConnected : graphConnected H) (hGenus : genus H = 0) (z : H.V) :
     BNExists G 1 d := by
   let hValid : c.Valid := (c.check_eq_true_iff).mp hCheck
   let f : IndexedHarmonicData G H := c.toData hValid

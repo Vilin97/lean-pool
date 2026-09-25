@@ -88,7 +88,7 @@ theorem underlyingSimpleGraph_edgeFinset_card_le (G : CFGraph.{u}) :
       rw [SimpleGraph.mem_edgeFinset] at he
       refine Sym2.ind ?_ e he
       intro x y hxy
-      change num_edges G x y > 0 at hxy
+      change numEdges G x y > 0 at hxy
       change 0 < (G.edges.filter (fun edge =>
         edge = (x, y) ∨ edge = (y, x))).card at hxy
       rw [Multiset.card_pos_iff_exists_mem] at hxy
@@ -106,7 +106,7 @@ theorem underlyingSimpleGraph_edgeFinset_card_le (G : CFGraph.{u}) :
 /-- Every connected loopless multigraph has at least `|V|-1` edge
 occurrences.  Parallel edges are allowed. -/
 theorem graph_connected_card_vertices_le_card_edges_add_one
-    (G : CFGraph.{u}) (hConnected : graph_connected G) :
+    (G : CFGraph.{u}) (hConnected : graphConnected G) :
     Fintype.card G.V ≤ G.edges.card + 1 := by
   have hSimple : (underlyingSimpleGraph G).Connected :=
     (graph_connected_iff_underlyingSimpleGraph_connected G).mp hConnected
@@ -121,7 +121,7 @@ theorem graph_connected_card_vertices_le_card_edges_add_one
 
 /-- The cyclomatic genus of a connected loopless multigraph is nonnegative. -/
 theorem genus_nonneg_of_graph_connected (G : CFGraph.{u})
-    (hConnected : graph_connected G) : 0 ≤ genus G := by
+    (hConnected : graphConnected G) : 0 ≤ genus G := by
   have hBound := graph_connected_card_vertices_le_card_edges_add_one G hConnected
   simp only [genus]
   omega
@@ -277,7 +277,7 @@ theorem internalDirectedMultiplicity_eq_two_mul_contractedEdgeCard
           exact hRealizes.1.symm
         exact hInternal hEq
   let natInternal : ℕ := ∑ x : G.V, ∑ y : G.V,
-    if c.vertexMap x = c.vertexMap y then num_edges G x y else 0
+    if c.vertexMap x = c.vertexMap y then numEdges G x y else 0
   have hNatInternal : natInternal =
       2 * (G.edges.filter fun edge =>
         c.vertexMap edge.1 = c.vertexMap edge.2).card := by
@@ -292,7 +292,7 @@ theorem internalDirectedMultiplicity_eq_two_mul_contractedEdgeCard
         intro y _
         simp only [edgeRealizesDirectedPair]
         by_cases hMap : c.vertexMap x = c.vertexMap y <;>
-          simp [hMap, num_edges]
+          simp [hMap, numEdges]
       _ = Multiset.sum (G.edges.map fun edge =>
           (Finset.univ.filter fun pair =>
             c.edgeRealizesDirectedPair pair edge).card) :=
@@ -444,7 +444,7 @@ theorem fibreGraph_underlyingSimpleGraph_isTree_of_genus_eq
     (hGenus : genus G = genus H) (target : H.V) :
     (underlyingSimpleGraph (c.fibreGraph hTopological.1 target)).IsTree := by
   let fibre := c.fibreGraph hTopological.1 target
-  have hFibreConnected : graph_connected fibre := by
+  have hFibreConnected : _root_.graphConnected fibre := by
     exact c.fibreGraph_connected_of_topologicalValid hTopological target
   have hSimpleConnected : (underlyingSimpleGraph fibre).Connected :=
     (graph_connected_iff_underlyingSimpleGraph_connected fibre).mp hFibreConnected

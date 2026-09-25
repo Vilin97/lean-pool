@@ -24,19 +24,19 @@ theorem exists_endpoint_transmission_block
     ∃ τ : ℤ → ℤ,
       IsTransmissionPermutation
           (mark B.graph (leftEndpoint B) (rightEndpoint B))
-          (g • one_chip (rightEndpoint B)) τ ∧
+          (g • oneChip (rightEndpoint B)) τ ∧
       IsKAffine k τ ∧
       ∀ b : ℕ, b ≤ g → τ b = (g - b : ℕ) := by
   let M := mark B.graph (leftEndpoint B) (rightEndpoint B)
-  let D : CFDiv B.graph := g • one_chip (rightEndpoint B)
+  let D : CFDiv B.graph := g • oneChip (rightEndpoint B)
   obtain ⟨τ, hτ, hAffine⟩ :=
     exists_affineTransmissionPermutation_of_submodular M D (banana_graph_connected B)
       (hsub D) hk
   refine ⟨τ, hτ, hAffine, ?_⟩
   intro b hb
   have hDiv :
-      D + ((g - b : ℕ) : ℤ) • one_chip (leftEndpoint B) -
-          (b : ℤ) • one_chip (rightEndpoint B) =
+      D + ((g - b : ℕ) : ℤ) • oneChip (leftEndpoint B) -
+          (b : ℤ) • oneChip (rightEndpoint B) =
         (g - b) • endpointPencilDivisor B := by
     rw [← Nat.cast_smul_eq_nsmul ℤ]
     dsimp [D, endpointPencilDivisor]
@@ -51,8 +51,8 @@ theorem exists_endpoint_transmission_block
   rw [← Nat.cast_sub hb] at hValue
   change (if τ (b : ℤ) = ((g - b : ℕ) : ℤ) then (1 : ℤ) else 0) =
       rankDelta (mark B.graph (leftEndpoint B) (rightEndpoint B))
-        (D + ((g - b : ℕ) : ℤ) • one_chip (leftEndpoint B) -
-          (b : ℤ) • one_chip (rightEndpoint B)) at hValue
+        (D + ((g - b : ℕ) : ℤ) • oneChip (leftEndpoint B) -
+          (b : ℤ) • oneChip (rightEndpoint B)) at hValue
   rw [hDiv] at hValue
   have hValue' : (if τ (b : ℤ) = ((g - b : ℕ) : ℤ) then (1 : ℤ) else 0) = 1 :=
     hValue.trans hDelta

@@ -28,23 +28,23 @@ open Utilities
 private theorem wedge_marked_torsion_divisor_eq_factor_sum
     (G H : CFGraph) (x : G.V) (y : H.V) (u : G.V) (v : H.V) (k : ℕ) :
     (k : ℤ) •
-        (one_chip (G := vertexWedge G H x y) (Sum.inl u) -
-          one_chip (G := vertexWedge G H x y)
+        (oneChip (G := vertexWedge G H x y) (Sum.inl u) -
+          oneChip (G := vertexWedge G H x y)
             (wedgeRightVertex G H x y v)) =
       wedgeAddDivisor G H x y
-        ((k : ℤ) • (one_chip u - one_chip x))
-        ((k : ℤ) • (one_chip y - one_chip v)) := by
+        ((k : ℤ) • (oneChip u - oneChip x))
+        ((k : ℤ) • (oneChip y - oneChip v)) := by
   have hBase := wedgeAddDivisor_transmissionTwist G H x y
     (0 : CFDiv G) (0 : CFDiv H) u v (k : ℤ) (k : ℤ)
   have hLeft :
-      chipShift G ((k : ℤ) • one_chip u) x (-((k : ℤ))) =
-        (k : ℤ) • (one_chip u - one_chip x) := by
+      chipShift G ((k : ℤ) • oneChip u) x (-((k : ℤ))) =
+        (k : ℤ) • (oneChip u - oneChip x) := by
     unfold chipShift
     rw [smul_sub]
     ring
   have hRight :
-      chipShift H (-((k : ℤ) • one_chip v)) y (k : ℤ) =
-        (k : ℤ) • (one_chip y - one_chip v) := by
+      chipShift H (-((k : ℤ) • oneChip v)) y (k : ℤ) =
+        (k : ℤ) • (oneChip y - oneChip v) := by
     unfold chipShift
     rw [smul_sub]
     abel
@@ -60,29 +60,29 @@ private theorem wedge_marked_torsion_divisor_eq_factor_sum
         rfl
   have hBase' :
       (k : ℤ) •
-          (one_chip (G := vertexWedge G H x y) (Sum.inl u) -
-            one_chip (G := vertexWedge G H x y)
+          (oneChip (G := vertexWedge G H x y) (Sum.inl u) -
+            oneChip (G := vertexWedge G H x y)
               (wedgeRightVertex G H x y v)) =
-        wedgeAddDivisor G H x y ((k : ℤ) • one_chip u)
-          (-((k : ℤ) • one_chip v)) := by
+        wedgeAddDivisor G H x y ((k : ℤ) • oneChip u)
+          (-((k : ℤ) • oneChip v)) := by
     simpa only [hZero, smul_sub, zero_add, zero_sub] using hBase
   have hCancel := wedgeAddDivisor_chipShift_cancel G H x y
-    ((k : ℤ) • one_chip u) (-((k : ℤ) • one_chip v)) (-((k : ℤ)))
+    ((k : ℤ) • oneChip u) (-((k : ℤ) • oneChip v)) (-((k : ℤ)))
   calc
     (k : ℤ) •
-        (one_chip (G := vertexWedge G H x y) (Sum.inl u) -
-          one_chip (G := vertexWedge G H x y)
+        (oneChip (G := vertexWedge G H x y) (Sum.inl u) -
+          oneChip (G := vertexWedge G H x y)
             (wedgeRightVertex G H x y v)) =
-        wedgeAddDivisor G H x y ((k : ℤ) • one_chip u)
-          (-((k : ℤ) • one_chip v)) := hBase'
+        wedgeAddDivisor G H x y ((k : ℤ) • oneChip u)
+          (-((k : ℤ) • oneChip v)) := hBase'
     _ = wedgeAddDivisor G H x y
-        (chipShift G ((k : ℤ) • one_chip u) x (-((k : ℤ))))
-        (chipShift H (-((k : ℤ) • one_chip v)) y (k : ℤ)) := by
+        (chipShift G ((k : ℤ) • oneChip u) x (-((k : ℤ))))
+        (chipShift H (-((k : ℤ) • oneChip v)) y (k : ℤ)) := by
           convert hCancel.symm using 1
           · simp
     _ = wedgeAddDivisor G H x y
-        ((k : ℤ) • (one_chip u - one_chip x))
-        ((k : ℤ) • (one_chip y - one_chip v)) := by rw [hLeft, hRight]
+        ((k : ℤ) • (oneChip u - oneChip x))
+        ((k : ℤ) • (oneChip y - oneChip v)) := by rw [hLeft, hRight]
 
 /-- A torsion witness for an opposite-side marked vertex wedge restricts to
 torsion witnesses of the same period on the two factor markings. -/
@@ -92,8 +92,8 @@ theorem torsionWitness_factors_of_vertexWedge_opposite
       (mark (vertexWedge G H x y) (Sum.inl u)
         (wedgeRightVertex G H x y v)) k) :
     TorsionWitness (mark G u x) k ∧ TorsionWitness (mark H y v) k := by
-  let DG : CFDiv G := (k : ℤ) • (one_chip u - one_chip x)
-  let EH : CFDiv H := (k : ℤ) • (one_chip y - one_chip v)
+  let DG : CFDiv G := (k : ℤ) • (oneChip u - oneChip x)
+  let EH : CFDiv H := (k : ℤ) • (oneChip y - oneChip v)
   have hWinnable : winnable (vertexWedge G H x y)
       (wedgeAddDivisor G H x y DG EH) := by
     refine ⟨0, ?_, ?_⟩
@@ -115,7 +115,7 @@ theorem torsionWitness_factors_of_vertexWedge_opposite
     have h := deg_nonneg_of_winnable G (chipShift G DG x t) hGwin
     have hShift : deg (chipShift G DG x t) = t := by
       calc
-        deg (chipShift G DG x t) = deg DG + deg (t • one_chip x) := by
+        deg (chipShift G DG x t) = deg DG + deg (t • oneChip x) := by
           rw [chipShift, deg.map_add]
         _ = t := by rw [hDegG, map_zsmul, deg_one_chip]; ring
     rw [hShift] at h
@@ -124,7 +124,7 @@ theorem torsionWitness_factors_of_vertexWedge_opposite
     have h := deg_nonneg_of_winnable H (chipShift H EH y (-t)) hHwin
     have hShift : deg (chipShift H EH y (-t)) = -t := by
       calc
-        deg (chipShift H EH y (-t)) = deg EH + deg ((-t) • one_chip y) := by
+        deg (chipShift H EH y (-t)) = deg EH + deg ((-t) • oneChip y) := by
           rw [chipShift, deg.map_add]
         _ = -t := by rw [hDegH, map_zsmul, deg_one_chip]; ring
     rw [hShift] at h
@@ -197,7 +197,7 @@ cycle presentation argument, this extracts the factor orders directly from
 the wedge torsion witness. -/
 theorem exists_factor_torsionOrders_lcm_eq_of_vertexWedge_opposite_kGeneral
     (G H : CFGraph) (x : G.V) (y : H.V) (u : G.V) (v : H.V) (k : ℕ)
-    (hConn : _root_.graph_connected (vertexWedge G H x y))
+    (hConn : _root_.graphConnected (vertexWedge G H x y))
     (hPos : 0 < genus (vertexWedge G H x y))
     (huv : (Sum.inl u : (vertexWedge G H x y).V) ≠
       wedgeRightVertex G H x y v)

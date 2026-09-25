@@ -27,7 +27,7 @@ open Utilities
 /-- The degree-`d` representative at an integer marked-difference index. -/
 noncomputable def degreeTwistInt
     (M : TwiceMarked) (D : CFDiv M.graph) (d b : ℤ) : CFDiv M.graph :=
-  D + (d - deg D + b) • one_chip M.u - b • one_chip M.v
+  D + (d - deg D + b) • oneChip M.u - b • oneChip M.v
 
 /-- Integer-indexed degree twists have the prescribed degree. -/
 @[simp] theorem deg_degreeTwistInt
@@ -42,7 +42,7 @@ difference. -/
 theorem degreeTwistInt_eq_zero_add_marked_difference
     (M : TwiceMarked) (D : CFDiv M.graph) (d b : ℤ) :
     degreeTwistInt M D d b =
-      degreeTwistInt M D d 0 + b • (one_chip M.u - one_chip M.v) := by
+      degreeTwistInt M D d 0 + b • (oneChip M.u - oneChip M.v) := by
   unfold degreeTwistInt
   rw [zero_smul]
   ext w
@@ -54,7 +54,7 @@ equivalence class. -/
 theorem degreeTwistInt_add_torsion_linearEquiv
     {M : TwiceMarked} {k : ℕ} (hk : TorsionWitness M k)
     (D : CFDiv M.graph) (d b : ℤ) :
-    linear_equiv M.graph
+    linearEquiv M.graph
       (degreeTwistInt M D d (b + k))
       (degreeTwistInt M D d b) := by
   unfold degreeTwistInt
@@ -66,9 +66,9 @@ residues instead of Picard-group quotient classes. -/
 def NonRecurrent (M : TwiceMarked) (k : ℕ) : Prop :=
   ∀ (w : M.graph.V) (n m : Fin k), n.val ≠ 0 → m.val ≠ 0 →
     0 ≤ rank M.graph
-      (one_chip w + (n.val : ℤ) • (one_chip M.u - one_chip M.v)) →
+      (oneChip w + (n.val : ℤ) • (oneChip M.u - oneChip M.v)) →
     0 ≤ rank M.graph
-      (one_chip w + (m.val : ℤ) • (one_chip M.u - one_chip M.v)) →
+      (oneChip w + (m.val : ℤ) • (oneChip M.u - oneChip M.v)) →
     n = m
 
 /-- A convenient finite-residue consequence of nonrecurrence: two effective
@@ -77,9 +77,9 @@ theorem NonRecurrent.zero_or_eq_of_two_rank_nonneg
     {M : TwiceMarked} {k : ℕ} (hNonrec : NonRecurrent M k)
     (w : M.graph.V) (n m : Fin k)
     (hn : 0 ≤ rank M.graph
-      (one_chip w + (n.val : ℤ) • (one_chip M.u - one_chip M.v)))
+      (oneChip w + (n.val : ℤ) • (oneChip M.u - oneChip M.v)))
     (hm : 0 ≤ rank M.graph
-      (one_chip w + (m.val : ℤ) • (one_chip M.u - one_chip M.v))) :
+      (oneChip w + (m.val : ℤ) • (oneChip M.u - oneChip M.v))) :
     n.val = 0 ∨ m.val = 0 ∨ n = m := by
   by_cases hn0 : n.val = 0
   · exact Or.inl hn0
@@ -90,16 +90,16 @@ theorem NonRecurrent.zero_or_eq_of_two_rank_nonneg
 /-! ## A no-wrap prefix calculation -/
 
 private theorem linear_equiv_zsmul' {G : CFGraph} {A B : CFDiv G}
-    (h : linear_equiv G A B) (n : ℤ) :
-    linear_equiv G (n • A) (n • B) := by
-  unfold linear_equiv at h ⊢
-  simpa [smul_sub] using AddSubgroup.zsmul_mem (principal_divisors G) h n
+    (h : linearEquiv G A B) (n : ℤ) :
+    linearEquiv G (n • A) (n • B) := by
+  unfold linearEquiv at h ⊢
+  simpa [smul_sub] using AddSubgroup.zsmul_mem (principalDivisors G) h n
 
 private theorem linear_equiv_sub' {G : CFGraph} {A B C D : CFDiv G}
-    (hAC : linear_equiv G A C) (hBD : linear_equiv G B D) :
-    linear_equiv G (A - B) (C - D) := by
-  unfold linear_equiv at hAC hBD ⊢
-  convert (principal_divisors G).sub_mem hAC hBD using 1 ; abel
+    (hAC : linearEquiv G A C) (hBD : linearEquiv G B D) :
+    linearEquiv G (A - B) (C - D) := by
+  unfold linearEquiv at hAC hBD ⊢
+  convert (principalDivisors G).sub_mem hAC hBD using 1 ; abel
 
 /-- Before either marked position wraps around its strand, multiplying the
 marked difference simply advances both points by the same multiplier. -/
@@ -108,11 +108,11 @@ theorem theta_multiple_noWrap_linearEquiv
     (i : B.PathPosition alpha) (j : B.PathPosition beta) (n : ℕ)
     (hni : n * i.val ≤ B.length alpha)
     (hnj : n * j.val ≤ B.length beta) :
-    linear_equiv B.graph
+    linearEquiv B.graph
       ((n : ℤ) •
-        (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j)))
-      (one_chip (strandVertex B alpha ⟨n * i.val, by omega⟩) -
-        one_chip (strandVertex B beta ⟨n * j.val, by omega⟩)) := by
+        (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j)))
+      (oneChip (strandVertex B alpha ⟨n * i.val, by omega⟩) -
+        oneChip (strandVertex B beta ⟨n * j.val, by omega⟩)) := by
   let p : B.PathPosition alpha := ⟨n * i.val, by omega⟩
   let q : B.PathPosition beta := ⟨n * j.val, by omega⟩
   have hα := strand_prefix_linearEquiv B alpha i
@@ -121,53 +121,53 @@ theorem theta_multiple_noWrap_linearEquiv
   have hq := strand_prefix_linearEquiv B beta q
   have hαscale := linear_equiv_zsmul' hα (n : ℤ)
   have hβscale := linear_equiv_zsmul' hβ (n : ℤ)
-  have hα' : linear_equiv B.graph
-      ((n : ℤ) • (one_chip (strandVertex B alpha i) - one_chip (leftEndpoint B)))
-      (one_chip (strandVertex B alpha p) - one_chip (leftEndpoint B)) := by
+  have hα' : linearEquiv B.graph
+      ((n : ℤ) • (oneChip (strandVertex B alpha i) - oneChip (leftEndpoint B)))
+      (oneChip (strandVertex B alpha p) - oneChip (leftEndpoint B)) := by
     have hscale : (n : ℤ) • ((i.val : ℤ) •
-        (one_chip (strandVertex B alpha ⟨1, by
-          have := B.length_pos alpha; omega⟩) - one_chip (leftEndpoint B))) =
+        (oneChip (strandVertex B alpha ⟨1, by
+          have := B.length_pos alpha; omega⟩) - oneChip (leftEndpoint B))) =
         (p.val : ℤ) •
-        (one_chip (strandVertex B alpha ⟨1, by
-          have := B.length_pos alpha; omega⟩) - one_chip (leftEndpoint B)) := by
+        (oneChip (strandVertex B alpha ⟨1, by
+          have := B.length_pos alpha; omega⟩) - oneChip (leftEndpoint B)) := by
       rw [smul_smul]
       congr 1
     rw [hscale] at hαscale
     exact hαscale.symm.trans hp
-  have hβ' : linear_equiv B.graph
-      ((n : ℤ) • (one_chip (strandVertex B beta j) - one_chip (leftEndpoint B)))
-      (one_chip (strandVertex B beta q) - one_chip (leftEndpoint B)) := by
+  have hβ' : linearEquiv B.graph
+      ((n : ℤ) • (oneChip (strandVertex B beta j) - oneChip (leftEndpoint B)))
+      (oneChip (strandVertex B beta q) - oneChip (leftEndpoint B)) := by
     have hscale : (n : ℤ) • ((j.val : ℤ) •
-        (one_chip (strandVertex B beta ⟨1, by
-          have := B.length_pos beta; omega⟩) - one_chip (leftEndpoint B))) =
+        (oneChip (strandVertex B beta ⟨1, by
+          have := B.length_pos beta; omega⟩) - oneChip (leftEndpoint B))) =
         (q.val : ℤ) •
-        (one_chip (strandVertex B beta ⟨1, by
-          have := B.length_pos beta; omega⟩) - one_chip (leftEndpoint B)) := by
+        (oneChip (strandVertex B beta ⟨1, by
+          have := B.length_pos beta; omega⟩) - oneChip (leftEndpoint B)) := by
       rw [smul_smul]
       congr 1
     rw [hscale] at hβscale
     exact hβscale.symm.trans hq
   have h := linear_equiv_sub' hα' hβ'
   have hLeft : (n : ℤ) •
-      (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j)) =
-      (n : ℤ) • (one_chip (strandVertex B alpha i) - one_chip (leftEndpoint B)) -
-        (n : ℤ) • (one_chip (strandVertex B beta j) - one_chip (leftEndpoint B)) := by
+      (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j)) =
+      (n : ℤ) • (oneChip (strandVertex B alpha i) - oneChip (leftEndpoint B)) -
+        (n : ℤ) • (oneChip (strandVertex B beta j) - oneChip (leftEndpoint B)) := by
     rw [smul_sub]
     simp only [smul_sub]
     abel
   have hRight :
-      (one_chip (strandVertex B alpha p) - one_chip (leftEndpoint B)) -
-        (one_chip (strandVertex B beta q) - one_chip (leftEndpoint B)) =
-      one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q) := by
+      (oneChip (strandVertex B alpha p) - oneChip (leftEndpoint B)) -
+        (oneChip (strandVertex B beta q) - oneChip (leftEndpoint B)) =
+      oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q) := by
     abel
   rw [← hLeft, hRight] at h
   exact h
 
 private theorem linear_equiv_add' {G : CFGraph} {A B C D : CFDiv G}
-    (hAC : linear_equiv G A C) (hBD : linear_equiv G B D) :
-    linear_equiv G (A + B) (C + D) := by
-  unfold linear_equiv at hAC hBD ⊢
-  convert (principal_divisors G).add_mem hAC hBD using 1 ; abel
+    (hAC : linearEquiv G A C) (hBD : linearEquiv G B D) :
+    linearEquiv G (A + B) (C + D) := by
+  unfold linearEquiv at hAC hBD ⊢
+  convert (principalDivisors G).add_mem hAC hBD using 1 ; abel
 
 /-- A multiple of one normalized strand prefix is its quotient number of
 endpoint differences plus its residue prefix. -/
@@ -175,14 +175,14 @@ theorem strand_multiple_prefix_normalForm_linearEquiv
     {g : ℕ} (B : Banana g) (alpha : Fin (g + 1))
     (i p : B.PathPosition alpha) (m t : ℕ)
     (hmp : m * i.val = t * B.length alpha + p.val) :
-    linear_equiv B.graph
-      ((m : ℤ) • (one_chip (strandVertex B alpha i) - one_chip (leftEndpoint B)))
-      ((t : ℤ) • (one_chip (rightEndpoint B) - one_chip (leftEndpoint B)) +
-        (one_chip (strandVertex B alpha p) - one_chip (leftEndpoint B))) := by
+    linearEquiv B.graph
+      ((m : ℤ) • (oneChip (strandVertex B alpha i) - oneChip (leftEndpoint B)))
+      ((t : ℤ) • (oneChip (rightEndpoint B) - oneChip (leftEndpoint B)) +
+        (oneChip (strandVertex B alpha p) - oneChip (leftEndpoint B))) := by
   let step : CFDiv B.graph :=
-    one_chip (strandVertex B alpha ⟨1, by
+    oneChip (strandVertex B alpha ⟨1, by
       have := B.length_pos alpha
-      omega⟩) - one_chip (leftEndpoint B)
+      omega⟩) - oneChip (leftEndpoint B)
   have hi := strand_prefix_linearEquiv B alpha i
   have hp := strand_prefix_linearEquiv B alpha p
   have hEnd := strand_prefix_linearEquiv B alpha
@@ -202,13 +202,13 @@ theorem strand_multiple_prefix_normalForm_linearEquiv
       ((m : ℤ) * (i.val : ℤ)) • step := by
     simp only [smul_smul]
     rw [← add_smul, ← hCoeff]
-  change linear_equiv B.graph
+  change linearEquiv B.graph
     ((m : ℤ) • ((i.val : ℤ) • step))
-    ((m : ℤ) • (one_chip (strandVertex B alpha i) - one_chip (leftEndpoint B))) at hScaleI
-  have hAdd' : linear_equiv B.graph
+    ((m : ℤ) • (oneChip (strandVertex B alpha i) - oneChip (leftEndpoint B))) at hScaleI
+  have hAdd' : linearEquiv B.graph
     ((t : ℤ) • ((B.length alpha : ℤ) • step) + (p.val : ℤ) • step)
-    ((t : ℤ) • (one_chip (rightEndpoint B) - one_chip (leftEndpoint B)) +
-      (one_chip (strandVertex B alpha p) - one_chip (leftEndpoint B))) := by
+    ((t : ℤ) • (oneChip (rightEndpoint B) - oneChip (leftEndpoint B)) +
+      (oneChip (strandVertex B alpha p) - oneChip (leftEndpoint B))) := by
     simpa [step, strandVertex_length] using hAdd
   rw [hLeft] at hScaleI
   rw [hRight] at hAdd'
@@ -222,26 +222,26 @@ theorem theta_multiple_residue_linearEquiv
     (m t : ℕ)
     (hα : m * i.val = t * B.length alpha + p.val)
     (hβ : m * j.val = t * B.length beta + q.val) :
-    linear_equiv B.graph
+    linearEquiv B.graph
       ((m : ℤ) •
-        (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j)))
-      (one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q)) := by
+        (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j)))
+      (oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q)) := by
   have hA := strand_multiple_prefix_normalForm_linearEquiv B alpha i p m t hα
   have hB := strand_multiple_prefix_normalForm_linearEquiv B beta j q m t hβ
   have h := linear_equiv_sub' hA hB
   have hLeft : (m : ℤ) •
-      (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j)) =
-      (m : ℤ) • (one_chip (strandVertex B alpha i) - one_chip (leftEndpoint B)) -
-        (m : ℤ) • (one_chip (strandVertex B beta j) - one_chip (leftEndpoint B)) := by
+      (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j)) =
+      (m : ℤ) • (oneChip (strandVertex B alpha i) - oneChip (leftEndpoint B)) -
+        (m : ℤ) • (oneChip (strandVertex B beta j) - oneChip (leftEndpoint B)) := by
     rw [smul_sub]
     simp only [smul_sub]
     abel
   have hRight :
-      ((t : ℤ) • (one_chip (rightEndpoint B) - one_chip (leftEndpoint B)) +
-        (one_chip (strandVertex B alpha p) - one_chip (leftEndpoint B))) -
-      ((t : ℤ) • (one_chip (rightEndpoint B) - one_chip (leftEndpoint B)) +
-        (one_chip (strandVertex B beta q) - one_chip (leftEndpoint B))) =
-      one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q) := by
+      ((t : ℤ) • (oneChip (rightEndpoint B) - oneChip (leftEndpoint B)) +
+        (oneChip (strandVertex B alpha p) - oneChip (leftEndpoint B))) -
+      ((t : ℤ) • (oneChip (rightEndpoint B) - oneChip (leftEndpoint B)) +
+        (oneChip (strandVertex B beta q) - oneChip (leftEndpoint B))) =
+      oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q) := by
     abel
   rw [← hLeft, hRight] at h
   exact h
@@ -253,15 +253,15 @@ theorem evenlyMarkedTheta_multiple_residue_linearEquiv
     (B : Banana 2) (alpha beta : Fin 3)
     (i : B.PathPosition alpha) (j : B.PathPosition beta)
     (hEven : EvenlyMarkedTheta B alpha beta i j) (m : ℕ) :
-    linear_equiv B.graph
+    linearEquiv B.graph
       ((m : ℤ) •
-        (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j)))
-      (one_chip (strandVertex B alpha
+        (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j)))
+      (oneChip (strandVertex B alpha
           ⟨(m * i.val) % B.length alpha,
             by
               have h := Nat.mod_lt (m * i.val) (B.length_pos alpha)
               omega⟩) -
-        one_chip (strandVertex B beta
+        oneChip (strandVertex B beta
           ⟨(m * j.val) % B.length beta,
             by
               have h := Nat.mod_lt (m * j.val) (B.length_pos beta)
@@ -277,10 +277,10 @@ theorem evenlyMarkedTheta_multiple_residue_linearEquiv
   let t := m * i.val / B.length alpha
   have hdecomp := evenlyMarkedTheta_mul_residue_decompositions
     B alpha beta i j hEven m
-  change linear_equiv B.graph
+  change linearEquiv B.graph
       ((m : ℤ) •
-        (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j)))
-      (one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q))
+        (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j)))
+      (oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q))
   exact theta_multiple_residue_linearEquiv B alpha beta i p j q m t
     (by simpa [p, t] using hdecomp.1)
     (by simpa [q, t] using hdecomp.2)
@@ -291,14 +291,14 @@ theorem evenlyMarkedTheta_canonical_sub_multiple_residue_linearEquiv
     (B : Banana 2) (alpha beta : Fin 3)
     (i : B.PathPosition alpha) (j : B.PathPosition beta)
     (hEven : EvenlyMarkedTheta B alpha beta i j) (m : ℕ) :
-    linear_equiv B.graph
-      (canonical_divisor B.graph - (m : ℤ) •
-        (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j)))
-      (one_chip (strandVertex B alpha
+    linearEquiv B.graph
+      (canonicalDivisor B.graph - (m : ℤ) •
+        (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j)))
+      (oneChip (strandVertex B alpha
           (strandMirror B alpha ⟨(m * i.val) % B.length alpha, by
             have h := Nat.mod_lt (m * i.val) (B.length_pos alpha)
             omega⟩)) +
-        one_chip (strandVertex B beta ⟨(m * j.val) % B.length beta, by
+        oneChip (strandVertex B beta ⟨(m * j.val) % B.length beta, by
           have h := Nat.mod_lt (m * j.val) (B.length_pos beta)
           omega⟩)) := by
   let p : B.PathPosition alpha := ⟨(m * i.val) % B.length alpha, by
@@ -309,74 +309,74 @@ theorem evenlyMarkedTheta_canonical_sub_multiple_residue_linearEquiv
     omega⟩
   have hMult := evenlyMarkedTheta_multiple_residue_linearEquiv
     B alpha beta i j hEven m
-  change linear_equiv B.graph
-      (canonical_divisor B.graph - (m : ℤ) •
-        (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j)))
-      (one_chip (strandVertex B alpha (strandMirror B alpha p)) +
-        one_chip (strandVertex B beta q))
-  have hCan : canonical_divisor B.graph =
-      one_chip (leftEndpoint B) + one_chip (rightEndpoint B) := by
+  change linearEquiv B.graph
+      (canonicalDivisor B.graph - (m : ℤ) •
+        (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j)))
+      (oneChip (strandVertex B alpha (strandMirror B alpha p)) +
+        oneChip (strandVertex B beta q))
+  have hCan : canonicalDivisor B.graph =
+      oneChip (leftEndpoint B) + oneChip (rightEndpoint B) := by
     simpa using canonical_divisor_eq_endpoints B
   have hRef0 := endpoint_sum_linearEquiv_strand_reflection B alpha p
-  have hRef : linear_equiv B.graph (canonical_divisor B.graph)
-      (one_chip (strandVertex B alpha p) +
-        one_chip (strandVertex B alpha (strandMirror B alpha p))) := by
+  have hRef : linearEquiv B.graph (canonicalDivisor B.graph)
+      (oneChip (strandVertex B alpha p) +
+        oneChip (strandVertex B alpha (strandMirror B alpha p))) := by
     rw [hCan]
     exact hRef0
-  have hFirst : linear_equiv B.graph
-      (canonical_divisor B.graph - (m : ℤ) •
-        (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j)))
-      (canonical_divisor B.graph -
-        (one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q))) := by
-    unfold linear_equiv at hMult ⊢
+  have hFirst : linearEquiv B.graph
+      (canonicalDivisor B.graph - (m : ℤ) •
+        (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j)))
+      (canonicalDivisor B.graph -
+        (oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q))) := by
+    unfold linearEquiv at hMult ⊢
     have hDiff :
-        (canonical_divisor B.graph -
-          (one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q))) -
-        (canonical_divisor B.graph - (m : ℤ) •
-          (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j))) =
-        - ((one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q)) -
-          (m : ℤ) • (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j))) := by
+        (canonicalDivisor B.graph -
+          (oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q))) -
+        (canonicalDivisor B.graph - (m : ℤ) •
+          (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j))) =
+        - ((oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q)) -
+          (m : ℤ) • (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j))) := by
       abel
     rw [hDiff]
-    exact (principal_divisors B.graph).neg_mem hMult
-  have hSecond : linear_equiv B.graph
-      (canonical_divisor B.graph -
-        (one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q)))
-      ((one_chip (strandVertex B alpha p) +
-        one_chip (strandVertex B alpha (strandMirror B alpha p))) -
-        (one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q))) := by
-    unfold linear_equiv at hRef ⊢
+    exact (principalDivisors B.graph).neg_mem hMult
+  have hSecond : linearEquiv B.graph
+      (canonicalDivisor B.graph -
+        (oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q)))
+      ((oneChip (strandVertex B alpha p) +
+        oneChip (strandVertex B alpha (strandMirror B alpha p))) -
+        (oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q))) := by
+    unfold linearEquiv at hRef ⊢
     have hDiff :
-        ((one_chip (strandVertex B alpha p) +
-          one_chip (strandVertex B alpha (strandMirror B alpha p))) -
-          (one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q))) -
-        (canonical_divisor B.graph -
-          (one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q))) =
-        (one_chip (strandVertex B alpha p) +
-          one_chip (strandVertex B alpha (strandMirror B alpha p))) -
-          canonical_divisor B.graph := by abel
+        ((oneChip (strandVertex B alpha p) +
+          oneChip (strandVertex B alpha (strandMirror B alpha p))) -
+          (oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q))) -
+        (canonicalDivisor B.graph -
+          (oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q))) =
+        (oneChip (strandVertex B alpha p) +
+          oneChip (strandVertex B alpha (strandMirror B alpha p))) -
+          canonicalDivisor B.graph := by abel
     rw [hDiff]
     exact hRef
-  have hCancel : linear_equiv B.graph
-      (canonical_divisor B.graph -
-        (one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q)))
-      (one_chip (strandVertex B alpha (strandMirror B alpha p)) +
-        one_chip (strandVertex B beta q)) := by
+  have hCancel : linearEquiv B.graph
+      (canonicalDivisor B.graph -
+        (oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q)))
+      (oneChip (strandVertex B alpha (strandMirror B alpha p)) +
+        oneChip (strandVertex B beta q)) := by
     convert hSecond using 1 ; abel
   exact hFirst.trans hCancel
 
 private theorem linear_equiv_sub_right' {G : CFGraph} {A B C : CFDiv G}
-    (hAB : linear_equiv G A B) :
-    linear_equiv G (C - A) (C - B) := by
-  unfold linear_equiv at hAB ⊢
+    (hAB : linearEquiv G A B) :
+    linearEquiv G (C - A) (C - B) := by
+  unfold linearEquiv at hAB ⊢
   have h : (C - B) - (C - A) = -(B - A) := by abel
   rw [h]
-  exact (principal_divisors G).neg_mem hAB
+  exact (principalDivisors G).neg_mem hAB
 
 private theorem linear_equiv_sub_left' {G : CFGraph} {A B C : CFDiv G}
-    (hAB : linear_equiv G A B) :
-    linear_equiv G (A - C) (B - C) := by
-  unfold linear_equiv at hAB ⊢
+    (hAB : linearEquiv G A B) :
+    linearEquiv G (A - C) (B - C) := by
+  unfold linearEquiv at hAB ⊢
   have h : (B - C) - (A - C) = B - A := by abel
   rw [h]
   exact hAB
@@ -384,12 +384,12 @@ private theorem linear_equiv_sub_left' {G : CFGraph} {A B C : CFDiv G}
 /-- Rank support is invariant under linear equivalence of the ambient
 divisor. -/
 theorem rankSupport_eq_of_linearEquiv {G : CFGraph} {A B : CFDiv G}
-    (hAB : linear_equiv G A B) :
+    (hAB : linearEquiv G A B) :
     rankSupport G A = rankSupport G B := by
   ext w
-  change 0 ≤ rank G (A - one_chip w) ↔ 0 ≤ rank G (B - one_chip w)
+  change 0 ≤ rank G (A - oneChip w) ↔ 0 ≤ rank G (B - oneChip w)
   rw [rank_eq_of_linear_equiv G
-    (linear_equiv_sub_left' hAB (C := one_chip w))]
+    (linear_equiv_sub_left' hAB (C := oneChip w))]
 
 /-- In the no-wrap range, the canonical complement of a multiple of the
 marked difference is represented by the reflection of the first advanced
@@ -399,37 +399,37 @@ theorem theta_canonical_sub_multiple_noWrap_linearEquiv
     (i : B.PathPosition alpha) (j : B.PathPosition beta) (n : ℕ)
     (hni : n * i.val ≤ B.length alpha)
     (hnj : n * j.val ≤ B.length beta) :
-    linear_equiv B.graph
-      (canonical_divisor B.graph - (n : ℤ) •
-        (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j)))
-      (one_chip (strandVertex B alpha
+    linearEquiv B.graph
+      (canonicalDivisor B.graph - (n : ℤ) •
+        (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j)))
+      (oneChip (strandVertex B alpha
           (strandMirror B alpha ⟨n * i.val, by omega⟩)) +
-        one_chip (strandVertex B beta ⟨n * j.val, by omega⟩)) := by
+        oneChip (strandVertex B beta ⟨n * j.val, by omega⟩)) := by
   let p : B.PathPosition alpha := ⟨n * i.val, by omega⟩
   let q : B.PathPosition beta := ⟨n * j.val, by omega⟩
   have hMult := theta_multiple_noWrap_linearEquiv B alpha beta i j n hni hnj
-  change linear_equiv B.graph
-      (canonical_divisor B.graph - (n : ℤ) •
-        (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j)))
-      (one_chip (strandVertex B alpha (strandMirror B alpha p)) +
-        one_chip (strandVertex B beta q))
-  have hCan : canonical_divisor B.graph =
-      one_chip (leftEndpoint B) + one_chip (rightEndpoint B) := by
+  change linearEquiv B.graph
+      (canonicalDivisor B.graph - (n : ℤ) •
+        (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j)))
+      (oneChip (strandVertex B alpha (strandMirror B alpha p)) +
+        oneChip (strandVertex B beta q))
+  have hCan : canonicalDivisor B.graph =
+      oneChip (leftEndpoint B) + oneChip (rightEndpoint B) := by
     simpa using canonical_divisor_eq_endpoints B
   have hRef0 := endpoint_sum_linearEquiv_strand_reflection B alpha p
-  have hRef : linear_equiv B.graph (canonical_divisor B.graph)
-      (one_chip (strandVertex B alpha p) +
-        one_chip (strandVertex B alpha (strandMirror B alpha p))) := by
+  have hRef : linearEquiv B.graph (canonicalDivisor B.graph)
+      (oneChip (strandVertex B alpha p) +
+        oneChip (strandVertex B alpha (strandMirror B alpha p))) := by
     rw [hCan]
     exact hRef0
-  have hFirst := linear_equiv_sub_right' (C := canonical_divisor B.graph) hMult
+  have hFirst := linear_equiv_sub_right' (C := canonicalDivisor B.graph) hMult
   have hSecond := linear_equiv_sub_left' hRef
-    (C := one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q))
-  have hCancel : linear_equiv B.graph
-      (canonical_divisor B.graph -
-        (one_chip (strandVertex B alpha p) - one_chip (strandVertex B beta q)))
-      (one_chip (strandVertex B alpha (strandMirror B alpha p)) +
-        one_chip (strandVertex B beta q)) := by
+    (C := oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q))
+  have hCancel : linearEquiv B.graph
+      (canonicalDivisor B.graph -
+        (oneChip (strandVertex B alpha p) - oneChip (strandVertex B beta q)))
+      (oneChip (strandVertex B alpha (strandMirror B alpha p)) +
+        oneChip (strandVertex B beta q)) := by
     convert hSecond using 1 ; abel
   exact hFirst.trans hCancel
 
@@ -443,10 +443,10 @@ theorem transmissionPermutation_unique
   funext b
   by_contra hne
   have hσb : (1 : ℤ) = rankDelta M
-      (D + (σ b) • one_chip M.u - b • one_chip M.v) := by
+      (D + (σ b) • oneChip M.u - b • oneChip M.v) := by
     simpa using hσ.2 (σ b) b
   have hτb : (0 : ℤ) = rankDelta M
-      (D + (σ b) • one_chip M.u - b • one_chip M.v) := by
+      (D + (σ b) • oneChip M.u - b • oneChip M.v) := by
     simpa [hne] using hτ.2 (σ b) b
   omega
 
@@ -454,34 +454,34 @@ theorem transmissionPermutation_unique
 permutation whose slipface is the marked rank surface. -/
 theorem transmissionPermutation_rankSlipFace
     (M : TwiceMarked) (D : CFDiv M.graph)
-    (hconn : _root_.graph_connected M.graph) (τ : ℤ → ℤ)
+    (hconn : _root_.graphConnected M.graph) (τ : ℤ → ℤ)
     (hτ : IsTransmissionPermutation M D τ) :
     ∃ σ : AspPerm,
       σ.func = τ ∧
-        σ.s = rankSlipFace M (D - one_chip M.u) hconn := by
+        σ.s = rankSlipFace M (D - oneChip M.u) hconn := by
   have hsub :
-      (rankSlipFace M (D - one_chip M.u) hconn).submodular := by
+      (rankSlipFace M (D - oneChip M.u) hconn).submodular := by
     intro a b
     rw [rankSlipFace_Delta]
     have hDiv :
-        D - one_chip M.u + (a + 1) • one_chip M.u -
-            b • one_chip M.v =
-          D + a • one_chip M.u - b • one_chip M.v := by
+        D - oneChip M.u + (a + 1) • oneChip M.u -
+            b • oneChip M.v =
+          D + a • oneChip M.u - b • oneChip M.v := by
       rw [add_smul, one_smul]
       abel
     rw [hDiv, ← hτ.2 a b]
     split <;> omega
   obtain ⟨σ, hσSlip⟩ :=
     (Submodular.submodular_iff_asp
-      (rankSlipFace M (D - one_chip M.u) hconn)).mp hsub
+      (rankSlipFace M (D - oneChip M.u) hconn)).mp hsub
   have hσ : IsTransmissionPermutation M D σ.func := by
     refine ⟨σ.bijective, ?_⟩
     intro a b
     rw [← σ.Delta_eq a b, hσSlip, rankSlipFace_Delta]
     have hDiv :
-        D - one_chip M.u + (a + 1) • one_chip M.u -
-            b • one_chip M.v =
-          D + a • one_chip M.u - b • one_chip M.v := by
+        D - oneChip M.u + (a + 1) • oneChip M.u -
+            b • oneChip M.v =
+          D + a • oneChip M.u - b • oneChip M.v := by
       rw [add_smul, one_smul]
       abel
     rw [hDiv]
@@ -490,43 +490,43 @@ theorem transmissionPermutation_rankSlipFace
 /-- Paper Lemma `lem:tauChars`, southeast/rank form. -/
 theorem transmission_rank_eq_southeast_ncard
     (M : TwiceMarked) (D : CFDiv M.graph)
-    (hconn : _root_.graph_connected M.graph) (τ : ℤ → ℤ)
+    (hconn : _root_.graphConnected M.graph) (τ : ℤ → ℤ)
     (hτ : IsTransmissionPermutation M D τ) (a b : ℤ) :
-    rank M.graph (D + a • one_chip M.u - b • one_chip M.v) + 1 =
-      (southeast_set τ (a + 1) b).ncard := by
+    rank M.graph (D + a • oneChip M.u - b • oneChip M.v) + 1 =
+      (southeastSet τ (a + 1) b).ncard := by
   obtain ⟨σ, hστ, hσSlip⟩ :=
     transmissionPermutation_rankSlipFace M D hconn τ hτ
   have hDiv :
-      D - one_chip M.u + (a + 1) • one_chip M.u -
-          b • one_chip M.v =
-        D + a • one_chip M.u - b • one_chip M.v := by
+      D - oneChip M.u + (a + 1) • oneChip M.u -
+          b • oneChip M.v =
+        D + a • oneChip M.u - b • oneChip M.v := by
     rw [add_smul, one_smul]
     abel
   calc
-    rank M.graph (D + a • one_chip M.u - b • one_chip M.v) + 1 =
-        rankSlipFace M (D - one_chip M.u) hconn (a + 1) b := by
+    rank M.graph (D + a • oneChip M.u - b • oneChip M.v) + 1 =
+        rankSlipFace M (D - oneChip M.u) hconn (a + 1) b := by
           rw [rankSlipFace_apply, hDiv]
     _ = σ.s (a + 1) b := by rw [hσSlip]
-    _ = (southeast_set σ.func (a + 1) b).ncard := σ.s_eq_ncard _ _
-    _ = (southeast_set τ (a + 1) b).ncard := by rw [hστ]
+    _ = (southeastSet σ.func (a + 1) b).ncard := σ.s_eq_ncard _ _
+    _ = (southeastSet τ (a + 1) b).ncard := by rw [hστ]
 
 /-- Paper Lemma `lem:tauChars`, northwest/canonical-complement form. -/
 theorem transmission_complement_rank_eq_northwest_ncard
     (M : TwiceMarked) (D : CFDiv M.graph)
-    (hconn : _root_.graph_connected M.graph) (τ : ℤ → ℤ)
+    (hconn : _root_.graphConnected M.graph) (τ : ℤ → ℤ)
     (hτ : IsTransmissionPermutation M D τ) (a b : ℤ) :
     rank M.graph
-        (canonical_divisor M.graph - D - a • one_chip M.u +
-          b • one_chip M.v) + 1 =
-      (northwest_set τ (a + 1) b).ncard := by
+        (canonicalDivisor M.graph - D - a • oneChip M.u +
+          b • oneChip M.v) + 1 =
+      (northwestSet τ (a + 1) b).ncard := by
   obtain ⟨σ, hστ, hσSlip⟩ :=
     transmissionPermutation_rankSlipFace M D hconn τ hτ
   let X : CFDiv M.graph :=
-    D + a • one_chip M.u - b • one_chip M.v
+    D + a • oneChip M.u - b • oneChip M.v
   have hComplement :
-      canonical_divisor M.graph - X =
-        canonical_divisor M.graph - D - a • one_chip M.u +
-          b • one_chip M.v := by
+      canonicalDivisor M.graph - X =
+        canonicalDivisor M.graph - D - a • oneChip M.u +
+          b • oneChip M.v := by
     dsimp [X]
     abel
   have hRR := riemann_roch_for_graphs hconn X
@@ -539,14 +539,14 @@ theorem transmission_complement_rank_eq_northwest_ncard
       σ.s (a + 1) b = rank M.graph X + 1 := by
     rw [hσSlip, rankSlipFace_apply]
     have hDiv :
-        D - one_chip M.u + (a + 1) • one_chip M.u -
-            b • one_chip M.v = X := by
+        D - oneChip M.u + (a + 1) • oneChip M.u -
+            b • oneChip M.v = X := by
       dsimp [X]
       rw [add_smul, one_smul]
       abel
     rw [hDiv]
   have hChi : σ.χ = deg D - genus M.graph := by
-    have hChi' := rankSlipFace_chi M (D - one_chip M.u) hconn
+    have hChi' := rankSlipFace_chi M (D - oneChip M.u) hconn
     rw [← hσSlip] at hChi'
     simpa only [AspPerm.s_chi_eq] using hChi'
       |>.trans (by
@@ -554,17 +554,17 @@ theorem transmission_complement_rank_eq_northwest_ncard
         ring)
   have hDual := σ.duality (a + 1) b
   have hRankEq :
-      rank M.graph (canonical_divisor M.graph - X) + 1 =
+      rank M.graph (canonicalDivisor M.graph - X) + 1 =
         (σ⁻¹).s b (a + 1) := by
     omega
   calc
     rank M.graph
-        (canonical_divisor M.graph - D - a • one_chip M.u +
-          b • one_chip M.v) + 1 =
-        rank M.graph (canonical_divisor M.graph - X) + 1 := by rw [hComplement]
+        (canonicalDivisor M.graph - D - a • oneChip M.u +
+          b • oneChip M.v) + 1 =
+        rank M.graph (canonicalDivisor M.graph - X) + 1 := by rw [hComplement]
     _ = (σ⁻¹).s b (a + 1) := hRankEq
-    _ = (northwest_set σ.func (a + 1) b).ncard := σ.s'_eq_ncard _ _
-    _ = (northwest_set τ (a + 1) b).ncard := by rw [hστ]
+    _ = (northwestSet σ.func (a + 1) b).ncard := σ.s'_eq_ncard _ _
+    _ = (northwestSet τ (a + 1) b).ncard := by rw [hστ]
 
 /-! ## The geometric support input for evenly marked theta graphs -/
 
@@ -577,12 +577,12 @@ theorem rankSupport_two_distinct_interior_strand_chips
     (hp : B.IsInteriorPosition alpha p)
     (hq : B.IsInteriorPosition beta q) (hab : alpha ≠ beta) :
     rankSupport B.graph
-        (one_chip (strandVertex B alpha p) +
-          one_chip (strandVertex B beta q)) =
+        (oneChip (strandVertex B alpha p) +
+          oneChip (strandVertex B beta q)) =
       {strandVertex B alpha p, strandVertex B beta q} := by
   let x := strandVertex B alpha p
   let y := strandVertex B beta q
-  let E : CFDiv B.graph := one_chip x + one_chip y
+  let E : CFDiv B.graph := oneChip x + oneChip y
   have hxy : x ≠ y := by
     intro h
     exact hab (strand_eq_of_interior_vertex_eq B alpha beta p q hp hq h)
@@ -607,24 +607,24 @@ theorem rankSupport_two_distinct_interior_strand_chips
       simp [y, hwy]
     have hEw : E w = 0 := by
       dsimp [E]
-      simp only [one_chip, if_neg hnx, if_neg hny, add_zero]
+      simp only [oneChip, if_neg hnx, if_neg hny, add_zero]
     have hRank := rank_semibreak_sub_vertex_eq_neg_one B E hSemi hDeg w hEw
-    have hw' : 0 ≤ rank B.graph (E - one_chip w) := by
+    have hw' : 0 ≤ rank B.graph (E - oneChip w) := by
       simpa [rankSupport, E, x, y] using hw
     omega
   · intro hw
     rcases hw with rfl | rfl
-    · have hDiv : E - one_chip x = one_chip y := by
+    · have hDiv : E - oneChip x = oneChip y := by
         dsimp [E]
         abel
-      have hRank : rank B.graph (E - one_chip x) = 0 := by
+      have hRank : rank B.graph (E - oneChip x) = 0 := by
         rw [hDiv]
         exact rank_one_chip_zero_banana_two B y
       simpa [rankSupport, E, x, y] using hRank.ge
-    · have hDiv : E - one_chip y = one_chip x := by
+    · have hDiv : E - oneChip y = oneChip x := by
         dsimp [E]
         abel
-      have hRank : rank B.graph (E - one_chip y) = 0 := by
+      have hRank : rank B.graph (E - oneChip y) = 0 := by
         rw [hDiv]
         exact rank_one_chip_zero_banana_two B x
       simpa [rankSupport, E, x, y] using hRank.ge
@@ -640,8 +640,8 @@ theorem rankSupport_canonical_sub_multiple_noWrap
       (strandMirror B alpha ⟨n * i.val, by omega⟩))
     (hq : B.IsInteriorPosition beta ⟨n * j.val, by omega⟩) :
     rankSupport B.graph
-      (canonical_divisor B.graph - (n : ℤ) •
-        (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j))) =
+      (canonicalDivisor B.graph - (n : ℤ) •
+        (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j))) =
       {strandVertex B alpha (strandMirror B alpha ⟨n * i.val, by omega⟩),
         strandVertex B beta ⟨n * j.val, by omega⟩} := by
   let p : B.PathPosition alpha := ⟨n * i.val, by omega⟩
@@ -649,8 +649,8 @@ theorem rankSupport_canonical_sub_multiple_noWrap
   have hComp := theta_canonical_sub_multiple_noWrap_linearEquiv
     B alpha beta i j n hni hnj
   change rankSupport B.graph
-      (canonical_divisor B.graph - (n : ℤ) •
-        (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j))) =
+      (canonicalDivisor B.graph - (n : ℤ) •
+        (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j))) =
       {strandVertex B alpha (strandMirror B alpha p), strandVertex B beta q}
   rw [rankSupport_eq_of_linearEquiv hComp]
   exact rankSupport_two_distinct_interior_strand_chips B alpha beta
@@ -666,8 +666,8 @@ theorem rankSupport_evenlyMarkedTheta_canonical_sub_multiple_residue
     (hm0 : 0 < m)
     (hmk : m < B.length alpha / Nat.gcd (B.length alpha) i.val) :
     rankSupport B.graph
-      (canonical_divisor B.graph - (m : ℤ) •
-        (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j))) =
+      (canonicalDivisor B.graph - (m : ℤ) •
+        (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j))) =
       {strandVertex B alpha
           (strandMirror B alpha ⟨(m * i.val) % B.length alpha, by
             have h := Nat.mod_lt (m * i.val) (B.length_pos alpha)
@@ -696,8 +696,8 @@ theorem rankSupport_evenlyMarkedTheta_canonical_sub_multiple_residue
   have hComp := evenlyMarkedTheta_canonical_sub_multiple_residue_linearEquiv
     B alpha beta i j hEven m
   change rankSupport B.graph
-      (canonical_divisor B.graph - (m : ℤ) •
-        (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j))) =
+      (canonicalDivisor B.graph - (m : ℤ) •
+        (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j))) =
       {strandVertex B alpha (strandMirror B alpha p), strandVertex B beta q}
   rw [rankSupport_eq_of_linearEquiv hComp]
   exact rankSupport_two_distinct_interior_strand_chips B alpha beta
@@ -715,9 +715,9 @@ theorem disjoint_rankSupport_two_distinct_interior_strand_chips
     (hpp : p.val ≠ p'.val) (hqq : q.val ≠ q'.val) :
     Disjoint
       (rankSupport B.graph
-        (one_chip (strandVertex B alpha p) + one_chip (strandVertex B beta q)))
+        (oneChip (strandVertex B alpha p) + oneChip (strandVertex B beta q)))
       (rankSupport B.graph
-        (one_chip (strandVertex B alpha p') + one_chip (strandVertex B beta q'))) := by
+        (oneChip (strandVertex B alpha p') + oneChip (strandVertex B beta q'))) := by
   rw [rankSupport_two_distinct_interior_strand_chips B alpha beta p q hp hq hab,
     rankSupport_two_distinct_interior_strand_chips B alpha beta p' q' hp' hq' hab]
   rw [Set.disjoint_left]
@@ -746,11 +746,11 @@ theorem disjoint_rankSupport_evenlyMarkedTheta_canonical_sub_multiple_residue
     (hmn : m ≠ n) :
     Disjoint
       (rankSupport B.graph
-        (canonical_divisor B.graph - (m : ℤ) •
-          (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j))))
+        (canonicalDivisor B.graph - (m : ℤ) •
+          (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j))))
       (rankSupport B.graph
-        (canonical_divisor B.graph - (n : ℤ) •
-          (one_chip (strandVertex B alpha i) - one_chip (strandVertex B beta j)))) := by
+        (canonicalDivisor B.graph - (n : ℤ) •
+          (oneChip (strandVertex B alpha i) - oneChip (strandVertex B beta j)))) := by
   let pm : B.PathPosition alpha := ⟨(m * i.val) % B.length alpha, by
     have h := Nat.mod_lt (m * i.val) (B.length_pos alpha)
     omega⟩
@@ -829,26 +829,26 @@ visible chip into the rank support of the canonical complement. -/
 private theorem mem_rankSupport_canonical_sub_of_rank_nonneg
     (B : Banana 2) (u v w : B.graph.V) (n : ℕ)
     (hRank : 0 ≤ rank B.graph
-      (one_chip w + (n : ℤ) • (one_chip u - one_chip v))) :
+      (oneChip w + (n : ℤ) • (oneChip u - oneChip v))) :
     w ∈ rankSupport B.graph
-      (canonical_divisor B.graph - (n : ℤ) • (one_chip u - one_chip v)) := by
+      (canonicalDivisor B.graph - (n : ℤ) • (oneChip u - oneChip v)) := by
   let X : CFDiv B.graph :=
-    one_chip w + (n : ℤ) • (one_chip u - one_chip v)
+    oneChip w + (n : ℤ) • (oneChip u - oneChip v)
   have hDeg : deg X = 1 := by
     dsimp [X]
     rw [deg.map_add, deg_one_chip, map_zsmul, deg.map_sub,
       deg_one_chip, deg_one_chip]
     norm_num
-  have hRR := riemann_roch_for_graphs (graph_connected B) X
+  have hRR := riemann_roch_for_graphs (graphConnected B) X
   rw [B.genus_graph, hDeg] at hRR
-  have hDual : rank B.graph (canonical_divisor B.graph - X) = rank B.graph X := by
+  have hDual : rank B.graph (canonicalDivisor B.graph - X) = rank B.graph X := by
     omega
   change 0 ≤ rank B.graph
-    ((canonical_divisor B.graph - (n : ℤ) • (one_chip u - one_chip v)) -
-      one_chip w)
+    ((canonicalDivisor B.graph - (n : ℤ) • (oneChip u - oneChip v)) -
+      oneChip w)
   have hRewrite :
-      (canonical_divisor B.graph - (n : ℤ) • (one_chip u - one_chip v)) -
-          one_chip w = canonical_divisor B.graph - X := by
+      (canonicalDivisor B.graph - (n : ℤ) • (oneChip u - oneChip v)) -
+          oneChip w = canonicalDivisor B.graph - X := by
     dsimp [X]
     abel
   rw [hRewrite]
@@ -889,9 +889,9 @@ theorem evenlyMarkedTheta_mark_pair_rank_zero
     (i : B.PathPosition alpha) (j : B.PathPosition beta)
     (hEven : EvenlyMarkedTheta B alpha beta i j) :
     rank B.graph
-      (one_chip (strandVertex B alpha i) + one_chip (strandVertex B beta j)) = 0 := by
+      (oneChip (strandVertex B alpha i) + oneChip (strandVertex B beta j)) = 0 := by
   have hSemi : IsSemibreak B
-      (one_chip (strandVertex B alpha i) + one_chip (strandVertex B beta j)) := by
+      (oneChip (strandVertex B alpha i) + oneChip (strandVertex B beta j)) := by
     exact isSemibreak_two_distinct_strand_chips B alpha beta i j
       ⟨hEven.2.1, hEven.2.2.1⟩ ⟨hEven.2.2.2.1, hEven.2.2.2.2.1⟩ hEven.1
   apply rank_semibreak_eq_zero B _ hSemi
@@ -904,15 +904,15 @@ theorem evenlyMarkedTheta_mark_pair_not_linearEquiv_canonical
     (B : Banana 2) (alpha beta : Fin 3)
     (i : B.PathPosition alpha) (j : B.PathPosition beta)
     (hEven : EvenlyMarkedTheta B alpha beta i j) :
-    ¬ linear_equiv B.graph
-      (one_chip (strandVertex B alpha i) + one_chip (strandVertex B beta j))
-      (canonical_divisor B.graph) := by
+    ¬ linearEquiv B.graph
+      (oneChip (strandVertex B alpha i) + oneChip (strandVertex B beta j))
+      (canonicalDivisor B.graph) := by
   intro hEq
   have hPair := evenlyMarkedTheta_mark_pair_rank_zero B alpha beta i j hEven
   have hRankEq := rank_eq_of_linear_equiv B.graph hEq
-  have hKRank : rank B.graph (canonical_divisor B.graph) = 1 := by
-    have hRR := riemann_roch_for_graphs (graph_connected B)
-      (canonical_divisor B.graph)
+  have hKRank : rank B.graph (canonicalDivisor B.graph) = 1 := by
+    have hRR := riemann_roch_for_graphs (graphConnected B)
+      (canonicalDivisor B.graph)
     rw [sub_self, zero_divisor_rank, degree_of_canonical_divisor,
       B.genus_graph] at hRR
     omega

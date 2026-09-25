@@ -35,7 +35,7 @@ theorem crossOneOff_corrected_inversion_lower_bound
       (mark B.graph
         (strandVertex B alpha ⟨1, by omega⟩)
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau)
+      (g • oneChip (rightEndpoint B)) tau)
     (hSeparate : crossOneOffCutoff g (B.length beta) ≤ k)
     (hfinite : (kInversions k tau).Finite) :
     correctedCrossOneOffForcedCount g (B.length beta) ≤
@@ -61,7 +61,7 @@ theorem crossOneOff_corrected_inversion_lower_bound_of_not_both_two
       (mark B.graph
         (strandVertex B alpha ⟨1, by omega⟩)
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau)
+      (g • oneChip (rightEndpoint B)) tau)
     (hTO : IsTorsionOrder
       (mark B.graph
         (strandVertex B alpha ⟨1, by omega⟩)

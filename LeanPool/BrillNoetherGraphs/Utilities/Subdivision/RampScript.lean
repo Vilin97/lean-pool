@@ -79,7 +79,7 @@ def rampValue (spec : SubdivisionGraph.Spec n p) (pot : Fin n → ℤ)
 /-- The ramp firing script. -/
 def rampScript (spec : SubdivisionGraph.Spec n p) (pot : Fin n → ℤ)
     (sgn : Fin p → ℤ) (lo : Fin p → ℕ) (t : ℕ) :
-    firing_script spec.graph :=
+    firingScript spec.graph :=
   spec.slotValueScript pot (rampValue spec pot sgn lo t)
 
 /-- Unit-step slopes of a ramp script. -/

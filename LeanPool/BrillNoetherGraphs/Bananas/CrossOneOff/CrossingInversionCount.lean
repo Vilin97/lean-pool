@@ -38,7 +38,7 @@ private theorem crossing_collision_count_oriented
   have hkZ : 0 < (k : ℤ) := by exact_mod_cast hk
   by_cases hkOne : k = 1
   · subst k
-    have hInv : (a, b) ∈ inv_set tau := by
+    have hInv : (a, b) ∈ invSet tau := by
       exact ⟨by omega, by omega⟩
     have hmem := inversion_normalize_first_coordinate (k := 1)
       (tau := tau) (by omega) hAffine hInv
@@ -114,7 +114,7 @@ private theorem crossing_collision_count_oriented
     have hiHi : i ≤ a + 2 * (k : ℤ) + 1 :=
       (Finset.mem_Icc.mp hiData.1).2
     by_cases hiTau : tau i ≤ 0
-    · have hInv : (a, i) ∈ inv_set tau := ⟨hiLo, by omega⟩
+    · have hInv : (a, i) ∈ invSet tau := ⟨hiLo, by omega⟩
       simpa [representative, candidate, hiTau, normalizeInversionFirst] using
         inversion_normalize_first_coordinate hk hAffine hInv
     · have hib' : i < b' := by
@@ -123,7 +123,7 @@ private theorem crossing_collision_count_oriented
         have hibEq : i = b' := by omega
         subst i
         omega
-      have hInv : (i, b') ∈ inv_set tau := ⟨hib', by omega⟩
+      have hInv : (i, b') ∈ invSet tau := ⟨hib', by omega⟩
       simpa [representative, candidate, hiTau, normalizeInversionFirst] using
         inversion_normalize_first_coordinate hk hAffine hInv
   have hNotCongruent : ∀ i ∈ I, i % k ≠ a % k := by

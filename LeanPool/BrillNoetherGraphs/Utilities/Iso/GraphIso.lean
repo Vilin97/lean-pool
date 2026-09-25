@@ -11,7 +11,7 @@ import LeanPool.BrillNoetherGraphs.Utilities.Foundations.Parameters
 
 This module transports divisor theory along an equivalence of vertex types
 that preserves every edge multiplicity. The definition deliberately ignores
-the orientation chosen for pairs in the raw edge multiset: `num_edges` is the
+the orientation chosen for pairs in the raw edge multiset: `numEdges` is the
 mathematical graph structure used by chip firing.
 -/
 
@@ -24,7 +24,7 @@ types preserving every edge multiplicity. -/
 structure CFGraphIso (G : CFGraph.{u}) (H : CFGraph.{v}) where
   vertexEquiv : G.V ≃ H.V
   map_num_edges : ∀ x y : G.V,
-    num_edges H (vertexEquiv x) (vertexEquiv y) = num_edges G x y
+    numEdges H (vertexEquiv x) (vertexEquiv y) = numEdges G x y
 
 namespace CFGraphIso
 
@@ -58,7 +58,7 @@ def mapDiv (φ : CFGraphIso G H) : CFDiv G ≃+ CFDiv H :=
 
 /-- Relabeling a firing script is the same additive equivalence as relabeling
 a divisor. -/
-abbrev mapScript (φ : CFGraphIso G H) : firing_script G ≃+ firing_script H :=
+abbrev mapScript (φ : CFGraphIso G H) : firingScript G ≃+ firingScript H :=
   φ.mapDiv
 
 @[simp] theorem mapDiv_apply (φ : CFGraphIso G H) (D : CFDiv G) (w : H.V) :
@@ -87,15 +87,15 @@ abbrev mapScript (φ : CFGraphIso G H) : firing_script G ≃+ firing_script H :=
 
 /-- Relabeling carries a one-chip divisor to the corresponding vertex. -/
 @[simp] theorem mapDiv_one_chip (φ : CFGraphIso G H) (v : G.V) :
-    φ.mapDiv (one_chip v) = one_chip (φ.vertexEquiv v) := by
+    φ.mapDiv (oneChip v) = oneChip (φ.vertexEquiv v) := by
   funext w
   obtain ⟨x, rfl⟩ := φ.vertexEquiv.surjective w
-  simp [one_chip]
+  simp [oneChip]
 
 /-- Vertex degree is invariant under graph isomorphism. -/
 @[simp] theorem vertex_degree_map (φ : CFGraphIso G H) (v : G.V) :
-    vertex_degree H (φ.vertexEquiv v) = vertex_degree G v := by
-  unfold vertex_degree
+    vertexDegree H (φ.vertexEquiv v) = vertexDegree G v := by
+  unfold vertexDegree
   rw [← φ.vertexEquiv.sum_comp]
   simp [φ.map_num_edges]
 
@@ -116,16 +116,16 @@ abbrev mapScript (φ : CFGraphIso G H) : firing_script G ≃+ firing_script H :=
 
 /-- Principal divisors commute with relabeling. -/
 @[simp] theorem mapDiv_prin
-    (φ : CFGraphIso G H) (σ : firing_script G) :
+    (φ : CFGraphIso G H) (σ : firingScript G) :
     φ.mapDiv (prin G σ) = prin H (φ.mapScript σ) := by
   funext w
   obtain ⟨v, rfl⟩ := φ.vertexEquiv.surjective w
   rw [mapDiv_apply_vertex]
   change
-    (∑ u : G.V, (σ u - σ v) * (num_edges G v u : ℤ)) =
+    (∑ u : G.V, (σ u - σ v) * (numEdges G v u : ℤ)) =
       ∑ z : H.V,
         (φ.mapScript σ z - φ.mapScript σ (φ.vertexEquiv v)) *
-          (num_edges H (φ.vertexEquiv v) z : ℤ)
+          (numEdges H (φ.vertexEquiv v) z : ℤ)
   rw [← φ.vertexEquiv.sum_comp]
   simp [φ.map_num_edges]
 
@@ -133,10 +133,10 @@ abbrev mapScript (φ : CFGraphIso G H) : firing_script G ≃+ firing_script H :=
 relabeling. -/
 @[simp] theorem mem_principal_mapDiv_iff
     (φ : CFGraphIso G H) (D : CFDiv G) :
-    φ.mapDiv D ∈ principal_divisors H ↔ D ∈ principal_divisors G := by
+    φ.mapDiv D ∈ principalDivisors H ↔ D ∈ principalDivisors G := by
   constructor
   · intro h
-    have hMapped : φ.symm.mapDiv (φ.mapDiv D) ∈ principal_divisors G := by
+    have hMapped : φ.symm.mapDiv (φ.mapDiv D) ∈ principalDivisors G := by
       rw [principal_iff_eq_prin] at h ⊢
       obtain ⟨σ, hσ⟩ := h
       refine ⟨φ.symm.mapScript σ, ?_⟩
@@ -151,8 +151,8 @@ relabeling. -/
 /-- Linear equivalence is invariant under relabeling. -/
 @[simp] theorem linear_equiv_mapDiv_iff
     (φ : CFGraphIso G H) (D E : CFDiv G) :
-    linear_equiv H (φ.mapDiv D) (φ.mapDiv E) ↔ linear_equiv G D E := by
-  simpa [linear_equiv] using φ.mem_principal_mapDiv_iff (E - D)
+    linearEquiv H (φ.mapDiv D) (φ.mapDiv E) ↔ linearEquiv G D E := by
+  simpa [linearEquiv] using φ.mem_principal_mapDiv_iff (E - D)
 
 /-- Winnability is invariant under relabeling. -/
 @[simp] theorem winnable_mapDiv_iff
@@ -173,13 +173,13 @@ relabeling. -/
 /-- Relabeling preserves the set of effective divisors of each degree. -/
 @[simp] theorem mem_eff_of_degree_mapDiv_iff
     (φ : CFGraphIso G H) (E : CFDiv G) (k : ℤ) :
-    φ.mapDiv E ∈ eff_of_degree H k ↔ E ∈ eff_of_degree G k := by
-  simp [eff_of_degree]
+    φ.mapDiv E ∈ effOfDegree H k ↔ E ∈ effOfDegree G k := by
+  simp [effOfDegree]
 
 /-- Every rank lower bound is invariant under relabeling. -/
 @[simp] theorem rank_geq_mapDiv_iff
     (φ : CFGraphIso G H) (D : CFDiv G) (k : ℤ) :
-    rank_geq H (φ.mapDiv D) k ↔ rank_geq G D k := by
+    rankGeq H (φ.mapDiv D) k ↔ rankGeq G D k := by
   constructor
   · intro hRank E hE
     have hTarget := hRank (φ.mapDiv E)
@@ -189,7 +189,7 @@ relabeling. -/
     exact (φ.winnable_mapDiv_iff (D - E)).mp hTarget'
   · intro hRank E hE
     let E' : CFDiv G := φ.symm.mapDiv E
-    have hE' : E' ∈ eff_of_degree G k := by
+    have hE' : E' ∈ effOfDegree G k := by
       exact (φ.symm.mem_eff_of_degree_mapDiv_iff E k).mpr hE
     have hSource := hRank E' hE'
     have hTarget := (φ.winnable_mapDiv_iff (D - E')).mpr hSource
@@ -216,8 +216,8 @@ even though their choices of pair orientation need not agree. -/
 @[simp] theorem edge_card_eq (φ : CFGraphIso G H) :
     H.edges.card = G.edges.card := by
   have hDegreeSum :
-      (∑ w : H.V, vertex_degree H w) =
-        ∑ v : G.V, vertex_degree G v := by
+      (∑ w : H.V, vertexDegree H w) =
+        ∑ v : G.V, vertexDegree G v := by
     rw [← φ.vertexEquiv.sum_comp]
     simp
   have hH := sum_vertex_degree_eq_twice_card_edges H
@@ -233,7 +233,7 @@ even though their choices of pair orientation need not agree. -/
 /-- Connectivity is transported in the forward direction by a graph
 isomorphism. -/
 theorem graph_connected_map (φ : CFGraphIso G H)
-    (hConnected : graph_connected G) : graph_connected H := by
+    (hConnected : graphConnected G) : graphConnected H := by
   intro S hCut
   let T : Finset G.V := S.map φ.vertexEquiv.symm.toEmbedding
   obtain ⟨a, b, ha, hb⟩ := hCut
@@ -250,7 +250,7 @@ theorem graph_connected_map (φ : CFGraphIso G H)
 
 /-- Graph connectivity is invariant under isomorphism. -/
 @[simp] theorem graph_connected_iff (φ : CFGraphIso G H) :
-    graph_connected H ↔ graph_connected G := by
+    graphConnected H ↔ graphConnected G := by
   exact ⟨φ.symm.graph_connected_map, φ.graph_connected_map⟩
 
 /-- Brill--Noether existence is invariant under graph isomorphism. -/

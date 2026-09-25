@@ -33,9 +33,9 @@ theorem factor_torsionOrders_eq_of_vertexWedge_opposite_kGeneral
     (hA : IsTorsionOrder (mark G u x) a)
     (hB : IsTorsionOrder (mark H y v) b)
     (hWCut : TwoEdgeCutCondition (vertexWedge G H x y))
-    (hWRigid : ¬ linear_equiv (vertexWedge G H x y)
-      (one_chip (Sum.inl u) + one_chip (wedgeRightVertex G H x y v))
-      (canonical_divisor (vertexWedge G H x y)))
+    (hWRigid : ¬ linearEquiv (vertexWedge G H x y)
+      (oneChip (Sum.inl u) + oneChip (wedgeRightVertex G H x y v))
+      (canonicalDivisor (vertexWedge G H x y)))
     (haOne : 1 < a) (hAB : a ≤ b)
     (hK : KGeneralTransmission
       (mark (vertexWedge G H x y) (Sum.inl u)
@@ -44,7 +44,7 @@ theorem factor_torsionOrders_eq_of_vertexWedge_opposite_kGeneral
   let W := vertexWedge G H x y
   let U : W.V := Sum.inl u
   let V : W.V := wedgeRightVertex G H x y v
-  have hWConn : _root_.graph_connected W :=
+  have hWConn : _root_.graphConnected W :=
     graph_connected_vertexWedge G H x y hG.connected hH.connected
   have hWGenus : genus W = 2 := by
     dsimp [W]
@@ -57,8 +57,8 @@ theorem factor_torsionOrders_eq_of_vertexWedge_opposite_kGeneral
   have hWNontrivial : ∃ p q : W.V, p ≠ q := ⟨U, V, hUV⟩
   have hK' : KGeneralTransmission (mark W U V) k := by
     simpa only [W, U, V] using hK
-  have hWRigid' : ¬ linear_equiv W (one_chip U + one_chip V)
-      (canonical_divisor W) := by
+  have hWRigid' : ¬ linearEquiv W (oneChip U + oneChip V)
+      (canonicalDivisor W) := by
     simpa only [W, U, V] using hWRigid
   have hWPos : 0 < genus (mark W U V).graph := by
     change 0 < genus W
@@ -84,9 +84,9 @@ theorem pointedGenusOneRigid_vertexWedge_opposite_kGeneral_iff_orders_eq
     (hA : IsTorsionOrder (mark G u x) a)
     (hB : IsTorsionOrder (mark H y v) b)
     (hWCut : TwoEdgeCutCondition (vertexWedge G H x y))
-    (hWRigid : ¬ linear_equiv (vertexWedge G H x y)
-      (one_chip (Sum.inl u) + one_chip (wedgeRightVertex G H x y v))
-      (canonical_divisor (vertexWedge G H x y)))
+    (hWRigid : ¬ linearEquiv (vertexWedge G H x y)
+      (oneChip (Sum.inl u) + oneChip (wedgeRightVertex G H x y v))
+      (canonicalDivisor (vertexWedge G H x y)))
     (haOne : 1 < a) (hAB : a ≤ b) :
     KGeneralTransmission
       (mark (vertexWedge G H x y) (Sum.inl u)

@@ -14,7 +14,7 @@ import Mathlib.Tactic
 `GraphContractionCertificate.Valid` records the quotient multiplicities.  A
 topological contraction additionally has connected vertex fibres.  This file
 expresses that condition by the same finite-cut criterion as
-`graph_connected`, so it admits an exact Boolean replay checker.
+`graphConnected`, so it admits an exact Boolean replay checker.
 
 The fibre condition is deliberately separate from `Valid`: quotient
 multiplicities alone do not prevent a certificate from identifying two
@@ -41,7 +41,7 @@ def FibreConnectedAt (c : GraphContractionCertificate G H) (target : H.V) : Prop
         c.vertexMap inside = target ∧ c.vertexMap outside = target) →
     ∃ inside ∈ S, ∃ outside ∉ S,
       c.vertexMap inside = target ∧ c.vertexMap outside = target ∧
-        num_edges G inside outside > 0
+        numEdges G inside outside > 0
 
 /-- Every vertex fibre is connected. -/
 def ConnectedFibres (c : GraphContractionCertificate G H) : Prop :=
@@ -56,7 +56,7 @@ def connectedFibresCheck (c : GraphContractionCertificate G H) : Bool :=
           c.vertexMap inside = target ∧ c.vertexMap outside = target) →
         ∃ inside ∈ S, ∃ outside ∉ S,
           c.vertexMap inside = target ∧ c.vertexMap outside = target ∧
-            num_edges G inside outside > 0)
+            numEdges G inside outside > 0)
 
 @[simp] theorem connectedFibresCheck_eq_true_iff
     (c : GraphContractionCertificate G H) :
@@ -89,8 +89,8 @@ fibre; it therefore descends to a nontrivial target cut, whose crossing edge
 lifts through the quotient multiplicity equation. -/
 theorem graph_connected_of_topologicalValid
     (c : GraphContractionCertificate G H) (hTopological : c.TopologicalValid)
-    (hTarget : graph_connected H) :
-    graph_connected G := by
+    (hTarget : _root_.graphConnected H) :
+    _root_.graphConnected G := by
   classical
   intro S hSplit
   obtain ⟨x, y, hxS, hyS⟩ := hSplit
@@ -117,12 +117,12 @@ theorem graph_connected_of_topologicalValid
     exact hbT (by simpa [hab] using haT)
   have hSum : 0 < ∑ source : G.V, ∑ other : G.V,
       if c.vertexMap source = a ∧ c.vertexMap other = b then
-        num_edges G source other else 0 := by
+        numEdges G source other else 0 := by
     rw [← hTopological.1.2 a b hab]
     exact hTargetEdge
   have hOuter : ∃ source : G.V, 0 < ∑ other : G.V,
       if c.vertexMap source = a ∧ c.vertexMap other = b then
-        num_edges G source other else 0 := by
+        numEdges G source other else 0 := by
     obtain ⟨source, _, hSource⟩ :=
       (Finset.sum_pos_iff_of_nonneg (fun _ _ => Nat.zero_le _)).mp hSum
     exact ⟨source, hSource⟩

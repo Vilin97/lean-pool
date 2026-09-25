@@ -1251,11 +1251,11 @@ theorem rowDivisor_reaches_coreVertex {d : DegSpec 8 12}
           (fun w => by rw [lbCoeff_eq hCore hB hC w]; exact lbCoeff_nonneg hB w)
           (by rw [lbCoeff_eq hCore hB hC 1]; exact lbCoeff_owner_one) v))).reaches
   · exact reaches_of_effective_representative
-      (linear_equiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
+      (linearEquiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
       (one_le_markedDivisorTwo_at_chip d chipWeight (rowMark d) 4 7
         chipWeight_nonneg (c := 2) (by decide))
   · exact reaches_of_effective_representative
-      (linear_equiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
+      (linearEquiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
       (one_le_markedDivisorTwo_at_chip d chipWeight (rowMark d) 4 7
         chipWeight_nonneg (c := 3) (by decide))
   · exact (DharMove.ofScript _ (residual_effective d hpT4 hrT4 hCoreValue

@@ -24,7 +24,7 @@ open Utilities
 /-- On a nontrivial connected graph with no one-edge cut, an effective
 degree-one divisor has rank zero. -/
 theorem rank_eq_zero_of_degree_one_rank_nonneg_of_twoEdgeCutCondition
-    (G : CFGraph) (hConnected : _root_.graph_connected G)
+    (G : CFGraph) (hConnected : _root_.graphConnected G)
     (hCut : TwoEdgeCutCondition G) (hNontrivial : ∃ p q : G.V, p ≠ q)
     (X : CFDiv G) (hDegree : deg X = 1) (hRank : 0 ≤ rank G X) :
     rank G X = 0 := by
@@ -43,7 +43,7 @@ most two when the marked difference is nonrecurrent.  This is the cardinality
 estimate in the proof of Theorem 4.8, stated without a theta presentation. -/
 theorem effectiveDegreeOneTwistResidues_ncard_le_two_of_nonRecurrent_bridgeless
     (G : CFGraph) (u v : G.V) (D : CFDiv G) (k : ℕ)
-    (hConnected : _root_.graph_connected G) (hCut : TwoEdgeCutCondition G)
+    (hConnected : _root_.graphConnected G) (hCut : TwoEdgeCutCondition G)
     (hNontrivial : ∃ p q : G.V, p ≠ q)
     (hTO : IsTorsionOrder (mark G u v) k)
     (hNonrec : NonRecurrent (mark G u v) k) :
@@ -65,14 +65,14 @@ theorem effectiveDegreeOneTwistResidues_ncard_le_two_of_nonRecurrent_bridgeless
       (degreeTwistInt M D 1 c.val) hRankC
       (deg_effectiveDegreeOneTwistResidue M D k c)
   let T : Set (Fin k) := {r | 0 ≤ rank G
-    (one_chip w + (r.val : ℤ) • (one_chip u - one_chip v))}
+    (oneChip w + (r.val : ℤ) • (oneChip u - oneChip v))}
   have hMap : ∀ b ∈ S, residueShift k b c ∈ T := by
     intro b hb
     have h := rank_nonneg_rebased_residue_of_effectiveDegreeOneTwist
       hTO.1 D b c w hw (by simpa [S] using hb)
     change 0 ≤ rank G
-      (one_chip w + ((residueShift k b c).val : ℤ) •
-        (one_chip u - one_chip v))
+      (oneChip w + ((residueShift k b c).val : ℤ) •
+        (oneChip u - oneChip v))
     rw [residueShift_val]
     exact h
   have hTtwo : T.ncard ≤ 2 := by
@@ -112,18 +112,18 @@ private theorem fin_eq_of_ncard_le_two_of_mem_three
 the definition of nonrecurrence. -/
 private theorem mem_effectiveDegreeOneTwistResidues_one_chip_iff'
     (G : CFGraph) (u v w : G.V) (k : ℕ) (b : Fin k) :
-    b ∈ effectiveDegreeOneTwistResidues (mark G u v) (one_chip w) k ↔
-      0 ≤ rank G (one_chip w + (b : ℤ) • (one_chip u - one_chip v)) := by
+    b ∈ effectiveDegreeOneTwistResidues (mark G u v) (oneChip w) k ↔
+      0 ≤ rank G (oneChip w + (b : ℤ) • (oneChip u - oneChip v)) := by
   rw [mem_effectiveDegreeOneTwistResidues_iff]
   unfold degreeTwistInt
   change 0 ≤ rank G
-    (one_chip w + (1 - deg (one_chip w) + (b : ℤ)) • one_chip u -
-      (b : ℤ) • one_chip v) ↔ _
+    (oneChip w + (1 - deg (oneChip w) + (b : ℤ)) • oneChip u -
+      (b : ℤ) • oneChip v) ↔ _
   rw [deg_one_chip]
   have hDiv :
-      (one_chip w + (1 - 1 + (b : ℤ)) • one_chip u -
-        (b : ℤ) • one_chip v : CFDiv G) =
-        one_chip w + (b : ℤ) • (one_chip u - one_chip v) := by
+      (oneChip w + (1 - 1 + (b : ℤ)) • oneChip u -
+        (b : ℤ) • oneChip v : CFDiv G) =
+        oneChip w + (b : ℤ) • (oneChip u - oneChip v) := by
     ext x
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply]
     ring
@@ -136,19 +136,19 @@ genus-two graph as soon as its corresponding inversion formula is supplied.
 -/
 theorem nonRecurrent_of_kGeneralTransmission_of_effectiveResidueFormula
     (G : CFGraph) (u v : G.V) (k : ℕ)
-    (hConnected : _root_.graph_connected G)
+    (hConnected : _root_.graphConnected G)
     (hCut : TwoEdgeCutCondition G) (hNontrivial : ∃ p q : G.V, p ≠ q)
     (hGenus : genus G = 2)
     (hFormula : ∀ w τ,
-      IsTransmissionPermutation (mark G u v) (one_chip w) τ →
+      IsTransmissionPermutation (mark G u v) (oneChip w) τ →
       IsKAffine k τ →
       kInversionCount k τ =
-        (effectiveDegreeOneTwistResidues (mark G u v) (one_chip w) k).ncard)
+        (effectiveDegreeOneTwistResidues (mark G u v) (oneChip w) k).ncard)
     (hKGT : KGeneralTransmission (mark G u v) k) :
     NonRecurrent (mark G u v) k := by
   obtain ⟨hTorsion, -, hData⟩ := hKGT
   intro w n m hn hm hnRank hmRank
-  obtain ⟨tau, hTau, hAffine, -, hCount⟩ := hData (one_chip w)
+  obtain ⟨tau, hTau, hAffine, -, hCount⟩ := hData (oneChip w)
   have hEq := hFormula w tau hTau hAffine
   have hGenusNat : Int.toNat (genus (mark G u v).graph) = 2 := by
     change Int.toNat (genus G) = 2
@@ -156,18 +156,18 @@ theorem nonRecurrent_of_kGeneralTransmission_of_effectiveResidueFormula
     rfl
   rw [hGenusNat, hEq] at hCount
   have hzero : (⟨0, hTorsion.1⟩ : Fin k) ∈
-      effectiveDegreeOneTwistResidues (mark G u v) (one_chip w) k := by
+      effectiveDegreeOneTwistResidues (mark G u v) (oneChip w) k := by
     rw [mem_effectiveDegreeOneTwistResidues_one_chip_iff' G u v w k _]
-    have hRank : rank G (one_chip w) = 0 :=
+    have hRank : rank G (oneChip w) = 0 :=
       rank_one_chip_eq_zero_of_twoEdgeCutCondition G
         hConnected hCut hNontrivial w
     simpa using hRank.ge
   have hnMem : n ∈
-      effectiveDegreeOneTwistResidues (mark G u v) (one_chip w) k := by
+      effectiveDegreeOneTwistResidues (mark G u v) (oneChip w) k := by
     rw [mem_effectiveDegreeOneTwistResidues_one_chip_iff' G u v w k _]
     exact hnRank
   have hmMem : m ∈
-      effectiveDegreeOneTwistResidues (mark G u v) (one_chip w) k := by
+      effectiveDegreeOneTwistResidues (mark G u v) (oneChip w) k := by
     rw [mem_effectiveDegreeOneTwistResidues_one_chip_iff' G u v w k _]
     exact hmRank
   exact fin_eq_of_ncard_le_two_of_mem_three hCount hzero hnMem hmMem

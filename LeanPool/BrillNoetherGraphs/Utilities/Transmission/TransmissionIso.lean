@@ -27,9 +27,9 @@ variable {G : CFGraph.{u}} {H : CFGraph.{v}}
 /-- Relabeling commutes with every twice-marked divisor twist. -/
 @[simp] theorem mapDiv_add_marked_twist
     (φ : CFGraphIso G H) (D : CFDiv G) (u v : G.V) (a b : ℤ) :
-    φ.mapDiv (D + a • one_chip u - b • one_chip v) =
-      φ.mapDiv D + a • one_chip (φ.vertexEquiv u) -
-        b • one_chip (φ.vertexEquiv v) := by
+    φ.mapDiv (D + a • oneChip u - b • oneChip v) =
+      φ.mapDiv D + a • oneChip (φ.vertexEquiv u) -
+        b • oneChip (φ.vertexEquiv v) := by
   simp only [map_sub, map_add, map_zsmul, mapDiv_one_chip]
 
 /-- A single transmission rank inequality is invariant under relabeling the
@@ -118,10 +118,10 @@ theorem onceMarkedBNExists_map
     exact hDegree
   · intro c hc
     calc
-      rank H (φ.mapDiv D + c.1 • one_chip (φ.vertexEquiv u)) =
-          rank H (φ.mapDiv (D + c.1 • one_chip u)) := by
+      rank H (φ.mapDiv D + c.1 • oneChip (φ.vertexEquiv u)) =
+          rank H (φ.mapDiv (D + c.1 • oneChip u)) := by
             rw [map_add, map_zsmul, φ.mapDiv_one_chip]
-      _ = rank G (D + c.1 • one_chip u) := φ.rank_mapDiv _
+      _ = rank G (D + c.1 • oneChip u) := φ.rank_mapDiv _
       _ ≥ c.2.2 := hRows c hc
 
 /-- Once-marked partition occurrence is invariant under relabeling the graph

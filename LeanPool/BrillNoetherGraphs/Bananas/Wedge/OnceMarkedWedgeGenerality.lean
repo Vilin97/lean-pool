@@ -35,10 +35,10 @@ universe u v
 prescribed nonnegative rank.  The twist is normalized so that its degree is
 the natural number being searched over. -/
 private theorem exists_normalized_twist_rank_ge
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (i : ℕ) :
     ∃ n : ℕ,
-      rank G (D + ((n : ℤ) - deg D) • one_chip q) ≥ (i : ℤ) := by
+      rank G (D + ((n : ℤ) - deg D) • oneChip q) ≥ (i : ℤ) := by
   have hg : 0 ≤ genus G := genus_nonneg_of_graph_connected G hG
   let n : ℕ := (genus G).toNat + i
   refine ⟨n, ?_⟩
@@ -46,9 +46,9 @@ private theorem exists_normalized_twist_rank_ge
     dsimp [n]
     rw [Int.toNat_of_nonneg hg]
   have hRank := rank_ge_deg_sub_genus hG
-    (D + ((n : ℤ) - deg D) • one_chip q)
+    (D + ((n : ℤ) - deg D) • oneChip q)
   have hDegree :
-      deg (D + ((n : ℤ) - deg D) • one_chip q) = (n : ℤ) := by
+      deg (D + ((n : ℤ) - deg D) • oneChip q) = (n : ℤ) := by
     rw [deg.map_add, map_zsmul, deg_one_chip]
     ring
   rw [hDegree] at hRank
@@ -59,26 +59,26 @@ private theorem exists_normalized_twist_rank_ge
 from degree zero upward; every earlier twist has negative degree and hence
 rank `-1`, so this is also the first twist among all integers. -/
 noncomputable def pointedRankThreshold
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (i : ℕ) : ℤ :=
   (Nat.find (exists_normalized_twist_rank_ge G hG D q i) : ℤ) - deg D
 
 theorem rank_at_pointedRankThreshold_ge
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (i : ℕ) :
-    rank G (D + pointedRankThreshold G hG D q i • one_chip q) ≥
+    rank G (D + pointedRankThreshold G hG D q i • oneChip q) ≥
       (i : ℤ) := by
   exact Nat.find_spec (exists_normalized_twist_rank_ge G hG D q i)
 
 /-- Minimality of the pointed rank threshold among all integral twists. -/
 theorem pointedRankThreshold_le_of_rank_ge
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (i : ℕ) (t : ℤ)
-    (ht : rank G (D + t • one_chip q) ≥ (i : ℤ)) :
+    (ht : rank G (D + t • oneChip q) ≥ (i : ℤ)) :
     pointedRankThreshold G hG D q i ≤ t := by
   have htDegree : 0 ≤ deg D + t := by
     by_contra hneg
-    have hRankNeg : rank G (D + t • one_chip q) = -1 := by
+    have hRankNeg : rank G (D + t • oneChip q) = -1 := by
       apply rank_neg_one_of_deg_neg
       rw [deg.map_add, map_zsmul, deg_one_chip]
       norm_num
@@ -90,12 +90,12 @@ theorem pointedRankThreshold_le_of_rank_ge
     dsimp [n]
     exact Int.toNat_of_nonneg htDegree
   have hTwist :
-      D + ((n : ℤ) - deg D) • one_chip q = D + t • one_chip q := by
+      D + ((n : ℤ) - deg D) • oneChip q = D + t • oneChip q := by
     rw [hn]
     congr 2
     ring
   have hnWitness :
-      rank G (D + ((n : ℤ) - deg D) • one_chip q) ≥ (i : ℤ) := by
+      rank G (D + ((n : ℤ) - deg D) • oneChip q) ≥ (i : ℤ) := by
     rw [hTwist]
     exact ht
   have hFind := Nat.find_min'
@@ -106,9 +106,9 @@ theorem pointedRankThreshold_le_of_rank_ge
 /-- Immediately before the threshold, the desired rank has not yet been
 reached. -/
 theorem rank_before_pointedRankThreshold_lt
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (i : ℕ) :
-    rank G (D + (pointedRankThreshold G hG D q i - 1) • one_chip q) <
+    rank G (D + (pointedRankThreshold G hG D q i - 1) • oneChip q) <
       (i : ℤ) := by
   by_contra hnot
   have hle := pointedRankThreshold_le_of_rank_ge G hG D q i
@@ -119,16 +119,16 @@ theorem rank_before_pointedRankThreshold_lt
 This is the monotonicity that makes the associated row lengths weakly
 decreasing. -/
 theorem pointedRankThreshold_succ_le
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (i : ℕ) :
     pointedRankThreshold G hG D q i + 1 ≤
       pointedRankThreshold G hG D q (i + 1) := by
   let t := pointedRankThreshold G hG D q (i + 1)
   have hAt := rank_at_pointedRankThreshold_ge G hG D q (i + 1)
   have hStep := (rank_add_zsmul_one_chip_step G D q (t - 1)).2
-  have hPrev : rank G (D + (t - 1) • one_chip q) ≥ (i : ℤ) := by
-    have hRewrite : D + ((t - 1) + 1) • one_chip q =
-        D + t • one_chip q := by
+  have hPrev : rank G (D + (t - 1) • oneChip q) ≥ (i : ℤ) := by
+    have hRewrite : D + ((t - 1) + 1) • oneChip q =
+        D + t • oneChip q := by
       congr 2
       ring
     rw [hRewrite] at hStep
@@ -141,13 +141,13 @@ theorem pointedRankThreshold_succ_le
 
 /-- The `i`th (truncated) Weierstrass row attached to a pointed divisor. -/
 noncomputable def pointedRowLength
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (i : ℕ) : ℕ :=
   Int.toNat ((i : ℤ) + genus G - deg D -
     pointedRankThreshold G hG D q i)
 
 theorem pointedRowLength_anti
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (i : ℕ) :
     pointedRowLength G hG D q (i + 1) ≤
       pointedRowLength G hG D q i := by
@@ -159,12 +159,12 @@ theorem pointedRowLength_anti
 /-- The first `r+1` pointed rows, sufficient for studying a divisor of rank
 `r` on a vertex wedge. -/
 noncomputable def finitePointedRows
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (r : ℕ) : List ℕ :=
   List.ofFn fun i : Fin (r + 1) => pointedRowLength G hG D q i
 
 theorem finitePointedRows_sorted
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (r : ℕ) :
     (finitePointedRows G hG D q r).SortedGE := by
   rw [List.sortedGE_iff_pairwise, finitePointedRows, List.pairwise_ofFn]
@@ -173,7 +173,7 @@ theorem finitePointedRows_sorted
 
 /-- The finite Young diagram cut out by the first `r+1` pointed rows. -/
 noncomputable def finitePointedDiagram
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (r : ℕ) : YoungDiagram :=
   YoungDiagram.ofRowLens (finitePointedRows G hG D q r)
     (finitePointedRows_sorted G hG D q r)
@@ -197,7 +197,7 @@ private theorem card_cellsOfRowLens (rows : List ℕ) :
         omega
 
 theorem finitePointedDiagram_card
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (r : ℕ) :
     (finitePointedDiagram G hG D q r).card =
       (finitePointedRows G hG D q r).sum := by
@@ -205,12 +205,12 @@ theorem finitePointedDiagram_card
 /-- Every finite pointed diagram belongs to the once-marked divisor census,
 witnessed by the degree-`g` normalization of the original divisor. -/
 theorem finitePointedDiagram_censusContains
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (r : ℕ) :
     OnceMarkedCensusContains G q (finitePointedDiagram G hG D q r) := by
   rw [onceMarkedCensusContains_iff_onceMarkedBNExists hG]
   rw [onceMarkedBNExists_iff_rank_cells]
-  let E : CFDiv G := D + (genus G - deg D) • one_chip q
+  let E : CFDiv G := D + (genus G - deg D) • oneChip q
   refine ⟨E, ?_, ?_⟩
   · dsimp [E]
     rw [deg.map_add, map_zsmul, deg_one_chip]
@@ -251,11 +251,11 @@ theorem finitePointedDiagram_censusContains
       dsimp [n]
       exact Int.toNat_of_nonneg (sub_nonneg.mpr hExponent)
     have hTransport := rank_add_nsmul_one_chip_ge
-      (D + pointedRankThreshold G hG D q i • one_chip q) q n
+      (D + pointedRankThreshold G hG D q i • oneChip q) q n
     have hRewrite :
-        (D + pointedRankThreshold G hG D q i • one_chip q) +
-            (n : ℤ) • one_chip q =
-          E + ((i : ℤ) - (j : ℤ) - 1) • one_chip q := by
+        (D + pointedRankThreshold G hG D q i • oneChip q) +
+            (n : ℤ) • oneChip q =
+          E + ((i : ℤ) - (j : ℤ) - 1) • oneChip q := by
       dsimp [E]
       funext z
       simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
@@ -270,7 +270,7 @@ theorem finitePointedDiagram_censusContains
 sum to at most zero. -/
 theorem pointedRankThreshold_add_le_zero_of_wedge_rank
     (G : CFGraph.{u}) (H : CFGraph.{v})
-    (hG : graph_connected G) (hH : graph_connected H)
+    (hG : graphConnected G) (hH : graphConnected H)
     (x : G.V) (y : H.V) (D : CFDiv G) (E : CFDiv H)
     (r : ℕ)
     (hRank : rank (vertexWedge G H x y)
@@ -284,12 +284,12 @@ theorem pointedRankThreshold_add_le_zero_of_wedge_rank
   have hBefore := rank_before_pointedRankThreshold_lt G hG D x i
   have hAtPhase := hProfile (-s)
   have hLeftRewrite :
-      D - (-s + 1) • one_chip x = D + (s - 1) • one_chip x := by
+      D - (-s + 1) • oneChip x = D + (s - 1) • oneChip x := by
     funext z
     simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
     ring
   rw [hLeftRewrite] at hAtPhase
-  have hRight : rank H (E + (-s) • one_chip y) ≥ ((r - i : ℕ) : ℤ) := by
+  have hRight : rank H (E + (-s) • oneChip y) ≥ ((r - i : ℕ) : ℤ) := by
     dsimp [s] at hBefore hAtPhase ⊢
     omega
   have hMin := pointedRankThreshold_le_of_rank_ge H hH E y (r - i) (-s) hRight
@@ -300,7 +300,7 @@ theorem pointedRankThreshold_add_le_zero_of_wedge_rank
 rectangle width of the wedge divisor. -/
 theorem pointedRowLength_add_ge_wedge_width
     (G : CFGraph.{u}) (H : CFGraph.{v})
-    (hG : graph_connected G) (hH : graph_connected H)
+    (hG : graphConnected G) (hH : graphConnected H)
     (x : G.V) (y : H.V) (D : CFDiv G) (E : CFDiv H)
     (r : ℕ)
     (hRank : rank (vertexWedge G H x y)
@@ -321,7 +321,7 @@ Gluing the marked vertices of two once-marked Brill--Noether-general
 connected graphs produces an unmarked Brill--Noether-general graph. -/
 theorem onceMarkedBrillNoetherGeneral_vertexWedge
     (G : CFGraph.{u}) (H : CFGraph.{v})
-    (hG : graph_connected G) (hH : graph_connected H)
+    (hG : graphConnected G) (hH : graphConnected H)
     (x : G.V) (y : H.V)
     (hGeneralG : OnceMarkedBrillNoetherGeneral G x)
     (hGeneralH : OnceMarkedBrillNoetherGeneral H y) :

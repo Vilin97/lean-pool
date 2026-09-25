@@ -25,7 +25,7 @@ namespace Utilities
 /-- The marked normalization of the canonical complement appropriate to
 transmission duality. -/
 def transmissionDualDivisor {G : CFGraph} (u v : G.V) (D : CFDiv G) : CFDiv G :=
-  canonical_divisor G - D + one_chip u + one_chip v
+  canonicalDivisor G - D + oneChip u + oneChip v
 
 /-- The normalized canonical complement has the degree prescribed by the
 inverse ASP permutation. -/
@@ -43,9 +43,9 @@ theorem degree_transmissionDualDivisor
 original twist at the transposed, shifted lattice point. -/
 theorem transmissionDualDivisor_twist
     {G : CFGraph} (u v : G.V) (D : CFDiv G) (a b : ℤ) :
-    transmissionDualDivisor u v D + a • one_chip v - b • one_chip u =
-      canonical_divisor G -
-        (D + (b - 1) • one_chip u - (a + 1) • one_chip v) := by
+    transmissionDualDivisor u v D + a • oneChip v - b • oneChip u =
+      canonicalDivisor G -
+        (D + (b - 1) • oneChip u - (a + 1) • oneChip v) := by
   unfold transmissionDualDivisor
   rw [sub_zsmul, add_zsmul]
   simp only [one_zsmul]
@@ -53,26 +53,26 @@ theorem transmissionDualDivisor_twist
 
 /-- The dual row bound supplied by Riemann--Roch. -/
 theorem transmissionDualDivisor_rank_ge
-    {G : CFGraph} (hconn : graph_connected G)
+    {G : CFGraph} (hconn : graphConnected G)
     {u v : G.V} {τ : AspPerm} {D : CFDiv G}
     (h : SatisfiesTransmission G u v τ D) (a b : ℤ) :
-    rank G (transmissionDualDivisor u v D + a • one_chip v - b • one_chip u) ≥
+    rank G (transmissionDualDivisor u v D + a • oneChip v - b • oneChip u) ≥
       (τ⁻¹).s (a + 1) b - 1 := by
   have hRow := rank_twist_of_satisfiesTransmission h (b - 1) (a + 1)
   have hRR := riemann_roch_for_graphs hconn
-    (D + (b - 1) • one_chip u - (a + 1) • one_chip v)
+    (D + (b - 1) • oneChip u - (a + 1) • oneChip v)
   rw [degree_twist_of_satisfiesTransmission h (b - 1) (a + 1)] at hRR
   rw [← transmissionDualDivisor_twist u v D a b] at hRR
   have hRow' :
-      rank G (D + (b - 1) • one_chip u - (a + 1) • one_chip v) ≥
+      rank G (D + (b - 1) • oneChip u - (a + 1) • oneChip v) ≥
         τ.s b (a + 1) - 1 := by
     have hIndex : b - 1 + 1 = b := by omega
     rw [hIndex] at hRow
     exact hRow
   have hRR' :
-      rank G (D + (b - 1) • one_chip u - (a + 1) • one_chip v) -
-          rank G (transmissionDualDivisor u v D + a • one_chip v -
-            b • one_chip u) = τ.χ + b - a - 1 := by
+      rank G (D + (b - 1) • oneChip u - (a + 1) • oneChip v) -
+          rank G (transmissionDualDivisor u v D + a • oneChip v -
+            b • oneChip u) = τ.χ + b - a - 1 := by
     linarith [hRR]
   have hSlip := τ.duality b (a + 1)
   linarith [hRow', hRR', hSlip]
@@ -80,7 +80,7 @@ theorem transmissionDualDivisor_rank_ge
 /-- A transmission witness canonically yields an inverse-permutation witness
 at the swapped marks. -/
 theorem satisfiesTransmission_dual
-    {G : CFGraph} (hconn : graph_connected G)
+    {G : CFGraph} (hconn : graphConnected G)
     {u v : G.V} {τ : AspPerm} {D : CFDiv G}
     (h : SatisfiesTransmission G u v τ D) :
     SatisfiesTransmission G v u τ⁻¹ (transmissionDualDivisor u v D) := by
@@ -93,14 +93,14 @@ theorem satisfiesTransmission_dual
 /-- Transmission existence is preserved by Riemann--Roch duality, inversion,
 and swapping the marked points. -/
 theorem transmissionExists_dual
-    {G : CFGraph} (hconn : graph_connected G) (u v : G.V) (τ : AspPerm) :
+    {G : CFGraph} (hconn : graphConnected G) (u v : G.V) (τ : AspPerm) :
     TransmissionExists G u v τ → TransmissionExists G v u τ⁻¹ := by
   rintro ⟨D, hD⟩
   exact ⟨transmissionDualDivisor u v D, satisfiesTransmission_dual hconn hD⟩
 
 /-- The duality transport is an equivalence after applying it twice. -/
 theorem transmissionExists_dual_iff
-    {G : CFGraph} (hconn : graph_connected G) (u v : G.V) (τ : AspPerm) :
+    {G : CFGraph} (hconn : graphConnected G) (u v : G.V) (τ : AspPerm) :
     TransmissionExists G v u τ⁻¹ ↔ TransmissionExists G u v τ := by
   constructor
   · simpa only [inv_inv] using transmissionExists_dual hconn v u τ⁻¹

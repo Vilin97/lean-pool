@@ -11,7 +11,7 @@ import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaGeometry
 
 The paper's `SameStrand` argument is a reduced-divisor argument.  This lemma
 packages the only finite-set calculation it needs: a strict total chip versus
-boundary inequality produces the pointwise witness required by `q_reduced`.
+boundary inequality produces the pointwise witness required by `qReduced`.
 -/
 
 namespace Bananas
@@ -24,12 +24,12 @@ open Utilities Finset
 `q` carries strictly fewer total chips than its outgoing edge multiplicity. -/
 theorem q_reduced_of_sum_lt_cut
     (G : CFGraph) (q : G.V) (D : CFDiv G)
-    (hEff : q_effective q D)
+    (hEff : qEffective q D)
     (hCut : ∀ S : Finset G.V, S ⊆ Finset.univ.filter (· ≠ q) → S.Nonempty →
       (∑ v ∈ S, D v) <
         ∑ v ∈ S, ∑ w ∈ (Finset.univ.filter fun x => x ∉ S),
-          (num_edges G v w : ℤ)) :
-    q_reduced G q D := by
+          (numEdges G v w : ℤ)) :
+    qReduced G q D := by
   refine ⟨hEff, ?_⟩
   intro S hqS hSNonempty hLegal
   have hS : S ⊆ Finset.univ.filter (· ≠ q) := by
@@ -38,13 +38,13 @@ theorem q_reduced_of_sum_lt_cut
     intro hvq
     exact hqS (hvq ▸ hv)
   have hPointwise : ∀ v ∈ S,
-      ∑ w ∈ (Finset.univ.filter fun x => x ∉ S), (num_edges G v w : ℤ) ≤ D v := by
+      ∑ w ∈ (Finset.univ.filter fun x => x ∉ S), (numEdges G v w : ℤ) ≤ D v := by
     intro v hv
     rw [← outdeg_S_eq_sum_filter]
     exact hLegal v hv
   have hSum :
       (∑ v ∈ S, ∑ w ∈ (Finset.univ.filter fun x => x ∉ S),
-        (num_edges G v w : ℤ)) ≤ ∑ v ∈ S, D v := by
+        (numEdges G v w : ℤ)) ≤ ∑ v ∈ S, D v := by
     exact Finset.sum_le_sum fun v hv => hPointwise v hv
   have hStrict := hCut S hS hSNonempty
   omega
@@ -57,12 +57,12 @@ theorem q_reduced_two_chip_sub_of_cut_bounds
     (G : CFGraph) (q x y : G.V) (hqx : q ≠ x) (hqy : q ≠ y)
     (hTwo : ∀ S : Finset G.V, S ⊆ Finset.univ.filter (· ≠ q) → S.Nonempty →
       2 ≤ ∑ v ∈ S, ∑ w ∈ (Finset.univ.filter fun z => z ∉ S),
-        (num_edges G v w : ℤ))
+        (numEdges G v w : ℤ))
     (hThree : ∀ S : Finset G.V, S ⊆ Finset.univ.filter (· ≠ q) →
       x ∈ S → y ∈ S →
       3 ≤ ∑ v ∈ S, ∑ w ∈ (Finset.univ.filter fun z => z ∉ S),
-        (num_edges G v w : ℤ)) :
-    q_reduced G q (one_chip x + one_chip y - one_chip q) := by
+        (numEdges G v w : ℤ)) :
+    qReduced G q (oneChip x + oneChip y - oneChip q) := by
   apply q_reduced_of_sum_lt_cut G q _
   · intro v hv
     by_cases hvx : v = x <;> by_cases hvy : v = y
@@ -73,7 +73,7 @@ theorem q_reduced_two_chip_sub_of_cut_bounds
       simp [hqx, hvy]
     · subst v
       simp [hqy, hvx]
-    · simp [one_chip, hv, hvx, hvy]
+    · simp [oneChip, hv, hvx, hvy]
   · intro S hS hSNonempty
     have hqS : q ∉ S := by
       intro hq
@@ -81,19 +81,19 @@ theorem q_reduced_two_chip_sub_of_cut_bounds
       simp at this
     by_cases hx : x ∈ S <;> by_cases hy : y ∈ S
     · have hBound := hThree S hS hx hy
-      simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, one_chip,
+      simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, oneChip,
         hx, hy, hqS]
       omega
     · have hBound := hTwo S hS hSNonempty
-      simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, one_chip,
+      simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, oneChip,
         hx, hy, hqS]
       omega
     · have hBound := hTwo S hS hSNonempty
-      simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, one_chip,
+      simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, oneChip,
         hx, hy, hqS]
       omega
     · have hBound := hTwo S hS hSNonempty
-      simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, one_chip,
+      simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, oneChip,
         hx, hy, hqS]
       omega
 
@@ -107,8 +107,8 @@ theorem q_reduced_two_chip_sub_of_twoEdgeCutCondition
     (hThree : ∀ S : Finset G.V, S ⊆ Finset.univ.filter (· ≠ q) →
       x ∈ S → y ∈ S →
       3 ≤ ∑ v ∈ S, ∑ w ∈ (Finset.univ.filter fun z => z ∉ S),
-        (num_edges G v w : ℤ)) :
-    q_reduced G q (one_chip x + one_chip y - one_chip q) := by
+        (numEdges G v w : ℤ)) :
+    qReduced G q (oneChip x + oneChip y - oneChip q) := by
   apply q_reduced_two_chip_sub_of_cut_bounds G q x y hqx hqy
   · intro S hS hNonempty
     have hProper : S ≠ Finset.univ := by

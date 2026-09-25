@@ -25,17 +25,17 @@ theorem exists_degree_four_vertex_of_unique_topological_of_bridgeless_genus_two
     (G : CFGraph) (hCut : TwoEdgeCutCondition G)
     (hNontrivial : ∃ p q : G.V, p ≠ q) (hGenus : genus G = 2)
     (hCard : (topologicalVertices G).card = 1) :
-    ∃ w : G.V, vertex_degree G w = 4 ∧
-      ∀ v : G.V, v ≠ w → vertex_degree G v = 2 := by
+    ∃ w : G.V, vertexDegree G w = 4 ∧
+      ∀ v : G.V, v ≠ w → vertexDegree G v = 2 := by
   classical
   obtain ⟨w, hTop⟩ := Finset.card_eq_one.mp hCard
   let hMin := hasMinimumValenceTwo_of_twoEdgeCutCondition G hCut hNontrivial
-  have hTopW : 3 ≤ vertex_degree G w := by
+  have hTopW : 3 ≤ vertexDegree G w := by
     have : w ∈ topologicalVertices G := by rw [hTop]; simp
     simpa [topologicalVertices] using this
-  have hOther : ∀ v : G.V, v ≠ w → vertex_degree G v = 2 := by
+  have hOther : ∀ v : G.V, v ≠ w → vertexDegree G v = 2 := by
     intro v hv
-    have hNotTop : ¬ 3 ≤ vertex_degree G v := by
+    have hNotTop : ¬ 3 ≤ vertexDegree G v := by
       intro hDegree
       have : v ∈ topologicalVertices G := by simpa [topologicalVertices] using hDegree
       rw [hTop] at this
@@ -44,7 +44,7 @@ theorem exists_degree_four_vertex_of_unique_topological_of_bridgeless_genus_two
     omega
   refine ⟨w, ?_, hOther⟩
   have hSum := sum_vertex_degree_sub_two G
-  have hSumVal : (∑ v : G.V, (vertex_degree G v - 2)) = vertex_degree G w - 2 := by
+  have hSumVal : (∑ v : G.V, (vertexDegree G v - 2)) = vertexDegree G w - 2 := by
     apply Finset.sum_eq_single w
     · intro v _ hv
       rw [hOther v hv]
@@ -60,20 +60,20 @@ theorem exists_two_trivalent_vertices_of_two_topological_of_bridgeless_genus_two
     (hNontrivial : ∃ p q : G.V, p ≠ q) (hGenus : genus G = 2)
     (hCard : (topologicalVertices G).card = 2) :
     ∃ w₁ w₂ : G.V, w₁ ≠ w₂ ∧
-      vertex_degree G w₁ = 3 ∧ vertex_degree G w₂ = 3 ∧
-      ∀ v : G.V, v ≠ w₁ → v ≠ w₂ → vertex_degree G v = 2 := by
+      vertexDegree G w₁ = 3 ∧ vertexDegree G w₂ = 3 ∧
+      ∀ v : G.V, v ≠ w₁ → v ≠ w₂ → vertexDegree G v = 2 := by
   classical
   obtain ⟨w₁, w₂, hNe, hTop⟩ := Finset.card_eq_two.mp hCard
   let hMin := hasMinimumValenceTwo_of_twoEdgeCutCondition G hCut hNontrivial
-  have hTop₁ : 3 ≤ vertex_degree G w₁ := by
+  have hTop₁ : 3 ≤ vertexDegree G w₁ := by
     have : w₁ ∈ topologicalVertices G := by rw [hTop]; simp
     simpa [topologicalVertices] using this
-  have hTop₂ : 3 ≤ vertex_degree G w₂ := by
+  have hTop₂ : 3 ≤ vertexDegree G w₂ := by
     have : w₂ ∈ topologicalVertices G := by rw [hTop]; simp
     simpa [topologicalVertices] using this
-  have hOther : ∀ v : G.V, v ≠ w₁ → v ≠ w₂ → vertex_degree G v = 2 := by
+  have hOther : ∀ v : G.V, v ≠ w₁ → v ≠ w₂ → vertexDegree G v = 2 := by
     intro v hv₁ hv₂
-    have hNotTop : ¬ 3 ≤ vertex_degree G v := by
+    have hNotTop : ¬ 3 ≤ vertexDegree G v := by
       intro hDegree
       have : v ∈ topologicalVertices G := by simpa [topologicalVertices] using hDegree
       rw [hTop] at this
@@ -84,8 +84,8 @@ theorem exists_two_trivalent_vertices_of_two_topological_of_bridgeless_genus_two
     have hLower := hMin v
     omega
   have hSum := sum_vertex_degree_sub_two G
-  have hSumVal : (∑ v : G.V, (vertex_degree G v - 2)) =
-      (vertex_degree G w₁ - 2) + (vertex_degree G w₂ - 2) := by
+  have hSumVal : (∑ v : G.V, (vertexDegree G v - 2)) =
+      (vertexDegree G w₁ - 2) + (vertexDegree G w₂ - 2) := by
     rw [← Finset.add_sum_erase _ _ (Finset.mem_univ w₁)]
     rw [Finset.sum_eq_single w₂]
     · intro v hV hv

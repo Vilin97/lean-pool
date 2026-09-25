@@ -139,11 +139,11 @@ theorem onceMarkedBNExists_chain
     (M : MarkedGraph.{u}) (L : List MarkedGraph.{u})
     (hM : TransmissionExistence M.graph M.left M.right)
     (hL : ∀ N ∈ L, TransmissionExistence N.graph N.left N.right)
-    (hconn : graph_connected (M.chain L).graph)
+    (hconn : graphConnected (M.chain L).graph)
     (tau : AspPerm) (lambda : YoungDiagram)
     (hProfile : GrassmannianPartitionProfile tau lambda)
     (hFinite : FiniteTransmissionPerm tau)
-    (hLength : ((inv_set tau).ncard : ℤ) ≤ genus (M.chain L).graph) :
+    (hLength : ((invSet tau).ncard : ℤ) ≤ genus (M.chain L).graph) :
     OnceMarkedBNExists (M.chain L).graph (M.chain L).left lambda := by
   refine (transmissionExists_iff_onceMarkedBNExists hconn (M.chain L).left
     (M.chain L).right tau lambda hProfile).mp ?_

@@ -14,7 +14,7 @@ import Mathlib.Tactic
 
 `OneBridgeCut` is occurrence-safe finite data exhibiting an ambient graph as
 two induced vertex-disjoint factors joined by one specified bridge occurrence.
-The cross-edge equation is phrased with `num_edges`, so parallel edges inside
+The cross-edge equation is phrased with `numEdges`, so parallel edges inside
 either factor remain fully visible while the separating edge has multiplicity
 exactly one.
 -/
@@ -41,7 +41,7 @@ structure OneBridgeCut (K : CFGraph.{u}) where
   disjoint : Disjoint left right
   vertex_cover : ∀ z : K.V, z ∈ left ∨ z ∈ right
   cross_num_edges : ∀ a b : K.V, a ∈ left → b ∈ right →
-    num_edges K a b = if a = leftAttach ∧ b = rightAttach then 1 else 0
+    numEdges K a b = if a = leftAttach ∧ b = rightAttach then 1 else 0
 
 namespace OneBridgeCut
 
@@ -110,7 +110,7 @@ noncomputable def vertexEquiv : cut.bridgeGraph.V ≃ K.V where
 @[simp] theorem vertexEquiv_apply_right (b : cut.rightGraph.V) :
     cut.vertexEquiv (Sum.inr b) = b.val := rfl
 private theorem num_edges_cross (a : cut.leftGraph.V) (b : cut.rightGraph.V) :
-    num_edges K a.val b.val =
+    numEdges K a.val b.val =
       if a = cut.leftGlue ∧ b = cut.rightGlue then 1 else 0 := by
   have hRaw := cut.cross_num_edges a.val b.val a.property b.property
   by_cases ha : a = cut.leftGlue
@@ -148,11 +148,11 @@ noncomputable def graphIso : CFGraphIso cut.bridgeGraph K where
           cut.leftGlue cut.rightGlue a b').symm
     · unfold bridgeGraph
       calc
-        num_edges K b.val a'.val = num_edges K a'.val b.val :=
+        numEdges K b.val a'.val = numEdges K a'.val b.val :=
           num_edges_symmetric K _ _
         _ = if a' = cut.leftGlue ∧ b = cut.rightGlue then 1 else 0 :=
           cut.num_edges_cross a' b
-        _ = num_edges (Utilities.bridgeGraph cut.leftGraph cut.rightGraph
+        _ = numEdges (Utilities.bridgeGraph cut.leftGraph cut.rightGraph
             cut.leftGlue cut.rightGlue) (Sum.inr b) (Sum.inl a') := by
           rw [num_edges_symmetric]
           exact (num_edges_bridgeGraph_inl_inr cut.leftGraph cut.rightGraph
@@ -172,8 +172,8 @@ theorem genus_eq : genus K = genus cut.leftGraph + genus cut.rightGraph := by
 
 /-- A connected ambient graph has connected induced left factor across a
 single separating bridge. -/
-theorem graph_connected_left_of_connected (hK : graph_connected K) :
-    graph_connected cut.leftGraph := by
+theorem graph_connected_left_of_connected (hK : graphConnected K) :
+    graphConnected cut.leftGraph := by
   classical
   intro A hSplit
   obtain ⟨inside, outside, hInside, hOutside⟩ := hSplit
@@ -300,26 +300,26 @@ def swap : OneBridgeCut K where
 
 /-- A connected ambient graph has connected induced right factor across a
 single separating bridge. -/
-theorem graph_connected_right_of_connected (hK : graph_connected K) :
-    graph_connected cut.rightGraph := by
+theorem graph_connected_right_of_connected (hK : graphConnected K) :
+    graphConnected cut.rightGraph := by
   simpa using cut.swap.graph_connected_left_of_connected hK
 
-theorem graph_connected_factors_of_connected (hK : graph_connected K) :
-    graph_connected cut.leftGraph ∧ graph_connected cut.rightGraph :=
+theorem graph_connected_factors_of_connected (hK : graphConnected K) :
+    graphConnected cut.leftGraph ∧ graphConnected cut.rightGraph :=
   ⟨cut.graph_connected_left_of_connected hK,
     cut.graph_connected_right_of_connected hK⟩
 
 /-- Connected factors reconstruct a connected ambient graph. -/
 theorem graph_connected_of_factors
-    (hLeft : graph_connected cut.leftGraph)
-    (hRight : graph_connected cut.rightGraph) : graph_connected K :=
+    (hLeft : graphConnected cut.leftGraph)
+    (hRight : graphConnected cut.rightGraph) : graphConnected K :=
   cut.graphIso.graph_connected_map
     (graph_connected_bridgeGraph cut.leftGraph cut.rightGraph
       cut.leftGlue cut.rightGlue hLeft hRight)
 
 theorem graph_connected_iff_factors :
-    graph_connected K ↔
-      graph_connected cut.leftGraph ∧ graph_connected cut.rightGraph :=
+    graphConnected K ↔
+      graphConnected cut.leftGraph ∧ graphConnected cut.rightGraph :=
   ⟨cut.graph_connected_factors_of_connected,
     fun h => cut.graph_connected_of_factors h.1 h.2⟩
 

@@ -112,17 +112,17 @@ def efProfile : WindowProfile.Data (Spec length hLength) where
 /-- The sparse signed-endpoint expansion of the Case-2 `d` profile. -/
 theorem dProfile_endpointDivisors :
     (dProfile length hLength hBC hmy).endpointDivisors =
-      (one_chip ((Spec length hLength).pathVertex 4
+      (oneChip ((Spec length hLength).pathVertex 4
         ((dProfile length hLength hBC hmy).startPosition 4)) -
-        one_chip ((Spec length hLength).pathVertex 4
+        oneChip ((Spec length hLength).pathVertex 4
           ((dProfile length hLength hBC hmy).stopPosition 4))) +
-      (one_chip ((Spec length hLength).pathVertex 5
+      (oneChip ((Spec length hLength).pathVertex 5
         ((dProfile length hLength hBC hmy).startPosition 5)) -
-        one_chip ((Spec length hLength).pathVertex 5
+        oneChip ((Spec length hLength).pathVertex 5
           ((dProfile length hLength hBC hmy).stopPosition 5))) +
-      (one_chip ((Spec length hLength).pathVertex 8
+      (oneChip ((Spec length hLength).pathVertex 8
         ((dProfile length hLength hBC hmy).startPosition 8)) -
-        one_chip ((Spec length hLength).pathVertex 8
+        oneChip ((Spec length hLength).pathVertex 8
           ((dProfile length hLength hBC hmy).stopPosition 8))) := by
   rw [WindowProfile.Data.endpointDivisors]
   simp [Fin.sum_univ_succ, dProfile]
@@ -199,18 +199,18 @@ theorem reaches_one :
     have hRewrite :
         threeChipDivisor ((Spec length hLength).coreVertex 4)
             (q length hLength hNorm) (r length hLength hBC hmy) -
-          one_chip ((Spec length hLength).coreVertex 1) +
-          ((one_chip ((Spec length hLength).pathVertex 4
+          oneChip ((Spec length hLength).coreVertex 1) +
+          ((oneChip ((Spec length hLength).pathVertex 4
               ((dProfile length hLength hBC hmy).startPosition 4)) -
-              one_chip ((Spec length hLength).coreVertex 4)) +
-            (one_chip ((Spec length hLength).coreVertex 1) -
-              one_chip (q length hLength hNorm)) +
-            (one_chip ((Spec length hLength).pathVertex 8
+              oneChip ((Spec length hLength).coreVertex 4)) +
+            (oneChip ((Spec length hLength).coreVertex 1) -
+              oneChip (q length hLength hNorm)) +
+            (oneChip ((Spec length hLength).pathVertex 8
               ((dProfile length hLength hBC hmy).startPosition 8)) -
-              one_chip (r length hLength hBC hmy))) =
-          one_chip (G := (Spec length hLength).graph) ((Spec length hLength).pathVertex 4
+              oneChip (r length hLength hBC hmy))) =
+          oneChip (G := (Spec length hLength).graph) ((Spec length hLength).pathVertex 4
               ((dProfile length hLength hBC hmy).startPosition 4)) +
-            one_chip (G := (Spec length hLength).graph) ((Spec length hLength).pathVertex 8
+            oneChip (G := (Spec length hLength).graph) ((Spec length hLength).pathVertex 8
               ((dProfile length hLength hBC hmy).startPosition 8)) := by
       simp [threeChipDivisor]
       abel
@@ -222,18 +222,18 @@ theorem reaches_one :
     have hRewrite :
         threeChipDivisor ((Spec length hLength).coreVertex 4)
             (q length hLength hNorm) (r length hLength hBC hmy) -
-          one_chip ((Spec length hLength).coreVertex 1) +
-          ((one_chip ((Spec length hLength).coreVertex 1) -
-              one_chip ((Spec length hLength).coreVertex 4)) +
-            (one_chip ((Spec length hLength).pathVertex 5
+          oneChip ((Spec length hLength).coreVertex 1) +
+          ((oneChip ((Spec length hLength).coreVertex 1) -
+              oneChip ((Spec length hLength).coreVertex 4)) +
+            (oneChip ((Spec length hLength).pathVertex 5
               ((dProfile length hLength hBC hmy).startPosition 5)) -
-              one_chip (q length hLength hNorm)) +
-            (one_chip ((Spec length hLength).pathVertex 8
+              oneChip (q length hLength hNorm)) +
+            (oneChip ((Spec length hLength).pathVertex 8
               ((dProfile length hLength hBC hmy).startPosition 8)) -
-              one_chip (r length hLength hBC hmy))) =
-          one_chip (G := (Spec length hLength).graph) ((Spec length hLength).pathVertex 5
+              oneChip (r length hLength hBC hmy))) =
+          oneChip (G := (Spec length hLength).graph) ((Spec length hLength).pathVertex 5
               ((dProfile length hLength hBC hmy).startPosition 5)) +
-            one_chip (G := (Spec length hLength).graph) ((Spec length hLength).pathVertex 8
+            oneChip (G := (Spec length hLength).graph) ((Spec length hLength).pathVertex 8
               ((dProfile length hLength hBC hmy).startPosition 8)) := by
       simp [threeChipDivisor]
       abel
@@ -322,10 +322,10 @@ private theorem ef_stop_eight_eq_r :
 
 theorem efProfile_endpointDivisors :
     (efProfile length hLength hBC hmy).endpointDivisors =
-      (- one_chip ((Spec length hLength).coreVertex 1) + one_chip ((Spec length hLength).coreVertex 3)) +
-      (one_chip ((Spec length hLength).pathVertex 4 ((dProfile length hLength hBC hmy).startPosition 4)) - one_chip ((Spec length hLength).coreVertex 4)) +
-      (one_chip ((Spec length hLength).pathVertex 5 ((dProfile length hLength hBC hmy).startPosition 5)) - one_chip (q length hLength hNorm)) +
-      (one_chip ((Spec length hLength).coreVertex 2) - one_chip (r length hLength hBC hmy)) := by
+      (- oneChip ((Spec length hLength).coreVertex 1) + oneChip ((Spec length hLength).coreVertex 3)) +
+      (oneChip ((Spec length hLength).pathVertex 4 ((dProfile length hLength hBC hmy).startPosition 4)) - oneChip ((Spec length hLength).coreVertex 4)) +
+      (oneChip ((Spec length hLength).pathVertex 5 ((dProfile length hLength hBC hmy).startPosition 5)) - oneChip (q length hLength hNorm)) +
+      (oneChip ((Spec length hLength).coreVertex 2) - oneChip (r length hLength hBC hmy)) := by
   rw [WindowProfile.Data.endpointDivisors]
   simp [Fin.sum_univ_succ, efProfile_slope, ef_start_three_eq_one, ef_stop_three_eq_three,
     ef_start_four_eq_dStart, ef_stop_four_eq_four, ef_start_five_eq_dStart,
@@ -334,16 +334,16 @@ theorem efProfile_endpointDivisors :
   abel
 
 private theorem effective_dStarts_sub_one :
-    effective (one_chip (G := (Spec length hLength).graph)
+    effective (oneChip (G := (Spec length hLength).graph)
       ((Spec length hLength).pathVertex 4 ((dProfile length hLength hBC hmy).startPosition 4)) +
-      one_chip ((Spec length hLength).pathVertex 5 ((dProfile length hLength hBC hmy).startPosition 5)) -
-      one_chip ((Spec length hLength).coreVertex 1)) := by
+      oneChip ((Spec length hLength).pathVertex 5 ((dProfile length hLength hBC hmy).startPosition 5)) -
+      oneChip ((Spec length hLength).coreVertex 1)) := by
   by_cases hXD : X length ≤ Delta length
   · rw [dProfile_start_five_eq_one length hLength hBC hmy (min_eq_left hXD)]
-    intro vertex; simp [one_chip]; split_ifs <;> omega
+    intro vertex; simp [oneChip]; split_ifs <;> omega
   · have hDX : Delta length ≤ X length := by omega
     rw [dProfile_start_four_eq_one length hLength hBC hmy (min_eq_right hDX)]
-    intro vertex; simp [one_chip]; split_ifs <;> omega
+    intro vertex; simp [oneChip]; split_ifs <;> omega
 
 theorem reaches_two : StrongSeparator.Reaches (Spec length hLength).graph
     (threeChipDivisor ((Spec length hLength).coreVertex 4) (q length hLength hNorm) (r length hLength hBC hmy))
@@ -368,7 +368,7 @@ theorem reaches_three : StrongSeparator.Reaches (Spec length hLength).graph
 theorem bnExists_one_three (hNorm : length 0 ≤ length 5) (hBC : B length < C length)
     (hmy : m length ≤ Y length) : BNExists (Spec length hLength).graph 1 3 := by
   refine Utilities.Certificate.GenusFourLoopLemma.bnExists_of_reaches_coreVertices
-    (Spec length hLength) (graph_connected length hLength)
+    (Spec length hLength) (graphConnected length hLength)
     (threeChipDivisor ((Spec length hLength).coreVertex 4)
       (q length hLength hNorm) (r length hLength hBC hmy)) 3 ?_ ?_
   · exact deg_threeChipDivisor _ _ _

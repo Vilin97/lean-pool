@@ -17,18 +17,18 @@ open Utilities.SegmentReflection
 
 
 private theorem linear_equiv_add {G : CFGraph} {A B C D : CFDiv G}
-    (hA : linear_equiv G A C) (hB : linear_equiv G B D) :
-    linear_equiv G (A + B) (C + D) := by
-  unfold linear_equiv at hA hB ⊢
-  convert (principal_divisors G).add_mem hA hB using 1 ; abel
+    (hA : linearEquiv G A C) (hB : linearEquiv G B D) :
+    linearEquiv G (A + B) (C + D) := by
+  unfold linearEquiv at hA hB ⊢
+  convert (principalDivisors G).add_mem hA hB using 1 ; abel
 
 private theorem raw_endpoint_pair_linearEquiv
     {g : ℕ} (B : Banana g) (α : Fin (g + 1)) (i k : B.PathPosition α)
     (hsum : i.val + k.val = B.length α) :
-    linear_equiv B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k))
-      (one_chip (B.pathVertex α ⟨0, by omega⟩) +
-        one_chip (B.pathVertex α ⟨B.length α, by omega⟩)) := by
+    linearEquiv B.graph
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k))
+      (oneChip (B.pathVertex α ⟨0, by omega⟩) +
+        oneChip (B.pathVertex α ⟨B.length α, by omega⟩)) := by
   have hk : k.val = B.length α - i.val := by omega
   have hkm : B.pathVertex α k =
       B.pathVertex α (SegmentReflection.symmetricPosition B α i) := by
@@ -36,7 +36,7 @@ private theorem raw_endpoint_pair_linearEquiv
     simp [SegmentReflection.symmetricPosition]
     omega
   have hScript := SegmentReflection.prin_script_eq_reflectionDivisor B α i
-  unfold linear_equiv
+  unfold linearEquiv
   apply (principal_iff_eq_prin B.graph _).mpr
   refine ⟨-SegmentReflection.script B α i, ?_⟩
   rw [map_neg, hScript, ← hkm, B.pathVertex_zero, B.pathVertex_length]
@@ -46,40 +46,40 @@ private theorem raw_endpoint_pair_linearEquiv
 theorem raw_strand_prefix_linearEquiv
     {g : ℕ} (B : Banana g) (α : Fin (g + 1)) (n : ℕ)
     (hn : n ≤ B.length α) :
-    linear_equiv B.graph
-      ((n : ℤ) • (one_chip (B.pathVertex α ⟨1, by
-        have := B.length_pos α; omega⟩) - one_chip (B.pathVertex α 0)))
-      (one_chip (B.pathVertex α ⟨n, by omega⟩) - one_chip (B.pathVertex α 0)) := by
+    linearEquiv B.graph
+      ((n : ℤ) • (oneChip (B.pathVertex α ⟨1, by
+        have := B.length_pos α; omega⟩) - oneChip (B.pathVertex α 0)))
+      (oneChip (B.pathVertex α ⟨n, by omega⟩) - oneChip (B.pathVertex α 0)) := by
   have aux : ∀ m : ℕ, ∀ hm : m ≤ B.length α,
-      linear_equiv B.graph
-        ((m : ℤ) • (one_chip (B.pathVertex α ⟨1, by
-          have := B.length_pos α; omega⟩) - one_chip (B.pathVertex α 0)))
-        (one_chip (B.pathVertex α ⟨m, by omega⟩) - one_chip (B.pathVertex α 0)) := by
+      linearEquiv B.graph
+        ((m : ℤ) • (oneChip (B.pathVertex α ⟨1, by
+          have := B.length_pos α; omega⟩) - oneChip (B.pathVertex α 0)))
+        (oneChip (B.pathVertex α ⟨m, by omega⟩) - oneChip (B.pathVertex α 0)) := by
     intro m
     induction m with
-    | zero => intro; simp [linear_equiv]
+    | zero => intro; simp [linearEquiv]
     | succ m ih =>
       intro hm
       by_cases hOne : m = 0
       · subst m
-        unfold linear_equiv
+        unfold linearEquiv
         simp [sub_eq_add_neg]
       · by_cases hLast : m + 1 = B.length α
         · have hnPos : 0 < m := by omega
           have hPair := raw_endpoint_pair_linearEquiv B α
             ⟨1, by have := B.length_pos α; omega⟩
             ⟨m, by omega⟩ (by simpa [Nat.add_comm] using hLast)
-          have hStep : linear_equiv B.graph
-              (one_chip (B.pathVertex α ⟨1, by omega⟩) -
-                one_chip (B.pathVertex α ⟨0, by omega⟩))
-              (one_chip (B.pathVertex α ⟨B.length α, by omega⟩) -
-                one_chip (B.pathVertex α ⟨m, by omega⟩)) := by
-            unfold linear_equiv at hPair ⊢
+          have hStep : linearEquiv B.graph
+              (oneChip (B.pathVertex α ⟨1, by omega⟩) -
+                oneChip (B.pathVertex α ⟨0, by omega⟩))
+              (oneChip (B.pathVertex α ⟨B.length α, by omega⟩) -
+                oneChip (B.pathVertex α ⟨m, by omega⟩)) := by
+            unfold linearEquiv at hPair ⊢
             convert hPair using 1 ;
               simp [B.pathVertex_length,
                 sub_eq_add_neg] ; abel
           have hAdd := linear_equiv_add (ih (by omega)) hStep
-          unfold linear_equiv at hAdd ⊢
+          unfold linearEquiv at hAdd ⊢
           convert hAdd using 1 ;
             simp [← hLast, sub_eq_add_neg, add_smul,
               Nat.cast_add] ; abel
@@ -89,15 +89,15 @@ theorem raw_strand_prefix_linearEquiv
           have hSlide := path_pair_linearEquiv_tail_sum B α
             ⟨1, by have := B.length_pos α; omega⟩
             ⟨m, hmLt⟩ (by norm_num) (by exact hmPos) hsum
-          have hStep : linear_equiv B.graph
-              (one_chip (B.pathVertex α ⟨1, by omega⟩) -
-                one_chip (B.pathVertex α ⟨0, by omega⟩))
-              (one_chip (B.pathVertex α ⟨1 + m, by omega⟩) -
-                one_chip (B.pathVertex α ⟨m, by omega⟩)) := by
-            unfold linear_equiv at hSlide ⊢
+          have hStep : linearEquiv B.graph
+              (oneChip (B.pathVertex α ⟨1, by omega⟩) -
+                oneChip (B.pathVertex α ⟨0, by omega⟩))
+              (oneChip (B.pathVertex α ⟨1 + m, by omega⟩) -
+                oneChip (B.pathVertex α ⟨m, by omega⟩)) := by
+            unfold linearEquiv at hSlide ⊢
             convert hSlide using 1 ; abel
           have hAdd := linear_equiv_add (ih (by omega)) hStep
-          unfold linear_equiv at hAdd ⊢
+          unfold linearEquiv at hAdd ⊢
           convert hAdd using 1 ;
             simp [sub_eq_add_neg, add_smul, Nat.cast_add] ; abel_nf
   exact aux n hn
@@ -109,12 +109,12 @@ reflection calculation, not a definitional simplification. -/
 theorem strand_prefix_linearEquiv_of_tail_zero
     {g : ℕ} (B : Banana g) (α : Fin (g + 1)) (p : B.PathPosition α)
     (hTail : B.core.tail α = 0) :
-    linear_equiv B.graph
+    linearEquiv B.graph
       ((p.val : ℤ) •
-        (one_chip (strandVertex B α ⟨1, by
+        (oneChip (strandVertex B α ⟨1, by
           have := B.length_pos α; omega⟩) -
-          one_chip (leftEndpoint B)))
-      (one_chip (strandVertex B α p) - one_chip (leftEndpoint B)) := by
+          oneChip (leftEndpoint B)))
+      (oneChip (strandVertex B α p) - oneChip (leftEndpoint B)) := by
   have hz0 : B.pathVertex α (0 : B.PathPosition α) =
       B.coreVertex 0 := by simpa [hTail] using B.pathVertex_zero α
   have hRaw := raw_strand_prefix_linearEquiv B α p.val (by omega)
@@ -133,46 +133,46 @@ theorem strand_prefix_linearEquiv_of_tail_zero
 private theorem raw_strand_prefix_from_length_linearEquiv
     {g : ℕ} (B : Banana g) (α : Fin (g + 1)) (m : ℕ)
     (hm : m ≤ B.length α) :
-    linear_equiv B.graph
+    linearEquiv B.graph
       ((m : ℤ) •
-        (one_chip (B.pathVertex α ⟨B.length α - 1, by
+        (oneChip (B.pathVertex α ⟨B.length α - 1, by
           have := B.length_pos α; omega⟩) -
-          one_chip (B.pathVertex α ⟨B.length α, by omega⟩)))
-      (one_chip (B.pathVertex α ⟨B.length α - m, by omega⟩) -
-        one_chip (B.pathVertex α ⟨B.length α, by omega⟩)) := by
+          oneChip (B.pathVertex α ⟨B.length α, by omega⟩)))
+      (oneChip (B.pathVertex α ⟨B.length α - m, by omega⟩) -
+        oneChip (B.pathVertex α ⟨B.length α, by omega⟩)) := by
   have aux : ∀ r : ℕ, ∀ hr : r ≤ B.length α,
-      linear_equiv B.graph
+      linearEquiv B.graph
         ((r : ℤ) •
-          (one_chip (B.pathVertex α ⟨B.length α - 1, by
+          (oneChip (B.pathVertex α ⟨B.length α - 1, by
             have := B.length_pos α; omega⟩) -
-            one_chip (B.pathVertex α ⟨B.length α, by omega⟩)))
-        (one_chip (B.pathVertex α ⟨B.length α - r, by omega⟩) -
-          one_chip (B.pathVertex α ⟨B.length α, by omega⟩)) := by
+            oneChip (B.pathVertex α ⟨B.length α, by omega⟩)))
+        (oneChip (B.pathVertex α ⟨B.length α - r, by omega⟩) -
+          oneChip (B.pathVertex α ⟨B.length α, by omega⟩)) := by
     intro r
     induction r with
-    | zero => intro; simp [linear_equiv]
+    | zero => intro; simp [linearEquiv]
     | succ r ih =>
       intro hr
       by_cases hOne : r = 0
       · subst r
-        unfold linear_equiv
+        unfold linearEquiv
         simp [sub_eq_add_neg]
       · by_cases hLast : r + 1 = B.length α
         · have hPair := raw_endpoint_pair_linearEquiv B α
             ⟨B.length α - 1, by have := B.length_pos α; omega⟩
             ⟨1, by have := B.length_pos α; omega⟩
               (by change (B.length α - 1) + 1 = B.length α; omega)
-          have hStep : linear_equiv B.graph
-              (one_chip (B.pathVertex α ⟨B.length α - 1, by omega⟩) -
-                one_chip (B.pathVertex α ⟨B.length α, by omega⟩))
-              (one_chip (B.pathVertex α ⟨0, by omega⟩) -
-                one_chip (B.pathVertex α ⟨1, by omega⟩)) := by
-            unfold linear_equiv at hPair ⊢
+          have hStep : linearEquiv B.graph
+              (oneChip (B.pathVertex α ⟨B.length α - 1, by omega⟩) -
+                oneChip (B.pathVertex α ⟨B.length α, by omega⟩))
+              (oneChip (B.pathVertex α ⟨0, by omega⟩) -
+                oneChip (B.pathVertex α ⟨1, by omega⟩)) := by
+            unfold linearEquiv at hPair ⊢
             convert hPair using 1 ;
               simp [B.pathVertex_length,
                 sub_eq_add_neg] ; abel
           have hAdd := linear_equiv_add (ih (by omega)) hStep
-          unfold linear_equiv at hAdd ⊢
+          unfold linearEquiv at hAdd ⊢
           convert hAdd using 1 ;
             simp [← hLast, sub_eq_add_neg, add_smul,
               Nat.cast_add] ; abel
@@ -184,17 +184,17 @@ private theorem raw_strand_prefix_from_length_linearEquiv
             ⟨B.length α - r, by omega⟩
               (by show B.length α - 1 < B.length α; omega)
               (by show B.length α - r < B.length α; omega) hsum
-          have hStep : linear_equiv B.graph
-              (one_chip (B.pathVertex α ⟨B.length α - 1, by omega⟩) -
-                one_chip (B.pathVertex α ⟨B.length α, by omega⟩))
-              (one_chip (B.pathVertex α ⟨B.length α - r - 1, by omega⟩) -
-                one_chip (B.pathVertex α ⟨B.length α - r, by omega⟩)) := by
-            unfold linear_equiv at hSlide ⊢
+          have hStep : linearEquiv B.graph
+              (oneChip (B.pathVertex α ⟨B.length α - 1, by omega⟩) -
+                oneChip (B.pathVertex α ⟨B.length α, by omega⟩))
+              (oneChip (B.pathVertex α ⟨B.length α - r - 1, by omega⟩) -
+                oneChip (B.pathVertex α ⟨B.length α - r, by omega⟩)) := by
+            unfold linearEquiv at hSlide ⊢
             have hidx : B.length α - 1 + (B.length α - r) - B.length α =
                 B.length α - r - 1 := by omega
             convert hSlide using 1 ; simp [hidx] ; abel_nf
           have hAdd := linear_equiv_add (ih (by omega)) hStep
-          unfold linear_equiv at hAdd ⊢
+          unfold linearEquiv at hAdd ⊢
           have hidx : B.length α - (r + 1) = B.length α - r - 1 := by omega
           convert hAdd using 1 ;
             simp [hidx, sub_eq_add_neg, add_smul,
@@ -204,12 +204,12 @@ private theorem raw_strand_prefix_from_length_linearEquiv
 theorem strand_prefix_linearEquiv_of_tail_nonzero
     {g : ℕ} (B : Banana g) (α : Fin (g + 1)) (p : B.PathPosition α)
     (hTail : B.core.tail α ≠ 0) :
-    linear_equiv B.graph
+    linearEquiv B.graph
       ((p.val : ℤ) •
-        (one_chip (strandVertex B α ⟨1, by
+        (oneChip (strandVertex B α ⟨1, by
           have := B.length_pos α; omega⟩) -
-          one_chip (leftEndpoint B)))
-      (one_chip (strandVertex B α p) - one_chip (leftEndpoint B)) := by
+          oneChip (leftEndpoint B)))
+      (oneChip (strandVertex B α p) - oneChip (leftEndpoint B)) := by
   unfold strandVertex
   have hTail' : B.core.tail α = 1 := by
     apply Fin.ext
@@ -242,12 +242,12 @@ arbitrary storage orientation. -/
 /- TeX label: `eq:multDiffMarkedPts` (prefix firing identity). -/
 theorem strand_prefix_linearEquiv
     {g : ℕ} (B : Banana g) (α : Fin (g + 1)) (p : B.PathPosition α) :
-    linear_equiv B.graph
+    linearEquiv B.graph
       ((p.val : ℤ) •
-        (one_chip (strandVertex B α ⟨1, by
+        (oneChip (strandVertex B α ⟨1, by
           have := B.length_pos α; omega⟩) -
-          one_chip (leftEndpoint B)))
-      (one_chip (strandVertex B α p) - one_chip (leftEndpoint B)) := by
+          oneChip (leftEndpoint B)))
+      (oneChip (strandVertex B α p) - oneChip (leftEndpoint B)) := by
   by_cases hTail : B.core.tail α = 0
   · exact strand_prefix_linearEquiv_of_tail_zero B α p hTail
   · exact strand_prefix_linearEquiv_of_tail_nonzero B α p hTail

@@ -103,8 +103,8 @@ def vertexWedgeAssocLastVertex
 @[simp] theorem num_edges_vertexWedge_right_left
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (b : { b : H.V // b ≠ y }) (a : G.V) :
-    num_edges (vertexWedge G H x y) (Sum.inr b) (Sum.inl a) =
-      if a = x then num_edges H y b.1 else 0 := by
+    numEdges (vertexWedge G H x y) (Sum.inr b) (Sum.inl a) =
+      if a = x then numEdges H y b.1 else 0 := by
   rw [num_edges_symmetric]
   exact num_edges_vertexWedge_left_right G H x y a b
 
@@ -128,7 +128,7 @@ def vertexWedgeAssocLastVertex
 
 The middle graph is glued to `G` at `y` and to `K` at `z`; no hypothesis
 that these two vertices are distinct is needed. -/
-def vertexWedge_assoc
+def vertexWedgeAssoc
     (G : CFGraph.{u}) (H : CFGraph.{v}) (K : CFGraph.{w})
     (x : G.V) (y z : H.V) (t : K.V) :
     CFGraphIso
@@ -300,6 +300,6 @@ theorem brillNoetherGeneral_vertexWedge_assoc_iff
       BrillNoetherGeneral
         (vertexWedge (vertexWedge G H x y) K
           (wedgeRightVertex G H x y z) t) :=
-  brillNoetherGeneral_iff_graphIso (vertexWedge_assoc G H K x y z t)
+  brillNoetherGeneral_iff_graphIso (vertexWedgeAssoc G H K x y z t)
 
 end Bananas

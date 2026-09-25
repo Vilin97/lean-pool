@@ -22,38 +22,38 @@ open Utilities
 /-- Riemann--Roch preserves the marked rank second difference after translating
 the canonical complement by the two marked chips. -/
 theorem rankDelta_canonical_dual
-    (M : TwiceMarked) (hconn : graph_connected M.graph)
+    (M : TwiceMarked) (hconn : graphConnected M.graph)
     (D : CFDiv M.graph) :
     rankDelta M D =
       rankDelta M
-        (canonical_divisor M.graph + one_chip M.u + one_chip M.v - D) := by
+        (canonicalDivisor M.graph + oneChip M.u + oneChip M.v - D) := by
   let E : CFDiv M.graph :=
-    canonical_divisor M.graph + one_chip M.u + one_chip M.v - D
+    canonicalDivisor M.graph + oneChip M.u + oneChip M.v - D
   have hCompD :
-      canonical_divisor M.graph - D =
-        E - one_chip M.u - one_chip M.v := by
+      canonicalDivisor M.graph - D =
+        E - oneChip M.u - oneChip M.v := by
     dsimp [E]
     abel
   have hCompDu :
-      canonical_divisor M.graph - (D - one_chip M.u) =
-        E - one_chip M.v := by
+      canonicalDivisor M.graph - (D - oneChip M.u) =
+        E - oneChip M.v := by
     dsimp [E]
     abel
   have hCompDv :
-      canonical_divisor M.graph - (D - one_chip M.v) =
-        E - one_chip M.u := by
+      canonicalDivisor M.graph - (D - oneChip M.v) =
+        E - oneChip M.u := by
     dsimp [E]
     abel
   have hCompDuv :
-      canonical_divisor M.graph -
-          (D - one_chip M.u - one_chip M.v) = E := by
+      canonicalDivisor M.graph -
+          (D - oneChip M.u - oneChip M.v) = E := by
     dsimp [E]
     abel
   have hD := riemann_roch_for_graphs hconn D
-  have hDu := riemann_roch_for_graphs hconn (D - one_chip M.u)
-  have hDv := riemann_roch_for_graphs hconn (D - one_chip M.v)
+  have hDu := riemann_roch_for_graphs hconn (D - oneChip M.u)
+  have hDv := riemann_roch_for_graphs hconn (D - oneChip M.v)
   have hDuv := riemann_roch_for_graphs hconn
-    (D - one_chip M.u - one_chip M.v)
+    (D - oneChip M.u - oneChip M.v)
   rw [hCompD] at hD
   rw [hCompDu] at hDu
   rw [hCompDv] at hDv

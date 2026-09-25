@@ -43,7 +43,7 @@ theorem transmission_oneOff_block
     (hTau : IsTransmissionPermutation
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau) :
+      (g • oneChip (rightEndpoint B)) tau) :
     tau (b : ℤ) = (oneOffRow g (B.length alpha) b : ℕ) := by
   let n := B.length alpha
   let m := b / n
@@ -105,7 +105,7 @@ theorem oneOff_forcedInversionPairs_card_le
     (hTau : IsTransmissionPermutation
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau)
+      (g • oneChip (rightEndpoint B)) tau)
     (hAffine : IsKAffine k tau)
     (hfinite : (kInversions k tau).Finite) :
     (oneOffForcedInversionPairs g (B.length alpha)).card ≤
@@ -571,7 +571,7 @@ theorem oneOff_refined_inversion_lower_bound
     (hTau : IsTransmissionPermutation
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau)
+      (g • oneChip (rightEndpoint B)) tau)
     (hAffine : IsKAffine k tau)
     (hfinite : (kInversions k tau).Finite) :
     Nat.choose g 2 + g / (B.length alpha - 1) ≤
@@ -591,7 +591,7 @@ theorem oneOff_not_kGeneral_of_four_le_genus
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩)) k := by
   intro hK
   obtain ⟨tau, hTau, hAffine, hFinite, hUpper⟩ :=
-    hK.2.2 (g • one_chip (rightEndpoint B))
+    hK.2.2 (g • oneChip (rightEndpoint B))
   have hLower := oneOff_refined_inversion_lower_bound
     B alpha tau (by omega) hK.1.1 hLength hTau hAffine hFinite
   have hGenus : Int.toNat (genus
@@ -632,12 +632,12 @@ theorem oneOff_refined_inversion_lower_bound_ledger
       IsTransmissionPermutation
         (mark B.graph (leftEndpoint B)
           (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-        (g • one_chip (rightEndpoint B)) tau ∧
+        (g • oneChip (rightEndpoint B)) tau ∧
       IsKAffine k tau ∧
       Nat.choose g 2 + g / (B.length alpha - 1) ≤ kInversionCount k tau := by
   obtain ⟨tau, hTau, hAffine, hFinite⟩ :=
     exists_affine_transmission_of_allSubmodular
-      (graph_connected B) hTO.1 hSub (g • one_chip (rightEndpoint B))
+      (graphConnected B) hTO.1 hSub (g • oneChip (rightEndpoint B))
   exact ⟨tau, hTau, hAffine,
     oneOff_refined_inversion_lower_bound
       B alpha tau hg hTO.1.1 hLength hTau hAffine hFinite⟩

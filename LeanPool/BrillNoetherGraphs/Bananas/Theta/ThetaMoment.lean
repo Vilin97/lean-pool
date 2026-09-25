@@ -64,7 +64,7 @@ private theorem interior_position_eq_of_vertex_eq
 theorem interiorMoment_one_chip
     (B : Banana 2) (α β : Fin 3)
     (j : B.PathPosition β) (hj : B.IsInteriorPosition β j) :
-    interiorMoment B α (one_chip (strandVertex B β j)) =
+    interiorMoment B α (oneChip (strandVertex B β j)) =
       if α = β then (j.val : ℤ) else 0 := by
   classical
   unfold interiorMoment
@@ -74,7 +74,7 @@ theorem interiorMoment_one_chip
     have hterm : ∀ r ∈ Finset.range (B.length α - 1),
         (if h : r + 1 < B.length α then
           ((r + 1 : ℕ) : ℤ) *
-            (one_chip (strandVertex B α j)
+            (oneChip (strandVertex B α j)
               (strandVertex B α ⟨r + 1, by omega⟩))
         else 0) =
           if r = j.val - 1 then (j.val : ℤ) else 0 := by
@@ -82,7 +82,7 @@ theorem interiorMoment_one_chip
       have hr_lt : r + 1 < B.length α := by
         have hr := Finset.mem_range.mp hrange
         omega
-      simp only [one_chip]
+      simp only [oneChip]
       by_cases hrj : r = j.val - 1
       · subst r
         have hjpos : 1 ≤ j.val := hj.1
@@ -128,7 +128,7 @@ theorem interiorMoment_one_chip
         ⟨r + 1, by omega⟩ j
           (by exact ⟨Nat.zero_lt_succ r, hr_lt⟩)
           hj h)
-    simp [hr_lt, one_chip, hne]
+    simp [hr_lt, oneChip, hne]
 
 private theorem interiorMoment_sub
     (B : Banana 2) (α : Fin 3) (D E : CFDiv B.graph) :
@@ -149,8 +149,8 @@ theorem thetaMoment_marked_difference
     (hi : B.IsInteriorPosition α i)
     (hj : B.IsInteriorPosition β j) :
     thetaMoment B
-      (one_chip (strandVertex B α i) -
-        one_chip (strandVertex B β j)) =
+      (oneChip (strandVertex B α i) -
+        oneChip (strandVertex B β j)) =
       ((if α = 1 then (i.val : ℤ) else 0) -
           (if β = 1 then (j.val : ℤ) else 0) -
         ((if α = 0 then (i.val : ℤ) else 0) -
@@ -172,8 +172,8 @@ theorem thetaCoordinate_marked_difference
     (hi : B.IsInteriorPosition α i)
     (hj : B.IsInteriorPosition β j) :
     thetaCoordinate B
-      (one_chip (strandVertex B α i) -
-        one_chip (strandVertex B β j)) =
+      (oneChip (strandVertex B α i) -
+        oneChip (strandVertex B β j)) =
       ((if α = 0 then (i.val : ℤ) else 0) -
           (if β = 0 then (j.val : ℤ) else 0) -
           (B.length 0 : ℤ) *
@@ -191,7 +191,7 @@ theorem thetaCoordinate_marked_difference
     exact strandVertex_ne_rightEndpoint B α i hi.2
   have hjRight : strandVertex B β j ≠ rightEndpoint B := by
     exact strandVertex_ne_rightEndpoint B β j hj.2
-  simp [one_chip, hiRight, hjRight, Ne.symm hiRight, Ne.symm hjRight, eq_comm]
+  simp [oneChip, hiRight, hjRight, Ne.symm hiRight, Ne.symm hjRight, eq_comm]
 
 /- TeX labels: `prop-JacBanana`, `eq:multDiffMarkedPts` (the paper's
 two-coordinate marked-point representative). -/
@@ -200,8 +200,8 @@ theorem thetaJacobianMoment_marked_difference_01
     (hi : B.IsInteriorPosition 0 i)
     (hj : B.IsInteriorPosition 1 j) :
     thetaJacobianMoment B
-      (one_chip (strandVertex B 0 i) -
-        one_chip (strandVertex B 1 j)) =
+      (oneChip (strandVertex B 0 i) -
+        oneChip (strandVertex B 1 j)) =
       ((i.val : ℤ), -(j.val : ℤ)) := by
   unfold thetaJacobianMoment
   rw [interiorMoment_sub, interiorMoment_sub, interiorMoment_sub]
@@ -215,7 +215,7 @@ theorem thetaJacobianMoment_marked_difference_01
     strandVertex_ne_rightEndpoint B 0 i hi.2
   have hjRight : strandVertex B 1 j ≠ rightEndpoint B :=
     strandVertex_ne_rightEndpoint B 1 j hj.2
-  simp [one_chip, Ne.symm hiRight, Ne.symm hjRight, eq_comm]
+  simp [oneChip, Ne.symm hiRight, Ne.symm hjRight, eq_comm]
 
 
 end Bananas

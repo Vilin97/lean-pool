@@ -42,30 +42,30 @@ open Utilities
 
 section Generic
 
-/-- `linear_equiv G X 0` is literally membership of `X` in the principal
-divisors, up to the sign convention baked into `linear_equiv`. -/
+/-- `linearEquiv G X 0` is literally membership of `X` in the principal
+divisors, up to the sign convention baked into `linearEquiv`. -/
 private theorem linear_equiv_zero_iff_mem {G : CFGraph} {X : CFDiv G} :
-    linear_equiv G X 0 ↔ X ∈ principal_divisors G := by
-  unfold linear_equiv
+    linearEquiv G X 0 ↔ X ∈ principalDivisors G := by
+  unfold linearEquiv
   rw [zero_sub, AddSubgroup.neg_mem_iff]
 
 private theorem linear_equiv_neg {G : CFGraph} {X : CFDiv G}
-    (h : linear_equiv G X 0) : linear_equiv G (-X) 0 :=
+    (h : linearEquiv G X 0) : linearEquiv G (-X) 0 :=
   linear_equiv_zero_iff_mem.mpr
-    ((principal_divisors G).neg_mem (linear_equiv_zero_iff_mem.mp h))
+    ((principalDivisors G).neg_mem (linear_equiv_zero_iff_mem.mp h))
 
 private theorem linear_equiv_sub_to_zero {G : CFGraph} {X Y : CFDiv G}
-    (h : linear_equiv G X Y) : linear_equiv G (X - Y) 0 := by
-  unfold linear_equiv at h ⊢
+    (h : linearEquiv G X Y) : linearEquiv G (X - Y) 0 := by
+  unfold linearEquiv at h ⊢
   have heq : (0 : CFDiv G) - (X - Y) = Y - X := by abel
   rw [heq]
   exact h
 
 private theorem linear_equiv_zsmul {G : CFGraph} {D E : CFDiv G}
-    (h : linear_equiv G D E) (n : ℤ) :
-    linear_equiv G (n • D) (n • E) := by
-  unfold linear_equiv at h ⊢
-  simpa [smul_sub] using (principal_divisors G).zsmul_mem h n
+    (h : linearEquiv G D E) (n : ℤ) :
+    linearEquiv G (n • D) (n • E) := by
+  unfold linearEquiv at h ⊢
+  simpa [smul_sub] using (principalDivisors G).zsmul_mem h n
 
 end Generic
 
@@ -128,29 +128,29 @@ theorem cycle_isTorsionOrder (B : Banana 1) :
   have hapos : 0 < a := B.length_pos 0
   have hbpos : 0 < b := B.length_pos 1
   -- The two strand-length relations.
-  have h0 : linear_equiv B.graph ((a : ℤ) • w0) (one_chip R - one_chip L) :=
+  have h0 : linearEquiv B.graph ((a : ℤ) • w0) (oneChip R - oneChip L) :=
     bananaCoordinateStep_length_linearEquiv_endpointDifference B 0
-  have h1 : linear_equiv B.graph ((b : ℤ) • w1) (one_chip R - one_chip L) :=
+  have h1 : linearEquiv B.graph ((b : ℤ) • w1) (oneChip R - oneChip L) :=
     bananaCoordinateStep_length_linearEquiv_endpointDifference B 1
   -- The diagonal relation: firing the shared left endpoint.
-  have hdiag : linear_equiv B.graph (w0 + w1) 0 := by
+  have hdiag : linearEquiv B.graph (w0 + w1) 0 := by
     have hmem := bananaDiagonalRelation_image_principal B
     rw [bananaCoordinateDivisorHom_diagonalRelation, Fin.sum_univ_two] at hmem
     exact linear_equiv_zero_iff_mem.mpr hmem
-  have hw1neg : linear_equiv B.graph w1 (-w0) := by
-    unfold linear_equiv at hdiag ⊢
+  have hw1neg : linearEquiv B.graph w1 (-w0) := by
+    unfold linearEquiv at hdiag ⊢
     have heq : (-w0) - w1 = (0 : CFDiv B.graph) - (w0 + w1) := by abel
     rw [heq]
     exact hdiag
-  have hb' : linear_equiv B.graph ((b : ℤ) • w1) (-((b : ℤ) • w0)) := by
+  have hb' : linearEquiv B.graph ((b : ℤ) • w1) (-((b : ℤ) • w0)) := by
     have := linear_equiv_zsmul hw1neg b
     simpa [smul_neg] using this
   -- Chase: a•w0 ~ (R - L) ~ b•w1 ~ -(b•w0), so (a+b)•w0 ~ 0.
-  have hchain : linear_equiv B.graph ((a : ℤ) • w0) (-((b : ℤ) • w0)) :=
+  have hchain : linearEquiv B.graph ((a : ℤ) • w0) (-((b : ℤ) • w0)) :=
     h0.trans (h1.symm.trans hb')
-  have hAB0 : linear_equiv B.graph
+  have hAB0 : linearEquiv B.graph
       (((a : ℤ) • w0) - (-((b : ℤ) • w0))) 0 := linear_equiv_sub_to_zero hchain
-  have hAB : linear_equiv B.graph (((a + b : ℕ) : ℤ) • w0) 0 := by
+  have hAB : linearEquiv B.graph (((a + b : ℕ) : ℤ) • w0) 0 := by
     have heq : ((a : ℤ) • w0) - (-((b : ℤ) • w0)) = ((a + b : ℕ) : ℤ) • w0 := by
       push_cast
       module
@@ -177,13 +177,13 @@ theorem cycle_isTorsionOrder (B : Banana 1) :
       _ = (k * d) * e := by ring
       _ = (a + b) * e := by rw [hkd]
   -- Annihilation: k • (L - R) ~ 0.
-  have hRL_k : linear_equiv B.graph ((k : ℤ) • ((a : ℤ) • w0))
-      ((k : ℤ) • (one_chip R - one_chip L)) := linear_equiv_zsmul h0 k
-  have hka0 : linear_equiv B.graph (((k * a : ℕ) : ℤ) • w0) 0 := by
-    have heAB : linear_equiv B.graph
+  have hRL_k : linearEquiv B.graph ((k : ℤ) • ((a : ℤ) • w0))
+      ((k : ℤ) • (oneChip R - oneChip L)) := linear_equiv_zsmul h0 k
+  have hka0 : linearEquiv B.graph (((k * a : ℕ) : ℤ) • w0) 0 := by
+    have heAB : linearEquiv B.graph
         ((e : ℤ) • (((a + b : ℕ) : ℤ) • w0)) ((e : ℤ) • (0 : CFDiv B.graph)) :=
       linear_equiv_zsmul hAB e
-    have heAB' : linear_equiv B.graph (((k * a : ℕ) : ℤ) • w0) 0 := by
+    have heAB' : linearEquiv B.graph (((k * a : ℕ) : ℤ) • w0) 0 := by
       have heq1 : ((k * a : ℕ) : ℤ) • w0
           = (e : ℤ) • (((a + b : ℕ) : ℤ) • w0) := by
         rw [hka]
@@ -192,14 +192,14 @@ theorem cycle_isTorsionOrder (B : Banana 1) :
       rw [heq1]
       simpa using heAB
     exact heAB'
-  have hRLk0 : linear_equiv B.graph ((k : ℤ) • (one_chip R - one_chip L)) 0 := by
+  have hRLk0 : linearEquiv B.graph ((k : ℤ) • (oneChip R - oneChip L)) 0 := by
     have heq : (k : ℤ) • ((a : ℤ) • w0) = ((k * a : ℕ) : ℤ) • w0 := by
       push_cast; module
     rw [heq] at hRL_k
     exact hRL_k.symm.trans hka0
-  have hLRk0 : linear_equiv B.graph ((k : ℤ) • (one_chip L - one_chip R)) 0 := by
-    have heq : (k : ℤ) • (one_chip L - one_chip R)
-        = -((k : ℤ) • (one_chip R - one_chip L)) := by
+  have hLRk0 : linearEquiv B.graph ((k : ℤ) • (oneChip L - oneChip R)) 0 := by
+    have heq : (k : ℤ) • (oneChip L - oneChip R)
+        = -((k : ℤ) • (oneChip R - oneChip L)) := by
       rw [← smul_neg]
       congr 1
       abel
@@ -209,22 +209,22 @@ theorem cycle_isTorsionOrder (B : Banana 1) :
   -- Minimality.
   intro m hm
   obtain ⟨hmpos, hmw⟩ := hm
-  have hmRL0 : linear_equiv B.graph ((m : ℤ) • (one_chip R - one_chip L)) 0 := by
-    have heq : (m : ℤ) • (one_chip R - one_chip L)
-        = -((m : ℤ) • (one_chip L - one_chip R)) := by
+  have hmRL0 : linearEquiv B.graph ((m : ℤ) • (oneChip R - oneChip L)) 0 := by
+    have heq : (m : ℤ) • (oneChip R - oneChip L)
+        = -((m : ℤ) • (oneChip L - oneChip R)) := by
       rw [← smul_neg]
       congr 1
       abel
     rw [heq]
     exact linear_equiv_neg hmw
-  have hRm : linear_equiv B.graph ((m : ℤ) • ((a : ℤ) • w0))
-      ((m : ℤ) • (one_chip R - one_chip L)) := linear_equiv_zsmul h0 m
-  have hmaw0 : linear_equiv B.graph (((m * a : ℕ) : ℤ) • w0) 0 := by
+  have hRm : linearEquiv B.graph ((m : ℤ) • ((a : ℤ) • w0))
+      ((m : ℤ) • (oneChip R - oneChip L)) := linear_equiv_zsmul h0 m
+  have hmaw0 : linearEquiv B.graph (((m * a : ℕ) : ℤ) • w0) 0 := by
     have heq : (m : ℤ) • ((a : ℤ) • w0) = ((m * a : ℕ) : ℤ) • w0 := by
       push_cast; module
     rw [heq] at hRm
     exact hRm.trans hmRL0
-  have hmem : (((m * a : ℕ) : ℤ) • w0) ∈ principal_divisors B.graph :=
+  have hmem : (((m * a : ℕ) : ℤ) • w0) ∈ principalDivisors B.graph :=
     linear_equiv_zero_iff_mem.mp hmaw0
   have hcoordEq : bananaCoordinateDivisorHom B
       (((m * a : ℕ) : ℤ) • bananaCoordinateBasis (0 : Fin 2))
@@ -232,7 +232,7 @@ theorem cycle_isTorsionOrder (B : Banana 1) :
     rw [map_zsmul, bananaCoordinateDivisorHom_basis]
   have hmem' : bananaCoordinateDivisorHom B
       (((m * a : ℕ) : ℤ) • bananaCoordinateBasis (0 : Fin 2)) ∈
-        principal_divisors B.graph := by
+        principalDivisors B.graph := by
     rw [hcoordEq]; exact hmem
   have hrel : (((m * a : ℕ) : ℤ) • bananaCoordinateBasis (0 : Fin 2)) ∈
       bananaCoordinateRelations B := by

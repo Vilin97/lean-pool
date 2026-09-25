@@ -34,54 +34,54 @@ abbrev Remaining := {x : G.V // x ≠ leaf}
 
 structure LeafData where
   root : G.V
-  count_root : num_edges G leaf root = 1
-  count_other : ∀ x : G.V, x ≠ root → num_edges G leaf x = 0
+  count_root : numEdges G leaf root = 1
+  count_other : ∀ x : G.V, x ≠ root → numEdges G leaf x = 0
 
-theorem exists_leafData (hDegree : vertex_degree G leaf = 1) :
+theorem exists_leafData (hDegree : vertexDegree G leaf = 1) :
     Nonempty (LeafData G leaf) := by
-  have hSumInt : ∑ x : G.V, (num_edges G leaf x : ℤ) = 1 := by
-    simpa [vertex_degree] using hDegree
-  have hSum : ∑ x : G.V, num_edges G leaf x = 1 := by
+  have hSumInt : ∑ x : G.V, (numEdges G leaf x : ℤ) = 1 := by
+    simpa [vertexDegree] using hDegree
+  have hSum : ∑ x : G.V, numEdges G leaf x = 1 := by
     exact_mod_cast hSumInt
-  have hSumNe : ∑ x : G.V, num_edges G leaf x ≠ 0 := by
+  have hSumNe : ∑ x : G.V, numEdges G leaf x ≠ 0 := by
     omega
   obtain ⟨root, _hRootMem, hRootNe⟩ :=
     Finset.exists_ne_zero_of_sum_ne_zero hSumNe
-  have hRootPos : 0 < num_edges G leaf root :=
+  have hRootPos : 0 < numEdges G leaf root :=
     Nat.pos_of_ne_zero hRootNe
-  have hRootLe : num_edges G leaf root ≤
-      ∑ x : G.V, num_edges G leaf x := by
+  have hRootLe : numEdges G leaf root ≤
+      ∑ x : G.V, numEdges G leaf x := by
     exact Finset.single_le_sum
-      (fun x _ => Nat.zero_le (num_edges G leaf x)) (Finset.mem_univ root)
-  have hRootOne : num_edges G leaf root = 1 := by omega
+      (fun x _ => Nat.zero_le (numEdges G leaf x)) (Finset.mem_univ root)
+  have hRootOne : numEdges G leaf root = 1 := by omega
   refine ⟨⟨root, hRootOne, ?_⟩⟩
   intro x hx
   have hRootNeX : root ≠ x := fun h => hx h.symm
   have hPair :
-      num_edges G leaf root + num_edges G leaf x ≤
-        ∑ y : G.V, num_edges G leaf y := by
+      numEdges G leaf root + numEdges G leaf x ≤
+        ∑ y : G.V, numEdges G leaf y := by
     have hSubset : ({root, x} : Finset G.V) ⊆ Finset.univ := by simp
     have hBound := Finset.sum_le_sum_of_subset_of_nonneg hSubset
-      (fun y _hy _hnot => Nat.zero_le (num_edges G leaf y))
+      (fun y _hy _hnot => Nat.zero_le (numEdges G leaf y))
     simpa [Finset.sum_pair hRootNeX] using hBound
   omega
 
-noncomputable def leafData (hDegree : vertex_degree G leaf = 1) :
+noncomputable def leafData (hDegree : vertexDegree G leaf = 1) :
     LeafData G leaf :=
   Classical.choice (exists_leafData G leaf hDegree)
 
-noncomputable def root (hDegree : vertex_degree G leaf = 1) :
+noncomputable def root (hDegree : vertexDegree G leaf = 1) :
     Remaining G leaf :=
   ⟨(leafData G leaf hDegree).root, by
     intro hEq
-    have hSelf : num_edges G leaf leaf = 1 := by
+    have hSelf : numEdges G leaf leaf = 1 := by
       simpa [hEq] using (leafData G leaf hDegree).count_root
-    have hZero : num_edges G leaf leaf = 0 := num_edges_self_zero G leaf
+    have hZero : numEdges G leaf leaf = 0 := num_edges_self_zero G leaf
     omega⟩
 
-private theorem num_edges_leaf_eq (hDegree : vertex_degree G leaf = 1)
+private theorem num_edges_leaf_eq (hDegree : vertexDegree G leaf = 1)
     (x : G.V) :
-    num_edges G leaf x =
+    numEdges G leaf x =
       if x = (leafData G leaf hDegree).root then 1 else 0 := by
   by_cases hx : x = (leafData G leaf hDegree).root
   · subst x
@@ -109,7 +109,7 @@ private theorem keptEdges_all :
 
 /-- Delete `leaf`, retaining precisely the edges whose endpoints remain. -/
 noncomputable abbrev deleteLeaf
-    (hDegree : vertex_degree G leaf = 1) : CFGraph where
+    (hDegree : vertexDegree G leaf = 1) : CFGraph where
   V := Remaining G leaf
   instNonempty := ⟨root G leaf hDegree⟩
   edges := (keptEdges G leaf).pmap (restrictEdge G leaf)
@@ -131,7 +131,7 @@ noncomputable abbrev deleteLeaf
     exact G.loopless vertex.val hOriginal
 
 @[simp] theorem deleteLeaf_edges
-    (hDegree : vertex_degree G leaf = 1) :
+    (hDegree : vertexDegree G leaf = 1) :
     (deleteLeaf G leaf hDegree).edges =
       (keptEdges G leaf).pmap (restrictEdge G leaf)
         (keptEdges_all G leaf) := rfl
@@ -161,8 +161,8 @@ private theorem filter_keptEdges_endpoints
 
 /-- Deleting a leaf does not change edge multiplicities among old vertices. -/
 @[simp] theorem num_edges_deleteLeaf
-    (hDegree : vertex_degree G leaf = 1) (x y : Remaining G leaf) :
-    num_edges (deleteLeaf G leaf hDegree) x y = num_edges G x.val y.val := by
+    (hDegree : vertexDegree G leaf = 1) (x y : Remaining G leaf) :
+    numEdges (deleteLeaf G leaf hDegree) x y = numEdges G x.val y.val := by
   classical
   change
     ((Multiset.pmap (restrictEdge G leaf) (keptEdges G leaf)
@@ -209,13 +209,13 @@ private theorem filter_keptEdges_endpoints
 
 /-- The chosen neighbor, regarded as a vertex of the bundled pruned graph. -/
 noncomputable def rootInDeleteLeaf
-    (hDegree : vertex_degree G leaf = 1) :
+    (hDegree : vertexDegree G leaf = 1) :
     (deleteLeaf G leaf hDegree).V := by
   change Remaining G leaf
   exact root G leaf hDegree
 
 @[simp] theorem mk_eq_rootInDeleteLeaf_iff
-    (hDegree : vertex_degree G leaf = 1) (x : G.V) (hx : x ≠ leaf) :
+    (hDegree : vertexDegree G leaf = 1) (x : G.V) (hx : x ≠ leaf) :
     (show (deleteLeaf G leaf hDegree).V from ⟨x, hx⟩) =
         rootInDeleteLeaf G leaf hDegree ↔
       x = (leafData G leaf hDegree).root := by
@@ -228,7 +228,7 @@ noncomputable def rootInDeleteLeaf
 /-- The canonical relabeling from the original vertices to a new leaf plus
 the remaining vertices. -/
 noncomputable def vertexEquiv
-    (hDegree : vertex_degree G leaf = 1) :
+    (hDegree : vertexDegree G leaf = 1) :
     G.V ≃
       (LeafExtension.addLeaf (deleteLeaf G leaf hDegree)
         (rootInDeleteLeaf G leaf hDegree)).V := by
@@ -236,20 +236,20 @@ noncomputable def vertexEquiv
   exact (Equiv.optionSubtypeNe leaf).symm
 
 @[simp] theorem vertexEquiv_leaf
-    (hDegree : vertex_degree G leaf = 1) :
+    (hDegree : vertexDegree G leaf = 1) :
     vertexEquiv G leaf hDegree leaf = none := by
   change (Equiv.optionSubtypeNe leaf).symm leaf = none
   exact Equiv.optionSubtypeNe_symm_self leaf
 
 @[simp] theorem vertexEquiv_of_ne
-    (hDegree : vertex_degree G leaf = 1) (x : G.V) (hx : x ≠ leaf) :
+    (hDegree : vertexDegree G leaf = 1) (x : G.V) (hx : x ≠ leaf) :
     vertexEquiv G leaf hDegree x = some ⟨x, hx⟩ := by
   change (Equiv.optionSubtypeNe leaf).symm x = some ⟨x, hx⟩
   exact Equiv.optionSubtypeNe_symm_of_ne hx
 /-- A graph with a degree-one vertex is the explicit leaf extension of the
 graph on the remaining subtype, up to Laplacian-preserving relabeling. -/
-noncomputable def laplacianEquiv_deleteLeaf_addLeaf
-    (hDegree : vertex_degree G leaf = 1) :
+noncomputable def laplacianEquivDeleteLeafAddLeaf
+    (hDegree : vertexDegree G leaf = 1) :
     LaplacianEquiv G
       (LeafExtension.addLeaf (deleteLeaf G leaf hDegree)
         (rootInDeleteLeaf G leaf hDegree)) where
@@ -294,8 +294,8 @@ noncomputable def laplacianEquiv_deleteLeaf_addLeaf
 original connected graph.  The local lifting calculation uses only the exact
 valence-one hypothesis. -/
 theorem bnExists_rank_one_of_deleteLeaf
-    (_hG : graph_connected G)
-    (hDegree : vertex_degree G leaf = 1) {d : ℤ}
+    (_hG : graphConnected G)
+    (hDegree : vertexDegree G leaf = 1) {d : ℤ}
     (hPruned : BNExists (deleteLeaf G leaf hDegree) 1 d) :
     BNExists G 1 d := by
   have hExtended :
@@ -305,7 +305,7 @@ theorem bnExists_rank_one_of_deleteLeaf
         1 d :=
     LeafExtension.bnExists_rank_one_addLeaf
       (deleteLeaf G leaf hDegree) (rootInDeleteLeaf G leaf hDegree) hPruned
-  exact ((laplacianEquiv_deleteLeaf_addLeaf G leaf hDegree).bnExists_iff 1 d).2
+  exact ((laplacianEquivDeleteLeafAddLeaf G leaf hDegree).bnExists_iff 1 d).2
     hExtended
 
 end LeafPruning

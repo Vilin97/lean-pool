@@ -36,8 +36,8 @@ abbrev addEdge (H : CFGraph) (x y : H.V) (hxy : x ≠ y) : CFGraph where
 
 @[simp] theorem num_edges_addEdge
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y) (v w : H.V) :
-    num_edges (addEdge H x y hxy) v w =
-      num_edges H v w +
+    numEdges (addEdge H x y hxy) v w =
+      numEdges H v w +
         if (v = x ∧ w = y) ∨ (v = y ∧ w = x) then 1 else 0 := by
   change
     (Multiset.filter (fun e : H.V × H.V => e = (v, w) ∨ e = (w, v))
@@ -59,7 +59,7 @@ abbrev addEdge (H : CFGraph) (x y : H.V) (hxy : x ≠ y) : CFGraph where
 
 theorem num_edges_le_addEdge
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y) (v w : H.V) :
-    num_edges H v w ≤ num_edges (addEdge H x y hxy) v w := by
+    numEdges H v w ≤ numEdges (addEdge H x y hxy) v w := by
   rw [num_edges_addEdge]
   omega
 
@@ -72,13 +72,13 @@ edge, since the vertex type and its finite structure are unchanged. -/
 
 @[simp] theorem num_edges_addEdge_endpoints
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y) :
-    num_edges (addEdge H x y hxy) x y = num_edges H x y + 1 := by
+    numEdges (addEdge H x y hxy) x y = numEdges H x y + 1 := by
   simp [num_edges_addEdge]
 
 @[simp] theorem num_edges_addEdge_of_not_endpoints
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y) (v w : H.V)
     (hvw : ¬ ((v = x ∧ w = y) ∨ (v = y ∧ w = x))) :
-    num_edges (addEdge H x y hxy) v w = num_edges H v w := by
+    numEdges (addEdge H x y hxy) v w = numEdges H v w := by
   simp [num_edges_addEdge, hvw]
 
 @[simp] theorem genus_addEdge
@@ -92,18 +92,18 @@ edge, since the vertex type and its finite structure are unchanged. -/
 
 theorem graph_connected_addEdge
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y)
-    (hH : graph_connected H) :
-    graph_connected (addEdge H x y hxy) := by
+    (hH : graphConnected H) :
+    graphConnected (addEdge H x y hxy) := by
   intro S hS
   rcases hH S hS with ⟨v, hv, w, hw, hvw⟩
   exact ⟨v, hv, w, hw, lt_of_lt_of_le hvw (num_edges_le_addEdge H x y hxy v w)⟩
 
 @[simp] theorem vertex_degree_addEdge_left
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y) :
-    vertex_degree (addEdge H x y hxy) x = vertex_degree H x + 1 := by
+    vertexDegree (addEdge H x y hxy) x = vertexDegree H x + 1 := by
   change
-    (∑ u : H.V, (num_edges (addEdge H x y hxy) x u : ℤ)) =
-      (∑ u : H.V, (num_edges H x u : ℤ)) + 1
+    (∑ u : H.V, (numEdges (addEdge H x y hxy) x u : ℤ)) =
+      (∑ u : H.V, (numEdges H x u : ℤ)) + 1
   simp_rw [num_edges_addEdge]
   simp only [Nat.cast_add, Nat.cast_ite, Nat.cast_one, Nat.cast_zero]
   rw [Finset.sum_add_distrib]
@@ -111,10 +111,10 @@ theorem graph_connected_addEdge
 
 @[simp] theorem vertex_degree_addEdge_right
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y) :
-    vertex_degree (addEdge H x y hxy) y = vertex_degree H y + 1 := by
+    vertexDegree (addEdge H x y hxy) y = vertexDegree H y + 1 := by
   change
-    (∑ u : H.V, (num_edges (addEdge H x y hxy) y u : ℤ)) =
-      (∑ u : H.V, (num_edges H y u : ℤ)) + 1
+    (∑ u : H.V, (numEdges (addEdge H x y hxy) y u : ℤ)) =
+      (∑ u : H.V, (numEdges H y u : ℤ)) + 1
   simp_rw [num_edges_addEdge]
   simp only [Nat.cast_add, Nat.cast_ite, Nat.cast_one, Nat.cast_zero]
   rw [Finset.sum_add_distrib]
@@ -123,10 +123,10 @@ theorem graph_connected_addEdge
 @[simp] theorem vertex_degree_addEdge_of_ne
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y) (v : H.V)
     (hvx : v ≠ x) (hvy : v ≠ y) :
-    vertex_degree (addEdge H x y hxy) v = vertex_degree H v := by
+    vertexDegree (addEdge H x y hxy) v = vertexDegree H v := by
   change
-    (∑ u : H.V, (num_edges (addEdge H x y hxy) v u : ℤ)) =
-      ∑ u : H.V, (num_edges H v u : ℤ)
+    (∑ u : H.V, (numEdges (addEdge H x y hxy) v u : ℤ)) =
+      ∑ u : H.V, (numEdges H v u : ℤ)
   simp_rw [num_edges_addEdge]
   simp only [Nat.cast_add, Nat.cast_ite, Nat.cast_one, Nat.cast_zero]
   rw [Finset.sum_add_distrib]
@@ -134,7 +134,7 @@ theorem graph_connected_addEdge
 
 /-- The degree-zero divisor supported with opposite signs at the new edge's endpoints. -/
 def seamDivisor {H : CFGraph} (x y : H.V) : CFDiv H :=
-  one_chip x - one_chip y
+  oneChip x - oneChip y
 
 @[simp] theorem deg_seamDivisor {H : CFGraph} (x y : H.V) :
     deg (seamDivisor x y) = 0 := by
@@ -147,12 +147,12 @@ def seamDivisor {H : CFGraph} (x y : H.V) : CFDiv H :=
 
 @[simp] theorem prin_addEdge_apply_left
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y)
-    (σ : firing_script H) :
+    (σ : firingScript H) :
     prin (addEdge H x y hxy) σ x = prin H σ x + (σ y - σ x) := by
   change
     (∑ u : H.V,
-      (σ u - σ x) * (num_edges (addEdge H x y hxy) x u : ℤ)) =
-      (∑ u : H.V, (σ u - σ x) * (num_edges H x u : ℤ)) +
+      (σ u - σ x) * (numEdges (addEdge H x y hxy) x u : ℤ)) =
+      (∑ u : H.V, (σ u - σ x) * (numEdges H x u : ℤ)) +
         (σ y - σ x)
   simp_rw [num_edges_addEdge]
   simp only [Nat.cast_add, Nat.cast_ite, Nat.cast_one, Nat.cast_zero, mul_add]
@@ -161,12 +161,12 @@ def seamDivisor {H : CFGraph} (x y : H.V) : CFDiv H :=
 
 @[simp] theorem prin_addEdge_apply_right
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y)
-    (σ : firing_script H) :
+    (σ : firingScript H) :
     prin (addEdge H x y hxy) σ y = prin H σ y + (σ x - σ y) := by
   change
     (∑ u : H.V,
-      (σ u - σ y) * (num_edges (addEdge H x y hxy) y u : ℤ)) =
-      (∑ u : H.V, (σ u - σ y) * (num_edges H y u : ℤ)) +
+      (σ u - σ y) * (numEdges (addEdge H x y hxy) y u : ℤ)) =
+      (∑ u : H.V, (σ u - σ y) * (numEdges H y u : ℤ)) +
         (σ x - σ y)
   simp_rw [num_edges_addEdge]
   simp only [Nat.cast_add, Nat.cast_ite, Nat.cast_one, Nat.cast_zero, mul_add]
@@ -175,12 +175,12 @@ def seamDivisor {H : CFGraph} (x y : H.V) : CFDiv H :=
 
 @[simp] theorem prin_addEdge_apply_of_ne
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y)
-    (σ : firing_script H) (v : H.V) (hvx : v ≠ x) (hvy : v ≠ y) :
+    (σ : firingScript H) (v : H.V) (hvx : v ≠ x) (hvy : v ≠ y) :
     prin (addEdge H x y hxy) σ v = prin H σ v := by
   change
     (∑ u : H.V,
-      (σ u - σ v) * (num_edges (addEdge H x y hxy) v u : ℤ)) =
-      ∑ u : H.V, (σ u - σ v) * (num_edges H v u : ℤ)
+      (σ u - σ v) * (numEdges (addEdge H x y hxy) v u : ℤ)) =
+      ∑ u : H.V, (σ u - σ v) * (numEdges H v u : ℤ)
   simp_rw [num_edges_addEdge]
   simp [hvx, hvy]
 
@@ -191,7 +191,7 @@ negative of the usual graph Laplacian applied to the firing script.
 -/
 theorem prin_addEdge
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y)
-    (σ : firing_script H) :
+    (σ : firingScript H) :
     prin H σ =
       fun v : H.V =>
         prin (addEdge H x y hxy) σ v +
@@ -200,24 +200,24 @@ theorem prin_addEdge
   by_cases hvx : v = x
   · subst v
     rw [prin_addEdge_apply_left]
-    simp only [seamDivisor, Pi.sub_apply, one_chip, ↓reduceIte, hxy, sub_zero, mul_one]
+    simp only [seamDivisor, Pi.sub_apply, oneChip, ↓reduceIte, hxy, sub_zero, mul_one]
     ring
   · by_cases hvy : v = y
     · subst v
       rw [prin_addEdge_apply_right]
-      simp only [seamDivisor, Pi.sub_apply, one_chip, hvx, ↓reduceIte, zero_sub, Int.reduceNeg,
+      simp only [seamDivisor, Pi.sub_apply, oneChip, hvx, ↓reduceIte, zero_sub, Int.reduceNeg,
         mul_neg, mul_one, neg_sub]
       ring
     · rw [prin_addEdge_apply_of_ne H x y hxy σ v hvx hvy]
-      simp [seamDivisor, one_chip, hvx, hvy]
+      simp [seamDivisor, oneChip, hvx, hvy]
 
 /-- Linear equivalence on the old graph transfers to linear equivalence on
 the new graph after translating by an integral multiple of the seam divisor. -/
 theorem linear_equiv_phase_transfer
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y)
-    (D E : CFDiv H) (hDE : linear_equiv H D E) :
+    (D E : CFDiv H) (hDE : linearEquiv H D E) :
     ∃ n : ℤ,
-      linear_equiv (addEdge H x y hxy)
+      linearEquiv (addEdge H x y hxy)
         (D + n • seamDivisor x y) E := by
   obtain ⟨σ, hσ⟩ :=
     (principal_iff_eq_prin H (E - D)).mp hDE
@@ -241,13 +241,13 @@ theorem phase_represented_by_old_linear_class
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y)
     (D : CFDiv H) (n : ℤ) :
     ∃ E : CFDiv H,
-      linear_equiv H D E ∧
-      linear_equiv (addEdge H x y hxy)
+      linearEquiv H D E ∧
+      linearEquiv (addEdge H x y hxy)
         (D + n • seamDivisor x y) E := by
-  let σ : firing_script H := n • one_chip x
+  let σ : firingScript H := n • oneChip x
   let E : CFDiv H := D + prin H σ
   have hDrop : σ x - σ y = n := by
-    simp [σ, one_chip, hxy.symm]
+    simp [σ, oneChip, hxy.symm]
   have hPrin (v : H.V) :
       prin H σ v =
         prin (addEdge H x y hxy) σ v + n * seamDivisor x y v := by
@@ -273,20 +273,20 @@ theorem old_linear_class_iff_seam_phase_orbit
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y)
     (D F : CFDiv H) :
     (∃ E : CFDiv H,
-      linear_equiv H D E ∧
-      linear_equiv (addEdge H x y hxy) E F) ↔
+      linearEquiv H D E ∧
+      linearEquiv (addEdge H x y hxy) E F) ↔
     ∃ n : ℤ,
-      linear_equiv (addEdge H x y hxy)
+      linearEquiv (addEdge H x y hxy)
         (D + n • seamDivisor x y) F := by
   constructor
   · rintro ⟨E, hDE, hEF⟩
     obtain ⟨n, hn⟩ := linear_equiv_phase_transfer H x y hxy D E hDE
-    exact ⟨n, linear_equiv.trans hn hEF⟩
+    exact ⟨n, linearEquiv.trans hn hEF⟩
   · rintro ⟨n, hn⟩
     obtain ⟨E, hDE, hPhaseE⟩ :=
       phase_represented_by_old_linear_class H x y hxy D n
     exact ⟨E, hDE,
-      linear_equiv.trans (linear_equiv.symm hPhaseE) hn⟩
+      linearEquiv.trans (linearEquiv.symm hPhaseE) hn⟩
 
 /-- A winnable divisor on the old graph has a winnable phase after the edge
 is added.  This is edge normalization in rank zero, without a BN hypothesis. -/
@@ -307,23 +307,23 @@ endpoint.  The pointwise RHS makes the definitional identification of vertex
 types explicit. -/
 theorem canonical_divisor_addEdge
     (H : CFGraph) (x y : H.V) (hxy : x ≠ y) :
-    canonical_divisor (addEdge H x y hxy) =
-      fun v : H.V => canonical_divisor H v + one_chip x v + one_chip y v := by
+    canonicalDivisor (addEdge H x y hxy) =
+      fun v : H.V => canonicalDivisor H v + oneChip x v + oneChip y v := by
   change
-    (fun v : H.V => vertex_degree (addEdge H x y hxy) v - 2) =
-      fun v : H.V => canonical_divisor H v + one_chip x v + one_chip y v
+    (fun v : H.V => vertexDegree (addEdge H x y hxy) v - 2) =
+      fun v : H.V => canonicalDivisor H v + oneChip x v + oneChip y v
   funext v
   by_cases hvx : v = x
   · subst v
     rw [vertex_degree_addEdge_left]
-    simp only [canonical_divisor, one_chip, ↓reduceIte, hxy, add_zero]
+    simp only [canonicalDivisor, oneChip, ↓reduceIte, hxy, add_zero]
     ring
   · by_cases hvy : v = y
     · subst v
       rw [vertex_degree_addEdge_right]
-      simp only [canonical_divisor, one_chip, hvx, ↓reduceIte, add_zero]
+      simp only [canonicalDivisor, oneChip, hvx, ↓reduceIte, add_zero]
       ring
     · rw [vertex_degree_addEdge_of_ne H x y hxy v hvx hvy]
-      simp [canonical_divisor, one_chip, hvx, hvy]
+      simp [canonicalDivisor, oneChip, hvx, hvy]
 
 end Utilities

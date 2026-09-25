@@ -346,28 +346,28 @@ $$
 (s \star t)(a,b) = \min_{\ell \in \mathbb{Z}} [s(a,\ell) + t(\ell,b)].
 $$
 
-In Lean, `star_func s t a b` is this integer value, while `s ⋆ t` is the resulting
+In Lean, `starFunction s t a b` is this integer value, while `s ⋆ t` is the resulting
 `SlipFace`.
 See *Definition 3.7 (`defn:sfAlgebra`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
-noncomputable def star_func (s t : SlipFace) : ℤ → ℤ → ℤ :=
+noncomputable def starFunction (s t : SlipFace) : ℤ → ℤ → ℤ :=
   fun a b => (SlipValley s t a b).min
 
 lemma star_dual_ineq (s t : SlipFace) (a b : ℤ) :
-  star_func t.dual s.dual b a ≤ star_func s t a b - a + b - s.χ - t.χ := by
+  starFunction t.dual s.dual b a ≤ starFunction s t a b - a + b - s.χ - t.χ := by
   let v := SlipValley s t a b
   let l := v.M
-  have hl : s a l + t l b = star_func s t a b := by
+  have hl : s a l + t l b = starFunction s t a b := by
     exact (SlipValley s t a b).f_M
-  have ineq : star_func t.dual s.dual b a ≤ t.dual b l + s.dual l a := by
+  have ineq : starFunction t.dual s.dual b a ≤ t.dual b l + s.dual l a := by
     exact (SlipValley t.dual s.dual b a).min_spec l
   apply le_trans ineq
   dsimp [SlipFace.dual]
   omega
 
 lemma star_dual_eq (s t : SlipFace) (a b : ℤ) :
-  star_func s t a b - star_func t.dual s.dual b a = a - b + s.χ + t.χ := by
-  suffices star_func t.dual s.dual b a = star_func s t a b - a + b - s.χ - t.χ by omega
+  starFunction s t a b - starFunction t.dual s.dual b a = a - b + s.χ + t.χ := by
+  suffices starFunction t.dual s.dual b a = starFunction s t a b - a + b - s.χ - t.χ by omega
   apply le_antisymm
   · exact star_dual_ineq s t a b
   let s' := s.dual
@@ -383,14 +383,14 @@ lemma star_dual_eq (s t : SlipFace) (a b : ℤ) :
   rw [this] at ineq
   omega
 
-private lemma D_props_of_star_func (s t : SlipFace) : D_props (s.star_func t) := by
+private lemma D_props_of_star_func (s t : SlipFace) : D_props (s.starFunction t) := by
   constructor
   · intro a b
     let v := SlipValley s t (a+1) b
     let l := v.M
-    rw [← show s (a+1) l + t l b = s.star_func t (a+1) b by
+    rw [← show s (a+1) l + t l b = s.starFunction t (a+1) b by
       exact (SlipValley s t (a+1) b).f_M]
-    have hmin : s.star_func t a b ≤ s a l + t l b := by
+    have hmin : s.starFunction t a b ≤ s a l + t l b := by
       exact (SlipValley s t a b).min_spec l
     apply le_trans hmin
     have step : s a l ≤ s (a+1) l := (s.a_step a l).1
@@ -398,9 +398,9 @@ private lemma D_props_of_star_func (s t : SlipFace) : D_props (s.star_func t) :=
   · intro a b
     let v := SlipValley s t a b
     let l := v.M
-    rw [← show s a l + t l b = s.star_func t a b by
+    rw [← show s a l + t l b = s.starFunction t a b by
       exact (SlipValley s t a b).f_M]
-    have hmin : s.star_func t a (b+1) ≤ s a l + t l (b+1) := by
+    have hmin : s.starFunction t a (b+1) ≤ s a l + t l (b+1) := by
       exact (SlipValley s t a (b+1)).min_spec l
     apply le_trans hmin
     have step : t l (b+1) ≤ t l b := (t.b_step l b).1
@@ -412,14 +412,14 @@ private lemma D_props_of_star_func (s t : SlipFace) : D_props (s.star_func t) :=
     use B
     intro b hb
     specialize hB b hb
-    have : s.star_func t a b ≤ s a l + t l b := by
+    have : s.starFunction t a b ≤ s a l + t l b := by
       exact (SlipValley s t a b).min_spec l
-    have le_zero : s.star_func t a b ≤ 0 := by
+    have le_zero : s.starFunction t a b ≤ 0 := by
       rwa [hl, hB, add_zero] at this
-    have ge_zero : s.star_func t a b ≥ 0 := by
+    have ge_zero : s.starFunction t a b ≥ 0 := by
       let v := SlipValley s t a b
       let l := v.M
-      rw [← show s a l + t l b = s.star_func t a b by
+      rw [← show s a l + t l b = s.starFunction t a b by
         exact (SlipValley s t a b).f_M]
       linarith [s.nonneg a l, t.nonneg l b]
     exact le_antisymm le_zero ge_zero
@@ -430,23 +430,23 @@ private lemma D_props_of_star_func (s t : SlipFace) : D_props (s.star_func t) :=
     use A
     intro a ha
     specialize hA a ha
-    have : s.star_func t a b ≤ s a l + t l b := by
+    have : s.starFunction t a b ≤ s a l + t l b := by
       exact (SlipValley s t a b).min_spec l
-    have le_zero : s.star_func t a b ≤ 0 := by
+    have le_zero : s.starFunction t a b ≤ 0 := by
       rwa [hA, hl, zero_add] at this
-    have ge_zero : s.star_func t a b ≥ 0 := by
+    have ge_zero : s.starFunction t a b ≥ 0 := by
       let v := SlipValley s t a b
       let l := v.M
-      have hl : s a l + t l b = s.star_func t a b := by
+      have hl : s a l + t l b = s.starFunction t a b := by
         exact (SlipValley s t a b).f_M
       linarith [s.nonneg a l, t.nonneg l b]
     exact le_antisymm le_zero ge_zero
 
 private lemma star_exists (s t : SlipFace) : ∃ p : SlipFace,
-  ((p.func = star_func s t ∧ p.χ = s.χ + t.χ)
-  ∧ p.dual.func = star_func t.dual s.dual) := by
-  let P := star_func s t
-  let P' := star_func t.dual s.dual
+  ((p.func = starFunction s t ∧ p.χ = s.χ + t.χ)
+  ∧ p.dual.func = starFunction t.dual s.dual) := by
+  let P := starFunction s t
+  let P' := starFunction t.dual s.dual
   let χ := s.χ + t.χ
   have : ∀ a b : ℤ, P a b - P' b a = a - b + χ := by
     intro a b
@@ -458,7 +458,7 @@ private lemma star_exists (s t : SlipFace) : ∃ p : SlipFace,
   exact ⟨D_props_of_star_func s t, D_props_of_star_func t.dual s.dual⟩
 
 /-- The product of two slipfaces, obtained from the minimum formula
-`star_func`.
+`starFunction`.
 See *Definition 3.7* (`defn:sfAlgebra`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
 noncomputable def star (s t : SlipFace) : SlipFace :=
@@ -468,7 +468,7 @@ noncomputable instance : Mul SlipFace := ⟨star⟩
 
 infixl:70 " ⋆ " => star
 
-lemma star_func_eq (s t : SlipFace) : (s ⋆ t).func = star_func s t := by
+lemma star_func_eq (s t : SlipFace) : (s ⋆ t).func = starFunction s t := by
   have h := star_exists s t
   exact (Classical.choose_spec h).1.1
 
@@ -543,11 +543,11 @@ lemma star_val_le (s t : SlipFace) (a b l : ℤ) : (s ⋆ t) a b ≤ s a l + t l
     exact v.min_spec l
   rwa [← hmin] at hM
 
-noncomputable def star_wit (s t : SlipFace) (a b : ℤ) : ℤ :=
+noncomputable def starWitness (s t : SlipFace) (a b : ℤ) : ℤ :=
   (SlipValley s t a b).M
 
 lemma star_wit_spec (s t : SlipFace) (a b : ℤ) :
-  (s ⋆ t) a b = s a (star_wit s t a b) + t (star_wit s t a b) b := by
+  (s ⋆ t) a b = s a (starWitness s t a b) + t (starWitness s t a b) b := by
   let v := SlipValley s t a b
   rw [star_func_eq]
   exact Eq.symm v.f_M
@@ -562,7 +562,7 @@ lemma le_star_val_iff (r s t : SlipFace) (a b : ℤ) :
     contrapose! h
     exact lt_of_le_of_lt (star_val_le s t a b l) h
   · intro h
-    let l := star_wit s t a b
+    let l := starWitness s t a b
     have : (s ⋆ t) a b = s a l + t l b := by
       exact star_wit_spec s t a b
     rw [this]
@@ -575,7 +575,7 @@ lemma ge_star_val_iff (r s t : SlipFace) (a b : ℤ) :
   := by
   constructor
   · intro h
-    use star_wit s t a b
+    use starWitness s t a b
     rw [← star_wit_spec s t a b]
     exact h
   · rintro ⟨l, hl⟩
@@ -592,19 +592,19 @@ lemma star_assoc (r s t : SlipFace) : r ⋆ s ⋆ t = r ⋆ (s ⋆ t) := by
   apply (SF_ext _ _).mpr
   intro a b
   apply le_antisymm
-  · let l := star_wit r (s ⋆ t) a b
+  · let l := starWitness r (s ⋆ t) a b
     have : (r ⋆ (s ⋆ t)) a b = r a l + (s ⋆ t) l b := star_wit_spec r (s ⋆ t) a b
     rw [this]
-    let m := star_wit s t l b
+    let m := starWitness s t l b
     have : (s ⋆ t) l b = s l m + t m b := star_wit_spec s t l b
     rw [this]
     have h1 : (r ⋆ s ⋆ t) a b ≤ (r ⋆ s) a m + t m b := by apply star_val_le
     have h2 : (r ⋆ s) a m ≤ r a l + s l m := by apply star_val_le
     omega
-  · let l := star_wit (r ⋆ s) t a b
+  · let l := starWitness (r ⋆ s) t a b
     have : ((r ⋆ s) ⋆ t) a b = (r ⋆ s) a l + t l b := star_wit_spec (r ⋆ s) t a b
     rw [this]
-    let m := star_wit r s a l
+    let m := starWitness r s a l
     have : (r ⋆ s) a l = r a m + s m l := star_wit_spec r s a l
     rw [this]
     have h1 : (r ⋆ (s ⋆ t)) a b ≤ r a m + (s ⋆ t) m b := by apply star_val_le
@@ -757,7 +757,7 @@ lemma lres_wit_exists (s t : SlipFace) (a b : ℤ) : ∃ m, ∀ l,
 
 
 /-- The argmax witnessing the left residual value $s \triangleleft t (a,b)$. -/
-noncomputable def lres_wit (s t : SlipFace) (a b : ℤ) : ℤ :=
+noncomputable def leftResidualWitness (s t : SlipFace) (a b : ℤ) : ℤ :=
   Classical.choose (lres_wit_exists s t a b)
 
 /-- The left residual function
@@ -766,16 +766,16 @@ $$
 $$
 See *Definition 3.7* (`defn:sfAlgebra`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
-noncomputable def lres_func (s t : SlipFace) : ℤ → ℤ → ℤ :=
-  fun a b => s a (lres_wit s t a b) - t.dual b (lres_wit s t a b)
+noncomputable def leftResidualFunction (s t : SlipFace) : ℤ → ℤ → ℤ :=
+  fun a b => s a (leftResidualWitness s t a b) - t.dual b (leftResidualWitness s t a b)
 
 /-- Every value $s(a,\ell) - t^\vee(b,\ell)$ is at most $s \triangleleft t (a,b)$. -/
-lemma lres_val_ge (s t : SlipFace) (a b l : ℤ) : s a l - t.dual b l ≤ lres_func s t a b :=
+lemma lres_val_ge (s t : SlipFace) (a b l : ℤ) : s a l - t.dual b l ≤ leftResidualFunction s t a b :=
   Classical.choose_spec (lres_wit_exists s t a b) l
 
 /-- The left residual is nonnegative, since for `l ≫ 0` both terms in the
 maximizing expression vanish. -/
-lemma lres_func_nonneg (s t : SlipFace) (a b : ℤ) : 0 ≤ lres_func s t a b := by
+lemma lres_func_nonneg (s t : SlipFace) (a b : ℤ) : 0 ≤ leftResidualFunction s t a b := by
   -- Proof written by GPT 5.5.
   obtain ⟨U₁, hU₁⟩ := s.large_b a
   obtain ⟨U₂, hU₂⟩ := t.dual.large_b b
@@ -786,20 +786,20 @@ lemma lres_func_nonneg (s t : SlipFace) (a b : ℤ) : 0 ≤ lres_func s t a b :=
   rw [hs0, ht0] at hmax
   omega
 
-private lemma D_props_of_lres_func (s t : SlipFace) : D_props (lres_func s t) := by
+private lemma D_props_of_lres_func (s t : SlipFace) : D_props (leftResidualFunction s t) := by
   -- Proof written by GPT 5.5.
   constructor
   · intro a b
-    let l := lres_wit s t a b
-    change s a l - t.dual b l ≤ lres_func s t (a+1) b
-    have hmax : s (a+1) l - t.dual b l ≤ lres_func s t (a+1) b :=
+    let l := leftResidualWitness s t a b
+    change s a l - t.dual b l ≤ leftResidualFunction s t (a+1) b
+    have hmax : s (a+1) l - t.dual b l ≤ leftResidualFunction s t (a+1) b :=
       lres_val_ge s t (a+1) b l
     have hstep : s a l ≤ s (a+1) l := (s.a_step a l).1
     omega
   · intro a b
-    let l := lres_wit s t a (b+1)
-    change s a l - t.dual (b+1) l ≤ lres_func s t a b
-    have hmax : s a l - t.dual b l ≤ lres_func s t a b :=
+    let l := leftResidualWitness s t a (b+1)
+    change s a l - t.dual (b+1) l ≤ leftResidualFunction s t a b
+    have hmax : s a l - t.dual b l ≤ leftResidualFunction s t a b :=
       lres_val_ge s t a b l
     have hstep : t.dual b l ≤ t.dual (b+1) l := (t.dual.a_step b l).1
     omega
@@ -810,7 +810,7 @@ private lemma D_props_of_lres_func (s t : SlipFace) : D_props (lres_func s t) :=
       use B
       intro b hb
       apply le_antisymm
-      · let l := lres_wit s t a b
+      · let l := leftResidualWitness s t a b
         change s a l - t.dual b l ≤ 0
         exact hB b hb l
       · exact lres_func_nonneg s t a b
@@ -864,7 +864,7 @@ private lemma D_props_of_lres_func (s t : SlipFace) : D_props (lres_func s t) :=
       use A
       intro a ha
       apply le_antisymm
-      · let l := lres_wit s t a b
+      · let l := leftResidualWitness s t a b
         change s a l - t.dual b l ≤ 0
         exact hA a ha l
       · exact lres_func_nonneg s t a b
@@ -962,7 +962,7 @@ private lemma rres_exists (s t : SlipFace) (a b : ℤ) : ∃ m, ∀ l,
       omega
 
 /-- The argmax witnessing the right residual value $s \triangleright t (a,b)$. -/
-noncomputable def rres_wit (s t : SlipFace) (a b : ℤ) : ℤ :=
+noncomputable def rightResidualWitness (s t : SlipFace) (a b : ℤ) : ℤ :=
   Classical.choose (rres_exists s t a b)
 
 /-- The right residual function
@@ -971,16 +971,16 @@ $$
 $$
 *Definition 3.7* (`defn:sfAlgebra`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
-noncomputable def rres_func (s t : SlipFace) : ℤ → ℤ → ℤ :=
-  fun a b => t (rres_wit s t a b) b - s.dual (rres_wit s t a b) a
+noncomputable def rightResidualFunction (s t : SlipFace) : ℤ → ℤ → ℤ :=
+  fun a b => t (rightResidualWitness s t a b) b - s.dual (rightResidualWitness s t a b) a
 
 /-- Every value $t(\ell,b) - s^\vee(\ell,a)$ is at most $s \triangleright t (a,b)$. -/
-lemma rres_val_ge (s t : SlipFace) (a b l : ℤ) : t l b - s.dual l a ≤ rres_func s t a b :=
+lemma rres_val_ge (s t : SlipFace) (a b l : ℤ) : t l b - s.dual l a ≤ rightResidualFunction s t a b :=
   Classical.choose_spec (rres_exists s t a b) l
 
 /-- The right residual is nonnegative, since for `l ≪ 0` both terms in the
 maximizing expression vanish. -/
-lemma rres_func_nonneg (s t : SlipFace) (a b : ℤ) : 0 ≤ rres_func s t a b := by
+lemma rres_func_nonneg (s t : SlipFace) (a b : ℤ) : 0 ≤ rightResidualFunction s t a b := by
   -- Proof written by GPT 5.5.
   obtain ⟨A₁, hA₁⟩ := t.small_a b
   obtain ⟨A₂, hA₂⟩ := s.dual.small_a a
@@ -991,20 +991,20 @@ lemma rres_func_nonneg (s t : SlipFace) (a b : ℤ) : 0 ≤ rres_func s t a b :=
   rw [ht0, hs0] at hmax
   omega
 
-private lemma D_props_of_rres_func (s t : SlipFace) : D_props (rres_func s t) := by
+private lemma D_props_of_rres_func (s t : SlipFace) : D_props (rightResidualFunction s t) := by
   -- Proof written by GPT 5.5.
   constructor
   · intro a b
-    let l := rres_wit s t a b
-    change t l b - s.dual l a ≤ rres_func s t (a+1) b
-    have hmax : t l b - s.dual l (a+1) ≤ rres_func s t (a+1) b :=
+    let l := rightResidualWitness s t a b
+    change t l b - s.dual l a ≤ rightResidualFunction s t (a+1) b
+    have hmax : t l b - s.dual l (a+1) ≤ rightResidualFunction s t (a+1) b :=
       rres_val_ge s t (a+1) b l
     have hstep : s.dual l (a+1) ≤ s.dual l a := (s.dual.b_step l a).1
     omega
   · intro a b
-    let l := rres_wit s t a (b+1)
-    change t l (b+1) - s.dual l a ≤ rres_func s t a b
-    have hmax : t l b - s.dual l a ≤ rres_func s t a b :=
+    let l := rightResidualWitness s t a (b+1)
+    change t l (b+1) - s.dual l a ≤ rightResidualFunction s t a b
+    have hmax : t l b - s.dual l a ≤ rightResidualFunction s t a b :=
       rres_val_ge s t a b l
     have hstep : t l (b+1) ≤ t l b := (t.b_step l b).1
     omega
@@ -1015,7 +1015,7 @@ private lemma D_props_of_rres_func (s t : SlipFace) : D_props (rres_func s t) :=
       use B
       intro b hb
       apply le_antisymm
-      · let l := rres_wit s t a b
+      · let l := rightResidualWitness s t a b
         change t l b - s.dual l a ≤ 0
         exact hB b hb l
       · exact rres_func_nonneg s t a b
@@ -1077,7 +1077,7 @@ private lemma D_props_of_rres_func (s t : SlipFace) : D_props (rres_func s t) :=
       use A
       intro a ha
       apply le_antisymm
-      · let l := rres_wit s t a b
+      · let l := rightResidualWitness s t a b
         change t l b - s.dual l a ≤ 0
         exact hA a ha l
       · exact rres_func_nonneg s t a b
@@ -1122,33 +1122,33 @@ private lemma D_props_of_rres_func (s t : SlipFace) : D_props (rres_func s t) :=
         omega
 
 private lemma lres_rres_dual_eq (s t : SlipFace) (a b : ℤ) :
-    lres_func s t a b - rres_func t.dual s.dual b a = a - b + s.χ + t.χ := by
+    leftResidualFunction s t a b - rightResidualFunction t.dual s.dual b a = a - b + s.χ + t.χ := by
   -- Proof written by GPT 5.5.
   let C := a - b + s.χ + t.χ
-  suffices lres_func s t a b ≤ rres_func t.dual s.dual b a + C ∧
-      rres_func t.dual s.dual b a + C ≤ lres_func s t a b by
+  suffices leftResidualFunction s t a b ≤ rightResidualFunction t.dual s.dual b a + C ∧
+      rightResidualFunction t.dual s.dual b a + C ≤ leftResidualFunction s t a b by
     omega
   constructor
-  · let l := lres_wit s t a b
-    change s a l - t.dual b l ≤ rres_func t.dual s.dual b a + C
-    have hmax : s.dual l a - t l b ≤ rres_func t.dual s.dual b a := by
+  · let l := leftResidualWitness s t a b
+    change s a l - t.dual b l ≤ rightResidualFunction t.dual s.dual b a + C
+    have hmax : s.dual l a - t l b ≤ rightResidualFunction t.dual s.dual b a := by
       have h := rres_val_ge t.dual s.dual b a l
       rwa [SlipFace.dual_dual t] at h
     linarith [s.s_eq a l, t.s'_eq b l, hmax]
-  · let l := rres_wit t.dual s.dual b a
-    change s.dual l a - (t.dual).dual l b + C ≤ lres_func s t a b
+  · let l := rightResidualWitness t.dual s.dual b a
+    change s.dual l a - (t.dual).dual l b + C ≤ leftResidualFunction s t a b
     have htdd : (t.dual).dual l b = t l b := by
       rw [SlipFace.dual_dual t]
-    have hmax : s a l - t.dual b l ≤ lres_func s t a b :=
+    have hmax : s a l - t.dual b l ≤ leftResidualFunction s t a b :=
       lres_val_ge s t a b l
     linarith [s.s_eq a l, t.s'_eq b l, htdd, hmax]
 
 private lemma lres_exists (s t : SlipFace) : ∃ p : SlipFace,
-    ((p.func = lres_func s t ∧ p.χ = s.χ + t.χ)
-    ∧ p.dual.func = rres_func t.dual s.dual) := by
+    ((p.func = leftResidualFunction s t ∧ p.χ = s.χ + t.χ)
+    ∧ p.dual.func = rightResidualFunction t.dual s.dual) := by
   -- Proof written by GPT 5.5.
-  let P := lres_func s t
-  let P' := rres_func t.dual s.dual
+  let P := leftResidualFunction s t
+  let P' := rightResidualFunction t.dual s.dual
   let χ := s.χ + t.χ
   have hdual : ∀ a b : ℤ, P a b - P' b a = a - b + χ := by
     intro a b
@@ -1160,18 +1160,18 @@ private lemma lres_exists (s t : SlipFace) : ∃ p : SlipFace,
   exact ⟨D_props_of_lres_func s t, D_props_of_rres_func t.dual s.dual⟩
 
 /-- The left residual of two slipfaces, obtained from the maximum formula
-`lres_func`. See *Definition 3.7* (`defn:sfAlgebra`) of
+`leftResidualFunction`. See *Definition 3.7* (`defn:sfAlgebra`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
 noncomputable def lres (s t : SlipFace) : SlipFace :=
   Classical.choose (lres_exists s t)
 
 infixl:70 " ◃ " => lres
 
-lemma lres_func_eq (s t : SlipFace) : (s ◃ t).func = lres_func s t :=
+lemma lres_func_eq (s t : SlipFace) : (s ◃ t).func = leftResidualFunction s t :=
   (Classical.choose_spec (lres_exists s t)).1.1
 
 lemma lres_wit_spec (s t : SlipFace) (a b : ℤ) :
-    (s ◃ t) a b = s a (lres_wit s t a b) - t.dual b (lres_wit s t a b) := by
+    (s ◃ t) a b = s a (leftResidualWitness s t a b) - t.dual b (leftResidualWitness s t a b) := by
   rw [lres_func_eq]
   rfl
 
@@ -1203,15 +1203,15 @@ noncomputable def rres (s t : SlipFace) : SlipFace :=
 
 infixr:70 " ▹ " => rres
 
-lemma rres_func_eq (s t : SlipFace) : (s ▹ t).func = rres_func s t := by
+lemma rres_func_eq (s t : SlipFace) : (s ▹ t).func = rightResidualFunction s t := by
   dsimp [rres]
   calc
-    (t.dual ◃ s.dual).dual.func = rres_func s.dual.dual t.dual.dual :=
+    (t.dual ◃ s.dual).dual.func = rightResidualFunction s.dual.dual t.dual.dual :=
       (Classical.choose_spec (lres_exists t.dual s.dual)).2
-    _ = rres_func s t := by rw [SlipFace.dual_dual s, SlipFace.dual_dual t]
+    _ = rightResidualFunction s t := by rw [SlipFace.dual_dual s, SlipFace.dual_dual t]
 
 lemma rres_wit_spec (s t : SlipFace) (a b : ℤ) :
-    (s ▹ t) a b = t (rres_wit s t a b) b - s.dual (rres_wit s t a b) a := by
+    (s ▹ t) a b = t (rightResidualWitness s t a b) b - s.dual (rightResidualWitness s t a b) a := by
   rw [rres_func_eq]
   rfl
 
@@ -1257,15 +1257,15 @@ left/right duality to dual slipfaces.
 /-- A small set on which witnesses to the value $s \star t (a,b)$ always occur.
 *Lemma 3.13 (`lem:setL`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 1/5.* -/
-def bend_set (t : SlipFace) (b : ℤ) : Set ℤ :=
+def bendSet (t : SlipFace) (b : ℤ) : Set ℤ :=
   {l : ℤ | t (l-1) b = t l b ∧ t l b ≠ t (l+1) b}
 
 /-- *Lemma 3.13 (`lem:setL`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 2/5.* -/
-lemma bend_set_finite (t : SlipFace) (b : ℤ) : Finite (bend_set t b) := by
+lemma bend_set_finite (t : SlipFace) (b : ℤ) : Finite (bendSet t b) := by
   obtain ⟨A1, hA1⟩ := t.large_a b
   obtain ⟨A0, hA0⟩ := t.small_a b
-  have : bend_set t b ⊆ Finset.Icc A0 A1 := by
+  have : bendSet t b ⊆ Finset.Icc A0 A1 := by
     rintro l ⟨hl_left,hl_right⟩
     rw [Finset.mem_coe, Finset.mem_Icc]
     constructor
@@ -1310,7 +1310,7 @@ decreasing_by
 /-- *Lemma 3.13 (`lem:setL`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 3/5.* -/
 lemma bend_set_witness (s t : SlipFace) (a b : ℤ) :
-  ∃ l ∈ bend_set t b, (s ⋆ t) a b = s a l + t l b := by
+  ∃ l ∈ bendSet t b, (s ⋆ t) a b = s a l + t l b := by
   -- Proof written by GPT 5.5.
   let v := SlipValley s t a b
   have hM_right : t v.M b ≠ t (v.M + 1) b := by
@@ -1409,12 +1409,12 @@ decreasing_by
 /-- *Lemma 3.13 (`lem:setL`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 4/5.* -/
 lemma bend_set_witness_lres (s t : SlipFace) (a b : ℤ) :
-    ∃ l ∈ bend_set t b, (s ◃ t) a b = s a l - t.dual b l := by
+    ∃ l ∈ bendSet t b, (s ◃ t) a b = s a l - t.dual b l := by
   -- Proof written by GPT 5.5.
-  let l := lres_wit s t a b
+  let l := leftResidualWitness s t a b
   have hmax : ∀ n, s a n - t.dual b n ≤ s a l - t.dual b l := by
     intro n
-    change s a n - t.dual b n ≤ s a (lres_wit s t a b) - t.dual b (lres_wit s t a b)
+    change s a n - t.dual b n ≤ s a (leftResidualWitness s t a b) - t.dual b (leftResidualWitness s t a b)
     exact lres_val_ge s t a b n
   obtain ⟨r, hr_right, hlr⟩ := bend_set_witness_lres_right_helper s t a b l hmax
   obtain ⟨m, hm_left, hm_right, hrm⟩ := bend_set_witness_lres_helper s t a b r hr_right
@@ -1433,7 +1433,7 @@ lemma bend_set_witness_lres (s t : SlipFace) (a b : ℤ) :
 /-- The slipface $s_{\iota_n}$, which is the minimal slipface of shift $n$.
 It is given simply by $s(a,b) = \max(a - b + n, 0)$.
 -/
-def iota_sf (n : ℤ) : SlipFace  := {
+def iotaSf (n : ℤ) : SlipFace  := {
   func := fun a b => max (a - b + n) 0
   χ := n
   a_step := by
@@ -1489,30 +1489,30 @@ def iota_sf (n : ℤ) : SlipFace  := {
     omega
 }
 
-private lemma bend_set_iota (n b : ℤ) : bend_set (iota_sf n) b = {b - n} := by
+private lemma bend_set_iota (n b : ℤ) : bendSet (iotaSf n) b = {b - n} := by
   ext m
   constructor
   · intro h
     obtain ⟨h1, h2⟩ := h
     have mle : m ≤ b - n := by
       by_contra!
-      rw [show iota_sf n (m-1) b = m -1 - b + n  by exact max_eq_left (by omega)] at h1
-      rw [show iota_sf n m b = m - b + n by exact max_eq_left (by omega)] at h1 h2
-      rw [show iota_sf n (m+1) b = m + 1 - b + n by exact max_eq_left (by omega)] at h2
+      rw [show iotaSf n (m-1) b = m -1 - b + n  by exact max_eq_left (by omega)] at h1
+      rw [show iotaSf n m b = m - b + n by exact max_eq_left (by omega)] at h1 h2
+      rw [show iotaSf n (m+1) b = m + 1 - b + n by exact max_eq_left (by omega)] at h2
       omega
     have mge : b - n ≤ m := by
       by_contra!
-      rw [show iota_sf n (m-1) b = 0 by exact max_eq_right (by omega)] at h1
-      rw [show iota_sf n m b = 0 by exact max_eq_right (by omega)] at h1 h2
-      rw [show iota_sf n (m+1) b = 0 by exact max_eq_right (by omega)] at h2
+      rw [show iotaSf n (m-1) b = 0 by exact max_eq_right (by omega)] at h1
+      rw [show iotaSf n m b = 0 by exact max_eq_right (by omega)] at h1 h2
+      rw [show iotaSf n (m+1) b = 0 by exact max_eq_right (by omega)] at h2
       omega
     rw [antisymm mle mge]
     rfl
   · intro h
     rw [show m = b - n by exact h]
-    constructor <;>  rw [show iota_sf n (b-n) b = 0 by exact max_eq_right (by omega)]
-    · rw [show iota_sf n (b-n-1) b = 0 by exact max_eq_right (by omega)]
-    · rw [show iota_sf n (b-n+1) b = b-n+1-b+n by exact max_eq_left (by omega)]
+    constructor <;>  rw [show iotaSf n (b-n) b = 0 by exact max_eq_right (by omega)]
+    · rw [show iotaSf n (b-n-1) b = 0 by exact max_eq_right (by omega)]
+    · rw [show iotaSf n (b-n+1) b = b-n+1-b+n by exact max_eq_left (by omega)]
       omega
 
 /-!
@@ -1543,7 +1543,7 @@ lemma lres_mono {s₁ s₂ t₁ t₂ : SlipFace}
     s₁ ◃ t₂.dual ≤ s₂ ◃ t₁.dual := by
   -- Proof written by GPT 5.5.
   intro a b
-  let l := lres_wit s₁ t₂.dual a b
+  let l := leftResidualWitness s₁ t₂.dual a b
   rw [lres_wit_spec]
   change s₁ a l - (t₂.dual).dual b l ≤ (s₂ ◃ t₁.dual) a b
   have hmax : s₂ a l - t₁ b l ≤ (s₂ ◃ t₁.dual) a b := by
@@ -1565,7 +1565,7 @@ lemma rres_mono {s₁ s₂ t₁ t₂ : SlipFace}
     t₂.dual ▹ s₁ ≤ t₁.dual ▹ s₂ := by
   -- Proof written by GPT 5.5.
   intro a b
-  let l := rres_wit t₂.dual s₁ a b
+  let l := rightResidualWitness t₂.dual s₁ a b
   rw [rres_wit_spec]
   change s₁ l b - (t₂.dual).dual l a ≤ (t₁.dual ▹ s₂) a b
   have hmax : s₂ l b - t₁ l a ≤ (t₁.dual ▹ s₂) a b := by
@@ -1596,7 +1596,7 @@ lemma ge_star_iff_ge_lres (s t u : SlipFace) :
     have hs : (u ◃ t.dual) a l ≤ s a l := h a l
     omega
   · intro h a l
-    let b := lres_wit u t.dual a l
+    let b := leftResidualWitness u t.dual a l
     rw [lres_wit_spec]
     change u a b - (t.dual).dual l b ≤ s a l
     have hstar : u a b ≤ (s ⋆ t) a b := h a b
@@ -1623,7 +1623,7 @@ lemma ge_star_iff_ge_rres (s t u : SlipFace) :
     have ht : (s.dual ▹ u) l b ≤ t l b := h l b
     omega
   · intro h l b
-    let a := rres_wit s.dual u l b
+    let a := rightResidualWitness s.dual u l b
     rw [rres_wit_spec]
     change u a b - (s.dual).dual a l ≤ t l b
     have hstar : u a b ≤ (s ⋆ t) a b := h a b
@@ -1925,10 +1925,10 @@ private lemma ess_seeker (s t : SlipFace) (nle : ¬ s ≤ t) (M : ℕ) :
 
 /-- *Definition 7.3 (`defn:cliffordSF`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
-def is_clifford : Prop := ∃ (M : ℕ),
+def isClifford : Prop := ∃ (M : ℕ),
   ∀ a b : ℤ, sf a b + sf.dual b a ≥ M → sf a b = 0 ∨ sf.dual b a = 0
 
-private lemma le_of_ess_le (s t : SlipFace) (cliff : s.is_clifford) (chile : s.χ ≤ t.χ)
+private lemma le_of_ess_le (s t : SlipFace) (cliff : s.isClifford) (chile : s.χ ≤ t.χ)
   (ess_le : ∀ (a b : ℤ), (a, b) ∈ s.ess → s a b ≤ t a b) :
   s ≤ t := by
   obtain ⟨M, cliff_cond⟩ := cliff
@@ -1944,7 +1944,7 @@ private lemma le_of_ess_le (s t : SlipFace) (cliff : s.is_clifford) (chile : s.�
       have := t.dual.nonneg b a
       omega
 
-theorem ess_clifford (s t : SlipFace) (cliff : s.is_clifford) :
+theorem ess_clifford (s t : SlipFace) (cliff : s.isClifford) :
   s ≤ t ↔ s.χ ≤ t.χ ∧ ∀ (a b : ℤ), (a, b) ∈ s.ess → s a b ≤ t a b := by
   constructor
   · intro s_le_t

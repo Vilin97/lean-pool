@@ -70,7 +70,7 @@ private theorem coarseChips_apply {ι : Type*} [Fintype ι] (chips : ι → spec
     (v : spec.Vertex) :
     spec.coarseChips N chips v =
       ∑ i, (if (chips i).coarseVertex = v then (1 : ℤ) else 0) := by
-  show (∑ i, one_chip ((chips i).coarseVertex) : CFDiv spec.graph) v = _
+  show (∑ i, oneChip ((chips i).coarseVertex) : CFDiv spec.graph) v = _
   rw [Finset.sum_apply]
   refine Finset.sum_congr rfl fun i _ => ?_
   by_cases h : (chips i).coarseVertex = v
@@ -291,7 +291,7 @@ private theorem interior_chip_count {ι : Type*} [Fintype ι] (chips : ι → sp
 /-- At every coarse vertex, the rounded script loses at most the number of
 chips rounded to that vertex relative to the fine script at its image. -/
 theorem prin_roundedScript_ge {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (D₀ : CFDiv spec.graph)
-    (σ : firing_script (spec.scale N hN).graph)
+    (σ : firingScript (spec.scale N hN).graph)
     (hσ : effective (spec.embed N hN D₀ + spec.fineChips N hN chips +
       prin (spec.scale N hN).graph σ))
     (κ : Fin N)
@@ -433,7 +433,7 @@ theorem winnable_of_winnable_scale_cost {ι : Type*} [Fintype ι] (chips : ι �
   have hfineChips : ∀ v : spec.Vertex,
       spec.fineChips N hN chips (spec.fineOf N hN v) = 0 := by
     intro v
-    show (∑ i, one_chip ((chips i).fineVertex hN) :
+    show (∑ i, oneChip ((chips i).fineVertex hN) :
       CFDiv (spec.scale N hN).graph) (spec.fineOf N hN v) = 0
     rw [Finset.sum_apply]
     refine Finset.sum_eq_zero fun i _ => ?_

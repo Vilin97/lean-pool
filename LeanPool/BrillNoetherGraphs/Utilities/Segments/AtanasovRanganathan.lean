@@ -40,9 +40,9 @@ theorem rank_ge_one_of_reaches_off_support
     intro other
     by_cases hOther : other = vertex
     · subst other
-      simp only [Pi.sub_apply, one_chip, ↓reduceIte, Int.sub_nonneg]
+      simp only [Pi.sub_apply, oneChip, ↓reduceIte, Int.sub_nonneg]
       omega
-    · simpa [one_chip, hOther] using hEffective other
+    · simpa [oneChip, hOther] using hEffective other
   · have hZero : D vertex = 0 := by
       have := hEffective vertex
       omega

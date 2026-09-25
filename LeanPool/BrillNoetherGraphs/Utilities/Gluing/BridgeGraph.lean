@@ -87,9 +87,9 @@ abbrev bridgeGraph (G : CFGraph.{u}) (H : CFGraph.{v})
 @[simp] theorem num_edges_bridgeGraph_inl
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (a b : G.V) :
-    num_edges (bridgeGraph G H x y) (Sum.inl a) (Sum.inl b) =
-      num_edges G a b := by
-  simp only [num_edges, bridgeGraph, Prod.mk.injEq, Sum.inl.injEq, reduceCtorEq, and_false, or_self,
+    numEdges (bridgeGraph G H x y) (Sum.inl a) (Sum.inl b) =
+      numEdges G a b := by
+  simp only [numEdges, bridgeGraph, Prod.mk.injEq, Sum.inl.injEq, reduceCtorEq, and_false, or_self,
     not_false_eq_true, Multiset.filter_cons_of_neg, filter_add, Multiset.filter_map,
     Function.comp_apply, and_self, Multiset.filter_false, Multiset.map_zero, Multiset.add_zero,
     Multiset.card_map]
@@ -105,9 +105,9 @@ abbrev bridgeGraph (G : CFGraph.{u}) (H : CFGraph.{v})
 @[simp] theorem num_edges_bridgeGraph_inr
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (a b : H.V) :
-    num_edges (bridgeGraph G H x y) (Sum.inr a) (Sum.inr b) =
-      num_edges H a b := by
-  simp only [num_edges, bridgeGraph, Prod.mk.injEq, reduceCtorEq, Sum.inr.injEq, false_and, or_self,
+    numEdges (bridgeGraph G H x y) (Sum.inr a) (Sum.inr b) =
+      numEdges H a b := by
+  simp only [numEdges, bridgeGraph, Prod.mk.injEq, reduceCtorEq, Sum.inr.injEq, false_and, or_self,
     not_false_eq_true, Multiset.filter_cons_of_neg, filter_add, Multiset.filter_map,
     Function.comp_apply, and_self, Multiset.filter_false, Multiset.map_zero, Multiset.zero_add,
     Multiset.card_map]
@@ -123,21 +123,21 @@ abbrev bridgeGraph (G : CFGraph.{u}) (H : CFGraph.{v})
 @[simp] theorem num_edges_bridgeGraph_inl_inr
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (a : G.V) (b : H.V) :
-    num_edges (bridgeGraph G H x y) (Sum.inl a) (Sum.inr b) =
+    numEdges (bridgeGraph G H x y) (Sum.inl a) (Sum.inr b) =
       if a = x ∧ b = y then 1 else 0 := by
   by_cases h : a = x ∧ b = y
   · rcases h with ⟨rfl, rfl⟩
-    simp [num_edges, bridgeGraph, Multiset.filter_map]
+    simp [numEdges, bridgeGraph, Multiset.filter_map]
   · have hReverse : ¬ (x = a ∧ y = b) := by
       rintro ⟨hxa, hyb⟩
       exact h ⟨hxa.symm, hyb.symm⟩
-    simp [num_edges, bridgeGraph, Multiset.filter_add,
+    simp [numEdges, bridgeGraph, Multiset.filter_add,
       Multiset.filter_map, h, hReverse]
 
 /-- The distinguished endpoints are joined by exactly one cross edge. -/
 @[simp] theorem num_edges_bridgeGraph_endpoints
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) :
-    num_edges (bridgeGraph G H x y) (Sum.inl x) (Sum.inr y) = 1 := by
+    numEdges (bridgeGraph G H x y) (Sum.inl x) (Sum.inr y) = 1 := by
   simp
 
 -- See the comment above `num_edges_bridgeGraph_inl` for why this override is
@@ -146,8 +146,8 @@ abbrev bridgeGraph (G : CFGraph.{u}) (H : CFGraph.{v})
 /-- Joining two connected graphs by a bridge produces a connected graph. -/
 theorem graph_connected_bridgeGraph
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (hG : graph_connected G) (hH : graph_connected H) :
-    graph_connected (bridgeGraph G H x y) := by
+    (hG : graphConnected G) (hH : graphConnected H) :
+    graphConnected (bridgeGraph G H x y) := by
   intro S hS
   change Finset (Sum G.V H.V) at S
   let SL : Finset G.V := Finset.univ.filter (fun a => Sum.inl a ∈ S)
@@ -155,7 +155,7 @@ theorem graph_connected_bridgeGraph
   have hLeftCross : ∀ a b : G.V,
       Sum.inl a ∈ S → Sum.inl b ∉ S →
         ∃ z ∈ S, ∃ w ∉ S,
-          num_edges (bridgeGraph G H x y) z w > 0 := by
+          numEdges (bridgeGraph G H x y) z w > 0 := by
     intro a b ha hb
     have hCut : ∃ p q : G.V, p ∈ SL ∧ q ∉ SL := by
       exact ⟨a, b, by simpa [SL] using ha, by simpa [SL] using hb⟩
@@ -165,7 +165,7 @@ theorem graph_connected_bridgeGraph
   have hRightCross : ∀ a b : H.V,
       Sum.inr a ∈ S → Sum.inr b ∉ S →
         ∃ z ∈ S, ∃ w ∉ S,
-          num_edges (bridgeGraph G H x y) z w > 0 := by
+          numEdges (bridgeGraph G H x y) z w > 0 := by
     intro a b ha hb
     have hCut : ∃ p q : H.V, p ∈ SR ∧ q ∉ SR := by
       exact ⟨a, b, by simpa [SR] using ha, by simpa [SR] using hb⟩

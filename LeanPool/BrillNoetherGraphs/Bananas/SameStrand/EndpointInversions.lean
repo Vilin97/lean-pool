@@ -30,7 +30,7 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 
 private noncomputable def rankSlipFunction (M : TwiceMarked) (D : CFDiv M.graph) :
     ℤ → ℤ → ℤ :=
-  fun a b => rank M.graph (D + a • one_chip M.u - b • one_chip M.v) + 1
+  fun a b => rank M.graph (D + a • oneChip M.u - b • oneChip M.v) + 1
 
 private theorem rankSlipFunction_D_props (M : TwiceMarked)
     (D : CFDiv M.graph) :
@@ -38,21 +38,21 @@ private theorem rankSlipFunction_D_props (M : TwiceMarked)
   constructor
   · intro a b
     have h := rank_add_one_chip_ge
-      (D + a • one_chip M.u - b • one_chip M.v) M.u
-      (rank M.graph (D + a • one_chip M.u - b • one_chip M.v)) le_rfl
+      (D + a • oneChip M.u - b • oneChip M.v) M.u
+      (rank M.graph (D + a • oneChip M.u - b • oneChip M.v)) le_rfl
     have hDiv :
-        D + (a + 1) • one_chip M.u - b • one_chip M.v =
-          (D + a • one_chip M.u - b • one_chip M.v) + one_chip M.u := by
+        D + (a + 1) • oneChip M.u - b • oneChip M.v =
+          (D + a • oneChip M.u - b • oneChip M.v) + oneChip M.u := by
       rw [add_smul, one_smul]
       abel
     simpa only [rankSlipFunction, hDiv, add_le_add_iff_right] using h
   · intro a b
     have h := rank_add_one_chip_ge
-      (D + a • one_chip M.u - (b + 1) • one_chip M.v) M.v
-      (rank M.graph (D + a • one_chip M.u - (b + 1) • one_chip M.v)) le_rfl
+      (D + a • oneChip M.u - (b + 1) • oneChip M.v) M.v
+      (rank M.graph (D + a • oneChip M.u - (b + 1) • oneChip M.v)) le_rfl
     have hDiv :
-        (D + a • one_chip M.u - (b + 1) • one_chip M.v) + one_chip M.v =
-          D + a • one_chip M.u - b • one_chip M.v := by
+        (D + a • oneChip M.u - (b + 1) • oneChip M.v) + oneChip M.v =
+          D + a • oneChip M.u - b • oneChip M.v := by
       rw [add_smul, one_smul]
       abel
     simpa only [rankSlipFunction, hDiv, add_le_add_iff_right] using h
@@ -78,23 +78,23 @@ private theorem rankSlipFunction_D_props (M : TwiceMarked)
       omega
 
 private theorem rankSlip_duality (M : TwiceMarked) (D : CFDiv M.graph)
-    (hconn : graph_connected M.graph)
+    (hconn : graphConnected M.graph)
     (a b : ℤ) :
     rankSlipFunction M D a b -
-        rankSlipFunction (mark M.graph M.v M.u) (canonical_divisor M.graph - D) b a =
+        rankSlipFunction (mark M.graph M.v M.u) (canonicalDivisor M.graph - D) b a =
       a - b + (deg D - genus M.graph + 1) := by
   have hRR := riemann_roch_for_graphs hconn
-    (D + a • one_chip M.u - b • one_chip M.v)
+    (D + a • oneChip M.u - b • oneChip M.v)
   have hComplement :
-      canonical_divisor M.graph -
-          (D + a • one_chip M.u - b • one_chip M.v) =
-        (canonical_divisor M.graph - D) + b • one_chip M.v - a • one_chip M.u := by
+      canonicalDivisor M.graph -
+          (D + a • oneChip M.u - b • oneChip M.v) =
+        (canonicalDivisor M.graph - D) + b • oneChip M.v - a • oneChip M.u := by
     abel
   rw [hComplement] at hRR
   unfold rankSlipFunction
-  change rank M.graph (D + a • one_chip M.u - b • one_chip M.v) + 1 -
+  change rank M.graph (D + a • oneChip M.u - b • oneChip M.v) + 1 -
       (rank M.graph
-        ((canonical_divisor M.graph - D) + b • one_chip M.v - a • one_chip M.u) + 1) = _
+        ((canonicalDivisor M.graph - D) + b • oneChip M.v - a • oneChip M.u) + 1) = _
   rw [deg.map_sub, deg.map_add, map_zsmul, map_zsmul,
     deg_one_chip, deg_one_chip] at hRR
   simp only [smul_eq_mul, mul_one] at hRR
@@ -103,60 +103,60 @@ private theorem rankSlip_duality (M : TwiceMarked) (D : CFDiv M.graph)
 /-- The rank function of a twice-marked divisor, shifted by one, is a
 slipface. -/
 noncomputable def rankSlipFace (M : TwiceMarked) (D : CFDiv M.graph)
-    (hconn : graph_connected M.graph) : SlipFace :=
+    (hconn : graphConnected M.graph) : SlipFace :=
   Classical.choose (SlipFace.sf_of_D_props (rankSlip_duality M D hconn)
     ⟨rankSlipFunction_D_props M D,
       rankSlipFunction_D_props (mark M.graph M.v M.u)
-        (canonical_divisor M.graph - D)⟩)
+        (canonicalDivisor M.graph - D)⟩)
 
 @[simp] theorem rankSlipFace_apply (M : TwiceMarked) (D : CFDiv M.graph)
-    (hconn : graph_connected M.graph)
+    (hconn : graphConnected M.graph)
     (a b : ℤ) :
     rankSlipFace M D hconn a b =
-      rank M.graph (D + a • one_chip M.u - b • one_chip M.v) + 1 := by
+      rank M.graph (D + a • oneChip M.u - b • oneChip M.v) + 1 := by
   have h := Classical.choose_spec (SlipFace.sf_of_D_props (rankSlip_duality M D hconn)
     ⟨rankSlipFunction_D_props M D,
       rankSlipFunction_D_props (mark M.graph M.v M.u)
-        (canonical_divisor M.graph - D)⟩)
+        (canonicalDivisor M.graph - D)⟩)
   exact congrFun (congrFun h.1.1 a) b
 
 @[simp] theorem rankSlipFace_chi (M : TwiceMarked) (D : CFDiv M.graph)
-    (hconn : graph_connected M.graph) :
+    (hconn : graphConnected M.graph) :
     (rankSlipFace M D hconn).χ = deg D - genus M.graph + 1 := by
   exact (Classical.choose_spec (SlipFace.sf_of_D_props (rankSlip_duality M D hconn)
     ⟨rankSlipFunction_D_props M D,
       rankSlipFunction_D_props (mark M.graph M.v M.u)
-        (canonical_divisor M.graph - D)⟩)).1.2
+        (canonicalDivisor M.graph - D)⟩)).1.2
 
 theorem rankSlipFace_Delta (M : TwiceMarked) (D : CFDiv M.graph)
-    (hconn : graph_connected M.graph)
+    (hconn : graphConnected M.graph)
     (a b : ℤ) :
     (rankSlipFace M D hconn).Δ a b =
-      rankDelta M (D + (a + 1) • one_chip M.u - b • one_chip M.v) := by
+      rankDelta M (D + (a + 1) • oneChip M.u - b • oneChip M.v) := by
   unfold SlipFace.Δ rankDelta
   simp only [rankSlipFace_apply]
   have hU :
-      D + (a + 1) • one_chip M.u - b • one_chip M.v - one_chip M.u =
-        D + a • one_chip M.u - b • one_chip M.v := by
+      D + (a + 1) • oneChip M.u - b • oneChip M.v - oneChip M.u =
+        D + a • oneChip M.u - b • oneChip M.v := by
     rw [add_smul, one_smul]
     abel
   have hV :
-      D + (a + 1) • one_chip M.u - b • one_chip M.v - one_chip M.v =
-        D + (a + 1) • one_chip M.u - (b + 1) • one_chip M.v := by
+      D + (a + 1) • oneChip M.u - b • oneChip M.v - oneChip M.v =
+        D + (a + 1) • oneChip M.u - (b + 1) • oneChip M.v := by
     rw [add_smul, one_smul]
     ext x
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply]
     ring_nf
   have hUV :
-      D + (a + 1) • one_chip M.u - b • one_chip M.v - one_chip M.u - one_chip M.v =
-        D + a • one_chip M.u - (b + 1) • one_chip M.v := by
+      D + (a + 1) • oneChip M.u - b • oneChip M.v - oneChip M.u - oneChip M.v =
+        D + a • oneChip M.u - (b + 1) • oneChip M.v := by
     rw [add_smul, one_smul]
     ext x
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply]
     ring_nf
   have hLast :
-      D + a • one_chip M.u - b • one_chip M.v - one_chip M.v =
-        D + a • one_chip M.u - (b + 1) • one_chip M.v := by
+      D + a • oneChip M.u - b • oneChip M.v - oneChip M.v =
+        D + a • oneChip M.u - (b + 1) • oneChip M.v := by
     rw [add_smul, one_smul]
     ext x
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply]
@@ -166,14 +166,14 @@ theorem rankSlipFace_Delta (M : TwiceMarked) (D : CFDiv M.graph)
 
 /-- Submodularity recovers the transmission permutation of a divisor. -/
 theorem exists_transmissionPermutation_of_submodular
-    (M : TwiceMarked) (D : CFDiv M.graph) (hconn : graph_connected M.graph)
+    (M : TwiceMarked) (D : CFDiv M.graph) (hconn : graphConnected M.graph)
     (hD : Submodular M D) :
     ∃ τ : ℤ → ℤ, IsTransmissionPermutation M D τ := by
-  have hsub : (rankSlipFace M (D - one_chip M.u) hconn).submodular := by
+  have hsub : (rankSlipFace M (D - oneChip M.u) hconn).submodular := by
     intro a b
     rw [rankSlipFace_Delta]
     have hDiv :
-        D - one_chip M.u + (a + 1) • one_chip M.u - b • one_chip M.v =
+        D - oneChip M.u + (a + 1) • oneChip M.u - b • oneChip M.v =
           twist M D a (-b) := by
       unfold twist
       simp only [neg_smul]
@@ -182,53 +182,53 @@ theorem exists_transmissionPermutation_of_submodular
     rw [hDiv]
     exact hD a (-b)
   obtain ⟨σ, hσ⟩ := (Submodular.submodular_iff_asp
-    (rankSlipFace M (D - one_chip M.u) hconn)).mp hsub
+    (rankSlipFace M (D - oneChip M.u) hconn)).mp hsub
   refine ⟨σ, σ.bijective, ?_⟩
   intro a b
   rw [← σ.Delta_eq a b, hσ, rankSlipFace_Delta]
   have hDiv :
-      D - one_chip M.u + (a + 1) • one_chip M.u - b • one_chip M.v =
-        D + a • one_chip M.u - b • one_chip M.v := by
+      D - oneChip M.u + (a + 1) • oneChip M.u - b • oneChip M.v =
+        D + a • oneChip M.u - b • oneChip M.v := by
     rw [add_smul, one_smul]
     abel
   rw [hDiv]
 
 private theorem linearEquiv_sub_fixed {M : TwiceMarked} {D E : CFDiv M.graph}
-    (hDE : linear_equiv M.graph D E) (A : CFDiv M.graph) :
-    linear_equiv M.graph (D - A) (E - A) := by
-  unfold linear_equiv at hDE ⊢
+    (hDE : linearEquiv M.graph D E) (A : CFDiv M.graph) :
+    linearEquiv M.graph (D - A) (E - A) := by
+  unfold linearEquiv at hDE ⊢
   have hDifference : (E - A) - (D - A) = E - D := by abel
   rw [hDifference]
   exact hDE
 
 theorem rankDelta_eq_of_linearEquiv {M : TwiceMarked} {D E : CFDiv M.graph}
-    (hDE : linear_equiv M.graph D E) :
+    (hDE : linearEquiv M.graph D E) :
     rankDelta M D = rankDelta M E := by
   unfold rankDelta
   rw [rank_eq_of_linear_equiv M.graph hDE]
   rw [rank_eq_of_linear_equiv M.graph
-    (linearEquiv_sub_fixed hDE (one_chip M.u))]
+    (linearEquiv_sub_fixed hDE (oneChip M.u))]
   rw [rank_eq_of_linear_equiv M.graph
-    (linearEquiv_sub_fixed hDE (one_chip M.v))]
+    (linearEquiv_sub_fixed hDE (oneChip M.v))]
   rw [rank_eq_of_linear_equiv M.graph
     (linearEquiv_sub_fixed
-      (linearEquiv_sub_fixed hDE (one_chip M.u)) (one_chip M.v))]
+      (linearEquiv_sub_fixed hDE (oneChip M.u)) (oneChip M.v))]
 
 theorem rankDelta_marked_twist_add_torsion
     {M : TwiceMarked} {k : ℕ} (hk : TorsionWitness M k)
     (D : CFDiv M.graph) (a b : ℤ) :
       rankDelta M
-        (D + (a + k) • one_chip M.u - (b + k) • one_chip M.v) =
-      rankDelta M (D + a • one_chip M.u - b • one_chip M.v) := by
+        (D + (a + k) • oneChip M.u - (b + k) • oneChip M.v) =
+      rankDelta M (D + a • oneChip M.u - b • oneChip M.v) := by
   rcases hk with ⟨_, hk⟩
-  have hEquiv : linear_equiv M.graph
-      (D + (a + k) • one_chip M.u - (b + k) • one_chip M.v)
-      (D + a • one_chip M.u - b • one_chip M.v) := by
-    unfold linear_equiv at hk ⊢
+  have hEquiv : linearEquiv M.graph
+      (D + (a + k) • oneChip M.u - (b + k) • oneChip M.v)
+      (D + a • oneChip M.u - b • oneChip M.v) := by
+    unfold linearEquiv at hk ⊢
     have hDifference :
-        (D + a • one_chip M.u - b • one_chip M.v) -
-            (D + (a + k) • one_chip M.u - (b + k) • one_chip M.v) =
-          0 - (k : ℤ) • (one_chip M.u - one_chip M.v) := by
+        (D + a • oneChip M.u - b • oneChip M.v) -
+            (D + (a + k) • oneChip M.u - (b + k) • oneChip M.v) =
+          0 - (k : ℤ) • (oneChip M.u - oneChip M.v) := by
       ext x
       simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply]
       ring_nf
@@ -241,7 +241,7 @@ theorem rankDelta_marked_twist_add_torsion
 /-- A transmission permutation recovered from a submodular divisor is affine
 at every torsion witness. -/
 theorem exists_affineTransmissionPermutation_of_submodular
-    (M : TwiceMarked) (D : CFDiv M.graph) (hconn : graph_connected M.graph)
+    (M : TwiceMarked) (D : CFDiv M.graph) (hconn : graphConnected M.graph)
     {k : ℕ} (hD : Submodular M D) (hk : TorsionWitness M k) :
     ∃ τ : ℤ → ℤ,
       IsTransmissionPermutation M D τ ∧ IsKAffine k τ := by
@@ -307,7 +307,7 @@ private theorem banana_core_connected {g : ℕ} (B : Banana g) :
     simpa [ht, hh] using And.intro hv hw
 
 theorem banana_graph_connected {g : ℕ} (B : Banana g) :
-    graph_connected B.graph :=
+    graphConnected B.graph :=
   B.graph_connected_of_coreConnected (banana_core_connected B)
 
 @[simp] theorem banana_genus {g : ℕ} (B : Banana g) :
@@ -318,7 +318,7 @@ theorem banana_graph_connected {g : ℕ} (B : Banana g) :
 
 /-- The literal divisor consisting of one chip at each multivalent endpoint. -/
 def endpointPencilDivisor {g : ℕ} (B : Banana g) : CFDiv B.graph :=
-  one_chip (leftEndpoint B) + one_chip (rightEndpoint B)
+  oneChip (leftEndpoint B) + oneChip (rightEndpoint B)
 
 @[simp] theorem degree_endpointPencilDivisor {g : ℕ} (B : Banana g) :
     deg (endpointPencilDivisor B) = 2 := by
@@ -339,11 +339,11 @@ theorem rank_endpointPencilDivisor_ge_one {g : ℕ} (B : Banana g) :
     · have hEq : vertex = (0 : Fin 2) := Fin.ext hLeft
       subst vertex
       simp [endpointPencilDivisor, leftEndpoint, rightEndpoint,
-        one_chip, Spec.coreVertex]
+        oneChip, Spec.coreVertex]
     · have hEq : vertex = (1 : Fin 2) := Fin.ext hRight
       subst vertex
       simp [endpointPencilDivisor, leftEndpoint, rightEndpoint,
-        one_chip, Spec.coreVertex]
+        oneChip, Spec.coreVertex]
   change rank B.graph (endpointPencilDivisor B) ≥ 1
   rw [rank_ge_one_iff_winnable_sub_one_chip]
   intro vertex
@@ -352,10 +352,10 @@ theorem rank_endpointPencilDivisor_ge_one {g : ℕ} (B : Banana g) :
     intro q
     by_cases hq : q = B.coreVertex vertex
     · subst q
-      simpa [one_chip, Spec.coreVertex] using
+      simpa [oneChip, Spec.coreVertex] using
         (sub_nonneg.mpr (hCoreValue vertex))
     · change q ≠ Sum.inl vertex at hq
-      simpa [one_chip, hq] using hEffective q
+      simpa [oneChip, hq] using hEffective q
   · rcases interior with ⟨edge, offset⟩
     let position : B.PathPosition edge :=
       ⟨offset.val + 1, by have := offset.isLt; omega⟩
@@ -368,7 +368,7 @@ theorem rank_endpointPencilDivisor_ge_one {g : ℕ} (B : Banana g) :
         omega)]
       congr 3
     change winnable B.graph
-      (endpointPencilDivisor B - one_chip (B.interiorVertex edge offset))
+      (endpointPencilDivisor B - oneChip (B.interiorVertex edge offset))
     rw [← hPosition]
     exact SegmentReflection.reaches_pathPosition B (endpointPencilDivisor B)
       edge position hEffective (hCoreValue (B.core.tail edge))
@@ -384,7 +384,7 @@ theorem rank_add_ge_add_rank
     ⟨_, Int.toNat_of_nonneg hD⟩
   obtain ⟨s, hs⟩ : ∃ s : ℕ, (s : ℤ) = rank G E :=
     ⟨_, Int.toNat_of_nonneg hE⟩
-  have hRankGeq : rank_geq G (D + E) (r + s) := by
+  have hRankGeq : rankGeq G (D + E) (r + s) := by
     rintro A ⟨hAEffective, hADegree⟩
     obtain ⟨A₁, A₂, hA₁Effective, hA₂Effective, hA₁Degree, hA₂Degree, rfl⟩ :=
       effective_divisor_decomposition G A r s hAEffective hADegree
@@ -457,14 +457,14 @@ theorem rank_endpointPencil_nsmul_eq {g : ℕ} (B : Banana g) (b : ℕ)
 
 private theorem rank_endpointPencil_nsmul_sub_endpoint_eq
     {g : ℕ} (B : Banana g) (w other : B.graph.V)
-    (hPencil : endpointPencilDivisor B = one_chip w + one_chip other)
+    (hPencil : endpointPencilDivisor B = oneChip w + oneChip other)
     (b : ℕ) (hbPos : 0 < b) (hb : b ≤ g) :
-    rank B.graph (b • endpointPencilDivisor B - one_chip w) = (b : ℤ) - 1 := by
+    rank B.graph (b • endpointPencilDivisor B - oneChip w) = (b : ℤ) - 1 := by
   have hbPred : b - 1 ≤ g := by omega
   have hBase := rank_endpointPencil_nsmul_eq B (b - 1) hbPred
   have hDiv :
-      b • endpointPencilDivisor B - one_chip w =
-        (b - 1) • endpointPencilDivisor B + one_chip other := by
+      b • endpointPencilDivisor B - oneChip w =
+        (b - 1) • endpointPencilDivisor B + oneChip other := by
     have hbDecomp : b = (b - 1) + 1 := by omega
     conv_lhs => rw [hbDecomp, add_nsmul, one_nsmul]
     rw [hPencil]
@@ -474,16 +474,16 @@ private theorem rank_endpointPencil_nsmul_sub_endpoint_eq
     rw [hBase]
     omega
   have hLower := rank_add_effective_ge B.graph
-    ((b - 1) • endpointPencilDivisor B) (one_chip other)
+    ((b - 1) • endpointPencilDivisor B) (oneChip other)
     (eff_one_chip other) ((b : ℤ) - 1) hBase'.ge
   rw [← hDiv] at hLower
   have hDegree :
-      deg (b • endpointPencilDivisor B - one_chip w) = 2 * (b : ℤ) - 1 := by
+      deg (b • endpointPencilDivisor B - oneChip w) = 2 * (b : ℤ) - 1 := by
     rw [deg.map_sub, map_nsmul, degree_endpointPencilDivisor, deg_one_chip]
     ring
   by_cases hbg : b < g
   · have hUpperQ := (rank_nonspecial_range (banana_graph_connected B)
-      (b • endpointPencilDivisor B - one_chip w)).2.1 (by
+      (b • endpointPencilDivisor B - oneChip w)).2.1 (by
         constructor
         · rw [hDegree]
           have hbQ : (1 : ℚ) ≤ (b : ℚ) := by exact_mod_cast hbPos
@@ -498,12 +498,12 @@ private theorem rank_endpointPencil_nsmul_sub_endpoint_eq
     rw [hDegree] at hUpperQ
     push_cast at hUpperQ
     have hUpper : rank B.graph
-        (b • endpointPencilDivisor B - one_chip w) < (b : ℤ) := by
+        (b • endpointPencilDivisor B - oneChip w) < (b : ℤ) := by
       by_contra hnot
       have hRankGe : (b : ℤ) ≤
-          rank B.graph (b • endpointPencilDivisor B - one_chip w) := by omega
+          rank B.graph (b • endpointPencilDivisor B - oneChip w) := by omega
       have hRankGeQ : (b : ℚ) ≤
-          (rank B.graph (b • endpointPencilDivisor B - one_chip w) : ℚ) := by
+          (rank B.graph (b • endpointPencilDivisor B - oneChip w) : ℚ) := by
         exact_mod_cast hRankGe
       linarith
     omega
@@ -511,7 +511,7 @@ private theorem rank_endpointPencil_nsmul_sub_endpoint_eq
     subst b
     have hgPos : 0 < g := hbPos
     have hExact := (rank_nonspecial_range (banana_graph_connected B)
-      (g • endpointPencilDivisor B - one_chip w)).2.2 (by
+      (g • endpointPencilDivisor B - oneChip w)).2.2 (by
         rw [hDegree, banana_genus]
         omega)
     rw [hDegree, banana_genus] at hExact
@@ -519,14 +519,14 @@ private theorem rank_endpointPencil_nsmul_sub_endpoint_eq
 
 theorem rank_endpointPencil_nsmul_sub_left_eq
     {g : ℕ} (B : Banana g) (b : ℕ) (hbPos : 0 < b) (hb : b ≤ g) :
-    rank B.graph (b • endpointPencilDivisor B - one_chip (leftEndpoint B)) =
+    rank B.graph (b • endpointPencilDivisor B - oneChip (leftEndpoint B)) =
       (b : ℤ) - 1 :=
   rank_endpointPencil_nsmul_sub_endpoint_eq B (leftEndpoint B) (rightEndpoint B)
     rfl b hbPos hb
 
 theorem rank_endpointPencil_nsmul_sub_right_eq
     {g : ℕ} (B : Banana g) (b : ℕ) (hbPos : 0 < b) (hb : b ≤ g) :
-    rank B.graph (b • endpointPencilDivisor B - one_chip (rightEndpoint B)) =
+    rank B.graph (b • endpointPencilDivisor B - oneChip (rightEndpoint B)) =
       (b : ℤ) - 1 :=
   rank_endpointPencil_nsmul_sub_endpoint_eq B (rightEndpoint B) (leftEndpoint B)
     (by simp [endpointPencilDivisor, add_comm]) b hbPos hb
@@ -540,19 +540,19 @@ theorem rankDelta_endpointPencil_nsmul_eq_one
       (b • endpointPencilDivisor B) = 1 := by
   by_cases hbZero : b = 0
   · subst b
-    have hLeftDeg : deg ((0 : CFDiv B.graph) - one_chip (leftEndpoint B)) < 0 := by
+    have hLeftDeg : deg ((0 : CFDiv B.graph) - oneChip (leftEndpoint B)) < 0 := by
       simp
-    have hRightDeg : deg ((0 : CFDiv B.graph) - one_chip (rightEndpoint B)) < 0 := by
+    have hRightDeg : deg ((0 : CFDiv B.graph) - oneChip (rightEndpoint B)) < 0 := by
       simp
-    have hBothDeg : deg ((0 : CFDiv B.graph) - one_chip (leftEndpoint B) -
-        one_chip (rightEndpoint B)) < 0 := by
+    have hBothDeg : deg ((0 : CFDiv B.graph) - oneChip (leftEndpoint B) -
+        oneChip (rightEndpoint B)) < 0 := by
       simp
     unfold rankDelta
     simp only [zero_nsmul]
-    change rank B.graph 0 - rank B.graph (0 - one_chip (leftEndpoint B)) -
-        rank B.graph (0 - one_chip (rightEndpoint B)) +
-          rank B.graph (0 - one_chip (leftEndpoint B) -
-            one_chip (rightEndpoint B)) = 1
+    change rank B.graph 0 - rank B.graph (0 - oneChip (leftEndpoint B)) -
+        rank B.graph (0 - oneChip (rightEndpoint B)) +
+          rank B.graph (0 - oneChip (leftEndpoint B) -
+            oneChip (rightEndpoint B)) = 1
     rw [zero_divisor_rank]
     rw [rank_neg_one_of_deg_neg B.graph _ hLeftDeg,
       rank_neg_one_of_deg_neg B.graph _ hRightDeg,
@@ -563,8 +563,8 @@ theorem rankDelta_endpointPencil_nsmul_eq_one
     have hLeft := rank_endpointPencil_nsmul_sub_left_eq B b hbPos hb
     have hRight := rank_endpointPencil_nsmul_sub_right_eq B b hbPos hb
     have hBothDiv :
-        b • endpointPencilDivisor B - one_chip (leftEndpoint B) -
-            one_chip (rightEndpoint B) =
+        b • endpointPencilDivisor B - oneChip (leftEndpoint B) -
+            oneChip (rightEndpoint B) =
           (b - 1) • endpointPencilDivisor B := by
       have hbDecomp : b = (b - 1) + 1 := by omega
       rw [hbDecomp, add_nsmul, one_nsmul]
@@ -573,10 +573,10 @@ theorem rankDelta_endpointPencil_nsmul_eq_one
     have hBothRank := rank_endpointPencil_nsmul_eq B (b - 1) (by omega)
     unfold rankDelta
     change rank B.graph (b • endpointPencilDivisor B) -
-        rank B.graph (b • endpointPencilDivisor B - one_chip (leftEndpoint B)) -
-        rank B.graph (b • endpointPencilDivisor B - one_chip (rightEndpoint B)) +
-          rank B.graph (b • endpointPencilDivisor B - one_chip (leftEndpoint B) -
-            one_chip (rightEndpoint B)) = 1
+        rank B.graph (b • endpointPencilDivisor B - oneChip (leftEndpoint B)) -
+        rank B.graph (b • endpointPencilDivisor B - oneChip (rightEndpoint B)) +
+          rank B.graph (b • endpointPencilDivisor B - oneChip (leftEndpoint B) -
+            oneChip (rightEndpoint B)) = 1
     rw [hRank, hLeft, hRight, hBothDiv, hBothRank]
     omega
 

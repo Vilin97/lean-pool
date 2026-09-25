@@ -26,17 +26,17 @@ theorem oneOff_firing_multiple
     (b m c : ℕ) (hLength : 1 < B.length alpha)
     (hb : b = m * B.length alpha) (hbm : b ≤ g + m)
     (hc : c = g + m - b) :
-    linear_equiv B.graph
-      (g • one_chip (rightEndpoint B) +
-        (m : ℤ) • one_chip (leftEndpoint B) -
-        (b : ℤ) • one_chip
+    linearEquiv B.graph
+      (g • oneChip (rightEndpoint B) +
+        (m : ℤ) • oneChip (leftEndpoint B) -
+        (b : ℤ) • oneChip
           (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      (c • one_chip (rightEndpoint B)) := by
+      (c • oneChip (rightEndpoint B)) := by
   have hMark := crossOneOff_second_mark_multiple B alpha b m 0
     (by simpa using hb) (by omega)
   rw [strandVertex_zero B alpha] at hMark
-  unfold linear_equiv at hMark ⊢
-  have hNeg := (principal_divisors B.graph).neg_mem hMark
+  unfold linearEquiv at hMark ⊢
+  have hNeg := (principalDivisors B.graph).neg_mem hMark
   convert hNeg using 1
   ext z
   simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, Pi.neg_apply,
@@ -56,28 +56,28 @@ theorem rankDelta_oneOff_rightEndpoint_nsmul_eq_one_all
     rankDelta
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      (c • one_chip (rightEndpoint B)) = 1 := by
+      (c • oneChip (rightEndpoint B)) = 1 := by
   by_cases hcZero : c = 0
   · subst c
     have hLeftDeg : deg
-        ((0 : CFDiv B.graph) - one_chip (leftEndpoint B)) < 0 := by simp
+        ((0 : CFDiv B.graph) - oneChip (leftEndpoint B)) < 0 := by simp
     have hMarkDeg : deg
-        ((0 : CFDiv B.graph) - one_chip
+        ((0 : CFDiv B.graph) - oneChip
           (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩)) < 0 := by
       simp
     have hBothDeg : deg
-        ((0 : CFDiv B.graph) - one_chip (leftEndpoint B) -
-          one_chip
+        ((0 : CFDiv B.graph) - oneChip (leftEndpoint B) -
+          oneChip
             (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩)) < 0 := by
       simp
     unfold rankDelta
     simp only [zero_nsmul]
     change rank B.graph 0 -
-        rank B.graph ((0 : CFDiv B.graph) - one_chip (leftEndpoint B)) -
-        rank B.graph ((0 : CFDiv B.graph) - one_chip
+        rank B.graph ((0 : CFDiv B.graph) - oneChip (leftEndpoint B)) -
+        rank B.graph ((0 : CFDiv B.graph) - oneChip
           (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩)) +
-        rank B.graph ((0 : CFDiv B.graph) - one_chip (leftEndpoint B) -
-          one_chip
+        rank B.graph ((0 : CFDiv B.graph) - oneChip (leftEndpoint B) -
+          oneChip
             (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩)) = 1
     rw [zero_divisor_rank,
       rank_neg_one_of_deg_neg B.graph _ hLeftDeg,
@@ -98,7 +98,7 @@ theorem transmission_oneOff_multiple
     (hTau : IsTransmissionPermutation
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau) :
+      (g • oneChip (rightEndpoint B)) tau) :
     tau (b : ℤ) = (m : ℕ) := by
   let c := g + m - b
   have hc : c = g + m - b := rfl
@@ -124,7 +124,7 @@ theorem transmission_oneOff_length
     (hTau : IsTransmissionPermutation
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau) :
+      (g • oneChip (rightEndpoint B)) tau) :
     tau (B.length alpha : ℤ) = 1 := by
   apply transmission_oneOff_multiple B alpha (B.length alpha) 1 tau
     hLength (by simp) (by simpa using hLengthBound) hTau
@@ -140,15 +140,15 @@ theorem oneOff_firing_complement
     (b m c : ℕ) (hLength : 1 < B.length alpha) (hm : 0 < m)
     (hb : b + 1 = m * B.length alpha) (hbm : b + 1 ≤ g + m)
     (hc : c = g + m - b - 1) :
-    linear_equiv B.graph
-      (g • one_chip (rightEndpoint B) +
-        ((g + m : ℕ) : ℤ) • one_chip (leftEndpoint B) -
-        (b : ℤ) • one_chip
+    linearEquiv B.graph
+      (g • oneChip (rightEndpoint B) +
+        ((g + m : ℕ) : ℤ) • oneChip (leftEndpoint B) -
+        (b : ℤ) • oneChip
           (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      ((g : ℤ) • one_chip (leftEndpoint B) +
-        one_chip
+      ((g : ℤ) • oneChip (leftEndpoint B) +
+        oneChip
           (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩) +
-        c • one_chip (rightEndpoint B)) := by
+        c • oneChip (rightEndpoint B)) := by
   have hDecompose : b = (m - 1) * B.length alpha +
       (B.length alpha - 1) := by
     have hRhsSucc : (m - 1) * B.length alpha +
@@ -162,8 +162,8 @@ theorem oneOff_firing_complement
     omega
   have hMark := crossOneOff_second_mark_multiple B alpha b (m - 1)
     (B.length alpha - 1) hDecompose (by omega)
-  unfold linear_equiv at hMark ⊢
-  have hNeg := (principal_divisors B.graph).neg_mem hMark
+  unfold linearEquiv at hMark ⊢
+  have hNeg := (principalDivisors B.graph).neg_mem hMark
   convert hNeg using 1
   ext z
   simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, Pi.neg_apply,
@@ -188,13 +188,13 @@ theorem rankDelta_oneOff_complement_normalForm_eq_one
     rankDelta
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      ((g : ℤ) • one_chip (leftEndpoint B) +
-        one_chip
+      ((g : ℤ) • oneChip (leftEndpoint B) +
+        oneChip
           (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩) +
-        c • one_chip (rightEndpoint B)) = 1 := by
+        c • oneChip (rightEndpoint B)) = 1 := by
   let v := strandVertex B alpha
     (⟨B.length alpha - 1, by omega⟩ : B.PathPosition alpha)
-  let E : CFDiv B.graph := one_chip v
+  let E : CFDiv B.graph := oneChip v
   have hv : B.IsInteriorPosition alpha
       (⟨B.length alpha - 1, by omega⟩ : B.PathPosition alpha) := by
     change 0 < B.length alpha - 1 ∧ B.length alpha - 1 < B.length alpha
@@ -203,24 +203,24 @@ theorem rankDelta_oneOff_complement_normalForm_eq_one
     isSemibreak_one_strand_chip B alpha _ hv
   have hZero : IsSemibreak B (0 : CFDiv B.graph) := isSemibreak_zero B
   have hdegE : deg E = 1 := by simp [E, deg_one_chip]
-  have hD : (g : ℤ) • one_chip (leftEndpoint B) + E +
-      c • one_chip (rightEndpoint B) =
+  have hD : (g : ℤ) • oneChip (leftEndpoint B) + E +
+      c • oneChip (rightEndpoint B) =
       bananaNormalForm B (g : ℤ) (c : ℤ) E := by
     unfold bananaNormalForm
     ext z
     simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
     rw [nsmul_eq_mul]
     ring
-  have hDU : (g : ℤ) • one_chip (leftEndpoint B) + E +
-      c • one_chip (rightEndpoint B) - one_chip (leftEndpoint B) =
+  have hDU : (g : ℤ) • oneChip (leftEndpoint B) + E +
+      c • oneChip (rightEndpoint B) - oneChip (leftEndpoint B) =
       bananaNormalForm B ((g : ℤ) - 1) (c : ℤ) E := by
     unfold bananaNormalForm
     ext z
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
     rw [nsmul_eq_mul]
     ring
-  have hDV : (g : ℤ) • one_chip (leftEndpoint B) + E +
-      c • one_chip (rightEndpoint B) - one_chip v =
+  have hDV : (g : ℤ) • oneChip (leftEndpoint B) + E +
+      c • oneChip (rightEndpoint B) - oneChip v =
       bananaNormalForm B (g : ℤ) (c : ℤ) 0 := by
     dsimp [E]
     unfold bananaNormalForm
@@ -229,9 +229,9 @@ theorem rankDelta_oneOff_complement_normalForm_eq_one
       smul_eq_mul]
     rw [nsmul_eq_mul]
     ring
-  have hBoth : (g : ℤ) • one_chip (leftEndpoint B) + E +
-      c • one_chip (rightEndpoint B) - one_chip (leftEndpoint B) -
-      one_chip v =
+  have hBoth : (g : ℤ) • oneChip (leftEndpoint B) + E +
+      c • oneChip (rightEndpoint B) - oneChip (leftEndpoint B) -
+      oneChip v =
       bananaNormalForm B ((g : ℤ) - 1) (c : ℤ) 0 := by
     dsimp [E]
     unfold bananaNormalForm
@@ -255,37 +255,37 @@ theorem rankDelta_oneOff_complement_normalForm_eq_one
   have hRankBoth := rank_bananaNormalForm B ((g : ℤ) - 1) (c : ℤ) 0 hZero
     (by omega) (by omega) hRangeZero
   have hRankD' : rank B.graph
-      ((g : ℤ) • one_chip (leftEndpoint B) + E +
-        c • one_chip (rightEndpoint B)) = (c : ℤ) + 1 := by
+      ((g : ℤ) • oneChip (leftEndpoint B) + E +
+        c • oneChip (rightEndpoint B)) = (c : ℤ) + 1 := by
     rw [hD, hRankD, hdegE]
     omega
   have hRankDU' : rank B.graph
-      ((g : ℤ) • one_chip (leftEndpoint B) + E +
-        c • one_chip (rightEndpoint B) - one_chip (leftEndpoint B)) = c := by
+      ((g : ℤ) • oneChip (leftEndpoint B) + E +
+        c • oneChip (rightEndpoint B) - oneChip (leftEndpoint B)) = c := by
     rw [hDU, hRankDU, hdegE]
     omega
   have hRankDV' : rank B.graph
-      ((g : ℤ) • one_chip (leftEndpoint B) + E +
-        c • one_chip (rightEndpoint B) - one_chip v) = c := by
+      ((g : ℤ) • oneChip (leftEndpoint B) + E +
+        c • oneChip (rightEndpoint B) - oneChip v) = c := by
     rw [hDV, hRankDV]
     simp
   have hRankBoth' : rank B.graph
-      ((g : ℤ) • one_chip (leftEndpoint B) + E +
-        c • one_chip (rightEndpoint B) - one_chip (leftEndpoint B) -
-        one_chip v) = c := by
+      ((g : ℤ) • oneChip (leftEndpoint B) + E +
+        c • oneChip (rightEndpoint B) - oneChip (leftEndpoint B) -
+        oneChip v) = c := by
     rw [hBoth, hRankBoth]
     simp
     omega
   unfold rankDelta
-  change rank B.graph ((g : ℤ) • one_chip (leftEndpoint B) + E +
-      c • one_chip (rightEndpoint B)) -
-    rank B.graph ((g : ℤ) • one_chip (leftEndpoint B) + E +
-      c • one_chip (rightEndpoint B) - one_chip (leftEndpoint B)) -
-    rank B.graph ((g : ℤ) • one_chip (leftEndpoint B) + E +
-      c • one_chip (rightEndpoint B) - one_chip v) +
-    rank B.graph ((g : ℤ) • one_chip (leftEndpoint B) + E +
-      c • one_chip (rightEndpoint B) - one_chip (leftEndpoint B) -
-      one_chip v) = 1
+  change rank B.graph ((g : ℤ) • oneChip (leftEndpoint B) + E +
+      c • oneChip (rightEndpoint B)) -
+    rank B.graph ((g : ℤ) • oneChip (leftEndpoint B) + E +
+      c • oneChip (rightEndpoint B) - oneChip (leftEndpoint B)) -
+    rank B.graph ((g : ℤ) • oneChip (leftEndpoint B) + E +
+      c • oneChip (rightEndpoint B) - oneChip v) +
+    rank B.graph ((g : ℤ) • oneChip (leftEndpoint B) + E +
+      c • oneChip (rightEndpoint B) - oneChip (leftEndpoint B) -
+      oneChip v) = 1
   rw [hRankD', hRankDU', hRankDV', hRankBoth']
   omega
 
@@ -299,7 +299,7 @@ theorem transmission_oneOff_complement
     (hTau : IsTransmissionPermutation
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau) :
+      (g • oneChip (rightEndpoint B)) tau) :
     tau (b : ℤ) = (g + m : ℕ) := by
   let c := g + m - b - 1
   have hc : c = g + m - b - 1 := rfl

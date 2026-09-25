@@ -1002,7 +1002,7 @@ theorem rowDivisor_reaches_coreVertex {d : DegSpec 8 12}
   have hAT := allocT_classSum hCore
   fin_cases center
   · exact reaches_of_effective_representative
-      (linear_equiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
+      (linearEquiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
       (one_le_markedDivisorOne_at_chip d chipWeight (rowMark d) 4
         chipWeight_nonneg (c := 0) (by norm_num [chipWeight]))
   · exact (DharMove.ofScript _ (residual_effective d hpT hrT hCoreValue
@@ -1012,7 +1012,7 @@ theorem rowDivisor_reaches_coreVertex {d : DegSpec 8 12}
           (fun w => by rw [tCoeff_eq hCore hb hc w]; exact tCoeff_nonneg hb w)
           (by rw [tCoeff_eq hCore hb hc 1]; exact tCoeff_owner) v))).reaches
   · exact reaches_of_effective_representative
-      (linear_equiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
+      (linearEquiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
       (one_le_markedDivisorOne_at_chip d chipWeight (rowMark d) 4
         chipWeight_nonneg (c := 2) (by norm_num [chipWeight]))
   · exact (DharMove.ofScript _ (residual_effective d hpFlat hrFlat hCoreValue
@@ -1042,7 +1042,7 @@ theorem rowDivisor_reaches_coreVertex {d : DegSpec 8 12}
           (by rw [pCoeff_eq hCore hb hc (ownerP d)]
               exact pCoeff_owner hb hc) v))).reaches
   · exact reaches_of_effective_representative
-      (linear_equiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
+      (linearEquiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
       (one_le_markedDivisorOne_at_chip d chipWeight (rowMark d) 4
         chipWeight_nonneg (c := 7) (by norm_num [chipWeight]))
 

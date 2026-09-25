@@ -68,7 +68,7 @@ theorem isSemibreak_two_distinct_strand_chips
     (hp : B.IsInteriorPosition α p)
     (hq : B.IsInteriorPosition β q) (hαβ : α ≠ β) :
     IsSemibreak B
-      (one_chip (strandVertex B α p) + one_chip (strandVertex B β q)) := by
+      (oneChip (strandVertex B α p) + oneChip (strandVertex B β q)) := by
   let op := normalizedInteriorOffset B α p hp
   let oq := normalizedInteriorOffset B β q hq
   let chips : ∀ γ : Fin (g + 1), Option (Fin (B.length γ - 1)) :=
@@ -79,40 +79,40 @@ theorem isSemibreak_two_distinct_strand_chips
     strandVertex_eq_interiorVertex_normalizedInteriorOffset B β q hq]
   funext z
   rcases z with core | ⟨γ, offset⟩
-  · simp [semibreakDivisor, one_chip,
+  · simp [semibreakDivisor, oneChip,
 
       SubdivisionGraph.Spec.interiorVertex]
   · by_cases hγα : γ = α
     · subst γ
-      simp [semibreakDivisor, chips, hαβ, one_chip,
+      simp [semibreakDivisor, chips, hαβ, oneChip,
         SubdivisionGraph.Spec.interiorVertex]
       aesop
     · by_cases hγβ : γ = β
       · subst γ
-        simp [semibreakDivisor, chips, hγα, one_chip,
+        simp [semibreakDivisor, chips, hγα, oneChip,
           SubdivisionGraph.Spec.interiorVertex]
         aesop
-      · simp [semibreakDivisor, chips, hγα, hγβ, one_chip,
+      · simp [semibreakDivisor, chips, hγα, hγβ, oneChip,
           SubdivisionGraph.Spec.interiorVertex]
 
 private theorem linearEquiv_sub {G : CFGraph} {A B C D : CFDiv G}
-    (h₁ : linear_equiv G A B) (h₂ : linear_equiv G C D) :
-    linear_equiv G (A - C) (B - D) := by
-  unfold linear_equiv at h₁ h₂ ⊢
-  have h := (principal_divisors G).sub_mem h₁ h₂
+    (h₁ : linearEquiv G A B) (h₂ : linearEquiv G C D) :
+    linearEquiv G (A - C) (B - D) := by
+  unfold linearEquiv at h₁ h₂ ⊢
+  have h := (principalDivisors G).sub_mem h₁ h₂
   convert h using 1 ; abel
 
 private theorem linearEquiv_add {G : CFGraph} {A B C D : CFDiv G}
-    (h₁ : linear_equiv G A B) (h₂ : linear_equiv G C D) :
-    linear_equiv G (A + C) (B + D) := by
-  unfold linear_equiv at h₁ h₂ ⊢
-  have h := (principal_divisors G).add_mem h₁ h₂
+    (h₁ : linearEquiv G A B) (h₂ : linearEquiv G C D) :
+    linearEquiv G (A + C) (B + D) := by
+  unfold linearEquiv at h₁ h₂ ⊢
+  have h := (principalDivisors G).add_mem h₁ h₂
   convert h using 1 ; abel
 
 private theorem linearEquiv_add_common {G : CFGraph} {A B : CFDiv G}
-    (h : linear_equiv G A B) (C : CFDiv G) :
-    linear_equiv G (C + A) (C + B) := by
-  unfold linear_equiv at h ⊢
+    (h : linearEquiv G A B) (C : CFDiv G) :
+    linearEquiv G (C + A) (C + B) := by
+  unfold linearEquiv at h ⊢
   convert h using 1 ; abel
 
 /-- Paper Corollary 2.25(3), first rank-difference calculation, in normalized
@@ -130,8 +130,8 @@ theorem rankDelta_crossOneOff_two_interior_eq_one
         (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩)
         (strandVertex B β ⟨B.length β - 1, by omega⟩))
       ((c : ℤ) •
-          (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) +
-        one_chip (strandVertex B α p) + one_chip (strandVertex B β q)) = 1 := by
+          (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) +
+        oneChip (strandVertex B α p) + oneChip (strandVertex B β q)) = 1 := by
   let pPrev : B.PathPosition α := ⟨p.val - 1, by omega⟩
   let qNext : B.PathPosition β := ⟨q.val + 1, by omega⟩
   have hp : B.IsInteriorPosition α p := by
@@ -147,13 +147,13 @@ theorem rankDelta_crossOneOff_two_interior_eq_one
     change 0 < q.val + 1 ∧ q.val + 1 < B.length β
     omega
   let E : CFDiv B.graph :=
-    one_chip (strandVertex B α p) + one_chip (strandVertex B β q)
+    oneChip (strandVertex B α p) + oneChip (strandVertex B β q)
   let EU : CFDiv B.graph :=
-    one_chip (strandVertex B α pPrev) + one_chip (strandVertex B β q)
+    oneChip (strandVertex B α pPrev) + oneChip (strandVertex B β q)
   let EV : CFDiv B.graph :=
-    one_chip (strandVertex B α p) + one_chip (strandVertex B β qNext)
+    oneChip (strandVertex B α p) + oneChip (strandVertex B β qNext)
   let EUV : CFDiv B.graph :=
-    one_chip (strandVertex B α pPrev) + one_chip (strandVertex B β qNext)
+    oneChip (strandVertex B α pPrev) + oneChip (strandVertex B β qNext)
   have hE : IsSemibreak B E := by
     dsimp [E]
     exact isSemibreak_two_distinct_strand_chips B α β p q hp hq hαβ
@@ -179,8 +179,8 @@ theorem rankDelta_crossOneOff_two_interior_eq_one
     exact_mod_cast (show c + 2 ≤ g by omega)
   let D : CFDiv B.graph := bananaNormalForm B (c : ℤ) (c : ℤ) E
   have hDDef : D =
-      (c : ℤ) • (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) +
-        one_chip (strandVertex B α p) + one_chip (strandVertex B β q) := by
+      (c : ℤ) • (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) +
+        oneChip (strandVertex B α p) + oneChip (strandVertex B β q) := by
     dsimp [D, E]
     unfold bananaNormalForm
     ext z
@@ -189,44 +189,44 @@ theorem rankDelta_crossOneOff_two_interior_eq_one
   have hShiftU := crossOneOff_sub_first_mark_shift B α p.val
     (by omega) (by omega)
   have hShiftV := crossOneOff_sub_second_mark_shift B β q.val (by omega)
-  have hDU : linear_equiv B.graph
-      (D - one_chip
+  have hDU : linearEquiv B.graph
+      (D - oneChip
         (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩))
       (bananaNormalForm B ((c : ℤ) - 1) (c : ℤ) EU) := by
     have h := linearEquiv_add_common hShiftU
       ((c : ℤ) •
-          (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) +
-        one_chip (strandVertex B β q))
+          (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) +
+        oneChip (strandVertex B β q))
     dsimp [D, E, EU, pPrev]
     unfold bananaNormalForm at h ⊢
     convert h using 1 <;>
       ext z <;>
       simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul] <;>
       ring
-  have hDV : linear_equiv B.graph
-      (D - one_chip
+  have hDV : linearEquiv B.graph
+      (D - oneChip
         (strandVertex B β ⟨B.length β - 1, by omega⟩))
       (bananaNormalForm B (c : ℤ) ((c : ℤ) - 1) EV) := by
     have h := linearEquiv_add_common hShiftV
       ((c : ℤ) •
-          (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) +
-        one_chip (strandVertex B α p))
+          (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) +
+        oneChip (strandVertex B α p))
     dsimp [D, E, EV, qNext]
     unfold bananaNormalForm at h ⊢
     convert h using 1 <;>
       ext z <;>
       simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul] <;>
       ring
-  have hDUV : linear_equiv B.graph
-      (D - one_chip
+  have hDUV : linearEquiv B.graph
+      (D - oneChip
           (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩) -
-        one_chip
+        oneChip
           (strandVertex B β ⟨B.length β - 1, by omega⟩))
       (bananaNormalForm B ((c : ℤ) - 1) ((c : ℤ) - 1) EUV) := by
     have hPair := linearEquiv_add hShiftU hShiftV
     have h := linearEquiv_add_common hPair
       ((c : ℤ) •
-        (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)))
+        (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)))
     dsimp [D, E, EUV, pPrev, qNext]
     unfold bananaNormalForm at h ⊢
     convert h using 1 <;>
@@ -243,7 +243,7 @@ theorem rankDelta_crossOneOff_two_interior_eq_one
     · rw [hdegE]
       exact hcInt
   have hRankDU : rank B.graph
-      (D - one_chip
+      (D - oneChip
         (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩)) =
         (c : ℤ) - 1 := by
     rw [rank_eq_of_linear_equiv B.graph hDU,
@@ -257,7 +257,7 @@ theorem rankDelta_crossOneOff_two_interior_eq_one
     · rw [hdegEU]
       exact hcInt
   have hRankDV : rank B.graph
-      (D - one_chip
+      (D - oneChip
         (strandVertex B β ⟨B.length β - 1, by omega⟩)) =
         (c : ℤ) - 1 := by
     rw [rank_eq_of_linear_equiv B.graph hDV]
@@ -279,21 +279,21 @@ theorem rankDelta_crossOneOff_two_interior_eq_one
       · rw [hdegEV]
         omega
   have hRankDUV : rank B.graph
-      (D - one_chip
+      (D - oneChip
           (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩) -
-        one_chip
+        oneChip
           (strandVertex B β ⟨B.length β - 1, by omega⟩)) =
         (c : ℤ) - 1 := by
     by_cases hc0 : c = 0
     · subst c
       have hUpper := rank_sub_one_chip_le_rank B.graph
-        (D - one_chip
+        (D - oneChip
           (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩))
         (strandVertex B β ⟨B.length β - 1, by omega⟩)
       have hLower := rank_geq_neg_one B.graph
-        (D - one_chip
+        (D - oneChip
           (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩) -
-          one_chip
+          oneChip
             (strandVertex B β ⟨B.length β - 1, by omega⟩))
       rw [hRankDU] at hUpper
       omega

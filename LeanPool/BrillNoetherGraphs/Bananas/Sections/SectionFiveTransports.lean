@@ -50,7 +50,7 @@ exchanged marks.  Riemann--Roch supplies the only non-formal ingredient: it
 identifies the marked second differences of a divisor and its normalized
 canonical complement. -/
 theorem sectionFive_dual_transmission_proof
-    {G : CFGraph} (hconn : _root_.graph_connected G) (u v : G.V)
+    {G : CFGraph} (hconn : _root_.graphConnected G) (u v : G.V)
     {D : CFDiv G} {tau : ℤ → ℤ}
     (hTau : IsTransmissionPermutation (mark G u v) D tau) :
     IsTransmissionPermutation (mark G v u)
@@ -70,19 +70,19 @@ theorem sectionFive_dual_transmission_proof
       (if tau a = b then 1 else 0) by simp only [hInverse]]
   rw [hTau.2 b a]
   rw [rankDelta_mark_swap G u v
-    (transmissionDualDivisor u v D + a • one_chip v - b • one_chip u)]
+    (transmissionDualDivisor u v D + a • oneChip v - b • oneChip u)]
   have hDual := rankDelta_canonical_dual (mark G u v) hconn
-    (D + b • one_chip u - a • one_chip v)
-  change rankDelta (mark G u v) (D + b • one_chip u - a • one_chip v) =
+    (D + b • oneChip u - a • oneChip v)
+  change rankDelta (mark G u v) (D + b • oneChip u - a • oneChip v) =
     rankDelta (mark G u v)
-      (transmissionDualDivisor u v D + a • one_chip v - b • one_chip u)
+      (transmissionDualDivisor u v D + a • oneChip v - b • oneChip u)
   calc
-    rankDelta (mark G u v) (D + b • one_chip u - a • one_chip v) =
+    rankDelta (mark G u v) (D + b • oneChip u - a • oneChip v) =
         rankDelta (mark G u v)
-          (canonical_divisor G + one_chip u + one_chip v -
-            (D + b • one_chip u - a • one_chip v)) := hDual
+          (canonicalDivisor G + oneChip u + oneChip v -
+            (D + b • oneChip u - a • oneChip v)) := hDual
     _ = rankDelta (mark G u v)
-          (transmissionDualDivisor u v D + a • one_chip v - b • one_chip u) := by
+          (transmissionDualDivisor u v D + a • oneChip v - b • oneChip u) := by
       congr 1
       unfold transmissionDualDivisor
       abel

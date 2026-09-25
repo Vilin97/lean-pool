@@ -114,26 +114,26 @@ theorem phase_sumDivisor
     (D : CFDiv A) (E : CFDiv B) (n : ℤ) :
     phase A B p q (sumDivisor A B p q D E) n =
       sumDivisor A B p q
-        (D + n • one_chip p.second) (E - n • one_chip q.second) := by
+        (D + n • oneChip p.second) (E - n • oneChip q.second) := by
   funext z
   cases z with
   | inl a =>
       by_cases ha : a = p.second
       · subst a
-        simp [phase, seamDivisor, one_chip]
+        simp [phase, seamDivisor, oneChip]
       · have hSum :
             (Sum.inl a : (join A B p q).V) ≠ Sum.inl p.second :=
           fun h => ha (Sum.inl.inj h)
-        simp [phase, seamDivisor, one_chip, ha, hSum]
+        simp [phase, seamDivisor, oneChip, ha, hSum]
   | inr b =>
       by_cases hb : b = q.second
       · subst b
-        simp [phase, seamDivisor, one_chip]
+        simp [phase, seamDivisor, oneChip]
         ring
       · have hSum :
             (Sum.inr b : (join A B p q).V) ≠ Sum.inr q.second :=
           fun h => hb (Sum.inr.inj h)
-        simp [phase, seamDivisor, one_chip, hb, hSum]
+        simp [phase, seamDivisor, oneChip, hb, hSum]
 /-- Degrees add under the literal sum of factor divisors. -/
 @[simp] theorem deg_sumDivisor
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
@@ -161,11 +161,11 @@ theorem phase_sumDivisor
 theorem vertex_degree_bridge_inl
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
     (a : A.V) :
-    vertex_degree (bridge A B p q) (Sum.inl a) =
-      vertex_degree A a + if a = p.first then 1 else 0 := by
-  unfold vertex_degree bridge
+    vertexDegree (bridge A B p q) (Sum.inl a) =
+      vertexDegree A a + if a = p.first then 1 else 0 := by
+  unfold vertexDegree bridge
   change (∑ z : Sum A.V B.V,
-    (num_edges (bridgeGraph A B p.first q.first) (Sum.inl a) z : ℤ)) = _
+    (numEdges (bridgeGraph A B p.first q.first) (Sum.inl a) z : ℤ)) = _
   rw [Fintype.sum_sum_type]
   simp_rw [num_edges_bridgeGraph_inl, num_edges_bridgeGraph_inl_inr]
   by_cases ha : a = p.first
@@ -178,11 +178,11 @@ theorem vertex_degree_bridge_inl
 theorem vertex_degree_bridge_inr
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
     (b : B.V) :
-    vertex_degree (bridge A B p q) (Sum.inr b) =
-      vertex_degree B b + if b = q.first then 1 else 0 := by
-  unfold vertex_degree bridge
+    vertexDegree (bridge A B p q) (Sum.inr b) =
+      vertexDegree B b + if b = q.first then 1 else 0 := by
+  unfold vertexDegree bridge
   change (∑ z : Sum A.V B.V,
-    (num_edges (bridgeGraph A B p.first q.first) (Sum.inr b) z : ℤ)) = _
+    (numEdges (bridgeGraph A B p.first q.first) (Sum.inr b) z : ℤ)) = _
   rw [Fintype.sum_sum_type]
   simp_rw [num_edges_symmetric, num_edges_bridgeGraph_inl_inr,
     num_edges_bridgeGraph_inr]
@@ -197,20 +197,20 @@ theorem vertex_degree_bridge_inr
 factor canonical divisors plus one chip at each bridge endpoint. -/
 theorem canonical_divisor_bridge
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B) :
-    canonical_divisor (bridge A B p q) =
-      fun z => Sum.elim (canonical_divisor A) (canonical_divisor B) z +
-        one_chip (G := bridge A B p q) (Sum.inl p.first) z +
-          one_chip (G := bridge A B p q) (Sum.inr q.first) z := by
+    canonicalDivisor (bridge A B p q) =
+      fun z => Sum.elim (canonicalDivisor A) (canonicalDivisor B) z +
+        oneChip (G := bridge A B p q) (Sum.inl p.first) z +
+          oneChip (G := bridge A B p q) (Sum.inr q.first) z := by
   funext z
-  unfold canonical_divisor
+  unfold canonicalDivisor
   cases z with
   | inl a =>
       rw [vertex_degree_bridge_inl]
       by_cases ha : a = p.first
       · subst a
-        simp [one_chip]
+        simp [oneChip]
         ring
-      · simp only [one_chip]
+      · simp only [oneChip]
         rw [if_neg (fun h => ha (Sum.inl.inj h)), if_neg Sum.inl_ne_inr]
         simp only [Sum.elim_inl]
         rw [if_neg ha]
@@ -219,9 +219,9 @@ theorem canonical_divisor_bridge
       rw [vertex_degree_bridge_inr]
       by_cases hb : b = q.first
       · subst b
-        simp [one_chip]
+        simp [oneChip]
         ring
-      · simp only [one_chip]
+      · simp only [oneChip]
         rw [if_neg Sum.inr_ne_inl, if_neg (fun h => hb (Sum.inr.inj h))]
         simp only [Sum.elim_inr]
         rw [if_neg hb]
@@ -230,13 +230,13 @@ theorem canonical_divisor_bridge
 /-- The four pole chips, regarded as a divisor on the two-pole join. -/
 def boundaryDivisor (A : CFGraph.{u}) (B : CFGraph.{v})
     (p : TwoPole A) (q : TwoPole B) : CFDiv (join A B p q) :=
-  one_chip (Sum.inl p.first) + one_chip (Sum.inl p.second) +
-    one_chip (Sum.inr q.first) + one_chip (Sum.inr q.second)
+  oneChip (Sum.inl p.first) + oneChip (Sum.inl p.second) +
+    oneChip (Sum.inr q.first) + oneChip (Sum.inr q.second)
 
 /-- The sum of the two local canonical divisors, with no pole chips added. -/
 def canonicalSum (A : CFGraph.{u}) (B : CFGraph.{v})
     (p : TwoPole A) (q : TwoPole B) : CFDiv (join A B p q) :=
-  sumDivisor A B p q (canonical_divisor A) (canonical_divisor B)
+  sumDivisor A B p q (canonicalDivisor A) (canonicalDivisor B)
 /-- Adding the second cross-edge creates one cycle. -/
 @[simp] theorem genus_join
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B) :
@@ -246,8 +246,8 @@ def canonicalSum (A : CFGraph.{u}) (B : CFGraph.{v})
 /-- A two-pole join of connected factors is connected. -/
 theorem connected_join
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
-    (hA : graph_connected A) (hB : graph_connected B) :
-    graph_connected (join A B p q) := by
+    (hA : graphConnected A) (hB : graphConnected B) :
+    graphConnected (join A B p q) := by
   apply graph_connected_addEdge
   exact graph_connected_bridgeGraph A B p.first q.first hA hB
 @[simp] theorem deg_boundaryDivisor
@@ -259,7 +259,7 @@ theorem connected_join
 @[simp] theorem deg_canonicalSum
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B) :
     deg (canonicalSum A B p q) = 2 * genus A + 2 * genus B - 4 := by
-  change deg (sumDivisor A B p q (canonical_divisor A) (canonical_divisor B)) = _
+  change deg (sumDivisor A B p q (canonicalDivisor A) (canonicalDivisor B)) = _
   rw [deg_sumDivisor]
   simp only [degree_of_canonical_divisor]
   ring
@@ -267,7 +267,7 @@ theorem connected_join
 is the local canonical sum plus exactly the four pole chips. -/
 theorem canonical_divisor_join
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B) :
-    canonical_divisor (join A B p q) =
+    canonicalDivisor (join A B p q) =
       canonicalSum A B p q + boundaryDivisor A B p q := by
   unfold join
   rw [canonical_divisor_addEdge]
@@ -278,20 +278,20 @@ theorem canonical_divisor_join
       simp only [Pi.add_apply, canonicalSum, sumDivisor_inl, boundaryDivisor]
       rw [hBridge]
       simp only [Sum.elim_inl]
-      simp [one_chip]
+      simp [oneChip]
       ring
   | inr b =>
       simp only [Pi.add_apply, canonicalSum, sumDivisor_inr, boundaryDivisor]
       rw [hBridge]
       simp only [Sum.elim_inr]
-      simp [one_chip]
+      simp [oneChip]
       ring
 
 /-- The four pole chips are literally the canonical complement of the local
 canonical sum. -/
 theorem canonical_sub_canonicalSum
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B) :
-    canonical_divisor (join A B p q) - canonicalSum A B p q =
+    canonicalDivisor (join A B p q) - canonicalSum A B p q =
       boundaryDivisor A B p q := by
   rw [canonical_divisor_join]
   abel
@@ -300,7 +300,7 @@ theorem canonical_sub_canonicalSum
 two-pole join. -/
 theorem rank_canonicalSum_sub_rank_boundary
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
-    (hA : graph_connected A) (hB : graph_connected B) :
+    (hA : graphConnected A) (hB : graphConnected B) :
     rank (join A B p q) (canonicalSum A B p q) -
         rank (join A B p q) (boundaryDivisor A B p q) =
       genus A + genus B - 4 := by
@@ -315,8 +315,8 @@ have equal rank.  Thus either one may be used as the unmarked degree-four
 witness. -/
 theorem rank_canonicalSum_eq_rank_boundary_of_genus_two
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
-    (hA : graph_connected A) (hGenusA : genus A = 2)
-    (hB : graph_connected B) (hGenusB : genus B = 2) :
+    (hA : graphConnected A) (hGenusA : genus A = 2)
+    (hB : graphConnected B) (hGenusB : genus B = 2) :
     rank (join A B p q) (canonicalSum A B p q) =
       rank (join A B p q) (boundaryDivisor A B p q) := by
   have h := rank_canonicalSum_sub_rank_boundary A B p q hA hB

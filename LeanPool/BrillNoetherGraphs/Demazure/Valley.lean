@@ -94,7 +94,7 @@ lemma M_spec : ∀ n : ℤ, v.f n ≥ v.f v.M ∧ (n > v.M → v.f n > v.f v.M) 
     simpa [M] using Finset.le_max' (v.floor v.min) n this
 
 /-- Shift every value of a valley downward by the constant `k`. -/
-def shift_down (k : ℤ) : Valley where
+def shiftDown (k : ℤ) : Valley where
   f := fun n => v.f n - k
   rises := by
     intro m
@@ -108,20 +108,20 @@ def shift_down (k : ℤ) : Valley where
     apply v.rises
 
 /-- Shifting a valley downward does not change its rightmost minimizer. -/
-lemma shift_down_M (k : ℤ) : (v.shift_down k).M = v.M := by
-  let v' := v.shift_down k
+lemma shift_down_M (k : ℤ) : (v.shiftDown k).M = v.M := by
+  let v' := v.shiftDown k
   suffices v.M = v'.M by rw [this]
   have ge : v.f v'.M ≥ v.f v.M := (v.M_spec v'.M).1
   have le : v'.f v'.M ≤ v'.f v.M := by
-    exact ((v.shift_down k).M_spec v.M).1
+    exact ((v.shiftDown k).M_spec v.M).1
   have f_eq : v.f v.M = v.f v'.M := by
     subst v'
-    unfold Valley.shift_down at le ge ⊢
+    unfold Valley.shiftDown at le ge ⊢
     simp only [tsub_le_iff_right, sub_add_cancel] at le
     omega
   have f'_eq : v'.f v.M = v'.f v'.M := by
     subst v'
-    unfold Valley.shift_down at le ge ⊢
+    unfold Valley.shiftDown at le ge ⊢
     simp only [tsub_le_iff_right, sub_add_cancel, sub_left_inj] at le ⊢
     omega
   have M_le_M' : v.M ≤ v'.M := by
@@ -139,11 +139,11 @@ lemma shift_down_M (k : ℤ) : (v.shift_down k).M = v.M := by
   exact le_antisymm M_le_M' M'_le_M
 
 /-- Shifting a valley downward subtracts `k` from its minimum value. -/
-lemma shift_down_min (k : ℤ) : (v.shift_down k).min = v.min - k := by
-  let v' := v.shift_down k
+lemma shift_down_min (k : ℤ) : (v.shiftDown k).min = v.min - k := by
+  let v' := v.shiftDown k
   rw [← v'.f_M, ← v.f_M, v.shift_down_M k]
   subst v'
-  unfold Valley.shift_down
+  unfold Valley.shiftDown
   simp only
 
 end Valley

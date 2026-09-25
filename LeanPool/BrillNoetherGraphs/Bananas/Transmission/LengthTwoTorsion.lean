@@ -29,7 +29,7 @@ to fire, because the `SMul` instance recorded in the term mentions
 `(mark G u v).graph`. -/
 theorem torsionWitness_mark_iff {G : CFGraph} (u v : G.V) (k : ℕ) :
     TorsionWitness (mark G u v) k ↔
-      0 < k ∧ linear_equiv G ((k : ℤ) • (one_chip u - one_chip v)) 0 :=
+      0 < k ∧ linearEquiv G ((k : ℤ) • (oneChip u - oneChip v)) 0 :=
   Iff.rfl
 
 /-- Every combinatorial midpoint, not only the midpoint of a length-two
@@ -40,8 +40,8 @@ even-length strand still has torsion order two. -/
 theorem two_smul_strand_midpoint_linearEquiv_endpoints
     {g : ℕ} (B : Banana g) (α : Fin (g + 1)) (i : B.PathPosition α)
     (hi : 2 * i.val = B.length α) :
-    linear_equiv B.graph ((2 : ℤ) • one_chip (strandVertex B α i))
-      (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) := by
+    linearEquiv B.graph ((2 : ℤ) • oneChip (strandVertex B α i))
+      (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) := by
   have hmirror : strandMirror B α i = i := by
     apply Fin.ext
     simp only [strandMirror]
@@ -75,15 +75,15 @@ theorem distinct_strand_midpoints_torsionOrder_two
       hiInt hjInt (by simpa [u, v] using huvEq))
   have hU := two_smul_strand_midpoint_linearEquiv_endpoints B α i hi
   have hV := two_smul_strand_midpoint_linearEquiv_endpoints B β j hj
-  have hUV : linear_equiv B.graph
-      ((2 : ℤ) • one_chip u) ((2 : ℤ) • one_chip v) := by
+  have hUV : linearEquiv B.graph
+      ((2 : ℤ) • oneChip u) ((2 : ℤ) • oneChip v) := by
     simpa [u, v] using hU.trans hV.symm
-  have hDiff : linear_equiv B.graph
-      ((2 : ℤ) • (one_chip u - one_chip v)) 0 := by
-    unfold linear_equiv at hUV ⊢
+  have hDiff : linearEquiv B.graph
+      ((2 : ℤ) • (oneChip u - oneChip v)) 0 := by
+    unfold linearEquiv at hUV ⊢
     have heq : (0 : CFDiv B.graph) -
-          (2 : ℤ) • (one_chip u - one_chip v) =
-        (2 : ℤ) • one_chip v - (2 : ℤ) • one_chip u := by
+          (2 : ℤ) • (oneChip u - oneChip v) =
+        (2 : ℤ) • oneChip v - (2 : ℤ) • oneChip u := by
       simp [smul_sub]
     rw [heq]
     exact hUV
@@ -114,24 +114,24 @@ theorem length_two_midpoint_torsionOrder_two
       (mark B.graph (strandVertex B α i) (strandVertex B β j)) 2 := by
   let u := strandVertex B α i
   let v := strandVertex B β j
-  have hU : linear_equiv B.graph
-      ((2 : ℤ) • one_chip u)
-      (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) := by
+  have hU : linearEquiv B.graph
+      ((2 : ℤ) • oneChip u)
+      (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) := by
     dsimp [u]
     exact two_smul_midpoint_linearEquiv_endpoints B α i hα hi
-  have hV : linear_equiv B.graph
-      ((2 : ℤ) • one_chip v)
-      (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) := by
+  have hV : linearEquiv B.graph
+      ((2 : ℤ) • oneChip v)
+      (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) := by
     dsimp [v]
     exact two_smul_midpoint_linearEquiv_endpoints B β j hβ hj
-  have hUV : linear_equiv B.graph
-      ((2 : ℤ) • one_chip u) ((2 : ℤ) • one_chip v) :=
+  have hUV : linearEquiv B.graph
+      ((2 : ℤ) • oneChip u) ((2 : ℤ) • oneChip v) :=
     hU.trans hV.symm
-  have hDiff : linear_equiv B.graph
-      ((2 : ℤ) • (one_chip u - one_chip v)) 0 := by
-    unfold linear_equiv at hUV ⊢
-    have heq : (0 : CFDiv B.graph) - (2 : ℤ) • (one_chip u - one_chip v) =
-        (2 : ℤ) • one_chip v - (2 : ℤ) • one_chip u := by
+  have hDiff : linearEquiv B.graph
+      ((2 : ℤ) • (oneChip u - oneChip v)) 0 := by
+    unfold linearEquiv at hUV ⊢
+    have heq : (0 : CFDiv B.graph) - (2 : ℤ) • (oneChip u - oneChip v) =
+        (2 : ℤ) • oneChip v - (2 : ℤ) • oneChip u := by
       simp [smul_sub]
     rw [heq]
     exact hUV

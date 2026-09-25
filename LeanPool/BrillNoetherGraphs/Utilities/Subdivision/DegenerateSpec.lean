@@ -330,10 +330,10 @@ the `forest` field is exactly what makes the two `z`'s cancel. -/
 /-! ## Multiplicities -/
 
 theorem num_edges_eq_card_filter_steps (x y : d.Vertex) :
-    num_edges d.graph x y =
+    numEdges d.graph x y =
       ((Finset.univ : Finset d.Step).filter fun s =>
         d.unitEdge s = (x, y) ∨ d.unitEdge s = (y, x)).card := by
-  unfold num_edges
+  unfold numEdges
   change Multiset.card
       (((Finset.univ : Finset d.Step).val.map d.unitEdge).filter
         (fun e => e = (x, y) ∨ e = (y, x))) = _

@@ -101,8 +101,8 @@ theorem thetaRigid_kGeneral_iff_nonRecurrent_class
     {k : ℕ} (B : Banana 2) (u v : B.graph.V)
     (hSub : AllSubmodular (mark B.graph u v))
     (hTO : IsTorsionOrder (mark B.graph u v) k)
-    (hRigid : ¬ linear_equiv B.graph
-      (one_chip u + one_chip v) (canonical_divisor B.graph)) :
+    (hRigid : ¬ linearEquiv B.graph
+      (oneChip u + oneChip v) (canonicalDivisor B.graph)) :
     KGeneralTransmission (mark B.graph u v) k ↔
       NonRecurrent (mark B.graph u v) k :=
   thetaRigid_kGeneral_iff_nonRecurrent B u v hSub hTO hRigid
@@ -126,14 +126,14 @@ theorem thetaRigid_kGeneral_of_nonRecurrent
     (hSub : AllSubmodular (mark B.graph u v))
     (hTO : IsTorsionOrder (mark B.graph u v) k)
     (hNonrec : NonRecurrent (mark B.graph u v) k)
-    (hRigid : ¬ linear_equiv B.graph
-      (one_chip u + one_chip v) (canonical_divisor B.graph)) :
+    (hRigid : ¬ linearEquiv B.graph
+      (oneChip u + oneChip v) (canonicalDivisor B.graph)) :
     KGeneralTransmission (mark B.graph u v) k := by
   refine ⟨hTO.1, hSub, ?_⟩
   intro D
   obtain ⟨τ, hτ, hAffine, hFinite⟩ :=
     exists_affine_transmission_of_allSubmodular
-      (graph_connected B) hTO.1 hSub D
+      (graphConnected B) hTO.1 hSub D
   refine ⟨τ, hτ, hAffine, hFinite, ?_⟩
   have hCount := kInversionCount_le_two_of_nonRecurrent_of_rigid
     B u v D k τ hTO hτ hAffine hNonrec hRigid

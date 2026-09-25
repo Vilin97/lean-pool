@@ -24,37 +24,37 @@ variable {n p nA pA nB pB : ℕ}
 /-! Values of an arbitrary script along a slot, extended constantly past its
 last endpoint. This lets us reuse the existing slot-value Laplacian API. -/
 
-def pathValue (s : Spec n p) (f : firing_script s.graph) (e : Fin p) (k : ℕ) : ℤ :=
+def pathValue (s : Spec n p) (f : firingScript s.graph) (e : Fin p) (k : ℕ) : ℤ :=
   if hzero : k = 0 then f (s.coreVertex (s.core.tail e))
   else if hlt : k < s.length e then
     f (s.interiorVertex e ⟨k - 1, by omega⟩)
   else f (s.coreVertex (s.core.head e))
 
-@[simp] theorem pathValue_zero (s : Spec n p) (f : firing_script s.graph) (e : Fin p) :
+@[simp] theorem pathValue_zero (s : Spec n p) (f : firingScript s.graph) (e : Fin p) :
     pathValue s f e 0 = f (s.coreVertex (s.core.tail e)) := by simp [pathValue]
 
-@[simp] theorem pathValue_length (s : Spec n p) (f : firing_script s.graph) (e : Fin p) :
+@[simp] theorem pathValue_length (s : Spec n p) (f : firingScript s.graph) (e : Fin p) :
     pathValue s f e (s.length e) = f (s.coreVertex (s.core.head e)) := by
   simp [pathValue, (s.length_pos e).ne']
 
-@[simp] theorem pathValue_interior (s : Spec n p) (f : firing_script s.graph)
+@[simp] theorem pathValue_interior (s : Spec n p) (f : firingScript s.graph)
     (e : Fin p) (k : Fin (s.length e - 1)) :
     pathValue s f e (k.val + 1) = f (s.interiorVertex e k) := by
   have hk : k.val + 1 < s.length e := by have := k.isLt; omega
   simp [pathValue, hk]
 
-theorem pathValue_compatible (s : Spec n p) (f : firing_script s.graph) :
+theorem pathValue_compatible (s : Spec n p) (f : firingScript s.graph) :
     s.SlotValueCompatible (fun v => f (s.coreVertex v)) (pathValue s f) :=
   ⟨pathValue_zero s f, pathValue_length s f⟩
 
-theorem pathValue_script (s : Spec n p) (f : firing_script s.graph) :
+theorem pathValue_script (s : Spec n p) (f : firingScript s.graph) :
     s.slotValueScript (fun v => f (s.coreVertex v)) (pathValue s f) = f := by
   funext v
   cases v with
   | inl a => rfl
   | inr a => exact pathValue_interior s f a.1 a.2
 
-theorem pathValue_slope (s : Spec n p) (f : firing_script s.graph) :
+theorem pathValue_slope (s : Spec n p) (f : firingScript s.graph) :
     s.IsStepSlope f (fun e k => pathValue s f e (k + 1) - pathValue s f e k) := by
   have h := s.isStepSlope_slotValueScript (pathValue_compatible s f)
   rwa [pathValue_script] at h
@@ -192,25 +192,25 @@ theorem disjoint (a : (d.leftSpec s).Vertex) (b : (d.rightSpec s).Vertex) :
       exact Sum.inl_ne_inr (Sum.inl.inj (d.slots.injective
         (congrArg Sigma.fst (Sum.inr.inj h))))
 
-def potential (f : firing_script (d.leftSpec s).graph)
-    (g : firing_script (d.rightSpec s).graph) (v : Fin n) : ℤ :=
+def potential (f : firingScript (d.leftSpec s).graph)
+    (g : firingScript (d.rightSpec s).graph) (v : Fin n) : ℤ :=
   match d.vertices.symm v with
   | .inl a => f ((d.leftSpec s).coreVertex a)
   | .inr b => g ((d.rightSpec s).coreVertex b)
 
-def values (f : firing_script (d.leftSpec s).graph)
-    (g : firing_script (d.rightSpec s).graph) (h : ℕ → ℤ) (e : Fin p) (k : ℕ) : ℤ :=
+def values (f : firingScript (d.leftSpec s).graph)
+    (g : firingScript (d.rightSpec s).graph) (h : ℕ → ℤ) (e : Fin p) (k : ℕ) : ℤ :=
   match d.slots.symm e with
   | .inl (.inl a) => pathValue (d.leftSpec s) f a k
   | .inl (.inr b) => pathValue (d.rightSpec s) g b k
   | .inr i => if i = 0 then h k else f ((d.leftSpec s).coreVertex (d.leftPole 1))
 
-def script (f : firing_script (d.leftSpec s).graph)
-    (g : firing_script (d.rightSpec s).graph) (h : ℕ → ℤ) : firing_script s.graph :=
+def script (f : firingScript (d.leftSpec s).graph)
+    (g : firingScript (d.rightSpec s).graph) (h : ℕ → ℤ) : firingScript s.graph :=
   s.slotValueScript (d.potential s f g) (d.values s f g h)
 
-theorem compatible (f : firing_script (d.leftSpec s).graph)
-    (g : firing_script (d.rightSpec s).graph) (h : ℕ → ℤ)
+theorem compatible (f : firingScript (d.leftSpec s).graph)
+    (g : firingScript (d.rightSpec s).graph) (h : ℕ → ℤ)
     (h0 : h 0 = f ((d.leftSpec s).coreVertex (d.leftPole 0)))
     (hL : h (s.length (d.slots (.inr 0))) = g ((d.rightSpec s).coreVertex (d.rightPole 0)))
     (hsecond : f ((d.leftSpec s).coreVertex (d.leftPole 1)) =
@@ -242,8 +242,8 @@ theorem compatible (f : firing_script (d.leftSpec s).graph)
         · simpa [values, potential, hh] using hsecond
         · simp [values, potential, hh]
 
-theorem slope (f : firing_script (d.leftSpec s).graph)
-    (g : firing_script (d.rightSpec s).graph) (h : ℕ → ℤ)
+theorem slope (f : firingScript (d.leftSpec s).graph)
+    (g : firingScript (d.rightSpec s).graph) (h : ℕ → ℤ)
     (hCompat : s.SlotValueCompatible (d.potential s f g) (d.values s f g h)) :
     s.IsStepSlope (d.script s f g h)
       (fun e k => d.values s f g h e (k + 1) - d.values s f g h e k) :=

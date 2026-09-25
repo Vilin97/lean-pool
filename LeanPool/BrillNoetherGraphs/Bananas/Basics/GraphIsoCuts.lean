@@ -36,8 +36,8 @@ private theorem mem_image_vertexEquiv_iff (S : Finset G.V) (x : G.V) :
     exact Finset.mem_image.mpr ⟨x, hx, rfl⟩
 
 private theorem outdeg_S_image (S : Finset G.V) (x : G.V) :
-    outdeg_S H (S.image φ.vertexEquiv) (φ.vertexEquiv x) =
-      outdeg_S G S x := by
+    outdegreeSet H (S.image φ.vertexEquiv) (φ.vertexEquiv x) =
+      outdegreeSet G S x := by
   rw [outdeg_S_eq_sum_filter, outdeg_S_eq_sum_filter]
   rw [Finset.sum_filter, Finset.sum_filter]
   rw [← φ.vertexEquiv.sum_comp]

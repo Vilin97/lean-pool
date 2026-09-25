@@ -34,19 +34,19 @@ open Utilities
 /-! ## The Riemann-Roch bound on a transmission permutation -/
 
 private theorem deg_markedTwist (M : TwiceMarked) (D : CFDiv M.graph) (x y : ℤ) :
-    deg (D + x • one_chip M.u - y • one_chip M.v) = deg D + x - y := by
+    deg (D + x • oneChip M.u - y • oneChip M.v) = deg D + x - y := by
   rw [deg.map_sub, deg.map_add, map_zsmul, map_zsmul, deg_one_chip, deg_one_chip]
   simp only [smul_eq_mul, mul_one]
 
 private theorem markedTwist_sub_u (M : TwiceMarked) (D : CFDiv M.graph) (x y : ℤ) :
-    D + x • one_chip M.u - y • one_chip M.v - one_chip M.u =
-      D + (x - 1) • one_chip M.u - y • one_chip M.v := by
+    D + x • oneChip M.u - y • oneChip M.v - oneChip M.u =
+      D + (x - 1) • oneChip M.u - y • oneChip M.v := by
   rw [sub_smul, one_smul]
   abel
 
 private theorem markedTwist_sub_v (M : TwiceMarked) (D : CFDiv M.graph) (x y : ℤ) :
-    D + x • one_chip M.u - y • one_chip M.v - one_chip M.v =
-      D + x • one_chip M.u - (y + 1) • one_chip M.v := by
+    D + x • oneChip M.u - y • oneChip M.v - oneChip M.v =
+      D + x • oneChip M.u - (y + 1) • oneChip M.v := by
   rw [add_smul, one_smul]
   ext w
   simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply]
@@ -64,19 +64,19 @@ theorem transmissionPermutation_ge
   have hInd := hτ.2 (τ b) b
   rw [if_pos rfl] at hInd
   set a := τ b with ha_def
-  have hd0 : deg (D + a • one_chip M.u - b • one_chip M.v) < 0 := by
+  have hd0 : deg (D + a • oneChip M.u - b • oneChip M.v) < 0 := by
     rw [deg_markedTwist]; omega
-  have hd1 : deg (D + (a - 1) • one_chip M.u - b • one_chip M.v) < 0 := by
+  have hd1 : deg (D + (a - 1) • oneChip M.u - b • oneChip M.v) < 0 := by
     rw [deg_markedTwist]; omega
-  have hd2 : deg (D + a • one_chip M.u - (b + 1) • one_chip M.v) < 0 := by
+  have hd2 : deg (D + a • oneChip M.u - (b + 1) • oneChip M.v) < 0 := by
     rw [deg_markedTwist]; omega
-  have hd3 : deg (D + (a - 1) • one_chip M.u - (b + 1) • one_chip M.v) < 0 := by
+  have hd3 : deg (D + (a - 1) • oneChip M.u - (b + 1) • oneChip M.v) < 0 := by
     rw [deg_markedTwist]; omega
   have hR0 := rank_neg_one_of_deg_neg M.graph _ hd0
   have hR1 := rank_neg_one_of_deg_neg M.graph _ hd1
   have hR2 := rank_neg_one_of_deg_neg M.graph _ hd2
   have hR3 := rank_neg_one_of_deg_neg M.graph _ hd3
-  have hDelta : rankDelta M (D + a • one_chip M.u - b • one_chip M.v) = 0 := by
+  have hDelta : rankDelta M (D + a • oneChip M.u - b • oneChip M.v) = 0 := by
     unfold rankDelta
     simp only [markedTwist_sub_u, markedTwist_sub_v]
     rw [hR0, hR1, hR2, hR3]
@@ -88,7 +88,7 @@ theorem transmissionPermutation_ge
 (Riemann's part of Riemann-Roch) rather than submodularity. -/
 theorem transmissionPermutation_le
     {M : TwiceMarked} {D : CFDiv M.graph} {τ : ℤ → ℤ}
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : _root_.graphConnected M.graph)
     (hτ : IsTransmissionPermutation M D τ) (b : ℤ) :
     τ b ≤ 2 * genus M.graph + b - deg D := by
   by_contra hlt
@@ -96,20 +96,20 @@ theorem transmissionPermutation_le
   have hInd := hτ.2 (τ b) b
   rw [if_pos rfl] at hInd
   set a := τ b with ha_def
-  have hd0 : deg (D + a • one_chip M.u - b • one_chip M.v) > 2 * genus M.graph - 2 := by
+  have hd0 : deg (D + a • oneChip M.u - b • oneChip M.v) > 2 * genus M.graph - 2 := by
     rw [deg_markedTwist]; omega
-  have hd1 : deg (D + (a - 1) • one_chip M.u - b • one_chip M.v) > 2 * genus M.graph - 2 := by
+  have hd1 : deg (D + (a - 1) • oneChip M.u - b • oneChip M.v) > 2 * genus M.graph - 2 := by
     rw [deg_markedTwist]; omega
-  have hd2 : deg (D + a • one_chip M.u - (b + 1) • one_chip M.v) > 2 * genus M.graph - 2 := by
+  have hd2 : deg (D + a • oneChip M.u - (b + 1) • oneChip M.v) > 2 * genus M.graph - 2 := by
     rw [deg_markedTwist]; omega
-  have hd3 : deg (D + (a - 1) • one_chip M.u - (b + 1) • one_chip M.v) >
+  have hd3 : deg (D + (a - 1) • oneChip M.u - (b + 1) • oneChip M.v) >
       2 * genus M.graph - 2 := by
     rw [deg_markedTwist]; omega
   have hR0 := (rank_nonspecial_range hconn _).2.2 hd0
   have hR1 := (rank_nonspecial_range hconn _).2.2 hd1
   have hR2 := (rank_nonspecial_range hconn _).2.2 hd2
   have hR3 := (rank_nonspecial_range hconn _).2.2 hd3
-  have hDelta : rankDelta M (D + a • one_chip M.u - b • one_chip M.v) = 0 := by
+  have hDelta : rankDelta M (D + a • oneChip M.u - b • oneChip M.v) = 0 := by
     unfold rankDelta
     simp only [markedTwist_sub_u, markedTwist_sub_v]
     rw [hR0, hR1, hR2, hR3]
@@ -127,7 +127,7 @@ regardless of submodularity: the bound only uses `transmissionPermutation_ge`
 `τ(n + 2) = τ(n) + 2`. -/
 theorem kInversionCount_two_le_genus
     {M : TwiceMarked} {D : CFDiv M.graph} {τ : ℤ → ℤ}
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : _root_.graphConnected M.graph)
     (hτ : IsTransmissionPermutation M D τ) (hAff : IsKAffine 2 τ) :
     kInversionCount 2 τ ≤ Int.toNat (genus M.graph) := by
   have hA0 := transmissionPermutation_ge hτ 0
@@ -210,7 +210,7 @@ genuine partial converse to `lem:kgtImpliesTorsionOrder`
 only at `k = 2`: connectivity is the only hypothesis needed beyond the paper
 statement, matching every other theorem in this file's dependency chain. -/
 theorem torsionOrder_two_allSubmodular_isKGeneral
-    {M : TwiceMarked} (hconn : _root_.graph_connected M.graph)
+    {M : TwiceMarked} (hconn : _root_.graphConnected M.graph)
     (hTO : IsTorsionOrder M 2) (hSub : AllSubmodular M) :
     KGeneralTransmission M 2 := by
   refine ⟨hTO.1, hSub, ?_⟩

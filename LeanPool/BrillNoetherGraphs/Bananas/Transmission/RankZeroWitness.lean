@@ -26,9 +26,9 @@ equivalence class. -/
 theorem rankDelta_neg_iff_rank_zero_deletions
     (M : TwiceMarked) (D : CFDiv M.graph) (hD : rank M.graph D = 0) :
     rankDelta M D < 0 ↔
-      rank M.graph (D - one_chip M.u) = 0 ∧
-      rank M.graph (D - one_chip M.v) = 0 ∧
-      rank M.graph (D - one_chip M.u - one_chip M.v) = -1 := by
+      rank M.graph (D - oneChip M.u) = 0 ∧
+      rank M.graph (D - oneChip M.v) = 0 ∧
+      rank M.graph (D - oneChip M.u - oneChip M.v) = -1 := by
   rw [rankDelta_neg_iff_rank_pattern]
   constructor
   · rintro ⟨hU, hV, hUV⟩

@@ -30,18 +30,18 @@ factor. -/
 theorem BNExists_vertexWedge_rankOneDegreeThree_of_genus_three
     (G : CFGraph.{uOneCycle}) (H : CFGraph.{vOneCycle})
     (x : G.V) (y : H.V)
-    (hG : graph_connected G) (hGenusG : genus G = 3)
+    (hG : graphConnected G) (hGenusG : genus G = 3)
     (hH : PointedGenusOneRigid H y) :
     BNExists (vertexWedge G H x y) 1 3 := by
   obtain ⟨D, _Ddual, hD, _hDdual, _hPair⟩ :=
     exists_canonical_slack_dual_pair G hG (by omega) x x
   have hResidualWin :
-      winnable G (D - one_chip x - one_chip x) :=
-    (rank_nonneg_iff_winnable G (D - one_chip x - one_chip x)).mp
-      ((rank_geq_iff G (D - one_chip x - one_chip x) 0).mpr hD.2.2)
+      winnable G (D - oneChip x - oneChip x) :=
+    (rank_nonneg_iff_winnable G (D - oneChip x - oneChip x)).mp
+      ((rank_geq_iff G (D - oneChip x - oneChip x) 0).mpr hD.2.2)
   have hTwoChipRewrite :
-      D - one_chip x - one_chip x =
-        D - (2 : ℤ) • one_chip x := by
+      D - oneChip x - oneChip x =
+        D - (2 : ℤ) • oneChip x := by
     funext z
     simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
     ring

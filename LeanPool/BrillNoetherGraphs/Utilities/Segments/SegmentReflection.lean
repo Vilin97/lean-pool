@@ -101,7 +101,7 @@ theorem slope_divergence {length position j : ℕ}
 other subdivision slot. -/
 def script {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
     (edge : Fin p) (position : spec.PathPosition edge) :
-    firing_script spec.graph
+    firingScript spec.graph
   | Sum.inl _vertex => 0
   | Sum.inr interior =>
       if interior.1 = edge then
@@ -363,11 +363,11 @@ theorem prin_script_pathVertex_eq_reflectionDivisor {n p : ℕ}
     (spec : SubdivisionGraph.Spec n p) (edge : Fin p)
     (position probe : spec.PathPosition edge) :
     prin spec.graph (script spec edge position) (spec.pathVertex edge probe) =
-      (-(one_chip (G := spec.graph)
+      (-(oneChip (G := spec.graph)
             (spec.coreVertex (spec.core.tail edge))) -
-          one_chip (G := spec.graph) (spec.coreVertex (spec.core.head edge)) +
-          one_chip (G := spec.graph) (spec.pathVertex edge position) +
-          one_chip (G := spec.graph)
+          oneChip (G := spec.graph) (spec.coreVertex (spec.core.head edge)) +
+          oneChip (G := spec.graph) (spec.pathVertex edge position) +
+          oneChip (G := spec.graph)
             (spec.pathVertex edge (symmetricPosition spec edge position)))
         (spec.pathVertex edge probe) := by
   rw [prin_script_pathVertex]
@@ -395,7 +395,7 @@ theorem prin_script_pathVertex_eq_reflectionDivisor {n p : ℕ}
     rw [spec.pathVertex_eq_iff_val_eq]
     rfl
   simp only [Pi.add_apply, Pi.sub_apply, Pi.neg_apply]
-  simp [one_chip, hTail, hHead, hTarget, hReflected]
+  simp [oneChip, hTail, hHead, hTarget, hReflected]
 
 /-- Exact principal-divisor identity for reflection on one arbitrary
 subdivision slot. -/
@@ -403,11 +403,11 @@ theorem prin_script_eq_reflectionDivisor {n p : ℕ}
     (spec : SubdivisionGraph.Spec n p) (edge : Fin p)
     (position : spec.PathPosition edge) :
     prin spec.graph (script spec edge position) =
-      -(one_chip (G := spec.graph)
+      -(oneChip (G := spec.graph)
           (spec.coreVertex (spec.core.tail edge))) -
-        one_chip (G := spec.graph) (spec.coreVertex (spec.core.head edge)) +
-        one_chip (G := spec.graph) (spec.pathVertex edge position) +
-        one_chip (G := spec.graph)
+        oneChip (G := spec.graph) (spec.coreVertex (spec.core.head edge)) +
+        oneChip (G := spec.graph) (spec.pathVertex edge position) +
+        oneChip (G := spec.graph)
           (spec.pathVertex edge (symmetricPosition spec edge position)) := by
   classical
   funext vertex
@@ -482,7 +482,7 @@ theorem prin_script_eq_reflectionDivisor {n p : ℕ}
           exact hHead (Sum.inl.inj hEqual)
         rw [prin_script_eq_slot_sum]
         simp_rw [if_neg (hLeft _), if_neg (hRight _)]
-        simp [one_chip, hTailVertex, hHeadVertex,
+        simp [oneChip, hTailVertex, hHeadVertex,
           hTargetNe', hReflectedNe']
   · obtain ⟨other, offset⟩ := interior
     change prin spec.graph (script spec edge position)
@@ -548,7 +548,7 @@ theorem prin_script_eq_reflectionDivisor {n p : ℕ}
         hReflectedNe
       rw [prin_script_eq_slot_sum]
       simp_rw [if_neg (hLeft _), if_neg (hRight _)]
-      simp [one_chip, SubdivisionGraph.Spec.coreVertex,
+      simp [oneChip, SubdivisionGraph.Spec.coreVertex,
         hTargetNe', hReflectedNe']
 
 /-! ## Public reflection and reachability interfaces -/

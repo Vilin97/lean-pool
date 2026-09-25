@@ -169,7 +169,7 @@ structure LeftRankTransport (M N : MarkedGraph.{u}) where
   mapDiv : CFDiv M.graph → CFDiv N.graph
   map_sub : ∀ D E, mapDiv (D - E) = mapDiv D - mapDiv E
   map_zsmul : ∀ (n : ℤ) D, mapDiv (n • D) = n • mapDiv D
-  map_one_chip : mapDiv (one_chip M.left) = one_chip N.left
+  map_one_chip : mapDiv (oneChip M.left) = oneChip N.left
   deg_map : ∀ D, deg (mapDiv D) = deg D
   rank_map : ∀ D, rank N.graph (mapDiv D) = rank M.graph D
   genus_eq : genus N.graph = genus M.graph
@@ -201,29 +201,29 @@ noncomputable def trans {M N K : MarkedGraph.{u}}
 end LeftRankTransport
 private theorem bridgePushforward_one_chip_left (M N : MarkedGraph.{u}) :
     bridgePushforward M.graph N.graph M.right N.left
-        (one_chip (Sum.inl M.left)) =
-      one_chip (Sum.inl M.left : (M.wedge N).graph.V) := by
+        (oneChip (Sum.inl M.left)) =
+      oneChip (Sum.inl M.left : (M.wedge N).graph.V) := by
   have hSource :
-      (one_chip (Sum.inl M.left) : CFDiv (M.bridge N).graph) =
+      (oneChip (Sum.inl M.left) : CFDiv (M.bridge N).graph) =
         MarkedGraphs.liftLeftDivisor M.graph N.graph M.right N.left
-          (one_chip M.left) := by
+          (oneChip M.left) := by
     funext z
     rcases z with a | b
-    · simp only [MarkedGraphs.liftLeftDivisor_inl, one_chip]
+    · simp only [MarkedGraphs.liftLeftDivisor_inl, oneChip]
       by_cases h : a = M.left
       · subst a
         rw [if_pos rfl, if_pos rfl]
       · rw [if_neg (fun e => h (Sum.inl.inj e)), if_neg h]
-    · simp [one_chip]
+    · simp [oneChip]
   rw [hSource, bridgePushforward_liftLeftDivisor]
   funext z
   rcases z with a | b
-  · simp only [wedgeLiftLeftDivisor_left, one_chip]
+  · simp only [wedgeLiftLeftDivisor_left, oneChip]
     by_cases h : a = M.left
     · subst a
       rw [if_pos rfl, if_pos rfl]
     · rw [if_neg h, if_neg (fun e => h (Sum.inl.inj e))]
-  · simp [one_chip]
+  · simp [oneChip]
 
 /-- Contract the bridge between two marked factors. -/
 noncomputable def contractBridgeTransport (M N : MarkedGraph.{u}) :

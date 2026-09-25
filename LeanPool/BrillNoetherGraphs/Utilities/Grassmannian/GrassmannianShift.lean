@@ -30,13 +30,13 @@ noncomputable def shiftedGrassmannianPerm
 
 @[simp] theorem inv_set_shiftedGrassmannianPerm
     (lambda : YoungDiagram) (chi : ℤ) :
-    inv_set (shiftedGrassmannianPerm lambda chi) =
+    invSet (shiftedGrassmannianPerm lambda chi) =
       grassmannianInvSet lambda := by
   simp [shiftedGrassmannianPerm, inv_set_grassmannianPerm]
 
 theorem ncard_inv_set_shiftedGrassmannianPerm
     (lambda : YoungDiagram) (chi : ℤ) :
-    (inv_set (shiftedGrassmannianPerm lambda chi)).ncard = lambda.card := by
+    (invSet (shiftedGrassmannianPerm lambda chi)).ncard = lambda.card := by
   rw [inv_set_shiftedGrassmannianPerm]
   rw [← inv_set_grassmannianPerm]
   exact ncard_inv_set_grassmannianPerm lambda
@@ -47,7 +47,7 @@ inversion set of `lambda` is definitionally the canonical shifted constructor
 used in this library. -/
 theorem eq_shiftedGrassmannianPerm_of_inv_set_eq_of_chi_eq
     (tau : AspPerm) (lambda : YoungDiagram) (chi : ℤ)
-    (hInv : inv_set tau = grassmannianInvSet lambda)
+    (hInv : invSet tau = grassmannianInvSet lambda)
     (hChi : tau.χ = chi) :
     tau = shiftedGrassmannianPerm lambda chi := by
   apply AspPerm.eq_of_inv_set_eq_of_chi_eq
@@ -90,7 +90,7 @@ theorem transmissionExists_shiftedGrassmannianPerm_iff
 Grassmannian/once-marked dictionary.  The output shift changes the normalized
 degree of a transmission witness but not its existence problem. -/
 theorem transmissionExists_shiftedGrassmannianPerm_iff_onceMarkedBNExists_of_negativeEnvelope
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V)
     (lambda : YoungDiagram) (chi : ℤ)
     (hNegative : GrassmannianNegativeEnvelope lambda) :
     TransmissionExists G u v (shiftedGrassmannianPerm lambda chi) ↔
@@ -102,7 +102,7 @@ theorem transmissionExists_shiftedGrassmannianPerm_iff_onceMarkedBNExists_of_neg
 /-- Arbitrary output normalization of the unconditional Grassmannian/
 once-marked dictionary. -/
 theorem transmissionExists_shiftedGrassmannianPerm_iff_onceMarkedBNExists
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V)
     (lambda : YoungDiagram) (chi : ℤ) :
     TransmissionExists G u v (shiftedGrassmannianPerm lambda chi) ↔
       OnceMarkedBNExists G u lambda := by
@@ -115,9 +115,9 @@ set is the Ferrers set of `lambda` and whose shift is `chi` has exactly the
 once-marked transmission locus, even if it was not built with the canonical
 constructor. -/
 theorem transmissionExists_iff_onceMarkedBNExists_of_grassmannian_inv_set
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V)
     (tau : AspPerm) (lambda : YoungDiagram) (chi : ℤ)
-    (hInv : inv_set tau = grassmannianInvSet lambda)
+    (hInv : invSet tau = grassmannianInvSet lambda)
     (hChi : tau.χ = chi) :
     TransmissionExists G u v tau ↔ OnceMarkedBNExists G u lambda := by
   rw [eq_shiftedGrassmannianPerm_of_inv_set_eq_of_chi_eq

@@ -25,11 +25,11 @@ open Utilities
 private theorem nonprincipal_mark_difference_of_pointedRigid
     {G : CFGraph} {x u : G.V} (hRigid : PointedGenusOneRigid G x)
     (hu : u ≠ x) :
-    ¬ linear_equiv G (one_chip u - one_chip x) 0 := by
+    ¬ linearEquiv G (oneChip u - oneChip x) 0 := by
   intro h
   apply hRigid.nontrivial u hu
-  unfold linear_equiv at h ⊢
-  have hNeg := (principal_divisors G).neg_mem h
+  unfold linearEquiv at h ⊢
+  have hNeg := (principalDivisors G).neg_mem h
   convert hNeg using 1
   abel
 

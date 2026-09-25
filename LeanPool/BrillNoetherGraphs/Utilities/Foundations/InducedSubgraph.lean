@@ -128,7 +128,7 @@ private theorem filter_inducedEdges_endpoints (G : CFGraph.{u}) (S : Finset G.V)
 /-- Inducing on `S` preserves edge multiplicities between vertices of `S`. -/
 @[simp] theorem num_edges_inducedSubgraph (G : CFGraph.{u}) (S : Finset G.V)
     (hS : S.Nonempty) (x y : {v : G.V // v ∈ S}) :
-    num_edges (inducedSubgraph G S hS) x y = num_edges G x.val y.val := by
+    numEdges (inducedSubgraph G S hS) x y = numEdges G x.val y.val := by
   classical
   change
     ((Multiset.pmap (restrictInducedEdge G S) (inducedEdges G S)

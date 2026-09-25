@@ -39,7 +39,7 @@ def segValue (star : Fin p) (lo hi target : ℕ) : Fin p → ℕ → ℤ := fun 
 
 /-- The sub-interval reflection script. -/
 def segScript (spec : SubdivisionGraph.Spec n p) (star : Fin p)
-    (lo hi target : ℕ) : firing_script spec.graph :=
+    (lo hi target : ℕ) : firingScript spec.graph :=
   spec.slotValueScript (fun _ => 0) (segValue star lo hi target)
 
 /-- Unit-step slopes of the sub-interval reflection. -/
@@ -237,7 +237,7 @@ theorem prin_seg_int (hlo : lo < target) (hhi : target < hi)
 
 /-! ## Generic vertex and chip lemmas
 
-Elementary facts about subdivision vertices and `one_chip` evaluations,
+Elementary facts about subdivision vertices and `oneChip` evaluations,
 transplanted verbatim from the `Generic`/`Chips` sections of
 `Utilities/GenusFourCore100.lean` and `Utilities/GenusFourCore097.lean`
 so that the banana development does not depend on those genus-four case
@@ -298,7 +298,7 @@ variable (spec : SubdivisionGraph.Spec n p)
 
 theorem one_chip_pV_core (e : Fin p) (k : ℕ) (hk : k ≤ spec.length e)
     (v : Fin n) :
-    one_chip (G := spec.graph) (spec.pathVertex e ⟨k, by omega⟩)
+    oneChip (G := spec.graph) (spec.pathVertex e ⟨k, by omega⟩)
         (spec.coreVertex v) =
       (if k = 0 then (if spec.core.tail e = v then (1 : ℤ) else 0) else 0) +
         (if k = spec.length e then
@@ -309,7 +309,7 @@ theorem one_chip_pV_core (e : Fin p) (k : ℕ) (hk : k ≤ spec.length e)
       Fin.ext (by simpa using hzero)
     rw [hfin, spec.pathVertex_zero, if_pos hzero,
       if_neg (by omega : ¬ (k = spec.length e)), add_zero]
-    simp only [one_chip, SubdivisionGraph.Spec.coreVertex, Sum.inl.injEq]
+    simp only [oneChip, SubdivisionGraph.Spec.coreVertex, Sum.inl.injEq]
     by_cases hv : spec.core.tail e = v
     · rw [if_pos hv.symm, if_pos hv]
     · rw [if_neg (fun hh => hv hh.symm), if_neg hv]
@@ -317,19 +317,19 @@ theorem one_chip_pV_core (e : Fin p) (k : ℕ) (hk : k ≤ spec.length e)
     · have hfin : (⟨k, by omega⟩ : spec.PathPosition e) =
           ⟨spec.length e, by omega⟩ := Fin.ext (by simpa using hlast)
       rw [hfin, spec.pathVertex_length, if_neg hzero, zero_add, if_pos hlast]
-      simp only [one_chip, SubdivisionGraph.Spec.coreVertex, Sum.inl.injEq]
+      simp only [oneChip, SubdivisionGraph.Spec.coreVertex, Sum.inl.injEq]
       by_cases hv : spec.core.head e = v
       · rw [if_pos hv.symm, if_pos hv]
       · rw [if_neg (fun hh => hv hh.symm), if_neg hv]
     · rw [pathVertex_interior e k (by omega) (by omega), if_neg hzero,
         if_neg hlast]
-      simp only [one_chip]
+      simp only [oneChip]
       rw [if_neg (coreVertex_ne_interiorVertex spec v e _)]
       ring
 
 theorem one_chip_pV_int (e : Fin p) (k : ℕ) (hk : k ≤ spec.length e)
     (e' : Fin p) (off : Fin (spec.length e' - 1)) :
-    one_chip (G := spec.graph) (spec.pathVertex e ⟨k, by omega⟩)
+    oneChip (G := spec.graph) (spec.pathVertex e ⟨k, by omega⟩)
         (spec.interiorVertex e' off) =
       if e = e' then (if k = off.val + 1 then (1 : ℤ) else 0) else 0 := by
   have hpos := spec.length_pos e
@@ -338,7 +338,7 @@ theorem one_chip_pV_int (e : Fin p) (k : ℕ) (hk : k ≤ spec.length e)
   · have hfin : (⟨k, by omega⟩ : spec.PathPosition e) = ⟨0, by omega⟩ :=
       Fin.ext (by simpa using hzero)
     rw [hfin, spec.pathVertex_zero]
-    simp only [one_chip]
+    simp only [oneChip]
     rw [if_neg (fun hh =>
       (coreVertex_ne_interiorVertex spec (spec.core.tail e) e' off) hh.symm)]
     by_cases he : e = e'
@@ -348,7 +348,7 @@ theorem one_chip_pV_int (e : Fin p) (k : ℕ) (hk : k ≤ spec.length e)
     · have hfin : (⟨k, by omega⟩ : spec.PathPosition e) =
           ⟨spec.length e, by omega⟩ := Fin.ext (by simpa using hlast)
       rw [hfin, spec.pathVertex_length]
-      simp only [one_chip]
+      simp only [oneChip]
       rw [if_neg (fun hh =>
         (coreVertex_ne_interiorVertex spec (spec.core.head e) e' off) hh.symm)]
       by_cases he : e = e'
@@ -356,7 +356,7 @@ theorem one_chip_pV_int (e : Fin p) (k : ℕ) (hk : k ≤ spec.length e)
         rw [if_pos rfl, if_neg (by omega : ¬ (k = off.val + 1))]
       · rw [if_neg he]
     · rw [pathVertex_interior e k (by omega) (by omega)]
-      simp only [one_chip]
+      simp only [oneChip]
       by_cases he : e = e'
       · subst he
         rw [if_pos rfl]
@@ -375,7 +375,7 @@ theorem one_chip_pV_int (e : Fin p) (k : ℕ) (hk : k ≤ spec.length e)
         exact he hee.symm
 
 theorem one_chip_pos_core (e : Fin p) (pos : spec.PathPosition e) (v : Fin n) :
-    one_chip (G := spec.graph) (spec.pathVertex e pos) (spec.coreVertex v) =
+    oneChip (G := spec.graph) (spec.pathVertex e pos) (spec.coreVertex v) =
       (if pos.val = 0 then (if spec.core.tail e = v then (1 : ℤ) else 0)
         else 0) +
         (if pos.val = spec.length e then
@@ -388,7 +388,7 @@ theorem one_chip_pos_core (e : Fin p) (pos : spec.PathPosition e) (v : Fin n) :
 
 theorem one_chip_pos_int (e : Fin p) (pos : spec.PathPosition e) (e' : Fin p)
     (off : Fin (spec.length e' - 1)) :
-    one_chip (G := spec.graph) (spec.pathVertex e pos)
+    oneChip (G := spec.graph) (spec.pathVertex e pos)
         (spec.interiorVertex e' off) =
       if e = e' then (if pos.val = off.val + 1 then (1 : ℤ) else 0) else 0 := by
   have hlt := pos.isLt

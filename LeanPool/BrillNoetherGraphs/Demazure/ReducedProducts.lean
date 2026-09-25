@@ -24,12 +24,12 @@ namespace ReducedProducts
 /-- The part of $s_\alpha(a,\ell)$ coming from indices above $\ell$ whose
 preimages under $\beta$ lie below $b$. -/
 private noncomputable def star_hi_error (α β : AspPerm) (a b l : ℤ) : Finset ℤ :=
-  (α.se_finset a l).filter (fun n => β⁻¹ n < b)
+  (α.seFinset a l).filter (fun n => β⁻¹ n < b)
 
 /-- The part of $s_\beta(\ell,b)$ coming from indices below $\ell$ whose
 images under $\alpha$ lie above $a$. -/
 private noncomputable def star_lo_error (α β : AspPerm) (a b l : ℤ) : Finset ℤ :=
-  ((β⁻¹).nw_finset b l).filter (fun n => a ≤ α n)
+  ((β⁻¹).nwFinset b l).filter (fun n => a ≤ α n)
 
 @[simp] private lemma mem_star_hi_error (α β : AspPerm) (a b l n : ℤ) :
     n ∈ star_hi_error α β a b l ↔ l ≤ n ∧ α n < a ∧ β⁻¹ n < b := by
@@ -53,12 +53,12 @@ private lemma star_sum_eq_mul_add_errors (α β : AspPerm) (a b l : ℤ) :
         + (star_hi_error α β a b l).card
         + (star_lo_error α β a b l).card := by
   -- Proof written by Codex.
-  let A := α.se_finset a l
-  let B := (β⁻¹).nw_finset b l
-  let P := Finset.image β ((α * β).se_finset a b)
+  let A := α.seFinset a l
+  let B := (β⁻¹).nwFinset b l
+  let P := Finset.image β ((α * β).seFinset a b)
   let P_hi := A.filter (fun n => b ≤ β⁻¹ n)
   let P_lo := B.filter (fun n => α n < a)
-  have hβ_image : Finset.image β (β.se_finset l b) = B := by
+  have hβ_image : Finset.image β (β.seFinset l b) = B := by
     ext n
     simp only [Finset.mem_image, AspPerm.mem_se, AspPerm.mem_nw, ge_iff_le, B]
     constructor
@@ -70,8 +70,8 @@ private lemma star_sum_eq_mul_add_errors (α β : AspPerm) (a b l : ℤ) :
   have hβ_card : β.s l b = B.card := by
     rw [β.s_eq_se_card]
     have hcard :
-        (β.se_finset l b).card = B.card := calc
-      (β.se_finset l b).card = (Finset.image β (β.se_finset l b)).card := by
+        (β.seFinset l b).card = B.card := calc
+      (β.seFinset l b).card = (Finset.image β (β.seFinset l b)).card := by
         exact (Finset.card_image_of_injective _ β.injective).symm
       _ = B.card := by rw [hβ_image]
     exact_mod_cast hcard
@@ -176,16 +176,16 @@ private lemma star_le_mul_of_reducedProduct (α β : AspPerm)
   have hstrict : (α * β).s a b < (α.s ⋆ β.s) a b := by
     omega
   obtain ⟨l₀, hl₀⟩ := β.tend_zero_a b
-  have hse₀ : β.se_finset l₀ b = ∅ := by
+  have hse₀ : β.seFinset l₀ b = ∅ := by
     apply Finset.card_eq_zero.mp
-    have hcard : ((β.se_finset l₀ b).card : ℤ) = 0 := by
+    have hcard : ((β.seFinset l₀ b).card : ℤ) = 0 := by
       rwa [← β.s_eq_se_card]
     exact_mod_cast hcard
   have hlo₀ : star_lo_error α β a b l₀ = ∅ := by
     apply Finset.eq_empty_iff_forall_notMem.mpr
     intro m hm
     have hm' := (mem_star_lo_error α β a b l₀ m).mp hm
-    have hβm : β⁻¹ m ∈ β.se_finset l₀ b := by
+    have hβm : β⁻¹ m ∈ β.seFinset l₀ b := by
       simpa only [AspPerm.mem_se, ge_iff_le, AspPerm.mul_inv_cancel_eval] using
         ⟨hm'.2.1, hm'.1⟩
     rw [hse₀] at hβm
@@ -228,9 +228,9 @@ private lemma star_le_mul_of_reducedProduct (α β : AspPerm)
     intro hmn_eq
     subst m
     omega
-  have hαmn : ⟨m, n⟩ ∈ inv_set α :=
+  have hαmn : ⟨m, n⟩ ∈ invSet α :=
     ⟨hmn, lt_of_lt_of_le hn_data.2.1 hm'.2.2⟩
-  have hβmn : ⟨m, n⟩ ∈ inv_set (β⁻¹).func :=
+  have hβmn : ⟨m, n⟩ ∈ invSet (β⁻¹).func :=
     ⟨hmn, lt_of_lt_of_le hn_data.2.2 hm'.2.1⟩
   exact Set.disjoint_left.mp h_reduced hαmn hβmn
 
@@ -253,12 +253,12 @@ theorem star_eq_mul_iff_reducedProduct (α β : AspPerm) :
 $s_{\alpha\beta}(a,b)$ but omitted from the candidate
 $s_\alpha(a,\ell)-s_{\beta^{-1}}(b,\ell)$. -/
 private noncomputable def lres_lo_error (α β : AspPerm) (a b l : ℤ) : Finset ℤ :=
-  ((β⁻¹).nw_finset b l).filter (fun n => α n < a)
+  ((β⁻¹).nwFinset b l).filter (fun n => α n < a)
 
 /-- The left-residual error above the cutoff $\ell$: indices subtracted by
 $s_{\beta^{-1}}(b,\ell)$ but not counted by $s_\alpha(a,\ell)$. -/
 private noncomputable def lres_hi_error (α β : AspPerm) (a b l : ℤ) : Finset ℤ :=
-  ((β⁻¹).se_finset b l).filter (fun n => a ≤ α n)
+  ((β⁻¹).seFinset b l).filter (fun n => a ≤ α n)
 
 @[simp] private lemma mem_lres_lo_error (α β : AspPerm) (a b l n : ℤ) :
     n ∈ lres_lo_error α β a b l ↔ n < l ∧ b ≤ β⁻¹ n ∧ α n < a := by
@@ -282,9 +282,9 @@ private lemma lres_diff_eq_mul_sub_errors (α β : AspPerm) (a b l : ℤ) :
         - (lres_lo_error α β a b l).card
         - (lres_hi_error α β a b l).card := by
   -- Proof written by Codex.
-  let A := α.se_finset a l
-  let B := (β⁻¹).se_finset b l
-  let P := Finset.image β ((α * β).se_finset a b)
+  let A := α.seFinset a l
+  let B := (β⁻¹).seFinset b l
+  let P := Finset.image β ((α * β).seFinset a b)
   let P_hi := A.filter (fun n => b ≤ β⁻¹ n)
   let C := B.filter (fun n => α n < a)
   have hmul_card : (α * β).s a b = P.card := by
@@ -353,7 +353,7 @@ theorem lres_le_mul (α β : AspPerm) : α ◃ β ≤ α * β := by
   apply (AspPerm.s_le_iff (α ◃ β) (α * β)).mp
   rw [AspPerm.lres_spec]
   intro a b
-  let l := SlipFace.lres_wit α.s β.s a b
+  let l := SlipFace.leftResidualWitness α.s β.s a b
   have hcount := lres_diff_eq_mul_sub_errors α β a b l
   dsimp only [l] at hcount
   rw [SlipFace.lres_wit_spec, AspPerm.s_dual]
@@ -376,7 +376,7 @@ private lemma le_weak_L_of_mul_le_lres (α β : AspPerm)
   have hα_lt : α m < α n := lt_of_le_of_ne hα_le hα_ne
   let a := α n
   let b := β⁻¹ m
-  let l := SlipFace.lres_wit α.s β.s a b
+  let l := SlipFace.leftResidualWitness α.s β.s a b
   have hcount := lres_diff_eq_mul_sub_errors α β a b l
   have hlc :
       (α ◃ β).s a b = α.s a l - (β⁻¹).s b l := by
@@ -419,16 +419,16 @@ private lemma mul_le_lres_of_le_weak_L (α β : AspPerm)
     rw [← hcount]
     exact hcand'
   obtain ⟨l₀, hl₀⟩ := β.tend_zero_a b
-  have hse₀ : β.se_finset l₀ b = ∅ := by
+  have hse₀ : β.seFinset l₀ b = ∅ := by
     apply Finset.card_eq_zero.mp
-    have hcard : ((β.se_finset l₀ b).card : ℤ) = 0 := by
+    have hcard : ((β.seFinset l₀ b).card : ℤ) = 0 := by
       rwa [← β.s_eq_se_card]
     exact_mod_cast hcard
   have hlo₀ : lres_lo_error α β a b l₀ = ∅ := by
     apply Finset.eq_empty_iff_forall_notMem.mpr
     intro m hm
     have hm' := (mem_lres_lo_error α β a b l₀ m).mp hm
-    have hβm : β⁻¹ m ∈ β.se_finset l₀ b := by
+    have hβm : β⁻¹ m ∈ β.seFinset l₀ b := by
       simpa only [AspPerm.mem_se, ge_iff_le, AspPerm.mul_inv_cancel_eval] using
         ⟨hm'.2.1, hm'.1⟩
     rw [hse₀] at hβm
@@ -462,7 +462,7 @@ private lemma mul_le_lres_of_le_weak_L (α β : AspPerm)
         intro hmn_eq
         subst m
         omega
-      have hβmn : ⟨m, n⟩ ∈ inv_set (β⁻¹).func :=
+      have hβmn : ⟨m, n⟩ ∈ invSet (β⁻¹).func :=
         ⟨hmn, lt_of_lt_of_le hn_data.2.1 hm'.2.1⟩
       have hαmn := hweak hβmn
       have hα_bad : α n < α m := hαmn.2

@@ -19,12 +19,12 @@ namespace Utilities
 
 /-- The vertices of valence at least three. -/
 def topologicalVertices (G : CFGraph) : Finset G.V :=
-  Finset.univ.filter fun v => 3 ≤ vertex_degree G v
+  Finset.univ.filter fun v => 3 ≤ vertexDegree G v
 
 /-- Every vertex has valence at least two. This is the structural condition
 obtained after pruning grafted trees. -/
 def HasMinimumValenceTwo (G : CFGraph) : Prop :=
-  ∀ v : G.V, 2 ≤ vertex_degree G v
+  ∀ v : G.V, 2 ≤ vertexDegree G v
 
 /-- Connectivity across a singleton cut gives positive valence whenever the
 graph has a vertex distinct from each chosen vertex.  The genus-specific
@@ -32,10 +32,10 @@ leafless-normalization arguments supply the second-vertex hypothesis from
 their edge-count identities; keeping that argument separate makes this
 singleton-cut step reusable at every genus. -/
 theorem vertex_degree_pos_of_connected_of_exists_vertex_ne
-    {G : CFGraph} (hConnected : graph_connected G)
+    {G : CFGraph} (hConnected : graphConnected G)
     (hOther : ∀ vertex : G.V, ∃ other : G.V, other ≠ vertex)
     (vertex : G.V) :
-    0 < vertex_degree G vertex := by
+    0 < vertexDegree G vertex := by
   obtain ⟨other, hOther⟩ := hOther vertex
   have hSplit :
       ∃ inside outside : G.V,
@@ -45,7 +45,7 @@ theorem vertex_degree_pos_of_connected_of_exists_vertex_ne
     hConnected ({vertex} : Finset G.V) hSplit
   have hInsideEq : inside = vertex := by simpa using hInside
   subst inside
-  unfold vertex_degree
+  unfold vertexDegree
   apply Finset.sum_pos'
   · intro neighbor _hNeighbor
     positivity
@@ -56,9 +56,9 @@ theorem vertex_degree_pos_of_connected_of_exists_vertex_ne
 two.  This is the common first step before suppressing bivalent chains in a
 loop-aware normalizer. -/
 theorem hasMinimumValenceTwo_of_leafless_of_exists_vertex_ne
-    {G : CFGraph} (hConnected : graph_connected G)
+    {G : CFGraph} (hConnected : graphConnected G)
     (hOther : ∀ vertex : G.V, ∃ other : G.V, other ≠ vertex)
-    (hLeafless : ∀ vertex : G.V, vertex_degree G vertex ≠ 1) :
+    (hLeafless : ∀ vertex : G.V, vertexDegree G vertex ≠ 1) :
     HasMinimumValenceTwo G := by
   intro vertex
   have hPositive :=
@@ -68,11 +68,11 @@ theorem hasMinimumValenceTwo_of_leafless_of_exists_vertex_ne
 
 /-- Every vertex is bivalent or trivalent. -/
 def IsTopologicallyTrivalent (G : CFGraph) : Prop :=
-  ∀ v : G.V, vertex_degree G v = 2 ∨ vertex_degree G v = 3
+  ∀ v : G.V, vertexDegree G v = 2 ∨ vertexDegree G v = 3
 
 /-- The sum of the valence excesses over two is `2g - 2`. -/
 theorem sum_vertex_degree_sub_two (G : CFGraph) :
-    (∑ v : G.V, (vertex_degree G v - 2)) = 2 * genus G - 2 := by
+    (∑ v : G.V, (vertexDegree G v - 2)) = 2 * genus G - 2 := by
   rw [Finset.sum_sub_distrib, sum_vertex_degree_eq_twice_card_edges]
   simp only [Finset.sum_const, Finset.card_univ, Int.nsmul_eq_mul, genus]
   ring
@@ -84,12 +84,12 @@ theorem card_topologicalVertices_le
     ((topologicalVertices G).card : ℤ) ≤ 2 * genus G - 2 := by
   calc
     ((topologicalVertices G).card : ℤ) =
-        ∑ v : G.V, if 3 ≤ vertex_degree G v then (1 : ℤ) else 0 := by
+        ∑ v : G.V, if 3 ≤ vertexDegree G v then (1 : ℤ) else 0 := by
       simp [topologicalVertices]
-    _ ≤ ∑ v : G.V, (vertex_degree G v - 2) := by
+    _ ≤ ∑ v : G.V, (vertexDegree G v - 2) := by
       apply Finset.sum_le_sum
       intro v _
-      by_cases hTopological : 3 ≤ vertex_degree G v
+      by_cases hTopological : 3 ≤ vertexDegree G v
       · simp only [hTopological, ↓reduceIte]
         omega
       · simp only [hTopological, ↓reduceIte, Int.sub_nonneg]
@@ -103,9 +103,9 @@ theorem card_topologicalVertices_eq_of_topologicallyTrivalent
     ((topologicalVertices G).card : ℤ) = 2 * genus G - 2 := by
   calc
     ((topologicalVertices G).card : ℤ) =
-        ∑ v : G.V, if 3 ≤ vertex_degree G v then (1 : ℤ) else 0 := by
+        ∑ v : G.V, if 3 ≤ vertexDegree G v then (1 : ℤ) else 0 := by
       simp [topologicalVertices]
-    _ = ∑ v : G.V, (vertex_degree G v - 2) := by
+    _ = ∑ v : G.V, (vertexDegree G v - 2) := by
       apply Finset.sum_congr rfl
       intro v _
       rcases hTri v with hDegree | hDegree

@@ -24,7 +24,7 @@ theorem same_leftFactor_kGeneral_period_eq_two
     (hK : KGeneralTransmission
       (mark (vertexWedge G H x y) (Sum.inl x) (Sum.inl u)) k) :
     k = 2 := by
-  have hConn : _root_.graph_connected (vertexWedge G H x y) :=
+  have hConn : _root_.graphConnected (vertexWedge G H x y) :=
     graph_connected_vertexWedge G H x y hG.connected hH.connected
   have hPos : 0 < genus (vertexWedge G H x y) := by
     rw [genus_vertexWedge, hG.genus_one, hH.genus_one]
@@ -44,7 +44,7 @@ theorem same_rightFactor_kGeneral_period_eq_two
     (hK : KGeneralTransmission (mark (vertexWedge G H x y)
       (wedgeRightVertex G H x y y) (wedgeRightVertex G H x y p)) k) :
     k = 2 := by
-  have hConn : _root_.graph_connected (vertexWedge G H x y) :=
+  have hConn : _root_.graphConnected (vertexWedge G H x y) :=
     graph_connected_vertexWedge G H x y hG.connected hH.connected
   have hPos : 0 < genus (vertexWedge G H x y) := by
     rw [genus_vertexWedge, hG.genus_one, hH.genus_one]

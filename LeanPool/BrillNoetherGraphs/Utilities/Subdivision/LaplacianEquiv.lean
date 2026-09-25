@@ -30,7 +30,7 @@ structure LaplacianEquiv (G : CFGraph.{u}) (H : CFGraph.{v}) where
   toEquiv : G.V ≃ H.V
   num_edges_eq :
     ∀ x y : G.V,
-      num_edges H (toEquiv x) (toEquiv y) = num_edges G x y
+      numEdges H (toEquiv x) (toEquiv y) = numEdges G x y
 
 namespace LaplacianEquiv
 
@@ -48,8 +48,8 @@ def trans {K : CFGraph.{w}} (first : LaplacianEquiv G H)
   toEquiv := first.toEquiv.trans second.toEquiv
   num_edges_eq := by
     intro x y
-    change num_edges K (second.toEquiv (first.toEquiv x))
-      (second.toEquiv (first.toEquiv y)) = num_edges G x y
+    change numEdges K (second.toEquiv (first.toEquiv x))
+      (second.toEquiv (first.toEquiv y)) = numEdges G x y
     rw [second.num_edges_eq, first.num_edges_eq]
 
 /-- Reverse an adjacency-preserving vertex equivalence. -/
@@ -67,7 +67,7 @@ def mapDiv (equivalence : LaplacianEquiv G H) (D : CFDiv G) : CFDiv H :=
 
 /-- Transport a firing script forward along the vertex equivalence. -/
 def mapScript (equivalence : LaplacianEquiv G H)
-    (script : firing_script G) : firing_script H :=
+    (script : firingScript G) : firingScript H :=
   fun y => script (equivalence.toEquiv.symm y)
 
 @[simp] theorem mapDiv_apply (equivalence : LaplacianEquiv G H)
@@ -75,7 +75,7 @@ def mapScript (equivalence : LaplacianEquiv G H)
     equivalence.mapDiv D y = D (equivalence.toEquiv.symm y) := rfl
 
 @[simp] theorem mapScript_apply (equivalence : LaplacianEquiv G H)
-    (script : firing_script G) (y : H.V) :
+    (script : firingScript G) (y : H.V) :
     equivalence.mapScript script y =
       script (equivalence.toEquiv.symm y) := rfl
 
@@ -110,7 +110,7 @@ def mapScript (equivalence : LaplacianEquiv G H)
 
 @[simp] theorem mapDiv_one_chip (equivalence : LaplacianEquiv G H)
     (x : G.V) :
-    equivalence.mapDiv (one_chip x) = one_chip (equivalence x) := by
+    equivalence.mapDiv (oneChip x) = oneChip (equivalence x) := by
   funext y
   have hiff : equivalence.toEquiv.symm y = x ↔
       y = equivalence.toEquiv x := by
@@ -119,15 +119,15 @@ def mapScript (equivalence : LaplacianEquiv G H)
       rw [← equivalence.toEquiv.apply_symm_apply y, h]
     · intro h
       rw [h, equivalence.toEquiv.symm_apply_apply]
-  simp only [mapDiv, one_chip]
+  simp only [mapDiv, oneChip]
   by_cases h : equivalence.toEquiv.symm y = x
   · rw [if_pos h, if_pos (hiff.mp h)]
   · rw [if_neg h, if_neg (mt hiff.mpr h)]
 
 /-- Vertex valence is preserved by an adjacency-preserving equivalence. -/
 theorem vertex_degree_eq (equivalence : LaplacianEquiv G H) (x : G.V) :
-    vertex_degree H (equivalence x) = vertex_degree G x := by
-  unfold vertex_degree
+    vertexDegree H (equivalence x) = vertexDegree G x := by
+  unfold vertexDegree
   apply Fintype.sum_equiv equivalence.toEquiv.symm
   intro y
   simpa using congrArg (fun degree : ℕ => (degree : ℤ))
@@ -153,18 +153,18 @@ theorem effective_mapDiv_iff (equivalence : LaplacianEquiv G H)
 /-- The principal divisor of a transported firing script is the transported
 principal divisor. -/
 theorem mapDiv_prin (equivalence : LaplacianEquiv G H)
-    (script : firing_script G) :
+    (script : firingScript G) :
     equivalence.mapDiv (prin G script) =
       prin H (equivalence.mapScript script) := by
   funext y
   change
     (∑ x : G.V,
       (script x - script (equivalence.toEquiv.symm y)) *
-        (num_edges G (equivalence.toEquiv.symm y) x : ℤ)) =
+        (numEdges G (equivalence.toEquiv.symm y) x : ℤ)) =
     ∑ z : H.V,
       (script (equivalence.toEquiv.symm z) -
           script (equivalence.toEquiv.symm y)) *
-        (num_edges H y z : ℤ)
+        (numEdges H y z : ℤ)
   apply Fintype.sum_equiv equivalence.toEquiv
   intro x
   simp only [Equiv.symm_apply_apply]
@@ -174,9 +174,9 @@ theorem mapDiv_prin (equivalence : LaplacianEquiv G H)
 
 /-- Linear equivalence transports forward. -/
 theorem linearEquiv_mapDiv (equivalence : LaplacianEquiv G H)
-    {D E : CFDiv G} (h : linear_equiv G D E) :
-    linear_equiv H (equivalence.mapDiv D) (equivalence.mapDiv E) := by
-  unfold linear_equiv at h ⊢
+    {D E : CFDiv G} (h : linearEquiv G D E) :
+    linearEquiv H (equivalence.mapDiv D) (equivalence.mapDiv E) := by
+  unfold linearEquiv at h ⊢
   rw [principal_iff_eq_prin] at h ⊢
   obtain ⟨script, hscript⟩ := h
   refine ⟨equivalence.mapScript script, ?_⟩
@@ -185,8 +185,8 @@ theorem linearEquiv_mapDiv (equivalence : LaplacianEquiv G H)
 /-- Linear equivalence is unchanged by relabeling vertices. -/
 theorem linearEquiv_mapDiv_iff (equivalence : LaplacianEquiv G H)
     (D E : CFDiv G) :
-    linear_equiv H (equivalence.mapDiv D) (equivalence.mapDiv E) ↔
-      linear_equiv G D E := by
+    linearEquiv H (equivalence.mapDiv D) (equivalence.mapDiv E) ↔
+      linearEquiv G D E := by
   constructor
   · intro h
     have h' := equivalence.symm.linearEquiv_mapDiv h
@@ -216,7 +216,7 @@ theorem winnable_mapDiv_iff (equivalence : LaplacianEquiv G H)
 /-- Every rank lower-bound predicate is unchanged by relabeling vertices. -/
 theorem rank_geq_mapDiv_iff (equivalence : LaplacianEquiv G H)
     (D : CFDiv G) (k : ℤ) :
-    rank_geq H (equivalence.mapDiv D) k ↔ rank_geq G D k := by
+    rankGeq H (equivalence.mapDiv D) k ↔ rankGeq G D k := by
   constructor
   · intro h E hE
     have hMapped :
@@ -245,7 +245,7 @@ theorem rank_mapDiv_ge_iff (equivalence : LaplacianEquiv G H)
 /-- Graph connectivity is preserved by an adjacency-preserving vertex
 equivalence. -/
 theorem graphConnected (equivalence : LaplacianEquiv G H)
-    (hG : graph_connected G) : graph_connected H := by
+    (hG : graphConnected G) : graphConnected H := by
   classical
   intro S hS
   let pulled : Finset G.V :=
@@ -266,7 +266,7 @@ theorem graphConnected (equivalence : LaplacianEquiv G H)
 
 /-- Connectivity is unchanged by a Laplacian-preserving relabeling. -/
 theorem graphConnected_iff (equivalence : LaplacianEquiv G H) :
-    graph_connected G ↔ graph_connected H :=
+    _root_.graphConnected G ↔ _root_.graphConnected H :=
   ⟨equivalence.graphConnected, equivalence.symm.graphConnected⟩
 
 /-- Brill--Noether existence is unchanged by an adjacency-preserving vertex
@@ -315,8 +315,8 @@ def parallelPairEquiv : LaplacianEquiv parallelPair relabeledParallelPair where
   num_edges_eq := by decide
 
 theorem parallelPair_multiplicity_relabeling :
-    num_edges parallelPair (0 : PairVertex) (1 : PairVertex) = 2 ∧
-      num_edges relabeledParallelPair (parallelPairEquiv (0 : PairVertex))
+    numEdges parallelPair (0 : PairVertex) (1 : PairVertex) = 2 ∧
+      numEdges relabeledParallelPair (parallelPairEquiv (0 : PairVertex))
         (parallelPairEquiv (1 : PairVertex)) = 2 := by
   decide
 

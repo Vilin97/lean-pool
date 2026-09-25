@@ -63,8 +63,8 @@ theorem core_connected {g : ℕ} (B : Banana g) : B.core.Connected := by
     simpa [hTail, hHead] using hSides
 
 /-- Every positive-length banana graph is connected. -/
-theorem graph_connected {g : ℕ} (B : Banana g) :
-    _root_.graph_connected B.graph :=
+theorem graphConnected {g : ℕ} (B : Banana g) :
+    _root_.graphConnected B.graph :=
   B.graph_connected_of_coreConnected (core_connected B)
 
 /-- With at least two strands, the parallel-edge core has no one-edge cut. -/
@@ -133,14 +133,14 @@ theorem graph_twoEdgeCutCondition {g : ℕ} (hg : 1 ≤ g) (B : Banana g) :
 divisor classes. -/
 theorem not_linearEquiv_one_chip_sub {g : ℕ} (hg : 1 ≤ g) (B : Banana g)
     {p q : B.graph.V} (hpq : p ≠ q) :
-    ¬ linear_equiv B.graph (one_chip q - one_chip p) 0 :=
+    ¬ linearEquiv B.graph (oneChip q - oneChip p) 0 :=
   not_linear_equiv_one_chip_sub_of_twoEdgeCutCondition
-    (graph_connected B) (graph_twoEdgeCutCondition hg B) hpq
+    (graphConnected B) (graph_twoEdgeCutCondition hg B) hpq
 
 /-- Convenient orientation of degree-one rigidity for an ordered marked pair. -/
 theorem marks_not_linearEquiv {g : ℕ} (hg : 1 ≤ g) (B : Banana g)
     {u v : B.graph.V} (huv : u ≠ v) :
-    ¬ linear_equiv B.graph (one_chip u - one_chip v) 0 :=
+    ¬ linearEquiv B.graph (oneChip u - oneChip v) 0 :=
   not_linearEquiv_one_chip_sub hg B huv.symm
 
 /-- The subdivision model has the advertised genus. -/
@@ -154,13 +154,13 @@ multivalent endpoints, with coefficient `g - 1` at each endpoint.  The
 coefficient is an integer, so this also correctly covers the genus-zero
 single-strand case. -/
 theorem canonical_divisor_eq_endpoints {g : ℕ} (B : Banana g) :
-    canonical_divisor B.graph =
+    canonicalDivisor B.graph =
       ((g : ℤ) - 1) •
-        (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) := by
+        (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) := by
   classical
   funext vertex
   rcases vertex with coreVertex | interior
-  · change vertex_degree B.graph (B.coreVertex coreVertex) - 2 = _
+  · change vertexDegree B.graph (B.coreVertex coreVertex) - 2 = _
     rw [B.vertex_degree_coreVertex_eq_incidentSlots]
     have hIncident :
         (∑ edge : Fin (g + 1),
@@ -191,12 +191,12 @@ theorem canonical_divisor_eq_endpoints {g : ℕ} (B : Banana g) :
         _ = (g : ℤ) + 1 := by simp
     rw [hIncident]
     fin_cases coreVertex <;>
-      simp [leftEndpoint, rightEndpoint, one_chip,
+      simp [leftEndpoint, rightEndpoint, oneChip,
         SubdivisionGraph.Spec.coreVertex] <;> ring
-  · change vertex_degree B.graph
+  · change vertexDegree B.graph
         (B.interiorVertex interior.1 interior.2) - 2 = _
     rw [B.vertex_degree_interiorVertex_eq_two]
-    simp [leftEndpoint, rightEndpoint, one_chip,
+    simp [leftEndpoint, rightEndpoint, oneChip,
       SubdivisionGraph.Spec.coreVertex]
 
 end Bananas

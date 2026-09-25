@@ -109,7 +109,7 @@ across a coarse step, corrected by the signed rounding cost of its chips, lies
 between `N` times (first fine slope minus the left count) and `N` times (last
 fine slope plus the right count). -/
 theorem step_bounds {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (D₀ : CFDiv spec.graph)
-    (σ : firing_script (spec.scale N hN).graph)
+    (σ : firingScript (spec.scale N hN).graph)
     (hσ : effective (spec.embed N hN D₀ + spec.fineChips N hN chips +
       prin (spec.scale N hN).graph σ))
     (step : spec.Step) :
@@ -188,10 +188,10 @@ theorem step_bounds {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (D₀
         (((spec.stepChips N chips (⟨e, k⟩ : spec.Step)).filter
           (fun i => (chips i).offset = t)).card : ℤ) := by
       have hone : ∀ i : ι,
-          one_chip (G := (spec.scale N hN).graph) ((chips i).fineVertex hN) v
+          oneChip (G := (spec.scale N hN).graph) ((chips i).fineVertex hN) v
           = (if (chips i).fineVertex hN = v then (1 : ℤ) else 0) := by
         intro i
-        simp only [one_chip]
+        simp only [oneChip]
         by_cases h : (chips i).fineVertex hN = v
         · rw [if_pos h.symm, if_pos h]
         · rw [if_neg (fun hh => h hh.symm), if_neg h]
@@ -262,7 +262,7 @@ theorem step_bounds {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (D₀
 the rounded script is bounded by the corresponding fine endpoint slopes and
 chip counts. -/
 theorem roundedSlope_bounds {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (D₀ : CFDiv spec.graph)
-    (σ : firing_script (spec.scale N hN).graph)
+    (σ : firingScript (spec.scale N hN).graph)
     (hσ : effective (spec.embed N hN D₀ + spec.fineChips N hN chips +
       prin (spec.scale N hN).graph σ))
     (κ : Fin N)

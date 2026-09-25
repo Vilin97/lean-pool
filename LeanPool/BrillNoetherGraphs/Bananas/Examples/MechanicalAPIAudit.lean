@@ -66,7 +66,7 @@ theorem evenlyMarkedTheta_affine_existence_audit
       (kInversions k τ).Finite := by
   let M := mark B.graph (strandVertex B α i) (strandVertex B β j)
   exact exists_affine_transmission_of_allSubmodular
-    (graph_connected B) hk (by
+    (graphConnected B) hk (by
       simpa [M] using evenlyMarkedTheta_allSubmodular B α β i j hEven) D
 
 /-! ## Cross one-off: what the generic APIs actually yield -/
@@ -88,7 +88,7 @@ theorem cross_oneOff_affine_existence_audit
       IsKAffine k τ ∧
       (kInversions k τ).Finite := by
   exact exists_affine_transmission_of_allSubmodular
-    (graph_connected B) hk hsub E
+    (graphConnected B) hk hsub E
 
 /-! This is the exact missing strengthening for the both-off target
 (`cor-bothOffMax`, Corollary 4.31): the current API supplies the preceding

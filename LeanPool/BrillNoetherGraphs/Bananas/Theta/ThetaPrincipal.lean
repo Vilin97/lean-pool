@@ -17,27 +17,27 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 
 /-! Firing-script values and slopes in the normalized strand coordinates. -/
 def normalizedPathValue
-    (B : Banana 2) (script : firing_script B.graph)
+    (B : Banana 2) (script : firingScript B.graph)
     (α : Fin 3) (r : ℕ) : ℤ :=
   if hr : r ≤ B.length α then
     script (strandVertex B α ⟨r, by omega⟩)
   else 0
 
 def normalizedStepSlope
-    (B : Banana 2) (script : firing_script B.graph)
+    (B : Banana 2) (script : firingScript B.graph)
     (α : Fin 3) (k : ℕ) : ℤ :=
   normalizedPathValue B script α (k + 1) -
     normalizedPathValue B script α k
 
 theorem normalizedPathValue_eq
-    (B : Banana 2) (script : firing_script B.graph)
+    (B : Banana 2) (script : firingScript B.graph)
     (α : Fin 3) (r : ℕ) (hr : r ≤ B.length α) :
     normalizedPathValue B script α r =
       script (strandVertex B α ⟨r, by omega⟩) := by
   simp [normalizedPathValue, hr]
 
 theorem normalizedStepSlope_eq
-    (B : Banana 2) (script : firing_script B.graph)
+    (B : Banana 2) (script : firingScript B.graph)
     (α : Fin 3) (k : ℕ) (hk : k < B.length α) :
     normalizedStepSlope B script α k =
       script (strandVertex B α ⟨k + 1, by omega⟩) -
@@ -48,7 +48,7 @@ theorem normalizedStepSlope_eq
 
 /- TeX label: `prop-JacBanana` (telescoping normalized slopes). -/
 theorem sum_normalizedStepSlope
-    (B : Banana 2) (script : firing_script B.graph) (α : Fin 3) :
+    (B : Banana 2) (script : firingScript B.graph) (α : Fin 3) :
     ∑ k ∈ Finset.range (B.length α),
         normalizedStepSlope B script α k =
       script (rightEndpoint B) - script (leftEndpoint B) := by
@@ -63,7 +63,7 @@ theorem sum_normalizedStepSlope
 `0` to core vertex `1`.  Thus a reversed stored edge needs both a sign and an
 index reversal. -/
 def storageStepSlope
-    (B : Banana 2) (script : firing_script B.graph)
+    (B : Banana 2) (script : firingScript B.graph)
     (α : Fin 3) (k : ℕ) : ℤ :=
   if B.core.tail α = 0 then
     normalizedStepSlope B script α k
@@ -72,7 +72,7 @@ def storageStepSlope
 
 /- TeX label: `prop-JacBanana` (orientation-normalized slope datum). -/
 theorem storageStepSlope_isStepSlope
-    (B : Banana 2) (script : firing_script B.graph) :
+    (B : Banana 2) (script : firingScript B.graph) :
     B.IsStepSlope script (storageStepSlope B script) := by
   intro α o
   by_cases ht : B.core.tail α = 0
@@ -129,7 +129,7 @@ theorem storageStepSlope_isStepSlope
 /- TeX label: `prop-JacBanana` (principal divisor at normalized interior
 vertices). -/
 theorem prin_normalized_interior
-    (B : Banana 2) (script : firing_script B.graph)
+    (B : Banana 2) (script : firingScript B.graph)
     (α : Fin 3) (r : Fin (B.length α - 1)) :
     prin B.graph script
         (strandVertex B α ⟨r.val + 1, by omega⟩) =
@@ -183,7 +183,7 @@ theorem prin_normalized_interior
 
 /- TeX label: `prop-JacBanana` (interior moment of a principal divisor). -/
 theorem interiorMoment_prin
-    (B : Banana 2) (script : firing_script B.graph) (α : Fin 3) :
+    (B : Banana 2) (script : firingScript B.graph) (α : Fin 3) :
     interiorMoment B α (prin B.graph script) =
       (B.length α : ℤ) *
           normalizedStepSlope B script α (B.length α - 1) -
@@ -214,7 +214,7 @@ theorem interiorMoment_prin
 
 /- TeX label: `prop-JacBanana` (right endpoint principal coefficient). -/
 theorem prin_rightEndpoint_eq
-    (B : Banana 2) (script : firing_script B.graph) :
+    (B : Banana 2) (script : firingScript B.graph) :
     prin B.graph script (rightEndpoint B) =
       -∑ α : Fin 3,
         normalizedStepSlope B script α (B.length α - 1) := by
@@ -253,7 +253,7 @@ theorem prin_rightEndpoint_eq
 
 /- TeX label: `prop-JacBanana` (principal divisor maps to the theta lattice). -/
 theorem thetaJacobianMoment_prin_mem
-    (B : Banana 2) (script : firing_script B.graph) :
+    (B : Banana 2) (script : firingScript B.graph) :
     thetaJacobianMoment B (prin B.graph script) ∈
       thetaLattice (B.length 0) (B.length 1) (B.length 2) := by
   unfold thetaJacobianMoment

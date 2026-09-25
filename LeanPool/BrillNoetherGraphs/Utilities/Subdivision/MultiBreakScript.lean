@@ -103,13 +103,13 @@ chip at `q` proves that `D` reaches `q`. Row-independent generalization of
 the `reaches_of_script` helper otherwise restated for each direct
 genus-four row (e.g. `GenusFourCore100.reaches_of_script`). -/
 theorem reaches_of_script (D : CFDiv spec.graph)
-    (script : firing_script spec.graph) (q : spec.graph.V)
+    (script : firingScript spec.graph) (q : spec.graph.V)
     (hEffective : effective (D + prin spec.graph script))
     (hChip : 1 ≤ (D + prin spec.graph script) q) :
     Certificate.StrongSeparator.Reaches spec.graph D q := by
   refine Certificate.StrongSeparator.reaches_of_effective_representative
     ?_ hEffective hChip
-  unfold linear_equiv
+  unfold linearEquiv
   rw [principal_iff_eq_prin]
   exact ⟨script, by abel⟩
 

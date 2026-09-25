@@ -39,7 +39,7 @@ theorem IsKAffine.not_period_of_forced_rows
 theorem transmission_value_of_rankDelta_eq_one
     {M : TwiceMarked} {D : CFDiv M.graph} {τ : ℤ → ℤ}
     (hτ : IsTransmissionPermutation M D τ) {a b : ℤ}
-    (hDelta : rankDelta M (D + a • one_chip M.u - b • one_chip M.v) = 1) :
+    (hDelta : rankDelta M (D + a • oneChip M.u - b • oneChip M.v) = 1) :
     τ b = a := by
   have hValue := hτ.2 a b
   rw [hDelta] at hValue
@@ -50,7 +50,7 @@ forced transmission row. -/
 theorem transmission_value_of_linearEquiv_rankDelta_eq_one
     {M : TwiceMarked} {D E : CFDiv M.graph} {τ : ℤ → ℤ}
     (hτ : IsTransmissionPermutation M D τ) {a b : ℤ}
-    (hDE : linear_equiv M.graph (D + a • one_chip M.u - b • one_chip M.v) E)
+    (hDE : linearEquiv M.graph (D + a • oneChip M.u - b • oneChip M.v) E)
     (hDelta : rankDelta M E = 1) :
     τ b = a := by
   apply transmission_value_of_rankDelta_eq_one hτ
@@ -74,12 +74,12 @@ theorem transmission_crossOneOff_positive_residue
       (mark B.graph
         (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩)
         (strandVertex B β ⟨B.length β - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) τ) :
+      (g • oneChip (rightEndpoint B)) τ) :
     τ (b : ℤ) = (g + 2 * m + 2 - b : ℕ) := by
   let M := mark B.graph
     (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩)
     (strandVertex B β ⟨B.length β - 1, by omega⟩)
-  let D : CFDiv B.graph := g • one_chip (rightEndpoint B)
+  let D : CFDiv B.graph := g • oneChip (rightEndpoint B)
   let p : B.PathPosition α := ⟨g + 2 * m + 2 - b, by omega⟩
   let q : B.PathPosition β := ⟨r, by omega⟩
   have hFiring := crossOneOff_firing_positive_residue B α β b m r hb hrLo hrHi
@@ -87,13 +87,13 @@ theorem transmission_crossOneOff_positive_residue
   have hDelta := rankDelta_crossOneOff_two_interior_eq_one B α β p q c hg hαβ
     (by simpa [p] using hpLo) (by simpa [p] using hpHi)
     (by simpa [q] using hrLo) (by simpa [q] using hrHi) hc
-  have hE : linear_equiv B.graph
+  have hE : linearEquiv B.graph
       (D + ((g + 2 * m + 2 - b : ℕ) : ℤ) •
-          one_chip (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩) -
+          oneChip (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩) -
         (b : ℤ) •
-          one_chip (strandVertex B β ⟨B.length β - 1, by omega⟩))
-      ((c : ℤ) • (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) +
-        one_chip (strandVertex B α p) + one_chip (strandVertex B β q)) := by
+          oneChip (strandVertex B β ⟨B.length β - 1, by omega⟩))
+      ((c : ℤ) • (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) +
+        oneChip (strandVertex B α p) + oneChip (strandVertex B β q)) := by
     have hcEqZ : (c : ℤ) = (g : ℤ) + (m : ℤ) - (b : ℤ) := by
       exact_mod_cast hcEq
     rw [hcEqZ]
@@ -114,23 +114,23 @@ theorem transmission_crossOneOff_multiple
       (mark B.graph
         (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩)
         (strandVertex B β ⟨B.length β - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) τ) :
+      (g • oneChip (rightEndpoint B)) τ) :
     τ (b : ℤ) = (m + 1 : ℕ) := by
   let M := mark B.graph
     (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩)
     (strandVertex B β ⟨B.length β - 1, by omega⟩)
-  let D : CFDiv B.graph := g • one_chip (rightEndpoint B)
+  let D : CFDiv B.graph := g • oneChip (rightEndpoint B)
   let p : B.PathPosition α := ⟨m + 1, by omega⟩
   have hFiring := crossOneOff_firing_multiple B α β b m hb (by omega)
   have hDelta := rankDelta_crossOneOff_multiple_normalForm_eq_one B α β p c
     hg hαβ (by simpa [p] using hm) (by simpa [p] using ha)
     hβLength hc
-  have hE : linear_equiv B.graph
+  have hE : linearEquiv B.graph
       (D + ((m + 1 : ℕ) : ℤ) •
-          one_chip (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩) -
+          oneChip (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩) -
         (b : ℤ) •
-          one_chip (strandVertex B β ⟨B.length β - 1, by omega⟩))
-      ((c : ℤ) • one_chip (rightEndpoint B) + one_chip (strandVertex B α p)) := by
+          oneChip (strandVertex B β ⟨B.length β - 1, by omega⟩))
+      ((c : ℤ) • oneChip (rightEndpoint B) + oneChip (strandVertex B α p)) := by
     have hcEqZ : (c : ℤ) = (g : ℤ) + (m : ℤ) - (b : ℤ) := by
       exact_mod_cast hcEq
     rw [hcEqZ]
@@ -153,26 +153,26 @@ theorem transmission_crossOneOff_complement_residue
       (mark B.graph
         (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩)
         (strandVertex B β ⟨B.length β - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) τ) :
+      (g • oneChip (rightEndpoint B)) τ) :
     τ (b : ℤ) = (g + m : ℕ) := by
   let M := mark B.graph
     (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩)
     (strandVertex B β ⟨B.length β - 1, by omega⟩)
-  let D : CFDiv B.graph := g • one_chip (rightEndpoint B)
+  let D : CFDiv B.graph := g • oneChip (rightEndpoint B)
   let p : B.PathPosition α := ⟨g + m, by omega⟩
   let q : B.PathPosition β := ⟨B.length β - 1, by omega⟩
   have hFiring := crossOneOff_firing_complement_residue B α β b m hm hb (by omega)
   have hDelta := rankDelta_crossOneOff_complement_normalForm_eq_one B α β p c
     hg hαβ (by simpa [p] using (show 2 ≤ g + m by omega))
     (by simpa [p] using ha) hβLength hc
-  have hE : linear_equiv B.graph
+  have hE : linearEquiv B.graph
       (D + ((g + m : ℕ) : ℤ) •
-          one_chip (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩) -
+          oneChip (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩) -
         (b : ℤ) •
-          one_chip (strandVertex B β ⟨B.length β - 1, by omega⟩))
-      (((g : ℤ) - 1) • one_chip (leftEndpoint B) +
-        (c : ℤ) • one_chip (rightEndpoint B) +
-        one_chip (strandVertex B α p) + one_chip (strandVertex B β q)) := by
+          oneChip (strandVertex B β ⟨B.length β - 1, by omega⟩))
+      (((g : ℤ) - 1) • oneChip (leftEndpoint B) +
+        (c : ℤ) • oneChip (rightEndpoint B) +
+        oneChip (strandVertex B α p) + oneChip (strandVertex B β q)) := by
     have hcEqZ : (c : ℤ) = (g : ℤ) - (m : ℤ) * ((B.length β : ℤ) - 1) := by
       rw [hcEq, Nat.cast_sub hcm, Nat.cast_mul,
         Nat.cast_sub (by omega : 1 ≤ B.length β)]

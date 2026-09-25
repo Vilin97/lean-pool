@@ -29,16 +29,16 @@ variable {n p : ℕ} {spec : SubdivisionGraph.Spec n p}
 def endpointDivisors (data : Data spec) : CFDiv spec.graph :=
   ∑ edge : Fin p,
     data.slope edge •
-      (one_chip (G := spec.graph)
+      (oneChip (G := spec.graph)
           (spec.pathVertex edge (data.startPosition edge)) -
-        one_chip (G := spec.graph)
+        oneChip (G := spec.graph)
           (spec.pathVertex edge (data.stopPosition edge)))
 
 /-- Adding the signed endpoint divisor of a compatible window profile is a
 linear equivalence. -/
 theorem linearEquiv_add_endpointDivisors (data : Data spec)
     (D : CFDiv spec.graph) :
-    linear_equiv spec.graph D (D + data.endpointDivisors) := by
+    linearEquiv spec.graph D (D + data.endpointDivisors) := by
   rw [endpointDivisors, ← data.prin_script_eq_endpointDivisors]
   exact StrongSeparator.linearEquiv_add_prin D data.script
 
@@ -59,10 +59,10 @@ theorem winnable_add_endpointDivisors_iff (data : Data spec)
 effective divisor, then the original divisor reaches that vertex. -/
 theorem reaches_of_effective_endpointDivisors
     (data : Data spec) {D : CFDiv spec.graph} {v : spec.Vertex}
-    (hEffective : effective (D - one_chip v + data.endpointDivisors)) :
+    (hEffective : effective (D - oneChip v + data.endpointDivisors)) :
     StrongSeparator.Reaches spec.graph D v := by
   unfold StrongSeparator.Reaches winnable
-  refine ⟨D - one_chip v + data.endpointDivisors, hEffective, ?_⟩
-  exact data.linearEquiv_add_endpointDivisors (D - one_chip v)
+  refine ⟨D - oneChip v + data.endpointDivisors, hEffective, ?_⟩
+  exact data.linearEquiv_add_endpointDivisors (D - oneChip v)
 
 end Utilities.Certificate.WindowProfile.Data

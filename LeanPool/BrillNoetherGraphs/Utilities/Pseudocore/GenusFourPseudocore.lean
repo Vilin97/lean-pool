@@ -69,7 +69,7 @@ def MatrixWellFormed : Prop :=
     core.multiplicity first second = core.multiplicity second first
 
 /-- Connectedness of the nonloop support, in the same cut form used by
-`graph_connected`.  Semantic loops do not cross cuts. -/
+`graphConnected`.  Semantic loops do not cross cuts. -/
 def Connected : Prop :=
   ∀ S : Finset (Fin n),
     (∃ inside outside : Fin n, inside ∈ S ∧ outside ∉ S) →

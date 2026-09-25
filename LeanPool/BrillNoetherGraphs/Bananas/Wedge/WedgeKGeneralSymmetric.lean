@@ -33,12 +33,12 @@ private theorem torsionOrder_gt_one_of_pointedGenusOneRigid_ne
   subst a
   apply hG.nontrivial u hu
   have hWitness := hA.1
-  change 0 < 1 ∧ linear_equiv G
-    ((1 : ℤ) • (one_chip u - one_chip x)) 0 at hWitness
-  have h : linear_equiv G (one_chip u - one_chip x) 0 := by
+  change 0 < 1 ∧ linearEquiv G
+    ((1 : ℤ) • (oneChip u - oneChip x)) 0 at hWitness
+  have h : linearEquiv G (oneChip u - oneChip x) 0 := by
     simpa using hWitness.2
-  unfold linear_equiv at h ⊢
-  have hNeg := (principal_divisors G).neg_mem h
+  unfold linearEquiv at h ⊢
+  have hNeg := (principalDivisors G).neg_mem h
   convert hNeg using 1
   abel
 
@@ -60,9 +60,9 @@ theorem factor_torsionOrders_eq_of_vertexWedge_opposite_kGeneral_symmetric
     (hA : IsTorsionOrder (mark G u x) a)
     (hB : IsTorsionOrder (mark H y v) b)
     (hWCut : TwoEdgeCutCondition (vertexWedge G H x y))
-    (hWRigid : ¬ linear_equiv (vertexWedge G H x y)
-      (one_chip (Sum.inl u) + one_chip (wedgeRightVertex G H x y v))
-      (canonical_divisor (vertexWedge G H x y)))
+    (hWRigid : ¬ linearEquiv (vertexWedge G H x y)
+      (oneChip (Sum.inl u) + oneChip (wedgeRightVertex G H x y v))
+      (canonicalDivisor (vertexWedge G H x y)))
     (hK : KGeneralTransmission
       (mark (vertexWedge G H x y) (Sum.inl u)
         (wedgeRightVertex G H x y v)) k) :
@@ -82,7 +82,7 @@ theorem factor_torsionOrders_eq_of_vertexWedge_opposite_kGeneral_symmetric
     let V : W.V := wedgeRightVertex G H x y v
     let U' : W'.V := Sum.inl v
     let V' : W'.V := wedgeRightVertex H G y x u
-    let phi : CFGraphIso W W' := vertexWedge_comm G H x y
+    let phi : CFGraphIso W W' := vertexWedgeComm G H x y
     have hPhiU : phi.vertexEquiv U = V' := by rfl
     have hPhiV : phi.vertexEquiv V = U' := by
       exact vertexWedge_comm_apply_right G H x y v
@@ -92,16 +92,16 @@ theorem factor_torsionOrders_eq_of_vertexWedge_opposite_kGeneral_symmetric
       exact (kGeneralTransmission_map_of_marks_iff phi hPhiV hPhiU k).mpr hSwap
     have hCutSwap : TwoEdgeCutCondition W' :=
       (phi.twoEdgeCutCondition_map_iff).mpr (by simpa [W] using hWCut)
-    have hConn : _root_.graph_connected W :=
+    have hConn : _root_.graphConnected W :=
       graph_connected_vertexWedge G H x y hG.connected hH.connected
     have hGenus : genus W = 2 := by
       dsimp [W]
       rw [genus_vertexWedge, hG.genus_one, hH.genus_one]
       norm_num
-    have hRigidSwap : ¬ linear_equiv W'
-        (one_chip U' + one_chip V') (canonical_divisor W') := by
+    have hRigidSwap : ¬ linearEquiv W'
+        (oneChip U' + oneChip V') (canonicalDivisor W') := by
       intro hCanon
-      have hRank' : rank W' (one_chip U' + one_chip V') = 1 := by
+      have hRank' : rank W' (oneChip U' + oneChip V') = 1 := by
         rw [rank_eq_of_linear_equiv W' hCanon]
         exact rank_canonical_eq_one_of_genus_two
           (by
@@ -110,16 +110,16 @@ theorem factor_torsionOrders_eq_of_vertexWedge_opposite_kGeneral_symmetric
               dsimp [W']
               rw [genus_vertexWedge, hH.genus_one, hG.genus_one]
               norm_num)
-      have hMap : phi.mapDiv (one_chip U + one_chip V) =
-          one_chip U' + one_chip V' := by
+      have hMap : phi.mapDiv (oneChip U + oneChip V) =
+          oneChip U' + oneChip V' := by
         rw [map_add, phi.mapDiv_one_chip, phi.mapDiv_one_chip, hPhiU, hPhiV]
         abel
-      have hRank : rank W (one_chip U + one_chip V) = 1 := by
-        have := phi.rank_mapDiv (one_chip U + one_chip V)
+      have hRank : rank W (oneChip U + oneChip V) = 1 := by
+        have := phi.rank_mapDiv (oneChip U + oneChip V)
         rw [hMap, hRank'] at this
         exact this.symm
       apply hWRigid
-      change linear_equiv W (one_chip U + one_chip V) (canonical_divisor W)
+      change linearEquiv W (oneChip U + oneChip V) (canonicalDivisor W)
       exact linearEquiv_canonical_of_rank_eq_one_degree_two_genus_two
         hConn hGenus _ (by simp) hRank
     have hAswap : IsTorsionOrder (mark G x u) a :=

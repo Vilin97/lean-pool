@@ -30,7 +30,7 @@ into the corresponding Weierstrass-size bound.  Keeping this divisor algebra
 at an abstract graph prevents concrete wedge vertex types from unfolding
 during elaboration. -/
 theorem weierstrassSize_le_genus_of_sci_le
-    {G : CFGraph} (u v : G.V) (hG : _root_.graph_connected G)
+    {G : CFGraph} (u v : G.V) (hG : _root_.graphConnected G)
     (D : CFDiv G) (tau : ℤ → ℤ)
     (hTau : IsTransmissionPermutation (mark G u v) D tau)
     (hSci : (sci tau : ℤ) ≤ genus G) :
@@ -48,8 +48,8 @@ Brill--Noether hypothesis itself concerns only the gluing vertex `x`.
 -/
 theorem onceMarkedBrillNoetherGeneral_vertexWedge_of_kGeneralTransmission
     (G H : CFGraph) (u x : G.V) (y v : H.V)
-    (hGconn : _root_.graph_connected G)
-    (hHconn : _root_.graph_connected H)
+    (hGconn : _root_.graphConnected G)
+    (hHconn : _root_.graphConnected H)
     (hGsub : AllSubmodular (mark G u x))
     (hGgeneral : OnceMarkedBrillNoetherGeneral G x)
     {k : ℕ} (hK : KGeneralTransmission (mark H y v) k)
@@ -59,13 +59,13 @@ theorem onceMarkedBrillNoetherGeneral_vertexWedge_of_kGeneralTransmission
   classical
   let W := vertexWedge G H x y
   let wv : W.V := wedgeRightVertex G H x y v
-  have hWconn : _root_.graph_connected W :=
+  have hWconn : _root_.graphConnected W :=
     graph_connected_vertexWedge G H x y hGconn hHconn
   intro lambda hCensus
   let Q : CFDiv W := Classical.choose hCensus
   have hRows : ∀ i : ℕ,
       rank W (Q + ((i : ℤ) + genus W - deg Q -
-        (onceMarkedPart lambda i : ℤ)) • one_chip wv) ≥ (i : ℤ) :=
+        (onceMarkedPart lambda i : ℤ)) • oneChip wv) ≥ (i : ℤ) :=
     Classical.choose_spec hCensus
   let D : CFDiv G := wedgeRestrictLeftDivisor G H x y Q
   let E : CFDiv H := wedgeRestrictRightDivisor G H x y Q
@@ -131,7 +131,7 @@ this is equivalent to the paper's specialization of Theorem 6.6 to a
 one-vertex first graph, without choosing a separate model of that graph. -/
 theorem onceMarkedBrillNoetherGeneral_of_kGeneralTransmission
     {G : CFGraph} (u v : G.V)
-    (hGconn : _root_.graph_connected G)
+    (hGconn : _root_.graphConnected G)
     {k : ℕ} (hK : KGeneralTransmission (mark G u v) k)
     (hbudget : genus G < (k : ℤ)) :
     OnceMarkedBrillNoetherGeneral G v := by
@@ -140,7 +140,7 @@ theorem onceMarkedBrillNoetherGeneral_of_kGeneralTransmission
   let D : CFDiv G := Classical.choose hCensus
   have hRows : ∀ i : ℕ,
       rank G (D + ((i : ℤ) + genus G - deg D -
-        (onceMarkedPart lambda i : ℤ)) • one_chip v) ≥ (i : ℤ) :=
+        (onceMarkedPart lambda i : ℤ)) • oneChip v) ≥ (i : ℤ) :=
     Classical.choose_spec hCensus
   obtain ⟨tau, hTau, hAffine, hCount⟩ :=
     hK.exists_affine_transmission D

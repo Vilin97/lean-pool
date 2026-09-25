@@ -89,7 +89,7 @@ theorem corrected_banana_kGeneral_iff_of_torsionDichotomy
         simpa [u, v, huvEq] using hK
       have hNeg : ∃ D : CFDiv B.graph,
           rankDelta (mark B.graph u u) D < 0 :=
-        ⟨one_chip u, rankDelta_one_chip_self_lt_zero (by omega) B u⟩
+        ⟨oneChip u, rankDelta_one_chip_self_lt_zero (by omega) B u⟩
       exact (not_kGeneralTransmission_of_negative_rankDelta
         (mark B.graph u u) k hNeg) hK'
     have hTO : IsTorsionOrder (mark B.graph u v) k :=

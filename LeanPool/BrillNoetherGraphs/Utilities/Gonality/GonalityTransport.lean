@@ -66,7 +66,7 @@ theorem rank_ge_of_add_effective {G : CFGraph} {D E : CFDiv G} (hE : effective E
     have := hE v
     simp only [Pi.add_apply]
     omega
-  · show (A + E) - (D + E - F) ∈ principal_divisors G
+  · show (A + E) - (D + E - F) ∈ principalDivisors G
     have hrw : (A + E) - (D + E - F) = A - (D - F) := by ring
     rw [hrw]
     exact hAequiv
@@ -75,7 +75,7 @@ theorem rank_ge_of_add_effective {G : CFGraph} {D E : CFDiv G} (hE : effective E
 
 /-- Bounding the gonality from below is exactly bounding the degree of every
 positive-rank effective divisor from below. -/
-theorem le_divisorialGonality_of_forall {G : CFGraph} (h_conn : graph_connected G)
+theorem le_divisorialGonality_of_forall {G : CFGraph} (h_conn : graphConnected G)
     {k : ℕ}
     (h : ∀ D : CFDiv G, effective D → rank G D ≥ 1 → (k : ℤ) ≤ deg D) :
     k ≤ divisorialGonality G := by
@@ -87,7 +87,7 @@ theorem le_divisorialGonality_of_forall {G : CFGraph} (h_conn : graph_connected 
 /-- The form the tricycle lower bounds are actually proved in: no positive-rank
 effective divisor of degree *exactly* `d` for any `d < k`.  `rank_ge_of_add_effective`
 is what lets the smaller degrees be skipped. -/
-theorem le_divisorialGonality_of_no_small {G : CFGraph} (h_conn : graph_connected G)
+theorem le_divisorialGonality_of_no_small {G : CFGraph} (h_conn : graphConnected G)
     {k : ℕ}
     (h : ∀ D : CFDiv G, effective D → deg D = ((k : ℤ) - 1) → ¬ (rank G D ≥ 1)) :
     k ≤ divisorialGonality G := by

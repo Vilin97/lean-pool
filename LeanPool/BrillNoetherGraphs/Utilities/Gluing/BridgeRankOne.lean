@@ -25,33 +25,33 @@ universe u v
 theorem liftLeftDivisor_sub_one_chip
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (a : G.V) :
-    liftLeftDivisor G H x y (D - one_chip a) =
-      liftLeftDivisor G H x y D - one_chip (Sum.inl a) := by
+    liftLeftDivisor G H x y (D - oneChip a) =
+      liftLeftDivisor G H x y D - oneChip (Sum.inl a) := by
   funext z
   cases z with
   | inl p =>
-      change D p - one_chip a p =
+      change D p - oneChip a p =
         D p - (if (Sum.inl p : Sum G.V H.V) = Sum.inl a then 1 else 0)
-      simp [one_chip]
+      simp [oneChip]
   | inr q =>
       unfold liftLeftDivisor bridgeGraph
-      simp [Pi.sub_apply, one_chip]
+      simp [Pi.sub_apply, oneChip]
 
 /-- Zero extension from the right commutes with subtracting one chip. -/
 theorem liftRightDivisor_sub_one_chip
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv H) (b : H.V) :
-    liftRightDivisor G H x y (D - one_chip b) =
-      liftRightDivisor G H x y D - one_chip (Sum.inr b) := by
+    liftRightDivisor G H x y (D - oneChip b) =
+      liftRightDivisor G H x y D - oneChip (Sum.inr b) := by
   funext z
   cases z with
   | inl p =>
       unfold liftRightDivisor bridgeGraph
-      simp [Pi.sub_apply, one_chip]
+      simp [Pi.sub_apply, oneChip]
   | inr q =>
-      change D q - one_chip b q =
+      change D q - oneChip b q =
         D q - (if (Sum.inr q : Sum G.V H.V) = Sum.inr b then 1 else 0)
-      simp [one_chip]
+      simp [oneChip]
 
 /-- Winnable divisors on the two factors have a winnable sum after zero
 extension to the bridge graph. -/
@@ -71,12 +71,12 @@ subtracting the left bridge-end chip. -/
 theorem linear_equiv_sub_bridge_endpoints
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (P : CFDiv (bridgeGraph G H x y)) :
-    linear_equiv (bridgeGraph G H x y)
-      (P - one_chip (Sum.inr y)) (P - one_chip (Sum.inl x)) := by
-  unfold linear_equiv
+    linearEquiv (bridgeGraph G H x y)
+      (P - oneChip (Sum.inr y)) (P - oneChip (Sum.inl x)) := by
+  unfold linearEquiv
   apply (principal_iff_eq_prin (bridgeGraph G H x y)
-    ((P - one_chip (G := bridgeGraph G H x y) (Sum.inl x)) -
-      (P - one_chip (G := bridgeGraph G H x y) (Sum.inr y)))).mpr
+    ((P - oneChip (G := bridgeGraph G H x y) (Sum.inl x)) -
+      (P - oneChip (G := bridgeGraph G H x y) (Sum.inr y)))).mpr
   refine ⟨leftSideIndicator G H x y, ?_⟩
   rw [prin_leftSideIndicator]
   abel
@@ -87,7 +87,7 @@ def bridgeRankOneDivisor
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (E : CFDiv H) : CFDiv (bridgeGraph G H x y) :=
   liftLeftDivisor G H x y D + liftRightDivisor G H x y E -
-    one_chip (Sum.inl x)
+    oneChip (Sum.inl x)
 
 /-- Rank-one divisors on two factors glue to a rank-one divisor of degree one
 less than the sum of their degrees. -/
@@ -97,61 +97,61 @@ theorem rank_bridgeGraph_ge_one
     (hD : rank G D ≥ 1) (hE : rank H E ≥ 1) :
     rank (bridgeGraph G H x y)
       (liftLeftDivisor G H x y D + liftRightDivisor G H x y E -
-        one_chip (Sum.inl x)) ≥ 1 := by
+        oneChip (Sum.inl x)) ≥ 1 := by
   rw [rank_ge_one_iff_winnable_sub_one_chip]
   intro z
   cases z with
   | inl a =>
-      have hDa : winnable G (D - one_chip a) :=
+      have hDa : winnable G (D - oneChip a) :=
         (rank_ge_one_iff_winnable_sub_one_chip G D).mp hD a
-      have hEy : winnable H (E - one_chip y) :=
+      have hEy : winnable H (E - oneChip y) :=
         (rank_ge_one_iff_winnable_sub_one_chip H E).mp hE y
       have hBase : winnable (bridgeGraph G H x y)
-          (liftLeftDivisor G H x y (D - one_chip a) +
-            liftRightDivisor G H x y (E - one_chip y)) :=
+          (liftLeftDivisor G H x y (D - oneChip a) +
+            liftRightDivisor G H x y (E - oneChip y)) :=
         winnable_add_liftDivisors G H x y hDa hEy
       let P : CFDiv (bridgeGraph G H x y) :=
-        liftLeftDivisor G H x y (D - one_chip a) +
+        liftLeftDivisor G H x y (D - oneChip a) +
           liftRightDivisor G H x y E
       have hRight : winnable (bridgeGraph G H x y)
-          (P - one_chip (Sum.inr y)) := by
+          (P - oneChip (Sum.inr y)) := by
         have hEq :
-            P - one_chip (Sum.inr y) =
-              liftLeftDivisor G H x y (D - one_chip a) +
-                liftRightDivisor G H x y (E - one_chip y) := by
+            P - oneChip (Sum.inr y) =
+              liftLeftDivisor G H x y (D - oneChip a) +
+                liftRightDivisor G H x y (E - oneChip y) := by
           dsimp [P]
           rw [liftRightDivisor_sub_one_chip]
           abel
         rw [hEq]
         exact hBase
       have hLeft : winnable (bridgeGraph G H x y)
-          (P - one_chip (Sum.inl x)) :=
+          (P - oneChip (Sum.inl x)) :=
         winnable_equiv_winnable (bridgeGraph G H x y)
-          (P - one_chip (Sum.inr y)) (P - one_chip (Sum.inl x))
+          (P - oneChip (Sum.inr y)) (P - oneChip (Sum.inl x))
           hRight (linear_equiv_sub_bridge_endpoints G H x y P)
       have hEq :
           liftLeftDivisor G H x y D + liftRightDivisor G H x y E -
-                one_chip (Sum.inl x) - one_chip (Sum.inl a) =
-            P - one_chip (Sum.inl x) := by
+                oneChip (Sum.inl x) - oneChip (Sum.inl a) =
+            P - oneChip (Sum.inl x) := by
         dsimp [P]
         rw [liftLeftDivisor_sub_one_chip]
         abel
       rw [hEq]
       exact hLeft
   | inr b =>
-      have hDx : winnable G (D - one_chip x) :=
+      have hDx : winnable G (D - oneChip x) :=
         (rank_ge_one_iff_winnable_sub_one_chip G D).mp hD x
-      have hEb : winnable H (E - one_chip b) :=
+      have hEb : winnable H (E - oneChip b) :=
         (rank_ge_one_iff_winnable_sub_one_chip H E).mp hE b
       have hBase : winnable (bridgeGraph G H x y)
-          (liftLeftDivisor G H x y (D - one_chip x) +
-            liftRightDivisor G H x y (E - one_chip b)) :=
+          (liftLeftDivisor G H x y (D - oneChip x) +
+            liftRightDivisor G H x y (E - oneChip b)) :=
         winnable_add_liftDivisors G H x y hDx hEb
       have hEq :
           liftLeftDivisor G H x y D + liftRightDivisor G H x y E -
-                one_chip (Sum.inl x) - one_chip (Sum.inr b) =
-            liftLeftDivisor G H x y (D - one_chip x) +
-              liftRightDivisor G H x y (E - one_chip b) := by
+                oneChip (Sum.inl x) - oneChip (Sum.inr b) =
+            liftLeftDivisor G H x y (D - oneChip x) +
+              liftRightDivisor G H x y (E - oneChip b) := by
         rw [liftLeftDivisor_sub_one_chip,
           liftRightDivisor_sub_one_chip]
         abel

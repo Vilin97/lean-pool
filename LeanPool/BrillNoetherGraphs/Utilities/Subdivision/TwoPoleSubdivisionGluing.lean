@@ -22,8 +22,8 @@ open Finset ExplicitPotential SubdivisionGraph
 
 variable {n p nA pA nB pB : ℕ}
 variable (s : Spec n p) (d : Data s.core nA pA nB pB)
-variable (f : firing_script (d.leftSpec s).graph)
-variable (g : firing_script (d.rightSpec s).graph) (h : ℕ → ℤ)
+variable (f : firingScript (d.leftSpec s).graph)
+variable (g : firingScript (d.rightSpec s).graph) (h : ℕ → ℤ)
 variable (hCompat : s.SlotValueCompatible (d.potential s f g) (d.values s f g h))
 
 include hCompat
@@ -105,8 +105,8 @@ def rightPoles : Utilities.TwoPole (d.rightSpec s).graph where
   second := (d.rightSpec s).coreVertex (d.rightPole 1)
 
 theorem prin_script_nonneg_outside
-    (f : firing_script (d.leftSpec s).graph)
-    (g : firing_script (d.rightSpec s).graph) (h : ℕ → ℤ)
+    (f : firingScript (d.leftSpec s).graph)
+    (g : firingScript (d.rightSpec s).graph) (h : ℕ → ℤ)
     (hCompat : s.SlotValueCompatible (d.potential s f g) (d.values s f g h))
     (hConvex : ∀ j : ℕ, 0 < j → j < s.length (d.slots (.inr 0)) →
       0 ≤ h (j - 1) - 2 * h j + h (j + 1))

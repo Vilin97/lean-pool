@@ -23,7 +23,7 @@ compatibility, or transmission condition occurs here.
 
 The library's `BNExists G r d` uses the equivalent convenient convention
 "degree exactly `d` and rank at least `r`".  The dependency's
-`brill_noether_conjecture` uses the same convention with the Brill--Noether
+`brillNoetherConjecture` uses the same convention with the Brill--Noether
 inequality exposed as an implication.
 -/
 
@@ -31,11 +31,11 @@ namespace Utilities
 
 /-- The genus-four geometric heart of the Atanasov--Ranganathan theorem. -/
 def GenusFourRankOneExistence : Prop :=
-  ∀ (G : CFGraph.{0}), graph_connected G → genus G = 4 → BNExists G 1 3
+  ∀ (G : CFGraph.{0}), graphConnected G → genus G = 4 → BNExists G 1 3
 
 /-- The genus-five geometric heart of the Atanasov--Ranganathan theorem. -/
 def GenusFiveRankOneExistence : Prop :=
-  ∀ (G : CFGraph.{0}), graph_connected G → genus G = 5 → BNExists G 1 4
+  ∀ (G : CFGraph.{0}), graphConnected G → genus G = 5 → BNExists G 1 4
 
 /-- The two genuinely geometric inputs left after the low-genus arithmetic
 reduction. -/
@@ -53,7 +53,7 @@ theorem bnNumber_nonneg_iff_rectangle_area_le (G : CFGraph) (r d : ℤ) :
 /-- Every admissible Brill--Noether parameter pair on a connected graph of
 genus at most three is elementary. -/
 theorem bnExists_of_genus_le_three
-    {G : CFGraph} (hG : graph_connected G) (hGenus : genus G ≤ 3)
+    {G : CFGraph} (hG : graphConnected G) (hGenus : genus G ≤ 3)
     {r d : ℤ} (hR : 0 ≤ r) (hRho : 0 ≤ bnNumber G r d) :
     BNExists G r d := by
   apply BNExists_elementary hG hR hRho
@@ -69,7 +69,7 @@ theorem bnExists_of_genus_le_three
 /-- In genus four, `r = 1`, `d = 3` is the only admissible pair outside the
 elementary range. -/
 theorem bnExists_genus_four_of_rankOneDegreeThree
-    {G : CFGraph} (hG : graph_connected G) (hGenus : genus G = 4)
+    {G : CFGraph} (hG : graphConnected G) (hGenus : genus G = 4)
     (hCritical : BNExists G 1 3) {r d : ℤ}
     (hR : 0 ≤ r) (hRho : 0 ≤ bnNumber G r d) :
     BNExists G r d := by
@@ -93,7 +93,7 @@ theorem bnExists_genus_four_of_rankOneDegreeThree
 /-- In genus five, `r = 1`, `d = 4` is the only admissible pair outside the
 elementary range. -/
 theorem bnExists_genus_five_of_rankOneDegreeFour
-    {G : CFGraph} (hG : graph_connected G) (hGenus : genus G = 5)
+    {G : CFGraph} (hG : graphConnected G) (hGenus : genus G = 5)
     (hCritical : BNExists G 1 4) {r d : ℤ}
     (hR : 0 ≤ r) (hRho : 0 ≤ bnNumber G r d) :
     BNExists G r d := by
@@ -118,7 +118,7 @@ theorem bnExists_genus_five_of_rankOneDegreeFour
 every admissible parameter pair in genus at most five. -/
 theorem bnExists_of_genus_le_five_of_criticalPencils
     (critical : LowGenusCriticalPencils)
-    {G : CFGraph.{0}} (hG : graph_connected G) (hGenus : genus G ≤ 5)
+    {G : CFGraph.{0}} (hG : graphConnected G) (hGenus : genus G ≤ 5)
     {r d : ℤ} (hR : 0 ≤ r) (hRho : 0 ≤ bnNumber G r d) :
     BNExists G r d := by
   by_cases hLow : genus G ≤ 3
@@ -136,8 +136,8 @@ Brill--Noether existence conjecture for every connected graph of genus at
 most five. -/
 theorem brillNoetherConjecture_of_genus_le_five_of_criticalPencils
     (critical : LowGenusCriticalPencils)
-    (G : CFGraph.{0}) (hG : graph_connected G) (hGenus : genus G ≤ 5)
-    (r d : ℤ) : brill_noether_conjecture hG r d := by
+    (G : CFGraph.{0}) (hG : graphConnected G) (hGenus : genus G ≤ 5)
+    (r d : ℤ) : brillNoetherConjecture hG r d := by
   show 0 ≤ genus G - (r + 1) * (genus G - d + r) →
     ∃ D : CFDiv G, rank G D ≥ r ∧ deg D = d
   intro hRho
@@ -147,8 +147,8 @@ theorem brillNoetherConjecture_of_genus_le_five_of_criticalPencils
         (by simpa [bnNumber, rectangleWidth] using hRho)
     exact ⟨D, hRank, hDegree⟩
   · let u : G.V := Classical.arbitrary G.V
-    refine ⟨d • one_chip u, ?_, ?_⟩
-    · have hLower := rank_geq_neg_one G (d • one_chip u)
+    refine ⟨d • oneChip u, ?_, ?_⟩
+    · have hLower := rank_geq_neg_one G (d • oneChip u)
       omega
     · rw [map_zsmul, deg_one_chip]
       ring
@@ -156,8 +156,8 @@ theorem brillNoetherConjecture_of_genus_le_five_of_criticalPencils
 /-- The proposition represented by the paper's main theorem in the library's
 degree-exact, rank-lower-bound convention. -/
 def BrillNoetherExistenceThroughFive : Prop :=
-  ∀ (G : CFGraph.{0}) (hG : graph_connected G), genus G ≤ 5 →
-    ∀ r d : ℤ, brill_noether_conjecture hG r d
+  ∀ (G : CFGraph.{0}) (hG : graphConnected G), genus G ≤ 5 →
+    ∀ r d : ℤ, brillNoetherConjecture hG r d
 
 theorem criticalPencils_imply_brillNoetherExistenceThroughFive
     (critical : LowGenusCriticalPencils) :

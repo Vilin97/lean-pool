@@ -90,27 +90,27 @@ Since `CFOrientation` lost its `no_bidirectional` field it is the set of edge-le
 orientations of `G`, multigraphs included, so this predicate now agrees with ABKS's
 everywhere and not merely on simple graphs. -/
 def Orientable (G : CFGraph) (D : CFDiv G) : Prop :=
-  ∃ O : CFOrientation G, linear_equiv G D (ordiv G O)
+  ∃ O : CFOrientation G, linearEquiv G D (ordiv G O)
 
 /-- The acyclic refinement: the class contains the divisor of an *acyclic* orientation. By
 `unwinnable_iff_exists_acyclic_ordiv` this is exactly unwinnability at degree `genus G - 1`
 (`acyclicallyOrientable_iff_not_winnable`). -/
 def AcyclicallyOrientable (G : CFGraph) (D : CFDiv G) : Prop :=
-  ∃ O : CFOrientation G, is_acyclic G O ∧ linear_equiv G D (ordiv G O)
+  ∃ O : CFOrientation G, isAcyclic G O ∧ linearEquiv G D (ordiv G O)
 
 /-- An orientation divisor is orientable, tautologically. -/
 theorem orientable_ordiv (O : CFOrientation G) : Orientable G (ordiv G O) :=
-  ⟨O, linear_equiv.refl G (ordiv G O)⟩
+  ⟨O, linearEquiv.refl G (ordiv G O)⟩
 
 /-- **Orientability is a property of the linear equivalence class.** -/
-theorem Orientable.of_linear_equiv {D D' : CFDiv G} (h : linear_equiv G D D')
+theorem Orientable.of_linear_equiv {D D' : CFDiv G} (h : linearEquiv G D D')
     (hD' : Orientable G D') : Orientable G D := by
   obtain ⟨O, hO⟩ := hD'
   exact ⟨O, h.trans hO⟩
 
 /-- Orientability transported the other way, so that `Orientable` is genuinely
 class-invariant. -/
-theorem Orientable.congr {D D' : CFDiv G} (h : linear_equiv G D D') :
+theorem Orientable.congr {D D' : CFDiv G} (h : linearEquiv G D D') :
     Orientable G D ↔ Orientable G D' :=
   ⟨fun hD => Orientable.of_linear_equiv h.symm hD, fun hD' => Orientable.of_linear_equiv h hD'⟩
 
@@ -141,7 +141,7 @@ opposite ways form a directed `2`-cycle. -/
 /-- **Acyclic orientability is unwinnability**, at degree `genus G - 1`. A restatement of
 `unwinnable_iff_exists_acyclic_ordiv` (`Foundations/AcyclicOrientation.lean`, `sorry`-free)
 in the vocabulary of this file. -/
-theorem acyclicallyOrientable_iff_not_winnable (h_conn : graph_connected G) (D : CFDiv G)
+theorem acyclicallyOrientable_iff_not_winnable (h_conn : graphConnected G) (D : CFDiv G)
     (hDeg : deg D = genus G - 1) : AcyclicallyOrientable G D ↔ ¬ winnable G D :=
   (unwinnable_iff_exists_acyclic_ordiv h_conn D hDeg).symm
 
@@ -152,7 +152,7 @@ This is the half of ABKS Theorem 1.2 that a *cyclic* orientation is never needed
 predates the ABKS route of §3, which now proves every degree-`(g−1)` class. It is kept
 because it says more than `orientable_of_deg_eq` does on unwinnable classes: the witnessing
 orientation is acyclic. -/
-theorem orientable_of_not_winnable (h_conn : graph_connected G) (D : CFDiv G)
+theorem orientable_of_not_winnable (h_conn : graphConnected G) (D : CFDiv G)
     (hDeg : deg D = genus G - 1) (hUnwin : ¬ winnable G D) : Orientable G D :=
   ((acyclicallyOrientable_iff_not_winnable h_conn D hDeg).mpr hUnwin).orientable
 
@@ -166,7 +166,7 @@ still records why the winnable case was the hard one: such a class is by
 `isAcyclic_iff_not_winnable_ordiv` (`Foundations/OrientationReversal.lean`) never the divisor
 of an acyclic orientation, so any witness for it must be cyclic, and cyclic orientations were
 precisely what `CFOrientation.no_bidirectional` failed to represent on a multigraph. -/
-theorem orientable_of_forall_winnable (h_conn : graph_connected G)
+theorem orientable_of_forall_winnable (h_conn : graphConnected G)
     (hwin : ∀ D : CFDiv G, deg D = genus G - 1 → winnable G D → Orientable G D)
     (D : CFDiv G) (hDeg : deg D = genus G - 1) : Orientable G D := by
   by_cases hw : winnable G D
@@ -217,7 +217,7 @@ def edgesWithinOf (M : Multiset (G.V × G.V)) (S : Finset G.V) : ℕ :=
 def edgesBetweenOf (M : Multiset (G.V × G.V)) (S T : Finset G.V) : ℕ :=
   Multiset.countP (fun e => (e.1 ∈ S ∧ e.2 ∈ T) ∨ (e.1 ∈ T ∧ e.2 ∈ S)) M
 
-/-- `num_edges` on an arbitrary edge multiset. -/
+/-- `numEdges` on an arbitrary edge multiset. -/
 def numEdgesOf (M : Multiset (G.V × G.V)) (v w : G.V) : ℕ :=
   Multiset.countP (fun e => e = (v, w) ∨ e = (w, v)) M
 
@@ -225,9 +225,9 @@ def numEdgesOf (M : Multiset (G.V × G.V)) (v w : G.V) : ℕ :=
 lemma edgesWithin_eq (S : Finset G.V) : edgesWithin G S = edgesWithinOf G.edges S := by
   simp only [edgesWithin, edgesWithinOf, Multiset.countP_eq_card_filter]
 
-/-- `num_edges G v w` is `numEdgesOf G.edges v w`. -/
-lemma numEdgesOf_edges (v w : G.V) : numEdgesOf G.edges v w = num_edges G v w := by
-  simp only [numEdgesOf, num_edges, Multiset.countP_eq_card_filter]
+/-- `numEdges G v w` is `numEdgesOf G.edges v w`. -/
+lemma numEdgesOf_edges (v w : G.V) : numEdgesOf G.edges v w = numEdges G v w := by
+  simp only [numEdgesOf, numEdges, Multiset.countP_eq_card_filter]
 
 /-- **The quantitative refinement of the submodularity of `e(·)`**
 (`Picg_revised.tex:706`): `e(S) + e(T) + e(S∖T, T∖S) = e(S∩T) + e(S∪T)`. Proved by induction
@@ -270,7 +270,7 @@ private lemma ite_or_add {P Q : Prop} [Decidable P] [Decidable Q] (h : ¬ (P ∧
 
 /-- **`e_M(S,T)` as a double sum of edge multiplicities**, for disjoint `S` and `T`. This is
 the bridge between the `countP` form, in which submodularity is proved, and the
-`num_edges` form, in which the effect of a set firing is computed. -/
+`numEdges` form, in which the effect of a set firing is computed. -/
 lemma edgesBetweenOf_eq_sum (M : Multiset (G.V × G.V)) {S T : Finset G.V}
     (hST : Disjoint S T) :
     edgesBetweenOf M S T = ∑ v ∈ S, ∑ w ∈ T, numEdgesOf M v w := by
@@ -330,7 +330,7 @@ lemma edgesBetweenOf_eq_sum (M : Multiset (G.V × G.V)) {S T : Finset G.V}
 `T` this is the number of edges with one end in each (`edgesBetweenOf_eq_sum`), which is what
 makes it the right bookkeeping device for a set firing. -/
 def edgesBetween (G : CFGraph) (S T : Finset G.V) : ℕ :=
-  ∑ v ∈ S, ∑ w ∈ T, num_edges G v w
+  ∑ v ∈ S, ∑ w ∈ T, numEdges G v w
 
 /-- `edgesBetween` is symmetric. -/
 lemma edgesBetween_comm (S T : Finset G.V) : edgesBetween G S T = edgesBetween G T S := by
@@ -655,25 +655,25 @@ Two formulas, both instances of "chips cross the boundary of the fired set once 
 firing `A` **adds** `e(A, T)` to `χ(T, ·)` when `T` misses `A`, and **subtracts**
 `e(Aᶜ, T)` when `T` sits inside `A`. Everything below uses only these two. -/
 
-/-- Firing a set is a linear equivalence: `set_firing G D A - D` is the sum of the firing
+/-- Firing a set is a linear equivalence: `setFiring G D A - D` is the sum of the firing
 vectors of the members of `A`, hence principal. -/
 lemma linear_equiv_set_firing (D : CFDiv G) (A : Finset G.V) :
-    linear_equiv G D (set_firing G D A) := by
+    linearEquiv G D (setFiring G D A) := by
   rw [set_firing_eq_add_prin_indicator_script]
-  unfold linear_equiv
+  unfold linearEquiv
   rw [principal_iff_eq_prin]
-  exact ⟨indicator_script G A, by abel⟩
+  exact ⟨indicatorScript G A, by abel⟩
 
 /-- **Firing `A` seen from outside `A`**: every edge from `A` to `T` sends one chip. -/
 lemma sum_set_firing_of_disjoint (D : CFDiv G) {A T : Finset G.V} (h : Disjoint T A) :
-    (∑ w ∈ T, set_firing G D A w) = (∑ w ∈ T, D w) + (edgesBetween G A T : ℤ) := by
-  have hpt : ∀ w ∈ T, set_firing G D A w = D w + ∑ v ∈ A, (num_edges G v w : ℤ) := by
+    (∑ w ∈ T, setFiring G D A w) = (∑ w ∈ T, D w) + (edgesBetween G A T : ℤ) := by
+  have hpt : ∀ w ∈ T, setFiring G D A w = D w + ∑ v ∈ A, (numEdges G v w : ℤ) := by
     intro w hw
     rw [set_firing_apply_of_not_mem G D (by
       intro hwA
       exact (Finset.disjoint_left.mp h hw) hwA)]
     congr 1
-    unfold outdeg_S
+    unfold outdegreeSet
     refine Finset.sum_congr ?_ fun v _ => ?_
     · ext v
       simp
@@ -685,13 +685,13 @@ lemma sum_set_firing_of_disjoint (D : CFDiv G) {A T : Finset G.V} (h : Disjoint 
 /-- **Firing `A` seen from inside `A`**: every edge from `T` to the outside of `A` loses one
 chip. -/
 lemma sum_set_firing_of_subset (D : CFDiv G) {A T : Finset G.V} (h : T ⊆ A) :
-    (∑ w ∈ T, set_firing G D A w) = (∑ w ∈ T, D w) - (edgesBetween G Aᶜ T : ℤ) := by
-  have hpt : ∀ w ∈ T, set_firing G D A w = D w - ∑ v ∈ Aᶜ, (num_edges G v w : ℤ) := by
+    (∑ w ∈ T, setFiring G D A w) = (∑ w ∈ T, D w) - (edgesBetween G Aᶜ T : ℤ) := by
+  have hpt : ∀ w ∈ T, setFiring G D A w = D w - ∑ v ∈ Aᶜ, (numEdges G v w : ℤ) := by
     intro w hw
     have hwA : w ∈ A := h hw
     rw [set_firing_apply_of_mem G D hwA]
     congr 1
-    unfold outdeg_S
+    unfold outdegreeSet
     exact Finset.sum_congr rfl fun v _ => by
       exact_mod_cast num_edges_symmetric G w v
   rw [Finset.sum_congr rfl hpt, Finset.sum_sub_distrib, edgesBetween]
@@ -700,13 +700,13 @@ lemma sum_set_firing_of_subset (D : CFDiv G) {A T : Finset G.V} (h : T ⊆ A) :
 
 /-- `χ(T, ·)` after firing `A`, for `T` disjoint from `A`. -/
 lemma eulerChi_set_firing_of_disjoint (D : CFDiv G) {A T : Finset G.V} (h : Disjoint T A) :
-    eulerChi G T (set_firing G D A) = eulerChi G T D + (edgesBetween G A T : ℤ) := by
+    eulerChi G T (setFiring G D A) = eulerChi G T D + (edgesBetween G A T : ℤ) := by
   simp only [eulerChi, sum_set_firing_of_disjoint D h]
   ring
 
 /-- `χ(T, ·)` after firing `A`, for `T` inside `A`. -/
 lemma eulerChi_set_firing_of_subset (D : CFDiv G) {A T : Finset G.V} (h : T ⊆ A) :
-    eulerChi G T (set_firing G D A) = eulerChi G T D - (edgesBetween G Aᶜ T : ℤ) := by
+    eulerChi G T (setFiring G D A) = eulerChi G T D - (edgesBetween G Aᶜ T : ℤ) := by
   simp only [eulerChi, sum_set_firing_of_subset D h]
   ring
 
@@ -792,14 +792,14 @@ because the empty intersection is not a special case once `χ(∅, ·) = 0 ≥ �
 
 Connectivity is used exactly once, in the case `S = S₀`: it makes `e(S₀ᶜ, S₀) > 0`, which is
 what turns that case's inequality into a strict one. -/
-private lemma chiMin_le_eulerChi_set_firing (h_conn : graph_connected G) (D : CFDiv G)
+private lemma chiMin_le_eulerChi_set_firing (h_conn : graphConnected G) (D : CFDiv G)
     (hdeg : deg D = genus G - 1) (hneg : chiMin G D < 0) (S : Finset G.V) :
-    chiMin G D ≤ eulerChi G S (set_firing G D (chiMinimizer G D)ᶜ) ∧
-      (eulerChi G S (set_firing G D (chiMinimizer G D)ᶜ) = chiMin G D →
+    chiMin G D ≤ eulerChi G S (setFiring G D (chiMinimizer G D)ᶜ) ∧
+      (eulerChi G S (setFiring G D (chiMinimizer G D)ᶜ) = chiMin G D →
         chiMinimizer G D ⊂ S) := by
   classical
   set S₀ := chiMinimizer G D with hS₀def
-  set D₁ := set_firing G D S₀ᶜ with hD₁def
+  set D₁ := setFiring G D S₀ᶜ with hD₁def
   have hmin₀ : eulerChi G S₀ D = chiMin G D := chiMinimizer_eq D
   -- `S₀` is neither empty nor everything, so connectivity gives an edge across it
   have hS₀ne : S₀.Nonempty := by
@@ -817,11 +817,11 @@ private lemma chiMin_le_eulerChi_set_firing (h_conn : graph_connected G) (D : CF
       by_contra hc
       exact hS₀univ (Finset.eq_univ_iff_forall.mpr (by simpa using hc))
     obtain ⟨x, hx, y, hy, hpos⟩ := h_conn S₀ ⟨v, w, hv, hw⟩
-    calc 0 < num_edges G y x := by rw [num_edges_symmetric]; exact hpos
-      _ ≤ ∑ u ∈ S₀, num_edges G y u :=
+    calc 0 < numEdges G y x := by rw [num_edges_symmetric]; exact hpos
+      _ ≤ ∑ u ∈ S₀, numEdges G y u :=
           Finset.single_le_sum (fun u _ => Nat.zero_le _) hx
       _ ≤ edgesBetween G S₀ᶜ S₀ :=
-          Finset.single_le_sum (f := fun z => ∑ u ∈ S₀, num_edges G z u)
+          Finset.single_le_sum (f := fun z => ∑ u ∈ S₀, numEdges G z u)
             (fun z _ => Nat.zero_le _) (Finset.mem_compl.mpr hy)
   by_cases hsub : S ⊆ S₀
   · -- **Case A**: `S ⊆ S₀`. Firing `S₀ᶜ` can only add chips to `S`, and `S₀` is minimal.
@@ -905,11 +905,11 @@ lemma chiPotential_le (D : CFDiv G) : chiPotential G D ≤ Fintype.card G.V := b
 
 /-- **The descent step strictly increases the potential.** Either the minimum goes up (worth
 `|V| + 1`, more than any possible loss in `|S₀|`), or it stays put and `S₀` strictly grows. -/
-private lemma chiPotential_lt (h_conn : graph_connected G) (D : CFDiv G)
+private lemma chiPotential_lt (h_conn : graphConnected G) (D : CFDiv G)
     (hdeg : deg D = genus G - 1) (hneg : chiMin G D < 0) :
-    chiPotential G D < chiPotential G (set_firing G D (chiMinimizer G D)ᶜ) := by
+    chiPotential G D < chiPotential G (setFiring G D (chiMinimizer G D)ᶜ) := by
   classical
-  set D₁ := set_firing G D (chiMinimizer G D)ᶜ with hD₁def
+  set D₁ := setFiring G D (chiMinimizer G D)ᶜ with hD₁def
   have hclaim := chiMin_le_eulerChi_set_firing h_conn D hdeg hneg
   have hmin₁ : chiMin G D ≤ chiMin G D₁ := by
     rw [← chiMinimizer_eq D₁]
@@ -944,25 +944,25 @@ fixed point: `chiPotential` is bounded above by `|V|`, so among all divisors in 
 there is one of greatest potential (`Int.exists_greatest_of_bdd`), and `chiPotential_lt` says
 that a divisor with `χ_D < 0` is never of greatest potential. Hence the maximiser has
 `χ_D ≥ 0`, which is Hakimi's criterion. -/
-theorem exists_linear_equiv_chi_nonneg (h_conn : graph_connected G) (D : CFDiv G)
+theorem exists_linear_equiv_chi_nonneg (h_conn : graphConnected G) (D : CFDiv G)
     (hDeg : deg D = genus G - 1) :
-    ∃ D' : CFDiv G, linear_equiv G D D' ∧ ∀ S : Finset G.V, S.Nonempty → 0 ≤ eulerChi G S D' := by
+    ∃ D' : CFDiv G, linearEquiv G D D' ∧ ∀ S : Finset G.V, S.Nonempty → 0 ≤ eulerChi G S D' := by
   classical
   have hbdd : ∃ b : ℤ, ∀ z : ℤ,
-      (∃ D' : CFDiv G, linear_equiv G D D' ∧ chiPotential G D' = z) → z ≤ b := by
+      (∃ D' : CFDiv G, linearEquiv G D D' ∧ chiPotential G D' = z) → z ≤ b := by
     refine ⟨(Fintype.card G.V : ℤ), ?_⟩
     rintro z ⟨D', -, rfl⟩
     exact chiPotential_le D'
   obtain ⟨z, ⟨D', hequiv, hz⟩, hmax⟩ :=
-    Int.exists_greatest_of_bdd hbdd ⟨chiPotential G D, D, linear_equiv.refl G D, rfl⟩
+    Int.exists_greatest_of_bdd hbdd ⟨chiPotential G D, D, linearEquiv.refl G D, rfl⟩
   have hdeg' : deg D' = genus G - 1 := by
     rw [← linear_equiv_preserves_deg G D D' hequiv]
     exact hDeg
   rcases lt_or_ge (chiMin G D') 0 with hneg | hpos
   · exfalso
     have hlt := chiPotential_lt h_conn D' hdeg' hneg
-    have hle : chiPotential G (set_firing G D' (chiMinimizer G D')ᶜ) ≤ z :=
-      hmax _ ⟨set_firing G D' (chiMinimizer G D')ᶜ,
+    have hle : chiPotential G (setFiring G D' (chiMinimizer G D')ᶜ) ≤ z :=
+      hmax _ ⟨setFiring G D' (chiMinimizer G D')ᶜ,
         hequiv.trans (linear_equiv_set_firing D' _), rfl⟩
     omega
   · exact ⟨D', hequiv, fun S _ => le_trans hpos (chiMin_le D' S)⟩
@@ -981,7 +981,7 @@ submodularity descent) moves the class to a representative satisfying Hakimi's c
 `exists_ordiv_eq_of_chi_nonneg` (Hakimi) turns that representative into an orientation on the
 nose. The unwinnable case also has an independent proof with an *acyclic* witness — see
 `orientable_of_not_winnable`. -/
-theorem orientable_of_deg_eq (h_conn : graph_connected G) (D : CFDiv G)
+theorem orientable_of_deg_eq (h_conn : graphConnected G) (D : CFDiv G)
     (hDeg : deg D = genus G - 1) : Orientable G D := by
   obtain ⟨D', hEquiv, hchi⟩ := exists_linear_equiv_chi_nonneg h_conn D hDeg
   have hDeg' : deg D' = genus G - 1 := by
@@ -992,7 +992,7 @@ theorem orientable_of_deg_eq (h_conn : graph_connected G) (D : CFDiv G)
 /-- **§2c as a biconditional.** On a connected graph the orientable divisors are exactly the
 divisors of degree `genus G - 1`. The `→` direction is unconditional (`Orientable.deg_eq`);
 only `←` needs connectivity. -/
-theorem orientable_iff_deg_eq (h_conn : graph_connected G) (D : CFDiv G) :
+theorem orientable_iff_deg_eq (h_conn : graphConnected G) (D : CFDiv G) :
     Orientable G D ↔ deg D = genus G - 1 :=
   ⟨Orientable.deg_eq, orientable_of_deg_eq h_conn D⟩
 

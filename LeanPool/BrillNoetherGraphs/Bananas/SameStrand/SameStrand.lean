@@ -39,10 +39,10 @@ theorem prin_subinterval_reflection
     (hlo : lo < target) (hhi : target < hi)
     (hlen : hi ≤ spec.length star) :
     prin spec.graph (segScript spec star lo hi target) =
-      -one_chip (G := spec.graph) (spec.pathVertex star ⟨lo, by omega⟩) -
-        one_chip (spec.pathVertex star ⟨hi, by omega⟩) +
-        one_chip (spec.pathVertex star ⟨target, by omega⟩) +
-        one_chip (spec.pathVertex star ⟨lo + hi - target, by omega⟩) := by
+      -oneChip (G := spec.graph) (spec.pathVertex star ⟨lo, by omega⟩) -
+        oneChip (spec.pathVertex star ⟨hi, by omega⟩) +
+        oneChip (spec.pathVertex star ⟨target, by omega⟩) +
+        oneChip (spec.pathVertex star ⟨lo + hi - target, by omega⟩) := by
   have hpos := spec.length_pos star
   refine divisor_ext ?_ ?_
   · intro v
@@ -83,11 +83,11 @@ theorem path_pair_linearEquiv_tail_sum
     (i k : B.PathPosition α)
     (hi : 0 < i.val) (hk : 0 < k.val)
     (hsum : i.val + k.val < B.length α) :
-    linear_equiv B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k))
-      (one_chip (B.coreVertex (B.core.tail α)) +
-        one_chip (B.pathVertex α ⟨i.val + k.val, by omega⟩)) := by
-  unfold linear_equiv
+    linearEquiv B.graph
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k))
+      (oneChip (B.coreVertex (B.core.tail α)) +
+        oneChip (B.pathVertex α ⟨i.val + k.val, by omega⟩)) := by
+  unfold linearEquiv
   apply (principal_iff_eq_prin B.graph _).mpr
   let s := -segScript B α 0 (i.val + k.val) i.val
   refine ⟨s, ?_⟩
@@ -112,11 +112,11 @@ theorem path_pair_linearEquiv_head_excess
     (i k : B.PathPosition α)
     (hi : i.val < B.length α) (hk : k.val < B.length α)
     (hsum : B.length α < i.val + k.val) :
-    linear_equiv B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k))
-      (one_chip (B.pathVertex α ⟨i.val + k.val - B.length α, by omega⟩) +
-        one_chip (B.coreVertex (B.core.head α))) := by
-  unfold linear_equiv
+    linearEquiv B.graph
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k))
+      (oneChip (B.pathVertex α ⟨i.val + k.val - B.length α, by omega⟩) +
+        oneChip (B.coreVertex (B.core.head α))) := by
+  unfold linearEquiv
   apply (principal_iff_eq_prin B.graph _).mpr
   let lo := i.val + k.val - B.length α
   let s := -segScript B α lo (B.length α) i.val
@@ -143,26 +143,26 @@ theorem rank_path_pair_eq_one_of_sum_eq_length
     (B : Banana 2) (α : Fin 3) (i k : B.PathPosition α)
     (hsum : i.val + k.val = B.length α) :
     rank B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k)) = 1 := by
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k)) = 1 := by
   have hkMirror : B.pathVertex α k =
       B.pathVertex α (SegmentReflection.symmetricPosition B α i) := by
     rw [B.pathVertex_eq_iff_val_eq]
     change k.val = B.length α - i.val
     have hiBound := i.isLt
     omega
-  have hReflection : linear_equiv B.graph
-      (one_chip (B.coreVertex (B.core.tail α)) +
-        one_chip (B.coreVertex (B.core.head α)))
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k)) := by
-    unfold linear_equiv
+  have hReflection : linearEquiv B.graph
+      (oneChip (B.coreVertex (B.core.tail α)) +
+        oneChip (B.coreVertex (B.core.head α)))
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k)) := by
+    unfold linearEquiv
     apply (principal_iff_eq_prin B.graph _).mpr
     refine ⟨SegmentReflection.script B α i, ?_⟩
     rw [SegmentReflection.prin_script_eq_reflectionDivisor, ← hkMirror]
     abel
   have hRawEndpoints :
-      one_chip (B.coreVertex (B.core.tail α)) +
-          one_chip (B.coreVertex (B.core.head α)) =
-        one_chip (leftEndpoint B) + one_chip (rightEndpoint B) := by
+      oneChip (B.coreVertex (B.core.tail α)) +
+          oneChip (B.coreVertex (B.core.head α)) =
+        oneChip (leftEndpoint B) + oneChip (rightEndpoint B) := by
     by_cases hTail : B.core.tail α = 0
     · have hHead := head_eq_other_of_tail B α hTail
       simp [hTail, hHead, leftEndpoint, rightEndpoint]
@@ -190,12 +190,12 @@ theorem rank_path_pair_eq_one_of_sum_eq_length
         simp [hTail', hHead']
       simp [hTail', hHead, leftEndpoint, rightEndpoint, add_comm]
   have hCanonical :
-      canonical_divisor B.graph =
-        one_chip (leftEndpoint B) + one_chip (rightEndpoint B) := by
+      canonicalDivisor B.graph =
+        oneChip (leftEndpoint B) + oneChip (rightEndpoint B) := by
     simpa using canonical_divisor_eq_endpoints B
-  have hCanonicalRank : rank B.graph (canonical_divisor B.graph) = 1 := by
-    have hRR := riemann_roch_for_graphs (graph_connected B)
-      (canonical_divisor B.graph)
+  have hCanonicalRank : rank B.graph (canonicalDivisor B.graph) = 1 := by
+    have hRR := riemann_roch_for_graphs (graphConnected B)
+      (canonicalDivisor B.graph)
     rw [sub_self, zero_divisor_rank, degree_of_canonical_divisor,
       B.genus_graph] at hRR
     omega
@@ -270,7 +270,7 @@ theorem theta_left_endpoint_has_distinct_slot_descriptions (B : Banana 2) :
 `-1`.  It is kept separate from the banana interval calculation. -/
 theorem rank_eq_neg_one_of_qReduced_debt
     (G : CFGraph) (q : G.V) (D : CFDiv G)
-    (hRed : q_reduced G q D) (hDebt : D q < 0) :
+    (hRed : qReduced G q D) (hDebt : D q < 0) :
     rank G D = -1 := by
   have hNotWin : ¬ winnable G D := by
     intro hWin
@@ -297,16 +297,16 @@ theorem q_reduced_two_chip_sub_of_twoEdgeCutCondition_of_twoCut_burn
       S ⊆ Finset.univ.filter (· ≠ q) → S.Nonempty →
       cutMultiplicity G S = 2 →
       ∃ z ∈ S,
-        one_chip x z + one_chip y z - one_chip q z <
-          ∑ w ∈ (Finset.univ.filter fun t => t ∉ S), (num_edges G z w : ℤ)) :
-    q_reduced G q (one_chip x + one_chip y - one_chip q) := by
+        oneChip x z + oneChip y z - oneChip q z <
+          ∑ w ∈ (Finset.univ.filter fun t => t ∉ S), (numEdges G z w : ℤ)) :
+    qReduced G q (oneChip x + oneChip y - oneChip q) := by
   refine ⟨?_, ?_⟩
   · intro z hz
     by_cases hzx : z = x <;> by_cases hzy : z = y
     · subst z; subst y; simp [hqx]
     · subst z; simp [hqx, hzy]
     · subst z; simp [hqy, hzx]
-    · simp [one_chip, hz, hzx, hzy]
+    · simp [oneChip, hz, hzx, hzy]
   · intro S hqS hNonempty hLegal
     have hS : S ⊆ Finset.univ.filter (· ≠ q) := by
       intro z hz
@@ -314,7 +314,7 @@ theorem q_reduced_two_chip_sub_of_twoEdgeCutCondition_of_twoCut_burn
       intro hzq
       exact hqS (hzq ▸ hz)
     let boundary : ℤ := ∑ z ∈ S,
-      ∑ w ∈ (Finset.univ.filter fun t => t ∉ S), (num_edges G z w : ℤ)
+      ∑ w ∈ (Finset.univ.filter fun t => t ∉ S), (numEdges G z w : ℤ)
     have hTwo : 2 ≤ boundary := by
       have hProper : S ≠ Finset.univ := by
         intro hAll
@@ -334,22 +334,22 @@ theorem q_reduced_two_chip_sub_of_twoEdgeCutCondition_of_twoCut_burn
       simpa using hzBurn
     ·
       have hPointwise : ∀ z ∈ S,
-          ∑ w ∈ (Finset.univ.filter fun t => t ∉ S), (num_edges G z w : ℤ) ≤
-            one_chip x z + one_chip y z - one_chip q z := by
+          ∑ w ∈ (Finset.univ.filter fun t => t ∉ S), (numEdges G z w : ℤ) ≤
+            oneChip x z + oneChip y z - oneChip q z := by
         intro z hz
         rw [← outdeg_S_eq_sum_filter]
         exact hLegal z hz
       have hSum : boundary ≤ ∑ z ∈ S,
-          (one_chip x z + one_chip y z - one_chip q z) := by
+          (oneChip x z + oneChip y z - oneChip q z) := by
         exact Finset.sum_le_sum fun z hz => hPointwise z hz
       have hqS : q ∉ S := by
         intro hqS
         have := hS hqS
         simp at this
       have hMass : (∑ z ∈ S,
-          (one_chip x z + one_chip y z - one_chip q z)) ≤ 2 := by
+          (oneChip x z + oneChip y z - oneChip q z)) ≤ 2 := by
         by_cases hx : x ∈ S <;> by_cases hy : y ∈ S <;>
-          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, one_chip,
+          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, oneChip,
             hx, hy, hqS]
       have hThree : 3 ≤ boundary := by omega
       omega
@@ -362,28 +362,28 @@ theorem boundary_source_eq_left_or_right_of_two_chip_no_burn
     (G : CFGraph) (q x y : G.V) (S : Finset G.V)
     (hS : S ⊆ Finset.univ.filter (· ≠ q))
     (hNoBurn : ∀ z ∈ S,
-      ¬ (one_chip x z + one_chip y z - one_chip q z <
-        ∑ w ∈ (Finset.univ.filter fun t => t ∉ S), (num_edges G z w : ℤ)))
+      ¬ (oneChip x z + oneChip y z - oneChip q z <
+        ∑ w ∈ (Finset.univ.filter fun t => t ∉ S), (numEdges G z w : ℤ)))
     {z w : G.V} (hz : z ∈ S) (hw : w ∉ S)
-    (hEdge : 0 < num_edges G z w) : z = x ∨ z = y := by
+    (hEdge : 0 < numEdges G z w) : z = x ∨ z = y := by
   have hqz : z ≠ q := by
     intro hzq
     have := hS hz
     simp [hzq] at this
   by_contra hNot
   push Not at hNot
-  have hTerm : 0 < (num_edges G z w : ℤ) := by exact_mod_cast hEdge
+  have hTerm : 0 < (numEdges G z w : ℤ) := by exact_mod_cast hEdge
   have hwFilter : w ∈ Finset.univ.filter fun t => t ∉ S := by
     simp [hw]
-  have hTermLe : (num_edges G z w : ℤ) ≤
-      ∑ t ∈ (Finset.univ.filter fun t => t ∉ S), (num_edges G z t : ℤ) := by
-    refine Finset.single_le_sum (f := fun t => (num_edges G z t : ℤ))
+  have hTermLe : (numEdges G z w : ℤ) ≤
+      ∑ t ∈ (Finset.univ.filter fun t => t ∉ S), (numEdges G z t : ℤ) := by
+    refine Finset.single_le_sum (f := fun t => (numEdges G z t : ℤ))
       (fun _ _ => Int.natCast_nonneg _) hwFilter
   have hBoundaryPos : 0 <
-      ∑ t ∈ (Finset.univ.filter fun t => t ∉ S), (num_edges G z t : ℤ) := by
+      ∑ t ∈ (Finset.univ.filter fun t => t ∉ S), (numEdges G z t : ℤ) := by
     omega
   have hNo := hNoBurn z hz
-  simp [one_chip, hNot.1, hNot.2, hqz] at hNo
+  simp [oneChip, hNot.1, hNot.2, hqz] at hNo
   omega
 
 /-- Turn a positive boundary multiplicity into the crossing unit step used by
@@ -391,7 +391,7 @@ the subdivision cut lemmas. -/
 theorem exists_crossingStep_of_boundary_edge {n p : ℕ}
     (B : SubdivisionGraph.Spec n p) (S : Finset B.graph.V)
     {z w : B.graph.V} (hz : z ∈ S) (hw : w ∉ S)
-    (hEdge : 0 < num_edges B.graph z w) :
+    (hEdge : 0 < numEdges B.graph z w) :
     ∃ step : B.Step, step ∈ B.crossingSteps S ∧
       (B.stepLeft step.1 step.2 = z ∨ B.stepRight step.1 step.2 = z) := by
   obtain ⟨step, hstep | hstep⟩ := (B.num_edges_pos_iff z w).mp hEdge
@@ -474,9 +474,9 @@ theorem q_reduced_distinct_interior_path_strands
     (hαβ : α ≠ β)
     (hqx : B.pathVertex γ q ≠ B.pathVertex α i)
     (hqy : B.pathVertex γ q ≠ B.pathVertex β j) :
-    q_reduced B.graph (B.pathVertex γ q)
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex β j) -
-        one_chip (B.pathVertex γ q)) := by
+    qReduced B.graph (B.pathVertex γ q)
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex β j) -
+        oneChip (B.pathVertex γ q)) := by
   apply q_reduced_two_chip_sub_of_twoEdgeCutCondition_of_twoCut_burn
     B.graph (B.pathVertex γ q) (B.pathVertex α i) (B.pathVertex β j)
     hqx hqy (graph_twoEdgeCutCondition (by omega) B)
@@ -489,21 +489,21 @@ theorem q_reduced_distinct_interior_path_strands
     simp at this
   have hPointwise : ∀ z ∈ S,
       (∑ w ∈ (Finset.univ.filter fun t => t ∉ S),
-        (num_edges B.graph z w : ℤ)) ≤
-      one_chip (B.pathVertex α i) z + one_chip (B.pathVertex β j) z -
-        one_chip (B.pathVertex γ q) z := by
+        (numEdges B.graph z w : ℤ)) ≤
+      oneChip (B.pathVertex α i) z + oneChip (B.pathVertex β j) z -
+        oneChip (B.pathVertex γ q) z := by
     intro z hz
     exact hNoBurn z hz
   have hNoBurn' : ∀ z ∈ S,
-      ¬ (one_chip (B.pathVertex α i) z + one_chip (B.pathVertex β j) z -
-        one_chip (B.pathVertex γ q) z <
+      ¬ (oneChip (B.pathVertex α i) z + oneChip (B.pathVertex β j) z -
+        oneChip (B.pathVertex γ q) z <
           ∑ w ∈ (Finset.univ.filter fun t => t ∉ S),
-            (num_edges B.graph z w : ℤ)) := by
+            (numEdges B.graph z w : ℤ)) := by
     intro z hz
     exact not_lt.mpr (hNoBurn z hz)
   have hBoundary :
       (∑ z ∈ S, ∑ w ∈ (Finset.univ.filter fun t => t ∉ S),
-        (num_edges B.graph z w : ℤ)) = 2 := by
+        (numEdges B.graph z w : ℤ)) = 2 := by
     unfold cutMultiplicity at hCut
     simp_rw [outdeg_S_eq_sum_filter] at hCut
     exact hCut
@@ -514,10 +514,10 @@ theorem q_reduced_distinct_interior_path_strands
         (fun z hz => hPointwise z hz)
       have hMass :
           (∑ z ∈ S,
-            (one_chip (B.pathVertex α i) z + one_chip (B.pathVertex β j) z -
-              one_chip (B.pathVertex γ q) z)) ≤ 1 := by
+            (oneChip (B.pathVertex α i) z + oneChip (B.pathVertex β j) z -
+              oneChip (B.pathVertex γ q) z)) ≤ 1 := by
         by_cases hy : B.pathVertex β j ∈ S <;>
-          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, one_chip,
+          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, oneChip,
             hx, hy, hqS]
       omega
     · by_contra hy
@@ -525,10 +525,10 @@ theorem q_reduced_distinct_interior_path_strands
         (fun z hz => hPointwise z hz)
       have hMass :
           (∑ z ∈ S,
-            (one_chip (B.pathVertex α i) z + one_chip (B.pathVertex β j) z -
-              one_chip (B.pathVertex γ q) z)) ≤ 1 := by
+            (oneChip (B.pathVertex α i) z + oneChip (B.pathVertex β j) z -
+              oneChip (B.pathVertex γ q) z)) ≤ 1 := by
         by_cases hx : B.pathVertex α i ∈ S <;>
-          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, one_chip,
+          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, oneChip,
             hx, hy, hqS]
       omega
   have hCoreSame := core_vertices_same_side_of_cutMultiplicity_two hg B S hCut
@@ -569,9 +569,9 @@ theorem q_reduced_distinct_interior_path_strands
   have hbIn : B.stepRight γ b ∈ S := by
     by_contra hnot
     exact hbRightNotComp (Finset.mem_compl.mpr hnot)
-  have haEdge : 0 < num_edges B.graph (B.stepLeft γ a) (B.stepRight γ a) := by
+  have haEdge : 0 < numEdges B.graph (B.stepLeft γ a) (B.stepRight γ a) := by
     simpa using B.consecutive_num_edges_pos γ a
-  have hbEdge : 0 < num_edges B.graph (B.stepRight γ b) (B.stepLeft γ b) := by
+  have hbEdge : 0 < numEdges B.graph (B.stepRight γ b) (B.stepLeft γ b) := by
     rw [num_edges_symmetric]
     simpa using B.consecutive_num_edges_pos γ b
   have haSource := boundary_source_eq_left_or_right_of_two_chip_no_burn
@@ -613,9 +613,9 @@ theorem q_reduced_coreVertex_add_distinct_interior_path_strands
     (hαβ : α ≠ β)
     (hjEndpoint : B.pathVertex β j ≠ B.coreVertex e)
     (hji : B.pathVertex β j ≠ B.pathVertex α i) :
-    q_reduced B.graph (B.pathVertex β j)
-      (one_chip (B.coreVertex e) + one_chip (B.pathVertex α i) -
-        one_chip (B.pathVertex β j)) := by
+    qReduced B.graph (B.pathVertex β j)
+      (oneChip (B.coreVertex e) + oneChip (B.pathVertex α i) -
+        oneChip (B.pathVertex β j)) := by
   apply q_reduced_two_chip_sub_of_twoEdgeCutCondition_of_twoCut_burn
     B.graph (B.pathVertex β j) (B.coreVertex e) (B.pathVertex α i)
     hjEndpoint hji (graph_twoEdgeCutCondition (by omega) B)
@@ -627,15 +627,15 @@ theorem q_reduced_coreVertex_add_distinct_interior_path_strands
     have := hS hmem
     simp at this
   have hNoBurn' : ∀ z ∈ S,
-      ¬ (one_chip (B.coreVertex e) z + one_chip (B.pathVertex α i) z -
-        one_chip (B.pathVertex β j) z <
+      ¬ (oneChip (B.coreVertex e) z + oneChip (B.pathVertex α i) z -
+        oneChip (B.pathVertex β j) z <
           ∑ w ∈ (Finset.univ.filter fun t => t ∉ S),
-            (num_edges B.graph z w : ℤ)) := by
+            (numEdges B.graph z w : ℤ)) := by
     intro z hz
     exact not_lt.mpr (hNoBurn z hz)
   have hBoundary :
       (∑ z ∈ S, ∑ w ∈ (Finset.univ.filter fun t => t ∉ S),
-        (num_edges B.graph z w : ℤ)) = 2 := by
+        (numEdges B.graph z w : ℤ)) = 2 := by
     unfold cutMultiplicity at hCut
     simp_rw [outdeg_S_eq_sum_filter] at hCut
     exact hCut
@@ -645,22 +645,22 @@ theorem q_reduced_coreVertex_add_distinct_interior_path_strands
       have hSum := Finset.sum_le_sum
         (fun z hz => hNoBurn z hz)
       have hMass :
-          (∑ z ∈ S, (one_chip (B.coreVertex e) z +
-            one_chip (B.pathVertex α i) z -
-              one_chip (B.pathVertex β j) z)) ≤ 1 := by
+          (∑ z ∈ S, (oneChip (B.coreVertex e) z +
+            oneChip (B.pathVertex α i) z -
+              oneChip (B.pathVertex β j) z)) ≤ 1 := by
         by_cases hy : B.pathVertex α i ∈ S <;>
-          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, one_chip,
+          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, oneChip,
             hx, hy, hqS]
       omega
     · by_contra hy
       have hSum := Finset.sum_le_sum
         (fun z hz => hNoBurn z hz)
       have hMass :
-          (∑ z ∈ S, (one_chip (B.coreVertex e) z +
-            one_chip (B.pathVertex α i) z -
-              one_chip (B.pathVertex β j) z)) ≤ 1 := by
+          (∑ z ∈ S, (oneChip (B.coreVertex e) z +
+            oneChip (B.pathVertex α i) z -
+              oneChip (B.pathVertex β j) z)) ≤ 1 := by
         by_cases hx : B.coreVertex e ∈ S <;>
-          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, one_chip,
+          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, oneChip,
             hx, hy, hqS]
       omega
   have hCoreSame := core_vertices_same_side_of_cutMultiplicity_two hg B S hCut
@@ -696,9 +696,9 @@ theorem q_reduced_coreVertex_add_distinct_interior_path_strands
   have hbIn : B.stepRight β b ∈ S := by
     by_contra hnot
     exact hbRightNotComp (Finset.mem_compl.mpr hnot)
-  have haEdge : 0 < num_edges B.graph (B.stepLeft β a) (B.stepRight β a) := by
+  have haEdge : 0 < numEdges B.graph (B.stepLeft β a) (B.stepRight β a) := by
     simpa using B.consecutive_num_edges_pos β a
-  have hbEdge : 0 < num_edges B.graph (B.stepRight β b) (B.stepLeft β b) := by
+  have hbEdge : 0 < numEdges B.graph (B.stepRight β b) (B.stepLeft β b) := by
     rw [num_edges_symmetric]
     simpa using B.consecutive_num_edges_pos β b
   have haSource := boundary_source_eq_left_or_right_of_two_chip_no_burn
@@ -734,9 +734,9 @@ and that debt is reduced at the debt.  No interior hypothesis is needed for
 theorem q_reduced_path_zero_add_same_strand_of_lt
     {g : ℕ} (hg : 2 ≤ g) (B : Banana g) (α : Fin (g + 1))
     (p q : B.PathPosition α) (hpq : p.val < q.val) :
-    q_reduced B.graph (B.pathVertex α q)
-      (one_chip (B.pathVertex α ⟨0, by omega⟩) +
-        one_chip (B.pathVertex α p) - one_chip (B.pathVertex α q)) := by
+    qReduced B.graph (B.pathVertex α q)
+      (oneChip (B.pathVertex α ⟨0, by omega⟩) +
+        oneChip (B.pathVertex α p) - oneChip (B.pathVertex α q)) := by
   rw [B.pathVertex_zero]
   have hqZero : B.pathVertex α q ≠ B.coreVertex (B.core.tail α) := by
     intro h
@@ -762,15 +762,15 @@ theorem q_reduced_path_zero_add_same_strand_of_lt
     have := hS hmem
     simp at this
   have hNoBurn' : ∀ z ∈ S,
-      ¬ (one_chip (B.coreVertex (B.core.tail α)) z +
-          one_chip (B.pathVertex α p) z - one_chip (B.pathVertex α q) z <
+      ¬ (oneChip (B.coreVertex (B.core.tail α)) z +
+          oneChip (B.pathVertex α p) z - oneChip (B.pathVertex α q) z <
         ∑ w ∈ (Finset.univ.filter fun t => t ∉ S),
-          (num_edges B.graph z w : ℤ)) := by
+          (numEdges B.graph z w : ℤ)) := by
     intro z hz
     exact not_lt.mpr (hNoBurn z hz)
   have hBoundary :
       (∑ z ∈ S, ∑ w ∈ (Finset.univ.filter fun t => t ∉ S),
-        (num_edges B.graph z w : ℤ)) = 2 := by
+        (numEdges B.graph z w : ℤ)) = 2 := by
     unfold cutMultiplicity at hCut
     simp_rw [outdeg_S_eq_sum_filter] at hCut
     exact hCut
@@ -780,21 +780,21 @@ theorem q_reduced_path_zero_add_same_strand_of_lt
     · by_contra hx
       have hSum := Finset.sum_le_sum (fun z hz => hNoBurn z hz)
       have hMass :
-          (∑ z ∈ S, (one_chip (B.coreVertex (B.core.tail α)) z +
-            one_chip (B.pathVertex α p) z -
-              one_chip (B.pathVertex α q) z)) ≤ 1 := by
+          (∑ z ∈ S, (oneChip (B.coreVertex (B.core.tail α)) z +
+            oneChip (B.pathVertex α p) z -
+              oneChip (B.pathVertex α q) z)) ≤ 1 := by
         by_cases hy : B.pathVertex α p ∈ S <;>
-          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, one_chip,
+          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, oneChip,
             hx, hy, hqS]
       omega
     · by_contra hy
       have hSum := Finset.sum_le_sum (fun z hz => hNoBurn z hz)
       have hMass :
-          (∑ z ∈ S, (one_chip (B.coreVertex (B.core.tail α)) z +
-            one_chip (B.pathVertex α p) z -
-              one_chip (B.pathVertex α q) z)) ≤ 1 := by
+          (∑ z ∈ S, (oneChip (B.coreVertex (B.core.tail α)) z +
+            oneChip (B.pathVertex α p) z -
+              oneChip (B.pathVertex α q) z)) ≤ 1 := by
         by_cases hx : B.coreVertex (B.core.tail α) ∈ S <;>
-          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, one_chip,
+          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, oneChip,
             hx, hy, hqS]
       omega
   have hCoreSame := core_vertices_same_side_of_cutMultiplicity_two hg B S hCut
@@ -830,7 +830,7 @@ theorem q_reduced_path_zero_add_same_strand_of_lt
   have hbIn : B.stepRight α b ∈ S := by
     by_contra hnot
     exact hbRightNotComp (Finset.mem_compl.mpr hnot)
-  have hbEdge : 0 < num_edges B.graph (B.stepRight α b) (B.stepLeft α b) := by
+  have hbEdge : 0 < numEdges B.graph (B.stepRight α b) (B.stepLeft α b) := by
     rw [num_edges_symmetric]
     simpa using B.consecutive_num_edges_pos α b
   have hbSource := boundary_source_eq_left_or_right_of_two_chip_no_burn
@@ -859,10 +859,10 @@ of `q_reduced_path_zero_add_same_strand_of_lt`. -/
 theorem q_reduced_same_strand_add_path_length_of_lt
     {g : ℕ} (hg : 2 ≤ g) (B : Banana g) (α : Fin (g + 1))
     (p q : B.PathPosition α) (hqp : q.val < p.val) :
-    q_reduced B.graph (B.pathVertex α q)
-      (one_chip (B.pathVertex α p) +
-        one_chip (B.pathVertex α ⟨B.length α, by omega⟩) -
-          one_chip (B.pathVertex α q)) := by
+    qReduced B.graph (B.pathVertex α q)
+      (oneChip (B.pathVertex α p) +
+        oneChip (B.pathVertex α ⟨B.length α, by omega⟩) -
+          oneChip (B.pathVertex α q)) := by
   rw [B.pathVertex_length]
   have hqpVertex : B.pathVertex α q ≠ B.pathVertex α p := by
     intro h
@@ -889,16 +889,16 @@ theorem q_reduced_same_strand_add_path_length_of_lt
     have := hS hmem
     simp at this
   have hNoBurn' : ∀ z ∈ S,
-      ¬ (one_chip (B.pathVertex α p) z +
-          one_chip (B.coreVertex (B.core.head α)) z -
-            one_chip (B.pathVertex α q) z <
+      ¬ (oneChip (B.pathVertex α p) z +
+          oneChip (B.coreVertex (B.core.head α)) z -
+            oneChip (B.pathVertex α q) z <
         ∑ w ∈ (Finset.univ.filter fun t => t ∉ S),
-          (num_edges B.graph z w : ℤ)) := by
+          (numEdges B.graph z w : ℤ)) := by
     intro z hz
     exact not_lt.mpr (hNoBurn z hz)
   have hBoundary :
       (∑ z ∈ S, ∑ w ∈ (Finset.univ.filter fun t => t ∉ S),
-        (num_edges B.graph z w : ℤ)) = 2 := by
+        (numEdges B.graph z w : ℤ)) = 2 := by
     unfold cutMultiplicity at hCut
     simp_rw [outdeg_S_eq_sum_filter] at hCut
     exact hCut
@@ -908,21 +908,21 @@ theorem q_reduced_same_strand_add_path_length_of_lt
     · by_contra hx
       have hSum := Finset.sum_le_sum (fun z hz => hNoBurn z hz)
       have hMass :
-          (∑ z ∈ S, (one_chip (B.pathVertex α p) z +
-            one_chip (B.coreVertex (B.core.head α)) z -
-              one_chip (B.pathVertex α q) z)) ≤ 1 := by
+          (∑ z ∈ S, (oneChip (B.pathVertex α p) z +
+            oneChip (B.coreVertex (B.core.head α)) z -
+              oneChip (B.pathVertex α q) z)) ≤ 1 := by
         by_cases hy : B.coreVertex (B.core.head α) ∈ S <;>
-          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, one_chip,
+          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, oneChip,
             hx, hy, hqS]
       omega
     · by_contra hy
       have hSum := Finset.sum_le_sum (fun z hz => hNoBurn z hz)
       have hMass :
-          (∑ z ∈ S, (one_chip (B.pathVertex α p) z +
-            one_chip (B.coreVertex (B.core.head α)) z -
-              one_chip (B.pathVertex α q) z)) ≤ 1 := by
+          (∑ z ∈ S, (oneChip (B.pathVertex α p) z +
+            oneChip (B.coreVertex (B.core.head α)) z -
+              oneChip (B.pathVertex α q) z)) ≤ 1 := by
         by_cases hx : B.pathVertex α p ∈ S <;>
-          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, one_chip,
+          simp [Finset.sum_sub_distrib, Finset.sum_add_distrib, oneChip,
             hx, hy, hqS]
       omega
   have hCoreSame := core_vertices_same_side_of_cutMultiplicity_two hg B S hCut
@@ -949,7 +949,7 @@ theorem q_reduced_same_strand_add_path_length_of_lt
     exact hqS (by simpa [hqZero] using hTailMem)
   obtain ⟨a, _, haq, haIn, haOut⟩ :=
     B.exists_crossing_step_between S α ⟨0, by omega⟩ q hqPos hTailMem hqS
-  have haEdge : 0 < num_edges B.graph (B.stepLeft α a) (B.stepRight α a) := by
+  have haEdge : 0 < numEdges B.graph (B.stepLeft α a) (B.stepRight α a) := by
     simpa using B.consecutive_num_edges_pos α a
   have haSource := boundary_source_eq_left_or_right_of_two_chip_no_burn
     B.graph (B.pathVertex α q) (B.pathVertex α p)
@@ -975,8 +975,8 @@ theorem rank_path_zero_add_same_strand_sub_of_lt
     {g : ℕ} (hg : 2 ≤ g) (B : Banana g) (α : Fin (g + 1))
     (p q : B.PathPosition α) (hpq : p.val < q.val) :
     rank B.graph
-      (one_chip (B.pathVertex α ⟨0, by omega⟩) +
-        one_chip (B.pathVertex α p) - one_chip (B.pathVertex α q)) = -1 := by
+      (oneChip (B.pathVertex α ⟨0, by omega⟩) +
+        oneChip (B.pathVertex α p) - oneChip (B.pathVertex α q)) = -1 := by
   have hqZero : B.pathVertex α q ≠ B.pathVertex α ⟨0, by omega⟩ := by
     intro h
     have hPos := congrArg Fin.val (B.pathVertex_injective α h)
@@ -990,21 +990,21 @@ theorem rank_path_zero_add_same_strand_sub_of_lt
     intro h
     apply hqZero
     simpa using h
-  let D : CFDiv B.graph := one_chip (B.pathVertex α ⟨0, by omega⟩) +
-      one_chip (B.pathVertex α p) - one_chip (B.pathVertex α q)
-  have hred : q_reduced B.graph (B.pathVertex α q) D := by
+  let D : CFDiv B.graph := oneChip (B.pathVertex α ⟨0, by omega⟩) +
+      oneChip (B.pathVertex α p) - oneChip (B.pathVertex α q)
+  have hred : qReduced B.graph (B.pathVertex α q) D := by
     simpa [D] using q_reduced_path_zero_add_same_strand_of_lt hg B α p q hpq
   have hneg : D (B.pathVertex α q) < 0 := by
-    simp [D, one_chip, hqZero', hqp]
+    simp [D, oneChip, hqZero', hqp]
   exact rank_eq_neg_one_of_qReduced_debt B.graph (B.pathVertex α q) D hred hneg
 
 theorem rank_same_strand_add_path_length_sub_of_lt
     {g : ℕ} (hg : 2 ≤ g) (B : Banana g) (α : Fin (g + 1))
     (p q : B.PathPosition α) (hqp : q.val < p.val) :
     rank B.graph
-      (one_chip (B.pathVertex α p) +
-        one_chip (B.pathVertex α ⟨B.length α, by omega⟩) -
-          one_chip (B.pathVertex α q)) = -1 := by
+      (oneChip (B.pathVertex α p) +
+        oneChip (B.pathVertex α ⟨B.length α, by omega⟩) -
+          oneChip (B.pathVertex α q)) = -1 := by
   have hqP : B.pathVertex α q ≠ B.pathVertex α p := by
     intro h
     have hPos := congrArg Fin.val (B.pathVertex_injective α h)
@@ -1019,13 +1019,13 @@ theorem rank_same_strand_add_path_length_sub_of_lt
     intro h
     apply hqLength
     simpa [B.pathVertex_length] using h
-  let D : CFDiv B.graph := one_chip (B.pathVertex α p) +
-      one_chip (B.pathVertex α ⟨B.length α, by omega⟩) -
-        one_chip (B.pathVertex α q)
-  have hred : q_reduced B.graph (B.pathVertex α q) D := by
+  let D : CFDiv B.graph := oneChip (B.pathVertex α p) +
+      oneChip (B.pathVertex α ⟨B.length α, by omega⟩) -
+        oneChip (B.pathVertex α q)
+  have hred : qReduced B.graph (B.pathVertex α q) D := by
     simpa [D] using q_reduced_same_strand_add_path_length_of_lt hg B α p q hqp
   have hneg : D (B.pathVertex α q) < 0 := by
-    simp [D, one_chip, hqP, hqHead]
+    simp [D, oneChip, hqP, hqHead]
   exact rank_eq_neg_one_of_qReduced_debt B.graph (B.pathVertex α q) D hred hneg
 
 theorem rank_same_path_pair_sub_of_sum_outside
@@ -1033,8 +1033,8 @@ theorem rank_same_path_pair_sub_of_sum_outside
     (i k q : B.PathPosition α)
     (hRight : i.val + k.val < B.length α ∧ i.val + k.val < q.val) :
     rank B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k) -
-        one_chip (B.pathVertex α q)) = -1 := by
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k) -
+        oneChip (B.pathVertex α q)) = -1 := by
   by_cases hi0 : i.val = 0
   · have hi : i = ⟨0, by omega⟩ := by apply Fin.ext; exact hi0
     rw [hi]
@@ -1060,9 +1060,9 @@ theorem rank_same_path_pair_sub_of_sum_outside
   have hTail := rank_path_zero_add_same_strand_sub_of_lt
     (by omega : 2 ≤ 2) B α ⟨i.val + k.val, by omega⟩ q hRight.2
   have hTail' : rank B.graph
-      (one_chip (B.coreVertex (B.core.tail α)) +
-        one_chip (B.pathVertex α ⟨i.val + k.val, by omega⟩) -
-        one_chip (B.pathVertex α q)) = -1 := by
+      (oneChip (B.coreVertex (B.core.tail α)) +
+        oneChip (B.pathVertex α ⟨i.val + k.val, by omega⟩) -
+        oneChip (B.pathVertex α q)) = -1 := by
     simpa only [B.pathVertex_zero] using hTail
   rw [hTail'] at hRankEq
   omega
@@ -1074,8 +1074,8 @@ theorem rank_same_path_pair_sub_of_sum_outside_interior
     (hk : B.IsInteriorPosition α k)
     (hRight : i.val + k.val < B.length α ∧ i.val + k.val < q.val) :
     rank B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k) -
-        one_chip (B.pathVertex α q)) = -1 := by
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k) -
+        oneChip (B.pathVertex α q)) = -1 := by
   have hSlide := path_pair_linearEquiv_tail_sum B α i k hi.1 hk.1 hRight.1
   have hShift := Certificate.StrongSeparator.linearEquiv_sub_one_chip
     hSlide (B.pathVertex α q)
@@ -1083,9 +1083,9 @@ theorem rank_same_path_pair_sub_of_sum_outside_interior
   have hTail := rank_path_zero_add_same_strand_sub_of_lt
     (by omega : 2 ≤ 2) B α ⟨i.val + k.val, by omega⟩ q hRight.2
   have hTail' : rank B.graph
-      (one_chip (B.coreVertex (B.core.tail α)) +
-        one_chip (B.pathVertex α ⟨i.val + k.val, by omega⟩) -
-        one_chip (B.pathVertex α q)) = -1 := by
+      (oneChip (B.coreVertex (B.core.tail α)) +
+        oneChip (B.pathVertex α ⟨i.val + k.val, by omega⟩) -
+        oneChip (B.pathVertex α q)) = -1 := by
     simpa only [B.pathVertex_zero] using hTail
   rw [hTail'] at hRankEq
   omega
@@ -1096,8 +1096,8 @@ theorem rank_same_path_pair_sub_of_sum_outside_left
     (hLeft : B.length α < i.val + k.val ∧
       q.val < i.val + k.val - B.length α) :
     rank B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k) -
-        one_chip (B.pathVertex α q)) = -1 := by
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k) -
+        oneChip (B.pathVertex α q)) = -1 := by
   by_cases hiL : i.val = B.length α
   · have hi : i = ⟨B.length α, by omega⟩ := by apply Fin.ext; exact hiL
     rw [hi]
@@ -1123,9 +1123,9 @@ theorem rank_same_path_pair_sub_of_sum_outside_left
     (by omega : 2 ≤ 2) B α
       ⟨i.val + k.val - B.length α, by omega⟩ q hLeft.2
   have hHead' : rank B.graph
-      (one_chip (B.pathVertex α ⟨i.val + k.val - B.length α, by omega⟩) +
-        one_chip (B.coreVertex (B.core.head α)) -
-        one_chip (B.pathVertex α q)) = -1 := by
+      (oneChip (B.pathVertex α ⟨i.val + k.val - B.length α, by omega⟩) +
+        oneChip (B.coreVertex (B.core.head α)) -
+        oneChip (B.pathVertex α q)) = -1 := by
     simpa [B.pathVertex_length, add_comm] using hHead
   rw [hHead'] at hRankEq
   omega
@@ -1136,10 +1136,10 @@ theorem same_strand_pair_sub_zero_forces_interval_general
     (i j k : B.PathPosition α)
     (hij : i.val < j.val)
     (hPair : rank B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k)) = 0)
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k)) = 0)
     (hSub : rank B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k) -
-        one_chip (B.pathVertex α j)) = 0) :
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k) -
+        oneChip (B.pathVertex α j)) = 0) :
     k.val ≠ B.length α - i.val ∧
       j.val - i.val ≤ k.val ∧ k.val ≤ j.val - i.val + B.length α := by
   have hNotReflect : i.val + k.val ≠ B.length α := by
@@ -1198,10 +1198,10 @@ theorem same_strand_auxiliary_vertex_interval
     (w : B.graph.V)
     (hwv : w ≠ B.pathVertex α j)
     (hPair : rank B.graph
-      (one_chip w + one_chip (B.pathVertex α i)) = 0)
+      (oneChip w + oneChip (B.pathVertex α i)) = 0)
     (hSub : rank B.graph
-      (one_chip w + one_chip (B.pathVertex α i) -
-        one_chip (B.pathVertex α j)) = 0) :
+      (oneChip w + oneChip (B.pathVertex α i) -
+        oneChip (B.pathVertex α j)) = 0) :
     ∃ k : B.PathPosition α, w = B.pathVertex α k ∧
       k.val ≠ B.length α - i.val ∧
       j.val - i.val ≤ k.val ∧ k.val ≤ j.val - i.val + B.length α := by
@@ -1209,12 +1209,12 @@ theorem same_strand_auxiliary_vertex_interval
   · obtain hEnd | hEnd := coreVertex_eq_pathVertex_zero_or_length B α e
     · let k : B.PathPosition α := ⟨0, by omega⟩
       have hPair' : rank B.graph
-          (one_chip (B.pathVertex α k) + one_chip (B.pathVertex α i)) = 0 := by
+          (oneChip (B.pathVertex α k) + oneChip (B.pathVertex α i)) = 0 := by
         rw [← hEnd]
         exact hPair
       have hSub' : rank B.graph
-          (one_chip (B.pathVertex α k) + one_chip (B.pathVertex α i) -
-            one_chip (B.pathVertex α j)) = 0 := by
+          (oneChip (B.pathVertex α k) + oneChip (B.pathVertex α i) -
+            oneChip (B.pathVertex α j)) = 0 := by
         rw [← hEnd]
         exact hSub
       obtain ⟨hk, hInt⟩ := same_strand_pair_sub_zero_forces_interval_general
@@ -1223,12 +1223,12 @@ theorem same_strand_auxiliary_vertex_interval
       exact ⟨k, hEnd, hk, hInt.1, hInt.2⟩
     · let k : B.PathPosition α := ⟨B.length α, by omega⟩
       have hPair' : rank B.graph
-          (one_chip (B.pathVertex α k) + one_chip (B.pathVertex α i)) = 0 := by
+          (oneChip (B.pathVertex α k) + oneChip (B.pathVertex α i)) = 0 := by
         rw [← hEnd]
         exact hPair
       have hSub' : rank B.graph
-          (one_chip (B.pathVertex α k) + one_chip (B.pathVertex α i) -
-            one_chip (B.pathVertex α j)) = 0 := by
+          (oneChip (B.pathVertex α k) + oneChip (B.pathVertex α i) -
+            oneChip (B.pathVertex α j)) = 0 := by
         rw [← hEnd]
         exact hSub
       obtain ⟨hk, hInt⟩ := same_strand_pair_sub_zero_forces_interval_general
@@ -1248,12 +1248,12 @@ theorem same_strand_auxiliary_vertex_interval
       rw [B.pathVertex_eq_interiorVertex γ k hk]
       congr 1
     have hPairPath : rank B.graph
-        (one_chip (B.pathVertex γ k) + one_chip (B.pathVertex α i)) = 0 := by
+        (oneChip (B.pathVertex γ k) + oneChip (B.pathVertex α i)) = 0 := by
       rw [← hwPath]
       exact hPair
     have hSubPath : rank B.graph
-        (one_chip (B.pathVertex γ k) + one_chip (B.pathVertex α i) -
-          one_chip (B.pathVertex α j)) = 0 := by
+        (oneChip (B.pathVertex γ k) + oneChip (B.pathVertex α i) -
+          oneChip (B.pathVertex α j)) = 0 := by
       rw [← hwPath]
       exact hSub
     by_cases hγα : γ = α
@@ -1279,14 +1279,14 @@ theorem same_strand_auxiliary_vertex_interval
       have hRed := q_reduced_distinct_interior_path_strands
         (by omega) B γ α α k i j hk hi hj hγα hqW hqU
       have hDebt :
-          ((one_chip (B.pathVertex γ k) + one_chip (B.pathVertex α i) -
-            one_chip (B.pathVertex α j) : CFDiv B.graph)
+          ((oneChip (B.pathVertex γ k) + oneChip (B.pathVertex α i) -
+            oneChip (B.pathVertex α j) : CFDiv B.graph)
               (B.pathVertex α j)) < 0 := by
-        simp [one_chip, hqW, hqU]
+        simp [oneChip, hqW, hqU]
       have hRank := rank_eq_neg_one_of_qReduced_debt B.graph
         (B.pathVertex α j)
-        (one_chip (B.pathVertex γ k) + one_chip (B.pathVertex α i) -
-          one_chip (B.pathVertex α j)) hRed hDebt
+        (oneChip (B.pathVertex γ k) + oneChip (B.pathVertex α i) -
+          oneChip (B.pathVertex α j)) hRed hDebt
       exfalso
       omega
 /-- Left-endpoint specialization of the core-endpoint Dhar calculation. -/
@@ -1299,9 +1299,9 @@ theorem q_reduced_leftEndpoint_add_distinct_interior_path_strands
     (hαβ : α ≠ β)
     (hjLeft : B.pathVertex β j ≠ leftEndpoint B)
     (hji : B.pathVertex β j ≠ B.pathVertex α i) :
-    q_reduced B.graph (B.pathVertex β j)
-      (one_chip (leftEndpoint B) + one_chip (B.pathVertex α i) -
-        one_chip (B.pathVertex β j)) := by
+    qReduced B.graph (B.pathVertex β j)
+      (oneChip (leftEndpoint B) + oneChip (B.pathVertex α i) -
+        oneChip (B.pathVertex β j)) := by
   simpa [leftEndpoint] using
     q_reduced_coreVertex_add_distinct_interior_path_strands hg B 0 α β i j
       hi hj hαβ (by simpa [leftEndpoint] using hjLeft) hji
@@ -1316,9 +1316,9 @@ theorem q_reduced_rightEndpoint_add_distinct_interior_path_strands
     (hαβ : α ≠ β)
     (hjRight : B.pathVertex β j ≠ rightEndpoint B)
     (hji : B.pathVertex β j ≠ B.pathVertex α i) :
-    q_reduced B.graph (B.pathVertex β j)
-      (one_chip (rightEndpoint B) + one_chip (B.pathVertex α i) -
-        one_chip (B.pathVertex β j)) := by
+    qReduced B.graph (B.pathVertex β j)
+      (oneChip (rightEndpoint B) + oneChip (B.pathVertex α i) -
+        oneChip (B.pathVertex β j)) := by
   simpa [rightEndpoint] using
     q_reduced_coreVertex_add_distinct_interior_path_strands hg B 1 α β i j
       hi hj hαβ (by simpa [rightEndpoint] using hjRight) hji
@@ -1332,8 +1332,8 @@ theorem rank_leftEndpoint_add_distinct_interior_path_marks_ne_zero
     (hj : B.IsInteriorPosition β j)
     (hαβ : α ≠ β) :
     rank B.graph
-      (one_chip (leftEndpoint B) + one_chip (B.pathVertex α i) -
-        one_chip (B.pathVertex β j)) ≠ 0 := by
+      (oneChip (leftEndpoint B) + oneChip (B.pathVertex α i) -
+        oneChip (B.pathVertex β j)) ≠ 0 := by
   have hjLeft : B.pathVertex β j ≠ leftEndpoint B := by
     intro h
     unfold leftEndpoint at h
@@ -1348,12 +1348,12 @@ theorem rank_leftEndpoint_add_distinct_interior_path_marks_ne_zero
   have hRed := q_reduced_leftEndpoint_add_distinct_interior_path_strands
     (by omega) B α β i j hi hj hαβ hjLeft hji
   have hDebt :
-      ((one_chip (leftEndpoint B) + one_chip (B.pathVertex α i) -
-        one_chip (B.pathVertex β j) : CFDiv B.graph) (B.pathVertex β j)) < 0 := by
-    simp [one_chip, hjLeft, hji]
+      ((oneChip (leftEndpoint B) + oneChip (B.pathVertex α i) -
+        oneChip (B.pathVertex β j) : CFDiv B.graph) (B.pathVertex β j)) < 0 := by
+    simp [oneChip, hjLeft, hji]
   have hRank := rank_eq_neg_one_of_qReduced_debt B.graph (B.pathVertex β j)
-    (one_chip (leftEndpoint B) + one_chip (B.pathVertex α i) -
-      one_chip (B.pathVertex β j)) hRed hDebt
+    (oneChip (leftEndpoint B) + oneChip (B.pathVertex α i) -
+      oneChip (B.pathVertex β j)) hRed hDebt
   omega
 
 /-- The right endpoint likewise cannot be the auxiliary vertex in a
@@ -1365,8 +1365,8 @@ theorem rank_rightEndpoint_add_distinct_interior_path_marks_ne_zero
     (hj : B.IsInteriorPosition β j)
     (hαβ : α ≠ β) :
     rank B.graph
-      (one_chip (rightEndpoint B) + one_chip (B.pathVertex α i) -
-        one_chip (B.pathVertex β j)) ≠ 0 := by
+      (oneChip (rightEndpoint B) + oneChip (B.pathVertex α i) -
+        oneChip (B.pathVertex β j)) ≠ 0 := by
   have hjRight : B.pathVertex β j ≠ rightEndpoint B := by
     intro h
     unfold rightEndpoint at h
@@ -1381,12 +1381,12 @@ theorem rank_rightEndpoint_add_distinct_interior_path_marks_ne_zero
   have hRed := q_reduced_rightEndpoint_add_distinct_interior_path_strands
     (by omega) B α β i j hi hj hαβ hjRight hji
   have hDebt :
-      ((one_chip (rightEndpoint B) + one_chip (B.pathVertex α i) -
-        one_chip (B.pathVertex β j) : CFDiv B.graph) (B.pathVertex β j)) < 0 := by
-    simp [one_chip, hjRight, hji]
+      ((oneChip (rightEndpoint B) + oneChip (B.pathVertex α i) -
+        oneChip (B.pathVertex β j) : CFDiv B.graph) (B.pathVertex β j)) < 0 := by
+    simp [oneChip, hjRight, hji]
   have hRank := rank_eq_neg_one_of_qReduced_debt B.graph (B.pathVertex β j)
-    (one_chip (rightEndpoint B) + one_chip (B.pathVertex α i) -
-      one_chip (B.pathVertex β j)) hRed hDebt
+    (oneChip (rightEndpoint B) + oneChip (B.pathVertex α i) -
+      oneChip (B.pathVertex β j)) hRed hDebt
   omega
 
 /-- Coordinate-free core-endpoint version used when decomposing an arbitrary
@@ -1398,8 +1398,8 @@ theorem rank_coreVertex_add_distinct_interior_path_marks_ne_zero
     (hj : B.IsInteriorPosition β j)
     (hαβ : α ≠ β) :
     rank B.graph
-      (one_chip (B.coreVertex e) + one_chip (B.pathVertex α i) -
-        one_chip (B.pathVertex β j)) ≠ 0 := by
+      (oneChip (B.coreVertex e) + oneChip (B.pathVertex α i) -
+        oneChip (B.pathVertex β j)) ≠ 0 := by
   have hjEndpoint : B.pathVertex β j ≠ B.coreVertex e := by
     intro h
     rw [B.pathVertex_eq_interiorVertex β j hj] at h
@@ -1413,13 +1413,13 @@ theorem rank_coreVertex_add_distinct_interior_path_marks_ne_zero
   have hRed := q_reduced_coreVertex_add_distinct_interior_path_strands
     (by omega) B e α β i j hi hj hαβ hjEndpoint hji
   have hDebt :
-      ((one_chip (B.coreVertex e) + one_chip (B.pathVertex α i) -
-        one_chip (B.pathVertex β j) : CFDiv B.graph)
+      ((oneChip (B.coreVertex e) + oneChip (B.pathVertex α i) -
+        oneChip (B.pathVertex β j) : CFDiv B.graph)
           (B.pathVertex β j)) < 0 := by
-    simp [one_chip, hjEndpoint, hji]
+    simp [oneChip, hjEndpoint, hji]
   have hRank := rank_eq_neg_one_of_qReduced_debt B.graph (B.pathVertex β j)
-    (one_chip (B.coreVertex e) + one_chip (B.pathVertex α i) -
-      one_chip (B.pathVertex β j)) hRed hDebt
+    (oneChip (B.coreVertex e) + oneChip (B.pathVertex α i) -
+      oneChip (B.pathVertex β j)) hRed hDebt
   omega
 
 /-- The remaining on-strand case of `SameStrand`.  If the two positive
@@ -1435,10 +1435,10 @@ theorem rank_same_path_pair_sub_distinct_interior_ne_zero
     (hj : B.IsInteriorPosition β j)
     (hαβ : α ≠ β)
     (hPairRank : rank B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k)) = 0) :
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k)) = 0) :
     rank B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k) -
-        one_chip (B.pathVertex β j)) ≠ 0 := by
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k) -
+        oneChip (B.pathVertex β j)) ≠ 0 := by
   rcases lt_trichotomy (i.val + k.val) (B.length α) with hsum | hsum | hsum
   · let p : B.PathPosition α := ⟨i.val + k.val, by omega⟩
     have hp : B.IsInteriorPosition α p := by
@@ -1458,14 +1458,14 @@ theorem rank_same_path_pair_sub_distinct_interior_ne_zero
     have hRed := q_reduced_coreVertex_add_distinct_interior_path_strands
       (by omega) B (B.core.tail α) α β p j hp hj hαβ hjEndpoint hjp
     have hDebt :
-        ((one_chip (B.coreVertex (B.core.tail α)) +
-          one_chip (B.pathVertex α p) - one_chip (B.pathVertex β j) :
+        ((oneChip (B.coreVertex (B.core.tail α)) +
+          oneChip (B.pathVertex α p) - oneChip (B.pathVertex β j) :
             CFDiv B.graph) (B.pathVertex β j)) < 0 := by
-      simp [one_chip, hjEndpoint, hjp]
+      simp [oneChip, hjEndpoint, hjp]
     have hEndpointRank := rank_eq_neg_one_of_qReduced_debt B.graph
       (B.pathVertex β j)
-      (one_chip (B.coreVertex (B.core.tail α)) +
-        one_chip (B.pathVertex α p) - one_chip (B.pathVertex β j))
+      (oneChip (B.coreVertex (B.core.tail α)) +
+        oneChip (B.pathVertex α p) - oneChip (B.pathVertex β j))
       hRed hDebt
     have hSlide := path_pair_linearEquiv_tail_sum B α i k hi.1 hk.1 hsum
     have hShift := Certificate.StrongSeparator.linearEquiv_sub_one_chip
@@ -1501,14 +1501,14 @@ theorem rank_same_path_pair_sub_distinct_interior_ne_zero
     have hRed := q_reduced_coreVertex_add_distinct_interior_path_strands
       (by omega) B (B.core.head α) α β p j hp hj hαβ hjEndpoint hjp
     have hDebt :
-        ((one_chip (B.coreVertex (B.core.head α)) +
-          one_chip (B.pathVertex α p) - one_chip (B.pathVertex β j) :
+        ((oneChip (B.coreVertex (B.core.head α)) +
+          oneChip (B.pathVertex α p) - oneChip (B.pathVertex β j) :
             CFDiv B.graph) (B.pathVertex β j)) < 0 := by
-      simp [one_chip, hjEndpoint, hjp]
+      simp [oneChip, hjEndpoint, hjp]
     have hEndpointRank := rank_eq_neg_one_of_qReduced_debt B.graph
       (B.pathVertex β j)
-      (one_chip (B.coreVertex (B.core.head α)) +
-        one_chip (B.pathVertex α p) - one_chip (B.pathVertex β j))
+      (oneChip (B.coreVertex (B.core.head α)) +
+        oneChip (B.pathVertex α p) - oneChip (B.pathVertex β j))
       hRed hDebt
     have hSlide := path_pair_linearEquiv_head_excess B α i k hi.2 hk.2 hsum
     have hShift := Certificate.StrongSeparator.linearEquiv_sub_one_chip
@@ -1516,9 +1516,9 @@ theorem rank_same_path_pair_sub_distinct_interior_ne_zero
     have hRankEq := rank_eq_of_linear_equiv B.graph hShift
     intro hZero
     have hEndpointRank' : rank B.graph
-        (one_chip (B.pathVertex α p) +
-          one_chip (B.coreVertex (B.core.head α)) -
-            one_chip (B.pathVertex β j)) = -1 := by
+        (oneChip (B.pathVertex α p) +
+          oneChip (B.coreVertex (B.core.head α)) -
+            oneChip (B.pathVertex β j)) = -1 := by
       simpa only [add_comm] using hEndpointRank
     dsimp [p] at hEndpointRank' hRankEq
     rw [hZero, hEndpointRank'] at hRankEq
@@ -1536,10 +1536,10 @@ theorem rank_aux_add_mark_sub_distinct_mark_ne_zero
     (hαβ : α ≠ β) (w : B.graph.V)
     (hwv : w ≠ B.pathVertex β j)
     (hPairRank : rank B.graph
-      (one_chip w + one_chip (B.pathVertex α i)) = 0) :
+      (oneChip w + oneChip (B.pathVertex α i)) = 0) :
     rank B.graph
-      (one_chip w + one_chip (B.pathVertex α i) -
-        one_chip (B.pathVertex β j)) ≠ 0 := by
+      (oneChip w + oneChip (B.pathVertex α i) -
+        oneChip (B.pathVertex β j)) ≠ 0 := by
   rcases w with e | interior
   · simpa [SubdivisionGraph.Spec.coreVertex] using
       rank_coreVertex_add_distinct_interior_path_marks_ne_zero
@@ -1559,21 +1559,21 @@ theorem rank_aux_add_mark_sub_distinct_mark_ne_zero
       rw [B.pathVertex_eq_interiorVertex γ k hk]
       congr 1
     have hPairRankPath : rank B.graph
-        (one_chip (B.pathVertex γ k) + one_chip (B.pathVertex α i)) = 0 := by
+        (oneChip (B.pathVertex γ k) + oneChip (B.pathVertex α i)) = 0 := by
       rw [← hwPath]
       exact hPairRank
     by_cases hγα : γ = α
     · subst γ
       have hPairRank' : rank B.graph
-          (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k)) = 0 := by
+          (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k)) = 0 := by
         simpa [add_comm] using hPairRankPath
       have hOnStrand := rank_same_path_pair_sub_distinct_interior_ne_zero
         B α β i k j hi hk hj hαβ hPairRank'
       intro hZero
       apply hOnStrand
       have hZeroPath : rank B.graph
-          (one_chip (B.pathVertex α k) + one_chip (B.pathVertex α i) -
-            one_chip (B.pathVertex β j)) = 0 := by
+          (oneChip (B.pathVertex α k) + oneChip (B.pathVertex α i) -
+            oneChip (B.pathVertex β j)) = 0 := by
         rw [← hwPath]
         exact hZero
       simpa [add_comm] using hZeroPath
@@ -1591,25 +1591,25 @@ theorem rank_aux_add_mark_sub_distinct_mark_ne_zero
       have hRed := q_reduced_distinct_interior_path_strands
         (by omega) B γ α β k i j hk hi hj hγα hqW hqU
       have hDebt :
-          ((one_chip (B.pathVertex γ k) + one_chip (B.pathVertex α i) -
-            one_chip (B.pathVertex β j) : CFDiv B.graph)
+          ((oneChip (B.pathVertex γ k) + oneChip (B.pathVertex α i) -
+            oneChip (B.pathVertex β j) : CFDiv B.graph)
               (B.pathVertex β j)) < 0 := by
-        simp [one_chip, hqW, hqU]
+        simp [oneChip, hqW, hqU]
       have hRank := rank_eq_neg_one_of_qReduced_debt B.graph
         (B.pathVertex β j)
-        (one_chip (B.pathVertex γ k) + one_chip (B.pathVertex α i) -
-          one_chip (B.pathVertex β j)) hRed hDebt
+        (oneChip (B.pathVertex γ k) + oneChip (B.pathVertex α i) -
+          oneChip (B.pathVertex β j)) hRed hDebt
       intro hZero
       have hZero' : rank B.graph
-          (one_chip (B.pathVertex γ k) + one_chip (B.pathVertex α i) -
-            one_chip (B.pathVertex β j)) = 0 := by
+          (oneChip (B.pathVertex γ k) + oneChip (B.pathVertex α i) -
+            oneChip (B.pathVertex β j)) = 0 := by
         rw [← hwPath]
         exact hZero
       omega
 
 private theorem linearEquiv_zero_of_rank_nonneg_degree_zero_sameStrand
     (G : CFGraph) (D : CFDiv G) (hRank : 0 ≤ rank G D) (hDeg : deg D = 0) :
-    linear_equiv G D 0 := by
+    linearEquiv G D 0 := by
   obtain ⟨E, hEff, hDE⟩ := (rank_nonneg_iff_winnable G D).mp
     ((rank_geq_iff G D 0).mpr hRank)
   have hEDeg : deg E = 0 := by
@@ -1622,12 +1622,12 @@ theorem rank_same_strand_pair_zero_of_not_reflection
     (i k : B.PathPosition α)
     (hNot : strandVertex B α k ≠ strandVertex B α (strandMirror B α i)) :
     rank B.graph
-      (one_chip (strandVertex B α i) + one_chip (strandVertex B α k)) = 0 := by
+      (oneChip (strandVertex B α i) + oneChip (strandVertex B α k)) = 0 := by
   let D : CFDiv B.graph :=
-    one_chip (strandVertex B α i) + one_chip (strandVertex B α k)
+    oneChip (strandVertex B α i) + oneChip (strandVertex B α k)
   have hEff : effective D := by
     intro v
-    simp [D, one_chip]
+    simp [D, oneChip]
     omega
   have hNonneg : 0 ≤ rank B.graph D := by
     apply (rank_geq_iff B.graph D 0).mp
@@ -1636,15 +1636,15 @@ theorem rank_same_strand_pair_zero_of_not_reflection
   have hDeg : deg D = 2 := by
     dsimp [D]
     simp [deg.map_add, deg_one_chip]
-  have hKDeg : deg (canonical_divisor B.graph - D) = 0 := by
+  have hKDeg : deg (canonicalDivisor B.graph - D) = 0 := by
     rw [deg.map_sub, degree_of_canonical_divisor, B.genus_graph, hDeg]
     norm_num
-  have hRR := riemann_roch_for_graphs (graph_connected B) D
-  have hKLe : rank B.graph (canonical_divisor B.graph - D) ≤ 0 := by
-    by_cases hKNonneg : 0 ≤ rank B.graph (canonical_divisor B.graph - D)
+  have hRR := riemann_roch_for_graphs (graphConnected B) D
+  have hKLe : rank B.graph (canonicalDivisor B.graph - D) ≤ 0 := by
+    by_cases hKNonneg : 0 ≤ rank B.graph (canonicalDivisor B.graph - D)
     · have hBound := rank_le_degree B.graph
-        (canonical_divisor B.graph - D)
-        (rank B.graph (canonical_divisor B.graph - D)) hKNonneg
+        (canonicalDivisor B.graph - D)
+        (rank B.graph (canonicalDivisor B.graph - D)) hKNonneg
         ((rank_geq_iff B.graph _ _).mpr le_rfl)
       omega
     · omega
@@ -1654,29 +1654,29 @@ theorem rank_same_strand_pair_zero_of_not_reflection
   by_cases hZero : rank B.graph D = 0
   · simpa [D] using hZero
   · have hOne : rank B.graph D = 1 := by omega
-    have hKRank : rank B.graph (canonical_divisor B.graph - D) = 0 := by
+    have hKRank : rank B.graph (canonicalDivisor B.graph - D) = 0 := by
       rw [B.genus_graph, hDeg, hOne] at hRR
       omega
     have hKEquiv := linearEquiv_zero_of_rank_nonneg_degree_zero_sameStrand B.graph
-      (canonical_divisor B.graph - D) (by omega) hKDeg
-    have hDK : linear_equiv B.graph D (canonical_divisor B.graph) := by
-      unfold linear_equiv at hKEquiv ⊢
+      (canonicalDivisor B.graph - D) (by omega) hKDeg
+    have hDK : linearEquiv B.graph D (canonicalDivisor B.graph) := by
+      unfold linearEquiv at hKEquiv ⊢
       simpa [sub_eq_add_neg] using
-        AddSubgroup.neg_mem (principal_divisors B.graph) hKEquiv
+        AddSubgroup.neg_mem (principalDivisors B.graph) hKEquiv
     have hRef := endpoint_sum_linearEquiv_strand_reflection B α i
-    have hCan : canonical_divisor B.graph =
-        one_chip (leftEndpoint B) + one_chip (rightEndpoint B) := by
+    have hCan : canonicalDivisor B.graph =
+        oneChip (leftEndpoint B) + oneChip (rightEndpoint B) := by
       simpa using canonical_divisor_eq_endpoints B
     rw [← hCan] at hRef
-    have hResidual : linear_equiv B.graph
-        (one_chip (strandVertex B α k))
-        (canonical_divisor B.graph - one_chip (strandVertex B α i)) := by
-      unfold linear_equiv at hDK ⊢
+    have hResidual : linearEquiv B.graph
+        (oneChip (strandVertex B α k))
+        (canonicalDivisor B.graph - oneChip (strandVertex B α i)) := by
+      unfold linearEquiv at hDK ⊢
       convert hDK using 1 ; dsimp [D] ; abel
-    have hRefResidual : linear_equiv B.graph
-        (canonical_divisor B.graph - one_chip (strandVertex B α i))
-        (one_chip (strandVertex B α (strandMirror B α i))) := by
-      unfold linear_equiv at hRef ⊢
+    have hRefResidual : linearEquiv B.graph
+        (canonicalDivisor B.graph - oneChip (strandVertex B α i))
+        (oneChip (strandVertex B α (strandMirror B α i))) := by
+      unfold linearEquiv at hRef ⊢
       convert hRef using 1 ; abel
     have hVertices : strandVertex B α k =
         strandVertex B α (strandMirror B α i) :=
@@ -1688,7 +1688,7 @@ theorem rank_same_strand_pair_zero_of_not_reflection
 
 private theorem rank_one_chip_eq_zero_banana_two
     (B : Banana 2) (x : B.graph.V) :
-    rank B.graph (one_chip x) = 0 := by
+    rank B.graph (oneChip x) = 0 := by
   let y : B.graph.V :=
     if x = leftEndpoint B then rightEndpoint B else leftEndpoint B
   have hxy : x ≠ y := by
@@ -1697,16 +1697,16 @@ private theorem rank_one_chip_eq_zero_banana_two
     · rw [hx]
       simp [leftEndpoint, rightEndpoint, SubdivisionGraph.Spec.coreVertex]
     · exact hx
-  have hWinnable : winnable B.graph (one_chip x) :=
+  have hWinnable : winnable B.graph (oneChip x) :=
     winnable_of_effective B.graph _ (eff_one_chip x)
-  have hNonneg : 0 ≤ rank B.graph (one_chip x) :=
+  have hNonneg : 0 ≤ rank B.graph (oneChip x) :=
     (rank_geq_iff B.graph _ 0).mp
       ((rank_nonneg_iff_winnable B.graph _).mpr hWinnable)
-  have hLt : rank B.graph (one_chip x) < 1 := by
+  have hLt : rank B.graph (oneChip x) < 1 := by
     by_contra hNot
-    have hRank : rank B.graph (one_chip x) ≥ 1 := by omega
+    have hRank : rank B.graph (oneChip x) ≥ 1 := by omega
     have hxyWin := (rank_ge_one_iff_winnable_sub_one_chip B.graph
-      (one_chip x)).mp hRank y
+      (oneChip x)).mp hRank y
     obtain ⟨E, hEff, hEquiv⟩ := hxyWin
     have hEDeg : deg E = 0 := by
       rw [← linear_equiv_preserves_deg B.graph _ E hEquiv,
@@ -1719,7 +1719,7 @@ private theorem rank_one_chip_eq_zero_banana_two
 
 theorem rank_one_chip_zero_banana_two
     (B : Banana 2) (x : B.graph.V) :
-    rank B.graph (one_chip x) = 0 :=
+    rank B.graph (oneChip x) = 0 :=
   rank_one_chip_eq_zero_banana_two B x
 
 theorem rank_same_path_pair_sub_of_sum_inside_full
@@ -1731,8 +1731,8 @@ theorem rank_same_path_pair_sub_of_sum_inside_full
     (hInside : i.val + k.val - B.length alpha ≤ q.val ∧
       q.val ≤ i.val + k.val) :
     rank B.graph
-      (one_chip (B.pathVertex alpha i) + one_chip (B.pathVertex alpha k) -
-        one_chip (B.pathVertex alpha q)) = 0 := by
+      (oneChip (B.pathVertex alpha i) + oneChip (B.pathVertex alpha k) -
+        oneChip (B.pathVertex alpha q)) = 0 := by
   by_cases hNotReflect : i.val + k.val ≠ B.length alpha
   · by_cases hsum : i.val + k.val < B.length alpha
     · have hSlide := path_pair_linearEquiv_tail_sum B alpha i k hi.1 hk.1 hsum
@@ -1745,10 +1745,10 @@ theorem rank_same_path_pair_sub_of_sum_inside_full
         have hRankEq := rank_eq_of_linear_equiv B.graph hShift
         rw [hqEq] at hRankEq
         have hCancel :
-            one_chip (B.coreVertex (B.core.tail alpha)) +
-                one_chip (B.pathVertex alpha ⟨i.val + k.val, by omega⟩) -
-                  one_chip (B.pathVertex alpha ⟨i.val + k.val, by omega⟩) =
-              one_chip (G := B.graph) (B.coreVertex (B.core.tail alpha)) := by
+            oneChip (B.coreVertex (B.core.tail alpha)) +
+                oneChip (B.pathVertex alpha ⟨i.val + k.val, by omega⟩) -
+                  oneChip (B.pathVertex alpha ⟨i.val + k.val, by omega⟩) =
+              oneChip (G := B.graph) (B.coreVertex (B.core.tail alpha)) := by
           abel
         rw [hCancel, rank_one_chip_eq_zero_banana_two] at hRankEq
         simpa only [hqEq] using hRankEq
@@ -1756,13 +1756,13 @@ theorem rank_same_path_pair_sub_of_sum_inside_full
         have hPrin := prin_subinterval_reflection (spec := B) (star := alpha)
           (lo := 0) (hi := i.val + k.val) (target := q.val)
           hq.1 hqLt (by omega)
-        have hReflect : linear_equiv B.graph
-            (one_chip (B.coreVertex (B.core.tail alpha)) +
-                one_chip (B.pathVertex alpha ⟨i.val + k.val, by omega⟩) -
-                  one_chip (B.pathVertex alpha q))
-            (one_chip (B.pathVertex alpha
+        have hReflect : linearEquiv B.graph
+            (oneChip (B.coreVertex (B.core.tail alpha)) +
+                oneChip (B.pathVertex alpha ⟨i.val + k.val, by omega⟩) -
+                  oneChip (B.pathVertex alpha q))
+            (oneChip (B.pathVertex alpha
               ⟨0 + (i.val + k.val) - q.val, by omega⟩)) := by
-          unfold linear_equiv
+          unfold linearEquiv
           apply (principal_iff_eq_prin B.graph _).mpr
           refine ⟨segScript B alpha 0 (i.val + k.val) q.val, ?_⟩
           rw [hPrin, B.pathVertex_zero]
@@ -1782,12 +1782,12 @@ theorem rank_same_path_pair_sub_of_sum_inside_full
         have hRankEq := rank_eq_of_linear_equiv B.graph hShift
         rw [hqEq] at hRankEq
         have hCancel :
-            one_chip (B.pathVertex alpha
+            oneChip (B.pathVertex alpha
                 ⟨i.val + k.val - B.length alpha, by omega⟩) +
-                one_chip (B.coreVertex (B.core.head alpha)) -
-                  one_chip (B.pathVertex alpha
+                oneChip (B.coreVertex (B.core.head alpha)) -
+                  oneChip (B.pathVertex alpha
                     ⟨i.val + k.val - B.length alpha, by omega⟩) =
-              one_chip (G := B.graph) (B.coreVertex (B.core.head alpha)) := by
+              oneChip (G := B.graph) (B.coreVertex (B.core.head alpha)) := by
           abel
         rw [hCancel, rank_one_chip_eq_zero_banana_two] at hRankEq
         simpa only [hqEq] using hRankEq
@@ -1796,15 +1796,15 @@ theorem rank_same_path_pair_sub_of_sum_inside_full
           (lo := i.val + k.val - B.length alpha)
           (hi := B.length alpha) (target := q.val)
           hqGt hq.2 (by omega)
-        have hReflect : linear_equiv B.graph
-            (one_chip (B.pathVertex alpha
+        have hReflect : linearEquiv B.graph
+            (oneChip (B.pathVertex alpha
                 ⟨i.val + k.val - B.length alpha, by omega⟩) +
-                one_chip (B.coreVertex (B.core.head alpha)) -
-                  one_chip (B.pathVertex alpha q))
-            (one_chip (B.pathVertex alpha
+                oneChip (B.coreVertex (B.core.head alpha)) -
+                  oneChip (B.pathVertex alpha q))
+            (oneChip (B.pathVertex alpha
               ⟨(i.val + k.val - B.length alpha) + B.length alpha - q.val,
                 by omega⟩)) := by
-          unfold linear_equiv
+          unfold linearEquiv
           apply (principal_iff_eq_prin B.graph _).mpr
           refine ⟨segScript B alpha (i.val + k.val - B.length alpha)
             (B.length alpha) q.val, ?_⟩
@@ -1816,8 +1816,8 @@ theorem rank_same_path_pair_sub_of_sum_inside_full
         omega
   · have hReflect : i.val + k.val = B.length alpha := by omega
     let D : CFDiv B.graph :=
-      one_chip (B.pathVertex alpha i) + one_chip (B.pathVertex alpha k)
-    let E : CFDiv B.graph := D - one_chip (B.pathVertex alpha q)
+      oneChip (B.pathVertex alpha i) + oneChip (B.pathVertex alpha k)
+    let E : CFDiv B.graph := D - oneChip (B.pathVertex alpha q)
     have hDRank : rank B.graph D = 1 := by
       dsimp [D]
       exact rank_path_pair_eq_one_of_sum_eq_length B alpha i k hReflect
@@ -1846,21 +1846,21 @@ theorem rank_same_path_pair_sub_of_sum_inside_full
       rw [B.pathVertex_eq_interiorVertex γ k hk]
       congr 1
     have hPairRankPath : rank B.graph
-        (one_chip (B.pathVertex γ k) + one_chip (B.pathVertex α i)) = 0 := by
+        (oneChip (B.pathVertex γ k) + oneChip (B.pathVertex α i)) = 0 := by
       rw [← hwPath]
       exact hPairRank
     by_cases hγα : γ = α
     · subst γ
       have hPairRank' : rank B.graph
-          (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k)) = 0 := by
+          (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k)) = 0 := by
         simpa [add_comm] using hPairRankPath
       have hOnStrand := rank_same_path_pair_sub_distinct_interior_ne_zero
         B α β i k j hi hk hj hαβ hPairRank'
       intro hZero
       apply hOnStrand
       have hZeroPath : rank B.graph
-          (one_chip (B.pathVertex α k) + one_chip (B.pathVertex α i) -
-            one_chip (B.pathVertex β j)) = 0 := by
+          (oneChip (B.pathVertex α k) + oneChip (B.pathVertex α i) -
+            oneChip (B.pathVertex β j)) = 0 := by
         rw [← hwPath]
         exact hZero
       simpa [add_comm] using hZeroPath
@@ -1878,18 +1878,18 @@ theorem rank_same_path_pair_sub_of_sum_inside_full
       have hRed := q_reduced_distinct_interior_path_strands
         (by omega) B γ α β k i j hk hi hj hγα hqW hqU
       have hDebt :
-          ((one_chip (B.pathVertex γ k) + one_chip (B.pathVertex α i) -
-            one_chip (B.pathVertex β j) : CFDiv B.graph)
+          ((oneChip (B.pathVertex γ k) + oneChip (B.pathVertex α i) -
+            oneChip (B.pathVertex β j) : CFDiv B.graph)
               (B.pathVertex β j)) < 0 := by
-        simp [one_chip, hqW, hqU]
+        simp [oneChip, hqW, hqU]
       have hRank := rank_eq_neg_one_of_qReduced_debt B.graph
         (B.pathVertex β j)
-        (one_chip (B.pathVertex γ k) + one_chip (B.pathVertex α i) -
-          one_chip (B.pathVertex β j)) hRed hDebt
+        (oneChip (B.pathVertex γ k) + oneChip (B.pathVertex α i) -
+          oneChip (B.pathVertex β j)) hRed hDebt
       intro hZero
       have hZero' : rank B.graph
-          (one_chip (B.pathVertex γ k) + one_chip (B.pathVertex α i) -
-            one_chip (B.pathVertex β j)) = 0 := by
+          (oneChip (B.pathVertex γ k) + oneChip (B.pathVertex α i) -
+            oneChip (B.pathVertex β j)) = 0 := by
         rw [← hwPath]
         exact hZero
       omega

@@ -126,8 +126,8 @@ def laplacianEquivTrans {G H K : CFGraph}
   toEquiv := first.toEquiv.trans second.toEquiv
   num_edges_eq := by
     intro x y
-    change num_edges K (second.toEquiv (first.toEquiv x))
-      (second.toEquiv (first.toEquiv y)) = num_edges G x y
+    change numEdges K (second.toEquiv (first.toEquiv x))
+      (second.toEquiv (first.toEquiv y)) = numEdges G x y
     rw [second.num_edges_eq, first.num_edges_eq]
 
 /-! ## The canonical split core -/
@@ -262,8 +262,8 @@ def laplacianEquiv : LaplacianEquiv source.graph expanded.graph :=
     (OneSplitData.unitEdge_eq data)
 
 @[simp] theorem num_edges_eq (x y : source.Vertex) :
-    num_edges expanded.graph (data.vertexEquiv x) (data.vertexEquiv y) =
-      num_edges source.graph x y :=
+    numEdges expanded.graph (data.vertexEquiv x) (data.vertexEquiv y) =
+      numEdges source.graph x y :=
   (laplacianEquiv data).num_edges_eq x y
 
 /-- Exact edge count, obtained from the occurrence bijection itself. -/
@@ -1259,8 +1259,8 @@ def identityLaplacianEquiv (source : SubdivisionGraph.Spec n p) :
 
 @[simp] theorem identity_num_edges (source : SubdivisionGraph.Spec n p)
     (x y : source.Vertex) :
-    num_edges source.graph (identityLaplacianEquiv source x)
-        (identityLaplacianEquiv source y) = num_edges source.graph x y :=
+    numEdges source.graph (identityLaplacianEquiv source x)
+        (identityLaplacianEquiv source y) = numEdges source.graph x y :=
   (identityLaplacianEquiv source).num_edges_eq x y
 
 end Utilities.Certificate.OneEdgeSplitRefinement

@@ -33,8 +33,8 @@ theorem rankDelta_path_pair_neg_of_mem_thetaExceptionalPositions_terminal_right
     rankDelta
       (mark B.graph (B.pathVertex alpha i)
         (B.pathVertex alpha ⟨B.length alpha, by omega⟩))
-      (one_chip (B.pathVertex alpha k) +
-        one_chip (B.pathVertex alpha i)) < 0 := by
+      (oneChip (B.pathVertex alpha k) +
+        oneChip (B.pathVertex alpha i)) < 0 := by
   rcases hkExceptional with ⟨hkReflect, hkj, hkLower, _hkUpper⟩
   have hkNotZero : k.val ≠ 0 := by
     intro hkZero
@@ -56,7 +56,7 @@ theorem rankDelta_path_pair_neg_of_mem_thetaExceptionalPositions_terminal_right
     omega
   let terminal : B.PathPosition alpha := ⟨B.length alpha, by omega⟩
   let D : CFDiv B.graph :=
-    one_chip (B.pathVertex alpha k) + one_chip (B.pathVertex alpha i)
+    oneChip (B.pathVertex alpha k) + oneChip (B.pathVertex alpha i)
   have hRankD : rank B.graph D = 0 := by
     dsimp [D]
     apply rank_same_strand_pair_zero_of_not_reflection_generic
@@ -65,15 +65,15 @@ theorem rankDelta_path_pair_neg_of_mem_thetaExceptionalPositions_terminal_right
     apply hkReflect
     omega
   have hRankU : rank B.graph
-      (D - one_chip (B.pathVertex alpha i)) = 0 := by
-    have hCancel : D - one_chip (B.pathVertex alpha i) =
-        one_chip (G := B.graph) (B.pathVertex alpha k) := by
+      (D - oneChip (B.pathVertex alpha i)) = 0 := by
+    have hCancel : D - oneChip (B.pathVertex alpha i) =
+        oneChip (G := B.graph) (B.pathVertex alpha k) := by
       dsimp [D]
       abel_nf
     rw [hCancel]
     exact rank_one_chip_zero_banana_two B _
   have hRankV : rank B.graph
-      (D - one_chip (B.pathVertex alpha terminal)) = 0 := by
+      (D - oneChip (B.pathVertex alpha terminal)) = 0 := by
     have hSlide := path_pair_linearEquiv_head_excess
       B alpha k i hkInterior.2 hi.2 (by omega)
     have hShift := Certificate.StrongSeparator.linearEquiv_sub_one_chip
@@ -81,24 +81,24 @@ theorem rankDelta_path_pair_neg_of_mem_thetaExceptionalPositions_terminal_right
     let q : B.PathPosition alpha :=
       ⟨k.val + i.val - B.length alpha, by omega⟩
     have hCancel :
-        one_chip (B.pathVertex alpha q) +
-              one_chip (B.coreVertex (B.core.head alpha)) -
-            one_chip (B.pathVertex alpha terminal) =
-          (one_chip (B.pathVertex alpha q) : CFDiv B.graph) := by
+        oneChip (B.pathVertex alpha q) +
+              oneChip (B.coreVertex (B.core.head alpha)) -
+            oneChip (B.pathVertex alpha terminal) =
+          (oneChip (B.pathVertex alpha q) : CFDiv B.graph) := by
       rw [B.pathVertex_length]
       abel_nf
     have hRankEq := rank_eq_of_linear_equiv B.graph hShift
     rw [hCancel, rank_one_chip_zero_banana_two] at hRankEq
     have hRewrite :
-        D - one_chip (B.pathVertex alpha terminal) =
-          one_chip (B.pathVertex alpha k) + one_chip (B.pathVertex alpha i) -
-            one_chip (B.pathVertex alpha terminal) := by
+        D - oneChip (B.pathVertex alpha terminal) =
+          oneChip (B.pathVertex alpha k) + oneChip (B.pathVertex alpha i) -
+            oneChip (B.pathVertex alpha terminal) := by
       rfl
     rw [hRewrite]
     exact hRankEq
   have hRankUV : rank B.graph
-      (D - one_chip (B.pathVertex alpha i) -
-        one_chip (B.pathVertex alpha terminal)) = -1 := by
+      (D - oneChip (B.pathVertex alpha i) -
+        oneChip (B.pathVertex alpha terminal)) = -1 := by
     have hVertices : B.pathVertex alpha k ≠ B.pathVertex alpha terminal := by
       intro h
       apply hkNotTerminal
@@ -106,10 +106,10 @@ theorem rankDelta_path_pair_neg_of_mem_thetaExceptionalPositions_terminal_right
     have hRank := rank_one_chip_sub_one_chip_eq_neg_one_of_ne_banana
       B (B.pathVertex alpha k) (B.pathVertex alpha terminal) hVertices
     have hCancel :
-        D - one_chip (B.pathVertex alpha i) -
-            one_chip (B.pathVertex alpha terminal) =
-          one_chip (B.pathVertex alpha k) -
-            one_chip (B.pathVertex alpha terminal) := by
+        D - oneChip (B.pathVertex alpha i) -
+            oneChip (B.pathVertex alpha terminal) =
+          oneChip (B.pathVertex alpha k) -
+            oneChip (B.pathVertex alpha terminal) := by
       dsimp [D]
       abel_nf
     rw [hCancel]
@@ -132,8 +132,8 @@ theorem negative_path_pair_has_exceptional_representative_terminal_right
     ∃ k : B.PathPosition alpha,
       k ∈ thetaExceptionalPositions B alpha i
         ⟨B.length alpha, by omega⟩ ∧
-      linear_equiv B.graph D
-        (one_chip (B.pathVertex alpha k) + one_chip (B.pathVertex alpha i)) := by
+      linearEquiv B.graph D
+        (oneChip (B.pathVertex alpha k) + oneChip (B.pathVertex alpha i)) := by
   let terminal : B.PathPosition alpha := ⟨B.length alpha, by omega⟩
   have hij : i.val < terminal.val := by
     dsimp [terminal]
@@ -175,17 +175,17 @@ theorem negative_path_pair_has_exceptional_representative_terminal_right
         obtain ⟨p, hp, hpVertex⟩ :=
           exists_interior_strandVertex B alpha firstOffset
         have hSub' : rank B.graph
-            (one_chip (strandVertex B gamma q) +
-              one_chip (strandVertex B alpha p) -
-              one_chip (B.pathVertex alpha terminal)) = 0 := by
+            (oneChip (strandVertex B gamma q) +
+              oneChip (strandVertex B alpha p) -
+              oneChip (B.pathVertex alpha terminal)) = 0 := by
           rw [hqVertex, hpVertex, ← hiOffset]
           exact hSub
         have hSupport := rankSupport_two_interior_distinct_strands
           (by omega : 2 ≤ 2) B gamma alpha q p hq hp hgamma
         have hTerminalMem : B.pathVertex alpha terminal ∈
             rankSupport B.graph
-              (one_chip (strandVertex B gamma q) +
-                one_chip (strandVertex B alpha p)) := by
+              (oneChip (strandVertex B gamma q) +
+                oneChip (strandVertex B alpha p)) := by
           exact hSub'.ge
         rw [hSupport] at hTerminalMem
         have hTerminalEndpoint : B.pathVertex alpha terminal =
@@ -206,12 +206,12 @@ theorem negative_path_pair_has_exceptional_representative_terminal_right
         exact (hTerminalMem.elim hTerminalNeQ hTerminalNeP).elim
   obtain ⟨k, hwk⟩ := hWonStrand
   have hPair' : rank B.graph
-      (one_chip (B.pathVertex alpha i) + one_chip (B.pathVertex alpha k)) = 0 := by
+      (oneChip (B.pathVertex alpha i) + oneChip (B.pathVertex alpha k)) = 0 := by
     rw [← hwk]
     simpa [add_comm] using hPair
   have hSub' : rank B.graph
-      (one_chip (B.pathVertex alpha i) + one_chip (B.pathVertex alpha k) -
-        one_chip (B.pathVertex alpha terminal)) = 0 := by
+      (oneChip (B.pathVertex alpha i) + oneChip (B.pathVertex alpha k) -
+        oneChip (B.pathVertex alpha terminal)) = 0 := by
     rw [← hwk]
     simpa [add_comm] using hSub
   obtain ⟨hkReflect, hkLower, hkUpper⟩ :=
@@ -237,11 +237,11 @@ theorem negative_path_pair_has_exceptional_representative_terminal_right
       apply hkj
       omega
     constructor <;> omega
-  have hWChip : one_chip w =
-      (one_chip (B.pathVertex alpha k) : CFDiv B.graph) :=
-    congrArg (one_chip (G := B.graph)) hwk
-  have hPairEquiv' : linear_equiv B.graph D
-      (one_chip (B.pathVertex alpha k) + one_chip (B.pathVertex alpha i)) := by
+  have hWChip : oneChip w =
+      (oneChip (B.pathVertex alpha k) : CFDiv B.graph) :=
+    congrArg (oneChip (G := B.graph)) hwk
+  have hPairEquiv' : linearEquiv B.graph D
+      (oneChip (B.pathVertex alpha k) + oneChip (B.pathVertex alpha i)) := by
     simpa only [hWChip] using hPairEquiv
   exact ⟨k, hkExceptional, hPairEquiv'⟩
 
@@ -257,8 +257,8 @@ theorem thetaPairDivisorClass_bijOn_negative_terminal_right
           (B.pathVertex alpha ⟨B.length alpha, by omega⟩))) := by
   refine ⟨?_, (thetaPairDivisorClass_injective B alpha i).injOn, ?_⟩
   · intro k hk
-    refine ⟨one_chip (B.pathVertex alpha k) +
-      one_chip (B.pathVertex alpha i), rfl, ?_⟩
+    refine ⟨oneChip (B.pathVertex alpha k) +
+      oneChip (B.pathVertex alpha i), rfl, ?_⟩
     exact rankDelta_path_pair_neg_of_mem_thetaExceptionalPositions_terminal_right
       B alpha i k hi hiFar hk
   · intro c hc

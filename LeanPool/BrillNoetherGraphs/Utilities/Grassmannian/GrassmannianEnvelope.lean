@@ -28,11 +28,11 @@ namespace Utilities
 the initial interval whose length is the zero-cut slipface value. -/
 theorem grassmannianPerm_se_finset_zero_eq_Ico_s
     (lambda : YoungDiagram) (a : ℤ) :
-    (grassmannianPermOfYoungDiagram lambda).se_finset (a + 1) 0 =
+    (grassmannianPermOfYoungDiagram lambda).seFinset (a + 1) 0 =
       Finset.Ico 0
         ((grassmannianPermOfYoungDiagram lambda).s (a + 1) 0) := by
   let tau := grassmannianPermOfYoungDiagram lambda
-  let S := tau.se_finset (a + 1) 0
+  let S := tau.seFinset (a + 1) 0
   change S = Finset.Ico 0 (tau.s (a + 1) 0)
   have hSlip : tau.s (a + 1) 0 = (S.card : ℤ) := by
     simpa [S] using tau.s_eq_se_card (a + 1) 0
@@ -71,8 +71,8 @@ theorem grassmannianRowLen_at_zeroCut_le
   change (lambda.rowLen r.toNat : ℤ) ≤ r - a - 1
   have hr : 0 ≤ r := tau.s_nonneg (a + 1) 0
   have hCut := grassmannianPerm_se_finset_zero_eq_Ico_s lambda a
-  have hNotMem : r ∉ tau.se_finset (a + 1) 0 := by
-    rw [show tau.se_finset (a + 1) 0 = Finset.Ico 0 r by
+  have hNotMem : r ∉ tau.seFinset (a + 1) 0 := by
+    rw [show tau.seFinset (a + 1) 0 = Finset.Ico 0 r by
       simpa [tau, r] using hCut]
     simp
   have hValue : a + 1 ≤ tau r := by
@@ -96,8 +96,8 @@ theorem grassmannianRowLen_before_zeroCut_ge
   have hr' : 0 < r := by simpa [tau, r] using hr
   have hrm1 : 0 ≤ r - 1 := by omega
   have hCut := grassmannianPerm_se_finset_zero_eq_Ico_s lambda a
-  have hMem : r - 1 ∈ tau.se_finset (a + 1) 0 := by
-    rw [show tau.se_finset (a + 1) 0 = Finset.Ico 0 r by
+  have hMem : r - 1 ∈ tau.seFinset (a + 1) 0 := by
+    rw [show tau.seFinset (a + 1) 0 = Finset.Ico 0 r by
       simpa [tau, r] using hCut]
     simp only [Finset.mem_Ico]
     omega
@@ -411,7 +411,7 @@ theorem grassmannianPartitionProfile (lambda : YoungDiagram) :
 /-- Factored form of the full Grassmannian/once-marked dictionary, useful when
 reusing a separately supplied negative-envelope proof. -/
 theorem transmissionExists_grassmannianPerm_iff_onceMarkedBNExists_of_negativeEnvelope
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V)
     (lambda : YoungDiagram) (hNegative : GrassmannianNegativeEnvelope lambda) :
     TransmissionExists G u v (grassmannianPermOfYoungDiagram lambda) ↔
       OnceMarkedBNExists G u lambda :=
@@ -421,7 +421,7 @@ theorem transmissionExists_grassmannianPerm_iff_onceMarkedBNExists_of_negativeEn
 
 /-- Unconditional Grassmannian/once-marked existence dictionary. -/
 theorem transmissionExists_grassmannianPerm_iff_onceMarkedBNExists
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V)
     (lambda : YoungDiagram) :
     TransmissionExists G u v (grassmannianPermOfYoungDiagram lambda) ↔
       OnceMarkedBNExists G u lambda :=

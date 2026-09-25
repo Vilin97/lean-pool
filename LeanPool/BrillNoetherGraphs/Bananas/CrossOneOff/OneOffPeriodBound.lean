@@ -102,7 +102,7 @@ theorem oneOff_affine_period_gt_cutoff
     (hTau : IsTransmissionPermutation
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau)
+      (g • oneChip (rightEndpoint B)) tau)
     (hAffine : IsKAffine k tau) :
     crossOneOffCutoff g (B.length alpha) < k := by
   let n := B.length alpha

@@ -33,7 +33,7 @@ structure OneVertexCut (K : CFGraph.{u}) where
   vertex_cover : ∀ z : K.V, z ∈ left ∨ z ∈ right
   only_overlap : ∀ z : K.V, z ∈ left → z ∈ right → z = glue
   no_cross : ∀ a : K.V, a ∈ left → a ≠ glue →
-    ∀ b : K.V, b ∈ right → b ≠ glue → num_edges K a b = 0
+    ∀ b : K.V, b ∈ right → b ≠ glue → numEdges K a b = 0
 
 namespace OneVertexCut
 
@@ -129,9 +129,9 @@ theorem genus_eq : genus K = genus cut.leftGraph + genus cut.rightGraph :=
 
 /-- Connected induced factors give a connected ambient graph. -/
 theorem graph_connected_of_factors
-    (hLeft : graph_connected cut.leftGraph)
-    (hRight : graph_connected cut.rightGraph) :
-    graph_connected K :=
+    (hLeft : graphConnected cut.leftGraph)
+    (hRight : graphConnected cut.rightGraph) :
+    graphConnected K :=
   cut.presentation.graph_connected_of_factors hLeft hRight
 
 /-- Brill--Noether existence on the ambient graph is exactly existence on the

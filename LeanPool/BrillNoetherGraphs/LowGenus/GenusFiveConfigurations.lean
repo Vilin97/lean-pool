@@ -41,7 +41,7 @@ variable {G : CFGraph}
 /-- The degree-four divisor used by the genus-five pictures.  Repeated chip
 positions are allowed, as required by AR's seventh family. -/
 def fourChipDivisor (first second third fourth : G.V) : CFDiv G :=
-  one_chip first + one_chip second + one_chip third + one_chip fourth
+  oneChip first + oneChip second + oneChip third + oneChip fourth
 
 theorem fourChipDivisor_effective (first second third fourth : G.V) :
     effective (fourChipDivisor first second third fourth) := by
@@ -57,22 +57,22 @@ theorem fourChipDivisor_effective (first second third fourth : G.V) :
 
 theorem fourChipDivisor_has_chip_first (first second third fourth : G.V) :
     1 ≤ fourChipDivisor first second third fourth first := by
-  simp only [fourChipDivisor, Pi.add_apply, one_chip, ↓reduceIte]
+  simp only [fourChipDivisor, Pi.add_apply, oneChip, ↓reduceIte]
   omega
 
 theorem fourChipDivisor_has_chip_second (first second third fourth : G.V) :
     1 ≤ fourChipDivisor first second third fourth second := by
-  simp only [fourChipDivisor, Pi.add_apply, one_chip, ↓reduceIte]
+  simp only [fourChipDivisor, Pi.add_apply, oneChip, ↓reduceIte]
   omega
 
 theorem fourChipDivisor_has_chip_third (first second third fourth : G.V) :
     1 ≤ fourChipDivisor first second third fourth third := by
-  simp only [fourChipDivisor, Pi.add_apply, one_chip, ↓reduceIte]
+  simp only [fourChipDivisor, Pi.add_apply, oneChip, ↓reduceIte]
   omega
 
 theorem fourChipDivisor_has_chip_fourth (first second third fourth : G.V) :
     1 ≤ fourChipDivisor first second third fourth fourth := by
-  simp only [fourChipDivisor, Pi.add_apply, one_chip, ↓reduceIte, le_add_iff_nonneg_left]
+  simp only [fourChipDivisor, Pi.add_apply, oneChip, ↓reduceIte, le_add_iff_nonneg_left]
   omega
 
 /-! ## The eleven local pictures -/
@@ -113,7 +113,7 @@ structure DegreeFourDharPencil (G : CFGraph) where
   divisor : CFDiv G
   divisor_effective : effective divisor
   divisor_degree : deg divisor = 4
-  move_off_support : ∀ vertex : G.V, divisor vertex = 0 →
+  moveOffSupport : ∀ vertex : G.V, divisor vertex = 0 →
     GenusFiveConfigurationKind × DharMove G divisor vertex
 
 namespace DegreeFourDharPencil
@@ -131,7 +131,7 @@ noncomputable def ofEffectiveRankOne (D : CFDiv G)
   divisor := D
   divisor_effective := hEffective
   divisor_degree := hDegree
-  move_off_support := by
+  moveOffSupport := by
     intro vertex _hZero
     have hWinnable :=
       (rank_ge_one_iff_winnable_sub_one_chip G D).mp hRank vertex
@@ -139,15 +139,15 @@ noncomputable def ofEffectiveRankOne (D : CFDiv G)
     have hRepresentative := (Classical.choose_spec hWinnable).1
     have hLinear := (Classical.choose_spec hWinnable).2
     change effective representative at hRepresentative
-    change linear_equiv G (D - one_chip vertex) representative at hLinear
-    unfold linear_equiv at hLinear
+    change linearEquiv G (D - oneChip vertex) representative at hLinear
+    unfold linearEquiv at hLinear
     have hPrincipal :=
-      (principal_iff_eq_prin G (representative - (D - one_chip vertex))).mp
+      (principal_iff_eq_prin G (representative - (D - oneChip vertex))).mp
         hLinear
     let script := Classical.choose hPrincipal
     have hScript := Classical.choose_spec hPrincipal
     refine ⟨.second, DharMove.ofScript script ?_⟩
-    have hEq : D - one_chip vertex + prin G script = representative := by
+    have hEq : D - oneChip vertex + prin G script = representative := by
       rw [← hScript]
       abel
     simpa only [hEq] using hRepresentative
@@ -162,7 +162,7 @@ while the row interface still asks for the diagnostic `DharMove` package. -/
 theorem nonempty_ofBNExists (existence : BNExists G 1 4) :
     Nonempty (DegreeFourDharPencil G) := by
   obtain ⟨D, hDegree, hRank⟩ := existence
-  have hRankNonnegative : rank_geq G D 0 :=
+  have hRankNonnegative : rankGeq G D 0 :=
     (rank_geq_iff G D 0).mpr (le_trans (by norm_num) hRank)
   have hWinnable : winnable G D :=
     (rank_nonneg_iff_winnable G D).mp hRankNonnegative
@@ -177,7 +177,7 @@ theorem rank_ge_one (pencil : DegreeFourDharPencil G) :
   apply rank_ge_one_of_dharMoves_off_support
     pencil.divisor pencil.divisor_effective
   intro vertex hZero
-  exact (pencil.move_off_support vertex hZero).2
+  exact (pencil.moveOffSupport vertex hZero).2
 
 theorem bnExists (pencil : DegreeFourDharPencil G) : BNExists G 1 4 :=
   ⟨pencil.divisor, pencil.divisor_degree, pencil.rank_ge_one⟩

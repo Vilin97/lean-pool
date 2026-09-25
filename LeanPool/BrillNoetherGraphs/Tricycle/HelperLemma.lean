@@ -81,7 +81,7 @@ theorem spokeStep_of_length_one (hcore : spec.core = tricycleCore) {i : Fin 6}
 
 /-- The centre is adjacent to the first vertex up each spoke. -/
 theorem num_edges_centre_spokeStep (hcore : spec.core = tricycleCore) (i : Fin 6) :
-    0 < num_edges spec.graph (spec.coreVertex centre) (spokeStep spec i) := by
+    0 < numEdges spec.graph (spec.coreVertex centre) (spokeStep spec i) := by
   have h := slotVertex_num_edges_pos (spec := spec) (edge := spokeOf i) (k := 0)
     (spec.length_pos _)
   rwa [slotVertex_zero, spoke_tail hcore] at h
@@ -114,7 +114,7 @@ costs its cardinality in chips, counted on the centre and the spoke
 interiors. -/
 theorem helper_lemma_b (hcore : spec.core = tricycleCore)
     {D : CFDiv spec.graph} (hEff : effective D)
-    (hred : q_reduced spec.graph (spec.coreVertex centre) D)
+    (hred : qReduced spec.graph (spec.coreVertex centre) D)
     (hrank : rank spec.graph D ≥ 1)
     {w : spec.Vertex} (hw : D w = 0)
     (I : Finset (Fin 6))
@@ -152,7 +152,7 @@ theorem helper_lemma_b (hcore : spec.core = tricycleCore)
             (spokeStep spec)).card : ℤ)
           ≤ ∑ u ∈ (I.filter (fun i => spokeStep spec i ∈ burned spec.graph D w)).image
               (spokeStep spec),
-              (num_edges spec.graph (spec.coreVertex centre) u : ℤ) := by
+              (numEdges spec.graph (spec.coreVertex centre) u : ℤ) := by
       calc (((I.filter (fun i => spokeStep spec i ∈ burned spec.graph D w)).image
               (spokeStep spec)).card : ℤ)
           = ∑ _u ∈ (I.filter (fun i => spokeStep spec i ∈ burned spec.graph D w)).image
@@ -164,9 +164,9 @@ theorem helper_lemma_b (hcore : spec.core = tricycleCore)
             omega
     have hmono :
         ∑ u ∈ (I.filter (fun i => spokeStep spec i ∈ burned spec.graph D w)).image
-            (spokeStep spec), (num_edges spec.graph (spec.coreVertex centre) u : ℤ)
+            (spokeStep spec), (numEdges spec.graph (spec.coreVertex centre) u : ℤ)
           ≤ ∑ u ∈ burned spec.graph D w,
-              (num_edges spec.graph (spec.coreVertex centre) u : ℤ) :=
+              (numEdges spec.graph (spec.coreVertex centre) u : ℤ) :=
       Finset.sum_le_sum_of_subset_of_nonneg hTsub fun _ _ _ => Int.natCast_nonneg _
     omega
   -- each remaining spoke has a chip in its interior

@@ -86,7 +86,7 @@ theorem transmission_crossOneOff_extended_simple_block
       (mark B.graph
         (strandVertex B alpha ⟨1, by omega⟩)
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau) :
+      (g • oneChip (rightEndpoint B)) tau) :
     ∀ i : ℕ, i ≤ g - 2 → tau (2 + i : ℕ) = (g - i : ℕ) := by
   intro i hi
   let b := 2 + i
@@ -121,7 +121,7 @@ theorem crossOneOff_extended_simple_inversion_lower_bound
       (mark B.graph
         (strandVertex B alpha ⟨1, by omega⟩)
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau)
+      (g • oneChip (rightEndpoint B)) tau)
     (hSeparate : g ≤ k)
     (hfinite : (kInversions k tau).Finite) :
     Nat.choose (g - 1) 2 ≤ kInversionCount k tau := by
@@ -151,7 +151,7 @@ theorem crossOneOff_not_kGeneral_of_five_le_genus
   have hPeriod : g ≤ k := crossOneOff_kGeneral_period_ge_genus
     B alpha beta (by omega) hab hAlpha (by omega) hK
   obtain ⟨tau, hTau, _hAffine, hFinite, hUpper⟩ :=
-    hK.2.2 (g • one_chip (rightEndpoint B))
+    hK.2.2 (g • oneChip (rightEndpoint B))
   have hLower := crossOneOff_extended_simple_inversion_lower_bound
     B alpha beta tau (by omega) hab hAlpha hBetaVeryLong hLong
       hTau hPeriod hFinite

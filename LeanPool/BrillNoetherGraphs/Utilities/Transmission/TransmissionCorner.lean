@@ -36,25 +36,25 @@ namespace Utilities
 
 /-- The Riemann inequality: rank is at least degree minus genus. -/
 theorem rank_ge_deg_sub_genus
-    {G : CFGraph} (hG : graph_connected G) (D : CFDiv G) :
+    {G : CFGraph} (hG : graphConnected G) (D : CFDiv G) :
     rank G D ≥ deg D - (genus G : ℤ) := by
   have hRR := riemann_roch_for_graphs hG D
-  have hDual := rank_geq_neg_one G (canonical_divisor G - D)
+  have hDual := rank_geq_neg_one G (canonicalDivisor G - D)
   omega
 
 /-- Removing `k` chips at one vertex lowers rank by at most `k`. -/
 theorem rank_sub_nsmul_one_chip_ge
     {G : CFGraph} (D : CFDiv G) (w : G.V) (k : ℕ) :
-    rank G (D - (k : ℤ) • one_chip w) ≥ rank G D - (k : ℤ) := by
+    rank G (D - (k : ℤ) • oneChip w) ≥ rank G D - (k : ℤ) := by
   induction k with
   | zero => simp
   | succ m ih =>
       have hstep :
-          rank G ((D - (m : ℤ) • one_chip w) - one_chip w)
-            ≥ rank G (D - (m : ℤ) • one_chip w) - 1 :=
+          rank G ((D - (m : ℤ) • oneChip w) - oneChip w)
+            ≥ rank G (D - (m : ℤ) • oneChip w) - 1 :=
         rank_sub_one_chip_ge_rank_sub_one _ w
-      have hrw : D - ((m + 1 : ℕ) : ℤ) • one_chip w
-          = (D - (m : ℤ) • one_chip w) - one_chip w := by
+      have hrw : D - ((m + 1 : ℕ) : ℤ) • oneChip w
+          = (D - (m : ℤ) • oneChip w) - oneChip w := by
         funext x
         push_cast
         simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
@@ -66,16 +66,16 @@ theorem rank_sub_nsmul_one_chip_ge
 /-- Adding chips at one vertex never lowers rank. -/
 theorem rank_add_nsmul_one_chip_ge
     {G : CFGraph} (D : CFDiv G) (w : G.V) (k : ℕ) :
-    rank G (D + (k : ℤ) • one_chip w) ≥ rank G D := by
+    rank G (D + (k : ℤ) • oneChip w) ≥ rank G D := by
   induction k with
   | zero => simp
   | succ m ih =>
       have hstep :
-          rank G ((D + (m : ℤ) • one_chip w) + one_chip w)
-            ≥ rank G (D + (m : ℤ) • one_chip w) :=
+          rank G ((D + (m : ℤ) • oneChip w) + oneChip w)
+            ≥ rank G (D + (m : ℤ) • oneChip w) :=
         rank_add_one_chip_ge _ w _ le_rfl
-      have hrw : D + ((m + 1 : ℕ) : ℤ) • one_chip w
-          = (D + (m : ℤ) • one_chip w) + one_chip w := by
+      have hrw : D + ((m + 1 : ℕ) : ℤ) • oneChip w
+          = (D + (m : ℤ) • oneChip w) + oneChip w := by
         funext x
         push_cast
         simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
@@ -87,7 +87,7 @@ theorem rank_add_nsmul_one_chip_ge
 chips actually removed. -/
 theorem rank_add_zsmul_one_chip_ge
     {G : CFGraph} (E : CFDiv G) (w : G.V) (p : ℤ) :
-    rank G (E + p • one_chip w) ≥ rank G E - max 0 (-p) := by
+    rank G (E + p • oneChip w) ≥ rank G E - max 0 (-p) := by
   rcases lt_or_ge p 0 with hp | hp
   swap
   · have hk : p = ((p.toNat : ℕ) : ℤ) := (Int.toNat_of_nonneg hp).symm
@@ -98,7 +98,7 @@ theorem rank_add_zsmul_one_chip_ge
   · have hk : -p = (((-p).toNat : ℕ) : ℤ) := (Int.toNat_of_nonneg (by omega)).symm
     have hsub := rank_sub_nsmul_one_chip_ge E w (-p).toNat
     rw [← hk] at hsub
-    have hrw : E - (-p) • one_chip w = E + p • one_chip w := by
+    have hrw : E - (-p) • oneChip w = E + p • oneChip w := by
       funext x
       simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
       ring
@@ -110,15 +110,15 @@ theorem rank_add_zsmul_one_chip_ge
 propagates to every lattice point. -/
 theorem rank_transmissionTwist_ge_of_corner
     {G : CFGraph} (u v : G.V) (D : CFDiv G) {a₀ b₀ r₀ : ℤ}
-    (h : rank G (D + a₀ • one_chip u - b₀ • one_chip v) ≥ r₀)
+    (h : rank G (D + a₀ • oneChip u - b₀ • oneChip v) ≥ r₀)
     (a b : ℤ) :
-    rank G (D + a • one_chip u - b • one_chip v)
+    rank G (D + a • oneChip u - b • oneChip v)
       ≥ r₀ - max 0 (a₀ - a) - max 0 (b - b₀) := by
-  set E : CFDiv G := D + a₀ • one_chip u - b₀ • one_chip v with hE
+  set E : CFDiv G := D + a₀ • oneChip u - b₀ • oneChip v with hE
   have hStep1 := rank_add_zsmul_one_chip_ge E u (a - a₀)
-  have hStep2 := rank_add_zsmul_one_chip_ge (E + (a - a₀) • one_chip u) v (b₀ - b)
-  have hrw : E + (a - a₀) • one_chip u + (b₀ - b) • one_chip v
-      = D + a • one_chip u - b • one_chip v := by
+  have hStep2 := rank_add_zsmul_one_chip_ge (E + (a - a₀) • oneChip u) v (b₀ - b)
+  have hrw : E + (a - a₀) • oneChip u + (b₀ - b) • oneChip v
+      = D + a • oneChip u - b • oneChip v := by
     funext x
     simp only [hE, Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
     ring
@@ -154,22 +154,22 @@ def CornersDominate (τ : AspPerm) (C : List Corner) : Prop :=
 /-- **Corner certificate.**  A divisor of the right degree that achieves every
 corner bound satisfies the full transmission condition. -/
 theorem satisfiesTransmission_of_corners
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V)
     (τ : AspPerm) (D : CFDiv G) (C : List Corner)
     (hDegree : deg D = (genus G : ℤ) + τ.χ)
     (hDom : CornersDominate τ C)
     (hCorners : ∀ c ∈ C,
-      rank G (D + c.1 • one_chip u - c.2.1 • one_chip v) ≥ c.2.2) :
+      rank G (D + c.1 • oneChip u - c.2.1 • oneChip v) ≥ c.2.2) :
     SatisfiesTransmission G u v τ D := by
   refine ⟨hDegree, ?_⟩
   intro a b
   unfold TransmissionInequality
   rcases hDom a b with hTrivial | hRiemann | ⟨c, hc, hBound⟩
-  · have hNeg := rank_geq_neg_one G (D + a • one_chip u - b • one_chip v)
+  · have hNeg := rank_geq_neg_one G (D + a • oneChip u - b • oneChip v)
     omega
   · have hDeg :=
       deg_add_marked_twist_of_degree D u v a b _ hDegree
-    have hR := rank_ge_deg_sub_genus hG (D + a • one_chip u - b • one_chip v)
+    have hR := rank_ge_deg_sub_genus hG (D + a • oneChip u - b • oneChip v)
     rw [hDeg] at hR
     omega
   · have hT := rank_transmissionTwist_ge_of_corner u v D (hCorners c hc) a b
@@ -182,12 +182,12 @@ theorem satisfiesTransmission_of_corners
 of the correct degree.  This covers exactly the ASP permutations of length
 zero. -/
 theorem transmissionExists_of_riemann
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V) (τ : AspPerm)
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V) (τ : AspPerm)
     (hDom : ∀ a b : ℤ, τ.s (a + 1) b - 1 ≤ τ.χ + a - b) :
     TransmissionExists G u v τ := by
   classical
   let w : G.V := Classical.arbitrary G.V
-  refine ⟨((genus G : ℤ) + τ.χ) • one_chip w, ?_⟩
+  refine ⟨((genus G : ℤ) + τ.χ) • oneChip w, ?_⟩
   refine satisfiesTransmission_of_corners hG u v τ _ [] ?_ ?_ ?_
   · rw [map_zsmul, deg_one_chip]
     simp
@@ -200,16 +200,16 @@ theorem transmissionExists_of_riemann
 `(a₀, b₀, r₀)` dominates the slipface of `τ`, then transmission for `τ` follows
 from `BNExists` at rank `r₀` and the corresponding affine degree. -/
 theorem transmissionExists_of_corner_of_BNExists
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V) (τ : AspPerm)
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V) (τ : AspPerm)
     (a₀ b₀ r₀ : ℤ)
     (hDom : CornersDominate τ [(a₀, b₀, r₀)])
     (hBN : BNExists G r₀ ((genus G : ℤ) + τ.χ + a₀ - b₀)) :
     TransmissionExists G u v τ := by
   obtain ⟨E, hDegE, hRankE⟩ := hBN
-  refine ⟨E - a₀ • one_chip u + b₀ • one_chip v, ?_⟩
+  refine ⟨E - a₀ • oneChip u + b₀ • oneChip v, ?_⟩
   have hTwist :
-      E - a₀ • one_chip u + b₀ • one_chip v
-        + a₀ • one_chip u - b₀ • one_chip v = E := by
+      E - a₀ • oneChip u + b₀ • oneChip v
+        + a₀ • oneChip u - b₀ • oneChip v = E := by
     funext x
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
     ring
@@ -240,7 +240,7 @@ corner recording its true value, transmission on a twice-marked graph is
 *equivalent* to ordinary Brill--Noether existence, and in particular does not
 depend on the two marks. -/
 theorem transmissionExists_iff_BNExists_of_corner
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V) (τ : AspPerm)
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V) (τ : AspPerm)
     (a₀ b₀ r₀ : ℤ)
     (hDom : CornersDominate τ [(a₀, b₀, r₀)])
     (hThreshold : r₀ ≤ τ.s (a₀ + 1) b₀ - 1) :
@@ -261,7 +261,7 @@ column `W^1_{g-1}`. -/
 
 /-- Transmission in the elementary Brill--Noether range. -/
 theorem transmissionExists_of_corner_elementary
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V) (τ : AspPerm)
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V) (τ : AspPerm)
     (a₀ b₀ r₀ : ℤ)
     (hDom : CornersDominate τ [(a₀, b₀, r₀)])
     (hR : 0 ≤ r₀)
@@ -274,7 +274,7 @@ theorem transmissionExists_of_corner_elementary
 
 /-- Rank-zero corner: the transmission witness is an effective divisor. -/
 theorem transmissionExists_of_corner_rank_zero
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V) (τ : AspPerm)
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V) (τ : AspPerm)
     (a₀ b₀ : ℤ)
     (hDom : CornersDominate τ [(a₀, b₀, 0)])
     (hDeg : 0 ≤ (genus G : ℤ) + τ.χ + a₀ - b₀) :

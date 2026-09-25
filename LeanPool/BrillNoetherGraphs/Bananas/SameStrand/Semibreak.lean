@@ -204,10 +204,10 @@ private theorem neighbor_mem_of_no_burn_zero
     (G : CFGraph) (q : G.V) (E : CFDiv G) (S : Finset G.V)
     (hS : S ⊆ Finset.univ.filter (· ≠ q))
     (hNoBurn : ∀ z ∈ S,
-      ¬ (E - one_chip q) z <
-        ∑ y ∈ (Finset.univ.filter fun x => x ∉ S), (num_edges G z y : ℤ))
+      ¬ (E - oneChip q) z <
+        ∑ y ∈ (Finset.univ.filter fun x => x ∉ S), (numEdges G z y : ℤ))
     {z : G.V} (hz : z ∈ S) (hEz : E z = 0)
-    {y : G.V} (hEdge : 0 < num_edges G z y) :
+    {y : G.V} (hEdge : 0 < numEdges G z y) :
     y ∈ S := by
   by_contra hy
   have hqz : z ≠ q := by
@@ -216,15 +216,15 @@ private theorem neighbor_mem_of_no_burn_zero
     simp [hzq] at this
   have hyFilter : y ∈ Finset.univ.filter fun x => x ∉ S := by
     simp [hy]
-  have hTerm : (1 : ℤ) ≤ (num_edges G z y : ℤ) := by
+  have hTerm : (1 : ℤ) ≤ (numEdges G z y : ℤ) := by
     exact_mod_cast hEdge
-  have hTermLe : (num_edges G z y : ℤ) ≤
-      ∑ x ∈ (Finset.univ.filter fun t => t ∉ S), (num_edges G z x : ℤ) := by
+  have hTermLe : (numEdges G z y : ℤ) ≤
+      ∑ x ∈ (Finset.univ.filter fun t => t ∉ S), (numEdges G z x : ℤ) := by
     exact Finset.single_le_sum
-      (fun x _ => Int.natCast_nonneg (num_edges G z x)) hyFilter
+      (fun x _ => Int.natCast_nonneg (numEdges G z x)) hyFilter
   apply hNoBurn z hz
-  have hValue : (E - one_chip q) z = 0 := by
-    simp [Pi.sub_apply, one_chip, hqz, hEz]
+  have hValue : (E - oneChip q) z = 0 := by
+    simp [Pi.sub_apply, oneChip, hqz, hEz]
   rw [hValue]
   omega
 
@@ -232,20 +232,20 @@ private theorem neighbor_mem_of_no_burn_zero_direct
     (G : CFGraph) (D : CFDiv G) (S : Finset G.V)
     (hNoBurn : ∀ z ∈ S,
       ¬ D z < ∑ y ∈ (Finset.univ.filter fun x => x ∉ S),
-        (num_edges G z y : ℤ))
+        (numEdges G z y : ℤ))
     {z : G.V} (hz : z ∈ S) (hDz : D z = 0)
-    {y : G.V} (hEdge : 0 < num_edges G z y) :
+    {y : G.V} (hEdge : 0 < numEdges G z y) :
     y ∈ S := by
   by_contra hy
   have hyFilter : y ∈ Finset.univ.filter fun x => x ∉ S := by
     simp [hy]
-  have hTerm : (1 : ℤ) ≤ (num_edges G z y : ℤ) := by
+  have hTerm : (1 : ℤ) ≤ (numEdges G z y : ℤ) := by
     exact_mod_cast hEdge
-  have hTermLe : (num_edges G z y : ℤ) ≤
+  have hTermLe : (numEdges G z y : ℤ) ≤
       ∑ x ∈ (Finset.univ.filter fun t => t ∉ S),
-        (num_edges G z x : ℤ) := by
+        (numEdges G z x : ℤ) := by
     exact Finset.single_le_sum
-      (fun x _ => Int.natCast_nonneg (num_edges G z x)) hyFilter
+      (fun x _ => Int.natCast_nonneg (numEdges G z x)) hyFilter
   apply hNoBurn z hz
   rw [hDz]
   omega
@@ -253,7 +253,7 @@ private theorem neighbor_mem_of_no_burn_zero_direct
 private theorem path_mem_forward_of_zero
     {g : ℕ} (B : Banana g) (E : CFDiv B.graph) (S : Finset B.graph.V)
     (hClosed : ∀ {z : B.graph.V}, z ∈ S → E z = 0 →
-      ∀ {y : B.graph.V}, 0 < num_edges B.graph z y → y ∈ S)
+      ∀ {y : B.graph.V}, 0 < numEdges B.graph z y → y ∈ S)
     (γ : Fin (g + 1)) (lo hi : B.PathPosition γ) (hlt : lo.val < hi.val)
     (hlo : B.pathVertex γ lo ∈ S)
     (hzero : ∀ p : B.PathPosition γ, lo.val ≤ p.val → p.val < hi.val →
@@ -265,7 +265,7 @@ private theorem path_mem_forward_of_zero
   have hSourceZero :=
     hzero (B.stepLeftPosition γ offset) hOffsetLo hOffsetHi
   rw [B.pathVertex_stepLeftPosition] at hSourceZero
-  have hEdge : 0 < num_edges B.graph (B.stepLeft γ offset)
+  have hEdge : 0 < numEdges B.graph (B.stepLeft γ offset)
       (B.stepRight γ offset) := by
     simpa using B.consecutive_num_edges_pos γ offset
   have hNext := hClosed hLeft hSourceZero hEdge
@@ -274,7 +274,7 @@ private theorem path_mem_forward_of_zero
 private theorem path_mem_reverse_of_zero
     {g : ℕ} (B : Banana g) (E : CFDiv B.graph) (S : Finset B.graph.V)
     (hClosed : ∀ {z : B.graph.V}, z ∈ S → E z = 0 →
-      ∀ {y : B.graph.V}, 0 < num_edges B.graph z y → y ∈ S)
+      ∀ {y : B.graph.V}, 0 < numEdges B.graph z y → y ∈ S)
     (γ : Fin (g + 1)) (lo hi : B.PathPosition γ) (hlt : lo.val < hi.val)
     (hhi : B.pathVertex γ hi ∈ S)
     (hzero : ∀ p : B.PathPosition γ, lo.val < p.val → p.val ≤ hi.val →
@@ -294,7 +294,7 @@ private theorem path_mem_reverse_of_zero
     hzero (B.stepRightPosition γ offset) (by simp [stepRightPosition]; omega)
       (by simp [stepRightPosition]; omega)
   rw [B.pathVertex_stepRightPosition] at hSourceZero
-  have hEdge : 0 < num_edges B.graph (B.stepRight γ offset)
+  have hEdge : 0 < numEdges B.graph (B.stepRight γ offset)
       (B.stepLeft γ offset) := by
     rw [num_edges_symmetric]
     simpa using B.consecutive_num_edges_pos γ offset
@@ -311,7 +311,7 @@ private theorem not_both_core_mem_of_no_burn
     (hw : semibreakDivisor B chips w = 0) (hwS : w ∉ S)
     (hClosed : ∀ {z : B.graph.V}, z ∈ S →
       semibreakDivisor B chips z = 0 →
-      ∀ {y : B.graph.V}, 0 < num_edges B.graph z y → y ∈ S) :
+      ∀ {y : B.graph.V}, 0 < numEdges B.graph z y → y ∈ S) :
     ¬ (B.coreVertex (0 : Fin 2) ∈ S ∧ B.coreVertex (1 : Fin 2) ∈ S) := by
   intro hBoth
   rcases w with core | interior
@@ -392,7 +392,7 @@ private theorem core_mem_iff_of_free_strand
     (S : Finset B.graph.V)
     (hClosed : ∀ {z : B.graph.V}, z ∈ S →
       semibreakDivisor B chips z = 0 →
-      ∀ {y : B.graph.V}, 0 < num_edges B.graph z y → y ∈ S)
+      ∀ {y : B.graph.V}, 0 < numEdges B.graph z y → y ∈ S)
     (γ : Fin (g + 1)) (hchip : chips γ = none) :
     B.coreVertex (0 : Fin 2) ∈ S ↔ B.coreVertex (1 : Fin 2) ∈ S := by
   have hRaw : B.coreVertex (B.core.tail γ) ∈ S ↔
@@ -429,11 +429,11 @@ private theorem false_of_no_burn_with_two_outside_neighbors
     (G : CFGraph) (q : G.V) (E : CFDiv G) (S : Finset G.V)
     (hS : S ⊆ Finset.univ.filter (· ≠ q))
     (hNoBurn : ∀ z ∈ S,
-      ¬ (E - one_chip q) z <
-        ∑ y ∈ (Finset.univ.filter fun x => x ∉ S), (num_edges G z y : ℤ))
+      ¬ (E - oneChip q) z <
+        ∑ y ∈ (Finset.univ.filter fun x => x ∉ S), (numEdges G z y : ℤ))
     {z y₁ y₂ : G.V} (hz : z ∈ S) (hEz : E z = 1)
     (hyNe : y₁ ≠ y₂) (hy₁ : y₁ ∉ S) (hy₂ : y₂ ∉ S)
-    (hEdge₁ : 0 < num_edges G z y₁) (hEdge₂ : 0 < num_edges G z y₂) :
+    (hEdge₁ : 0 < numEdges G z y₁) (hEdge₂ : 0 < numEdges G z y₂) :
     False := by
   have hSubset : ({y₁, y₂} : Finset G.V) ⊆
       Finset.univ.filter fun x => x ∉ S := by
@@ -441,21 +441,21 @@ private theorem false_of_no_burn_with_two_outside_neighbors
     simp only [Finset.mem_insert, Finset.mem_singleton] at hy
     rcases hy with rfl | rfl <;> simp [hy₁, hy₂]
   have hBound := Finset.sum_le_sum_of_subset_of_nonneg hSubset
-    (fun y _ _ => Int.natCast_nonneg (num_edges G z y))
-  have hPair : (num_edges G z y₁ : ℤ) + (num_edges G z y₂ : ℤ) ≤
-      ∑ y ∈ (Finset.univ.filter fun x => x ∉ S), (num_edges G z y : ℤ) := by
+    (fun y _ _ => Int.natCast_nonneg (numEdges G z y))
+  have hPair : (numEdges G z y₁ : ℤ) + (numEdges G z y₂ : ℤ) ≤
+      ∑ y ∈ (Finset.univ.filter fun x => x ∉ S), (numEdges G z y : ℤ) := by
     simpa [Finset.sum_pair hyNe] using hBound
-  have hOne₁ : (1 : ℤ) ≤ (num_edges G z y₁ : ℤ) := by
+  have hOne₁ : (1 : ℤ) ≤ (numEdges G z y₁ : ℤ) := by
     exact_mod_cast hEdge₁
-  have hOne₂ : (1 : ℤ) ≤ (num_edges G z y₂ : ℤ) := by
+  have hOne₂ : (1 : ℤ) ≤ (numEdges G z y₂ : ℤ) := by
     exact_mod_cast hEdge₂
   have hqz : z ≠ q := by
     intro hzq
     have := hS hz
     simp [hzq] at this
   apply hNoBurn z hz
-  have hValue : (E - one_chip q) z = 1 := by
-    simp [Pi.sub_apply, one_chip, hqz, hEz]
+  have hValue : (E - oneChip q) z = 1 := by
+    simp [Pi.sub_apply, oneChip, hqz, hEz]
   rw [hValue]
   omega
 
@@ -463,10 +463,10 @@ private theorem false_of_no_burn_with_two_outside_neighbors_direct
     (G : CFGraph) (D : CFDiv G) (S : Finset G.V)
     (hNoBurn : ∀ z ∈ S,
       ¬ D z < ∑ y ∈ (Finset.univ.filter fun x => x ∉ S),
-        (num_edges G z y : ℤ))
+        (numEdges G z y : ℤ))
     {z y₁ y₂ : G.V} (hz : z ∈ S) (hDz : D z = 1)
     (hyNe : y₁ ≠ y₂) (hy₁ : y₁ ∉ S) (hy₂ : y₂ ∉ S)
-    (hEdge₁ : 0 < num_edges G z y₁) (hEdge₂ : 0 < num_edges G z y₂) :
+    (hEdge₁ : 0 < numEdges G z y₁) (hEdge₂ : 0 < numEdges G z y₂) :
     False := by
   have hSubset : ({y₁, y₂} : Finset G.V) ⊆
       Finset.univ.filter fun x => x ∉ S := by
@@ -474,14 +474,14 @@ private theorem false_of_no_burn_with_two_outside_neighbors_direct
     simp only [Finset.mem_insert, Finset.mem_singleton] at hy
     rcases hy with rfl | rfl <;> simp [hy₁, hy₂]
   have hBound := Finset.sum_le_sum_of_subset_of_nonneg hSubset
-    (fun y _ _ => Int.natCast_nonneg (num_edges G z y))
-  have hPair : (num_edges G z y₁ : ℤ) + (num_edges G z y₂ : ℤ) ≤
+    (fun y _ _ => Int.natCast_nonneg (numEdges G z y))
+  have hPair : (numEdges G z y₁ : ℤ) + (numEdges G z y₂ : ℤ) ≤
       ∑ y ∈ (Finset.univ.filter fun x => x ∉ S),
-        (num_edges G z y : ℤ) := by
+        (numEdges G z y : ℤ) := by
     simpa [Finset.sum_pair hyNe] using hBound
-  have hOne₁ : (1 : ℤ) ≤ (num_edges G z y₁ : ℤ) := by
+  have hOne₁ : (1 : ℤ) ≤ (numEdges G z y₁ : ℤ) := by
     exact_mod_cast hEdge₁
-  have hOne₂ : (1 : ℤ) ≤ (num_edges G z y₂ : ℤ) := by
+  have hOne₂ : (1 : ℤ) ≤ (numEdges G z y₂ : ℤ) := by
     exact_mod_cast hEdge₂
   apply hNoBurn z hz
   rw [hDz]
@@ -495,7 +495,7 @@ private theorem false_of_no_burn_semibreak_of_core_out
     (D : CFDiv B.graph) (S : Finset B.graph.V)
     (hNoBurn : ∀ z ∈ S,
       ¬ D z < ∑ y ∈ (Finset.univ.filter fun x => x ∉ S),
-        (num_edges B.graph z y : ℤ))
+        (numEdges B.graph z y : ℤ))
     (hCoreZeroOut : B.coreVertex (0 : Fin 2) ∉ S)
     (hCoreOneOut : B.coreVertex (1 : Fin 2) ∉ S)
     (hInteriorValue : ∀ (γ : Fin (g + 1))
@@ -505,7 +505,7 @@ private theorem false_of_no_burn_semibreak_of_core_out
     (hNonempty : S.Nonempty) : False := by
   have hClosed : ∀ {z : B.graph.V}, z ∈ S →
       semibreakDivisor B chips z = 0 →
-      ∀ {y : B.graph.V}, 0 < num_edges B.graph z y → y ∈ S := by
+      ∀ {y : B.graph.V}, 0 < numEdges B.graph z y → y ∈ S := by
     intro z hz hEz y hEdge
     rcases z with core | interior
     · rcases fin_two_cases core with hcore | hcore
@@ -607,11 +607,11 @@ private theorem false_of_no_burn_semibreak_of_core_out
             dsimp [previous, next, qpos, previousPathPosition,
               nextPathPosition] at hPos
             omega
-          have hPreviousEdge : 0 < num_edges B.graph
+          have hPreviousEdge : 0 < numEdges B.graph
               (B.pathVertex γ qpos) (B.pathVertex γ previous) :=
             (B.pathVertex_num_edges_pos_iff γ qpos hqInterior
               (B.pathVertex γ previous)).2 (Or.inl rfl)
-          have hNextEdge : 0 < num_edges B.graph
+          have hNextEdge : 0 < numEdges B.graph
               (B.pathVertex γ qpos) (B.pathVertex γ next) :=
             (B.pathVertex_num_edges_pos_iff γ qpos hqInterior
               (B.pathVertex γ next)).2 (Or.inr rfl)
@@ -650,12 +650,12 @@ private theorem false_of_no_burn_semibreak_of_core_out
 theorem q_reduced_semibreak_sub_vertex {g : ℕ} (B : Banana g)
     (E : CFDiv B.graph) (hE : IsSemibreak B E) (hdeg : deg E ≤ (g : ℤ))
     (w : B.graph.V) (hw : E w = 0) :
-    q_reduced B.graph w (E - one_chip w) := by
+    qReduced B.graph w (E - oneChip w) := by
   rcases hE with ⟨chips, rfl⟩
   refine ⟨?_, ?_⟩
   · intro z hzw
     have hEff := effective_semibreakDivisor B chips z
-    simpa [Pi.sub_apply, one_chip, hzw] using hEff
+    simpa [Pi.sub_apply, oneChip, hzw] using hEff
   · intro S hwS hNonempty hLegal
     have hS : S ⊆ Finset.univ.filter (· ≠ w) := by
       intro z hz
@@ -663,9 +663,9 @@ theorem q_reduced_semibreak_sub_vertex {g : ℕ} (B : Banana g)
       intro hzw
       exact hwS (hzw ▸ hz)
     have hNoBurn : ∀ z ∈ S,
-        ¬ (semibreakDivisor B chips - one_chip w) z <
+        ¬ (semibreakDivisor B chips - oneChip w) z <
           ∑ y ∈ (Finset.univ.filter fun x => x ∉ S),
-            (num_edges B.graph z y : ℤ) := by
+            (numEdges B.graph z y : ℤ) := by
       intro z hz
       rw [← outdeg_S_eq_sum_filter]
       exact not_lt.mpr (hLegal z hz)
@@ -675,7 +675,7 @@ theorem q_reduced_semibreak_sub_vertex {g : ℕ} (B : Banana g)
       simp at this
     have hClosed : ∀ {z : B.graph.V}, z ∈ S →
         semibreakDivisor B chips z = 0 →
-        ∀ {y : B.graph.V}, 0 < num_edges B.graph z y → y ∈ S := by
+        ∀ {y : B.graph.V}, 0 < numEdges B.graph z y → y ∈ S := by
       intro z hz hEz y hEdge
       exact neighbor_mem_of_no_burn_zero B.graph w (semibreakDivisor B chips)
         S hS hNoBurn hz hEz hEdge
@@ -775,11 +775,11 @@ theorem q_reduced_semibreak_sub_vertex {g : ℕ} (B : Banana g)
               dsimp [previous, next, qpos, previousPathPosition,
                 nextPathPosition] at hPos
               omega
-            have hPreviousEdge : 0 < num_edges B.graph
+            have hPreviousEdge : 0 < numEdges B.graph
                 (B.pathVertex γ qpos) (B.pathVertex γ previous) :=
               (B.pathVertex_num_edges_pos_iff γ qpos hqInterior
                 (B.pathVertex γ previous)).2 (Or.inl rfl)
-            have hNextEdge : 0 < num_edges B.graph
+            have hNextEdge : 0 < numEdges B.graph
                 (B.pathVertex γ qpos) (B.pathVertex γ next) :=
               (B.pathVertex_num_edges_pos_iff γ qpos hqInterior
                 (B.pathVertex γ next)).2 (Or.inr rfl)
@@ -815,10 +815,10 @@ theorem q_reduced_semibreak_sub_vertex {g : ℕ} (B : Banana g)
 theorem rank_semibreak_sub_vertex_eq_neg_one {g : ℕ} (B : Banana g)
     (E : CFDiv B.graph) (hE : IsSemibreak B E) (hdeg : deg E ≤ (g : ℤ))
     (w : B.graph.V) (hw : E w = 0) :
-    rank B.graph (E - one_chip w) = -1 := by
+    rank B.graph (E - oneChip w) = -1 := by
   apply rank_eq_neg_one_of_qReduced_debt B.graph w
-    (E - one_chip w) (q_reduced_semibreak_sub_vertex B E hE hdeg w hw)
-  simp [Pi.sub_apply, one_chip, hw]
+    (E - oneChip w) (q_reduced_semibreak_sub_vertex B E hE hdeg w hw)
+  simp [Pi.sub_apply, oneChip, hw]
 
 /-- A semibreak divisor of degree at most the genus has rank exactly zero. -/
 theorem rank_semibreak_eq_zero {g : ℕ} (B : Banana g)
@@ -837,7 +837,7 @@ theorem rank_semibreak_eq_zero {g : ℕ} (B : Banana g)
     intro hOne
     have hWin := (rank_ge_one_iff_winnable_sub_one_chip B.graph E).mp hOne
       (leftEndpoint B)
-    have hSubNonneg : 0 ≤ rank B.graph (E - one_chip (leftEndpoint B)) := by
+    have hSubNonneg : 0 ≤ rank B.graph (E - oneChip (leftEndpoint B)) := by
       apply (rank_geq_iff B.graph _ 0).mp
       exact (rank_nonneg_iff_winnable B.graph _).mpr hWin
     rw [hSub] at hSubNonneg
@@ -850,7 +850,7 @@ theorem rank_semibreak_eq_zero {g : ℕ} (B : Banana g)
 normal form. -/
 noncomputable def bananaNormalForm {g : ℕ} (B : Banana g) (a b : ℤ)
     (E : CFDiv B.graph) : CFDiv B.graph :=
-  a • one_chip (leftEndpoint B) + b • one_chip (rightEndpoint B) + E
+  a • oneChip (leftEndpoint B) + b • oneChip (rightEndpoint B) + E
 
 /-- The numerical side condition in the paper's banana normal form. -/
 def IsBananaNormalForm {g : ℕ} (B : Banana g) (b : ℤ)
@@ -870,7 +870,7 @@ def IsBananaNormalForm {g : ℕ} (B : Banana g) (b : ℤ)
   have hELeft : E (leftEndpoint B) = 0 := by
     simpa [leftEndpoint] using hE.coreVertex_eq_zero (0 : Fin 2)
   change E (Sum.inl (0 : Fin 2)) = 0 at hELeft
-  simp [bananaNormalForm, leftEndpoint, rightEndpoint, one_chip,
+  simp [bananaNormalForm, leftEndpoint, rightEndpoint, oneChip,
     SubdivisionGraph.Spec.coreVertex, hELeft]
 
 @[simp] theorem bananaNormalForm_rightEndpoint {g : ℕ} (B : Banana g)
@@ -879,7 +879,7 @@ def IsBananaNormalForm {g : ℕ} (B : Banana g) (b : ℤ)
   have hERight : E (rightEndpoint B) = 0 := by
     simpa [rightEndpoint] using hE.coreVertex_eq_zero (1 : Fin 2)
   change E (Sum.inl (1 : Fin 2)) = 0 at hERight
-  simp [bananaNormalForm, leftEndpoint, rightEndpoint, one_chip,
+  simp [bananaNormalForm, leftEndpoint, rightEndpoint, oneChip,
     SubdivisionGraph.Spec.coreVertex, hERight]
 
 theorem effective_bananaNormalForm {g : ℕ} (B : Banana g)
@@ -888,29 +888,29 @@ theorem effective_bananaNormalForm {g : ℕ} (B : Banana g)
     effective (bananaNormalForm B a b E) := by
   intro z
   have hEz := hE.effective z
-  have hLeft : 0 ≤ (a • one_chip (leftEndpoint B)) z := by
+  have hLeft : 0 ≤ (a • oneChip (leftEndpoint B)) z := by
     simp only [Pi.smul_apply, smul_eq_mul]
-    by_cases hz : z = leftEndpoint B <;> simp [one_chip, hz, ha]
-  have hRight : 0 ≤ (b • one_chip (rightEndpoint B)) z := by
+    by_cases hz : z = leftEndpoint B <;> simp [oneChip, hz, ha]
+  have hRight : 0 ≤ (b • oneChip (rightEndpoint B)) z := by
     simp only [Pi.smul_apply, smul_eq_mul]
-    by_cases hz : z = rightEndpoint B <;> simp [one_chip, hz, hb]
-  change 0 ≤ (a • one_chip (leftEndpoint B)) z +
-    (b • one_chip (rightEndpoint B)) z + E z
+    by_cases hz : z = rightEndpoint B <;> simp [oneChip, hz, hb]
+  change 0 ≤ (a • oneChip (leftEndpoint B)) z +
+    (b • oneChip (rightEndpoint B)) z + E z
   omega
 
 theorem q_effective_bananaNormalForm {g : ℕ} (B : Banana g)
     (a b : ℤ) (E : CFDiv B.graph) (hE : IsSemibreak B E)
     (hb : 0 ≤ b) :
-    q_effective (leftEndpoint B) (bananaNormalForm B a b E) := by
+    qEffective (leftEndpoint B) (bananaNormalForm B a b E) := by
   intro z hzLeft
   have hEz := hE.effective z
-  have hLeft : (a • one_chip (leftEndpoint B)) z = 0 := by
-    simp [Pi.smul_apply, one_chip, hzLeft]
-  have hRight : 0 ≤ (b • one_chip (rightEndpoint B)) z := by
+  have hLeft : (a • oneChip (leftEndpoint B)) z = 0 := by
+    simp [Pi.smul_apply, oneChip, hzLeft]
+  have hRight : 0 ≤ (b • oneChip (rightEndpoint B)) z := by
     simp only [Pi.smul_apply, smul_eq_mul]
-    by_cases hz : z = rightEndpoint B <;> simp [one_chip, hz, hb]
-  change 0 ≤ (a • one_chip (leftEndpoint B)) z +
-    (b • one_chip (rightEndpoint B)) z + E z
+    by_cases hz : z = rightEndpoint B <;> simp [oneChip, hz, hb]
+  change 0 ≤ (a • oneChip (leftEndpoint B)) z +
+    (b • oneChip (rightEndpoint B)) z + E z
   rw [hLeft]
   omega
 
@@ -920,11 +920,11 @@ unrestricted, as reducedness only asks for effectivity away from it. -/
 theorem q_reduced_bananaNormalForm {g : ℕ} (B : Banana g)
     (a b : ℤ) (E : CFDiv B.graph) (hE : IsSemibreak B E)
     (hb : 0 ≤ b) (hdeg : b + deg E ≤ (g : ℤ)) :
-    q_reduced B.graph (leftEndpoint B) (bananaNormalForm B a b E) := by
+    qReduced B.graph (leftEndpoint B) (bananaNormalForm B a b E) := by
   rcases hE with ⟨chips, rfl⟩
   let E : CFDiv B.graph := semibreakDivisor B chips
   have hE : IsSemibreak B E := ⟨chips, rfl⟩
-  have hQE : q_effective (leftEndpoint B) (bananaNormalForm B a b E) :=
+  have hQE : qEffective (leftEndpoint B) (bananaNormalForm B a b E) :=
     q_effective_bananaNormalForm B a b E hE hb
   refine ⟨hQE, ?_⟩
   intro S hqS hNonempty hLegal
@@ -936,7 +936,7 @@ theorem q_reduced_bananaNormalForm {g : ℕ} (B : Banana g)
   have hNoBurn : ∀ z ∈ S,
       ¬ bananaNormalForm B a b E z <
         ∑ y ∈ (Finset.univ.filter fun x => x ∉ S),
-          (num_edges B.graph z y : ℤ) := by
+          (numEdges B.graph z y : ℤ) := by
     intro z hz
     rw [← outdeg_S_eq_sum_filter]
     exact not_lt.mpr (hLegal z hz)
@@ -951,7 +951,7 @@ theorem q_reduced_bananaNormalForm {g : ℕ} (B : Banana g)
       simpa [rightEndpoint] using hRight⟩)
     have hCutLower : (g : ℤ) + 1 ≤
         ∑ z ∈ S, ∑ y ∈ (Finset.univ.filter fun x => x ∉ S),
-          (num_edges B.graph z y : ℤ) := by
+          (numEdges B.graph z y : ℤ) := by
       have hCrossInt : (g : ℤ) + 1 ≤ ((B.crossingSteps S).card : ℤ) := by
         exact_mod_cast hCross
       rw [← B.cutMultiplicity_eq_card_crossingSteps S] at hCrossInt
@@ -960,18 +960,18 @@ theorem q_reduced_bananaNormalForm {g : ℕ} (B : Banana g)
       exact hCrossInt
     have hPointwise : ∀ z ∈ S,
         (∑ y ∈ (Finset.univ.filter fun x => x ∉ S),
-          (num_edges B.graph z y : ℤ)) ≤ bananaNormalForm B a b E z := by
+          (numEdges B.graph z y : ℤ)) ≤ bananaNormalForm B a b E z := by
       intro z hz
       exact le_of_not_gt (hNoBurn z hz)
     have hCutLe :
         (∑ z ∈ S, ∑ y ∈ (Finset.univ.filter fun x => x ∉ S),
-          (num_edges B.graph z y : ℤ)) ≤
+          (numEdges B.graph z y : ℤ)) ≤
           ∑ z ∈ S, bananaNormalForm B a b E z := by
       exact Finset.sum_le_sum fun z hz => hPointwise z hz
     have hSumNormal :
         (∑ z ∈ S, bananaNormalForm B a b E z) =
           b + ∑ z ∈ S, E z := by
-      simp [bananaNormalForm, Finset.sum_add_distrib, one_chip,
+      simp [bananaNormalForm, Finset.sum_add_distrib, oneChip,
         hLeftOut, hRight]
     have hSumE := hE.sum_le_degree S
     have hdegE : b + deg E ≤ (g : ℤ) := by
@@ -983,7 +983,7 @@ theorem q_reduced_bananaNormalForm {g : ℕ} (B : Banana g)
     (by simpa [leftEndpoint] using hLeftOut)
     (by simpa [rightEndpoint] using hRightOut) (by
       intro γ q
-      simp [bananaNormalForm, E, leftEndpoint, rightEndpoint, one_chip,
+      simp [bananaNormalForm, E, leftEndpoint, rightEndpoint, oneChip,
         SubdivisionGraph.Spec.coreVertex,
         SubdivisionGraph.Spec.interiorVertex]) hNonempty).elim
 
@@ -996,7 +996,7 @@ theorem bananaNormalForm_parameters_unique {g : ℕ} (B : Banana g)
     (hb : 0 ≤ b) (hb' : 0 ≤ b')
     (hdeg : b + deg E ≤ (g : ℤ))
     (hdeg' : b' + deg E' ≤ (g : ℤ))
-    (hLinear : linear_equiv B.graph (bananaNormalForm B a b E)
+    (hLinear : linearEquiv B.graph (bananaNormalForm B a b E)
       (bananaNormalForm B a' b' E')) :
     a = a' ∧ b = b' ∧ E = E' := by
   have hEqual := q_reduced_unique B.graph (leftEndpoint B)
@@ -1024,16 +1024,16 @@ right endpoint. -/
 theorem q_effective_bananaNormalForm_right {g : ℕ} (B : Banana g)
     (a b : ℤ) (E : CFDiv B.graph) (hE : IsSemibreak B E)
     (ha : 0 ≤ a) :
-    q_effective (rightEndpoint B) (bananaNormalForm B a b E) := by
+    qEffective (rightEndpoint B) (bananaNormalForm B a b E) := by
   intro z hzRight
   have hEz := hE.effective z
-  have hRight : (b • one_chip (rightEndpoint B)) z = 0 := by
-    simp [Pi.smul_apply, one_chip, hzRight]
-  have hLeft : 0 ≤ (a • one_chip (leftEndpoint B)) z := by
+  have hRight : (b • oneChip (rightEndpoint B)) z = 0 := by
+    simp [Pi.smul_apply, oneChip, hzRight]
+  have hLeft : 0 ≤ (a • oneChip (leftEndpoint B)) z := by
     simp only [Pi.smul_apply, smul_eq_mul]
-    by_cases hz : z = leftEndpoint B <;> simp [one_chip, hz, ha]
-  change 0 ≤ (a • one_chip (leftEndpoint B)) z +
-    (b • one_chip (rightEndpoint B)) z + E z
+    by_cases hz : z = leftEndpoint B <;> simp [oneChip, hz, ha]
+  change 0 ≤ (a • oneChip (leftEndpoint B)) z +
+    (b • oneChip (rightEndpoint B)) z + E z
   rw [hRight]
   omega
 
@@ -1042,11 +1042,11 @@ normal-form divisor reduced at the right endpoint. -/
 theorem q_reduced_bananaNormalForm_right {g : ℕ} (B : Banana g)
     (a b : ℤ) (E : CFDiv B.graph) (hE : IsSemibreak B E)
     (ha : 0 ≤ a) (hdeg : a + deg E ≤ (g : ℤ)) :
-    q_reduced B.graph (rightEndpoint B) (bananaNormalForm B a b E) := by
+    qReduced B.graph (rightEndpoint B) (bananaNormalForm B a b E) := by
   rcases hE with ⟨chips, rfl⟩
   let E : CFDiv B.graph := semibreakDivisor B chips
   have hE : IsSemibreak B E := ⟨chips, rfl⟩
-  have hQE : q_effective (rightEndpoint B) (bananaNormalForm B a b E) :=
+  have hQE : qEffective (rightEndpoint B) (bananaNormalForm B a b E) :=
     q_effective_bananaNormalForm_right B a b E hE ha
   refine ⟨hQE, ?_⟩
   intro S hqS hNonempty hLegal
@@ -1058,7 +1058,7 @@ theorem q_reduced_bananaNormalForm_right {g : ℕ} (B : Banana g)
   have hNoBurn : ∀ z ∈ S,
       ¬ bananaNormalForm B a b E z <
         ∑ y ∈ (Finset.univ.filter fun x => x ∉ S),
-          (num_edges B.graph z y : ℤ) := by
+          (numEdges B.graph z y : ℤ) := by
     intro z hz
     rw [← outdeg_S_eq_sum_filter]
     exact not_lt.mpr (hLegal z hz)
@@ -1073,7 +1073,7 @@ theorem q_reduced_bananaNormalForm_right {g : ℕ} (B : Banana g)
       simpa [rightEndpoint] using hRightOut⟩)
     have hCutLower : (g : ℤ) + 1 ≤
         ∑ z ∈ S, ∑ y ∈ (Finset.univ.filter fun x => x ∉ S),
-          (num_edges B.graph z y : ℤ) := by
+          (numEdges B.graph z y : ℤ) := by
       have hCrossInt : (g : ℤ) + 1 ≤ ((B.crossingSteps S).card : ℤ) := by
         exact_mod_cast hCross
       rw [← B.cutMultiplicity_eq_card_crossingSteps S] at hCrossInt
@@ -1082,18 +1082,18 @@ theorem q_reduced_bananaNormalForm_right {g : ℕ} (B : Banana g)
       exact hCrossInt
     have hPointwise : ∀ z ∈ S,
         (∑ y ∈ (Finset.univ.filter fun x => x ∉ S),
-          (num_edges B.graph z y : ℤ)) ≤ bananaNormalForm B a b E z := by
+          (numEdges B.graph z y : ℤ)) ≤ bananaNormalForm B a b E z := by
       intro z hz
       exact le_of_not_gt (hNoBurn z hz)
     have hCutLe :
         (∑ z ∈ S, ∑ y ∈ (Finset.univ.filter fun x => x ∉ S),
-          (num_edges B.graph z y : ℤ)) ≤
+          (numEdges B.graph z y : ℤ)) ≤
           ∑ z ∈ S, bananaNormalForm B a b E z := by
       exact Finset.sum_le_sum fun z hz => hPointwise z hz
     have hSumNormal :
         (∑ z ∈ S, bananaNormalForm B a b E z) =
           a + ∑ z ∈ S, E z := by
-      simp [bananaNormalForm, Finset.sum_add_distrib, one_chip,
+      simp [bananaNormalForm, Finset.sum_add_distrib, oneChip,
         hLeft, hRightOut]
     have hSumE := hE.sum_le_degree S
     have hdegE : a + deg E ≤ (g : ℤ) := by
@@ -1105,7 +1105,7 @@ theorem q_reduced_bananaNormalForm_right {g : ℕ} (B : Banana g)
     (by simpa [leftEndpoint] using hLeftOut)
     (by simpa [rightEndpoint] using hRightOut) (by
       intro γ q
-      simp [bananaNormalForm, E, leftEndpoint, rightEndpoint, one_chip,
+      simp [bananaNormalForm, E, leftEndpoint, rightEndpoint, oneChip,
         SubdivisionGraph.Spec.coreVertex,
         SubdivisionGraph.Spec.interiorVertex]) hNonempty).elim
 
@@ -1114,7 +1114,7 @@ form follows from the generic reduced-divisor API. -/
 theorem rank_bananaNormalForm_neg_iff_of_q_reduced {g : ℕ} (B : Banana g)
     (a b : ℤ) (E : CFDiv B.graph) (hE : IsSemibreak B E)
     (hb : 0 ≤ b)
-    (hReduced : q_reduced B.graph (leftEndpoint B)
+    (hReduced : qReduced B.graph (leftEndpoint B)
       (bananaNormalForm B a b E)) :
     rank B.graph (bananaNormalForm B a b E) = -1 ↔ a < 0 := by
   constructor
@@ -1190,10 +1190,10 @@ theorem rank_bananaNormalForm {g : ℕ} (B : Banana g)
         (m • endpointPencilDivisor B) F hFEffective (m : ℤ)
         (rank_endpointPencil_nsmul_ge B m)
       simpa [hm] using hLower
-    have hRR := riemann_roch_for_graphs (graph_connected B)
+    have hRR := riemann_roch_for_graphs (graphConnected B)
       (bananaNormalForm B a b E)
     have hDual := rank_geq_neg_one B.graph
-      (canonical_divisor B.graph - bananaNormalForm B a b E)
+      (canonicalDivisor B.graph - bananaNormalForm B a b E)
     have hLowerRR :
         a + b + deg E - (g : ℤ) ≤
           rank B.graph (bananaNormalForm B a b E) := by
@@ -1201,7 +1201,7 @@ theorem rank_bananaNormalForm {g : ℕ} (B : Banana g)
       omega
     by_cases haBound : a + deg E ≤ (g : ℤ)
     · by_cases hab : a ≤ b
-      · let A : CFDiv B.graph := (a + 1) • one_chip (leftEndpoint B)
+      · let A : CFDiv B.graph := (a + 1) • oneChip (leftEndpoint B)
         have hAEffective : effective A := by
           exact effective_zsmul_one_chip_of_nonneg B.graph
             (leftEndpoint B) (a + 1) (by omega)
@@ -1229,7 +1229,7 @@ theorem rank_bananaNormalForm {g : ℕ} (B : Banana g)
         rw [hMin, max_eq_left hRRLe]
         omega
       · have hba : b ≤ a := by omega
-        let A : CFDiv B.graph := (b + 1) • one_chip (rightEndpoint B)
+        let A : CFDiv B.graph := (b + 1) • oneChip (rightEndpoint B)
         have hAEffective : effective A := by
           exact effective_zsmul_one_chip_of_nonneg B.graph
             (rightEndpoint B) (b + 1) (by omega)
@@ -1262,8 +1262,8 @@ theorem rank_bananaNormalForm {g : ℕ} (B : Banana g)
         omega
     · have hLeftCoeff : 0 ≤ a - (g : ℤ) + deg E := by omega
       let A : CFDiv B.graph :=
-        (a - (g : ℤ) + deg E) • one_chip (leftEndpoint B) +
-          (b + 1) • one_chip (rightEndpoint B)
+        (a - (g : ℤ) + deg E) • oneChip (leftEndpoint B) +
+          (b + 1) • oneChip (rightEndpoint B)
       have hAEffective : effective A := by
         apply (Eff B.graph).add_mem
         · exact effective_zsmul_one_chip_of_nonneg B.graph
@@ -1321,7 +1321,7 @@ theorem rank_bananaNormalForm {g : ℕ} (B : Banana g)
 nonnegative. -/
 theorem q_reduced_rightEndpoint_nonneg {g : ℕ} {B : Banana g}
     {D : CFDiv B.graph}
-    (hD : q_reduced B.graph (leftEndpoint B) D) :
+    (hD : qReduced B.graph (leftEndpoint B) D) :
     0 ≤ D (rightEndpoint B) := by
   apply hD.1
   simp [leftEndpoint, rightEndpoint,
@@ -1330,7 +1330,7 @@ theorem q_reduced_rightEndpoint_nonneg {g : ℕ} {B : Banana g}
 /-- Every interior coefficient of a left-reduced divisor is nonnegative. -/
 theorem q_reduced_interiorVertex_nonneg {g : ℕ} {B : Banana g}
     {D : CFDiv B.graph}
-    (hD : q_reduced B.graph (leftEndpoint B) D)
+    (hD : qReduced B.graph (leftEndpoint B) D)
     (γ : Fin (g + 1)) (offset : Fin (B.length γ - 1)) :
     0 ≤ D (B.interiorVertex γ offset) := by
   apply hD.1
@@ -1341,7 +1341,7 @@ theorem q_reduced_interiorVertex_nonneg {g : ℕ} {B : Banana g}
 coefficient by one. -/
 theorem q_reduced_interiorVertex_le_one {g : ℕ} {B : Banana g}
     {D : CFDiv B.graph}
-    (hD : q_reduced B.graph (leftEndpoint B) D)
+    (hD : qReduced B.graph (leftEndpoint B) D)
     (γ : Fin (g + 1)) (offset : Fin (B.length γ - 1)) :
     D (B.interiorVertex γ offset) ≤ 1 := by
   let v : B.graph.V := B.interiorVertex γ offset
@@ -1354,12 +1354,12 @@ theorem q_reduced_interiorVertex_le_one {g : ℕ} {B : Banana g}
     hD.exists_lt_outdeg hLeftNotMem ⟨v, by simp⟩
   have hzv : z = v := by simpa using hz
   subst z
-  have hDegree : vertex_degree B.graph v = 2 := by
+  have hDegree : vertexDegree B.graph v = 2 := by
     simpa [v] using B.vertex_degree_interiorVertex_eq_two γ offset
   rw [vertex_degree_eq_internalDegree_add_outdeg_S B.graph {v} v] at hDegree
-  have hOut : outdeg_S B.graph {v} v = 2 := by
+  have hOut : outdegreeSet B.graph {v} v = 2 := by
     simpa [internalDegree] using hDegree
-  change D v < outdeg_S B.graph {v} v at hBurn
+  change D v < outdegreeSet B.graph {v} v at hBurn
   rw [hOut] at hBurn
   dsimp [v] at hBurn
   omega
@@ -1367,7 +1367,7 @@ theorem q_reduced_interiorVertex_le_one {g : ℕ} {B : Banana g}
 distinct interior positions of the same strand. -/
 private theorem false_of_q_reduced_two_positive_same_strand_of_lt
     {g : ℕ} {B : Banana g} {D : CFDiv B.graph}
-    (hD : q_reduced B.graph (leftEndpoint B) D)
+    (hD : qReduced B.graph (leftEndpoint B) D)
     (γ : Fin (g + 1)) (p q : Fin (B.length γ - 1))
     (hpq : p.val < q.val)
     (hp : 0 < D (B.interiorVertex γ p))
@@ -1423,11 +1423,11 @@ private theorem false_of_q_reduced_two_positive_same_strand_of_lt
   simp only [S, Finset.mem_filter, Finset.mem_univ, true_and] at hzInterval
   obtain ⟨r, hrLo, hrHi, rfl⟩ := hzInterval
   change D (B.pathVertex γ r) <
-    outdeg_S B.graph S (B.pathVertex γ r) at hBurn
+    outdegreeSet B.graph S (B.pathVertex γ r) at hBurn
   have hrInterior : B.IsInteriorPosition γ r := by
     exact ⟨lt_of_lt_of_le hpInterior.1 hrLo,
       lt_of_le_of_lt hrHi hqInterior.2⟩
-  have hDegree : vertex_degree B.graph (B.pathVertex γ r) = 2 := by
+  have hDegree : vertexDegree B.graph (B.pathVertex γ r) = 2 := by
     rw [B.pathVertex_eq_interiorVertex γ r hrInterior]
     exact B.vertex_degree_interiorVertex_eq_two γ
       (B.interiorOffsetOfPosition γ r hrInterior)
@@ -1444,22 +1444,22 @@ private theorem false_of_q_reduced_two_positive_same_strand_of_lt
         exact Nat.le_succ _
       · dsimp [next, ppos, qpos, nextPathPosition]
         omega
-    have hNextEdge : 0 < num_edges B.graph
+    have hNextEdge : 0 < numEdges B.graph
         (B.pathVertex γ ppos) (B.pathVertex γ next) :=
       (B.pathVertex_num_edges_pos_iff γ ppos hpInterior
         (B.pathVertex γ next)).2 (Or.inr rfl)
     have hTerm : (1 : ℤ) ≤
-        (num_edges B.graph (B.pathVertex γ ppos)
+        (numEdges B.graph (B.pathVertex γ ppos)
           (B.pathVertex γ next) : ℤ) := by
       exact_mod_cast hNextEdge
     have hTermLe :
-        (num_edges B.graph (B.pathVertex γ ppos)
+        (numEdges B.graph (B.pathVertex γ ppos)
           (B.pathVertex γ next) : ℤ) ≤
           internalDegree B.graph S (B.pathVertex γ ppos) := by
       unfold internalDegree
       exact Finset.single_le_sum
         (fun y _ => Int.natCast_nonneg
-          (num_edges B.graph (B.pathVertex γ ppos) y)) hNextMem
+          (numEdges B.graph (B.pathVertex γ ppos) y)) hNextMem
     have hDp : 1 ≤ D (B.pathVertex γ ppos) := by
       rw [hpVertex]
       omega
@@ -1475,22 +1475,22 @@ private theorem false_of_q_reduced_two_positive_same_strand_of_lt
           omega
         · dsimp [previous, previousPathPosition]
           exact Nat.sub_le _ _
-      have hPreviousEdge : 0 < num_edges B.graph
+      have hPreviousEdge : 0 < numEdges B.graph
           (B.pathVertex γ qpos) (B.pathVertex γ previous) :=
         (B.pathVertex_num_edges_pos_iff γ qpos hqInterior
           (B.pathVertex γ previous)).2 (Or.inl rfl)
       have hTerm : (1 : ℤ) ≤
-          (num_edges B.graph (B.pathVertex γ qpos)
+          (numEdges B.graph (B.pathVertex γ qpos)
             (B.pathVertex γ previous) : ℤ) := by
         exact_mod_cast hPreviousEdge
       have hTermLe :
-          (num_edges B.graph (B.pathVertex γ qpos)
+          (numEdges B.graph (B.pathVertex γ qpos)
             (B.pathVertex γ previous) : ℤ) ≤
             internalDegree B.graph S (B.pathVertex γ qpos) := by
         unfold internalDegree
         exact Finset.single_le_sum
           (fun y _ => Int.natCast_nonneg
-            (num_edges B.graph (B.pathVertex γ qpos) y)) hPreviousMem
+            (numEdges B.graph (B.pathVertex γ qpos) y)) hPreviousMem
       have hDq : 1 ≤ D (B.pathVertex γ qpos) := by
         rw [hqVertex]
         omega
@@ -1525,20 +1525,20 @@ private theorem false_of_q_reduced_two_positive_same_strand_of_lt
         have hPos := congrArg Fin.val (B.pathVertex_injective γ hEq)
         dsimp [previous, next, previousPathPosition, nextPathPosition] at hPos
         omega
-      have hPreviousEdge : 0 < num_edges B.graph
+      have hPreviousEdge : 0 < numEdges B.graph
           (B.pathVertex γ r) (B.pathVertex γ previous) :=
         (B.pathVertex_num_edges_pos_iff γ r hrInterior
           (B.pathVertex γ previous)).2 (Or.inl rfl)
-      have hNextEdge : 0 < num_edges B.graph
+      have hNextEdge : 0 < numEdges B.graph
           (B.pathVertex γ r) (B.pathVertex γ next) :=
         (B.pathVertex_num_edges_pos_iff γ r hrInterior
           (B.pathVertex γ next)).2 (Or.inr rfl)
       have hPreviousTerm : (1 : ℤ) ≤
-          (num_edges B.graph (B.pathVertex γ r)
+          (numEdges B.graph (B.pathVertex γ r)
             (B.pathVertex γ previous) : ℤ) := by
         exact_mod_cast hPreviousEdge
       have hNextTerm : (1 : ℤ) ≤
-          (num_edges B.graph (B.pathVertex γ r)
+          (numEdges B.graph (B.pathVertex γ r)
             (B.pathVertex γ next) : ℤ) := by
         exact_mod_cast hNextEdge
       have hPairSubset :
@@ -1551,17 +1551,17 @@ private theorem false_of_q_reduced_two_positive_same_strand_of_lt
         · exact hNextMem
       have hPairLe := Finset.sum_le_sum_of_subset_of_nonneg hPairSubset
         (fun y _ _ => Int.natCast_nonneg
-          (num_edges B.graph (B.pathVertex γ r) y))
+          (numEdges B.graph (B.pathVertex γ r) y))
       have hInternal : (2 : ℤ) ≤
           internalDegree B.graph S (B.pathVertex γ r) := by
         unfold internalDegree
         have hPair :
-            (num_edges B.graph (B.pathVertex γ r)
+            (numEdges B.graph (B.pathVertex γ r)
                 (B.pathVertex γ previous) : ℤ) +
-              (num_edges B.graph (B.pathVertex γ r)
+              (numEdges B.graph (B.pathVertex γ r)
                 (B.pathVertex γ next) : ℤ) ≤
               ∑ y ∈ S,
-                (num_edges B.graph (B.pathVertex γ r) y : ℤ) := by
+                (numEdges B.graph (B.pathVertex γ r) y : ℤ) := by
           simpa [Finset.sum_pair hPreviousNeNext] using hPairLe
         omega
       have hDrNonneg : 0 ≤ D (B.pathVertex γ r) := by
@@ -1574,7 +1574,7 @@ private theorem false_of_q_reduced_two_positive_same_strand_of_lt
 divisor must occur at the same offset. -/
 theorem q_reduced_positive_interiorVertex_unique {g : ℕ} {B : Banana g}
     {D : CFDiv B.graph}
-    (hD : q_reduced B.graph (leftEndpoint B) D)
+    (hD : qReduced B.graph (leftEndpoint B) D)
     (γ : Fin (g + 1)) (p q : Fin (B.length γ - 1))
     (hp : 0 < D (B.interiorVertex γ p))
     (hq : 0 < D (B.interiorVertex γ q)) : p = q := by
@@ -1607,7 +1607,7 @@ noncomputable def reducedSemibreakDivisor {g : ℕ} (B : Banana g)
 left-reduced divisor. -/
 theorem reducedSemibreakDivisor_interiorVertex_eq {g : ℕ} {B : Banana g}
     {D : CFDiv B.graph}
-    (hD : q_reduced B.graph (leftEndpoint B) D)
+    (hD : qReduced B.graph (leftEndpoint B) D)
     (γ : Fin (g + 1)) (offset : Fin (B.length γ - 1)) :
     reducedSemibreakDivisor B D (B.interiorVertex γ offset) =
       D (B.interiorVertex γ offset) := by
@@ -1650,27 +1650,27 @@ theorem isSemibreak_reducedSemibreakDivisor {g : ℕ} (B : Banana g)
 semibreak divisor extracted from its interior coefficients. -/
 theorem eq_bananaNormalForm_reducedSemibreakDivisor {g : ℕ} {B : Banana g}
     {D : CFDiv B.graph}
-    (hD : q_reduced B.graph (leftEndpoint B) D) :
+    (hD : qReduced B.graph (leftEndpoint B) D) :
     D = bananaNormalForm B (D (leftEndpoint B))
       (D (rightEndpoint B)) (reducedSemibreakDivisor B D) := by
   funext z
   rcases z with core | interior
   · fin_cases core <;>
       simp [bananaNormalForm, reducedSemibreakDivisor, semibreakDivisor,
-        leftEndpoint, rightEndpoint, one_chip,
+        leftEndpoint, rightEndpoint, oneChip,
         SubdivisionGraph.Spec.coreVertex]
   · rcases interior with ⟨γ, offset⟩
     change D (B.interiorVertex γ offset) =
       bananaNormalForm B (D (leftEndpoint B)) (D (rightEndpoint B))
         (reducedSemibreakDivisor B D) (B.interiorVertex γ offset)
     simp only [bananaNormalForm, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
-    have hLeft : one_chip (leftEndpoint B)
+    have hLeft : oneChip (leftEndpoint B)
         (B.interiorVertex γ offset) = 0 := by
-      simp [one_chip, leftEndpoint, SubdivisionGraph.Spec.coreVertex,
+      simp [oneChip, leftEndpoint, SubdivisionGraph.Spec.coreVertex,
         SubdivisionGraph.Spec.interiorVertex]
-    have hRight : one_chip (rightEndpoint B)
+    have hRight : oneChip (rightEndpoint B)
         (B.interiorVertex γ offset) = 0 := by
-      simp [one_chip, rightEndpoint, SubdivisionGraph.Spec.coreVertex,
+      simp [oneChip, rightEndpoint, SubdivisionGraph.Spec.coreVertex,
         SubdivisionGraph.Spec.interiorVertex]
     simpa [hLeft, hRight] using
       (reducedSemibreakDivisor_interiorVertex_eq hD γ offset).symm
@@ -1678,7 +1678,7 @@ theorem eq_bananaNormalForm_reducedSemibreakDivisor {g : ℕ} {B : Banana g}
 /-- Existential form of semibreak extraction from a left-reduced divisor. -/
 theorem exists_semibreak_bananaNormalForm_of_q_reduced {g : ℕ} {B : Banana g}
     {D : CFDiv B.graph}
-    (hD : q_reduced B.graph (leftEndpoint B) D) :
+    (hD : qReduced B.graph (leftEndpoint B) D) :
     ∃ E : CFDiv B.graph, IsSemibreak B E ∧
       D = bananaNormalForm B (D (leftEndpoint B))
         (D (rightEndpoint B)) E := by
@@ -1691,34 +1691,34 @@ reducedness: both q-effectivity and every Dhar inequality are evaluated away
 from that vertex. -/
 theorem q_reduced_add_zsmul_one_chip_at_reducing_vertex
     {G : CFGraph} {q : G.V} {D : CFDiv G}
-    (hD : q_reduced G q D) (k : ℤ) :
-    q_reduced G q (D + k • one_chip q) := by
+    (hD : qReduced G q D) (k : ℤ) :
+    qReduced G q (D + k • oneChip q) := by
   refine ⟨?_, ?_⟩
   · intro v hvq
     have hDv := hD.1 v hvq
-    simpa [Pi.add_apply, Pi.smul_apply, one_chip, hvq] using hDv
+    simpa [Pi.add_apply, Pi.smul_apply, oneChip, hvq] using hDv
   · intro S hqS hNonempty hLegal
     obtain ⟨v, hvS, hBurn⟩ := hD.exists_lt_outdeg hqS hNonempty
     apply (not_lt_of_ge (hLegal v hvS))
     have hvq : v ≠ q := by
       intro hvq
       exact hqS (hvq ▸ hvS)
-    simpa [Pi.add_apply, Pi.smul_apply, one_chip, hvq] using hBurn
+    simpa [Pi.add_apply, Pi.smul_apply, oneChip, hvq] using hBurn
 
 /-- The endpoint coefficient and extracted semibreak degree of a left-reduced
 divisor satisfy the numerical normal-form bound. -/
 theorem q_reduced_rightEndpoint_add_reducedSemibreakDivisor_degree_le_genus
     {g : ℕ} {B : Banana g} {D : CFDiv B.graph}
-    (hD : q_reduced B.graph (leftEndpoint B) D) :
+    (hD : qReduced B.graph (leftEndpoint B) D) :
     D (rightEndpoint B) + deg (reducedSemibreakDivisor B D) ≤ (g : ℤ) := by
   let debt : CFDiv B.graph :=
-    D + (-1 - D (leftEndpoint B)) • one_chip (leftEndpoint B)
-  have hDebtReduced : q_reduced B.graph (leftEndpoint B) debt := by
+    D + (-1 - D (leftEndpoint B)) • oneChip (leftEndpoint B)
+  have hDebtReduced : qReduced B.graph (leftEndpoint B) debt := by
     exact q_reduced_add_zsmul_one_chip_at_reducing_vertex hD
       (-1 - D (leftEndpoint B))
   have hDebtValue : debt (leftEndpoint B) = -1 := by
     dsimp [debt]
-    simp [one_chip]
+    simp [oneChip]
   have hDebtRank : rank B.graph debt = -1 := by
     exact rank_eq_neg_one_of_qReduced_debt B.graph (leftEndpoint B)
       debt hDebtReduced (by omega)
@@ -1731,16 +1731,16 @@ theorem q_reduced_rightEndpoint_add_reducedSemibreakDivisor_degree_le_genus
     dsimp [debt]
     rw [deg.map_add, map_zsmul, deg_one_chip, hDegD]
     ring
-  have hInequality := rank_degree_inequality (graph_connected B) debt
+  have hInequality := rank_degree_inequality (graphConnected B) debt
   have hResidualLower := rank_geq_neg_one B.graph
-    (canonical_divisor B.graph - debt)
+    (canonicalDivisor B.graph - debt)
   rw [hDebtDegree, B.genus_graph, hDebtRank] at hInequality
   omega
 
 /-- Full converse normal-form statement for a left-reduced divisor. -/
 theorem exists_bananaNormalForm_of_q_reduced {g : ℕ} {B : Banana g}
     {D : CFDiv B.graph}
-    (hD : q_reduced B.graph (leftEndpoint B) D) :
+    (hD : qReduced B.graph (leftEndpoint B) D) :
     ∃ E : CFDiv B.graph, IsSemibreak B E ∧
       0 ≤ D (rightEndpoint B) ∧
       D (rightEndpoint B) + deg E ≤ (g : ℤ) ∧
@@ -1758,9 +1758,9 @@ theorem exists_linearly_equiv_bananaNormalForm {g : ℕ} (B : Banana g)
     (D : CFDiv B.graph) :
     ∃ (a b : ℤ) (E : CFDiv B.graph),
       IsSemibreak B E ∧ 0 ≤ b ∧ b + deg E ≤ (g : ℤ) ∧
-      linear_equiv B.graph D (bananaNormalForm B a b E) := by
+      linearEquiv B.graph D (bananaNormalForm B a b E) := by
   obtain ⟨Dred, hLinear, hReduced⟩ :=
-    exists_q_reduced_representative (graph_connected B) (leftEndpoint B) D
+    exists_q_reduced_representative (graphConnected B) (leftEndpoint B) D
   obtain ⟨E, hE, hb, hdeg, hNormal⟩ :=
     exists_bananaNormalForm_of_q_reduced hReduced
   refine ⟨Dred (leftEndpoint B), Dred (rightEndpoint B), E,

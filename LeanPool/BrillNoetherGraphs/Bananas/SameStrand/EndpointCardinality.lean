@@ -127,7 +127,7 @@ theorem endpoint_marked_inversion_lower_bound
   let M := mark B.graph (leftEndpoint B) (rightEndpoint B)
   obtain ⟨τ, hτ, hAffine, hBlock⟩ :=
     exists_endpoint_transmission_block B hsub hk.1
-  refine ⟨g • one_chip (rightEndpoint B), τ, hτ, hAffine, ?_⟩
+  refine ⟨g • oneChip (rightEndpoint B), τ, hτ, hAffine, ?_⟩
   exact endpoint_block_inversion_lower_bound hk.1.1 hAffine hBlock
     (kInversions_finite_of_isKAffine hk.1.1 hAffine)
 

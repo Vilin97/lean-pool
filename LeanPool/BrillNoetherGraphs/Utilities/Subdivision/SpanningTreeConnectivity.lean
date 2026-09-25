@@ -153,7 +153,7 @@ theorem graph_connected_of_spanningCheck
     (spec : SubdivisionGraph.Spec n p)
     (data : Certificate spec.core)
     (hCheck : data.check = true) :
-    graph_connected spec.graph :=
+    graphConnected spec.graph :=
   spec.graph_connected_of_coreConnected
     (data.coreConnected_of_check_eq_true hCheck)
 

@@ -33,15 +33,15 @@ theorem cross_strand_rank_minus_one_of_distinct_interior
     (hqx : B.pathVertex γ q ≠ B.pathVertex α i)
     (hqy : B.pathVertex γ q ≠ B.pathVertex β j) :
     rank B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex β j) -
-        one_chip (B.pathVertex γ q)) = -1 := by
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex β j) -
+        oneChip (B.pathVertex γ q)) = -1 := by
   have hRed := q_reduced_distinct_interior_path_strands
     hg B α β γ i j q hi hj hq hαβ hqx hqy
   have hRank := rank_eq_neg_one_of_qReduced_debt B.graph
     (B.pathVertex γ q)
-    (one_chip (B.pathVertex α i) + one_chip (B.pathVertex β j) -
-      one_chip (B.pathVertex γ q)) hRed (by
-        simp [one_chip, hqx, hqy])
+    (oneChip (B.pathVertex α i) + oneChip (B.pathVertex β j) -
+      oneChip (B.pathVertex γ q)) hRed (by
+        simp [oneChip, hqx, hqy])
   exact hRank
 
 end Bananas

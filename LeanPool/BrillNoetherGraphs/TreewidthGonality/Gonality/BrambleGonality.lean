@@ -28,7 +28,7 @@ holds whether or not the duality theorem has been formalized.
 ## Conventions
 
 Brambles live on `underlyingSimpleGraph G` — treewidth and brambles do not see
-edge multiplicities. The chip-firing side does: `outdeg_S` and `edgeCut` count
+edge multiplicities. The chip-firing side does: `outdegreeSet` and `edgeCut` count
 **with multiplicity**, which only strengthens the inequalities used here
 (more parallel edges make a cut more expensive, never less).
 
@@ -77,8 +77,8 @@ theorem edgeCut_nonneg (U : Finset G.V) : 0 ≤ edgeCut G U := by
 
 /-- The cut is the total boundary of the vertices of `U`. -/
 theorem edgeCut_eq_sum_outdeg (U : Finset G.V) :
-    edgeCut G U = ∑ v ∈ U, outdeg_S G U v := by
-  unfold edgeCut edgesBetween outdeg_S
+    edgeCut G U = ∑ v ∈ U, outdegreeSet G U v := by
+  unfold edgeCut edgesBetween outdegreeSet
   push_cast
   rfl
 
@@ -97,7 +97,7 @@ Proved (2026-08-25); the paper's argument in two steps:
 2. If `B ⊄ U`, connectedness of `B` gives an edge of `underlyingSimpleGraph G`
    inside `B` with one end `u ∈ U` and the other end `w ∈ B ∖ U`
    (`Utilities.Treewidth.exists_adj_across_of_walk`).  Then
-   `set_firing G D U w = D w + outdeg_S G Uᶜ w ≥ 0 + num_edges G w u > 0`, again
+   `setFiring G D U w = D w + outdegreeSet G Uᶜ w ≥ 0 + numEdges G w u > 0`, again
    contradicting `hmiss`.
 
 Note no legality hypothesis is needed: only effectivity of `D` and the two
@@ -105,13 +105,13 @@ Note no legality hypothesis is needed: only effectivity of `D` and the two
 theorem support_containment {D : CFDiv G} {U B : Finset G.V} (hD : effective D)
     (hBconn : ((underlyingSimpleGraph G).induce (↑B : Set G.V)).Connected)
     (hmeet : (B ∩ divisorSupport D).Nonempty)
-    (hmiss : B ∩ divisorSupport (set_firing G D U) = ∅) :
+    (hmiss : B ∩ divisorSupport (setFiring G D U) = ∅) :
     B ⊆ U := by
   classical
   -- No vertex of `B` carries a chip after the firing.
-  have hnot : ∀ z ∈ B, ¬ (0 < set_firing G D U z) := by
+  have hnot : ∀ z ∈ B, ¬ (0 < setFiring G D U z) := by
     intro z hz hpos
-    have hmem : z ∈ B ∩ divisorSupport (set_firing G D U) :=
+    have hmem : z ∈ B ∩ divisorSupport (setFiring G D U) :=
       Finset.mem_inter.mpr ⟨hz, mem_divisorSupport.mpr hpos⟩
     rw [hmiss] at hmem
     exact absurd hmem (Finset.notMem_empty z)
@@ -135,12 +135,12 @@ theorem support_containment {D : CFDiv G} {U B : Finset G.V} (hD : effective D)
   have hbB : (↑b : G.V) ∈ B := Finset.mem_coe.mp b.2
   refine hnot (↑b : G.V) hbB ?_
   rw [set_firing_apply_of_not_mem G D hb]
-  have hpos : 0 < num_edges G (↑b : G.V) (↑a : G.V) := by
+  have hpos : 0 < numEdges G (↑b : G.V) (↑a : G.V) := by
     have := hadj.symm
     simpa using this
-  have hle : ((num_edges G (↑b : G.V) (↑a : G.V) : ℕ) : ℤ) ≤ outdeg_S G Uᶜ (↑b : G.V) := by
-    unfold outdeg_S
-    exact Finset.single_le_sum (f := fun u => (num_edges G (↑b : G.V) u : ℤ))
+  have hle : ((numEdges G (↑b : G.V) (↑a : G.V) : ℕ) : ℤ) ≤ outdegreeSet G Uᶜ (↑b : G.V) := by
+    unfold outdegreeSet
+    exact Finset.single_le_sum (f := fun u => (numEdges G (↑b : G.V) u : ℤ))
       (fun i _ => Int.natCast_nonneg _) (by simpa using ha)
   have hDb := hD (↑b : G.V)
   omega
@@ -177,7 +177,7 @@ vertex**, and the choice that makes the case analysis close is:
   ends was selected.
 
 The multiplicity convention only helps: the cut is modelled by the finite set of
-*ordered pairs* `(x, y) ∈ U × Uᶜ` with `num_edges > 0`, whose cardinality is at
+*ordered pairs* `(x, y) ∈ U × Uᶜ` with `numEdges > 0`, whose cardinality is at
 most `edgeCut`. -/
 theorem hitting_of_cut (𝔅 : Bramble (underlyingSimpleGraph G)) {U B B' : Finset G.V}
     (hB : B ∈ 𝔅.members) (hB' : B' ∈ 𝔅.members)
@@ -188,10 +188,10 @@ theorem hitting_of_cut (𝔅 : Bramble (underlyingSimpleGraph G)) {U B B' : Fins
   -- pairs rather than with `Sym2` keeps the two shores syntactically separate;
   -- parallel edges are collapsed here, which only helps the count.
   set P : Finset (G.V × G.V) :=
-    Finset.univ.filter (fun p : G.V × G.V => p.1 ∈ U ∧ p.2 ∉ U ∧ 0 < num_edges G p.1 p.2)
+    Finset.univ.filter (fun p : G.V × G.V => p.1 ∈ U ∧ p.2 ∉ U ∧ 0 < numEdges G p.1 p.2)
     with hPdef
   have hmemP : ∀ p : G.V × G.V,
-      p ∈ P ↔ (p.1 ∈ U ∧ p.2 ∉ U ∧ 0 < num_edges G p.1 p.2) := by
+      p ∈ P ↔ (p.1 ∈ U ∧ p.2 ∉ U ∧ 0 < numEdges G p.1 p.2) := by
     intro p; simp [hPdef]
   -- The two shores.
   set X : Finset G.V := P.image Prod.fst with hXdef
@@ -233,7 +233,7 @@ theorem hitting_of_cut (𝔅 : Bramble (underlyingSimpleGraph G)) {U B B' : Fins
       Finset.mem_coe.mp z₁.2, Finset.mem_coe.mp z₂.2⟩
   -- Any member inside `U` is disjoint from `B'`, hence joined to it by a cut edge.
   have hedgeUp : ∀ A ∈ 𝔅.members, A ⊆ U →
-      ∃ x ∈ A, ∃ y ∈ B', 0 < num_edges G x y := by
+      ∃ x ∈ A, ∃ y ∈ B', 0 < numEdges G x y := by
     intro A hA hAU
     rcases 𝔅.exists_inter_or_adj hA hB' with hint | ⟨x, hx, y, hy, hadj⟩
     · obtain ⟨z, hz⟩ := hint
@@ -250,7 +250,7 @@ theorem hitting_of_cut (𝔅 : Bramble (underlyingSimpleGraph G)) {U B B' : Fins
   have hB₀U : B₀ ⊆ U := (Finset.mem_filter.mp hB₀M).2
   -- Any member on the far side is joined to `B₀` by a cut edge.
   have hedgeDown : ∀ A ∈ 𝔅.members, (∀ a ∈ A, a ∉ U) →
-      ∃ x ∈ A, ∃ y ∈ B₀, 0 < num_edges G x y := by
+      ∃ x ∈ A, ∃ y ∈ B₀, 0 < numEdges G x y := by
     intro A hA hAU
     rcases 𝔅.exists_inter_or_adj hA hB₀mem with hint | ⟨x, hx, y, hy, hadj⟩
     · obtain ⟨z, hz⟩ := hint
@@ -349,14 +349,14 @@ theorem hitting_of_cut (𝔅 : Bramble (underlyingSimpleGraph G)) {U B B' : Fins
     exact Finset.mem_product.mpr ⟨h1, Finset.mem_compl.mpr h2⟩
   have hPle : (P.card : ℤ) ≤ edgeCut G U := by
     have h1 : (P.card : ℤ) = ∑ _p ∈ P, (1 : ℤ) := by simp
-    have h2 : ∑ _p ∈ P, (1 : ℤ) ≤ ∑ p ∈ P, (num_edges G p.1 p.2 : ℤ) := by
+    have h2 : ∑ _p ∈ P, (1 : ℤ) ≤ ∑ p ∈ P, (numEdges G p.1 p.2 : ℤ) := by
       refine Finset.sum_le_sum fun p hp => ?_
       have := ((hmemP p).mp hp).2.2
       omega
-    have h3 : ∑ p ∈ P, (num_edges G p.1 p.2 : ℤ)
-        ≤ ∑ p ∈ U ×ˢ Uᶜ, (num_edges G p.1 p.2 : ℤ) :=
+    have h3 : ∑ p ∈ P, (numEdges G p.1 p.2 : ℤ)
+        ≤ ∑ p ∈ U ×ˢ Uᶜ, (numEdges G p.1 p.2 : ℤ) :=
       Finset.sum_le_sum_of_subset_of_nonneg hPsub fun _ _ _ => Int.natCast_nonneg _
-    have h4 : ∑ p ∈ U ×ˢ Uᶜ, (num_edges G p.1 p.2 : ℤ) = edgeCut G U := by
+    have h4 : ∑ p ∈ U ×ˢ Uᶜ, (numEdges G p.1 p.2 : ℤ) = edgeCut G U := by
       rw [Finset.sum_product]
       unfold edgeCut edgesBetween
       push_cast
@@ -368,14 +368,14 @@ theorem hitting_of_cut (𝔅 : Bramble (underlyingSimpleGraph G)) {U B B' : Fins
 
 /-- **The charge of a legal set.**  A legally fired set pays one chip per edge
 leaving it, so it must have been carrying at least `edgeCut G U` chips. -/
-theorem charge_of_legal {D : CFDiv G} {U : Finset G.V} (hU : legal_set G D U) :
+theorem charge_of_legal {D : CFDiv G} {U : Finset G.V} (hU : legalSet G D U) :
     edgeCut G U ≤ ∑ v ∈ U, D v := by
   rw [edgeCut_eq_sum_outdeg]
   exact Finset.sum_le_sum fun v hv => hU v hv
 
 /-- The degree of an effective divisor bounds any cut it can legally fire. -/
 theorem edgeCut_le_deg_of_legal {D : CFDiv G} {U : Finset G.V} (hD : effective D)
-    (hU : legal_set G D U) : edgeCut G U ≤ deg D := by
+    (hU : legalSet G D U) : edgeCut G U ≤ deg D := by
   refine le_trans (charge_of_legal hU) ?_
   have : ∑ v ∈ U, D v ≤ ∑ v : G.V, D v :=
     Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ _) fun v _ _ => hD v
@@ -436,7 +436,7 @@ Hence `𝔅.order ≤ d + 1` in both cases.
 The extremal choice is realized as `Nat.sSup` of the (nonempty, bounded by
 `𝔅.members.card`) set of achievable hit counts, which avoids having to know that
 the family of competitors is finite. -/
-theorem bramble_order_le_gonality_succ (h_conn : graph_connected G)
+theorem bramble_order_le_gonality_succ (h_conn : graphConnected G)
     (𝔅 : Bramble (underlyingSimpleGraph G)) :
     𝔅.order ≤ divisorialGonality G + 1 := by
   classical
@@ -577,7 +577,7 @@ theorem bramble_order_le_gonality_succ (h_conn : graph_connected G)
     have hB₀compl : B₀ ⊆ (U j')ᶜ := by
       refine support_containment (D := fireChain G D U (j' + 1)) (U := (U j')ᶜ) (B := B₀)
         (hEff (j' + 1) (by omega)) (𝔅.connected_mem B₀ hB₀mem) hjne ?_
-      have hrev : set_firing G (fireChain G D U (j' + 1)) (U j')ᶜ =
+      have hrev : setFiring G (fireChain G D U (j' + 1)) (U j')ᶜ =
           fireChain G D U j' := by
         rw [fireChain_succ, set_firing_compl_set_firing]
       rw [hrev]

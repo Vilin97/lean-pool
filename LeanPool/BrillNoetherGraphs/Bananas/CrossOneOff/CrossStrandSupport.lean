@@ -70,38 +70,38 @@ theorem rankSupport_two_interior_distinct_strands
     (hi : B.IsInteriorPosition α i) (hj : B.IsInteriorPosition β j)
     (hαβ : α ≠ β) :
     rankSupport B.graph
-        (one_chip (strandVertex B α i) + one_chip (strandVertex B β j)) =
+        (oneChip (strandVertex B α i) + oneChip (strandVertex B β j)) =
       {strandVertex B α i, strandVertex B β j} := by
   classical
   -- Keep the divisor written out: introducing a local abbreviation here can
   -- make `rw`/`rintro` unfold concrete vertex equality at substantial cost.
   have hgz : (2 : ℤ) ≤ (g : ℤ) := by exact_mod_cast hg
   have hSemi : IsSemibreak B
-      (one_chip (strandVertex B α i) + one_chip (strandVertex B β j)) :=
+      (oneChip (strandVertex B α i) + oneChip (strandVertex B β j)) :=
     isSemibreak_two_distinct_strand_chips B α β i j hi hj hαβ
-  have hdegE : deg (one_chip (strandVertex B α i) +
-      one_chip (strandVertex B β j)) = 2 := by
+  have hdegE : deg (oneChip (strandVertex B α i) +
+      oneChip (strandVertex B β j)) = 2 := by
     rw [deg.map_add, deg_one_chip, deg_one_chip]
     norm_num
   -- Deleting either multivalent vertex leaves a normal form with a negative
   -- endpoint coefficient, hence rank `-1`.
-  have hLeft : rank B.graph (one_chip (strandVertex B α i) +
-      one_chip (strandVertex B β j) - one_chip (leftEndpoint B)) = -1 := by
-    have hform : one_chip (strandVertex B α i) + one_chip (strandVertex B β j) -
-        one_chip (leftEndpoint B) =
-        bananaNormalForm B (-1) 0 (one_chip (strandVertex B α i) +
-          one_chip (strandVertex B β j)) := by
+  have hLeft : rank B.graph (oneChip (strandVertex B α i) +
+      oneChip (strandVertex B β j) - oneChip (leftEndpoint B)) = -1 := by
+    have hform : oneChip (strandVertex B α i) + oneChip (strandVertex B β j) -
+        oneChip (leftEndpoint B) =
+        bananaNormalForm B (-1) 0 (oneChip (strandVertex B α i) +
+          oneChip (strandVertex B β j)) := by
       rw [bananaNormalForm, neg_one_zsmul, zero_zsmul]
       abel
     rw [hform]
     exact (rank_bananaNormalForm_neg_iff B (-1) 0 _ hSemi le_rfl
       (by rw [hdegE]; omega)).2 (by omega)
-  have hRight : rank B.graph (one_chip (strandVertex B α i) +
-      one_chip (strandVertex B β j) - one_chip (rightEndpoint B)) = -1 := by
-    have hform : one_chip (strandVertex B α i) + one_chip (strandVertex B β j) -
-        one_chip (rightEndpoint B) =
-        bananaNormalForm B 0 (-1) (one_chip (strandVertex B α i) +
-          one_chip (strandVertex B β j)) := by
+  have hRight : rank B.graph (oneChip (strandVertex B α i) +
+      oneChip (strandVertex B β j) - oneChip (rightEndpoint B)) = -1 := by
+    have hform : oneChip (strandVertex B α i) + oneChip (strandVertex B β j) -
+        oneChip (rightEndpoint B) =
+        bananaNormalForm B 0 (-1) (oneChip (strandVertex B α i) +
+          oneChip (strandVertex B β j)) := by
       rw [bananaNormalForm, zero_zsmul, neg_one_zsmul]
       abel
     rw [hform]
@@ -110,23 +110,23 @@ theorem rankSupport_two_interior_distinct_strands
         (by rw [hdegE]; omega)
     · rw [bananaNormalForm_rightEndpoint B 0 (-1) _ hSemi]
       omega
-  have heff : ∀ w : B.graph.V, 0 ≤ rank B.graph (one_chip w) := by
+  have heff : ∀ w : B.graph.V, 0 ≤ rank B.graph (oneChip w) := by
     intro w
-    exact (rank_geq_iff B.graph (one_chip w) 0).mp
-      ((rank_nonneg_iff_winnable B.graph (one_chip w)).mpr
-        (winnable_of_effective B.graph (one_chip w) (eff_one_chip w)))
+    exact (rank_geq_iff B.graph (oneChip w) 0).mp
+      ((rank_nonneg_iff_winnable B.graph (oneChip w)).mpr
+        (winnable_of_effective B.graph (oneChip w) (eff_one_chip w)))
   ext x
   simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
   constructor
   · intro hx0
     -- `mem_rankSupport_iff` is `Iff.rfl`, so this is a defeq restatement.
-    have hx : 0 ≤ rank B.graph (one_chip (strandVertex B α i) +
-        one_chip (strandVertex B β j) - one_chip x) := hx0
+    have hx : 0 ≤ rank B.graph (oneChip (strandVertex B α i) +
+        oneChip (strandVertex B β j) - oneChip x) := hx0
     by_contra hne
     push Not at hne
     obtain ⟨hxu, hxv⟩ := hne
-    have hneg : rank B.graph (one_chip (strandVertex B α i) +
-        one_chip (strandVertex B β j) - one_chip x) = -1 := by
+    have hneg : rank B.graph (oneChip (strandVertex B α i) +
+        oneChip (strandVertex B β j) - oneChip x) = -1 := by
       rcases x with c | ⟨γ, o⟩
       · rcases fin_two_eq_zero_or_one c with rfl | rfl
         · exact hLeft
@@ -138,14 +138,14 @@ theorem rankSupport_two_interior_distinct_strands
     rw [hneg] at hx
     omega
   · rintro (rfl | rfl)
-    · show 0 ≤ rank B.graph (one_chip (strandVertex B α i) +
-        one_chip (strandVertex B β j) - one_chip (strandVertex B α i))
+    · show 0 ≤ rank B.graph (oneChip (strandVertex B α i) +
+        oneChip (strandVertex B β j) - oneChip (strandVertex B α i))
       rw [add_sub_cancel_left]
       exact heff _
-    · show 0 ≤ rank B.graph (one_chip (strandVertex B α i) +
-        one_chip (strandVertex B β j) - one_chip (strandVertex B β j))
-      rw [add_comm (one_chip (strandVertex B α i))
-        (one_chip (strandVertex B β j)), add_sub_cancel_left]
+    · show 0 ≤ rank B.graph (oneChip (strandVertex B α i) +
+        oneChip (strandVertex B β j) - oneChip (strandVertex B β j))
+      rw [add_comm (oneChip (strandVertex B α i))
+        (oneChip (strandVertex B β j)), add_sub_cancel_left]
       exact heff _
 
 /-- TeX label: `cor:suppUV` (Corollary 3.8), **general genus**.
@@ -164,7 +164,7 @@ theorem suppUV
     (hi : B.IsInteriorPosition α i) (hj : B.IsInteriorPosition β j)
     (hαβ : α ≠ β) :
     rankSupport B.graph
-        (one_chip (strandVertex B α i) + one_chip (strandVertex B β j)) =
+        (oneChip (strandVertex B α i) + oneChip (strandVertex B β j)) =
       {strandVertex B α i, strandVertex B β j} :=
   rankSupport_two_interior_distinct_strands hg B α β i j hi hj hαβ
 

@@ -97,7 +97,7 @@ def stepRight (edge : Fin p) (offset : Fin (spec.length edge)) :
         omega⟩
 
 /-- The ordered pair emitted by one unit step.  Its orientation is only a
-storage convention; `num_edges` treats it as undirected. -/
+storage convention; `numEdges` treats it as undirected. -/
 def unitEdge (step : spec.Step) : spec.Vertex × spec.Vertex :=
   (spec.stepLeft step.1 step.2, spec.stepRight step.1 step.2)
 
@@ -221,10 +221,10 @@ the abstract core with `p` edge slots and `n` vertices. -/
 /-- Exact multiplicity formula, expressed directly as a finite filter of unit
 steps.  This is often the most convenient interface for executable proofs. -/
 theorem num_edges_eq_card_filter_steps (x y : spec.Vertex) :
-    num_edges spec.graph x y =
+    numEdges spec.graph x y =
       ((Finset.univ : Finset spec.Step).filter fun step =>
         spec.unitEdge step = (x, y) ∨ spec.unitEdge step = (y, x)).card := by
-  unfold num_edges
+  unfold numEdges
   change Multiset.card
       (((Finset.univ : Finset spec.Step).val.map spec.unitEdge).filter
         (fun edge => edge = (x, y) ∨ edge = (y, x))) = _
@@ -233,7 +233,7 @@ theorem num_edges_eq_card_filter_steps (x y : spec.Vertex) :
 
 /-- Expanded indicator-sum form of the exact edge multiplicity. -/
 theorem num_edges_eq_sum_steps (x y : spec.Vertex) :
-    num_edges spec.graph x y =
+    numEdges spec.graph x y =
       ∑ step : spec.Step,
         if spec.unitEdge step = (x, y) ∨
             spec.unitEdge step = (y, x) then 1 else 0 := by
@@ -248,7 +248,7 @@ theorem num_edges_eq_sum_steps (x y : spec.Vertex) :
 /-- Positive multiplicity is equivalent to the existence of an emitted unit
 step with the requested unordered endpoints. -/
 theorem num_edges_pos_iff (x y : spec.Vertex) :
-    0 < num_edges spec.graph x y ↔
+    0 < numEdges spec.graph x y ↔
       ∃ step : spec.Step,
         spec.unitEdge step = (x, y) ∨ spec.unitEdge step = (y, x) := by
   rw [spec.num_edges_eq_card_filter_steps, Finset.card_pos]
@@ -262,7 +262,7 @@ theorem num_edges_pos_iff (x y : spec.Vertex) :
 one.  Parallel slots may make the inequality strict. -/
 theorem unitStep_num_edges_pos (edge : Fin p)
     (offset : Fin (spec.length edge)) :
-    0 < num_edges spec.graph (spec.stepLeft edge offset)
+    0 < numEdges spec.graph (spec.stepLeft edge offset)
       (spec.stepRight edge offset) := by
   rw [spec.num_edges_pos_iff]
   exact ⟨⟨edge, offset⟩, Or.inl rfl⟩
@@ -277,13 +277,13 @@ def headNeighbor (edge : Fin p) : spec.Vertex :=
     ⟨spec.length edge - 1, by have := spec.length_pos edge; omega⟩
 
 theorem tail_num_edges_pos (edge : Fin p) :
-    0 < num_edges spec.graph
+    0 < numEdges spec.graph
       (spec.coreVertex (spec.core.tail edge)) (spec.tailNeighbor edge) := by
   simpa [tailNeighbor] using
     spec.unitStep_num_edges_pos edge ⟨0, spec.length_pos edge⟩
 
 theorem head_num_edges_pos (edge : Fin p) :
-    0 < num_edges spec.graph
+    0 < numEdges spec.graph
       (spec.coreVertex (spec.core.head edge)) (spec.headNeighbor edge) := by
   rw [num_edges_symmetric]
   simpa [headNeighbor] using
@@ -386,7 +386,7 @@ theorem stepLeft_eq_interiorVertex_iff (step : spec.Step)
 
 theorem previous_num_edges_pos (edge : Fin p)
     (offset : Fin (spec.length edge - 1)) :
-    0 < num_edges spec.graph (spec.interiorVertex edge offset)
+    0 < numEdges spec.graph (spec.interiorVertex edge offset)
       (spec.previousVertex edge offset) := by
   rw [num_edges_symmetric]
   simpa [previousVertex] using
@@ -394,14 +394,14 @@ theorem previous_num_edges_pos (edge : Fin p)
 
 theorem next_num_edges_pos (edge : Fin p)
     (offset : Fin (spec.length edge - 1)) :
-    0 < num_edges spec.graph (spec.interiorVertex edge offset)
+    0 < numEdges spec.graph (spec.interiorVertex edge offset)
       (spec.nextVertex edge offset) := by
   simpa [nextVertex] using
     spec.unitStep_num_edges_pos edge (spec.nextStep edge offset)
 
 /-- A principal-divisor coefficient is the sum of the contributions of the
 individual emitted unit steps incident to the vertex. -/
-theorem prin_eq_sum_steps (script : firing_script spec.graph)
+theorem prin_eq_sum_steps (script : firingScript spec.graph)
     (vertex : spec.Vertex) :
     prin spec.graph script vertex =
       ∑ step : spec.Step,
@@ -411,7 +411,7 @@ theorem prin_eq_sum_steps (script : firing_script spec.graph)
             script (spec.stepLeft step.1 step.2) - script vertex else 0)) := by
   change (∑ neighbor : spec.graph.V,
     (script neighbor - script vertex) *
-      (num_edges spec.graph vertex neighbor : ℤ)) = _
+      (numEdges spec.graph vertex neighbor : ℤ)) = _
   simp_rw [spec.num_edges_eq_sum_steps]
   push_cast
   simp_rw [mul_sum]
@@ -434,7 +434,7 @@ theorem prin_eq_sum_steps (script : firing_script spec.graph)
 /-- A principal-divisor coefficient depends only on the oriented difference
 of the firing script along each emitted unit step.  This form is convenient
 for scripts described by slopes rather than by vertex values. -/
-theorem prin_eq_sum_step_differences (script : firing_script spec.graph)
+theorem prin_eq_sum_step_differences (script : firingScript spec.graph)
     (vertex : spec.Vertex) :
     prin spec.graph script vertex =
       ∑ step : spec.Step,
@@ -476,7 +476,7 @@ def pathValue (potential : Fin n → ℤ) (edge : Fin p)
 
 /-- Extend an integral core potential over every subdivided slot by the
 canonical convex interpolation from `SubdivisionArithmetic`. -/
-def interpolatedScript (potential : Fin n → ℤ) : firing_script spec.graph
+def interpolatedScript (potential : Fin n → ℤ) : firingScript spec.graph
   | Sum.inl vertex => potential vertex
   | Sum.inr interior =>
       spec.pathValue potential interior.1 (interior.2.val + 1)

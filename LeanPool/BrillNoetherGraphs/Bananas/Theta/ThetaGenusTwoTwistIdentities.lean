@@ -21,7 +21,7 @@ open Utilities
 /-- Removing the first marked chip lowers the degree-twist index by one. -/
 theorem degreeTwistInt_sub_u
     (M : TwiceMarked) (D : CFDiv M.graph) (d b : ℤ) :
-    degreeTwistInt M D d b - one_chip M.u =
+    degreeTwistInt M D d b - oneChip M.u =
       degreeTwistInt M D (d - 1) b := by
   unfold degreeTwistInt
   ext x
@@ -32,7 +32,7 @@ theorem degreeTwistInt_sub_u
 index by one. -/
 theorem degreeTwistInt_sub_v
     (M : TwiceMarked) (D : CFDiv M.graph) (d b : ℤ) :
-    degreeTwistInt M D d b - one_chip M.v =
+    degreeTwistInt M D d b - oneChip M.v =
       degreeTwistInt M D (d - 1) (b + 1) := by
   unfold degreeTwistInt
   ext x
@@ -43,7 +43,7 @@ theorem degreeTwistInt_sub_v
 index once. -/
 theorem degreeTwistInt_sub_uv
     (M : TwiceMarked) (D : CFDiv M.graph) (d b : ℤ) :
-    degreeTwistInt M D d b - one_chip M.u - one_chip M.v =
+    degreeTwistInt M D d b - oneChip M.u - oneChip M.v =
       degreeTwistInt M D (d - 2) (b + 1) := by
   rw [degreeTwistInt_sub_u, degreeTwistInt_sub_v]
   congr 1
@@ -54,7 +54,7 @@ twists at the same finite orbit index. -/
 theorem degreeTwistInt_one_eq_zero_add_u
     (M : TwiceMarked) (D : CFDiv M.graph) (b : ℤ) :
     degreeTwistInt M D 1 b =
-      degreeTwistInt M D 0 b + one_chip M.u := by
+      degreeTwistInt M D 0 b + oneChip M.u := by
   unfold degreeTwistInt
   ext x
   simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply]

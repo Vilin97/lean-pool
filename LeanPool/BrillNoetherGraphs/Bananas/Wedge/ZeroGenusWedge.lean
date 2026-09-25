@@ -29,7 +29,7 @@ universe u v
 /-- On a connected genus-zero graph, every divisor of nonnegative degree has
 rank equal to its degree. -/
 theorem rank_eq_degree_of_connected_genus_zero
-    (H : CFGraph.{v}) (hConnected : graph_connected H)
+    (H : CFGraph.{v}) (hConnected : graphConnected H)
     (hGenus : genus H = 0) (E : CFDiv H) (hDegree : 0 ≤ deg E) :
     rank H E = deg E := by
   have hLower : deg E ≤ rank H E := by
@@ -44,7 +44,7 @@ theorem rank_eq_degree_of_connected_genus_zero
 
 /-- Complete rank formula on a connected genus-zero graph. -/
 theorem rank_eq_degree_or_neg_one_of_connected_genus_zero
-    (H : CFGraph.{v}) (hConnected : graph_connected H)
+    (H : CFGraph.{v}) (hConnected : graphConnected H)
     (hGenus : genus H = 0) (E : CFDiv H) :
     rank H E = if deg E < 0 then -1 else deg E := by
   by_cases hDegree : deg E < 0
@@ -58,8 +58,8 @@ theorem rank_eq_degree_or_neg_one_of_connected_genus_zero
 than `t`.  This is the iterated form of the one-chip Lipschitz bound. -/
 private theorem rank_shift_le_add_nat
     (G : CFGraph.{u}) (D : CFDiv G) (x : G.V) (n : ℤ) (t : ℕ) :
-    rank G (D + (n + (t : ℤ)) • one_chip x) ≤
-      rank G (D + n • one_chip x) + (t : ℤ) := by
+    rank G (D + (n + (t : ℤ)) • oneChip x) ≤
+      rank G (D + n • oneChip x) + (t : ℤ) := by
   induction t with
   | zero => simp
   | succ t ih =>
@@ -73,8 +73,8 @@ private theorem rank_shift_le_add_nat
 /-- Adding a natural number of marked chips cannot decrease rank. -/
 private theorem rank_shift_mono_nat
     (G : CFGraph.{u}) (D : CFDiv G) (x : G.V) (n : ℤ) (t : ℕ) :
-    rank G (D + n • one_chip x) ≤
-      rank G (D + (n + (t : ℤ)) • one_chip x) := by
+    rank G (D + n • oneChip x) ≤
+      rank G (D + (n + (t : ℤ)) • oneChip x) := by
   induction t with
   | zero => simp
   | succ t ih =>
@@ -90,18 +90,18 @@ gluing coefficient on the other factor.  This is an exact rank identity for
 arbitrary divisors, not merely a Brill--Noether implication. -/
 theorem rank_vertexWedge_genus_zero_right
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (hConnected : graph_connected H) (hGenus : genus H = 0)
+    (hConnected : graphConnected H) (hGenus : genus H = 0)
     (D : CFDiv G) (E : CFDiv H) :
     rank (vertexWedge G H x y) (wedgeAddDivisor G H x y D E) =
-      rank G (D + deg E • one_chip x) := by
-  let r : ℤ := rank G (D + deg E • one_chip x)
+      rank G (D + deg E • oneChip x) := by
+  let r : ℤ := rank G (D + deg E • oneChip x)
   apply (vertexWedge_rank_eq_iff_profile_inequalities_and_attained
     G H x y D E r).2
   constructor
   · intro ell
     have hLeftDivisor :
-        D - (ell + 1) • one_chip x =
-          D + (-(ell + 1)) • one_chip x := by
+        D - (ell + 1) • oneChip x =
+          D + (-(ell + 1)) • oneChip x := by
       funext z
       simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
       ring
@@ -138,8 +138,8 @@ theorem rank_vertexWedge_genus_zero_right
     rw [if_pos hDegree]
     dsimp [r]
     have hLeftDivisor :
-        D - (-deg E - 1 + 1) • one_chip x =
-          D + deg E • one_chip x := by
+        D - (-deg E - 1 + 1) • oneChip x =
+          D + deg E • oneChip x := by
       funext z
       simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
       ring
@@ -150,14 +150,14 @@ theorem rank_vertexWedge_genus_zero_right
 Brill--Noether generality. -/
 theorem brillNoetherGeneral_vertexWedge_genus_zero_right
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (hConnected : graph_connected H) (hGenus : genus H = 0)
+    (hConnected : graphConnected H) (hGenus : genus H = 0)
     (hGeneral : BrillNoetherGeneral G) :
     BrillNoetherGeneral (vertexWedge G H x y) := by
   intro r d hRankNonnegative hExists
   obtain ⟨Q, hQDegree, hQRank⟩ := hExists
   let D := wedgeRestrictLeftDivisor G H x y Q
   let E := wedgeRestrictRightDivisor G H x y Q
-  let D' : CFDiv G := D + deg E • one_chip x
+  let D' : CFDiv G := D + deg E • oneChip x
   have hSplit : wedgeAddDivisor G H x y D E = Q := by
     exact wedgeAddDivisor_restrict G H x y Q
   have hDegreeSplit : deg D + deg E = deg Q := by

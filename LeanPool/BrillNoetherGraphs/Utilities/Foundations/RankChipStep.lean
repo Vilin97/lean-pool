@@ -23,31 +23,31 @@ namespace Utilities
 theorem rank_add_one_chip_ge
     {G : CFGraph} (D : CFDiv G) (q : G.V) (k : ℤ)
     (hRank : rank G D ≥ k) :
-    rank G (D + one_chip q) ≥ k := by
-  exact rank_add_effective_ge G D (one_chip q) (eff_one_chip q) k hRank
+    rank G (D + oneChip q) ≥ k := by
+  exact rank_add_effective_ge G D (oneChip q) (eff_one_chip q) k hRank
 
 /-- If `D` has rank at least `k+1`, then removing one chip leaves rank at least
 `k`. -/
 theorem rank_sub_one_chip_ge_of_rank_ge_succ
     {G : CFGraph} (D : CFDiv G) (q : G.V) (k : ℤ)
     (hRank : rank G D ≥ k + 1) :
-    rank G (D - one_chip q) ≥ k := by
-  apply (rank_geq_iff G (D - one_chip q) k).mp
-  have hRankGeq : rank_geq G D (k + 1) :=
+    rank G (D - oneChip q) ≥ k := by
+  apply (rank_geq_iff G (D - oneChip q) k).mp
+  have hRankGeq : rankGeq G D (k + 1) :=
     (rank_geq_iff G D (k + 1)).mpr hRank
   intro A hA
-  have hSumEffective : effective (A + one_chip q) :=
+  have hSumEffective : effective (A + oneChip q) :=
     (Eff G).add_mem hA.1 (eff_one_chip q)
-  have hSumDegree : deg (A + one_chip q) = k + 1 := by
+  have hSumDegree : deg (A + oneChip q) = k + 1 := by
     rw [deg.map_add, hA.2, deg_one_chip]
-  have hWin := hRankGeq (A + one_chip q) ⟨hSumEffective, hSumDegree⟩
+  have hWin := hRankGeq (A + oneChip q) ⟨hSumEffective, hSumDegree⟩
   convert hWin using 1
   abel
 
 /-- Numerical corollary: subtracting one chip lowers rank by at most one. -/
 theorem rank_sub_one_chip_ge_rank_sub_one
     {G : CFGraph} (D : CFDiv G) (q : G.V) :
-    rank G (D - one_chip q) ≥ rank G D - 1 := by
+    rank G (D - oneChip q) ≥ rank G D - 1 := by
   apply rank_sub_one_chip_ge_of_rank_ge_succ D q (rank G D - 1)
   omega
 

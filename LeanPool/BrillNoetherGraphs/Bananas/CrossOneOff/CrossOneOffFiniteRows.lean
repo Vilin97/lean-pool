@@ -96,7 +96,7 @@ theorem crossOneOff_forcedInversionPairs_card_le
       (mark B.graph
         (strandVertex B alpha ⟨1, by omega⟩)
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau)
+      (g • oneChip (rightEndpoint B)) tau)
     (hSeparate : crossOneOffCutoff g (B.length beta) ≤ k)
     (hfinite : (kInversions k tau).Finite) :
     (crossOneOffForcedInversionPairs g (B.length beta)).card ≤
@@ -131,7 +131,7 @@ theorem crossOneOff_corrected_inversion_lower_bound_of_finiteRows
       (mark B.graph
         (strandVertex B alpha ⟨1, by omega⟩)
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau)
+      (g • oneChip (rightEndpoint B)) tau)
     (hSeparate : crossOneOffCutoff g (B.length beta) ≤ k)
     (hfinite : (kInversions k tau).Finite)
     (hSharp : correctedCrossOneOffForcedCount g (B.length beta) ≤

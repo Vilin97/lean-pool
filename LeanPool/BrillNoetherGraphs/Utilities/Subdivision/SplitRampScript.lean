@@ -69,7 +69,7 @@ def splitValue (potential : Fin n → ℤ) (mark : Fin p → ℕ)
 
 /-- The firing script assembled from the marked slot values. -/
 def splitScript (potential : Fin n → ℤ) (mark : Fin p → ℕ)
-    (markValue : Fin p → ℤ) : firing_script d.graph :=
+    (markValue : Fin p → ℤ) : firingScript d.graph :=
   d.slotValueScript potential (d.splitValue potential mark markValue)
 
 theorem splitValueCompatible {potential : Fin n → ℤ} {mark : Fin p → ℕ}

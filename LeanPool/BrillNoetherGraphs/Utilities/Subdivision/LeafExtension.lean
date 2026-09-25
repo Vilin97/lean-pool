@@ -94,7 +94,7 @@ private theorem filter_map_liftEdge_none_some
 
 /-- Old-old edge multiplicities are unchanged. -/
 @[simp] theorem num_edges_some_some (x y : H.V) :
-    num_edges (addLeaf H root) (some x) (some y) = num_edges H x y := by
+    numEdges (addLeaf H root) (some x) (some y) = numEdges H x y := by
   change
     (((none, some root) ::ₘ H.edges.map (liftEdge H)).filter
       (fun edge =>
@@ -111,7 +111,7 @@ private theorem filter_map_liftEdge_none_some
 
 /-- The new leaf has one edge to `root` and none to another old vertex. -/
 @[simp] theorem num_edges_none_some (x : H.V) :
-    num_edges (addLeaf H root) none (some x) = if x = root then 1 else 0 := by
+    numEdges (addLeaf H root) none (some x) = if x = root then 1 else 0 := by
   change
     (((none, some root) ::ₘ H.edges.map (liftEdge H)).filter
       (fun edge =>
@@ -131,7 +131,7 @@ private theorem filter_map_liftEdge_none_some
 -- several library files (e.g. `Init/Data/List/Lemmas.lean`): disable the
 -- flag locally for these `addLeaf`-typed lemmas.
 @[simp] theorem num_edges_some_none (x : H.V) :
-    num_edges (addLeaf H root) (some x) none = if x = root then 1 else 0 := by
+    numEdges (addLeaf H root) (some x) none = if x = root then 1 else 0 := by
   rw [num_edges_symmetric]
   exact num_edges_none_some H root x
 
@@ -144,12 +144,12 @@ private theorem filter_map_liftEdge_none_some
   simp
 
 /-- A connected graph remains connected after adjoining a leaf. -/
-theorem graph_connected_addLeaf (hH : graph_connected H) :
-    graph_connected (addLeaf H root) := by
+theorem graph_connected_addLeaf (hH : graphConnected H) :
+    graphConnected (addLeaf H root) := by
   change ∀ S : Finset (Option H.V),
     (∃ v w : Option H.V, v ∈ S ∧ w ∉ S) →
       ∃ v ∈ S, ∃ w ∉ S,
-        num_edges (addLeaf H root) v w > 0
+        numEdges (addLeaf H root) v w > 0
   intro S hS
   by_cases hOldCut :
       ∃ x y : H.V, some x ∈ S ∧ some y ∉ S
@@ -191,7 +191,7 @@ def extendDiv (D : CFDiv H) : CFDiv (addLeaf H root)
   | some x => D x
 
 /-- Extend a firing script constantly across the new leaf edge. -/
-def extendScript (script : firing_script H) : firing_script (addLeaf H root)
+def extendScript (script : firingScript H) : firingScript (addLeaf H root)
   | none => script root
   | some x => script x
 
@@ -201,10 +201,10 @@ def extendScript (script : firing_script H) : firing_script (addLeaf H root)
 @[simp] theorem extendDiv_some (D : CFDiv H) (x : H.V) :
     extendDiv H root D (some x) = D x := rfl
 
-@[simp] theorem extendScript_none (script : firing_script H) :
+@[simp] theorem extendScript_none (script : firingScript H) :
     extendScript H root script none = script root := rfl
 
-@[simp] theorem extendScript_some (script : firing_script H) (x : H.V) :
+@[simp] theorem extendScript_some (script : firingScript H) (x : H.V) :
     extendScript H root script (some x) = script x := rfl
 
 @[simp] theorem extendDiv_zero :
@@ -224,19 +224,19 @@ def extendScript (script : firing_script H) : firing_script (addLeaf H root)
 
 -- See the comment above `num_edges_some_none` for why this override is
 -- needed (Mathlib v4.33): the `DecidableEq (addLeaf H root).V` instance used
--- by `one_chip`'s `if` needs to be identified with the canonical
+-- by `oneChip`'s `if` needs to be identified with the canonical
 -- `DecidableEq (Option H.V)` instance, which requires unfolding the
 -- semireducible `addLeaf`.
 @[simp] theorem extendDiv_one_chip (x : H.V) :
-    extendDiv H root (one_chip x) =
-      one_chip (G := addLeaf H root) (some x) := by
+    extendDiv H root (oneChip x) =
+      oneChip (G := addLeaf H root) (some x) := by
   funext vertex
   cases vertex with
-  | none => simp [extendDiv, one_chip]
+  | none => simp [extendDiv, oneChip]
   | some y =>
       by_cases hy : y = x
       · subst y
-        simp [extendDiv, one_chip]
+        simp [extendDiv, oneChip]
       · have hSome : (some y : Option H.V) ≠ some x := by
           exact fun h => hy (Option.some.inj h)
         change (if y = x then 1 else 0) =
@@ -263,7 +263,7 @@ theorem effective_extendDiv {D : CFDiv H} (hD : effective D) :
 
 /-- Constant extension of a firing script has zero Laplacian at the leaf and
 the old Laplacian at every old vertex. -/
-theorem extendDiv_prin (script : firing_script H) :
+theorem extendDiv_prin (script : firingScript H) :
     extendDiv H root (prin H script) =
       prin (addLeaf H root) (extendScript H root script) := by
   funext vertex
@@ -272,14 +272,14 @@ theorem extendDiv_prin (script : firing_script H) :
       change 0 =
         ∑ neighbor : Option H.V,
           (extendScript H root script neighbor - script root) *
-            (num_edges (addLeaf H root) none neighbor : ℤ)
+            (numEdges (addLeaf H root) none neighbor : ℤ)
       simp
   | some x =>
       change
-        (∑ y : H.V, (script y - script x) * (num_edges H x y : ℤ)) =
+        (∑ y : H.V, (script y - script x) * (numEdges H x y : ℤ)) =
         ∑ neighbor : Option H.V,
           (extendScript H root script neighbor - script x) *
-            (num_edges (addLeaf H root) (some x) neighbor : ℤ)
+            (numEdges (addLeaf H root) (some x) neighbor : ℤ)
       rw [Fintype.sum_option]
       by_cases hx : x = root
       · subst x
@@ -288,10 +288,10 @@ theorem extendDiv_prin (script : firing_script H) :
 
 /-- Linear equivalence transports from the old graph to its leaf extension. -/
 theorem linearEquiv_extendDiv {D E : CFDiv H}
-    (hEquiv : linear_equiv H D E) :
-    linear_equiv (addLeaf H root)
+    (hEquiv : linearEquiv H D E) :
+    linearEquiv (addLeaf H root)
       (extendDiv H root D) (extendDiv H root E) := by
-  unfold linear_equiv at hEquiv ⊢
+  unfold linearEquiv at hEquiv ⊢
   rw [principal_iff_eq_prin] at hEquiv ⊢
   obtain ⟨script, hscript⟩ := hEquiv
   refine ⟨extendScript H root script, ?_⟩
@@ -306,7 +306,7 @@ theorem winnable_extendDiv {D : CFDiv H} (hWin : winnable H D) :
     linearEquiv_extendDiv H root hEquiv⟩
 
 /-- Script which moves one removed-chip test from `root` to the new leaf. -/
-def leafMoveScript : firing_script (addLeaf H root)
+def leafMoveScript : firingScript (addLeaf H root)
   | none => 1
   | some _ => 0
 
@@ -316,7 +316,7 @@ private theorem prin_leafMoveScript_none :
   change
     (∑ neighbor : Option H.V,
       (leafMoveScript H root neighbor - 1) *
-        (num_edges (addLeaf H root) none neighbor : ℤ)) = -1
+        (numEdges (addLeaf H root) none neighbor : ℤ)) = -1
   rw [Fintype.sum_option]
   simp [leafMoveScript]
 
@@ -326,7 +326,7 @@ private theorem prin_leafMoveScript_some (x : H.V) :
   change
     (∑ neighbor : Option H.V,
       (leafMoveScript H root neighbor - 0) *
-        (num_edges (addLeaf H root) (some x) neighbor : ℤ)) =
+        (numEdges (addLeaf H root) (some x) neighbor : ℤ)) =
       if x = root then 1 else 0
   rw [Fintype.sum_option]
   simp [leafMoveScript]
@@ -335,20 +335,20 @@ private theorem prin_leafMoveScript_some (x : H.V) :
 -- (Mathlib v4.33).
 theorem prin_leafMoveScript :
     prin (addLeaf H root) (leafMoveScript H root) =
-      one_chip (some root) - one_chip none := by
+      oneChip (some root) - oneChip none := by
   funext vertex
   cases vertex with
   | none =>
       rw [prin_leafMoveScript_none]
-      simp [one_chip]
+      simp [oneChip]
   | some x =>
       rw [prin_leafMoveScript_some]
       by_cases hx : x = root
       · subst x
-        simp [one_chip]
+        simp [oneChip]
       · have hSome : (some x : Option H.V) ≠ some root := by
           exact fun h => hx (Option.some.inj h)
-        simp only [Pi.sub_apply, one_chip]
+        simp only [Pi.sub_apply, oneChip]
         change (if x = root then 1 else 0) =
           (if (some x : Option H.V) = some root then 1 else 0) -
             (if (some x : Option H.V) = none then 1 else 0)
@@ -358,10 +358,10 @@ theorem prin_leafMoveScript :
 /-- Removing a chip at the old root or at the new leaf gives linearly
 equivalent divisors on the leaf extension. -/
 theorem sub_root_linearEquiv_sub_leaf (D : CFDiv H) :
-    linear_equiv (addLeaf H root)
-      (extendDiv H root D - one_chip (some root))
-      (extendDiv H root D - one_chip none) := by
-  unfold linear_equiv
+    linearEquiv (addLeaf H root)
+      (extendDiv H root D - oneChip (some root))
+      (extendDiv H root D - oneChip none) := by
+  unfold linearEquiv
   rw [principal_iff_eq_prin]
   refine ⟨leafMoveScript H root, ?_⟩
   rw [prin_leafMoveScript]
@@ -378,13 +378,13 @@ theorem rank_ge_one_addLeaf {D : CFDiv H} (hRank : rank H D ≥ 1) :
   | some x =>
       have hOld :=
         (rank_geq_iff H D 1).mpr hRank
-          (one_chip x) ⟨eff_one_chip x, deg_one_chip x⟩
+          (oneChip x) ⟨eff_one_chip x, deg_one_chip x⟩
       have hExtended := winnable_extendDiv H root hOld
       simpa using hExtended
   | none =>
       have hOld :=
         (rank_geq_iff H D 1).mpr hRank
-          (one_chip root) ⟨eff_one_chip root, deg_one_chip root⟩
+          (oneChip root) ⟨eff_one_chip root, deg_one_chip root⟩
       have hExtended := winnable_extendDiv H root hOld
       have hLinear := sub_root_linearEquiv_sub_leaf H root D
       exact winnable_equiv_winnable (addLeaf H root) _ _
@@ -407,7 +407,7 @@ def retractDiv (E : CFDiv (addLeaf H root)) : CFDiv H :=
     retractDiv H root E x = E (some x) + if x = root then E none else 0 := rfl
 
 /-- Restrict a firing script from a leaf extension to the old vertices. -/
-def retractScript (script : firing_script (addLeaf H root)) : firing_script H :=
+def retractScript (script : firingScript (addLeaf H root)) : firingScript H :=
   fun x => script (some x)
 
 @[simp] theorem retractDiv_extendDiv (D : CFDiv H) :
@@ -432,7 +432,7 @@ def retractScript (script : firing_script (addLeaf H root)) : firing_script H :=
 
 /-- Retraction commutes with principal divisors.  The leaf-edge contribution
 cancels between the root and the leaf. -/
-theorem retractDiv_prin (script : firing_script (addLeaf H root)) :
+theorem retractDiv_prin (script : firingScript (addLeaf H root)) :
     retractDiv H root (prin (addLeaf H root) script) =
       prin H (retractScript H root script) := by
   funext x
@@ -442,13 +442,13 @@ theorem retractDiv_prin (script : firing_script (addLeaf H root)) :
     change
       (∑ neighbor : Option H.V,
         (script neighbor - script (some root)) *
-          (num_edges (addLeaf H root) (some root) neighbor : ℤ)) +
+          (numEdges (addLeaf H root) (some root) neighbor : ℤ)) +
         ∑ neighbor : Option H.V,
           (script neighbor - script none) *
-            (num_edges (addLeaf H root) none neighbor : ℤ) =
+            (numEdges (addLeaf H root) none neighbor : ℤ) =
       ∑ neighbor : H.V,
         (script (some neighbor) - script (some root)) *
-          (num_edges H root neighbor : ℤ)
+          (numEdges H root neighbor : ℤ)
     rw [Fintype.sum_option, Fintype.sum_option]
     simp
     ring
@@ -457,18 +457,18 @@ theorem retractDiv_prin (script : firing_script (addLeaf H root)) :
     change
       (∑ neighbor : Option H.V,
         (script neighbor - script (some x)) *
-          (num_edges (addLeaf H root) (some x) neighbor : ℤ)) =
+          (numEdges (addLeaf H root) (some x) neighbor : ℤ)) =
       ∑ neighbor : H.V,
-        (script (some neighbor) - script (some x)) * (num_edges H x neighbor : ℤ)
+        (script (some neighbor) - script (some x)) * (numEdges H x neighbor : ℤ)
     rw [Fintype.sum_option]
     simp [hx]
 
 /-- Linear equivalence on a leaf extension retracts to linear equivalence on
 the original graph. -/
 theorem linearEquiv_retractDiv {E F : CFDiv (addLeaf H root)}
-    (hEquiv : linear_equiv (addLeaf H root) E F) :
-    linear_equiv H (retractDiv H root E) (retractDiv H root F) := by
-  unfold linear_equiv at hEquiv ⊢
+    (hEquiv : linearEquiv (addLeaf H root) E F) :
+    linearEquiv H (retractDiv H root E) (retractDiv H root F) := by
+  unfold linearEquiv at hEquiv ⊢
   rw [principal_iff_eq_prin] at hEquiv ⊢
   obtain ⟨script, hscript⟩ := hEquiv
   refine ⟨retractScript H root script, ?_⟩
@@ -503,22 +503,22 @@ theorem winnable_retractDiv {E : CFDiv (addLeaf H root)}
 /-- The leaf transfer identifies every divisor with the zero extension of its
 retraction, up to linear equivalence. -/
 theorem linearEquiv_retractDiv_extendDiv (E : CFDiv (addLeaf H root)) :
-    linear_equiv (addLeaf H root) E
+    linearEquiv (addLeaf H root) E
       (extendDiv H root (retractDiv H root E)) := by
-  unfold linear_equiv
+  unfold linearEquiv
   rw [principal_iff_eq_prin]
   refine ⟨E none • leafMoveScript H root, ?_⟩
   rw [(prin (addLeaf H root)).map_zsmul, prin_leafMoveScript]
   funext vertex
   cases vertex with
   | none =>
-      simp [extendDiv, one_chip]
+      simp [extendDiv, oneChip]
   | some x =>
       by_cases hx : x = root
       · subst x
-        simp [extendDiv, retractDiv, one_chip]
+        simp [extendDiv, retractDiv, oneChip]
       · simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
-          extendDiv_some, retractDiv_apply, one_chip]
+          extendDiv_some, retractDiv_apply, oneChip]
         simp only [if_neg hx]
         have hSome : (some x : (addLeaf H root).V) ≠ some root := by
           intro h
@@ -538,10 +538,10 @@ theorem linearEquiv_retractDiv_extendDiv (E : CFDiv (addLeaf H root)) :
 
 /-- Zero extension preserves every rank lower bound. -/
 theorem rank_geq_addLeaf {D : CFDiv H} {k : ℤ}
-    (hRank : rank_geq H D k) :
-    rank_geq (addLeaf H root) (extendDiv H root D) k := by
+    (hRank : rankGeq H D k) :
+    rankGeq (addLeaf H root) (extendDiv H root D) k := by
   intro E hE
-  have hRetract : retractDiv H root E ∈ eff_of_degree H k :=
+  have hRetract : retractDiv H root E ∈ effOfDegree H k :=
     ⟨effective_retractDiv H root hE.1, by simpa using hE.2⟩
   have hOldWin : winnable H (D - retractDiv H root E) :=
     hRank (retractDiv H root E) hRetract
@@ -555,7 +555,7 @@ theorem rank_geq_addLeaf {D : CFDiv H} {k : ℤ}
     rw [extendDiv_sub]
   rw [hDifference] at hExtendedWin
   apply winnable_equiv_winnable (addLeaf H root) _ _ hExtendedWin
-  unfold linear_equiv
+  unfold linearEquiv
   rw [principal_iff_eq_prin]
   obtain ⟨script, hscript⟩ :=
     (principal_iff_eq_prin (addLeaf H root)
@@ -571,10 +571,10 @@ theorem rank_geq_addLeaf {D : CFDiv H} {k : ℤ}
 /-- Every rank lower bound of a zero-extended divisor is already witnessed on
 the original graph. -/
 theorem rank_geq_of_addLeaf {D : CFDiv H} {k : ℤ}
-    (hRank : rank_geq (addLeaf H root) (extendDiv H root D) k) :
-    rank_geq H D k := by
+    (hRank : rankGeq (addLeaf H root) (extendDiv H root D) k) :
+    rankGeq H D k := by
   intro A hA
-  have hExtended : extendDiv H root A ∈ eff_of_degree (addLeaf H root) k :=
+  have hExtended : extendDiv H root A ∈ effOfDegree (addLeaf H root) k :=
     ⟨effective_extendDiv H root hA.1, by simpa using hA.2⟩
   have hWin : winnable (addLeaf H root)
       (extendDiv H root D - extendDiv H root A) := hRank _ hExtended
@@ -583,7 +583,7 @@ theorem rank_geq_of_addLeaf {D : CFDiv H} {k : ℤ}
 
 /-- Zero extension preserves and reflects every rank lower bound. -/
 theorem rank_geq_addLeaf_iff (D : CFDiv H) (k : ℤ) :
-    rank_geq (addLeaf H root) (extendDiv H root D) k ↔ rank_geq H D k := by
+    rankGeq (addLeaf H root) (extendDiv H root D) k ↔ rankGeq H D k := by
   constructor
   · exact rank_geq_of_addLeaf H root
   · exact rank_geq_addLeaf H root
@@ -635,7 +635,7 @@ theorem rank_collapseDiv (D : CFDiv (addLeaf H root)) :
 
 /-- Collapsing a principal divisor restricts its firing script to the old
 vertices. -/
-theorem prin_collapse (script : firing_script (addLeaf H root)) :
+theorem prin_collapse (script : firingScript (addLeaf H root)) :
     collapseDiv H root (prin (addLeaf H root) script) =
       prin H (fun w => script (some w)) := by
   exact retractDiv_prin H root script
@@ -659,7 +659,7 @@ theorem bnExists_rank_one_of_addLeaf {d : ℤ} :
   exact (bnExists_addLeaf_iff H root 1 d).mp
 
 /-- Adjoining one leaf does not change divisorial gonality. -/
-theorem divisorialGonality_addLeaf (hconn : graph_connected H) :
+theorem divisorialGonality_addLeaf (hconn : graphConnected H) :
     divisorialGonality (addLeaf H root) = divisorialGonality H := by
   apply Nat.le_antisymm
   · have hBN : BNExists (addLeaf H root) 1

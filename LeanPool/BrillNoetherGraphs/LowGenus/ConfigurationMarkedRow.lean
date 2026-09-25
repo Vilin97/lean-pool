@@ -80,7 +80,7 @@ def markValue (mark : Fin 12 → ℕ) (h : Fin 8 → ℕ) (e : Fin 12) : ℤ :=
   if 0 < mark e then 0 else heightPotential d h (d.core.tail e)
 
 /-- The marked firing script of a height profile. -/
-def script (mark : Fin 12 → ℕ) (h : Fin 8 → ℕ) : firing_script d.graph :=
+def script (mark : Fin 12 → ℕ) (h : Fin 8 → ℕ) : firingScript d.graph :=
   d.splitScript (heightPotential d h) mark (markValue d mark h)
 
 /-- What a chamber has to say about its height profile.  Everything else in
@@ -369,7 +369,7 @@ theorem residual_effective {mark : Fin 12 → ℕ} {h : Fin 8 → ℕ}
     (hLocal : ∀ v : Fin 8, 0 ≤ alloc v - indicatorWeight v owner +
       positiveEndpointContribution d (heightPotential d h) mark
         (markValue d mark h) v) :
-    effective (D - one_chip (d.coreVertex center)
+    effective (D - oneChip (d.coreVertex center)
       + prin d.graph (script d mark h)) := by
   classical
   have hMarks := marks_admissible d hprof hRep
@@ -382,7 +382,7 @@ theorem residual_effective {mark : Fin 12 → ℕ} {h : Fin 8 → ℕ}
       exact Subtype.ext hr.symm
     rw [hVertex]
     change 0 ≤ D (d.coreVertex r)
-      - one_chip (G := d.graph) (d.coreVertex center) (d.coreVertex r)
+      - oneChip (G := d.graph) (d.coreVertex center) (d.coreVertex r)
       + prin d.graph (script d mark h) (d.coreVertex r)
     rw [hCoreValue r, ← hAlloc r]
     rw [show prin d.graph (script d mark h) (d.coreVertex r) =
@@ -392,11 +392,11 @@ theorem residual_effective {mark : Fin 12 → ℕ} {h : Fin 8 → ℕ}
       (positiveEndpointContribution_classSum_eq d hMarks r).symm]
     have hIndicator := sum_indicatorWeight_class d owner r
     have hOneChip :
-        one_chip (G := d.graph) (d.coreVertex center) (d.coreVertex r) =
+        oneChip (G := d.graph) (d.coreVertex center) (d.coreVertex r) =
           ∑ v ∈ Finset.univ.filter (fun v : Fin 8 => d.rep v = d.rep r),
             indicatorWeight v owner := by
       rw [hIndicator]
-      simp only [one_chip, d.coreVertex_eq_iff]
+      simp only [oneChip, d.coreVertex_eq_iff]
       rw [hOwnerRep]
       simp only [eq_comm]
     rw [hOneChip, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
@@ -406,13 +406,13 @@ theorem residual_effective {mark : Fin 12 → ℕ} {h : Fin 8 → ℕ}
         d.interiorVertex edge offset := rfl
     rw [hVertex]
     change 0 ≤ D (d.interiorVertex edge offset)
-      - one_chip (G := d.graph) (d.coreVertex center) (d.interiorVertex edge offset)
+      - oneChip (G := d.graph) (d.coreVertex center) (d.interiorVertex edge offset)
       + prin d.graph (script d mark h) (d.interiorVertex edge offset)
     have hNe : (d.coreVertex center) ≠ d.interiorVertex edge offset := by
       simp [DegSpec.coreVertex, DegSpec.interiorVertex]
-    have hZeroChip : one_chip (G := d.graph) (d.coreVertex center)
+    have hZeroChip : oneChip (G := d.graph) (d.coreVertex center)
         (d.interiorVertex edge offset) = 0 := by
-      simp only [one_chip, if_neg hNe.symm]
+      simp only [oneChip, if_neg hNe.symm]
     rw [hZeroChip]
     by_cases hmark : offset.val + 1 = mark edge
     · have hlt : mark edge < d.length edge := by
@@ -444,13 +444,13 @@ section Divisors
 /-- A core-class weight plus chips at the marks of two slots. -/
 def markedDivisorTwo (W : Fin 8 → ℤ) (mark : Fin 12 → ℕ) (e f : Fin 12) :
     CFDiv d.graph :=
-  d.coreClassDivisor W + one_chip (d.pathAt e (mark e))
-    + one_chip (d.pathAt f (mark f))
+  d.coreClassDivisor W + oneChip (d.pathAt e (mark e))
+    + oneChip (d.pathAt f (mark f))
 
 /-- A core-class weight plus a chip at the mark of one slot. -/
 def markedDivisorOne (W : Fin 8 → ℤ) (mark : Fin 12 → ℕ) (e : Fin 12) :
     CFDiv d.graph :=
-  d.coreClassDivisor W + one_chip (d.pathAt e (mark e))
+  d.coreClassDivisor W + oneChip (d.pathAt e (mark e))
 
 /-- The core-class weight of a two-mark divisor. -/
 def baseTwo (W : Fin 8 → ℤ) (mark : Fin 12 → ℕ) (e f : Fin 12) (v : Fin 8) : ℤ :=
@@ -502,8 +502,8 @@ theorem markedDivisorTwo_coreVertex (e f : Fin 12) (r : Fin 8) :
         baseTwo d W mark e f v := by
   classical
   show d.coreClassDivisor W (d.coreVertex r)
-      + one_chip (G := d.graph) (d.pathAt e (mark e)) (d.coreVertex r)
-      + one_chip (G := d.graph) (d.pathAt f (mark f)) (d.coreVertex r) = _
+      + oneChip (G := d.graph) (d.pathAt e (mark e)) (d.coreVertex r)
+      + oneChip (G := d.graph) (d.pathAt f (mark f)) (d.coreVertex r) = _
   rw [d.coreClassDivisor_coreVertex, markChip_classSum_eq d mark e r,
     markChip_classSum_eq d mark f r]
   unfold baseTwo
@@ -515,7 +515,7 @@ theorem markedDivisorOne_coreVertex (e : Fin 12) (r : Fin 8) :
         baseOne d W mark e v := by
   classical
   show d.coreClassDivisor W (d.coreVertex r)
-      + one_chip (G := d.graph) (d.pathAt e (mark e)) (d.coreVertex r) = _
+      + oneChip (G := d.graph) (d.pathAt e (mark e)) (d.coreVertex r) = _
   rw [d.coreClassDivisor_coreVertex, markChip_classSum_eq d mark e r]
   unfold baseOne
   rw [Finset.sum_add_distrib]
@@ -543,8 +543,8 @@ theorem markedDivisorTwo_chip {e f : Fin 12}
     rw [d.pathAt_interior (by omega) hlt]
     exact congrArg (d.interiorVertex g) (Fin.ext (by simp; omega))
   show 1 ≤ d.coreClassDivisor W (d.interiorVertex g o)
-      + one_chip (G := d.graph) (d.pathAt e (mark e)) (d.interiorVertex g o)
-      + one_chip (G := d.graph) (d.pathAt f (mark f)) (d.interiorVertex g o)
+      + oneChip (G := d.graph) (d.pathAt e (mark e)) (d.interiorVertex g o)
+      + oneChip (G := d.graph) (d.pathAt f (mark f)) (d.interiorVertex g o)
   rw [d.coreClassDivisor_interiorVertex]
   rcases hsupp g hpos with rfl | rfl
   · have hz := eff_one_chip (G := d.graph) (d.pathAt f (mark f))
@@ -566,7 +566,7 @@ theorem markedDivisorOne_chip {e : Fin 12}
     rw [d.pathAt_interior (by omega) hlt]
     exact congrArg (d.interiorVertex g) (Fin.ext (by simp; omega))
   show 1 ≤ d.coreClassDivisor W (d.interiorVertex g o)
-      + one_chip (G := d.graph) (d.pathAt e (mark e)) (d.interiorVertex g o)
+      + oneChip (G := d.graph) (d.pathAt e (mark e)) (d.interiorVertex g o)
   rw [d.coreClassDivisor_interiorVertex]
   rcases hsupp g hpos with rfl
   rw [hpath, one_chip_apply_v]

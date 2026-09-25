@@ -104,13 +104,13 @@ inducing set. -/
 private theorem vertex_degree_inducedSubgraph_eq_internalDegree
     (G : CFGraph) (S : Finset G.V) (hS : S.Nonempty)
     (vertex : (inducedSubgraph G S hS).V) :
-    vertex_degree (inducedSubgraph G S hS) vertex =
+    vertexDegree (inducedSubgraph G S hS) vertex =
       internalDegree G S vertex.val := by
   classical
-  unfold vertex_degree internalDegree
+  unfold vertexDegree internalDegree
   simp_rw [num_edges_inducedSubgraph]
   exact (Finset.sum_subtype S (fun _ => Iff.rfl)
-    (fun neighbor => (num_edges G vertex.val neighbor : ℤ))).symm
+    (fun neighbor => (numEdges G vertex.val neighbor : ℤ))).symm
 
 -- v4.33: `backward.isDefEq.respectTransparency` now defaults to `true`, so unifying
 -- instance-implicit arguments through the semireducible cut/induced-subgraph
@@ -128,7 +128,7 @@ private theorem vertex_degree_induced_coreVertex_eq_incidentSlots
           spec.stepRight edge offset ∈ sideVertices ↔
         spec.core.tail edge ∈ side ∧ spec.core.head edge ∈ side)
     (vertex : Fin n) (hVertex : vertex ∈ side) :
-    vertex_degree (inducedSubgraph spec.graph sideVertices hSideNonempty)
+    vertexDegree (inducedSubgraph spec.graph sideVertices hSideNonempty)
         ⟨spec.coreVertex vertex, (hCore vertex).mpr hVertex⟩ =
       (∑ edge : Fin p,
         if spec.core.tail edge ∈ side ∧ spec.core.head edge ∈ side then
@@ -320,7 +320,7 @@ theorem step_mem_rightVertices_iff (h : c.Valid) (edge : Fin p)
 count, independently of subdivision lengths. -/
 theorem leftGraph_vertex_degree_coreVertex (h : c.Valid)
     (vertex : Fin n) (hVertex : vertex ∈ c.left) :
-    vertex_degree (c.toOneVertexCut spec h).leftGraph
+    vertexDegree (c.toOneVertexCut spec h).leftGraph
         ⟨spec.coreVertex vertex, c.mem_leftVertices_core spec vertex |>.mpr hVertex⟩ =
       (c.leftIncidentDegree vertex : ℤ) := by
   rw [leftIncidentDegree, leftSlots, Finset.sum_filter]
@@ -333,7 +333,7 @@ theorem leftGraph_vertex_degree_coreVertex (h : c.Valid)
 incidence count, independently of subdivision lengths. -/
 theorem rightGraph_vertex_degree_coreVertex (h : c.Valid)
     (vertex : Fin n) (hVertex : vertex ∈ c.right) :
-    vertex_degree (c.toOneVertexCut spec h).rightGraph
+    vertexDegree (c.toOneVertexCut spec h).rightGraph
         ⟨spec.coreVertex vertex, c.mem_rightVertices_core spec vertex |>.mpr hVertex⟩ =
       (c.rightIncidentDegree vertex : ℤ) := by
   rw [rightIncidentDegree, rightSlots, Finset.sum_filter]
@@ -355,7 +355,7 @@ private theorem vertex_degree_induced_interiorVertex_eq_two
           spec.stepRight edge offset ∈ sideVertices ↔ slot edge)
     (edge : Fin p) (offset : Fin (spec.length edge - 1))
     (hSlot : slot edge) :
-    vertex_degree (inducedSubgraph spec.graph sideVertices hSideNonempty)
+    vertexDegree (inducedSubgraph spec.graph sideVertices hSideNonempty)
         ⟨spec.interiorVertex edge offset, by
           have hEnds := (hStep edge (spec.previousStep edge offset)).mpr hSlot
           simpa using hEnds.2⟩ = 2 := by
@@ -364,15 +364,15 @@ private theorem vertex_degree_induced_interiorVertex_eq_two
   have hNextMem : spec.nextVertex edge offset ∈ sideVertices := by
     exact ((hStep edge (spec.nextStep edge offset)).mpr hSlot).2
   have hOut :
-      outdeg_S spec.graph sideVertices
+      outdegreeSet spec.graph sideVertices
         (spec.interiorVertex edge offset) = 0 := by
-    unfold outdeg_S
+    unfold outdegreeSet
     apply Finset.sum_eq_zero
     intro neighbor hNeighbor
     have hNeighborNot : neighbor ∉ sideVertices := by
       simpa using hNeighbor
     have hZero :
-        num_edges spec.graph (spec.interiorVertex edge offset) neighbor = 0 := by
+        numEdges spec.graph (spec.interiorVertex edge offset) neighbor = 0 := by
       apply Nat.eq_zero_of_not_pos
       intro hPositive
       rcases (spec.interior_num_edges_pos_iff edge offset neighbor).mp
@@ -392,7 +392,7 @@ private theorem vertex_degree_induced_interiorVertex_eq_two
 positive subdivision. -/
 theorem leftGraph_vertex_degree_two (h : c.Valid) (hRegular : c.LeftTwoRegular) :
     ∀ vertex : (c.toOneVertexCut spec h).leftGraph.V,
-      vertex_degree (c.toOneVertexCut spec h).leftGraph vertex = 2 := by
+      vertexDegree (c.toOneVertexCut spec h).leftGraph vertex = 2 := by
   rintro ⟨vertex, hVertex⟩
   rcases vertex with coreVertex | interior
   · have hCore : coreVertex ∈ c.left :=
@@ -420,7 +420,7 @@ every positive subdivision. -/
 theorem rightGraph_vertex_degree_two (h : c.Valid)
     (hRegular : c.RightTwoRegular) :
     ∀ vertex : (c.toOneVertexCut spec h).rightGraph.V,
-      vertex_degree (c.toOneVertexCut spec h).rightGraph vertex = 2 := by
+      vertexDegree (c.toOneVertexCut spec h).rightGraph vertex = 2 := by
   rintro ⟨vertex, hVertex⟩
   rcases vertex with coreVertex | interior
   · have hCore : coreVertex ∈ c.right :=
@@ -451,12 +451,12 @@ universe uTwoRegular
 than any prescribed mark. -/
 theorem exists_vertex_ne_of_vertexDegree_two
     (H : CFGraph.{uTwoRegular}) (marked : H.V)
-    (hDegree : ∀ vertex : H.V, vertex_degree H vertex = 2) :
+    (hDegree : ∀ vertex : H.V, vertexDegree H vertex = 2) :
     ∃ other : H.V, other ≠ marked := by
   by_contra hNoOther
   push Not at hNoOther
-  have hZero : vertex_degree H marked = 0 := by
-    rw [vertex_degree]
+  have hZero : vertexDegree H marked = 0 := by
+    rw [vertexDegree]
     apply Finset.sum_eq_zero
     intro vertex _hVertex
     rw [hNoOther vertex]
@@ -512,12 +512,12 @@ theorem leftPointedGenusOneRigid (h : c.LeftRigidConditions) :
     PointedGenusOneRigid (c.toOneVertexCut spec h.1).leftGraph
       (c.toOneVertexCut spec h.1).leftGlue := by
   let cut := c.toOneVertexCut spec h.1
-  have hConnectedAmbient : graph_connected spec.graph :=
+  have hConnectedAmbient : graphConnected spec.graph :=
     spec.graph_connected_of_coreConnected h.2.1
-  have hConnected : graph_connected cut.leftGraph :=
+  have hConnected : graphConnected cut.leftGraph :=
     cut.graph_connected_left_of_connected hConnectedAmbient
   have hDegree : ∀ vertex : cut.leftGraph.V,
-      vertex_degree cut.leftGraph vertex = 2 :=
+      vertexDegree cut.leftGraph vertex = 2 :=
     c.leftGraph_vertex_degree_two spec h.1 h.2.2.1
   apply pointedGenusOneRigid_of_twoEdgeCutCondition cut.leftGlue hConnected
   · rw [c.leftGraph_genus spec h.1, h.2.2.2]
@@ -530,12 +530,12 @@ theorem rightPointedGenusOneRigid (h : c.RightRigidConditions) :
     PointedGenusOneRigid (c.toOneVertexCut spec h.1).rightGraph
       (c.toOneVertexCut spec h.1).rightGlue := by
   let cut := c.toOneVertexCut spec h.1
-  have hConnectedAmbient : graph_connected spec.graph :=
+  have hConnectedAmbient : graphConnected spec.graph :=
     spec.graph_connected_of_coreConnected h.2.1
-  have hConnected : graph_connected cut.rightGraph :=
+  have hConnected : graphConnected cut.rightGraph :=
     cut.graph_connected_right_of_connected hConnectedAmbient
   have hDegree : ∀ vertex : cut.rightGraph.V,
-      vertex_degree cut.rightGraph vertex = 2 :=
+      vertexDegree cut.rightGraph vertex = 2 :=
     c.rightGraph_vertex_degree_two spec h.1 h.2.2.1
   apply pointedGenusOneRigid_of_twoEdgeCutCondition cut.rightGlue hConnected
   · rw [c.rightGraph_genus spec h.1, h.2.2.2]

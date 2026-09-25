@@ -55,9 +55,9 @@ theorem torsionWitness_coordinate_mem_thetaLattice_01
     (((m * i.val : ℕ) : ℤ), -((m * j.val : ℕ) : ℤ)) ∈
       thetaLattice (B.length 0) (B.length 1) (B.length 2) := by
   let diff : CFDiv B.graph :=
-    one_chip (strandVertex B 0 i) - one_chip (strandVertex B 1 j)
-  have hequiv : linear_equiv B.graph 0 ((m : ℤ) • diff) := hm.2.symm
-  unfold linear_equiv at hequiv
+    oneChip (strandVertex B 0 i) - oneChip (strandVertex B 1 j)
+  have hequiv : linearEquiv B.graph 0 ((m : ℤ) • diff) := hm.2.symm
+  unfold linearEquiv at hequiv
   obtain ⟨script, hscript⟩ :=
     (principal_iff_eq_prin B.graph (((m : ℤ) • diff) - 0)).mp hequiv
   have hmem := thetaJacobianMoment_prin_mem B script

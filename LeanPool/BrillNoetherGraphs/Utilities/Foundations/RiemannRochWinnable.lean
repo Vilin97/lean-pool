@@ -21,9 +21,9 @@ namespace Utilities
 /-- At degree `g - 1 + k`, rank at least `k` is equivalent to winnability of
 the canonical complement. -/
 theorem rank_ge_iff_canonical_sub_winnable_of_degree
-    {G : CFGraph} (hG : graph_connected G) (D : CFDiv G) (k : ℤ)
+    {G : CFGraph} (hG : graphConnected G) (D : CFDiv G) (k : ℤ)
     (hDegree : deg D = (genus G : ℤ) - 1 + k) :
-    rank G D ≥ k ↔ winnable G (canonical_divisor G - D) := by
+    rank G D ≥ k ↔ winnable G (canonicalDivisor G - D) := by
   rw [rank_ge_iff_dual_rank_ge hG D k]
   have hDualRank : dualRank G k (deg D) = 0 := by
     unfold dualRank rectangleWidth
@@ -31,70 +31,70 @@ theorem rank_ge_iff_canonical_sub_winnable_of_degree
     ring
   rw [hDualRank]
   rw [← rank_geq_iff]
-  exact rank_nonneg_iff_winnable G (canonical_divisor G - D)
+  exact rank_nonneg_iff_winnable G (canonicalDivisor G - D)
 
 /-- Effective-representative form of the degree-specialized Riemann--Roch
 criterion.  This is convenient for residual constructions: a rank hypothesis
 can be destructed directly into an effective representative of `K - D`. -/
 theorem rank_ge_iff_exists_effective_canonical_complement
-    {G : CFGraph} (hG : graph_connected G) (D : CFDiv G) (k : ℤ)
+    {G : CFGraph} (hG : graphConnected G) (D : CFDiv G) (k : ℤ)
     (hDegree : deg D = (genus G : ℤ) - 1 + k) :
     rank G D ≥ k ↔
-      ∃ E : CFDiv G, effective E ∧ linear_equiv G (canonical_divisor G - D) E := by
+      ∃ E : CFDiv G, effective E ∧ linearEquiv G (canonicalDivisor G - D) E := by
   rw [rank_ge_iff_canonical_sub_winnable_of_degree hG D k hDegree]
-  exact winnable_iff_exists_effective G (canonical_divisor G - D)
+  exact winnable_iff_exists_effective G (canonicalDivisor G - D)
 
 /-- Complementary form: if `F` has degree `g - 1 - k`, then `K - F` has rank
 at least `k` exactly when `F` is winnable. -/
 theorem canonical_sub_rank_ge_iff_winnable_of_degree
-    {G : CFGraph} (hG : graph_connected G) (F : CFDiv G) (k : ℤ)
+    {G : CFGraph} (hG : graphConnected G) (F : CFDiv G) (k : ℤ)
     (hDegree : deg F = (genus G : ℤ) - 1 - k) :
-    rank G (canonical_divisor G - F) ≥ k ↔ winnable G F := by
+    rank G (canonicalDivisor G - F) ≥ k ↔ winnable G F := by
   have hComplementDegree :
-      deg (canonical_divisor G - F) = (genus G : ℤ) - 1 + k := by
+      deg (canonicalDivisor G - F) = (genus G : ℤ) - 1 + k := by
     rw [deg.map_sub, degree_of_canonical_divisor, hDegree]
     ring
   rw [rank_ge_iff_canonical_sub_winnable_of_degree hG
-    (canonical_divisor G - F) k hComplementDegree]
+    (canonicalDivisor G - F) k hComplementDegree]
   have hDoubleComplement :
-      canonical_divisor G - (canonical_divisor G - F) = F := by
+      canonicalDivisor G - (canonicalDivisor G - F) = F := by
     abel
   rw [hDoubleComplement]
 
 /-- Effective-representative version of the complementary criterion. -/
 theorem canonical_sub_rank_ge_iff_exists_effective
-    {G : CFGraph} (hG : graph_connected G) (F : CFDiv G) (k : ℤ)
+    {G : CFGraph} (hG : graphConnected G) (F : CFDiv G) (k : ℤ)
     (hDegree : deg F = (genus G : ℤ) - 1 - k) :
-    rank G (canonical_divisor G - F) ≥ k ↔
-      ∃ E : CFDiv G, effective E ∧ linear_equiv G F E := by
+    rank G (canonicalDivisor G - F) ≥ k ↔
+      ∃ E : CFDiv G, effective E ∧ linearEquiv G F E := by
   rw [canonical_sub_rank_ge_iff_winnable_of_degree hG F k hDegree]
   exact winnable_iff_exists_effective G F
 
 /-- The rank-one canonical-complement test used in the width-two and
 prescribed-residual constructions. -/
 theorem canonical_sub_rank_ge_one_iff_winnable
-    {G : CFGraph} (hG : graph_connected G) (F : CFDiv G)
+    {G : CFGraph} (hG : graphConnected G) (F : CFDiv G)
     (hDegree : deg F = (genus G : ℤ) - 2) :
-    rank G (canonical_divisor G - F) ≥ 1 ↔ winnable G F := by
+    rank G (canonicalDivisor G - F) ≥ 1 ↔ winnable G F := by
   apply canonical_sub_rank_ge_iff_winnable_of_degree hG F 1
   omega
 
 /-- The degree-`g-1` case: a divisor is winnable exactly when its canonical
 complement is winnable. -/
 theorem degree_genus_sub_one_winnable_iff_complement_winnable
-    {G : CFGraph} (hG : graph_connected G) (D : CFDiv G)
+    {G : CFGraph} (hG : graphConnected G) (D : CFDiv G)
     (hDegree : deg D = (genus G : ℤ) - 1) :
-    winnable G D ↔ winnable G (canonical_divisor G - D) := by
+    winnable G D ↔ winnable G (canonicalDivisor G - D) := by
   constructor
   · intro hWin
-    have hRankGeq : rank_geq G D 0 :=
+    have hRankGeq : rankGeq G D 0 :=
       (rank_nonneg_iff_winnable G D).mpr hWin
     have hRank : rank G D ≥ 0 := (rank_geq_iff G D 0).mp hRankGeq
     exact (rank_ge_iff_canonical_sub_winnable_of_degree hG D 0 (by omega)).mp hRank
   · intro hComp
     have hRank : rank G D ≥ 0 :=
       (rank_ge_iff_canonical_sub_winnable_of_degree hG D 0 (by omega)).mpr hComp
-    have hRankGeq : rank_geq G D 0 := (rank_geq_iff G D 0).mpr hRank
+    have hRankGeq : rankGeq G D 0 := (rank_geq_iff G D 0).mpr hRank
     exact (rank_nonneg_iff_winnable G D).mp hRankGeq
 
 end Utilities

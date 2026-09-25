@@ -25,9 +25,9 @@ theorem not_nonRecurrent_of_rank_nonneg_one_and_period
     {M : TwiceMarked} {a k : ℕ} (w : M.graph.V)
     (haOne : 1 < a) (haK : a < k)
     (hOne : 0 ≤ rank M.graph
-      (one_chip w + (1 : ℤ) • (one_chip M.u - one_chip M.v)))
+      (oneChip w + (1 : ℤ) • (oneChip M.u - oneChip M.v)))
     (hA : 0 ≤ rank M.graph
-      (one_chip w + (a : ℤ) • (one_chip M.u - one_chip M.v))) :
+      (oneChip w + (a : ℤ) • (oneChip M.u - oneChip M.v))) :
     ¬ NonRecurrent M k := by
   intro hNonrec
   let n : Fin k := ⟨1, by omega⟩

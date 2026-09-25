@@ -22,7 +22,7 @@ namespace Utilities
 /-- The marked twist attached to one transmission row. -/
 def TransmissionTwist
     (G : CFGraph) (u v : G.V) (D : CFDiv G) (a b : ℤ) : CFDiv G :=
-  D + a • one_chip u - b • one_chip v
+  D + a • oneChip u - b • oneChip v
 
 /-- Exact degree of a transmission-row twist. -/
 theorem degree_transmissionTwist

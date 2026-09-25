@@ -117,7 +117,7 @@ example (P : Loop) (L : List Loop)
     (hrho : 0 ≤ bnNumber (chainGraph P L) r d) :
     rank (chainGraph P L)
         (D - (r + bnNumber (chainGraph P L) r d + 1) •
-          (one_chip (chainMarked P L).right : CFDiv (chainGraph P L))) < 0 :=
+          (oneChip (chainMarked P L).right : CFDiv (chainGraph P L))) < 0 :=
   ChainOfLoops.cdpr_no_high_multiplicity P L hg hGeneric D r d hr hrbound hdeg
     hrank hrho
 
@@ -132,7 +132,7 @@ example (P : Loop) (L : List Loop)
     (hrho : 0 ≤ bnNumber (chainGraph P L) r d) :
     rank (chainGraph P L)
         (D - (r + bnNumber (chainGraph P L) r d + 1) •
-          (one_chip (chainMarked P L).left : CFDiv (chainGraph P L))) < 0 :=
+          (oneChip (chainMarked P L).left : CFDiv (chainGraph P L))) < 0 :=
   ChainOfLoops.cdpr_no_high_multiplicity_left P L hg hGeneric D r d hr hrbound
     hdeg hrank hrho
 

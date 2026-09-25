@@ -27,17 +27,17 @@ namespace Utilities
 /-- Change the output normalization of an ASP permutation, leaving its
 inversion set unchanged.  Positive `c` subtracts `c` from every output. -/
 noncomputable def outputShift (τ : AspPerm) (c : ℤ) : AspPerm :=
-  (AspSet.of_AspPerm τ).toAspPerm (τ.χ + c)
+  (AspSet.ofAspPerm τ).toAspPerm (τ.χ + c)
 
 /-- Output shifts preserve the inversion set. -/
 @[simp] theorem inv_set_outputShift (τ : AspPerm) (c : ℤ) :
-    inv_set (outputShift τ c) = inv_set τ := by
-  exact AspSet.invSet_of_toAspPerm (AspSet.of_AspPerm τ) (τ.χ + c)
+    invSet (outputShift τ c) = invSet τ := by
+  exact AspSet.invSet_of_toAspPerm (AspSet.ofAspPerm τ) (τ.χ + c)
 
 /-- The ASP shift parameter increases by the output-shift amount. -/
 @[simp] theorem outputShift_chi (τ : AspPerm) (c : ℤ) :
     (outputShift τ c).χ = τ.χ + c := by
-  exact AspSet.chi_of_toAspPerm (AspSet.of_AspPerm τ) (τ.χ + c)
+  exact AspSet.chi_of_toAspPerm (AspSet.ofAspPerm τ) (τ.χ + c)
 
 private theorem outputShift_outset (τ : AspPerm) (c n : ℤ) :
     (outputShift τ c).outset n = τ.outset n := by
@@ -63,8 +63,8 @@ coordinate. -/
 @[simp] theorem outputShift_s (τ : AspPerm) (c a b : ℤ) :
     (outputShift τ c).s a b = τ.s (a + c) b := by
   rw [AspPerm.s_eq_se_card, AspPerm.s_eq_se_card]
-  have hse : (outputShift τ c).se_finset a b =
-      τ.se_finset (a + c) b := by
+  have hse : (outputShift τ c).seFinset a b =
+      τ.seFinset (a + c) b := by
     ext n
     simp only [AspPerm.mem_se, outputShift_apply]
     omega
@@ -108,7 +108,7 @@ noncomputable def shiftZeroPerm (τ : AspPerm) : AspPerm :=
   simp [shiftZeroPerm]
 
 @[simp] theorem inv_set_shiftZeroPerm (τ : AspPerm) :
-    inv_set (shiftZeroPerm τ) = inv_set τ := by
+    invSet (shiftZeroPerm τ) = invSet τ := by
   simp [shiftZeroPerm]
 
 /-- Recovering the original output normalization from its shift-zero
@@ -123,12 +123,12 @@ theorem transmissionInequality_outputShift
     {G : CFGraph} (u v : G.V) (τ : AspPerm) (D : CFDiv G)
     (c a b : ℤ) :
     TransmissionInequality G u v (outputShift τ c)
-      (D + c • one_chip u) a b ↔
+      (D + c • oneChip u) a b ↔
     TransmissionInequality G u v τ D (a + c) b := by
   unfold TransmissionInequality
   rw [outputShift_s]
-  have htwist : D + c • one_chip u + a • one_chip u - b • one_chip v =
-      D + (a + c) • one_chip u - b • one_chip v := by
+  have htwist : D + c • oneChip u + a • oneChip u - b • oneChip v =
+      D + (a + c) • oneChip u - b • oneChip v := by
     rw [add_assoc, ← add_zsmul, add_comm c a]
   rw [htwist]
   suffices hslip : τ.s (a + 1 + c) b = τ.s (a + c + 1) b by
@@ -140,7 +140,7 @@ to the output-shifted permutation. -/
 theorem satisfiesTransmission_outputShift
     {G : CFGraph} (u v : G.V) (τ : AspPerm) (D : CFDiv G) (c : ℤ)
     (h : SatisfiesTransmission G u v τ D) :
-    SatisfiesTransmission G u v (outputShift τ c) (D + c • one_chip u) := by
+    SatisfiesTransmission G u v (outputShift τ c) (D + c • oneChip u) := by
   constructor
   · rw [deg.map_add, map_zsmul, deg_one_chip, h.1, outputShift_chi]
     ring
@@ -150,12 +150,12 @@ theorem satisfiesTransmission_outputShift
 /-- Output shifting is an equivalence on transmission witnesses. -/
 theorem satisfiesTransmission_outputShift_iff
     {G : CFGraph} (u v : G.V) (τ : AspPerm) (D : CFDiv G) (c : ℤ) :
-    SatisfiesTransmission G u v (outputShift τ c) (D + c • one_chip u) ↔
+    SatisfiesTransmission G u v (outputShift τ c) (D + c • oneChip u) ↔
       SatisfiesTransmission G u v τ D := by
   constructor
   · intro h
     have h' := satisfiesTransmission_outputShift u v
-      (outputShift τ c) (D + c • one_chip u) (-c) h
+      (outputShift τ c) (D + c • oneChip u) (-c) h
     simpa [outputShift_neg_add] using h'
   · exact satisfiesTransmission_outputShift u v τ D c
 
@@ -166,14 +166,14 @@ theorem transmissionExists_outputShift_iff
       TransmissionExists G u v τ := by
   constructor
   · rintro ⟨E, hE⟩
-    refine ⟨E + (-c) • one_chip u, ?_⟩
+    refine ⟨E + (-c) • oneChip u, ?_⟩
     apply (satisfiesTransmission_outputShift_iff u v τ
-      (E + (-c) • one_chip u) c).mp
+      (E + (-c) • oneChip u) c).mp
     convert hE using 1
     rw [add_assoc, ← add_zsmul]
     simp
   · rintro ⟨D, hD⟩
-    exact ⟨D + c • one_chip u,
+    exact ⟨D + c • oneChip u,
       satisfiesTransmission_outputShift u v τ D c hD⟩
 
 /-- Every transmission-existence problem is canonically equivalent to its

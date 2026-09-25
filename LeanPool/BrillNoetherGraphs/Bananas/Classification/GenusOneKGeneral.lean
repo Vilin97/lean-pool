@@ -46,8 +46,8 @@ variable {G : CFGraph} {u v : G.V}
 the integer-indexed twist used by the torsion API. -/
 private theorem genusOneZeroTwist_eq_degreeTwistInt (D : CFDiv G) (b : ℤ) :
     genusOneZeroTwist (u := u) (v := v) D b = degreeTwistInt (mark G u v) D 0 b := by
-  show D + (b - deg D) • one_chip u - b • one_chip v
-      = D + (0 - deg D + b) • one_chip u - b • one_chip v
+  show D + (b - deg D) • oneChip u - b • oneChip v
+      = D + (0 - deg D + b) • oneChip u - b • oneChip v
   have hcoeff : b - deg D = 0 - deg D + b := by ring
   rw [hcoeff]
 
@@ -60,8 +60,8 @@ private theorem natAbs_dvd_iff {k : ℕ} (m : ℤ) : k ∣ m.natAbs ↔ (k : ℤ
 private theorem principal_genusOneZeroTwist_of_dvd {k : ℕ}
     (hWitness : TorsionWitness (mark G u v) k) (D : CFDiv G) (b c : ℤ)
     (hDvd : (k : ℤ) ∣ b - c)
-    (hc : linear_equiv G (genusOneZeroTwist (u := u) (v := v) D c) 0) :
-    linear_equiv G (genusOneZeroTwist (u := u) (v := v) D b) 0 := by
+    (hc : linearEquiv G (genusOneZeroTwist (u := u) (v := v) D c) 0) :
+    linearEquiv G (genusOneZeroTwist (u := u) (v := v) D b) 0 := by
   rw [genusOneZeroTwist_eq_degreeTwistInt] at hc ⊢
   refine degreeTwistInt_linearEquiv_zero_of_emod_eq hWitness D 0 b c ?_ hc
   have hmod : Int.ModEq (k : ℤ) b c :=
@@ -74,7 +74,7 @@ end Genus
 all divisors submodular has general transmission at that order. -/
 theorem kGeneralTransmission_genusOne_of_torsionOrder_and_allSubmodular
     {M : TwiceMarked} {k : ℕ}
-    (hConnected : _root_.graph_connected M.graph) (hGenus : genus M.graph = 1)
+    (hConnected : _root_.graphConnected M.graph) (hGenus : genus M.graph = 1)
     (hOrder : IsTorsionOrder M k) (hSub : AllSubmodular M) :
     KGeneralTransmission M k := by
   obtain ⟨G, u, v⟩ := M
@@ -87,13 +87,13 @@ theorem kGeneralTransmission_genusOne_of_torsionOrder_and_allSubmodular
   refine ⟨τ, hτ, hAffine, kInversions_finite_of_isKAffine hkpos hAffine, ?_⟩
   have hGenusNat : Int.toNat (genus G) = 1 := by rw [hGenus]; rfl
   rw [hGenusNat]
-  by_cases hAny : ∃ c : ℤ, linear_equiv G (genusOneZeroTwist (u := u) (v := v) D c) 0
+  by_cases hAny : ∃ c : ℤ, linearEquiv G (genusOneZeroTwist (u := u) (v := v) D c) 0
   · obtain ⟨c, hc⟩ := hAny
     by_cases hk2 : 2 ≤ k
     case neg =>
       -- `k = 1`: every index is principal, so `τ` is a translation.
       have hk1' : k = 1 := by omega
-      have hAll : ∀ b : ℤ, linear_equiv G
+      have hAll : ∀ b : ℤ, linearEquiv G
           (genusOneZeroTwist (u := u) (v := v) D b) 0 := by
         intro b
         refine principal_genusOneZeroTwist_of_dvd hWitness D b c ?_ hc
@@ -141,11 +141,11 @@ theorem kGeneralTransmission_genusOne_of_torsionOrder_and_allSubmodular
               refine hn ((mem_affineReflectionSupport_iff k (c - 1) n).mpr ?_)
               have hShift : n - (c - 1) = n + 1 - c := by ring
               rwa [hShift]
-            have hB : ¬ linear_equiv G
+            have hB : ¬ linearEquiv G
                 (genusOneZeroTwist (u := u) (v := v) D n) 0 :=
               not_principal_genusOneZeroTwist_of_not_dvd ⟨hWitness, hMin⟩ D n c hc
                 (fun h => hNotN ((natAbs_dvd_iff (n - c)).mp h))
-            have hNext : ¬ linear_equiv G
+            have hNext : ¬ linearEquiv G
                 (genusOneZeroTwist (u := u) (v := v) D (n + 1)) 0 :=
               not_principal_genusOneZeroTwist_of_not_dvd ⟨hWitness, hMin⟩ D (n + 1) c hc
                 (fun h => hNotN1 ((natAbs_dvd_iff (n + 1 - c)).mp h))

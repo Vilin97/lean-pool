@@ -79,8 +79,8 @@ theorem rank_normalized_same_strand_pair_zero_of_not_reflection_vertex
     (hNot : strandVertex B alpha k ≠
       strandVertex B alpha (strandMirror B alpha i)) :
     rank B.graph
-      (one_chip (strandVertex B alpha i) +
-        one_chip (strandVertex B alpha k)) = 0 := by
+      (oneChip (strandVertex B alpha i) +
+        oneChip (strandVertex B alpha k)) = 0 := by
   have hSum : i.val + k.val ≠ B.length alpha := by
     intro h
     apply hNot
@@ -111,8 +111,8 @@ theorem rank_coreVertex_add_distinct_interior_path_marks_ne_zero_generic
     (hj : B.IsInteriorPosition beta j)
     (hab : alpha ≠ beta) :
     rank B.graph
-      (one_chip (B.coreVertex e) + one_chip (B.pathVertex alpha i) -
-        one_chip (B.pathVertex beta j)) ≠ 0 := by
+      (oneChip (B.coreVertex e) + oneChip (B.pathVertex alpha i) -
+        oneChip (B.pathVertex beta j)) ≠ 0 := by
   have hjEndpoint : B.pathVertex beta j ≠ B.coreVertex e := by
     intro h
     rw [B.pathVertex_eq_interiorVertex beta j hj] at h
@@ -126,13 +126,13 @@ theorem rank_coreVertex_add_distinct_interior_path_marks_ne_zero_generic
   have hRed := q_reduced_coreVertex_add_distinct_interior_path_strands
     hg B e alpha beta i j hi hj hab hjEndpoint hji
   have hDebt :
-      ((one_chip (B.coreVertex e) + one_chip (B.pathVertex alpha i) -
-        one_chip (B.pathVertex beta j) : CFDiv B.graph)
+      ((oneChip (B.coreVertex e) + oneChip (B.pathVertex alpha i) -
+        oneChip (B.pathVertex beta j) : CFDiv B.graph)
           (B.pathVertex beta j)) < 0 := by
-    simp [one_chip, hjEndpoint, hji]
+    simp [oneChip, hjEndpoint, hji]
   have hRank := rank_eq_neg_one_of_qReduced_debt B.graph (B.pathVertex beta j)
-    (one_chip (B.coreVertex e) + one_chip (B.pathVertex alpha i) -
-      one_chip (B.pathVertex beta j)) hRed hDebt
+    (oneChip (B.coreVertex e) + oneChip (B.pathVertex alpha i) -
+      oneChip (B.pathVertex beta j)) hRed hDebt
   omega
 
 /-- A raw-coordinate reflected pair has rank one in every banana of genus at
@@ -143,25 +143,25 @@ theorem rank_path_pair_eq_one_of_sum_eq_length_generic
     (i k : B.PathPosition alpha)
     (hsum : i.val + k.val = B.length alpha) :
     rank B.graph
-      (one_chip (B.pathVertex alpha i) + one_chip (B.pathVertex alpha k)) = 1 := by
+      (oneChip (B.pathVertex alpha i) + oneChip (B.pathVertex alpha k)) = 1 := by
   have hkMirror : B.pathVertex alpha k =
       B.pathVertex alpha (SegmentReflection.symmetricPosition B alpha i) := by
     rw [B.pathVertex_eq_iff_val_eq]
     change k.val = B.length alpha - i.val
     have hiBound := i.isLt
     omega
-  have hReflection : linear_equiv B.graph
-      (one_chip (B.coreVertex (B.core.tail alpha)) +
-        one_chip (B.coreVertex (B.core.head alpha)))
-      (one_chip (B.pathVertex alpha i) + one_chip (B.pathVertex alpha k)) := by
-    unfold linear_equiv
+  have hReflection : linearEquiv B.graph
+      (oneChip (B.coreVertex (B.core.tail alpha)) +
+        oneChip (B.coreVertex (B.core.head alpha)))
+      (oneChip (B.pathVertex alpha i) + oneChip (B.pathVertex alpha k)) := by
+    unfold linearEquiv
     apply (principal_iff_eq_prin B.graph _).mpr
     refine ⟨SegmentReflection.script B alpha i, ?_⟩
     rw [SegmentReflection.prin_script_eq_reflectionDivisor, ← hkMirror]
     abel
   have hRawEndpoints :
-      one_chip (B.coreVertex (B.core.tail alpha)) +
-          one_chip (B.coreVertex (B.core.head alpha)) =
+      oneChip (B.coreVertex (B.core.tail alpha)) +
+          oneChip (B.coreVertex (B.core.head alpha)) =
         endpointPencilDivisor B := by
     by_cases hTail : B.core.tail alpha = 0
     · have hHead := head_eq_other_of_tail B alpha hTail
@@ -208,10 +208,10 @@ theorem rank_same_path_pair_sub_distinct_interior_ne_zero_generic
     (hj : B.IsInteriorPosition beta j)
     (hab : alpha ≠ beta)
     (hPairRank : rank B.graph
-      (one_chip (B.pathVertex alpha i) + one_chip (B.pathVertex alpha k)) = 0) :
+      (oneChip (B.pathVertex alpha i) + oneChip (B.pathVertex alpha k)) = 0) :
     rank B.graph
-      (one_chip (B.pathVertex alpha i) + one_chip (B.pathVertex alpha k) -
-        one_chip (B.pathVertex beta j)) ≠ 0 := by
+      (oneChip (B.pathVertex alpha i) + oneChip (B.pathVertex alpha k) -
+        oneChip (B.pathVertex beta j)) ≠ 0 := by
   rcases lt_trichotomy (i.val + k.val) (B.length alpha) with hsum | hsum | hsum
   · let p : B.PathPosition alpha := ⟨i.val + k.val, by omega⟩
     have hp : B.IsInteriorPosition alpha p := by
@@ -231,14 +231,14 @@ theorem rank_same_path_pair_sub_distinct_interior_ne_zero_generic
     have hRed := q_reduced_coreVertex_add_distinct_interior_path_strands
       hg B (B.core.tail alpha) alpha beta p j hp hj hab hjEndpoint hjp
     have hDebt :
-        ((one_chip (B.coreVertex (B.core.tail alpha)) +
-          one_chip (B.pathVertex alpha p) - one_chip (B.pathVertex beta j) :
+        ((oneChip (B.coreVertex (B.core.tail alpha)) +
+          oneChip (B.pathVertex alpha p) - oneChip (B.pathVertex beta j) :
             CFDiv B.graph) (B.pathVertex beta j)) < 0 := by
-      simp [one_chip, hjEndpoint, hjp]
+      simp [oneChip, hjEndpoint, hjp]
     have hEndpointRank := rank_eq_neg_one_of_qReduced_debt B.graph
       (B.pathVertex beta j)
-      (one_chip (B.coreVertex (B.core.tail alpha)) +
-        one_chip (B.pathVertex alpha p) - one_chip (B.pathVertex beta j))
+      (oneChip (B.coreVertex (B.core.tail alpha)) +
+        oneChip (B.pathVertex alpha p) - oneChip (B.pathVertex beta j))
       hRed hDebt
     have hSlide := path_pair_linearEquiv_tail_sum B alpha i k hi.1 hk.1 hsum
     have hShift := Certificate.StrongSeparator.linearEquiv_sub_one_chip
@@ -275,14 +275,14 @@ theorem rank_same_path_pair_sub_distinct_interior_ne_zero_generic
     have hRed := q_reduced_coreVertex_add_distinct_interior_path_strands
       hg B (B.core.head alpha) alpha beta p j hp hj hab hjEndpoint hjp
     have hDebt :
-        ((one_chip (B.coreVertex (B.core.head alpha)) +
-          one_chip (B.pathVertex alpha p) - one_chip (B.pathVertex beta j) :
+        ((oneChip (B.coreVertex (B.core.head alpha)) +
+          oneChip (B.pathVertex alpha p) - oneChip (B.pathVertex beta j) :
             CFDiv B.graph) (B.pathVertex beta j)) < 0 := by
-      simp [one_chip, hjEndpoint, hjp]
+      simp [oneChip, hjEndpoint, hjp]
     have hEndpointRank := rank_eq_neg_one_of_qReduced_debt B.graph
       (B.pathVertex beta j)
-      (one_chip (B.coreVertex (B.core.head alpha)) +
-        one_chip (B.pathVertex alpha p) - one_chip (B.pathVertex beta j))
+      (oneChip (B.coreVertex (B.core.head alpha)) +
+        oneChip (B.pathVertex alpha p) - oneChip (B.pathVertex beta j))
       hRed hDebt
     have hSlide := path_pair_linearEquiv_head_excess B alpha i k hi.2 hk.2 hsum
     have hShift := Certificate.StrongSeparator.linearEquiv_sub_one_chip
@@ -290,9 +290,9 @@ theorem rank_same_path_pair_sub_distinct_interior_ne_zero_generic
     have hRankEq := rank_eq_of_linear_equiv B.graph hShift
     intro hZero
     have hEndpointRank' : rank B.graph
-        (one_chip (B.pathVertex alpha p) +
-          one_chip (B.coreVertex (B.core.head alpha)) -
-            one_chip (B.pathVertex beta j)) = -1 := by
+        (oneChip (B.pathVertex alpha p) +
+          oneChip (B.coreVertex (B.core.head alpha)) -
+            oneChip (B.pathVertex beta j)) = -1 := by
       simpa only [add_comm] using hEndpointRank
     dsimp [p] at hEndpointRank' hRankEq
     rw [hZero, hEndpointRank'] at hRankEq
@@ -307,8 +307,8 @@ theorem rank_coreVertex_add_distinct_normalized_interior_ne_zero
     (hi : B.IsInteriorPosition alpha i)
     (hj : B.IsInteriorPosition beta j) (hab : alpha ≠ beta) :
     rank B.graph
-      (one_chip (B.coreVertex e) + one_chip (strandVertex B alpha i) -
-        one_chip (strandVertex B beta j)) ≠ 0 := by
+      (oneChip (B.coreVertex e) + oneChip (strandVertex B alpha i) -
+        oneChip (strandVertex B beta j)) ≠ 0 := by
   let p := normalizedPathPosition B alpha i
   let q := normalizedPathPosition B beta j
   have hp : B.IsInteriorPosition alpha p :=
@@ -329,14 +329,14 @@ theorem rank_distinct_normalized_interior_pair_sub_core_ne_zero
     (hj : B.IsInteriorPosition beta j) (hab : alpha ≠ beta)
     (e : Fin 2) :
     rank B.graph
-      (one_chip (strandVertex B alpha i) + one_chip (strandVertex B beta j) -
-        one_chip (B.coreVertex e)) ≠ 0 := by
+      (oneChip (strandVertex B alpha i) + oneChip (strandVertex B beta j) -
+        oneChip (B.coreVertex e)) ≠ 0 := by
   have hSupport := rankSupport_two_interior_distinct_strands
     hg B alpha beta i j hi hj hab
   intro hRank
   have hMem : B.coreVertex e ∈ rankSupport B.graph
-      (one_chip (strandVertex B alpha i) +
-        one_chip (strandVertex B beta j)) := by
+      (oneChip (strandVertex B alpha i) +
+        oneChip (strandVertex B beta j)) := by
     exact hRank.ge
   rw [hSupport] at hMem
   have heAlpha : B.coreVertex e ≠ strandVertex B alpha i := by
@@ -364,12 +364,12 @@ theorem rank_same_normalized_pair_sub_distinct_interior_ne_zero
     (hk : B.IsInteriorPosition alpha k)
     (hj : B.IsInteriorPosition beta j) (hab : alpha ≠ beta)
     (hPair : rank B.graph
-      (one_chip (strandVertex B alpha i) +
-        one_chip (strandVertex B alpha k)) = 0) :
+      (oneChip (strandVertex B alpha i) +
+        oneChip (strandVertex B alpha k)) = 0) :
     rank B.graph
-      (one_chip (strandVertex B alpha i) +
-        one_chip (strandVertex B alpha k) -
-        one_chip (strandVertex B beta j)) ≠ 0 := by
+      (oneChip (strandVertex B alpha i) +
+        oneChip (strandVertex B alpha k) -
+        oneChip (strandVertex B beta j)) ≠ 0 := by
   let p := normalizedPathPosition B alpha i
   let q := normalizedPathPosition B alpha k
   let r := normalizedPathPosition B beta j
@@ -380,7 +380,7 @@ theorem rank_same_normalized_pair_sub_distinct_interior_ne_zero
   have hr : B.IsInteriorPosition beta r :=
     normalizedPathPosition_isInterior B beta j hj
   have hPairRaw : rank B.graph
-      (one_chip (B.pathVertex alpha p) + one_chip (B.pathVertex alpha q)) = 0 := by
+      (oneChip (B.pathVertex alpha p) + oneChip (B.pathVertex alpha q)) = 0 := by
     simpa [p, q, strandVertex_eq_pathVertex_normalized] using hPair
   have hRaw := rank_same_path_pair_sub_distinct_interior_ne_zero_generic
     hg B alpha beta p q r hp hq hr hab hPairRaw
@@ -401,9 +401,9 @@ theorem banana_rank_zero_three_vertices_same_strand_alternatives
     (i : B.PathPosition alpha) (j : B.PathPosition beta)
     (k : B.PathPosition gamma)
     (hRank : rank B.graph
-      (one_chip (strandVertex B alpha i) +
-        one_chip (strandVertex B beta j) -
-        one_chip (strandVertex B gamma k)) = 0) :
+      (oneChip (strandVertex B alpha i) +
+        oneChip (strandVertex B beta j) -
+        oneChip (strandVertex B gamma k)) = 0) :
     strandVertex B alpha i = strandVertex B gamma k ∨
       strandVertex B beta j = strandVertex B gamma k ∨
       strandVertex B beta j =
@@ -428,8 +428,8 @@ theorem banana_rank_zero_three_vertices_same_strand_alternatives
           · subst gamma
             exact ⟨alpha, ⟨i, rfl⟩, ⟨j, rfl⟩, ⟨k, rfl⟩⟩
           · have hPair : rank B.graph
-                (one_chip (strandVertex B alpha i) +
-                  one_chip (strandVertex B alpha j)) = 0 :=
+                (oneChip (strandVertex B alpha i) +
+                  oneChip (strandVertex B alpha j)) = 0 :=
               rank_normalized_same_strand_pair_zero_of_not_reflection_vertex
                 hg B alpha i j hReflect
             have hNotRank :=

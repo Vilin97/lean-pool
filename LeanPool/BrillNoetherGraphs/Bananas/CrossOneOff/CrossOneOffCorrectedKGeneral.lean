@@ -62,7 +62,7 @@ theorem crossOneOff_not_kGeneral_of_five_le_genus_second_long
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩)) k := by
   intro hK
   obtain ⟨tau, hTau, _hAffine, hFinite, hUpper⟩ :=
-    hK.2.2 (g • one_chip (rightEndpoint B))
+    hK.2.2 (g • oneChip (rightEndpoint B))
   have hSeparate : crossOneOffCutoff g (B.length beta) ≤ k :=
     crossOneOff_kGeneral_cutoff_le_period
       B alpha beta (by omega) hab hAlpha hBetaLong hK

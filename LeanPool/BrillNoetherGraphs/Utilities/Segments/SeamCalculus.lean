@@ -49,25 +49,25 @@ Theorem C together with Theorem C′ of §5/§12:
 
 What the library **has** (all of it used below):
 
-* `CFDiv G = G.V → ℤ`, `one_chip v`, `effective D = ∀ v, D v ≥ 0`, `deg`,
-  `winnable G D`, `linear_equiv G D D'`, `principal_divisors G`
+* `CFDiv G = G.V → ℤ`, `oneChip v`, `effective D = ∀ v, D v ≥ 0`, `deg`,
+  `winnable G D`, `linearEquiv G D D'`, `principalDivisors G`
   (`ChipFiringWithLean.Basic`).
-* Firing scripts as plain functions: `firing_script G = G.V → ℤ` together with
-  the additive map `prin G : firing_script G →+ CFDiv G`, given by
-  `prin G σ v = ∑ u, (σ u - σ v) * num_edges G v u`.  This **is** the `Δ` of
+* Firing scripts as plain functions: `firingScript G = G.V → ℤ` together with
+  the additive map `prin G : firingScript G →+ CFDiv G`, given by
+  `prin G σ v = ∑ u, (σ u - σ v) * numEdges G v u`.  This **is** the `Δ` of
   the note (the negative of the Laplacian action; see the docstring of `prin`).
-  `principal_iff_eq_prin` identifies `principal_divisors` with the image of
-  `prin`.  There is also `firing_vector`, `set_firing`, `laplacian_matrix`,
-  `apply_laplacian`, none of which are needed here.
-* `q_reduced G q D`: `q_effective q D` together with "every nonempty
+  `principal_iff_eq_prin` identifies `principalDivisors` with the image of
+  `prin`.  There is also `firingVector`, `setFiring`, `laplacianMatrix`,
+  `applyLaplacian`, none of which are needed here.
+* `qReduced G q D`: `qEffective q D` together with "every nonempty
   `S ⊆ V ∖ {q}` contains a vertex `v` with
-  `D v < ∑ w ∉ S, num_edges G v w`" — i.e. no `q`-avoiding set is legal.
+  `D v < ∑ w ∉ S, numEdges G v w`" — i.e. no `q`-avoiding set is legal.
 * `exists_q_reduced_representative` and `unique_q_reduced` (both need
-  `graph_connected`), `q_reduced_unique`, `qReducedRep` (`RRGHelpers`),
+  `graphConnected`), `q_reduced_unique`, `qReducedRep` (`RRGHelpers`),
   `winnable_iff_q_reduced_effective`, `effective_of_winnable_and_q_reduced`.
 * `winnable_equiv_winnable`, `winnable_of_effective`, `rank`, `rank_geq_iff`,
   `rank_nonneg_iff_winnable`, Riemann–Roch.
-* `seamDivisor x y = one_chip x - one_chip y` (`Utilities.EdgeAddition`).
+* `seamDivisor x y = oneChip x - oneChip y` (`Utilities.EdgeAddition`).
 
 What the library **lacks**, and how it is handled here:
 
@@ -87,7 +87,7 @@ What the library **lacks**, and how it is handled here:
 * **"A `q`-reduced `D` satisfies `D q ≥ 1` iff `[D] - (q)` is effective".**
   Absent; proved here as `winnable_sub_one_chip_iff_of_qReduced`.
 * **"Two scripts with the same principal divisor differ by a constant".**
-  Absent (only the connectivity-free `q_reducer` shadow, which is private);
+  Absent (only the connectivity-free `qReducer` shadow, which is private);
   proved here as `script_const_of_prin_eq_zero`.
 * ℚ-valued potentials and effective resistance: absent.  Theorems B and D of
   the note need them and are deliberately not attempted.
@@ -104,35 +104,35 @@ variable {H : CFGraph}
 
 /-! ## Pointwise lemmas for chips and seams -/
 
-lemma one_chip_self (v : H.V) : (one_chip v : CFDiv H) v = 1 := by
-  simp [one_chip]
+lemma one_chip_self (v : H.V) : (oneChip v : CFDiv H) v = 1 := by
+  simp [oneChip]
 
 lemma sub_one_chip_apply_self (D : CFDiv H) (q : H.V) :
-    (D - one_chip q) q = D q - 1 := by
+    (D - oneChip q) q = D q - 1 := by
   simp only [Pi.sub_apply, one_chip_self]
 
 lemma sub_one_chip_apply_of_ne (D : CFDiv H) {q v : H.V} (h : v ≠ q) :
-    (D - one_chip q) v = D v := by
-  simp [one_chip, h]
+    (D - oneChip q) v = D v := by
+  simp [oneChip, h]
 
 lemma seamDivisor_apply_of_ne {x y v : H.V} (hvx : v ≠ x) (hvy : v ≠ y) :
     seamDivisor x y v = 0 := by
-  simp [seamDivisor, one_chip, hvx, hvy]
+  simp [seamDivisor, oneChip, hvx, hvy]
 
 lemma seamDivisor_apply_left {x y : H.V} (hxy : x ≠ y) :
     seamDivisor x y x = 1 := by
-  simp [seamDivisor, one_chip, hxy]
+  simp [seamDivisor, oneChip, hxy]
 
 lemma seamDivisor_apply_right {x y : H.V} (hxy : x ≠ y) :
     seamDivisor x y y = -1 := by
-  simp [seamDivisor, one_chip, hxy.symm]
+  simp [seamDivisor, oneChip, hxy.symm]
 
 /-- Away from `y` the seam divisor is nonnegative. -/
 lemma seamDivisor_nonneg_of_ne_right (x y : H.V) {w : H.V} (hw : w ≠ y) :
     0 ≤ seamDivisor x y w := by
   by_cases hwx : w = x
   · subst w
-    simp [seamDivisor, one_chip, hw]
+    simp [seamDivisor, oneChip, hw]
   · simp [seamDivisor_apply_of_ne hwx hw]
 
 /-! ## Level sets of a firing script
@@ -145,17 +145,17 @@ non-`q`-reducedness.
 -/
 
 /-- The set of vertices where a firing script attains its maximum. -/
-def topSet (g : firing_script H) : Finset H.V :=
+def topSet (g : firingScript H) : Finset H.V :=
   Finset.univ.filter (fun v => ∀ u, g u ≤ g v)
 
 /-- The set of vertices where a firing script attains its minimum. -/
-def botSet (g : firing_script H) : Finset H.V := topSet (-g)
+def botSet (g : firingScript H) : Finset H.V := topSet (-g)
 
-lemma mem_topSet {g : firing_script H} {v : H.V} :
+lemma mem_topSet {g : firingScript H} {v : H.V} :
     v ∈ topSet g ↔ ∀ u, g u ≤ g v := by
   simp [topSet]
 
-lemma mem_botSet {g : firing_script H} {v : H.V} :
+lemma mem_botSet {g : firingScript H} {v : H.V} :
     v ∈ botSet g ↔ ∀ u, g v ≤ g u := by
   rw [botSet, mem_topSet]
   constructor
@@ -168,15 +168,15 @@ lemma mem_botSet {g : firing_script H} {v : H.V} :
     simp only [Pi.neg_apply]
     omega
 
-lemma topSet_nonempty (g : firing_script H) : (topSet g).Nonempty := by
+lemma topSet_nonempty (g : firingScript H) : (topSet g).Nonempty := by
   obtain ⟨v, hv⟩ := Finite.exists_max g
   exact ⟨v, mem_topSet.mpr hv⟩
 
-lemma botSet_nonempty (g : firing_script H) : (botSet g).Nonempty :=
+lemma botSet_nonempty (g : firingScript H) : (botSet g).Nonempty :=
   topSet_nonempty _
 
 /-- Outside the `argmax` level set the script is *strictly* smaller. -/
-lemma lt_of_not_mem_topSet {g : firing_script H} {v u : H.V}
+lemma lt_of_not_mem_topSet {g : firingScript H} {v u : H.V}
     (hv : v ∈ topSet g) (hu : u ∉ topSet g) : g u < g v := by
   rcases lt_or_eq_of_le (mem_topSet.mp hv u) with h | h
   · exact h
@@ -184,37 +184,37 @@ lemma lt_of_not_mem_topSet {g : firing_script H} {v u : H.V}
 
 /-- **The level-set inequality.**  Firing a script whose maximum is attained at
 `v` costs `v` at least its out-degree from the maximal level set. -/
-lemma prin_le_neg_outdeg_S {g : firing_script H} {v : H.V} (hv : v ∈ topSet g) :
-    prin H g v ≤ - outdeg_S H (topSet g) v := by
+lemma prin_le_neg_outdeg_S {g : firingScript H} {v : H.V} (hv : v ∈ topSet g) :
+    prin H g v ≤ - outdegreeSet H (topSet g) v := by
   have hsplit := Finset.sum_filter_add_sum_filter_not (Finset.univ : Finset H.V)
-      (fun z => z ∉ topSet g) (fun u => (g u - g v) * (num_edges H v u : ℤ))
+      (fun z => z ∉ topSet g) (fun u => (g u - g v) * (numEdges H v u : ℤ))
   have h1 : ∑ u ∈ Finset.univ.filter (fun z => z ∉ topSet g),
-        (g u - g v) * (num_edges H v u : ℤ)
-      ≤ ∑ u ∈ Finset.univ.filter (fun z => z ∉ topSet g), (-(num_edges H v u : ℤ)) := by
+        (g u - g v) * (numEdges H v u : ℤ)
+      ≤ ∑ u ∈ Finset.univ.filter (fun z => z ∉ topSet g), (-(numEdges H v u : ℤ)) := by
     refine Finset.sum_le_sum fun u hu => ?_
     have hu' : u ∉ topSet g := (Finset.mem_filter.mp hu).2
     have hlt : g u - g v ≤ -1 := by
       have := lt_of_not_mem_topSet hv hu'
       omega
-    calc (g u - g v) * (num_edges H v u : ℤ)
-        ≤ (-1) * (num_edges H v u : ℤ) :=
+    calc (g u - g v) * (numEdges H v u : ℤ)
+        ≤ (-1) * (numEdges H v u : ℤ) :=
           mul_le_mul_of_nonneg_right hlt (Int.natCast_nonneg _)
-      _ = -(num_edges H v u : ℤ) := by ring
+      _ = -(numEdges H v u : ℤ) := by ring
   have h2 : ∑ u ∈ Finset.univ.filter (fun z => ¬ (z ∉ topSet g)),
-        (g u - g v) * (num_edges H v u : ℤ) ≤ 0 := by
+        (g u - g v) * (numEdges H v u : ℤ) ≤ 0 := by
     refine Finset.sum_nonpos fun u _ => ?_
     exact mul_nonpos_of_nonpos_of_nonneg
       (sub_nonpos.mpr (mem_topSet.mp hv u)) (Int.natCast_nonneg _)
-  have h3 : ∑ u ∈ Finset.univ.filter (fun z => z ∉ topSet g), (-(num_edges H v u : ℤ))
-      = - outdeg_S H (topSet g) v := by
+  have h3 : ∑ u ∈ Finset.univ.filter (fun z => z ∉ topSet g), (-(numEdges H v u : ℤ))
+      = - outdegreeSet H (topSet g) v := by
     rw [outdeg_S_eq_sum_filter]
     simp
   rw [prin_apply, ← hsplit]
   linarith
 
 /-- The `argmin` mirror of `prin_le_neg_outdeg_S`. -/
-lemma outdeg_S_le_prin {g : firing_script H} {v : H.V} (hv : v ∈ botSet g) :
-    outdeg_S H (botSet g) v ≤ prin H g v := by
+lemma outdeg_S_le_prin {g : firingScript H} {v : H.V} (hv : v ∈ botSet g) :
+    outdegreeSet H (botSet g) v ≤ prin H g v := by
   have h := prin_le_neg_outdeg_S (g := -g) hv
   rw [map_neg] at h
   simp only [Pi.neg_apply] at h
@@ -223,22 +223,22 @@ lemma outdeg_S_le_prin {g : firing_script H} {v : H.V} (hv : v ∈ botSet g) :
   omega
 
 /-- **Connectivity ⇒ the kernel of `Δ` consists of the constant scripts.** -/
-lemma script_const_of_prin_eq_zero (hconn : graph_connected H)
-    {g : firing_script H} (h : prin H g = 0) (u v : H.V) : g u = g v := by
+lemma script_const_of_prin_eq_zero (hconn : graphConnected H)
+    {g : firingScript H} (h : prin H g = 0) (u v : H.V) : g u = g v := by
   have hall : ∀ w : H.V, w ∈ topSet g := by
     by_contra hcon
     push Not at hcon
     obtain ⟨w, hw⟩ := hcon
     obtain ⟨z, hz⟩ := topSet_nonempty g
     obtain ⟨a, haS, b, hbS, hab⟩ := hconn (topSet g) ⟨z, w, hz, hw⟩
-    have h1 : prin H g a ≤ - outdeg_S H (topSet g) a := prin_le_neg_outdeg_S haS
-    have h2 : (num_edges H a b : ℤ) ≤ outdeg_S H (topSet g) a := by
-      unfold outdeg_S
-      refine Finset.single_le_sum (f := fun w => (num_edges H a w : ℤ))
+    have h1 : prin H g a ≤ - outdegreeSet H (topSet g) a := prin_le_neg_outdeg_S haS
+    have h2 : (numEdges H a b : ℤ) ≤ outdegreeSet H (topSet g) a := by
+      unfold outdegreeSet
+      refine Finset.single_le_sum (f := fun w => (numEdges H a w : ℤ))
         (fun i _ => Int.natCast_nonneg _) ?_
       simpa using hbS
     have h3 : prin H g a = 0 := by rw [h]; rfl
-    have h4 : 0 < (num_edges H a b : ℤ) := by exact_mod_cast hab
+    have h4 : 0 < (numEdges H a b : ℤ) := by exact_mod_cast hab
     omega
   have hu := mem_topSet.mp (hall u) v
   have hv := mem_topSet.mp (hall v) u
@@ -250,8 +250,8 @@ A `q`-reduced divisor stays `q`-reduced after a chip is removed at `q`, which
 converts "the class minus `(q)` is effective" into the pointwise test `D q ≥ 1`.
 -/
 
-lemma q_reduced_sub_one_chip {q : H.V} {D : CFDiv H} (h : q_reduced H q D) :
-    q_reduced H q (D - one_chip q) := by
+lemma q_reduced_sub_one_chip {q : H.V} {D : CFDiv H} (h : qReduced H q D) :
+    qReduced H q (D - oneChip q) := by
   refine ⟨fun v hv => ?_, fun S hS hne => ?_⟩
   · rw [sub_one_chip_apply_of_ne D hv]
     exact h.1 v hv
@@ -266,7 +266,7 @@ lemma q_reduced_sub_one_chip {q : H.V} {D : CFDiv H} (h : q_reduced H q D) :
 /-- **The chip test.**  For a `q`-reduced divisor `D`, the class `[D] - (q)` is
 effective exactly when `D` already carries a chip at `q`. -/
 lemma winnable_sub_one_chip_iff_of_qReduced {q : H.V} {D : CFDiv H}
-    (h : q_reduced H q D) : winnable H (D - one_chip q) ↔ 1 ≤ D q := by
+    (h : qReduced H q D) : winnable H (D - oneChip q) ↔ 1 ≤ D q := by
   constructor
   · intro hw
     have heff := effective_of_winnable_and_q_reduced H q _ hw (q_reduced_sub_one_chip h)
@@ -289,12 +289,12 @@ def seamTwist (C : CFDiv H) (x y : H.V) (m : ℤ) : CFDiv H :=
   C + m • seamDivisor x y
 
 /-- The displacement `t(f) = f x - f y` of a firing script. -/
-def displacement (x y : H.V) (f : firing_script H) : ℤ := f x - f y
+def displacement (x y : H.V) (f : firingScript H) : ℤ := f x - f y
 
 /-- `t` is a displacement of the `m`-twist: some script puts the `m`-twist into
 effective position with displacement `t`. -/
 def IsDisplacement (C : CFDiv H) (x y : H.V) (m t : ℤ) : Prop :=
-  ∃ f : firing_script H,
+  ∃ f : firingScript H,
     effective (seamTwist C x y m + prin H f) ∧ displacement x y f = t
 
 /-- The displacement set `d(A_m)` of the `m`-twist. -/
@@ -314,7 +314,7 @@ def IsMinDisplacement (C : CFDiv H) (x y : H.V) (m t : ℤ) : Prop :=
 
 /-- The junction class `ξ_m = [C + m•α - (y)]` of the pair `m | m+1`. -/
 def junction (C : CFDiv H) (x y : H.V) (m : ℤ) : CFDiv H :=
-  seamTwist C x y m - one_chip y
+  seamTwist C x y m - oneChip y
 
 /-- A constant script has zero displacement. -/
 @[simp] lemma displacement_const (x y : H.V) (c : ℤ) :
@@ -328,18 +328,18 @@ lemma seamTwist_succ (C : CFDiv H) (x y : H.V) (m : ℤ) :
 
 /-- The junction class seen from the right: `ξ_m = [C + (m+1)•α - (x)]`. -/
 lemma junction_eq_succ_sub_x (C : CFDiv H) (x y : H.V) (m : ℤ) :
-    junction C x y m = seamTwist C x y (m + 1) - one_chip x := by
+    junction C x y m = seamTwist C x y (m + 1) - oneChip x := by
   rw [junction, seamTwist_succ, seamDivisor]
   abel
 
 /-! ### Displacement is well defined on representatives -/
 
-lemma linear_equiv_add_prin (D : CFDiv H) (f : firing_script H) :
-    linear_equiv H D (D + prin H f) := by
+lemma linear_equiv_add_prin (D : CFDiv H) (f : firingScript H) :
+    linearEquiv H D (D + prin H f) := by
   have hdiff : D + prin H f - D = prin H f := by abel
   exact (principal_iff_eq_prin H _).mpr ⟨f, hdiff⟩
 
-lemma winnable_add_prin_iff (D : CFDiv H) (f : firing_script H) :
+lemma winnable_add_prin_iff (D : CFDiv H) (f : firingScript H) :
     winnable H (D + prin H f) ↔ winnable H D := by
   constructor
   · exact fun h => winnable_equiv_winnable H _ _ h (linear_equiv_add_prin D f).symm
@@ -348,8 +348,8 @@ lemma winnable_add_prin_iff (D : CFDiv H) (f : firing_script H) :
 /-- **`t` is well defined on representatives.**  On a connected graph two
 scripts with the same principal divisor differ by a constant, hence have the
 same displacement. -/
-theorem displacement_eq_of_prin_eq (hconn : graph_connected H) (x y : H.V)
-    {f f' : firing_script H} (h : prin H f = prin H f') :
+theorem displacement_eq_of_prin_eq (hconn : graphConnected H) (x y : H.V)
+    {f f' : firingScript H} (h : prin H f = prin H f') :
     displacement x y f = displacement x y f' := by
   have hzero : prin H (f - f') = 0 := by
     rw [map_sub, h, sub_self]
@@ -360,8 +360,8 @@ theorem displacement_eq_of_prin_eq (hconn : graph_connected H) (x y : H.V)
 
 /-- Hence the displacement attached to an effective representative of a twist
 depends only on the representative. -/
-theorem displacement_eq_of_div_eq (hconn : graph_connected H) (C : CFDiv H)
-    (x y : H.V) (m : ℤ) {f f' : firing_script H}
+theorem displacement_eq_of_div_eq (hconn : graphConnected H) (C : CFDiv H)
+    (x y : H.V) (m : ℤ) {f f' : firingScript H}
     (h : seamTwist C x y m + prin H f = seamTwist C x y m + prin H f') :
     displacement x y f = displacement x y f' :=
   displacement_eq_of_prin_eq hconn x y (by
@@ -384,10 +384,10 @@ lemma winnable_of_isDisplacement {C : CFDiv H} {x y : H.V} {m t : ℤ}
 
 /-- Every winnable divisor has a `q`-reduced effective representative, presented
 as an explicit script. -/
-lemma exists_qReduced_script (hconn : graph_connected H) (q : H.V) (A : CFDiv H)
+lemma exists_qReduced_script (hconn : graphConnected H) (q : H.V) (A : CFDiv H)
     (hw : winnable H A) :
-    ∃ f : firing_script H,
-      effective (A + prin H f) ∧ q_reduced H q (A + prin H f) := by
+    ∃ f : firingScript H,
+      effective (A + prin H f) ∧ qReduced H q (A + prin H f) := by
   obtain ⟨D', hequiv, hred, heff⟩ := (winnable_iff_q_reduced_effective hconn q A).mp hw
   obtain ⟨f, hf⟩ := (principal_iff_eq_prin H (D' - A)).mp hequiv
   have hAf : A + prin H f = D' := by rw [← hf]; abel
@@ -402,18 +402,18 @@ then firing a script `g`, then `g` attains its minimum at `q`.
 
 /-- **Master lemma.**  Let `D` be effective, let `β` be nonnegative away from
 `q`, and suppose `D + β + Δg` is `q`-reduced.  Then `g` is minimized at `q`. -/
-theorem script_min_at_of_qReduced (q : H.V) (D β : CFDiv H) (g : firing_script H)
+theorem script_min_at_of_qReduced (q : H.V) (D β : CFDiv H) (g : firingScript H)
     (hD : effective D) (hβ : ∀ w, w ≠ q → 0 ≤ β w)
-    (hred : q_reduced H q (D + β + prin H g)) :
+    (hred : qReduced H q (D + β + prin H g)) :
     ∀ w, g q ≤ g w := by
   by_contra hcon
   push Not at hcon
   obtain ⟨w₀, hw₀⟩ := hcon
   have hq : q ∉ botSet g := fun hmem => absurd (mem_botSet.mp hmem w₀) (not_le.mpr hw₀)
   obtain ⟨v, hvT, hlt⟩ := hred.exists_lt_outdeg hq (botSet_nonempty g)
-  have hlt' : (D + β + prin H g) v < outdeg_S H (botSet g) v := hlt
+  have hlt' : (D + β + prin H g) v < outdegreeSet H (botSet g) v := hlt
   have hvq : v ≠ q := by rintro rfl; exact hq hvT
-  have h1 : outdeg_S H (botSet g) v ≤ prin H g v := outdeg_S_le_prin hvT
+  have h1 : outdegreeSet H (botSet g) v ≤ prin H g v := outdeg_S_le_prin hvT
   have h2 : (D + β + prin H g) v = D v + β v + prin H g v := rfl
   have h3 := hD v
   have h4 := hβ v hvq
@@ -431,9 +431,9 @@ anywhere below.)
 
 /-- The `y`-reduced effective representative attains the maximal displacement. -/
 theorem isMaxDisplacement_of_qReduced_y (C : CFDiv H) (x y : H.V) (m : ℤ)
-    {f : firing_script H}
+    {f : firingScript H}
     (heff : effective (seamTwist C x y m + prin H f))
-    (hred : q_reduced H y (seamTwist C x y m + prin H f)) :
+    (hred : qReduced H y (seamTwist C x y m + prin H f)) :
     IsMaxDisplacement C x y m (displacement x y f) := by
   refine ⟨⟨f, heff, rfl⟩, ?_⟩
   rintro s ⟨f', heff', rfl⟩
@@ -450,9 +450,9 @@ theorem isMaxDisplacement_of_qReduced_y (C : CFDiv H) (x y : H.V) (m : ℤ)
 
 /-- The `x`-reduced effective representative attains the minimal displacement. -/
 theorem isMinDisplacement_of_qReduced_x (C : CFDiv H) (x y : H.V) (m : ℤ)
-    {f : firing_script H}
+    {f : firingScript H}
     (heff : effective (seamTwist C x y m + prin H f))
-    (hred : q_reduced H x (seamTwist C x y m + prin H f)) :
+    (hred : qReduced H x (seamTwist C x y m + prin H f)) :
     IsMinDisplacement C x y m (displacement x y f) := by
   refine ⟨⟨f, heff, rfl⟩, ?_⟩
   rintro s ⟨f', heff', rfl⟩
@@ -468,14 +468,14 @@ theorem isMinDisplacement_of_qReduced_x (C : CFDiv H) (x y : H.V) (m : ℤ)
   omega
 
 /-- A winnable twist has a maximal displacement. -/
-theorem exists_isMaxDisplacement (hconn : graph_connected H) (C : CFDiv H)
+theorem exists_isMaxDisplacement (hconn : graphConnected H) (C : CFDiv H)
     (x y : H.V) (m : ℤ) (hw : winnable H (seamTwist C x y m)) :
     ∃ b, IsMaxDisplacement C x y m b := by
   obtain ⟨f, heff, hred⟩ := exists_qReduced_script hconn y _ hw
   exact ⟨_, isMaxDisplacement_of_qReduced_y C x y m heff hred⟩
 
 /-- A winnable twist has a minimal displacement. -/
-theorem exists_isMinDisplacement (hconn : graph_connected H) (C : CFDiv H)
+theorem exists_isMinDisplacement (hconn : graphConnected H) (C : CFDiv H)
     (x y : H.V) (m : ℤ) (hw : winnable H (seamTwist C x y m)) :
     ∃ a, IsMinDisplacement C x y m a := by
   obtain ⟨f, heff, hred⟩ := exists_qReduced_script hconn x _ hw
@@ -496,11 +496,11 @@ lemma IsMinDisplacement.unique {C : CFDiv H} {x y : H.V} {m a a' : ℤ}
 /-- The junction class `ξ_m` is effective iff the `y`-reduced representative of
 the `m`-twist carries a chip at `y`. -/
 theorem junction_winnable_iff_chip (C : CFDiv H) (x y : H.V) (m : ℤ)
-    {f : firing_script H}
-    (hred : q_reduced H y (seamTwist C x y m + prin H f)) :
+    {f : firingScript H}
+    (hred : qReduced H y (seamTwist C x y m + prin H f)) :
     winnable H (junction C x y m) ↔ 1 ≤ (seamTwist C x y m + prin H f) y := by
   rw [← winnable_sub_one_chip_iff_of_qReduced hred]
-  have hshift : seamTwist C x y m + prin H f - one_chip y
+  have hshift : seamTwist C x y m + prin H f - oneChip y
       = junction C x y m + prin H f := by
     rw [junction]; abel
   rw [hshift, winnable_add_prin_iff]
@@ -510,9 +510,9 @@ the `y`-reduced effective representative of the `m`-twist, translated by the
 seam, is an effective representative of the `(m+1)`-twist *with the same
 script* — hence with the same displacement. -/
 theorem isDisplacement_succ_of_junction_winnable (C : CFDiv H) (x y : H.V)
-    (hxy : x ≠ y) (m : ℤ) {f : firing_script H}
+    (hxy : x ≠ y) (m : ℤ) {f : firingScript H}
     (heff : effective (seamTwist C x y m + prin H f))
-    (hred : q_reduced H y (seamTwist C x y m + prin H f))
+    (hred : qReduced H y (seamTwist C x y m + prin H f))
     (hjun : winnable H (junction C x y m)) :
     IsDisplacement C x y (m + 1) (displacement x y f) := by
   have hchip := (junction_winnable_iff_chip C x y m hred).mp hjun
@@ -535,7 +535,7 @@ theorem isDisplacement_succ_of_junction_winnable (C : CFDiv H) (x y : H.V)
 /-- **Theorem C, packaged.**  If the junction class is effective then the
 maximal displacement of the `m`-twist is again a displacement of the
 `(m+1)`-twist; in particular `b_{m+1} ≥ b_m`, i.e. `gap_m ≤ 0`. -/
-theorem isDisplacement_succ_of_isMaxDisplacement (hconn : graph_connected H)
+theorem isDisplacement_succ_of_isMaxDisplacement (hconn : graphConnected H)
     (C : CFDiv H) (x y : H.V) (hxy : x ≠ y) (m b : ℤ)
     (hb : IsMaxDisplacement C x y m b)
     (hjun : winnable H (junction C x y m)) :
@@ -553,9 +553,9 @@ theorem isDisplacement_succ_of_isMaxDisplacement (hconn : graph_connected H)
 at most the displacement of the `y`-reduced representative of the
 `(m+1)`-twist.  Equivalently `b_m ≤ b_{m+1}`. -/
 theorem le_displacement_of_qReduced_succ (C : CFDiv H) (x y : H.V) (m : ℤ)
-    {f f' : firing_script H}
+    {f f' : firingScript H}
     (heff : effective (seamTwist C x y m + prin H f))
-    (hred' : q_reduced H y (seamTwist C x y (m + 1) + prin H f')) :
+    (hred' : qReduced H y (seamTwist C x y (m + 1) + prin H f')) :
     displacement x y f ≤ displacement x y f' := by
   have hkey : seamTwist C x y (m + 1) + prin H f'
       = (seamTwist C x y m + prin H f) + seamDivisor x y + prin H (f' - f) := by
@@ -571,7 +571,7 @@ theorem le_displacement_of_qReduced_succ (C : CFDiv H) (x y : H.V) (m : ℤ)
 /-- **Lemma M, `∃`-representative form.**  If the `(m+1)`-twist is winnable then
 every displacement of the `m`-twist is dominated by some displacement of the
 `(m+1)`-twist. -/
-theorem exists_isDisplacement_succ_ge (hconn : graph_connected H) (C : CFDiv H)
+theorem exists_isDisplacement_succ_ge (hconn : graphConnected H) (C : CFDiv H)
     (x y : H.V) (m s : ℤ) (hs : IsDisplacement C x y m s)
     (hw : winnable H (seamTwist C x y (m + 1))) :
     ∃ t, IsDisplacement C x y (m + 1) t ∧ s ≤ t := by
@@ -581,7 +581,7 @@ theorem exists_isDisplacement_succ_ge (hconn : graph_connected H) (C : CFDiv H)
     le_displacement_of_qReduced_succ C x y m heff hred'⟩
 
 /-- **Lemma M, maximal form**: `b_m ≤ b_{m+1}`. -/
-theorem isMaxDisplacement_mono (hconn : graph_connected H) (C : CFDiv H)
+theorem isMaxDisplacement_mono (hconn : graphConnected H) (C : CFDiv H)
     (x y : H.V) (m b b' : ℤ)
     (hb : IsMaxDisplacement C x y m b)
     (hb' : IsMaxDisplacement C x y (m + 1) b') :
@@ -603,8 +603,8 @@ with *no chip at* `y`, and suppose `D + α + Δg` is effective.  Then `g` is
 strictly larger at `x` than at `y`: the seam step strictly increases the
 displacement. -/
 theorem lt_script_of_qReduced_no_chip (x y : H.V) (hxy : x ≠ y)
-    {D : CFDiv H} {g : firing_script H}
-    (hDred : q_reduced H y D) (hDy : D y = 0)
+    {D : CFDiv H} {g : firingScript H}
+    (hDred : qReduced H y D) (hDy : D y = 0)
     (heff : effective (D + seamDivisor x y + prin H g)) :
     g y < g x := by
   by_contra hcon
@@ -618,10 +618,10 @@ theorem lt_script_of_qReduced_no_chip (x y : H.V) (hxy : x ≠ y)
       exact hy (mem_topSet.mpr fun u => le_trans (mem_topSet.mp hxtop u) hcon)
     -- ... so `topSet g` is a nonempty legal firing set for `D` avoiding `y`.
     obtain ⟨v, hvS, hlt⟩ := hDred.exists_lt_outdeg hy (topSet_nonempty g)
-    have hlt' : D v < outdeg_S H (topSet g) v := hlt
+    have hlt' : D v < outdegreeSet H (topSet g) v := hlt
     have hvx : v ≠ x := by rintro rfl; exact hx hvS
     have hvy : v ≠ y := by rintro rfl; exact hy hvS
-    have h1 : prin H g v ≤ - outdeg_S H (topSet g) v := prin_le_neg_outdeg_S hvS
+    have h1 : prin H g v ≤ - outdegreeSet H (topSet g) v := prin_le_neg_outdeg_S hvS
     have h2 := heff v
     simp only [Pi.add_apply] at h2
     rw [seamDivisor_apply_of_ne hvx hvy] at h2
@@ -643,7 +643,7 @@ def HasGap (C : CFDiv H) (x y : H.V) (m : ℤ) : Prop :=
   ∀ s t : ℤ, IsDisplacement C x y m s → IsDisplacement C x y (m + 1) t → s < t
 
 /-- **Theorem C′.**  A non-effective junction class forces a gap. -/
-theorem hasGap_of_junction_not_winnable (hconn : graph_connected H) (C : CFDiv H)
+theorem hasGap_of_junction_not_winnable (hconn : graphConnected H) (C : CFDiv H)
     (x y : H.V) (hxy : x ≠ y) (m : ℤ)
     (hjun : ¬ winnable H (junction C x y m)) :
     HasGap C x y m := by
@@ -672,7 +672,7 @@ theorem hasGap_of_junction_not_winnable (hconn : graph_connected H) (C : CFDiv H
 /-- **Theorem C, contrapositive form.**  An effective junction class rules out a
 gap (assuming the `m`-twist is winnable, so that there is something to rule
 out). -/
-theorem not_hasGap_of_junction_winnable (hconn : graph_connected H) (C : CFDiv H)
+theorem not_hasGap_of_junction_winnable (hconn : graphConnected H) (C : CFDiv H)
     (x y : H.V) (hxy : x ≠ y) (m : ℤ)
     (hw : winnable H (seamTwist C x y m))
     (hjun : winnable H (junction C x y m)) :
@@ -686,7 +686,7 @@ theorem not_hasGap_of_junction_winnable (hconn : graph_connected H) (C : CFDiv H
 `m`-twist on a connected graph, the junction `m | m+1` has a gap exactly when
 its junction class `ξ_m = [C + m•α - (y)] = [C + (m+1)•α - (x)]` fails to be
 effective. -/
-theorem hasGap_iff (hconn : graph_connected H) (C : CFDiv H) (x y : H.V)
+theorem hasGap_iff (hconn : graphConnected H) (C : CFDiv H) (x y : H.V)
     (hxy : x ≠ y) (m : ℤ) (hw : winnable H (seamTwist C x y m)) :
     HasGap C x y m ↔ ¬ winnable H (junction C x y m) := by
   constructor
@@ -696,13 +696,13 @@ theorem hasGap_iff (hconn : graph_connected H) (C : CFDiv H) (x y : H.V)
 
 /-- **Corollary C1 (rank kills gaps).**  If the `m`-twist has positive rank then
 its junction class is effective, so the junction `m | m+1` has no gap. -/
-theorem not_hasGap_of_rank_pos (hconn : graph_connected H) (C : CFDiv H)
+theorem not_hasGap_of_rank_pos (hconn : graphConnected H) (C : CFDiv H)
     (x y : H.V) (hxy : x ≠ y) (m : ℤ)
     (hrank : 1 ≤ rank H (seamTwist C x y m)) :
     ¬ HasGap C x y m := by
   have hjun : winnable H (junction C x y m) := by
-    have hgeq : rank_geq H (seamTwist C x y m) 1 := (rank_geq_iff H _ 1).mpr hrank
-    exact hgeq (one_chip y) ⟨eff_one_chip y, deg_one_chip y⟩
+    have hgeq : rankGeq H (seamTwist C x y m) 1 := (rank_geq_iff H _ 1).mpr hrank
+    exact hgeq (oneChip y) ⟨eff_one_chip y, deg_one_chip y⟩
   have hw : winnable H (seamTwist C x y m) := by
     refine (rank_nonneg_iff_winnable H _).mp ((rank_geq_iff H _ 0).mpr ?_)
     omega
@@ -710,7 +710,7 @@ theorem not_hasGap_of_rank_pos (hconn : graph_connected H) (C : CFDiv H)
 
 /-- **Lemma M, strict form.**  When the junction class is not effective the
 displacement strictly increases: `b_{m+1} ≥ b_m + 1`. -/
-theorem exists_isDisplacement_succ_gt (hconn : graph_connected H) (C : CFDiv H)
+theorem exists_isDisplacement_succ_gt (hconn : graphConnected H) (C : CFDiv H)
     (x y : H.V) (hxy : x ≠ y) (m s : ℤ) (hs : IsDisplacement C x y m s)
     (hw : winnable H (seamTwist C x y (m + 1)))
     (hjun : ¬ winnable H (junction C x y m)) :
@@ -731,7 +731,7 @@ lemma seamTwist_swap (C : CFDiv H) (x y : H.V) (m : ℤ) :
     seamTwist C y x m = seamTwist C x y (-m) := by
   rw [seamTwist, seamTwist, seamDivisor_swap, smul_neg, ← neg_smul]
 
-lemma displacement_swap (x y : H.V) (f : firing_script H) :
+lemma displacement_swap (x y : H.V) (f : firingScript H) :
     displacement y x f = - displacement x y f := by
   simp only [displacement]; ring
 
@@ -757,9 +757,9 @@ class, seen from both sides (§5 of the note): the same hypothesis
 representative of the `(m+1)`-twist, translated back by the seam, is an
 effective representative of the `m`-twist with the same script. -/
 theorem isDisplacement_pred_of_junction_winnable (C : CFDiv H) (x y : H.V)
-    (hxy : x ≠ y) (m : ℤ) {f : firing_script H}
+    (hxy : x ≠ y) (m : ℤ) {f : firingScript H}
     (heff : effective (seamTwist C x y (m + 1) + prin H f))
-    (hred : q_reduced H x (seamTwist C x y (m + 1) + prin H f))
+    (hred : qReduced H x (seamTwist C x y (m + 1) + prin H f))
     (hjun : winnable H (junction C x y m)) :
     IsDisplacement C x y m (displacement x y f) := by
   have hts : seamTwist C y x (-(m + 1)) = seamTwist C x y (m + 1) := by
@@ -778,7 +778,7 @@ theorem isDisplacement_pred_of_junction_winnable (C : CFDiv H) (x y : H.V)
 /-- **Theorem C, `x`-side packaged.**  If the junction class is effective, the
 minimal displacement of the `(m+1)`-twist is again a displacement of the
 `m`-twist; in particular `a_m ≤ a_{m+1}` is not strict. -/
-theorem isDisplacement_of_isMinDisplacement_succ (hconn : graph_connected H)
+theorem isDisplacement_of_isMinDisplacement_succ (hconn : graphConnected H)
     (C : CFDiv H) (x y : H.V) (hxy : x ≠ y) (m a : ℤ)
     (ha : IsMinDisplacement C x y (m + 1) a)
     (hjun : winnable H (junction C x y m)) :
@@ -793,7 +793,7 @@ theorem isDisplacement_of_isMinDisplacement_succ (hconn : graph_connected H)
 /-- **Lemma M (`a`-side).**  If the `m`-twist is winnable then every
 displacement of the `(m+1)`-twist dominates some displacement of the `m`-twist:
 `a_m ≤ a_{m+1}`. -/
-theorem exists_isDisplacement_le (hconn : graph_connected H) (C : CFDiv H)
+theorem exists_isDisplacement_le (hconn : graphConnected H) (C : CFDiv H)
     (x y : H.V) (m t : ℤ) (ht : IsDisplacement C x y (m + 1) t)
     (hw : winnable H (seamTwist C x y m)) :
     ∃ s, IsDisplacement C x y m s ∧ s ≤ t := by
@@ -813,7 +813,7 @@ theorem exists_isDisplacement_le (hconn : graph_connected H) (C : CFDiv H)
 
 /-- **The `a`-side gap statement.**  A non-effective junction class also forces
 the strict inequality on the `x`-reduced side. -/
-theorem exists_isDisplacement_lt (hconn : graph_connected H) (C : CFDiv H)
+theorem exists_isDisplacement_lt (hconn : graphConnected H) (C : CFDiv H)
     (x y : H.V) (hxy : x ≠ y) (m t : ℤ) (ht : IsDisplacement C x y (m + 1) t)
     (hw : winnable H (seamTwist C x y m))
     (hjun : ¬ winnable H (junction C x y m)) :

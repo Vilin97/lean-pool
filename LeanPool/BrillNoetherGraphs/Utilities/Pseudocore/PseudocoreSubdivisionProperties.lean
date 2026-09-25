@@ -70,12 +70,12 @@ theorem two_le_slotValence {n g : ℕ} {core : Pseudocore n}
 
 /-- Every positive subdivision of a valid compatible pseudocore split is
 connected. -/
-theorem graph_connected {n g : ℕ} {core : Pseudocore n}
+theorem graphConnected {n g : ℕ} {core : Pseudocore n}
     (split : core.SplitMetadata) (hValid : core.ValidAt g)
     (hCompatible : PseudocoreSplitGlue.Compatible split)
     (spec : Spec (n + core.loopCount) core.splitEdgeCount)
     (hCore : spec.core = split.splitCore) :
-    graph_connected spec.graph := by
+    graphConnected spec.graph := by
   apply spec.graph_connected_of_coreConnected
   rw [hCore]
   exact PseudocoreSplitGlue.splitCore_connected_of_compatible split hValid.2.1
@@ -98,7 +98,7 @@ theorem leafless {n g : ℕ} {core : Pseudocore n}
     (hCompatible : PseudocoreSplitGlue.Compatible split)
     (spec : Spec (n + core.loopCount) core.splitEdgeCount)
     (hCore : spec.core = split.splitCore) :
-    ∀ vertex : spec.graph.V, vertex_degree spec.graph vertex ≠ 1 := by
+    ∀ vertex : spec.graph.V, vertexDegree spec.graph vertex ≠ 1 := by
   intro vertex
   rcases vertex with coreVertex | interior
   · have hValence : 2 ≤ slotValence spec.core coreVertex := by
@@ -106,15 +106,15 @@ theorem leafless {n g : ℕ} {core : Pseudocore n}
       exact two_le_slotValence split hValid hCompatible coreVertex
     have hDegree := slotValence_eq_vertex_degree spec coreVertex
     have hDegreeLower : (2 : ℤ) ≤
-        vertex_degree spec.graph (spec.coreVertex coreVertex) := by
+        vertexDegree spec.graph (spec.coreVertex coreVertex) := by
       rw [← hDegree]
       exact_mod_cast hValence
     intro hOne
-    change vertex_degree spec.graph (spec.coreVertex coreVertex) = 1 at hOne
+    change vertexDegree spec.graph (spec.coreVertex coreVertex) = 1 at hOne
     rw [hOne] at hDegreeLower
     norm_num at hDegreeLower
   · obtain ⟨edge, offset⟩ := interior
-    change vertex_degree spec.graph (spec.interiorVertex edge offset) ≠ 1
+    change vertexDegree spec.graph (spec.interiorVertex edge offset) ≠ 1
     rw [spec.vertex_degree_interiorVertex_eq_two edge offset]
     norm_num
 

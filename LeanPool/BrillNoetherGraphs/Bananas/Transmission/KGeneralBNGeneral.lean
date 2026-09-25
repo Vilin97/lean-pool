@@ -33,11 +33,11 @@ def normalizeFirstInversion (k : ℕ) (p : ℤ × ℤ) : ℤ × ℤ :=
 
 /-- The rectangular family of inversions crossing both coordinate axes. -/
 def crossingInversions (τ : ℤ → ℤ) : Set (ℤ × ℤ) :=
-  northwest_set τ 1 0 ×ˢ southeast_set τ 1 0
+  northwestSet τ 1 0 ×ˢ southeastSet τ 1 0
 
 theorem crossingInversions_ncard (τ : ℤ → ℤ) :
     (crossingInversions τ).ncard =
-      (northwest_set τ 1 0).ncard * (southeast_set τ 1 0).ncard := by
+      (northwestSet τ 1 0).ncard * (southeastSet τ 1 0).ncard := by
   exact Set.ncard_prod
 
 theorem normalizeFirstInversion_mem_kInversions_of_crossing
@@ -93,7 +93,7 @@ The paper's standing convention is that graphs are connected; it is explicit
 here because `CFGraph` itself does not bundle connectedness. -/
 theorem kGeneralTransmission_brillNoetherGeneral
     {M : TwiceMarked} {g k : ℕ}
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : _root_.graphConnected M.graph)
     (hgenus : genus M.graph = g)
     (hK : KGeneralTransmission M k)
     (hthreshold : g + 2 ≤ 2 * k) :
@@ -109,13 +109,13 @@ theorem kGeneralTransmission_brillNoetherGeneral
   have hNW := transmission_complement_rank_eq_northwest_ncard
     M D hconn τ hτ 0 0
   have hRR := riemann_roch_for_graphs hconn D
-  have hSEcard : ((southeast_set τ 1 0).ncard : ℤ) = rank M.graph D + 1 := by
+  have hSEcard : ((southeastSet τ 1 0).ncard : ℤ) = rank M.graph D + 1 := by
     simpa using hSE.symm
-  have hNWcard : ((northwest_set τ 1 0).ncard : ℤ) =
+  have hNWcard : ((northwestSet τ 1 0).ncard : ℤ) =
       genus M.graph - d + rank M.graph D := by
-    have hComplement : canonical_divisor M.graph - D -
-        (0 : ℤ) • one_chip M.u + (0 : ℤ) • one_chip M.v =
-          canonical_divisor M.graph - D := by simp
+    have hComplement : canonicalDivisor M.graph - D -
+        (0 : ℤ) • oneChip M.u + (0 : ℤ) • oneChip M.v =
+          canonicalDivisor M.graph - D := by simp
     rw [hComplement] at hNW
     norm_num at hNW
     rw [hdeg] at hRR

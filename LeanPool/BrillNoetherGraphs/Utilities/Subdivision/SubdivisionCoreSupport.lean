@@ -36,7 +36,7 @@ variable {G : CFGraph}
 it carries a chip.  Consequently positivity on a strong separator proves
 rank at least one. -/
 theorem rank_ge_one_of_effective_positive_on_strongSeparator
-    (hConnected : graph_connected G) {S : Finset G.V}
+    (hConnected : graphConnected G) {S : Finset G.V}
     (hSNonempty : S.Nonempty)
     (hSeparator : StrongSeparator.StrongSeparatorCertificate G S)
     {D : CFDiv G} (hEffective : effective D)
@@ -46,7 +46,7 @@ theorem rank_ge_one_of_effective_positive_on_strongSeparator
     hConnected hSNonempty hSeparator
   intro s hs
   exact StrongSeparator.reaches_of_effective_representative
-    (linear_equiv.refl G D) hEffective (hPositive s hs)
+    (linearEquiv.refl G D) hEffective (hPositive s hs)
 
 variable {n p : ℕ}
 
@@ -85,7 +85,7 @@ weights; subdivision-interior vertices contribute zero. -/
 /-- Positive core weights on a connected positive subdivision give a
 rank-one divisor, uniformly over all edge lengths. -/
 theorem rank_ge_one_coreDivisor (spec : SubdivisionGraph.Spec n p)
-    (weight : Fin n → ℤ) (hConnected : graph_connected spec.graph)
+    (weight : Fin n → ℤ) (hConnected : graphConnected spec.graph)
     (hPositive : ∀ vertex, 1 ≤ weight vertex) :
     rank spec.graph (coreDivisor spec weight) ≥ 1 := by
   apply rank_ge_one_of_effective_positive_on_strongSeparator hConnected
@@ -104,7 +104,7 @@ core weights remain as hypotheses. -/
 theorem bnExists_coreDivisor (spec : SubdivisionGraph.Spec n p)
     (weight : Fin n → ℤ) (degree : ℤ)
     (hDegree : (∑ vertex : Fin n, weight vertex) = degree)
-    (hConnected : graph_connected spec.graph)
+    (hConnected : graphConnected spec.graph)
     (hPositive : ∀ vertex, 1 ≤ weight vertex) :
     BNExists spec.graph 1 degree := by
   refine ⟨coreDivisor spec weight, ?_,
@@ -137,7 +137,7 @@ theorem degreeWeight_positive (spec : SubdivisionGraph.Spec n p)
 is the certificate-free form of the all-supported sparse-potential pattern. -/
 theorem bnExists_of_coreVertexCount_le_degree
     (spec : SubdivisionGraph.Spec n p) (degree : ℤ)
-    (hConnected : graph_connected spec.graph)
+    (hConnected : graphConnected spec.graph)
     (hDegree : (n : ℤ) ≤ degree) :
     BNExists spec.graph 1 degree := by
   exact bnExists_coreDivisor spec (degreeWeight spec degree) degree

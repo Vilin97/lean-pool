@@ -32,7 +32,7 @@ open GenusFiveCoreAtlas GenusFiveTwoPoleData
 rank at least one when every unsupported core vertex is an attachment
 vertex in one of the two displayed connector orders. -/
 theorem rank_ge_one_of_twoPoleData {n p : ℕ}
-    (s : SubdivisionGraph.Spec n p) (hConnected : graph_connected s.graph)
+    (s : SubdivisionGraph.Spec n p) (hConnected : graphConnected s.graph)
     (weight : Fin n → ℤ) (hNonnegative : ∀ v, 0 ≤ weight v)
     (data : Fin 2 → Data s.core 4 5 4 5)
     (hLeftConnected : ∀ i, (data i).leftCore.Connected)
@@ -56,11 +56,11 @@ theorem rank_ge_one_of_twoPoleData {n p : ℕ}
     intro vertex
     rcases hCover vertex with hChip | ⟨i, hPole⟩
     · exact StrongSeparator.reaches_of_effective_representative
-        (linear_equiv.refl s.graph D) hDEffective hChip
+        (linearEquiv.refl s.graph D) hDEffective hChip
     · let d := data i
       let J := d.scriptGluing s
-      let CA := canonical_divisor (d.leftSpec s).graph
-      let CB := canonical_divisor (d.rightSpec s).graph
+      let CA := canonicalDivisor (d.leftSpec s).graph
+      let CB := canonicalDivisor (d.rightSpec s).graph
       obtain ⟨hCA, _, hRankA⟩ := (d.leftSpec s).effective_canonical_pencil
         ((d.leftSpec s).graph_connected_of_coreConnected (hLeftConnected i))
         (by decide) (hLeftLeafless i)
@@ -71,20 +71,20 @@ theorem rank_ge_one_of_twoPoleData {n p : ℕ}
         intro a
         rcases a with a | ⟨e, k⟩
         · change weight (d.vertices (.inl a)) =
-            canonical_divisor (d.leftSpec s).graph ((d.leftSpec s).coreVertex a)
+            canonicalDivisor (d.leftSpec s).graph ((d.leftSpec s).coreVertex a)
           rw [(d.leftSpec s).canonical_divisor_coreVertex]
           exact hWeightLeft i a
-        · change 0 = canonical_divisor (d.leftSpec s).graph
+        · change 0 = canonicalDivisor (d.leftSpec s).graph
             ((d.leftSpec s).interiorVertex e k)
           rw [(d.leftSpec s).canonical_divisor_interiorVertex]
       have hDB : ∀ b, D (J.right b) = CB b := by
         intro b
         rcases b with b | ⟨e, k⟩
         · change weight (d.vertices (.inr b)) =
-            canonical_divisor (d.rightSpec s).graph ((d.rightSpec s).coreVertex b)
+            canonicalDivisor (d.rightSpec s).graph ((d.rightSpec s).coreVertex b)
           rw [(d.rightSpec s).canonical_divisor_coreVertex]
           exact hWeightRight i b
-        · change 0 = canonical_divisor (d.rightSpec s).graph
+        · change 0 = canonicalDivisor (d.rightSpec s).graph
             ((d.rightSpec s).interiorVertex e k)
           rw [(d.rightSpec s).canonical_divisor_interiorVertex]
       have hWinA := (rank_ge_one_iff_winnable_sub_one_chip _ _).mp hRankA
@@ -109,7 +109,7 @@ theorem rank_ge_one_of_twoPoleData {n p : ℕ}
 /-- Package the fixed canonical divisor as the existing degree-four
 Brill–Noether existence statement. -/
 theorem bnExists_of_twoPoleData {n p : ℕ}
-    (s : SubdivisionGraph.Spec n p) (hConnected : graph_connected s.graph)
+    (s : SubdivisionGraph.Spec n p) (hConnected : graphConnected s.graph)
     (weight : Fin n → ℤ) (hNonnegative : ∀ v, 0 ≤ weight v)
     (hDegree : ∑ v : Fin n, weight v = 4)
     (data : Fin 2 → Data s.core 4 5 4 5)

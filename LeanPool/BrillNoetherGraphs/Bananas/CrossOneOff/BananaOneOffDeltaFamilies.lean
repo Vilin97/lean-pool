@@ -26,7 +26,7 @@ theorem rankDelta_oneOff_rightEndpoint_family
     rankDelta
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      (a • one_chip (rightEndpoint B)) = 1 :=
+      (a • oneChip (rightEndpoint B)) = 1 :=
   rankDelta_oneOff_rightEndpoint_nsmul_eq_one
     B alpha a ha hag hLength
 
@@ -40,10 +40,10 @@ private theorem rankDelta_oneOff_interior_chip_eq_one
     rankDelta
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      (one_chip (strandVertex B alpha ⟨r, by omega⟩)) = 1 := by
+      (oneChip (strandVertex B alpha ⟨r, by omega⟩)) = 1 := by
   let p : B.PathPosition alpha := ⟨r, by omega⟩
   let v : B.PathPosition alpha := ⟨B.length alpha - 1, by omega⟩
-  let E : CFDiv B.graph := one_chip (strandVertex B alpha p)
+  let E : CFDiv B.graph := oneChip (strandVertex B alpha p)
   have hp : B.IsInteriorPosition alpha p := by
     change 0 < r ∧ r < B.length alpha
     omega
@@ -71,17 +71,17 @@ private theorem rankDelta_oneOff_interior_chip_eq_one
   have hRankV := rank_semibreak_sub_vertex_eq_neg_one B E hE
     (by rw [hdegE]; omega) (strandVertex B alpha v) hSupportV
   have hBothDeg : deg
-      (E - one_chip (leftEndpoint B) -
-        one_chip (strandVertex B alpha v)) < 0 := by
+      (E - oneChip (leftEndpoint B) -
+        oneChip (strandVertex B alpha v)) < 0 := by
     rw [deg.map_sub, deg.map_sub, hdegE, deg_one_chip, deg_one_chip]
     norm_num
   have hRankBoth := rank_neg_one_of_deg_neg B.graph _ hBothDeg
   unfold rankDelta mark
   change rank B.graph E -
-      rank B.graph (E - one_chip (leftEndpoint B)) -
-      rank B.graph (E - one_chip (strandVertex B alpha v)) +
-      rank B.graph (E - one_chip (leftEndpoint B) -
-        one_chip (strandVertex B alpha v)) = 1
+      rank B.graph (E - oneChip (leftEndpoint B)) -
+      rank B.graph (E - oneChip (strandVertex B alpha v)) +
+      rank B.graph (E - oneChip (leftEndpoint B) -
+        oneChip (strandVertex B alpha v)) = 1
   rw [hRankE, hRankLeft, hRankV, hRankBoth]
   norm_num
 
@@ -94,9 +94,9 @@ theorem rankDelta_oneOff_balanced_interior_family
     rankDelta
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      ((b : ℤ) • one_chip (leftEndpoint B) +
-        (b : ℤ) • one_chip (rightEndpoint B) +
-        one_chip (strandVertex B alpha ⟨r, by omega⟩)) = 1 := by
+      ((b : ℤ) • oneChip (leftEndpoint B) +
+        (b : ℤ) • oneChip (rightEndpoint B) +
+        oneChip (strandVertex B alpha ⟨r, by omega⟩)) = 1 := by
   by_cases hbZero : b = 0
   · subst b
     simp only [Nat.cast_zero, zero_smul, zero_add]
@@ -115,13 +115,13 @@ theorem rankDelta_oneOff_terminal_family
     rankDelta
       (mark B.graph (leftEndpoint B)
         (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-      ((a : ℤ) • one_chip (leftEndpoint B) +
-        (b : ℤ) • one_chip (rightEndpoint B) +
-        one_chip (strandVertex B alpha
+      ((a : ℤ) • oneChip (leftEndpoint B) +
+        (b : ℤ) • oneChip (rightEndpoint B) +
+        oneChip (strandVertex B alpha
           ⟨B.length alpha - 1, by omega⟩)) =
       if a = g then 1 else 0 := by
   let v : B.PathPosition alpha := ⟨B.length alpha - 1, by omega⟩
-  let E : CFDiv B.graph := one_chip (strandVertex B alpha v)
+  let E : CFDiv B.graph := oneChip (strandVertex B alpha v)
   have hv : B.IsInteriorPosition alpha v := by
     change 0 < B.length alpha - 1 ∧ B.length alpha - 1 < B.length alpha
     omega
@@ -143,20 +143,20 @@ theorem rankDelta_oneOff_terminal_family
     (by omega) (by omega) hRangeZero
   have hRankBoth := rank_bananaNormalForm B ((a : ℤ) - 1) (b : ℤ) 0 hZero
     (by omega) (by omega) hRangeZero
-  have hD : (a : ℤ) • one_chip (leftEndpoint B) +
-      (b : ℤ) • one_chip (rightEndpoint B) + E =
+  have hD : (a : ℤ) • oneChip (leftEndpoint B) +
+      (b : ℤ) • oneChip (rightEndpoint B) + E =
       bananaNormalForm B a b E := rfl
-  have hDU : (a : ℤ) • one_chip (leftEndpoint B) +
-      (b : ℤ) • one_chip (rightEndpoint B) + E -
-      one_chip (leftEndpoint B) =
+  have hDU : (a : ℤ) • oneChip (leftEndpoint B) +
+      (b : ℤ) • oneChip (rightEndpoint B) + E -
+      oneChip (leftEndpoint B) =
       bananaNormalForm B ((a : ℤ) - 1) b E := by
     unfold bananaNormalForm
     ext z
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
     ring
-  have hDV : (a : ℤ) • one_chip (leftEndpoint B) +
-      (b : ℤ) • one_chip (rightEndpoint B) + E -
-      one_chip (strandVertex B alpha v) =
+  have hDV : (a : ℤ) • oneChip (leftEndpoint B) +
+      (b : ℤ) • oneChip (rightEndpoint B) + E -
+      oneChip (strandVertex B alpha v) =
       bananaNormalForm B a b 0 := by
     dsimp [E]
     unfold bananaNormalForm
@@ -164,9 +164,9 @@ theorem rankDelta_oneOff_terminal_family
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, Pi.zero_apply,
       smul_eq_mul]
     ring
-  have hBoth : (a : ℤ) • one_chip (leftEndpoint B) +
-      (b : ℤ) • one_chip (rightEndpoint B) + E -
-      one_chip (leftEndpoint B) - one_chip (strandVertex B alpha v) =
+  have hBoth : (a : ℤ) • oneChip (leftEndpoint B) +
+      (b : ℤ) • oneChip (rightEndpoint B) + E -
+      oneChip (leftEndpoint B) - oneChip (strandVertex B alpha v) =
       bananaNormalForm B ((a : ℤ) - 1) b 0 := by
     dsimp [E]
     unfold bananaNormalForm
@@ -175,27 +175,27 @@ theorem rankDelta_oneOff_terminal_family
       smul_eq_mul]
     ring
   have hRankD' : rank B.graph
-      ((a : ℤ) • one_chip (leftEndpoint B) +
-        (b : ℤ) • one_chip (rightEndpoint B) + E) =
+      ((a : ℤ) • oneChip (leftEndpoint B) +
+        (b : ℤ) • oneChip (rightEndpoint B) + E) =
       max (min (a : ℤ) b) ((a : ℤ) + b + deg E - g) := by
     rw [hD, hRankD]
   have hRankDU' : rank B.graph
-      ((a : ℤ) • one_chip (leftEndpoint B) +
-        (b : ℤ) • one_chip (rightEndpoint B) + E -
-        one_chip (leftEndpoint B)) =
+      ((a : ℤ) • oneChip (leftEndpoint B) +
+        (b : ℤ) • oneChip (rightEndpoint B) + E -
+        oneChip (leftEndpoint B)) =
       max (min ((a : ℤ) - 1) b)
         ((a : ℤ) - 1 + b + deg E - g) := by
     rw [hDU, hRankDU]
   have hRankDV' : rank B.graph
-      ((a : ℤ) • one_chip (leftEndpoint B) +
-        (b : ℤ) • one_chip (rightEndpoint B) + E -
-        one_chip (strandVertex B alpha v)) =
+      ((a : ℤ) • oneChip (leftEndpoint B) +
+        (b : ℤ) • oneChip (rightEndpoint B) + E -
+        oneChip (strandVertex B alpha v)) =
       max (min (a : ℤ) b) ((a : ℤ) + b + deg (0 : CFDiv B.graph) - g) := by
     rw [hDV, hRankDV]
   have hRankBoth' : rank B.graph
-      ((a : ℤ) • one_chip (leftEndpoint B) +
-        (b : ℤ) • one_chip (rightEndpoint B) + E -
-        one_chip (leftEndpoint B) - one_chip (strandVertex B alpha v)) =
+      ((a : ℤ) • oneChip (leftEndpoint B) +
+        (b : ℤ) • oneChip (rightEndpoint B) + E -
+        oneChip (leftEndpoint B) - oneChip (strandVertex B alpha v)) =
       max (min ((a : ℤ) - 1) b)
         ((a : ℤ) - 1 + b + deg (0 : CFDiv B.graph) - g) := by
     rw [hBoth, hRankBoth]
@@ -229,17 +229,17 @@ theorem rankDelta_oneOff_terminal_family
     rw [max_eq_left]
     omega
   unfold rankDelta mark
-  change rank B.graph ((a : ℤ) • one_chip (leftEndpoint B) +
-      (b : ℤ) • one_chip (rightEndpoint B) + E) -
-    rank B.graph ((a : ℤ) • one_chip (leftEndpoint B) +
-      (b : ℤ) • one_chip (rightEndpoint B) + E -
-      one_chip (leftEndpoint B)) -
-    rank B.graph ((a : ℤ) • one_chip (leftEndpoint B) +
-      (b : ℤ) • one_chip (rightEndpoint B) + E -
-      one_chip (strandVertex B alpha v)) +
-    rank B.graph ((a : ℤ) • one_chip (leftEndpoint B) +
-      (b : ℤ) • one_chip (rightEndpoint B) + E -
-      one_chip (leftEndpoint B) - one_chip (strandVertex B alpha v)) = _
+  change rank B.graph ((a : ℤ) • oneChip (leftEndpoint B) +
+      (b : ℤ) • oneChip (rightEndpoint B) + E) -
+    rank B.graph ((a : ℤ) • oneChip (leftEndpoint B) +
+      (b : ℤ) • oneChip (rightEndpoint B) + E -
+      oneChip (leftEndpoint B)) -
+    rank B.graph ((a : ℤ) • oneChip (leftEndpoint B) +
+      (b : ℤ) • oneChip (rightEndpoint B) + E -
+      oneChip (strandVertex B alpha v)) +
+    rank B.graph ((a : ℤ) • oneChip (leftEndpoint B) +
+      (b : ℤ) • oneChip (rightEndpoint B) + E -
+      oneChip (leftEndpoint B) - oneChip (strandVertex B alpha v)) = _
   rw [hRankD', hRankDU', hRankDV', hRankBoth', hdegE]
   simp only [map_zero, add_zero]
   rw [hMinA, hMinPred, hMaxD, hMaxDU, hMaxDV, hMaxBoth]
@@ -259,19 +259,19 @@ theorem rankDelta_oneOff_three_families
     rankDelta
         (mark B.graph (leftEndpoint B)
           (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-        (a • one_chip (rightEndpoint B)) = 1 ∧
+        (a • oneChip (rightEndpoint B)) = 1 ∧
       rankDelta
         (mark B.graph (leftEndpoint B)
           (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-        ((b : ℤ) • one_chip (leftEndpoint B) +
-          (b : ℤ) • one_chip (rightEndpoint B) +
-          one_chip (strandVertex B alpha ⟨r, by omega⟩)) = 1 ∧
+        ((b : ℤ) • oneChip (leftEndpoint B) +
+          (b : ℤ) • oneChip (rightEndpoint B) +
+          oneChip (strandVertex B alpha ⟨r, by omega⟩)) = 1 ∧
       rankDelta
         (mark B.graph (leftEndpoint B)
           (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
-        ((a : ℤ) • one_chip (leftEndpoint B) +
-          (b : ℤ) • one_chip (rightEndpoint B) +
-          one_chip (strandVertex B alpha
+        ((a : ℤ) • oneChip (leftEndpoint B) +
+          (b : ℤ) • oneChip (rightEndpoint B) +
+          oneChip (strandVertex B alpha
             ⟨B.length alpha - 1, by omega⟩)) =
         if a = g then 1 else 0 := by
   have ha : 0 < a := by omega

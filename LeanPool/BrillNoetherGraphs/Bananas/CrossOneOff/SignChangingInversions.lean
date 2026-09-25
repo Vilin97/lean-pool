@@ -167,7 +167,7 @@ theorem sub_one_le_sci_of_two_signFlips
 
 /-- An ASP permutation has finitely many sign-changing inversions.
 
-`is_asp` says only finitely many `n` satisfy `n * α n < 0`.  Choose `N`
+`isAsp` says only finitely many `n` satisfy `n * α n < 0`.  Choose `N`
 bounding that set together with `α⁻¹ 0`.  Then every sign-changing inversion
 lies in the box `[-N, N]²`: if `u < -N` then `u < 0` and `u ∉ F` force
 `α u ≤ 0`; if `v > N` then `v > 0` and `v ∉ F ∪ {α⁻¹ 0}` force `0 < α v`; and
@@ -368,7 +368,7 @@ any inversion translates into the fundamental range `[0, k)` by `k`-affinity. -/
 theorem inv_set_eq_empty_of_kInversionCount_eq_zero
     (k : ℕ) (hk : 0 < k) (β : AspPerm)
     (hβ : IsKAffine k β.func) (hcount : kInversionCount k β.func = 0) :
-    inv_set β.func = ∅ := by
+    invSet β.func = ∅ := by
   have hfin := kInversions_finite_of_isKAffine hk hβ
   have hempty : kInversions k β.func = ∅ := by
     rw [kInversionCount, Set.ncard_eq_zero hfin] at hcount
@@ -403,7 +403,7 @@ theorem sci_star_le_of_kInversionCount_eq_zero
     sci (α ⋆ β).func ≤ sci α.func := by
   have hinv := inv_set_eq_empty_of_kInversionCount_eq_zero k hk β hβ hcount
   -- `β` has no inversions, hence neither does `β⁻¹`.
-  have hinvInv : inv_set (β⁻¹).func = ∅ := by
+  have hinvInv : invSet (β⁻¹).func = ∅ := by
     ext x
     simp only [Set.mem_empty_iff_false, iff_false]
     intro hx

@@ -26,7 +26,7 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 /-- A degree-zero divisor which is not principal has rank `-1`. -/
 theorem rank_eq_neg_one_of_degree_zero_not_linear_equiv
     (G : CFGraph) (D : CFDiv G) (hDeg : deg D = 0)
-    (hNotPrincipal : ¬ linear_equiv G D 0) :
+    (hNotPrincipal : ¬ linearEquiv G D 0) :
     rank G D = -1 := by
   have hLower := rank_geq_neg_one G D
   by_contra hNot
@@ -44,7 +44,7 @@ zero. -/
 theorem rank_eq_zero_of_effective_of_rank_sub_one_chip_eq_neg_one
     (G : CFGraph) (D : CFDiv G) (q : G.V)
     (hEff : effective D)
-    (hSub : rank G (D - one_chip q) = -1) :
+    (hSub : rank G (D - oneChip q) = -1) :
     rank G D = 0 := by
   have hNonneg : 0 ≤ rank G D :=
     (rank_geq_iff G D 0).mp ((rank_nonneg_iff_winnable G D).mpr
@@ -53,28 +53,28 @@ theorem rank_eq_zero_of_effective_of_rank_sub_one_chip_eq_neg_one
     by_contra hNot
     have hOne : rank G D ≥ 1 := by omega
     have hWin := (rank_ge_one_iff_winnable_sub_one_chip G D).mp hOne q
-    have hSubNonneg : 0 ≤ rank G (D - one_chip q) :=
-      (rank_geq_iff G (D - one_chip q) 0).mp
-        ((rank_nonneg_iff_winnable G (D - one_chip q)).mpr hWin)
+    have hSubNonneg : 0 ≤ rank G (D - oneChip q) :=
+      (rank_geq_iff G (D - oneChip q) 0).mp
+        ((rank_nonneg_iff_winnable G (D - oneChip q)).mpr hWin)
     omega
   omega
 
 /-- A `q`-reduced effective divisor with no chip at `q` has rank zero. -/
 theorem rank_eq_zero_of_effective_of_qReduced_of_no_chip
     (G : CFGraph) (q : G.V) (D : CFDiv G)
-    (hEff : effective D) (hRed : q_reduced G q D)
+    (hEff : effective D) (hRed : qReduced G q D)
     (hNoChip : D q = 0) :
     rank G D = 0 := by
   apply rank_eq_zero_of_effective_of_rank_sub_one_chip_eq_neg_one G D q hEff
   apply rank_eq_neg_one_of_qReduced_debt G q
-    (D - one_chip q) (q_reduced_sub_one_chip hRed)
+    (D - oneChip q) (q_reduced_sub_one_chip hRed)
   simp [hNoChip]
 
 /-- The one-chip rank on a nontrivial banana is zero, uniformly in the
 genus. -/
 theorem rank_one_chip_zero_of_banana
     {g : ℕ} (hg : 1 ≤ g) (B : Banana g) (x : B.graph.V) :
-    rank B.graph (one_chip x) = 0 := by
+    rank B.graph (oneChip x) = 0 := by
   let y : B.graph.V :=
     if x = leftEndpoint B then rightEndpoint B else leftEndpoint B
   have hxy : x ≠ y := by
@@ -83,15 +83,15 @@ theorem rank_one_chip_zero_of_banana
     · rw [hx]
       simp [leftEndpoint, rightEndpoint, SubdivisionGraph.Spec.coreVertex]
     · exact hx
-  have hNonneg : 0 ≤ rank B.graph (one_chip x) :=
+  have hNonneg : 0 ≤ rank B.graph (oneChip x) :=
     (rank_geq_iff B.graph _ 0).mp
       ((rank_nonneg_iff_winnable B.graph _).mpr
         (winnable_of_effective B.graph _ (eff_one_chip x)))
-  have hLt : rank B.graph (one_chip x) < 1 := by
+  have hLt : rank B.graph (oneChip x) < 1 := by
     by_contra hNot
-    have hOne : rank B.graph (one_chip x) ≥ 1 := by omega
+    have hOne : rank B.graph (oneChip x) ≥ 1 := by omega
     have hxyWin := (rank_ge_one_iff_winnable_sub_one_chip B.graph
-      (one_chip x)).mp hOne y
+      (oneChip x)).mp hOne y
     obtain ⟨E, hEff, hEquiv⟩ := hxyWin
     have hEDeg : deg E = 0 := by
       rw [← linear_equiv_preserves_deg B.graph _ E hEquiv,
@@ -109,14 +109,14 @@ theorem rank_same_strand_pair_zero_of_not_reflection_generic
     (i k : B.PathPosition α)
     (hNot : i.val + k.val ≠ B.length α) :
     rank B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k)) = 0 := by
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k)) = 0 := by
   let D : CFDiv B.graph :=
-    one_chip (B.pathVertex α i) + one_chip (B.pathVertex α k)
+    oneChip (B.pathVertex α i) + oneChip (B.pathVertex α k)
   have hEff : effective D := by
     intro v
-    simp [D, one_chip]
+    simp [D, oneChip]
     omega
-  have hNeg : ∃ q : B.graph.V, rank B.graph (D - one_chip q) = -1 := by
+  have hNeg : ∃ q : B.graph.V, rank B.graph (D - oneChip q) = -1 := by
     rcases lt_or_gt_of_ne hNot with hlt | hgt
     · let p : B.PathPosition α :=
         ⟨i.val + k.val, by omega⟩
@@ -132,8 +132,8 @@ theorem rank_same_strand_pair_zero_of_not_reflection_generic
         have hBase := rank_path_zero_add_same_strand_sub_of_lt
           hg B α k ⟨B.length α, by omega⟩ hkLen
         have hBase' : rank B.graph
-            (one_chip (B.pathVertex α ⟨0, by omega⟩) +
-              one_chip (B.pathVertex α k) - one_chip q) = -1 := by
+            (oneChip (B.pathVertex α ⟨0, by omega⟩) +
+              oneChip (B.pathVertex α k) - oneChip q) = -1 := by
           simpa only [q, B.pathVertex_zero] using hBase
         exact ⟨q, by simpa [D, q, hi, add_comm] using hBase'⟩
       by_cases hk0 : k.val = 0
@@ -147,8 +147,8 @@ theorem rank_same_strand_pair_zero_of_not_reflection_generic
         have hBase := rank_path_zero_add_same_strand_sub_of_lt
           hg B α i ⟨B.length α, by omega⟩ hiLen
         have hBase' : rank B.graph
-            (one_chip (B.pathVertex α ⟨0, by omega⟩) +
-              one_chip (B.pathVertex α i) - one_chip q) = -1 := by
+            (oneChip (B.pathVertex α ⟨0, by omega⟩) +
+              oneChip (B.pathVertex α i) - oneChip q) = -1 := by
           simpa only [q] using hBase
         exact ⟨q, by simpa [D, q, hk, add_comm] using hBase'⟩
       · have hSlide := path_pair_linearEquiv_tail_sum B α i k
@@ -172,9 +172,9 @@ theorem rank_same_strand_pair_zero_of_not_reflection_generic
         have hBase := rank_same_strand_add_path_length_sub_of_lt
           hg B α k ⟨0, by omega⟩ hkPos
         have hBase' : rank B.graph
-            (one_chip (B.pathVertex α k) +
-              one_chip (B.pathVertex α ⟨B.length α, by omega⟩) -
-              one_chip q) = -1 := by
+            (oneChip (B.pathVertex α k) +
+              oneChip (B.pathVertex α ⟨B.length α, by omega⟩) -
+              oneChip q) = -1 := by
           simpa only [q] using hBase
         exact ⟨q, by simpa [D, q, hi, add_comm, add_left_comm, add_assoc] using hBase'⟩
       by_cases hkL : k.val = B.length α
@@ -185,9 +185,9 @@ theorem rank_same_strand_pair_zero_of_not_reflection_generic
         have hBase := rank_same_strand_add_path_length_sub_of_lt
           hg B α i ⟨0, by omega⟩ hiPos
         have hBase' : rank B.graph
-            (one_chip (B.pathVertex α i) +
-              one_chip (B.pathVertex α ⟨B.length α, by omega⟩) -
-              one_chip q) = -1 := by
+            (oneChip (B.pathVertex α i) +
+              oneChip (B.pathVertex α ⟨B.length α, by omega⟩) -
+              oneChip q) = -1 := by
           simpa only [q] using hBase
         exact ⟨q, by simpa [D, q, hk, add_comm, add_left_comm, add_assoc] using hBase'⟩
       · have hSlide := path_pair_linearEquiv_head_excess B α i k
@@ -221,19 +221,19 @@ theorem rank_distinct_interior_pair_sub_of_distinct_interior
     (hqx : B.pathVertex γ q ≠ B.pathVertex α i)
     (hqy : B.pathVertex γ q ≠ B.pathVertex β j) :
     rank B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex β j) -
-        one_chip (B.pathVertex γ q)) = -1 := by
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex β j) -
+        oneChip (B.pathVertex γ q)) = -1 := by
   have hRed := q_reduced_distinct_interior_path_strands
     hg B α β γ i j q hi hj hq hαβ hqx hqy
   have hDebt :
-      ((one_chip (B.pathVertex α i) + one_chip (B.pathVertex β j) -
-        one_chip (B.pathVertex γ q) : CFDiv B.graph)
+      ((oneChip (B.pathVertex α i) + oneChip (B.pathVertex β j) -
+        oneChip (B.pathVertex γ q) : CFDiv B.graph)
           (B.pathVertex γ q)) < 0 := by
-    simp [one_chip, hqx, hqy]
+    simp [oneChip, hqx, hqy]
   exact rank_eq_neg_one_of_qReduced_debt B.graph
     (B.pathVertex γ q)
-    (one_chip (B.pathVertex α i) + one_chip (B.pathVertex β j) -
-      one_chip (B.pathVertex γ q)) hRed hDebt
+    (oneChip (B.pathVertex α i) + oneChip (B.pathVertex β j) -
+      oneChip (B.pathVertex γ q)) hRed hDebt
 
 /-- The corresponding positive-pair rank is zero.  This packages the
 degree-two step used in the paper's cross-strand three-chip tables. -/
@@ -249,14 +249,14 @@ theorem rank_distinct_interior_pair_zero_of_auxiliary
     (hqx : B.pathVertex γ q ≠ B.pathVertex α i)
     (hqy : B.pathVertex γ q ≠ B.pathVertex β j) :
     rank B.graph
-      (one_chip (B.pathVertex α i) + one_chip (B.pathVertex β j)) = 0 := by
+      (oneChip (B.pathVertex α i) + oneChip (B.pathVertex β j)) = 0 := by
   let D : CFDiv B.graph :=
-    one_chip (B.pathVertex α i) + one_chip (B.pathVertex β j)
+    oneChip (B.pathVertex α i) + oneChip (B.pathVertex β j)
   have hEff : effective D := by
     intro z
-    simp [D, one_chip]
+    simp [D, oneChip]
     omega
-  have hSub : rank B.graph (D - one_chip (B.pathVertex γ q)) = -1 := by
+  have hSub : rank B.graph (D - oneChip (B.pathVertex γ q)) = -1 := by
     simpa [D] using rank_distinct_interior_pair_sub_of_distinct_interior
       hg B α β γ i j q hi hj hq hαβ hqx hqy
   exact rank_eq_zero_of_effective_of_rank_sub_one_chip_eq_neg_one

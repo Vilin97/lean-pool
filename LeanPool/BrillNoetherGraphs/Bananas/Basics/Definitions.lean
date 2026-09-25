@@ -74,13 +74,13 @@ abbrev mark (G : CFGraph) (u v : G.V) : TwiceMarked := ⟨G, u, v⟩
 
 The paper's second rank difference, relative to the two marks. -/
 noncomputable def rankDelta (M : TwiceMarked) (D : CFDiv M.graph) : ℤ :=
-  rank M.graph D - rank M.graph (D - one_chip M.u) -
-    rank M.graph (D - one_chip M.v) +
-      rank M.graph (D - one_chip M.u - one_chip M.v)
+  rank M.graph D - rank M.graph (D - oneChip M.u) -
+    rank M.graph (D - oneChip M.v) +
+      rank M.graph (D - oneChip M.u - oneChip M.v)
 
 /-- Paper source: `def-Twist` (Definition 2.7). -/
 def twist (M : TwiceMarked) (D : CFDiv M.graph) (a b : ℤ) : CFDiv M.graph :=
-  D + a • one_chip M.u + b • one_chip M.v
+  D + a • oneChip M.u + b • oneChip M.v
 
 /-- Paper source: `def-submod` (Definition 2.9).
 
@@ -97,8 +97,8 @@ definition (Definition 1.10), *not* the torsion order of `def-TwMkGraph`.
 
 A positive `k` kills the degree-zero class of the marked-point difference. -/
 def TorsionWitness (M : TwiceMarked) (k : ℕ) : Prop :=
-  0 < k ∧ linear_equiv M.graph
-    ((k : ℤ) • (one_chip M.u - one_chip M.v)) 0
+  0 < k ∧ linearEquiv M.graph
+    ((k : ℤ) • (oneChip M.u - oneChip M.v)) 0
 
 /-- Paper source: `def-TwMkGraph` (Definition 2.6), the torsion order.
 
@@ -118,7 +118,7 @@ def IsTransmissionPermutation (M : TwiceMarked) (D : CFDiv M.graph)
     (τ : ℤ → ℤ) : Prop :=
   Function.Bijective τ ∧ ∀ a b : ℤ,
     (if τ b = a then (1 : ℤ) else 0) =
-      rankDelta M (D + a • one_chip M.u - b • one_chip M.v)
+      rankDelta M (D + a • oneChip M.u - b • oneChip M.v)
 
 /-- Paper source: `def-EA` (Definition 2.10), membership in the extended
 affine symmetric group `Σ̃_k`. -/

@@ -47,13 +47,13 @@ theorem allSubmodular_same_leftFactor_of_card_eq_two
   have hNeg : rankDelta (mark W (Sum.inl x) (Sum.inl u)) D < 0 := by
     change rankDelta (mark (vertexWedge G H x y) (Sum.inl x) (Sum.inl u)) D < 0
     omega
-  have hWconn : _root_.graph_connected W :=
+  have hWconn : _root_.graphConnected W :=
     graph_connected_vertexWedge G H x y hG.connected hH.connected
   have hWgenus : genus W = 2 := by
     rw [genus_vertexWedge, hG.genus_one, hH.genus_one]
     norm_num
-  have hDistinct : ¬ linear_equiv W
-      (one_chip (Sum.inl x) - one_chip (Sum.inl u)) 0 :=
+  have hDistinct : ¬ linearEquiv W
+      (oneChip (Sum.inl x) - oneChip (Sum.inl u)) 0 :=
     left_mark_difference_not_principal G H x u y hG hxu.symm
   have hRankD : rank W D = 0 :=
     rank_eq_zero_of_rankDelta_neg_genus_two
@@ -70,13 +70,13 @@ theorem allSubmodular_same_leftFactor_of_card_eq_two
       have ha : a = x :=
         eq_attachment_of_card_two hCard hxu hau
       subst a
-      let A : CFDiv G := one_chip x + one_chip x
-      have hDPair : linear_equiv W D
-          (one_chip (Sum.inl x) + one_chip (Sum.inl x)) := by
-        unfold linear_equiv at hRep ⊢
+      let A : CFDiv G := oneChip x + oneChip x
+      have hDPair : linearEquiv W D
+          (oneChip (Sum.inl x) + oneChip (Sum.inl x)) := by
+        unfold linearEquiv at hRep ⊢
         have hEq :
-            (one_chip (Sum.inl x) + one_chip (Sum.inl x) - D : CFDiv W) =
-              one_chip (Sum.inl x) - (D - one_chip (Sum.inl x)) := by
+            (oneChip (Sum.inl x) + oneChip (Sum.inl x) - D : CFDiv W) =
+              oneChip (Sum.inl x) - (D - oneChip (Sum.inl x)) := by
           abel
         rw [hEq]
         exact hRep
@@ -88,8 +88,8 @@ theorem allSubmodular_same_leftFactor_of_card_eq_two
           dsimp [A]
           norm_num] at h
         exact h
-      have hResidual : winnable G (A - (2 : ℤ) • one_chip x) := by
-        have hZero : A - (2 : ℤ) • one_chip x = 0 := by
+      have hResidual : winnable G (A - (2 : ℤ) • oneChip x) := by
+        have hZero : A - (2 : ℤ) • oneChip x = 0 := by
           dsimp [A]
           abel
         rw [hZero]
@@ -97,7 +97,7 @@ theorem allSubmodular_same_leftFactor_of_card_eq_two
       have hRankPair : rank W (wedgeLiftLeftDivisor G H x y A) ≥ 1 :=
         (rank_wedgeLiftLeft_ge_one_iff G H x y hH A).mpr ⟨by omega, hResidual⟩
       have hPairEq :
-          one_chip (G := W) (Sum.inl x) + one_chip (G := W) (Sum.inl x) =
+          oneChip (G := W) (Sum.inl x) + oneChip (G := W) (Sum.inl x) =
             wedgeLiftLeftDivisor G H x y A :=
         wedge_left_pair G H x y x x
       have hRankEq := rank_eq_of_linear_equiv W hDPair

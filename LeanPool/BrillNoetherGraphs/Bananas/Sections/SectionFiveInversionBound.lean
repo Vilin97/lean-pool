@@ -109,7 +109,7 @@ theorem sectionFive_rankDropFibre_sum_le_inversionCount
 transmission fibre.  This is the `tauChars` part of the paper argument. -/
 theorem sectionFive_rankDropSum_eq_fibre_sum
     {M : TwiceMarked} {D : CFDiv M.graph} {tau : ℤ → ℤ} {k : ℕ}
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : _root_.graphConnected M.graph)
     (hTau : IsTransmissionPermutation M D tau) :
     sectionFiveRankDropSum M D k =
       ∑ m : Fin k,
@@ -121,11 +121,11 @@ theorem sectionFive_rankDropSum_eq_fibre_sum
   push_cast
   apply Finset.sum_congr rfl
   intro m _
-  let big : Set ℤ := southeast_set tau ((m : ℕ) : ℤ) ((m : ℕ) : ℤ)
-  let small : Set ℤ := southeast_set tau (((m : ℕ) : ℤ) - 1) ((m : ℕ) : ℤ)
+  let big : Set ℤ := southeastSet tau ((m : ℕ) : ℤ) ((m : ℕ) : ℤ)
+  let small : Set ℤ := southeastSet tau (((m : ℕ) : ℤ) - 1) ((m : ℕ) : ℤ)
   let fibre : Set ℤ := sectionFiveRankDropFibre tau ((m : ℕ) : ℤ)
   have hbigFin : big.Finite := by
-    rw [show big = southeast_set sigma.func ((m : ℕ) : ℤ) ((m : ℕ) : ℤ) by
+    rw [show big = southeastSet sigma.func ((m : ℕ) : ℤ) ((m : ℕ) : ℤ) by
       simp only [big, hSigmaTau]]
     exact sigma.se_finite _ _
   have hsmallFin : small.Finite := by
@@ -163,17 +163,17 @@ theorem sectionFive_rankDropSum_eq_fibre_sum
     M D hconn tau hTau (((m : ℕ) : ℤ) - 2) ((m : ℕ) : ℤ)
   simp only [sub_add_cancel] at hrankBig
   change rank M.graph
-      (D + (((m : ℕ) : ℤ) - 1) • one_chip M.u - ((m : ℕ) : ℤ) • one_chip M.v) -
+      (D + (((m : ℕ) : ℤ) - 1) • oneChip M.u - ((m : ℕ) : ℤ) • oneChip M.v) -
     rank M.graph
-      (D + (((m : ℕ) : ℤ) - 2) • one_chip M.u - ((m : ℕ) : ℤ) • one_chip M.v) = _
+      (D + (((m : ℕ) : ℤ) - 2) • oneChip M.u - ((m : ℕ) : ℤ) • oneChip M.v) = _
   change _ = ((sectionFiveRankDropFibre tau ((m : ℕ) : ℤ)).ncard : ℤ)
   have hsmallThreshold : ((m : ℕ) : ℤ) - 2 + 1 = ((m : ℕ) : ℤ) - 1 := by ring
   rw [hsmallThreshold] at hrankSmall
   change rank M.graph
-      (D + (((m : ℕ) : ℤ) - 1) • one_chip M.u - ((m : ℕ) : ℤ) • one_chip M.v) + 1 =
+      (D + (((m : ℕ) : ℤ) - 1) • oneChip M.u - ((m : ℕ) : ℤ) • oneChip M.v) + 1 =
     big.ncard at hrankBig
   change rank M.graph
-      (D + (((m : ℕ) : ℤ) - 2) • one_chip M.u - ((m : ℕ) : ℤ) • one_chip M.v) + 1 =
+      (D + (((m : ℕ) : ℤ) - 2) • oneChip M.u - ((m : ℕ) : ℤ) • oneChip M.v) + 1 =
     small.ncard at hrankSmall
   dsimp [big, small, fibre] at hcard hrankBig hrankSmall
   omega
@@ -183,7 +183,7 @@ assumes connected graphs throughout; `CFGraph` does not bundle that condition,
 so it is explicit here. -/
 theorem sectionFive_inversion_lower_bound_of_involutive_transmission_connected
     {M : TwiceMarked} {D : CFDiv M.graph} {tau : ℤ → ℤ} {k : ℕ}
-    (hk : 0 < k) (hconn : _root_.graph_connected M.graph)
+    (hk : 0 < k) (hconn : _root_.graphConnected M.graph)
     (hTau : IsTransmissionPermutation M D tau)
     (hAffine : IsKAffine k tau)
     (hInvolutive : ∀ a b : ℤ, tau b = a ↔ tau a = b) :

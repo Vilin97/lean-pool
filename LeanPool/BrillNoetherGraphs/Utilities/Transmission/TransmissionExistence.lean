@@ -16,7 +16,7 @@ permutations with at most `genus G` inversions.  Finiteness is a separate
 hypothesis: in Mathlib, `Set.ncard` is zero on an infinite set, so the bare
 inequality
 
-`(inv_set tau).ncard <= genus G`
+`(invSet tau).ncard <= genus G`
 
 does not express finite Coxeter length by itself.
 
@@ -32,20 +32,20 @@ universe uTransmission
 /-- The inversion set of `tau` is finite.  Keeping this named avoids the
 incorrect convention that `Set.ncard` alone detects finite ASP length. -/
 def FiniteTransmissionPerm (tau : AspPerm) : Prop :=
-  (inv_set tau).Finite
+  (invSet tau).Finite
 
 /-- Every finite-length ASP transmission problem allowed by the genus has a
 witness on the twice-marked graph `(G,u,v)`. -/
 def TransmissionExistence (G : CFGraph) (u v : G.V) : Prop :=
   forall tau : AspPerm,
     FiniteTransmissionPerm tau ->
-    ((inv_set tau).ncard : Int) <= genus G ->
+    ((invSet tau).ncard : Int) <= genus G ->
     TransmissionExists G u v tau
 
 /-- The general transmission-existence conjecture for finite connected
 twice-marked graphs. -/
 def TransmissionExistenceConjecture : Prop :=
-  forall (G : CFGraph.{uTransmission}), graph_connected G ->
+  forall (G : CFGraph.{uTransmission}), graphConnected G ->
     forall u v : G.V, TransmissionExistence G u v
 
 /-- Every shifted Grassmannian permutation has finite transmission length. -/
@@ -71,7 +71,7 @@ theorem grassmannianTransmissionExistence_of_transmissionExistence
 /-- On a connected graph, the general twice-marked conjecture implies the
 once-marked Brill--Noether existence statement at its first mark. -/
 theorem onceMarkedBNExistence_of_transmissionExistence
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V)
     (h : TransmissionExistence G u v) :
     OnceMarkedBNExistence G u := by
   apply (grassmannianTransmissionExistence_iff_onceMarkedBNExistence
@@ -83,24 +83,24 @@ theorem onceMarkedBNExistence_of_transmissionExistence
 /-- Reversing an inversion and applying `tau` to both entries identifies the
 inversion set of `tau` with that of its inverse. -/
 theorem inv_set_inverse_eq_revMap_image (tau : AspPerm) :
-    inv_set (tau⁻¹).func = tau.rev_map '' inv_set tau := by
+    invSet (tau⁻¹).func = tau.revMap '' invSet tau := by
   ext pair
   rcases pair with ⟨a, b⟩
   constructor
   · intro h
-    have hPre : ⟨tau⁻¹ b, tau⁻¹ a⟩ ∈ inv_set tau := by
+    have hPre : ⟨tau⁻¹ b, tau⁻¹ a⟩ ∈ invSet tau := by
       simpa only [inv_inv] using ((tau⁻¹).inv_set_inverse a b).mp h
     refine ⟨⟨tau⁻¹ b, tau⁻¹ a⟩, hPre, ?_⟩
-    simp [AspPerm.rev_map]
+    simp [AspPerm.revMap]
   · rintro ⟨⟨i, j⟩, hij, hImage⟩
     rw [← hImage]
     exact (tau.inv_set_inverse i j).mp hij
 
 /-- The inversion-reversal map is injective. -/
 theorem revMap_injective (tau : AspPerm) :
-    Function.Injective tau.rev_map := by
+    Function.Injective tau.revMap := by
   rintro ⟨i, j⟩ ⟨i', j'⟩ h
-  simp only [AspPerm.rev_map, Prod.mk.injEq] at h
+  simp only [AspPerm.revMap, Prod.mk.injEq] at h
   apply Prod.ext
   · exact tau.injective h.2
   · exact tau.injective h.1
@@ -108,9 +108,9 @@ theorem revMap_injective (tau : AspPerm) :
 /-- ASP inversion preserves the inversion number, including the infinite case
 under Mathlib's `Set.ncard` convention. -/
 theorem ncard_inv_set_inverse (tau : AspPerm) :
-    (inv_set (tau⁻¹).func).ncard = (inv_set tau).ncard := by
+    (invSet (tau⁻¹).func).ncard = (invSet tau).ncard := by
   rw [inv_set_inverse_eq_revMap_image]
-  exact Set.ncard_image_of_injective (inv_set tau) (revMap_injective tau)
+  exact Set.ncard_image_of_injective (invSet tau) (revMap_injective tau)
 
 /-- Finite transmission length is invariant under ASP inversion. -/
 theorem finiteTransmissionPerm_inverse_iff (tau : AspPerm) :
@@ -122,7 +122,7 @@ theorem finiteTransmissionPerm_inverse_iff (tau : AspPerm) :
 /-- Riemann--Roch duality makes the fully quantified transmission-existence
 predicate symmetric in its two marked vertices. -/
 theorem transmissionExistence_swap_iff
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V) :
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V) :
     TransmissionExistence G v u ↔ TransmissionExistence G u v := by
   constructor
   · intro h tau hFinite hLength

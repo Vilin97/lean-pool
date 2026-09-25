@@ -53,49 +53,49 @@ theorem wedgeAddDivisor_zsmul
 /-- A left-factor chip is its literal wedge-additive lift. -/
 theorem wedgeAddDivisor_one_chip_left
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) (u : G.V) :
-    wedgeAddDivisor G H x y (one_chip u) 0 =
-      one_chip (G := vertexWedge G H x y) (Sum.inl u) := by
+    wedgeAddDivisor G H x y (oneChip u) 0 =
+      oneChip (G := vertexWedge G H x y) (Sum.inl u) := by
   funext z
   cases z with
   | inl p =>
       rw [wedgeAddDivisor_left]
-      change one_chip u p + (if p = x then (0 : CFDiv H) y else 0) =
+      change oneChip u p + (if p = x then (0 : CFDiv H) y else 0) =
         if (Sum.inl p : Sum G.V {q : H.V // q ≠ y}) = Sum.inl u then 1 else 0
       simp only [Sum.inl.injEq]
-      simp [one_chip]
+      simp [oneChip]
   | inr q =>
       rw [wedgeAddDivisor_right]
-      simp [one_chip]
+      simp [oneChip]
 
 /-- A right-factor chip is its wedge-additive lift, including at the common
 vertex when the chip is at `y`. -/
 theorem wedgeAddDivisor_one_chip_right
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) (v : H.V) :
-    wedgeAddDivisor G H x y 0 (one_chip v) =
-      one_chip (G := vertexWedge G H x y) (wedgeRightVertex G H x y v) := by
+    wedgeAddDivisor G H x y 0 (oneChip v) =
+      oneChip (G := vertexWedge G H x y) (wedgeRightVertex G H x y v) := by
   classical
   funext z
   cases z with
   | inl p =>
       rw [wedgeAddDivisor_left]
-      change (0 : CFDiv G) p + (if p = x then one_chip v y else 0) =
+      change (0 : CFDiv G) p + (if p = x then oneChip v y else 0) =
         if (Sum.inl p : Sum G.V {q : H.V // q ≠ y}) =
           wedgeRightVertex G H x y v then 1 else 0
       by_cases hv : v = y
       · subst v
-        simp [wedgeRightVertex, one_chip]
+        simp [wedgeRightVertex, oneChip]
       · have hyv : y ≠ v := Ne.symm hv
-        simp [wedgeRightVertex, one_chip, hv, hyv]
+        simp [wedgeRightVertex, oneChip, hv, hyv]
   | inr q =>
       rw [wedgeAddDivisor_right]
-      change one_chip v q.1 = if (Sum.inr q : Sum G.V {q : H.V // q ≠ y}) =
+      change oneChip v q.1 = if (Sum.inr q : Sum G.V {q : H.V // q ≠ y}) =
         wedgeRightVertex G H x y v then 1 else 0
       by_cases hv : v = y
       · subst v
-        simp [wedgeRightVertex, one_chip, q.2]
+        simp [wedgeRightVertex, oneChip, q.2]
       · rw [wedgeRightVertex_unmarked G H x y v hv]
         simp only [Sum.inr.injEq]
-        simp [one_chip, Subtype.ext_iff]
+        simp [oneChip, Subtype.ext_iff]
 
 /-- The transmission twist of a wedge-additive divisor splits literally into
 the corresponding left and right factor twists. -/
@@ -103,17 +103,17 @@ theorem wedgeAddDivisor_transmissionTwist
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (E : CFDiv H) (u : G.V) (v : H.V) (a b : ℤ) :
     wedgeAddDivisor G H x y D E +
-        a • one_chip (G := vertexWedge G H x y) (Sum.inl u) -
-        b • one_chip (G := vertexWedge G H x y) (wedgeRightVertex G H x y v) =
-      wedgeAddDivisor G H x y (D + a • one_chip u) (E - b • one_chip v) := by
-  have hLeft : a • one_chip (G := vertexWedge G H x y) (Sum.inl u) =
-      wedgeAddDivisor G H x y (a • one_chip u) 0 := by
+        a • oneChip (G := vertexWedge G H x y) (Sum.inl u) -
+        b • oneChip (G := vertexWedge G H x y) (wedgeRightVertex G H x y v) =
+      wedgeAddDivisor G H x y (D + a • oneChip u) (E - b • oneChip v) := by
+  have hLeft : a • oneChip (G := vertexWedge G H x y) (Sum.inl u) =
+      wedgeAddDivisor G H x y (a • oneChip u) 0 := by
     rw [← wedgeAddDivisor_one_chip_left G H x y u,
       wedgeAddDivisor_zsmul]
     simp
-  have hRight : b • one_chip (G := vertexWedge G H x y)
+  have hRight : b • oneChip (G := vertexWedge G H x y)
       (wedgeRightVertex G H x y v) =
-      wedgeAddDivisor G H x y 0 (b • one_chip v) := by
+      wedgeAddDivisor G H x y 0 (b • oneChip v) := by
     rw [← wedgeAddDivisor_one_chip_right G H x y v,
       wedgeAddDivisor_zsmul]
     simp
@@ -126,8 +126,8 @@ def WedgeTransmissionRowProfile
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (E : CFDiv H) (u : G.V) (v : H.V)
     (tau : AspPerm) (a b ell : ℤ) : Prop :=
-  rank G (D + a • one_chip u - (ell + 1) • one_chip x) +
-      rank H (E - b • one_chip v + ell • one_chip y) + 1 ≥
+  rank G (D + a • oneChip u - (ell + 1) • oneChip x) +
+      rank H (E - b • oneChip v + ell • oneChip y) + 1 ≥
     tau.s (a + 1) b - 1
 
 /-- A wedge-additive divisor has the required transmission ranks exactly when
@@ -146,7 +146,7 @@ theorem transmissionInequality_wedgeAddDivisor_iff_rowProfile
     omega
   by_cases hNonneg : 0 ≤ tau.s (a + 1) b - 1
   · rw [vertexWedge_rank_ge_iff_profile_inequalities G H x y
-      (D + a • one_chip u) (E - b • one_chip v)
+      (D + a • oneChip u) (E - b • oneChip v)
       (tau.s (a + 1) b - 1) hNonneg]
     rfl
   · have hMinusOne : tau.s (a + 1) b - 1 = -1 := by omega
@@ -155,9 +155,9 @@ theorem transmissionInequality_wedgeAddDivisor_iff_rowProfile
     · intro _ ell
       dsimp [WedgeTransmissionRowProfile]
       have hLeft := rank_geq_neg_one G
-        (D + a • one_chip u - (ell + 1) • one_chip x)
+        (D + a • oneChip u - (ell + 1) • oneChip x)
       have hRight := rank_geq_neg_one H
-        (E - b • one_chip v + ell • one_chip y)
+        (E - b • oneChip v + ell • oneChip y)
       omega
     · intro _
       exact rank_geq_neg_one _ _

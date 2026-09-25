@@ -35,7 +35,7 @@ def toLaplacianEquiv (φ : CFGraphIso G H) : Certificate.LaplacianEquiv G H wher
     φ.toLaplacianEquiv.mapDiv D = φ.mapDiv D := rfl
 
 @[simp] theorem toLaplacianEquiv_mapScript
-    (φ : CFGraphIso G H) (script : firing_script G) :
+    (φ : CFGraphIso G H) (script : firingScript G) :
     φ.toLaplacianEquiv.mapScript script = φ.mapScript script := rfl
 
 end CFGraphIso
@@ -55,7 +55,7 @@ def toGraphIso (equivalence : LaplacianEquiv G H) : CFGraphIso G H where
     equivalence.toGraphIso.mapDiv D = equivalence.mapDiv D := rfl
 
 @[simp] theorem toGraphIso_mapScript (equivalence : LaplacianEquiv G H)
-    (script : firing_script G) :
+    (script : firingScript G) :
     equivalence.toGraphIso.mapScript script = equivalence.mapScript script := rfl
 
 @[simp] theorem toGraphIso_toLaplacianEquiv

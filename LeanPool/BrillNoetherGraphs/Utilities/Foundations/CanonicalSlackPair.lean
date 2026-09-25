@@ -30,18 +30,18 @@ def IsSlackNearRectangleDivisor
     (H : CFGraph) (x y : H.V) (D : CFDiv H) : Prop :=
   deg D = genus H ∧
   rank H D ≥ 1 ∧
-  rank H (D - one_chip x - one_chip y) ≥ 0
+  rank H (D - oneChip x - oneChip y) ≥ 0
 
 /-- Either half of a splitting of the marked canonical residual, restored by
 the two marked chips, is a slack near-rectangle divisor. -/
 theorem isSlackNearRectangleDivisor_of_canonical_split
-    (H : CFGraph) (hH : graph_connected H) (x y : H.V)
+    (H : CFGraph) (hH : graphConnected H) (x y : H.V)
     (E F : CFDiv H) (hEEffective : effective E) (hFEffective : effective F)
     (hEDegree : deg E = genus H - 2)
-    (hSplit : linear_equiv H
-      (canonical_divisor H - (one_chip x + one_chip y)) (E + F)) :
-    IsSlackNearRectangleDivisor H x y (E + one_chip x + one_chip y) := by
-  have hDegree : deg (E + one_chip x + one_chip y) = genus H := by
+    (hSplit : linearEquiv H
+      (canonicalDivisor H - (oneChip x + oneChip y)) (E + F)) :
+    IsSlackNearRectangleDivisor H x y (E + oneChip x + oneChip y) := by
+  have hDegree : deg (E + oneChip x + oneChip y) = genus H := by
     rw [deg.map_add, deg.map_add, deg_one_chip, deg_one_chip, hEDegree]
     ring
   have hERank : rank H E ≥ 0 := by
@@ -52,23 +52,23 @@ theorem isSlackNearRectangleDivisor_of_canonical_split
     apply (rank_geq_iff H F 0).mp
     exact (rank_nonneg_iff_winnable H F).mpr
       (winnable_of_effective H F hFEffective)
-  have hSeam : E + one_chip x + one_chip y - one_chip x - one_chip y = E := by
+  have hSeam : E + oneChip x + oneChip y - oneChip x - oneChip y = E := by
     abel
   have hComplementEquiv :
-      linear_equiv H
-        (canonical_divisor H - (E + one_chip x + one_chip y)) F := by
-    unfold linear_equiv at hSplit ⊢
+      linearEquiv H
+        (canonicalDivisor H - (E + oneChip x + oneChip y)) F := by
+    unfold linearEquiv at hSplit ⊢
     have hDifference :
-        F - (canonical_divisor H - (E + one_chip x + one_chip y)) =
-          (E + F) - (canonical_divisor H - (one_chip x + one_chip y)) := by
+        F - (canonicalDivisor H - (E + oneChip x + oneChip y)) =
+          (E + F) - (canonicalDivisor H - (oneChip x + oneChip y)) := by
       abel
     rw [hDifference]
     exact hSplit
   have hComplementRank :
-      rank H (canonical_divisor H - (E + one_chip x + one_chip y)) ≥ 0 := by
+      rank H (canonicalDivisor H - (E + oneChip x + oneChip y)) ≥ 0 := by
     rw [rank_eq_of_linear_equiv H hComplementEquiv]
     exact hFRank
-  have hRR := riemann_roch_for_graphs hH (E + one_chip x + one_chip y)
+  have hRR := riemann_roch_for_graphs hH (E + oneChip x + oneChip y)
   rw [hDegree] at hRR
   refine ⟨hDegree, by omega, ?_⟩
   rw [hSeam]
@@ -77,49 +77,49 @@ theorem isSlackNearRectangleDivisor_of_canonical_split
 /-- On a connected graph of genus at least three, every pair of marked
 vertices admits complementary slack near-rectangle divisors. -/
 theorem exists_canonical_slack_dual_pair
-    (H : CFGraph) (hH : graph_connected H) (hGenus : 3 ≤ genus H)
+    (H : CFGraph) (hH : graphConnected H) (hGenus : 3 ≤ genus H)
     (x y : H.V) :
     ∃ D₁ D₂ : CFDiv H,
       IsSlackNearRectangleDivisor H x y D₁ ∧
       IsSlackNearRectangleDivisor H x y D₂ ∧
-      linear_equiv H (D₁ + D₂)
-        (canonical_divisor H + one_chip x + one_chip y) := by
-  have hMarkedEffective : effective (one_chip x + one_chip y) := by
+      linearEquiv H (D₁ + D₂)
+        (canonicalDivisor H + oneChip x + oneChip y) := by
+  have hMarkedEffective : effective (oneChip x + oneChip y) := by
     exact (Eff H).add_mem (eff_one_chip x) (eff_one_chip y)
-  have hMarkedDegree : deg (one_chip x + one_chip y) = 2 := by
+  have hMarkedDegree : deg (oneChip x + oneChip y) = 2 := by
     simp
-  have hMarkedRank : rank H (one_chip x + one_chip y) ≥ 0 := by
-    apply (rank_geq_iff H (one_chip x + one_chip y) 0).mp
-    exact (rank_nonneg_iff_winnable H (one_chip x + one_chip y)).mpr
-      (winnable_of_effective H (one_chip x + one_chip y) hMarkedEffective)
+  have hMarkedRank : rank H (oneChip x + oneChip y) ≥ 0 := by
+    apply (rank_geq_iff H (oneChip x + oneChip y) 0).mp
+    exact (rank_nonneg_iff_winnable H (oneChip x + oneChip y)).mpr
+      (winnable_of_effective H (oneChip x + oneChip y) hMarkedEffective)
   have hResidualDegree :
-      deg (canonical_divisor H - (one_chip x + one_chip y)) =
+      deg (canonicalDivisor H - (oneChip x + oneChip y)) =
         2 * genus H - 4 := by
     rw [deg.map_sub, degree_of_canonical_divisor, hMarkedDegree]
     ring
   have hResidualRank :
-      rank H (canonical_divisor H - (one_chip x + one_chip y)) ≥ 0 := by
+      rank H (canonicalDivisor H - (oneChip x + oneChip y)) ≥ 0 := by
     have hRR := riemann_roch_for_graphs hH
-      (canonical_divisor H - (one_chip x + one_chip y))
+      (canonicalDivisor H - (oneChip x + oneChip y))
     have hComplement :
-        canonical_divisor H -
-            (canonical_divisor H - (one_chip x + one_chip y)) =
-          one_chip x + one_chip y := by
+        canonicalDivisor H -
+            (canonicalDivisor H - (oneChip x + oneChip y)) =
+          oneChip x + oneChip y := by
       abel
     rw [hComplement, hResidualDegree] at hRR
     omega
   have hResidualWinnable :
-      winnable H (canonical_divisor H - (one_chip x + one_chip y)) :=
+      winnable H (canonicalDivisor H - (oneChip x + oneChip y)) :=
     (rank_nonneg_iff_winnable H
-      (canonical_divisor H - (one_chip x + one_chip y))).mp
+      (canonicalDivisor H - (oneChip x + oneChip y))).mp
       ((rank_geq_iff H
-        (canonical_divisor H - (one_chip x + one_chip y)) 0).mpr hResidualRank)
+        (canonicalDivisor H - (oneChip x + oneChip y)) 0).mpr hResidualRank)
   obtain ⟨M, hMEffective, hMEquiv⟩ :=
     (winnable_iff_exists_effective H
-      (canonical_divisor H - (one_chip x + one_chip y))).mp hResidualWinnable
+      (canonicalDivisor H - (oneChip x + oneChip y))).mp hResidualWinnable
   have hMDegree : deg M = 2 * genus H - 4 := by
     have hEq := linear_equiv_preserves_deg H
-      (canonical_divisor H - (one_chip x + one_chip y)) M hMEquiv
+      (canonicalDivisor H - (oneChip x + oneChip y)) M hMEquiv
     omega
   have hHalf : ((genus H - 2).toNat : ℤ) = genus H - 2 :=
     Int.toNat_of_nonneg (by omega)
@@ -128,26 +128,26 @@ theorem exists_canonical_slack_dual_pair
       hMEffective (by rw [hMDegree, hHalf]; ring)
   have hEDegree' : deg E = genus H - 2 := hEDegree.trans hHalf
   have hFDegree' : deg F = genus H - 2 := hFDegree.trans hHalf
-  have hSplit : linear_equiv H
-      (canonical_divisor H - (one_chip x + one_chip y)) (E + F) := by
+  have hSplit : linearEquiv H
+      (canonicalDivisor H - (oneChip x + oneChip y)) (E + F) := by
     rw [← hMSplit]
     exact hMEquiv
-  have hSplitSymm : linear_equiv H
-      (canonical_divisor H - (one_chip x + one_chip y)) (F + E) := by
+  have hSplitSymm : linearEquiv H
+      (canonicalDivisor H - (oneChip x + oneChip y)) (F + E) := by
     rw [add_comm F E]
     exact hSplit
-  refine ⟨E + one_chip x + one_chip y, F + one_chip x + one_chip y,
+  refine ⟨E + oneChip x + oneChip y, F + oneChip x + oneChip y,
     isSlackNearRectangleDivisor_of_canonical_split H hH x y E F
       hEEffective hFEffective hEDegree' hSplit,
     isSlackNearRectangleDivisor_of_canonical_split H hH x y F E
       hFEffective hEEffective hFDegree' hSplitSymm, ?_⟩
-  unfold linear_equiv at hSplit ⊢
+  unfold linearEquiv at hSplit ⊢
   have hDifference :
-      canonical_divisor H + one_chip x + one_chip y -
-          (E + one_chip x + one_chip y + (F + one_chip x + one_chip y)) =
-        -((E + F) - (canonical_divisor H - (one_chip x + one_chip y))) := by
+      canonicalDivisor H + oneChip x + oneChip y -
+          (E + oneChip x + oneChip y + (F + oneChip x + oneChip y)) =
+        -((E + F) - (canonicalDivisor H - (oneChip x + oneChip y))) := by
     abel
   rw [hDifference]
-  exact AddSubgroup.neg_mem (principal_divisors H) hSplit
+  exact AddSubgroup.neg_mem (principalDivisors H) hSplit
 
 end MarkedGraphs

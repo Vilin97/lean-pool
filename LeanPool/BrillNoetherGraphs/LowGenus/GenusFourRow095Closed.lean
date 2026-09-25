@@ -185,53 +185,53 @@ theorem row095_closed
     have hToSpec : d.toSpec hPos = LowGenus.GenusFourRow095.Spec length hPos := rfl
     rw [← hToSpec] at hPositive
     exact (d.bnExists_toSpec_iff hPos 1 3).mp hPositive
-  · exact dispatch rev_0 data_0 length hForest hNotLoopy (by simpa [data_0] using h0)
+  · exact dispatch rev0 data0 length hForest hNotLoopy (by simpa [data0] using h0)
       (by norm_num) LowGenus.GenusFourRow097Contractions.bnExists068
-  · exact dispatch rev_3 data_3 length hForest hNotLoopy (by simpa [data_3] using h3)
+  · exact dispatch rev3 data3 length hForest hNotLoopy (by simpa [data3] using h3)
       (by norm_num) LowGenus.GenusFourRow097Contractions.bnExists068
-  · exact dispatch rev_5 data_5 length hForest hNotLoopy (by simpa [data_5] using h5)
+  · exact dispatch rev5 data5 length hForest hNotLoopy (by simpa [data5] using h5)
       (by norm_num) LowGenus.GenusFourRow097Contractions.bnExists068
-  · exact dispatch rev_8 data_8 length hForest hNotLoopy (by simpa [data_8] using h8)
+  · exact dispatch rev8 data8 length hForest hNotLoopy (by simpa [data8] using h8)
       (by norm_num) LowGenus.GenusFourRow097Contractions.bnExists068
-  · exact dispatch rev_4 data_4 length hForest hNotLoopy (by simpa [data_4] using h4)
+  · exact dispatch rev4 data4 length hForest hNotLoopy (by simpa [data4] using h4)
       (by norm_num) bnExists069
-  · exact dispatch rev_0_4 data_0_4 length hForest hNotLoopy (by simpa [data_0_4] using h04)
+  · exact dispatch rev04 data04 length hForest hNotLoopy (by simpa [data04] using h04)
       (by norm_num) bnExists029
-  · exact dispatch rev_3_4 data_3_4 length hForest hNotLoopy (by simpa [data_3_4] using h34)
+  · exact dispatch rev34 data34 length hForest hNotLoopy (by simpa [data34] using h34)
       (by norm_num) bnExists029
-  · exact dispatch rev_4_5 data_4_5 length hForest hNotLoopy (by simpa [data_4_5] using h45)
+  · exact dispatch rev45 data45 length hForest hNotLoopy (by simpa [data45] using h45)
       (by norm_num) bnExists029
-  · exact dispatch rev_4_8 data_4_8 length hForest hNotLoopy (by simpa [data_4_8] using h48)
+  · exact dispatch rev48 data48 length hForest hNotLoopy (by simpa [data48] using h48)
       (by norm_num) bnExists029
-  · exact dispatch rev_0_8 data_0_8 length hForest hNotLoopy (by simpa [data_0_8] using h08)
+  · exact dispatch rev08 data08 length hForest hNotLoopy (by simpa [data08] using h08)
       (by norm_num) LowGenus.GenusFourRow097Contractions.bnExists031
-  · exact dispatch rev_3_5 data_3_5 length hForest hNotLoopy (by simpa [data_3_5] using h35)
+  · exact dispatch rev35 data35 length hForest hNotLoopy (by simpa [data35] using h35)
       (by norm_num) LowGenus.GenusFourRow097Contractions.bnExists031
-  · exact dispatch rev_0_3 data_0_3 length hForest hNotLoopy (by simpa [data_0_3] using h03)
+  · exact dispatch rev03 data03 length hForest hNotLoopy (by simpa [data03] using h03)
       (by norm_num) LowGenus.GenusFourRow097Contractions.bnExists032
-  · exact dispatch rev_5_8 data_5_8 length hForest hNotLoopy (by simpa [data_5_8] using h58)
+  · exact dispatch rev58 data58 length hForest hNotLoopy (by simpa [data58] using h58)
       (by norm_num) LowGenus.GenusFourRow097Contractions.bnExists032
-  · exact dispatch rev_0_5 data_0_5 length hForest hNotLoopy (by simpa [data_0_5] using h05)
+  · exact dispatch rev05 data05 length hForest hNotLoopy (by simpa [data05] using h05)
       (by norm_num) LowGenus.GenusFourRow097Contractions.bnExists034
-  · exact dispatch rev_3_8 data_3_8 length hForest hNotLoopy (by simpa [data_3_8] using h38)
+  · exact dispatch rev38 data38 length hForest hNotLoopy (by simpa [data38] using h38)
       (by norm_num) LowGenus.GenusFourRow097Contractions.bnExists034
-  · exact dispatch rev_0_3_4 data_0_3_4 length hForest hNotLoopy
-      (by simpa [data_0_3_4] using h034) (by norm_num) bnExists009
-  · exact dispatch rev_3_4_5 data_3_4_5 length hForest hNotLoopy
-      (by simpa [data_3_4_5] using h345) (by norm_num) bnExists009
-  · exact dispatch rev_0_4_8 data_0_4_8 length hForest hNotLoopy
-      (by simpa [data_0_4_8] using h048) (by norm_num) bnExists009
-  · exact dispatch rev_4_5_8 data_4_5_8 length hForest hNotLoopy
-      (by simpa [data_4_5_8] using h458) (by norm_num) bnExists009
-  · exact dispatch rev_0_3_5 data_0_3_5 length hForest hNotLoopy
-      (by simpa [data_0_3_5] using h035) (by norm_num) bnExists010
-  · exact dispatch rev_0_3_8 data_0_3_8 length hForest hNotLoopy
-      (by simpa [data_0_3_8] using h038) (by norm_num) bnExists010
-  · exact dispatch rev_0_5_8 data_0_5_8 length hForest hNotLoopy
-      (by simpa [data_0_5_8] using h058) (by norm_num) bnExists010
-  · exact dispatch rev_3_5_8 data_3_5_8 length hForest hNotLoopy
-      (by simpa [data_3_5_8] using h358) (by norm_num) bnExists010
-  · exact dispatch rev_0_3_5_8 data_0_3_5_8 length hForest hNotLoopy
-      (by simpa [data_0_3_5_8] using h0358) (by norm_num) bnExists002
+  · exact dispatch rev034 data034 length hForest hNotLoopy
+      (by simpa [data034] using h034) (by norm_num) bnExists009
+  · exact dispatch rev345 data345 length hForest hNotLoopy
+      (by simpa [data345] using h345) (by norm_num) bnExists009
+  · exact dispatch rev048 data048 length hForest hNotLoopy
+      (by simpa [data048] using h048) (by norm_num) bnExists009
+  · exact dispatch rev458 data458 length hForest hNotLoopy
+      (by simpa [data458] using h458) (by norm_num) bnExists009
+  · exact dispatch rev035 data035 length hForest hNotLoopy
+      (by simpa [data035] using h035) (by norm_num) bnExists010
+  · exact dispatch rev038 data038 length hForest hNotLoopy
+      (by simpa [data038] using h038) (by norm_num) bnExists010
+  · exact dispatch rev058 data058 length hForest hNotLoopy
+      (by simpa [data058] using h058) (by norm_num) bnExists010
+  · exact dispatch rev358 data358 length hForest hNotLoopy
+      (by simpa [data358] using h358) (by norm_num) bnExists010
+  · exact dispatch rev0358 data0358 length hForest hNotLoopy
+      (by simpa [data0358] using h0358) (by norm_num) bnExists002
 
 end AtanasovRanganathan.GenusFourRow095Closed

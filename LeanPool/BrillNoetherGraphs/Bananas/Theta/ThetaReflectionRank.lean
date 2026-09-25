@@ -22,15 +22,15 @@ open Utilities
 theorem rank_strand_reflection_pair_eq_one
     (B : Banana 2) (alpha : Fin 3) (i : B.PathPosition alpha) :
     rank B.graph
-      (one_chip (strandVertex B alpha i) +
-        one_chip (strandVertex B alpha (strandMirror B alpha i))) = 1 := by
+      (oneChip (strandVertex B alpha i) +
+        oneChip (strandVertex B alpha (strandMirror B alpha i))) = 1 := by
   have hCanonical :
-      canonical_divisor B.graph =
-        one_chip (leftEndpoint B) + one_chip (rightEndpoint B) := by
+      canonicalDivisor B.graph =
+        oneChip (leftEndpoint B) + oneChip (rightEndpoint B) := by
     simpa using canonical_divisor_eq_endpoints B
-  have hCanonicalRank : rank B.graph (canonical_divisor B.graph) = 1 := by
-    have hRR := riemann_roch_for_graphs (graph_connected B)
-      (canonical_divisor B.graph)
+  have hCanonicalRank : rank B.graph (canonicalDivisor B.graph) = 1 := by
+    have hRR := riemann_roch_for_graphs (graphConnected B)
+      (canonicalDivisor B.graph)
     rw [sub_self, zero_divisor_rank, degree_of_canonical_divisor,
       B.genus_graph] at hRR
     omega
@@ -45,7 +45,7 @@ theorem ne_strand_reflection_of_pair_rank_zero
     (B : Banana 2) (alpha : Fin 3) (i : B.PathPosition alpha)
     (w : B.graph.V)
     (hRank : rank B.graph
-      (one_chip (strandVertex B alpha i) + one_chip w) = 0) :
+      (oneChip (strandVertex B alpha i) + oneChip w) = 0) :
     w ≠ strandVertex B alpha (strandMirror B alpha i) := by
   intro hw
   subst w

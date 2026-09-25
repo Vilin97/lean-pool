@@ -62,11 +62,11 @@ variable {G : CFGraph.{u}}
 /-- `v` is **interior** to `A` when every ambient edge at `v` has its other end
 in `A`.  A script supported on interior vertices cannot be felt outside `A`. -/
 def Interior (G : CFGraph.{u}) (A : Finset G.V) (v : G.V) : Prop :=
-  ∀ w : G.V, w ∉ A → num_edges G v w = 0
+  ∀ w : G.V, w ∉ A → numEdges G v w = 0
 
 /-- An interior vertex is invisible from outside `A`. -/
 theorem num_edges_eq_zero_of_interior {A : Finset G.V} {u w : G.V}
-    (hu : Interior G A u) (hw : w ∉ A) : num_edges G w u = 0 := by
+    (hu : Interior G A u) (hw : w ∉ A) : numEdges G w u = 0 := by
   rw [num_edges_symmetric]
   exact hu w hw
 
@@ -74,26 +74,26 @@ theorem num_edges_eq_zero_of_interior {A : Finset G.V} {u w : G.V}
 
 /-- Extend a script on `G[A]` by zero. -/
 noncomputable def extendScript (G : CFGraph.{u}) (A : Finset G.V) (hA : A.Nonempty)
-    (t : firing_script (inducedSubgraph G A hA)) : firing_script G :=
+    (t : firingScript (inducedSubgraph G A hA)) : firingScript G :=
   fun v => if h : v ∈ A then t ⟨v, h⟩ else 0
 
 @[simp] theorem extendScript_of_mem {A : Finset G.V} {hA : A.Nonempty}
-    (t : firing_script (inducedSubgraph G A hA)) {v : G.V} (hv : v ∈ A) :
+    (t : firingScript (inducedSubgraph G A hA)) {v : G.V} (hv : v ∈ A) :
     extendScript G A hA t v = t ⟨v, hv⟩ := dif_pos hv
 
 @[simp] theorem extendScript_of_not_mem {A : Finset G.V} {hA : A.Nonempty}
-    (t : firing_script (inducedSubgraph G A hA)) {v : G.V} (hv : v ∉ A) :
+    (t : firingScript (inducedSubgraph G A hA)) {v : G.V} (hv : v ∉ A) :
     extendScript G A hA t v = 0 := dif_neg hv
 
 /-- The script's support consists of interior vertices. -/
 def SupportInterior {A : Finset G.V} {hA : A.Nonempty}
-    (t : firing_script (inducedSubgraph G A hA)) : Prop :=
+    (t : firingScript (inducedSubgraph G A hA)) : Prop :=
   ∀ x : (inducedSubgraph G A hA).V, t x ≠ 0 → Interior G A x.val
 
 /-- The practical form of the side condition: name a finite set `B` containing
 every non-interior vertex of `A`, and check that the script vanishes on it. -/
 theorem supportInterior_of_vanishing_on_boundary {A : Finset G.V} {hA : A.Nonempty}
-    {t : firing_script (inducedSubgraph G A hA)} (B : Finset G.V)
+    {t : firingScript (inducedSubgraph G A hA)} (B : Finset G.V)
     (hB : ∀ x : (inducedSubgraph G A hA).V, x.val ∉ B → Interior G A x.val)
     (hVanish : ∀ x : (inducedSubgraph G A hA).V, x.val ∈ B → t x = 0) :
     SupportInterior t := by
@@ -106,12 +106,12 @@ theorem supportInterior_of_vanishing_on_boundary {A : Finset G.V} {hA : A.Nonemp
 
 /-- Outside `A` the extended script does nothing. -/
 theorem prin_extendScript_of_not_mem {A : Finset G.V} {hA : A.Nonempty}
-    {t : firing_script (inducedSubgraph G A hA)} (ht : SupportInterior t)
+    {t : firingScript (inducedSubgraph G A hA)} (ht : SupportInterior t)
     {v : G.V} (hv : v ∉ A) :
     prin G (extendScript G A hA t) v = 0 := by
   classical
   show (∑ u : G.V, (extendScript G A hA t u - extendScript G A hA t v)
-      * (num_edges G v u : ℤ)) = 0
+      * (numEdges G v u : ℤ)) = 0
   rw [extendScript_of_not_mem t hv]
   refine Finset.sum_eq_zero fun u _ => ?_
   by_cases hu : u ∈ A
@@ -125,23 +125,23 @@ theorem prin_extendScript_of_not_mem {A : Finset G.V} {hA : A.Nonempty}
 
 /-- Inside `A` the extended script acts exactly as it does on `G[A]`. -/
 theorem prin_extendScript_of_mem {A : Finset G.V} {hA : A.Nonempty}
-    {t : firing_script (inducedSubgraph G A hA)} (ht : SupportInterior t)
+    {t : firingScript (inducedSubgraph G A hA)} (ht : SupportInterior t)
     {v : G.V} (hv : v ∈ A) :
     prin G (extendScript G A hA t) v =
       prin (inducedSubgraph G A hA) t ⟨v, hv⟩ := by
   classical
   show (∑ u : G.V, (extendScript G A hA t u - extendScript G A hA t v)
-      * (num_edges G v u : ℤ))
+      * (numEdges G v u : ℤ))
     = ∑ x : (inducedSubgraph G A hA).V,
-        (t x - t ⟨v, hv⟩) * (num_edges (inducedSubgraph G A hA) ⟨v, hv⟩ x : ℤ)
+        (t x - t ⟨v, hv⟩) * (numEdges (inducedSubgraph G A hA) ⟨v, hv⟩ x : ℤ)
   -- The outside contributes nothing.
   have hsplit := Finset.sum_filter_add_sum_filter_not (Finset.univ : Finset G.V)
     (fun u => u ∈ A)
     (fun u => (extendScript G A hA t u - extendScript G A hA t v)
-      * (num_edges G v u : ℤ))
+      * (numEdges G v u : ℤ))
   have houtside : ∑ u ∈ Finset.univ.filter (fun u => ¬ u ∈ A),
       (extendScript G A hA t u - extendScript G A hA t v)
-        * (num_edges G v u : ℤ) = 0 := by
+        * (numEdges G v u : ℤ) = 0 := by
     refine Finset.sum_eq_zero fun u hu => ?_
     have hu' : u ∉ A := (Finset.mem_filter.mp hu).2
     rw [extendScript_of_not_mem t hu', extendScript_of_mem t hv]
@@ -153,16 +153,16 @@ theorem prin_extendScript_of_mem {A : Finset G.V} {hA : A.Nonempty}
   -- Inside `A` the two sums agree termwise.
   have hinside : ∑ u ∈ Finset.univ.filter (fun u => u ∈ A),
       (extendScript G A hA t u - extendScript G A hA t v)
-        * (num_edges G v u : ℤ)
+        * (numEdges G v u : ℤ)
     = ∑ u ∈ A, (extendScript G A hA t u - extendScript G A hA t v)
-        * (num_edges G v u : ℤ) := by
+        * (numEdges G v u : ℤ) := by
     apply Finset.sum_congr _ (fun _ _ => rfl)
     ext u
     simp
   rw [hinside]
   rw [Finset.sum_subtype (p := fun u : G.V => u ∈ A) A (fun _ => Iff.rfl)
     (fun u => (extendScript G A hA t u - extendScript G A hA t v)
-      * (num_edges G v u : ℤ))]
+      * (numEdges G v u : ℤ))]
   refine Finset.sum_congr rfl fun x _ => ?_
   rw [extendScript_of_mem t x.property, extendScript_of_mem t hv,
     num_edges_inducedSubgraph G A hA ⟨v, hv⟩ x]
@@ -183,18 +183,18 @@ subgraph `G[A]` is an effective ambient residual. -/
 theorem reaches_of_induced_script {A : Finset G.V} (hA : A.Nonempty)
     {D : CFDiv G} (hOff : ∀ v : G.V, v ∉ A → 0 ≤ D v)
     {p : G.V} (hp : p ∈ A)
-    {t : firing_script (inducedSubgraph G A hA)} (ht : SupportInterior t)
+    {t : firingScript (inducedSubgraph G A hA)} (ht : SupportInterior t)
     (hEff : effective ((fun x : (inducedSubgraph G A hA).V => D x.val)
-      - one_chip (⟨p, hp⟩ : (inducedSubgraph G A hA).V)
+      - oneChip (⟨p, hp⟩ : (inducedSubgraph G A hA).V)
       + prin (inducedSubgraph G A hA) t)) :
     Reaches G D p := by
   classical
-  refine ⟨D - one_chip p + prin G (extendScript G A hA t), ?_, ?_⟩
-  · show effective (D - one_chip p + prin G (extendScript G A hA t))
+  refine ⟨D - oneChip p + prin G (extendScript G A hA t), ?_, ?_⟩
+  · show effective (D - oneChip p + prin G (extendScript G A hA t))
     intro v
     by_cases hv : v ∈ A
-    · have hchip : one_chip p v
-          = one_chip (G := inducedSubgraph G A hA) ⟨p, hp⟩ ⟨v, hv⟩ := by
+    · have hchip : oneChip p v
+          = oneChip (G := inducedSubgraph G A hA) ⟨p, hp⟩ ⟨v, hv⟩ := by
         show (if v = p then (1 : ℤ) else 0)
             = if (⟨v, hv⟩ : (inducedSubgraph G A hA).V) = ⟨p, hp⟩ then (1 : ℤ) else 0
         refine if_congr ?_ rfl rfl
@@ -203,7 +203,7 @@ theorem reaches_of_induced_script {A : Finset G.V} (hA : A.Nonempty)
       simp only [Pi.add_apply, Pi.sub_apply] at this ⊢
       rw [prin_extendScript_of_mem ht hv, hchip]
       exact this
-    · have hchip : one_chip p v = 0 := by
+    · have hchip : oneChip p v = 0 := by
         have hvp : v ≠ p := by
           intro hvp
           exact hv (hvp ▸ hp)
@@ -211,7 +211,7 @@ theorem reaches_of_induced_script {A : Finset G.V} (hA : A.Nonempty)
       simp only [Pi.add_apply, Pi.sub_apply]
       rw [prin_extendScript_of_not_mem ht hv, hchip]
       simpa using hOff v hv
-  · exact linearEquiv_add_prin (D - one_chip p) (extendScript G A hA t)
+  · exact linearEquiv_add_prin (D - oneChip p) (extendScript G A hA t)
 
 /-! ## The one-boundary case: a vertex gluing, where the side condition is free -/
 
@@ -224,9 +224,9 @@ theorem reaches_of_induced_script_of_unique_boundary {A : Finset G.V}
     (hBoundary : ∀ u : G.V, u ∈ A → u ≠ g → Interior G A u)
     {D : CFDiv G} (hOff : ∀ v : G.V, v ∉ A → 0 ≤ D v)
     {p : G.V} (hp : p ∈ A)
-    (t : firing_script (inducedSubgraph G A hA))
+    (t : firingScript (inducedSubgraph G A hA))
     (hEff : effective ((fun x : (inducedSubgraph G A hA).V => D x.val)
-      - one_chip (⟨p, hp⟩ : (inducedSubgraph G A hA).V)
+      - oneChip (⟨p, hp⟩ : (inducedSubgraph G A hA).V)
       + prin (inducedSubgraph G A hA) t)) :
     Reaches G D p := by
   classical

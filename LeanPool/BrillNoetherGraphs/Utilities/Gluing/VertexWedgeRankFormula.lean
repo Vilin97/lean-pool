@@ -35,30 +35,30 @@ universe u v
 basic discrete Lipschitz property of a marked rank profile. -/
 theorem rank_add_zsmul_one_chip_step
     (G : CFGraph.{u}) (D : CFDiv G) (q : G.V) (n : ℤ) :
-    rank G (D + n • one_chip q) ≤
-        rank G (D + (n + 1) • one_chip q) ∧
-      rank G (D + (n + 1) • one_chip q) ≤
-        rank G (D + n • one_chip q) + 1 := by
+    rank G (D + n • oneChip q) ≤
+        rank G (D + (n + 1) • oneChip q) ∧
+      rank G (D + (n + 1) • oneChip q) ≤
+        rank G (D + n • oneChip q) + 1 := by
   have hForward :
-      rank G ((D + n • one_chip q) + one_chip q) ≥
-        rank G (D + n • one_chip q) :=
-    rank_add_one_chip_ge (D + n • one_chip q) q _ le_rfl
+      rank G ((D + n • oneChip q) + oneChip q) ≥
+        rank G (D + n • oneChip q) :=
+    rank_add_one_chip_ge (D + n • oneChip q) q _ le_rfl
   have hBackward :
-      rank G ((D + (n + 1) • one_chip q) - one_chip q) ≥
-        rank G (D + (n + 1) • one_chip q) - 1 :=
-    rank_sub_one_chip_ge_rank_sub_one (D + (n + 1) • one_chip q) q
+      rank G ((D + (n + 1) • oneChip q) - oneChip q) ≥
+        rank G (D + (n + 1) • oneChip q) - 1 :=
+    rank_sub_one_chip_ge_rank_sub_one (D + (n + 1) • oneChip q) q
   constructor
   · have hRewrite :
-        (D + n • one_chip q) + one_chip q =
-          D + (n + 1) • one_chip q := by
+        (D + n • oneChip q) + oneChip q =
+          D + (n + 1) • oneChip q := by
       funext z
       simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
       ring
     rw [hRewrite] at hForward
     exact hForward
   · have hRewrite :
-        (D + (n + 1) • one_chip q) - one_chip q =
-          D + n • one_chip q := by
+        (D + (n + 1) • oneChip q) - oneChip q =
+          D + n • oneChip q := by
       funext z
       simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
       ring
@@ -68,7 +68,7 @@ theorem rank_add_zsmul_one_chip_step
 /-- The degree along a marked rank profile is affine with slope one. -/
 theorem deg_add_zsmul_one_chip
     (G : CFGraph.{u}) (D : CFDiv G) (q : G.V) (n : ℤ) :
-    deg (D + n • one_chip q) = deg D + n := by
+    deg (D + n • oneChip q) = deg D + n := by
   rw [deg.map_add, map_zsmul, deg_one_chip]
   simp
 
@@ -76,7 +76,7 @@ theorem deg_add_zsmul_one_chip
 theorem rank_add_zsmul_one_chip_eq_neg_one_of_degree_neg
     (G : CFGraph.{u}) (D : CFDiv G) (q : G.V) (n : ℤ)
     (hDegree : deg D + n < 0) :
-    rank G (D + n • one_chip q) = -1 := by
+    rank G (D + n • oneChip q) = -1 := by
   apply rank_neg_one_of_deg_neg
   rw [deg_add_zsmul_one_chip]
   exact hDegree
@@ -84,19 +84,19 @@ theorem rank_add_zsmul_one_chip_eq_neg_one_of_degree_neg
 /-- On a connected graph, the sufficiently high-degree tail of a marked rank
 profile is the affine Riemann--Roch line `degree - genus`. -/
 theorem rank_add_zsmul_one_chip_eq_degree_sub_genus_of_large
-    (G : CFGraph.{u}) (hG : graph_connected G)
+    (G : CFGraph.{u}) (hG : graphConnected G)
     (D : CFDiv G) (q : G.V) (n : ℤ)
     (hLarge : 2 * (genus G : ℤ) - 2 < deg D + n) :
-    rank G (D + n • one_chip q) = deg D + n - (genus G : ℤ) := by
-  let A : CFDiv G := D + n • one_chip q
+    rank G (D + n • oneChip q) = deg D + n - (genus G : ℤ) := by
+  let A : CFDiv G := D + n • oneChip q
   change rank G A = deg D + n - (genus G : ℤ)
   have hADegree : deg A = deg D + n := by
     dsimp [A]
     exact deg_add_zsmul_one_chip G D q n
-  have hDualDegree : deg (canonical_divisor G - A) < 0 := by
+  have hDualDegree : deg (canonicalDivisor G - A) < 0 := by
     rw [deg.map_sub, degree_of_canonical_divisor, hADegree]
     omega
-  have hDualRank : rank G (canonical_divisor G - A) = -1 :=
+  have hDualRank : rank G (canonicalDivisor G - A) = -1 :=
     rank_neg_one_of_deg_neg G _ hDualDegree
   have hRR := riemann_roch_for_graphs hG A
   rw [hDualRank, hADegree] at hRR
@@ -159,22 +159,22 @@ theorem wedgeAddDivisor_sub
 /-- A nonnegative integral multiple of one chip is effective. -/
 theorem effective_zsmul_one_chip_of_nonneg
     (G : CFGraph.{u}) (q : G.V) (a : ℤ) (ha : 0 ≤ a) :
-    effective (a • one_chip q) := by
+    effective (a • oneChip q) := by
   intro z
   by_cases hz : z = q
   · subst z
-    simp [one_chip, ha]
-  · simp [one_chip, hz]
+    simp [oneChip, ha]
+  · simp [oneChip, hz]
 
 /-- Winnability is monotone as the coefficient of a marked chip increases. -/
 theorem winnable_add_zsmul_one_chip_mono
     (G : CFGraph.{u}) (D : CFDiv G) (q : G.V) (a b : ℤ)
-    (hab : a ≤ b) (ha : winnable G (D + a • one_chip q)) :
-    winnable G (D + b • one_chip q) := by
-  have hEffective : effective ((b - a) • one_chip q) :=
+    (hab : a ≤ b) (ha : winnable G (D + a • oneChip q)) :
+    winnable G (D + b • oneChip q) := by
+  have hEffective : effective ((b - a) • oneChip q) :=
     effective_zsmul_one_chip_of_nonneg G q (b - a) (sub_nonneg.mpr hab)
   have hAdd := winnable_add_effective_divisor G
-    (D + a • one_chip q) ((b - a) • one_chip q) ha hEffective
+    (D + a • oneChip q) ((b - a) • oneChip q) ha hEffective
   convert hAdd using 1
   funext z
   simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
@@ -274,20 +274,20 @@ theorem vertexWedge_rank_ge_of_staggered_profile_split_cover
     (D : CFDiv G) (E : CFDiv H) (k : ℤ)
     (hProfile : ∀ a b : ℤ, 0 ≤ a → 0 ≤ b → a + b = k →
       ∃ ell : ℤ,
-        rank G (D - (ell + 1) • one_chip x) ≥ a ∧
-        rank H (E + (ell + 1) • one_chip y) ≥ b) :
+        rank G (D - (ell + 1) • oneChip x) ≥ a ∧
+        rank H (E + (ell + 1) • oneChip y) ≥ b) :
     rank (vertexWedge G H x y) (wedgeAddDivisor G H x y D E) ≥ k := by
   apply vertexWedge_rank_ge_of_factor_shift_cover G H x y D E k
   intro A B hA hB hDegrees
   obtain ⟨ell, hRankA, hRankB⟩ := hProfile (deg A) (deg B)
     (deg_of_eff_nonneg A hA) (deg_of_eff_nonneg B hB) hDegrees
   have hLeftPhase : winnable G
-      ((D - (ell + 1) • one_chip x) - A) :=
-    ((rank_geq_iff G (D - (ell + 1) • one_chip x) (deg A)).mpr hRankA)
+      ((D - (ell + 1) • oneChip x) - A) :=
+    ((rank_geq_iff G (D - (ell + 1) • oneChip x) (deg A)).mpr hRankA)
       A ⟨hA, rfl⟩
   have hRightPhase : winnable H
-      ((E + (ell + 1) • one_chip y) - B) :=
-    ((rank_geq_iff H (E + (ell + 1) • one_chip y) (deg B)).mpr hRankB)
+      ((E + (ell + 1) • oneChip y) - B) :=
+    ((rank_geq_iff H (E + (ell + 1) • oneChip y) (deg B)).mpr hRankB)
       B ⟨hB, rfl⟩
   refine ⟨-(ell + 1), ?_, ?_⟩
   · convert hLeftPhase using 1
@@ -309,21 +309,21 @@ theorem vertexWedge_rank_ge_of_profile_split_cover
     (D : CFDiv G) (E : CFDiv H) (k : ℤ)
     (hProfile : ∀ a b : ℤ, 0 ≤ a → 0 ≤ b → a + b = k →
       ∃ ell : ℤ,
-        rank G (D - (ell + 1) • one_chip x) ≥ a ∧
-        rank H (E + ell • one_chip y) ≥ b) :
+        rank G (D - (ell + 1) • oneChip x) ≥ a ∧
+        rank H (E + ell • oneChip y) ≥ b) :
     rank (vertexWedge G H x y) (wedgeAddDivisor G H x y D E) ≥ k := by
   apply vertexWedge_rank_ge_of_factor_shift_cover G H x y D E k
   intro A B hA hB hDegrees
   obtain ⟨ell, hRankA, hRankB⟩ := hProfile (deg A) (deg B)
     (deg_of_eff_nonneg A hA) (deg_of_eff_nonneg B hB) hDegrees
   have hLeftPhase : winnable G
-      ((D - (ell + 1) • one_chip x) - A) :=
-    ((rank_geq_iff G (D - (ell + 1) • one_chip x) (deg A)).mpr hRankA)
+      ((D - (ell + 1) • oneChip x) - A) :=
+    ((rank_geq_iff G (D - (ell + 1) • oneChip x) (deg A)).mpr hRankA)
       A ⟨hA, rfl⟩
-  have hRightPhase : winnable H ((E + ell • one_chip y) - B) :=
-    ((rank_geq_iff H (E + ell • one_chip y) (deg B)).mpr hRankB)
+  have hRightPhase : winnable H ((E + ell • oneChip y) - B) :=
+    ((rank_geq_iff H (E + ell • oneChip y) (deg B)).mpr hRankB)
       B ⟨hB, rfl⟩
-  have hRightShift : winnable H (E - B + (ell + 1) • one_chip y) := by
+  have hRightShift : winnable H (E - B + (ell + 1) • oneChip y) := by
     apply winnable_add_zsmul_one_chip_mono H (E - B) y ell (ell + 1) (by omega)
     convert hRightPhase using 1
     funext z
@@ -353,11 +353,11 @@ theorem exists_staggered_rank_profile_split_of_inequalities
     (D : CFDiv G) (E : CFDiv H) (k a b : ℤ)
     (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = k)
     (hProfile : ∀ ell : ℤ,
-      rank G (D - (ell + 1) • one_chip x) +
-          rank H (E + ell • one_chip y) + 1 ≥ k) :
+      rank G (D - (ell + 1) • oneChip x) +
+          rank H (E + ell • oneChip y) + 1 ≥ k) :
     ∃ ell : ℤ,
-      rank G (D - (ell + 1) • one_chip x) ≥ a ∧
-      rank H (E + (ell + 1) • one_chip y) ≥ b := by
+      rank G (D - (ell + 1) • oneChip x) ≥ a ∧
+      rank H (E + (ell + 1) • oneChip y) ≥ b := by
   classical
   let lo : ℤ := min (-deg E - 1) (deg D)
   let hi : ℤ := deg D
@@ -369,22 +369,22 @@ theorem exists_staggered_rank_profile_split_of_inequalities
       dsimp [lo]
       exact min_le_left _ _
     omega
-  have hRightLoRank : rank H (E + lo • one_chip y) = -1 :=
+  have hRightLoRank : rank H (E + lo • oneChip y) = -1 :=
     rank_add_zsmul_one_chip_eq_neg_one_of_degree_neg
       H E y lo hRightLoDegree
-  have hLeftHiDegree : deg (D - (hi + 1) • one_chip x) < 0 := by
+  have hLeftHiDegree : deg (D - (hi + 1) • oneChip x) < 0 := by
     rw [deg.map_sub, map_zsmul, deg_one_chip]
     dsimp [hi]
     ring_nf
     norm_num
-  have hLeftHiRank : rank G (D - (hi + 1) • one_chip x) = -1 :=
+  have hLeftHiRank : rank G (D - (hi + 1) • oneChip x) = -1 :=
     rank_neg_one_of_deg_neg G _ hLeftHiDegree
-  have hRightHi : rank H (E + hi • one_chip y) ≥ b := by
+  have hRightHi : rank H (E + hi • oneChip y) ≥ b := by
     have h := hProfile hi
     rw [hLeftHiRank] at h
     omega
   let p : ℤ → Prop := fun ell =>
-    rank H (E + ell • one_chip y) ≥ b
+    rank H (E + ell • oneChip y) ≥ b
   have hStart : ¬ p lo := by
     dsimp [p]
     rw [hRightLoRank]
@@ -392,7 +392,7 @@ theorem exists_staggered_rank_profile_split_of_inequalities
   have hEnd : p hi := hRightHi
   obtain ⟨ell, hEllBelow, hEllNext⟩ :=
     exists_adjacent_crossing_int p lo hi hlohi hStart hEnd
-  have hLeft : rank G (D - (ell + 1) • one_chip x) ≥ a := by
+  have hLeft : rank G (D - (ell + 1) • oneChip x) ≥ a := by
     have h := hProfile ell
     dsimp [p] at hEllBelow
     omega
@@ -405,8 +405,8 @@ theorem vertexWedge_rank_ge_of_profile_inequalities
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (E : CFDiv H) (k : ℤ) (_hk : 0 ≤ k)
     (hProfile : ∀ ell : ℤ,
-      rank G (D - (ell + 1) • one_chip x) +
-          rank H (E + ell • one_chip y) + 1 ≥ k) :
+      rank G (D - (ell + 1) • oneChip x) +
+          rank H (E + ell • oneChip y) + 1 ≥ k) :
     rank (vertexWedge G H x y) (wedgeAddDivisor G H x y D E) ≥ k := by
   apply vertexWedge_rank_ge_of_staggered_profile_split_cover G H x y D E k
   intro a b ha hb hab
@@ -421,25 +421,25 @@ theorem vertexWedge_rank_profile_inequality
     (hRank : rank (vertexWedge G H x y)
       (wedgeAddDivisor G H x y D E) ≥ k) :
     ∀ ell : ℤ,
-      rank G (D - (ell + 1) • one_chip x) +
-          rank H (E + ell • one_chip y) + 1 ≥ k := by
+      rank G (D - (ell + 1) • oneChip x) +
+          rank H (E + ell • oneChip y) + 1 ≥ k := by
   intro ell
   by_contra hProfile
   have hStrict :
-      rank G (D - (ell + 1) • one_chip x) +
-          rank H (E + ell • one_chip y) + 1 < k := by
+      rank G (D - (ell + 1) • oneChip x) +
+          rank H (E + ell • oneChip y) + 1 < k := by
     omega
-  let r : ℤ := rank G (D - (ell + 1) • one_chip x)
-  let s : ℤ := rank H (E + ell • one_chip y)
+  let r : ℤ := rank G (D - (ell + 1) • oneChip x)
+  let s : ℤ := rank H (E + ell • oneChip y)
   obtain ⟨A, hAEffective, hADegree, hAUnwinnable⟩ :=
-    rank_get_effective G (D - (ell + 1) • one_chip x)
+    rank_get_effective G (D - (ell + 1) • oneChip x)
   obtain ⟨B, hBEffective, hBDegree, hBUnwinnable⟩ :=
-    rank_get_effective H (E + ell • one_chip y)
+    rank_get_effective H (E + ell • oneChip y)
   let c : ℤ := k - (r + s + 2)
   have hc : 0 ≤ c := by
     dsimp [c, r, s]
     omega
-  let A' : CFDiv G := A + c • one_chip x
+  let A' : CFDiv G := A + c • oneChip x
   have hA'Effective : effective A' :=
     fun z => add_nonneg (hAEffective z)
       (effective_zsmul_one_chip_of_nonneg G x c hc z)
@@ -457,7 +457,7 @@ theorem vertexWedge_rank_profile_inequality
     rw [deg_wedgeAddDivisor, hA'Degree, hBDegree]
     dsimp [c, s]
     ring
-  have hRankGeq : rank_geq (vertexWedge G H x y)
+  have hRankGeq : rankGeq (vertexWedge G H x y)
       (wedgeAddDivisor G H x y D E) k :=
     (rank_geq_iff _ _ k).mpr hRank
   have hSubWinnable := hRankGeq Q ⟨hQEffective, hQDegree⟩
@@ -466,14 +466,14 @@ theorem vertexWedge_rank_profile_inequality
     (winnable_vertexWedge_iff_exists_chipShift
       G H x y (D - A') (E - B)).mp hSubWinnable
   by_cases ht : t ≤ -(ell + 1)
-  · have hLeft' : winnable G (D - A + (t - c) • one_chip x) := by
+  · have hLeft' : winnable G (D - A + (t - c) • oneChip x) := by
       convert hLeft using 1
       funext z
       simp only [chipShift, A', Pi.sub_apply, Pi.add_apply, Pi.smul_apply,
         smul_eq_mul]
       ring
     have hWitness : winnable G
-        (D - A + (-(ell + 1)) • one_chip x) :=
+        (D - A + (-(ell + 1)) • oneChip x) :=
       winnable_add_zsmul_one_chip_mono G (D - A) x
         (t - c) (-(ell + 1)) (by omega) hLeft'
     apply hAUnwinnable
@@ -482,12 +482,12 @@ theorem vertexWedge_rank_profile_inequality
     simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
     ring
   · have ht' : -t ≤ ell := by omega
-    have hRight' : winnable H (E - B + (-t) • one_chip y) := by
+    have hRight' : winnable H (E - B + (-t) • oneChip y) := by
       convert hRight using 1
       funext z
       simp only [chipShift, Pi.sub_apply, Pi.add_apply, Pi.smul_apply,
         smul_eq_mul]
-    have hWitness : winnable H (E - B + ell • one_chip y) :=
+    have hWitness : winnable H (E - B + ell • oneChip y) :=
       winnable_add_zsmul_one_chip_mono H (E - B) y (-t) ell ht' hRight'
     apply hBUnwinnable
     convert hWitness using 1
@@ -503,8 +503,8 @@ theorem vertexWedge_rank_ge_iff_profile_inequalities
     (D : CFDiv G) (E : CFDiv H) (k : ℤ) (hk : 0 ≤ k) :
     rank (vertexWedge G H x y) (wedgeAddDivisor G H x y D E) ≥ k ↔
       ∀ ell : ℤ,
-        rank G (D - (ell + 1) • one_chip x) +
-            rank H (E + ell • one_chip y) + 1 ≥ k := by
+        rank G (D - (ell + 1) • oneChip x) +
+            rank H (E + ell • oneChip y) + 1 ≥ k := by
   constructor
   · exact vertexWedge_rank_profile_inequality G H x y D E k hk
   · exact vertexWedge_rank_ge_of_profile_inequalities G H x y D E k hk

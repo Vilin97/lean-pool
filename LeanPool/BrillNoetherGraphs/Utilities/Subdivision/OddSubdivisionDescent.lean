@@ -198,7 +198,7 @@ theorem two_mul_roundDist_lt (hodd : Odd N) (y : (spec.scale N hN).Vertex) :
   omega
 
 theorem embed_one_chip (x : spec.Vertex) :
-    spec.embed N hN (one_chip x) = one_chip (spec.fineOf N hN x) := by
+    spec.embed N hN (oneChip x) = oneChip (spec.fineOf N hN x) := by
   classical
   funext y
   unfold embed
@@ -208,8 +208,8 @@ theorem embed_one_chip (x : spec.Vertex) :
     · rw [if_neg hxy]
       exact (one_chip_apply_other' _ _ (fun hc => hxy hc.symm)).symm
   · intro x' _ hne
-    have hzero : (one_chip x : CFDiv spec.graph) x' = 0 := by
-      simp only [one_chip]
+    have hzero : (oneChip x : CFDiv spec.graph) x' = 0 := by
+      simp only [oneChip]
       rw [if_neg hne]
     rw [hzero]
     split_ifs <;> rfl
@@ -240,8 +240,8 @@ private theorem rank_ge_nearest_of_split {ι : Type*} [Fintype ι]
     (hlefts : ∀ i : {i : ι // ¬ P i}, spec.roundData N hN (ys i.1) = Sum.inl (lefts i))
     (hbudget : (∑ i, (spec.roundDist N hN (ys i) : ℤ)) < N)
     (hrank : rank (spec.scale N hN).graph
-      (spec.embed N hN D₀ + ∑ i, one_chip (ys i)) ≥ r) :
-    rank spec.graph (D₀ + ∑ i, one_chip (spec.nearest N hN (ys i))) ≥ r := by
+      (spec.embed N hN D₀ + ∑ i, oneChip (ys i)) ≥ r) :
+    rank spec.graph (D₀ + ∑ i, oneChip (spec.nearest N hN (ys i))) ≥ r := by
   have hys_right : ∀ i : {i : ι // P i}, ys i.1 = (chips i).fineVertex hN :=
     fun i => spec.eq_fineVertex_of_roundData_eq_inr N hN (hchips i)
   have hys_left : ∀ i : {i : ι // ¬ P i}, ys i.1 = spec.fineOf N hN (lefts i) :=
@@ -281,33 +281,33 @@ private theorem rank_ge_nearest_of_split {ι : Type*} [Fintype ι]
     rw [h1, h2, add_zero] at hbudget
     exact hbudget
   -- The fine divisor is the embedding of the padded coarse divisor plus the chips.
-  have hfineEq : spec.embed N hN D₀ + ∑ i, one_chip (ys i)
-      = spec.embed N hN (D₀ + ∑ i : {i : ι // ¬ P i}, one_chip (lefts i))
+  have hfineEq : spec.embed N hN D₀ + ∑ i, oneChip (ys i)
+      = spec.embed N hN (D₀ + ∑ i : {i : ι // ¬ P i}, oneChip (lefts i))
         + spec.fineChips N hN chips := by
-    have hE : (∑ i : {i : ι // ¬ P i}, spec.embed N hN (one_chip (lefts i)))
-        = ∑ i : {i : ι // ¬ P i}, one_chip (ys i.1) :=
+    have hE : (∑ i : {i : ι // ¬ P i}, spec.embed N hN (oneChip (lefts i)))
+        = ∑ i : {i : ι // ¬ P i}, oneChip (ys i.1) :=
       Finset.sum_congr rfl (fun i _ => by
         rw [spec.embed_one_chip N hN, ← hys_left i])
-    have hF : spec.fineChips N hN chips = ∑ i : {i : ι // P i}, one_chip (ys i.1) := by
+    have hF : spec.fineChips N hN chips = ∑ i : {i : ι // P i}, oneChip (ys i.1) := by
       unfold fineChips
       exact Finset.sum_congr rfl (fun i _ => by rw [hys_right i])
     have hsplit := Fintype.sum_subtype_add_sum_subtype P
-      (fun i => (one_chip (ys i) : CFDiv (spec.scale N hN).graph))
+      (fun i => (oneChip (ys i) : CFDiv (spec.scale N hN).graph))
     rw [spec.embed_add N hN, spec.embed_finset_sum N hN, hE, hF, ← hsplit]
     abel
   -- The coarse divisor is the padded coarse divisor plus the rounded chips.
-  have hcoarseEq : D₀ + ∑ i, one_chip (spec.nearest N hN (ys i))
-      = (D₀ + ∑ i : {i : ι // ¬ P i}, one_chip (lefts i))
+  have hcoarseEq : D₀ + ∑ i, oneChip (spec.nearest N hN (ys i))
+      = (D₀ + ∑ i : {i : ι // ¬ P i}, oneChip (lefts i))
         + spec.coarseChips N chips := by
     have hC : spec.coarseChips N chips
-        = ∑ i : {i : ι // P i}, one_chip (spec.nearest N hN (ys i.1)) := by
+        = ∑ i : {i : ι // P i}, oneChip (spec.nearest N hN (ys i.1)) := by
       unfold coarseChips
       exact Finset.sum_congr rfl (fun i _ => by rw [hnear_right i])
-    have hL : (∑ i : {i : ι // ¬ P i}, one_chip (lefts i) : CFDiv spec.graph)
-        = ∑ i : {i : ι // ¬ P i}, one_chip (spec.nearest N hN (ys i.1)) :=
+    have hL : (∑ i : {i : ι // ¬ P i}, oneChip (lefts i) : CFDiv spec.graph)
+        = ∑ i : {i : ι // ¬ P i}, oneChip (spec.nearest N hN (ys i.1)) :=
       Finset.sum_congr rfl (fun i _ => by rw [hnear_left i])
     have hsplit := Fintype.sum_subtype_add_sum_subtype P
-      (fun i => (one_chip (spec.nearest N hN (ys i)) : CFDiv spec.graph))
+      (fun i => (oneChip (spec.nearest N hN (ys i)) : CFDiv spec.graph))
     rw [hC, hL, ← hsplit]
     abel
   rw [hcoarseEq]
@@ -323,8 +323,8 @@ theorem rank_ge_of_rank_scale_ge_nearest {ι : Type*} [Fintype ι]
     (ys : ι → (spec.scale N hN).Vertex) (D₀ : CFDiv spec.graph) (r : ℤ)
     (hbudget : (∑ i, (spec.roundDist N hN (ys i) : ℤ)) < N)
     (hrank : rank (spec.scale N hN).graph
-      (spec.embed N hN D₀ + ∑ i, one_chip (ys i)) ≥ r) :
-    rank spec.graph (D₀ + ∑ i, one_chip (spec.nearest N hN (ys i))) ≥ r :=
+      (spec.embed N hN D₀ + ∑ i, oneChip (ys i)) ≥ r) :
+    rank spec.graph (D₀ + ∑ i, oneChip (spec.nearest N hN (ys i))) ≥ r :=
   spec.rank_ge_nearest_of_split N hN ys D₀ r
     (fun i => (spec.roundData N hN (ys i)).isRight = true)
     (fun i => (spec.roundData N hN (ys i.1)).getRight i.2)
@@ -346,12 +346,12 @@ private theorem exists_coarse_completion_two (hodd : Odd N) {r : ℤ}
     ∃ B : CFDiv spec.graph, effective B ∧ deg B = 2 ∧ rank spec.graph (E + B) ≥ r := by
   obtain ⟨y₁, y₂, hF⟩ := exists_chip_pair_of_effective_deg_two _ F hFeff hFdeg
   subst hF
-  have hsum2 : (∑ i : Fin 2, one_chip (![y₁, y₂] i) : CFDiv (spec.scale N hN).graph)
-      = one_chip y₁ + one_chip y₂ := by
+  have hsum2 : (∑ i : Fin 2, oneChip (![y₁, y₂] i) : CFDiv (spec.scale N hN).graph)
+      = oneChip y₁ + oneChip y₂ := by
     rw [Fin.sum_univ_two]
     simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
   have hrank2 : rank (spec.scale N hN).graph
-      (spec.embed N hN E + ∑ i : Fin 2, one_chip (![y₁, y₂] i)) ≥ r := by
+      (spec.embed N hN E + ∑ i : Fin 2, oneChip (![y₁, y₂] i)) ≥ r := by
     rw [hsum2]
     exact hrank
   have hbudget : (∑ i : Fin 2, (spec.roundDist N hN (![y₁, y₂] i) : ℤ)) < N := by
@@ -363,12 +363,12 @@ private theorem exists_coarse_completion_two (hodd : Odd N) {r : ℤ}
   have hcoarse := spec.rank_ge_of_rank_scale_ge_nearest N hN ![y₁, y₂] E r hbudget hrank2
   rw [Fin.sum_univ_two] at hcoarse
   simp only [Matrix.cons_val_zero, Matrix.cons_val_one] at hcoarse
-  have heff : effective (one_chip (spec.nearest N hN y₁) + one_chip (spec.nearest N hN y₂)
+  have heff : effective (oneChip (spec.nearest N hN y₁) + oneChip (spec.nearest N hN y₂)
       : CFDiv spec.graph) := by
     intro v
     exact add_nonneg (eff_one_chip (spec.nearest N hN y₁) v)
       (eff_one_chip (spec.nearest N hN y₂) v)
-  have hdegB : deg (one_chip (spec.nearest N hN y₁) + one_chip (spec.nearest N hN y₂)
+  have hdegB : deg (oneChip (spec.nearest N hN y₁) + oneChip (spec.nearest N hN y₂)
       : CFDiv spec.graph) = 2 := by
     rw [deg.map_add, deg_one_chip, deg_one_chip]
     norm_num
@@ -384,12 +384,12 @@ private theorem exists_coarse_completion_one {r : ℤ}
     ∃ B : CFDiv spec.graph, effective B ∧ deg B = 1 ∧ rank spec.graph (E + B) ≥ r := by
   obtain ⟨y, hF⟩ := effective_degree_one_eq_one_chip hFeff hFdeg
   subst hF
-  have hsum1 : (∑ i : Fin 1, one_chip (![y] i) : CFDiv (spec.scale N hN).graph)
-      = one_chip y := by
+  have hsum1 : (∑ i : Fin 1, oneChip (![y] i) : CFDiv (spec.scale N hN).graph)
+      = oneChip y := by
     rw [Fin.sum_univ_one]
     simp only [Matrix.cons_val_zero]
   have hrank1 : rank (spec.scale N hN).graph
-      (spec.embed N hN E + ∑ i : Fin 1, one_chip (![y] i)) ≥ r := by
+      (spec.embed N hN E + ∑ i : Fin 1, oneChip (![y] i)) ≥ r := by
     rw [hsum1]
     exact hrank
   have hbudget : (∑ i : Fin 1, (spec.roundDist N hN (![y] i) : ℤ)) < N := by
@@ -400,7 +400,7 @@ private theorem exists_coarse_completion_one {r : ℤ}
   have hcoarse := spec.rank_ge_of_rank_scale_ge_nearest N hN ![y] E r hbudget hrank1
   rw [Fin.sum_univ_one] at hcoarse
   simp only [Matrix.cons_val_zero] at hcoarse
-  exact ⟨one_chip (spec.nearest N hN y), eff_one_chip _, deg_one_chip _, hcoarse⟩
+  exact ⟨oneChip (spec.nearest N hN y), eff_one_chip _, deg_one_chip _, hcoarse⟩
 
 /-- **Two residual chips, odd scale.**  If `d = r + k + 2` and `N` is odd, then
 `w^r_d(σ_N) ≥ k` implies `w^r_d ≥ k` on the coarse graph. -/
@@ -487,8 +487,8 @@ def OddPairWitness (G : CFGraph) : Prop :=
   ∀ x y : G.V, ∃ (N : ℕ) (hN : 0 < N), Odd N ∧
     ∃ F : CFDiv (regularSubdivision G N hN), effective F ∧ deg F = 2 ∧
       rank (regularSubdivision G N hN)
-        (one_chip (regularSubdivisionVertex G N hN x) +
-          one_chip (regularSubdivisionVertex G N hN y) + F) ≥ 1
+        (oneChip (regularSubdivisionVertex G N hN x) +
+          oneChip (regularSubdivisionVertex G N hN y) + F) ≥ 1
 
 /-- **The pairwise form of the descent.**  An odd pair witness already gives
 `w^1_4(G) ≥ 1`; the odd scale may depend on the pair, and only the pencil
@@ -514,8 +514,8 @@ theorem bnRankGe_one_four_of_oddPairWitness (G : CFGraph) (h : OddPairWitness G)
     rw [Equiv.apply_symm_apply]
   rw [hva, hvb] at hFrank
   have hembed : (UnitSubdivisionPresentation.spec G).embed N hN E
-      = one_chip ((UnitSubdivisionPresentation.spec G).fineOf N hN a)
-        + one_chip ((UnitSubdivisionPresentation.spec G).fineOf N hN b) := by
+      = oneChip ((UnitSubdivisionPresentation.spec G).fineOf N hN a)
+        + oneChip ((UnitSubdivisionPresentation.spec G).fineOf N hN b) := by
     rw [hEab, Spec.embed_add, Spec.embed_one_chip, Spec.embed_one_chip]
   obtain ⟨B, hBeff, hBdeg, hBrank⟩ :=
     (UnitSubdivisionPresentation.spec G).exists_coarse_completion_two N hN hodd

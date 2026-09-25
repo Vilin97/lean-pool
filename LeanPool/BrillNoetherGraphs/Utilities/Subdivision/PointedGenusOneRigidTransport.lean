@@ -41,7 +41,7 @@ theorem map {G : CFGraph.{u}} {H : CFGraph.{v}} {root : G.V}
         (congrArg equivalence.vertexEquiv h)
     apply hRigid.nontrivial p hp
     apply (equivalence.linear_equiv_mapDiv_iff
-      (one_chip root - one_chip p) 0).mp
+      (oneChip root - oneChip p) 0).mp
     simpa [p] using hLinear
 
 end PointedGenusOneRigid

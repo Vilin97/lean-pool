@@ -31,12 +31,12 @@ universe u v
 /-- Debit the two boundary fluxes from a divisor on the left factor. -/
 def debit {G : CFGraph.{u}} (p : TwoPole G) (D : CFDiv G)
     (c₁ c₂ : ℤ) : CFDiv G :=
-  D - c₁ • one_chip p.first - c₂ • one_chip p.second
+  D - c₁ • oneChip p.first - c₂ • oneChip p.second
 
 /-- Credit the two boundary fluxes to a divisor on the right factor. -/
 def credit {G : CFGraph.{u}} (p : TwoPole G) (D : CFDiv G)
     (c₁ c₂ : ℤ) : CFDiv G :=
-  D + c₁ • one_chip p.first + c₂ • one_chip p.second
+  D + c₁ • oneChip p.first + c₂ • oneChip p.second
 
 /-- A response of a two-pole divisor to prescribed boundary fluxes.  The
 integer `t` is the displacement of a script making the debited divisor
@@ -67,34 +67,34 @@ translation changes neither its factor principal divisor nor its
 displacement, but it sets the absolute flux through the first cross-edge. -/
 def glueScript (A : CFGraph.{u}) (B : CFGraph.{v})
     (p : TwoPole A) (q : TwoPole B)
-    (f : firing_script A) (g : firing_script B) (k : ℤ) :
-    firing_script (join A B p q) :=
+    (f : firingScript A) (g : firingScript B) (k : ℤ) :
+    firingScript (join A B p q) :=
   Sum.elim f (fun b => g b + k)
 
 @[simp] theorem glueScript_inl
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
-    (f : firing_script A) (g : firing_script B) (k : ℤ) (a : A.V) :
+    (f : firingScript A) (g : firingScript B) (k : ℤ) (a : A.V) :
     glueScript A B p q f g k (Sum.inl a) = f a := rfl
 
 @[simp] theorem glueScript_inr
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
-    (f : firing_script A) (g : firing_script B) (k : ℤ) (b : B.V) :
+    (f : firingScript A) (g : firingScript B) (k : ℤ) (b : B.V) :
     glueScript A B p q f g k (Sum.inr b) = g b + k := rfl
 /-- The first bridge contributes its flux at a left vertex. -/
 theorem prin_bridge_glueScript_inl
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
-    (f : firing_script A) (g : firing_script B) (k : ℤ) (a : A.V) :
+    (f : firingScript A) (g : firingScript B) (k : ℤ) (a : A.V) :
     prin (bridge A B p q) (glueScript A B p q f g k) (Sum.inl a) =
       prin A f a +
         if a = p.first then g q.first + k - f p.first else 0 := by
   change
     (∑ z : Sum A.V B.V,
       (Sum.elim f (fun b => g b + k) z - f a) *
-        (num_edges (bridgeGraph A B p.first q.first) (Sum.inl a) z : ℤ)) = _
+        (numEdges (bridgeGraph A B p.first q.first) (Sum.inl a) z : ℤ)) = _
   rw [Fintype.sum_sum_type]
   simp_rw [num_edges_bridgeGraph_inl, num_edges_bridgeGraph_inl_inr]
   change
-    (∑ x : A.V, (f x - f a) * (num_edges A a x : ℤ)) +
+    (∑ x : A.V, (f x - f a) * (numEdges A a x : ℤ)) +
       ∑ y : B.V, (g y + k - f a) *
         (((if a = p.first ∧ y = q.first then 1 else 0) : ℕ) : ℤ) = _
   by_cases ha : a = p.first
@@ -104,17 +104,17 @@ theorem prin_bridge_glueScript_inl
 /-- The first bridge contributes its flux at a right vertex. -/
 theorem prin_bridge_glueScript_inr
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
-    (f : firing_script A) (g : firing_script B) (k : ℤ) (b : B.V) :
+    (f : firingScript A) (g : firingScript B) (k : ℤ) (b : B.V) :
     prin (bridge A B p q) (glueScript A B p q f g k) (Sum.inr b) =
       prin B g b +
         if b = q.first then f p.first - (g q.first + k) else 0 := by
   change
     (∑ z : Sum A.V B.V,
       (Sum.elim f (fun y => g y + k) z - (g b + k)) *
-        (num_edges (bridgeGraph A B p.first q.first) (Sum.inr b) z : ℤ)) = _
+        (numEdges (bridgeGraph A B p.first q.first) (Sum.inr b) z : ℤ)) = _
   rw [Fintype.sum_sum_type]
   have hCross (a : A.V) :
-      num_edges (bridgeGraph A B p.first q.first) (Sum.inr b) (Sum.inl a) =
+      numEdges (bridgeGraph A B p.first q.first) (Sum.inr b) (Sum.inl a) =
         if a = p.first ∧ b = q.first then 1 else 0 := by
     rw [num_edges_symmetric]
     exact num_edges_bridgeGraph_inl_inr A B p.first q.first a b
@@ -126,7 +126,7 @@ theorem prin_bridge_glueScript_inr
   change
     (∑ x : A.V, (f x - (g b + k)) *
         (((if x = p.first ∧ b = q.first then 1 else 0) : ℕ) : ℤ)) +
-      ∑ y : B.V, (g y - g b) * (num_edges B b y : ℤ) = _
+      ∑ y : B.V, (g y - g b) * (numEdges B b y : ℤ) = _
   by_cases hb : b = q.first
   · subst b
     simp [prin_apply]
@@ -135,7 +135,7 @@ theorem prin_bridge_glueScript_inr
 /-- Both cross-edges contribute their fluxes at a left vertex. -/
 theorem prin_join_glueScript_inl
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
-    (f : firing_script A) (g : firing_script B) (k : ℤ) (a : A.V) :
+    (f : firingScript A) (g : firingScript B) (k : ℤ) (a : A.V) :
     prin (join A B p q) (glueScript A B p q f g k) (Sum.inl a) =
       prin A f a +
         (if a = p.first then g q.first + k - f p.first else 0) +
@@ -155,16 +155,16 @@ theorem prin_join_glueScript_inl
   change _ = _
   by_cases ha : a = p.second
   · subst a
-    simp [seamDivisor, one_chip] at hAdd ⊢
+    simp [seamDivisor, oneChip] at hAdd ⊢
     linarith
   · have hSum : (Sum.inl a : Sum A.V B.V) ≠ Sum.inl p.second :=
       fun h => ha (Sum.inl.inj h)
-    simp [seamDivisor, one_chip, ha, hSum] at hAdd ⊢
+    simp [seamDivisor, oneChip, ha, hSum] at hAdd ⊢
     linarith
 /-- Both cross-edges contribute their fluxes at a right vertex. -/
 theorem prin_join_glueScript_inr
     (A : CFGraph.{u}) (B : CFGraph.{v}) (p : TwoPole A) (q : TwoPole B)
-    (f : firing_script A) (g : firing_script B) (k : ℤ) (b : B.V) :
+    (f : firingScript A) (g : firingScript B) (k : ℤ) (b : B.V) :
     prin (join A B p q) (glueScript A B p q f g k) (Sum.inr b) =
       prin B g b +
         (if b = q.first then f p.first - (g q.first + k) else 0) +
@@ -184,11 +184,11 @@ theorem prin_join_glueScript_inr
   change _ = _
   by_cases hb : b = q.second
   · subst b
-    simp [seamDivisor, one_chip] at hAdd ⊢
+    simp [seamDivisor, oneChip] at hAdd ⊢
     linarith
   · have hSum : (Sum.inr b : Sum A.V B.V) ≠ Sum.inr q.second :=
       fun h => hb (Sum.inr.inj h)
-    simp [seamDivisor, one_chip, hb, hSum] at hAdd ⊢
+    simp [seamDivisor, oneChip, hb, hSum] at hAdd ⊢
     linarith
 /-- **Two-pole response gluing.**  A debited response on the left and the
 matching credited response on the right make the original factor sum
@@ -233,7 +233,7 @@ theorem winnable_sumDivisor_of_responses
               (debit p D c₁ c₂ + prin A f) a := by
           rw [prin_join_glueScript_inl, hFlux₁', hFlux₂']
           by_cases ha₁ : a = p.first <;> by_cases ha₂ : a = p.second
-          all_goals simp_all [debit, one_chip]
+          all_goals simp_all [debit, oneChip]
           all_goals ring
         change 0 ≤ D a +
           prin (join A B p q) (glueScript A B p q f g k) (Sum.inl a)
@@ -247,7 +247,7 @@ theorem winnable_sumDivisor_of_responses
               (credit q E c₁ c₂ + prin B g) b := by
           rw [prin_join_glueScript_inr, hFlux₁, hFlux₂]
           by_cases hb₁ : b = q.first <;> by_cases hb₂ : b = q.second
-          all_goals simp_all [credit, one_chip]
+          all_goals simp_all [credit, oneChip]
           all_goals ring
         change 0 ≤ E b +
           prin (join A B p q) (glueScript A B p q f g k) (Sum.inr b)
@@ -280,8 +280,8 @@ theorem exists_responses_of_winnable_sumDivisor
       abel
     rw [hEq]
     exact hFEffective
-  let f : firing_script A := fun a => σ (Sum.inl a)
-  let g : firing_script B := fun b => σ (Sum.inr b)
+  let f : firingScript A := fun a => σ (Sum.inl a)
+  let g : firingScript B := fun b => σ (Sum.inr b)
   let c₁ : ℤ := f p.first - g q.first
   let c₂ : ℤ := f p.second - g q.second
   let s : ℤ := displacement p.first p.second f
@@ -301,7 +301,7 @@ theorem exists_responses_of_winnable_sumDivisor
       rw [← hGlue, prin_join_glueScript_inl]
       dsimp [c₁, c₂]
       by_cases ha₁ : a = p.first <;> by_cases ha₂ : a = p.second
-      all_goals simp_all [debit, one_chip]
+      all_goals simp_all [debit, oneChip]
       all_goals ring
     rw [hEq]
     exact hGlobal
@@ -315,7 +315,7 @@ theorem exists_responses_of_winnable_sumDivisor
       rw [← hGlue, prin_join_glueScript_inr]
       dsimp [c₁, c₂]
       by_cases hb₁ : b = q.first <;> by_cases hb₂ : b = q.second
-      all_goals simp_all [credit, one_chip]
+      all_goals simp_all [credit, oneChip]
       all_goals ring
     rw [hEq]
     exact hGlobal

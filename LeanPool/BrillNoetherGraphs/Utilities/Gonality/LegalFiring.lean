@@ -23,17 +23,17 @@ which is what the extremal argument in
 
 ## Conventions (multiplicity!)
 
-`outdeg_S G U v = ∑_{u ∉ U} num_edges G v u` counts **with edge multiplicity**,
-matching both `set_firing` and the dependency's `q_reduced`. Firing every
+`outdegreeSet G U v = ∑_{u ∉ U} numEdges G v u` counts **with edge multiplicity**,
+matching both `setFiring` and the dependency's `qReduced`. Firing every
 vertex of `U` exactly once satisfies
 
-* `set_firing G D U v = D v - outdeg_S G U v` for `v ∈ U`;
-* `set_firing G D U v = D v + outdeg_S G Uᶜ v` for `v ∉ U`
+* `setFiring G D U v = D v - outdegreeSet G U v` for `v ∈ U`;
+* `setFiring G D U v = D v + outdegreeSet G Uᶜ v` for `v ∉ U`
 
 — chips only ever *leave* the fired set and only ever *arrive* outside it.
 
 A set `U` is **legal** for `D` when firing it keeps `D` effective, i.e.
-`D u ≥ outdeg_S G U u` for all `u ∈ U`.
+`D u ≥ outdegreeSet G U u` for all `u ∈ U`.
 -/
 
 namespace Utilities.Gonality
@@ -52,7 +52,7 @@ records the one remaining piece of script calculus it needs. -/
 This is what turns the step `Dⱼ₋₁ → Dⱼ` around in the main theorem: `Dⱼ₋₁` is
 obtained from `Dⱼ` by firing the complement of `U j`. -/
 theorem set_firing_compl_set_firing (D : CFDiv G) (U : Finset G.V) :
-    set_firing G (set_firing G D U) Uᶜ = D := by
+    setFiring G (setFiring G D U) Uᶜ = D := by
   classical
   funext v
   by_cases hv : v ∈ U
@@ -69,7 +69,7 @@ is every intermediate divisor obtained by truncating the script from below:
 
 This is the whole content of the nested chain: the level sets of `x` fire in
 increasing order and every partial sum is such a truncation. -/
-theorem effective_add_prin_truncate {D : CFDiv G} {x : firing_script G}
+theorem effective_add_prin_truncate {D : CFDiv G} {x : firingScript G}
     (hD : effective D) (hDx : effective (D + prin G x)) (c : ℤ) :
     effective (D + prin G (fun v => max (x v - c) 0)) := by
   intro v
@@ -108,24 +108,24 @@ theorem effective_add_prin_truncate {D : CFDiv G} {x : firing_script G}
 /-- `fireChain G D U i` is the result of firing `U 0, U 1, …, U (i-1)` in turn. -/
 def fireChain (G : CFGraph) (D : CFDiv G) (U : ℕ → Finset G.V) : ℕ → CFDiv G
   | 0 => D
-  | (i + 1) => set_firing G (fireChain G D U i) (U i)
+  | (i + 1) => setFiring G (fireChain G D U i) (U i)
 
 @[simp] theorem fireChain_zero (D : CFDiv G) (U : ℕ → Finset G.V) :
     fireChain G D U 0 = D := rfl
 
 @[simp] theorem fireChain_succ (D : CFDiv G) (U : ℕ → Finset G.V) (i : ℕ) :
-    fireChain G D U (i + 1) = set_firing G (fireChain G D U i) (U i) := rfl
+    fireChain G D U (i + 1) = setFiring G (fireChain G D U i) (U i) := rfl
 
 /-- Every divisor in a firing chain is linearly equivalent to the initial one. -/
 theorem fireChain_linear_equiv (D : CFDiv G) (U : ℕ → Finset G.V) (i : ℕ) :
-    linear_equiv G D (fireChain G D U i) := by
+    linearEquiv G D (fireChain G D U i) := by
   induction i with
-  | zero => exact linear_equiv.refl G D
-  | succ i ih => exact linear_equiv.trans ih (linear_equiv_set_firing _ _)
+  | zero => exact linearEquiv.refl G D
+  | succ i ih => exact linearEquiv.trans ih (linear_equiv_set_firing _ _)
 
 /-- Every divisor in a chain of legal firings is effective. -/
 theorem fireChain_effective {D : CFDiv G} (hD : effective D) {U : ℕ → Finset G.V}
-    {k : ℕ} (hlegal : ∀ i, i < k → legal_set G (fireChain G D U i) (U i)) :
+    {k : ℕ} (hlegal : ∀ i, i < k → legalSet G (fireChain G D U i) (U i)) :
     ∀ i, i ≤ k → effective (fireChain G D U i) := by
   intro i
   induction i with
@@ -147,7 +147,7 @@ uniqueness of the chain.
 **The route actually taken is the paper's level-set decomposition, not the
 "maximal legal set" route this docstring used to recommend.**  That route is a
 dead end: a set `U` legal for `D` is *not* in general legal for
-`set_firing G D U` (that would need `D u ≥ 2 · outdeg_S G U u`), so maximality at consecutive steps
+`setFiring G D U` (that would need `D u ≥ 2 · outdegreeSet G U u`), so maximality at consecutive steps
 does not force nestedness.  What works instead:
 
 * take `D'`, the `q`-reduced representative of `D` (`exists_q_reduced_representative`),
@@ -166,14 +166,14 @@ does not force nestedness.  What works instead:
 
 The only real content is `effective_add_prin_truncate`, four lines of case
 analysis on `x v ≤ c`. -/
-theorem exists_nested_legal_chain (h_conn : graph_connected G) (q : G.V)
+theorem exists_nested_legal_chain (h_conn : graphConnected G) (q : G.V)
     {D : CFDiv G} (hD : effective D) :
     ∃ (k : ℕ) (U : ℕ → Finset G.V),
       (∀ i, i < k → U i ⊆ Finset.univ.erase q) ∧
       (∀ i, i < k → (U i).Nonempty) ∧
       (∀ i j, i ≤ j → j < k → U i ⊆ U j) ∧
-      (∀ i, i < k → legal_set G (fireChain G D U i) (U i)) ∧
-      q_reduced G q (fireChain G D U k) := by
+      (∀ i, i < k → legalSet G (fireChain G D U i) (U i)) ∧
+      qReduced G q (fireChain G D U k) := by
   classical
   -- The target of the chain: the `q`-reduced representative, which is effective
   -- because `D` is.
@@ -182,7 +182,7 @@ theorem exists_nested_legal_chain (h_conn : graph_connected G) (q : G.V)
     effective_of_winnable_and_q_reduced G q D' ⟨D, hD, hequiv.symm⟩ hred
   -- The firing script carrying `D` to `D'`, normalized to vanish at `q`.
   obtain ⟨x₀, hx₀⟩ := (principal_iff_eq_prin G (D' - D)).mp hequiv
-  set x : firing_script G := fun v => x₀ v - x₀ q with hxdef
+  set x : firingScript G := fun v => x₀ v - x₀ q with hxdef
   have hxq : x q = 0 := by simp [hxdef]
   have hD'eq : D' = D + prin G x := by
     rw [hxdef, prin_sub_const]
@@ -216,20 +216,20 @@ theorem exists_nested_legal_chain (h_conn : graph_connected G) (q : G.V)
       have hmv := hm v₀ (Finset.mem_univ v₀)
       omega
     -- `W` is legal for `D'`: it is the first firing of the reverse chain.
-    have hWlegal : legal_set G D' W := by
+    have hWlegal : legalSet G D' W := by
       have htr := effective_add_prin_truncate hD'eff hrev (-(x m) - 1)
       have heq : (fun v => max ((fun w => -x w) v - (-(x m) - 1)) 0)
-          = indicator_script G W := by
+          = indicatorScript G W := by
         funext v
         have hge : x m ≤ x v := hm v (Finset.mem_univ v)
         by_cases h : x v = x m
         · have hvW : v ∈ W := by simp [hW, h]
-          show max (-x v - (-(x m) - 1)) 0 = indicator_script G W v
-          rw [indicator_script, if_pos hvW]
+          show max (-x v - (-(x m) - 1)) 0 = indicatorScript G W v
+          rw [indicatorScript, if_pos hvW]
           omega
         · have hvW : v ∉ W := by simp [hW, h]
-          show max (-x v - (-(x m) - 1)) 0 = indicator_script G W v
-          rw [indicator_script, if_neg hvW]
+          show max (-x v - (-(x m) - 1)) 0 = indicatorScript G W v
+          rw [indicatorScript, if_neg hvW]
           omega
       rw [heq, ← set_firing_eq_add_prin_indicator_script] at htr
       intro u hu
@@ -257,7 +257,7 @@ theorem exists_nested_legal_chain (h_conn : graph_connected G) (q : G.V)
     intro t
     induction t with
     | zero =>
-        have h0 : (fun v => max (x v - (K - ((0 : ℕ) : ℤ))) 0) = (0 : firing_script G) := by
+        have h0 : (fun v => max (x v - (K - ((0 : ℕ) : ℤ))) 0) = (0 : firingScript G) := by
           funext v
           have hpv := hp v (Finset.mem_univ v)
           show max (x v - (K - ((0 : ℕ) : ℤ))) 0 = 0
@@ -267,14 +267,14 @@ theorem exists_nested_legal_chain (h_conn : graph_connected G) (q : G.V)
         simp
     | succ t ih =>
         have key : (fun v : G.V => max (x v - (K - ((t : ℤ) + 1))) 0)
-            = (fun v : G.V => max (x v - (K - (t : ℤ))) 0) + indicator_script G (U t) := by
+            = (fun v : G.V => max (x v - (K - (t : ℤ))) 0) + indicatorScript G (U t) := by
           funext v
           show max (x v - (K - ((t : ℤ) + 1))) 0
-              = max (x v - (K - (t : ℤ))) 0 + indicator_script G (U t) v
+              = max (x v - (K - (t : ℤ))) 0 + indicatorScript G (U t) v
           by_cases h : K - (t : ℤ) ≤ x v
-          · rw [indicator_script, if_pos ((hmemU t v).mpr h)]
+          · rw [indicatorScript, if_pos ((hmemU t v).mpr h)]
             omega
-          · rw [indicator_script, if_neg (fun hc => h ((hmemU t v).mp hc))]
+          · rw [indicatorScript, if_neg (fun hc => h ((hmemU t v).mp hc))]
             omega
         rw [fireChain_succ, ih, set_firing_eq_add_prin_indicator_script]
         push_cast

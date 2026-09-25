@@ -85,8 +85,8 @@ private theorem theta_zeroPenult_rigid
     (u v : B.graph.V)
     (hPair : (u = strandVertex B gamma p ∧ v = strandVertex B gamma q) ∨
       (u = strandVertex B gamma q ∧ v = strandVertex B gamma p)) :
-    ¬ linear_equiv B.graph (one_chip u + one_chip v)
-      (canonical_divisor B.graph) := by
+    ¬ linearEquiv B.graph (oneChip u + oneChip v)
+      (canonicalDivisor B.graph) := by
   have hqLt : q.val < B.length gamma := by omega
   have hNe : strandVertex B gamma q ≠ rightEndpoint B :=
     strandVertex_ne_rightEndpoint B gamma q hqLt
@@ -103,8 +103,8 @@ private theorem theta_oneLength_rigid
     (u v : B.graph.V)
     (hPair : (u = strandVertex B gamma p ∧ v = strandVertex B gamma q) ∨
       (u = strandVertex B gamma q ∧ v = strandVertex B gamma p)) :
-    ¬ linear_equiv B.graph (one_chip u + one_chip v)
-      (canonical_divisor B.graph) := by
+    ¬ linearEquiv B.graph (oneChip u + oneChip v)
+      (canonicalDivisor B.graph) := by
   have hpPos : 0 < p.val := by omega
   have hNe : strandVertex B gamma p ≠ leftEndpoint B :=
     strandVertex_ne_leftEndpoint B gamma p hpPos

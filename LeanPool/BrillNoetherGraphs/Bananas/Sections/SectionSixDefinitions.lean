@@ -36,7 +36,7 @@ def OnceMarkedBrillNoetherGeneral (G : CFGraph) (v : G.V) : Prop :=
 finite normalized witness predicate.  This is the form suited to the vertex
 wedge rank formula, while the definition above is the literal paper wording. -/
 theorem onceMarkedBrillNoetherGeneral_iff_normalized
-    {G : CFGraph} (hconn : graph_connected G) (v : G.V) :
+    {G : CFGraph} (hconn : graphConnected G) (v : G.V) :
     OnceMarkedBrillNoetherGeneral G v ↔
       ∀ lambda : YoungDiagram,
         OnceMarkedBNExists G v lambda → (lambda.card : ℤ) ≤ genus G := by

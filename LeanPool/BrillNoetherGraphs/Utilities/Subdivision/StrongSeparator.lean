@@ -28,7 +28,7 @@ For an ordinary strong separator, choose a component of the complement of
 give `pathCut`, while acyclicity gives `oneEdge`.  Formalizing that standard
 component-to-certificate construction, in particular for subdivided cores,
 is deliberately left as future graph-plumbing work; the soundness theorem
-below is complete and uses only the public `q_reduced` API.
+below is complete and uses only the public `qReduced` API.
 -/
 
 namespace Utilities.Certificate.StrongSeparator
@@ -39,19 +39,19 @@ variable {G : CFGraph}
 
 /-- The divisor class of `D` reaches `v` after one chip is removed. -/
 def Reaches (G : CFGraph) (D : CFDiv G) (v : G.V) : Prop :=
-  winnable G (D - one_chip v)
+  winnable G (D - oneChip v)
 
 /-- Total edge multiplicity from `v` into `C`, as an integer. -/
 def intoMultiplicity (G : CFGraph) (C : Finset G.V) (v : G.V) : ℤ :=
-  ∑ x ∈ C, (num_edges G v x : ℤ)
+  ∑ x ∈ C, (numEdges G v x : ℤ)
 
 /-- A vertex outside `C` is on its boundary when it has a positive-multiplicity
 edge into `C`. -/
 def IsBoundary (G : CFGraph) (C : Finset G.V) (v : G.V) : Prop :=
-  ∃ x ∈ C, 0 < num_edges G v x
+  ∃ x ∈ C, 0 < numEdges G v x
 
 /-- Borrow once on every vertex of `C`. -/
-def borrowScript (C : Finset G.V) : firing_script G :=
+def borrowScript (C : Finset G.V) : firingScript G :=
   fun v => if v ∈ C then -1 else 0
 
 theorem intoMultiplicity_nonneg (C : Finset G.V) (v : G.V) :
@@ -60,16 +60,16 @@ theorem intoMultiplicity_nonneg (C : Finset G.V) (v : G.V) :
 
 theorem edge_le_intoMultiplicity {C : Finset G.V} {v x : G.V}
     (hx : x ∈ C) :
-    (num_edges G v x : ℤ) ≤ intoMultiplicity G C v := by
+    (numEdges G v x : ℤ) ≤ intoMultiplicity G C v := by
   exact Finset.single_le_sum
-    (fun y _ => Int.natCast_nonneg (num_edges G v y)) hx
+    (fun y _ => Int.natCast_nonneg (numEdges G v y)) hx
 
 theorem edge_le_outdeg_S {A : Finset G.V} {v x : G.V}
     (hx : x ∉ A) :
-    (num_edges G v x : ℤ) ≤ outdeg_S G A v := by
-  unfold outdeg_S
+    (numEdges G v x : ℤ) ≤ outdegreeSet G A v := by
+  unfold outdegreeSet
   apply Finset.single_le_sum
-    (fun y _ => Int.natCast_nonneg (num_edges G v y))
+    (fun y _ => Int.natCast_nonneg (numEdges G v y))
   simp [hx]
 
 theorem intoMultiplicity_eq_zero_of_not_boundary
@@ -77,7 +77,7 @@ theorem intoMultiplicity_eq_zero_of_not_boundary
     intoMultiplicity G C v = 0 := by
   apply Finset.sum_eq_zero
   intro x hx
-  have hzero : num_edges G v x = 0 := by
+  have hzero : numEdges G v x = 0 := by
     apply Nat.eq_zero_of_not_pos
     intro hpos
     exact h ⟨x, hx, hpos⟩
@@ -85,49 +85,49 @@ theorem intoMultiplicity_eq_zero_of_not_boundary
 
 theorem prin_indicator_script_of_mem {A : Finset G.V} {v : G.V}
     (hv : v ∈ A) :
-    prin G (indicator_script G A) v = -outdeg_S G A v := by
+    prin G (indicatorScript G A) v = -outdegreeSet G A v := by
   change
-    (∑ u : G.V, (indicator_script G A u - indicator_script G A v) *
-      (num_edges G v u : ℤ)) = _
-  rw [show indicator_script G A v = 1 by simp [indicator_script, hv]]
-  rw [outdeg_S, ← Finset.sum_neg_distrib]
+    (∑ u : G.V, (indicatorScript G A u - indicatorScript G A v) *
+      (numEdges G v u : ℤ)) = _
+  rw [show indicatorScript G A v = 1 by simp [indicatorScript, hv]]
+  rw [outdegreeSet, ← Finset.sum_neg_distrib]
   rw [← Finset.sum_subset (Finset.subset_univ Aᶜ)]
   · apply Finset.sum_congr rfl
     intro u hu
     have huA : u ∉ A := by simpa using hu
-    simp [indicator_script, huA]
+    simp [indicatorScript, huA]
   · intro u _ hu
     have huA : u ∈ A := by simpa using hu
-    simp [indicator_script, huA]
+    simp [indicatorScript, huA]
 
 theorem prin_indicator_script_of_not_mem {A : Finset G.V} {v : G.V}
     (hv : v ∉ A) :
-    prin G (indicator_script G A) v = intoMultiplicity G A v := by
+    prin G (indicatorScript G A) v = intoMultiplicity G A v := by
   change
-    (∑ u : G.V, (indicator_script G A u - indicator_script G A v) *
-      (num_edges G v u : ℤ)) = _
-  rw [show indicator_script G A v = 0 by simp [indicator_script, hv]]
+    (∑ u : G.V, (indicatorScript G A u - indicatorScript G A v) *
+      (numEdges G v u : ℤ)) = _
+  rw [show indicatorScript G A v = 0 by simp [indicatorScript, hv]]
   simp only [sub_zero, intoMultiplicity]
   calc
-    (∑ u : G.V, indicator_script G A u * (num_edges G v u : ℤ)) =
-        ∑ u ∈ A, indicator_script G A u * (num_edges G v u : ℤ) := by
+    (∑ u : G.V, indicatorScript G A u * (numEdges G v u : ℤ)) =
+        ∑ u ∈ A, indicatorScript G A u * (numEdges G v u : ℤ) := by
       symm
       apply Finset.sum_subset (Finset.subset_univ A)
       intro u _ hu
-      simp [indicator_script, hu]
-    _ = ∑ u ∈ A, (num_edges G v u : ℤ) := by
+      simp [indicatorScript, hu]
+    _ = ∑ u ∈ A, (numEdges G v u : ℤ) := by
       apply Finset.sum_congr rfl
       intro u hu
-      simp [indicator_script, hu]
+      simp [indicatorScript, hu]
 
 theorem borrowScript_eq_neg_indicator_script (C : Finset G.V) :
-    borrowScript C = -(indicator_script G C : firing_script G) := by
+    borrowScript C = -(indicatorScript G C : firingScript G) := by
   funext v
-  by_cases hv : v ∈ C <;> simp [borrowScript, indicator_script, hv]
+  by_cases hv : v ∈ C <;> simp [borrowScript, indicatorScript, hv]
 
 theorem prin_borrowScript_of_mem {C : Finset G.V} {v : G.V}
     (hv : v ∈ C) :
-    prin G (borrowScript C) v = outdeg_S G C v := by
+    prin G (borrowScript C) v = outdegreeSet G C v := by
   rw [borrowScript_eq_neg_indicator_script, map_neg, Pi.neg_apply,
     prin_indicator_script_of_mem hv]
   simp
@@ -140,42 +140,42 @@ theorem prin_borrowScript_of_not_mem {C : Finset G.V} {v : G.V}
 
 /-- Removing a chip at the reduction vertex preserves reducedness. -/
 theorem qReduced_sub_one_chip {q : G.V} {D : CFDiv G}
-    (hReduced : q_reduced G q D) :
-    q_reduced G q (D - one_chip q) := by
+    (hReduced : qReduced G q D) :
+    qReduced G q (D - oneChip q) := by
   refine ⟨?_, ?_⟩
   · intro v hv
-    simp [one_chip, hv, hReduced.1 v hv]
+    simp [oneChip, hv, hReduced.1 v hv]
   · intro A hA hNonempty hLegal
     apply hReduced.2 A hA hNonempty
     intro v hvA
     have hvq : v ≠ q := fun hvq => hA (hvq ▸ hvA)
-    simpa [one_chip, hvq] using hLegal v hvA
+    simpa [oneChip, hvq] using hLegal v hvA
 
 /-- Subtracting the same chip from linearly equivalent divisors preserves
 linear equivalence. -/
 theorem linearEquiv_sub_one_chip {D E : CFDiv G}
-    (hEquiv : linear_equiv G D E) (v : G.V) :
-    linear_equiv G (D - one_chip v) (E - one_chip v) := by
-  unfold linear_equiv at hEquiv ⊢
+    (hEquiv : linearEquiv G D E) (v : G.V) :
+    linearEquiv G (D - oneChip v) (E - oneChip v) := by
+  unfold linearEquiv at hEquiv ⊢
   have hDifference :
-      (E - one_chip v) - (D - one_chip v) = E - D := by
+      (E - oneChip v) - (D - oneChip v) = E - D := by
     abel
   rwa [hDifference]
 
 /-- An effective representative carrying a chip at `v` proves that the
 original divisor reaches `v`. -/
 theorem reaches_of_effective_representative {D E : CFDiv G} {v : G.V}
-    (hEquiv : linear_equiv G D E) (hEffective : effective E)
+    (hEquiv : linearEquiv G D E) (hEffective : effective E)
     (hChip : 1 ≤ E v) :
     Reaches G D v := by
-  apply winnable_equiv_winnable G (E - one_chip v) (D - one_chip v)
+  apply winnable_equiv_winnable G (E - oneChip v) (D - oneChip v)
   · apply winnable_of_effective
     intro x
     by_cases hx : x = v
     · subst x
-      simp only [Pi.sub_apply, one_chip, ↓reduceIte, Int.sub_nonneg]
+      simp only [Pi.sub_apply, oneChip, ↓reduceIte, Int.sub_nonneg]
       omega
-    · simpa [one_chip, hx] using hEffective x
+    · simpa [oneChip, hx] using hEffective x
   · exact (linearEquiv_sub_one_chip hEquiv v).symm
 
 /-- The finite complementary cell used by the strong-separator argument. -/
@@ -188,7 +188,7 @@ structure ExpansionCell (G : CFGraph) (R : Finset G.V) where
   anchor_boundary : IsBoundary G carrier anchor
   /-- Every edge leaving the cell lands in the reached enlargement. -/
   closed : ∀ {x y : G.V}, x ∈ carrier → y ∉ carrier →
-    0 < num_edges G x y → y ∈ R
+    0 < numEdges G x y → y ∈ R
   /-- A reached vertex has at most one edge, counted with multiplicity, into
   this complementary cell. -/
   oneEdge : ∀ {y : G.V}, y ∈ R → intoMultiplicity G carrier y ≤ 1
@@ -197,9 +197,9 @@ structure ExpansionCell (G : CFGraph) (R : Finset G.V) where
   pathCut : ∀ {t : G.V}, t ∈ R → IsBoundary G carrier t →
     ∀ A : Finset G.V, anchor ∈ A → t ∉ A →
       (∃ x ∈ carrier, x ∉ A ∧
-        ∃ y ∈ A, 0 < num_edges G x y) ∨
+        ∃ y ∈ A, 0 < numEdges G x y) ∨
       (∃ x ∈ carrier, x ∈ A ∧
-        ∃ y, y ∉ A ∧ 0 < num_edges G x y)
+        ∃ y, y ∉ A ∧ 0 < numEdges G x y)
 
 /-- A transparent strong-separator certificate: every proper enlargement of
 `S` has a complementary cell with the exact tree/path cut data above. -/
@@ -208,9 +208,9 @@ def StrongSeparatorCertificate (G : CFGraph) (S : Finset G.V) : Prop :=
     Nonempty (ExpansionCell G R)
 
 /-- Adding an explicit principal divisor does not change a divisor class. -/
-theorem linearEquiv_add_prin (D : CFDiv G) (script : firing_script G) :
-    linear_equiv G D (D + prin G script) := by
-  unfold linear_equiv
+theorem linearEquiv_add_prin (D : CFDiv G) (script : firingScript G) :
+    linearEquiv G D (D + prin G script) := by
+  unfold linearEquiv
   rw [add_sub_cancel_left]
   exact (principal_iff_eq_prin G (prin G script)).2 ⟨script, rfl⟩
 
@@ -221,7 +221,7 @@ The proof enlarges `S` to the finite set of all vertices reached by `D`.  A
 certificate cell for a hypothetical proper enlargement then supplies a new
 reached vertex, a contradiction. -/
 theorem rank_ge_one_of_strongSeparatorCertificate
-    (hConnected : graph_connected G) {S : Finset G.V}
+    (hConnected : graphConnected G) {S : Finset G.V}
     (hSNonempty : S.Nonempty)
     (hSeparator : StrongSeparatorCertificate G S)
     {D : CFDiv G}
@@ -245,14 +245,14 @@ theorem rank_ge_one_of_strongSeparatorCertificate
     obtain ⟨Dred, hEquiv, hReduced⟩ :=
       exists_q_reduced_representative hConnected cell.anchor D
     have hWinReducedSub :
-        winnable G (Dred - one_chip cell.anchor) :=
+        winnable G (Dred - oneChip cell.anchor) :=
       winnable_equiv_winnable G
-        (D - one_chip cell.anchor) (Dred - one_chip cell.anchor)
+        (D - oneChip cell.anchor) (Dred - oneChip cell.anchor)
         hAnchorReach (linearEquiv_sub_one_chip hEquiv cell.anchor)
     have hReducedSub :
-        q_reduced G cell.anchor (Dred - one_chip cell.anchor) :=
+        qReduced G cell.anchor (Dred - oneChip cell.anchor) :=
       qReduced_sub_one_chip hReduced
-    have hEffectiveSub : effective (Dred - one_chip cell.anchor) :=
+    have hEffectiveSub : effective (Dred - oneChip cell.anchor) :=
       effective_of_winnable_and_q_reduced G cell.anchor _
         hWinReducedSub hReducedSub
     have hEffectiveRed : effective Dred := by
@@ -260,12 +260,12 @@ theorem rank_ge_one_of_strongSeparatorCertificate
       by_cases hv : v = cell.anchor
       · subst v
         have h := hEffectiveSub cell.anchor
-        simp only [Pi.sub_apply, one_chip, ↓reduceIte, Int.sub_nonneg] at h
+        simp only [Pi.sub_apply, oneChip, ↓reduceIte, Int.sub_nonneg] at h
         omega
-      · simpa [one_chip, hv] using hEffectiveSub v
+      · simpa [oneChip, hv] using hEffectiveSub v
     have hAnchorChip : 1 ≤ Dred cell.anchor := by
       have h := hEffectiveSub cell.anchor
-      simp only [Pi.sub_apply, one_chip, ↓reduceIte, Int.sub_nonneg] at h
+      simp only [Pi.sub_apply, oneChip, ↓reduceIte, Int.sub_nonneg] at h
       omega
     have hPositiveMemR {v : G.V} (hv : 1 ≤ Dred v) : v ∈ R := by
       have hReach : Reaches G D v :=
@@ -284,7 +284,7 @@ theorem rank_ge_one_of_strongSeparatorCertificate
       exact (Finset.disjoint_left.mp cell.disjoint) hs cell.anchor_mem
     by_cases hAllBoundaryChips :
         ∀ y : G.V, y ∈ R → IsBoundary G cell.carrier y → 1 ≤ Dred y
-    · let script : firing_script G := borrowScript cell.carrier
+    · let script : firingScript G := borrowScript cell.carrier
       let E : CFDiv G := Dred + prin G script
       have hEffectiveE : effective E := by
         intro v
@@ -305,23 +305,23 @@ theorem rank_ge_one_of_strongSeparatorCertificate
           · have hvBoundary : ¬IsBoundary G cell.carrier v := by
               intro hBoundary
               obtain ⟨x, hxCarrier, hxv⟩ := hBoundary
-              have hxv' : 0 < num_edges G x v := by
+              have hxv' : 0 < numEdges G x v := by
                 rwa [num_edges_symmetric]
               exact hvR (cell.closed hxCarrier hvCarrier hxv')
             rw [intoMultiplicity_eq_zero_of_not_boundary hvBoundary]
             simpa using hEffectiveRed v
       obtain ⟨x, hxCarrier, hAnchorX⟩ := cell.anchor_boundary
-      have hXAnchor : 0 < num_edges G x cell.anchor := by
+      have hXAnchor : 0 < numEdges G x cell.anchor := by
         rwa [num_edges_symmetric]
-      have hEdgeInt : 1 ≤ (num_edges G x cell.anchor : ℤ) := by
+      have hEdgeInt : 1 ≤ (numEdges G x cell.anchor : ℤ) := by
         exact_mod_cast hXAnchor
-      have hOutPositive : 1 ≤ outdeg_S G cell.carrier x :=
+      have hOutPositive : 1 ≤ outdegreeSet G cell.carrier x :=
         le_trans hEdgeInt (edge_le_outdeg_S hAnchorNotCarrier)
       have hEChip : 1 ≤ E x := by
         change 1 ≤ Dred x + prin G (borrowScript cell.carrier) x
         rw [prin_borrowScript_of_mem hxCarrier, hZeroCarrier x hxCarrier]
         simpa using hOutPositive
-      have hDE : linear_equiv G D E :=
+      have hDE : linearEquiv G D E :=
         hEquiv.trans (linearEquiv_add_prin Dred script)
       have hxReach : Reaches G D x :=
         reaches_of_effective_representative hDE hEffectiveE hEChip
@@ -335,22 +335,22 @@ theorem rank_ge_one_of_strongSeparatorCertificate
         omega
       have htReach : Reaches G D t := by
         simpa only [R, Finset.mem_filter, Finset.mem_univ, true_and] using htR
-      have hNotTReduced : ¬q_reduced G t Dred := by
+      have hNotTReduced : ¬qReduced G t Dred := by
         intro hTReduced
-        have hWinTSub : winnable G (Dred - one_chip t) :=
-          winnable_equiv_winnable G (D - one_chip t)
-            (Dred - one_chip t) htReach
+        have hWinTSub : winnable G (Dred - oneChip t) :=
+          winnable_equiv_winnable G (D - oneChip t)
+            (Dred - oneChip t) htReach
             (linearEquiv_sub_one_chip hEquiv t)
-        have hEffTSub : effective (Dred - one_chip t) :=
+        have hEffTSub : effective (Dred - oneChip t) :=
           effective_of_winnable_and_q_reduced G t _ hWinTSub
             (qReduced_sub_one_chip hTReduced)
         have h := hEffTSub t
-        simp [one_chip, htZero] at h
-      have hTqEffective : q_effective t Dred := by
+        simp [oneChip, htZero] at h
+      have hTqEffective : qEffective t Dred := by
         intro v _
         exact hEffectiveRed v
       have hBurnFailure :
-          ¬(∀ A : Finset G.V, t ∉ A → A.Nonempty → ¬legal_set G Dred A) := by
+          ¬(∀ A : Finset G.V, t ∉ A → A.Nonempty → ¬legalSet G Dred A) := by
         intro hBurn
         exact hNotTReduced ⟨hTqEffective, hBurn⟩
       push Not at hBurnFailure
@@ -359,24 +359,24 @@ theorem rank_ge_one_of_strongSeparatorCertificate
         by_contra hAnchorNotA
         exact hReduced.2 A hAnchorNotA hANonempty hLegal
       have hEffectiveFire :
-          effective (Dred + prin G (indicator_script G A)) := by
+          effective (Dred + prin G (indicatorScript G A)) := by
         rw [← set_firing_eq_add_prin_indicator_script]
         exact effective_set_firing_of_legal_set G hEffectiveRed hLegal
       rcases cell.pathCut htR htBoundary A hAnchorA htNotA with
         hIncoming | hOutgoing
       · obtain ⟨x, hxCarrier, hxNotA, y, hyA, hxy⟩ := hIncoming
-        have hEdgeInt : 1 ≤ (num_edges G x y : ℤ) := by
+        have hEdgeInt : 1 ≤ (numEdges G x y : ℤ) := by
           exact_mod_cast hxy
         have hIntoPositive : 1 ≤ intoMultiplicity G A x :=
           le_trans hEdgeInt (edge_le_intoMultiplicity hyA)
         have hFiredChip :
-            1 ≤ (Dred + prin G (indicator_script G A)) x := by
+            1 ≤ (Dred + prin G (indicatorScript G A)) x := by
           rw [Pi.add_apply, prin_indicator_script_of_not_mem hxNotA,
             hZeroCarrier x hxCarrier]
           simpa using hIntoPositive
         have hDFired :
-            linear_equiv G D (Dred + prin G (indicator_script G A)) :=
-          hEquiv.trans (linearEquiv_add_prin Dred (indicator_script G A))
+            linearEquiv G D (Dred + prin G (indicatorScript G A)) :=
+          hEquiv.trans (linearEquiv_add_prin Dred (indicatorScript G A))
         have hxReach : Reaches G D x :=
           reaches_of_effective_representative hDFired hEffectiveFire
             hFiredChip
@@ -384,9 +384,9 @@ theorem rank_ge_one_of_strongSeparatorCertificate
           simpa only [R, Finset.mem_filter, Finset.mem_univ, true_and]
         exact ((Finset.disjoint_left.mp cell.disjoint) hxCarrier hxR).elim
       · obtain ⟨x, hxCarrier, hxA, y, hyNotA, hxy⟩ := hOutgoing
-        have hEdgeInt : 1 ≤ (num_edges G x y : ℤ) := by
+        have hEdgeInt : 1 ≤ (numEdges G x y : ℤ) := by
           exact_mod_cast hxy
-        have hOutPositive : 1 ≤ outdeg_S G A x :=
+        have hOutPositive : 1 ≤ outdegreeSet G A x :=
           le_trans hEdgeInt (edge_le_outdeg_S hyNotA)
         have hNoDebtX := hLegal x hxA
         rw [hZeroCarrier x hxCarrier] at hNoDebtX

@@ -91,7 +91,7 @@ def OnceMarkedCensusContains (G : CFGraph) (u : G.V)
     ∀ i : ℕ,
       rank G
         (D + ((i : ℤ) + genus G - deg D - (onceMarkedPart lambda i : ℤ)) •
-          one_chip u) ≥ (i : ℤ)
+          oneChip u) ≥ (i : ℤ)
 
 /-- The normalized form of membership of `lambda` in the divisor census of
 the once-marked graph `(G,u)`. -/
@@ -100,7 +100,7 @@ def OnceMarkedBNExists (G : CFGraph) (u : G.V)
   ∃ D : CFDiv G,
     deg D = genus G ∧
     ∀ c ∈ onceMarkedCorners lambda,
-      rank G (D + c.1 • one_chip u) ≥ c.2.2
+      rank G (D + c.1 • oneChip u) ≥ c.2.2
 
 /-- Once-marked Brill--Noether existence for `(G,u)`: every Young diagram of
 size at most the genus occurs in its divisor census. -/
@@ -112,7 +112,7 @@ def OnceMarkedBNExistence (G : CFGraph) (u : G.V) : Prop :=
 /-- The once-marked Brill--Noether existence conjecture for finite connected
 graphs. -/
 def OnceMarkedBNConjecture : Prop :=
-  ∀ (G : CFGraph.{uOnceMarked}), graph_connected G →
+  ∀ (G : CFGraph.{uOnceMarked}), graphConnected G →
     ∀ u : G.V, OnceMarkedBNExistence G u
 
 /-- Row-indexed form of `OnceMarkedBNExists`.  This is convenient both for
@@ -124,7 +124,7 @@ theorem onceMarkedBNExists_iff_rank_rows
         deg D = genus G ∧
         ∀ (i : ℕ) (hi : i < lambda.rowLens.length),
           rank G
-            (D + ((i : ℤ) - (lambda.rowLens[i] : ℤ)) • one_chip u) ≥
+            (D + ((i : ℤ) - (lambda.rowLens[i] : ℤ)) • oneChip u) ≥
               (i : ℤ) := by
   unfold OnceMarkedBNExists onceMarkedCorners
   simp only [List.forall_mem_map, List.forall_mem_zipIdx']
@@ -141,7 +141,7 @@ theorem onceMarkedBNExists_iff_rank_cells
         deg D = genus G ∧
         ∀ (i j : ℕ), (i, j) ∈ lambda →
           rank G
-            (D + ((i : ℤ) - (j : ℤ) - 1) • one_chip u) ≥ (i : ℤ) := by
+            (D + ((i : ℤ) - (j : ℤ) - 1) • oneChip u) ≥ (i : ℤ) := by
   rw [onceMarkedBNExists_iff_rank_rows]
   constructor
   · rintro ⟨D, hDegree, hRows⟩
@@ -163,11 +163,11 @@ theorem onceMarkedBNExists_iff_rank_cells
       dsimp [k]
       omega
     have hTransport := rank_add_nsmul_one_chip_ge
-      (D + ((i : ℤ) - (lambda.rowLen i : ℤ)) • one_chip u) u k
+      (D + ((i : ℤ) - (lambda.rowLen i : ℤ)) • oneChip u) u k
     have hRewrite :
-        (D + ((i : ℤ) - (lambda.rowLen i : ℤ)) • one_chip u) +
-            (k : ℤ) • one_chip u =
-          D + ((i : ℤ) - (j : ℤ) - 1) • one_chip u := by
+        (D + ((i : ℤ) - (lambda.rowLen i : ℤ)) • oneChip u) +
+            (k : ℤ) • oneChip u =
+          D + ((i : ℤ) - (j : ℤ) - 1) • oneChip u := by
       funext v
       simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
       rw [hk]
@@ -189,8 +189,8 @@ theorem onceMarkedBNExists_iff_rank_cells
       omega
     have hCell := hCells i j (YoungDiagram.mem_iff_lt_rowLen.mpr hj)
     have hRewrite :
-        D + ((i : ℤ) - (j : ℤ) - 1) • one_chip u =
-          D + ((i : ℤ) - (lambda.rowLens[i] : ℤ)) • one_chip u := by
+        D + ((i : ℤ) - (j : ℤ) - 1) • oneChip u =
+          D + ((i : ℤ) - (lambda.rowLens[i] : ℤ)) • oneChip u := by
       funext v
       simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
       rw [hjCast]
@@ -202,7 +202,7 @@ theorem onceMarkedBNExists_iff_rank_cells
 The extra `2u` normalizes the degree; twisting a divisor at the marked point
 does not change its Weierstrass partition. -/
 def onceMarkedDualDivisor (G : CFGraph) (u : G.V) (D : CFDiv G) : CFDiv G :=
-  canonical_divisor G - D + (2 : ℤ) • one_chip u
+  canonicalDivisor G - D + (2 : ℤ) • oneChip u
 
 @[simp] theorem deg_onceMarkedDualDivisor
     {G : CFGraph} (u : G.V) (D : CFDiv G)
@@ -214,18 +214,18 @@ def onceMarkedDualDivisor (G : CFGraph) (u : G.V) (D : CFDiv G) : CFDiv G :=
 
 /-- Exact marked Riemann--Roch identity for a normalized divisor. -/
 theorem rank_onceMarkedDualDivisor_add_zsmul
-    {G : CFGraph} (hG : graph_connected G) (u : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u : G.V)
     (D : CFDiv G) (hDegree : deg D = genus G) (ell : ℤ) :
-    rank G (onceMarkedDualDivisor G u D + ell • one_chip u) =
-      rank G (D - (ell + 2) • one_chip u) + ell + 1 := by
-  let X : CFDiv G := D - (ell + 2) • one_chip u
+    rank G (onceMarkedDualDivisor G u D + ell • oneChip u) =
+      rank G (D - (ell + 2) • oneChip u) + ell + 1 := by
+  let X : CFDiv G := D - (ell + 2) • oneChip u
   have hXDegree : deg X = genus G - (ell + 2) := by
     dsimp [X]
     rw [deg.map_sub, map_zsmul, deg_one_chip, hDegree]
     ring
   have hComplement :
-      canonical_divisor G - X =
-        onceMarkedDualDivisor G u D + ell • one_chip u := by
+      canonicalDivisor G - X =
+        onceMarkedDualDivisor G u D + ell • oneChip u := by
     dsimp [X, onceMarkedDualDivisor]
     funext v
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
@@ -237,7 +237,7 @@ theorem rank_onceMarkedDualDivisor_add_zsmul
 /-- A normalized witness for `lambda` dualizes to a normalized witness for
 the transposed Young diagram. -/
 theorem onceMarkedBNExists_transpose
-    {G : CFGraph} (hG : graph_connected G) (u : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u : G.V)
     (lambda : YoungDiagram) :
     OnceMarkedBNExists G u lambda →
       OnceMarkedBNExists G u lambda.transpose := by
@@ -248,13 +248,13 @@ theorem onceMarkedBNExists_transpose
     deg_onceMarkedDualDivisor u D hDegree, ?_⟩
   intro i j hij
   have hSource :
-      rank G (D + ((j : ℤ) - (i : ℤ) - 1) • one_chip u) ≥ (j : ℤ) :=
+      rank G (D + ((j : ℤ) - (i : ℤ) - 1) • oneChip u) ≥ (j : ℤ) :=
     hCells j i (by simpa using hij)
   have hRR := rank_onceMarkedDualDivisor_add_zsmul
     hG u D hDegree ((i : ℤ) - (j : ℤ) - 1)
   have hSourceRewrite :
-      D - (((i : ℤ) - (j : ℤ) - 1) + 2) • one_chip u =
-        D + ((j : ℤ) - (i : ℤ) - 1) • one_chip u := by
+      D - (((i : ℤ) - (j : ℤ) - 1) + 2) • oneChip u =
+        D + ((j : ℤ) - (i : ℤ) - 1) • oneChip u := by
     funext v
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
     ring
@@ -265,7 +265,7 @@ theorem onceMarkedBNExists_transpose
 /-- Once-marked Brill--Noether existence is invariant under transposing the
 partition. -/
 theorem onceMarkedBNExists_transpose_iff
-    {G : CFGraph} (hG : graph_connected G) (u : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u : G.V)
     (lambda : YoungDiagram) :
     OnceMarkedBNExists G u lambda ↔
       OnceMarkedBNExists G u lambda.transpose := by
@@ -278,14 +278,14 @@ theorem onceMarkedBNExists_transpose_iff
 /-- On a connected graph, degree normalization and the Riemann tail identify
 the original all-row census test with the finite positive-row test. -/
 theorem onceMarkedCensusContains_iff_onceMarkedBNExists
-    {G : CFGraph} (hG : graph_connected G) (u : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u : G.V)
     (lambda : YoungDiagram) :
     OnceMarkedCensusContains G u lambda ↔
       OnceMarkedBNExists G u lambda := by
   rw [onceMarkedBNExists_iff_rank_rows]
   constructor
   · rintro ⟨E, hE⟩
-    let D : CFDiv G := E + (genus G - deg E) • one_chip u
+    let D : CFDiv G := E + (genus G - deg E) • oneChip u
     refine ⟨D, ?_, ?_⟩
     · dsimp [D]
       rw [deg.map_add, map_zsmul, deg_one_chip]
@@ -295,9 +295,9 @@ theorem onceMarkedCensusContains_iff_onceMarkedBNExists
         exact List.getD_eq_getElem lambda.rowLens 0 hi
       have hRank := hE i
       have hTwist :
-          D + ((i : ℤ) - (lambda.rowLens[i] : ℤ)) • one_chip u =
+          D + ((i : ℤ) - (lambda.rowLens[i] : ℤ)) • oneChip u =
             E + ((i : ℤ) + genus G - deg E -
-              (onceMarkedPart lambda i : ℤ)) • one_chip u := by
+              (onceMarkedPart lambda i : ℤ)) • oneChip u := by
         rw [hPart]
         dsimp [D]
         funext v
@@ -314,8 +314,8 @@ theorem onceMarkedCensusContains_iff_onceMarkedBNExists
       have hRank := hRows i hi
       have hTwist :
           D + ((i : ℤ) + genus G - deg D -
-              (onceMarkedPart lambda i : ℤ)) • one_chip u =
-            D + ((i : ℤ) - (lambda.rowLens[i] : ℤ)) • one_chip u := by
+              (onceMarkedPart lambda i : ℤ)) • oneChip u =
+            D + ((i : ℤ) - (lambda.rowLens[i] : ℤ)) • oneChip u := by
         rw [hDegree, hPart]
         congr 2
         ring
@@ -324,11 +324,11 @@ theorem onceMarkedCensusContains_iff_onceMarkedBNExists
     · have hPart : onceMarkedPart lambda i = 0 := by
         exact List.getD_eq_default _ _ (Nat.le_of_not_gt hi)
       have hRank := rank_ge_deg_sub_genus hG
-        (D + (i : ℤ) • one_chip u)
+        (D + (i : ℤ) • oneChip u)
       have hTwist :
           D + ((i : ℤ) + genus G - deg D -
-              (onceMarkedPart lambda i : ℤ)) • one_chip u =
-            D + (i : ℤ) • one_chip u := by
+              (onceMarkedPart lambda i : ℤ)) • oneChip u =
+            D + (i : ℤ) • oneChip u := by
         rw [hDegree, hPart]
         congr 2
         ring
@@ -354,7 +354,7 @@ def GrassmannianPartitionProfile (tau : AspPerm)
 existence condition exactly the once-marked divisor-census condition.  In
 particular, the result is independent of the auxiliary second mark. -/
 theorem transmissionExists_iff_onceMarkedBNExists
-    {G : CFGraph} (hG : graph_connected G) (u v : G.V)
+    {G : CFGraph} (hG : graphConnected G) (u v : G.V)
     (tau : AspPerm) (lambda : YoungDiagram)
     (hProfile : GrassmannianPartitionProfile tau lambda) :
     TransmissionExists G u v tau ↔ OnceMarkedBNExists G u lambda := by

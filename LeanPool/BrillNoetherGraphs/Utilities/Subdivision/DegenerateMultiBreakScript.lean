@@ -44,12 +44,12 @@ theorem effective_of_cases {D : CFDiv d.graph}
 /-- An effective representative carrying a chip at a target vertex witnesses
 reachability there.  It works verbatim on closed faces, including when core
 vertices have merged. -/
-theorem reaches_of_script (D : CFDiv d.graph) (script : firing_script d.graph)
+theorem reaches_of_script (D : CFDiv d.graph) (script : firingScript d.graph)
     (q : d.graph.V) (hEffective : effective (D + prin d.graph script))
     (hChip : 1 ≤ (D + prin d.graph script) q) :
     StrongSeparator.Reaches d.graph D q := by
   refine StrongSeparator.reaches_of_effective_representative ?_ hEffective hChip
-  unfold linear_equiv
+  unfold linearEquiv
   rw [principal_iff_eq_prin]
   exact ⟨script, by abel⟩
 
@@ -62,7 +62,7 @@ def breakValue (potential : Fin n → ℤ) (breaks : Fin p → List (ℕ × ℤ)
 
 /-- The concrete multi-break firing script on a contracted subdivision. -/
 def breakScript (potential : Fin n → ℤ) (breaks : Fin p → List (ℕ × ℤ)) :
-    firing_script d.graph :=
+    firingScript d.graph :=
   d.slotValueScript potential (d.breakValue potential breaks)
 
 /-- Closing condition for a multi-break script, including zero slots. -/

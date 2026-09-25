@@ -24,12 +24,12 @@ theorem rankDelta_mapDiv_of_marks
     (D : CFDiv M.graph) :
     rankDelta N (φ.mapDiv D) = rankDelta M D := by
   unfold rankDelta
-  have hU : φ.mapDiv (D - one_chip M.u) = φ.mapDiv D - one_chip N.u := by
+  have hU : φ.mapDiv (D - oneChip M.u) = φ.mapDiv D - oneChip N.u := by
     rw [map_sub, φ.mapDiv_one_chip, hu]
-  have hV : φ.mapDiv (D - one_chip M.v) = φ.mapDiv D - one_chip N.v := by
+  have hV : φ.mapDiv (D - oneChip M.v) = φ.mapDiv D - oneChip N.v := by
     rw [map_sub, φ.mapDiv_one_chip, hv]
-  have hUV : φ.mapDiv (D - one_chip M.u - one_chip M.v) =
-      φ.mapDiv D - one_chip N.u - one_chip N.v := by
+  have hUV : φ.mapDiv (D - oneChip M.u - oneChip M.v) =
+      φ.mapDiv D - oneChip N.u - oneChip N.v := by
     rw [map_sub, map_sub, φ.mapDiv_one_chip, φ.mapDiv_one_chip, hu, hv]
   rw [← hUV, ← hU, ← hV, φ.rank_mapDiv, φ.rank_mapDiv,
     φ.rank_mapDiv, φ.rank_mapDiv]
@@ -42,18 +42,18 @@ theorem torsionWitness_mapDiv_of_marks_iff
   constructor
   · rintro ⟨hk, h⟩
     refine ⟨hk, ?_⟩
-    have hDiv : φ.mapDiv ((k : ℤ) • (one_chip M.u - one_chip M.v)) =
-        (k : ℤ) • (one_chip N.u - one_chip N.v) := by
+    have hDiv : φ.mapDiv ((k : ℤ) • (oneChip M.u - oneChip M.v)) =
+        (k : ℤ) • (oneChip N.u - oneChip N.v) := by
       rw [map_zsmul, map_sub, φ.mapDiv_one_chip, φ.mapDiv_one_chip, hu, hv]
-    have hMapped : linear_equiv N.graph
-        (φ.mapDiv ((k : ℤ) • (one_chip M.u - one_chip M.v))) 0 := by
+    have hMapped : linearEquiv N.graph
+        (φ.mapDiv ((k : ℤ) • (oneChip M.u - oneChip M.v))) 0 := by
       rw [hDiv]
       exact h
     exact (φ.linear_equiv_mapDiv_iff _ 0).mp hMapped
   · rintro ⟨hk, h⟩
     refine ⟨hk, ?_⟩
-    have hDiv : φ.mapDiv ((k : ℤ) • (one_chip M.u - one_chip M.v)) =
-        (k : ℤ) • (one_chip N.u - one_chip N.v) := by
+    have hDiv : φ.mapDiv ((k : ℤ) • (oneChip M.u - oneChip M.v)) =
+        (k : ℤ) • (oneChip N.u - oneChip N.v) := by
       rw [map_zsmul, map_sub, φ.mapDiv_one_chip, φ.mapDiv_one_chip, hu, hv]
     have hMapped := (φ.linear_equiv_mapDiv_iff _ 0).mpr h
     rw [hDiv] at hMapped
@@ -112,8 +112,8 @@ theorem isTransmissionPermutation_mapDiv_of_marks_iff
     refine ⟨hBij, ?_⟩
     intro a b
     have h := hRows a b
-    have hTwist' : φ.mapDiv (D + a • one_chip M.u - b • one_chip M.v) =
-        φ.mapDiv D + a • one_chip N.u - b • one_chip N.v := by
+    have hTwist' : φ.mapDiv (D + a • oneChip M.u - b • oneChip M.v) =
+        φ.mapDiv D + a • oneChip N.u - b • oneChip N.v := by
       simpa [twist, sub_eq_add_neg] using hTwist a b
     rw [← hTwist', rankDelta_mapDiv_of_marks φ hu hv] at h
     exact h
@@ -121,8 +121,8 @@ theorem isTransmissionPermutation_mapDiv_of_marks_iff
     refine ⟨hBij, ?_⟩
     intro a b
     have h := hRows a b
-    have hTwist' : φ.mapDiv (D + a • one_chip M.u - b • one_chip M.v) =
-        φ.mapDiv D + a • one_chip N.u - b • one_chip N.v := by
+    have hTwist' : φ.mapDiv (D + a • oneChip M.u - b • oneChip M.v) =
+        φ.mapDiv D + a • oneChip N.u - b • oneChip N.v := by
       simpa [twist, sub_eq_add_neg] using hTwist a b
     rw [← hTwist', rankDelta_mapDiv_of_marks φ hu hv]
     exact h

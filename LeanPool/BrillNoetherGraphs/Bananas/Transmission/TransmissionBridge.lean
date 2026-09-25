@@ -54,12 +54,12 @@ This is the translation lemma between the two transmission formalisms.  The
 `AspPerm` is the one whose slipface is the marked rank surface of `D - u`, and
 `σ.s (a + 1) b` is exactly `rank (D + a·u - b·v) + 1`. -/
 theorem exists_aspPerm_rank_eq_of_isTransmissionPermutation
-    {G : CFGraph} (u v : G.V) (hconn : _root_.graph_connected G)
+    {G : CFGraph} (u v : G.V) (hconn : _root_.graphConnected G)
     (D : CFDiv G) (τ : ℤ → ℤ)
     (hτ : IsTransmissionPermutation (mark G u v) D τ) :
     ∃ σ : AspPerm, σ.func = τ ∧
       ∀ a b : ℤ,
-        rank G (D + a • one_chip u - b • one_chip v) = σ.s (a + 1) b - 1 := by
+        rank G (D + a • oneChip u - b • oneChip v) = σ.s (a + 1) b - 1 := by
   obtain ⟨σ, hσFunc, _hσSlip⟩ :=
     transmissionPermutation_rankSlipFace (mark G u v) D hconn τ hτ
   refine ⟨σ, hσFunc, ?_⟩
@@ -69,10 +69,10 @@ theorem exists_aspPerm_rank_eq_of_isTransmissionPermutation
   -- coercion is a cheap projection-of-constructor step; leaving the
   -- projections in place would instead leave `omega` with atoms that do not
   -- match syntactically.
-  have hSE : rank G (D + a • one_chip u - b • one_chip v) + 1 =
-      ((southeast_set τ (a + 1) b).ncard : ℤ) :=
+  have hSE : rank G (D + a • oneChip u - b • oneChip v) + 1 =
+      ((southeastSet τ (a + 1) b).ncard : ℤ) :=
     transmission_rank_eq_southeast_ncard (mark G u v) D hconn τ hτ a b
-  have hs : σ.s (a + 1) b = ((southeast_set τ (a + 1) b).ncard : ℤ) := by
+  have hs : σ.s (a + 1) b = ((southeastSet τ (a + 1) b).ncard : ℤ) := by
     rw [AspPerm.s_eq_ncard, hσFunc]
   omega
 
@@ -82,7 +82,7 @@ theorem exists_aspPerm_rank_eq_of_isTransmissionPermutation
 Unlike `satisfiesTransmission_of_isTransmissionPermutation` this needs no
 degree hypothesis, because `SatisfiesTransmissionOn` carries none. -/
 theorem satisfiesTransmissionOn_of_isTransmissionPermutation
-    {G : CFGraph} (u v : G.V) (hconn : _root_.graph_connected G)
+    {G : CFGraph} (u v : G.V) (hconn : _root_.graphConnected G)
     (D : CFDiv G) (τ : ℤ → ℤ)
     (hτ : IsTransmissionPermutation (mark G u v) D τ)
     (S : Set (ℤ × ℤ)) :
@@ -105,7 +105,7 @@ permutation of `D` it follows from Riemann-Roch.  Evaluating
 with `rank (D - u) + 1` and `rank (K - (D - u)) + 1`, so
 `χ(σ) = rank (D - u) - rank (K - (D - u)) = deg (D - u) - g + 1 = deg D - g`. -/
 theorem degree_eq_genus_add_chi_of_isTransmissionPermutation
-    {G : CFGraph} (u v : G.V) (hconn : _root_.graph_connected G)
+    {G : CFGraph} (u v : G.V) (hconn : _root_.graphConnected G)
     (D : CFDiv G) (τ : ℤ → ℤ)
     (hτ : IsTransmissionPermutation (mark G u v) D τ)
     (σ : AspPerm) (hσFunc : σ.func = τ) :
@@ -114,37 +114,37 @@ theorem degree_eq_genus_add_chi_of_isTransmissionPermutation
   have hχ : σ.χ = σ.s 0 0 - (σ⁻¹).s 0 0 := by
     have := σ.s_eq 0 0
     omega
-  have hSE : σ.s 0 0 = ((southeast_set τ 0 0).ncard : ℤ) := by
+  have hSE : σ.s 0 0 = ((southeastSet τ 0 0).ncard : ℤ) := by
     rw [AspPerm.s_eq_ncard, hσFunc]
-  have hNW : (σ⁻¹).s 0 0 = ((northwest_set τ 0 0).ncard : ℤ) := by
+  have hNW : (σ⁻¹).s 0 0 = ((northwestSet τ 0 0).ncard : ℤ) := by
     rw [AspPerm.s'_eq_ncard, hσFunc]
   -- The two counting lemmas at `(a, b) = (-1, 0)`.
-  have hRankSE : rank G (D - one_chip u) + 1 =
-      ((southeast_set τ 0 0).ncard : ℤ) := by
-    have h : rank G (D + (-1 : ℤ) • one_chip u - (0 : ℤ) • one_chip v) + 1 =
-        ((southeast_set τ ((-1 : ℤ) + 1) 0).ncard : ℤ) :=
+  have hRankSE : rank G (D - oneChip u) + 1 =
+      ((southeastSet τ 0 0).ncard : ℤ) := by
+    have h : rank G (D + (-1 : ℤ) • oneChip u - (0 : ℤ) • oneChip v) + 1 =
+        ((southeastSet τ ((-1 : ℤ) + 1) 0).ncard : ℤ) :=
       transmission_rank_eq_southeast_ncard (mark G u v) D hconn τ hτ (-1) 0
-    have hDiv : D + (-1 : ℤ) • one_chip u - (0 : ℤ) • one_chip v =
-        D - one_chip u := by
+    have hDiv : D + (-1 : ℤ) • oneChip u - (0 : ℤ) • oneChip v =
+        D - oneChip u := by
       rw [neg_one_zsmul, zero_zsmul]
       abel
     rw [hDiv] at h
     simpa using h
-  have hRankNW : rank G (canonical_divisor G - (D - one_chip u)) + 1 =
-      ((northwest_set τ 0 0).ncard : ℤ) := by
-    have h : rank G (canonical_divisor G - D - (-1 : ℤ) • one_chip u +
-          (0 : ℤ) • one_chip v) + 1 =
-        ((northwest_set τ ((-1 : ℤ) + 1) 0).ncard : ℤ) :=
+  have hRankNW : rank G (canonicalDivisor G - (D - oneChip u)) + 1 =
+      ((northwestSet τ 0 0).ncard : ℤ) := by
+    have h : rank G (canonicalDivisor G - D - (-1 : ℤ) • oneChip u +
+          (0 : ℤ) • oneChip v) + 1 =
+        ((northwestSet τ ((-1 : ℤ) + 1) 0).ncard : ℤ) :=
       transmission_complement_rank_eq_northwest_ncard (mark G u v) D
         hconn τ hτ (-1) 0
-    have hDiv : canonical_divisor G - D - (-1 : ℤ) • one_chip u +
-        (0 : ℤ) • one_chip v = canonical_divisor G - (D - one_chip u) := by
+    have hDiv : canonicalDivisor G - D - (-1 : ℤ) • oneChip u +
+        (0 : ℤ) • oneChip v = canonicalDivisor G - (D - oneChip u) := by
       rw [neg_one_zsmul, zero_zsmul]
       abel
     rw [hDiv] at h
     simpa using h
-  have hRR := riemann_roch_for_graphs hconn (D - one_chip u)
-  have hDeg : deg (D - one_chip u) = deg D - 1 := by
+  have hRR := riemann_roch_for_graphs hconn (D - oneChip u)
+  have hDeg : deg (D - oneChip u) = deg D - 1 := by
     rw [deg.map_sub, deg_one_chip]
   omega
 
@@ -153,7 +153,7 @@ gives an `AspPerm` satisfying `Utilities.SatisfiesTransmission` for `D`.
 
 This gives a direct construction of a `SatisfiesTransmission` witness. -/
 theorem satisfiesTransmission_of_isTransmissionPermutation
-    {G : CFGraph} (u v : G.V) (hconn : _root_.graph_connected G)
+    {G : CFGraph} (u v : G.V) (hconn : _root_.graphConnected G)
     (D : CFDiv G) (τ : ℤ → ℤ)
     (hτ : IsTransmissionPermutation (mark G u v) D τ) :
     ∃ σ : AspPerm, σ.func = τ ∧ SatisfiesTransmission G u v σ D := by

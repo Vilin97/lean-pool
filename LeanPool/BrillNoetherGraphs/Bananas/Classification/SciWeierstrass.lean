@@ -25,7 +25,7 @@ open Utilities
 value.  The relevant position is `-s_i`, correcting the missing minus sign in
 the prose proof of Proposition 6.10. -/
 theorem transmission_neg_poleOrder_nonpos
-    {G : CFGraph} (u v : G.V) (hG : _root_.graph_connected G)
+    {G : CFGraph} (u v : G.V) (hG : _root_.graphConnected G)
     (D : CFDiv G) (tau : ℤ → ℤ)
     (hTau : IsTransmissionPermutation (mark G u v) D tau) (i : ℕ) :
     tau (-poleOrder G v D i) ≤ 0 := by
@@ -37,14 +37,14 @@ theorem transmission_neg_poleOrder_nonpos
   have hAtFormula := hRank 0 (-poleOrder G v D i)
   have hBeforeFormula := hRank 0 (-(poleOrder G v D i - 1))
   have hAtDiv :
-      D + (0 : ℤ) • one_chip u - (-poleOrder G v D i) • one_chip v =
-        D + poleOrder G v D i • one_chip v := by
+      D + (0 : ℤ) • oneChip u - (-poleOrder G v D i) • oneChip v =
+        D + poleOrder G v D i • oneChip v := by
     funext w
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
     ring
   have hBeforeDiv :
-      D + (0 : ℤ) • one_chip u - (-(poleOrder G v D i - 1)) • one_chip v =
-        D + (poleOrder G v D i - 1) • one_chip v := by
+      D + (0 : ℤ) • oneChip u - (-(poleOrder G v D i - 1)) • oneChip v =
+        D + (poleOrder G v D i - 1) • oneChip v := by
     funext w
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
     ring
@@ -67,7 +67,7 @@ theorem transmission_neg_poleOrder_nonpos
 /-- Every nonpositive transmission value occurs at exactly one negated pole
 order. -/
 theorem exists_eq_neg_poleOrder_of_transmission_nonpos
-    {G : CFGraph} (u v : G.V) (hG : _root_.graph_connected G)
+    {G : CFGraph} (u v : G.V) (hG : _root_.graphConnected G)
     (D : CFDiv G) (tau : ℤ → ℤ)
     (hTau : IsTransmissionPermutation (mark G u v) D tau)
     {b : ℤ} (hb : tau b ≤ 0) :
@@ -77,34 +77,34 @@ theorem exists_eq_neg_poleOrder_of_transmission_nonpos
   have hbSigma : sigma b < 1 := by rw [hFunc]; omega
   have hStep := (sigma.b_step_one_iff 1 b).mpr hbSigma
   let ell : ℤ := -b
-  let r : ℤ := rank G (D + ell • one_chip v)
+  let r : ℤ := rank G (D + ell • oneChip v)
   have hAtFormula := hRank 0 b
   have hBeforeFormula := hRank 0 (b + 1)
   have hAtDiv :
-      D + (0 : ℤ) • one_chip u - b • one_chip v =
-        D + ell • one_chip v := by
+      D + (0 : ℤ) • oneChip u - b • oneChip v =
+        D + ell • oneChip v := by
     dsimp [ell]
     funext w
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
     ring
   have hBeforeDiv :
-      D + (0 : ℤ) • one_chip u - (b + 1) • one_chip v =
-        D + (ell - 1) • one_chip v := by
+      D + (0 : ℤ) • oneChip u - (b + 1) • oneChip v =
+        D + (ell - 1) • oneChip v := by
     dsimp [ell]
     funext w
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
     ring
   rw [hAtDiv] at hAtFormula
   rw [hBeforeDiv] at hBeforeFormula
-  have hAtFormula' : rank G (D + ell • one_chip v) =
+  have hAtFormula' : rank G (D + ell • oneChip v) =
       sigma.s 1 b - 1 := by simpa using hAtFormula
-  have hBeforeFormula' : rank G (D + (ell - 1) • one_chip v) =
+  have hBeforeFormula' : rank G (D + (ell - 1) • oneChip v) =
       sigma.s 1 (b + 1) - 1 := by simpa using hBeforeFormula
   have hrFormula : r = sigma.s 1 b - 1 := by
     dsimp [r]
     exact hAtFormula'
   have hBeforeRank :
-      rank G (D + (ell - 1) • one_chip v) = r - 1 := by
+      rank G (D + (ell - 1) • oneChip v) = r - 1 := by
     rw [hStep] at hBeforeFormula'
     omega
   have hrNonneg : 0 ≤ r := by
@@ -124,28 +124,28 @@ theorem exists_eq_neg_poleOrder_of_transmission_nonpos
 /-- The northwest fiber at the negated `i`th pole has cardinality the `i`th
 Weierstrass part. -/
 theorem northwest_ncard_neg_poleOrder_eq_weierstrassPart
-    {G : CFGraph} (u v : G.V) (hG : _root_.graph_connected G)
+    {G : CFGraph} (u v : G.V) (hG : _root_.graphConnected G)
     (D : CFDiv G) (tau : ℤ → ℤ)
     (hTau : IsTransmissionPermutation (mark G u v) D tau) (i : ℕ) :
-    (northwest_set tau 1 (-poleOrder G v D i)).ncard =
+    (northwestSet tau 1 (-poleOrder G v D i)).ncard =
       weierstrassPart G v D i := by
   have hNW := transmission_complement_rank_eq_northwest_ncard
     (mark G u v) D hG tau hTau 0 (-poleOrder G v D i)
   change rank G
-      (canonical_divisor G - D - (0 : ℤ) • one_chip u +
-        (-poleOrder G v D i) • one_chip v) + 1 =
-      ((northwest_set tau 1 (-poleOrder G v D i)).ncard : ℤ) at hNW
+      (canonicalDivisor G - D - (0 : ℤ) • oneChip u +
+        (-poleOrder G v D i) • oneChip v) + 1 =
+      ((northwestSet tau 1 (-poleOrder G v D i)).ncard : ℤ) at hNW
   have hXRank := rank_poleOrder_eq hG v D i
-  let X : CFDiv G := D + poleOrder G v D i • one_chip v
+  let X : CFDiv G := D + poleOrder G v D i • oneChip v
   have hRR := riemann_roch_for_graphs hG X
   have hDegree : deg X = deg D + poleOrder G v D i := by
     dsimp [X]
     rw [deg.map_add, map_zsmul, deg_one_chip]
     norm_num
   have hComplement :
-      canonical_divisor G - D - (0 : ℤ) • one_chip u +
-          (-poleOrder G v D i) • one_chip v =
-        canonical_divisor G - X := by
+      canonicalDivisor G - D - (0 : ℤ) • oneChip u +
+          (-poleOrder G v D i) • oneChip v =
+        canonicalDivisor G - X := by
     dsimp [X]
     funext w
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
@@ -155,19 +155,19 @@ theorem northwest_ncard_neg_poleOrder_eq_weierstrassPart
   rw [hComplement] at hNW
   rw [hXRank, hDegree] at hRR
   exact_mod_cast (show
-    ((northwest_set tau 1 (-poleOrder G v D i)).ncard : ℤ) =
+    ((northwestSet tau 1 (-poleOrder G v D i)).ncard : ℤ) =
       (weierstrassPart G v D i : ℤ) by omega)
 
 /-- The sign-changing inversions in the row with second coordinate `b`. -/
 def sciRow (tau : ℤ → ℤ) (b : ℤ) : Set (ℤ × ℤ) :=
-  (fun a : ℤ => (a, b)) '' northwest_set tau 1 b
+  (fun a : ℤ => (a, b)) '' northwestSet tau 1 b
 
 theorem sciRow_ncard (tau : ℤ → ℤ) (b : ℤ) :
-    (sciRow tau b).ncard = (northwest_set tau 1 b).ncard := by
+    (sciRow tau b).ncard = (northwestSet tau 1 b).ncard := by
   exact Set.ncard_image_of_injective _ (fun _ _ h => by simpa using congrArg Prod.fst h)
 
 theorem sci_eq_weierstrassSize
-    {G : CFGraph} (u v : G.V) (hG : _root_.graph_connected G)
+    {G : CFGraph} (u v : G.V) (hG : _root_.graphConnected G)
     (D : CFDiv G) (tau : ℤ → ℤ)
     (hTau : IsTransmissionPermutation (mark G u v) D tau) :
     sci tau = weierstrassSize hG v D := by
@@ -200,12 +200,12 @@ theorem sci_eq_weierstrassSize
       rcases hp with ⟨hpLt, hpPos, hpNonpos⟩
       obtain ⟨i, hiPole⟩ :=
         exists_eq_neg_poleOrder_of_transmission_nonpos u v hG D tau hTau hpNonpos
-      have hNWmem : p.1 ∈ northwest_set tau 1 p.2 := by
+      have hNWmem : p.1 ∈ northwestSet tau 1 p.2 := by
         exact ⟨hpLt, by omega⟩
-      have hNWfinite : (northwest_set tau 1 p.2).Finite := by
+      have hNWfinite : (northwestSet tau 1 p.2).Finite := by
         rw [← hFunc]
         exact sigma.nw_finite 1 p.2
-      have hNWpos : 0 < (northwest_set tau 1 p.2).ncard :=
+      have hNWpos : 0 < (northwestSet tau 1 p.2).ncard :=
         (Set.ncard_pos hNWfinite).mpr ⟨p.1, hNWmem⟩
       have hPartPos : 0 < weierstrassPart G v D i := by
         rw [hiPole,

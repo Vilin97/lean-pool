@@ -102,74 +102,74 @@ divisor is effective. -/
 
 /-- Extend a firing script on the left factor by zero on the right. -/
 def liftLeftScript (G : CFGraph.{u}) (H : CFGraph.{v})
-    (x : G.V) (y : H.V) (σ : firing_script G) :
-    firing_script (bridgeGraph G H x y) :=
+    (x : G.V) (y : H.V) (σ : firingScript G) :
+    firingScript (bridgeGraph G H x y) :=
   Sum.elim σ (fun _ => 0)
 
 /-- Extend a firing script on the right factor by zero on the left. -/
 def liftRightScript (G : CFGraph.{u}) (H : CFGraph.{v})
-    (x : G.V) (y : H.V) (σ : firing_script H) :
-    firing_script (bridgeGraph G H x y) :=
+    (x : G.V) (y : H.V) (σ : firingScript H) :
+    firingScript (bridgeGraph G H x y) :=
   Sum.elim (fun _ => 0) σ
 
 @[simp] theorem liftLeftScript_inl
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script G) (a : G.V) :
+    (σ : firingScript G) (a : G.V) :
     liftLeftScript G H x y σ (Sum.inl a) = σ a := rfl
 
 @[simp] theorem liftLeftScript_inr
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script G) (b : H.V) :
+    (σ : firingScript G) (b : H.V) :
     liftLeftScript G H x y σ (Sum.inr b) = 0 := rfl
 
 @[simp] theorem liftRightScript_inl
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script H) (a : G.V) :
+    (σ : firingScript H) (a : G.V) :
     liftRightScript G H x y σ (Sum.inl a) = 0 := rfl
 
 @[simp] theorem liftRightScript_inr
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script H) (b : H.V) :
+    (σ : firingScript H) (b : H.V) :
     liftRightScript G H x y σ (Sum.inr b) = σ b := rfl
 
 /-- Extend a left-factor script constantly across the right factor, using its
 value at the bridge endpoint. This introduces no firing across the bridge. -/
 def extendLeftScript (G : CFGraph.{u}) (H : CFGraph.{v})
-    (x : G.V) (y : H.V) (σ : firing_script G) :
-    firing_script (bridgeGraph G H x y) :=
+    (x : G.V) (y : H.V) (σ : firingScript G) :
+    firingScript (bridgeGraph G H x y) :=
   Sum.elim σ (fun _ => σ x)
 
 /-- Extend a right-factor script constantly across the left factor, using its
 value at the bridge endpoint. This introduces no firing across the bridge. -/
 def extendRightScript (G : CFGraph.{u}) (H : CFGraph.{v})
-    (x : G.V) (y : H.V) (σ : firing_script H) :
-    firing_script (bridgeGraph G H x y) :=
+    (x : G.V) (y : H.V) (σ : firingScript H) :
+    firingScript (bridgeGraph G H x y) :=
   Sum.elim (fun _ => σ y) σ
 
 @[simp] theorem extendLeftScript_inl
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script G) (a : G.V) :
+    (σ : firingScript G) (a : G.V) :
     extendLeftScript G H x y σ (Sum.inl a) = σ a := rfl
 
 @[simp] theorem extendLeftScript_inr
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script G) (b : H.V) :
+    (σ : firingScript G) (b : H.V) :
     extendLeftScript G H x y σ (Sum.inr b) = σ x := rfl
 
 @[simp] theorem extendRightScript_inl
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script H) (a : G.V) :
+    (σ : firingScript H) (a : G.V) :
     extendRightScript G H x y σ (Sum.inl a) = σ y := rfl
 
 @[simp] theorem extendRightScript_inr
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script H) (b : H.V) :
+    (σ : firingScript H) (b : H.V) :
     extendRightScript G H x y σ (Sum.inr b) = σ b := rfl
 /-- Endpoint-constant extension carries a principal divisor from the left
 factor to its zero extension on the bridge graph. -/
 theorem prin_extendLeftScript
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script G) :
+    (σ : firingScript G) :
     prin (bridgeGraph G H x y) (extendLeftScript G H x y σ) =
       liftLeftDivisor G H x y (prin G σ) := by
   funext z
@@ -178,17 +178,17 @@ theorem prin_extendLeftScript
       change
         (∑ z : Sum G.V H.V,
           (extendLeftScript G H x y σ z - σ a) *
-            (num_edges (bridgeGraph G H x y) (Sum.inl a) z : ℤ)) =
+            (numEdges (bridgeGraph G H x y) (Sum.inl a) z : ℤ)) =
           (prin G σ) a
       rw [Fintype.sum_sum_type]
       simp only [extendLeftScript_inl, extendLeftScript_inr,
         num_edges_bridgeGraph_inl, num_edges_bridgeGraph_inl_inr]
       change
-        (∑ p : G.V, (σ p - σ a) * (num_edges G a p : ℤ)) +
+        (∑ p : G.V, (σ p - σ a) * (numEdges G a p : ℤ)) +
             ∑ q : H.V,
               (σ x - σ a) *
                 (((if a = x ∧ q = y then 1 else 0) : ℕ) : ℤ) =
-          ∑ p : G.V, (σ p - σ a) * (num_edges G a p : ℤ)
+          ∑ p : G.V, (σ p - σ a) * (numEdges G a p : ℤ)
       by_cases ha : a = x
       · subst a
         simp
@@ -197,10 +197,10 @@ theorem prin_extendLeftScript
       change
         (∑ z : Sum G.V H.V,
           (extendLeftScript G H x y σ z - σ x) *
-            (num_edges (bridgeGraph G H x y) (Sum.inr b) z : ℤ)) = 0
+            (numEdges (bridgeGraph G H x y) (Sum.inr b) z : ℤ)) = 0
       rw [Fintype.sum_sum_type]
       have hCross (a : G.V) :
-          num_edges (bridgeGraph G H x y) (Sum.inr b) (Sum.inl a) =
+          numEdges (bridgeGraph G H x y) (Sum.inr b) (Sum.inl a) =
             if a = x ∧ b = y then 1 else 0 := by
         rw [num_edges_symmetric]
         exact num_edges_bridgeGraph_inl_inr G H x y a b
@@ -217,7 +217,7 @@ theorem prin_extendLeftScript
 factor to its zero extension on the bridge graph. -/
 theorem prin_extendRightScript
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    (σ : firing_script H) :
+    (σ : firingScript H) :
     prin (bridgeGraph G H x y) (extendRightScript G H x y σ) =
       liftRightDivisor G H x y (prin H σ) := by
   funext z
@@ -226,7 +226,7 @@ theorem prin_extendRightScript
       change
         (∑ z : Sum G.V H.V,
           (extendRightScript G H x y σ z - σ y) *
-            (num_edges (bridgeGraph G H x y) (Sum.inl a) z : ℤ)) = 0
+            (numEdges (bridgeGraph G H x y) (Sum.inl a) z : ℤ)) = 0
       rw [Fintype.sum_sum_type]
       simp_rw [extendRightScript_inl, extendRightScript_inr,
         num_edges_bridgeGraph_inl, num_edges_bridgeGraph_inl_inr]
@@ -241,11 +241,11 @@ theorem prin_extendRightScript
       change
         (∑ z : Sum G.V H.V,
           (extendRightScript G H x y σ z - σ b) *
-            (num_edges (bridgeGraph G H x y) (Sum.inr b) z : ℤ)) =
+            (numEdges (bridgeGraph G H x y) (Sum.inr b) z : ℤ)) =
           (prin H σ) b
       rw [Fintype.sum_sum_type]
       have hCross (a : G.V) :
-          num_edges (bridgeGraph G H x y) (Sum.inr b) (Sum.inl a) =
+          numEdges (bridgeGraph G H x y) (Sum.inr b) (Sum.inl a) =
             if a = x ∧ b = y then 1 else 0 := by
         rw [num_edges_symmetric]
         exact num_edges_bridgeGraph_inl_inr G H x y a b
@@ -255,8 +255,8 @@ theorem prin_extendRightScript
         (∑ p : G.V,
           (σ y - σ b) *
             (((if p = x ∧ b = y then 1 else 0) : ℕ) : ℤ)) +
-            ∑ q : H.V, (σ q - σ b) * (num_edges H b q : ℤ) =
-          ∑ q : H.V, (σ q - σ b) * (num_edges H b q : ℤ)
+            ∑ q : H.V, (σ q - σ b) * (numEdges H b q : ℤ) =
+          ∑ q : H.V, (σ q - σ b) * (numEdges H b q : ℤ)
       by_cases hb : b = y
       · subst b
         simp
@@ -265,10 +265,10 @@ theorem prin_extendRightScript
 zero extension to the bridge graph. -/
 theorem linear_equiv_liftLeftDivisor
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    {D E : CFDiv G} (hDE : linear_equiv G D E) :
-    linear_equiv (bridgeGraph G H x y)
+    {D E : CFDiv G} (hDE : linearEquiv G D E) :
+    linearEquiv (bridgeGraph G H x y)
       (liftLeftDivisor G H x y D) (liftLeftDivisor G H x y E) := by
-  unfold linear_equiv at hDE ⊢
+  unfold linearEquiv at hDE ⊢
   obtain ⟨σ, hσ⟩ := (principal_iff_eq_prin G (E - D)).mp hDE
   apply (principal_iff_eq_prin (bridgeGraph G H x y)
     (liftLeftDivisor G H x y E - liftLeftDivisor G H x y D)).mpr
@@ -282,10 +282,10 @@ theorem linear_equiv_liftLeftDivisor
 zero extension to the bridge graph. -/
 theorem linear_equiv_liftRightDivisor
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
-    {D E : CFDiv H} (hDE : linear_equiv H D E) :
-    linear_equiv (bridgeGraph G H x y)
+    {D E : CFDiv H} (hDE : linearEquiv H D E) :
+    linearEquiv (bridgeGraph G H x y)
       (liftRightDivisor G H x y D) (liftRightDivisor G H x y E) := by
-  unfold linear_equiv at hDE ⊢
+  unfold linearEquiv at hDE ⊢
   obtain ⟨σ, hσ⟩ := (principal_iff_eq_prin H (E - D)).mp hDE
   apply (principal_iff_eq_prin (bridgeGraph G H x y)
     (liftRightDivisor G H x y E - liftRightDivisor G H x y D)).mpr
@@ -318,7 +318,7 @@ theorem winnable_liftRightDivisor
 
 /-- The firing script which is one on the left factor and zero on the right. -/
 def leftSideIndicator (G : CFGraph.{u}) (H : CFGraph.{v})
-    (x : G.V) (y : H.V) : firing_script (bridgeGraph G H x y) :=
+    (x : G.V) (y : H.V) : firingScript (bridgeGraph G H x y) :=
   liftLeftScript G H x y (fun _ => 1)
 
 @[simp] theorem leftSideIndicator_inl
@@ -335,7 +335,7 @@ side once moves one chip from the left endpoint to the right endpoint. -/
 theorem prin_leftSideIndicator
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) :
     prin (bridgeGraph G H x y) (leftSideIndicator G H x y) =
-      one_chip (Sum.inr y) - one_chip (Sum.inl x) := by
+      oneChip (Sum.inr y) - oneChip (Sum.inl x) := by
   funext z
   cases z with
   | inl a =>
@@ -343,11 +343,11 @@ theorem prin_leftSideIndicator
         (∑ z : Sum G.V H.V,
           (leftSideIndicator G H x y z -
               leftSideIndicator G H x y (Sum.inl a)) *
-            (num_edges (bridgeGraph G H x y) (Sum.inl a) z : ℤ)) =
-          (one_chip (G := bridgeGraph G H x y) (Sum.inr y)) (Sum.inl a) -
-            (one_chip (G := bridgeGraph G H x y) (Sum.inl x)) (Sum.inl a)
+            (numEdges (bridgeGraph G H x y) (Sum.inl a) z : ℤ)) =
+          (oneChip (G := bridgeGraph G H x y) (Sum.inr y)) (Sum.inl a) -
+            (oneChip (G := bridgeGraph G H x y) (Sum.inl x)) (Sum.inl a)
       rw [Fintype.sum_sum_type]
-      simp [one_chip]
+      simp [oneChip]
       by_cases ha : a = x
       · subst a
         simp
@@ -357,17 +357,17 @@ theorem prin_leftSideIndicator
         (∑ z : Sum G.V H.V,
           (leftSideIndicator G H x y z -
               leftSideIndicator G H x y (Sum.inr b)) *
-            (num_edges (bridgeGraph G H x y) (Sum.inr b) z : ℤ)) =
-          (one_chip (G := bridgeGraph G H x y) (Sum.inr y)) (Sum.inr b) -
-            (one_chip (G := bridgeGraph G H x y) (Sum.inl x)) (Sum.inr b)
+            (numEdges (bridgeGraph G H x y) (Sum.inr b) z : ℤ)) =
+          (oneChip (G := bridgeGraph G H x y) (Sum.inr y)) (Sum.inr b) -
+            (oneChip (G := bridgeGraph G H x y) (Sum.inl x)) (Sum.inr b)
       rw [Fintype.sum_sum_type]
       have hCross (a : G.V) :
-          num_edges (bridgeGraph G H x y) (Sum.inr b) (Sum.inl a) =
+          numEdges (bridgeGraph G H x y) (Sum.inr b) (Sum.inl a) =
             if a = x ∧ b = y then 1 else 0 := by
         rw [num_edges_symmetric]
         exact num_edges_bridgeGraph_inl_inr G H x y a b
       simp_rw [hCross]
-      simp [one_chip]
+      simp [oneChip]
       by_cases hb : b = y
       · subst b
         simp

@@ -14,12 +14,12 @@ Every gonality *upper* bound in this repository is witnessed by a divisor and a
 firing script.  This module supplies the missing other half: a small, checkable
 witness that a given divisor **does not** have positive rank.
 
-The obstacle is that `q_reduced` (in the chip-firing dependency) quantifies over
+The obstacle is that `qReduced` (in the chip-firing dependency) quantifies over
 *all* subsets of `V \ {q}`, so deciding it directly costs `2^{n-1}`.  A
 **burning order** replaces that quantifier by an `n`-step linear check:
 
 > a list `π = (q = u₀, u₁, …)` containing every vertex, in which every entry
-> after the first satisfies `D(uⱼ) < Σ_{i<j} num_edges G uⱼ uᵢ`.
+> after the first satisfies `D(uⱼ) < Σ_{i<j} numEdges G uⱼ uᵢ`.
 
 Soundness (`qReduced_of_burningOrder`): given a nonempty `S ⊆ V \ {q}`, the
 *least* index `j` with `uⱼ ∈ S` has all its predecessors outside `S`, so the
@@ -58,7 +58,7 @@ def BurningOrder (G : CFGraph) (D : CFDiv G) (v : G.V) (order : List G.V) :
   order.head? = some v ∧ (∀ w : G.V, w ∈ order) ∧
     ∀ i : Fin order.length, 0 < i.val →
       D (order.get i) <
-        ∑ w ∈ (order.take i.val).toFinset, (num_edges G (order.get i) w : ℤ)
+        ∑ w ∈ (order.take i.val).toFinset, (numEdges G (order.get i) w : ℤ)
 
 instance (D : CFDiv G) (v : G.V) (order : List G.V) :
     Decidable (BurningOrder G D v order) := by
@@ -66,10 +66,10 @@ instance (D : CFDiv G) (v : G.V) (order : List G.V) :
   infer_instance
 
 /-- **Soundness of a burning order.**  It certifies `q`-reducedness, replacing
-the `2^{n-1}` subset quantifier of `q_reduced` by an `n`-step check. -/
+the `2^{n-1}` subset quantifier of `qReduced` by an `n`-step check. -/
 theorem qReduced_of_burningOrder {D : CFDiv G} {v : G.V} {order : List G.V}
-    (hEff : q_effective v D) (h : BurningOrder G D v order) :
-    q_reduced G v D := by
+    (hEff : qEffective v D) (h : BurningOrder G D v order) :
+    qReduced G v D := by
   classical
   obtain ⟨hHead, hAll, hStep⟩ := h
   refine ⟨hEff, ?_⟩
@@ -116,7 +116,7 @@ theorem qReduced_of_burningOrder {D : CFDiv G} {v : G.V} {order : List G.V}
     exact absurd ⟨hiOrder, by rw [hgetEq]; exact hxS⟩ (Nat.find_min hP hilt)
   have hstep := hStep ⟨Nat.find hP, hjlt⟩ hjpos
   simp only [List.get_eq_getElem] at hstep
-  have hlt : D (order[Nat.find hP]'hjlt) < outdeg_S G S (order[Nat.find hP]'hjlt) := by
+  have hlt : D (order[Nat.find hP]'hjlt) < outdegreeSet G S (order[Nat.find hP]'hjlt) := by
     rw [outdeg_S_eq_sum_filter]
     exact lt_of_lt_of_le hstep
       (Finset.sum_le_sum_of_subset_of_nonneg hPred fun _ _ _ => Int.natCast_nonneg _)
@@ -133,18 +133,18 @@ The proof is two lines of divisor bookkeeping on top of
 divisor of positive rank carries a chip at `q`
 (`one_le_apply_of_q_reduced_of_rank_geq_one`). -/
 theorem not_rank_ge_one_of_burningOrder
-    {D : CFDiv G} {v : G.V} {x : firing_script G} {order : List G.V}
-    (hEff : q_effective v (D + prin G x))
+    {D : CFDiv G} {v : G.V} {x : firingScript G} {order : List G.V}
+    (hEff : qEffective v (D + prin G x))
     (hOrder : BurningOrder G (D + prin G x) v order)
     (hzero : (D + prin G x) v ≤ 0) : ¬ (rank G D ≥ 1) := by
   intro hrank
-  have hequiv : linear_equiv G D (D + prin G x) := by
-    show (D + prin G x) - D ∈ principal_divisors G
+  have hequiv : linearEquiv G D (D + prin G x) := by
+    show (D + prin G x) - D ∈ principalDivisors G
     rw [principal_iff_eq_prin]
     exact ⟨x, by ring⟩
   have hrank' : rank G (D + prin G x) ≥ 1 := by
     rwa [← Utilities.rank_eq_of_linear_equiv G hequiv]
-  have hred : q_reduced G v (D + prin G x) := qReduced_of_burningOrder hEff hOrder
+  have hred : qReduced G v (D + prin G x) := qReduced_of_burningOrder hEff hOrder
   have := one_le_apply_of_q_reduced_of_rank_geq_one hred hrank'
   omega
 
@@ -154,7 +154,7 @@ structure RankZeroCertificate (G : CFGraph) (D : CFDiv G) where
   /-- The base point of the reduction. -/
   vertex : G.V
   /-- The firing script carrying `D` to its `vertex`-reduced representative. -/
-  script : firing_script G
+  script : firingScript G
   /-- A burning order recording a run of Dhar's algorithm as data. -/
   order : List G.V
 
@@ -167,12 +167,12 @@ def reduced : CFDiv G := D + prin G c.script
 
 /-- Everything the certificate must satisfy, as one decidable proposition. -/
 def Valid : Prop :=
-  q_effective c.vertex c.reduced ∧
+  qEffective c.vertex c.reduced ∧
     BurningOrder G c.reduced c.vertex c.order ∧
     c.reduced c.vertex ≤ 0
 
 instance : Decidable c.Valid := by
-  unfold Valid q_effective
+  unfold Valid qEffective
   infer_instance
 
 theorem not_rank_ge_one (h : c.Valid) :

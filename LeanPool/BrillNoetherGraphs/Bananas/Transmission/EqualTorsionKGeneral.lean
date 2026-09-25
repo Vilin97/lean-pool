@@ -80,7 +80,7 @@ private theorem kInversionCount_comp_intShift_le
   refine Set.ncard_le_ncard_of_injOn
     (fun p => normalizeFirstPair k (translatePair c p)) ?_ ?_ hfin
   · rintro p hp
-    have hInv : translatePair c p ∈ inv_set α.func := by
+    have hInv : translatePair c p ∈ invSet α.func := by
       rcases hp with ⟨hlt, hinv, -, -⟩
       refine ⟨?_, hinv⟩
       omega
@@ -94,13 +94,13 @@ private theorem kInversionCount_comp_intShift_le
     exact h
 
 private theorem eq_intShift_of_inv_set_eq_empty
-    (β : AspPerm) (hinv : inv_set β.func = ∅) :
+    (β : AspPerm) (hinv : invSet β.func = ∅) :
     ∀ n : ℤ, β n = n + β 0 := by
   have hStrict : ∀ a b : ℤ, a < b → β a < β b := by
     intro a b hab
     by_contra hnot
     have hne : β a ≠ β b := fun h => (by omega : a ≠ b) (β.injective h)
-    have hInv : (a, b) ∈ inv_set β.func := ⟨hab, by omega⟩
+    have hInv : (a, b) ∈ invSet β.func := ⟨hab, by omega⟩
     rw [hinv] at hInv
     exact hInv
   have hStep : ∀ n : ℤ, β (n + 1) = β n + 1 := by
@@ -285,7 +285,7 @@ theorem kInversionCount_star_le
       · subst hzero
         have hinv := inv_set_eq_empty_of_kInversionCount_eq_zero
           k hkpos β hβ hcount
-        have hInv : inv_set (β⁻¹).func = ∅ := by
+        have hInv : invSet (β⁻¹).func = ∅ := by
           ext p
           simp only [Set.mem_empty_iff_false, iff_false]
           intro hp
@@ -335,12 +335,12 @@ theorem torsionWitness_vertexWedge_opposite
         (wedgeRightVertex G H x y v)) k := by
   refine ⟨hG.1, ?_⟩
   have hGlue :
-      wedgeAddDivisor G H x y ((k : ℤ) • one_chip x) 0 =
-        wedgeAddDivisor G H x y 0 ((k : ℤ) • one_chip y) := by
-    have hLeft := wedgeAddDivisor_zsmul G H x y (one_chip x)
+      wedgeAddDivisor G H x y ((k : ℤ) • oneChip x) 0 =
+        wedgeAddDivisor G H x y 0 ((k : ℤ) • oneChip y) := by
+    have hLeft := wedgeAddDivisor_zsmul G H x y (oneChip x)
       (0 : CFDiv H) (k : ℤ)
     have hRight := wedgeAddDivisor_zsmul G H x y (0 : CFDiv G)
-      (one_chip y) (k : ℤ)
+      (oneChip y) (k : ℤ)
     simp only [smul_zero] at hLeft hRight
     rw [← hLeft, ← hRight, wedgeAddDivisor_one_chip_left,
       wedgeAddDivisor_one_chip_right, wedgeRightVertex_marked]
@@ -356,57 +356,57 @@ theorem torsionWitness_vertexWedge_opposite
         rfl
   have hTarget :
       (k : ℤ) •
-          (one_chip (G := vertexWedge G H x y) (Sum.inl u) -
-            one_chip (G := vertexWedge G H x y)
+          (oneChip (G := vertexWedge G H x y) (Sum.inl u) -
+            oneChip (G := vertexWedge G H x y)
               (wedgeRightVertex G H x y v)) =
-        wedgeAddDivisor G H x y ((k : ℤ) • one_chip u)
-          (-((k : ℤ) • one_chip v)) := by
+        wedgeAddDivisor G H x y ((k : ℤ) • oneChip u)
+          (-((k : ℤ) • oneChip v)) := by
     simpa [smul_sub, hZero] using
       (wedgeAddDivisor_transmissionTwist G H x y
         (0 : CFDiv G) (0 : CFDiv H) u v (k : ℤ) (k : ℤ))
   have hFactor :
       wedgeAddDivisor G H x y
-          ((k : ℤ) • (one_chip u - one_chip x))
-          ((k : ℤ) • (one_chip y - one_chip v)) =
-        wedgeAddDivisor G H x y ((k : ℤ) • one_chip u)
-          (-((k : ℤ) • one_chip v)) := by
+          ((k : ℤ) • (oneChip u - oneChip x))
+          ((k : ℤ) • (oneChip y - oneChip v)) =
+        wedgeAddDivisor G H x y ((k : ℤ) • oneChip u)
+          (-((k : ℤ) • oneChip v)) := by
     rw [smul_sub, smul_sub, ← wedgeAddDivisor_sub]
     have hLeft :
-        wedgeAddDivisor G H x y ((k : ℤ) • one_chip u)
-            ((k : ℤ) • one_chip y) =
-          wedgeAddDivisor G H x y ((k : ℤ) • one_chip u) 0 +
-            wedgeAddDivisor G H x y 0 ((k : ℤ) • one_chip y) := by
+        wedgeAddDivisor G H x y ((k : ℤ) • oneChip u)
+            ((k : ℤ) • oneChip y) =
+          wedgeAddDivisor G H x y ((k : ℤ) • oneChip u) 0 +
+            wedgeAddDivisor G H x y 0 ((k : ℤ) • oneChip y) := by
       rw [wedgeAddDivisor_add]
       simp
     have hRight :
-        wedgeAddDivisor G H x y ((k : ℤ) • one_chip x)
-            ((k : ℤ) • one_chip v) =
-          wedgeAddDivisor G H x y ((k : ℤ) • one_chip x) 0 +
-            wedgeAddDivisor G H x y 0 ((k : ℤ) • one_chip v) := by
+        wedgeAddDivisor G H x y ((k : ℤ) • oneChip x)
+            ((k : ℤ) • oneChip v) =
+          wedgeAddDivisor G H x y ((k : ℤ) • oneChip x) 0 +
+            wedgeAddDivisor G H x y 0 ((k : ℤ) • oneChip v) := by
       rw [wedgeAddDivisor_add]
       simp
     rw [hLeft, hRight, ← hGlue]
     calc
-      wedgeAddDivisor G H x y ((k : ℤ) • one_chip u) 0 +
-          wedgeAddDivisor G H x y ((k : ℤ) • one_chip x) 0 -
-          (wedgeAddDivisor G H x y ((k : ℤ) • one_chip x) 0 +
-            wedgeAddDivisor G H x y 0 ((k : ℤ) • one_chip v)) =
-          wedgeAddDivisor G H x y ((k : ℤ) • one_chip u) 0 -
-            wedgeAddDivisor G H x y 0 ((k : ℤ) • one_chip v) := by abel
+      wedgeAddDivisor G H x y ((k : ℤ) • oneChip u) 0 +
+          wedgeAddDivisor G H x y ((k : ℤ) • oneChip x) 0 -
+          (wedgeAddDivisor G H x y ((k : ℤ) • oneChip x) 0 +
+            wedgeAddDivisor G H x y 0 ((k : ℤ) • oneChip v)) =
+          wedgeAddDivisor G H x y ((k : ℤ) • oneChip u) 0 -
+            wedgeAddDivisor G H x y 0 ((k : ℤ) • oneChip v) := by abel
       _ = wedgeAddDivisor G H x y
-          (((k : ℤ) • one_chip u) - 0)
-          (0 - ((k : ℤ) • one_chip v)) := by
+          (((k : ℤ) • oneChip u) - 0)
+          (0 - ((k : ℤ) • oneChip v)) := by
           rw [wedgeAddDivisor_sub]
-      _ = wedgeAddDivisor G H x y ((k : ℤ) • one_chip u)
-          (-((k : ℤ) • one_chip v)) := by simp
+      _ = wedgeAddDivisor G H x y ((k : ℤ) • oneChip u)
+          (-((k : ℤ) • oneChip v)) := by simp
   have hWedge := linear_equiv_wedgeAddDivisor G H x y
-    ((k : ℤ) • (one_chip u - one_chip x)) 0
-    ((k : ℤ) • (one_chip y - one_chip v)) 0 hG.2 hH.2
+    ((k : ℤ) • (oneChip u - oneChip x)) 0
+    ((k : ℤ) • (oneChip y - oneChip v)) 0 hG.2 hH.2
   rw [hFactor] at hWedge
-  change linear_equiv (vertexWedge G H x y)
+  change linearEquiv (vertexWedge G H x y)
     ((k : ℤ) •
-      (one_chip (G := vertexWedge G H x y) (Sum.inl u) -
-        one_chip (G := vertexWedge G H x y)
+      (oneChip (G := vertexWedge G H x y) (Sum.inl u) -
+        oneChip (G := vertexWedge G H x y)
           (wedgeRightVertex G H x y v))) 0
   rw [hTarget]
   rw [hZero] at hWedge
@@ -417,7 +417,7 @@ period have `k`-general transmission after vertex gluing. -/
 theorem kGeneralTransmission_vertexWedge_opposite
     (G H : CFGraph) (x : G.V) (y : H.V) (u : G.V) (v : H.V)
     (k : ℕ)
-    (hGconn : _root_.graph_connected G) (hHconn : _root_.graph_connected H)
+    (hGconn : _root_.graphConnected G) (hHconn : _root_.graphConnected H)
     (hG : KGeneralTransmission (mark G u x) k)
     (hH : KGeneralTransmission (mark H y v) k) :
     KGeneralTransmission
@@ -463,9 +463,9 @@ theorem kGeneralTransmission_vertexWedge_opposite
 marked chain. -/
 theorem kGeneralTransmission_markedChain_of_commonPeriod
     (M : MarkedGraph) (L : List MarkedGraph) (k : ℕ)
-    (hMconn : _root_.graph_connected M.graph)
+    (hMconn : _root_.graphConnected M.graph)
     (hMK : KGeneralTransmission (mark M.graph M.left M.right) k)
-    (hLconn : ∀ N ∈ L, _root_.graph_connected N.graph)
+    (hLconn : ∀ N ∈ L, _root_.graphConnected N.graph)
     (hLK : ∀ N ∈ L, KGeneralTransmission (mark N.graph N.left N.right) k) :
     KGeneralTransmission
       (mark (M.chain L).graph (M.chain L).left (M.chain L).right) k := by
@@ -488,9 +488,9 @@ theorem kGeneralTransmission_markedChain_of_commonPeriod
 /-- Connectivity is preserved along a marked chain. -/
 theorem graph_connected_markedChain
     (M : MarkedGraph) (L : List MarkedGraph)
-    (hMconn : _root_.graph_connected M.graph)
-    (hLconn : ∀ N ∈ L, _root_.graph_connected N.graph) :
-    _root_.graph_connected (M.chain L).graph := by
+    (hMconn : _root_.graphConnected M.graph)
+    (hLconn : ∀ N ∈ L, _root_.graphConnected N.graph) :
+    _root_.graphConnected (M.chain L).graph := by
   induction L generalizing M with
   | nil => simpa using hMconn
   | cons N rest ih =>
@@ -507,14 +507,14 @@ general whenever its total genus satisfies the corrected natural threshold
 `g + 2 ≤ 2k`. -/
 theorem brillNoetherGeneral_markedChain_of_commonPeriod
     (M : MarkedGraph) (L : List MarkedGraph) (k : ℕ)
-    (hMconn : _root_.graph_connected M.graph)
+    (hMconn : _root_.graphConnected M.graph)
     (hMK : KGeneralTransmission (mark M.graph M.left M.right) k)
-    (hLconn : ∀ N ∈ L, _root_.graph_connected N.graph)
+    (hLconn : ∀ N ∈ L, _root_.graphConnected N.graph)
     (hLK : ∀ N ∈ L, KGeneralTransmission (mark N.graph N.left N.right) k)
     (hthreshold : (genus (M.chain L).graph).toNat + 2 ≤ 2 * k) :
     BrillNoetherGeneral (M.chain L).graph := by
   let T := mark (M.chain L).graph (M.chain L).left (M.chain L).right
-  have hTconn : _root_.graph_connected T.graph :=
+  have hTconn : _root_.graphConnected T.graph :=
     graph_connected_markedChain M L hMconn hLconn
   have hTK : KGeneralTransmission T k :=
     kGeneralTransmission_markedChain_of_commonPeriod M L k hMconn hMK hLconn hLK

@@ -51,7 +51,7 @@ theorem chainTwoLoops_allSubmodular_same_right_arbitrary_iff
   let H := (TwoPathCycle.spec rightLength hRightLength).graph
   let W := vertexWedge G H leftGlue rightGlue
   let W' := vertexWedge H G rightGlue leftGlue
-  let phi : CFGraphIso W W' := vertexWedge_comm G H leftGlue rightGlue
+  let phi : CFGraphIso W W' := vertexWedgeComm G H leftGlue rightGlue
   let M := mark W
     (wedgeRightVertex G H leftGlue rightGlue p)
     (wedgeRightVertex G H leftGlue rightGlue q)

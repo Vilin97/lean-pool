@@ -98,7 +98,7 @@ theorem burned_tail_of_chipFree (hcore : spec.core = tricycleCore) (hEff : effec
 three spoke interiors. -/
 theorem three_le_of_three_burned (hcore : spec.core = tricycleCore)
     (hEff : effective D)
-    (hred : q_reduced spec.graph (spec.coreVertex centre) D)
+    (hred : qReduced spec.graph (spec.coreVertex centre) D)
     (hrank : rank spec.graph D ≥ 1) (hw : D w = 0)
     {j₁ j₂ j₃ : Fin 6} (h12 : j₁ ≠ j₂) (h13 : j₁ ≠ j₃) (h23 : j₂ ≠ j₃)
     (hb1 : spec.coreVertex (transitionOf j₁) ∈ burned spec.graph D w)
@@ -200,7 +200,7 @@ theorem tricycle_parity_split {c1 c2 c3 c4 c5 c6 : ℤ}
 the minimal tricycle whose three transition edges are unsubdivided — has
 divisorial gonality at least six. -/
 theorem six_le_divisorialGonality (hcore : spec.core = tricycleCore)
-    (htri : IsTricycle spec.length) (hconn : graph_connected spec.graph) :
+    (htri : IsTricycle spec.length) (hconn : graphConnected spec.graph) :
     6 ≤ divisorialGonality spec.graph := by
   refine le_divisorialGonality_of_no_small hconn ?_
   intro E hEeff hEdeg hErank
@@ -366,7 +366,7 @@ theorem divisorialGonality_Tm_scale_two (hk : 0 < 2) :
 
 /-- Every `σ_k(T_m)` is a subdivision of the tricycle core, hence connected. -/
 theorem Tm_scale_connected (k : ℕ) (hk : 0 < k) :
-    graph_connected (Tm.scale k hk).graph :=
+    graphConnected (Tm.scale k hk).graph :=
   (Tm.scale k hk).graph_connected_of_coreConnected tricycleCore_connected
 
 /-! ## The gap -/
@@ -401,7 +401,7 @@ source's Theorem 1.5, `dgon_r(Γ(G)) = min_k dgon_r(σ_k(G))`, which is delibera
 **not** formalized here — see `Utilities/Gonality/GonalityTransport.lean`. -/
 theorem baker_subdivision_conjecture_false :
     ¬ ∀ (n p : ℕ) (sp : Spec n p) (k : ℕ) (hk : 0 < k),
-        graph_connected sp.graph →
+        graphConnected sp.graph →
         divisorialGonality (sp.scale k hk).graph = divisorialGonality sp.graph := by
   intro h
   have hk : (0 : ℕ) < 2 := by omega
@@ -440,7 +440,7 @@ Conjecture 3.14(a): `dgon_r(σ_k(G)) = dgon_r(G)` for every connected loopless
 multigraph `G`, every `r ≥ 1` and every `k ≥ 1`.  It fails already at `r = 1`
 and `k = 2`, on the minimal tricycle. -/
 theorem baker_conjecture_3_14a_false :
-    ¬ ∀ (G : CFGraph.{0}) (k : ℕ) (hk : 0 < k), graph_connected G →
+    ¬ ∀ (G : CFGraph.{0}) (k : ℕ) (hk : 0 < k), graphConnected G →
         divisorialGonality (regularSubdivision G k hk) = divisorialGonality G := by
   intro h
   have hk : (0 : ℕ) < 2 := by omega

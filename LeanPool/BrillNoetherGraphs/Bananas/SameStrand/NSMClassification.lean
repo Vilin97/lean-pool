@@ -73,9 +73,9 @@ theorem nsmForBanana_interior_classification
   · by_cases hjFar : j.val + 1 < B.length β
     · by_cases hiFar : i.val + 1 < B.length α
       · right
-        refine ⟨one_chip (strandVertex B α ⟨1, by omega⟩) +
-          one_chip (strandVertex B α i) +
-          one_chip (strandVertex B β ⟨B.length β - 1, by omega⟩), ?_⟩
+        refine ⟨oneChip (strandVertex B α ⟨1, by omega⟩) +
+          oneChip (strandVertex B α i) +
+          oneChip (strandVertex B β ⟨B.length β - 1, by omega⟩), ?_⟩
         exact rankDelta_first_cross_witness_neg hg B α β i j hi hj hαβ
           hiFar hjFar
       · push Not at hiFar
@@ -91,9 +91,9 @@ theorem nsmForBanana_interior_classification
             have hαLength : 2 < B.length α := by
               have := B.length_pos α
               omega
-            refine ⟨one_chip (strandVertex B β j) +
-              one_chip (strandVertex B β ⟨B.length β - 1, by omega⟩) +
-              one_chip (strandVertex B α ⟨1, by omega⟩), ?_⟩
+            refine ⟨oneChip (strandVertex B β j) +
+              oneChip (strandVertex B β ⟨B.length β - 1, by omega⟩) +
+              oneChip (strandVertex B α ⟨1, by omega⟩), ?_⟩
             rw [rankDelta_swap_marks]
             exact rankDelta_second_cross_witness_neg hg B β α j i hj hi
               (Ne.symm hαβ) hiPenultimate hjOne hαLength
@@ -110,9 +110,9 @@ theorem nsmForBanana_interior_classification
           have hβLength : 2 < B.length β := by
             have := B.length_pos β
             omega
-          refine ⟨one_chip (strandVertex B α i) +
-            one_chip (strandVertex B α ⟨B.length α - 1, by omega⟩) +
-            one_chip (strandVertex B β ⟨1, by omega⟩), ?_⟩
+          refine ⟨oneChip (strandVertex B α i) +
+            oneChip (strandVertex B α ⟨B.length α - 1, by omega⟩) +
+            oneChip (strandVertex B β ⟨1, by omega⟩), ?_⟩
           exact rankDelta_second_cross_witness_neg hg B α β i j hi hj hαβ
             hjPenultimate hiOne hβLength
 

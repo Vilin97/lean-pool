@@ -27,25 +27,25 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 section Generic
 
 /-- Projection-clean wrapper around the genus-two one-chip reduction.  Keeping
-this lemma abstract prevents the elaborator from unfolding `one_chip` on a
+this lemma abstract prevents the elaborator from unfolding `oneChip` on a
 concrete subdivision vertex type merely to compare `mark G u v` with `G`. -/
 theorem exists_vertex_rep_of_rankDelta_neg_genus_two
     (G : CFGraph) (u v : G.V) (D : CFDiv G)
-    (hConn : _root_.graph_connected G) (hGenus : genus G = 2)
-    (hDistinct : ¬ linear_equiv G (one_chip u - one_chip v) 0)
+    (hConn : _root_.graphConnected G) (hGenus : genus G = 2)
+    (hDistinct : ¬ linearEquiv G (oneChip u - oneChip v) 0)
     (hNeg : rankDelta (mark G u v) D < 0) :
     ∃ w : G.V,
-      linear_equiv G (D - one_chip u) (one_chip w) ∧
-      q_reduced G v (one_chip w) ∧
+      linearEquiv G (D - oneChip u) (oneChip w) ∧
+      qReduced G v (oneChip w) ∧
       w ≠ v ∧
-      rank G (one_chip w + one_chip u - one_chip v) = 0 := by
+      rank G (oneChip w + oneChip u - oneChip v) = 0 := by
   have hBase :=
     exists_qReduced_vertex_rep_of_rankDelta_neg_genus_two
       (mark G u v) D hConn hGenus hDistinct hNeg
   change ∃ w : G.V,
-    linear_equiv G (D - one_chip u) (one_chip w) ∧
-    q_reduced G v (one_chip w) ∧
-    w ≠ v ∧ rank G (one_chip w + one_chip u - one_chip v) = 0 at hBase
+    linearEquiv G (D - oneChip u) (oneChip w) ∧
+    qReduced G v (oneChip w) ∧
+    w ≠ v ∧ rank G (oneChip w + oneChip u - oneChip v) = 0 at hBase
   exact hBase
 
 /-- Abstract `mark` wrapper for the pointwise form of all-divisor
@@ -59,8 +59,8 @@ theorem allSubmodular_mark_of_rankDelta_nonneg
 theorem rankDelta_mark_swap_boundary
     (G : CFGraph) (u v : G.V) (D : CFDiv G) :
     rankDelta (mark G u v) D = rankDelta (mark G v u) D := by
-  have hSub : D - one_chip u - one_chip v =
-      D - one_chip v - one_chip u := by
+  have hSub : D - oneChip u - oneChip v =
+      D - oneChip v - oneChip u := by
     abel
   unfold rankDelta mark
   rw [hSub]
@@ -115,30 +115,30 @@ theorem theta_allSubmodular_of_distinct_interior_strands
   obtain ⟨w, hw, _hred, hwv, hPair⟩ :=
     exists_qReduced_vertex_rep_of_rankDelta_neg_genus_two
       (mark B.graph (strandVertex B alpha i) (strandVertex B beta j)) D
-      (graph_connected B) B.genus_graph
+      (graphConnected B) B.genus_graph
       (marks_not_linearEquiv (by omega) B huv) hNeg'
   let wB : B.graph.V := (show B.graph.V from w)
   have hDRank : rank
       (mark B.graph (strandVertex B alpha i) (strandVertex B beta j)).graph D = 0 :=
     rank_eq_zero_of_rankDelta_neg_genus_two
       (mark B.graph (strandVertex B alpha i) (strandVertex B beta j)) D
-      (graph_connected B) B.genus_graph
+      (graphConnected B) B.genus_graph
       (marks_not_linearEquiv (by omega) B huv) hNeg'
   have hPair' : rank
       (mark B.graph (strandVertex B alpha i) (strandVertex B beta j)).graph
-      (one_chip w + one_chip (B.pathVertex alpha p)) = 0 := by
-    have hShift : linear_equiv
+      (oneChip w + oneChip (B.pathVertex alpha p)) = 0 := by
+    have hShift : linearEquiv
         (mark B.graph (strandVertex B alpha i) (strandVertex B beta j)).graph D
-        (one_chip w + one_chip
+        (oneChip w + oneChip
           (mark B.graph (strandVertex B alpha i) (strandVertex B beta j)).u) := by
-      unfold linear_equiv at hw ⊢
+      unfold linearEquiv at hw ⊢
       simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using hw
     have hRankShift := rank_eq_of_linear_equiv
       (mark B.graph (strandVertex B alpha i) (strandVertex B beta j)).graph hShift
     rw [hDRank] at hRankShift
     have hPairMark : rank
         (mark B.graph (strandVertex B alpha i) (strandVertex B beta j)).graph
-        (one_chip w + one_chip
+        (oneChip w + oneChip
           (mark B.graph (strandVertex B alpha i) (strandVertex B beta j)).u) = 0 := by
       omega
     simpa [mark, hu] using hPairMark
@@ -149,14 +149,14 @@ theorem theta_allSubmodular_of_distinct_interior_strands
     rw [hv]
     exact h
   have hPairB : rank B.graph
-      (one_chip wB + one_chip (B.pathVertex alpha p)) = 0 := by
+      (oneChip wB + oneChip (B.pathVertex alpha p)) = 0 := by
     exact hPair'
   have hNotZero := rank_aux_add_mark_sub_distinct_mark_ne_zero
     B alpha beta p q hp hq hab wB hwvPath hPairB
   apply hNotZero
   have hPairB' : rank B.graph
-      (one_chip wB + one_chip (strandVertex B alpha i) -
-        one_chip (strandVertex B beta j)) = 0 := by
+      (oneChip wB + oneChip (strandVertex B alpha i) -
+        oneChip (strandVertex B beta j)) = 0 := by
     exact hPair
   simpa [hu, hv, add_comm, add_left_comm, add_assoc] using hPairB'
 
@@ -192,8 +192,8 @@ theorem theta_allSubmodular_path_zero_penultimate
     intro h
     have hval := congrArg Fin.val (B.pathVertex_injective alpha h)
     exact (ne_of_lt hij) hval
-  have hDistinct : ¬ linear_equiv B.graph
-      (one_chip (B.pathVertex alpha i) - one_chip (B.pathVertex alpha j)) 0 :=
+  have hDistinct : ¬ linearEquiv B.graph
+      (oneChip (B.pathVertex alpha i) - oneChip (B.pathVertex alpha j)) 0 :=
     marks_not_linearEquiv (by omega) B huv
   have hNeg' : rankDelta
       (mark B.graph (B.pathVertex alpha i) (B.pathVertex alpha j)) D < 0 := by
@@ -201,33 +201,33 @@ theorem theta_allSubmodular_path_zero_penultimate
   obtain ⟨w, hw, _hwReduced, hwv, hSub⟩ :=
     exists_vertex_rep_of_rankDelta_neg_genus_two B.graph
       (B.pathVertex alpha i) (B.pathVertex alpha j) D
-      (graph_connected B) B.genus_graph hDistinct hNeg'
+      (graphConnected B) B.genus_graph hDistinct hNeg'
   have hDRank : rank B.graph D = 0 :=
     rank_eq_zero_of_rankDelta_neg_genus_two
       (mark B.graph (B.pathVertex alpha i) (B.pathVertex alpha j)) D
-      (graph_connected B) B.genus_graph hDistinct hNeg'
-  have hDPair : linear_equiv B.graph D
-      (one_chip w + one_chip (B.pathVertex alpha i)) := by
-    unfold linear_equiv at hw ⊢
+      (graphConnected B) B.genus_graph hDistinct hNeg'
+  have hDPair : linearEquiv B.graph D
+      (oneChip w + oneChip (B.pathVertex alpha i)) := by
+    unfold linearEquiv at hw ⊢
     have hEq :
-        (one_chip w + one_chip (B.pathVertex alpha i)) - D =
-          one_chip w - (D - one_chip (B.pathVertex alpha i)) := by
+        (oneChip w + oneChip (B.pathVertex alpha i)) - D =
+          oneChip w - (D - oneChip (B.pathVertex alpha i)) := by
       abel
     rw [hEq]
     exact hw
   have hPair : rank B.graph
-      (one_chip w + one_chip (B.pathVertex alpha i)) = 0 := by
+      (oneChip w + oneChip (B.pathVertex alpha i)) = 0 := by
     rw [← rank_eq_of_linear_equiv B.graph hDPair]
     exact hDRank
   have hNoOnStrand (k : B.PathPosition alpha)
       (hwk : w = B.pathVertex alpha k) : False := by
     have hPair' : rank B.graph
-        (one_chip (B.pathVertex alpha i) + one_chip (B.pathVertex alpha k)) = 0 := by
+        (oneChip (B.pathVertex alpha i) + oneChip (B.pathVertex alpha k)) = 0 := by
       rw [← hwk]
       simpa [add_comm] using hPair
     have hSub' : rank B.graph
-        (one_chip (B.pathVertex alpha i) + one_chip (B.pathVertex alpha k) -
-          one_chip (B.pathVertex alpha j)) = 0 := by
+        (oneChip (B.pathVertex alpha i) + oneChip (B.pathVertex alpha k) -
+          oneChip (B.pathVertex alpha j)) = 0 := by
       rw [← hwk]
       simpa [add_comm] using hSub
     obtain ⟨hkReflect, hkLower, _hkUpper⟩ :=
@@ -313,8 +313,8 @@ theorem theta_allSubmodular_path_one_length
     intro h
     have hval := congrArg Fin.val (B.pathVertex_injective alpha h)
     exact (ne_of_lt hij) hval
-  have hDistinct : ¬ linear_equiv B.graph
-      (one_chip (B.pathVertex alpha i) - one_chip (B.pathVertex alpha j)) 0 :=
+  have hDistinct : ¬ linearEquiv B.graph
+      (oneChip (B.pathVertex alpha i) - oneChip (B.pathVertex alpha j)) 0 :=
     marks_not_linearEquiv (by omega) B huv
   have hNeg' : rankDelta
       (mark B.graph (B.pathVertex alpha i) (B.pathVertex alpha j)) D < 0 := by
@@ -322,33 +322,33 @@ theorem theta_allSubmodular_path_one_length
   obtain ⟨w, hw, _hwReduced, hwv, hSub⟩ :=
     exists_vertex_rep_of_rankDelta_neg_genus_two B.graph
       (B.pathVertex alpha i) (B.pathVertex alpha j) D
-      (graph_connected B) B.genus_graph hDistinct hNeg'
+      (graphConnected B) B.genus_graph hDistinct hNeg'
   have hDRank : rank B.graph D = 0 :=
     rank_eq_zero_of_rankDelta_neg_genus_two
       (mark B.graph (B.pathVertex alpha i) (B.pathVertex alpha j)) D
-      (graph_connected B) B.genus_graph hDistinct hNeg'
-  have hDPair : linear_equiv B.graph D
-      (one_chip w + one_chip (B.pathVertex alpha i)) := by
-    unfold linear_equiv at hw ⊢
+      (graphConnected B) B.genus_graph hDistinct hNeg'
+  have hDPair : linearEquiv B.graph D
+      (oneChip w + oneChip (B.pathVertex alpha i)) := by
+    unfold linearEquiv at hw ⊢
     have hEq :
-        (one_chip w + one_chip (B.pathVertex alpha i)) - D =
-          one_chip w - (D - one_chip (B.pathVertex alpha i)) := by
+        (oneChip w + oneChip (B.pathVertex alpha i)) - D =
+          oneChip w - (D - oneChip (B.pathVertex alpha i)) := by
       abel
     rw [hEq]
     exact hw
   have hPair : rank B.graph
-      (one_chip w + one_chip (B.pathVertex alpha i)) = 0 := by
+      (oneChip w + oneChip (B.pathVertex alpha i)) = 0 := by
     rw [← rank_eq_of_linear_equiv B.graph hDPair]
     exact hDRank
   have hNoOnStrand (k : B.PathPosition alpha)
       (hwk : w = B.pathVertex alpha k) : False := by
     have hPair' : rank B.graph
-        (one_chip (B.pathVertex alpha i) + one_chip (B.pathVertex alpha k)) = 0 := by
+        (oneChip (B.pathVertex alpha i) + oneChip (B.pathVertex alpha k)) = 0 := by
       rw [← hwk]
       simpa [add_comm] using hPair
     have hSub' : rank B.graph
-        (one_chip (B.pathVertex alpha i) + one_chip (B.pathVertex alpha k) -
-          one_chip (B.pathVertex alpha j)) = 0 := by
+        (oneChip (B.pathVertex alpha i) + oneChip (B.pathVertex alpha k) -
+          oneChip (B.pathVertex alpha j)) = 0 := by
       rw [← hwk]
       simpa [add_comm] using hSub
     obtain ⟨hkReflect, hkLower, _hkUpper⟩ :=
@@ -396,17 +396,17 @@ theorem theta_allSubmodular_path_one_length
       obtain ⟨p, hp, hpVertex⟩ :=
         exists_interior_strandVertex B alpha firstOffset
       have hSub' : rank B.graph
-          (one_chip (strandVertex B gamma q) +
-            one_chip (strandVertex B alpha p) -
-            one_chip (B.pathVertex alpha j)) = 0 := by
+          (oneChip (strandVertex B gamma q) +
+            oneChip (strandVertex B alpha p) -
+            oneChip (B.pathVertex alpha j)) = 0 := by
         rw [hqVertex, hpVertex, ← hiOffset]
         exact hSub
       have hSupport := rankSupport_two_interior_distinct_strands
         (by omega : 2 ≤ 2) B gamma alpha q p hq hp hgamma
       have hjMem : B.pathVertex alpha j ∈
           rankSupport B.graph
-            (one_chip (strandVertex B gamma q) +
-              one_chip (strandVertex B alpha p)) := by
+            (oneChip (strandVertex B gamma q) +
+              oneChip (strandVertex B alpha p)) := by
         exact hSub'.ge
       rw [hSupport] at hjMem
       have hjEndpoint : B.pathVertex alpha j =
@@ -455,8 +455,8 @@ theorem theta_allSubmodular_path_endpoints
     intro h
     have hval := congrArg Fin.val (B.pathVertex_injective alpha h)
     exact (ne_of_lt hij) hval
-  have hDistinct : ¬ linear_equiv B.graph
-      (one_chip (B.pathVertex alpha i) - one_chip (B.pathVertex alpha j)) 0 :=
+  have hDistinct : ¬ linearEquiv B.graph
+      (oneChip (B.pathVertex alpha i) - oneChip (B.pathVertex alpha j)) 0 :=
     marks_not_linearEquiv (by omega) B huv
   have hNeg' : rankDelta
       (mark B.graph (B.pathVertex alpha i) (B.pathVertex alpha j)) D < 0 := by
@@ -464,22 +464,22 @@ theorem theta_allSubmodular_path_endpoints
   obtain ⟨w, hw, _hwReduced, hwv, hSub⟩ :=
     exists_vertex_rep_of_rankDelta_neg_genus_two B.graph
       (B.pathVertex alpha i) (B.pathVertex alpha j) D
-      (graph_connected B) B.genus_graph hDistinct hNeg'
+      (graphConnected B) B.genus_graph hDistinct hNeg'
   have hDRank : rank B.graph D = 0 :=
     rank_eq_zero_of_rankDelta_neg_genus_two
       (mark B.graph (B.pathVertex alpha i) (B.pathVertex alpha j)) D
-      (graph_connected B) B.genus_graph hDistinct hNeg'
-  have hDPair : linear_equiv B.graph D
-      (one_chip w + one_chip (B.pathVertex alpha i)) := by
-    unfold linear_equiv at hw ⊢
+      (graphConnected B) B.genus_graph hDistinct hNeg'
+  have hDPair : linearEquiv B.graph D
+      (oneChip w + oneChip (B.pathVertex alpha i)) := by
+    unfold linearEquiv at hw ⊢
     have hEq :
-        (one_chip w + one_chip (B.pathVertex alpha i)) - D =
-          one_chip w - (D - one_chip (B.pathVertex alpha i)) := by
+        (oneChip w + oneChip (B.pathVertex alpha i)) - D =
+          oneChip w - (D - oneChip (B.pathVertex alpha i)) := by
       abel
     rw [hEq]
     exact hw
   have hPair : rank B.graph
-      (one_chip w + one_chip (B.pathVertex alpha i)) = 0 := by
+      (oneChip w + oneChip (B.pathVertex alpha i)) = 0 := by
     rw [← rank_eq_of_linear_equiv B.graph hDPair]
     exact hDRank
   have hNoForward (gamma : Fin 3) (k : B.PathPosition gamma)
@@ -493,14 +493,14 @@ theorem theta_allSubmodular_path_endpoints
       dsimp [iGamma, jGamma]
       exact B.length_pos gamma
     have hPair' : rank B.graph
-        (one_chip (B.pathVertex gamma iGamma) +
-          one_chip (B.pathVertex gamma k)) = 0 := by
+        (oneChip (B.pathVertex gamma iGamma) +
+          oneChip (B.pathVertex gamma k)) = 0 := by
       rw [← hwk, ← hu]
       simpa [iGamma, add_comm] using hPair
     have hSub' : rank B.graph
-        (one_chip (B.pathVertex gamma iGamma) +
-          one_chip (B.pathVertex gamma k) -
-          one_chip (B.pathVertex gamma jGamma)) = 0 := by
+        (oneChip (B.pathVertex gamma iGamma) +
+          oneChip (B.pathVertex gamma k) -
+          oneChip (B.pathVertex gamma jGamma)) = 0 := by
       rw [← hwk, ← hu, ← hv]
       simpa [iGamma, jGamma, add_comm] using hSub
     obtain ⟨hkReflect, hkLower, _hkUpper⟩ :=
@@ -598,9 +598,9 @@ theorem theta_allSubmodular_path_endpoints
           _ = B.pathVertex gamma ⟨0, by omega⟩ :=
             (B.pathVertex_zero gamma).symm
       have hSub' : rank B.graph
-          (one_chip (B.pathVertex gamma k) +
-            one_chip (B.pathVertex gamma ⟨B.length gamma, by omega⟩) -
-            one_chip (B.pathVertex gamma ⟨0, by omega⟩)) = 0 := by
+          (oneChip (B.pathVertex gamma k) +
+            oneChip (B.pathVertex gamma ⟨B.length gamma, by omega⟩) -
+            oneChip (B.pathVertex gamma ⟨0, by omega⟩)) = 0 := by
         rw [← hwPath, ← hu, ← hv]
         exact hSub
       have hNegReverse := rank_same_strand_add_path_length_sub_of_lt
@@ -846,7 +846,7 @@ theorem marks_ne_of_allSubmodular_banana
     (hSub : AllSubmodular (mark B.graph u v)) : u ≠ v := by
   intro huv
   subst v
-  have hNonneg := (allSubmodular_iff_rankDelta_nonneg _).mp hSub (one_chip u)
+  have hNonneg := (allSubmodular_iff_rankDelta_nonneg _).mp hSub (oneChip u)
   have hNeg := rankDelta_one_chip_self_lt_zero hg B u
   omega
 

@@ -39,7 +39,7 @@ universe u
 Re-exported here so that the statements below read without qualification. -/
 
 /-- The simple graph underlying a chip-firing multigraph: `v` and `w` are
-adjacent when `num_edges G v w > 0`.  "The treewidth of a multigraph" means the
+adjacent when `numEdges G v w > 0`.  "The treewidth of a multigraph" means the
 treewidth of this graph — parallel edges do not change it.
 (`Utilities/Foundations/UnderlyingSimpleGraph.lean`) -/
 alias underlyingSimpleGraph := Utilities.underlyingSimpleGraph
@@ -65,12 +65,12 @@ alias treewidth := Utilities.Treewidth.treewidth
 /-! ## The headline theorem -/
 
 /-- **`treewidth ≤ gonality`** (van Dobben de Bruyn–Gijswijt, arXiv:1407.7055). -/
-example (G : CFGraph) (h_conn : graph_connected G) :
+example (G : CFGraph) (h_conn : graphConnected G) :
     treewidth (underlyingSimpleGraph G) ≤ divisorialGonality G :=
   Utilities.Gonality.treewidth_le_gonality h_conn
 
 /-- The same bound against the dependency's `ℤ`-valued `gonality`. -/
-example (G : CFGraph) (h_conn : graph_connected G) :
+example (G : CFGraph) (h_conn : graphConnected G) :
     (treewidth (underlyingSimpleGraph G) : ℤ) ≤ gonality h_conn :=
   Utilities.Gonality.treewidth_le_gonality_int h_conn
 
@@ -78,7 +78,7 @@ example (G : CFGraph) (h_conn : graph_connected G) :
 
 /-- **Theorem A**, the divisor-theoretic half: no bramble of a connected graph
 has order exceeding its gonality plus one. -/
-example (G : CFGraph) (h_conn : graph_connected G)
+example (G : CFGraph) (h_conn : graphConnected G)
     (𝔅 : Bramble (underlyingSimpleGraph G)) :
     𝔅.order ≤ divisorialGonality G + 1 :=
   Utilities.Gonality.bramble_order_le_gonality_succ h_conn 𝔅

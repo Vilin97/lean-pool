@@ -135,7 +135,7 @@ def pathValue (data : Data spec) (edge : Fin p) (offset : ℕ) : ℤ :=
     windowValue (data.start edge) (data.stop edge) (data.slope edge) offset
 
 /-- Extend a compatible profile over every subdivision vertex. -/
-def script (data : Data spec) : firing_script spec.graph
+def script (data : Data spec) : firingScript spec.graph
   | Sum.inl vertex => data.coreValue vertex
   | Sum.inr interior => data.pathValue interior.1 (interior.2.val + 1)
 
@@ -358,9 +358,9 @@ theorem edgeDivergence_eq_endpointDivisor (data : Data spec)
     (edge : Fin p) (vertex : spec.Vertex) :
     data.edgeDivergence edge vertex =
       (data.slope edge •
-        (one_chip (G := spec.graph)
+        (oneChip (G := spec.graph)
             (spec.pathVertex edge (data.startPosition edge)) -
-          one_chip (G := spec.graph)
+          oneChip (G := spec.graph)
             (spec.pathVertex edge (data.stopPosition edge)))) vertex := by
   classical
   by_cases hOn : ∃ probe : spec.PathPosition edge,
@@ -380,7 +380,7 @@ theorem edgeDivergence_eq_endpointDivisor (data : Data spec)
       rw [spec.pathVertex_eq_iff_val_eq]
       rfl
     simp only [Pi.smul_apply, Pi.sub_apply]
-    simp [one_chip, hStart, hStop]
+    simp [oneChip, hStart, hStop]
     split_ifs <;> ring
   · have hLeft (offset : Fin (spec.length edge)) :
         spec.stepLeft edge offset ≠ vertex := by
@@ -406,7 +406,7 @@ theorem edgeDivergence_eq_endpointDivisor (data : Data spec)
         vertex ≠ spec.pathVertex edge (data.startPosition edge) := hStart.symm
     have hStop' :
         vertex ≠ spec.pathVertex edge (data.stopPosition edge) := hStop.symm
-    simp [edgeDivergence, hLeft, hRight, one_chip, hStart', hStop']
+    simp [edgeDivergence, hLeft, hRight, oneChip, hStart', hStop']
 
 /-- Exact signed-endpoint formula for the principal divisor of a compatible
 window profile.  This is the compact replay theorem: a checker only needs to
@@ -416,9 +416,9 @@ theorem prin_script_eq_endpointDivisors (data : Data spec) :
     prin spec.graph data.script =
       ∑ edge : Fin p,
         data.slope edge •
-          (one_chip (G := spec.graph)
+          (oneChip (G := spec.graph)
               (spec.pathVertex edge (data.startPosition edge)) -
-            one_chip (G := spec.graph)
+            oneChip (G := spec.graph)
               (spec.pathVertex edge (data.stopPosition edge))) := by
   classical
   funext vertex

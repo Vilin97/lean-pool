@@ -86,7 +86,7 @@ def divisorOf (d : DegSpec n p) (certificate : ExplicitPotential.Certificate m n
     (hLength : LengthCompatible d certificate point)
     (hBounds : BoundsCertified certificate chips)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) : CFDiv d.graph :=
-  (chips.attach.map fun chip => chip.1.coefficient • one_chip
+  (chips.attach.map fun chip => chip.1.coefficient • oneChip
     (G := d.graph)
     (Code.decodeClosedVertex d certificate chip.1.position point hValid hLength
       (hBounds chip.1 chip.2) hCone)).sum
@@ -102,7 +102,7 @@ theorem deg_divisorOf (d : DegSpec n p) (certificate : ExplicitPotential.Certifi
     deg (divisorOf d certificate chips point hValid hLength hBounds hCone) =
       (chips.map WeightedChip.coefficient).sum := by
   have hsum : ∀ entries : List {chip // chip ∈ chips},
-      deg (entries.map fun chip => chip.1.coefficient • one_chip
+      deg (entries.map fun chip => chip.1.coefficient • oneChip
         (G := d.graph)
         (Code.decodeClosedVertex d certificate chip.1.position point hValid hLength
           (hBounds chip.1 chip.2) hCone)).sum =
@@ -150,7 +150,7 @@ def breaks (certificate : ExplicitPotential.Certificate m n p)
 /-- A concrete closed-face firing script from affine break lists. -/
 def firingScript (d : DegSpec n p) (certificate : ExplicitPotential.Certificate m n p)
     (script : BreakList m p) (potential : Fin n → ℤ) (point : Fin m → ℤ) :
-    firing_script d.graph :=
+    firingScript d.graph :=
   d.breakScript potential (script.breaks certificate point)
 
 /-- The sole closing condition for an affine break-list script on a closed

@@ -20,7 +20,7 @@ product.  This file proves that equality from the attained vertex-wedge rank
 formula.
 
 The divisor algebra which turns an exact rank surface into a raw transmission
-permutation is kept abstract.  This avoids unfolding `one_chip` on a concrete
+permutation is kept abstract.  This avoids unfolding `oneChip` on a concrete
 wedge vertex type.
 -/
 
@@ -36,7 +36,7 @@ theorem isTransmissionPermutation_of_rank_eq_slipface
     {M : TwiceMarked} (D : CFDiv M.graph) (tau : AspPerm)
     (hRank : ∀ a b : ℤ,
       rank M.graph
-          (D + a • one_chip M.u - b • one_chip M.v) =
+          (D + a • oneChip M.u - b • oneChip M.v) =
         tau.s (a + 1) b - 1) :
     IsTransmissionPermutation M D tau.func := by
   refine ⟨tau.bijective, ?_⟩
@@ -44,18 +44,18 @@ theorem isTransmissionPermutation_of_rank_eq_slipface
   rw [← tau.Delta_eq a b]
   unfold rankDelta SlipFace.Δ
   have hU :
-      D + a • one_chip M.u - b • one_chip M.v - one_chip M.u =
-        D + (a - 1) • one_chip M.u - b • one_chip M.v := by
+      D + a • oneChip M.u - b • oneChip M.v - oneChip M.u =
+        D + (a - 1) • oneChip M.u - b • oneChip M.v := by
     rw [sub_smul]
     abel
   have hV :
-      D + a • one_chip M.u - b • one_chip M.v - one_chip M.v =
-        D + a • one_chip M.u - (b + 1) • one_chip M.v := by
+      D + a • oneChip M.u - b • oneChip M.v - oneChip M.v =
+        D + a • oneChip M.u - (b + 1) • oneChip M.v := by
     rw [add_smul, one_smul]
     abel
   have hUV :
-      D + (a - 1) • one_chip M.u - b • one_chip M.v - one_chip M.v =
-        D + (a - 1) • one_chip M.u - (b + 1) • one_chip M.v := by
+      D + (a - 1) • oneChip M.u - b • oneChip M.v - oneChip M.v =
+        D + (a - 1) • oneChip M.u - (b + 1) • oneChip M.v := by
     rw [add_smul, one_smul]
     abel
   rw [hU, hV, hUV, hRank a b, hRank (a - 1) b,
@@ -71,21 +71,21 @@ theorem rank_wedgeAddDivisor_transmissionTwist_eq_star
     (D : CFDiv G) (E : CFDiv H) (u : G.V) (v : H.V)
     (alpha beta : AspPerm)
     (hD : ∀ a b : ℤ,
-      rank G (D + a • one_chip u - b • one_chip x) =
+      rank G (D + a • oneChip u - b • oneChip x) =
         alpha.s (a + 1) b - 1)
     (hE : ∀ a b : ℤ,
-      rank H (E + a • one_chip y - b • one_chip v) =
+      rank H (E + a • oneChip y - b • oneChip v) =
         beta.s (a + 1) b - 1)
     (a b : ℤ) :
     rank (vertexWedge G H x y)
         (wedgeAddDivisor G H x y D E +
-          a • one_chip (G := vertexWedge G H x y) (Sum.inl u) -
-          b • one_chip (G := vertexWedge G H x y)
+          a • oneChip (G := vertexWedge G H x y) (Sum.inl u) -
+          b • oneChip (G := vertexWedge G H x y)
             (wedgeRightVertex G H x y v)) =
       (alpha ⋆ beta).s (a + 1) b - 1 := by
   rw [wedgeAddDivisor_transmissionTwist G H x y D E u v a b]
   apply (vertexWedge_rank_eq_iff_profile_inequalities_and_attained
-    G H x y (D + a • one_chip u) (E - b • one_chip v)
+    G H x y (D + a • oneChip u) (E - b • oneChip v)
       ((alpha ⋆ beta).s (a + 1) b - 1)).2
   have hLeast := AspPerm.star_sf_isleast alpha beta (a + 1) b
   constructor
@@ -97,12 +97,12 @@ theorem rank_wedgeAddDivisor_transmissionTwist_eq_star
           alpha.s (a + 1) (ell + 1) + beta.s (ell + 1) b :=
       hLeast.2 ⟨ell + 1, rfl⟩
     have hLeftDiv :
-        D + a • one_chip u - (ell + 1) • one_chip x =
-          (D + a • one_chip u) - (ell + 1) • one_chip x := by
+        D + a • oneChip u - (ell + 1) • oneChip x =
+          (D + a • oneChip u) - (ell + 1) • oneChip x := by
       rfl
     have hRightDiv :
-        E + ell • one_chip y - b • one_chip v =
-          (E - b • one_chip v) + ell • one_chip y := by
+        E + ell • oneChip y - b • oneChip v =
+          (E - b • oneChip v) + ell • oneChip y := by
       abel
     rw [← hLeftDiv, ← hRightDiv, hLeft, hRight]
     omega
@@ -110,16 +110,16 @@ theorem rank_wedgeAddDivisor_transmissionTwist_eq_star
     refine ⟨m - 1, ?_⟩
     have hLeft := hD a m
     have hRight :
-        rank H (E + (m - 1) • one_chip y - b • one_chip v) =
+        rank H (E + (m - 1) • oneChip y - b • oneChip v) =
           beta.s m b - 1 := by
       simpa using hE (m - 1) b
     have hLeft' :
-        rank G ((D + a • one_chip u) - ((m - 1) + 1) • one_chip x) =
+        rank G ((D + a • oneChip u) - ((m - 1) + 1) • oneChip x) =
           alpha.s (a + 1) m - 1 := by
       simpa using hLeft
     have hRightDiv :
-        E + (m - 1) • one_chip y - b • one_chip v =
-          (E - b • one_chip v) + (m - 1) • one_chip y := by
+        E + (m - 1) • oneChip y - b • oneChip v =
+          (E - b • oneChip v) + (m - 1) • oneChip y := by
       abel
     rw [hLeft', ← hRightDiv, hRight]
     have hm' :
@@ -131,7 +131,7 @@ theorem rank_wedgeAddDivisor_transmissionTwist_eq_star
 Demazure product of the exact raw transmission permutations of its factors. -/
 theorem exists_isTransmissionPermutation_wedgeAddDivisor_star
     (G H : CFGraph) (x : G.V) (y : H.V)
-    (hG : _root_.graph_connected G) (hH : _root_.graph_connected H)
+    (hG : _root_.graphConnected G) (hH : _root_.graphConnected H)
     (D : CFDiv G) (E : CFDiv H) (u : G.V) (v : H.V)
     (tau sigma : ℤ → ℤ)
     (hTau : IsTransmissionPermutation (mark G u x) D tau)
@@ -156,8 +156,8 @@ theorem exists_isTransmissionPermutation_wedgeAddDivisor_star
 /-- All-divisor submodularity is closed under opposite-side vertex gluing. -/
 theorem allSubmodular_vertexWedge_opposite
     (G H : CFGraph) (x : G.V) (y : H.V)
-    (hGconn : _root_.graph_connected G)
-    (hHconn : _root_.graph_connected H)
+    (hGconn : _root_.graphConnected G)
+    (hHconn : _root_.graphConnected H)
     (u : G.V) (v : H.V)
     (hG : AllSubmodular (mark G u x))
     (hH : AllSubmodular (mark H y v)) :

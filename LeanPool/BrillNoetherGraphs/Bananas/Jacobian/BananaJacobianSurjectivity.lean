@@ -26,33 +26,33 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 section Generic
 
 private theorem linearEquiv_zsmul {G : CFGraph} {D E : CFDiv G}
-    (h : linear_equiv G D E) (n : ℤ) :
-    linear_equiv G (n • D) (n • E) := by
-  unfold linear_equiv at h ⊢
-  simpa [smul_sub] using (principal_divisors G).zsmul_mem h n
+    (h : linearEquiv G D E) (n : ℤ) :
+    linearEquiv G (n • D) (n • E) := by
+  unfold linearEquiv at h ⊢
+  simpa [smul_sub] using (principalDivisors G).zsmul_mem h n
 
 private theorem linearEquiv_sum {G : CFGraph} {ι : Type*} [Fintype ι]
-    {D E : ι → CFDiv G} (h : ∀ i, linear_equiv G (D i) (E i)) :
-    linear_equiv G (∑ i, D i) (∑ i, E i) := by
+    {D E : ι → CFDiv G} (h : ∀ i, linearEquiv G (D i) (E i)) :
+    linearEquiv G (∑ i, D i) (∑ i, E i) := by
   classical
-  unfold linear_equiv at h ⊢
+  unfold linearEquiv at h ⊢
   rw [← Finset.sum_sub_distrib]
-  exact (principal_divisors G).sum_mem (fun i _ => h i)
+  exact (principalDivisors G).sum_mem (fun i _ => h i)
 
 /-- Every divisor is the sum of its coefficients times the corresponding
 one-chip divisors. -/
 private theorem divisor_eq_sum_smul_oneChip {G : CFGraph} (D : CFDiv G) :
-    D = ∑ v : G.V, D v • one_chip v := by
+    D = ∑ v : G.V, D v • oneChip v := by
   classical
   funext w
-  simp [one_chip]
+  simp [oneChip]
 
 /-- A degree-zero divisor is the sum of its coefficient-weighted vertex
 differences from any chosen basepoint. -/
 private theorem sum_smul_vertexDifference_eq_of_degree_zero {G : CFGraph}
     (q : G.V) (D : CFDiv G) (hDegree : deg D = 0) :
-    (∑ v : G.V, D v • (one_chip v - one_chip q)) = D := by
-  rw [Finset.sum_congr rfl (fun v _ => smul_sub (D v) (one_chip v) (one_chip q))]
+    (∑ v : G.V, D v • (oneChip v - oneChip q)) = D := by
+  rw [Finset.sum_congr rfl (fun v _ => smul_sub (D v) (oneChip v) (oneChip q))]
   rw [Finset.sum_sub_distrib]
   rw [← Finset.sum_smul]
   rw [show ∑ v : G.V, D v = 0 by exact hDegree]
@@ -66,16 +66,16 @@ represented by a strand-coordinate vector. -/
 theorem exists_bananaCoordinate_linearEquiv_vertexDifference
     {g : ℕ} (B : Banana g) (v : B.graph.V) :
     ∃ a : Fin (g + 1) → ℤ,
-      linear_equiv B.graph (bananaCoordinateDivisorHom B a)
-        (one_chip v - one_chip (leftEndpoint B)) := by
+      linearEquiv B.graph (bananaCoordinateDivisorHom B a)
+        (oneChip v - oneChip (leftEndpoint B)) := by
   classical
   rcases v with core | ⟨alpha, offset⟩
   · rcases fin_two_eq_zero_or_one core with rfl | rfl
     · refine ⟨0, ?_⟩
       rw [map_zero]
-      change linear_equiv B.graph 0
-        (one_chip (leftEndpoint B) - one_chip (leftEndpoint B))
-      simp [linear_equiv]
+      change linearEquiv B.graph 0
+        (oneChip (leftEndpoint B) - oneChip (leftEndpoint B))
+      simp [linearEquiv]
     · refine ⟨(B.length (0 : Fin (g + 1)) : ℤ) •
           bananaCoordinateBasis (0 : Fin (g + 1)), ?_⟩
       rw [AddMonoidHom.map_zsmul, bananaCoordinateDivisorHom_basis]
@@ -84,8 +84,8 @@ theorem exists_bananaCoordinate_linearEquiv_vertexDifference
       exists_interior_strandVertex B alpha offset
     refine ⟨(p.val : ℤ) • bananaCoordinateBasis alpha, ?_⟩
     rw [AddMonoidHom.map_zsmul, bananaCoordinateDivisorHom_basis]
-    change linear_equiv B.graph ((p.val : ℤ) • bananaCoordinateStep B alpha)
-      (one_chip (B.interiorVertex alpha offset) - one_chip (leftEndpoint B))
+    change linearEquiv B.graph ((p.val : ℤ) • bananaCoordinateStep B alpha)
+      (oneChip (B.interiorVertex alpha offset) - oneChip (leftEndpoint B))
     rw [← hpVertex]
     simpa [bananaCoordinateStep] using strand_prefix_linearEquiv B alpha p
 
@@ -97,7 +97,7 @@ quotient. -/
 theorem exists_bananaCoordinate_linearEquiv_of_degree_zero
     {g : ℕ} (B : Banana g) (D : CFDiv B.graph) (hDegree : deg D = 0) :
     ∃ a : Fin (g + 1) → ℤ,
-      linear_equiv B.graph (bananaCoordinateDivisorHom B a) D := by
+      linearEquiv B.graph (bananaCoordinateDivisorHom B a) D := by
   classical
   choose coordinate hCoordinate using
     fun v : B.graph.V => exists_bananaCoordinate_linearEquiv_vertexDifference B v
@@ -105,9 +105,9 @@ theorem exists_bananaCoordinate_linearEquiv_of_degree_zero
     ∑ v : B.graph.V, D v • coordinate v
   refine ⟨a, ?_⟩
   have hScaled : ∀ v : B.graph.V,
-      linear_equiv B.graph
+      linearEquiv B.graph
         (D v • bananaCoordinateDivisorHom B (coordinate v))
-        (D v • (one_chip v - one_chip (leftEndpoint B))) := by
+        (D v • (oneChip v - oneChip (leftEndpoint B))) := by
     intro v
     exact linearEquiv_zsmul (hCoordinate v) (D v)
   have hSum := linearEquiv_sum hScaled

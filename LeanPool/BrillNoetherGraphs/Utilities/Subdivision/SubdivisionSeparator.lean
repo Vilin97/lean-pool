@@ -142,7 +142,7 @@ theorem pathVertex_injective (edge : Fin p) :
 /-- Consecutive positions are joined by the corresponding unit step. -/
 theorem consecutive_num_edges_pos (edge : Fin p)
     (offset : Fin (spec.length edge)) :
-    0 < num_edges spec.graph
+    0 < numEdges spec.graph
       (spec.pathVertex edge (spec.stepLeftPosition edge offset))
       (spec.pathVertex edge (spec.stepRightPosition edge offset)) := by
   simpa using spec.unitStep_num_edges_pos edge offset
@@ -226,7 +226,7 @@ theorem pathVertex_num_edges_pos_iff (edge : Fin p)
     (position : spec.PathPosition edge)
     (hInterior : spec.IsInteriorPosition edge position)
     (vertex : spec.Vertex) :
-    0 < num_edges spec.graph (spec.pathVertex edge position) vertex ↔
+    0 < numEdges spec.graph (spec.pathVertex edge position) vertex ↔
       vertex = spec.pathVertex edge
           (spec.previousPathPosition edge position hInterior.1) ∨
         vertex = spec.pathVertex edge
@@ -296,7 +296,7 @@ most one.  Parallel core slots cannot create parallel edges here because the
 interior vertex remembers its own slot. -/
 theorem num_edges_interior_le_one (edge : Fin p)
     (offset : Fin (spec.length edge - 1)) (vertex : spec.Vertex) :
-    num_edges spec.graph (spec.interiorVertex edge offset) vertex ≤ 1 := by
+    numEdges spec.graph (spec.interiorVertex edge offset) vertex ≤ 1 := by
   rw [spec.num_edges_eq_card_filter_steps]
   apply Finset.card_le_one_iff.mpr
   intro first second hFirst hSecond
@@ -452,7 +452,7 @@ theorem left_boundary :
 
 /-- Every edge leaving an open complement interval lands in `R`. -/
 theorem closed {x y : spec.Vertex} (hx : x ∈ interval.carrier)
-    (hy : y ∉ interval.carrier) (hxy : 0 < num_edges spec.graph x y) :
+    (hy : y ∉ interval.carrier) (hxy : 0 < numEdges spec.graph x y) :
     y ∈ R := by
   obtain ⟨position, hLeft, hRight, rfl⟩ :=
     (interval.mem_carrier_iff x).mp hx
@@ -516,7 +516,7 @@ theorem closed {x y : spec.Vertex} (hx : x ∈ interval.carrier)
 vertices, and the adjacent carrier vertex is the corresponding endpoint. -/
 theorem reached_neighbor_classification {x y : spec.Vertex}
     (hx : x ∈ interval.carrier) (hy : y ∈ R)
-    (hyx : 0 < num_edges spec.graph y x) :
+    (hyx : 0 < numEdges spec.graph y x) :
     (x = spec.pathVertex interval.edge interval.firstPosition ∧
       y = spec.pathVertex interval.edge interval.left) ∨
     (x = spec.pathVertex interval.edge interval.lastPosition ∧
@@ -527,7 +527,7 @@ theorem reached_neighbor_classification {x y : spec.Vertex}
   change 0 < position.val ∧
     position.val < spec.length interval.edge at hInterior
   have hxy :
-      0 < num_edges spec.graph (spec.pathVertex interval.edge position) y := by
+      0 < numEdges spec.graph (spec.pathVertex interval.edge position) y := by
     rwa [num_edges_symmetric]
   rw [spec.pathVertex_num_edges_pos_iff interval.edge position hInterior y]
     at hxy
@@ -586,8 +586,8 @@ theorem reached_neighbor_classification {x y : spec.Vertex}
 theorem reached_carrier_neighbor_unique {y x z : spec.Vertex}
     (hy : y ∈ R) (hx : x ∈ interval.carrier)
     (hz : z ∈ interval.carrier)
-    (hyx : 0 < num_edges spec.graph y x)
-    (hyz : 0 < num_edges spec.graph y z) : x = z := by
+    (hyx : 0 < numEdges spec.graph y x)
+    (hyz : 0 < numEdges spec.graph y z) : x = z := by
   rcases interval.reached_neighbor_classification hx hy hyx with
       hXLeft | hXRight <;>
     rcases interval.reached_neighbor_classification hz hy hyz with
@@ -617,14 +617,14 @@ theorem oneEdge {y : spec.Vertex} (hy : y ∈ R) :
     StrongSeparator.intoMultiplicity spec.graph interval.carrier y ≤ 1 := by
   unfold StrongSeparator.intoMultiplicity
   by_cases hExists :
-      ∃ x ∈ interval.carrier, 0 < num_edges spec.graph y x
+      ∃ x ∈ interval.carrier, 0 < numEdges spec.graph y x
   · obtain ⟨chosen, hChosenCarrier, hChosenPositive⟩ := hExists
     calc
-      (∑ x ∈ interval.carrier, (num_edges spec.graph y x : ℤ)) =
-          (num_edges spec.graph y chosen : ℤ) := by
+      (∑ x ∈ interval.carrier, (numEdges spec.graph y x : ℤ)) =
+          (numEdges spec.graph y chosen : ℤ) := by
         apply Finset.sum_eq_single chosen
         · intro x hx hne
-          have hNotPositive : ¬0 < num_edges spec.graph y x := by
+          have hNotPositive : ¬0 < numEdges spec.graph y x := by
             intro hPositive
             exact hne (interval.reached_carrier_neighbor_unique hy hx
               hChosenCarrier hPositive hChosenPositive)
@@ -641,12 +641,12 @@ theorem oneEdge {y : spec.Vertex} (hy : y ∈ R) :
         exact_mod_cast spec.num_edges_interior_le_one interval.edge
           (spec.interiorOffsetOfPosition interval.edge position hInterior) y
   · have hZero (x : spec.Vertex) (hx : x ∈ interval.carrier) :
-        num_edges spec.graph y x = 0 := by
+        numEdges spec.graph y x = 0 := by
       apply Nat.eq_zero_of_not_pos
       intro hPositive
       exact hExists ⟨x, hx, hPositive⟩
     have hSumZero :
-        (∑ x ∈ interval.carrier, (num_edges spec.graph y x : ℤ)) = 0 := by
+        (∑ x ∈ interval.carrier, (numEdges spec.graph y x : ℤ)) = 0 := by
       apply Finset.sum_eq_zero
       intro x hx
       simp [hZero x hx]
@@ -729,9 +729,9 @@ theorem pathCut {t : spec.Vertex} (htR : t ∈ R)
     (hLeftA : spec.pathVertex interval.edge interval.left ∈ A)
     (htNotA : t ∉ A) :
     (∃ x ∈ interval.carrier, x ∉ A ∧
-      ∃ y ∈ A, 0 < num_edges spec.graph x y) ∨
+      ∃ y ∈ A, 0 < numEdges spec.graph x y) ∨
     (∃ x ∈ interval.carrier, x ∈ A ∧
-      ∃ y, y ∉ A ∧ 0 < num_edges spec.graph x y) := by
+      ∃ y, y ∉ A ∧ 0 < numEdges spec.graph x y) := by
   obtain ⟨neighbor, hNeighborCarrier, htNeighbor⟩ := htBoundary
   rcases interval.reached_neighbor_classification hNeighborCarrier htR
       htNeighbor with hLeftBoundary | hRightBoundary
@@ -948,7 +948,7 @@ theorem bnExists_on_subdivision_of_valid
     (point : Fin m → ℤ) (core_nonempty : 0 < n) (degree : ℤ)
     (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
-    (hConnected : graph_connected
+    (hConnected : graphConnected
       (certificate.subdivisionSpec point core_nonempty hValid hCone).graph) :
     BNExists
       (certificate.subdivisionSpec point core_nonempty hValid hCone).graph

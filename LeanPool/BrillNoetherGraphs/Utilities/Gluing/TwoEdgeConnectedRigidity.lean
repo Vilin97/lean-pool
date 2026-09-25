@@ -33,7 +33,7 @@ variable {H : CFGraph.{uTwoEdgeRigidity}}
 /-- Total edge multiplicity crossing from `S` to its complement, counted at
 the endpoint in `S`. -/
 def cutMultiplicity (H : CFGraph) (S : Finset H.V) : ℤ :=
-  ∑ v ∈ S, outdeg_S H S v
+  ∑ v ∈ S, outdegreeSet H S v
 
 /-- Every nonempty proper vertex set has at least two outgoing edges, counted
 with multiplicity.  For a connected loopless multigraph this is the usual
@@ -45,24 +45,24 @@ def TwoEdgeCutCondition (H : CFGraph) : Prop :=
 /-- The cut leaving a singleton has multiplicity equal to the valence of its
 unique vertex. -/
 @[simp] theorem cutMultiplicity_singleton (H : CFGraph) (v : H.V) :
-    cutMultiplicity H {v} = vertex_degree H v := by
-  unfold cutMultiplicity vertex_degree outdeg_S
+    cutMultiplicity H {v} = vertexDegree H v := by
+  unfold cutMultiplicity vertexDegree outdegreeSet
   simp
 
 /-- A graph satisfying the two-edge cut condition has no degree-one
 vertices. -/
 theorem vertex_degree_ne_one_of_twoEdgeCutCondition
     (hCut : TwoEdgeCutCondition H) (v : H.V) :
-    vertex_degree H v ≠ 1 := by
+    vertexDegree H v ≠ 1 := by
   intro hDegree
-  have hNeighbor : ∃ w : H.V, 0 < num_edges H v w := by
+  have hNeighbor : ∃ w : H.V, 0 < numEdges H v w := by
     by_contra h
     push Not at h
-    have hZero : ∀ w : H.V, num_edges H v w = 0 := by
+    have hZero : ∀ w : H.V, numEdges H v w = 0 := by
       intro w
       have hw := h w
       omega
-    simp [vertex_degree, hZero] at hDegree
+    simp [vertexDegree, hZero] at hDegree
   obtain ⟨w, hvw⟩ := hNeighbor
   have hvwNe : w ≠ v := by
     intro h
@@ -83,9 +83,9 @@ theorem cutMultiplicity_nonneg (H : CFGraph) (S : Finset H.V) :
 /-- A maximum-level vertex whose principal coefficient is zero has no edge
 leaving the maximum-level set. -/
 theorem outdeg_S_topSet_eq_zero_of_prin_eq_zero
-    {g : firing_script H} {v : H.V} (hv : v ∈ topSet g)
+    {g : firingScript H} {v : H.V} (hv : v ∈ topSet g)
     (hPrin : prin H g v = 0) :
-    outdeg_S H (topSet g) v = 0 := by
+    outdegreeSet H (topSet g) v = 0 := by
   have hUpper := prin_le_neg_outdeg_S hv
   have hNonnegative := outdeg_S_nonneg H (topSet g) v
   omega
@@ -93,9 +93,9 @@ theorem outdeg_S_topSet_eq_zero_of_prin_eq_zero
 /-- A maximum-level vertex with principal coefficient `-1` has at most one
 edge leaving the maximum-level set. -/
 theorem outdeg_S_topSet_le_one_of_prin_eq_neg_one
-    {g : firing_script H} {v : H.V} (hv : v ∈ topSet g)
+    {g : firingScript H} {v : H.V} (hv : v ∈ topSet g)
     (hPrin : prin H g v = -1) :
-    outdeg_S H (topSet g) v ≤ 1 := by
+    outdegreeSet H (topSet g) v ≤ 1 := by
   have hUpper := prin_le_neg_outdeg_S hv
   omega
 
@@ -104,18 +104,18 @@ proper cut has multiplicity at least two.  Connectedness is retained in the
 interface expected by the genus-one application; the cut hypothesis already
 contains the part of connectedness used by this extremal-set proof. -/
 theorem not_linear_equiv_one_chip_sub_of_twoEdgeCutCondition
-    (_hConnected : graph_connected H) (hCut : TwoEdgeCutCondition H)
+    (_hConnected : graphConnected H) (hCut : TwoEdgeCutCondition H)
     {p y : H.V} (hpy : p ≠ y) :
-    ¬ linear_equiv H (one_chip y - one_chip p) 0 := by
+    ¬ linearEquiv H (oneChip y - oneChip p) 0 := by
   intro hEquivalent
-  unfold linear_equiv at hEquivalent
+  unfold linearEquiv at hEquivalent
   obtain ⟨g, hg⟩ :=
-    (principal_iff_eq_prin H (0 - (one_chip y - one_chip p))).mp
+    (principal_iff_eq_prin H (0 - (oneChip y - oneChip p))).mp
       hEquivalent
-  have hPrincipal : prin H g = one_chip p - one_chip y := by
+  have hPrincipal : prin H g = oneChip p - oneChip y := by
     calc
-      prin H g = 0 - (one_chip y - one_chip p) := hg.symm
-      _ = one_chip p - one_chip y := by abel
+      prin H g = 0 - (oneChip y - oneChip p) := hg.symm
+      _ = oneChip p - oneChip y := by abel
   let S : Finset H.V := topSet g
   have hSNonempty : S.Nonempty := by
     exact topSet_nonempty g
@@ -123,7 +123,7 @@ theorem not_linear_equiv_one_chip_sub_of_twoEdgeCutCondition
     intro hpS
     have hAtP : prin H g p = 1 := by
       rw [hPrincipal]
-      simp [one_chip, hpy]
+      simp [oneChip, hpy]
     have hUpper := prin_le_neg_outdeg_S (H := H) (g := g) (v := p) hpS
     have hNonnegative := outdeg_S_nonneg H (topSet g) p
     omega
@@ -132,7 +132,7 @@ theorem not_linear_equiv_one_chip_sub_of_twoEdgeCutCondition
     apply hpNotS
     rw [hUniv]
     simp
-  have hZeroAwayY : ∀ v ∈ S, v ≠ y → outdeg_S H S v = 0 := by
+  have hZeroAwayY : ∀ v ∈ S, v ≠ y → outdegreeSet H S v = 0 := by
     intro v hvS hvy
     have hvp : v ≠ p := by
       intro hvp
@@ -140,18 +140,18 @@ theorem not_linear_equiv_one_chip_sub_of_twoEdgeCutCondition
       exact hpNotS hvS
     have hAtV : prin H g v = 0 := by
       rw [hPrincipal]
-      simp [one_chip, hvp, hvy]
+      simp [oneChip, hvp, hvy]
     exact outdeg_S_topSet_eq_zero_of_prin_eq_zero
       (H := H) (g := g) (v := v) hvS hAtV
   have hCutUpper : cutMultiplicity H S ≤ 1 := by
     by_cases hyS : y ∈ S
     · have hAtY : prin H g y = -1 := by
         rw [hPrincipal]
-        simp [one_chip, hpy.symm]
-      have hYUpper : outdeg_S H S y ≤ 1 :=
+        simp [oneChip, hpy.symm]
+      have hYUpper : outdegreeSet H S y ≤ 1 :=
         outdeg_S_topSet_le_one_of_prin_eq_neg_one
           (H := H) (g := g) (v := y) hyS hAtY
-      have hSum : cutMultiplicity H S = outdeg_S H S y := by
+      have hSum : cutMultiplicity H S = outdegreeSet H S y := by
         unfold cutMultiplicity
         apply Finset.sum_eq_single y
         · intro v hvS hvy
@@ -176,7 +176,7 @@ theorem not_linear_equiv_one_chip_sub_of_twoEdgeCutCondition
 /-- A connected genus-one graph with a second vertex and no one-edge cut is
 a pointed rigid genus-one block. -/
 theorem pointedGenusOneRigid_of_twoEdgeCutCondition
-    (y : H.V) (hConnected : graph_connected H) (hGenus : genus H = 1)
+    (y : H.V) (hConnected : graphConnected H) (hGenus : genus H = 1)
     (hExists : ∃ p : H.V, p ≠ y) (hCut : TwoEdgeCutCondition H) :
     PointedGenusOneRigid H y where
   connected := hConnected

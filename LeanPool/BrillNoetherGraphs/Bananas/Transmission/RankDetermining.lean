@@ -39,11 +39,11 @@ def restrictedRankGeq (G : CFGraph) (A : Set G.V)
 at every integer lower bound, equivalently when `r_A(D) = r(D)` for every
 divisor `D`. -/
 def RankDetermining (G : CFGraph) (A : Set G.V) : Prop :=
-  ∀ (D : CFDiv G) (k : ℤ), restrictedRankGeq G A D k ↔ rank_geq G D k
+  ∀ (D : CFDiv G) (k : ℤ), restrictedRankGeq G A D k ↔ rankGeq G D k
 
 theorem restrictedRankGeq_of_rank_geq
     {G : CFGraph} {A : Set G.V} {D : CFDiv G} {k : ℤ}
-    (h : rank_geq G D k) : restrictedRankGeq G A D k := by
+    (h : rankGeq G D k) : restrictedRankGeq G A D k := by
   intro E hEff hDeg _hSupport
   exact h E ⟨hEff, hDeg⟩
 
@@ -55,14 +55,14 @@ private theorem supportedOn_zero {G : CFGraph} (A : Set G.V) :
 private theorem supportedOn_add_one_chip
     {G : CFGraph} {A : Set G.V} {E : CFDiv G} {a : G.V}
     (hE : DivisorSupportedOn A E) (ha : a ∈ A) :
-    DivisorSupportedOn A (E + one_chip a) := by
+    DivisorSupportedOn A (E + oneChip a) := by
   intro v hv
   by_cases hva : v = a
   · simpa [hva] using ha
   · have hEv : E v ≠ 0 := by
       intro hZero
       apply hv
-      simp [Pi.add_apply, one_chip, hva, hZero]
+      simp [Pi.add_apply, oneChip, hva, hZero]
     exact hE v hEv
 
 private theorem supportedOn_left_of_effective_add
@@ -85,10 +85,10 @@ ordinary rank at least one, then `A` is rank determining. -/
 theorem rankDetermining_of_rank_one_test
     {G : CFGraph} (A : Set G.V)
     (hOne : ∀ D : CFDiv G,
-      (∀ a ∈ A, winnable G (D - one_chip a)) → 1 ≤ rank G D) :
+      (∀ a ∈ A, winnable G (D - oneChip a)) → 1 ≤ rank G D) :
     RankDetermining G A := by
   have hNat : ∀ n : ℕ, ∀ D : CFDiv G,
-      restrictedRankGeq G A D (n : ℤ) → rank_geq G D (n : ℤ) := by
+      restrictedRankGeq G A D (n : ℤ) → rankGeq G D (n : ℤ) := by
     intro n
     induction n with
     | zero =>
@@ -99,16 +99,16 @@ theorem rankDetermining_of_rank_one_test
     | succ n ih =>
         intro D hRestricted
         have hSubtractA : ∀ a ∈ A,
-            rank_geq G (D - one_chip a) (n : ℤ) := by
+            rankGeq G (D - oneChip a) (n : ℤ) := by
           intro a ha
           apply ih
           intro E hEff hDeg hSupport
-          have hEffAdd : effective (E + one_chip a) :=
+          have hEffAdd : effective (E + oneChip a) :=
             fun v => add_nonneg (hEff v) (eff_one_chip a v)
-          have hDegAdd : deg (E + one_chip a) = ((n + 1 : ℕ) : ℤ) := by
+          have hDegAdd : deg (E + oneChip a) = ((n + 1 : ℕ) : ℤ) := by
             rw [deg.map_add, deg_one_chip, hDeg]
             norm_num
-          have hWin := hRestricted (E + one_chip a) hEffAdd hDegAdd
+          have hWin := hRestricted (E + oneChip a) hEffAdd hDegAdd
             (supportedOn_add_one_chip hSupport ha)
           convert hWin using 1
           abel_nf
@@ -124,7 +124,7 @@ theorem rankDetermining_of_rank_one_test
           have hRankA := hSubtractA a ha
           have hWinA := hRankA E₁ ⟨hE₁Eff, by exact_mod_cast hE₁Deg⟩
           simpa [X, sub_eq_add_neg, add_assoc, add_comm, add_left_comm] using hWinA
-        have hXGeq : rank_geq G X 1 :=
+        have hXGeq : rankGeq G X 1 :=
           (rank_geq_iff G X 1).mpr hXOne
         have hWin := hXGeq E₂ ⟨hE₂Eff, by exact_mod_cast hE₂Deg⟩
         rw [hESplit]

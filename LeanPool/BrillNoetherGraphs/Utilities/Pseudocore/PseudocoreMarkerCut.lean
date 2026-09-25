@@ -344,7 +344,7 @@ theorem cut_leftRigidConditions_of_presentation
     (hCompatible : PseudocoreSplitGlue.Compatible split)
     (spec : SubdivisionGraph.Spec (n + core.loopCount) core.splitEdgeCount)
     (hCore : spec.core = split.splitCore)
-    (hConnected : graph_connected spec.graph) :
+    (hConnected : graphConnected spec.graph) :
     (cut split marker).LeftRigidConditions := by
   have hCoreConnected : spec.core.Connected :=
     PseudocorePresentation.core_connected_of_graph_connected spec hConnected

@@ -81,8 +81,8 @@ theorem rank_strand_pair_sub_of_distinct_interior
     (hqx : strandVertex B γ q ≠ strandVertex B α i)
     (hqy : strandVertex B γ q ≠ strandVertex B β j) :
     rank B.graph
-      (one_chip (strandVertex B α i) + one_chip (strandVertex B β j) -
-        one_chip (strandVertex B γ q)) = -1 := by
+      (oneChip (strandVertex B α i) + oneChip (strandVertex B β j) -
+        oneChip (strandVertex B γ q)) = -1 := by
   let pα := normalizedPathPosition B α i
   let pβ := normalizedPathPosition B β j
   let pγ := normalizedPathPosition B γ q
@@ -114,7 +114,7 @@ theorem rank_strand_pair_zero_of_distinct_interior
     (hqx : strandVertex B γ q ≠ strandVertex B α i)
     (hqy : strandVertex B γ q ≠ strandVertex B β j) :
     rank B.graph
-      (one_chip (strandVertex B α i) + one_chip (strandVertex B β j)) = 0 := by
+      (oneChip (strandVertex B α i) + oneChip (strandVertex B β j)) = 0 := by
   let pα := normalizedPathPosition B α i
   let pβ := normalizedPathPosition B β j
   let pγ := normalizedPathPosition B γ q

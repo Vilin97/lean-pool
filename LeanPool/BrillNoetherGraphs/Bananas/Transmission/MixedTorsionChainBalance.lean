@@ -246,7 +246,7 @@ theorem genus_reversedMarkedChain
 /-- Connectivity is preserved while the suffix is assembled from the right. -/
 theorem graph_connected_reversedMarkedChain
     (F : KGeneralChainFactor) (rest : List KGeneralChainFactor) :
-    _root_.graph_connected (reversedMarkedChain F rest).graph := by
+    _root_.graphConnected (reversedMarkedChain F rest).graph := by
   induction rest generalizing F with
   | nil => simpa [reversedMarkedChain] using F.connected
   | cons next rest ih =>
@@ -308,9 +308,9 @@ theorem onceMarkedBrillNoetherGeneral_reversedMixedTorsionChain
 
 /-- Connectivity of a chain with a connected accumulated left factor. -/
 private theorem graph_connected_markedChain
-    (M : MarkedGraph) (hM : _root_.graph_connected M.graph)
+    (M : MarkedGraph) (hM : _root_.graphConnected M.graph)
     (rest : List KGeneralChainFactor) :
-    _root_.graph_connected
+    _root_.graphConnected
       (M.chain (rest.map KGeneralChainFactor.marked)).graph := by
   induction rest generalizing M with
   | nil => simpa using hM
@@ -324,7 +324,7 @@ private theorem graph_connected_markedChain
 /-- Connectivity of a left-associated nonempty factor chain. -/
 theorem graph_connected_factorChain
     (F : KGeneralChainFactor) (rest : List KGeneralChainFactor) :
-    _root_.graph_connected
+    _root_.graphConnected
       (F.marked.chain (rest.map KGeneralChainFactor.marked)).graph :=
   graph_connected_markedChain F.marked F.connected rest
 

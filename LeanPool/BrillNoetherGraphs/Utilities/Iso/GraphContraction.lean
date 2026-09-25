@@ -72,9 +72,9 @@ are contracted, so no equation is required on the diagonal. -/
 def Valid (c : GraphContractionCertificate G H) : Prop :=
   Function.Surjective c.vertexMap ∧
   ∀ a b : H.V, a ≠ b →
-    num_edges H a b =
+    numEdges H a b =
       ∑ x : G.V, ∑ y : G.V,
-        if c.vertexMap x = a ∧ c.vertexMap y = b then num_edges G x y else 0
+        if c.vertexMap x = a ∧ c.vertexMap y = b then numEdges G x y else 0
 
 /-- Validity is invariant under a checked reindexing of the source graph.
 The proof uses the vertex equivalence twice to reindex the two source sums;
@@ -117,19 +117,19 @@ theorem valid_postcomposeLaplacianEquiv {H' : CFGraph.{w}}
       apply hDistinct
       exact equivalence.toEquiv.symm.injective hEqual
     calc
-      num_edges H' a b =
-          num_edges H' (equivalence (equivalence.toEquiv.symm a))
+      numEdges H' a b =
+          numEdges H' (equivalence (equivalence.toEquiv.symm a))
             (equivalence (equivalence.toEquiv.symm b)) := by simp
-      _ = num_edges H (equivalence.toEquiv.symm a) (equivalence.toEquiv.symm b) :=
+      _ = numEdges H (equivalence.toEquiv.symm a) (equivalence.toEquiv.symm b) :=
         equivalence.num_edges_eq _ _
       _ = ∑ x : G.V, ∑ y : G.V,
           if c.vertexMap x = equivalence.toEquiv.symm a ∧
-              c.vertexMap y = equivalence.toEquiv.symm b then num_edges G x y else 0 :=
+              c.vertexMap y = equivalence.toEquiv.symm b then numEdges G x y else 0 :=
         hValid.2 _ _ hDistinctPreimage
       _ = ∑ x : G.V, ∑ y : G.V,
           if (c.postcomposeLaplacianEquiv equivalence).vertexMap x = a ∧
               (c.postcomposeLaplacianEquiv equivalence).vertexMap y = b then
-            num_edges G x y else 0 := by
+            numEdges G x y else 0 := by
         apply Finset.sum_congr rfl
         intro x _
         apply Finset.sum_congr rfl
@@ -162,9 +162,9 @@ def check (c : GraphContractionCertificate G H) : Bool :=
   (@decide (Function.Surjective c.vertexMap)
     Fintype.decidableForallFintype) &&
   (@decide (∀ p : H.V × H.V, p.1 ≠ p.2 →
-    num_edges H p.1 p.2 =
+    numEdges H p.1 p.2 =
       ∑ x : G.V, ∑ y : G.V,
-        if c.vertexMap x = p.1 ∧ c.vertexMap y = p.2 then num_edges G x y else 0)
+        if c.vertexMap x = p.1 ∧ c.vertexMap y = p.2 then numEdges G x y else 0)
     Fintype.decidableForallFintype)
 @[simp] theorem check_eq_true_iff (c : GraphContractionCertificate G H) :
     c.check = true ↔ c.Valid := by
@@ -177,7 +177,7 @@ def pushDiv (c : GraphContractionCertificate G H) (D : CFDiv G) : CFDiv H :=
 
 /-- Pull a firing script back by composition with the quotient map. -/
 def pullScript (c : GraphContractionCertificate G H)
-    (tau : firing_script H) : firing_script G :=
+    (tau : firingScript H) : firingScript G :=
   fun x => tau (c.vertexMap x)
 
 @[simp] theorem pushDiv_apply (c : GraphContractionCertificate G H)
@@ -185,7 +185,7 @@ def pullScript (c : GraphContractionCertificate G H)
     c.pushDiv D b = ∑ x : G.V, if c.vertexMap x = b then D x else 0 := rfl
 
 @[simp] theorem pullScript_apply (c : GraphContractionCertificate G H)
-    (tau : firing_script H) (x : G.V) :
+    (tau : firingScript H) (x : G.V) :
     c.pullScript tau x = tau (c.vertexMap x) := rfl
 
 @[simp] theorem pushDiv_zero (c : GraphContractionCertificate G H) :
@@ -216,19 +216,19 @@ def pullScript (c : GraphContractionCertificate G H)
 /-- Fibre summation sends one chip to the one chip at its image. -/
 @[simp] theorem pushDiv_one_chip (c : GraphContractionCertificate G H)
     (x : G.V) :
-    c.pushDiv (one_chip x) = one_chip (c.vertexMap x) := by
+    c.pushDiv (oneChip x) = oneChip (c.vertexMap x) := by
   funext b
   by_cases hb : c.vertexMap x = b
   · subst b
     rw [pushDiv]
     rw [Finset.sum_eq_single x]
-    · simp [one_chip]
+    · simp [oneChip]
     · intro y _ hy
-      simp [one_chip, hy]
+      simp [oneChip, hy]
     · simp
   · have hbx : b ≠ c.vertexMap x := Ne.symm hb
     rw [pushDiv]
-    simp only [one_chip, if_neg hbx]
+    simp only [oneChip, if_neg hbx]
     apply Finset.sum_eq_zero
     intro y _
     by_cases hy : y = x
@@ -277,22 +277,22 @@ private theorem sum_by_target (c : GraphContractionCertificate G H)
 integers. -/
 private theorem edgeMultiplicity_int (c : GraphContractionCertificate G H)
     (hValid : c.Valid) (a b : H.V) (hab : a ≠ b) :
-    (num_edges H a b : ℤ) =
+    (numEdges H a b : ℤ) =
       ∑ x : G.V, ∑ y : G.V,
         if c.vertexMap x = a ∧ c.vertexMap y = b then
-          (num_edges G x y : ℤ) else 0 := by
+          (numEdges G x y : ℤ) else 0 := by
   exact_mod_cast hValid.2 a b hab
 
 /-- A weighted version of the quotient equation.  On the diagonal the
 coefficient vanishes, which is exactly why the certificate need not constrain
 contracted internal edges. -/
 private theorem weighted_edgeMultiplicity (c : GraphContractionCertificate G H)
-    (hValid : c.Valid) (b : H.V) (tau : firing_script H) :
-    (∑ a : H.V, (tau a - tau b) * (num_edges H b a : ℤ)) =
+    (hValid : c.Valid) (b : H.V) (tau : firingScript H) :
+    (∑ a : H.V, (tau a - tau b) * (numEdges H b a : ℤ)) =
       ∑ a : H.V, (tau a - tau b) *
         (∑ x : G.V, ∑ y : G.V,
           if c.vertexMap x = b ∧ c.vertexMap y = a then
-            (num_edges G x y : ℤ) else 0) := by
+            (numEdges G x y : ℤ) else 0) := by
   apply Finset.sum_congr rfl
   intro a _
   by_cases h : a = b
@@ -304,30 +304,30 @@ private theorem weighted_edgeMultiplicity (c : GraphContractionCertificate G H)
 commute with contraction; this is the precise amount of compatibility needed
 to push explicit reachability certificates forward. -/
 theorem pushDiv_prin_pullScript (c : GraphContractionCertificate G H)
-    (hValid : c.Valid) (tau : firing_script H) :
+    (hValid : c.Valid) (tau : firingScript H) :
     c.pushDiv (prin G (c.pullScript tau)) = prin H tau := by
   funext b
   change
     (∑ x : G.V, if c.vertexMap x = b then
       (∑ y : G.V,
         (tau (c.vertexMap y) - tau (c.vertexMap x)) *
-          (num_edges G x y : ℤ)) else 0) =
-      ∑ a : H.V, (tau a - tau b) * (num_edges H b a : ℤ)
+          (numEdges G x y : ℤ)) else 0) =
+      ∑ a : H.V, (tau a - tau b) * (numEdges H b a : ℤ)
   calc
     (∑ x : G.V, if c.vertexMap x = b then
       (∑ y : G.V,
         (tau (c.vertexMap y) - tau (c.vertexMap x)) *
-          (num_edges G x y : ℤ)) else 0) =
+          (numEdges G x y : ℤ)) else 0) =
         ∑ x : G.V, ∑ y : G.V,
           if c.vertexMap x = b then
-            (tau (c.vertexMap y) - tau b) * (num_edges G x y : ℤ) else 0 := by
+            (tau (c.vertexMap y) - tau b) * (numEdges G x y : ℤ) else 0 := by
           apply Finset.sum_congr rfl
           intro x _
           by_cases hx : c.vertexMap x = b <;> simp [hx]
     _ = ∑ x : G.V, ∑ a : H.V, ∑ y : G.V,
           if c.vertexMap y = a then
             if c.vertexMap x = b then
-              (tau a - tau b) * (num_edges G x y : ℤ) else 0
+              (tau a - tau b) * (numEdges G x y : ℤ) else 0
           else 0 := by
           apply Finset.sum_congr rfl
           intro x _
@@ -339,7 +339,7 @@ theorem pushDiv_prin_pullScript (c : GraphContractionCertificate G H)
           by_cases hy : c.vertexMap y = a <;> simp [hy]
     _ = ∑ a : H.V, ∑ x : G.V, ∑ y : G.V,
           if c.vertexMap x = b ∧ c.vertexMap y = a then
-            (tau a - tau b) * (num_edges G x y : ℤ) else 0 := by
+            (tau a - tau b) * (numEdges G x y : ℤ) else 0 := by
           rw [Finset.sum_comm]
           apply Finset.sum_congr rfl
           intro a _
@@ -352,7 +352,7 @@ theorem pushDiv_prin_pullScript (c : GraphContractionCertificate G H)
     _ = ∑ a : H.V, (tau a - tau b) *
           (∑ x : G.V, ∑ y : G.V,
             if c.vertexMap x = b ∧ c.vertexMap y = a then
-              (num_edges G x y : ℤ) else 0) := by
+              (numEdges G x y : ℤ) else 0) := by
           apply Finset.sum_congr rfl
           intro a _
           symm
@@ -364,14 +364,14 @@ theorem pushDiv_prin_pullScript (c : GraphContractionCertificate G H)
           intro y _
           by_cases hxy : c.vertexMap x = b ∧ c.vertexMap y = a <;>
             simp [hxy]
-    _ = ∑ a : H.V, (tau a - tau b) * (num_edges H b a : ℤ) :=
+    _ = ∑ a : H.V, (tau a - tau b) * (numEdges H b a : ℤ) :=
           (c.weighted_edgeMultiplicity hValid b tau).symm
 
 /-- An explicit source winnability witness whose script is pulled back from
 the target.  This is the reusable certificate-level notion: it is stronger
 than merely being winnable on `G`, and therefore has a sound quotient image. -/
 def PushableWinnable (c : GraphContractionCertificate G H) (X : CFDiv G) : Prop :=
-  ∃ tau : firing_script H,
+  ∃ tau : firingScript H,
     effective (X + prin G (c.pullScript tau))
 
 /-- A pulled-back source witness pushes to an ordinary winnability witness on
@@ -392,7 +392,7 @@ The definition deliberately retains the source representative: different
 vertices of one contracted fibre may have different source witnesses. -/
 def PushableReaches (c : GraphContractionCertificate G H)
     (D : CFDiv G) (x : G.V) : Prop :=
-  c.PushableWinnable (D - one_chip x)
+  c.PushableWinnable (D - oneChip x)
 
 /-- A fibre-wise certificate: every chosen target fibre has one source
 representative with a pushable removed-chip witness.  This is the minimal
@@ -473,8 +473,8 @@ graphs.  The proof pulls a target cut back to the full preimage cut in the
 source; a source crossing edge contributes a positive summand to the exact
 off-diagonal fibre-multiplicity equation. -/
 theorem graphConnected (c : GraphContractionCertificate G H)
-    (hValid : c.Valid) (hConnected : graph_connected G) :
-    graph_connected H := by
+    (hValid : c.Valid) (hConnected : graphConnected G) :
+    graphConnected H := by
   classical
   intro S hSplit
   let pulled : Finset G.V := Finset.univ.filter fun x => c.vertexMap x ∈ S
@@ -495,29 +495,29 @@ theorem graphConnected (c : GraphContractionCertificate G H)
       intro h
       exact hqS (h ▸ hpS)
     rw [hValid.2 (c.vertexMap p) (c.vertexMap q) hpqImage]
-    have hleInner : num_edges G p q ≤
+    have hleInner : numEdges G p q ≤
         ∑ y : G.V,
           if c.vertexMap p = c.vertexMap p ∧ c.vertexMap y = c.vertexMap q then
-            num_edges G p y else 0 := by
+            numEdges G p y else 0 := by
       have hSingle := Finset.single_le_sum
         (fun z _ => Nat.zero_le _)
         (Finset.mem_univ q)
         (s := Finset.univ)
         (f := fun y : G.V =>
           if c.vertexMap p = c.vertexMap p ∧ c.vertexMap y = c.vertexMap q then
-            num_edges G p y else 0)
+            numEdges G p y else 0)
       simpa using hSingle
-    have hle : num_edges G p q ≤
+    have hle : numEdges G p q ≤
         ∑ x : G.V, ∑ y : G.V,
           if c.vertexMap x = c.vertexMap p ∧ c.vertexMap y = c.vertexMap q then
-            num_edges G x y else 0 := by
+            numEdges G x y else 0 := by
       calc
-        num_edges G p q ≤ ∑ y : G.V,
+        numEdges G p q ≤ ∑ y : G.V,
             if c.vertexMap p = c.vertexMap p ∧ c.vertexMap y = c.vertexMap q then
-              num_edges G p y else 0 := hleInner
+              numEdges G p y else 0 := hleInner
         _ ≤ ∑ x : G.V, ∑ y : G.V,
             if c.vertexMap x = c.vertexMap p ∧ c.vertexMap y = c.vertexMap q then
-              num_edges G x y else 0 := by
+              numEdges G x y else 0 := by
               have hSingle := Finset.single_le_sum
                 (fun z _ => Finset.sum_nonneg fun y _ => Nat.zero_le _)
                 (Finset.mem_univ p)
@@ -525,7 +525,7 @@ theorem graphConnected (c : GraphContractionCertificate G H)
                 (f := fun x : G.V => ∑ y : G.V,
                   if c.vertexMap x = c.vertexMap p ∧
                       c.vertexMap y = c.vertexMap q then
-                    num_edges G x y else 0)
+                    numEdges G x y else 0)
               simpa using hSingle
     exact lt_of_lt_of_le hpq hle
 

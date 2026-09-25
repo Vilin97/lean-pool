@@ -148,7 +148,7 @@ theorem stepLeft_eq_interiorVertex_iff (s : d.Step) (e : Fin p)
 /-! ## The Laplacian as a sum over unit steps -/
 
 theorem num_edges_eq_sum_steps (x y : d.Vertex) :
-    num_edges d.graph x y =
+    numEdges d.graph x y =
       ∑ s : d.Step,
         if d.unitEdge s = (x, y) ∨ d.unitEdge s = (y, x) then 1 else 0 := by
   rw [d.num_edges_eq_card_filter_steps]
@@ -158,7 +158,7 @@ theorem num_edges_eq_sum_steps (x y : d.Vertex) :
       (fun s : d.Step => d.unitEdge s = (x, y) ∨ d.unitEdge s = (y, x))
       Finset.univ)
 
-theorem prin_eq_sum_steps (script : firing_script d.graph) (v : d.Vertex) :
+theorem prin_eq_sum_steps (script : firingScript d.graph) (v : d.Vertex) :
     prin d.graph script v =
       ∑ s : d.Step,
         ((if d.stepLeft s.1 s.2 = v then
@@ -166,7 +166,7 @@ theorem prin_eq_sum_steps (script : firing_script d.graph) (v : d.Vertex) :
           (if d.stepRight s.1 s.2 = v then
             script (d.stepLeft s.1 s.2) - script v else 0)) := by
   change (∑ w : d.graph.V,
-    (script w - script v) * (num_edges d.graph v w : ℤ)) = _
+    (script w - script v) * (numEdges d.graph v w : ℤ)) = _
   simp_rw [d.num_edges_eq_sum_steps]
   push_cast
   simp_rw [mul_sum]
@@ -191,12 +191,12 @@ theorem prin_eq_sum_steps (script : firing_script d.graph) (v : d.Vertex) :
 /-- A slope datum for a firing script: the script rises by `slope edge k`
 across the `k`-th unit step of slot `edge`.  Vanishing slots impose no
 condition, since they carry no unit step. -/
-def IsStepSlope (script : firing_script d.graph) (slope : Fin p → ℕ → ℤ) :
+def IsStepSlope (script : firingScript d.graph) (slope : Fin p → ℕ → ℤ) :
     Prop :=
   ∀ (e : Fin p) (o : Fin (d.length e)),
     script (d.stepRight e o) - script (d.stepLeft e o) = slope e o.val
 
-theorem prin_eq_sum_slopes {script : firing_script d.graph}
+theorem prin_eq_sum_slopes {script : firingScript d.graph}
     {slope : Fin p → ℕ → ℤ} (hslope : d.IsStepSlope script slope)
     (v : d.Vertex) :
     prin d.graph script v =
@@ -243,7 +243,7 @@ theorem sum_over_last_step {e : Fin p} (hpos : 0 < d.length e)
 /-- **The load-bearing formula.**  At a contracted core class the Laplacian is
 the endpoint sum over *all* slots of the uncontracted core.  Vanishing slots
 appear in the sum and contribute zero, by `zero_slot_cancels`. -/
-theorem prin_coreVertex_eq_endpointSum {script : firing_script d.graph}
+theorem prin_coreVertex_eq_endpointSum {script : firingScript d.graph}
     {slope : Fin p → ℕ → ℤ} (hslope : d.IsStepSlope script slope) (r : Fin n) :
     prin d.graph script (d.coreVertex r) =
       ∑ e : Fin p,
@@ -295,7 +295,7 @@ theorem prin_coreVertex_eq_endpointSum {script : firing_script d.graph}
 /-- At an interior vertex the Laplacian is the difference of the two adjacent
 slopes.  Unchanged in form from the strictly positive case: an interior vertex
 only ever exists on a slot of length at least two. -/
-theorem prin_interiorVertex_eq_slopeDifference {script : firing_script d.graph}
+theorem prin_interiorVertex_eq_slopeDifference {script : firingScript d.graph}
     {slope : Fin p → ℕ → ℤ} (hslope : d.IsStepSlope script slope)
     (e : Fin p) (o : Fin (d.length e - 1)) :
     prin d.graph script (d.interiorVertex e o) =
@@ -337,7 +337,7 @@ endpoint formula — the same expression `SlopeScript`'s
 This is what makes a retrofit additive rather than per-face: a row proves its
 value lemmas once, at each of the `n` core vertices, and every face reads them
 off by summing over classes. -/
-theorem prin_coreVertex_eq_classSum {script : firing_script d.graph}
+theorem prin_coreVertex_eq_classSum {script : firingScript d.graph}
     {slope : Fin p → ℕ → ℤ} (hslope : d.IsStepSlope script slope) (r : Fin n) :
     prin d.graph script (d.coreVertex r) =
       ∑ v ∈ Finset.univ.filter (fun v : Fin n => d.rep v = d.rep r),
@@ -370,7 +370,7 @@ theorem le_sum_of_member {F : Fin n → ℤ} (r u : Fin n)
 /-- The script whose value at path position `k` of slot `edge` is
 `value edge k`, and `potential (rep v)` at the class of the core vertex `v`. -/
 def slotValueScript (potential : Fin n → ℤ) (value : Fin p → ℕ → ℤ) :
-    firing_script d.graph
+    firingScript d.graph
   | Sum.inl c => potential c.val
   | Sum.inr interior => value interior.1 (interior.2.val + 1)
 
@@ -434,7 +434,7 @@ At a strictly positive length vector `rep` is the identity, so every statement
 above is the corresponding `SlopeScript` statement transported along
 `laplacianEquivToSpec`.  Nothing in `SlopeScript` is restated or weakened. -/
 
-theorem isStepSlope_congr {script : firing_script d.graph}
+theorem isStepSlope_congr {script : firingScript d.graph}
     {slope slope' : Fin p → ℕ → ℤ}
     (h : ∀ (e : Fin p) (k : ℕ), k < d.length e → slope e k = slope' e k)
     (hslope : d.IsStepSlope script slope) : d.IsStepSlope script slope' := by
@@ -454,7 +454,7 @@ theorem classFilter_eq_singleton_of_pos (hpos : ∀ e : Fin p, 0 < d.length e)
 /-- Consistency with the strictly positive layer: on the interior the class
 sum collapses to a single term and the formula is literally
 `SubdivisionGraph.Spec.prin_coreVertex_eq_endpointSum`. -/
-theorem prin_coreVertex_eq_endpointSum_of_pos {script : firing_script d.graph}
+theorem prin_coreVertex_eq_endpointSum_of_pos {script : firingScript d.graph}
     {slope : Fin p → ℕ → ℤ} (hslope : d.IsStepSlope script slope)
     (hpos : ∀ e : Fin p, 0 < d.length e) (r : Fin n) :
     prin d.graph script (d.coreVertex r) =

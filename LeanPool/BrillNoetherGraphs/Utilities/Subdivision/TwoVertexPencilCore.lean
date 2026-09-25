@@ -39,7 +39,7 @@ theorem bnExists_one_two_of_coreVertexCount_eq_two
   let rightIndex : Fin n := ⟨1, by omega⟩
   let left : spec.graph.V := spec.coreVertex leftIndex
   let right : spec.graph.V := spec.coreVertex rightIndex
-  let D : CFDiv spec.graph := one_chip left + one_chip right
+  let D : CFDiv spec.graph := oneChip left + oneChip right
   have hEffective : effective D :=
     (Eff spec.graph).add_mem (eff_one_chip left) (eff_one_chip right)
   have hDegree : deg D = 2 := by
@@ -51,10 +51,10 @@ theorem bnExists_one_two_of_coreVertexCount_eq_two
     rcases hCases with hLeft | hRight
     · have hEq : vertex = leftIndex := Fin.ext hLeft
       subst vertex
-      simp [D, left, right, leftIndex, rightIndex, one_chip, Spec.coreVertex]
+      simp [D, left, right, leftIndex, rightIndex, oneChip, Spec.coreVertex]
     · have hEq : vertex = rightIndex := Fin.ext hRight
       subst vertex
-      simp [D, left, right, leftIndex, rightIndex, one_chip, Spec.coreVertex]
+      simp [D, left, right, leftIndex, rightIndex, oneChip, Spec.coreVertex]
   have hRank : rank spec.graph D ≥ 1 := by
     rw [rank_ge_one_iff_winnable_sub_one_chip]
     intro vertex
@@ -63,10 +63,10 @@ theorem bnExists_one_two_of_coreVertexCount_eq_two
       intro q
       by_cases hq : q = spec.coreVertex vertex
       · subst q
-        simpa [one_chip, Spec.coreVertex] using
+        simpa [oneChip, Spec.coreVertex] using
           (sub_nonneg.mpr (hCoreValue vertex))
       · change q ≠ Sum.inl vertex at hq
-        simpa [one_chip, hq] using hEffective q
+        simpa [oneChip, hq] using hEffective q
     · rcases interior with ⟨edge, offset⟩
       let position : spec.PathPosition edge :=
         ⟨offset.val + 1, by have := offset.isLt; omega⟩
@@ -79,7 +79,7 @@ theorem bnExists_one_two_of_coreVertexCount_eq_two
           omega)]
         congr 3
       change winnable spec.graph
-        (D - one_chip (spec.interiorVertex edge offset))
+        (D - oneChip (spec.interiorVertex edge offset))
       rw [← hPosition]
       exact SegmentReflection.reaches_pathPosition spec D edge position
         hEffective (hCoreValue (spec.core.tail edge))

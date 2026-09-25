@@ -505,12 +505,12 @@ theorem divisor_coreVertex_eq (r : Fin n) :
     cfg.divisor d (d.coreVertex r) =
       chipInd d r cfg.chipOne + chipInd d r cfg.chipTwo +
         chipInd d r cfg.chipThree + chipInd d r cfg.chipFour := by
-  simp [divisor, chipInd, fourChipDivisor, one_chip, d.coreVertex_eq_iff,
+  simp [divisor, chipInd, fourChipDivisor, oneChip, d.coreVertex_eq_iff,
     eq_comm]
 
 theorem divisor_interiorVertex_eq_zero (e : Fin p) (o : Fin (d.length e - 1)) :
     cfg.divisor d (d.interiorVertex e o) = 0 := by
-  simp [divisor, fourChipDivisor, one_chip, DegSpec.coreVertex,
+  simp [divisor, fourChipDivisor, oneChip, DegSpec.coreVertex,
     DegSpec.interiorVertex]
 
 /-- A slot from a chip-free class to a chip cannot have collapsed. -/
@@ -1665,9 +1665,9 @@ theorem residual_effective_of_coreVertex {potential : Fin n → ℤ}
     (hInv : d.RepInvariant potential) (center : Fin n)
     (hCoreCase : ∀ r : Fin n,
       0 ≤ cfg.divisor d (d.coreVertex r) -
-        one_chip (G := d.graph) (d.coreVertex center) (d.coreVertex r) +
+        oneChip (G := d.graph) (d.coreVertex center) (d.coreVertex r) +
         prin d.graph (d.interpolatedScript potential) (d.coreVertex r)) :
-    effective (cfg.divisor d - one_chip (d.coreVertex center) +
+    effective (cfg.divisor d - oneChip (d.coreVertex center) +
       prin d.graph (d.interpolatedScript potential)) := by
   intro vertex
   rcases vertex with coreClass | interior
@@ -1680,12 +1680,12 @@ theorem residual_effective_of_coreVertex {potential : Fin n → ℤ}
     exact hCoreCase r
   · obtain ⟨e, o⟩ := interior
     change 0 ≤ cfg.divisor d (d.interiorVertex e o) -
-      one_chip (G := d.graph) (d.coreVertex center) (d.interiorVertex e o) +
+      oneChip (G := d.graph) (d.coreVertex center) (d.interiorVertex e o) +
       prin d.graph (d.interpolatedScript potential) (d.interiorVertex e o)
     have hNe : d.interiorVertex e o ≠ d.coreVertex center := by
       simp [DegSpec.coreVertex, DegSpec.interiorVertex]
     rw [cfg.divisor_interiorVertex_eq_zero]
-    simp only [one_chip, if_neg hNe, sub_zero, zero_add]
+    simp only [oneChip, if_neg hNe, sub_zero, zero_add]
     exact d.prin_interpolatedScript_interiorVertex_nonneg hInv e o
 
 theorem pair_residual_effective (hCore : d.core = cfg.core)
@@ -1695,7 +1695,7 @@ theorem pair_residual_effective (hCore : d.core = cfg.core)
     (hTarget : ∀ v : Fin n, d.rep v = d.rep center ↔ v = center)
     (hPartner : ∀ v : Fin n,
       d.rep v = d.rep (cfg.partner center) ↔ v = cfg.partner center) :
-    effective (cfg.divisor d - one_chip (d.coreVertex center) +
+    effective (cfg.divisor d - oneChip (d.coreVertex center) +
       prin d.graph (d.interpolatedScript (cfg.pairPotential d center))) := by
   have hInv := cfg.pairPotential_repInvariant d center
   have hHeightPos := cfg.targetHeight_pos d hCore hCenter hZero
@@ -1715,17 +1715,17 @@ theorem pair_residual_effective (hCore : d.core = cfg.core)
     simp only [Finset.sum_singleton]
     have hContribution := cfg.endpointContribution_target_ge_one d hCore
       hCenter hZero hMiddlePos hTarget hPartner
-    change (0 : ℤ) ≤ 0 - one_chip (G := d.graph) (d.coreVertex r)
+    change (0 : ℤ) ≤ 0 - oneChip (G := d.graph) (d.coreVertex r)
       (d.coreVertex r) +
       ConfigurationCommon.endpointContribution d (cfg.pairPotential d r) r
-    simp only [one_chip]
+    simp only [oneChip]
     omega
   · by_cases hAtPartner : d.rep r = d.rep (cfg.partner center)
     · have hCoreNe : d.coreVertex center ≠ d.coreVertex r := by
         intro hEq
         exact hAtTarget ((d.coreVertex_eq_iff r center).mp hEq.symm)
-      rw [show one_chip (G := d.graph) (d.coreVertex center)
-          (d.coreVertex r) = 0 by simp [one_chip, hCoreNe.symm]]
+      rw [show oneChip (G := d.graph) (d.coreVertex center)
+          (d.coreVertex r) = 0 by simp [oneChip, hCoreNe.symm]]
       rw [d.prin_interpolatedScript_coreVertex_eq_classSum hInv]
       have hFilter : Finset.univ.filter
           (fun v : Fin n => d.rep v = d.rep r) = {cfg.partner center} := by
@@ -1743,8 +1743,8 @@ theorem pair_residual_effective (hCore : d.core = cfg.core)
     · have hCoreNe : d.coreVertex center ≠ d.coreVertex r := by
         intro hEq
         exact hAtTarget ((d.coreVertex_eq_iff r center).mp hEq.symm)
-      rw [show one_chip (G := d.graph) (d.coreVertex center)
-          (d.coreVertex r) = 0 by simp [one_chip, hCoreNe.symm]]
+      rw [show oneChip (G := d.graph) (d.coreVertex center)
+          (d.coreVertex r) = 0 by simp [oneChip, hCoreNe.symm]]
       rw [cfg.divisor_coreVertex_eq,
         cfg.prin_pair_nonTarget_eq d hCore hCenter hHeightPos hTarget hPartner
           hPF hPS r hAtTarget hAtPartner,
@@ -1777,7 +1777,7 @@ theorem targetOnly_residual_effective (hCore : d.core = cfg.core)
       d.rep (cfg.firstChip (cfg.partner center)) = d.rep (cfg.partner center) ∨
       d.rep (cfg.secondChip (cfg.partner center)) =
         d.rep (cfg.partner center)) :
-    effective (cfg.divisor d - one_chip (d.coreVertex center) +
+    effective (cfg.divisor d - oneChip (d.coreVertex center) +
       prin d.graph
         (d.interpolatedScript (cfg.targetOnlyPotential d center))) := by
   have hInv := ConfigurationCommon.centerPotential_repInvariant d center
@@ -1797,16 +1797,16 @@ theorem targetOnly_residual_effective (hCore : d.core = cfg.core)
     simp only [Finset.sum_singleton]
     have hContribution := cfg.endpointContribution_targetOnly_ge_one d hCore
       hCenter hZero hPartnerHeight hMiddlePos hSingleton
-    change (0 : ℤ) ≤ 0 - one_chip (G := d.graph) (d.coreVertex r)
+    change (0 : ℤ) ≤ 0 - oneChip (G := d.graph) (d.coreVertex r)
       (d.coreVertex r) +
       ConfigurationCommon.endpointContribution d (cfg.targetOnlyPotential d r) r
-    simp only [one_chip]
+    simp only [oneChip]
     omega
   · have hCoreNe : d.coreVertex center ≠ d.coreVertex r := by
       intro hEq
       exact hAtTarget ((d.coreVertex_eq_iff r center).mp hEq.symm)
-    rw [show one_chip (G := d.graph) (d.coreVertex center)
-        (d.coreVertex r) = 0 by simp [one_chip, hCoreNe.symm]]
+    rw [show oneChip (G := d.graph) (d.coreVertex center)
+        (d.coreVertex r) = 0 by simp [oneChip, hCoreNe.symm]]
     rw [cfg.divisor_coreVertex_eq,
       cfg.prin_targetOnly_nonTarget_eq d hCore hCenter hHeightPos
         hPartnerHeight hMiddlePos hSingleton r hAtTarget,
@@ -1834,7 +1834,7 @@ theorem merged_residual_effective (hCore : d.core = cfg.core)
     (hMerged : d.rep (cfg.partner center) = d.rep center)
     (hClass : ∀ v : Fin n,
       d.rep v = d.rep center ↔ v = center ∨ v = cfg.partner center) :
-    effective (cfg.divisor d - one_chip (d.coreVertex center) +
+    effective (cfg.divisor d - oneChip (d.coreVertex center) +
       prin d.graph (d.interpolatedScript (cfg.pairPotential d center))) := by
   have hInv := cfg.pairPotential_repInvariant d center
   have hHeightPos := cfg.targetHeight_pos d hCore hCenter hZero
@@ -1855,19 +1855,19 @@ theorem merged_residual_effective (hCore : d.core = cfg.core)
       not_false_eq_true, Finset.sum_singleton]
     have hContribution := cfg.endpointContribution_merged_ge_one d hCore
       hCenter hZero hMiddleZero hMerged hClass
-    change (0 : ℤ) ≤ 0 - one_chip (G := d.graph) (d.coreVertex center)
+    change (0 : ℤ) ≤ 0 - oneChip (G := d.graph) (d.coreVertex center)
       (d.coreVertex center) +
       (ConfigurationCommon.endpointContribution d (cfg.pairPotential d center)
           center +
         ConfigurationCommon.endpointContribution d (cfg.pairPotential d center)
           (cfg.partner center))
-    simp only [one_chip]
+    simp only [oneChip]
     omega
   · have hCoreNe : d.coreVertex center ≠ d.coreVertex r := by
       intro hEq
       exact hAtClass ((d.coreVertex_eq_iff r center).mp hEq.symm)
-    rw [show one_chip (G := d.graph) (d.coreVertex center)
-        (d.coreVertex r) = 0 by simp [one_chip, hCoreNe.symm]]
+    rw [show oneChip (G := d.graph) (d.coreVertex center)
+        (d.coreVertex r) = 0 by simp [oneChip, hCoreNe.symm]]
     rw [cfg.divisor_coreVertex_eq,
       cfg.prin_merged_nonTarget_eq d hCore hCenter hMiddleZero hMerged hClass
         hHeightPos r hAtClass,
@@ -1948,7 +1948,7 @@ theorem reaches_center (hCore : d.core = cfg.core)
       have hNonneg := hEffective (d.coreVertex center)
       omega
     exact reaches_of_effective_representative
-      (linear_equiv.refl d.graph (cfg.divisor d)) hEffective hChip
+      (linearEquiv.refl d.graph (cfg.divisor d)) hEffective hChip
 
 /-- **Configuration 3 on a closed face.**  A row every one of whose chip-free
 vertices is a declared centre gets the whole closed-orthant AR
@@ -1966,7 +1966,7 @@ theorem closedConstruction (core_nonempty : 0 < n) (hConnected : cfg.core.Connec
     (fun d hCore hRepReach center => by
       by_cases hChip : cfg.IsChip center
       · exact reaches_of_effective_representative
-          (linear_equiv.refl d.graph (cfg.divisor d)) (cfg.divisor_effective d)
+          (linearEquiv.refl d.graph (cfg.divisor d)) (cfg.divisor_effective d)
           (cfg.one_le_divisor_at_chip d hChip)
       · exact cfg.reaches_center d hCore (zeroSlots d.length) hRepReach
           (mem_zeroSlots d.length) (hCenters center hChip))

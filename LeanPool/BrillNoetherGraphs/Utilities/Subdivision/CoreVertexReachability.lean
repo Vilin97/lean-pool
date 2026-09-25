@@ -24,7 +24,7 @@ open Finset
 embedded core vertex has rank at least one. -/
 theorem bnExists_of_reaches_coreVertices
     {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
-    (hConnected : graph_connected spec.graph)
+    (hConnected : graphConnected spec.graph)
     (D : CFDiv spec.graph) (degree : ℤ)
     (hDegree : deg D = degree)
     (hReaches : ∀ vertex : Fin n,

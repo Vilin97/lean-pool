@@ -168,10 +168,10 @@ theorem leftEndpoint_ne_rightEndpoint {g : ℕ} (B : Banana g) :
 the sum of a normalized position and its reflected position. -/
 theorem endpoint_sum_linearEquiv_strand_reflection
     {g : ℕ} (B : Banana g) (α : Fin (g + 1)) (i : B.PathPosition α) :
-    linear_equiv B.graph
-      (one_chip (leftEndpoint B) + one_chip (rightEndpoint B))
-      (one_chip (strandVertex B α i) + one_chip (strandVertex B α (strandMirror B α i))) := by
-  unfold linear_equiv
+    linearEquiv B.graph
+      (oneChip (leftEndpoint B) + oneChip (rightEndpoint B))
+      (oneChip (strandVertex B α i) + oneChip (strandVertex B α (strandMirror B α i))) := by
+  unfold linearEquiv
   apply (principal_iff_eq_prin B.graph _).mpr
   by_cases hTail : B.core.tail α = 0
   · refine ⟨SegmentReflection.script B α i, ?_⟩

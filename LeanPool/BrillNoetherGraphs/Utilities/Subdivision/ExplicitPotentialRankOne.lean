@@ -255,7 +255,7 @@ and following path vertices.  This positivity-level characterization is the
 basic local input for constructing the embedded core's separator cells. -/
 theorem interior_num_edges_pos_iff (edge : Fin p)
     (offset : Fin (spec.length edge - 1)) (vertex : spec.Vertex) :
-    0 < num_edges spec.graph (spec.interiorVertex edge offset) vertex ↔
+    0 < numEdges spec.graph (spec.interiorVertex edge offset) vertex ↔
       vertex = spec.previousVertex edge offset ∨
         vertex = spec.nextVertex edge offset := by
   rw [spec.num_edges_pos_iff]
@@ -340,7 +340,7 @@ def coreAnchorScript (certificate : ExplicitPotential.Certificate m n p)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
     (anchor : Fin n) :
-    firing_script
+    firingScript
       (certificate.subdivisionSpec point core_nonempty hValid hCone).graph :=
   SubdivisionGraph.Spec.interpolatedScript
     (certificate.subdivisionSpec point core_nonempty hValid hCone)
@@ -358,7 +358,7 @@ theorem effective_coreAnchorResidual
     effective
       (certificate.subdivisionDivisor
           (certificate.subdivisionSpec point core_nonempty hValid hCone) -
-        one_chip
+        oneChip
           (SubdivisionGraph.Spec.coreVertex
             (certificate.subdivisionSpec point core_nonempty hValid hCone)
             anchor) +
@@ -368,14 +368,14 @@ theorem effective_coreAnchorResidual
   let spec := certificate.subdivisionSpec point core_nonempty hValid hCone
   change effective
     (certificate.subdivisionDivisor spec -
-      one_chip (spec.coreVertex anchor) +
+      oneChip (spec.coreVertex anchor) +
       prin spec.graph
         (spec.interpolatedScript
           (certificate.evaluatedPotential anchor point)))
   intro vertex
   rcases vertex with vertex | interior
   · simp only [Pi.add_apply, Pi.sub_apply, subdivisionDivisor,
-      one_chip, SubdivisionGraph.Spec.coreVertex, Sum.inl.injEq]
+      oneChip, SubdivisionGraph.Spec.coreVertex, Sum.inl.injEq]
     change 0 ≤ certificate.divisor vertex -
       (if vertex = anchor then 1 else 0) +
       prin spec.graph
@@ -430,11 +430,11 @@ theorem reaches_coreVertex
   let script := certificate.coreAnchorScript point core_nonempty hValid hCone
     anchor
   unfold StrongSeparator.Reaches winnable
-  refine ⟨divisor - one_chip (spec.coreVertex anchor) + prin spec.graph script,
+  refine ⟨divisor - oneChip (spec.coreVertex anchor) + prin spec.graph script,
     certificate.effective_coreAnchorResidual point core_nonempty hValid hCone
       anchor, ?_⟩
   exact StrongSeparator.linearEquiv_add_prin
-    (divisor - one_chip (spec.coreVertex anchor)) script
+    (divisor - oneChip (spec.coreVertex anchor)) script
 
 /-- The embedded core vertices of a subdivision. -/
 def coreVertices (spec : SubdivisionGraph.Spec n p) : Finset spec.graph.V :=
@@ -472,7 +472,7 @@ theorem bnExists_of_valid_of_strongSeparator
     (core_nonempty : 0 < n) (degree : ℤ)
     (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
-    (hConnected : graph_connected
+    (hConnected : graphConnected
       (certificate.subdivisionSpec point core_nonempty hValid hCone).graph)
     (hSeparator : StrongSeparator.StrongSeparatorCertificate
       (certificate.subdivisionSpec point core_nonempty hValid hCone).graph

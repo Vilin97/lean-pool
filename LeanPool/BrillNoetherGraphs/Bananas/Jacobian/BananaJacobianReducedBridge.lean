@@ -64,7 +64,7 @@ private theorem paperCoordinateSemibreak_eq_sum {g : ℕ} (B : Banana g)
     paperCoordinateSemibreak B p =
       ∑ alpha : Fin (g + 1),
         if _h : 0 < (p alpha).val ∧ (p alpha).val < B.length alpha then
-          one_chip (strandVertex B alpha (p alpha)) else 0 := by
+          oneChip (strandVertex B alpha (p alpha)) else 0 := by
   classical
   funext z
   rw [Finset.sum_apply]
@@ -78,7 +78,7 @@ private theorem paperCoordinateSemibreak_eq_sum {g : ℕ} (B : Banana g)
     · rw [dif_pos halpha,
         strandVertex_eq_interiorVertex_normalizedInteriorOffset B alpha
           (p alpha) halpha]
-      simp [one_chip, SubdivisionGraph.Spec.interiorVertex]
+      simp [oneChip, SubdivisionGraph.Spec.interiorVertex]
     · rw [dif_neg halpha]
       rfl
   · change (if paperCoordinateChips B p gamma = some offset then 1 else 0) = _
@@ -89,7 +89,7 @@ private theorem paperCoordinateSemibreak_eq_sum {g : ℕ} (B : Banana g)
         simp only [paperCoordinateChips, dif_pos hgamma]]
       simp only [Option.some.injEq]
       rw [Finset.sum_eq_single gamma]
-      · simp [hgamma, one_chip,
+      · simp [hgamma, oneChip,
           strandVertex_eq_interiorVertex_normalizedInteriorOffset B gamma
             (p gamma) hgamma,
           SubdivisionGraph.Spec.interiorVertex]
@@ -103,7 +103,7 @@ private theorem paperCoordinateSemibreak_eq_sum {g : ℕ} (B : Banana g)
         · rw [dif_pos halpha,
             strandVertex_eq_interiorVertex_normalizedInteriorOffset B alpha
               (p alpha) halpha]
-          simp [one_chip, SubdivisionGraph.Spec.interiorVertex, hne.symm]
+          simp [oneChip, SubdivisionGraph.Spec.interiorVertex, hne.symm]
         · rw [dif_neg halpha]
           rfl
       · simp
@@ -118,7 +118,7 @@ private theorem paperCoordinateSemibreak_eq_sum {g : ℕ} (B : Banana g)
       · rw [dif_pos halpha,
           strandVertex_eq_interiorVertex_normalizedInteriorOffset B alpha
             (p alpha) halpha]
-        simp only [one_chip, SubdivisionGraph.Spec.interiorVertex]
+        simp only [oneChip, SubdivisionGraph.Spec.interiorVertex]
         by_cases hag : alpha = gamma
         · subst alpha
           exact (hgamma halpha).elim
@@ -135,13 +135,13 @@ private theorem paperCoordinateSemibreak_eq_sum {g : ℕ} (B : Banana g)
 private theorem positionCoordinate_summand_eq_normalForm_summand {g : ℕ}
     (B : Banana g) (p : ∀ alpha : Fin (g + 1), B.PathPosition alpha)
     (alpha : Fin (g + 1)) :
-    one_chip (strandVertex B alpha (p alpha)) - one_chip (leftEndpoint B) =
+    oneChip (strandVertex B alpha (p alpha)) - oneChip (leftEndpoint B) =
       (if (p alpha).val = 0 then 0 else (-1 : ℤ)) •
-          one_chip (leftEndpoint B) +
+          oneChip (leftEndpoint B) +
         (if (p alpha).val = B.length alpha then (1 : ℤ) else 0) •
-          one_chip (rightEndpoint B) +
+          oneChip (rightEndpoint B) +
         (if _h : 0 < (p alpha).val ∧ (p alpha).val < B.length alpha then
-          one_chip (strandVertex B alpha (p alpha)) else 0) := by
+          oneChip (strandVertex B alpha (p alpha)) else 0) := by
   by_cases hzero : (p alpha).val = 0
   · have hp : p alpha = ⟨0, by omega⟩ := Fin.ext hzero
     have hlength := B.length_pos alpha
@@ -269,7 +269,7 @@ theorem q_reduced_bananaPositionCoordinateDivisor_of_paperReduced {g : ℕ}
     (B : Banana g)
     (p : ∀ alpha : Fin (g + 1), B.PathPosition alpha)
     (hPaper : IsPaperReducedPositionCoordinates B p) :
-    q_reduced B.graph (leftEndpoint B)
+    qReduced B.graph (leftEndpoint B)
       (bananaPositionCoordinateDivisor B p) := by
   rw [bananaPositionCoordinateDivisor_eq_normalForm]
   apply q_reduced_bananaNormalForm

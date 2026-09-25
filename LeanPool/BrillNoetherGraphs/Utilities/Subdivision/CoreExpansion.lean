@@ -472,7 +472,7 @@ private theorem sum_pair_indicator {V : Type} [Fintype V] [DecidableEq V]
 /-! ## Small-side edge count -/
 
 theorem numEdges_small_eq (small : Spec n p) (a b : small.Vertex) (hab : a ≠ b) :
-    num_edges small.graph a b = ∑ j : Fin p, slotSum small j a b := by
+    numEdges small.graph a b = ∑ j : Fin p, slotSum small j a b := by
   classical
   rw [small.num_edges_eq_sum_steps a b]
   rw [Fintype.sum_sigma]
@@ -698,14 +698,14 @@ theorem owner_aggregate (hCond : D.Conditions small.core)
 /-- **Quotient multiplicities match exactly.** -/
 theorem valid_multiplicity (hCond : D.Conditions small.core)
     (a b : small.Vertex) (hab : a ≠ b) :
-    num_edges small.graph a b =
+    numEdges small.graph a b =
       ∑ x : (D.bigSpec small hN hL).Vertex, ∑ y : (D.bigSpec small hN hL).Vertex,
         if vertexMap D small hN hL x = a ∧ vertexMap D small hN hL y = b then
-          num_edges (D.bigSpec small hN hL).graph x y else 0 := by
+          numEdges (D.bigSpec small hN hL).graph x y else 0 := by
   classical
   have hstep1 : ∀ x y : (D.bigSpec small hN hL).Vertex,
       (if vertexMap D small hN hL x = a ∧ vertexMap D small hN hL y = b then
-        num_edges (D.bigSpec small hN hL).graph x y else 0)
+        numEdges (D.bigSpec small hN hL).graph x y else 0)
       = ∑ s : (D.bigSpec small hN hL).Step,
           (if vertexMap D small hN hL x = a ∧ vertexMap D small hN hL y = b then
             (if ((D.bigSpec small hN hL).stepLeft s.1 s.2 = x ∧
@@ -723,7 +723,7 @@ theorem valid_multiplicity (hCond : D.Conditions small.core)
   have hswap : (∑ x : (D.bigSpec small hN hL).Vertex,
       ∑ y : (D.bigSpec small hN hL).Vertex,
         if vertexMap D small hN hL x = a ∧ vertexMap D small hN hL y = b then
-          num_edges (D.bigSpec small hN hL).graph x y else 0)
+          numEdges (D.bigSpec small hN hL).graph x y else 0)
       = ∑ s : (D.bigSpec small hN hL).Step,
           ((if vertexMap D small hN hL
                 ((D.bigSpec small hN hL).stepLeft s.1 s.2) = a ∧
@@ -1199,7 +1199,7 @@ theorem certificate_connectedFibres (hCond : D.Conditions small.core) :
     unfold SubdivisionGraph.Spec.stepRight
     rw [dif_pos (by omega : (0 : ℕ) + 1 = (D.bigSpec small hN hL).length e)]
     rfl
-  have hedge : 0 < num_edges (D.bigSpec small hN hL).graph
+  have hedge : 0 < numEdges (D.bigSpec small hN hL).graph
       (Sum.inl (D.bigCore.tail e)) (Sum.inl (D.bigCore.head e)) := by
     have hstep := (D.bigSpec small hN hL).unitStep_num_edges_pos e ⟨0, by omega⟩
     rw [hL0, hR0] at hstep

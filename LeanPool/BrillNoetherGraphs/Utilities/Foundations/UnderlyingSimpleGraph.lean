@@ -20,7 +20,7 @@ namespace Utilities
 
 /-- The simple graph underlying a chip-firing multigraph. -/
 def underlyingSimpleGraph (G : CFGraph) : SimpleGraph G.V where
-  Adj v w := num_edges G v w > 0
+  Adj v w := numEdges G v w > 0
   -- `SimpleGraph.symm` now asks for `Std.Symm Adj` (a one-field class), not the
   -- bare `Symmetric Adj` function type (Mathlib v4.33): wrap the old proof in
   -- the anonymous constructor.
@@ -29,18 +29,18 @@ def underlyingSimpleGraph (G : CFGraph) : SimpleGraph G.V where
     intro h
     exact h⟩
   loopless := ⟨fun v h => by
-    change num_edges G v v > 0 at h
+    change numEdges G v v > 0 at h
     simp at h⟩
 
 @[simp] theorem underlyingSimpleGraph_adj
     (G : CFGraph) (v w : G.V) :
-    (underlyingSimpleGraph G).Adj v w ↔ num_edges G v w > 0 :=
+    (underlyingSimpleGraph G).Adj v w ↔ numEdges G v w > 0 :=
   Iff.rfl
 
-instance underlyingSimpleGraph_decidableAdj (G : CFGraph) :
+instance underlyingSimpleGraphDecidableAdj (G : CFGraph) :
     DecidableRel (underlyingSimpleGraph G).Adj := by
   intro v w
-  exact inferInstanceAs (Decidable (num_edges G v w > 0))
+  exact inferInstanceAs (Decidable (numEdges G v w > 0))
 
 private theorem walk_has_edge_across_cut
     {V : Type*} {U : SimpleGraph V} {a b : V} (S : Set V)
@@ -56,7 +56,7 @@ private theorem walk_has_edge_across_cut
 /-- The cut definition of connectivity used by `CFGraph` agrees with
 connectivity of the underlying simple graph. -/
 theorem graph_connected_iff_underlyingSimpleGraph_connected (G : CFGraph) :
-    graph_connected G ↔ (underlyingSimpleGraph G).Connected := by
+    graphConnected G ↔ (underlyingSimpleGraph G).Connected := by
   classical
   let U := underlyingSimpleGraph G
   constructor

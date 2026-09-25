@@ -70,7 +70,7 @@ theorem transmission_crossOneOff_block
       (mark B.graph
         (strandVertex B alpha ⟨1, by omega⟩)
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
-      (g • one_chip (rightEndpoint B)) tau) :
+      (g • oneChip (rightEndpoint B)) tau) :
     tau (b : ℤ) = (crossOneOffRow g (B.length beta) b : ℕ) := by
   let n := B.length beta
   let n0 := B.length alpha

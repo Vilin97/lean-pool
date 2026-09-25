@@ -32,9 +32,9 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 section Generic
 
 private theorem linearEquiv_sub_same_right {G : CFGraph}
-    {D N C : CFDiv G} (h : linear_equiv G D N) :
-    linear_equiv G (D - C) (N - C) := by
-  unfold linear_equiv at h ⊢
+    {D N C : CFDiv G} (h : linearEquiv G D N) :
+    linearEquiv G (D - C) (N - C) := by
+  unfold linearEquiv at h ⊢
   have hDifference : (N - C) - (D - C) = N - D := by
     abel
   rw [hDifference]
@@ -54,17 +54,17 @@ end Generic
 
 private theorem bananaNormalForm_sub_leftEndpoint {g : ℕ} (B : Banana g)
     (a b : ℤ) (E : CFDiv B.graph) :
-    bananaNormalForm B a b E - one_chip (leftEndpoint B) =
+    bananaNormalForm B a b E - oneChip (leftEndpoint B) =
       bananaNormalForm B (a - 1) b E := by
   exact endpointNormalForm_sub_left
-    (one_chip (leftEndpoint B)) (one_chip (rightEndpoint B)) E a b
+    (oneChip (leftEndpoint B)) (oneChip (rightEndpoint B)) E a b
 
 private theorem bananaNormalForm_sub_rightEndpoint {g : ℕ} (B : Banana g)
     (a b : ℤ) (E : CFDiv B.graph) :
-    bananaNormalForm B a b E - one_chip (rightEndpoint B) =
+    bananaNormalForm B a b E - oneChip (rightEndpoint B) =
       bananaNormalForm B a (b - 1) E := by
   exact endpointNormalForm_sub_right
-    (one_chip (leftEndpoint B)) (one_chip (rightEndpoint B)) E a b
+    (oneChip (leftEndpoint B)) (oneChip (rightEndpoint B)) E a b
 
 /-- TeX label: `lem-BananaRDS` (Lemma 2.21), banana-specific rank-one
 criterion used with Luo's rank-determining-set characterization.
@@ -76,19 +76,19 @@ packaging it as the full rank-determining-set statement only requires the
 currently absent generic definition and Luo equivalence. -/
 theorem banana_rank_one_of_endpoint_residuals {g : ℕ} (B : Banana g)
     (D : CFDiv B.graph)
-    (hLeft : 0 ≤ rank B.graph (D - one_chip (leftEndpoint B)))
-    (hRight : 0 ≤ rank B.graph (D - one_chip (rightEndpoint B))) :
+    (hLeft : 0 ≤ rank B.graph (D - oneChip (leftEndpoint B)))
+    (hRight : 0 ≤ rank B.graph (D - oneChip (rightEndpoint B))) :
     1 ≤ rank B.graph D := by
   obtain ⟨a, b, E, hE, hb, hBound, hDN⟩ :=
     exists_linearly_equiv_bananaNormalForm B D
   let N : CFDiv B.graph := bananaNormalForm B a b E
-  have hLeftEquiv : linear_equiv B.graph
-      (D - one_chip (leftEndpoint B))
-      (N - one_chip (leftEndpoint B)) :=
+  have hLeftEquiv : linearEquiv B.graph
+      (D - oneChip (leftEndpoint B))
+      (N - oneChip (leftEndpoint B)) :=
     linearEquiv_sub_same_right hDN
-  have hRightEquiv : linear_equiv B.graph
-      (D - one_chip (rightEndpoint B))
-      (N - one_chip (rightEndpoint B)) :=
+  have hRightEquiv : linearEquiv B.graph
+      (D - oneChip (rightEndpoint B))
+      (N - oneChip (rightEndpoint B)) :=
     linearEquiv_sub_same_right hDN
   have hLeftN : 0 ≤ rank B.graph
       (bananaNormalForm B (a - 1) b E) := by

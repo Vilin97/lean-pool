@@ -49,9 +49,9 @@ case of `reaches_of_induced_script`. -/
 theorem reaches_of_oneVertexCut_left (cut : OneVertexCut K)
     {D : CFDiv K} (hOff : ∀ v : K.V, v ∉ cut.left → 0 ≤ D v)
     {p : K.V} (hp : p ∈ cut.left)
-    (t : firing_script cut.leftGraph)
+    (t : firingScript cut.leftGraph)
     (hEff : effective ((fun x : cut.leftGraph.V => D x.val)
-      - one_chip (⟨p, hp⟩ : cut.leftGraph.V) + prin cut.leftGraph t)) :
+      - oneChip (⟨p, hp⟩ : cut.leftGraph.V) + prin cut.leftGraph t)) :
     Reaches K D p :=
   reaches_of_induced_script_of_unique_boundary cut.left_nonempty
     cut.glue_mem_left

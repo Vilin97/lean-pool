@@ -73,7 +73,7 @@ systems from curves to graphs*, Conjecture 3.14(a) asserts
 `dgon_r(σ_k(G)) = dgon_r(G)` for every connected loopless multigraph `G`, every
 `r ≥ 1` and every `k ≥ 1`.  It fails already at `r = 1` and `k = 2`. -/
 example :
-    ¬ ∀ (G : CFGraph.{0}) (k : ℕ) (hk : 0 < k), graph_connected G →
+    ¬ ∀ (G : CFGraph.{0}) (k : ℕ) (hk : 0 < k), graphConnected G →
         divisorialGonality (regularSubdivision G k hk) = divisorialGonality G :=
   Utilities.Tricycle.baker_conjecture_3_14a_false
 
@@ -97,7 +97,7 @@ positive length vector, has `dgon ≥ 5`.  This is what makes the left-hand side
 of the gap a genuine minimum over `k`; it has to be, because
 `k ↦ dgon(σ_k(T_m))` is not monotone. -/
 example (spec : Spec 7 15) (hcore : spec.core = tricycleCore)
-    (hconn : graph_connected spec.graph) :
+    (hconn : graphConnected spec.graph) :
     5 ≤ divisorialGonality spec.graph :=
   Utilities.Tricycle.five_le_divisorialGonality hcore hconn
 
@@ -105,7 +105,7 @@ example (spec : Spec 7 15) (hcore : spec.core = tricycleCore)
 the minimal tricycle whose three transition edges are unsubdivided — has
 `dgon ≥ 6`. -/
 example (spec : Spec 7 15) (hcore : spec.core = tricycleCore)
-    (htri : IsTricycle spec.length) (hconn : graph_connected spec.graph) :
+    (htri : IsTricycle spec.length) (hconn : graphConnected spec.graph) :
     6 ≤ divisorialGonality spec.graph :=
   Utilities.Tricycle.six_le_divisorialGonality hcore htri hconn
 

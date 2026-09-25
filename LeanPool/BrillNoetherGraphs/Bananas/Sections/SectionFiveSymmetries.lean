@@ -21,26 +21,26 @@ open Utilities
 
 private theorem isTransmissionPermutation_of_linearEquiv
     {M : TwiceMarked} {D E : CFDiv M.graph} {tau : ℤ → ℤ}
-    (hDE : linear_equiv M.graph D E)
+    (hDE : linearEquiv M.graph D E)
     (hTau : IsTransmissionPermutation M D tau) :
     IsTransmissionPermutation M E tau := by
   refine ⟨hTau.1, ?_⟩
   intro a b
   rw [hTau.2]
   apply rankDelta_eq_of_linearEquiv
-  unfold linear_equiv at hDE ⊢
+  unfold linearEquiv at hDE ⊢
   have hDifference :
-      (E + a • one_chip M.u - b • one_chip M.v) -
-          (D + a • one_chip M.u - b • one_chip M.v) = E - D := by
+      (E + a • oneChip M.u - b • oneChip M.v) -
+          (D + a • oneChip M.u - b • oneChip M.v) = E - D := by
     abel
   rw [hDifference]
   exact hDE
 
 private theorem linearEquiv_of_sub_linearEquiv
     {G : CFGraph} {A B C : CFDiv G}
-    (h : linear_equiv G (A - B) C) :
-    linear_equiv G A (B + C) := by
-  unfold linear_equiv at h ⊢
+    (h : linearEquiv G (A - B) C) :
+    linearEquiv G A (B + C) := by
+  unfold linearEquiv at h ⊢
   have hDifference : (B + C) - A = C - (A - B) := by abel
   rw [hDifference]
   exact h
@@ -49,11 +49,11 @@ private theorem linearEquiv_of_sub_linearEquiv
 The statement ledger's unqualified version is therefore deliberately not
 used: a disconnected chip-firing graph has no such duality theorem. -/
 theorem sectionFive_tau_involutive_of_dual_automorphism_connected
-    {M : TwiceMarked} (hconn : _root_.graph_connected M.graph)
+    {M : TwiceMarked} (hconn : _root_.graphConnected M.graph)
     (phi : MarkedPointSwap M)
     {D : CFDiv M.graph} {tau : ℤ → ℤ}
     (hTau : IsTransmissionPermutation M D tau)
-    (hDual : linear_equiv M.graph
+    (hDual : linearEquiv M.graph
       (phi.toMarkedPointAutomorphism.iso.mapDiv D)
       (transmissionDualDivisor M.u M.v D)) :
     ∀ a b : ℤ, tau b = a ↔ tau a = b := by
@@ -92,43 +92,43 @@ theorem sectionFive_tau_reflection_of_twisted_automorphism_proved
     {M : TwiceMarked} (phi : MarkedPointSwap M)
     {D : CFDiv M.graph} {tau : ℤ → ℤ} (n : ℤ)
     (hTau : IsTransmissionPermutation M D tau)
-    (hTwist : linear_equiv M.graph
+    (hTwist : linearEquiv M.graph
       (phi.toMarkedPointAutomorphism.iso.mapDiv D - D)
-      (n • (one_chip M.u - one_chip M.v))) :
+      (n • (oneChip M.u - oneChip M.v))) :
     ∀ a b : ℤ, tau b = a ↔ tau (n - a) = n - b := by
   have hMap : IsTransmissionPermutation (mark M.graph M.v M.u)
       (phi.toMarkedPointAutomorphism.iso.mapDiv D) tau :=
     (isTransmissionPermutation_mapDiv_of_marks_iff (M := M)
       (N := mark M.graph M.v M.u)
       phi.toMarkedPointAutomorphism.iso phi.map_u phi.map_v D tau).mpr hTau
-  have hPhi : linear_equiv M.graph
+  have hPhi : linearEquiv M.graph
       (phi.toMarkedPointAutomorphism.iso.mapDiv D)
-      (D + n • (one_chip M.u - one_chip M.v)) := by
+      (D + n • (oneChip M.u - oneChip M.v)) := by
     exact linearEquiv_of_sub_linearEquiv hTwist
   have hShift : IsTransmissionPermutation (mark M.graph M.v M.u)
-      (D + n • (one_chip M.u - one_chip M.v)) tau :=
+      (D + n • (oneChip M.u - oneChip M.v)) tau :=
     isTransmissionPermutation_of_linearEquiv hPhi hMap
   intro a b
   have hDiv :
-      D + n • (one_chip M.u - one_chip M.v) + a • one_chip M.v -
-          b • one_chip M.u =
-        D + (n - b) • one_chip M.u - (n - a) • one_chip M.v := by
+      D + n • (oneChip M.u - oneChip M.v) + a • oneChip M.v -
+          b • oneChip M.u =
+        D + (n - b) • oneChip M.u - (n - a) • oneChip M.v := by
     ext x
     simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply]
     ring
   have hRank :
       rankDelta (mark M.graph M.v M.u)
-          (D + n • (one_chip M.u - one_chip M.v) + a • one_chip M.v -
-            b • one_chip M.u) =
-        rankDelta M (D + (n - b) • one_chip M.u -
-          (n - a) • one_chip M.v) := by
+          (D + n • (oneChip M.u - oneChip M.v) + a • oneChip M.v -
+            b • oneChip M.u) =
+        rankDelta M (D + (n - b) • oneChip M.u -
+          (n - a) • oneChip M.v) := by
     rw [rankDelta_mark_swap, hDiv]
   have hShiftValue := hShift.2 a b
   have hTauValue := hTau.2 (n - b) (n - a)
   change (if tau b = a then 1 else 0) =
       rankDelta (mark M.graph M.v M.u)
-        (D + n • (one_chip M.u - one_chip M.v) + a • one_chip M.v -
-          b • one_chip M.u) at hShiftValue
+        (D + n • (oneChip M.u - oneChip M.v) + a • oneChip M.v -
+          b • oneChip M.u) at hShiftValue
   constructor
   · intro h
     by_contra hNot

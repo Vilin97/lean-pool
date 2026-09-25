@@ -29,8 +29,8 @@ theorem rankDelta_crossOneOff_right_interior_family
       (mark B.graph
         (strandVertex B alpha ⟨1, by have := B.length_pos alpha; omega⟩)
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
-      ((b : ℤ) • one_chip (rightEndpoint B) +
-        one_chip (strandVertex B alpha p)) = 1 := by
+      ((b : ℤ) • oneChip (rightEndpoint B) +
+        oneChip (strandVertex B alpha p)) = 1 := by
   exact rankDelta_crossOneOff_multiple_normalForm_eq_one
     B alpha beta p b hg hab hpLo hpHi hBeta (by omega)
 
@@ -48,9 +48,9 @@ theorem rankDelta_crossOneOff_two_interior_boundary_eq_zero
         (strandVertex B alpha ⟨1, by have := B.length_pos alpha; omega⟩)
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
       (((g : ℤ) - 1) •
-          (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) +
-        one_chip (strandVertex B alpha p) +
-        one_chip (strandVertex B beta q)) = 0 := by
+          (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) +
+        oneChip (strandVertex B alpha p) +
+        oneChip (strandVertex B beta q)) = 0 := by
   let pPrev : B.PathPosition alpha := ⟨p.val - 1, by omega⟩
   let qNext : B.PathPosition beta := ⟨q.val + 1, by omega⟩
   have hpPrev : B.IsInteriorPosition alpha pPrev := by
@@ -60,10 +60,10 @@ theorem rankDelta_crossOneOff_two_interior_boundary_eq_zero
     change 0 < q.val + 1 ∧ q.val + 1 < B.length beta
     omega
   let E : CFDiv B.graph :=
-    one_chip (strandVertex B alpha p) + one_chip (strandVertex B beta q)
+    oneChip (strandVertex B alpha p) + oneChip (strandVertex B beta q)
   let EUV : CFDiv B.graph :=
-    one_chip (strandVertex B alpha pPrev) +
-      one_chip (strandVertex B beta qNext)
+    oneChip (strandVertex B alpha pPrev) +
+      oneChip (strandVertex B beta qNext)
   have hEUV : IsSemibreak B EUV := by
     dsimp [EUV]
     exact isSemibreak_two_distinct_strand_chips B alpha beta pPrev qNext
@@ -74,9 +74,9 @@ theorem rankDelta_crossOneOff_two_interior_boundary_eq_zero
     bananaNormalForm B ((g : ℤ) - 1) ((g : ℤ) - 1) E
   have hDDef : D =
       ((g : ℤ) - 1) •
-          (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) +
-        one_chip (strandVertex B alpha p) +
-        one_chip (strandVertex B beta q) := by
+          (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) +
+        oneChip (strandVertex B alpha p) +
+        oneChip (strandVertex B beta q) := by
     dsimp [D, E]
     unfold bananaNormalForm
     ext z
@@ -85,17 +85,17 @@ theorem rankDelta_crossOneOff_two_interior_boundary_eq_zero
   have hShiftU := crossOneOff_sub_first_mark_shift B alpha p.val
     (by omega) (by omega)
   have hShiftV := crossOneOff_sub_second_mark_shift B beta q.val (by omega)
-  have hDUV : linear_equiv B.graph
-      (D - one_chip
+  have hDUV : linearEquiv B.graph
+      (D - oneChip
           (strandVertex B alpha
             ⟨1, by have := B.length_pos alpha; omega⟩) -
-        one_chip
+        oneChip
           (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
       (bananaNormalForm B ((g : ℤ) - 2) ((g : ℤ) - 2) EUV) := by
-    unfold linear_equiv at hShiftU hShiftV ⊢
-    have hPair := (principal_divisors B.graph).add_mem hShiftU hShiftV
-    have hCommon := (principal_divisors B.graph).add_mem
-      ((principal_divisors B.graph).zero_mem) hPair
+    unfold linearEquiv at hShiftU hShiftV ⊢
+    have hPair := (principalDivisors B.graph).add_mem hShiftU hShiftV
+    have hCommon := (principalDivisors B.graph).add_mem
+      ((principalDivisors B.graph).zero_mem) hPair
     convert hCommon using 1
     all_goals
       (dsimp [D, E, EUV, pPrev, qNext]
@@ -108,13 +108,13 @@ theorem rankDelta_crossOneOff_two_interior_boundary_eq_zero
     rw [degree_bananaNormalForm, hdegE]
     ring
   have hDegreeDU : deg
-      (D - one_chip
+      (D - oneChip
         (strandVertex B alpha
           ⟨1, by have := B.length_pos alpha; omega⟩)) =
       2 * (g : ℤ) - 1 := by
     rw [deg.map_sub, hDegreeD, deg_one_chip]
   have hDegreeDV : deg
-      (D - one_chip
+      (D - oneChip
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩)) =
       2 * (g : ℤ) - 1 := by
     rw [deg.map_sub, hDegreeD, deg_one_chip]
@@ -125,12 +125,12 @@ theorem rankDelta_crossOneOff_two_interior_boundary_eq_zero
     rw [hDegreeD, banana_genus] at h
     omega
   have hRankDU : rank B.graph
-      (D - one_chip
+      (D - oneChip
         (strandVertex B alpha
           ⟨1, by have := B.length_pos alpha; omega⟩)) =
       (g : ℤ) - 1 := by
     have h := (rank_nonspecial_range (banana_graph_connected B)
-      (D - one_chip
+      (D - oneChip
         (strandVertex B alpha
           ⟨1, by have := B.length_pos alpha; omega⟩))).2.2 (by
             rw [hDegreeDU, banana_genus]
@@ -138,21 +138,21 @@ theorem rankDelta_crossOneOff_two_interior_boundary_eq_zero
     rw [hDegreeDU, banana_genus] at h
     omega
   have hRankDV : rank B.graph
-      (D - one_chip
+      (D - oneChip
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩)) =
       (g : ℤ) - 1 := by
     have h := (rank_nonspecial_range (banana_graph_connected B)
-      (D - one_chip
+      (D - oneChip
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))).2.2 (by
             rw [hDegreeDV, banana_genus]
             omega)
     rw [hDegreeDV, banana_genus] at h
     omega
   have hRankDUV : rank B.graph
-      (D - one_chip
+      (D - oneChip
           (strandVertex B alpha
             ⟨1, by have := B.length_pos alpha; omega⟩) -
-        one_chip
+        oneChip
           (strandVertex B beta ⟨B.length beta - 1, by omega⟩)) =
       (g : ℤ) - 2 := by
     rw [rank_eq_of_linear_equiv B.graph hDUV,
@@ -180,10 +180,10 @@ theorem rankDelta_crossOneOff_terminal_delta_family
       (mark B.graph
         (strandVertex B alpha ⟨1, by have := B.length_pos alpha; omega⟩)
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
-      (((g : ℤ) - 1) • one_chip (leftEndpoint B) +
-        (b : ℤ) • one_chip (rightEndpoint B) +
-        one_chip (strandVertex B alpha p) +
-        one_chip
+      (((g : ℤ) - 1) • oneChip (leftEndpoint B) +
+        (b : ℤ) • oneChip (rightEndpoint B) +
+        oneChip (strandVertex B alpha p) +
+        oneChip
           (strandVertex B beta ⟨B.length beta - 1, by omega⟩)) =
       if b < g - 1 then 1 else 0 := by
   by_cases hbLt : b < g - 1
@@ -210,9 +210,9 @@ theorem rankDelta_crossOneOff_balanced_delta_family
         (strandVertex B alpha ⟨1, by have := B.length_pos alpha; omega⟩)
         (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
       ((b : ℤ) •
-          (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) +
-        one_chip (strandVertex B alpha p) +
-        one_chip (strandVertex B beta q)) =
+          (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) +
+        oneChip (strandVertex B alpha p) +
+        oneChip (strandVertex B beta q)) =
       if b < g - 1 then 1 else 0 := by
   by_cases hbLt : b < g - 1
   · rw [if_pos hbLt]

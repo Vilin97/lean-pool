@@ -32,27 +32,27 @@ def bridgeGraphCongr (φ : CFGraphIso G G') (ψ : CFGraphIso H H')
   vertexEquiv := Equiv.sumCongr φ.vertexEquiv ψ.vertexEquiv
   map_num_edges := by
     rintro (x | x) (y | y)
-    · change num_edges (bridgeGraph G' H' (φ.vertexEquiv a) (ψ.vertexEquiv b))
+    · change numEdges (bridgeGraph G' H' (φ.vertexEquiv a) (ψ.vertexEquiv b))
         (Sum.inl (φ.vertexEquiv x)) (Sum.inl (φ.vertexEquiv y)) = _
       calc
-        _ = num_edges G' (φ.vertexEquiv x) (φ.vertexEquiv y) :=
+        _ = numEdges G' (φ.vertexEquiv x) (φ.vertexEquiv y) :=
           num_edges_bridgeGraph_inl _ _ _ _ _ _
-        _ = num_edges G x y := φ.map_num_edges x y
+        _ = numEdges G x y := φ.map_num_edges x y
         _ = _ := (num_edges_bridgeGraph_inl G H a b x y).symm
-    · change num_edges (bridgeGraph G' H' (φ.vertexEquiv a) (ψ.vertexEquiv b))
+    · change numEdges (bridgeGraph G' H' (φ.vertexEquiv a) (ψ.vertexEquiv b))
         (Sum.inl (φ.vertexEquiv x)) (Sum.inr (ψ.vertexEquiv y)) = _
       rw [num_edges_bridgeGraph_inl_inr]
       simp
-    · change num_edges (bridgeGraph G' H' (φ.vertexEquiv a) (ψ.vertexEquiv b))
+    · change numEdges (bridgeGraph G' H' (φ.vertexEquiv a) (ψ.vertexEquiv b))
         (Sum.inr (ψ.vertexEquiv x)) (Sum.inl (φ.vertexEquiv y)) = _
       rw [num_edges_symmetric, num_edges_bridgeGraph_inl_inr, num_edges_symmetric]
       simp
-    · change num_edges (bridgeGraph G' H' (φ.vertexEquiv a) (ψ.vertexEquiv b))
+    · change numEdges (bridgeGraph G' H' (φ.vertexEquiv a) (ψ.vertexEquiv b))
         (Sum.inr (ψ.vertexEquiv x)) (Sum.inr (ψ.vertexEquiv y)) = _
       calc
-        _ = num_edges H' (ψ.vertexEquiv x) (ψ.vertexEquiv y) :=
+        _ = numEdges H' (ψ.vertexEquiv x) (ψ.vertexEquiv y) :=
           num_edges_bridgeGraph_inr _ _ _ _ _ _
-        _ = num_edges H x y := ψ.map_num_edges x y
+        _ = numEdges H x y := ψ.map_num_edges x y
         _ = _ := (num_edges_bridgeGraph_inr G H a b x y).symm
 
 @[simp] theorem bridgeGraphCongr_apply_left

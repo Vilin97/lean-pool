@@ -26,24 +26,24 @@ theorem BNExists_rank_zero
     unfold bnNumber rectangleWidth at hRho
     linarith
   let v : G.V := Classical.arbitrary G.V
-  let D : CFDiv G := d.toNat • one_chip v
+  let D : CFDiv G := d.toNat • oneChip v
   have hEffective : effective D := by
     exact (Eff G).nsmul_mem (eff_one_chip v) d.toNat
   refine ⟨D, ?_, ?_⟩
   · dsimp [D]
     simpa [Int.toNat_of_nonneg hd] using
-      (AddMonoidHom.map_nsmul deg d.toNat (one_chip v))
+      (AddMonoidHom.map_nsmul deg d.toNat (oneChip v))
   · rw [← rank_geq_iff G D 0, rank_nonneg_iff_winnable]
     exact winnable_of_effective G D hEffective
 
 /-- If the rectangle width is nonpositive, every rank test leaves degree at
 least the genus and is therefore winnable. -/
 theorem BNExists_of_width_nonpos
-    {G : CFGraph} (hG : graph_connected G) {r d : ℤ}
+    {G : CFGraph} (hG : graphConnected G) {r d : ℤ}
     (hWidth : rectangleWidth G r d ≤ 0) :
     BNExists G r d := by
   let v : G.V := Classical.arbitrary G.V
-  let D : CFDiv G := d • one_chip v
+  let D : CFDiv G := d • oneChip v
   have hDegree : deg D = d := by
     dsimp [D]
     rw [map_zsmul, deg_one_chip, zsmul_one]
@@ -60,19 +60,19 @@ theorem BNExists_of_width_nonpos
 /-- At rectangle width one, subtract an effective divisor of degree `rho`
 from the canonical divisor and apply Riemann--Roch. -/
 theorem BNExists_of_width_one
-    {G : CFGraph} (hG : graph_connected G) {r d : ℤ}
+    {G : CFGraph} (hG : graphConnected G) {r d : ℤ}
     (_hR : 0 ≤ r) (hWidth : rectangleWidth G r d = 1)
     (hRho : 0 ≤ bnNumber G r d) :
     BNExists G r d := by
   let v : G.V := Classical.arbitrary G.V
-  let E : CFDiv G := (bnNumber G r d).toNat • one_chip v
+  let E : CFDiv G := (bnNumber G r d).toNat • oneChip v
   have hEffective : effective E := by
     exact (Eff G).nsmul_mem (eff_one_chip v) (bnNumber G r d).toNat
   have hEDegree : deg E = bnNumber G r d := by
     dsimp [E]
     simpa [Int.toNat_of_nonneg hRho] using
-      (AddMonoidHom.map_nsmul deg (bnNumber G r d).toNat (one_chip v))
-  let D : CFDiv G := canonical_divisor G - E
+      (AddMonoidHom.map_nsmul deg (bnNumber G r d).toNat (oneChip v))
+  let D : CFDiv G := canonicalDivisor G - E
   have hDegree : deg D = d := by
     dsimp [D]
     rw [deg.map_sub, degree_of_canonical_divisor, hEDegree]
@@ -85,7 +85,7 @@ theorem BNExists_of_width_one
     exact winnable_of_effective G E hEffective
   refine ⟨D, hDegree, ?_⟩
   have hRR := riemann_roch_for_graphs hG D
-  have hComplement : canonical_divisor G - D = E := by
+  have hComplement : canonicalDivisor G - D = E := by
     dsimp [D]
     abel
   rw [hComplement, hDegree] at hRR
@@ -94,7 +94,7 @@ theorem BNExists_of_width_one
 
 /-- The complete elementary range: rank zero or rectangle width at most one. -/
 theorem BNExists_elementary
-    {G : CFGraph} (hG : graph_connected G) {r d : ℤ}
+    {G : CFGraph} (hG : graphConnected G) {r d : ℤ}
     (hR : 0 ≤ r) (hRho : 0 ≤ bnNumber G r d)
     (hEasy : r = 0 ∨ rectangleWidth G r d ≤ 1) :
     BNExists G r d := by

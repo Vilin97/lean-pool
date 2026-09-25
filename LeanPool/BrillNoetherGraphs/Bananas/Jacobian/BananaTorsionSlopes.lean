@@ -25,24 +25,24 @@ open Utilities.Certificate SubdivisionGraph
 open Utilities.Certificate.SubdivisionGraph.Spec
 
 def bananaPathValue {g : ℕ} (B : Banana g)
-    (script : firing_script B.graph) (α : Fin (g + 1)) (r : ℕ) : ℤ :=
+    (script : firingScript B.graph) (α : Fin (g + 1)) (r : ℕ) : ℤ :=
   if hr : r ≤ B.length α then
     script (strandVertex B α ⟨r, by omega⟩)
   else 0
 
 def bananaStepSlope {g : ℕ} (B : Banana g)
-    (script : firing_script B.graph) (α : Fin (g + 1)) (r : ℕ) : ℤ :=
+    (script : firingScript B.graph) (α : Fin (g + 1)) (r : ℕ) : ℤ :=
   bananaPathValue B script α (r + 1) - bananaPathValue B script α r
 
 theorem bananaPathValue_eq {g : ℕ} (B : Banana g)
-    (script : firing_script B.graph) (α : Fin (g + 1)) (r : ℕ)
+    (script : firingScript B.graph) (α : Fin (g + 1)) (r : ℕ)
     (hr : r ≤ B.length α) :
     bananaPathValue B script α r =
       script (strandVertex B α ⟨r, by omega⟩) := by
   simp [bananaPathValue, hr]
 
 theorem bananaStepSlope_eq {g : ℕ} (B : Banana g)
-    (script : firing_script B.graph) (α : Fin (g + 1)) (r : ℕ)
+    (script : firingScript B.graph) (α : Fin (g + 1)) (r : ℕ)
     (hr : r < B.length α) :
     bananaStepSlope B script α r =
       script (strandVertex B α ⟨r + 1, by omega⟩) -
@@ -52,7 +52,7 @@ theorem bananaStepSlope_eq {g : ℕ} (B : Banana g)
     bananaPathValue_eq B script α r (by omega)]
 
 theorem sum_bananaStepSlope {g : ℕ} (B : Banana g)
-    (script : firing_script B.graph) (α : Fin (g + 1)) :
+    (script : firingScript B.graph) (α : Fin (g + 1)) :
     ∑ r ∈ Finset.range (B.length α), bananaStepSlope B script α r =
       script (rightEndpoint B) - script (leftEndpoint B) := by
   unfold bananaStepSlope
@@ -62,14 +62,14 @@ theorem sum_bananaStepSlope {g : ℕ} (B : Banana g)
     strandVertex_length B α, strandVertex_zero B α]
 
 def bananaStorageSlope {g : ℕ} (B : Banana g)
-    (script : firing_script B.graph) (α : Fin (g + 1)) (r : ℕ) : ℤ :=
+    (script : firingScript B.graph) (α : Fin (g + 1)) (r : ℕ) : ℤ :=
   if B.core.tail α = 0 then
     bananaStepSlope B script α r
   else
     -bananaStepSlope B script α (B.length α - 1 - r)
 
 theorem bananaStorageSlope_isStepSlope {g : ℕ} (B : Banana g)
-    (script : firing_script B.graph) :
+    (script : firingScript B.graph) :
     B.IsStepSlope script (bananaStorageSlope B script) := by
   intro α o
   by_cases ht : B.core.tail α = 0
@@ -124,7 +124,7 @@ theorem bananaStorageSlope_isStepSlope {g : ℕ} (B : Banana g)
     ring
 
 theorem prin_normalized_interior_general {g : ℕ} (B : Banana g)
-    (script : firing_script B.graph) (α : Fin (g + 1))
+    (script : firingScript B.graph) (α : Fin (g + 1))
     (r : Fin (B.length α - 1)) :
     prin B.graph script (strandVertex B α ⟨r.val + 1, by omega⟩) =
       bananaStepSlope B script α (r.val + 1) -
@@ -176,7 +176,7 @@ theorem prin_normalized_interior_general {g : ℕ} (B : Banana g)
     ring
 
 theorem prin_leftEndpoint_eq_sum_initialSlope {g : ℕ} (B : Banana g)
-    (script : firing_script B.graph) :
+    (script : firingScript B.graph) :
     prin B.graph script (leftEndpoint B) =
       ∑ α : Fin (g + 1), bananaStepSlope B script α 0 := by
   have h := B.prin_coreVertex_eq_endpointSum
@@ -203,7 +203,7 @@ theorem prin_leftEndpoint_eq_sum_initialSlope {g : ℕ} (B : Banana g)
     simp
 
 theorem prin_rightEndpoint_eq_neg_sum_finalSlope {g : ℕ} (B : Banana g)
-    (script : firing_script B.graph) :
+    (script : firingScript B.graph) :
     prin B.graph script (rightEndpoint B) =
       -∑ α : Fin (g + 1),
         bananaStepSlope B script α (B.length α - 1) := by
@@ -240,7 +240,7 @@ def bananaInteriorMoment {g : ℕ} (B : Banana g) (α : Fin (g + 1))
       D (strandVertex B α ⟨r.val + 1, by omega⟩)
 
 theorem bananaInteriorSum_prin {g : ℕ} (B : Banana g)
-    (script : firing_script B.graph) (α : Fin (g + 1)) :
+    (script : firingScript B.graph) (α : Fin (g + 1)) :
     bananaInteriorSum B α (prin B.graph script) =
       bananaStepSlope B script α (B.length α - 1) -
         bananaStepSlope B script α 0 := by
@@ -264,7 +264,7 @@ theorem bananaInteriorSum_prin {g : ℕ} (B : Banana g)
     _ = _ := Finset.sum_range_sub _ _
 
 theorem bananaInteriorMoment_prin {g : ℕ} (B : Banana g)
-    (script : firing_script B.graph) (α : Fin (g + 1)) :
+    (script : firingScript B.graph) (α : Fin (g + 1)) :
     bananaInteriorMoment B α (prin B.graph script) =
       (B.length α : ℤ) *
           bananaStepSlope B script α (B.length α - 1) -
@@ -290,7 +290,7 @@ theorem bananaInteriorMoment_prin {g : ℕ} (B : Banana g)
 /-- The initial slope on a strand is determined by the common rise and the
 zeroth and first interior moments of the principal divisor. -/
 theorem initialSlope_equation {g : ℕ} (B : Banana g)
-    (script : firing_script B.graph) (α : Fin (g + 1)) :
+    (script : firingScript B.graph) (α : Fin (g + 1)) :
     (B.length α : ℤ) * bananaStepSlope B script α 0 =
       (script (rightEndpoint B) - script (leftEndpoint B)) +
         bananaInteriorMoment B α (prin B.graph script) -
@@ -325,7 +325,7 @@ private theorem interior_position_eq_of_vertex_eq_general {g : ℕ}
 theorem bananaInteriorSum_one_chip {g : ℕ} (B : Banana g)
     (α β : Fin (g + 1)) (j : B.PathPosition β)
     (hj : B.IsInteriorPosition β j) :
-    bananaInteriorSum B α (one_chip (strandVertex B β j)) =
+    bananaInteriorSum B α (oneChip (strandVertex B β j)) =
       if α = β then 1 else 0 := by
   classical
   unfold bananaInteriorSum
@@ -335,7 +335,7 @@ theorem bananaInteriorSum_one_chip {g : ℕ} (B : Banana g)
     let selected : Fin (B.length α - 1) := ⟨j.val - 1, by omega⟩
     rw [Finset.sum_eq_single selected]
     · have hpos : j.val - 1 + 1 = j.val := by omega
-      simp [selected, one_chip, hpos]
+      simp [selected, oneChip, hpos]
     · intro r hr hrne
       have hne : strandVertex B α ⟨r.val + 1, by omega⟩ ≠
           strandVertex B α j := by
@@ -346,7 +346,7 @@ theorem bananaInteriorSum_one_chip {g : ℕ} (B : Banana g)
           change r.val = j.val - 1
           exact Nat.eq_sub_of_add_eq hv
         exact hrne hsel
-      simp [one_chip, hne]
+      simp [oneChip, hne]
     · exact fun h => (h (Finset.mem_univ selected)).elim
   · simp only [hαβ, ↓reduceIte]
     apply Finset.sum_eq_zero
@@ -355,12 +355,12 @@ theorem bananaInteriorSum_one_chip {g : ℕ} (B : Banana g)
         strandVertex B β j := by
       intro heq
       exact hαβ (interior_position_eq_of_vertex_eq_general B α β r.val r.isLt j hj |>.mp heq).1
-    simp [one_chip, hne]
+    simp [oneChip, hne]
 
 theorem bananaInteriorMoment_one_chip {g : ℕ} (B : Banana g)
     (α β : Fin (g + 1)) (j : B.PathPosition β)
     (hj : B.IsInteriorPosition β j) :
-    bananaInteriorMoment B α (one_chip (strandVertex B β j)) =
+    bananaInteriorMoment B α (oneChip (strandVertex B β j)) =
       if α = β then (j.val : ℤ) else 0 := by
   classical
   unfold bananaInteriorMoment
@@ -370,7 +370,7 @@ theorem bananaInteriorMoment_one_chip {g : ℕ} (B : Banana g)
     let selected : Fin (B.length α - 1) := ⟨j.val - 1, by omega⟩
     rw [Finset.sum_eq_single selected]
     · have hpos : j.val - 1 + 1 = j.val := by omega
-      simp [selected, one_chip, hpos]
+      simp [selected, oneChip, hpos]
     · intro r hr hrne
       have hne : strandVertex B α ⟨r.val + 1, by omega⟩ ≠
           strandVertex B α j := by
@@ -381,7 +381,7 @@ theorem bananaInteriorMoment_one_chip {g : ℕ} (B : Banana g)
           change r.val = j.val - 1
           exact Nat.eq_sub_of_add_eq hv
         exact hrne hsel
-      simp [one_chip, hne]
+      simp [oneChip, hne]
     · exact fun h => (h (Finset.mem_univ selected)).elim
   · simp only [hαβ, ↓reduceIte]
     apply Finset.sum_eq_zero
@@ -390,31 +390,31 @@ theorem bananaInteriorMoment_one_chip {g : ℕ} (B : Banana g)
         strandVertex B β j := by
       intro heq
       exact hαβ (interior_position_eq_of_vertex_eq_general B α β r.val r.isLt j hj |>.mp heq).1
-    simp [one_chip, hne]
+    simp [oneChip, hne]
 
 theorem bananaInteriorSum_one_chip_leftEndpoint {g : ℕ} (B : Banana g)
     (α : Fin (g + 1)) :
-    bananaInteriorSum B α (one_chip (leftEndpoint B)) = 0 := by
+    bananaInteriorSum B α (oneChip (leftEndpoint B)) = 0 := by
   unfold bananaInteriorSum
   apply Finset.sum_eq_zero
   intro r _hr
   have hne : strandVertex B α ⟨r.val + 1, by omega⟩ ≠ leftEndpoint B :=
     strandVertex_ne_leftEndpoint B α _ (Nat.zero_lt_succ r.val)
-  simp [one_chip, hne]
+  simp [oneChip, hne]
 
 theorem bananaInteriorMoment_one_chip_leftEndpoint {g : ℕ} (B : Banana g)
     (α : Fin (g + 1)) :
-    bananaInteriorMoment B α (one_chip (leftEndpoint B)) = 0 := by
+    bananaInteriorMoment B α (oneChip (leftEndpoint B)) = 0 := by
   unfold bananaInteriorMoment
   apply Finset.sum_eq_zero
   intro r _hr
   have hne : strandVertex B α ⟨r.val + 1, by omega⟩ ≠ leftEndpoint B :=
     strandVertex_ne_leftEndpoint B α _ (Nat.zero_lt_succ r.val)
-  simp [one_chip, hne]
+  simp [oneChip, hne]
 
 theorem bananaInteriorSum_one_chip_rightEndpoint {g : ℕ} (B : Banana g)
     (α : Fin (g + 1)) :
-    bananaInteriorSum B α (one_chip (rightEndpoint B)) = 0 := by
+    bananaInteriorSum B α (oneChip (rightEndpoint B)) = 0 := by
   unfold bananaInteriorSum
   apply Finset.sum_eq_zero
   intro r _hr
@@ -422,11 +422,11 @@ theorem bananaInteriorSum_one_chip_rightEndpoint {g : ℕ} (B : Banana g)
   have hlt : r.val + 1 < B.length α := by omega
   have hne : strandVertex B α ⟨r.val + 1, by omega⟩ ≠ rightEndpoint B :=
     strandVertex_ne_rightEndpoint B α _ hlt
-  simp [one_chip, hne]
+  simp [oneChip, hne]
 
 theorem bananaInteriorMoment_one_chip_rightEndpoint {g : ℕ} (B : Banana g)
     (α : Fin (g + 1)) :
-    bananaInteriorMoment B α (one_chip (rightEndpoint B)) = 0 := by
+    bananaInteriorMoment B α (oneChip (rightEndpoint B)) = 0 := by
   unfold bananaInteriorMoment
   apply Finset.sum_eq_zero
   intro r _hr
@@ -434,7 +434,7 @@ theorem bananaInteriorMoment_one_chip_rightEndpoint {g : ℕ} (B : Banana g)
   have hlt : r.val + 1 < B.length α := by omega
   have hne : strandVertex B α ⟨r.val + 1, by omega⟩ ≠ rightEndpoint B :=
     strandVertex_ne_rightEndpoint B α _ hlt
-  simp [one_chip, hne]
+  simp [oneChip, hne]
 
 theorem bananaInteriorSum_sub {g : ℕ} (B : Banana g)
     (α : Fin (g + 1)) (D E : CFDiv B.graph) :
@@ -471,14 +471,14 @@ equal to `-k` in the endpoint cases. -/
 theorem exists_prin_eq_neg_marked_difference_of_torsionWitness
     {G : CFGraph} (u v : G.V) (k : ℕ)
     (hk : TorsionWitness (mark G u v) k) :
-    ∃ script : firing_script G,
-      prin G script = (k : ℤ) • (one_chip v - one_chip u) := by
-  have hequiv : linear_equiv G 0
-      ((k : ℤ) • (one_chip u - one_chip v)) := hk.2.symm
-  unfold linear_equiv at hequiv
+    ∃ script : firingScript G,
+      prin G script = (k : ℤ) • (oneChip v - oneChip u) := by
+  have hequiv : linearEquiv G 0
+      ((k : ℤ) • (oneChip u - oneChip v)) := hk.2.symm
+  unfold linearEquiv at hequiv
   obtain ⟨script, hscript⟩ :=
     (principal_iff_eq_prin G
-      (((k : ℤ) • (one_chip u - one_chip v)) - 0)).mp hequiv
+      (((k : ℤ) • (oneChip u - oneChip v)) - 0)).mp hequiv
   refine ⟨-script, ?_⟩
   rw [map_neg, ← hscript]
   ext x
@@ -494,7 +494,7 @@ theorem torsion_interior_initialSlope_equations
     (hi : B.IsInteriorPosition α i) (hj : B.IsInteriorPosition β j)
     (hαβ : α ≠ β) (hk : TorsionWitness
       (mark B.graph (strandVertex B α i) (strandVertex B β j)) k) :
-    ∃ (script : firing_script B.graph) (rise : ℤ)
+    ∃ (script : firingScript B.graph) (rise : ℤ)
         (slope : Fin (g + 1) → ℤ),
       rise = script (rightEndpoint B) - script (leftEndpoint B) ∧
       (∑ γ, slope γ) = 0 ∧
@@ -517,7 +517,7 @@ theorem torsion_interior_initialSlope_equations
       strandVertex_ne_leftEndpoint B β j hj.1
     have hu' : leftEndpoint B ≠ strandVertex B α i := Ne.symm hu
     have hv' : leftEndpoint B ≠ strandVertex B β j := Ne.symm hv
-    simp [one_chip, hu', hv']
+    simp [oneChip, hu', hv']
   · have hEq := initialSlope_equation B script α
     rw [hprin, bananaInteriorMoment_zsmul, bananaInteriorSum_zsmul,
       bananaInteriorMoment_sub, bananaInteriorSum_sub,
@@ -685,7 +685,7 @@ theorem interior_torsion_rise_zero_or_period_ge_genus
     (hαβ : α ≠ β)
     (hTO : IsTorsionOrder
       (mark B.graph (strandVertex B α i) (strandVertex B β j)) k) :
-    ∃ (script : firing_script B.graph) (rise : ℤ)
+    ∃ (script : firingScript B.graph) (rise : ℤ)
         (slope : Fin (g + 1) → ℤ),
       rise = script (rightEndpoint B) - script (leftEndpoint B) ∧
       (∑ γ, slope γ) = 0 ∧
@@ -901,7 +901,7 @@ theorem leftEndpoint_penultimate_torsionOrder_gt_genus
     rw [← prin_leftEndpoint_eq_sum_initialSlope B script, hprin]
     have hne : leftEndpoint B ≠ strandVertex B β j :=
       (strandVertex_ne_leftEndpoint B β j hjInt.1).symm
-    simp [one_chip, hne]
+    simp [oneChip, hne]
   have hDist : rise = (B.length β : ℤ) * slope β + k := by
     have hEq := initialSlope_equation B script β
     rw [hprin, bananaInteriorMoment_zsmul, bananaInteriorSum_zsmul,
@@ -953,7 +953,7 @@ theorem rightEndpoint_one_torsionOrder_gt_genus
     rw [← prin_rightEndpoint_eq_neg_sum_finalSlope B script, hprin]
     have hne : rightEndpoint B ≠ strandVertex B α i :=
       (strandVertex_ne_rightEndpoint B α i hiInt.2).symm
-    simp [one_chip, hne]
+    simp [oneChip, hne]
   have hDist : -rise = (B.length α : ℤ) * reverseSlope α + k := by
     have hInitial := initialSlope_equation B script α
     have hInterior := bananaInteriorSum_prin B script α

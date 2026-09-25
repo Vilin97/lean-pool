@@ -203,7 +203,7 @@ theorem unitEdge_eq (step : (spec G).Step) :
 
 /-- Filtering the type of occurrences has the same cardinality as filtering
 the underlying multiset.  This is the bookkeeping lemma that retains parallel
-edge multiplicities in the final `num_edges` proof. -/
+edge multiplicities in the final `numEdges` proof. -/
 theorem card_filter_occurrences {α : Type*} [DecidableEq α]
     (edges : Multiset α) (predicate : α → Prop) [DecidablePred predicate] :
     ((Finset.univ : Finset edges).filter
@@ -225,11 +225,11 @@ theorem card_filter_occurrences {α : Type*} [DecidableEq α]
 
 /-- Unit subdivision preserves every unordered edge multiplicity. -/
 theorem num_edges_graphVertexEquiv (x y : G.V) :
-    num_edges (spec G).graph (graphVertexEquiv G x)
+    numEdges (spec G).graph (graphVertexEquiv G x)
         (graphVertexEquiv G y) =
-      num_edges G x y := by
+      numEdges G x y := by
   rw [(spec G).num_edges_eq_card_filter_steps]
-  unfold num_edges
+  unfold numEdges
   let stepPredicate : (spec G).Step → Prop := fun step =>
     (spec G).unitEdge step =
         (graphVertexEquiv G x, graphVertexEquiv G y) ∨

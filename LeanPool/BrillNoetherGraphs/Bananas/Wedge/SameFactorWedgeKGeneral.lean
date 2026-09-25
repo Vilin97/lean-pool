@@ -43,12 +43,12 @@ theorem same_leftFactor_wedge_isTorsionOrder_two
   let M := mark W (Sum.inl x) (Sum.inl u)
   have hFactor := (twoVertexGenusOne_isTorsionOrder_two
     G x u hG hCut hCard hxu).1.2
-  have hWedge : linear_equiv W
+  have hWedge : linearEquiv W
       (wedgeLiftLeftDivisor G H x y
-        ((2 : ℤ) • (one_chip x - one_chip u))) 0 := by
+        ((2 : ℤ) • (oneChip x - oneChip u))) 0 := by
     have h := linear_equiv_wedgeAddDivisor G H x y
-      ((2 : ℤ) • (one_chip x - one_chip u)) 0 0 0 hFactor
-      (linear_equiv.refl H 0)
+      ((2 : ℤ) • (oneChip x - oneChip u)) 0 0 0 hFactor
+      (linearEquiv.refl H 0)
     convert h using 1 <;> ext z <;> cases z <;>
       simp [wedgeLiftLeftDivisor, wedgeAddDivisor] <;> rfl
   have hNotOne : ¬ TorsionWitness M 1 := by
@@ -56,13 +56,13 @@ theorem same_leftFactor_wedge_isTorsionOrder_two
     apply left_mark_difference_not_principal G H x u y hG hxu.symm
     change TorsionWitness (mark W (Sum.inl x) (Sum.inl u)) 1 at hOne
     have hEq := hOne.2
-    change linear_equiv W ((1 : ℤ) •
-      (one_chip (G := W) (Sum.inl x) - one_chip (G := W) (Sum.inl u))) 0 at hEq
+    change linearEquiv W ((1 : ℤ) •
+      (oneChip (G := W) (Sum.inl x) - oneChip (G := W) (Sum.inl u))) 0 at hEq
     simpa using hEq
   refine ⟨?_, ?_⟩
   · refine ⟨by norm_num, ?_⟩
-    change linear_equiv W ((2 : ℤ) •
-      (one_chip (G := W) (Sum.inl x) - one_chip (G := W) (Sum.inl u))) 0
+    change linearEquiv W ((2 : ℤ) •
+      (oneChip (G := W) (Sum.inl x) - oneChip (G := W) (Sum.inl u))) 0
     rw [wedge_left_difference]
     rw [← wedgeLiftLeft_zsmul]
     exact hWedge

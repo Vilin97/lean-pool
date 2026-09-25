@@ -136,7 +136,7 @@ theorem nsmForBanana_classification
           have hpos : j = ⟨0, by omega⟩ := Fin.ext hjZero
           rw [hpos, strandVertex_zero]
         rw [hU, hV]
-        exact ⟨one_chip (leftEndpoint B), rankDelta_one_chip_self_lt_zero (by omega) B _⟩
+        exact ⟨oneChip (leftEndpoint B), rankDelta_one_chip_self_lt_zero (by omega) B _⟩
       · left
         have hU : strandVertex B α i = leftEndpoint B := by
           have hpos : i = ⟨0, by omega⟩ := Fin.ext hiZero
@@ -161,6 +161,6 @@ theorem nsmForBanana_classification
           have hpos : j = ⟨B.length β, by omega⟩ := Fin.ext hjLength
           rw [hpos, strandVertex_length]
         rw [hU, hV]
-        exact ⟨one_chip (rightEndpoint B), rankDelta_one_chip_self_lt_zero (by omega) B _⟩
+        exact ⟨oneChip (rightEndpoint B), rankDelta_one_chip_self_lt_zero (by omega) B _⟩
 
 end Bananas

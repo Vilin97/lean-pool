@@ -22,14 +22,14 @@ open Utilities
 is unique. -/
 theorem one_chip_representative_unique_on_banana
     {g : ℕ} (hg : 1 ≤ g) (B : Banana g) {D : CFDiv B.graph}
-    {x y : B.graph.V} (hDx : linear_equiv B.graph D (one_chip x))
-    (hDy : linear_equiv B.graph D (one_chip y)) :
+    {x y : B.graph.V} (hDx : linearEquiv B.graph D (oneChip x))
+    (hDy : linearEquiv B.graph D (oneChip y)) :
     x = y := by
   by_contra hxy
-  have hxyEquiv : linear_equiv B.graph (one_chip x) (one_chip y) :=
+  have hxyEquiv : linearEquiv B.graph (oneChip x) (oneChip y) :=
     hDx.symm.trans hDy
   apply marks_not_linearEquiv hg B hxy
-  unfold linear_equiv at hxyEquiv ⊢
+  unfold linearEquiv at hxyEquiv ⊢
   simpa using hxyEquiv
 
 end Bananas

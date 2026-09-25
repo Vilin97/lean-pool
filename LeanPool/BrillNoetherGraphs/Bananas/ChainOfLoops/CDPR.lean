@@ -223,9 +223,9 @@ noncomputable def chainGraph (P : Loop) (L : List Loop) : CFGraph :=
 
 /-- A chain of connected factors is connected. -/
 private theorem graph_connected_markedChain (M : MarkedGraph) (L : List MarkedGraph)
-    (hM : _root_.graph_connected M.graph)
-    (hL : ∀ N ∈ L, _root_.graph_connected N.graph) :
-    _root_.graph_connected (M.chain L).graph := by
+    (hM : _root_.graphConnected M.graph)
+    (hL : ∀ N ∈ L, _root_.graphConnected N.graph) :
+    _root_.graphConnected (M.chain L).graph := by
   induction L generalizing M with
   | nil => simpa using hM
   | cons N rest ih =>
@@ -236,7 +236,7 @@ private theorem graph_connected_markedChain (M : MarkedGraph) (L : List MarkedGr
 
 /-- A chain of loops is connected. -/
 theorem graph_connected_chainGraph (P : Loop) (L : List Loop) :
-    _root_.graph_connected (chainGraph P L) := by
+    _root_.graphConnected (chainGraph P L) := by
   apply graph_connected_markedChain _ _ P.factor.connected
   intro N hN
   simp only [List.mem_map] at hN
@@ -473,7 +473,7 @@ universe u
 
 /-- Pointed rank thresholds grow by at least one per row. -/
 private theorem pointedRankThreshold_add_le
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (v : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (v : G.V)
     (i j : ℕ) (hij : i ≤ j) :
     pointedRankThreshold G hG D v i + ((j : ℤ) - (i : ℤ)) ≤
       pointedRankThreshold G hG D v j := by
@@ -494,10 +494,10 @@ The `r + 1` rows are bounded below by the Brill--Noether rectangle width
 the zeroth row, whose threshold is pushed down to `-m` by the vanishing
 hypothesis. -/
 theorem finitePointedDiagram_card_ge_of_vanishing
-    (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (v : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (v : G.V)
     (r : ℕ) (m : ℤ)
     (hrank : (r : ℤ) ≤ rank G D)
-    (hm : 0 ≤ rank G (D - m • one_chip v)) :
+    (hm : 0 ≤ rank G (D - m • oneChip v)) :
     ((r : ℤ) + 1) * (genus G - deg D + (r : ℤ)) + (m - (r : ℤ)) ≤
       ((finitePointedDiagram G hG D v r).card : ℤ) := by
   -- The `r`-th threshold is at most `0`, so the `i`-th is at most `i - r`.
@@ -512,7 +512,7 @@ theorem finitePointedDiagram_card_ge_of_vanishing
   -- The vanishing hypothesis pushes the zeroth threshold down to `-m`.
   have hZero : pointedRankThreshold G hG D v 0 ≤ -m := by
     apply pointedRankThreshold_le_of_rank_ge G hG D v 0 (-m)
-    have hrw : D + (-m) • one_chip v = D - m • one_chip v := by
+    have hrw : D + (-m) • oneChip v = D - m • oneChip v := by
       funext z
       simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
         neg_mul]
@@ -563,10 +563,10 @@ general pointed graph, no divisor of rank at least `r` vanishes to order
 This is the graph-theoretic content of CDPR Theorem 1.1(2); the chain of
 loops enters only through `hOM`. -/
 theorem rank_sub_high_multiplicity_neg
-    (G : CFGraph.{u}) (hG : graph_connected G) (v : G.V)
+    (G : CFGraph.{u}) (hG : graphConnected G) (v : G.V)
     (hOM : OnceMarkedBrillNoetherGeneral G v)
     (D : CFDiv G) (r : ℤ) (hr : 0 ≤ r) (hrank : r ≤ rank G D) :
-    rank G (D - (r + bnNumber G r (deg D) + 1) • one_chip v) < 0 := by
+    rank G (D - (r + bnNumber G r (deg D) + 1) • oneChip v) < 0 := by
   by_contra hcon
   have hL8 := finitePointedDiagram_card_ge_of_vanishing G hG D v r.toNat
     (r + bnNumber G r (deg D) + 1)
@@ -581,10 +581,10 @@ theorem rank_sub_high_multiplicity_neg
 *image* of the mark to be once-marked Brill--Noether general. -/
 theorem rank_sub_high_multiplicity_neg_of_iso
     {G : CFGraph.{u}} {H : CFGraph.{v}} (phi : CFGraphIso G H)
-    (hG : graph_connected G) (v : G.V)
+    (hG : graphConnected G) (v : G.V)
     (hOM : OnceMarkedBrillNoetherGeneral H (phi.vertexEquiv v))
     (D : CFDiv G) (r : ℤ) (hr : 0 ≤ r) (hrank : r ≤ rank G D) :
-    rank G (D - (r + bnNumber G r (deg D) + 1) • one_chip v) < 0 := by
+    rank G (D - (r + bnNumber G r (deg D) + 1) • oneChip v) < 0 := by
   have hkey := rank_sub_high_multiplicity_neg H (phi.graph_connected_map hG)
     (phi.vertexEquiv v) hOM (phi.mapDiv D) r hr
     (by rw [phi.rank_mapDiv]; exact hrank)
@@ -593,9 +593,9 @@ theorem rank_sub_high_multiplicity_neg_of_iso
     simp only [bnNumber, rectangleWidth, phi.genus_eq]
   rw [hbn] at hkey
   rw [← phi.rank_mapDiv]
-  have hmap : phi.mapDiv (D - (r + bnNumber G r (deg D) + 1) • one_chip v)
+  have hmap : phi.mapDiv (D - (r + bnNumber G r (deg D) + 1) • oneChip v)
       = phi.mapDiv D - (r + bnNumber G r (deg D) + 1) •
-        one_chip (phi.vertexEquiv v) := by
+        oneChip (phi.vertexEquiv v) := by
     rw [map_sub, map_zsmul, CFGraphIso.mapDiv_one_chip]
   rw [hmap]
   exact hkey
@@ -617,7 +617,7 @@ theorem cdpr_no_high_multiplicity (P : Loop) (L : List Loop)
     (hrho : 0 ≤ bnNumber (chainGraph P L) r d) :
     rank (chainGraph P L)
         (D - (r + bnNumber (chainGraph P L) r d + 1) •
-          (one_chip (chainMarked P L).right : CFDiv (chainGraph P L))) < 0 := by
+          (oneChip (chainMarked P L).right : CFDiv (chainGraph P L))) < 0 := by
   subst hdeg
   exact rank_sub_high_multiplicity_neg (chainGraph P L)
     (graph_connected_chainGraph P L) (chainMarked P L).right
@@ -665,7 +665,7 @@ theorem cdpr_no_high_multiplicity_left (P : Loop) (L : List Loop)
     (hrho : 0 ≤ bnNumber (chainGraph P L) r d) :
     rank (chainGraph P L)
         (D - (r + bnNumber (chainGraph P L) r d + 1) •
-          (one_chip (chainMarked P L).left : CFDiv (chainGraph P L))) < 0 := by
+          (oneChip (chainMarked P L).left : CFDiv (chainGraph P L))) < 0 := by
   subst hdeg
   exact rank_sub_high_multiplicity_neg_of_iso
     (reversedFactorChainIso P.factor (L.map Loop.factor))

@@ -220,9 +220,9 @@ def efProfile (hBC : C length ≤ B length) :
 /-- Exact sparse endpoint divisor of the `d` profile. -/
 theorem dProfile_endpointDivisors (hNorm : length 0 ≤ length 5) (hBC : C length ≤ B length) :
     (dProfile length hLength hBC).endpointDivisors =
-      one_chip (pStart length hLength) - one_chip (p length hLength hBC) +
-      one_chip (deltaStart length hLength) - one_chip ((Spec length hLength).coreVertex 4) +
-      one_chip (xStart length hLength) - one_chip (q length hLength hNorm) := by
+      oneChip (pStart length hLength) - oneChip (p length hLength hBC) +
+      oneChip (deltaStart length hLength) - oneChip ((Spec length hLength).coreVertex 4) +
+      oneChip (xStart length hLength) - oneChip (q length hLength hNorm) := by
   classical
   rw [WindowProfile.Data.endpointDivisors]
   simp [Fin.sum_univ_succ, dProfile_start_three, dProfile_stop_three,
@@ -233,8 +233,8 @@ theorem dProfile_endpointDivisors (hNorm : length 0 ≤ length 5) (hBC : C lengt
 /-- Exact sparse endpoint divisor of the common `e/f` profile. -/
 theorem efProfile_endpointDivisors (hBC : C length ≤ B length) :
     (efProfile length hLength hBC).endpointDivisors =
-      - one_chip (p length hLength hBC) + one_chip ((Spec length hLength).coreVertex 3) +
-      one_chip ((Spec length hLength).coreVertex 2) - one_chip ((Spec length hLength).coreVertex 4) := by
+      - oneChip (p length hLength hBC) + oneChip ((Spec length hLength).coreVertex 3) +
+      oneChip ((Spec length hLength).coreVertex 2) - oneChip ((Spec length hLength).coreVertex 4) := by
   classical
   rw [WindowProfile.Data.endpointDivisors]
   simp [Fin.sum_univ_succ, efProfile_start_three, efProfile_stop_three,
@@ -296,21 +296,21 @@ private theorem some_start_eq_one :
       rw [Nat.min_eq_right hDX, Nat.min_eq_right hDP]
 
 private theorem effective_three_starts_sub_one :
-    effective (one_chip (G := (Spec length hLength).graph) (pStart length hLength) +
-      one_chip (deltaStart length hLength) + one_chip (xStart length hLength) -
-      one_chip ((Spec length hLength).coreVertex 1)) := by
+    effective (oneChip (G := (Spec length hLength).graph) (pStart length hLength) +
+      oneChip (deltaStart length hLength) + oneChip (xStart length hLength) -
+      oneChip ((Spec length hLength).coreVertex 1)) := by
   rcases some_start_eq_one length hLength with h | h | h
   · rw [h]
     intro vertex
-    simp [one_chip]
+    simp [oneChip]
     split_ifs <;> omega
   · rw [h]
     intro vertex
-    simp [one_chip]
+    simp [oneChip]
     split_ifs <;> omega
   · rw [h]
     intro vertex
-    simp [one_chip]
+    simp [oneChip]
     split_ifs <;> omega
 
 /-- The first Dhar profile reaches `d=1`. -/
@@ -323,7 +323,7 @@ theorem reaches_one (hNorm : length 0 ≤ length 5) (hBC : C length ≤ B length
   rw [dProfile_endpointDivisors length hLength hNorm hBC]
   convert effective_three_starts_sub_one length hLength using 1
   funext vertex
-  simp [threeChipDivisor, one_chip]
+  simp [threeChipDivisor, oneChip]
   ring
 
 /-- The second Dhar profile reaches `e=2`. -/
@@ -358,7 +358,7 @@ theorem reaches_three (hNorm : length 0 ≤ length 5) (hBC : C length ≤ B leng
 theorem bnExists_one_three (hNorm : length 0 ≤ length 5) (hBC : C length ≤ B length) :
     BNExists (Spec length hLength).graph 1 3 := by
   refine Utilities.Certificate.GenusFourLoopLemma.bnExists_of_reaches_coreVertices
-    (Spec length hLength) (graph_connected length hLength)
+    (Spec length hLength) (graphConnected length hLength)
     (threeChipDivisor ((Spec length hLength).coreVertex 4)
       (q length hLength hNorm) (p length hLength hBC)) 3 ?_ ?_
   · exact deg_threeChipDivisor _ _ _

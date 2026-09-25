@@ -28,7 +28,7 @@ representative and an ASP permutation. -/
 def TransmissionInequality
     (G : CFGraph) (u v : G.V) (τ : AspPerm) (D : CFDiv G)
     (a b : ℤ) : Prop :=
-  rank G (D + a • one_chip u - b • one_chip v) ≥ τ.s (a + 1) b - 1
+  rank G (D + a • oneChip u - b • oneChip v) ≥ τ.s (a + 1) b - 1
 
 /-- The transmission inequalities restricted to a set of lattice points. -/
 def SatisfiesTransmissionOn
@@ -55,7 +55,7 @@ theorem degree_of_satisfiesTransmission
 theorem rank_twist_of_satisfiesTransmission
     {G : CFGraph} {u v : G.V} {τ : AspPerm} {D : CFDiv G}
     (h : SatisfiesTransmission G u v τ D) (a b : ℤ) :
-    rank G (D + a • one_chip u - b • one_chip v) ≥ τ.s (a + 1) b - 1 :=
+    rank G (D + a • oneChip u - b • oneChip v) ≥ τ.s (a + 1) b - 1 :=
   h.2 a b
 
 /-- A global transmission witness satisfies the inequalities on any chosen test
@@ -93,22 +93,22 @@ degree. -/
 theorem degree_twist_of_satisfiesTransmission
     {G : CFGraph} {u v : G.V} {τ : AspPerm} {D : CFDiv G}
     (h : SatisfiesTransmission G u v τ D) (a b : ℤ) :
-    deg (D + a • one_chip u - b • one_chip v) =
+    deg (D + a • oneChip u - b • oneChip v) =
       (genus G : ℤ) + τ.χ + a - b := by
   rw [deg_add_marked_twist, h.1]
 
 /-- Adding the same marked twist to linearly equivalent divisors preserves
 linear equivalence. -/
 theorem marked_twist_linear_equiv
-    {G : CFGraph} {D E : CFDiv G} (hDE : linear_equiv G D E)
+    {G : CFGraph} {D E : CFDiv G} (hDE : linearEquiv G D E)
     (u v : G.V) (a b : ℤ) :
-    linear_equiv G
-      (D + a • one_chip u - b • one_chip v)
-      (E + a • one_chip u - b • one_chip v) := by
-  unfold linear_equiv at hDE ⊢
+    linearEquiv G
+      (D + a • oneChip u - b • oneChip v)
+      (E + a • oneChip u - b • oneChip v) := by
+  unfold linearEquiv at hDE ⊢
   have hDifference :
-      (E + a • one_chip u - b • one_chip v) -
-          (D + a • one_chip u - b • one_chip v) = E - D := by
+      (E + a • oneChip u - b • oneChip v) -
+          (D + a • oneChip u - b • oneChip v) = E - D := by
     abel
   rw [hDifference]
   exact hDE
@@ -116,7 +116,7 @@ theorem marked_twist_linear_equiv
 /-- A single transmission inequality is invariant under replacing the divisor
 by a linearly equivalent representative. -/
 theorem transmissionInequality_of_linear_equiv
-    {G : CFGraph} {D E : CFDiv G} (hDE : linear_equiv G D E)
+    {G : CFGraph} {D E : CFDiv G} (hDE : linearEquiv G D E)
     (u v : G.V) (τ : AspPerm) (a b : ℤ)
     (hD : TransmissionInequality G u v τ D a b) :
     TransmissionInequality G u v τ E a b := by
@@ -126,7 +126,7 @@ theorem transmissionInequality_of_linear_equiv
 
 /-- The full transmission condition depends only on the divisor class. -/
 theorem satisfiesTransmission_of_linear_equiv
-    {G : CFGraph} {D E : CFDiv G} (hDE : linear_equiv G D E)
+    {G : CFGraph} {D E : CFDiv G} (hDE : linearEquiv G D E)
     (u v : G.V) (τ : AspPerm)
     (hD : SatisfiesTransmission G u v τ D) :
     SatisfiesTransmission G u v τ E := by
@@ -138,7 +138,7 @@ theorem satisfiesTransmission_of_linear_equiv
 
 /-- Transmission is invariant under linear equivalence. -/
 theorem satisfiesTransmission_linear_equiv_iff
-    {G : CFGraph} {D E : CFDiv G} (hDE : linear_equiv G D E)
+    {G : CFGraph} {D E : CFDiv G} (hDE : linearEquiv G D E)
     (u v : G.V) (τ : AspPerm) :
     SatisfiesTransmission G u v τ D ↔ SatisfiesTransmission G u v τ E := by
   constructor

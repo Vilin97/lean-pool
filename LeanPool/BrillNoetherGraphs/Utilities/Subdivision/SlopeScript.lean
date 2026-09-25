@@ -38,7 +38,7 @@ variable {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
 
 /-- A slope datum for a firing script: the script rises by `slope edge k`
 across the `k`-th unit step of slot `edge`. -/
-def IsStepSlope (script : firing_script spec.graph) (slope : Fin p → ℕ → ℤ) :
+def IsStepSlope (script : firingScript spec.graph) (slope : Fin p → ℕ → ℤ) :
     Prop :=
   ∀ (edge : Fin p) (offset : Fin (spec.length edge)),
     script (spec.stepRight edge offset) - script (spec.stepLeft edge offset) =
@@ -94,7 +94,7 @@ theorem sum_over_last_step (edge : Fin p)
 
 /-- The Laplacian of any script, written entirely in terms of its unit-step
 slopes. -/
-theorem prin_eq_sum_slopes {script : firing_script spec.graph}
+theorem prin_eq_sum_slopes {script : firingScript spec.graph}
     {slope : Fin p → ℕ → ℤ} (hslope : spec.IsStepSlope script slope)
     (vertex : spec.Vertex) :
     prin spec.graph script vertex =
@@ -122,7 +122,7 @@ theorem prin_eq_sum_slopes {script : firing_script spec.graph}
 
 /-- At a core vertex, the Laplacian is the sum over all slots of the outgoing
 slope at each incident endpoint. -/
-theorem prin_coreVertex_eq_endpointSum {script : firing_script spec.graph}
+theorem prin_coreVertex_eq_endpointSum {script : firingScript spec.graph}
     {slope : Fin p → ℕ → ℤ} (hslope : spec.IsStepSlope script slope)
     (vertex : Fin n) :
     prin spec.graph script (spec.coreVertex vertex) =
@@ -170,7 +170,7 @@ theorem prin_coreVertex_eq_endpointSum {script : firing_script spec.graph}
 /-- At an interior vertex, the Laplacian is the difference of the two adjacent
 slopes. -/
 theorem prin_interiorVertex_eq_slopeDifference
-    {script : firing_script spec.graph}
+    {script : firingScript spec.graph}
     {slope : Fin p → ℕ → ℤ} (hslope : spec.IsStepSlope script slope)
     (edge : Fin p) (offset : Fin (spec.length edge - 1)) :
     prin spec.graph script (spec.interiorVertex edge offset) =
@@ -228,7 +228,7 @@ theorem prin_interiorVertex_eq_slopeDifference
 /-- The script whose value at path position `k` of slot `edge` is
 `value edge k`, and `potential v` at the core vertex `v`. -/
 def slotValueScript (potential : Fin n → ℤ) (value : Fin p → ℕ → ℤ) :
-    firing_script spec.graph
+    firingScript spec.graph
   | Sum.inl vertex => potential vertex
   | Sum.inr interior => value interior.1 (interior.2.val + 1)
 

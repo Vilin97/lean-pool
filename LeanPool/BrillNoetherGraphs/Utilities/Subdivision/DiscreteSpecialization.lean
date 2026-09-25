@@ -33,7 +33,7 @@ variable {n p : ℕ}
 
 /-- The source endpoint sum, regrouped by target contraction classes. -/
 theorem source_prin_classSum (d : DegSpec n p) (s : Spec n p)
-    (hCore : s.core = d.core) (f : firing_script s.graph) (r : Fin n) :
+    (hCore : s.core = d.core) (f : firingScript s.graph) (r : Fin n) :
     (∑ v ∈ univ.filter (fun v : Fin n => d.rep v = d.rep r),
       prin s.graph f (s.coreVertex v)) =
     ∑ e : Fin p,
@@ -53,9 +53,9 @@ effectivity. Both scripts are actual functions on their respective graphs. -/
 theorem effective_of_endpoint_comparison (d : DegSpec n p) (s : Spec n p)
     (hCore : s.core = d.core)
     (hZero : ∀ e, d.length e = 0 → s.length e = 1)
-    (weight : Fin n → ℤ) (f : firing_script s.graph)
+    (weight : Fin n → ℤ) (f : firingScript s.graph)
     (hf : effective (coreDivisor s weight + prin s.graph f))
-    (g : firing_script d.graph) (slope : Fin p → ℕ → ℤ)
+    (g : firingScript d.graph) (slope : Fin p → ℕ → ℤ)
     (hg : d.IsStepSlope g slope)
     (hTail : ∀ e, 0 < d.length e →
       pathValue s f e 1 - pathValue s f e 0 ≤ slope e 0)
@@ -125,7 +125,7 @@ variable {n p : ℕ}
 /-- A winning script for a core-supported divisor has nondecreasing unit
 slopes along every slot, since there are no prescribed interior chips. -/
 theorem winning_path_slopes_mono (s : Spec n p) (weight : Fin n → ℤ)
-    (f : firing_script s.graph)
+    (f : firingScript s.graph)
     (hf : effective (coreDivisor s weight + prin s.graph f)) (e : Fin p) :
     ∀ a b : ℕ, a ≤ b → b < s.length e →
       ConvexIntegerRounding.slope (pathValue s f e) a ≤
@@ -148,11 +148,11 @@ theorem rounded_script_effective (d : DegSpec n p) (s : Spec n p)
     (hCore : s.core = d.core) (N : ℕ) (hN : 0 < N)
     (hZero : ∀ e, d.length e = 0 → s.length e = 1)
     (hPos : ∀ e, 0 < d.length e → s.length e = N * d.length e)
-    (weight : Fin n → ℤ) (f : firing_script s.graph)
+    (weight : Fin n → ℤ) (f : firingScript s.graph)
     (hf : effective (coreDivisor s weight + prin s.graph f)) (k : Fin N)
     (hConst : ∀ u v : Fin n, d.rep u = d.rep v →
       round N k (f (s.coreVertex u)) = round N k (f (s.coreVertex v))) :
-    ∃ g : firing_script d.graph,
+    ∃ g : firingScript d.graph,
       effective (d.coreClassDivisor weight + prin d.graph g) := by
   let potential : Fin n → ℤ := fun v => round N k (f (s.coreVertex v))
   let values : Fin p → ℕ → ℤ := fun e j =>
@@ -287,7 +287,7 @@ theorem exists_descending_offset (d : DegSpec n p) (N : ℕ) (hN : 0 < N)
     (hMajorant : ∀ v, 0 ≤ majorant v) (hLe : ∀ v, weight v ≤ majorant v)
     (hBudget : ((univ.filter (fun e => d.length e = 0)).card : ℤ) *
       (∑ v, majorant v) < (N : ℤ))
-    (f : firing_script (stretch d N hN hLoopless).graph)
+    (f : firingScript (stretch d N hN hLoopless).graph)
     (hf : effective (coreDivisor (stretch d N hN hLoopless) weight +
       prin (stretch d N hN hLoopless).graph f)) :
     ∃ k : Fin N, ∀ u v, d.rep u = d.rep v →
@@ -305,7 +305,7 @@ theorem exists_descending_offset (d : DegSpec n p) (N : ℕ) (hN : 0 < N)
       |f (s.coreVertex (d.core.tail e)) - f (s.coreVertex (d.core.head e))| ≤
         ∑ v, majorant v := by
     have hz : d.length e = 0 := (mem_filter.mp he).2
-    have hEdge : 0 < num_edges s.graph (s.coreVertex (d.core.tail e))
+    have hEdge : 0 < numEdges s.graph (s.coreVertex (d.core.tail e))
         (s.coreVertex (d.core.head e)) := by
       have hh := s.unitStep_num_edges_pos e ⟨0, s.length_pos e⟩
       simpa [Spec.stepLeft, Spec.stepRight, s, stretch, hz] using hh
@@ -338,10 +338,10 @@ theorem winning_script_coreClassDivisor_of_stretch
     (hMajorant : ∀ v, 0 ≤ majorant v) (hLe : ∀ v, weight v ≤ majorant v)
     (hBudget : ((univ.filter (fun e => d.length e = 0)).card : ℤ) *
       (∑ v, majorant v) < (N : ℤ))
-    (f : firing_script (stretch d N hN hLoopless).graph)
+    (f : firingScript (stretch d N hN hLoopless).graph)
     (hf : effective (coreDivisor (stretch d N hN hLoopless) weight +
       prin (stretch d N hN hLoopless).graph f)) :
-    ∃ g : firing_script d.graph, effective (d.coreClassDivisor weight + prin d.graph g) := by
+    ∃ g : firingScript d.graph, effective (d.coreClassDivisor weight + prin d.graph g) := by
   obtain ⟨k, hk⟩ := exists_descending_offset d N hN hLoopless hRep
     weight majorant hMajorant hLe hBudget f hf
   exact rounded_script_effective d (stretch d N hN hLoopless) rfl N hN
@@ -404,24 +404,24 @@ def subChipWeight (weight : Fin n → ℤ) (anchor v : Fin n) : ℤ :=
 theorem coreDivisor_subChipWeight (s : Spec n p)
     (weight : Fin n → ℤ) (anchor : Fin n) :
     coreDivisor s (subChipWeight weight anchor) =
-      coreDivisor s weight - one_chip (s.coreVertex anchor) := by
+      coreDivisor s weight - oneChip (s.coreVertex anchor) := by
   funext x
   rcases x with v | interior
-  · simp [coreDivisor, subChipWeight, one_chip, Spec.coreVertex]
-  · simp [coreDivisor, one_chip, Spec.coreVertex]
+  · simp [coreDivisor, subChipWeight, oneChip, Spec.coreVertex]
+  · simp [coreDivisor, oneChip, Spec.coreVertex]
 
 /-- A single named chip pushes to a single chip on its contracted class,
 even when other original vertices belong to that class. -/
 theorem coreClassDivisor_subChipWeight (d : DegSpec n p)
     (weight : Fin n → ℤ) (anchor : Fin n) :
     d.coreClassDivisor (subChipWeight weight anchor) =
-      d.coreClassDivisor weight - one_chip (d.coreVertex anchor) := by
+      d.coreClassDivisor weight - oneChip (d.coreVertex anchor) := by
   classical
   funext x
   rcases x with c | interior
   · simp [DegSpec.coreClassDivisor, subChipWeight, Finset.sum_sub_distrib,
-      one_chip, DegSpec.coreVertex, Subtype.ext_iff, eq_comm]
-  · simp [DegSpec.coreClassDivisor, one_chip, DegSpec.coreVertex]
+      oneChip, DegSpec.coreVertex, Subtype.ext_iff, eq_comm]
+  · simp [DegSpec.coreClassDivisor, oneChip, DegSpec.coreVertex]
 
 /-- A core-supported rank-one divisor on one sufficiently stretched graph
 already gives rank one after contraction. Its weights need not belong to a
@@ -450,7 +450,7 @@ theorem rank_ge_one_coreClassDivisor_of_stretch
     split_ifs <;> omega
   have hTransferred := winnable_coreClassDivisor_of_stretch d N hN hLoopless hRep
     (subChipWeight weight anchor) weight hWeight hLe hBudget hWin
-  change winnable d.graph (d.coreClassDivisor weight - one_chip (d.coreVertex anchor))
+  change winnable d.graph (d.coreClassDivisor weight - oneChip (d.coreVertex anchor))
   simpa only [coreClassDivisor_subChipWeight] using hTransferred
 
 /-- Fixed nonnegative core weights that have rank one on every positive

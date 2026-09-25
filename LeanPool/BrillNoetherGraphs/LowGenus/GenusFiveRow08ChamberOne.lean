@@ -1065,11 +1065,11 @@ theorem rowDivisor_reaches_coreVertex {d : DegSpec 8 12}
           (by rw [t3Coeff_eq hCore hC hA (ownerThree d)]
               exact t3Coeff_owner) v))).reaches
   · exact reaches_of_effective_representative
-      (linear_equiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
+      (linearEquiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
       (one_le_markedDivisorTwo_at_chip d chipWeight (rowMark d) 3 2
         chipWeight_nonneg (c := 4) (by norm_num [chipWeight]))
   · exact reaches_of_effective_representative
-      (linear_equiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
+      (linearEquiv.refl d.graph (rowDivisor d)) (rowDivisor_effective d)
       (one_le_markedDivisorTwo_at_chip d chipWeight (rowMark d) 3 2
         chipWeight_nonneg (c := 5) (by norm_num [chipWeight]))
   · exact (DharMove.ofScript _ (residual_effective d hpRB hrRB hCoreValue

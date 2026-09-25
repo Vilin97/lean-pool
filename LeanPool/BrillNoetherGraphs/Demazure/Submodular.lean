@@ -311,7 +311,7 @@ private lemma asp_spec (s : SlipFace) (hsub : s.submodular) :
     rw [And.comm]
   simp only [ite, Finset.sum_ite_eq, Finset.mem_Ico, Finset.sum_boole]
   rw [τ.s_eq_se_card]
-  suffices τ.se_finset a b = {x ∈ Finset.Ico b B | A ≤ τ.func x ∧ τ.func x < a} by congr
+  suffices τ.seFinset a b = {x ∈ Finset.Ico b B | A ≤ τ.func x ∧ τ.func x < a} by congr
   ext b'
   simp only [τ.mem_se, Finset.mem_filter, Finset.mem_Ico]
   by_cases h : b' < b
@@ -399,16 +399,16 @@ private lemma AspSlipValley (α β : AspPerm) (a b : ℤ) :
 
 /-- If `τ = α ⋆ β` in the Demazure sense, then the minimum of
 `AspValley α β a b` is `τ.s a b`. -/
-private lemma AspValley_min_eq_s {α β τ : AspPerm} (dprod : τ.eq_dprod α β) (a b : ℤ) :
+private lemma AspValley_min_eq_s {α β τ : AspPerm} (dprod : τ.eqDprod α β) (a b : ℤ) :
   (AspValley α β a b).min = τ.s a b := by
   apply le_antisymm
   · have := dprod.2 a b
-    unfold AspPerm.dprod_val_le at this
+    unfold AspPerm.dprodValLe at this
     rcases this with ⟨l, hl⟩
     refine le_trans ?_ hl
     exact (AspValley α β a b).min_spec l
   · have := dprod.1 a b
-    unfold AspPerm.dprod_val_ge at this
+    unfold AspPerm.dprodValGe at this
     specialize this (AspValley α β a b).M
     refine le_trans this ?_
     rw [← (AspValley α β a b).f_M]
@@ -529,7 +529,7 @@ lemma AspValley_step_b (α β : AspPerm) (a b : ℤ) :
   let w := AspValley α β a (b+1)
   w.min = v.min - 1 + (if v.M ≤ β b then 1 else 0) ∧ v.M ≤ w.M := by
   intro v₀ w
-  let v := v₀.shift_down 1
+  let v := v₀.shiftDown 1
   have : v₀.min = v.min + 1 := by
     subst v
     have := v₀.shift_down_min 1
@@ -546,7 +546,7 @@ lemma AspValley_step_b (α β : AspPerm) (a b : ℤ) :
     intro n
     subst v w; simp only [AspValley]
     rw [β.b_step n b]
-    unfold Valley.shift_down
+    unfold Valley.shiftDown
     by_cases h : n ≤ β b
     · simp only [h, ↓reduceIte, sub_add_cancel, add_right_inj, sub_eq_self,
         ite_eq_right_iff, one_ne_zero, imp_false, not_lt]
@@ -633,7 +633,7 @@ theorem submodular_of_star {s t : SlipFace} (subS : s.submodular) (subT : t.subm
     intro a b
     have : (s ⋆ t) a b = (SlipFace.SlipValley s t a b).min := by
       rw [SlipFace.star_func_eq]
-      dsimp [SlipFace.star_func, SlipFace.SlipValley]
+      dsimp [SlipFace.starFunction, SlipFace.SlipValley]
     rw [this]
     rw [AspSlipValley, α_spec, β_spec]
   simp only [this] at eq ⊢
@@ -670,13 +670,13 @@ private def lres_witness_set (α β : AspPerm) (a b : ℤ) : Set ℤ :=
   {l | (α.s ◃ β.s) a b = α.s a l - (β⁻¹).s b l}
 
 private lemma lres_wit_mem_lres_witness_set (α β : AspPerm) (a b : ℤ) :
-    SlipFace.lres_wit α.s β.s a b ∈ lres_witness_set α β a b := by
+    SlipFace.leftResidualWitness α.s β.s a b ∈ lres_witness_set α β a b := by
   dsimp [lres_witness_set]
   rw [SlipFace.lres_wit_spec, AspPerm.s_dual]
 
 private lemma lres_witness_set_nonempty (α β : AspPerm) (a b : ℤ) :
     (lres_witness_set α β a b).Nonempty :=
-  ⟨SlipFace.lres_wit α.s β.s a b, lres_wit_mem_lres_witness_set α β a b⟩
+  ⟨SlipFace.leftResidualWitness α.s β.s a b, lres_wit_mem_lres_witness_set α β a b⟩
 
 /-- Every candidate value for left residual is at most its maximum. -/
 lemma lres_candidate_le (α β : AspPerm) (a b l : ℤ) :
@@ -693,7 +693,7 @@ private lemma lres_a_step_eq_iff_exists_witness (α β : AspPerm) (a b : ℤ) :
   -- Proof written by Codex.
   constructor
   · intro hflat
-    let l := SlipFace.lres_wit α.s β.s a b
+    let l := SlipFace.leftResidualWitness α.s β.s a b
     have hl : l ∈ lres_witness_set α β a b :=
       lres_wit_mem_lres_witness_set α β a b
     have hcut : α⁻¹ a < l := by
@@ -755,7 +755,7 @@ private lemma lres_b_step_eq_iff_exists_witness (α β : AspPerm) (a b : ℤ) :
   -- Proof written by Codex.
   constructor
   · intro hflat
-    let l := SlipFace.lres_wit α.s β.s a (b + 1)
+    let l := SlipFace.leftResidualWitness α.s β.s a (b + 1)
     have hl : l ∈ lres_witness_set α β a (b + 1) :=
       lres_wit_mem_lres_witness_set α β a (b + 1)
     have hcut : β b < l := by
@@ -1158,7 +1158,7 @@ This is part of *Theorem 1.1* (`thm:resL`) in [An extended Demazure product](htt
 theorem lres_sf_isgreatest (α β : AspPerm) (a b : ℤ) :
     IsGreatest {α.s a l - β⁻¹.s b l | l : ℤ} ((α ◃ β).s a b) := by
   constructor
-  · use SlipFace.lres_wit α.s β.s a b
+  · use SlipFace.leftResidualWitness α.s β.s a b
     convert Eq.symm <| SlipFace.lres_wit_spec α.s β.s a b
     · rw [β.s_dual]
     · rw [← lres_spec α β]
@@ -1233,7 +1233,7 @@ lemma chi_OrdProd (L : List AspPerm) : (OrdProd L).χ = (L.map AspPerm.χ).sum :
 
 lemma id_s_eq (a b : ℤ) : AspPerm.id.s a b = max (a - b) 0 := by
   rw [AspPerm.s_eq_se_card]
-  rw [show AspPerm.id.se_finset a b = Finset.Ico b a by
+  rw [show AspPerm.id.seFinset a b = Finset.Ico b a by
     ext k
     constructor
     · intro hk
@@ -1292,8 +1292,8 @@ instance : PartialOrder AspPerm where
 /-- The relation $\alpha \leq_\chi \beta$ from
 [An extended Demazure product](https://arxiv.org/abs/2206.14227): Bruhat order together with
 equality of shifts. In Lean this is the infix `≤χ`. -/
-def le_chi (σ τ : AspPerm) : Prop := σ ≤ τ ∧ σ.χ = τ.χ
-infix:50 " ≤χ " => le_chi
+def leChi (σ τ : AspPerm) : Prop := σ ≤ τ ∧ σ.χ = τ.χ
+infix:50 " ≤χ " => leChi
 
 /-- Bruhat order on ASP permutations agrees with pointwise order on their
 slipfaces. -/
@@ -1380,8 +1380,8 @@ theorem rres_eq_min (α β : AspPerm) :
     exact (ge_star_iff_ge_rres α γ β).mpr h
 
 /-- Comparison `τ ≤ α ⋆ β` is equivalent to the lower Demazure-product
-inequalities defining `τ.le_dprod α β`. -/
-lemma le_star_iff (τ α β : AspPerm) : τ ≤ α ⋆ β ↔ τ.le_dprod α β := by
+inequalities defining `τ.leDprod α β`. -/
+lemma le_star_iff (τ α β : AspPerm) : τ ≤ α ⋆ β ↔ τ.leDprod α β := by
   constructor
   · intro le a b l
     exact le_trans (le a b) ((star_sf_isleast α β a b).2 ⟨l, rfl⟩)
@@ -1391,8 +1391,8 @@ lemma le_star_iff (τ α β : AspPerm) : τ ≤ α ⋆ β ↔ τ.le_dprod α β 
     exact dle a b l
 
 /-- Comparison `α ⋆ β ≤ τ` is equivalent to the upper Demazure-product
-inequalities defining `τ.ge_dprod α β`. -/
-lemma ge_star_iff (τ α β : AspPerm) : α ⋆ β ≤ τ ↔ τ.ge_dprod α β := by
+inequalities defining `τ.geDprod α β`. -/
+lemma ge_star_iff (τ α β : AspPerm) : α ⋆ β ≤ τ ↔ τ.geDprod α β := by
   constructor
   · intro ge a b
     obtain ⟨l, hl⟩ := (star_sf_isleast α β a b).1
@@ -1403,7 +1403,7 @@ lemma ge_star_iff (τ α β : AspPerm) : α ⋆ β ≤ τ ↔ τ.ge_dprod α β 
 
 /-- Equality `τ = α ⋆ β` is equivalent to satisfying both Demazure comparison
 conditions. -/
-lemma eq_star_iff {τ α β : AspPerm} : τ = α ⋆ β ↔ τ.eq_dprod α β := by
+lemma eq_star_iff {τ α β : AspPerm} : τ = α ⋆ β ↔ τ.eqDprod α β := by
   constructor
   · intro eq
     have le : τ ≤ α ⋆ β := by
@@ -1426,7 +1426,7 @@ lemma eq_star_iff {τ α β : AspPerm} : τ = α ⋆ β ↔ τ.eq_dprod α β :=
   This is Corollary 7.9 (`cor:essBD`) in [An extended Demazure product](https://arxiv.org/abs/2206.14227).
   This theorem is delayed until this file since the definition of `≤` on ASP is needed for the
   statement. -/
-theorem ess_bdiff (α β : AspPerm) (bdiff : α.is_bdiff) :
+theorem ess_bdiff (α β : AspPerm) (bdiff : α.isBdiff) :
   α ≤ β ↔ α.χ ≤ β.χ ∧ ∀ (a b : ℤ), ⟨a, b⟩ ∈ α.ess → α.s a b ≤ β.s a b := by
   have := SlipFace.ess_clifford α.s β.s (α.bdiff_iff_clifford.mp bdiff)
   rwa [← α.s_chi_eq, ← β.s_chi_eq, α.ess_asp_eq_ess_sf]
@@ -1445,7 +1445,7 @@ left weak order. *Lemma 4.10 (`lem:invStar`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 1/2.* -/
 theorem lel_of_dprod (α β : AspPerm) : β ≤L α ⋆ β := by
   let τ := α ⋆ β
-  have dprod : τ.eq_dprod α β := by
+  have dprod : τ.eqDprod α β := by
     rw [← AspPerm.eq_star_iff]
   rintro ⟨u, v⟩ ⟨u_lt_v, βv_lt_βu⟩
   apply And.intro u_lt_v
@@ -1485,7 +1485,7 @@ right weak order. *Lemma 4.10 (`lem:invStar`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 2/2.* -/
 theorem ler_of_dprod (α β : AspPerm) : α ≤R α ⋆ β := by
   let τ := α ⋆ β
-  have dprod : τ.eq_dprod α β := by
+  have dprod : τ.eqDprod α β := by
     rw [← AspPerm.eq_star_iff]
   suffices α⁻¹ ≤L τ⁻¹ by
     simpa using AspPerm.le_weak_R_of_L this

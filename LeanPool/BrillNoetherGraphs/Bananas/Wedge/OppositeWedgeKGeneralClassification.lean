@@ -31,7 +31,7 @@ theorem opposite_wedge_kGeneral_factor_orders
     ∃ a : ℕ, IsTorsionOrder (mark G u x) a ∧
       IsTorsionOrder (mark H y v) a ∧ k = a := by
   let W := vertexWedge G H x y
-  have hConn : _root_.graph_connected W :=
+  have hConn : _root_.graphConnected W :=
     graph_connected_vertexWedge G H x y hG.connected hH.connected
   have hPos : 0 < genus W := by
     dsimp [W]
@@ -43,9 +43,9 @@ theorem opposite_wedge_kGeneral_factor_orders
   obtain ⟨a, b, hA, hB, hkLcm⟩ :=
     exists_factor_torsionOrders_lcm_eq_of_vertexWedge_opposite_kGeneral
       G H x y u v k hConn hPos hUV hK
-  have hRigid : ¬ linear_equiv W
-      (one_chip (Sum.inl u) + one_chip (wedgeRightVertex G H x y v))
-      (canonical_divisor W) := by
+  have hRigid : ¬ linearEquiv W
+      (oneChip (Sum.inl u) + oneChip (wedgeRightVertex G H x y v))
+      (canonicalDivisor W) := by
     simpa [W] using
       opposite_wedge_mark_pair_not_linearEquiv_canonical G H x u y v hG hH hu
   have hEq : a = b :=

@@ -26,7 +26,7 @@ with the ordered marks and the `k`-general-transmission assertion transported
 to that presentation. -/
 theorem kGeneralTransmission_bridgelessGenusTwo_coreNormalForm
     (G : CFGraph.{0}) (u v : G.V) (k : ℕ)
-    (hConnected : _root_.graph_connected G)
+    (hConnected : _root_.graphConnected G)
     (hCut : TwoEdgeCutCondition G) (hNontrivial : ∃ p q : G.V, p ≠ q)
     (hGenus : genus G = 2)
     (hKGT : KGeneralTransmission (mark G u v) k) :

@@ -81,9 +81,9 @@ theorem genusFiveRankOneExistence_of_pseudocorePencils
     GenusFiveRankOneExistence := by
   intro G hConnected hGenus
   let F := fossil G
-  have hFConnected : graph_connected F := graph_connected_fossil G hConnected
+  have hFConnected : graphConnected F := graph_connected_fossil G hConnected
   have hFGenus : genus F = 5 := (genus_fossil G hConnected).trans hGenus
-  have hFLeafless : ∀ vertex : F.V, vertex_degree F vertex ≠ 1 :=
+  have hFLeafless : ∀ vertex : F.V, vertexDegree F vertex ≠ 1 :=
     fossil_vertex_degree_ne_one G hConnected
   obtain ⟨vertexCount, core, split, hSmall, hValid, hCompatible,
       spec, hCore, ⟨equivalence⟩⟩ :=
@@ -200,7 +200,7 @@ theorem twoVertexCore_connected_of_edge {p : ℕ}
 /-- Every positive subdivision of a loopless two-vertex, six-edge core is
 connected. -/
 theorem graph_connected_twoVertex_sixEdges (spec : Spec 2 6) :
-    graph_connected spec.graph :=
+    graphConnected spec.graph :=
   spec.graph_connected_of_coreConnected
     (twoVertexCore_connected_of_edge spec (0 : Fin 6))
 
@@ -208,7 +208,7 @@ theorem graph_connected_twoVertex_sixEdges (spec : Spec 2 6) :
 for the completed genus-five banana family. -/
 theorem brillNoetherConjecture_twoVertex_sixEdges
     (spec : Spec 2 6) (r d : ℤ) :
-    brill_noether_conjecture
+    brillNoetherConjecture
       (graph_connected_twoVertex_sixEdges spec) r d := by
   show 0 ≤ genus spec.graph - (r + 1) * (genus spec.graph - d + r) →
     ∃ D : CFDiv spec.graph, rank spec.graph D ≥ r ∧ deg D = d
@@ -222,8 +222,8 @@ theorem brillNoetherConjecture_twoVertex_sixEdges
         (by simpa [bnNumber, rectangleWidth] using hRho)
     exact ⟨D, hRank, hDegree⟩
   · let vertex : spec.graph.V := Classical.arbitrary spec.graph.V
-    refine ⟨d • one_chip vertex, ?_, ?_⟩
-    · have hLower := rank_geq_neg_one spec.graph (d • one_chip vertex)
+    refine ⟨d • oneChip vertex, ?_, ?_⟩
+    · have hLower := rank_geq_neg_one spec.graph (d • oneChip vertex)
       omega
     · rw [map_zsmul, deg_one_chip]
       ring

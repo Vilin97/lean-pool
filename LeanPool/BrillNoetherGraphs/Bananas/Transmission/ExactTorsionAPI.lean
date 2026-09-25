@@ -37,23 +37,23 @@ principal. -/
 theorem marked_difference_remainder_linearEquiv_zero
     {M : TwiceMarked} {k m : ℕ}
     (hk : TorsionWitness M k)
-    (hm : linear_equiv M.graph
-      ((m : ℤ) • (one_chip M.u - one_chip M.v)) 0) :
-    linear_equiv M.graph
-      ((m % k : ℤ) • (one_chip M.u - one_chip M.v)) 0 := by
+    (hm : linearEquiv M.graph
+      ((m : ℤ) • (oneChip M.u - oneChip M.v)) 0) :
+    linearEquiv M.graph
+      ((m % k : ℤ) • (oneChip M.u - oneChip M.v)) 0 := by
   rcases hk with ⟨_hkPos, hkEq⟩
-  unfold linear_equiv at hkEq hm ⊢
+  unfold linearEquiv at hkEq hm ⊢
   let q : ℕ := m / k
-  let diff : CFDiv M.graph := one_chip M.u - one_chip M.v
-  have hq : 0 - ((q * k : ℕ) : ℤ) • diff ∈ principal_divisors M.graph := by
-    have hScale := AddSubgroup.zsmul_mem (principal_divisors M.graph) hkEq (q : ℤ)
+  let diff : CFDiv M.graph := oneChip M.u - oneChip M.v
+  have hq : 0 - ((q * k : ℕ) : ℤ) • diff ∈ principalDivisors M.graph := by
+    have hScale := AddSubgroup.zsmul_mem (principalDivisors M.graph) hkEq (q : ℤ)
     have hEq : (q : ℤ) • (0 - (k : ℤ) • diff) =
         0 - ((q * k : ℕ) : ℤ) • diff := by
       dsimp [diff]
       rw [smul_sub, smul_zero, smul_smul]
     rw [hEq] at hScale
     exact hScale
-  have hSubtract := (principal_divisors M.graph).sub_mem hm hq
+  have hSubtract := (principalDivisors M.graph).sub_mem hm hq
   have hDiv : m = q * k + m % k := by
     simpa [q, Nat.mul_comm] using (Nat.div_add_mod m k).symm
   have hDiff :
@@ -88,12 +88,12 @@ theorem isTorsionOrder_dvd_of_torsionWitness
 /-- Linear-equivalent degree twists have an annihilating difference index. -/
 theorem marked_difference_linearEquiv_zero_of_degreeTwistInt_linearEquiv
     {M : TwiceMarked} (D : CFDiv M.graph) (d b c : ℤ)
-    (hbc : linear_equiv M.graph
+    (hbc : linearEquiv M.graph
       (degreeTwistInt M D d b) (degreeTwistInt M D d c)) :
-    linear_equiv M.graph
-      ((b - c) • (one_chip M.u - one_chip M.v)) 0 := by
+    linearEquiv M.graph
+      ((b - c) • (oneChip M.u - oneChip M.v)) 0 := by
   unfold degreeTwistInt at hbc
-  unfold linear_equiv at hbc ⊢
+  unfold linearEquiv at hbc ⊢
   convert hbc using 1
   ext x
   simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, Pi.zero_apply]
@@ -105,7 +105,7 @@ period. -/
 theorem isTorsionOrder_dvd_natAbs_sub_of_degreeTwistInt_linearEquiv
     {M : TwiceMarked} {k : ℕ} (hk : IsTorsionOrder M k)
     (D : CFDiv M.graph) (d b c : ℤ)
-    (hbc : linear_equiv M.graph
+    (hbc : linearEquiv M.graph
       (degreeTwistInt M D d b) (degreeTwistInt M D d c)) :
     k ∣ (b - c).natAbs := by
   by_cases hzero : b = c
@@ -114,20 +114,20 @@ theorem isTorsionOrder_dvd_natAbs_sub_of_degreeTwistInt_linearEquiv
   have hSigned :=
     marked_difference_linearEquiv_zero_of_degreeTwistInt_linearEquiv D d b c hbc
   have hPos : 0 < (b - c).natAbs := Int.natAbs_pos.mpr (sub_ne_zero.mpr hzero)
-  have hAbs : linear_equiv M.graph
-      (((b - c).natAbs : ℤ) • (one_chip M.u - one_chip M.v)) 0 := by
+  have hAbs : linearEquiv M.graph
+      (((b - c).natAbs : ℤ) • (oneChip M.u - oneChip M.v)) 0 := by
     by_cases hNonneg : 0 ≤ b - c
     · have hCast : ((b - c).natAbs : ℤ) = b - c := by
         rw [Int.natCast_natAbs, abs_of_nonneg hNonneg]
       rw [hCast]
       exact hSigned
-    · unfold linear_equiv at hSigned ⊢
-      have hNeg := (principal_divisors M.graph).neg_mem hSigned
+    · unfold linearEquiv at hSigned ⊢
+      have hNeg := (principalDivisors M.graph).neg_mem hSigned
       have hCast : ((b - c).natAbs : ℤ) = -(b - c) := by
         rw [Int.natCast_natAbs, abs_of_nonpos (by omega)]
       rw [hCast]
-      rw [show 0 - (-(b - c)) • (one_chip M.u - one_chip M.v) =
-          -(0 - (b - c) • (one_chip M.u - one_chip M.v)) by
+      rw [show 0 - (-(b - c)) • (oneChip M.u - oneChip M.v) =
+          -(0 - (b - c) • (oneChip M.u - oneChip M.v)) by
         rw [neg_smul]
         abel]
       exact hNeg
@@ -140,7 +140,7 @@ theorem degreeTwistInt_injective_on_fundamental_period
     (D : CFDiv M.graph) (d b c : ℤ)
     (hb0 : 0 ≤ b) (hb : b < k)
     (hc0 : 0 ≤ c) (hc : c < k)
-    (hbc : linear_equiv M.graph
+    (hbc : linearEquiv M.graph
       (degreeTwistInt M D d b) (degreeTwistInt M D d c)) :
     b = c := by
   have hDvd := isTorsionOrder_dvd_natAbs_sub_of_degreeTwistInt_linearEquiv
@@ -160,19 +160,19 @@ theorem degreeTwistInt_injective_on_fundamental_period
 residue modulo any torsion witness. -/
 theorem marked_difference_mod_period_linearEquiv
     {M : TwiceMarked} {k : ℕ} (hk : TorsionWitness M k) (z : ℤ) :
-    linear_equiv M.graph
-      (z • (one_chip M.u - one_chip M.v))
-      ((z % k) • (one_chip M.u - one_chip M.v)) := by
+    linearEquiv M.graph
+      (z • (oneChip M.u - oneChip M.v))
+      ((z % k) • (oneChip M.u - oneChip M.v)) := by
   rcases hk with ⟨hkPos, hkEq⟩
   let q : ℤ := z / k
   let r : ℤ := z % k
-  let diff : CFDiv M.graph := one_chip M.u - one_chip M.v
+  let diff : CFDiv M.graph := oneChip M.u - oneChip M.v
   have hRepr : z = r + q * k := by
     dsimp [r, q]
     simpa [add_comm, mul_comm] using int_eq_emod_add_ediv_period (k := k) hkPos (b := z)
-  unfold linear_equiv at hkEq ⊢
-  have hScale := AddSubgroup.zsmul_mem (principal_divisors M.graph) hkEq q
-  have hScale' : 0 - (q * k) • diff ∈ principal_divisors M.graph := by
+  unfold linearEquiv at hkEq ⊢
+  have hScale := AddSubgroup.zsmul_mem (principalDivisors M.graph) hkEq q
+  have hScale' : 0 - (q * k) • diff ∈ principalDivisors M.graph := by
     convert hScale using 1
     dsimp [diff]
     ext x
@@ -187,9 +187,9 @@ theorem marked_difference_mod_period_linearEquiv
 /-- Adding a fixed divisor preserves linear equivalence. -/
 theorem linearEquiv_add_left_of_linearEquiv
     {G : CFGraph} {A B C : CFDiv G}
-    (hAB : linear_equiv G A B) :
-    linear_equiv G (C + A) (C + B) := by
-  unfold linear_equiv at hAB ⊢
+    (hAB : linearEquiv G A B) :
+    linearEquiv G (C + A) (C + B) := by
+  unfold linearEquiv at hAB ⊢
   have h : (C + B) - (C + A) = B - A := by abel
   rw [h]
   exact hAB

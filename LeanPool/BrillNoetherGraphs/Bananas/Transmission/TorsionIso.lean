@@ -24,9 +24,9 @@ theorem torsionWitness_map
     TorsionWitness (mark H (φ.vertexEquiv u) (φ.vertexEquiv v)) k := by
   refine ⟨h.1, ?_⟩
   have hMap := (φ.linear_equiv_mapDiv_iff
-    ((k : ℤ) • (one_chip u - one_chip v)) 0).mpr h.2
-  have hDiv : φ.mapDiv ((k : ℤ) • (one_chip u - one_chip v)) =
-      (k : ℤ) • (one_chip (φ.vertexEquiv u) - one_chip (φ.vertexEquiv v)) := by
+    ((k : ℤ) • (oneChip u - oneChip v)) 0).mpr h.2
+  have hDiv : φ.mapDiv ((k : ℤ) • (oneChip u - oneChip v)) =
+      (k : ℤ) • (oneChip (φ.vertexEquiv u) - oneChip (φ.vertexEquiv v)) := by
     rw [map_zsmul, map_sub, φ.mapDiv_one_chip, φ.mapDiv_one_chip]
   rw [hDiv] at hMap
   exact hMap

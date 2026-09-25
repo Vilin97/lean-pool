@@ -24,14 +24,14 @@ open Utilities
 /-- A degree-one marked twist is effective exactly when its vertex belongs to
 the rank support of the corresponding canonical complementary twist. -/
 theorem mem_rankSupport_canonical_sub_markedTwist_iff
-    {M : TwiceMarked} (hconn : _root_.graph_connected M.graph)
+    {M : TwiceMarked} (hconn : _root_.graphConnected M.graph)
     (hgenus : genus M.graph = 2) (w : M.graph.V) (n : ℕ) :
     w ∈ rankSupport M.graph
-        (canonical_divisor M.graph - (n : ℤ) • (one_chip M.u - one_chip M.v)) ↔
+        (canonicalDivisor M.graph - (n : ℤ) • (oneChip M.u - oneChip M.v)) ↔
       0 ≤ rank M.graph
-        (one_chip w + (n : ℤ) • (one_chip M.u - one_chip M.v)) := by
+        (oneChip w + (n : ℤ) • (oneChip M.u - oneChip M.v)) := by
   let X : CFDiv M.graph :=
-    one_chip w + (n : ℤ) • (one_chip M.u - one_chip M.v)
+    oneChip w + (n : ℤ) • (oneChip M.u - oneChip M.v)
   have hDeg : deg X = 1 := by
     dsimp [X]
     rw [deg.map_add, deg_one_chip, map_zsmul, deg.map_sub,
@@ -39,14 +39,14 @@ theorem mem_rankSupport_canonical_sub_markedTwist_iff
     norm_num
   have hRR := riemann_roch_for_graphs hconn X
   rw [hgenus, hDeg] at hRR
-  have hDual : rank M.graph (canonical_divisor M.graph - X) = rank M.graph X := by
+  have hDual : rank M.graph (canonicalDivisor M.graph - X) = rank M.graph X := by
     omega
   change 0 ≤ rank M.graph
-    ((canonical_divisor M.graph - (n : ℤ) • (one_chip M.u - one_chip M.v)) -
-      one_chip w) ↔ 0 ≤ rank M.graph X
+    ((canonicalDivisor M.graph - (n : ℤ) • (oneChip M.u - oneChip M.v)) -
+      oneChip w) ↔ 0 ≤ rank M.graph X
   have hRewrite :
-      (canonical_divisor M.graph - (n : ℤ) • (one_chip M.u - one_chip M.v)) -
-          one_chip w = canonical_divisor M.graph - X := by
+      (canonicalDivisor M.graph - (n : ℤ) • (oneChip M.u - oneChip M.v)) -
+          oneChip w = canonicalDivisor M.graph - X := by
     dsimp [X]
     abel
   rw [hRewrite, hDual]
@@ -57,14 +57,14 @@ def CanonicalMarkedSupportsPairwiseDisjoint (M : TwiceMarked) (k : ℕ) : Prop :
   ∀ n m : Fin k, n.val ≠ 0 → m.val ≠ 0 → n ≠ m →
     Disjoint
       (rankSupport M.graph
-        (canonical_divisor M.graph - (n.val : ℤ) • (one_chip M.u - one_chip M.v)))
+        (canonicalDivisor M.graph - (n.val : ℤ) • (oneChip M.u - oneChip M.v)))
       (rankSupport M.graph
-        (canonical_divisor M.graph - (m.val : ℤ) • (one_chip M.u - one_chip M.v)))
+        (canonicalDivisor M.graph - (m.val : ℤ) • (oneChip M.u - oneChip M.v)))
 
 /-- Lemma 4.7: nonrecurrence is equivalent to pairwise disjointness of the
 canonical support complexes of the nonzero marked twists. -/
 theorem nonRecurrent_iff_canonicalMarkedSupportsPairwiseDisjoint
-    {M : TwiceMarked} {k : ℕ} (hconn : _root_.graph_connected M.graph)
+    {M : TwiceMarked} {k : ℕ} (hconn : _root_.graphConnected M.graph)
     (hgenus : genus M.graph = 2) :
     NonRecurrent M k ↔ CanonicalMarkedSupportsPairwiseDisjoint M k := by
   constructor
@@ -72,19 +72,19 @@ theorem nonRecurrent_iff_canonicalMarkedSupportsPairwiseDisjoint
     rw [Set.disjoint_left]
     intro w hwn hwm
     have hnRank : 0 ≤ rank M.graph
-        (one_chip w + (n.val : ℤ) • (one_chip M.u - one_chip M.v)) :=
+        (oneChip w + (n.val : ℤ) • (oneChip M.u - oneChip M.v)) :=
       (mem_rankSupport_canonical_sub_markedTwist_iff hconn hgenus w n.val).mp hwn
     have hmRank : 0 ≤ rank M.graph
-        (one_chip w + (m.val : ℤ) • (one_chip M.u - one_chip M.v)) :=
+        (oneChip w + (m.val : ℤ) • (oneChip M.u - oneChip M.v)) :=
       (mem_rankSupport_canonical_sub_markedTwist_iff hconn hgenus w m.val).mp hwm
     exact hne (hNonrec w n m hn hm hnRank hmRank)
   · intro hDisjoint w n m hn hm hnRank hmRank
     by_contra hne
     have hnMem : w ∈ rankSupport M.graph
-        (canonical_divisor M.graph - (n.val : ℤ) • (one_chip M.u - one_chip M.v)) :=
+        (canonicalDivisor M.graph - (n.val : ℤ) • (oneChip M.u - oneChip M.v)) :=
       (mem_rankSupport_canonical_sub_markedTwist_iff hconn hgenus w n.val).mpr hnRank
     have hmMem : w ∈ rankSupport M.graph
-        (canonical_divisor M.graph - (m.val : ℤ) • (one_chip M.u - one_chip M.v)) :=
+        (canonicalDivisor M.graph - (m.val : ℤ) • (oneChip M.u - oneChip M.v)) :=
       (mem_rankSupport_canonical_sub_markedTwist_iff hconn hgenus w m.val).mpr hmRank
     have h := hDisjoint n m hn hm hne
     exact (Set.disjoint_left.mp h hnMem hmMem).elim

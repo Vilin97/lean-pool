@@ -84,29 +84,29 @@ variable {G : CFGraph}
 `count_of_multiset_of_count` `private`, so the four facts are re-proved here (same proofs,
 public names). They are the whole interface this file needs to the flow model. -/
 
-/-- `multiset_of_count f` has count function `f`. Public re-proof of the `private`
+/-- `multisetOfCount f` has count function `f`. Public re-proof of the `private`
 `count_of_multiset_of_count` of `Orientation.lean`. -/
 lemma count_multiset_of_count {T : Type*} [DecidableEq T] [Fintype T] (f : T → ℕ) (e : T) :
-    Multiset.count e (multiset_of_count f) = f e := by
+    Multiset.count e (multisetOfCount f) = f e := by
   rw [← Multiset.toDFinsupp_apply]
   calc
-    (Multiset.toDFinsupp (multiset_of_count f)) e = (DFinsupp.equivFunOnFintype.symm f) e := by
-      simp only [multiset_of_count, DFinsupp.toMultiset_toDFinsupp]
+    (Multiset.toDFinsupp (multisetOfCount f)) e = (DFinsupp.equivFunOnFintype.symm f) e := by
+      simp only [multisetOfCount, DFinsupp.toMultiset_toDFinsupp]
     _ = f e := by
       simpa only [DFinsupp.equivFunOnFintype_apply]
         using congrFun (Equiv.apply_symm_apply DFinsupp.equivFunOnFintype f) e
 
-/-- The flow of `orientation_from_flow f _` is `f`. -/
+/-- The flow of `orientationFromFlow f _` is `f`. -/
 lemma flow_orientation_from_flow (f : G.V × G.V → ℕ)
-    (h₁ : ∀ v w : G.V, f (v, w) + f (w, v) = num_edges G v w) (u v : G.V) :
-    flow (orientation_from_flow f h₁) u v = f (u, v) :=
+    (h₁ : ∀ v w : G.V, f (v, w) + f (w, v) = numEdges G v w) (u v : G.V) :
+    flow (orientationFromFlow f h₁) u v = f (u, v) :=
   count_multiset_of_count f (u, v)
 
 /-- Two orientations agreeing on every flow are equal. Public re-proof of the `private`
 `eq_orient` of `Orientation.lean`. -/
 lemma orientation_ext {O₁ O₂ : CFOrientation G} (h : ∀ u v : G.V, flow O₁ u v = flow O₂ u v) :
     O₁ = O₂ := by
-  have hd : O₁.directed_edges = O₂.directed_edges := by
+  have hd : O₁.directedEdges = O₂.directedEdges := by
     refine Multiset.ext.mpr ?_
     rintro ⟨u, v⟩
     exact h u v
@@ -118,7 +118,7 @@ lemma orientation_ext {O₁ O₂ : CFOrientation G} (h : ∀ u v : G.V, flow O�
 /-- The two flows on an undirected edge add up to its multiplicity. Public re-proof of the
 `private` `opp_flow` of `Orientation.lean`. -/
 lemma flow_add_flow_rev (O : CFOrientation G) (u v : G.V) :
-    flow O u v + flow O v u = num_edges G u v :=
+    flow O u v + flow O v u = numEdges G u v :=
   (O.count_preserving u v).symm
 
 /-- The in-degree is the total flow into the vertex. Public re-proof of the `private`
@@ -127,7 +127,7 @@ pairwise rather than by induction). -/
 lemma indeg_eq_sum_flow (O : CFOrientation G) (v : G.V) :
     indeg G O v = ∑ w : G.V, flow O w v := by
   classical
-  have hmem : ∀ e ∈ O.directed_edges.filter (fun e => e.snd = v),
+  have hmem : ∀ e ∈ O.directedEdges.filter (fun e => e.snd = v),
       e ∈ (Finset.univ : Finset (G.V × G.V)) := fun e _ => Finset.mem_univ e
   rw [indeg, ← Multiset.sum_count_eq_card hmem, ← Finset.univ_product_univ, Finset.sum_product]
   refine Finset.sum_congr rfl fun u _ => ?_
@@ -135,12 +135,12 @@ lemma indeg_eq_sum_flow (O : CFOrientation G) (v : G.V) :
 
 /-- A directed edge is exactly a pair carrying positive flow. -/
 lemma directed_edge_iff_flow_pos (O : CFOrientation G) (u v : G.V) :
-    directed_edge G O u v ↔ 0 < flow O u v :=
+    directedEdge G O u v ↔ 0 < flow O u v :=
   Multiset.count_pos.symm
 
-/-- **No directed loop**: `G` is loopless, so `num_edges G v v = 0` and no orientation can
+/-- **No directed loop**: `G` is loopless, so `numEdges G v v = 0` and no orientation can
 carry an edge from `v` to itself. This is what rules out one-vertex directed cycles. -/
-lemma not_directed_edge_self (O : CFOrientation G) (v : G.V) : ¬ directed_edge G O v v := by
+lemma not_directed_edge_self (O : CFOrientation G) (v : G.V) : ¬ directedEdge G O v v := by
   have h := flow_add_flow_rev O v v
   rw [num_edges_self_zero] at h
   rw [directed_edge_iff_flow_pos]
@@ -151,7 +151,7 @@ lemma not_directed_edge_self (O : CFOrientation G) (v : G.V) : ¬ directed_edge 
 legal configuration on a parallel class, and it is exactly what the two-vertex directed
 cycles are. -/
 def HasDirectedTwoCycle (O : CFOrientation G) : Prop :=
-  ∃ u v : G.V, directed_edge G O u v ∧ directed_edge G O v u
+  ∃ u v : G.V, directedEdge G O u v ∧ directedEdge G O v u
 
 /-! ## 1. Reversing a set of edges
 
@@ -170,7 +170,7 @@ def reverseFlow (O : CFOrientation G) (S : G.V → G.V → Prop) [DecidableRel S
 its full count to exactly one of the two directions. -/
 lemma reverseFlow_count_preserving (O : CFOrientation G) (S : G.V → G.V → Prop)
     [DecidableRel S] (u v : G.V) :
-    reverseFlow O S (u, v) + reverseFlow O S (v, u) = num_edges G u v := by
+    reverseFlow O S (u, v) + reverseFlow O S (v, u) = numEdges G u v := by
   have h := flow_add_flow_rev O u v
   simp only [reverseFlow]
   split_ifs <;> omega
@@ -179,7 +179,7 @@ lemma reverseFlow_count_preserving (O : CFOrientation G) (S : G.V → G.V → Pr
 satisfies `S` turned around. -/
 def reverseOn (O : CFOrientation G) (S : G.V → G.V → Prop) [DecidableRel S] :
     CFOrientation G :=
-  orientation_from_flow (reverseFlow O S) (reverseFlow_count_preserving O S)
+  orientationFromFlow (reverseFlow O S) (reverseFlow_count_preserving O S)
 
 /-- The defining flow identity for `reverseOn`. -/
 lemma flow_reverseOn (O : CFOrientation G) (S : G.V → G.V → Prop) [DecidableRel S]
@@ -240,8 +240,8 @@ has the property that every member is the head of a directed edge from another m
 `O` is not acyclic: walking backwards produces directed paths of every length, and a path
 longer than `Fintype.card G.V` cannot be non-repeating. -/
 lemma not_isAcyclic_of_backward_step {O : CFOrientation G} {P : G.V → Prop}
-    (step : ∀ v, P v → ∃ u, P u ∧ directed_edge G O u v) {v₀ : G.V} (h₀ : P v₀) :
-    ¬ is_acyclic G O := by
+    (step : ∀ v, P v → ∃ u, P u ∧ directedEdge G O u v) {v₀ : G.V} (h₀ : P v₀) :
+    ¬ isAcyclic G O := by
   intro hacyc
   obtain ⟨l, hlen, hchain, -⟩ := exists_isChain_of_backward_step step h₀ (Fintype.card G.V)
   have hnodup : l.Nodup := hacyc ⟨l, by omega, hchain⟩
@@ -266,7 +266,7 @@ structure DirectedCycle {G : CFGraph} (O : CFOrientation G) where
   /-- The vertices are distinct. -/
   vert_inj : Function.Injective vert
   /-- Consecutive vertices carry a directed edge of `O`. -/
-  edge : ∀ i : Fin (len + 2), directed_edge G O (vert i) (vert (i + 1))
+  edge : ∀ i : Fin (len + 2), directedEdge G O (vert i) (vert (i + 1))
 
 /-- Cyclic index arithmetic: `Fin (n)` is an additive group when `n ≠ 0`. -/
 private lemma fin_sub_add_one {n : ℕ} [NeZero n] (i : Fin n) : i - 1 + 1 = i := by abel
@@ -314,7 +314,7 @@ instance {O : CFOrientation G} (C : DirectedCycle O) : DecidableRel C.pred := fu
 
 /-- The predecessor of a cycle vertex along the cycle. -/
 lemma edge_pred {O : CFOrientation G} (C : DirectedCycle O) (i : Fin (C.len + 2)) :
-    directed_edge G O (C.vert (i - 1)) (C.vert i) := by
+    directedEdge G O (C.vert (i - 1)) (C.vert i) := by
   simpa only [fin_sub_add_one] using C.edge (i - 1)
 
 /-- The pairs of `C` ending at a cycle vertex: only the predecessor edge. -/
@@ -371,7 +371,7 @@ end DirectedCycle
 
 /-- An orientation carrying a directed cycle is not acyclic. -/
 theorem not_isAcyclic_of_directedCycle (O : CFOrientation G) (C : DirectedCycle O) :
-    ¬ is_acyclic G O :=
+    ¬ isAcyclic G O :=
   not_isAcyclic_of_backward_step (P := fun v => ∃ i, v = C.vert i)
     (fun _ hv => by
       obtain ⟨i, rfl⟩ := hv
@@ -380,14 +380,14 @@ theorem not_isAcyclic_of_directedCycle (O : CFOrientation G) (C : DirectedCycle 
 
 /-! ### Cycles of an arbitrary relation
 
-`DirectedCycle O` is the case `R = directed_edge G O` of `RelCycle R`. The generality is
+`DirectedCycle O` is the case `R = directedEdge G O` of `RelCycle R`. The generality is
 needed exactly once, and it is essential there: `reversalEquiv_of_indeg_eq` finds its cycle
 in the relation "`O₁` carries strictly more flow than `O₂`", which is *smaller* than
-`directed_edge G O₁`, and the extra information — that every step of the cycle is a step
+`directedEdge G O₁`, and the extra information — that every step of the cycle is a step
 where the two orientations disagree — is what makes the flow bookkeeping close. -/
 
 /-- A **cycle of a relation** `R`: `len + 2` distinct vertices, indexed cyclically, with
-`R` holding from each to its successor. `DirectedCycle O` is `RelCycle (directed_edge G O)`
+`R` holding from each to its successor. `DirectedCycle O` is `RelCycle (directedEdge G O)`
 with a bespoke name. -/
 structure RelCycle {V : Type*} (R : V → V → Prop) where
   /-- The cycle has `len + 2` vertices. -/
@@ -410,9 +410,9 @@ def RelCycle.op {V : Type*} {R : V → V → Prop} (C : RelCycle (fun u v => R v
     rw [h]
     simpa only [fin_sub_add_one] using C.edge (-j - 1)
 
-/-- A cycle of a relation refining `directed_edge G O` is a directed cycle of `O`. -/
+/-- A cycle of a relation refining `directedEdge G O` is a directed cycle of `O`. -/
 def RelCycle.toDirectedCycle {O : CFOrientation G} {R : G.V → G.V → Prop} (C : RelCycle R)
-    (h : ∀ u v : G.V, R u v → directed_edge G O u v) : DirectedCycle O where
+    (h : ∀ u v : G.V, R u v → directedEdge G O u v) : DirectedCycle O where
   len := C.len
   vert := C.vert
   vert_inj := C.vert_inj
@@ -486,10 +486,10 @@ theorem nonempty_relCycle_of_repeat {V : Type*} [Nonempty V] {R : V → V → Pr
     rw [hnext]
     exact hstep _ (by omega)
 
-/-- The `directed_edge` case of `nonempty_relCycle_of_repeat`; the irreflexivity hypothesis
+/-- The `directedEdge` case of `nonempty_relCycle_of_repeat`; the irreflexivity hypothesis
 is `not_directed_edge_self`, i.e. looplessness of `G`. -/
 private theorem nonempty_directedCycle_of_repeat (O : CFOrientation G) (l : List G.V)
-    (hchain : List.IsChain (directed_edge G O) l) (a b : ℕ) (hab : a < b)
+    (hchain : List.IsChain (directedEdge G O) l) (a b : ℕ) (hab : a < b)
     (hb : b < l.length) (heq : l[a]'(by omega) = l[b]) :
     Nonempty (DirectedCycle O) :=
   (nonempty_relCycle_of_repeat (not_directed_edge_self O) l hchain a b hab hb heq).map
@@ -526,11 +526,11 @@ theorem nonempty_relCycle_of_forward_step {V : Type*} [Fintype V] {R : V → V �
 repeated vertex; `nonempty_directedCycle_of_repeat` turns the shortest such repeat into a
 cycle, whose length is at least two because `G` is loopless. -/
 theorem nonempty_directedCycle_of_not_isAcyclic (O : CFOrientation G)
-    (h : ¬ is_acyclic G O) : Nonempty (DirectedCycle O) := by
+    (h : ¬ isAcyclic G O) : Nonempty (DirectedCycle O) := by
   classical
-  simp only [is_acyclic, not_forall] at h
+  simp only [isAcyclic, not_forall] at h
   obtain ⟨q, hq⟩ := h
-  simp only [non_repeating] at hq
+  simp only [nonRepeating] at hq
   obtain ⟨x, y, hxy, hne⟩ := Function.not_injective_iff.mp
     (fun hinj => hq (List.nodup_iff_injective_getElem.mpr hinj))
   rcases lt_or_gt_of_ne (fun hv : x.val = y.val => hne (Fin.ext hv)) with hlt | hlt
@@ -622,7 +622,7 @@ theorem ordiv_reverseCycle (O : CFOrientation G) (C : DirectedCycle O)
 /-- On a simple graph the balance hypothesis of `ordiv_reverseCycle` is automatic: every
 edge class traversed by the cycle has multiplicity exactly one. -/
 theorem ordiv_reverseCycle_of_simple (O : CFOrientation G) (C : DirectedCycle O)
-    (hsimple : ∀ u v : G.V, num_edges G u v ≤ 1) :
+    (hsimple : ∀ u v : G.V, numEdges G u v ≤ 1) :
     ordiv G (reverseCycle O C) = ordiv G O := by
   refine ordiv_reverseCycle O C fun i => ?_
   have h₁ : flow O (C.vert (i - 1)) (C.vert i) = 1 := by
@@ -679,7 +679,7 @@ one unit from one direction to the other, and a pair traversed in *both* directi
 possible for a `len = 0` cycle) loses and regains the same unit. -/
 lemma reverseCycleOneFlow_count_preserving (O : CFOrientation G) (C : DirectedCycle O)
     (u v : G.V) :
-    reverseCycleOneFlow O C (u, v) + reverseCycleOneFlow O C (v, u) = num_edges G u v := by
+    reverseCycleOneFlow O C (u, v) + reverseCycleOneFlow O C (v, u) = numEdges G u v := by
   have hsum := flow_add_flow_rev O u v
   by_cases h₁ : C.pred u v <;> by_cases h₂ : C.pred v u
   · have hp := C.flow_pos_of_pred h₁
@@ -697,7 +697,7 @@ lemma reverseCycleOneFlow_count_preserving (O : CFOrientation G) (C : DirectedCy
 
 /-- **Fine cycle reversal.** Turn one edge of each parallel class traversed by `C`. -/
 def reverseCycleOne (O : CFOrientation G) (C : DirectedCycle O) : CFOrientation G :=
-  orientation_from_flow (reverseCycleOneFlow O C) (reverseCycleOneFlow_count_preserving O C)
+  orientationFromFlow (reverseCycleOneFlow O C) (reverseCycleOneFlow_count_preserving O C)
 
 /-- The defining flow identity for `reverseCycleOne`. -/
 lemma flow_reverseCycleOne (O : CFOrientation G) (C : DirectedCycle O) (u v : G.V) :
@@ -803,7 +803,7 @@ terminates, which an acyclic `O` forbids. -/
 /-- **Acyclic orientations are determined by their indegree function**, with acyclicity
 assumed of only one of the two orientations. Strengthens
 `orientation_determined_by_indegrees` (`Orientation.lean`), which assumes both. -/
-theorem eq_of_indeg_eq_of_isAcyclic {O O' : CFOrientation G} (hO : is_acyclic G O)
+theorem eq_of_indeg_eq_of_isAcyclic {O O' : CFOrientation G} (hO : isAcyclic G O)
     (h : ∀ v : G.V, indeg G O v = indeg G O' v) : O = O' := by
   -- Every pair where `O` beats `O'` has a predecessor pair where `O` beats `O'`.
   have going_up : ∀ u v : G.V, flow O' u v < flow O u v →
@@ -862,7 +862,7 @@ Simplicity was the right hypothesis only while `CFOrientation.no_bidirectional` 
 reversal to turn whole parallel classes; with that field gone the fine move is available and
 the only obstruction left is the degenerate `2`-cycle. -/
 theorem isAcyclic_iff_unique_of_indeg (O : CFOrientation G) (hno2 : ¬ HasDirectedTwoCycle O) :
-    is_acyclic G O ↔ ∀ O' : CFOrientation G, (∀ v : G.V, indeg G O v = indeg G O' v) → O = O' := by
+    isAcyclic G O ↔ ∀ O' : CFOrientation G, (∀ v : G.V, indeg G O v = indeg G O' v) → O = O' := by
   constructor
   · intro hO O' h
     exact eq_of_indeg_eq_of_isAcyclic hO h
@@ -930,8 +930,8 @@ lemma reverseCut_reverseCut (O : CFOrientation G) (W : Finset G.V) (hcut : IsDir
       flow_reverseCut_same _ _ (by simp [hu, hv])]
 
 /-- Any directed path of an acyclic orientation is non-repeating, packaged for lists. -/
-private lemma nodup_of_isChain {O : CFOrientation G} (hO : is_acyclic G O) {l : List G.V}
-    (h : List.IsChain (directed_edge G O) l) : l.Nodup := by
+private lemma nodup_of_isChain {O : CFOrientation G} (hO : isAcyclic G O) {l : List G.V}
+    (h : List.IsChain (directedEdge G O) l) : l.Nodup := by
   cases l with
   | nil => exact List.nodup_nil
   | cons a t => exact hO ⟨a :: t, by simp, h⟩
@@ -940,7 +940,7 @@ private lemma nodup_of_isChain {O : CFOrientation G} (hO : is_acyclic G O) {l : 
 path of `O'` from its first vertex. -/
 private lemma mem_of_isChain_head {O' : CFOrientation G} {W : Finset G.V}
     (hout : ∀ u v : G.V, u ∈ W → v ∉ W → flow O' u v = 0) :
-    ∀ l : List G.V, List.IsChain (directed_edge G O') l →
+    ∀ l : List G.V, List.IsChain (directedEdge G O') l →
       (∀ a ∈ l.head?, a ∈ W) → ∀ x ∈ l, x ∈ W := by
   intro l
   induction l with
@@ -962,14 +962,14 @@ runs outside `W` and then, once it enters `W`, stays there — because after the
 edge leaves `W`. Each of the two stretches lies on one side of the cut, where the reversed
 orientation agrees with `O`, so each is a directed path of the acyclic `O` and is therefore
 non-repeating; and the two stretches are disjoint, being on opposite sides of `W`. -/
-theorem isAcyclic_reverseCut (O : CFOrientation G) (W : Finset G.V) (hO : is_acyclic G O) :
-    is_acyclic G (reverseCut O W) := by
+theorem isAcyclic_reverseCut (O : CFOrientation G) (W : Finset G.V) (hO : isAcyclic G O) :
+    isAcyclic G (reverseCut O W) := by
   classical
   set p : G.V → Bool := fun x => decide (x ∉ W) with hp
   have hout : ∀ u v : G.V, u ∈ W → v ∉ W → flow (reverseCut O W) u v = 0 :=
     fun u v hu hv => flow_reverseCut_out O W hu hv
   intro path
-  have hchain : List.IsChain (directed_edge G (reverseCut O W)) path.vertices := path.valid_edges
+  have hchain : List.IsChain (directedEdge G (reverseCut O W)) path.vertices := path.valid_edges
   have hsplit :
       path.vertices.takeWhile p ++ path.vertices.dropWhile p = path.vertices :=
     List.takeWhile_append_dropWhile
@@ -985,11 +985,11 @@ theorem isAcyclic_reverseCut (O : CFOrientation G) (W : Finset G.V) (hO : is_acy
     rw [Option.mem_def] at ha
     rw [ha] at hnot
     simpa only [hp, decide_eq_false_iff_not, not_not] using hnot
-  have hc₁O : List.IsChain (directed_edge G O) (path.vertices.takeWhile p) := by
+  have hc₁O : List.IsChain (directedEdge G O) (path.vertices.takeWhile p) := by
     refine List.IsChain.imp_of_mem_imp (fun a b ha hb hab => ?_) hc₁
     rw [directed_edge_iff_flow_pos] at hab ⊢
     rwa [flow_reverseCut_same O W (iff_of_false (h₁ a ha) (h₁ b hb))] at hab
-  have hc₂O : List.IsChain (directed_edge G O) (path.vertices.dropWhile p) := by
+  have hc₂O : List.IsChain (directedEdge G O) (path.vertices.dropWhile p) := by
     refine List.IsChain.imp_of_mem_imp (fun a b ha hb hab => ?_) hc₂
     rw [directed_edge_iff_flow_pos] at hab ⊢
     rwa [flow_reverseCut_same O W (iff_of_true (h₂ a ha) (h₂ b hb))] at hab
@@ -1058,7 +1058,7 @@ acyclicity by
 `isAcyclic_reverseCut`, in either direction because `reverseCut_reverseCut` exhibits the
 inverse move as another cocycle reversal. -/
 theorem isAcyclic_of_reversalStep {O₁ O₂ : CFOrientation G} (h : ReversalStep O₁ O₂)
-    (hO₁ : is_acyclic G O₁) : is_acyclic G O₂ := by
+    (hO₁ : isAcyclic G O₁) : isAcyclic G O₂ := by
   rcases h with ⟨C, -⟩ | ⟨C, hEq⟩ | ⟨C, -⟩ | ⟨C, hEq⟩ | ⟨W, -, hEq⟩ | ⟨W, hcut, hEq⟩
   · exact absurd hO₁ (not_isAcyclic_of_directedCycle O₁ C)
   · subst hEq
@@ -1074,7 +1074,7 @@ theorem isAcyclic_of_reversalStep {O₁ O₂ : CFOrientation G} (h : ReversalSte
 
 /-- **The reversal class of an acyclic orientation consists of acyclic orientations.** -/
 theorem isAcyclic_of_reversalEquiv {O₁ O₂ : CFOrientation G} (h : ReversalEquiv O₁ O₂)
-    (hO₁ : is_acyclic G O₁) : is_acyclic G O₂ := by
+    (hO₁ : isAcyclic G O₁) : isAcyclic G O₂ := by
   induction h with
   | refl => exact hO₁
   | tail _ hstep ih => exact isAcyclic_of_reversalStep hstep ih
@@ -1197,7 +1197,7 @@ private lemma reversalEquiv_of_indeg_eq_aux (n : ℕ) : ∀ O₁ O₂ : CFOrient
       rw [hzero v] at hsum
       exact lt_irrefl 0 hsum
     obtain ⟨C⟩ := nonempty_relCycle_of_forward_step hirr hforward ⟨u₁, hR₁⟩
-    have hedge : ∀ u v : G.V, R u v → directed_edge G O₁ u v := by
+    have hedge : ∀ u v : G.V, R u v → directedEdge G O₁ u v := by
       intro u v h
       simp only [hR] at h
       exact (directed_edge_iff_flow_pos O₁ u v).mpr (by omega)
@@ -1274,7 +1274,7 @@ theorem reversalEquiv_of_indeg_eq {O₁ O₂ : CFOrientation G}
 /-! ### Step 2 of Gioan's theorem: the cut part
 
 Write `d = indeg O₁ − indeg O₂`. Linear equivalence of the two orientation divisors says
-`d = ∂∂ᵀψ` for an integer potential `ψ`, i.e. `d v = ∑ u (ψ u − ψ v) · num_edges v u`. The
+`d = ∂∂ᵀψ` for an integer potential `ψ`, i.e. `d v = ∑ u (ψ u − ψ v) · numEdges v u`. The
 whole of the cut half of Gioan's argument is then the following observation, which needs no
 decomposition theory at all:
 
@@ -1282,7 +1282,7 @@ decomposition theory at all:
 > complement points *into* `W` under `O₁`.
 
 Indeed for `v ∈ W` every summand of `d v` is non-negative and the ones at `u ∉ W` are at
-least `num_edges v u`, so `∑_{v ∈ W} d v ≥ e(W, Wᶜ)`. On the other hand the disagreement of
+least `numEdges v u`, so `∑_{v ∈ W} d v ≥ e(W, Wᶜ)`. On the other hand the disagreement of
 `O₁` and `O₂` inside `W` cancels by antisymmetry, so `∑_{v ∈ W} d v` is exactly
 `(inflow into W under O₁) − (inflow into W under O₂)`, which is at most `e(W, Wᶜ)`. The two
 bounds pin both quantities: the second inflow is `0` and the first is everything.
@@ -1295,7 +1295,7 @@ the potential strictly drops and the induction is on that. -/
 See the section header for the two-inequality squeeze that proves it. -/
 private lemma isDirectedCut_compl_of_min (O₁ O₂ : CFOrientation G) (ψ : G.V → ℤ) (m : ℤ)
     (hd : ∀ v : G.V, (indeg G O₁ v : ℤ) - (indeg G O₂ v : ℤ)
-      = ∑ u : G.V, (ψ u - ψ v) * (num_edges G v u : ℤ))
+      = ∑ u : G.V, (ψ u - ψ v) * (numEdges G v u : ℤ))
     (hmin : ∀ v : G.V, m ≤ ψ v) (W : Finset G.V) (hW : ∀ v : G.V, v ∈ W ↔ ψ v = m) :
     IsDirectedCut O₁ Wᶜ := by
   classical
@@ -1327,18 +1327,18 @@ private lemma isDirectedCut_compl_of_min (O₁ O₂ : CFOrientation G) (ψ : G.V
     rw [Finset.sum_congr rfl fun v (_ : v ∈ W) => hsplit v, Finset.sum_add_distrib, hinner,
       zero_add]
   -- (3) the minimality of `ψ` on `W` bounds that difference below by the whole cut.
-  have hlow : ∑ v ∈ W, ∑ u ∈ Wᶜ, (num_edges G v u : ℤ)
+  have hlow : ∑ v ∈ W, ∑ u ∈ Wᶜ, (numEdges G v u : ℤ)
       ≤ ∑ v ∈ W, ((indeg G O₁ v : ℤ) - (indeg G O₂ v : ℤ)) := by
     refine Finset.sum_le_sum fun v hv => ?_
-    rw [hd v, ← Finset.sum_add_sum_compl W fun u => (ψ u - ψ v) * (num_edges G v u : ℤ)]
-    have hz : ∑ u ∈ W, (ψ u - ψ v) * (num_edges G v u : ℤ) = 0 :=
+    rw [hd v, ← Finset.sum_add_sum_compl W fun u => (ψ u - ψ v) * (numEdges G v u : ℤ)]
+    have hz : ∑ u ∈ W, (ψ u - ψ v) * (numEdges G v u : ℤ) = 0 :=
       Finset.sum_eq_zero fun u hu => by rw [(hW u).mp hu, (hW v).mp hv, sub_self, zero_mul]
-    have hge : ∑ u ∈ Wᶜ, (num_edges G v u : ℤ)
-        ≤ ∑ u ∈ Wᶜ, (ψ u - ψ v) * (num_edges G v u : ℤ) := by
+    have hge : ∑ u ∈ Wᶜ, (numEdges G v u : ℤ)
+        ≤ ∑ u ∈ Wᶜ, (ψ u - ψ v) * (numEdges G v u : ℤ) := by
       refine Finset.sum_le_sum fun u hu => ?_
       have h1 : m + 1 ≤ ψ u := (hWc u).mp hu
       have h2 : ψ v = m := (hW v).mp hv
-      have h3 : (0 : ℤ) ≤ (num_edges G v u : ℤ) := Int.natCast_nonneg _
+      have h3 : (0 : ℤ) ≤ (numEdges G v u : ℤ) := Int.natCast_nonneg _
       nlinarith
     linarith
   -- (4) the squeeze.
@@ -1348,7 +1348,7 @@ private lemma isDirectedCut_compl_of_min (O₁ O₂ : CFOrientation G) (ψ : G.V
     simp only [diffFlow, Finset.sum_sub_distrib]
   have hPS : (∑ v ∈ W, ∑ w ∈ Wᶜ, (flow O₁ w v : ℤ))
       + (∑ v ∈ W, ∑ w ∈ Wᶜ, (flow O₁ v w : ℤ))
-      = ∑ v ∈ W, ∑ u ∈ Wᶜ, (num_edges G v u : ℤ) := by
+      = ∑ v ∈ W, ∑ u ∈ Wᶜ, (numEdges G v u : ℤ) := by
     rw [← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun v _ => ?_
     rw [← Finset.sum_add_distrib]
@@ -1379,7 +1379,7 @@ private lemma indeg_reverseCut_compl (O : CFOrientation G) (W : Finset G.V)
     (hcut : IsDirectedCut O Wᶜ) (v : G.V) :
     (indeg G (reverseCut O Wᶜ) v : ℤ) = (indeg G O v : ℤ)
       + ∑ u : G.V, ((if u ∈ W then (1 : ℤ) else 0) - (if v ∈ W then (1 : ℤ) else 0))
-          * (num_edges G v u : ℤ) := by
+          * (numEdges G v u : ℤ) := by
   classical
   have hout : v ∈ W → ∀ w : G.V, w ∉ W → flow O v w = 0 := fun h1 w h2 =>
     hcut v w (by simp only [Finset.mem_compl, not_not]; exact h1) (Finset.mem_compl.mpr h2)
@@ -1387,7 +1387,7 @@ private lemma indeg_reverseCut_compl (O : CFOrientation G) (W : Finset G.V)
     hcut w v (by simp only [Finset.mem_compl, not_not]; exact h2) (Finset.mem_compl.mpr h1)
   have hterm : ∀ w : G.V,
       ((if w ∈ W then (1 : ℤ) else 0) - (if v ∈ W then (1 : ℤ) else 0))
-          * (num_edges G v w : ℤ)
+          * (numEdges G v w : ℤ)
         = -(if (w ∈ Wᶜ ∧ v ∉ Wᶜ) then (flow O w v : ℤ) else 0)
             + (if (v ∈ Wᶜ ∧ w ∉ Wᶜ) then (flow O v w : ℤ) else 0) := by
     intro w
@@ -1426,7 +1426,7 @@ which raises the minimum by one and so lowers the spread. -/
 private lemma reversalEquiv_of_potential (n : ℕ) :
     ∀ (O₁ O₂ : CFOrientation G) (ψ : G.V → ℤ),
       (∀ v : G.V, (indeg G O₁ v : ℤ) - (indeg G O₂ v : ℤ)
-        = ∑ u : G.V, (ψ u - ψ v) * (num_edges G v u : ℤ)) →
+        = ∑ u : G.V, (ψ u - ψ v) * (numEdges G v u : ℤ)) →
       (∀ v w : G.V, ψ v - ψ w ≤ (n : ℤ)) →
       ReversalEquiv O₁ O₂ := by
   classical
@@ -1440,7 +1440,7 @@ private lemma reversalEquiv_of_potential (n : ℕ) :
       have h2 := hsp v u
       push_cast at h1 h2
       omega
-    have hzero : ∑ u : G.V, (ψ u - ψ v) * (num_edges G v u : ℤ) = 0 :=
+    have hzero : ∑ u : G.V, (ψ u - ψ v) * (numEdges G v u : ℤ) = 0 :=
       Finset.sum_eq_zero fun u _ => by rw [hc u, sub_self, zero_mul]
     have hv := hd v
     rw [hzero] at hv
@@ -1455,7 +1455,7 @@ private lemma reversalEquiv_of_potential (n : ℕ) :
     by_cases hall : ∀ v : G.V, v ∈ W
     · -- `ψ` is constant, so the two in-degree functions already agree.
       refine reversalEquiv_of_indeg_eq fun v => ?_
-      have hzero : ∑ u : G.V, (ψ u - ψ v) * (num_edges G v u : ℤ) = 0 :=
+      have hzero : ∑ u : G.V, (ψ u - ψ v) * (numEdges G v u : ℤ) = 0 :=
         Finset.sum_eq_zero fun u _ => by
           rw [(hW u).mp (hall u), (hW v).mp (hall v), sub_self, zero_mul]
       have hv := hd v
@@ -1477,10 +1477,10 @@ private lemma reversalEquiv_of_potential (n : ℕ) :
       refine Relation.ReflTransGen.head hstep (ih (reverseCut O₁ Wᶜ) O₂ ψ' (fun v => ?_)
         (fun v w => ?_))
       · rw [indeg_reverseCut_compl O₁ W hcut v]
-        have hsplit : ∑ u : G.V, (ψ' u - ψ' v) * (num_edges G v u : ℤ)
-            = (∑ u : G.V, (ψ u - ψ v) * (num_edges G v u : ℤ))
+        have hsplit : ∑ u : G.V, (ψ' u - ψ' v) * (numEdges G v u : ℤ)
+            = (∑ u : G.V, (ψ u - ψ v) * (numEdges G v u : ℤ))
               + ∑ u : G.V, ((if u ∈ W then (1 : ℤ) else 0)
-                  - (if v ∈ W then (1 : ℤ) else 0)) * (num_edges G v u : ℤ) := by
+                  - (if v ∈ W then (1 : ℤ) else 0)) * (numEdges G v u : ℤ) := by
           rw [← Finset.sum_add_distrib]
           exact Finset.sum_congr rfl fun u _ => by rw [hψ' u, hψ' v]; ring
         rw [hsplit, ← hd v]
@@ -1511,7 +1511,7 @@ is introduced and its classes are identified with the classes of `D(𝒪)` modul
 equivalence. It is the lemma behind An–Baker–Kuperberg–Shokrieh, Theorem 1.2
 (every degree-`g-1` class is `D(𝒪)` for some orientation).
 
-**The proof, in two halves.** `linear_equiv` hands over a firing script `σ` with
+**The proof, in two halves.** `linearEquiv` hands over a firing script `σ` with
 `ordiv 𝒪₂ − ordiv 𝒪₁ = prin σ`, i.e. a potential `ψ = −σ` with
 `indeg 𝒪₁ − indeg 𝒪₂ = ∂∂ᵀψ` pointwise. The induction is on the **spread**
 `max ψ − min ψ`, a natural number because `G.V` is finite.
@@ -1546,20 +1546,20 @@ step: cocycle reversal preserves the class of `ordiv` (it changes it by the firi
 `W`) and so does the fine cycle reversal (`ordiv_reverseCycleOne`), but the coarse one does
 not in general. -/
 theorem gioan_reversalEquiv_of_linear_equiv {O₁ O₂ : CFOrientation G}
-    (h : linear_equiv G (ordiv G O₁) (ordiv G O₂)) :
+    (h : linearEquiv G (ordiv G O₁) (ordiv G O₂)) :
     ReversalEquiv O₁ O₂ := by
   classical
-  have hmem : ordiv G O₂ - ordiv G O₁ ∈ principal_divisors G := h
+  have hmem : ordiv G O₂ - ordiv G O₁ ∈ principalDivisors G := h
   obtain ⟨σ, hσ⟩ := (principal_iff_eq_prin G _).mp hmem
   -- `ψ = -σ` is the potential of the in-degree difference `indeg O₁ - indeg O₂`.
   have hd : ∀ v : G.V, (indeg G O₁ v : ℤ) - (indeg G O₂ v : ℤ)
-      = ∑ u : G.V, ((-σ u) - (-σ v)) * (num_edges G v u : ℤ) := by
+      = ∑ u : G.V, ((-σ u) - (-σ v)) * (numEdges G v u : ℤ) := by
     intro v
     have hv := congrFun hσ v
     have hv' : (indeg G O₂ v : ℤ) - 1 - ((indeg G O₁ v : ℤ) - 1)
-        = ∑ u : G.V, (σ u - σ v) * (num_edges G v u : ℤ) := hv
-    have hneg : ∑ u : G.V, ((-σ u) - (-σ v)) * (num_edges G v u : ℤ)
-        = -∑ u : G.V, (σ u - σ v) * (num_edges G v u : ℤ) := by
+        = ∑ u : G.V, (σ u - σ v) * (numEdges G v u : ℤ) := hv
+    have hneg : ∑ u : G.V, ((-σ u) - (-σ v)) * (numEdges G v u : ℤ)
+        = -∑ u : G.V, (σ u - σ v) * (numEdges G v u : ℤ) := by
       rw [← Finset.sum_neg_distrib]
       exact Finset.sum_congr rfl fun u _ => by ring
     rw [hneg, ← hv']
@@ -1584,8 +1584,8 @@ If `ordiv G O` were unwinnable then, having degree `genus G - 1`
 `ordiv G O'` for some *acyclic* `O'`; Gioan then puts `O` and `O'` in one reversal class, and
 `isAcyclic_of_reversalEquiv` propagates acyclicity from `O'` to `O`, contradicting the
 hypothesis. -/
-theorem winnable_ordiv_of_not_isAcyclic {G : CFGraph} (h_conn : graph_connected G)
-    (O : CFOrientation G) (hO : ¬ is_acyclic G O) : winnable G (ordiv G O) := by
+theorem winnable_ordiv_of_not_isAcyclic {G : CFGraph} (h_conn : graphConnected G)
+    (O : CFOrientation G) (hO : ¬ isAcyclic G O) : winnable G (ordiv G O) := by
   by_contra hw
   obtain ⟨O', hO'acyc, hequiv⟩ :=
     (unwinnable_iff_exists_acyclic_ordiv h_conn (ordiv G O) (degree_ordiv O)).mp hw
@@ -1594,16 +1594,16 @@ theorem winnable_ordiv_of_not_isAcyclic {G : CFGraph} (h_conn : graph_connected 
 
 /-- The contrapositive: an orientation whose divisor is
 unwinnable is acyclic. Together with `ordiv_unwinnable` (`Orientation.lean`) this makes
-`is_acyclic G O ↔ ¬ winnable G (ordiv G O)` — see `isAcyclic_iff_not_winnable_ordiv`. -/
-theorem isAcyclic_of_not_winnable_ordiv {G : CFGraph} (h_conn : graph_connected G)
-    (O : CFOrientation G) (hw : ¬ winnable G (ordiv G O)) : is_acyclic G O := by
+`isAcyclic G O ↔ ¬ winnable G (ordiv G O)` — see `isAcyclic_iff_not_winnable_ordiv`. -/
+theorem isAcyclic_of_not_winnable_ordiv {G : CFGraph} (h_conn : graphConnected G)
+    (O : CFOrientation G) (hw : ¬ winnable G (ordiv G O)) : isAcyclic G O := by
   by_contra hO
   exact hw (winnable_ordiv_of_not_isAcyclic h_conn O hO)
 
 /-- **Orientation criterion.** An orientation is acyclic exactly
 when its divisor is unwinnable. -/
-theorem isAcyclic_iff_not_winnable_ordiv {G : CFGraph} (h_conn : graph_connected G)
-    (O : CFOrientation G) : is_acyclic G O ↔ ¬ winnable G (ordiv G O) :=
+theorem isAcyclic_iff_not_winnable_ordiv {G : CFGraph} (h_conn : graphConnected G)
+    (O : CFOrientation G) : isAcyclic G O ↔ ¬ winnable G (ordiv G O) :=
   ⟨ordiv_unwinnable G O, isAcyclic_of_not_winnable_ordiv h_conn O⟩
 
 end Utilities

@@ -24,9 +24,9 @@ open Utilities
 /-- Connectivity is preserved by the displayed bridge-chain construction. -/
 theorem graph_connected_bridgeChain
     (M : MarkedGraph) (L : List MarkedGraph)
-    (hMconn : _root_.graph_connected M.graph)
-    (hLconn : ∀ N ∈ L, _root_.graph_connected N.graph) :
-    _root_.graph_connected (M.bridgeChain L).graph := by
+    (hMconn : _root_.graphConnected M.graph)
+    (hLconn : ∀ N ∈ L, _root_.graphConnected N.graph) :
+    _root_.graphConnected (M.bridgeChain L).graph := by
   induction L generalizing M with
   | nil => exact hMconn
   | cons N rest ih =>
@@ -43,7 +43,7 @@ needed. -/
 theorem exact_gonality_of_leftRankTransport
     {source target : MarkedGraph} (transport : LeftRankTransport source target)
     {k : ℕ}
-    (hTargetConn : _root_.graph_connected target.graph)
+    (hTargetConn : _root_.graphConnected target.graph)
     (hTargetK : KGeneralTransmission
       (mark target.graph target.left target.right) k)
     (hsmall : k ≤ ((genus source.graph).toNat + 3) / 2) :
@@ -63,15 +63,15 @@ theorem exact_gonality_of_leftRankTransport
   change BNExists target.graph 1 (k : ℤ) ∧
     (∀ d : ℤ, d < k → ¬ BNExists target.graph 1 d) at hExactTarget
   constructor
-  · let D : CFDiv source.graph := (k : ℤ) • one_chip source.left
+  · let D : CFDiv source.graph := (k : ℤ) • oneChip source.left
     refine ⟨D, ?_, ?_⟩
     · dsimp [D]
       rw [map_zsmul, deg_one_chip]
       simp
     · have hRankTarget := hTargetK.rank_period_smul_one_chip_ge_one hTargetConn
-      change rank target.graph ((k : ℤ) • one_chip target.left) ≥ 1 at hRankTarget
+      change rank target.graph ((k : ℤ) • oneChip target.left) ≥ 1 at hRankTarget
       have hMap : transport.mapDiv D =
-          (k : ℤ) • one_chip target.left := by
+          (k : ℤ) • oneChip target.left := by
         dsimp [D]
         rw [transport.map_zsmul, transport.map_one_chip]
       rw [← hMap, transport.rank_map] at hRankTarget
@@ -88,16 +88,16 @@ has gonality exactly `k`, whenever `k` is at most the generic gonality of the
 total genus. -/
 theorem exact_gonality_bridgeChain_of_commonPeriod
     (M : MarkedGraph) (L : List MarkedGraph) (k : ℕ)
-    (hMconn : _root_.graph_connected M.graph)
+    (hMconn : _root_.graphConnected M.graph)
     (hMK : KGeneralTransmission (mark M.graph M.left M.right) k)
-    (hLconn : ∀ N ∈ L, _root_.graph_connected N.graph)
+    (hLconn : ∀ N ∈ L, _root_.graphConnected N.graph)
     (hLK : ∀ N ∈ L,
       KGeneralTransmission (mark N.graph N.left N.right) k)
     (hsmall : k ≤ ((genus (M.bridgeChain L).graph).toNat + 3) / 2) :
     BNExists (M.bridgeChain L).graph 1 (k : ℤ) ∧
       ∀ d : ℤ, d < k → ¬ BNExists (M.bridgeChain L).graph 1 d := by
   let target := M.chain L
-  have hTargetConn : _root_.graph_connected target.graph :=
+  have hTargetConn : _root_.graphConnected target.graph :=
     graph_connected_markedChain M L hMconn hLconn
   have hTargetK : KGeneralTransmission
       (mark target.graph target.left target.right) k :=

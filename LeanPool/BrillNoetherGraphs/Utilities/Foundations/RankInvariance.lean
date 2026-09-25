@@ -18,12 +18,12 @@ namespace Utilities
 
 /-- Every rank lower bound is preserved under linear equivalence. -/
 theorem rank_geq_of_linear_equiv
-    (G : CFGraph) {D E : CFDiv G} (hDE : linear_equiv G D E) (k : ℤ)
-    (hRank : rank_geq G D k) :
-    rank_geq G E k := by
+    (G : CFGraph) {D E : CFDiv G} (hDE : linearEquiv G D E) (k : ℤ)
+    (hRank : rankGeq G D k) :
+    rankGeq G E k := by
   intro A hA
   apply winnable_equiv_winnable G (D - A) (E - A) (hRank A hA)
-  unfold linear_equiv at hDE ⊢
+  unfold linearEquiv at hDE ⊢
   have hDifference :
       (E - A) - (D - A) = E - D := by
     abel
@@ -32,7 +32,7 @@ theorem rank_geq_of_linear_equiv
 
 /-- Linearly equivalent divisors have equal rank. -/
 theorem rank_eq_of_linear_equiv
-    (G : CFGraph) {D E : CFDiv G} (hDE : linear_equiv G D E) :
+    (G : CFGraph) {D E : CFDiv G} (hDE : linearEquiv G D E) :
     rank G D = rank G E := by
   apply le_antisymm
   · apply (rank_geq_iff G E (rank G D)).mp
@@ -48,7 +48,7 @@ theorem rank_add_effective_ge
     (hRank : rank G D ≥ r) :
     rank G (D + E) ≥ r := by
   apply (rank_geq_iff G (D + E) r).mp
-  have hRankGeq : rank_geq G D r :=
+  have hRankGeq : rankGeq G D r :=
     (rank_geq_iff G D r).mpr hRank
   intro A hA
   have hWinnable := winnable_add_winnable G (D - A) E
@@ -64,14 +64,14 @@ theorem BNExists_mono_degree
     BNExists G r d' := by
   obtain ⟨D, hDDegree, hDRank⟩ := hExists
   let v : G.V := Classical.arbitrary G.V
-  let E : CFDiv G := (d' - d).toNat • one_chip v
+  let E : CFDiv G := (d' - d).toNat • oneChip v
   have hDifference : 0 ≤ d' - d := by omega
   have hEEffective : effective E := by
     exact (Eff G).nsmul_mem (eff_one_chip v) (d' - d).toNat
   have hEDegree : deg E = d' - d := by
     dsimp [E]
     simpa [Int.toNat_of_nonneg hDifference] using
-      (AddMonoidHom.map_nsmul deg (d' - d).toNat (one_chip v))
+      (AddMonoidHom.map_nsmul deg (d' - d).toNat (oneChip v))
   refine ⟨D + E, ?_, rank_add_effective_ge G D E hEEffective r hDRank⟩
   rw [deg.map_add, hDDegree, hEDegree]
   ring

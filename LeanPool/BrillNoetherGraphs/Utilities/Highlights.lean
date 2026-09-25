@@ -56,7 +56,7 @@ universe u
 Re-exported here so that the statements below read without qualification. -/
 
 /-- The simple graph underlying a chip-firing multigraph: `v` and `w` are
-adjacent when `num_edges G v w > 0`.  "The treewidth of a multigraph" means the
+adjacent when `numEdges G v w > 0`.  "The treewidth of a multigraph" means the
 treewidth of this graph — parallel edges do not change it.
 (`Utilities/Foundations/UnderlyingSimpleGraph.lean`) -/
 alias underlyingSimpleGraph := Utilities.underlyingSimpleGraph
@@ -94,12 +94,12 @@ This is what every downstream gonality argument in the repository runs on. -/
 
 /-- The two gonalities agree: the dependency's `ℤ`-valued `gonality` is the
 coercion of the `ℕ`-valued `divisorialGonality`. -/
-example (G : CFGraph) (h_conn : graph_connected G) :
+example (G : CFGraph) (h_conn : graphConnected G) :
     gonality h_conn = (divisorialGonality G : ℤ) :=
   Utilities.Gonality.gonality_eq_divisorialGonality h_conn
 
 /-- The gonality is **attained** by an actual divisor. -/
-example (G : CFGraph) (h_conn : graph_connected G) :
+example (G : CFGraph) (h_conn : graphConnected G) :
     ∃ D : CFDiv G, effective D ∧ deg D = (divisorialGonality G : ℤ) ∧
       rank G D ≥ 1 :=
   Utilities.Gonality.exists_divisor_of_divisorialGonality h_conn
@@ -107,7 +107,7 @@ example (G : CFGraph) (h_conn : graph_connected G) :
 /-! ## The Abel--Jacobi image / fossil -/
 
 /-- Passing to the fossil preserves genus and divisorial gonality. -/
-example (G : CFGraph) (h_conn : graph_connected G) :
+example (G : CFGraph) (h_conn : graphConnected G) :
     genus (fossil G) = genus G ∧
       divisorialGonality (fossil G) = divisorialGonality G :=
   ⟨Utilities.genus_fossil G h_conn,
@@ -115,26 +115,26 @@ example (G : CFGraph) (h_conn : graph_connected G) :
 
 /-- The fossil has no one-edge cut: it is the 2-edge-connectivization in the
 literal cut-multiplicity sense. -/
-example (G : CFGraph) (h_conn : graph_connected G) :
+example (G : CFGraph) (h_conn : graphConnected G) :
     TwoEdgeCutCondition (fossil G) :=
   Utilities.twoEdgeCutCondition_fossil G h_conn
 
 /-- Every-rank Brill--Noether existence is invariant under fossilization. -/
-example (G : CFGraph) (h_conn : graph_connected G) (r d : ℤ) :
+example (G : CFGraph) (h_conn : graphConnected G) (r d : ℤ) :
     BNExists G r d ↔ BNExists (fossil G) r d :=
   Utilities.BNExists_fossil_iff G h_conn r d
 
 /-- **The nested legal chain** (van Dobben de Bruyn–Gijswijt, Lemma 1.3): an
 effective divisor reaches its `q`-reduced form through legal firings whose
 fired sets are nested and avoid `q`. -/
-example (G : CFGraph) (h_conn : graph_connected G) (q : G.V)
+example (G : CFGraph) (h_conn : graphConnected G) (q : G.V)
     {D : CFDiv G} (hD : effective D) :
     ∃ (k : ℕ) (U : ℕ → Finset G.V),
       (∀ i, i < k → U i ⊆ Finset.univ.erase q) ∧
       (∀ i, i < k → (U i).Nonempty) ∧
       (∀ i j, i ≤ j → j < k → U i ⊆ U j) ∧
-      (∀ i, i < k → legal_set G (fireChain G D U i) (U i)) ∧
-      q_reduced G q (fireChain G D U k) :=
+      (∀ i, i < k → legalSet G (fireChain G D U i) (U i)) ∧
+      qReduced G q (fireChain G D U k) :=
   Utilities.Gonality.exists_nested_legal_chain h_conn q hD
 
 /-! ## Transport along a relabelling -/

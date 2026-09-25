@@ -55,7 +55,7 @@ back. -/
 theorem fixedDegreeTwist_two_eq_next_zero_add_uv
     (G : CFGraph) (u v : G.V) (D : CFDiv G) (b : ℤ) :
     fixedDegreeTwist G u v D 2 b =
-      fixedDegreeTwist G u v D 0 (b + 1) + one_chip u + one_chip v := by
+      fixedDegreeTwist G u v D 0 (b + 1) + oneChip u + oneChip v := by
   unfold fixedDegreeTwist
   ext x
   simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply]
@@ -65,11 +65,11 @@ theorem fixedDegreeTwist_two_eq_next_zero_add_uv
 translates. -/
 theorem degreeTwistInt_one_chip_one
     (G : CFGraph) (u v w : G.V) (b : ℤ) :
-    degreeTwistInt (mark G u v) (one_chip w) 1 b =
-      one_chip w + b • (one_chip u - one_chip v) := by
+    degreeTwistInt (mark G u v) (oneChip w) 1 b =
+      oneChip w + b • (oneChip u - oneChip v) := by
   unfold degreeTwistInt
-  change (one_chip w + (1 - deg (one_chip w) + b) • one_chip u -
-    b • one_chip v : CFDiv G) = _
+  change (oneChip w + (1 - deg (oneChip w) + b) • oneChip u -
+    b • oneChip v : CFDiv G) = _
   rw [deg_one_chip]
   ext x
   simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply]
@@ -80,7 +80,7 @@ torsion witness. -/
 theorem degreeTwistInt_emod_linearEquiv
     {M : TwiceMarked} {k : ℕ} (hk : TorsionWitness M k)
     (D : CFDiv M.graph) (d b : ℤ) :
-    linear_equiv M.graph
+    linearEquiv M.graph
       (degreeTwistInt M D d b) (degreeTwistInt M D d (b % k)) := by
   rw [degreeTwistInt_eq_zero_add_marked_difference M D d b,
     degreeTwistInt_eq_zero_add_marked_difference M D d (b % k)]
@@ -92,8 +92,8 @@ witness. -/
 theorem degreeTwistInt_linearEquiv_zero_of_emod_eq
     {M : TwiceMarked} {k : ℕ} (hk : TorsionWitness M k)
     (D : CFDiv M.graph) (d b c : ℤ) (hmod : b % k = c % k)
-    (hc : linear_equiv M.graph (degreeTwistInt M D d c) 0) :
-    linear_equiv M.graph (degreeTwistInt M D d b) 0 := by
+    (hc : linearEquiv M.graph (degreeTwistInt M D d c) 0) :
+    linearEquiv M.graph (degreeTwistInt M D d b) 0 := by
   have h1 := degreeTwistInt_emod_linearEquiv hk D d b
   have h2 := degreeTwistInt_emod_linearEquiv hk D d c
   rw [hmod] at h1
@@ -107,7 +107,7 @@ the paper's set `T^d_D` of degree-`d` twist classes. -/
 theorem twist_eq_degreeTwistInt
     (M : TwiceMarked) (D : CFDiv M.graph) (a b d : ℤ)
     (h : deg D + a - b = d) :
-    D + a • one_chip M.u - b • one_chip M.v = degreeTwistInt M D d b := by
+    D + a • oneChip M.u - b • oneChip M.v = degreeTwistInt M D d b := by
   have ha : a = d - deg D + b := by omega
   unfold degreeTwistInt
   rw [ha]
@@ -116,7 +116,7 @@ theorem twist_eq_degreeTwistInt
 theorem exists_fin_degreeTwistInt_linearEquiv
     {M : TwiceMarked} {k : ℕ} (hk : TorsionWitness M k)
     (D : CFDiv M.graph) (d b : ℤ) :
-    ∃ c : Fin k, linear_equiv M.graph
+    ∃ c : Fin k, linearEquiv M.graph
       (degreeTwistInt M D d b) (degreeTwistInt M D d (c : ℤ)) := by
   have hkZ : (0 : ℤ) < k := by exact_mod_cast hk.1
   have h0 : 0 ≤ b % k := Int.emod_nonneg _ (by omega)
@@ -126,7 +126,7 @@ theorem exists_fin_degreeTwistInt_linearEquiv
     exact_mod_cast this
   refine ⟨⟨(b % k).toNat, hc⟩, ?_⟩
   have hcast : (((b % k).toNat : ℕ) : ℤ) = b % k := Int.toNat_of_nonneg h0
-  change linear_equiv M.graph (degreeTwistInt M D d b)
+  change linearEquiv M.graph (degreeTwistInt M D d b)
     (degreeTwistInt M D d (((b % k).toNat : ℕ) : ℤ))
   rw [hcast]
   exact degreeTwistInt_emod_linearEquiv hk D d b
@@ -135,21 +135,21 @@ theorem exists_fin_degreeTwistInt_linearEquiv
 exactly when the marked pair is canonical.  This is the pointwise content of
 the paper's correction term. -/
 theorem canonical_sub_add_marks_linearEquiv_zero_iff
-    {u v : G.V} {A : CFDiv G} (hA : linear_equiv G A 0) :
-    linear_equiv G
-        (canonical_divisor G - (A + one_chip u + one_chip v)) 0 ↔
-      linear_equiv G (one_chip u + one_chip v) (canonical_divisor G) := by
-  unfold linear_equiv at hA ⊢
+    {u v : G.V} {A : CFDiv G} (hA : linearEquiv G A 0) :
+    linearEquiv G
+        (canonicalDivisor G - (A + oneChip u + oneChip v)) 0 ↔
+      linearEquiv G (oneChip u + oneChip v) (canonicalDivisor G) := by
+  unfold linearEquiv at hA ⊢
   constructor
   · intro h
-    have hSum := AddSubgroup.add_mem (principal_divisors G) h hA
-    have hNeg := AddSubgroup.neg_mem (principal_divisors G) hSum
+    have hSum := AddSubgroup.add_mem (principalDivisors G) h hA
+    have hNeg := AddSubgroup.neg_mem (principalDivisors G) hSum
     convert hNeg using 1
     abel
   · intro h
-    have hNegh := AddSubgroup.neg_mem (principal_divisors G) h
-    have hNegA := AddSubgroup.neg_mem (principal_divisors G) hA
-    have hSum := AddSubgroup.add_mem (principal_divisors G) hNegh hNegA
+    have hNegh := AddSubgroup.neg_mem (principalDivisors G) h
+    have hNegA := AddSubgroup.neg_mem (principalDivisors G) hA
+    have hSum := AddSubgroup.add_mem (principalDivisors G) hNegh hNegA
     convert hSum using 1
     abel
 
@@ -157,7 +157,7 @@ theorem canonical_sub_add_marks_linearEquiv_zero_iff
 principal and zero otherwise. -/
 theorem rankPlusOne_mul_eq_one_of_linearEquiv_zero
     (A Y : CFDiv G) (hA : deg A = 0) (hY : deg Y = 0)
-    (h1 : linear_equiv G A 0) (h2 : linear_equiv G Y 0) :
+    (h1 : linearEquiv G A 0) (h2 : linearEquiv G Y 0) :
     rankPlusOne G A * rankPlusOne G Y = 1 := by
   have e1 : rankPlusOne G A = 1 :=
     (rank_add_one_eq_one_iff_linearEquiv_zero_of_degree_zero G A hA).mpr h1
@@ -169,12 +169,12 @@ theorem rankPlusOne_mul_eq_one_of_linearEquiv_zero
 /-- If either factor of a degree-zero multiplicity product is nonprincipal,
 the product vanishes. -/
 theorem rankPlusOne_mul_eq_zero_of_not_linearEquiv_zero_left
-    (A Y : CFDiv G) (hA : deg A = 0) (h1 : ¬ linear_equiv G A 0) :
+    (A Y : CFDiv G) (hA : deg A = 0) (h1 : ¬ linearEquiv G A 0) :
     rankPlusOne G A * rankPlusOne G Y = 0 := by
   rw [rankPlusOne_eq_zero_of_degree_zero_not_principal G A hA h1, zero_mul]
 
 theorem rankPlusOne_mul_eq_zero_of_not_linearEquiv_zero_right
-    (A Y : CFDiv G) (hY : deg Y = 0) (h2 : ¬ linear_equiv G Y 0) :
+    (A Y : CFDiv G) (hY : deg Y = 0) (h2 : ¬ linearEquiv G Y 0) :
     rankPlusOne G A * rankPlusOne G Y = 0 := by
   rw [rankPlusOne_eq_zero_of_degree_zero_not_principal G Y hY h2, mul_zero]
 
@@ -190,9 +190,9 @@ open Classical in
 conjunct is the failure of the paper's rigidity condition (in genus two,
 `r(u+v) = 0` is equivalent to `u + v ≁ K_G`). -/
 noncomputable def invTauCorrection (M : TwiceMarked) (D : CFDiv M.graph) : ℤ :=
-  if (∃ b : ℤ, linear_equiv M.graph (degreeTwistInt M D 0 b) 0) ∧
-      linear_equiv M.graph (one_chip M.u + one_chip M.v)
-        (canonical_divisor M.graph)
+  if (∃ b : ℤ, linearEquiv M.graph (degreeTwistInt M D 0 b) 0) ∧
+      linearEquiv M.graph (oneChip M.u + oneChip M.v)
+        (canonicalDivisor M.graph)
     then 1 else 0
 
 open Classical in
@@ -200,15 +200,15 @@ open Classical in
 without the `TwiceMarked` projections so that `rw` fires on it. -/
 theorem invTauCorrection_mark (G : CFGraph) (u v : G.V) (D : CFDiv G) :
     invTauCorrection (mark G u v) D =
-      if (∃ b : ℤ, linear_equiv G (degreeTwistInt (mark G u v) D 0 b) 0) ∧
-          linear_equiv G (one_chip u + one_chip v) (canonical_divisor G)
+      if (∃ b : ℤ, linearEquiv G (degreeTwistInt (mark G u v) D 0 b) 0) ∧
+          linearEquiv G (oneChip u + oneChip v) (canonicalDivisor G)
         then 1 else 0 := rfl
 
 /-- Rigid markings have no correction. -/
 theorem invTauCorrection_eq_zero_of_not_mark_pair_canonical
     (M : TwiceMarked) (D : CFDiv M.graph)
-    (hRigid : ¬ linear_equiv M.graph (one_chip M.u + one_chip M.v)
-      (canonical_divisor M.graph)) :
+    (hRigid : ¬ linearEquiv M.graph (oneChip M.u + oneChip M.v)
+      (canonicalDivisor M.graph)) :
     invTauCorrection M D = 0 := by
   unfold invTauCorrection
   rw [if_neg]
@@ -218,7 +218,7 @@ theorem invTauCorrection_eq_zero_of_not_mark_pair_canonical
 /-- The canonical complement of a degree-two twist has degree zero. -/
 theorem deg_canonical_sub_fixedDegreeTwist_two
     (B : Banana 2) (u v : B.graph.V) (D : CFDiv B.graph) (b : ℤ) :
-    deg (canonical_divisor B.graph -
+    deg (canonicalDivisor B.graph -
       fixedDegreeTwist B.graph u v D 2 b) = 0 := by
   rw [deg.map_sub, degree_of_canonical_divisor, B.genus_graph,
     deg_fixedDegreeTwist]
@@ -229,12 +229,12 @@ shifted by one, have the same index. -/
 theorem fin_eq_of_shifted_degreeTwist_linearEquiv_zero
     {B : Banana 2} {u v : B.graph.V} {D : CFDiv B.graph} {k : ℕ}
     (hk : IsTorsionOrder (mark B.graph u v) k) {b c : Fin k}
-    (hb : linear_equiv B.graph
+    (hb : linearEquiv B.graph
       (fixedDegreeTwist B.graph u v D 0 ((b : ℤ) + 1)) 0)
-    (hc : linear_equiv B.graph
+    (hc : linearEquiv B.graph
       (fixedDegreeTwist B.graph u v D 0 ((c : ℤ) + 1)) 0) :
     b = c := by
-  have hbc : linear_equiv B.graph
+  have hbc : linearEquiv B.graph
       (degreeTwistInt (mark B.graph u v) D 0 ((b : ℤ) + 1))
       (degreeTwistInt (mark B.graph u v) D 0 ((c : ℤ) + 1)) := by
     exact hb.trans hc.symm
@@ -267,7 +267,7 @@ theorem sum_correctionProduct_eq_invTauCorrection
     ∑ b : Fin k,
         rankPlusOne B.graph
             (fixedDegreeTwist B.graph u v D 0 ((b : ℤ) + 1)) *
-          rankPlusOne B.graph (canonical_divisor B.graph -
+          rankPlusOne B.graph (canonicalDivisor B.graph -
             fixedDegreeTwist B.graph u v D 2 (b : ℤ)) =
       invTauCorrection (mark B.graph u v) D := by
   classical
@@ -276,25 +276,25 @@ theorem sum_correctionProduct_eq_invTauCorrection
     intro b
     exact deg_fixedDegreeTwist B.graph u v D 0 b
   have hDegY : ∀ b : ℤ,
-      deg (canonical_divisor B.graph -
+      deg (canonicalDivisor B.graph -
         fixedDegreeTwist B.graph u v D 2 b) = 0 :=
     deg_canonical_sub_fixedDegreeTwist_two B u v D
   -- The residual product at index `b` reduces to a conjunction of
   -- principality statements.
   have hYiff : ∀ b : ℤ,
-      linear_equiv B.graph (fixedDegreeTwist B.graph u v D 0 (b + 1)) 0 →
-        (linear_equiv B.graph (canonical_divisor B.graph -
+      linearEquiv B.graph (fixedDegreeTwist B.graph u v D 0 (b + 1)) 0 →
+        (linearEquiv B.graph (canonicalDivisor B.graph -
             fixedDegreeTwist B.graph u v D 2 b) 0 ↔
-          linear_equiv B.graph (one_chip u + one_chip v)
-            (canonical_divisor B.graph)) := by
+          linearEquiv B.graph (oneChip u + oneChip v)
+            (canonicalDivisor B.graph)) := by
     intro b hA
     rw [fixedDegreeTwist_two_eq_next_zero_add_uv]
     exact canonical_sub_add_marks_linearEquiv_zero_iff hA
   by_cases hCond :
-      (∃ b : ℤ, linear_equiv B.graph
+      (∃ b : ℤ, linearEquiv B.graph
         (degreeTwistInt (mark B.graph u v) D 0 b) 0) ∧
-      linear_equiv B.graph (one_chip u + one_chip v)
-        (canonical_divisor B.graph)
+      linearEquiv B.graph (oneChip u + oneChip v)
+        (canonicalDivisor B.graph)
   · obtain ⟨⟨b₀, hb₀⟩, hUV⟩ := hCond
     have hkPos : 0 < k := hk.1.1
     have hkZ : (0 : ℤ) < k := by exact_mod_cast hkPos
@@ -308,7 +308,7 @@ theorem sum_correctionProduct_eq_invTauCorrection
       rw [Int.toNat_of_nonneg hRes0, Int.emod_add_emod]
       congr 1
       ring
-    have hA : linear_equiv B.graph
+    have hA : linearEquiv B.graph
         (fixedDegreeTwist B.graph u v D 0
           ((((b₀ - 1) % k).toNat : ℤ) + 1)) 0 :=
       degreeTwistInt_linearEquiv_zero_of_emod_eq hk.1 D 0 _ b₀ hval hb₀
@@ -323,13 +323,13 @@ theorem sum_correctionProduct_eq_invTauCorrection
     · intro hmem
       exact absurd (Finset.mem_univ _) hmem
     · -- the surviving index contributes one
-      have hY : linear_equiv B.graph (canonical_divisor B.graph -
+      have hY : linearEquiv B.graph (canonicalDivisor B.graph -
           fixedDegreeTwist B.graph u v D 2 (((b₀ - 1) % k).toNat : ℤ)) 0 :=
         (hYiff _ hA).mpr hUV
       have hOne := rankPlusOne_mul_eq_one_of_linearEquiv_zero
         (fixedDegreeTwist B.graph u v D 0
           ((((b₀ - 1) % k).toNat : ℤ) + 1))
-        (canonical_divisor B.graph -
+        (canonicalDivisor B.graph -
           fixedDegreeTwist B.graph u v D 2 (((b₀ - 1) % k).toNat : ℤ))
         (hDegA _) (hDegY _) hA hY
       rw [hOne, invTauCorrection_mark, if_pos ⟨⟨b₀, hb₀⟩, hUV⟩]
@@ -337,10 +337,10 @@ theorem sum_correctionProduct_eq_invTauCorrection
     have hZero : ∀ b : Fin k,
         rankPlusOne B.graph
             (fixedDegreeTwist B.graph u v D 0 ((b : ℤ) + 1)) *
-          rankPlusOne B.graph (canonical_divisor B.graph -
+          rankPlusOne B.graph (canonicalDivisor B.graph -
             fixedDegreeTwist B.graph u v D 2 (b : ℤ)) = 0 := by
       intro b
-      by_cases hA : linear_equiv B.graph
+      by_cases hA : linearEquiv B.graph
           (fixedDegreeTwist B.graph u v D 0 ((b : ℤ) + 1)) 0
       · apply rankPlusOne_mul_eq_zero_of_not_linearEquiv_zero_right
           _ _ (hDegY _)
@@ -381,7 +381,7 @@ theorem intCast_kInversionCount_eq_effectiveResidues_add_correction
                 (fixedDegreeTwist B.graph u v D 0 ((b : ℤ) + 1))) +
             rankPlusOne B.graph
                 (fixedDegreeTwist B.graph u v D 0 ((b : ℤ) + 1)) *
-              rankPlusOne B.graph (canonical_divisor B.graph -
+              rankPlusOne B.graph (canonicalDivisor B.graph -
                 fixedDegreeTwist B.graph u v D 2 (b : ℤ))) := by
           apply Finset.sum_congr rfl
           intro b _
@@ -397,7 +397,7 @@ theorem intCast_kInversionCount_eq_effectiveResidues_add_correction
         ∑ b : Fin k,
           rankPlusOne B.graph
               (fixedDegreeTwist B.graph u v D 0 ((b : ℤ) + 1)) *
-            rankPlusOne B.graph (canonical_divisor B.graph -
+            rankPlusOne B.graph (canonicalDivisor B.graph -
               fixedDegreeTwist B.graph u v D 2 (b : ℤ)) := by
           rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
     _ = ((effectiveDegreeOneTwistResidues (mark B.graph u v) D k).ncard : ℤ) +
@@ -436,8 +436,8 @@ theorem eq_of_ncard_le_two_of_mem_three
 non-recurrence indices. -/
 theorem mem_effectiveDegreeOneTwistResidues_one_chip_iff
     (G : CFGraph) (u v w : G.V) (k : ℕ) (b : Fin k) :
-    b ∈ effectiveDegreeOneTwistResidues (mark G u v) (one_chip w) k ↔
-      0 ≤ rank G (one_chip w + (b : ℤ) • (one_chip u - one_chip v)) := by
+    b ∈ effectiveDegreeOneTwistResidues (mark G u v) (oneChip w) k ↔
+      0 ≤ rank G (oneChip w + (b : ℤ) • (oneChip u - oneChip v)) := by
   rw [mem_effectiveDegreeOneTwistResidues_iff,
     degreeTwistInt_one_chip_one]
 /-- Paper source: `thm:kgtThetas` (Theorem 4.8), the "only if" direction.
@@ -449,32 +449,32 @@ zero residue is always effective, and read the inversion bound `inv_k ≤ 2`
 backwards. -/
 theorem nonRecurrent_of_kGeneralTransmission
     (B : Banana 2) (u v : B.graph.V) (k : ℕ)
-    (hRigid : ¬ linear_equiv B.graph
-      (one_chip u + one_chip v) (canonical_divisor B.graph))
+    (hRigid : ¬ linearEquiv B.graph
+      (oneChip u + oneChip v) (canonicalDivisor B.graph))
     (hKGT : KGeneralTransmission (mark B.graph u v) k) :
     NonRecurrent (mark B.graph u v) k := by
   obtain ⟨hTorsion, -, hData⟩ := hKGT
   intro w n m hn hm hnRank hmRank
-  obtain ⟨tau, hTau, hAffine, -, hCount⟩ := hData (one_chip w)
+  obtain ⟨tau, hTau, hAffine, -, hCount⟩ := hData (oneChip w)
   have hEq := kInversionCount_eq_effectiveResidues_ncard_of_rigid
-    B u v (one_chip w) k tau hTorsion hTau hAffine hRigid
+    B u v (oneChip w) k tau hTorsion hTau hAffine hRigid
   have hGenus : Int.toNat (genus (mark B.graph u v).graph) = 2 := by
     change Int.toNat (genus B.graph) = 2
     rw [B.genus_graph]
     rfl
   rw [hGenus, hEq] at hCount
   have hzero : (⟨0, hTorsion.1⟩ : Fin k) ∈
-      effectiveDegreeOneTwistResidues (mark B.graph u v) (one_chip w) k := by
+      effectiveDegreeOneTwistResidues (mark B.graph u v) (oneChip w) k := by
     rw [mem_effectiveDegreeOneTwistResidues_one_chip_iff B.graph u v w k _]
-    have hRank : rank B.graph (one_chip w) = 0 :=
+    have hRank : rank B.graph (oneChip w) = 0 :=
       rank_one_chip_zero_banana_two B w
     simpa using hRank.ge
   have hnMem : n ∈
-      effectiveDegreeOneTwistResidues (mark B.graph u v) (one_chip w) k := by
+      effectiveDegreeOneTwistResidues (mark B.graph u v) (oneChip w) k := by
     rw [mem_effectiveDegreeOneTwistResidues_one_chip_iff B.graph u v w k _]
     exact hnRank
   have hmMem : m ∈
-      effectiveDegreeOneTwistResidues (mark B.graph u v) (one_chip w) k := by
+      effectiveDegreeOneTwistResidues (mark B.graph u v) (oneChip w) k := by
     rw [mem_effectiveDegreeOneTwistResidues_one_chip_iff B.graph u v w k _]
     exact hmRank
   exact eq_of_ncard_le_two_of_mem_three hCount hzero hnMem hmMem
@@ -488,8 +488,8 @@ theorem thetaRigid_kGeneral_iff_nonRecurrent
     {k : ℕ} (B : Banana 2) (u v : B.graph.V)
     (hSub : AllSubmodular (mark B.graph u v))
     (hTO : IsTorsionOrder (mark B.graph u v) k)
-    (hRigid : ¬ linear_equiv B.graph
-      (one_chip u + one_chip v) (canonical_divisor B.graph)) :
+    (hRigid : ¬ linearEquiv B.graph
+      (oneChip u + oneChip v) (canonicalDivisor B.graph)) :
     KGeneralTransmission (mark B.graph u v) k ↔
       NonRecurrent (mark B.graph u v) k := by
   constructor
@@ -499,7 +499,7 @@ theorem thetaRigid_kGeneral_iff_nonRecurrent
     intro D
     obtain ⟨τ, hτ, hAffine, hFinite⟩ :=
       exists_affine_transmission_of_allSubmodular
-        (graph_connected B) hTO.1 hSub D
+        (graphConnected B) hTO.1 hSub D
     refine ⟨τ, hτ, hAffine, hFinite, ?_⟩
     have hCount := kInversionCount_le_two_of_nonRecurrent_of_rigid
       B u v D k τ hTO hτ hAffine hNonrec hRigid

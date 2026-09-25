@@ -14,7 +14,7 @@ import Mathlib.Tactic
 `GraphContractionCertificate.Valid` fixes precisely the edges joining
 different vertex fibres.  This file packages the resulting Euler accounting.
 It is intentionally phrased using *directed multiplicities*, because that is
-the representation-independent quantity supplied by `num_edges`.
+the representation-independent quantity supplied by `numEdges`.
 
 In particular, an equal-genus valid contraction has exactly the amount of
 internal directed multiplicity forced by its loss of vertices.  Together with
@@ -38,13 +38,13 @@ variable {G : CFGraph.{u}} {H : CFGraph.{v}}
 vertex fibre. -/
 def internalDirectedMultiplicity (c : GraphContractionCertificate G H) : ℤ :=
   ∑ x : G.V, ∑ y : G.V,
-    if c.vertexMap x = c.vertexMap y then (num_edges G x y : ℤ) else 0
+    if c.vertexMap x = c.vertexMap y then (numEdges G x y : ℤ) else 0
 
 /-- The total directed multiplicity of source edges which join two distinct
 vertex fibres. -/
 def externalDirectedMultiplicity (c : GraphContractionCertificate G H) : ℤ :=
   ∑ x : G.V, ∑ y : G.V,
-    if c.vertexMap x ≠ c.vertexMap y then (num_edges G x y : ℤ) else 0
+    if c.vertexMap x ≠ c.vertexMap y then (numEdges G x y : ℤ) else 0
 
 /-- The vertices in one contraction fibre. -/
 def fibreVertices (c : GraphContractionCertificate G H) (target : H.V) :
@@ -65,7 +65,7 @@ noncomputable def fibreGraph (c : GraphContractionCertificate G H)
 induced fibre graph connected. -/
 theorem inducedFibre_connected (c : GraphContractionCertificate G H)
     (hValid : c.Valid) (hFibres : c.ConnectedFibres) (target : H.V) :
-    graph_connected (inducedSubgraph G (c.fibreVertices target)
+    _root_.graphConnected (inducedSubgraph G (c.fibreVertices target)
       (c.fibreVertices_nonempty hValid target)) := by
   classical
   intro S hSplit
@@ -112,14 +112,14 @@ theorem inducedFibre_connected (c : GraphContractionCertificate G H)
 
 theorem fibreGraph_connected (c : GraphContractionCertificate G H)
     (hValid : c.Valid) (hFibres : c.ConnectedFibres) (target : H.V) :
-    graph_connected (c.fibreGraph hValid target) := by
+    _root_.graphConnected (c.fibreGraph hValid target) := by
   simpa [fibreGraph] using c.inducedFibre_connected hValid hFibres target
 
 /-- Convenience form of fibre connectedness for a topological contraction. -/
 theorem fibreGraph_connected_of_topologicalValid
     (c : GraphContractionCertificate G H) (hTopological : c.TopologicalValid)
     (target : H.V) :
-    graph_connected (c.fibreGraph hTopological.1 target) :=
+    _root_.graphConnected (c.fibreGraph hTopological.1 target) :=
   c.fibreGraph_connected hTopological.1 hTopological.2 target
 
 /-- Partition a finite sum by the value of the contraction map. -/
@@ -177,9 +177,9 @@ private theorem sum_by_vertexMap_pair (c : GraphContractionCertificate G H)
 fibre contributions. -/
 theorem internal_add_external_eq_total (c : GraphContractionCertificate G H) :
     c.internalDirectedMultiplicity + c.externalDirectedMultiplicity =
-      ∑ x : G.V, vertex_degree G x := by
+      ∑ x : G.V, vertexDegree G x := by
   rw [internalDirectedMultiplicity, externalDirectedMultiplicity]
-  simp only [vertex_degree]
+  simp only [vertexDegree]
   rw [← Finset.sum_add_distrib]
   apply Finset.sum_congr rfl
   intro x _
@@ -192,14 +192,14 @@ theorem internal_add_external_eq_total (c : GraphContractionCertificate G H) :
 quotient graph. -/
 theorem externalDirectedMultiplicity_eq_degreeSum
     (c : GraphContractionCertificate G H) (hValid : c.Valid) :
-    c.externalDirectedMultiplicity = ∑ a : H.V, vertex_degree H a := by
+    c.externalDirectedMultiplicity = ∑ a : H.V, vertexDegree H a := by
   rw [externalDirectedMultiplicity]
   calc
     (∑ x : G.V, ∑ y : G.V,
-        if c.vertexMap x ≠ c.vertexMap y then (num_edges G x y : ℤ) else 0) =
+        if c.vertexMap x ≠ c.vertexMap y then (numEdges G x y : ℤ) else 0) =
       ∑ a : H.V, ∑ b : H.V, ∑ x : G.V, ∑ y : G.V,
         if c.vertexMap x = a ∧ c.vertexMap y = b then
-          if a ≠ b then (num_edges G x y : ℤ) else 0 else 0 := by
+          if a ≠ b then (numEdges G x y : ℤ) else 0 else 0 := by
       rw [c.sum_by_vertexMap_pair]
       apply Finset.sum_congr rfl
       intro a _
@@ -215,7 +215,7 @@ theorem externalDirectedMultiplicity_eq_degreeSum
           by_cases hyb : c.vertexMap y = a <;> simp [hxa, hyb]
       · by_cases hxa : c.vertexMap x = a <;>
           by_cases hyb : c.vertexMap y = b <;> simp [hxa, hyb, hab]
-    _ = ∑ a : H.V, ∑ b : H.V, (num_edges H a b : ℤ) := by
+    _ = ∑ a : H.V, ∑ b : H.V, (numEdges H a b : ℤ) := by
       apply Finset.sum_congr rfl
       intro a _
       apply Finset.sum_congr rfl
@@ -227,12 +227,12 @@ theorem externalDirectedMultiplicity_eq_degreeSum
         have hqInt :
             (∑ x : G.V, ∑ y : G.V,
               if c.vertexMap x = a ∧ c.vertexMap y = b then
-                (num_edges G x y : ℤ) else 0) =
-              (num_edges H a b : ℤ) := by
+                (numEdges G x y : ℤ) else 0) =
+              (numEdges H a b : ℤ) := by
           exact_mod_cast hq.symm
         simpa [hab] using hqInt
-    _ = ∑ a : H.V, vertex_degree H a := by
-      simp only [vertex_degree]
+    _ = ∑ a : H.V, vertexDegree H a := by
+      simp only [vertexDegree]
 
 /-- Euler accounting in directed form.  The contracted internal multiplicity
 is twice the loss of edge occurrences. -/

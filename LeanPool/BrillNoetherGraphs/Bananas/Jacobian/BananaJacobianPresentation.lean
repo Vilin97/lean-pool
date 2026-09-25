@@ -31,9 +31,9 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 in the paper's presentation. -/
 def bananaCoordinateStep {g : ℕ} (B : Banana g) (alpha : Fin (g + 1)) :
     CFDiv B.graph :=
-  one_chip (strandVertex B alpha ⟨1, by
+  oneChip (strandVertex B alpha ⟨1, by
     have := B.length_pos alpha
-    omega⟩) - one_chip (leftEndpoint B)
+    omega⟩) - oneChip (leftEndpoint B)
 
 /-- The free coordinate-vector map `tphi` in the proof of Proposition 2.14. -/
 def bananaCoordinateDivisorHom {g : ℕ} (B : Banana g) :
@@ -61,8 +61,8 @@ group model used here.  The preceding degree lemma shows that its image lies
 in the degree-zero (Jacobian) component. -/
 def bananaCoordinateClassHom {g : ℕ} (B : Banana g) :
     (Fin (g + 1) → ℤ) →+
-      (CFDiv B.graph ⧸ principal_divisors B.graph) :=
-  (QuotientAddGroup.mk' (principal_divisors B.graph)).comp
+      (CFDiv B.graph ⧸ principalDivisors B.graph) :=
+  (QuotientAddGroup.mk' (principalDivisors B.graph)).comp
     (bananaCoordinateDivisorHom B)
 
 /-- The exact relation subgroup of the graph-level coordinate map.  Showing
@@ -76,7 +76,7 @@ def bananaCoordinateRelations {g : ℕ} (B : Banana g) :
 divisor classes. -/
 def bananaPresentedClassHom {g : ℕ} (B : Banana g) :
     ((Fin (g + 1) → ℤ) ⧸ bananaCoordinateRelations B) →+
-      (CFDiv B.graph ⧸ principal_divisors B.graph) :=
+      (CFDiv B.graph ⧸ principalDivisors B.graph) :=
   QuotientAddGroup.lift (bananaCoordinateRelations B)
     (bananaCoordinateClassHom B) (by
       intro a ha
@@ -121,10 +121,10 @@ section Generic
 
 private theorem linearEquiv_sub_pair {G : CFGraph}
     {A B C D : CFDiv G}
-    (hAC : linear_equiv G A C) (hBD : linear_equiv G B D) :
-    linear_equiv G (A - B) (C - D) := by
-  unfold linear_equiv at hAC hBD ⊢
-  convert (principal_divisors G).sub_mem hAC hBD using 1
+    (hAC : linearEquiv G A C) (hBD : linearEquiv G B D) :
+    linearEquiv G (A - B) (C - D) := by
+  unfold linearEquiv at hAC hBD ⊢
+  convert (principalDivisors G).sub_mem hAC hBD using 1
   all_goals abel
 
 end Generic
@@ -134,9 +134,9 @@ to the common right endpoint.  This is Equation `eq:multDiff` at `a=n_alpha`.
 -/
 theorem bananaCoordinateStep_length_linearEquiv_endpointDifference
     {g : ℕ} (B : Banana g) (alpha : Fin (g + 1)) :
-    linear_equiv B.graph
+    linearEquiv B.graph
       ((B.length alpha : ℤ) • bananaCoordinateStep B alpha)
-      (one_chip (rightEndpoint B) - one_chip (leftEndpoint B)) := by
+      (oneChip (rightEndpoint B) - oneChip (leftEndpoint B)) := by
   simpa [bananaCoordinateStep, strandVertex_length] using
     strand_prefix_linearEquiv B alpha
       (⟨B.length alpha, by omega⟩ : B.PathPosition alpha)
@@ -146,20 +146,20 @@ divisor. -/
 theorem bananaStrandLengthRelation_image_principal {g : ℕ} (B : Banana g)
     (beta : Fin (g + 1)) :
     bananaCoordinateDivisorHom B (bananaStrandLengthRelation B beta) ∈
-      principal_divisors B.graph := by
+      principalDivisors B.graph := by
   have h0 := bananaCoordinateStep_length_linearEquiv_endpointDifference B
     (0 : Fin (g + 1))
   have hBeta := bananaCoordinateStep_length_linearEquiv_endpointDifference B beta
   have hDifference := linearEquiv_sub_pair h0 hBeta
-  have hZero : linear_equiv B.graph
+  have hZero : linearEquiv B.graph
       ((B.length 0 : ℤ) • bananaCoordinateStep B 0 -
         (B.length beta : ℤ) • bananaCoordinateStep B beta) 0 := by
     simpa using hDifference
   have hNegative :
       0 - ((B.length 0 : ℤ) • bananaCoordinateStep B 0 -
         (B.length beta : ℤ) • bananaCoordinateStep B beta) ∈
-          principal_divisors B.graph := hZero
-  have hPositive := (principal_divisors B.graph).neg_mem hNegative
+          principalDivisors B.graph := hZero
+  have hPositive := (principalDivisors B.graph).neg_mem hNegative
   rw [bananaCoordinateDivisorHom_strandLengthRelation]
   convert hPositive using 1
   all_goals abel

@@ -293,7 +293,7 @@ have been decoded on a particular closed face. -/
 def rawChipDivisor
     (d : Utilities.Certificate.DegenerateSpec.DegSpec n p) (w : RichWitness)
     (decode : ℕ → Form → d.Vertex) : CFDiv d.graph :=
-  (w.chips.map fun chip => chip.2.2 • one_chip
+  (w.chips.map fun chip => chip.2.2 • oneChip
     (G := d.graph) (decode chip.1 chip.2.1)).sum
 
 /-- Pointwise coefficient formula for decoded raw chips.  The endpoint-specific
@@ -310,11 +310,11 @@ theorem rawChipDivisor_apply
   | nil => simp
   | cons chip chips ih =>
       simp only [List.map_cons, List.sum_cons]
-      change (chip.2.2 • one_chip (G := d.graph) (decode chip.1 chip.2.1)) vertex +
-        ((List.map (fun chip => chip.2.2 • one_chip
+      change (chip.2.2 • oneChip (G := d.graph) (decode chip.1 chip.2.1)) vertex +
+        ((List.map (fun chip => chip.2.2 • oneChip
           (G := d.graph) (decode chip.1 chip.2.1)) chips).sum) vertex = _
       rw [ih]
-      unfold one_chip
+      unfold oneChip
       simp [eq_comm]
 
 /-- Exact raw-list coefficient formula at an interior vertex of a closed
@@ -344,7 +344,7 @@ theorem deg_rawChipDivisor
     deg (w.rawChipDivisor d decode) =
       (w.chips.map fun chip => chip.2.2).sum := by
   have hsum : ∀ entries : List (ℕ × Form × ℤ),
-      deg (entries.map fun chip => chip.2.2 • one_chip
+      deg (entries.map fun chip => chip.2.2 • oneChip
         (G := d.graph) (decode chip.1 chip.2.1)).sum =
         (entries.map fun chip => chip.2.2).sum := by
     intro entries

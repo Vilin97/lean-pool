@@ -569,7 +569,7 @@ theorem card_incidentSlots {n p : ℕ} (core : Core n p)
 
 theorem slotValence_eq_vertex_degree {n p : ℕ} (spec : Spec n p) (v : Fin n) :
     ((slotValence spec.core v : ℕ) : ℤ)
-      = vertex_degree spec.graph (spec.coreVertex v) := by
+      = vertexDegree spec.graph (spec.coreVertex v) := by
   rw [slotValence_eq_sum, spec.vertex_degree_coreVertex_eq_incidentSlots v]
 
 /-! ## Reading off the shape of a reduced core -/
@@ -650,7 +650,7 @@ theorem sideOf_stepRight {n p : ℕ} (spec : Spec n p) (S : Finset (Fin n))
 /-- Cut connectedness of the subdivided graph implies cut connectedness of the
 core.  This is the converse of `graph_connected_of_coreConnected`. -/
 theorem core_connected_of_graph_connected {n p : ℕ} (spec : Spec n p)
-    (hConnected : graph_connected spec.graph) : spec.core.Connected := by
+    (hConnected : graphConnected spec.graph) : spec.core.Connected := by
   classical
   intro S hSplit
   by_contra hNone
@@ -921,7 +921,7 @@ theorem mult_eq_zero_of_structure {v w u : Fin N} (hNe : u ≠ w)
 /-- Two adjacent bivalent vertices would exhaust the graph, which has genus
 one. -/
 theorem partner_not_bivalent_of_genus_ne_one (hReduced : Reduced spec.core)
-    (hConnected : graph_connected spec.graph) {g : ℕ}
+    (hConnected : graphConnected spec.graph) {g : ℕ}
     (hGenus : genus spec.graph = g) (hGenus_ne_one : g ≠ 1)
     {v w : Fin N} (hvw : w ≠ v)
     (hVal : slotValence spec.core v = 2)
@@ -1002,7 +1002,7 @@ end Shape
 /-- **Shape of a reduced presentation.**  Every vertex of a reduced core is
 either stable or a bivalent marker attached to a single stable base. -/
 theorem exists_markedShapeAt {N P g : ℕ} (spec : Spec N P)
-    (hReduced : Reduced spec.core) (hConnected : graph_connected spec.graph)
+    (hReduced : Reduced spec.core) (hConnected : graphConnected spec.graph)
     (hGenus : genus spec.graph = g) (hGenus_ne_one : g ≠ 1)
     (hDegree : ∀ v : Fin N, 2 ≤ slotValence spec.core v) :
     Nonempty (MarkedShape spec) := by
@@ -1043,7 +1043,7 @@ theorem exists_markedShapeAt {N P g : ℕ} (spec : Spec N P)
 
 /-- The genus-four specialization of `exists_markedShapeAt`. -/
 theorem exists_markedShape {N P : ℕ} (spec : Spec N P)
-    (hReduced : Reduced spec.core) (hConnected : graph_connected spec.graph)
+    (hReduced : Reduced spec.core) (hConnected : graphConnected spec.graph)
     (hGenus : genus spec.graph = 4)
     (hDegree : ∀ v : Fin N, 2 ≤ slotValence spec.core v) :
     Nonempty (MarkedShape spec) :=
@@ -1081,7 +1081,7 @@ end MarkedShape
 genus-`g` graph is the loopless split of a valid pseudocore on at most
 `2 * (g - 1)` vertices. -/
 theorem pseudocorePresentation_of_markedShapeAt {N P g : ℕ} (spec : Spec N P)
-    (shape : MarkedShape spec) (hConnected : graph_connected spec.graph)
+    (shape : MarkedShape spec) (hConnected : graphConnected spec.graph)
     (hGenus : genus spec.graph = g) {G : CFGraph.{0}}
     (hG : Nonempty (LaplacianEquiv G spec.graph)) :
     ∃ (k : ℕ) (core : Pseudocore k) (split : core.SplitMetadata),
@@ -1381,7 +1381,7 @@ theorem pseudocorePresentation_of_markedShapeAt {N P g : ℕ} (spec : Spec N P)
 /-- The genus-four specialization of
 `pseudocorePresentation_of_markedShapeAt`. -/
 theorem pseudocorePresentation_of_markedShape {N P : ℕ} (spec : Spec N P)
-    (shape : MarkedShape spec) (hConnected : graph_connected spec.graph)
+    (shape : MarkedShape spec) (hConnected : graphConnected spec.graph)
     (hGenus : genus spec.graph = 4) {G : CFGraph.{0}}
     (hG : Nonempty (LaplacianEquiv G spec.graph)) :
     ∃ (k : ℕ) (core : Pseudocore k) (split : core.SplitMetadata),
@@ -1395,9 +1395,9 @@ theorem pseudocorePresentation_of_markedShape {N P : ℕ} (spec : Spec N P)
 Laplacian-equivalent to a positive subdivision of the loopless split of a
 valid pseudocore on at most `2(g-1)` base vertices. -/
 theorem pseudocorePresentation_of_leafless {g : ℕ} (G : CFGraph.{0})
-    (hConnected : graph_connected G) (hGenus : genus G = g)
+    (hConnected : graphConnected G) (hGenus : genus G = g)
     (hGenusLower : 2 ≤ g)
-    (hLeafless : ∀ vertex : G.V, vertex_degree G vertex ≠ 1) :
+    (hLeafless : ∀ vertex : G.V, vertexDegree G vertex ≠ 1) :
     ∃ (k : ℕ) (core : Pseudocore k) (split : core.SplitMetadata),
       k ≤ 2 * (g - 1) ∧ core.ValidAt g ∧
       PseudocoreSplitGlue.Compatible split ∧
@@ -1405,7 +1405,7 @@ theorem pseudocorePresentation_of_leafless {g : ℕ} (G : CFGraph.{0})
         spec.core = split.splitCore ∧
         Nonempty (LaplacianEquiv G spec.graph) := by
   classical
-  have hDeg : ∀ vertex : G.V, 2 ≤ vertex_degree G vertex := by
+  have hDeg : ∀ vertex : G.V, 2 ≤ vertexDegree G vertex := by
     intro vertex
     have hCard : (G.edges.card : ℤ) = (Fintype.card G.V : ℤ) + (g : ℤ) - 1 := by
       simp only [genus] at hGenus
@@ -1428,8 +1428,8 @@ theorem pseudocorePresentation_of_leafless {g : ℕ} (G : CFGraph.{0})
         ⟨vertex, other, by simp, by simpa [Ne.symm hOther]⟩
     have hInsideEq : inside = vertex := by simpa using hInside
     subst inside
-    have hPositive : 0 < vertex_degree G vertex := by
-      unfold vertex_degree
+    have hPositive : 0 < vertexDegree G vertex := by
+      unfold vertexDegree
       apply Finset.sum_pos'
       · intro neighbour _hNeighbour
         positivity
@@ -1442,7 +1442,7 @@ theorem pseudocorePresentation_of_leafless {g : ℕ} (G : CFGraph.{0})
   obtain ⟨reduction⟩ := hPresent
   have equivalence : LaplacianEquiv G spec.graph :=
     (UnitSubdivisionPresentation.laplacianEquiv G).trans reduction
-  have hSpecConnected : graph_connected spec.graph :=
+  have hSpecConnected : graphConnected spec.graph :=
     equivalence.graphConnected hConnected
   have hSpecGenus : genus spec.graph = g := by
     rw [equivalence.genus_eq, hGenus]
@@ -1465,14 +1465,14 @@ theorem pseudocorePresentation_of_leafless {g : ℕ} (G : CFGraph.{0})
 positive subdivision of the loopless split of a valid genus-five pseudocore
 on at most eight vertices. -/
 theorem pseudocorePresentation_genusFive (G : CFGraph.{0})
-    (hConnected : graph_connected G) (hGenus : genus G = 5)
-    (hLeafless : ∀ vertex : G.V, vertex_degree G vertex ≠ 1) :
+    (hConnected : graphConnected G) (hGenus : genus G = 5)
+    (hLeafless : ∀ vertex : G.V, vertexDegree G vertex ≠ 1) :
     ∃ (k : ℕ) (core : Pseudocore k) (split : core.SplitMetadata),
       k ≤ 8 ∧ core.ValidAt 5 ∧ PseudocoreSplitGlue.Compatible split ∧
       ∃ spec : Spec (k + core.loopCount) core.splitEdgeCount,
         spec.core = split.splitCore ∧ Nonempty (LaplacianEquiv G spec.graph) := by
   classical
-  have hDeg : ∀ vertex : G.V, 2 ≤ vertex_degree G vertex := by
+  have hDeg : ∀ vertex : G.V, 2 ≤ vertexDegree G vertex := by
     intro vertex
     have hCard : (G.edges.card : ℤ) = (Fintype.card G.V : ℤ) + 4 := by
       simp only [genus] at hGenus
@@ -1494,8 +1494,8 @@ theorem pseudocorePresentation_genusFive (G : CFGraph.{0})
         ⟨vertex, other, by simp, by simpa [Ne.symm hOther]⟩
     have hInsideEq : inside = vertex := by simpa using hInside
     subst inside
-    have hPositive : 0 < vertex_degree G vertex := by
-      unfold vertex_degree
+    have hPositive : 0 < vertexDegree G vertex := by
+      unfold vertexDegree
       apply Finset.sum_pos'
       · intro neighbour _hNeighbour
         positivity
@@ -1508,7 +1508,7 @@ theorem pseudocorePresentation_genusFive (G : CFGraph.{0})
   obtain ⟨reduction⟩ := hPresent
   have equivalence : LaplacianEquiv G spec.graph :=
     (UnitSubdivisionPresentation.laplacianEquiv G).trans reduction
-  have hSpecConnected : graph_connected spec.graph :=
+  have hSpecConnected : graphConnected spec.graph :=
     equivalence.graphConnected hConnected
   have hSpecGenus : genus spec.graph = 5 := by
     rw [equivalence.genus_eq, hGenus]

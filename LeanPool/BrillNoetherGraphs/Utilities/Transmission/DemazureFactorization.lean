@@ -43,10 +43,10 @@ noncomputable def simpleReflection (i : ℤ) : AspPerm :=
   split_ifs <;> omega
 
 @[simp] theorem simpleReflection_inv_set (i : ℤ) :
-    inv_set (simpleReflection i) = {⟨i, i + 1⟩} := by
+    invSet (simpleReflection i) = {⟨i, i + 1⟩} := by
   ext p
   rcases p with ⟨a, b⟩
-  simp only [inv_set, Set.mem_ofPred_eq, Set.mem_singleton_iff, Prod.mk.injEq]
+  simp only [invSet, Set.mem_ofPred_eq, Set.mem_singleton_iff, Prod.mk.injEq]
   rw [simpleReflection_apply, simpleReflection_apply]
   constructor
   · rintro ⟨hab, hlt⟩
@@ -90,9 +90,9 @@ private theorem mul_simple_apply (τ : AspPerm) (i n : ℤ) :
 /-- The nonexceptional inversions before and after right multiplication by an
 adjacent reflection are in canonical bijection. -/
 noncomputable def invSetEraseSimpleEquiv (τ : AspPerm) (i : ℤ) :
-    {p // p ∈ inv_set (AspPerm.mul τ (simpleReflection i)) \
+    {p // p ∈ invSet (AspPerm.mul τ (simpleReflection i)) \
       ({(i, i + 1)} : Set (ℤ × ℤ))} ≃
-      {p // p ∈ inv_set τ \ ({(i, i + 1)} : Set (ℤ × ℤ))} where
+      {p // p ∈ invSet τ \ ({(i, i + 1)} : Set (ℤ × ℤ))} where
   toFun p := by
     rcases p with ⟨⟨a, b⟩, hp⟩
     refine ⟨swapPair i (a, b), ?_⟩
@@ -125,10 +125,10 @@ noncomputable def invSetEraseSimpleEquiv (τ : AspPerm) (i : ℤ) :
 /-- Right multiplication by an adjacent reflection preserves finiteness of the
 inversion set. -/
 theorem finite_invSet_mul_simple_iff (τ : AspPerm) (i : ℤ) :
-    (inv_set (AspPerm.mul τ (simpleReflection i))).Finite ↔
-      (inv_set τ).Finite := by
-  let A : Set (ℤ × ℤ) := inv_set (AspPerm.mul τ (simpleReflection i))
-  let B : Set (ℤ × ℤ) := inv_set τ
+    (invSet (AspPerm.mul τ (simpleReflection i))).Finite ↔
+      (invSet τ).Finite := by
+  let A : Set (ℤ × ℤ) := invSet (AspPerm.mul τ (simpleReflection i))
+  let B : Set (ℤ × ℤ) := invSet τ
   let e : Set (ℤ × ℤ) := {(i, i + 1)}
   have hdiff : (A \ e).Finite ↔ (B \ e).Finite := by
     rw [Set.finite_def, Set.finite_def]
@@ -152,31 +152,31 @@ theorem finite_invSet_mul_simple_iff (τ : AspPerm) (i : ℤ) :
     exact Set.finite_singleton _
 
 /-- Finite inversion length. -/
-noncomputable def invLength (τ : AspPerm) : ℕ := (inv_set τ).ncard
+noncomputable def invLength (τ : AspPerm) : ℕ := (invSet τ).ncard
 
 private theorem exceptional_mem_invSet_mul_simple_iff (τ : AspPerm) (i : ℤ) :
-    (i, i + 1) ∈ inv_set (AspPerm.mul τ (simpleReflection i)) ↔
+    (i, i + 1) ∈ invSet (AspPerm.mul τ (simpleReflection i)) ↔
       τ i < τ (i + 1) := by
-  simp only [inv_set, Set.mem_ofPred_eq, mul_simple_apply]
+  simp only [invSet, Set.mem_ofPred_eq, mul_simple_apply]
   simp [simpleReflection_apply]
 
 private theorem exceptional_mem_invSet_iff (τ : AspPerm) (i : ℤ) :
-    (i, i + 1) ∈ inv_set τ ↔ τ (i + 1) < τ i := by
-  simp [inv_set]
+    (i, i + 1) ∈ invSet τ ↔ τ (i + 1) < τ i := by
+  simp [invSet]
 
 private theorem ncard_invSet_delete_simple_eq (τ : AspPerm) (i : ℤ) :
-    (inv_set (AspPerm.mul τ (simpleReflection i)) \
+    (invSet (AspPerm.mul τ (simpleReflection i)) \
       ({(i, i + 1)} : Set (ℤ × ℤ))).ncard =
-      (inv_set τ \ ({(i, i + 1)} : Set (ℤ × ℤ))).ncard := by
+      (invSet τ \ ({(i, i + 1)} : Set (ℤ × ℤ))).ncard := by
   exact Set.ncard_congr' (invSetEraseSimpleEquiv τ i)
 
 /-- Right multiplication by an adjacent reflection adds one inversion at an
 ascent. -/
 theorem invLength_mul_simple_of_ascent (τ : AspPerm) (i : ℤ)
-    (hfin : (inv_set τ).Finite) (hasc : τ i < τ (i + 1)) :
+    (hfin : (invSet τ).Finite) (hasc : τ i < τ (i + 1)) :
     invLength (AspPerm.mul τ (simpleReflection i)) = invLength τ + 1 := by
-  let A : Set (ℤ × ℤ) := inv_set (AspPerm.mul τ (simpleReflection i))
-  let B : Set (ℤ × ℤ) := inv_set τ
+  let A : Set (ℤ × ℤ) := invSet (AspPerm.mul τ (simpleReflection i))
+  let B : Set (ℤ × ℤ) := invSet τ
   let e : ℤ × ℤ := (i, i + 1)
   have hAfin : A.Finite := (finite_invSet_mul_simple_iff τ i).2 hfin
   have heA : e ∈ A := (exceptional_mem_invSet_mul_simple_iff τ i).2 hasc
@@ -194,10 +194,10 @@ theorem invLength_mul_simple_of_ascent (τ : AspPerm) (i : ℤ)
 /-- Right multiplication by an adjacent reflection removes one inversion at a
 descent, stated additively to avoid truncated subtraction. -/
 theorem invLength_mul_simple_add_one_of_descent (τ : AspPerm) (i : ℤ)
-    (hfin : (inv_set τ).Finite) (hdesc : τ (i + 1) < τ i) :
+    (hfin : (invSet τ).Finite) (hdesc : τ (i + 1) < τ i) :
     invLength (AspPerm.mul τ (simpleReflection i)) + 1 = invLength τ := by
-  let A : Set (ℤ × ℤ) := inv_set (AspPerm.mul τ (simpleReflection i))
-  let B : Set (ℤ × ℤ) := inv_set τ
+  let A : Set (ℤ × ℤ) := invSet (AspPerm.mul τ (simpleReflection i))
+  let B : Set (ℤ × ℤ) := invSet τ
   let e : ℤ × ℤ := (i, i + 1)
   have heA : e ∉ A := by
     rw [exceptional_mem_invSet_mul_simple_iff]
@@ -245,7 +245,7 @@ private theorem exists_adjacent_descent_nat
 
 /-- Every inversion contains an adjacent descent. -/
 theorem exists_adjacent_descent_of_mem_invSet (τ : AspPerm) {a b : ℤ}
-    (hab : (a, b) ∈ inv_set τ) :
+    (hab : (a, b) ∈ invSet τ) :
     ∃ i : ℤ, a ≤ i ∧ i < b ∧ τ (i + 1) < τ i := by
   rcases hab with ⟨hab, hinv⟩
   let n := (b - a).toNat
@@ -262,9 +262,9 @@ theorem exists_adjacent_descent_of_mem_invSet (τ : AspPerm) {a b : ℤ}
 
 /-- Positive finite inversion length gives an adjacent descent. -/
 theorem exists_adjacent_descent_of_invLength_pos (τ : AspPerm)
-    (hfin : (inv_set τ).Finite) (hpos : 0 < invLength τ) :
+    (hfin : (invSet τ).Finite) (hpos : 0 < invLength τ) :
     ∃ i : ℤ, τ (i + 1) < τ i := by
-  have hnonempty : (inv_set τ).Nonempty :=
+  have hnonempty : (invSet τ).Nonempty :=
     (Set.ncard_pos hfin).mp hpos
   rcases hnonempty with ⟨⟨a, b⟩, hab⟩
   rcases exists_adjacent_descent_of_mem_invSet τ hab with ⟨i, -, -, hi⟩
@@ -287,14 +287,14 @@ private theorem star_simple_of_descent (τ : AspPerm) (i : ℤ)
 /-- A positive-length finite ASP permutation is a shorter permutation
 Demazure-multiplied on the right by one adjacent reflection. -/
 theorem exists_right_simple_factor_of_invLength_pos (τ : AspPerm)
-    (hfin : (inv_set τ).Finite) (hpos : 0 < invLength τ) :
+    (hfin : (invSet τ).Finite) (hpos : 0 < invLength τ) :
     ∃ τ' i,
       τ = τ' ⋆ simpleReflection i ∧
-      (inv_set τ').Finite ∧
+      (invSet τ').Finite ∧
       invLength τ' + 1 = invLength τ := by
   rcases exists_adjacent_descent_of_invLength_pos τ hfin hpos with ⟨i, hi⟩
   let τ' := AspPerm.mul τ (simpleReflection i)
-  have hτ'fin : (inv_set τ').Finite :=
+  have hτ'fin : (invSet τ').Finite :=
     (finite_invSet_mul_simple_iff τ i).2 hfin
   have hlen : invLength τ' + 1 = invLength τ :=
     invLength_mul_simple_add_one_of_descent τ i hfin hi
@@ -310,11 +310,11 @@ theorem exists_right_simple_factor_of_invLength_pos (τ : AspPerm)
 
 /-- Peel exactly `k` inversions into a zero-shift right factor. -/
 theorem exists_star_factorization_right_length (τ : AspPerm)
-    (hfin : (inv_set τ).Finite) (k : ℕ) (hk : k ≤ invLength τ) :
+    (hfin : (invSet τ).Finite) (k : ℕ) (hk : k ≤ invLength τ) :
     ∃ α β : AspPerm,
       τ = α ⋆ β ∧
-      (inv_set α).Finite ∧
-      (inv_set β).Finite ∧
+      (invSet α).Finite ∧
+      (invSet β).Finite ∧
       invLength α = invLength τ - k ∧
       invLength β = k ∧
       β.χ = 0 := by
@@ -354,8 +354,8 @@ theorem exists_star_factorization_right_length (τ : AspPerm)
           _ = τ' := hfac.symm
       have hβstar := star_simple_of_ascent β' i hβascent
       let β := β' ⋆ simpleReflection i
-      have hβfin : (inv_set β).Finite := by
-        change (inv_set (β' ⋆ simpleReflection i)).Finite
+      have hβfin : (invSet β).Finite := by
+        change (invSet (β' ⋆ simpleReflection i)).Finite
         rw [hβstar]
         exact (finite_invSet_mul_simple_iff β' i).2 hβ'fin
       have hβlen : invLength β = k + 1 := by
@@ -375,11 +375,11 @@ theorem exists_star_factorization_right_length (τ : AspPerm)
 
 /-- Split a finite ASP permutation at every prescribed inversion-length cut. -/
 theorem exists_star_factorization_invLength (τ : AspPerm)
-    (hfin : (inv_set τ).Finite) (m : ℕ) :
+    (hfin : (invSet τ).Finite) (m : ℕ) :
     ∃ α β : AspPerm,
       τ = α ⋆ β ∧
-      (inv_set α).Finite ∧
-      (inv_set β).Finite ∧
+      (invSet α).Finite ∧
+      (invSet β).Finite ∧
       invLength α = min m (invLength τ) ∧
       invLength β = invLength τ - min m (invLength τ) ∧
       β.χ = 0 := by

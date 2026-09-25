@@ -29,13 +29,13 @@ so it is unchanged by complementation. -/
 theorem cutMultiplicity_compl (H : CFGraph.{u}) (S : Finset H.V) :
     cutMultiplicity H S = cutMultiplicity H Sᶜ := by
   classical
-  have hLeft : cutMultiplicity H S = ∑ v ∈ S, ∑ w ∈ Sᶜ, (num_edges H v w : ℤ) := by
+  have hLeft : cutMultiplicity H S = ∑ v ∈ S, ∑ w ∈ Sᶜ, (numEdges H v w : ℤ) := by
     refine Finset.sum_congr rfl fun v _ => ?_
     rw [outdeg_S_eq_sum_filter]
     refine Finset.sum_congr ?_ fun _ _ => rfl
     ext w
     simp
-  have hRight : cutMultiplicity H Sᶜ = ∑ v ∈ Sᶜ, ∑ w ∈ S, (num_edges H v w : ℤ) := by
+  have hRight : cutMultiplicity H Sᶜ = ∑ v ∈ Sᶜ, ∑ w ∈ S, (numEdges H v w : ℤ) := by
     refine Finset.sum_congr rfl fun v _ => ?_
     rw [outdeg_S_eq_sum_filter]
     refine Finset.sum_congr ?_ fun _ _ => rfl
@@ -70,14 +70,14 @@ to a non-glue right vertex, and the cut forbids those. -/
 private theorem outdeg_S_leftGraph_eq
     (S : Finset cut.leftGraph.V) (hGlue : cut.leftGlue ∉ S)
     (v : cut.leftGraph.V) (hv : v ∈ S) :
-    outdeg_S cut.leftGraph S v = outdeg_S K (S.image Subtype.val) v.val := by
+    outdegreeSet cut.leftGraph S v = outdegreeSet K (S.image Subtype.val) v.val := by
   classical
   have hMem := cut.mem_image_val_iff S
   have hvGlue : v.val ≠ cut.glue := by
     intro hEq
     exact hGlue ((Subtype.ext hEq : v = cut.leftGlue) ▸ hv)
   set F : K.V → ℤ :=
-    fun b => if b ∈ S.image Subtype.val then 0 else (num_edges K v.val b : ℤ)
+    fun b => if b ∈ S.image Subtype.val then 0 else (numEdges K v.val b : ℤ)
     with hF
   have hZeroOutside : ∀ b : K.V, b ∉ cut.left → F b = 0 := by
     intro b hb
@@ -88,7 +88,7 @@ private theorem outdeg_S_leftGraph_eq
     have hbGlue : b ≠ cut.glue := fun hEq => hb (hEq ▸ cut.glue_mem_left)
     have hNum := cut.no_cross v.val v.property hvGlue b hbRight hbGlue
     simp [hF, hNum]
-  have hRight : outdeg_S K (S.image Subtype.val) v.val = ∑ b : K.V, F b := by
+  have hRight : outdegreeSet K (S.image Subtype.val) v.val = ∑ b : K.V, F b := by
     rw [outdeg_S_eq_sum_filter, Finset.sum_filter]
     refine Finset.sum_congr rfl fun b _ => ?_
     by_cases hb : b ∈ S.image Subtype.val
@@ -104,10 +104,10 @@ private theorem outdeg_S_leftGraph_eq
     simp only [Finset.mem_univ, true_iff]
     exact Finset.mem_attach _ _
   have hLeft :
-      outdeg_S cut.leftGraph S v = ∑ w ∈ cut.left.attach, F w.val := by
+      outdegreeSet cut.leftGraph S v = ∑ w ∈ cut.left.attach, F w.val := by
     rw [outdeg_S_eq_sum_filter, Finset.sum_filter, hUniv]
     refine Finset.sum_congr rfl fun w _ => ?_
-    have hNum : num_edges cut.leftGraph v w = num_edges K v.val w.val :=
+    have hNum : numEdges cut.leftGraph v w = numEdges K v.val w.val :=
       num_edges_inducedSubgraph K cut.left cut.left_nonempty v w
     by_cases hw : w ∈ S
     · rw [if_neg (fun h => h hw)]
@@ -126,7 +126,7 @@ private theorem cutMultiplicity_leftGraph_eq
   classical
   have hImage :
       cutMultiplicity K (S.image Subtype.val) =
-        ∑ v ∈ S, outdeg_S K (S.image Subtype.val) v.val := by
+        ∑ v ∈ S, outdegreeSet K (S.image Subtype.val) v.val := by
     refine Finset.sum_image ?_
     intro a _ b _ hEq
     exact Subtype.ext hEq

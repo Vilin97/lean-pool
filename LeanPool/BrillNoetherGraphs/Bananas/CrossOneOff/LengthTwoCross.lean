@@ -46,19 +46,19 @@ theorem semibreakDivisor_replace_chip {g : ℕ} (B : Banana g)
     (β : Fin (g + 1)) (oldChip newChip : Fin (B.length β - 1)) :
     semibreakDivisor B (replaceSemibreakChip B chips β (some newChip)) =
       semibreakDivisor B (replaceSemibreakChip B chips β (some oldChip)) +
-        one_chip (B.interiorVertex β newChip) -
-        one_chip (B.interiorVertex β oldChip) := by
+        oneChip (B.interiorVertex β newChip) -
+        oneChip (B.interiorVertex β oldChip) := by
   classical
   funext v
   rcases v with v | ⟨γ, offset⟩
-  · simp [semibreakDivisor, one_chip,
+  · simp [semibreakDivisor, oneChip,
       SubdivisionGraph.Spec.interiorVertex]
   · by_cases hγ : γ = β
     · subst γ
-      simp [semibreakDivisor, replaceSemibreakChip, one_chip,
+      simp [semibreakDivisor, replaceSemibreakChip, oneChip,
         SubdivisionGraph.Spec.interiorVertex]
       split_ifs <;> omega
-    · simp [semibreakDivisor, replaceSemibreakChip, hγ, one_chip,
+    · simp [semibreakDivisor, replaceSemibreakChip, hγ, oneChip,
         SubdivisionGraph.Spec.interiorVertex]
 
 theorem semibreakDivisor_remove_chip {g : ℕ} (B : Banana g)
@@ -66,18 +66,18 @@ theorem semibreakDivisor_remove_chip {g : ℕ} (B : Banana g)
     (β : Fin (g + 1)) (oldChip : Fin (B.length β - 1)) :
     semibreakDivisor B (replaceSemibreakChip B chips β none) =
       semibreakDivisor B (replaceSemibreakChip B chips β (some oldChip)) -
-        one_chip (B.interiorVertex β oldChip) := by
+        oneChip (B.interiorVertex β oldChip) := by
   classical
   funext v
   rcases v with v | ⟨γ, offset⟩
-  · simp [semibreakDivisor, one_chip,
+  · simp [semibreakDivisor, oneChip,
       SubdivisionGraph.Spec.interiorVertex]
   · by_cases hγ : γ = β
     · subst γ
-      simp [semibreakDivisor, replaceSemibreakChip, one_chip,
+      simp [semibreakDivisor, replaceSemibreakChip, oneChip,
         SubdivisionGraph.Spec.interiorVertex]
       split_ifs <;> omega
-    · simp [semibreakDivisor, replaceSemibreakChip, hγ, one_chip,
+    · simp [semibreakDivisor, replaceSemibreakChip, hγ, oneChip,
         SubdivisionGraph.Spec.interiorVertex]
 
 theorem isSemibreak_remove_chip {g : ℕ} (B : Banana g)
@@ -93,7 +93,7 @@ theorem isSemibreak_remove_interior_chip_of_eq_one {g : ℕ} (B : Banana g)
     (E : CFDiv B.graph) (hE : IsSemibreak B E)
     (β : Fin (g + 1)) (offset : Fin (B.length β - 1))
     (hmem : E (B.interiorVertex β offset) = 1) :
-    IsSemibreak (B := B) (E - one_chip (B.interiorVertex β offset)) := by
+    IsSemibreak (B := B) (E - oneChip (B.interiorVertex β offset)) := by
   rcases hE with ⟨chips, hchips⟩
   subst E
   have hchip : chips β = some offset := by
@@ -117,7 +117,7 @@ theorem isSemibreak_remove_midpoint_chip {g : ℕ} (B : Banana g)
     (hα : B.length α = 2) (hi : i.val = 1)
     (hmem : E (strandVertex B α i) = 1) :
     IsSemibreak (B := B)
-      (E - one_chip (strandVertex B α i)) := by
+      (E - oneChip (strandVertex B α i)) := by
   rcases hE with ⟨chips, hchips⟩
   have hmid : strandVertex B α i = B.interiorVertex α ⟨0, by omega⟩ := by
     unfold strandVertex
@@ -160,40 +160,40 @@ theorem rank_bananaNormalForm_remove_midpoint_chip
     (hmem : E (strandVertex B α i) = 1) :
     rank B.graph (bananaNormalForm B a b E) =
       rank B.graph (bananaNormalForm B a b E -
-        one_chip (strandVertex B α i)) := by
+        oneChip (strandVertex B α i)) := by
   have hE' := isSemibreak_remove_midpoint_chip B E hE α i hα hi hmem
-  have hdeg' : b + deg (E - one_chip (strandVertex B α i)) ≤ (g : ℤ) := by
+  have hdeg' : b + deg (E - oneChip (strandVertex B α i)) ≤ (g : ℤ) := by
     rw [deg.map_sub, deg_one_chip]
     omega
-  have hdeg_remove : deg (E - one_chip (strandVertex B α i)) = deg E - 1 := by
+  have hdeg_remove : deg (E - oneChip (strandVertex B α i)) = deg E - 1 := by
     rw [deg.map_sub, deg_one_chip]
   have hrewrite : bananaNormalForm B a b E -
-      one_chip (strandVertex B α i) =
-      bananaNormalForm B a b (E - one_chip (strandVertex B α i)) := by
+      oneChip (strandVertex B α i) =
+      bananaNormalForm B a b (E - oneChip (strandVertex B α i)) := by
     unfold bananaNormalForm
     abel
   rw [hrewrite]
   rw [rank_bananaNormalForm B a b E hE (by omega) hb
     (by omega : b + deg E ≤ (g : ℤ))]
-  rw [rank_bananaNormalForm B a b (E - one_chip (strandVertex B α i)) hE'
+  rw [rank_bananaNormalForm B a b (E - oneChip (strandVertex B α i)) hE'
     (by omega) hb hdeg']
   have hmin : min a b ≥ 0 := by omega
   have htop : a + b + deg E - (g : ℤ) ≤ min a b := by omega
-  have htop' : a + b + deg (E - one_chip (strandVertex B α i)) -
+  have htop' : a + b + deg (E - oneChip (strandVertex B α i)) -
       (g : ℤ) ≤ min a b := by
     rw [hdeg_remove]
     omega
   rw [max_eq_left htop, max_eq_left htop']
 
 noncomputable def basePointDrop (M : TwiceMarked) (D : CFDiv M.graph) : ℤ :=
-  rank M.graph D - rank M.graph (D - one_chip M.u)
+  rank M.graph D - rank M.graph (D - oneChip M.u)
 
 /-! A convenient difference form of the path-pair sliding identities. -/
 
 theorem linear_equiv_rearrange_pair {G : CFGraph} {A B C D : CFDiv G}
-    (h : linear_equiv G (A + B) (C + D)) :
-    linear_equiv G (A - C) (D - B) := by
-  unfold linear_equiv at h ⊢
+    (h : linearEquiv G (A + B) (C + D)) :
+    linearEquiv G (A - C) (D - B) := by
+  unfold linearEquiv at h ⊢
   convert h using 1 ; abel
 
 theorem path_pair_linearEquiv_tail_sum_sub
@@ -201,11 +201,11 @@ theorem path_pair_linearEquiv_tail_sum_sub
     (i k : B.PathPosition α)
     (hi : 0 < i.val) (hk : 0 < k.val)
     (hsum : i.val + k.val < B.length α) :
-    linear_equiv B.graph
-      (one_chip (B.pathVertex α i) -
-        one_chip (B.coreVertex (B.core.tail α)))
-      (one_chip (B.pathVertex α ⟨i.val + k.val, by omega⟩) -
-        one_chip (B.pathVertex α k)) := by
+    linearEquiv B.graph
+      (oneChip (B.pathVertex α i) -
+        oneChip (B.coreVertex (B.core.tail α)))
+      (oneChip (B.pathVertex α ⟨i.val + k.val, by omega⟩) -
+        oneChip (B.pathVertex α k)) := by
   apply linear_equiv_rearrange_pair
   exact path_pair_linearEquiv_tail_sum B α i k hi hk hsum
 
@@ -214,22 +214,22 @@ theorem path_pair_linearEquiv_head_excess_sub
     (i k : B.PathPosition α)
     (hi : i.val < B.length α) (hk : k.val < B.length α)
     (hsum : B.length α < i.val + k.val) :
-    linear_equiv B.graph
-      (one_chip (B.pathVertex α i) -
-        one_chip (B.coreVertex (B.core.head α)))
-      (one_chip (B.pathVertex α
+    linearEquiv B.graph
+      (oneChip (B.pathVertex α i) -
+        oneChip (B.coreVertex (B.core.head α)))
+      (oneChip (B.pathVertex α
           ⟨i.val + k.val - B.length α, by omega⟩) -
-        one_chip (B.pathVertex α k)) := by
-  unfold linear_equiv
+        oneChip (B.pathVertex α k)) := by
+  unfold linearEquiv
   have h := path_pair_linearEquiv_head_excess B α i k hi hk hsum
-  unfold linear_equiv at h
+  unfold linearEquiv at h
   convert h using 1 ; abel
 
 theorem rankDelta_eq_basePointDrop_sub (M : TwiceMarked) (D : CFDiv M.graph) :
     rankDelta M D =
-      basePointDrop M D - basePointDrop M (D - one_chip M.v) := by
-  have hswap : D - one_chip M.u - one_chip M.v =
-      D - one_chip M.v - one_chip M.u := by abel
+      basePointDrop M D - basePointDrop M (D - oneChip M.v) := by
+  have hswap : D - oneChip M.u - oneChip M.v =
+      D - oneChip M.v - oneChip M.u := by abel
   unfold rankDelta basePointDrop
   rw [hswap]
   ring
@@ -237,8 +237,8 @@ theorem rankDelta_eq_basePointDrop_sub (M : TwiceMarked) (D : CFDiv M.graph) :
 theorem two_smul_midpoint_linearEquiv_endpoints {g : ℕ} (B : Banana g)
     (α : Fin (g + 1)) (i : B.PathPosition α)
     (hα : B.length α = 2) (hi : i.val = 1) :
-    linear_equiv B.graph ((2 : ℤ) • one_chip (strandVertex B α i))
-      (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) := by
+    linearEquiv B.graph ((2 : ℤ) • oneChip (strandVertex B α i))
+      (oneChip (leftEndpoint B) + oneChip (rightEndpoint B)) := by
   have hi' : i = ⟨1, by omega⟩ := by
     apply Fin.ext
     exact hi
@@ -251,7 +251,7 @@ theorem two_smul_midpoint_linearEquiv_endpoints {g : ℕ} (B : Banana g)
 
 theorem deg_canonical_dual {g : ℕ} (B : Banana g) (u v : B.graph.V)
     (D : CFDiv B.graph) :
-    deg (canonical_divisor B.graph + one_chip u + one_chip v - D) =
+    deg (canonicalDivisor B.graph + oneChip u + oneChip v - D) =
       2 * (g : ℤ) - deg D := by
   rw [deg.map_sub, deg.map_add, deg.map_add, degree_of_canonical_divisor,
     deg_one_chip, deg_one_chip, B.genus_graph]

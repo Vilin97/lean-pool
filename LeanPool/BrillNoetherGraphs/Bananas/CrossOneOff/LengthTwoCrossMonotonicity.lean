@@ -21,7 +21,7 @@ All divisor algebra used below is proved once in the `Generic` section, for an
 abstract `CFGraph` and abstract divisors.  This is a performance requirement,
 not a stylistic preference.  `change`, `convert` and `abel` applied to divisors
 of a *concrete* banana graph let the unifier fall back on comparing divisors
-pointwise: it then unfolds `one_chip` into `if v = w then 1 else 0` and starts
+pointwise: it then unfolds `oneChip` into `if v = w then 1 else 0` and starts
 evaluating `DecidableEq` on the subdivision vertex type (a nested `Sum` of
 `Fin`s built out of `pathVertex`/`strandVertex` dite-chains).  A single such
 `change` costs minutes.  With abstract divisors the same steps are instant, and
@@ -39,9 +39,9 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 theorem basePointDrop_nonneg (M : TwiceMarked) (D : CFDiv M.graph) :
     0 ≤ basePointDrop M D := by
   unfold basePointDrop
-  have h := rank_add_one_chip_ge (D - one_chip M.u) M.u
-    (rank M.graph (D - one_chip M.u)) le_rfl
-  have heq : D - one_chip M.u + one_chip M.u = D := by abel
+  have h := rank_add_one_chip_ge (D - oneChip M.u) M.u
+    (rank M.graph (D - oneChip M.u)) le_rfl
+  have heq : D - oneChip M.u + oneChip M.u = D := by abel
   rw [heq] at h
   omega
 
@@ -64,7 +64,7 @@ variable {G : CFGraph}
 /-- `basePointDrop` of an explicitly marked graph, with the structure
 projections already reduced away. -/
 theorem basePointDrop_mark (u v : G.V) (D : CFDiv G) :
-    basePointDrop (mark G u v) D = rank G D - rank G (D - one_chip u) := rfl
+    basePointDrop (mark G u v) D = rank G D - rank G (D - oneChip u) := rfl
 
 theorem basePointDrop_mark_nonneg (u v : G.V) (D : CFDiv G) :
     0 ≤ basePointDrop (mark G u v) D :=
@@ -77,57 +77,57 @@ theorem basePointDrop_mark_le_one (u v : G.V) (D : CFDiv G) :
 theorem rankDelta_mark_eq_basePointDrop_sub (u v : G.V) (D : CFDiv G) :
     rankDelta (mark G u v) D =
       basePointDrop (mark G u v) D -
-        basePointDrop (mark G u v) (D - one_chip v) :=
+        basePointDrop (mark G u v) (D - oneChip v) :=
   rankDelta_eq_basePointDrop_sub (mark G u v) D
 
 theorem rankDelta_mark_eq_of_linearEquiv (u v : G.V) {D D' : CFDiv G}
-    (h : linear_equiv G D D') :
+    (h : linearEquiv G D D') :
     rankDelta (mark G u v) D = rankDelta (mark G u v) D' :=
   rankDelta_eq_of_linearEquiv (M := mark G u v) h
 
-theorem rankDelta_mark_canonical_dual (u v : G.V) (hconn : _root_.graph_connected G)
+theorem rankDelta_mark_canonical_dual (u v : G.V) (hconn : _root_.graphConnected G)
     (D : CFDiv G) :
     rankDelta (mark G u v) D =
       rankDelta (mark G u v)
-        (canonical_divisor G + one_chip u + one_chip v - D) :=
+        (canonicalDivisor G + oneChip u + oneChip v - D) :=
   rankDelta_canonical_dual (mark G u v) hconn D
 
 theorem rankDelta_mark_neg_iff_rank_pattern (u v : G.V) (D : CFDiv G) :
     rankDelta (mark G u v) D < 0 ↔
-      rank G D = rank G (D - one_chip u) ∧
-      rank G D = rank G (D - one_chip v) ∧
-      rank G D = rank G (D - one_chip u - one_chip v) + 1 :=
+      rank G D = rank G (D - oneChip u) ∧
+      rank G D = rank G (D - oneChip v) ∧
+      rank G D = rank G (D - oneChip u - oneChip v) + 1 :=
   rankDelta_neg_iff_rank_pattern (mark G u v) D
 
 /-- Linear equivalence is stable under subtracting a fixed divisor. -/
 theorem linear_equiv_sub_fixed_right {D D' : CFDiv G} (C : CFDiv G)
-    (h : linear_equiv G D D') : linear_equiv G (D - C) (D' - C) := by
-  unfold linear_equiv at h ⊢
+    (h : linearEquiv G D D') : linearEquiv G (D - C) (D' - C) := by
+  unfold linearEquiv at h ⊢
   have hEq : D' - C - (D - C) = D' - D := by abel
   rw [hEq]
   exact h
 
 theorem basePointDrop_mark_eq_zero_of_rank_eq (u v : G.V) {D : CFDiv G}
-    (h : rank G D = rank G (D - one_chip u)) :
+    (h : rank G D = rank G (D - oneChip u)) :
     basePointDrop (mark G u v) D = 0 := by
   rw [basePointDrop_mark, h, sub_self]
 
 /-- The workhorse: to see that a divisor is not a base point for `u`, move it
 by a linear equivalence to a divisor where the rank comparison is known. -/
 theorem basePointDrop_mark_eq_zero_of_linear_equiv (u v : G.V) {D D' : CFDiv G}
-    (hEquiv : linear_equiv G D D')
-    (hRank : rank G D' = rank G (D' - one_chip u)) :
+    (hEquiv : linearEquiv G D D')
+    (hRank : rank G D' = rank G (D' - oneChip u)) :
     basePointDrop (mark G u v) D = 0 := by
   refine basePointDrop_mark_eq_zero_of_rank_eq u v ?_
   rw [rank_eq_of_linear_equiv G hEquiv,
-    rank_eq_of_linear_equiv G (linear_equiv_sub_fixed_right (one_chip u) hEquiv),
+    rank_eq_of_linear_equiv G (linear_equiv_sub_fixed_right (oneChip u) hEquiv),
     hRank]
 
 /-- The two endpoints play symmetric roles in the reflection identity. -/
 theorem linear_equiv_endpoint_swap {L R P P' : CFDiv G}
-    (h : linear_equiv G (L + R) (P + P')) :
-    linear_equiv G (R + L) (P + P') := by
-  unfold linear_equiv at h ⊢
+    (h : linearEquiv G (L + R) (P + P')) :
+    linearEquiv G (R + L) (P + P') := by
+  unfold linearEquiv at h ⊢
   have hEq : P + P' - (R + L) = P + P' - (L + R) := by abel
   rw [hEq]
   exact h
@@ -135,11 +135,11 @@ theorem linear_equiv_endpoint_swap {L R P P' : CFDiv G}
 /-- Reflection in the strand midpoint followed by a slide of the old chip
 towards the tail endpoint `L`. -/
 theorem linear_equiv_pair_of_reflect_slide {L R P P' Q X : CFDiv G}
-    (hReflect : linear_equiv G (L + R) (P + P'))
-    (hSlide : linear_equiv G (Q + P') (L + X)) :
-    linear_equiv G (R + Q) (P + X) := by
-  unfold linear_equiv at hReflect hSlide ⊢
-  have h := (principal_divisors G).add_mem hReflect hSlide
+    (hReflect : linearEquiv G (L + R) (P + P'))
+    (hSlide : linearEquiv G (Q + P') (L + X)) :
+    linearEquiv G (R + Q) (P + X) := by
+  unfold linearEquiv at hReflect hSlide ⊢
+  have h := (principalDivisors G).add_mem hReflect hSlide
   have hEq : P + X - (R + Q) = P + P' - (L + R) + (L + X - (Q + P')) := by abel
   rw [hEq]
   exact h
@@ -147,11 +147,11 @@ theorem linear_equiv_pair_of_reflect_slide {L R P P' Q X : CFDiv G}
 /-- Variant of `linear_equiv_pair_of_reflect_slide` for the head-excess slide,
 whose statement lists the endpoint chip second. -/
 theorem linear_equiv_pair_of_reflect_slide' {L R P P' Q X : CFDiv G}
-    (hReflect : linear_equiv G (L + R) (P + P'))
-    (hSlide : linear_equiv G (Q + P') (X + L)) :
-    linear_equiv G (R + Q) (P + X) := by
-  unfold linear_equiv at hReflect hSlide ⊢
-  have h := (principal_divisors G).add_mem hReflect hSlide
+    (hReflect : linearEquiv G (L + R) (P + P'))
+    (hSlide : linearEquiv G (Q + P') (X + L)) :
+    linearEquiv G (R + Q) (P + X) := by
+  unfold linearEquiv at hReflect hSlide ⊢
+  have h := (principalDivisors G).add_mem hReflect hSlide
   have hEq : P + X - (R + Q) = P + P' - (L + R) + (X + L - (Q + P')) := by abel
   rw [hEq]
   exact h
@@ -159,11 +159,11 @@ theorem linear_equiv_pair_of_reflect_slide' {L R P P' Q X : CFDiv G}
 /-- Boundary case: the old chip and the reflected mark are themselves a
 reflected pair, so both endpoint chips cancel. -/
 theorem linear_equiv_of_reflect_pair {L R P P' Q : CFDiv G}
-    (hReflect : linear_equiv G (L + R) (P + P'))
-    (hPair : linear_equiv G (L + R) (Q + P')) :
-    linear_equiv G Q P := by
-  unfold linear_equiv at hReflect hPair ⊢
-  have h := (principal_divisors G).sub_mem hReflect hPair
+    (hReflect : linearEquiv G (L + R) (P + P'))
+    (hPair : linearEquiv G (L + R) (Q + P')) :
+    linearEquiv G Q P := by
+  unfold linearEquiv at hReflect hPair ⊢
+  have h := (principalDivisors G).sub_mem hReflect hPair
   have hEq : P - Q = P + P' - (L + R) - (Q + P' - (L + R)) := by abel
   rw [hEq]
   exact h
@@ -171,10 +171,10 @@ theorem linear_equiv_of_reflect_pair {L R P P' Q : CFDiv G}
 /-- Normal-form bookkeeping: paying one chip at `R` moves the deleted mark `P`
 to the new slot `X` and removes the old chip `Q`. -/
 theorem linear_equiv_normalForm_sub_right {L R P Q X E : CFDiv G} (a b : ℤ)
-    (h : linear_equiv G (R + Q) (P + X)) :
-    linear_equiv G (a • L + b • R + E - P)
+    (h : linearEquiv G (R + Q) (P + X)) :
+    linearEquiv G (a • L + b • R + E - P)
       (a • L + (b - 1) • R + (E + X - Q)) := by
-  unfold linear_equiv at h ⊢
+  unfold linearEquiv at h ⊢
   have hsmul : (b - 1) • R = b • R - R := by rw [sub_zsmul, one_zsmul, sub_eq_add_neg]
   rw [hsmul]
   have hEq : a • L + (b • R - R) + (E + X - Q) - (a • L + b • R + E - P)
@@ -184,10 +184,10 @@ theorem linear_equiv_normalForm_sub_right {L R P Q X E : CFDiv G} (a b : ℤ)
 
 /-- Mirror image of `linear_equiv_normalForm_sub_right`. -/
 theorem linear_equiv_normalForm_sub_left {L R P Q X E : CFDiv G} (a b : ℤ)
-    (h : linear_equiv G (L + Q) (P + X)) :
-    linear_equiv G (a • L + b • R + E - P)
+    (h : linearEquiv G (L + Q) (P + X)) :
+    linearEquiv G (a • L + b • R + E - P)
       ((a - 1) • L + b • R + (E + X - Q)) := by
-  unfold linear_equiv at h ⊢
+  unfold linearEquiv at h ⊢
   have hsmul : (a - 1) • L = a • L - L := by rw [sub_zsmul, one_zsmul, sub_eq_add_neg]
   rw [hsmul]
   have hEq : a • L - L + b • R + (E + X - Q) - (a • L + b • R + E - P)
@@ -198,10 +198,10 @@ theorem linear_equiv_normalForm_sub_left {L R P Q X E : CFDiv G} (a b : ℤ)
 /-- Reflection alone: the deleted mark `P` is replaced by its mirror `P'` at
 the cost of one chip at each endpoint. -/
 theorem linear_equiv_normalForm_sub_both {L R P P' E : CFDiv G} (a b : ℤ)
-    (h : linear_equiv G (L + R) (P + P')) :
-    linear_equiv G (a • L + b • R + E - P)
+    (h : linearEquiv G (L + R) (P + P')) :
+    linearEquiv G (a • L + b • R + E - P)
       ((a - 1) • L + (b - 1) • R + (E + P')) := by
-  unfold linear_equiv at h ⊢
+  unfold linearEquiv at h ⊢
   have hsmulL : (a - 1) • L = a • L - L := by rw [sub_zsmul, one_zsmul, sub_eq_add_neg]
   have hsmulR : (b - 1) • R = b • R - R := by rw [sub_zsmul, one_zsmul, sub_eq_add_neg]
   rw [hsmulL, hsmulR]
@@ -213,9 +213,9 @@ theorem linear_equiv_normalForm_sub_both {L R P P' E : CFDiv G} (a b : ℤ)
 /-- Endpoint-pair case: no endpoint chip is spent, the old chip `Q` is simply
 removed. -/
 theorem linear_equiv_normalForm_sub_pair {L R P Q E : CFDiv G} (a b : ℤ)
-    (h : linear_equiv G Q P) :
-    linear_equiv G (a • L + b • R + E - P) (a • L + b • R + (E - Q)) := by
-  unfold linear_equiv at h ⊢
+    (h : linearEquiv G Q P) :
+    linearEquiv G (a • L + b • R + E - P) (a • L + b • R + (E - Q)) := by
+  unfold linearEquiv at h ⊢
   have hEq : a • L + b • R + (E - Q) - (a • L + b • R + E - P) = P - Q := by
     abel
   rw [hEq]
@@ -230,7 +230,7 @@ for a variable banana, so proving it costs nothing. -/
 theorem bananaNormalForm_eq {g : ℕ} (B : Banana g) (a b : ℤ)
     (E : CFDiv B.graph) :
     bananaNormalForm B a b E =
-      a • one_chip (leftEndpoint B) + b • one_chip (rightEndpoint B) + E := rfl
+      a • oneChip (leftEndpoint B) + b • oneChip (rightEndpoint B) + E := rfl
 
 theorem bananaNormalForm_sub {g : ℕ} (B : Banana g) (a b : ℤ)
     (E C : CFDiv B.graph) :
@@ -241,10 +241,10 @@ theorem bananaNormalForm_sub {g : ℕ} (B : Banana g) (a b : ℤ)
 theorem endpoint_sum_linearEquiv_path_reflection
     {g : ℕ} (B : Banana g) (β : Fin (g + 1))
     (p : B.PathPosition β) :
-    linear_equiv B.graph
-      (one_chip (leftEndpoint B) + one_chip (rightEndpoint B))
-      (one_chip (B.pathVertex β p) +
-        one_chip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β))) := by
+    linearEquiv B.graph
+      (oneChip (leftEndpoint B) + oneChip (rightEndpoint B))
+      (oneChip (B.pathVertex β p) +
+        oneChip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β))) := by
   by_cases htail : B.core.tail β = 0
   · simpa [strandVertex, strandMirror, htail] using
       endpoint_sum_linearEquiv_strand_reflection B β p
@@ -261,7 +261,7 @@ theorem isSemibreak_add_interior_chip_of_empty
     (newChip : Fin (B.length β - 1))
     (hEmpty : ∀ chip : Fin (B.length β - 1),
       E (B.interiorVertex β chip) = 0) :
-    IsSemibreak (B := B) (E + one_chip (B.interiorVertex β newChip)) := by
+    IsSemibreak (B := B) (E + oneChip (B.interiorVertex β newChip)) := by
   rcases hE with ⟨chips, rfl⟩
   have hnone : chips β = none := by
     cases hchip : chips β with
@@ -286,8 +286,8 @@ theorem isSemibreak_replace_interior_chip_of_eq_one
     (oldChip newChip : Fin (B.length β - 1))
     (hmem : E (B.interiorVertex β oldChip) = 1) :
     IsSemibreak (B := B)
-      (E + one_chip (B.interiorVertex β newChip) -
-        one_chip (B.interiorVertex β oldChip)) := by
+      (E + oneChip (B.interiorVertex β newChip) -
+        oneChip (B.interiorVertex β oldChip)) := by
   rcases hE with ⟨chips, rfl⟩
   have hchip : chips β = some oldChip := by
     simpa [semibreakDivisor_interiorVertex] using hmem
@@ -347,10 +347,10 @@ theorem rank_bananaNormalForm_remove_midpoint_chip_of_ge_neg_one
     (hmem : E (strandVertex B α i) = 1) :
     rank B.graph (bananaNormalForm B a b E) =
       rank B.graph (bananaNormalForm B a b E -
-        one_chip (strandVertex B α i)) := by
-  have hEminus : IsSemibreak (B := B) (E - one_chip (strandVertex B α i)) :=
+        oneChip (strandVertex B α i)) := by
+  have hEminus : IsSemibreak (B := B) (E - oneChip (strandVertex B α i)) :=
     isSemibreak_remove_midpoint_chip B E hE α i hα hi hmem
-  have hdegMinus : deg (E - one_chip (strandVertex B α i)) = deg E - 1 := by
+  have hdegMinus : deg (E - oneChip (strandVertex B α i)) = deg E - 1 := by
     rw [deg.map_sub, deg_one_chip]
   rw [bananaNormalForm_sub]
   by_cases haNonneg : 0 ≤ a
@@ -369,14 +369,14 @@ theorem rank_bananaNormalForm_remove_midpoint_chip_of_ge_neg_one
           omega
       have hRankMinus :
           rank B.graph
-              (bananaNormalForm B a (-1) (E - one_chip (strandVertex B α i)))
+              (bananaNormalForm B a (-1) (E - oneChip (strandVertex B α i)))
             = -1 := by
         apply rank_eq_neg_one_of_qReduced_debt B.graph (rightEndpoint B)
         · exact q_reduced_bananaNormalForm_right B a (-1)
-            (E - one_chip (strandVertex B α i)) hEminus haNonneg
+            (E - oneChip (strandVertex B α i)) hEminus haNonneg
             (by rw [hdegMinus]; omega)
         · rw [bananaNormalForm_rightEndpoint B a (-1)
-            (E - one_chip (strandVertex B α i)) hEminus]
+            (E - oneChip (strandVertex B α i)) hEminus]
           omega
       rw [hRank, hRankMinus]
   · have haEq : a = -1 := by omega
@@ -387,10 +387,10 @@ theorem rank_bananaNormalForm_remove_midpoint_chip_of_ge_neg_one
         hRightDeg).2 (by omega)
     have hRankMinus :
         rank B.graph
-            (bananaNormalForm B (-1) b (E - one_chip (strandVertex B α i)))
+            (bananaNormalForm B (-1) b (E - oneChip (strandVertex B α i)))
           = -1 :=
       (rank_bananaNormalForm_neg_iff B (-1) b
-        (E - one_chip (strandVertex B α i)) hEminus hbNonneg
+        (E - oneChip (strandVertex B α i)) hEminus hbNonneg
         (by rw [hdegMinus]; omega)).2 (by omega)
     rw [hRank, hRankMinus]
 
@@ -412,7 +412,7 @@ theorem basePointDrop_bananaNormalForm_sub_empty_strand_eq_zero
     (hLowDeg : a + b + deg E ≤ (g : ℤ)) :
     basePointDrop
       (mark B.graph (strandVertex B α i) (B.pathVertex β p))
-      ((bananaNormalForm B a b E - one_chip (B.pathVertex β p) :
+      ((bananaNormalForm B a b E - oneChip (B.pathVertex β p) :
         CFDiv B.graph)) = 0 := by
   change 0 < p.val ∧ p.val < B.length β at hp
   have hr : B.IsInteriorPosition β
@@ -434,18 +434,18 @@ theorem basePointDrop_bananaNormalForm_sub_empty_strand_eq_zero
   by_cases habZero : a = 0 ∧ b = 0
   · obtain ⟨rfl, rfl⟩ := habZero
     have hdegE : deg E ≤ (g : ℤ) := by simpa using hLowDeg
-    have hRankV : rank B.graph (E - one_chip (B.pathVertex β p)) = -1 :=
+    have hRankV : rank B.graph (E - oneChip (B.pathVertex β p)) = -1 :=
       rank_semibreak_sub_vertex_eq_neg_one B E hE hdegE _ hvZero
-    have hEminus : IsSemibreak (B := B) (E - one_chip (strandVertex B α i)) :=
+    have hEminus : IsSemibreak (B := B) (E - oneChip (strandVertex B α i)) :=
       isSemibreak_remove_midpoint_chip B E hE α i hα hi hmem
-    have hdegEminus : deg (E - one_chip (strandVertex B α i)) ≤ (g : ℤ) := by
+    have hdegEminus : deg (E - oneChip (strandVertex B α i)) ≤ (g : ℤ) := by
       rw [deg.map_sub, deg_one_chip]
       omega
     have hvZeroMinus :
-        (E - one_chip (strandVertex B α i)) (B.pathVertex β p) = 0 := by
-      simp [Pi.sub_apply, one_chip, huv.symm, hvZero]
+        (E - oneChip (strandVertex B α i)) (B.pathVertex β p) = 0 := by
+      simp [Pi.sub_apply, oneChip, huv.symm, hvZero]
     have hRankUV : rank B.graph
-        (E - one_chip (strandVertex B α i) - one_chip (B.pathVertex β p))
+        (E - oneChip (strandVertex B α i) - oneChip (B.pathVertex β p))
           = -1 :=
       rank_semibreak_sub_vertex_eq_neg_one B _ hEminus hdegEminus _ hvZeroMinus
     have hNormal : bananaNormalForm B 0 0 E = E := by
@@ -455,17 +455,17 @@ theorem basePointDrop_bananaNormalForm_sub_empty_strand_eq_zero
     rw [hNormal, hRankV, sub_right_comm, hRankUV]
   · have hOneNonneg : 0 ≤ a - 1 ∨ 0 ≤ b - 1 := by omega
     have hEplus : IsSemibreak (B := B)
-        (E + one_chip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β))) := by
+        (E + oneChip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β))) := by
       rw [hrVertex]
       exact isSemibreak_add_interior_chip_of_empty B E hE β _ hEmpty
     have hdegPlus :
-        deg (E + one_chip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
+        deg (E + oneChip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
           = deg E + 1 := by
       rw [deg.map_add, deg_one_chip]
     have hmemPlus :
-        (E + one_chip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)) :
+        (E + oneChip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)) :
         CFDiv B.graph) (strandVertex B α i) = 1 := by
-      simpa [one_chip, hur] using hmem
+      simpa [oneChip, hur] using hmem
     have hRankEq :=
       rank_bananaNormalForm_remove_midpoint_chip_of_ge_neg_one B _ hEplus
         α i hα hi (a - 1) (b - 1) (by omega) (by omega) hOneNonneg
@@ -493,7 +493,7 @@ theorem basePointDrop_bananaNormalForm_sub_occupied_tail_eq_zero
     (hSum : oldChip.val + 1 + (B.length β - p.val) < B.length β) :
     basePointDrop
       (mark B.graph (strandVertex B α i) (B.pathVertex β p))
-      ((bananaNormalForm B a b E - one_chip (B.pathVertex β p) :
+      ((bananaNormalForm B a b E - oneChip (B.pathVertex β p) :
         CFDiv B.graph)) = 0 := by
   change 0 < p.val ∧ p.val < B.length β at hp
   have hOldLt : oldChip.val + 1 < B.length β := by
@@ -524,15 +524,15 @@ theorem basePointDrop_bananaNormalForm_sub_occupied_tail_eq_zero
     rw [B.pathVertex_eq_interiorVertex β _ hx]
     congr 1
   have hE' : IsSemibreak (B := B)
-      (E + one_chip (B.pathVertex β
+      (E + oneChip (B.pathVertex β
             (⟨oldChip.val + 1 + (B.length β - p.val), by omega⟩ : B.PathPosition β)) -
-        one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β))) := by
+        oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β))) := by
     rw [hqVertex, hxVertex]
     exact isSemibreak_replace_interior_chip_of_eq_one B E hE β oldChip _ hOld
   have hdegE' :
-      deg (E + one_chip (B.pathVertex β
+      deg (E + oneChip (B.pathVertex β
               (⟨oldChip.val + 1 + (B.length β - p.val), by omega⟩ : B.PathPosition β)) -
-          one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β))) = deg E := by
+          oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β))) = deg E := by
     rw [deg.map_sub, deg.map_add, deg_one_chip, deg_one_chip]
     ring
   have huq : strandVertex B α i ≠
@@ -542,25 +542,25 @@ theorem basePointDrop_bananaNormalForm_sub_occupied_tail_eq_zero
       B.pathVertex β (⟨oldChip.val + 1 + (B.length β - p.val), by omega⟩ : B.PathPosition β) :=
     length_two_midpoint_ne_pathVertex_of_distinct_strand B α β i _ hαβ hα hi hx
   have huMem' :
-      (E + one_chip (B.pathVertex β
+      (E + oneChip (B.pathVertex β
             (⟨oldChip.val + 1 + (B.length β - p.val), by omega⟩ : B.PathPosition β)) -
-          one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) :
+          oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) :
         CFDiv B.graph) (strandVertex B α i) = 1 := by
-    simpa [one_chip, huq, hux] using huMem
+    simpa [oneChip, huq, hux] using huMem
   have hReflect := endpoint_sum_linearEquiv_path_reflection B β p
-  have hSlide : linear_equiv B.graph
-      (one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) +
-        one_chip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
-      (one_chip (B.coreVertex (B.core.tail β)) +
-        one_chip (B.pathVertex β
+  have hSlide : linearEquiv B.graph
+      (oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) +
+        oneChip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
+      (oneChip (B.coreVertex (B.core.tail β)) +
+        oneChip (B.pathVertex β
           (⟨oldChip.val + 1 + (B.length β - p.val), by omega⟩ : B.PathPosition β))) :=
     path_pair_linearEquiv_tail_sum B β _ _ hq.1 hr.1 hSum
   by_cases htail : B.core.tail β = 0
-  · have hSlideL : linear_equiv B.graph
-        (one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) +
-          one_chip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
-        (one_chip (leftEndpoint B) +
-          one_chip (B.pathVertex β
+  · have hSlideL : linearEquiv B.graph
+        (oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) +
+          oneChip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
+        (oneChip (leftEndpoint B) +
+          oneChip (B.pathVertex β
             (⟨oldChip.val + 1 + (B.length β - p.val), by omega⟩ : B.PathPosition β))) := by
       rw [htail] at hSlide
       exact hSlide
@@ -577,11 +577,11 @@ theorem basePointDrop_bananaNormalForm_sub_occupied_tail_eq_zero
       rcases fin_two_eq_zero_or_one (B.core.tail β) with h | h
       · exact (htail h).elim
       · exact h
-    have hSlideR : linear_equiv B.graph
-        (one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) +
-          one_chip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
-        (one_chip (rightEndpoint B) +
-          one_chip (B.pathVertex β
+    have hSlideR : linearEquiv B.graph
+        (oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) +
+          oneChip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
+        (oneChip (rightEndpoint B) +
+          oneChip (B.pathVertex β
             (⟨oldChip.val + 1 + (B.length β - p.val), by omega⟩ : B.PathPosition β))) := by
       rw [htailOne] at hSlide
       exact hSlide
@@ -613,7 +613,7 @@ theorem basePointDrop_bananaNormalForm_sub_occupied_head_eq_zero
     (hSum : B.length β < oldChip.val + 1 + (B.length β - p.val)) :
     basePointDrop
       (mark B.graph (strandVertex B α i) (B.pathVertex β p))
-      ((bananaNormalForm B a b E - one_chip (B.pathVertex β p) :
+      ((bananaNormalForm B a b E - oneChip (B.pathVertex β p) :
         CFDiv B.graph)) = 0 := by
   change 0 < p.val ∧ p.val < B.length β at hp
   have hOldLt : oldChip.val + 1 < B.length β := by
@@ -646,17 +646,17 @@ theorem basePointDrop_bananaNormalForm_sub_occupied_head_eq_zero
     rw [B.pathVertex_eq_interiorVertex β _ hx]
     congr 1
   have hE' : IsSemibreak (B := B)
-      (E + one_chip (B.pathVertex β
+      (E + oneChip (B.pathVertex β
             ⟨oldChip.val + 1 + (B.length β - p.val) - B.length β,
               by omega⟩) -
-        one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β))) := by
+        oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β))) := by
     rw [hqVertex, hxVertex]
     exact isSemibreak_replace_interior_chip_of_eq_one B E hE β oldChip _ hOld
   have hdegE' :
-      deg (E + one_chip (B.pathVertex β
+      deg (E + oneChip (B.pathVertex β
               ⟨oldChip.val + 1 + (B.length β - p.val) - B.length β,
                 by omega⟩) -
-          one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β))) = deg E := by
+          oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β))) = deg E := by
     rw [deg.map_sub, deg.map_add, deg_one_chip, deg_one_chip]
     ring
   have huq : strandVertex B α i ≠
@@ -667,28 +667,28 @@ theorem basePointDrop_bananaNormalForm_sub_occupied_head_eq_zero
         (⟨oldChip.val + 1 + (B.length β - p.val) - B.length β, by omega⟩ : B.PathPosition β) :=
     length_two_midpoint_ne_pathVertex_of_distinct_strand B α β i _ hαβ hα hi hx
   have huMem' :
-      (E + one_chip (B.pathVertex β
+      (E + oneChip (B.pathVertex β
             ⟨oldChip.val + 1 + (B.length β - p.val) - B.length β,
               by omega⟩) -
-          one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) :
+          oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) :
         CFDiv B.graph) (strandVertex B α i) = 1 := by
-    simpa [one_chip, huq, hux] using huMem
+    simpa [oneChip, huq, hux] using huMem
   have hReflect := endpoint_sum_linearEquiv_path_reflection B β p
-  have hSlide : linear_equiv B.graph
-      (one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) +
-        one_chip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
-      (one_chip (B.pathVertex β
+  have hSlide : linearEquiv B.graph
+      (oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) +
+        oneChip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
+      (oneChip (B.pathVertex β
           (⟨oldChip.val + 1 + (B.length β - p.val) - B.length β, by omega⟩ : B.PathPosition β)) +
-        one_chip (B.coreVertex (B.core.head β))) :=
+        oneChip (B.coreVertex (B.core.head β))) :=
     path_pair_linearEquiv_head_excess B β _ _ hq.2 hr.2 hSum
   by_cases htail : B.core.tail β = 0
   · have hhead : B.core.head β = 1 := head_eq_other_of_tail B β htail
-    have hSlideR : linear_equiv B.graph
-        (one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) +
-          one_chip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
-        (one_chip (B.pathVertex β
+    have hSlideR : linearEquiv B.graph
+        (oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) +
+          oneChip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
+        (oneChip (B.pathVertex β
             (⟨oldChip.val + 1 + (B.length β - p.val) - B.length β, by omega⟩ : B.PathPosition β)) +
-          one_chip (rightEndpoint B)) := by
+          oneChip (rightEndpoint B)) := by
       rw [hhead] at hSlide
       exact hSlide
     have hRankEq :=
@@ -711,12 +711,12 @@ theorem basePointDrop_bananaNormalForm_sub_occupied_head_eq_zero
       · exfalso
         apply B.core_loopless β
         simp [htailOne, h]
-    have hSlideL : linear_equiv B.graph
-        (one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) +
-          one_chip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
-        (one_chip (B.pathVertex β
+    have hSlideL : linearEquiv B.graph
+        (oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) +
+          oneChip (B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β)))
+        (oneChip (B.pathVertex β
             (⟨oldChip.val + 1 + (B.length β - p.val) - B.length β, by omega⟩ : B.PathPosition β)) +
-          one_chip (leftEndpoint B)) := by
+          oneChip (leftEndpoint B)) := by
       rw [hhead] at hSlide
       exact hSlide
     have hRankEq :=
@@ -747,7 +747,7 @@ theorem basePointDrop_bananaNormalForm_sub_occupied_endpoint_pair_eq_zero
     (hSum : oldChip.val + 1 + (B.length β - p.val) = B.length β) :
     basePointDrop
       (mark B.graph (strandVertex B α i) (B.pathVertex β p))
-      ((bananaNormalForm B a b E - one_chip (B.pathVertex β p) :
+      ((bananaNormalForm B a b E - oneChip (B.pathVertex β p) :
         CFDiv B.graph)) = 0 := by
   change 0 < p.val ∧ p.val < B.length β at hp
   have hOldLt : oldChip.val + 1 < B.length β := by
@@ -762,20 +762,20 @@ theorem basePointDrop_bananaNormalForm_sub_occupied_endpoint_pair_eq_zero
     rw [B.pathVertex_eq_interiorVertex β _ hq]
     congr 1
   have hE' : IsSemibreak (B := B)
-      (E - one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β))) := by
+      (E - oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β))) := by
     rw [hqVertex]
     exact isSemibreak_remove_interior_chip_of_eq_one B E hE β oldChip hOld
   have hdegE' :
-      deg (E - one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)))
+      deg (E - oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)))
         = deg E - 1 := by
     rw [deg.map_sub, deg_one_chip]
   have huq : strandVertex B α i ≠
       B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β) :=
     length_two_midpoint_ne_pathVertex_of_distinct_strand B α β i _ hαβ hα hi hq
   have huMem' :
-      (E - one_chip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) :
+      (E - oneChip (B.pathVertex β (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)) :
         CFDiv B.graph) (strandVertex B α i) = 1 := by
-    simpa [one_chip, huq] using huMem
+    simpa [oneChip, huq] using huMem
   have hReflect := endpoint_sum_linearEquiv_path_reflection B β p
   have hposEq : B.pathVertex β (⟨B.length β - (oldChip.val + 1), by omega⟩ : B.PathPosition β) =
       B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β) := by
@@ -820,7 +820,7 @@ theorem rankDelta_bananaNormalForm_lengthTwoCross_nonneg
         B α i (B.pathVertex β p) a b E hα hi hE hzero ha hb hLowDeg
     have hDropSub :=
       basePointDrop_mark_le_one (strandVertex B α i) (B.pathVertex β p)
-        (bananaNormalForm B a b E - one_chip (B.pathVertex β p))
+        (bananaNormalForm B a b E - oneChip (B.pathVertex β p))
     omega
   · have hDrop :
         basePointDrop (mark B.graph (strandVertex B α i) (B.pathVertex β p))
@@ -884,12 +884,12 @@ theorem rankDelta_lengthTwoCross_path_nonneg
             (B.pathVertex β p)) Dlow < 0 := by
     by_cases hDeg : deg D ≤ (g : ℤ)
     · exact ⟨D, hDeg, hNeg⟩
-    · refine ⟨canonical_divisor B.graph + one_chip (strandVertex B α i) +
-        one_chip (B.pathVertex β p) - D, ?_, ?_⟩
+    · refine ⟨canonicalDivisor B.graph + oneChip (strandVertex B α i) +
+        oneChip (B.pathVertex β p) - D, ?_, ?_⟩
       · rw [deg_canonical_dual B (strandVertex B α i) (B.pathVertex β p) D]
         omega
       · rw [rankDelta_mark_canonical_dual (strandVertex B α i)
-          (B.pathVertex β p) (graph_connected B) D] at hNeg
+          (B.pathVertex β p) (graphConnected B) D] at hNeg
         exact hNeg
   obtain ⟨a, b, E, hE, hb, hbdeg, hLinear⟩ :=
     exists_linearly_equiv_bananaNormalForm B Dlow
@@ -909,8 +909,8 @@ theorem rankDelta_lengthTwoCross_path_nonneg
       (rankDelta_mark_neg_iff_rank_pattern (strandVertex B α i)
         (B.pathVertex β p) (bananaNormalForm B a b E)).mp hNegNormal
     have hLower := rank_geq_neg_one B.graph
-      (bananaNormalForm B a b E - one_chip (strandVertex B α i) -
-        one_chip (B.pathVertex β p))
+      (bananaNormalForm B a b E - oneChip (strandVertex B α i) -
+        oneChip (B.pathVertex β p))
     omega
   have ha : 0 ≤ a := by
     by_contra haNot

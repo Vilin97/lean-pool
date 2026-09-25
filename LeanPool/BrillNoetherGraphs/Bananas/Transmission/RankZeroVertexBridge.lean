@@ -25,7 +25,7 @@ chip. -/
 theorem exists_one_chip_representative_of_rank_zero_degree_one
     (G : CFGraph) (A : CFDiv G)
     (hRank : rank G A = 0) (hDeg : deg A = 1) :
-    ∃ x : G.V, linear_equiv G A (one_chip x) := by
+    ∃ x : G.V, linearEquiv G A (oneChip x) := by
   have hWin : winnable G A :=
     (rank_nonneg_iff_winnable G A).mp
       ((rank_geq_iff G A 0).mpr (by omega))
@@ -41,29 +41,29 @@ back identifies the rank-zero divisor to which the `SameStrand` lemma is
 applied in the paper. -/
 theorem exists_qReduced_vertex_rep_of_rankDelta_neg_genus_two
     (M : TwiceMarked) (D : CFDiv M.graph)
-    (hConn : _root_.graph_connected M.graph)
+    (hConn : _root_.graphConnected M.graph)
     (hGenus : genus M.graph = 2)
-    (hDistinct : ¬ linear_equiv M.graph (one_chip M.u - one_chip M.v) 0)
+    (hDistinct : ¬ linearEquiv M.graph (oneChip M.u - oneChip M.v) 0)
     (hNeg : rankDelta M D < 0) :
     ∃ w : M.graph.V,
-      linear_equiv M.graph (D - one_chip M.u) (one_chip w) ∧
-      q_reduced M.graph M.v (one_chip w) ∧
+      linearEquiv M.graph (D - oneChip M.u) (oneChip w) ∧
+      qReduced M.graph M.v (oneChip w) ∧
       w ≠ M.v ∧
-      rank M.graph (one_chip w + one_chip M.u - one_chip M.v) = 0 := by
+      rank M.graph (oneChip w + oneChip M.u - oneChip M.v) = 0 := by
   have hDRank : rank M.graph D = 0 :=
     rank_eq_zero_of_rankDelta_neg_genus_two M D hConn hGenus hDistinct hNeg
   obtain ⟨hU, hV, hUV⟩ :=
     (rankDelta_neg_iff_rank_zero_deletions M D hDRank).mp hNeg
-  have hUWin : winnable M.graph (D - one_chip M.u) :=
+  have hUWin : winnable M.graph (D - oneChip M.u) :=
     (rank_nonneg_iff_winnable M.graph _).mp
       ((rank_geq_iff M.graph _ 0).mpr (by omega))
   obtain ⟨E, hUE, hERed⟩ :=
-    exists_q_reduced_representative hConn M.v (D - one_chip M.u)
+    exists_q_reduced_representative hConn M.v (D - oneChip M.u)
   have hEEff : effective E :=
     effective_of_winnable_and_q_reduced M.graph M.v E
       (winnable_equiv_winnable M.graph _ _ hUWin hUE) hERed
   have hEDeg : deg E = 1 := by
-    rw [← linear_equiv_preserves_deg M.graph (D - one_chip M.u) E hUE,
+    rw [← linear_equiv_preserves_deg M.graph (D - oneChip M.u) E hUE,
       deg.map_sub, deg_one_chip]
     have hDDeg : deg D = 2 :=
       degree_eq_two_of_rankDelta_neg_genus_two M D hConn hGenus hDistinct hNeg
@@ -73,16 +73,16 @@ theorem exists_qReduced_vertex_rep_of_rankDelta_neg_genus_two
   refine ⟨w, hUE, hERed, ?_, ?_⟩
   · intro hwv
     subst w
-    have hZero : linear_equiv M.graph
-        (D - one_chip M.u - one_chip M.v) 0 := by
-      unfold linear_equiv at hUE ⊢
+    have hZero : linearEquiv M.graph
+        (D - oneChip M.u - oneChip M.v) 0 := by
+      unfold linearEquiv at hUE ⊢
       convert hUE using 1 ; abel
     have hRankZero := rank_eq_of_linear_equiv M.graph hZero
     rw [hUV, zero_divisor_rank] at hRankZero
     omega
-  · have hShift : linear_equiv M.graph (D - one_chip M.v)
-        (one_chip w + one_chip M.u - one_chip M.v) := by
-      unfold linear_equiv at hUE ⊢
+  · have hShift : linearEquiv M.graph (D - oneChip M.v)
+        (oneChip w + oneChip M.u - oneChip M.v) := by
+      unfold linearEquiv at hUE ⊢
       convert hUE using 1 ; abel
     rw [← rank_eq_of_linear_equiv M.graph hShift]
     exact hV

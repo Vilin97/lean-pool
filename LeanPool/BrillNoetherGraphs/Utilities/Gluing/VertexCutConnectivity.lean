@@ -27,8 +27,8 @@ variable {K : CFGraph.{u}} (cut : OneVertexCut K)
 -- instance-implicit arguments through the semireducible `bridgeGraph`/`vertexWedge`
 -- constructions no longer unfolds them; use the previous transparency locally.
 theorem graph_connected_left_of_connected
-    (hK : graph_connected K) :
-    graph_connected cut.leftGraph := by
+    (hK : graphConnected K) :
+    graphConnected cut.leftGraph := by
   classical
   intro A hSplit
   obtain ⟨inside, outside, hInside, hOutside⟩ := hSplit
@@ -130,7 +130,7 @@ theorem graph_connected_left_of_connected
       exact Finset.mem_image.mpr ⟨yLeft, hyA, rfl⟩
     refine ⟨xLeft, hxA, yLeft, hyA, ?_⟩
     have heq := num_edges_inducedSubgraph K cut.left cut.left_nonempty xLeft yLeft
-    have hpositive : 0 < num_edges K xLeft.val yLeft.val := by
+    have hpositive : 0 < numEdges K xLeft.val yLeft.val := by
       simpa only [yLeft, hxValue] using! hxy
     exact heq.symm ▸ hpositive
 
@@ -167,19 +167,19 @@ def swap : OneVertexCut K where
   rfl
 
 theorem graph_connected_right_of_connected
-    (hK : graph_connected K) :
-    graph_connected cut.rightGraph := by
+    (hK : graphConnected K) :
+    graphConnected cut.rightGraph := by
   simpa using cut.swap.graph_connected_left_of_connected hK
 
 theorem graph_connected_factors
-    (hK : graph_connected K) :
-    graph_connected cut.leftGraph ∧ graph_connected cut.rightGraph :=
+    (hK : graphConnected K) :
+    graphConnected cut.leftGraph ∧ graphConnected cut.rightGraph :=
   ⟨cut.graph_connected_left_of_connected hK,
     cut.graph_connected_right_of_connected hK⟩
 
 theorem graph_connected_iff_factors :
-    graph_connected K ↔
-      graph_connected cut.leftGraph ∧ graph_connected cut.rightGraph :=
+    graphConnected K ↔
+      graphConnected cut.leftGraph ∧ graphConnected cut.rightGraph :=
   ⟨cut.graph_connected_factors,
     fun h => cut.graph_connected_of_factors h.1 h.2⟩
 

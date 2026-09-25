@@ -35,14 +35,14 @@ variable {G : CFGraph}
 /-- **`treewidth ≤ gonality`** (van Dobben de Bruyn--Gijswijt).  Treewidth is
 taken on `underlyingSimpleGraph G`, which is what "the treewidth of a
 multigraph" means: parallel edges and loops do not change it. -/
-theorem treewidth_le_gonality (h_conn : graph_connected G) :
+theorem treewidth_le_gonality (h_conn : graphConnected G) :
     treewidth (underlyingSimpleGraph G) ≤ divisorialGonality G := by
   obtain ⟨𝔅, h𝔅⟩ := exists_bramble_of_treewidth (underlyingSimpleGraph G)
   have hA := bramble_order_le_gonality_succ h_conn 𝔅
   omega
 
 /-- The same bound against the dependency's `ℤ`-valued `gonality`. -/
-theorem treewidth_le_gonality_int (h_conn : graph_connected G) :
+theorem treewidth_le_gonality_int (h_conn : graphConnected G) :
     (treewidth (underlyingSimpleGraph G) : ℤ) ≤ gonality h_conn := by
   rw [gonality_eq_divisorialGonality h_conn]
   exact_mod_cast treewidth_le_gonality h_conn

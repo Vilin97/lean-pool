@@ -75,19 +75,19 @@ noncomputable def vertexWedgeCommPresentation
       simp [hb]
 
 /-- Vertex wedges are commutative up to graph isomorphism. -/
-noncomputable def vertexWedge_comm
+noncomputable def vertexWedgeComm
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) :
     CFGraphIso (vertexWedge G H x y) (vertexWedge H G y x) :=
   (vertexWedgeCommPresentation G H x y).graphIso
 
 @[simp] theorem vertexWedge_comm_apply_left
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) (a : G.V) :
-    (vertexWedge_comm G H x y).vertexEquiv (Sum.inl a) =
+    (vertexWedgeComm G H x y).vertexEquiv (Sum.inl a) =
       wedgeRightVertex H G y x a := rfl
 
 @[simp] theorem vertexWedge_comm_apply_right
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) (b : H.V) :
-    (vertexWedge_comm G H x y).vertexEquiv
+    (vertexWedgeComm G H x y).vertexEquiv
         (wedgeRightVertex G H x y b) = Sum.inl b :=
   (vertexWedgeCommPresentation G H x y).graphIso_apply_wedgeRightVertex b
 
@@ -136,7 +136,7 @@ noncomputable def markedChainReassocData
   | N :: rest => by
       let outer := markedChainReassocData (M.wedge F) N rest
       let inner := markedChainReassocData F N rest
-      let assoc := vertexWedge_assoc M.graph F.graph
+      let assoc := vertexWedgeAssoc M.graph F.graph
         (N.chain rest).graph M.right F.left F.right (N.chain rest).left
       have hInnerLeft :
           inner.iso.symm.vertexEquiv (Sum.inl F.left) =
@@ -211,7 +211,7 @@ noncomputable def reversedFactorChainIsoData
       let congr := vertexWedgeCongrRight inner.iso F.marked.right
         (next.marked.chain (rest.map KGeneralChainFactor.marked)).left
         (reversedMarkedChain next rest).right hInnerLeft
-      let comm := vertexWedge_comm
+      let comm := vertexWedgeComm
         F.marked.graph (reversedMarkedChain next rest).graph
         F.marked.right (reversedMarkedChain next rest).right
       refine {
@@ -324,7 +324,7 @@ theorem brillNoetherGeneral_factorChain_cons_genus_zero_of_tail
   let tail := next.marked.chain (rest.map KGeneralChainFactor.marked)
   let reassoc := markedChainReassocIso F.marked next.marked
     (rest.map KGeneralChainFactor.marked)
-  let comm := vertexWedge_comm F.marked.graph tail.graph F.marked.right tail.left
+  let comm := vertexWedgeComm F.marked.graph tail.graph F.marked.right tail.left
   have hAbsorb : BrillNoetherGeneral
       (vertexWedge tail.graph F.marked.graph tail.left F.marked.right) :=
     brillNoetherGeneral_vertexWedge_genus_zero_right

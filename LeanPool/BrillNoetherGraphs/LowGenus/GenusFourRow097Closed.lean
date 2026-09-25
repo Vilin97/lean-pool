@@ -466,19 +466,19 @@ theorem wRamp (hp : IsCore097 d.core) (hrep : RepGen d) {w : ℕ}
   · refine forall_fin_nine ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ <;> simp <;> omega
 
 /-- The `star 2` march. -/
-def vScript (d : DegSpec 6 9) (u : ℕ) : firing_script d.graph :=
+def vScript (d : DegSpec 6 9) (u : ℕ) : firingScript d.graph :=
   d.rampScript (vPot u) vSgn (vLo d.length u) u
 
 /-- The `{e0,e3,e4}` march. -/
-def pScript (d : DegSpec 6 9) (s : ℕ) : firing_script d.graph :=
+def pScript (d : DegSpec 6 9) (s : ℕ) : firingScript d.graph :=
   d.rampScript (pPot s) pSgn (pLo d.length s) s
 
 /-- The `{e0,e5}` march. -/
-def mScript (d : DegSpec 6 9) (a r : ℕ) : firing_script d.graph :=
+def mScript (d : DegSpec 6 9) (a r : ℕ) : firingScript d.graph :=
   d.rampScript (mPot r) mSgn (mLo a r) r
 
 /-- The `star 0` march. -/
-def wScript (d : DegSpec 6 9) (w : ℕ) : firing_script d.graph :=
+def wScript (d : DegSpec 6 9) (w : ℕ) : firingScript d.graph :=
   d.rampScript (wPot w) wSgn (wLo d.length w) w
 
 end Ramps
@@ -495,12 +495,12 @@ variable {d : DegSpec 6 9}
 theorem prin_v_eq {u : ℕ} (h : DegSpec.RampData d (vPot u) vSgn (vLo d.length u) u)
     (hu6 : u ≤ d.length 6) (hu7 : u ≤ d.length 7) :
     prin d.graph (vScript d u) =
-      (one_chip (G := d.graph) (d.pathAt 3 (dpos d.length + u)) -
-          one_chip (d.pathAt 3 (dpos d.length))) +
-        (one_chip (d.pathAt 6 (d.length 6 - u)) -
-          one_chip (d.pathAt 6 (d.length 6))) +
-        (one_chip (d.pathAt 7 (d.length 7 - u)) -
-          one_chip (d.pathAt 7 (d.length 7))) := by
+      (oneChip (G := d.graph) (d.pathAt 3 (dpos d.length + u)) -
+          oneChip (d.pathAt 3 (dpos d.length))) +
+        (oneChip (d.pathAt 6 (d.length 6 - u)) -
+          oneChip (d.pathAt 6 (d.length 6))) +
+        (oneChip (d.pathAt 7 (d.length 7 - u)) -
+          oneChip (d.pathAt 7 (d.length 7))) := by
   have e6 : d.pathAt 6 (d.length 6 - u + u) = d.pathAt 6 (d.length 6) :=
     d.pathAt_of_eq 6 (by omega)
   have e7 : d.pathAt 7 (d.length 7 - u + u) = d.pathAt 7 (d.length 7) :=
@@ -514,12 +514,12 @@ theorem prin_v_eq {u : ℕ} (h : DegSpec.RampData d (vPot u) vSgn (vLo d.length 
 theorem prin_p_eq {s : ℕ} (h : DegSpec.RampData d (pPot s) pSgn (pLo d.length s) s)
     (hs0 : s ≤ d.length 0) (hsd : s ≤ dpos d.length) (hs4 : s ≤ d.length 4) :
     prin d.graph (pScript d s) =
-      (one_chip (G := d.graph) (d.pathAt 0 (d.length 0 - s)) -
-          one_chip (d.pathAt 0 (d.length 0))) +
-        (one_chip (d.pathAt 3 (dpos d.length - s)) -
-          one_chip (d.pathAt 3 (dpos d.length))) +
-        (one_chip (d.pathAt 4 (d.length 4 - s)) -
-          one_chip (d.pathAt 4 (d.length 4))) := by
+      (oneChip (G := d.graph) (d.pathAt 0 (d.length 0 - s)) -
+          oneChip (d.pathAt 0 (d.length 0))) +
+        (oneChip (d.pathAt 3 (dpos d.length - s)) -
+          oneChip (d.pathAt 3 (dpos d.length))) +
+        (oneChip (d.pathAt 4 (d.length 4 - s)) -
+          oneChip (d.pathAt 4 (d.length 4))) := by
   have e0 : d.pathAt 0 (d.length 0 - s + s) = d.pathAt 0 (d.length 0) :=
     d.pathAt_of_eq 0 (by omega)
   have e3 : d.pathAt 3 (dpos d.length - s + s) = d.pathAt 3 (dpos d.length) :=
@@ -535,8 +535,8 @@ theorem prin_p_eq {s : ℕ} (h : DegSpec.RampData d (pPot s) pSgn (pLo d.length 
 theorem prin_m_eq {a r : ℕ} (h : DegSpec.RampData d (mPot r) mSgn (mLo a r) r)
     (hr1 : r ≤ a) :
     prin d.graph (mScript d a r) =
-      (one_chip (G := d.graph) (d.pathAt 0 (a - r)) - one_chip (d.pathAt 0 a)) -
-        (one_chip (d.pathAt 5 0) - one_chip (d.pathAt 5 r)) := by
+      (oneChip (G := d.graph) (d.pathAt 0 (a - r)) - oneChip (d.pathAt 0 a)) -
+        (oneChip (d.pathAt 5 0) - oneChip (d.pathAt 5 r)) := by
   have e0 : d.pathAt 0 (a - r + r) = d.pathAt 0 a := d.pathAt_of_eq 0 (by omega)
   have e5 : d.pathAt 5 (0 + r) = d.pathAt 5 r := d.pathAt_of_eq 5 (by omega)
   rw [mScript, DegSpec.prin_ramp_eq h, sum_univ_nine]
@@ -549,13 +549,13 @@ theorem prin_w_eq {w : ℕ} (h : DegSpec.RampData d (wPot w) wSgn (wLo d.length 
     (hww : w ≤ cRest d.length - m2Max d.length) (hw1 : w ≤ d.length 1)
     (hw2 : w ≤ d.length 2) :
     prin d.graph (wScript d w) =
-      (one_chip (G := d.graph)
+      (oneChip (G := d.graph)
             (d.pathAt 0 (cRest d.length - m2Max d.length - w)) -
-          one_chip (d.pathAt 0 (cRest d.length - m2Max d.length))) +
-        (one_chip (d.pathAt 1 (d.length 1 - w)) -
-          one_chip (d.pathAt 1 (d.length 1))) +
-        (one_chip (d.pathAt 2 (d.length 2 - w)) -
-          one_chip (d.pathAt 2 (d.length 2))) := by
+          oneChip (d.pathAt 0 (cRest d.length - m2Max d.length))) +
+        (oneChip (d.pathAt 1 (d.length 1 - w)) -
+          oneChip (d.pathAt 1 (d.length 1))) +
+        (oneChip (d.pathAt 2 (d.length 2 - w)) -
+          oneChip (d.pathAt 2 (d.length 2))) := by
   have e0 : d.pathAt 0 (cRest d.length - m2Max d.length - w + w) =
       d.pathAt 0 (cRest d.length - m2Max d.length) := d.pathAt_of_eq 0 (by omega)
   have e1 : d.pathAt 1 (d.length 1 - w + w) = d.pathAt 1 (d.length 1) :=
@@ -644,8 +644,8 @@ section States
 
 /-- The degree-three pencil of row 097. -/
 def pen (d : DegSpec 6 9) : CFDiv d.graph :=
-  one_chip (d.pathAt 3 (dpos d.length)) + one_chip (d.coreVertex 3) +
-    one_chip (d.coreVertex 4)
+  oneChip (d.pathAt 3 (dpos d.length)) + oneChip (d.coreVertex 3) +
+    oneChip (d.coreVertex 4)
 
 variable {d : DegSpec 6 9}
 
@@ -658,9 +658,9 @@ theorem state_v (hp : IsCore097 d.core) (hrep : RepGen d) {u : ℕ}
     (hu3 : dpos d.length + u ≤ d.length 3) (hu6 : u ≤ d.length 6)
     (hu7 : u ≤ d.length 7) :
     pen d + prin d.graph (vScript d u) =
-      one_chip (G := d.graph) (d.pathAt 3 (dpos d.length + u)) +
-        one_chip (d.pathAt 6 (d.length 6 - u)) +
-        one_chip (d.pathAt 7 (d.length 7 - u)) := by
+      oneChip (G := d.graph) (d.pathAt 3 (dpos d.length + u)) +
+        oneChip (d.pathAt 6 (d.length 6 - u)) +
+        oneChip (d.pathAt 7 (d.length 7 - u)) := by
   rw [pen, prin_v_eq (vRamp hp hrep hu3 hu6 hu7) hu6 hu7, cvH6 hp, cvH7 hp]
   abel
 
@@ -668,9 +668,9 @@ theorem state_p (hp : IsCore097 d.core) (hrep : RepGen d) {s : ℕ}
     (hs0 : s ≤ d.length 0) (hsd : s ≤ dpos d.length)
     (hd3 : dpos d.length ≤ d.length 3) (hs4 : s ≤ d.length 4) :
     pen d + prin d.graph (pScript d s) =
-      one_chip (G := d.graph) (d.pathAt 0 (d.length 0 - s)) +
-        one_chip (d.pathAt 3 (dpos d.length - s)) +
-        one_chip (d.pathAt 4 (d.length 4 - s)) := by
+      oneChip (G := d.graph) (d.pathAt 0 (d.length 0 - s)) +
+        oneChip (d.pathAt 3 (dpos d.length - s)) +
+        oneChip (d.pathAt 4 (d.length 4 - s)) := by
   rw [pen, prin_p_eq (pRamp hp hrep hs0 hsd hd3 hs4) hs0 hsd hs4, cvH4 hp,
     cvH0 hp]
   abel
@@ -681,10 +681,10 @@ theorem state_m1 (hp : IsCore097 d.core) (hrep : RepGen d)
     (hrle : r ≤ d.length 0 - dpos d.length) :
     pen d + prin d.graph (pScript d (dpos d.length) +
         mScript d (d.length 0 - dpos d.length) r) =
-      one_chip (G := d.graph)
+      oneChip (G := d.graph)
           (d.pathAt 0 (d.length 0 - dpos d.length - r)) +
-        one_chip (d.pathAt 5 r) +
-        one_chip (d.pathAt 4 (d.length 4 - dpos d.length)) := by
+        oneChip (d.pathAt 5 r) +
+        oneChip (d.pathAt 4 (d.length 4 - dpos d.length)) := by
   have hz : d.pathAt 3 (dpos d.length - dpos d.length) = d.pathAt 5 0 := by
     rw [d.pathAt_of_eq 3 (Nat.sub_self _), cvT3 hp, cvT5 hp]
   rw [map_add, ← add_assoc, state_p hp hrep hd0 le_rfl hd3 hd4,
@@ -701,8 +701,8 @@ theorem state_m2 (hp : IsCore097 d.core) (hrep : RepGen d)
     pen d + prin d.graph (pScript d (dpos d.length) +
         mScript d (d.length 0 - dpos d.length) (d.length 5) +
         mScript d (cRest d.length) r) =
-      one_chip (G := d.graph) (d.pathAt 0 (cRest d.length - r)) +
-        one_chip (d.pathAt 5 r) + one_chip (d.coreVertex 5) := by
+      oneChip (G := d.graph) (d.pathAt 0 (cRest d.length - r)) +
+        oneChip (d.pathAt 5 r) + oneChip (d.coreVertex 5) := by
   have hcr : cRest d.length ≤ d.length 0 := by simp only [cRest]; omega
   have heq0 : d.pathAt 0 (d.length 0 - dpos d.length - d.length 5) =
       d.pathAt 0 (cRest d.length) :=
@@ -725,10 +725,10 @@ theorem state_w (hp : IsCore097 d.core) (hrep : RepGen d)
     pen d + prin d.graph (pScript d (dpos d.length) +
         mScript d (d.length 0 - dpos d.length) (d.length 5) +
         mScript d (cRest d.length) (d.length 5) + wScript d w) =
-      one_chip (G := d.graph)
+      oneChip (G := d.graph)
           (d.pathAt 0 (cRest d.length - m2Max d.length - w)) +
-        one_chip (d.pathAt 1 (d.length 1 - w)) +
-        one_chip (d.pathAt 2 (d.length 2 - w)) := by
+        oneChip (d.pathAt 1 (d.length 1 - w)) +
+        oneChip (d.pathAt 2 (d.length 2 - w)) := by
   have hcr : cRest d.length ≤ d.length 0 := by simp only [cRest]; omega
   have h5c : d.length 5 ≤ cRest d.length := by
     have hm := hm2; simp only [m2Max] at hm; omega
@@ -751,14 +751,14 @@ section Assembly
 variable {d : DegSpec 6 9}
 
 theorem chip_three (A B C q : d.graph.V) (hq : q = A ∨ q = B ∨ q = C) :
-    1 ≤ (one_chip A + one_chip B + one_chip C) q := by
+    1 ≤ (oneChip A + oneChip B + oneChip C) q := by
   rcases hq with rfl | rfl | rfl
   · exact threeChipDivisor_has_chip_first _ _ _
   · exact threeChipDivisor_has_chip_second _ _ _
   · exact threeChipDivisor_has_chip_third _ _ _
 
-theorem reaches_three (script : firing_script d.graph) (A B C : d.graph.V)
-    (hst : pen d + prin d.graph script = one_chip A + one_chip B + one_chip C)
+theorem reaches_three (script : firingScript d.graph) (A B C : d.graph.V)
+    (hst : pen d + prin d.graph script = oneChip A + oneChip B + oneChip C)
     (q : d.graph.V) (hq : q = A ∨ q = B ∨ q = C) :
     StrongSeparator.Reaches d.graph (pen d) q := by
   refine d.reaches_of_script (pen d) script q ?_ ?_
@@ -833,9 +833,9 @@ theorem cRest_pos_of (h : 0 < cRest d.length - m2Max d.length) :
 theorem banana_pair (hp : IsCore097 d.core) (hrep : RepGen d)
     (hba : d.length 5 ≤ d.length 0) (hbc : d.length 4 ≤ d.length 3)
     (hx0 : cRest d.length - m2Max d.length = 0) :
-    ∃ (script : firing_script d.graph) (Z : d.graph.V),
+    ∃ (script : firingScript d.graph) (Z : d.graph.V),
       pen d + prin d.graph script =
-        one_chip (d.coreVertex 0) + one_chip (d.coreVertex 5) + one_chip Z := by
+        oneChip (d.coreVertex 0) + oneChip (d.coreVertex 5) + oneChip Z := by
   obtain ⟨hd4, hd3, hd0, h5⟩ := bounds hba hbc
   have hcr : cRest d.length ≤ d.length 0 := cRest_le hba
   by_cases hcase : d.length 4 = dpos d.length
