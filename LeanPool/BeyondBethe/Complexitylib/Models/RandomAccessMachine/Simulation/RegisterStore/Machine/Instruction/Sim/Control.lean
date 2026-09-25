@@ -43,6 +43,94 @@ private theorem hasBinaryPrefix_parked {t : Tape} {bits : List Bool}
   · rw [h.2.2 i (Nat.le_of_not_gt hi)]
     decide
 
+/-- Restore the empty entry scanner after copying a control instruction's store buffer. -/
+private theorem controlCopy_entryScannerReady
+    (tapes : ControlInstructionTapes n) (store : Store) (newPC : ℕ)
+    (initialWork work finalWork : Fin (n + 1) → Tape)
+    (hcontrolResult :
+      ControlInstructionResult tapes.lifted store newPC initialWork work) :
+    let bits := store.flatMap Entry.encode
+    let source := tapes.liftedSource
+    let buffer := tapes.buffer
+    (∀ i, i ≠ source → i ≠ buffer → finalWork i = work i) →
+    (∀ i, TM.Parked (finalWork i)) →
+    (work source).HasBinarySuffix bits →
+    (finalWork source).cells = (work source).cells →
+    (finalWork source).head = bits.length + 1 →
+    (finalWork source).HasOutput bits →
+    EntryScanReady tapes.lifted.data.update.entry [] [] finalWork finalWork := by
+  dsimp only
+  intro hotherFrame hfinalParked hsourceSuffix hsourceCells
+    hsourceFinalHead hsourceFinalOutput
+  let bits := store.flatMap Entry.encode
+  let source := tapes.liftedSource
+  let buffer := tapes.buffer
+  let entry := tapes.lifted.data.update.entry
+  have hrole (slot : Fin 9) (hne : slot ≠ 0) :
+      finalWork (entry.idx slot) = work (entry.idx slot) := by
+    exact hotherFrame _ (entry.ne hne)
+      (tapes.liftedData_ne_buffer ⟨slot, by omega⟩)
+  refine
+    { source := ?_
+      address := by
+        change (finalWork (entry.idx 1)).HasBinaryPrefix []
+        rw [hrole 1 (by decide)]
+        exact hcontrolResult.ready.lookup.scanner.address
+      addressStart := by
+        change (finalWork (entry.idx 1)).cells 0 = Γ.start
+        rw [hrole 1 (by decide)]
+        exact hcontrolResult.ready.lookup.scanner.addressStart
+      value := by
+        change (finalWork (entry.idx 2)).HasBinaryPrefix []
+        rw [hrole 2 (by decide)]
+        exact hcontrolResult.ready.lookup.scanner.value
+      valueStart := by
+        change (finalWork (entry.idx 2)).cells 0 = Γ.start
+        rw [hrole 2 (by decide)]
+        exact hcontrolResult.ready.lookup.scanner.valueStart
+      addressCounter := by
+        change (finalWork (entry.idx 3)).HasBinaryNat 0
+        rw [hrole 3 (by decide)]
+        exact hcontrolResult.ready.lookup.scanner.addressCounter
+      addressWidth := by
+        change (finalWork (entry.idx 4)).HasBinaryNat 0
+        rw [hrole 4 (by decide)]
+        exact hcontrolResult.ready.lookup.scanner.addressWidth
+      valueCounter := by
+        change (finalWork (entry.idx 5)).HasBinaryNat 0
+        rw [hrole 5 (by decide)]
+        exact hcontrolResult.ready.lookup.scanner.valueCounter
+      valueWidth := by
+        change (finalWork (entry.idx 6)).HasBinaryNat 0
+        rw [hrole 6 (by decide)]
+        exact hcontrolResult.ready.lookup.scanner.valueWidth
+      query := by
+        change (finalWork (entry.idx 7)).HasBinaryString []
+        rw [hrole 7 (by decide)]
+        exact hcontrolResult.ready.lookup.scanner.query
+      queryStart := by
+        change (finalWork (entry.idx 7)).cells 0 = Γ.start
+        rw [hrole 7 (by decide)]
+        exact hcontrolResult.ready.lookup.scanner.queryStart
+      result := by
+        change (finalWork (entry.idx 8)).HasBinaryPrefix []
+        rw [hrole 8 (by decide)]
+        exact hcontrolResult.ready.lookup.scanner.result
+      resultStart := by
+        change (finalWork (entry.idx 8)).cells 0 = Γ.start
+        rw [hrole 8 (by decide)]
+        exact hcontrolResult.ready.lookup.scanner.resultStart
+      parked := hfinalParked
+      frame := by intro i _ _ _ _ _ _ _ _ _; rfl }
+  change (finalWork source).HasBinarySuffix []
+  refine ⟨by omega, ?_, ?_, ?_⟩
+  · intro i hi
+    simp at hi
+  · simpa [hsourceFinalHead, Nat.add_comm] using! hsourceFinalOutput.2
+  · intro j hj
+    rw [hsourceCells]
+    exact hsourceSuffix.2.2.2 j hj
+
 private theorem finishControlInstructionTM_hoareTime_frame_internal
     (tapes : ControlInstructionTapes n) (store : Store)
     (pcValue newPC : ℕ) (initialWork : Fin (n + 1) → Tape)
@@ -226,71 +314,9 @@ private theorem finishControlInstructionTM_hoareTime_frame_internal
       · exact hotherParked i hiSource hiBuffer
     have hfinalScanner : EntryScanReady
         tapes.lifted.data.update.entry [] [] final.work final.work := by
-      let entry := tapes.lifted.data.update.entry
-      have hrole (slot : Fin 9) (hne : slot ≠ 0) :
-          final.work (entry.idx slot) = work (entry.idx slot) := by
-        exact hotherFrame _ (entry.ne hne)
-          (tapes.liftedData_ne_buffer ⟨slot, by omega⟩)
-      refine
-        { source := ?_
-          address := by
-            change (final.work (entry.idx 1)).HasBinaryPrefix []
-            rw [hrole 1 (by decide)]
-            exact hcontrolResult.ready.lookup.scanner.address
-          addressStart := by
-            change (final.work (entry.idx 1)).cells 0 = Γ.start
-            rw [hrole 1 (by decide)]
-            exact hcontrolResult.ready.lookup.scanner.addressStart
-          value := by
-            change (final.work (entry.idx 2)).HasBinaryPrefix []
-            rw [hrole 2 (by decide)]
-            exact hcontrolResult.ready.lookup.scanner.value
-          valueStart := by
-            change (final.work (entry.idx 2)).cells 0 = Γ.start
-            rw [hrole 2 (by decide)]
-            exact hcontrolResult.ready.lookup.scanner.valueStart
-          addressCounter := by
-            change (final.work (entry.idx 3)).HasBinaryNat 0
-            rw [hrole 3 (by decide)]
-            exact hcontrolResult.ready.lookup.scanner.addressCounter
-          addressWidth := by
-            change (final.work (entry.idx 4)).HasBinaryNat 0
-            rw [hrole 4 (by decide)]
-            exact hcontrolResult.ready.lookup.scanner.addressWidth
-          valueCounter := by
-            change (final.work (entry.idx 5)).HasBinaryNat 0
-            rw [hrole 5 (by decide)]
-            exact hcontrolResult.ready.lookup.scanner.valueCounter
-          valueWidth := by
-            change (final.work (entry.idx 6)).HasBinaryNat 0
-            rw [hrole 6 (by decide)]
-            exact hcontrolResult.ready.lookup.scanner.valueWidth
-          query := by
-            change (final.work (entry.idx 7)).HasBinaryString []
-            rw [hrole 7 (by decide)]
-            exact hcontrolResult.ready.lookup.scanner.query
-          queryStart := by
-            change (final.work (entry.idx 7)).cells 0 = Γ.start
-            rw [hrole 7 (by decide)]
-            exact hcontrolResult.ready.lookup.scanner.queryStart
-          result := by
-            change (final.work (entry.idx 8)).HasBinaryPrefix []
-            rw [hrole 8 (by decide)]
-            exact hcontrolResult.ready.lookup.scanner.result
-          resultStart := by
-            change (final.work (entry.idx 8)).cells 0 = Γ.start
-            rw [hrole 8 (by decide)]
-            exact hcontrolResult.ready.lookup.scanner.resultStart
-          parked := hfinalParked
-          frame := by intro i _ _ _ _ _ _ _ _ _; rfl }
-      change (final.work source).HasBinarySuffix []
-      refine ⟨by omega, ?_, ?_, ?_⟩
-      · intro i hi
-        simp at hi
-      · simpa [hsourceFinalHead, Nat.add_comm] using! hsourceFinalOutput.2
-      · intro j hj
-        rw [hsourceCells]
-        exact hsourceSuffix.2.2.2 j hj
+      exact controlCopy_entryScannerReady tapes store newPC initialWork work
+        final.work hcontrolResult hotherFrame hfinalParked hsourceSuffix
+        hsourceCells hsourceFinalHead hsourceFinalOutput
     have hfinalShift :
         (final.work tapes.lifted.data.shift).HasBinaryNat 0 := by
       change (final.work (tapes.lifted.data.idx 15)).HasBinaryNat 0

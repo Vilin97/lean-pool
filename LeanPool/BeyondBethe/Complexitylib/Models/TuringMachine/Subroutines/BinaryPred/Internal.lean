@@ -446,6 +446,142 @@ private theorem binaryPredTM_rewind_run (bits : List Bool)
       simpa [Nat.succ_eq_add_one, Nat.add_assoc] using
         (TM.reachesIn.step hstep hreach)
 
+/-- Borrowing through the last one bit erases it and rewinds the completed predecessor. -/
+private theorem binaryPredTM_borrow_terminal_one
+    (inp₀ : Tape) (work₀ : Fin n → Tape) (out₀ : Tape)
+    (hinp : inp₀.read ≠ Γ.start)
+    (hother : ∀ i, i ≠ idx → (work₀ i).read ≠ Γ.start)
+    (hout : out₀.read ≠ Γ.start) :
+    ∀ done (c : Cfg n (binaryPredTM idx).Q),
+      c.state = .borrow →
+      c.input = inp₀ →
+      (∀ i, i ≠ idx → c.work i = work₀ i) →
+      (c.work idx).HasBinaryContent (List.replicate done true ++ [true]) →
+      (c.work idx).cells 0 = Γ.start →
+      (c.work idx).head = done + 1 →
+      c.output = out₀ →
+      ∃ c',
+        (binaryPredTM idx).reachesIn (done + BinaryPred.steps [true]) c c' ∧
+        (binaryPredTM idx).halted c' ∧
+        c'.input = inp₀ ∧
+        (∀ i, i ≠ idx → c'.work i = work₀ i) ∧
+        (c'.work idx).HasBinaryString
+          (List.replicate done true ++ BinaryPred.ripple [true]) ∧
+        (c'.work idx).cells 0 = Γ.start ∧
+        c'.output = out₀ := by
+  intro done
+  intro c hstate hinput hwork hcontent hcell0 hhead houtput
+  have hread : (c.work idx).read = Γ.one :=
+    hcontent.binaryPred_read_cons hhead
+  have hstep := binaryPredTM_step_one c hstate hread
+    (by rw [hinput]; exact hinp)
+    (fun i hi => by rw [hwork i hi]; exact hother i hi)
+    (by rw [houtput]; exact hout)
+  let target₁ : Tape :=
+    ((c.work idx).write Γ.zero).move Dir3.right
+  have htarget₁Content : target₁.HasBinaryContent
+      (List.replicate done true ++ [false]) := by
+    have hwrite := hcontent.write_set false hhead (by simp)
+    rw [BinaryPred.set_true_to_false] at hwrite
+    simpa only [target₁, Tape.HasBinaryContent, Tape.move_cells]
+      using! hwrite
+  have htarget₁Cell0 : target₁.cells 0 = Γ.start := by
+    exact Tape.write_move_cell0 Γ.zero Dir3.right hcell0
+  have htarget₁Head : target₁.head = done + 2 := by
+    simp [target₁, Tape.move, Tape.write_head, hhead]
+  have htarget₁Read : target₁.read = Γ.blank := by
+    rw [Tape.read, htarget₁Head]
+    exact htarget₁Content.2 (done + 1) (by simp)
+  let c₁ : Cfg n (binaryPredTM idx).Q :=
+    { state := .check
+      input := c.input
+      work := Function.update c.work idx target₁
+      output := c.output }
+  have hcheck := binaryPredTM_step_check_blank c₁ rfl
+    (by simpa [c₁] using htarget₁Read)
+    (by rw [hinput]; exact hinp)
+    (fun i hi => by
+      simp only [c₁, Function.update_of_ne hi]
+      rw [hwork i hi]
+      exact hother i hi)
+    (by rw [houtput]; exact hout)
+  let target₂ : Tape := target₁.move Dir3.left
+  have htarget₂Content : target₂.HasBinaryContent
+      (List.replicate done true ++ [false]) := by
+    simpa only [target₂] using htarget₁Content.move Dir3.left
+  have htarget₂Cell0 : target₂.cells 0 = Γ.start := by
+    simpa [target₂, Tape.move_cells] using htarget₁Cell0
+  have htarget₂Head : target₂.head = done + 1 := by
+    simp [target₂, Tape.move, htarget₁Head]
+  have htarget₂Read : target₂.read ≠ Γ.start :=
+    htarget₂Content.cells_ne_start target₂.head (by
+      rw [htarget₂Head]
+      omega)
+  let c₂ : Cfg n (binaryPredTM idx).Q :=
+    { state := .erase
+      input := c.input
+      work := Function.update c.work idx target₂
+      output := c.output }
+  have herase := binaryPredTM_step_erase c₂ rfl
+    (by simpa [c₂] using htarget₂Read)
+    (by rw [hinput]; exact hinp)
+    (fun i hi => by
+      simp only [c₂, Function.update_of_ne hi]
+      rw [hwork i hi]
+      exact hother i hi)
+    (by rw [houtput]; exact hout)
+  let target₃ : Tape :=
+    (target₂.write Γ.blank).move Dir3.left
+  have htarget₃Content :
+      target₃.HasBinaryContent (List.replicate done true) := by
+    have herased := htarget₂Content.binaryPred_erase_last (by
+      simpa using htarget₂Head)
+    simpa only [target₃] using herased.move Dir3.left
+  have htarget₃Cell0 : target₃.cells 0 = Γ.start := by
+    exact Tape.write_move_cell0 Γ.blank Dir3.left htarget₂Cell0
+  have htarget₃Head : target₃.head = done := by
+    simp [target₃, Tape.move, Tape.write_head, htarget₂Head]
+  let c₃ : Cfg n (binaryPredTM idx).Q :=
+    { state := .rewind
+      input := c.input
+      work := Function.update c.work idx target₃
+      output := c.output }
+  have hcheck' : (binaryPredTM idx).step c₁ = some c₂ := by
+    simpa [c₁, c₂, target₂] using hcheck
+  have herase' : (binaryPredTM idx).step c₂ = some c₃ := by
+    simpa [c₂, c₃, target₃] using herase
+  obtain ⟨c', hreach, hhalt, hinput', hwork', hstring,
+      hcell0', houtput'⟩ :=
+    binaryPredTM_rewind_run (idx := idx)
+      (List.replicate done true) inp₀ work₀ out₀ hinp hother
+      hout done c₃ rfl hinput
+      (fun i hi => by
+        show Function.update c.work idx target₃ i = work₀ i
+        rw [Function.update_of_ne hi]
+        exact hwork i hi)
+      (by
+        show (Function.update c.work idx target₃ idx)
+          |>.HasBinaryContent _
+        rw [Function.update_self]
+        exact htarget₃Content)
+      (by
+        show (Function.update c.work idx target₃ idx).cells 0 = _
+        rw [Function.update_self]
+        exact htarget₃Cell0)
+      (by
+        show (Function.update c.work idx target₃ idx).head = done
+        rw [Function.update_self]
+        exact htarget₃Head)
+      houtput
+  have hprefix : (binaryPredTM idx).reachesIn 3 c c₃ := by
+    exact .step hstep (.step hcheck' (.step herase' .zero))
+  refine ⟨c', ?_, hhalt, hinput', hwork', ?_, hcell0', houtput'⟩
+  · have hrun := reachesIn_trans (binaryPredTM idx) hprefix hreach
+    convert! hrun using 1
+    all_goals simp [BinaryPred.steps]
+    all_goals omega
+  · simpa [BinaryPred.ripple] using hstring
+
 private theorem binaryPredTM_borrow_run
     (inp₀ : Tape) (work₀ : Fin n → Tape) (out₀ : Tape)
     (hinp : inp₀.read ≠ Γ.start)
@@ -573,117 +709,8 @@ private theorem binaryPredTM_borrow_run
       | true =>
           cases rest with
           | nil =>
-              intro c hstate hinput hwork hcontent hcell0 hhead houtput
-              have hread : (c.work idx).read = Γ.one :=
-                hcontent.binaryPred_read_cons hhead
-              have hstep := binaryPredTM_step_one c hstate hread
-                (by rw [hinput]; exact hinp)
-                (fun i hi => by rw [hwork i hi]; exact hother i hi)
-                (by rw [houtput]; exact hout)
-              let target₁ : Tape :=
-                ((c.work idx).write Γ.zero).move Dir3.right
-              have htarget₁Content : target₁.HasBinaryContent
-                  (List.replicate done true ++ [false]) := by
-                have hwrite := hcontent.write_set false hhead (by simp)
-                rw [BinaryPred.set_true_to_false] at hwrite
-                simpa only [target₁, Tape.HasBinaryContent, Tape.move_cells]
-                  using! hwrite
-              have htarget₁Cell0 : target₁.cells 0 = Γ.start := by
-                exact Tape.write_move_cell0 Γ.zero Dir3.right hcell0
-              have htarget₁Head : target₁.head = done + 2 := by
-                simp [target₁, Tape.move, Tape.write_head, hhead]
-              have htarget₁Read : target₁.read = Γ.blank := by
-                rw [Tape.read, htarget₁Head]
-                exact htarget₁Content.2 (done + 1) (by simp)
-              let c₁ : Cfg n (binaryPredTM idx).Q :=
-                { state := .check
-                  input := c.input
-                  work := Function.update c.work idx target₁
-                  output := c.output }
-              have hcheck := binaryPredTM_step_check_blank c₁ rfl
-                (by simpa [c₁] using htarget₁Read)
-                (by rw [hinput]; exact hinp)
-                (fun i hi => by
-                  simp only [c₁, Function.update_of_ne hi]
-                  rw [hwork i hi]
-                  exact hother i hi)
-                (by rw [houtput]; exact hout)
-              let target₂ : Tape := target₁.move Dir3.left
-              have htarget₂Content : target₂.HasBinaryContent
-                  (List.replicate done true ++ [false]) := by
-                simpa only [target₂] using htarget₁Content.move Dir3.left
-              have htarget₂Cell0 : target₂.cells 0 = Γ.start := by
-                simpa [target₂, Tape.move_cells] using htarget₁Cell0
-              have htarget₂Head : target₂.head = done + 1 := by
-                simp [target₂, Tape.move, htarget₁Head]
-              have htarget₂Read : target₂.read ≠ Γ.start :=
-                htarget₂Content.cells_ne_start target₂.head (by
-                  rw [htarget₂Head]
-                  omega)
-              let c₂ : Cfg n (binaryPredTM idx).Q :=
-                { state := .erase
-                  input := c.input
-                  work := Function.update c.work idx target₂
-                  output := c.output }
-              have herase := binaryPredTM_step_erase c₂ rfl
-                (by simpa [c₂] using htarget₂Read)
-                (by rw [hinput]; exact hinp)
-                (fun i hi => by
-                  simp only [c₂, Function.update_of_ne hi]
-                  rw [hwork i hi]
-                  exact hother i hi)
-                (by rw [houtput]; exact hout)
-              let target₃ : Tape :=
-                (target₂.write Γ.blank).move Dir3.left
-              have htarget₃Content :
-                  target₃.HasBinaryContent (List.replicate done true) := by
-                have herased := htarget₂Content.binaryPred_erase_last (by
-                  simpa using htarget₂Head)
-                simpa only [target₃] using herased.move Dir3.left
-              have htarget₃Cell0 : target₃.cells 0 = Γ.start := by
-                exact Tape.write_move_cell0 Γ.blank Dir3.left htarget₂Cell0
-              have htarget₃Head : target₃.head = done := by
-                simp [target₃, Tape.move, Tape.write_head, htarget₂Head]
-              let c₃ : Cfg n (binaryPredTM idx).Q :=
-                { state := .rewind
-                  input := c.input
-                  work := Function.update c.work idx target₃
-                  output := c.output }
-              have hcheck' : (binaryPredTM idx).step c₁ = some c₂ := by
-                simpa [c₁, c₂, target₂] using hcheck
-              have herase' : (binaryPredTM idx).step c₂ = some c₃ := by
-                simpa [c₂, c₃, target₃] using herase
-              obtain ⟨c', hreach, hhalt, hinput', hwork', hstring,
-                  hcell0', houtput'⟩ :=
-                binaryPredTM_rewind_run (idx := idx)
-                  (List.replicate done true) inp₀ work₀ out₀ hinp hother
-                  hout done c₃ rfl hinput
-                  (fun i hi => by
-                    show Function.update c.work idx target₃ i = work₀ i
-                    rw [Function.update_of_ne hi]
-                    exact hwork i hi)
-                  (by
-                    show (Function.update c.work idx target₃ idx)
-                      |>.HasBinaryContent _
-                    rw [Function.update_self]
-                    exact htarget₃Content)
-                  (by
-                    show (Function.update c.work idx target₃ idx).cells 0 = _
-                    rw [Function.update_self]
-                    exact htarget₃Cell0)
-                  (by
-                    show (Function.update c.work idx target₃ idx).head = done
-                    rw [Function.update_self]
-                    exact htarget₃Head)
-                  houtput
-              have hprefix : (binaryPredTM idx).reachesIn 3 c c₃ := by
-                exact .step hstep (.step hcheck' (.step herase' .zero))
-              refine ⟨c', ?_, hhalt, hinput', hwork', ?_, hcell0', houtput'⟩
-              · have hrun := reachesIn_trans (binaryPredTM idx) hprefix hreach
-                convert! hrun using 1
-                all_goals simp [BinaryPred.steps]
-                all_goals omega
-              · simpa [BinaryPred.ripple] using hstring
+              exact binaryPredTM_borrow_terminal_one inp₀ work₀ out₀
+                hinp hother hout done
           | cons next rest =>
               intro c hstate hinput hwork hcontent hcell0 hhead houtput
               have hread : (c.work idx).read = Γ.one :=

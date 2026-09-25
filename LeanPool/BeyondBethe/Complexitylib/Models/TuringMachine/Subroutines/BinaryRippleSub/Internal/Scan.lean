@@ -170,6 +170,174 @@ private theorem binaryRippleSubCoreTM_step_terminal {n : ℕ}
   · intro i _ _ hires
     simp [binaryRippleSubScanTurnWork, hires]
 
+/-- With the left input exhausted, ripple subtraction condiffes the right suffix and borrow. -/
+/-- Writing one ripple-sub output bit extends its prefix without changing the start marker. -/
+private theorem binaryRippleSubScanAdvanceWork_result {n : ℕ}
+    (lhsIdx rhsIdx resultIdx : Fin n) (diff : Bool) (emitted : List Bool)
+    (work₀ : Fin n → Tape)
+    (hresult : (work₀ resultIdx).HasBinaryPrefix emitted)
+    (hresultStart : (work₀ resultIdx).cells 0 = Γ.start) :
+    let work₁ := binaryRippleSubScanAdvanceWork lhsIdx rhsIdx resultIdx diff work₀
+    (work₁ resultIdx).HasBinaryPrefix (emitted ++ [diff]) ∧
+      (work₁ resultIdx).cells 0 = Γ.start := by
+  dsimp only
+  let work₁ := binaryRippleSubScanAdvanceWork lhsIdx rhsIdx resultIdx diff work₀
+  have hresult₁ :
+      (work₁ resultIdx).HasBinaryPrefix (emitted ++ [diff]) := by
+    rw [show work₁ resultIdx =
+      (work₀ resultIdx).writeAndMove (Γw.ofBool diff).toΓ
+        Dir3.right by
+      simp [work₁, binaryRippleSubScanAdvanceWork]]
+    rw [Γw.ofBool_toΓ]
+    exact Tape.hasBinaryPrefix_write_bit diff hresult
+  have hresultStart₁ : (work₁ resultIdx).cells 0 = Γ.start := by
+    rw [show work₁ resultIdx =
+      (work₀ resultIdx).writeAndMove (Γw.ofBool diff).toΓ
+        Dir3.right by
+      simp [work₁, binaryRippleSubScanAdvanceWork]]
+    rw [Γw.ofBool_toΓ]
+    exact Tape.hasBinaryPrefix_write_bit_cell0 diff hresult hresultStart
+  exact ⟨hresult₁, hresultStart₁⟩
+
+private theorem binaryRippleSubCoreTM_suffix_empty_left {n : ℕ}
+    (lhsIdx rhsIdx resultIdx : Fin n)
+    (hdistinct : BinaryRippleSubDistinct lhsIdx rhsIdx resultIdx)
+    (borrow : Bool) (rhs emitted : List Bool)
+    (inp₀ : Tape) (work₀ : Fin n → Tape) (out₀ : Tape)
+    (hlhs : (work₀ lhsIdx).HasBinarySuffix ([] : List Bool))
+    (hrhs : (work₀ rhsIdx).HasBinarySuffix rhs)
+    (hresult : (work₀ resultIdx).HasBinaryPrefix emitted)
+    (hresultStart : (work₀ resultIdx).cells 0 = Γ.start)
+    (hinput : inp₀.read ≠ Γ.start)
+    (hother : ∀ i, i ≠ lhsIdx → i ≠ rhsIdx → i ≠ resultIdx →
+      (work₀ i).read ≠ Γ.start)
+    (houtput : out₀.read ≠ Γ.start) :
+    ∃ c',
+      (binaryRippleSubCoreTM lhsIdx rhsIdx resultIdx).reachesIn
+        (binaryRippleSubScanTime ([] : List Bool) rhs)
+        { state := .scan borrow, input := inp₀, work := work₀, output := out₀ } c' ∧
+      c'.state = (if (BinaryRippleSub.scan borrow ([] : List Bool) rhs).borrow then
+          .erase else .trim false) ∧
+      c'.input = inp₀ ∧
+      (c'.work lhsIdx).cells = (work₀ lhsIdx).cells ∧
+      (c'.work lhsIdx).head = (work₀ lhsIdx).head + ([] : List Bool).length ∧
+      (c'.work rhsIdx).cells = (work₀ rhsIdx).cells ∧
+      (c'.work rhsIdx).head = (work₀ rhsIdx).head + rhs.length ∧
+      (c'.work resultIdx).HasBinaryContent
+        (emitted ++ (BinaryRippleSub.scan borrow ([] : List Bool) rhs).bits) ∧
+      (c'.work resultIdx).head =
+        (emitted ++ (BinaryRippleSub.scan borrow ([] : List Bool) rhs).bits).length ∧
+      (c'.work resultIdx).cells 0 = Γ.start ∧
+      (∀ i, i ≠ lhsIdx → i ≠ rhsIdx → i ≠ resultIdx →
+        c'.work i = work₀ i) ∧
+      c'.output = out₀ := by
+  induction rhs generalizing borrow emitted inp₀ work₀ out₀ with
+  | nil =>
+      have hterminal := binaryRippleSubCoreTM_step_terminal
+        lhsIdx rhsIdx resultIdx hdistinct borrow emitted inp₀ work₀ out₀
+        hlhs.read_nil hrhs.read_nil hinput hresult hresultStart hother houtput
+      let finalWork := binaryRippleSubScanTurnWork resultIdx work₀
+      let c' : Cfg n BinaryRippleSubPhase :=
+        { state := if borrow then .erase else .trim false
+          input := inp₀
+          work := finalWork
+          output := out₀ }
+      rcases hterminal with ⟨hstep, hfinalLhs, hfinalLhsHead, hfinalRhs,
+        hfinalRhsHead, hfinalResult, hfinalResultHead, hfinalResultStart,
+        hfinalOther⟩
+      refine ⟨c', ?_, by
+        cases borrow <;> simp [c', BinaryRippleSub.scan] <;> rfl, rfl,
+        hfinalLhs, ?_, hfinalRhs, ?_, ?_, ?_,
+        hfinalResultStart, hfinalOther, rfl⟩
+      · have hreach :
+            (binaryRippleSubCoreTM lhsIdx rhsIdx resultIdx).reachesIn 1
+              { state := .scan borrow, input := inp₀, work := work₀,
+                output := out₀ } c' :=
+          .step hstep .zero
+        simpa [binaryRippleSubScanTime] using hreach
+      · simpa using hfinalLhsHead
+      · simpa using hfinalRhsHead
+      · simpa [BinaryRippleSub.scan] using hfinalResult
+      · simpa [BinaryRippleSub.scan] using hfinalResultHead
+  | cons rhsBit rhsTail ih =>
+      have hlhsBit : decide ((work₀ lhsIdx).read = Γ.one) = false := by
+        rw [hlhs.read_nil]
+        decide
+      have hrhsBit : decide ((work₀ rhsIdx).read = Γ.one) = rhsBit := by
+        rw [hrhs.read_cons]
+        cases rhsBit <;> rfl
+      let diff := BinaryRippleSub.diffBit borrow false rhsBit
+      let nextBorrow := BinaryRippleSub.borrowBit borrow false rhsBit
+      let work₁ := binaryRippleSubScanAdvanceWork lhsIdx rhsIdx resultIdx
+        diff work₀
+      have hactive : ¬((work₀ lhsIdx).read = Γ.blank ∧
+          (work₀ rhsIdx).read = Γ.blank) := by
+        intro hblank
+        rw [hrhs.read_cons] at hblank
+        cases rhsBit <;> simp [Γ.ofBool] at hblank
+      have hrhsNotBlank : (work₀ rhsIdx).read ≠ Γ.blank := by
+        rw [hrhs.read_cons]
+        cases rhsBit <;> decide
+      have hstep :
+          (binaryRippleSubCoreTM lhsIdx rhsIdx resultIdx).step
+            { state := .scan borrow, input := inp₀, work := work₀,
+              output := out₀ } =
+            some
+              { state := .scan nextBorrow
+                input := inp₀
+                work := work₁
+                output := out₀ } := by
+        simpa [hlhsBit, hrhsBit, diff, nextBorrow, work₁] using
+          binaryRippleSubCoreTM_step_active lhsIdx rhsIdx resultIdx borrow
+            inp₀ work₀ out₀ hactive hinput hlhs.read_ne_start
+            hrhs.read_ne_start hother houtput
+      have hlhs₁ : (work₁ lhsIdx).HasBinarySuffix [] := by
+        simpa [work₁, binaryRippleSubScanAdvanceWork,
+          hdistinct.lhs_result, hlhs.read_nil] using hlhs
+      have hrhs₁ : (work₁ rhsIdx).HasBinarySuffix rhsTail := by
+        simpa [work₁, binaryRippleSubScanAdvanceWork,
+          hdistinct.rhs_result, Ne.symm hdistinct.lhs_rhs,
+          hrhsNotBlank] using hrhs.move_right_cons
+      obtain ⟨hresult₁, hresultStart₁⟩ :=
+        binaryRippleSubScanAdvanceWork_result lhsIdx rhsIdx resultIdx
+          diff emitted work₀ hresult hresultStart
+      have hother₁ : ∀ i, i ≠ lhsIdx → i ≠ rhsIdx → i ≠ resultIdx →
+          (work₁ i).read ≠ Γ.start := by
+        intro i hil hir hires
+        simpa [work₁, binaryRippleSubScanAdvanceWork, hil, hir, hires] using
+          hother i hil hir hires
+      obtain ⟨c', hreach, hstate, hfinalInput, hfinalLhs,
+          hfinalLhsHead, hfinalRhs, hfinalRhsHead, hfinalResult,
+          hfinalResultHead, hfinalResultStart, hfinalOther, hfinalOutput⟩ :=
+        ih nextBorrow
+          (emitted ++ [diff]) inp₀ work₁ out₀ hlhs₁ hrhs₁ hresult₁
+          hresultStart₁ hinput hother₁ houtput
+      refine ⟨c', ?_, ?_, hfinalInput, ?_, ?_, ?_, ?_, ?_, ?_,
+        hfinalResultStart, ?_, hfinalOutput⟩
+      · simpa [binaryRippleSubScanTime] using
+          TM.reachesIn.step hstep hreach
+      · simpa [BinaryRippleSub.scan, nextBorrow] using hstate
+      · simpa [work₁, binaryRippleSubScanAdvanceWork,
+          hdistinct.lhs_result, hlhs.read_nil] using hfinalLhs
+      · simpa [work₁, binaryRippleSubScanAdvanceWork,
+          hdistinct.lhs_result, hlhs.read_nil] using hfinalLhsHead
+      · simpa [work₁, binaryRippleSubScanAdvanceWork,
+          hdistinct.rhs_result, Ne.symm hdistinct.lhs_rhs,
+          hrhsNotBlank, Tape.move_cells] using hfinalRhs
+      · rw [hfinalRhsHead]
+        simp only [work₁, binaryRippleSubScanAdvanceWork,
+          ite_eq_right hdistinct.rhs_result,
+          ite_eq_right (Ne.symm hdistinct.lhs_rhs), ite_eq_left,
+          ite_eq_right hrhsNotBlank, Tape.move, List.length_cons]
+        omega
+      · simpa [BinaryRippleSub.scan, diff, nextBorrow,
+          List.append_assoc] using hfinalResult
+      · simpa [BinaryRippleSub.scan, diff, nextBorrow,
+          List.append_assoc] using hfinalResultHead
+      · intro i hil hir hires
+        rw [hfinalOther i hil hir hires]
+        simp [work₁, binaryRippleSubScanAdvanceWork, hil, hir, hires]
+
 private theorem binaryRippleSubCoreTM_suffix_reachesIn {n : ℕ}
     (lhsIdx rhsIdx resultIdx : Fin n)
     (hdistinct : BinaryRippleSubDistinct lhsIdx rhsIdx resultIdx)
@@ -207,127 +375,9 @@ private theorem binaryRippleSubCoreTM_suffix_reachesIn {n : ℕ}
   | h total ih =>
     cases lhs with
     | nil =>
-      cases rhs with
-      | nil =>
-          have hterminal := binaryRippleSubCoreTM_step_terminal
-            lhsIdx rhsIdx resultIdx hdistinct borrow emitted inp₀ work₀ out₀
-            hlhs.read_nil hrhs.read_nil hinput hresult hresultStart hother houtput
-          let finalWork := binaryRippleSubScanTurnWork resultIdx work₀
-          let c' : Cfg n BinaryRippleSubPhase :=
-            { state := if borrow then .erase else .trim false
-              input := inp₀
-              work := finalWork
-              output := out₀ }
-          rcases hterminal with ⟨hstep, hfinalLhs, hfinalLhsHead, hfinalRhs,
-            hfinalRhsHead, hfinalResult, hfinalResultHead, hfinalResultStart,
-            hfinalOther⟩
-          refine ⟨c', ?_, by
-            cases borrow <;> simp [c', BinaryRippleSub.scan] <;> rfl, rfl,
-            hfinalLhs, ?_, hfinalRhs, ?_, ?_, ?_,
-            hfinalResultStart, hfinalOther, rfl⟩
-          · have hreach :
-                (binaryRippleSubCoreTM lhsIdx rhsIdx resultIdx).reachesIn 1
-                  { state := .scan borrow, input := inp₀, work := work₀,
-                    output := out₀ } c' :=
-              .step hstep .zero
-            simpa [binaryRippleSubScanTime] using hreach
-          · simpa using hfinalLhsHead
-          · simpa using hfinalRhsHead
-          · simpa [BinaryRippleSub.scan] using hfinalResult
-          · simpa [BinaryRippleSub.scan] using hfinalResultHead
-      | cons rhsBit rhsTail =>
-          have hlhsBit : decide ((work₀ lhsIdx).read = Γ.one) = false := by
-            rw [hlhs.read_nil]
-            decide
-          have hrhsBit : decide ((work₀ rhsIdx).read = Γ.one) = rhsBit := by
-            rw [hrhs.read_cons]
-            cases rhsBit <;> rfl
-          let diff := BinaryRippleSub.diffBit borrow false rhsBit
-          let nextBorrow := BinaryRippleSub.borrowBit borrow false rhsBit
-          let work₁ := binaryRippleSubScanAdvanceWork lhsIdx rhsIdx resultIdx
-            diff work₀
-          have hactive : ¬((work₀ lhsIdx).read = Γ.blank ∧
-              (work₀ rhsIdx).read = Γ.blank) := by
-            intro hblank
-            rw [hrhs.read_cons] at hblank
-            cases rhsBit <;> simp [Γ.ofBool] at hblank
-          have hrhsNotBlank : (work₀ rhsIdx).read ≠ Γ.blank := by
-            rw [hrhs.read_cons]
-            cases rhsBit <;> decide
-          have hstep :
-              (binaryRippleSubCoreTM lhsIdx rhsIdx resultIdx).step
-                { state := .scan borrow, input := inp₀, work := work₀,
-                  output := out₀ } =
-                some
-                  { state := .scan nextBorrow
-                    input := inp₀
-                    work := work₁
-                    output := out₀ } := by
-            simpa [hlhsBit, hrhsBit, diff, nextBorrow, work₁] using
-              binaryRippleSubCoreTM_step_active lhsIdx rhsIdx resultIdx borrow
-                inp₀ work₀ out₀ hactive hinput hlhs.read_ne_start
-                hrhs.read_ne_start hother houtput
-          have hlhs₁ : (work₁ lhsIdx).HasBinarySuffix [] := by
-            simpa [work₁, binaryRippleSubScanAdvanceWork,
-              hdistinct.lhs_result, hlhs.read_nil] using hlhs
-          have hrhs₁ : (work₁ rhsIdx).HasBinarySuffix rhsTail := by
-            simpa [work₁, binaryRippleSubScanAdvanceWork,
-              hdistinct.rhs_result, Ne.symm hdistinct.lhs_rhs,
-              hrhsNotBlank] using hrhs.move_right_cons
-          have hresult₁ :
-              (work₁ resultIdx).HasBinaryPrefix (emitted ++ [diff]) := by
-            rw [show work₁ resultIdx =
-              (work₀ resultIdx).writeAndMove (Γw.ofBool diff).toΓ
-                Dir3.right by
-              simp [work₁, binaryRippleSubScanAdvanceWork]]
-            rw [Γw.ofBool_toΓ]
-            exact Tape.hasBinaryPrefix_write_bit diff hresult
-          have hresultStart₁ : (work₁ resultIdx).cells 0 = Γ.start := by
-            rw [show work₁ resultIdx =
-              (work₀ resultIdx).writeAndMove (Γw.ofBool diff).toΓ
-                Dir3.right by
-              simp [work₁, binaryRippleSubScanAdvanceWork]]
-            rw [Γw.ofBool_toΓ]
-            exact Tape.hasBinaryPrefix_write_bit_cell0 diff hresult hresultStart
-          have hother₁ : ∀ i, i ≠ lhsIdx → i ≠ rhsIdx → i ≠ resultIdx →
-              (work₁ i).read ≠ Γ.start := by
-            intro i hil hir hires
-            simpa [work₁, binaryRippleSubScanAdvanceWork, hil, hir, hires] using
-              hother i hil hir hires
-          have htailLength : rhsTail.length < total := by
-            simp only [List.length_nil, zero_add, List.length_cons] at hlength
-            omega
-          obtain ⟨c', hreach, hstate, hfinalInput, hfinalLhs,
-              hfinalLhsHead, hfinalRhs, hfinalRhsHead, hfinalResult,
-              hfinalResultHead, hfinalResultStart, hfinalOther, hfinalOutput⟩ :=
-            ih rhsTail.length htailLength nextBorrow [] rhsTail
-              (emitted ++ [diff]) inp₀ work₁ out₀ hlhs₁ hrhs₁ hresult₁
-              hresultStart₁ hinput hother₁ houtput (by simp)
-          refine ⟨c', ?_, ?_, hfinalInput, ?_, ?_, ?_, ?_, ?_, ?_,
-            hfinalResultStart, ?_, hfinalOutput⟩
-          · simpa [binaryRippleSubScanTime] using
-              TM.reachesIn.step hstep hreach
-          · simpa [BinaryRippleSub.scan, nextBorrow] using hstate
-          · simpa [work₁, binaryRippleSubScanAdvanceWork,
-              hdistinct.lhs_result, hlhs.read_nil] using hfinalLhs
-          · simpa [work₁, binaryRippleSubScanAdvanceWork,
-              hdistinct.lhs_result, hlhs.read_nil] using hfinalLhsHead
-          · simpa [work₁, binaryRippleSubScanAdvanceWork,
-              hdistinct.rhs_result, Ne.symm hdistinct.lhs_rhs,
-              hrhsNotBlank, Tape.move_cells] using hfinalRhs
-          · rw [hfinalRhsHead]
-            simp only [work₁, binaryRippleSubScanAdvanceWork,
-              ite_eq_right hdistinct.rhs_result,
-              ite_eq_right (Ne.symm hdistinct.lhs_rhs), ite_eq_left,
-              ite_eq_right hrhsNotBlank, Tape.move, List.length_cons]
-            omega
-          · simpa [BinaryRippleSub.scan, diff, nextBorrow,
-              List.append_assoc] using hfinalResult
-          · simpa [BinaryRippleSub.scan, diff, nextBorrow,
-              List.append_assoc] using hfinalResultHead
-          · intro i hil hir hires
-            rw [hfinalOther i hil hir hires]
-            simp [work₁, binaryRippleSubScanAdvanceWork, hil, hir, hires]
+      exact binaryRippleSubCoreTM_suffix_empty_left lhsIdx rhsIdx resultIdx
+        hdistinct borrow rhs emitted inp₀ work₀ out₀ hlhs hrhs hresult
+        hresultStart hinput hother houtput
     | cons lhsBit lhsTail =>
       cases rhs with
       | nil =>
@@ -369,21 +419,9 @@ private theorem binaryRippleSubCoreTM_suffix_reachesIn {n : ℕ}
             simpa [work₁, binaryRippleSubScanAdvanceWork,
               hdistinct.rhs_result, Ne.symm hdistinct.lhs_rhs,
               hrhs.read_nil] using hrhs
-          have hresult₁ :
-              (work₁ resultIdx).HasBinaryPrefix (emitted ++ [diff]) := by
-            rw [show work₁ resultIdx =
-              (work₀ resultIdx).writeAndMove (Γw.ofBool diff).toΓ
-                Dir3.right by
-              simp [work₁, binaryRippleSubScanAdvanceWork]]
-            rw [Γw.ofBool_toΓ]
-            exact Tape.hasBinaryPrefix_write_bit diff hresult
-          have hresultStart₁ : (work₁ resultIdx).cells 0 = Γ.start := by
-            rw [show work₁ resultIdx =
-              (work₀ resultIdx).writeAndMove (Γw.ofBool diff).toΓ
-                Dir3.right by
-              simp [work₁, binaryRippleSubScanAdvanceWork]]
-            rw [Γw.ofBool_toΓ]
-            exact Tape.hasBinaryPrefix_write_bit_cell0 diff hresult hresultStart
+          obtain ⟨hresult₁, hresultStart₁⟩ :=
+            binaryRippleSubScanAdvanceWork_result lhsIdx rhsIdx resultIdx
+              diff emitted work₀ hresult hresultStart
           have hother₁ : ∀ i, i ≠ lhsIdx → i ≠ rhsIdx → i ≠ resultIdx →
               (work₁ i).read ≠ Γ.start := by
             intro i hil hir hires
@@ -466,21 +504,9 @@ private theorem binaryRippleSubCoreTM_suffix_reachesIn {n : ℕ}
             simpa [work₁, binaryRippleSubScanAdvanceWork,
               hdistinct.rhs_result, Ne.symm hdistinct.lhs_rhs,
               hrhsNotBlank] using hrhs.move_right_cons
-          have hresult₁ :
-              (work₁ resultIdx).HasBinaryPrefix (emitted ++ [diff]) := by
-            rw [show work₁ resultIdx =
-              (work₀ resultIdx).writeAndMove (Γw.ofBool diff).toΓ
-                Dir3.right by
-              simp [work₁, binaryRippleSubScanAdvanceWork]]
-            rw [Γw.ofBool_toΓ]
-            exact Tape.hasBinaryPrefix_write_bit diff hresult
-          have hresultStart₁ : (work₁ resultIdx).cells 0 = Γ.start := by
-            rw [show work₁ resultIdx =
-              (work₀ resultIdx).writeAndMove (Γw.ofBool diff).toΓ
-                Dir3.right by
-              simp [work₁, binaryRippleSubScanAdvanceWork]]
-            rw [Γw.ofBool_toΓ]
-            exact Tape.hasBinaryPrefix_write_bit_cell0 diff hresult hresultStart
+          obtain ⟨hresult₁, hresultStart₁⟩ :=
+            binaryRippleSubScanAdvanceWork_result lhsIdx rhsIdx resultIdx
+              diff emitted work₀ hresult hresultStart
           have hother₁ : ∀ i, i ≠ lhsIdx → i ≠ rhsIdx → i ≠ resultIdx →
               (work₁ i).read ≠ Γ.start := by
             intro i hil hir hires

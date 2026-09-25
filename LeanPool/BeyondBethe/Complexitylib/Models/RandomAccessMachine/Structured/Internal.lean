@@ -145,6 +145,112 @@ private theorem run_space_le_spaceUpto (P : Program) (fuel : ℕ) (cfg : Cfg) :
         max (spaceUpto P fuel cfg) (run P fuel cfg).space := le_max_right _ _
     _ = spaceUpto P fuel cfg := hsplit.symm
 
+/-- Compilation preserves the nonzero conditional branch, including its exit jump cost. -/
+private theorem compileAt_ifNonzero_correct
+    {test : ℕ} {onZero onNonzero : Cmd} {store final : Store}
+    {branchSteps branchCost branchSpace : ℕ}
+    (htest : store test ≠ 0)
+    (ih : ∀ (pre suffix : Program),
+      let P := pre ++ onNonzero.compileAt pre.length ++ suffix
+      let start : Cfg := { pc := pre.length, regs := store }
+      run P branchSteps start =
+          { pc := pre.length + onNonzero.codeSize, regs := final } ∧
+        logTimeUpto P branchSteps start = branchCost ∧
+        spaceUpto P branchSteps start = branchSpace)
+    (pre suffix : Program) :
+    let cmd := Cmd.ifZero test onZero onNonzero
+    let P := pre ++ cmd.compileAt pre.length ++ suffix
+    let start : Cfg := { pc := pre.length, regs := store }
+    run P (branchSteps + 2) start =
+        { pc := pre.length + cmd.codeSize, regs := final } ∧
+      logTimeUpto P (branchSteps + 2) start =
+        bitlen (store test) + 1 + branchCost + 1 ∧
+      spaceUpto P (branchSteps + 2) start = max store.space branchSpace := by
+  dsimp only
+  simp only [Cmd.compileAt, Cmd.codeSize]
+  let zeroStart := pre.length + 1 + onNonzero.codeSize + 1
+  let done := pre.length + (2 + onZero.codeSize + onNonzero.codeSize)
+  let nonzeroPre := pre ++ [Instr.jz test zeroStart]
+  have hNonzeroPre : nonzeroPre.length = pre.length + 1 := by
+    simp [nonzeroPre]
+  have hbranchRun := ih nonzeroPre
+    (Instr.jmp done :: onZero.compileAt zeroStart ++ suffix)
+  simp only [hNonzeroPre] at hbranchRun
+  dsimp only [nonzeroPre, zeroStart, done] at hbranchRun ⊢
+  simp only [List.nil_append, List.cons_append, List.append_assoc]
+    at hbranchRun ⊢
+  let jmpPre := pre ++
+    [Instr.jz test (pre.length + 1 + onNonzero.codeSize + 1)] ++
+    onNonzero.compileAt (pre.length + 1)
+  have hjmp := step_jmp jmpPre
+    (onZero.compileAt (pre.length + 1 + onNonzero.codeSize + 1) ++ suffix)
+    (pre.length + (2 + onZero.codeSize + onNonzero.codeSize)) final
+  dsimp only [jmpPre] at hjmp
+  have hjmp' :
+      step
+          (pre ++ Instr.jz test (pre.length + 1 + onNonzero.codeSize + 1) ::
+            (onNonzero.compileAt (pre.length + 1) ++
+              Instr.jmp (pre.length + (2 + onZero.codeSize + onNonzero.codeSize)) ::
+                (onZero.compileAt (pre.length + 1 + onNonzero.codeSize + 1) ++ suffix)))
+          { pc := pre.length + 1 + onNonzero.codeSize, regs := final } =
+        { pc := pre.length + (2 + onZero.codeSize + onNonzero.codeSize),
+          regs := final } := by
+    simpa [Cmd.length_compileAt, Nat.add_assoc, Nat.add_comm,
+      Nat.add_left_comm] using hjmp
+  have hjmpInstr := curInstr_append_head jmpPre
+    (onZero.compileAt (pre.length + 1 + onNonzero.codeSize + 1) ++ suffix)
+    (Instr.jmp (pre.length + (2 + onZero.codeSize + onNonzero.codeSize))) final
+  dsimp only [jmpPre] at hjmpInstr
+  have hjmpInstr' :
+      curInstr
+          (pre ++ Instr.jz test (pre.length + 1 + onNonzero.codeSize + 1) ::
+            (onNonzero.compileAt (pre.length + 1) ++
+              Instr.jmp (pre.length + (2 + onZero.codeSize + onNonzero.codeSize)) ::
+                (onZero.compileAt (pre.length + 1 + onNonzero.codeSize + 1) ++ suffix)))
+          { pc := pre.length + 1 + onNonzero.codeSize, regs := final } =
+        Instr.jmp (pre.length + (2 + onZero.codeSize + onNonzero.codeSize)) := by
+    simpa [Cmd.length_compileAt, Nat.add_assoc, Nat.add_comm,
+      Nat.add_left_comm] using hjmpInstr
+  have hjmpHalt :
+      ¬Halted
+          (pre ++ Instr.jz test (pre.length + 1 + onNonzero.codeSize + 1) ::
+            (onNonzero.compileAt (pre.length + 1) ++
+              Instr.jmp (pre.length + (2 + onZero.codeSize + onNonzero.codeSize)) ::
+                (onZero.compileAt (pre.length + 1 + onNonzero.codeSize + 1) ++ suffix)))
+          { pc := pre.length + 1 + onNonzero.codeSize, regs := final } := by
+    simp [Halted, hjmpInstr']
+  rw [run_succ, logTimeUpto_succ]
+  simp [Halted, curInstr]
+  rw [step_jz_nonzero pre _ test _ store htest]
+  rw [run_succ_step, hbranchRun.1]
+  rw [hjmp']
+  rw [logTimeUpto_add _ branchSteps 1]
+  rw [hbranchRun.2.1, hbranchRun.1]
+  rw [show (1 : ℕ) = 0 + 1 from rfl, logTimeUpto_succ]
+  rw [ite_eq_right hjmpHalt]
+  simp [stepLogCost, hjmpInstr', Instr.logCost]
+  rw [spaceUpto]
+  simp [Halted, curInstr]
+  rw [step_jz_nonzero pre _ test _ store htest]
+  rw [spaceUpto_add _ branchSteps 1, hbranchRun.2.2, hbranchRun.1]
+  rw [show (1 : ℕ) = 0 + 1 from rfl, spaceUpto]
+  rw [ite_eq_right hjmpHalt, hjmp']
+  simp only [spaceUpto]
+  have hfinalSpace : final.space ≤ branchSpace := by
+    have hrunSpace := run_space_le_spaceUpto
+      (pre ++ Instr.jz test (pre.length + 1 + onNonzero.codeSize + 1) ::
+        (onNonzero.compileAt (pre.length + 1) ++
+          Instr.jmp (pre.length + (2 + onZero.codeSize + onNonzero.codeSize)) ::
+            (onZero.compileAt (pre.length + 1 + onNonzero.codeSize + 1) ++ suffix)))
+      branchSteps { pc := pre.length + 1, regs := store }
+    rw [hbranchRun.1, hbranchRun.2.2] at hrunSpace
+    simpa [Store.space, Cfg.space] using hrunSpace
+  constructor
+  · omega
+  · change max store.space (max branchSpace (max final.space final.space)) =
+      max store.space branchSpace
+    rw [max_self, max_eq_left hfinalSpace]
+
 theorem compileAt_correct_internal
     {cmd : Cmd} {initial final : Store} {steps cost space : ℕ}
     (hexec : Exec cmd initial final steps cost space)
@@ -213,90 +319,7 @@ theorem compileAt_correct_internal
         Cfg.space, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
       all_goals omega
   | ifNonzero htest hbranch ih =>
-      rename_i test onZero onNonzero store final branchSteps branchCost branchSpace
-      simp only [Cmd.compileAt, Cmd.codeSize]
-      let zeroStart := pre.length + 1 + onNonzero.codeSize + 1
-      let done := pre.length + (2 + onZero.codeSize + onNonzero.codeSize)
-      let nonzeroPre := pre ++ [Instr.jz test zeroStart]
-      have hNonzeroPre : nonzeroPre.length = pre.length + 1 := by
-        simp [nonzeroPre]
-      have hbranchRun := ih nonzeroPre
-        (Instr.jmp done :: onZero.compileAt zeroStart ++ suffix)
-      simp only [hNonzeroPre] at hbranchRun
-      dsimp only [nonzeroPre, zeroStart, done] at hbranchRun ⊢
-      simp only [List.nil_append, List.cons_append, List.append_assoc]
-        at hbranchRun ⊢
-      let jmpPre := pre ++
-        [Instr.jz test (pre.length + 1 + onNonzero.codeSize + 1)] ++
-        onNonzero.compileAt (pre.length + 1)
-      have hjmp := step_jmp jmpPre
-        (onZero.compileAt (pre.length + 1 + onNonzero.codeSize + 1) ++ suffix)
-        (pre.length + (2 + onZero.codeSize + onNonzero.codeSize)) final
-      dsimp only [jmpPre] at hjmp
-      have hjmp' :
-          step
-              (pre ++ Instr.jz test (pre.length + 1 + onNonzero.codeSize + 1) ::
-                (onNonzero.compileAt (pre.length + 1) ++
-                  Instr.jmp (pre.length + (2 + onZero.codeSize + onNonzero.codeSize)) ::
-                    (onZero.compileAt (pre.length + 1 + onNonzero.codeSize + 1) ++ suffix)))
-              { pc := pre.length + 1 + onNonzero.codeSize, regs := final } =
-            { pc := pre.length + (2 + onZero.codeSize + onNonzero.codeSize),
-              regs := final } := by
-        simpa [Cmd.length_compileAt, Nat.add_assoc, Nat.add_comm,
-          Nat.add_left_comm] using hjmp
-      have hjmpInstr := curInstr_append_head jmpPre
-        (onZero.compileAt (pre.length + 1 + onNonzero.codeSize + 1) ++ suffix)
-        (Instr.jmp (pre.length + (2 + onZero.codeSize + onNonzero.codeSize))) final
-      dsimp only [jmpPre] at hjmpInstr
-      have hjmpInstr' :
-          curInstr
-              (pre ++ Instr.jz test (pre.length + 1 + onNonzero.codeSize + 1) ::
-                (onNonzero.compileAt (pre.length + 1) ++
-                  Instr.jmp (pre.length + (2 + onZero.codeSize + onNonzero.codeSize)) ::
-                    (onZero.compileAt (pre.length + 1 + onNonzero.codeSize + 1) ++ suffix)))
-              { pc := pre.length + 1 + onNonzero.codeSize, regs := final } =
-            Instr.jmp (pre.length + (2 + onZero.codeSize + onNonzero.codeSize)) := by
-        simpa [Cmd.length_compileAt, Nat.add_assoc, Nat.add_comm,
-          Nat.add_left_comm] using hjmpInstr
-      have hjmpHalt :
-          ¬Halted
-              (pre ++ Instr.jz test (pre.length + 1 + onNonzero.codeSize + 1) ::
-                (onNonzero.compileAt (pre.length + 1) ++
-                  Instr.jmp (pre.length + (2 + onZero.codeSize + onNonzero.codeSize)) ::
-                    (onZero.compileAt (pre.length + 1 + onNonzero.codeSize + 1) ++ suffix)))
-              { pc := pre.length + 1 + onNonzero.codeSize, regs := final } := by
-        simp [Halted, hjmpInstr']
-      rw [run_succ, logTimeUpto_succ]
-      simp [Halted, curInstr]
-      rw [step_jz_nonzero pre _ test _ store htest]
-      rw [run_succ_step, hbranchRun.1]
-      rw [hjmp']
-      rw [logTimeUpto_add _ branchSteps 1]
-      rw [hbranchRun.2.1, hbranchRun.1]
-      rw [show (1 : ℕ) = 0 + 1 from rfl, logTimeUpto_succ]
-      rw [ite_eq_right hjmpHalt]
-      simp [stepLogCost, hjmpInstr', Instr.logCost]
-      rw [spaceUpto]
-      simp [Halted, curInstr]
-      rw [step_jz_nonzero pre _ test _ store htest]
-      rw [spaceUpto_add _ branchSteps 1, hbranchRun.2.2, hbranchRun.1]
-      rw [show (1 : ℕ) = 0 + 1 from rfl, spaceUpto]
-      rw [ite_eq_right hjmpHalt, hjmp']
-      simp only [spaceUpto]
-      have hfinalSpace : final.space ≤ branchSpace := by
-        have hrunSpace := run_space_le_spaceUpto
-          (pre ++ Instr.jz test (pre.length + 1 + onNonzero.codeSize + 1) ::
-            (onNonzero.compileAt (pre.length + 1) ++
-              Instr.jmp (pre.length + (2 + onZero.codeSize + onNonzero.codeSize)) ::
-                (onZero.compileAt (pre.length + 1 + onNonzero.codeSize + 1) ++ suffix)))
-          branchSteps { pc := pre.length + 1, regs := store }
-        rw [hbranchRun.1, hbranchRun.2.2] at hrunSpace
-        simpa [Store.space, Cfg.space] using hrunSpace
-      constructor
-      · omega
-      · change max store.space (max branchSpace (max final.space final.space)) =
-          max store.space branchSpace
-        rw [max_self, max_eq_left hfinalSpace]
+      exact compileAt_ifNonzero_correct htest ih pre suffix
   | whileZero htest =>
       rename_i test body store
       simp only [Cmd.compileAt, Cmd.codeSize, List.cons_append, List.append_assoc]

@@ -195,6 +195,159 @@ private theorem binaryRippleAddScanTM_step_terminal {n : ℕ}
       · intro i _ _ hires
         simp [finalWork, hires]
 
+/-- With the left input exhausted, ripple addition consumes the right suffix and carry. -/
+/-- Writing one ripple-add output bit extends its prefix without changing the start marker. -/
+private theorem binaryRippleAddScanAdvanceWork_result {n : ℕ}
+    (lhsIdx rhsIdx resultIdx : Fin n) (sum : Bool) (emitted : List Bool)
+    (work₀ : Fin n → Tape)
+    (hresult : (work₀ resultIdx).HasBinaryPrefix emitted)
+    (hresultStart : (work₀ resultIdx).cells 0 = Γ.start) :
+    let work₁ := binaryRippleAddScanAdvanceWork lhsIdx rhsIdx resultIdx sum work₀
+    (work₁ resultIdx).HasBinaryPrefix (emitted ++ [sum]) ∧
+      (work₁ resultIdx).cells 0 = Γ.start := by
+  dsimp only
+  let work₁ := binaryRippleAddScanAdvanceWork lhsIdx rhsIdx resultIdx sum work₀
+  have hresult₁ :
+      (work₁ resultIdx).HasBinaryPrefix (emitted ++ [sum]) := by
+    rw [show work₁ resultIdx =
+      (work₀ resultIdx).writeAndMove (Γw.ofBool sum).toΓ
+        Dir3.right by
+      simp [work₁, binaryRippleAddScanAdvanceWork]]
+    rw [Γw.ofBool_toΓ]
+    exact Tape.hasBinaryPrefix_write_bit sum hresult
+  have hresultStart₁ : (work₁ resultIdx).cells 0 = Γ.start := by
+    rw [show work₁ resultIdx =
+      (work₀ resultIdx).writeAndMove (Γw.ofBool sum).toΓ
+        Dir3.right by
+      simp [work₁, binaryRippleAddScanAdvanceWork]]
+    rw [Γw.ofBool_toΓ]
+    exact Tape.hasBinaryPrefix_write_bit_cell0 sum hresult hresultStart
+  exact ⟨hresult₁, hresultStart₁⟩
+
+private theorem binaryRippleAddScanTM_suffix_empty_left {n : ℕ}
+    (lhsIdx rhsIdx resultIdx : Fin n)
+    (hdistinct : BinaryRippleAddDistinct lhsIdx rhsIdx resultIdx)
+    (carry : Bool) (rhs emitted : List Bool)
+    (inp₀ : Tape) (work₀ : Fin n → Tape) (out₀ : Tape)
+    (hlhs : (work₀ lhsIdx).HasBinarySuffix ([] : List Bool))
+    (hrhs : (work₀ rhsIdx).HasBinarySuffix rhs)
+    (hresult : (work₀ resultIdx).HasBinaryPrefix emitted)
+    (hresultStart : (work₀ resultIdx).cells 0 = Γ.start)
+    (hinput : inp₀.read ≠ Γ.start)
+    (hother : ∀ i, i ≠ lhsIdx → i ≠ rhsIdx → i ≠ resultIdx →
+      (work₀ i).read ≠ Γ.start)
+    (houtput : out₀.read ≠ Γ.start) :
+    ∃ c',
+      (binaryRippleAddScanTM lhsIdx rhsIdx resultIdx).reachesIn
+        (binaryRippleAddScanTime ([] : List Bool) rhs)
+        { state := .scan carry, input := inp₀, work := work₀, output := out₀ } c' ∧
+      (binaryRippleAddScanTM lhsIdx rhsIdx resultIdx).halted c' ∧
+      c'.input = inp₀ ∧
+      (c'.work lhsIdx).cells = (work₀ lhsIdx).cells ∧
+      (c'.work lhsIdx).head = (work₀ lhsIdx).head + ([] : List Bool).length ∧
+      (c'.work rhsIdx).cells = (work₀ rhsIdx).cells ∧
+      (c'.work rhsIdx).head = (work₀ rhsIdx).head + rhs.length ∧
+      (c'.work resultIdx).HasBinaryPrefix
+        (emitted ++ BinaryRippleAdd.ripple carry ([] : List Bool) rhs) ∧
+      (c'.work resultIdx).cells 0 = Γ.start ∧
+      (∀ i, i ≠ lhsIdx → i ≠ rhsIdx → i ≠ resultIdx →
+        c'.work i = work₀ i) ∧
+      c'.output = out₀ := by
+  induction rhs generalizing carry emitted inp₀ work₀ out₀ with
+  | nil =>
+      obtain ⟨finalWork, hstep, hfinalLhs, hfinalLhsHead, hfinalRhs,
+          hfinalRhsHead, hfinalResult, hfinalResultStart, hfinalOther⟩ :=
+        binaryRippleAddScanTM_step_terminal lhsIdx rhsIdx resultIdx
+          hdistinct carry emitted inp₀ work₀ out₀ hlhs.read_nil
+          hrhs.read_nil hinput hresult hresultStart hother houtput
+      let c' : Cfg n BinaryRippleAddPhase :=
+        { state := .done, input := inp₀, work := finalWork, output := out₀ }
+      refine ⟨c', ?_, rfl, rfl, hfinalLhs, ?_, hfinalRhs, ?_,
+        hfinalResult, hfinalResultStart, hfinalOther, rfl⟩
+      · have hreach :
+            (binaryRippleAddScanTM lhsIdx rhsIdx resultIdx).reachesIn 1
+              { state := .scan carry, input := inp₀, work := work₀,
+                output := out₀ } c' :=
+          .step hstep .zero
+        simpa [binaryRippleAddScanTime] using hreach
+      · simpa using hfinalLhsHead
+      · simpa using hfinalRhsHead
+  | cons rhsBit rhsTail ih =>
+      have hlhsBit : decide ((work₀ lhsIdx).read = Γ.one) = false := by
+        rw [hlhs.read_nil]
+        decide
+      have hrhsBit : decide ((work₀ rhsIdx).read = Γ.one) = rhsBit := by
+        rw [hrhs.read_cons]
+        cases rhsBit <;> rfl
+      let sum := BinaryRippleAdd.sumBit carry false rhsBit
+      let nextCarry := BinaryRippleAdd.carryBit carry false rhsBit
+      let work₁ := binaryRippleAddScanAdvanceWork lhsIdx rhsIdx resultIdx
+        sum work₀
+      have hactive : ¬((work₀ lhsIdx).read = Γ.blank ∧
+          (work₀ rhsIdx).read = Γ.blank) := by
+        intro hblank
+        rw [hrhs.read_cons] at hblank
+        cases rhsBit <;> simp [Γ.ofBool] at hblank
+      have hrhsNotBlank : (work₀ rhsIdx).read ≠ Γ.blank := by
+        rw [hrhs.read_cons]
+        cases rhsBit <;> decide
+      have hstep :
+          (binaryRippleAddScanTM lhsIdx rhsIdx resultIdx).step
+            { state := .scan carry, input := inp₀, work := work₀,
+              output := out₀ } =
+            some
+              { state := .scan nextCarry
+                input := inp₀
+                work := work₁
+                output := out₀ } := by
+        simpa [hlhsBit, hrhsBit, sum, nextCarry, work₁] using
+          binaryRippleAddScanTM_step_active lhsIdx rhsIdx resultIdx carry
+            inp₀ work₀ out₀ hactive hinput hlhs.read_ne_start
+            hrhs.read_ne_start hother houtput
+      have hlhs₁ : (work₁ lhsIdx).HasBinarySuffix [] := by
+        simpa [work₁, binaryRippleAddScanAdvanceWork,
+          hdistinct.lhs_result, hlhs.read_nil] using hlhs
+      have hrhs₁ : (work₁ rhsIdx).HasBinarySuffix rhsTail := by
+        simpa [work₁, binaryRippleAddScanAdvanceWork,
+          hdistinct.rhs_result, Ne.symm hdistinct.lhs_rhs,
+          hrhsNotBlank] using hrhs.move_right_cons
+      obtain ⟨hresult₁, hresultStart₁⟩ :=
+        binaryRippleAddScanAdvanceWork_result lhsIdx rhsIdx resultIdx
+          sum emitted work₀ hresult hresultStart
+      have hother₁ : ∀ i, i ≠ lhsIdx → i ≠ rhsIdx → i ≠ resultIdx →
+          (work₁ i).read ≠ Γ.start := by
+        intro i hil hir hires
+        simpa [work₁, binaryRippleAddScanAdvanceWork, hil, hir, hires] using
+          hother i hil hir hires
+      obtain ⟨c', hreach, hhalt, hfinalInput, hfinalLhs,
+          hfinalLhsHead, hfinalRhs, hfinalRhsHead, hfinalResult,
+          hfinalResultStart, hfinalOther, hfinalOutput⟩ :=
+        ih nextCarry
+          (emitted ++ [sum]) inp₀ work₁ out₀ hlhs₁ hrhs₁ hresult₁
+          hresultStart₁ hinput hother₁ houtput
+      refine ⟨c', ?_, hhalt, hfinalInput, ?_, ?_, ?_, ?_, ?_,
+        hfinalResultStart, ?_, hfinalOutput⟩
+      · simpa [binaryRippleAddScanTime] using
+          TM.reachesIn.step hstep hreach
+      · simpa [work₁, binaryRippleAddScanAdvanceWork,
+          hdistinct.lhs_result, hlhs.read_nil] using hfinalLhs
+      · simpa [work₁, binaryRippleAddScanAdvanceWork,
+          hdistinct.lhs_result, hlhs.read_nil] using hfinalLhsHead
+      · simpa [work₁, binaryRippleAddScanAdvanceWork,
+          hdistinct.rhs_result, Ne.symm hdistinct.lhs_rhs,
+          hrhsNotBlank, Tape.move_cells] using hfinalRhs
+      · rw [hfinalRhsHead]
+        simp only [work₁, binaryRippleAddScanAdvanceWork,
+          ite_eq_right hdistinct.rhs_result,
+          ite_eq_right (Ne.symm hdistinct.lhs_rhs), ite_eq_left,
+          ite_eq_right hrhsNotBlank, Tape.move, List.length_cons]
+        omega
+      · simpa [BinaryRippleAdd.ripple, sum, nextCarry,
+          List.append_assoc] using hfinalResult
+      · intro i hil hir hires
+        rw [hfinalOther i hil hir hires]
+        simp [work₁, binaryRippleAddScanAdvanceWork, hil, hir, hires]
+
 private theorem binaryRippleAddScanTM_suffix_reachesIn {n : ℕ}
     (lhsIdx rhsIdx resultIdx : Fin n)
     (hdistinct : BinaryRippleAddDistinct lhsIdx rhsIdx resultIdx)
@@ -229,115 +382,9 @@ private theorem binaryRippleAddScanTM_suffix_reachesIn {n : ℕ}
   | h total ih =>
     cases lhs with
     | nil =>
-      cases rhs with
-      | nil =>
-          obtain ⟨finalWork, hstep, hfinalLhs, hfinalLhsHead, hfinalRhs,
-              hfinalRhsHead, hfinalResult, hfinalResultStart, hfinalOther⟩ :=
-            binaryRippleAddScanTM_step_terminal lhsIdx rhsIdx resultIdx
-              hdistinct carry emitted inp₀ work₀ out₀ hlhs.read_nil
-              hrhs.read_nil hinput hresult hresultStart hother houtput
-          let c' : Cfg n BinaryRippleAddPhase :=
-            { state := .done, input := inp₀, work := finalWork, output := out₀ }
-          refine ⟨c', ?_, rfl, rfl, hfinalLhs, ?_, hfinalRhs, ?_,
-            hfinalResult, hfinalResultStart, hfinalOther, rfl⟩
-          · have hreach :
-                (binaryRippleAddScanTM lhsIdx rhsIdx resultIdx).reachesIn 1
-                  { state := .scan carry, input := inp₀, work := work₀,
-                    output := out₀ } c' :=
-              .step hstep .zero
-            simpa [binaryRippleAddScanTime] using hreach
-          · simpa using hfinalLhsHead
-          · simpa using hfinalRhsHead
-      | cons rhsBit rhsTail =>
-          have hlhsBit : decide ((work₀ lhsIdx).read = Γ.one) = false := by
-            rw [hlhs.read_nil]
-            decide
-          have hrhsBit : decide ((work₀ rhsIdx).read = Γ.one) = rhsBit := by
-            rw [hrhs.read_cons]
-            cases rhsBit <;> rfl
-          let sum := BinaryRippleAdd.sumBit carry false rhsBit
-          let nextCarry := BinaryRippleAdd.carryBit carry false rhsBit
-          let work₁ := binaryRippleAddScanAdvanceWork lhsIdx rhsIdx resultIdx
-            sum work₀
-          have hactive : ¬((work₀ lhsIdx).read = Γ.blank ∧
-              (work₀ rhsIdx).read = Γ.blank) := by
-            intro hblank
-            rw [hrhs.read_cons] at hblank
-            cases rhsBit <;> simp [Γ.ofBool] at hblank
-          have hrhsNotBlank : (work₀ rhsIdx).read ≠ Γ.blank := by
-            rw [hrhs.read_cons]
-            cases rhsBit <;> decide
-          have hstep :
-              (binaryRippleAddScanTM lhsIdx rhsIdx resultIdx).step
-                { state := .scan carry, input := inp₀, work := work₀,
-                  output := out₀ } =
-                some
-                  { state := .scan nextCarry
-                    input := inp₀
-                    work := work₁
-                    output := out₀ } := by
-            simpa [hlhsBit, hrhsBit, sum, nextCarry, work₁] using
-              binaryRippleAddScanTM_step_active lhsIdx rhsIdx resultIdx carry
-                inp₀ work₀ out₀ hactive hinput hlhs.read_ne_start
-                hrhs.read_ne_start hother houtput
-          have hlhs₁ : (work₁ lhsIdx).HasBinarySuffix [] := by
-            simpa [work₁, binaryRippleAddScanAdvanceWork,
-              hdistinct.lhs_result, hlhs.read_nil] using hlhs
-          have hrhs₁ : (work₁ rhsIdx).HasBinarySuffix rhsTail := by
-            simpa [work₁, binaryRippleAddScanAdvanceWork,
-              hdistinct.rhs_result, Ne.symm hdistinct.lhs_rhs,
-              hrhsNotBlank] using hrhs.move_right_cons
-          have hresult₁ :
-              (work₁ resultIdx).HasBinaryPrefix (emitted ++ [sum]) := by
-            rw [show work₁ resultIdx =
-              (work₀ resultIdx).writeAndMove (Γw.ofBool sum).toΓ
-                Dir3.right by
-              simp [work₁, binaryRippleAddScanAdvanceWork]]
-            rw [Γw.ofBool_toΓ]
-            exact Tape.hasBinaryPrefix_write_bit sum hresult
-          have hresultStart₁ : (work₁ resultIdx).cells 0 = Γ.start := by
-            rw [show work₁ resultIdx =
-              (work₀ resultIdx).writeAndMove (Γw.ofBool sum).toΓ
-                Dir3.right by
-              simp [work₁, binaryRippleAddScanAdvanceWork]]
-            rw [Γw.ofBool_toΓ]
-            exact Tape.hasBinaryPrefix_write_bit_cell0 sum hresult hresultStart
-          have hother₁ : ∀ i, i ≠ lhsIdx → i ≠ rhsIdx → i ≠ resultIdx →
-              (work₁ i).read ≠ Γ.start := by
-            intro i hil hir hires
-            simpa [work₁, binaryRippleAddScanAdvanceWork, hil, hir, hires] using
-              hother i hil hir hires
-          have htailLength : rhsTail.length < total := by
-            simp only [List.length_nil, zero_add, List.length_cons] at hlength
-            omega
-          obtain ⟨c', hreach, hhalt, hfinalInput, hfinalLhs,
-              hfinalLhsHead, hfinalRhs, hfinalRhsHead, hfinalResult,
-              hfinalResultStart, hfinalOther, hfinalOutput⟩ :=
-            ih rhsTail.length htailLength nextCarry [] rhsTail
-              (emitted ++ [sum]) inp₀ work₁ out₀ hlhs₁ hrhs₁ hresult₁
-              hresultStart₁ hinput hother₁ houtput (by simp)
-          refine ⟨c', ?_, hhalt, hfinalInput, ?_, ?_, ?_, ?_, ?_,
-            hfinalResultStart, ?_, hfinalOutput⟩
-          · simpa [binaryRippleAddScanTime] using
-              TM.reachesIn.step hstep hreach
-          · simpa [work₁, binaryRippleAddScanAdvanceWork,
-              hdistinct.lhs_result, hlhs.read_nil] using hfinalLhs
-          · simpa [work₁, binaryRippleAddScanAdvanceWork,
-              hdistinct.lhs_result, hlhs.read_nil] using hfinalLhsHead
-          · simpa [work₁, binaryRippleAddScanAdvanceWork,
-              hdistinct.rhs_result, Ne.symm hdistinct.lhs_rhs,
-              hrhsNotBlank, Tape.move_cells] using hfinalRhs
-          · rw [hfinalRhsHead]
-            simp only [work₁, binaryRippleAddScanAdvanceWork,
-              ite_eq_right hdistinct.rhs_result,
-              ite_eq_right (Ne.symm hdistinct.lhs_rhs), ite_eq_left,
-              ite_eq_right hrhsNotBlank, Tape.move, List.length_cons]
-            omega
-          · simpa [BinaryRippleAdd.ripple, sum, nextCarry,
-              List.append_assoc] using hfinalResult
-          · intro i hil hir hires
-            rw [hfinalOther i hil hir hires]
-            simp [work₁, binaryRippleAddScanAdvanceWork, hil, hir, hires]
+      exact binaryRippleAddScanTM_suffix_empty_left lhsIdx rhsIdx resultIdx
+        hdistinct carry rhs emitted inp₀ work₀ out₀ hlhs hrhs hresult
+        hresultStart hinput hother houtput
     | cons lhsBit lhsTail =>
       cases rhs with
       | nil =>
@@ -379,21 +426,9 @@ private theorem binaryRippleAddScanTM_suffix_reachesIn {n : ℕ}
             simpa [work₁, binaryRippleAddScanAdvanceWork,
               hdistinct.rhs_result, Ne.symm hdistinct.lhs_rhs,
               hrhs.read_nil] using hrhs
-          have hresult₁ :
-              (work₁ resultIdx).HasBinaryPrefix (emitted ++ [sum]) := by
-            rw [show work₁ resultIdx =
-              (work₀ resultIdx).writeAndMove (Γw.ofBool sum).toΓ
-                Dir3.right by
-              simp [work₁, binaryRippleAddScanAdvanceWork]]
-            rw [Γw.ofBool_toΓ]
-            exact Tape.hasBinaryPrefix_write_bit sum hresult
-          have hresultStart₁ : (work₁ resultIdx).cells 0 = Γ.start := by
-            rw [show work₁ resultIdx =
-              (work₀ resultIdx).writeAndMove (Γw.ofBool sum).toΓ
-                Dir3.right by
-              simp [work₁, binaryRippleAddScanAdvanceWork]]
-            rw [Γw.ofBool_toΓ]
-            exact Tape.hasBinaryPrefix_write_bit_cell0 sum hresult hresultStart
+          obtain ⟨hresult₁, hresultStart₁⟩ :=
+            binaryRippleAddScanAdvanceWork_result lhsIdx rhsIdx resultIdx
+              sum emitted work₀ hresult hresultStart
           have hother₁ : ∀ i, i ≠ lhsIdx → i ≠ rhsIdx → i ≠ resultIdx →
               (work₁ i).read ≠ Γ.start := by
             intro i hil hir hires
@@ -473,21 +508,9 @@ private theorem binaryRippleAddScanTM_suffix_reachesIn {n : ℕ}
             simpa [work₁, binaryRippleAddScanAdvanceWork,
               hdistinct.rhs_result, Ne.symm hdistinct.lhs_rhs,
               hrhsNotBlank] using hrhs.move_right_cons
-          have hresult₁ :
-              (work₁ resultIdx).HasBinaryPrefix (emitted ++ [sum]) := by
-            rw [show work₁ resultIdx =
-              (work₀ resultIdx).writeAndMove (Γw.ofBool sum).toΓ
-                Dir3.right by
-              simp [work₁, binaryRippleAddScanAdvanceWork]]
-            rw [Γw.ofBool_toΓ]
-            exact Tape.hasBinaryPrefix_write_bit sum hresult
-          have hresultStart₁ : (work₁ resultIdx).cells 0 = Γ.start := by
-            rw [show work₁ resultIdx =
-              (work₀ resultIdx).writeAndMove (Γw.ofBool sum).toΓ
-                Dir3.right by
-              simp [work₁, binaryRippleAddScanAdvanceWork]]
-            rw [Γw.ofBool_toΓ]
-            exact Tape.hasBinaryPrefix_write_bit_cell0 sum hresult hresultStart
+          obtain ⟨hresult₁, hresultStart₁⟩ :=
+            binaryRippleAddScanAdvanceWork_result lhsIdx rhsIdx resultIdx
+              sum emitted work₀ hresult hresultStart
           have hother₁ : ∀ i, i ≠ lhsIdx → i ≠ rhsIdx → i ≠ resultIdx →
               (work₁ i).read ≠ Γ.start := by
             intro i hil hir hires
