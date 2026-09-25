@@ -2317,6 +2317,37 @@ private theorem forcing_outer_tsum_le_discount
       simpa [x, Book.Ch02.geometricDiscount] using
         (ENNReal.ofReal_sub 1 hx_nonneg).symm
 
+private theorem forcing_outer_tsum_root_le_discount
+    {delta beta r : ℝ} (hdelta : 0 < delta) (hbeta : delta ≤ beta) (hr : 0 < r) :
+    (∑' j : ℕ, ENNReal.ofReal (Real.rpow 3 (-beta * r * (j : ℝ)))) ^ r⁻¹ ≤
+      ENNReal.ofReal (Real.rpow (Book.Ch02.geometricDiscount delta r) (-1 / r)) := by
+  let D : ℝ := Book.Ch02.geometricDiscount delta r
+  let w : ℕ → ℝ≥0∞ := fun j =>
+    ENNReal.ofReal (Real.rpow 3 (-beta * r * (j : ℝ)))
+  have hDpos : 0 < D := by
+    dsimp [D]
+    exact Book.Ch02.book_geometricDiscount_pos (mul_pos hdelta hr)
+  have htail : ∑' j : ℕ, w j ≤ ENNReal.ofReal D⁻¹ := by
+    dsimp [w, D]
+    exact forcing_outer_tsum_le_discount hdelta hbeta hr
+  have htail_root : (∑' j : ℕ, w j) ^ r⁻¹ ≤
+      ENNReal.ofReal (Real.rpow D (-1 / r)) := by
+    calc
+      (∑' j : ℕ, w j) ^ r⁻¹ ≤ (ENNReal.ofReal D⁻¹) ^ r⁻¹ :=
+        ENNReal.rpow_le_rpow htail (inv_nonneg.mpr hr.le)
+      _ = ENNReal.ofReal (Real.rpow D (-1 / r)) := by
+        rw [ENNReal.ofReal_rpow_of_pos (inv_pos.mpr hDpos)]
+        congr 1
+        calc
+          Real.rpow D⁻¹ r⁻¹ = Real.rpow (Real.rpow D (-1)) r⁻¹ := by
+            congr 1
+            exact (Real.rpow_neg_one D).symm
+          _ = Real.rpow D ((-1 : ℝ) * r⁻¹) :=
+            (Real.rpow_mul hDpos.le _ _).symm
+          _ = Real.rpow D (-1 / r) := by
+            congr 1
+  exact htail_root
+
 /-- Root the four nonnegative factors produced by the outer forcing series.
 The first two already occur at the finite exponent, while the last two are
 the geometric tail and the complete parent energy. -/
@@ -2383,28 +2414,10 @@ private theorem localCoarseGrainingForcingLp_le_of_sharp_local
     dsimp [delta, beta]
     have hspos : 0 < s.1 := s.2.1
     linarith
-  have hDpos : 0 < D := by
-    dsimp [D]
-    exact Book.Ch02.book_geometricDiscount_pos (mul_pos hdelta hr)
-  have htail : ∑' j : ℕ, w j ≤ ENNReal.ofReal D⁻¹ := by
-    dsimp [w, D]
-    exact forcing_outer_tsum_le_discount hdelta hbeta hr
   have htail_root : (∑' j : ℕ, w j) ^ r⁻¹ ≤
       ENNReal.ofReal (Real.rpow D (-1 / r)) := by
-    calc
-      (∑' j : ℕ, w j) ^ r⁻¹ ≤ (ENNReal.ofReal D⁻¹) ^ r⁻¹ :=
-        ENNReal.rpow_le_rpow htail (inv_nonneg.mpr hr.le)
-      _ = ENNReal.ofReal (Real.rpow D (-1 / r)) := by
-        rw [ENNReal.ofReal_rpow_of_pos (inv_pos.mpr hDpos)]
-        congr 1
-        calc
-          Real.rpow D⁻¹ r⁻¹ = Real.rpow (Real.rpow D (-1)) r⁻¹ := by
-            congr 1
-            exact (Real.rpow_neg_one D).symm
-          _ = Real.rpow D ((-1 : ℝ) * r⁻¹) :=
-            (Real.rpow_mul hDpos.le _ _).symm
-          _ = Real.rpow D (-1 / r) := by
-            congr 1
+    dsimp [w, D]
+    exact forcing_outer_tsum_root_le_discount hdelta hbeta hr
   have hlocal' : ∀ j : ℕ,
       descendantsAtScaleENNAverage Q (n - (j : ℤ)) (fun R =>
           (ENNReal.ofReal (cubeBesovPositiveVectorSeminormTwo R s.1 g)) ^ r) ≤
