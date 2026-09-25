@@ -175,6 +175,73 @@ def reorderTM : TM 0 where
             by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
     | .rdone => exact rightOfStart_allIdle iHead wHeads oHead
 
+/-- The decode phase stops on an incomplete final payload bit without emitting it. -/
+private theorem reorderTM_dec_single
+    (b : Bool) (acc : List Bool) (c : Cfg 0 reorderTM.Q)
+    (hstate : c.state = ReorderPhase.rdecA)
+    (hsuf : c.input.HasBinarySuffix [b])
+    (hpre : c.output.HasBinaryPrefix acc) :
+    ∃ c' t, t ≤ 2 * [b].length + 2 ∧ reorderTM.reachesIn t c c' ∧
+      reorderTM.halted c' ∧ c'.output.HasBinaryPrefix (acc ++ fstBlock [b]) := by
+  have houtne : c.output.read ≠ Γ.start := by rw [hpre.read_blank]; decide
+  cases b with
+  | false =>
+      have hread : c.input.read = Γ.ofBool false := hsuf.read_cons
+      let c1 : Cfg 0 reorderTM.Q :=
+        { state := ReorderPhase.rdecBf
+          input := c.input.move Dir3.right
+          work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
+            (idleDir (c.work i).read)
+          output := c.output.writeAndMove (readBackWrite c.output.read)
+            (idleDir c.output.read) }
+      have hstep : reorderTM.step c = some c1 := by
+        simp [TM.step, hstate, reorderTM, hread, Γ.ofBool, c1]
+      have hsuf1 : c1.input.HasBinarySuffix [] := hsuf.move_right_cons
+      have hpre1 : c1.output.HasBinaryPrefix acc := by
+        rw [show c1.output = c.output from
+          Tape.writeAndMove_readBack_idle_of_ne_start _ houtne]
+        exact hpre
+      have hread1 : c1.input.read = Γ.blank := hsuf1.read_nil
+      have houtne1 : c1.output.read ≠ Γ.start := by rw [hpre1.read_blank]; decide
+      refine ⟨{ state := ReorderPhase.rdone
+                input := c1.input.move (idleDir c1.input.read)
+                work := fun i => (c1.work i).writeAndMove (readBackWrite (c1.work i).read)
+                  (idleDir (c1.work i).read)
+                output := c1.output.writeAndMove (readBackWrite c1.output.read)
+                  (idleDir c1.output.read) }, 2, by simp,
+        .step hstep (.step (by simp [TM.step, reorderTM, hread1, c1]) .zero), rfl, ?_⟩
+      rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
+          = c1.output from Tape.writeAndMove_readBack_idle_of_ne_start _ houtne1]
+      simpa [fstBlock] using hpre1
+  | true =>
+      have hread : c.input.read = Γ.ofBool true := hsuf.read_cons
+      let c1 : Cfg 0 reorderTM.Q :=
+        { state := ReorderPhase.rdecBt
+          input := c.input.move Dir3.right
+          work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
+            (idleDir (c.work i).read)
+          output := c.output.writeAndMove (readBackWrite c.output.read)
+            (idleDir c.output.read) }
+      have hstep : reorderTM.step c = some c1 := by
+        simp [TM.step, hstate, reorderTM, hread, Γ.ofBool, c1]
+      have hsuf1 : c1.input.HasBinarySuffix [] := hsuf.move_right_cons
+      have hpre1 : c1.output.HasBinaryPrefix acc := by
+        rw [show c1.output = c.output from
+          Tape.writeAndMove_readBack_idle_of_ne_start _ houtne]
+        exact hpre
+      have hread1 : c1.input.read = Γ.blank := hsuf1.read_nil
+      have houtne1 : c1.output.read ≠ Γ.start := by rw [hpre1.read_blank]; decide
+      refine ⟨{ state := ReorderPhase.rdone
+                input := c1.input.move (idleDir c1.input.read)
+                work := fun i => (c1.work i).writeAndMove (readBackWrite (c1.work i).read)
+                  (idleDir (c1.work i).read)
+                output := c1.output.writeAndMove (readBackWrite c1.output.read)
+                  (idleDir c1.output.read) }, 2, by simp,
+        .step hstep (.step (by simp [TM.step, reorderTM, hread1, c1]) .zero), rfl, ?_⟩
+      rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
+          = c1.output from Tape.writeAndMove_readBack_idle_of_ne_start _ houtne1]
+      simpa [fstBlock] using hpre1
+
 /-- Phase 2 of `reorderTM`: from `rdecA` on input `w` with output holding `acc`,
 decode and emit `fstBlock w`, halting with `acc ++ fstBlock w`. Identical in shape
 to `fstBlockTM_scan_loop`. -/
@@ -219,62 +286,8 @@ private theorem reorderTM_dec_loop :
           rw [show c.output.writeAndMove (readBackWrite c.output.read) (idleDir c.output.read)
               = c.output from Tape.writeAndMove_readBack_idle_of_ne_start _ houtne]
           simpa [fstBlock] using hpre
-      | [false] =>
-          have hread : c.input.read = Γ.ofBool false := hsuf.read_cons
-          let c1 : Cfg 0 reorderTM.Q :=
-            { state := ReorderPhase.rdecBf
-              input := c.input.move Dir3.right
-              work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
-                (idleDir (c.work i).read)
-              output := c.output.writeAndMove (readBackWrite c.output.read)
-                (idleDir c.output.read) }
-          have hstep : reorderTM.step c = some c1 := by
-            simp [TM.step, hstate, reorderTM, hread, Γ.ofBool, c1]
-          have hsuf1 : c1.input.HasBinarySuffix [] := hsuf.move_right_cons
-          have hpre1 : c1.output.HasBinaryPrefix acc := by
-            rw [show c1.output = c.output from
-              Tape.writeAndMove_readBack_idle_of_ne_start _ houtne]
-            exact hpre
-          have hread1 : c1.input.read = Γ.blank := hsuf1.read_nil
-          have houtne1 : c1.output.read ≠ Γ.start := by rw [hpre1.read_blank]; decide
-          refine ⟨{ state := ReorderPhase.rdone
-                    input := c1.input.move (idleDir c1.input.read)
-                    work := fun i => (c1.work i).writeAndMove (readBackWrite (c1.work i).read)
-                      (idleDir (c1.work i).read)
-                    output := c1.output.writeAndMove (readBackWrite c1.output.read)
-                      (idleDir c1.output.read) }, 2, by simp,
-            .step hstep (.step (by simp [TM.step, reorderTM, hread1, c1]) .zero), rfl, ?_⟩
-          rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
-              = c1.output from Tape.writeAndMove_readBack_idle_of_ne_start _ houtne1]
-          simpa [fstBlock] using hpre1
-      | [true] =>
-          have hread : c.input.read = Γ.ofBool true := hsuf.read_cons
-          let c1 : Cfg 0 reorderTM.Q :=
-            { state := ReorderPhase.rdecBt
-              input := c.input.move Dir3.right
-              work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
-                (idleDir (c.work i).read)
-              output := c.output.writeAndMove (readBackWrite c.output.read)
-                (idleDir c.output.read) }
-          have hstep : reorderTM.step c = some c1 := by
-            simp [TM.step, hstate, reorderTM, hread, Γ.ofBool, c1]
-          have hsuf1 : c1.input.HasBinarySuffix [] := hsuf.move_right_cons
-          have hpre1 : c1.output.HasBinaryPrefix acc := by
-            rw [show c1.output = c.output from
-              Tape.writeAndMove_readBack_idle_of_ne_start _ houtne]
-            exact hpre
-          have hread1 : c1.input.read = Γ.blank := hsuf1.read_nil
-          have houtne1 : c1.output.read ≠ Γ.start := by rw [hpre1.read_blank]; decide
-          refine ⟨{ state := ReorderPhase.rdone
-                    input := c1.input.move (idleDir c1.input.read)
-                    work := fun i => (c1.work i).writeAndMove (readBackWrite (c1.work i).read)
-                      (idleDir (c1.work i).read)
-                    output := c1.output.writeAndMove (readBackWrite c1.output.read)
-                      (idleDir c1.output.read) }, 2, by simp,
-            .step hstep (.step (by simp [TM.step, reorderTM, hread1, c1]) .zero), rfl, ?_⟩
-          rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
-              = c1.output from Tape.writeAndMove_readBack_idle_of_ne_start _ houtne1]
-          simpa [fstBlock] using hpre1
+      | [false] => exact reorderTM_dec_single false acc c hstate hsuf hpre
+      | [true] => exact reorderTM_dec_single true acc c hstate hsuf hpre
       | false :: true :: y =>
           have hreadA : c.input.read = Γ.ofBool false := hsuf.read_cons
           let c1 : Cfg 0 reorderTM.Q :=
@@ -412,6 +425,95 @@ private theorem reorderTM_dec_loop :
           rw [hfb, List.append_assoc, List.cons_append, List.nil_append] at *
           exact hcout
 
+/-- The copy phase emits a lone remaining bit and then halts. -/
+private theorem reorderTM_copy_single
+    (b : Bool) (acc : List Bool) (c : Cfg 0 reorderTM.Q)
+    (hstate : c.state = ReorderPhase.rcopyA)
+    (hsuf : c.input.HasBinarySuffix [b])
+    (hpre : c.output.HasBinaryPrefix acc) :
+    ∃ c' t, t ≤ 3 * [b].length + 3 ∧ reorderTM.reachesIn t c c' ∧
+      reorderTM.halted c' ∧ c'.output.HasBinaryPrefix (acc ++ reorder [b]) := by
+  cases b with
+  | false =>
+      have hread : c.input.read = Γ.ofBool false := hsuf.read_cons
+      let c1 : Cfg 0 reorderTM.Q :=
+        { state := ReorderPhase.rcopyBf
+          input := c.input.move Dir3.right
+          work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
+            (idleDir (c.work i).read)
+          output := c.output.writeAndMove (readBackWrite c.input.read) Dir3.right }
+      have hstep : reorderTM.step c = some c1 := by
+        simp [TM.step, hstate, reorderTM, hread, Γ.ofBool, c1]
+      have hsuf1 : c1.input.HasBinarySuffix [] := hsuf.move_right_cons
+      have hpre1 : c1.output.HasBinaryPrefix (acc ++ [false]) := by
+        have hco : (readBackWrite c.input.read).toΓ = Γ.ofBool false := by rw [hread]; rfl
+        show (c.output.writeAndMove ((readBackWrite c.input.read).toΓ)
+            Dir3.right).HasBinaryPrefix
+          (acc ++ [false])
+        rw [hco]; exact Tape.hasBinaryPrefix_write_bit false hpre
+      have hread1 : c1.input.read = Γ.blank := hsuf1.read_nil
+      have houtne1 : c1.output.read ≠ Γ.start := by rw [hpre1.read_blank]; decide
+      refine ⟨{ state := ReorderPhase.rdone
+                input := c1.input.move (idleDir c1.input.read)
+                work := fun i => (c1.work i).writeAndMove (readBackWrite (c1.work i).read)
+                  (idleDir (c1.work i).read)
+                output := c1.output.writeAndMove (readBackWrite c1.output.read)
+                  (idleDir c1.output.read) }, 2, by simp,
+        .step hstep (.step (by simp [TM.step, reorderTM, hread1, c1]) .zero), rfl, ?_⟩
+      rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
+          = c1.output from Tape.writeAndMove_readBack_idle_of_ne_start _ houtne1]
+      simpa [reorder] using hpre1
+  | true =>
+      have hread : c.input.read = Γ.ofBool true := hsuf.read_cons
+      let c1 : Cfg 0 reorderTM.Q :=
+        { state := ReorderPhase.rcopyBt
+          input := c.input.move Dir3.right
+          work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
+            (idleDir (c.work i).read)
+          output := c.output.writeAndMove (readBackWrite c.input.read) Dir3.right }
+      have hstep : reorderTM.step c = some c1 := by
+        simp [TM.step, hstate, reorderTM, hread, Γ.ofBool, c1]
+      have hsuf1 : c1.input.HasBinarySuffix [] := hsuf.move_right_cons
+      have hpre1 : c1.output.HasBinaryPrefix (acc ++ [true]) := by
+        have hco : (readBackWrite c.input.read).toΓ = Γ.ofBool true := by rw [hread]; rfl
+        show (c.output.writeAndMove ((readBackWrite c.input.read).toΓ)
+            Dir3.right).HasBinaryPrefix
+          (acc ++ [true])
+        rw [hco]; exact Tape.hasBinaryPrefix_write_bit true hpre
+      have hread1 : c1.input.read = Γ.blank := hsuf1.read_nil
+      have houtne1 : c1.output.read ≠ Γ.start := by rw [hpre1.read_blank]; decide
+      refine ⟨{ state := ReorderPhase.rdone
+                input := c1.input.move (idleDir c1.input.read)
+                work := fun i => (c1.work i).writeAndMove (readBackWrite (c1.work i).read)
+                  (idleDir (c1.work i).read)
+                output := c1.output.writeAndMove (readBackWrite c1.output.read)
+                  (idleDir c1.output.read) }, 2, by simp,
+        .step hstep (.step (by simp [TM.step, reorderTM, hread1, c1]) .zero), rfl, ?_⟩
+      rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
+          = c1.output from Tape.writeAndMove_readBack_idle_of_ne_start _ houtne1]
+      simpa [reorder] using hpre1
+
+/-- The copy phase halts on empty input without changing the output prefix. -/
+private theorem reorderTM_copy_empty
+    (acc : List Bool) (c : Cfg 0 reorderTM.Q)
+    (hstate : c.state = ReorderPhase.rcopyA)
+    (hsuf : c.input.HasBinarySuffix [])
+    (hpre : c.output.HasBinaryPrefix acc) :
+    ∃ c' t, t ≤ 3 ∧ reorderTM.reachesIn t c c' ∧ reorderTM.halted c' ∧
+      c'.output.HasBinaryPrefix (acc ++ reorder []) := by
+  have houtne : c.output.read ≠ Γ.start := by rw [hpre.read_blank]; decide
+  have hread : c.input.read = Γ.blank := hsuf.read_nil
+  refine ⟨{ state := ReorderPhase.rdone
+            input := c.input.move (idleDir c.input.read)
+            work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
+              (idleDir (c.work i).read)
+            output := c.output.writeAndMove (readBackWrite c.output.read)
+              (idleDir c.output.read) }, 1, by simp,
+    .step (by simp [TM.step, hstate, reorderTM, hread]) .zero, rfl, ?_⟩
+  rw [show c.output.writeAndMove (readBackWrite c.output.read) (idleDir c.output.read)
+      = c.output from Tape.writeAndMove_readBack_idle_of_ne_start _ houtne]
+  simpa [reorder] using hpre
+
 /-- Phase 1 of `reorderTM`: from `rcopyA` on input `w` with output holding `acc`,
 copy `w`'s leading block verbatim and decode the following block, halting with
 `acc ++ reorder w`. The separator case hands off to `reorderTM_dec_loop`. -/
@@ -428,93 +530,15 @@ private theorem reorderTM_copy_loop :
       intro w acc hw c hstate hsuf hpre
       have hwnil : w = [] := List.length_eq_zero_iff.mp (Nat.le_zero.mp hw)
       subst hwnil
-      have hread : c.input.read = Γ.blank := hsuf.read_nil
-      have houtne : c.output.read ≠ Γ.start := by rw [hpre.read_blank]; decide
-      refine ⟨{ state := ReorderPhase.rdone
-                input := c.input.move (idleDir c.input.read)
-                work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
-                  (idleDir (c.work i).read)
-                output := c.output.writeAndMove (readBackWrite c.output.read)
-                  (idleDir c.output.read) }, 1, by simp,
-        .step (by simp [TM.step, hstate, reorderTM, hread]) .zero, rfl, ?_⟩
-      rw [show c.output.writeAndMove (readBackWrite c.output.read) (idleDir c.output.read)
-          = c.output from Tape.writeAndMove_readBack_idle_of_ne_start _ houtne]
-      simpa [reorder] using hpre
+      exact reorderTM_copy_empty acc c hstate hsuf hpre
   | succ fuel ih =>
       intro w acc hw c hstate hsuf hpre
       have houtne : c.output.read ≠ Γ.start := by rw [hpre.read_blank]; decide
       -- The `rcopyA` step emits the first bit `c1` verbatim.
       match w with
-      | [] =>
-          have hread : c.input.read = Γ.blank := hsuf.read_nil
-          refine ⟨{ state := ReorderPhase.rdone
-                    input := c.input.move (idleDir c.input.read)
-                    work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
-                      (idleDir (c.work i).read)
-                    output := c.output.writeAndMove (readBackWrite c.output.read)
-                      (idleDir c.output.read) }, 1, by simp,
-            .step (by simp [TM.step, hstate, reorderTM, hread]) .zero, rfl, ?_⟩
-          rw [show c.output.writeAndMove (readBackWrite c.output.read) (idleDir c.output.read)
-              = c.output from Tape.writeAndMove_readBack_idle_of_ne_start _ houtne]
-          simpa [reorder] using hpre
-      | [false] =>
-          have hread : c.input.read = Γ.ofBool false := hsuf.read_cons
-          let c1 : Cfg 0 reorderTM.Q :=
-            { state := ReorderPhase.rcopyBf
-              input := c.input.move Dir3.right
-              work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
-                (idleDir (c.work i).read)
-              output := c.output.writeAndMove (readBackWrite c.input.read) Dir3.right }
-          have hstep : reorderTM.step c = some c1 := by
-            simp [TM.step, hstate, reorderTM, hread, Γ.ofBool, c1]
-          have hsuf1 : c1.input.HasBinarySuffix [] := hsuf.move_right_cons
-          have hpre1 : c1.output.HasBinaryPrefix (acc ++ [false]) := by
-            have hco : (readBackWrite c.input.read).toΓ = Γ.ofBool false := by rw [hread]; rfl
-            show (c.output.writeAndMove ((readBackWrite c.input.read).toΓ)
-                Dir3.right).HasBinaryPrefix
-              (acc ++ [false])
-            rw [hco]; exact Tape.hasBinaryPrefix_write_bit false hpre
-          have hread1 : c1.input.read = Γ.blank := hsuf1.read_nil
-          have houtne1 : c1.output.read ≠ Γ.start := by rw [hpre1.read_blank]; decide
-          refine ⟨{ state := ReorderPhase.rdone
-                    input := c1.input.move (idleDir c1.input.read)
-                    work := fun i => (c1.work i).writeAndMove (readBackWrite (c1.work i).read)
-                      (idleDir (c1.work i).read)
-                    output := c1.output.writeAndMove (readBackWrite c1.output.read)
-                      (idleDir c1.output.read) }, 2, by simp,
-            .step hstep (.step (by simp [TM.step, reorderTM, hread1, c1]) .zero), rfl, ?_⟩
-          rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
-              = c1.output from Tape.writeAndMove_readBack_idle_of_ne_start _ houtne1]
-          simpa [reorder] using hpre1
-      | [true] =>
-          have hread : c.input.read = Γ.ofBool true := hsuf.read_cons
-          let c1 : Cfg 0 reorderTM.Q :=
-            { state := ReorderPhase.rcopyBt
-              input := c.input.move Dir3.right
-              work := fun i => (c.work i).writeAndMove (readBackWrite (c.work i).read)
-                (idleDir (c.work i).read)
-              output := c.output.writeAndMove (readBackWrite c.input.read) Dir3.right }
-          have hstep : reorderTM.step c = some c1 := by
-            simp [TM.step, hstate, reorderTM, hread, Γ.ofBool, c1]
-          have hsuf1 : c1.input.HasBinarySuffix [] := hsuf.move_right_cons
-          have hpre1 : c1.output.HasBinaryPrefix (acc ++ [true]) := by
-            have hco : (readBackWrite c.input.read).toΓ = Γ.ofBool true := by rw [hread]; rfl
-            show (c.output.writeAndMove ((readBackWrite c.input.read).toΓ)
-                Dir3.right).HasBinaryPrefix
-              (acc ++ [true])
-            rw [hco]; exact Tape.hasBinaryPrefix_write_bit true hpre
-          have hread1 : c1.input.read = Γ.blank := hsuf1.read_nil
-          have houtne1 : c1.output.read ≠ Γ.start := by rw [hpre1.read_blank]; decide
-          refine ⟨{ state := ReorderPhase.rdone
-                    input := c1.input.move (idleDir c1.input.read)
-                    work := fun i => (c1.work i).writeAndMove (readBackWrite (c1.work i).read)
-                      (idleDir (c1.work i).read)
-                    output := c1.output.writeAndMove (readBackWrite c1.output.read)
-                      (idleDir c1.output.read) }, 2, by simp,
-            .step hstep (.step (by simp [TM.step, reorderTM, hread1, c1]) .zero), rfl, ?_⟩
-          rw [show c1.output.writeAndMove (readBackWrite c1.output.read) (idleDir c1.output.read)
-              = c1.output from Tape.writeAndMove_readBack_idle_of_ne_start _ houtne1]
-          simpa [reorder] using hpre1
+      | [] => exact reorderTM_copy_empty acc c hstate hsuf hpre
+      | [false] => exact reorderTM_copy_single false acc c hstate hsuf hpre
+      | [true] => exact reorderTM_copy_single true acc c hstate hsuf hpre
       | false :: true :: y =>
           -- separator: copy `false` then `true`, then decode `y`.
           have hreadA : c.input.read = Γ.ofBool false := hsuf.read_cons
