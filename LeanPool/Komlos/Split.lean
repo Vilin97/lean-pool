@@ -22,7 +22,7 @@ is unchanged and the last component is `Komlos.splitBit v P`. Claim 3.2,
 shift distance in direction `u`.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 
@@ -31,6 +31,7 @@ open Finsupp Finset
 variable {E : Type*}
 
 /-- The embedding of `E` as the slice at height `b` of `E × ℝ`. -/
+@[expose]
 def incl (b : ℝ) : E ↪ E × ℝ := ⟨fun x ↦ (x, b), Prod.mk_left_injective b⟩
 
 @[simp] lemma incl_apply (b : ℝ) (x : E) : incl b x = (x, b) := rfl

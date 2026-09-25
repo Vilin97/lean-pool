@@ -23,7 +23,7 @@ For points with last coordinate `0`, choose one of the points `x ± 3 • w` in 
 are chosen so that the change in the first coordinate is `e • w`.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 

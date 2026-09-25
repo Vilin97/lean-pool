@@ -16,7 +16,7 @@ Adapted for Lean Pool by changing module paths and selecting explicit imports.
 `mass P • u`, which is `u` when `P` is a probability distribution.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 
@@ -25,7 +25,7 @@ open Finsupp Finset
 variable {E : Type*} [AddCommGroup E]
 
 /-- Translation of a finitely supported function, carrying the weight at `x` to `x + u`. -/
-noncomputable def tr (u : E) (P : E →₀ ℝ) : E →₀ ℝ :=
+@[expose] noncomputable def tr (u : E) (P : E →₀ ℝ) : E →₀ ℝ :=
   Finsupp.equivMapDomain (Equiv.addRight u) P
 
 @[simp] lemma tr_apply (u : E) (P : E →₀ ℝ) (x : E) : tr u P x = P (x - u) := by

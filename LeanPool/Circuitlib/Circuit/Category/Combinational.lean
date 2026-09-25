@@ -17,7 +17,7 @@ import Mathlib.Tactic.Attr.Core
 
 -/
 
-@[expose] public section
+public section
 
 namespace Circuit
 
@@ -39,18 +39,18 @@ universe u v
 variable {V : Type v} {G : Type u}
 
 /-- Homomorphism. -/
-def Hom (V : Type v) [Preorder V] (I O : CombinationalCircuitCategory V G) :=
+@[expose] def Hom (V : Type v) [Preorder V] (I O : CombinationalCircuitCategory V G) :=
   { f : Wires V I.obj → Wires V O.obj // Monotone f }
 
 /-- The underlying identity wire-function. -/
-@[inline, simp]
+@[expose, inline, simp]
 def idVal : Wires V n → Wires V n := fun x => x
 
 @[simp]
 lemma id_monotone [Preorder V] : Monotone (idVal (V:=V) (n:=n)) := monotone_id
 
 /-- The identity morphism. -/
-@[inline, simp]
+@[expose, inline, simp]
 def id [Preorder V] : CombinationalCircuitCategory.Hom V X X := ⟨idVal, id_monotone⟩
 
 open CategoryTheory
@@ -71,7 +71,7 @@ lemma id_coe_apply
     (𝟙 X : Hom V X X).val v = v := rfl
 
 /-- The wire-function that duplicates its single input wire. -/
-@[inline, simp]
+@[expose, inline, simp]
 def fork (w : Wires V 1) : Wires V 2 := #v[w.get 0, w.get 0]
 
 @[simp]
@@ -261,7 +261,7 @@ lemma iso_inv_hom_id
   apply Subtype.ext; funext v; rfl
 
 /-- The isomorphism between objects with equal wire counts. -/
-@[inline, simp]
+@[expose, inline, simp]
 def iso
     (h : n = m) :
     CombinationalCircuitCategory.of V G n ≅ CombinationalCircuitCategory.of V G m :=
@@ -359,7 +359,7 @@ lemma tensorHom_comp_tensorHom
         exact tensorHom_eq_right v k f₁ f₂))
 
 /-- The monoidal unit, the object with no wires. -/
-@[inline, simp]
+@[expose, inline, simp]
 def tensorUnit : CombinationalCircuitCategory V G := .of V G 0
 
 omit [SemilatticeSup V] in
@@ -370,7 +370,7 @@ lemma associator_eq
   Nat.add_assoc X.obj Y.obj Z.obj
 
 /-- The associator isomorphism of the monoidal structure. -/
-@[inline, simp]
+@[expose, inline, simp]
 def associator
     (X Y Z : CombinationalCircuitCategory V G) :
     (X.tensorObj Y).tensorObj Z ≅ X.tensorObj (Y.tensorObj Z) :=
@@ -551,7 +551,7 @@ lemma braiding_hom_monotone
   split_ifs <;> exact hab _
 
 /-- The braiding morphism, swapping two blocks of wires. -/
-@[inline, simp]
+@[expose, inline, simp]
 def braidingHom (X Y : CombinationalCircuitCategory V G) : X ⊗ Y ⟶ Y ⊗ X :=
   ⟨braidingHomVal X Y, braiding_hom_monotone⟩
 
@@ -568,7 +568,7 @@ lemma braiding_hom_inv_id
   split_ifs <;> exact congrArg v.get (Fin.ext (by simp <;> omega))
 
 /-- The braiding isomorphism of the symmetric monoidal structure. -/
-@[inline, simp]
+@[expose, inline, simp]
 def braiding (X Y : CombinationalCircuitCategory V G) : X ⊗ Y ≅ Y ⊗ X :=
   { hom := braidingHom X Y
     inv := braidingHom Y X

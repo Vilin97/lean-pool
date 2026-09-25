@@ -19,7 +19,7 @@ public import LeanPool.Circuitlib.Circuit.Belnap.Gate
 
 -/
 
-@[expose] public section
+public section
 
 namespace Circuit
 

@@ -19,7 +19,7 @@ Adapted for Lean Pool by changing module paths and selecting explicit imports.
 For probability distributions, overlap equals `1 - tvDist P Q`.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 
@@ -28,12 +28,15 @@ open Finsupp Finset
 variable {E : Type*}
 
 /-- Half the sum of absolute differences of the weights of two finitely supported functions. -/
+@[expose]
 noncomputable def tvDist (P Q : E →₀ ℝ) : ℝ := 2⁻¹ * (P - Q).sum fun _ r ↦ |r|
 
 /-- Total common weight, computed by taking the pointwise minimum. -/
+@[expose]
 noncomputable def overlap (P Q : E →₀ ℝ) : ℝ := mass (P ⊓ Q)
 
 /-- Total variation distance between a finitely supported function and its translate by `u`. -/
+@[expose]
 noncomputable def shiftDist [AddCommGroup E] (P : E →₀ ℝ) (u : E) : ℝ := tvDist P (tr u P)
 
 lemma tvDist_nonneg (P Q : E →₀ ℝ) : 0 ≤ tvDist P Q := by

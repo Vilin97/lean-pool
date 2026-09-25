@@ -16,12 +16,12 @@ public import Mathlib.Order.Defs.PartialOrder
 
 -/
 
-@[expose] public section
+public section
 
 namespace Circuit
 
 /-- A bundle of `I` wires, each carrying a value of type `V`. -/
-def Wires (V : Type u) (I : ℕ) := Vector V I
+@[expose] def Wires (V : Type u) (I : ℕ) := Vector V I
 
 instance [Preorder V] : Preorder (Wires V I) where
   le a b := ∀ i : Fin I, a.get i ≤ b.get i
