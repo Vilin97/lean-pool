@@ -28,7 +28,7 @@ Lean-reading hints for beginners:
 * `field_simp` clears denominators after you provide nonzero-denominator proofs.
 -/
 
-@[expose] public section
+public section
 noncomputable section
 
 open scoped BigOperators

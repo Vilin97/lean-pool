@@ -49,7 +49,7 @@ binomial expansion of `(1 + A) ^ p` is `1 + p A` up to `p ^ (n + 2)`. Stating it
 avoids truncated subtraction in the exponents that appear in the paper's proof.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

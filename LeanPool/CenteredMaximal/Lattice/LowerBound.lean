@@ -18,7 +18,7 @@ using atoms of the neighbouring cells (`exists_isWitness_of_abs`). The `(2N + 1)
 `C` therefore satisfies `C ≥ ((2N + 1)/(2N + 3))³ Φ`, and `N → ∞` gives `C ≥ Φ`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

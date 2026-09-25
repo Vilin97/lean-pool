@@ -23,7 +23,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 # LeanPool.OrderPQ.Basic
 -/
 
-@[expose] public section
+public section
 
 attribute [local implicit_reducible]
   MulZMod instMulMulZMod instMulOneClassMulZMod instGroupMulZMod

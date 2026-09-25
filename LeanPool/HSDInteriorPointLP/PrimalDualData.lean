@@ -28,7 +28,7 @@ Lean-reading hints for beginners:
   `simp` in a long proof because the simplification set does not change silently.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -87,7 +87,7 @@ structure LPData (m n : Nat) where
 This says that the only linear combination of the rows of `A` equal to zero is the
 trivial one.  This is the standard full-row-rank assumption used in primal-dual IPM
 analyses. -/
-def FullRowRank {m n : Nat} (P : LPData m n) : Prop :=
+@[expose] def FullRowRank {m n : Nat} (P : LPData m n) : Prop :=
   ∀ y : Vec m, (∀ j : Fin n, ∑ i : Fin m, y i * P.A i j = 0) → ∀ i : Fin m, y i = 0
 
 /-- Standard assumptions for the LP-level HLP skeleton.
@@ -98,18 +98,18 @@ structure LPStandardAssumptions {m n : Nat} (P : LPData m n) : Prop where
   full_row_rank : FullRowRank P
 
 /-- Homogeneous complementarity dimension `n + 1`. -/
-def hdim (n : Nat) : ℝ := (n : ℝ) + 1
+@[expose] def hdim (n : Nat) : ℝ := (n : ℝ) + 1
 
 /-- Euclidean dot product on finite real vectors. -/
-def dot {n : Nat} (u v : Vec n) : ℝ :=
+@[expose] def dot {n : Nat} (u v : Vec n) : ℝ :=
   ∑ i, u i * v i
 
 /-- Pairing of `(x,τ)` and `(s,κ)`: `xᵀs + τκ`. -/
-def hdot {n : Nat} (x : Vec n) (tau : ℝ) (s : Vec n) (kappa : ℝ) : ℝ :=
+@[expose] def hdot {n : Nat} (x : Vec n) (tau : ℝ) (s : Vec n) (kappa : ℝ) : ℝ :=
   dot x s + tau * kappa
 
 /-- Squared centrality deviation for `(xᵢsᵢ, τκ)` from `μe`. -/
-def centerSq {n : Nat} (x : Vec n) (tau : ℝ) (s : Vec n) (kappa : ℝ) (μ : ℝ) : ℝ :=
+@[expose] def centerSq {n : Nat} (x : Vec n) (tau : ℝ) (s : Vec n) (kappa : ℝ) (μ : ℝ) : ℝ :=
   (∑ i, (x i * s i - μ) ^ 2) + (tau * kappa - μ) ^ 2
 
 /-- Homogeneous self-dual state with primal and dual/complementarity variables. -/
@@ -135,25 +135,26 @@ structure HSDirection (n : Nat) where
   dkappa : ℝ
 
 /-- Strict positivity of every HSD state component. -/
-def Interior {n : Nat} (w : HSState n) : Prop :=
+@[expose] def Interior {n : Nat} (w : HSState n) : Prop :=
   (∀ i, 0 < w.x i) ∧ 0 < w.tau ∧ (∀ i, 0 < w.s i) ∧ 0 < w.kappa
 
 /-- Complementarity gap of an HSD state. -/
-def gap {n : Nat} (w : HSState n) : ℝ :=
+@[expose] def gap {n : Nat} (w : HSState n) : ℝ :=
   hdot w.x w.tau w.s w.kappa
 
 /-- Average complementarity measure. -/
-def mu {n : Nat} (w : HSState n) : ℝ :=
+@[expose] def mu {n : Nat} (w : HSState n) : ℝ :=
   gap w / hdim n
 
 /-- HSDE central neighborhood corresponding to the YTM neighborhood
 `‖(Xs, τκ) - μe‖ ≤ β μ`, written with squared Euclidean norm. -/
+@[expose]
 def HSDNeighborhood {n : Nat} (β : ℝ) (w : HSState n) : Prop :=
   Interior w ∧ 0 < β ∧ β < 1 ∧
   centerSq w.x w.tau w.s w.kappa (mu w) ≤ (β * mu w) ^ 2
 
 /-- Apply a scalar step along an HSD search direction. -/
-def addStep {n : Nat} (w : HSState n) (d : HSDirection n) (α : ℝ) : HSState n :=
+@[expose] def addStep {n : Nat} (w : HSState n) (d : HSDirection n) (α : ℝ) : HSState n :=
   { x := fun i => w.x i + α * d.dx i
     tau := w.tau + α * d.dtau
     s := fun i => w.s i + α * d.ds i
@@ -217,11 +218,11 @@ The earlier `HSDirectionEquation` works only with the reduced variables
 -/
 
 /-- Matrix-vector multiplication for the row-indexed constraint matrix. -/
-def matVec {m n : Nat} (A : Matrix (Fin m) (Fin n) ℝ) (x : Vec n) : Vec m :=
+@[expose] def matVec {m n : Nat} (A : Matrix (Fin m) (Fin n) ℝ) (x : Vec n) : Vec m :=
   fun i => ∑ j, A i j * x j
 
 /-- Transposed matrix-vector multiplication. -/
-def tMatVec {m n : Nat} (A : Matrix (Fin m) (Fin n) ℝ) (y : Vec m) : Vec n :=
+@[expose] def tMatVec {m n : Nat} (A : Matrix (Fin m) (Fin n) ℝ) (y : Vec m) : Vec n :=
   fun j => ∑ i, A i j * y i
 
 /-- Finite-dimensional adjointness of `matVec` and `tMatVec`. -/
@@ -246,18 +247,18 @@ theorem dot_tMatVec_eq_dot_matVec {m n : Nat}
             ring
 
 /-- All-ones vector. -/
-def ones {n : Nat} : Vec n := fun _ => 1
+@[expose] def ones {n : Nat} : Vec n := fun _ => 1
 
 /-- The YTM simplified HLP uses `bbar = b - A e`. -/
-def bbar {m n : Nat} (P : LPData m n) : Vec m :=
+@[expose] def bbar {m n : Nat} (P : LPData m n) : Vec m :=
   fun i => P.b i - matVec P.A (ones : Vec n) i
 
 /-- The YTM simplified HLP uses `cbar = c - e`. -/
-def cbar {m n : Nat} (P : LPData m n) : Vec n :=
+@[expose] def cbar {m n : Nat} (P : LPData m n) : Vec n :=
   fun j => P.c j - 1
 
 /-- The YTM simplified HLP uses `zbar = cᵀe + 1`. -/
-def zbar {m n : Nat} (P : LPData m n) : ℝ :=
+@[expose] def zbar {m n : Nat} (P : LPData m n) : ℝ :=
   dot P.c (ones : Vec n) + 1
 
 /-- Full HLP direction, including the equality-multiplier direction `dy` and the
@@ -278,6 +279,7 @@ structure HLPFullDirection (m n : Nat) where
 
 /-- Forget the free/equality components and retain the reduced complementarity
 variables. -/
+@[expose]
 def HLPFullDirection.toHSDirection {m n : Nat} (D : HLPFullDirection m n) : HSDirection n :=
   { dx := D.dx
     dtau := D.dtau
@@ -312,11 +314,11 @@ structure HLPFullDirectionEquation {m n : Nat}
     w.tau * D.dkappa + w.kappa * D.dtau = γ * mu w - w.tau * w.kappa
 
 /-- Right-hand side of the complementarity part of the YTM Newton system. -/
-def complRhs {n : Nat} (w : HSState n) (γ : ℝ) : Vec n :=
+@[expose] def complRhs {n : Nat} (w : HSState n) (γ : ℝ) : Vec n :=
   fun i => γ * mu w - w.x i * w.s i
 
 /-- Right-hand side of the scalar complementarity equation. -/
-def scalarComplRhs {n : Nat} (w : HSState n) (γ : ℝ) : ℝ :=
+@[expose] def scalarComplRhs {n : Nat} (w : HSState n) (γ : ℝ) : ℝ :=
   γ * mu w - w.tau * w.kappa
 
 /-- The full HLP Newton block operator, written as equations rather than as a single
@@ -400,12 +402,12 @@ injective; in finite dimension, injectivity of a self-map implies surjectivity. 
 abbrev HLPBlockSpace (m n : Nat) := Vec m × Vec n × ℝ × ℝ × Vec n × ℝ
 
 /-- Encode a full HLP direction as a vector in the product block space. -/
-def HLPFullDirection.toBlockVector {m n : Nat} (D : HLPFullDirection m n) :
+@[expose] def HLPFullDirection.toBlockVector {m n : Nat} (D : HLPFullDirection m n) :
     HLPBlockSpace m n :=
   (D.dy, D.dx, D.dtau, D.dtheta, D.ds, D.dkappa)
 
 /-- Decode a product block vector as a full HLP direction. -/
-def HLPFullDirection.ofBlockVector {m n : Nat} (u : HLPBlockSpace m n) :
+@[expose] def HLPFullDirection.ofBlockVector {m n : Nat} (u : HLPBlockSpace m n) :
     HLPFullDirection m n :=
   { dy := u.1
     dx := u.2.1
@@ -427,7 +429,7 @@ def HLPFullDirection.ofBlockVector {m n : Nat} (u : HLPBlockSpace m n) :
   rfl
 
 /-- Right-hand side of the full Newton block system in the same block space. -/
-def HLPNewtonBlockRhs {n : Nat} (w : HSState n) (γ : ℝ) (m : Nat) :
+@[expose] def HLPNewtonBlockRhs {n : Nat} (w : HSState n) (γ : ℝ) (m : Nat) :
     HLPBlockSpace m n :=
   (0, 0, 0, 0, complRhs w γ, scalarComplRhs w γ)
 

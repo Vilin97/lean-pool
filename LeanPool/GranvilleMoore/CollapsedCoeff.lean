@@ -74,7 +74,7 @@ to give the congruence's right-hand side a meaning, and the forms above clear `j
 inverting it. They need only `2 ≤ p`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

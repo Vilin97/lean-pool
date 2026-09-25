@@ -24,7 +24,7 @@ That older interface was removed because the generated-algorithm interface in
 algorithm dependency clearer.
 -/
 
-@[expose] public section
+public section
 noncomputable section
 
 open scoped BigOperators
@@ -1087,7 +1087,7 @@ theorem corrector_step_guarantee_of_wide {n : Nat}
 
 
 /-- The contraction factor appearing in the two-step YTM estimate. -/
-def ytmContraction (n : Nat) : ℝ :=
+@[expose] def ytmContraction (n : Nat) : ℝ :=
   1 - ytmStepConstant / Real.sqrt (hdim n)
 
 /-- The two-step contraction factor is nonnegative. -/
@@ -1216,7 +1216,7 @@ theorem ytm_exp_mul_gap_le_of_log_bound {n : Nat}
 
 
 /-- Pair bound written using `L = log(gap0 / ε)`. -/
-def ytmLogPairBoundL (n : Nat) (L : ℝ) : Nat :=
+@[expose] def ytmLogPairBoundL (n : Nat) (L : ℝ) : Nat :=
   Nat.ceil ((Real.sqrt (hdim n) / ytmStepConstant) * L)
 
 /-- Ordinary iteration bound written using `L = log(gap0 / ε)`. -/
@@ -1224,6 +1224,7 @@ def ytmLogIterationBoundL (n : Nat) (L : ℝ) : Nat :=
   2 * ytmLogPairBoundL n L
 
 /-- Gap-based stopping condition used by the formalized iteration bound. -/
+@[expose]
 def YTMGapStop {n : Nat} (ε : ℝ) (w : HSState n) : Prop :=
   gap w ≤ ε
 

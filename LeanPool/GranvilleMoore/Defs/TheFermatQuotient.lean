@@ -37,7 +37,7 @@ about itself, so every `pow` lemma in Mathlib applies to it unchanged.
 cancel the denominator, see `GranvilleMoore.natCast_mul_fermatQuotient`.
 -/
 
-@[expose] public section
+public section
 
 namespace GranvilleMoore
 
@@ -53,6 +53,7 @@ abbrev fermatUnit (p : ℕ) (x : ℤ) : ℤ := x ^ (p - 1)
 `q_p(x) = (x ^ (p - 1) - 1) / p`, the quotient being taken in `ℚ`.
 
 For `p` prime with `p ∤ x` this rational number is an integer. -/
+@[expose]
 def fermatQuotient (p : ℕ) (x : ℤ) : ℚ := ((fermatUnit p x - 1 : ℤ) : ℚ) / (p : ℚ)
 
 /-- The Fermat quotient written out with the numerator cast to `ℚ` termwise. -/
@@ -79,7 +80,7 @@ theorem fermatQuotient_one (p : ℕ) : fermatQuotient p 1 = 0 := by
 
 It is the exponent for which `(x ^ (p - 1)) ^ e_k = x ^ (p ^ k - 1)`, since
 `(p - 1) * e_k = p ^ k - 1`. -/
-def frobeniusExponent (p k : ℕ) : ℕ := ∑ r ∈ range k, p ^ r
+@[expose] def frobeniusExponent (p k : ℕ) : ℕ := ∑ r ∈ range k, p ^ r
 
 /-- The Frobenius exponent is the truncated geometric sum, which is how Mathlib's
 geometric-sum API applies to it. -/
