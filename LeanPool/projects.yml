@@ -10208,6 +10208,55 @@ projects:
       - 35B65
       - 42B20
       - 28A78
+  - slug: hasse-minkowski
+    title: The Hasse–Minkowski theorem over ℚ
+    summary: >-
+      Proves the local–global principle for quadratic forms over the rationals:
+      a form is isotropic over ℚ exactly when it is isotropic over ℝ and over
+      every p-adic completion, together with Meyer's theorem that an indefinite
+      rational form in at least five variables is isotropic. The development
+      builds the Hilbert symbol at every place of ℚ with Serre's explicit
+      formulas (including the 2-adic case), proves Hilbert reciprocity and the
+      existence theorem for prescribed local symbols, the Hasse invariant and
+      the rank-two and rank-three local representability criteria, Legendre's
+      ternary descent, and the rank-four and rank-≥5 inductions.
+    branch: number theory
+    entry_module: LeanPool.HasseMinkowski
+    authors:
+      - jayyswan
+      - Nirvana Coppola
+      - María Inés de Frutos-Fernández
+    source:
+      title: The Hasse–Minkowski theorem over ℚ
+      url: https://github.com/jayyswan/hasse-minkowski
+      github_repo: jayyswan/hasse-minkowski
+      commit: 47f0e9b5cba6e6354b882bc5856a11962ba61f4a
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - HasseMinkowski.hasseMinkowski
+      - HasseMinkowski.meyer
+    main_results:
+      - declaration: HasseMinkowski.hasseMinkowski
+        informal: >-
+          A quadratic form over ℚ is isotropic if and only if it is isotropic
+          over ℝ and over every p-adic completion ℚ_[p] (the Hasse–Minkowski
+          local–global principle, in isotropy form).
+      - declaration: HasseMinkowski.meyer
+        informal: >-
+          Every indefinite quadratic form over ℚ in at least five variables is
+          isotropic (Meyer's theorem).
+    tags:
+      - number-theory
+      - quadratic-forms
+      - local-global
+      - p-adic
+    msc:
+      - '11E12'
+      - '11E08'
+      - '11E88'
+
   - slug: puiseux
     title: Puiseux's theorem
     summary: >-
