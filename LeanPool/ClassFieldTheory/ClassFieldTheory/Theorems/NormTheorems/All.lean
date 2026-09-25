@@ -21,4 +21,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.NormTheorems.T
 This module gathers the public local-global principles for field norms.
 -/
 
-@[expose] public section

@@ -25,7 +25,8 @@ open LocalFieldTheory
 open CyclicCohomology.ProfiniteCohomology.Herbrand
 open CyclicCohomology
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

@@ -23,7 +23,8 @@ has the restricted-product topology of the local unit groups.
 open Filter
 open scoped RestrictedProduct
 
-noncomputable section
+noncomputable
+section
 
 namespace RestrictedProduct
 
@@ -102,47 +103,51 @@ noncomputable def unitsContinuousMulEquiv
       (Πʳ i, [(R i)ˣ, (Submonoid.ofClass (B i)).units]) := by
   let e := unitsEquiv (B := B) (𝓕 := cofinite) R
   refine { toMulEquiv := e, continuous_toFun := ?_, continuous_invFun := ?_ }
-  · rw [continuous_iff_continuousAt]
-    intro x
-    let T : Set ι := {i | e x i ∈ (Submonoid.ofClass (B i)).units}
-    have hT : cofinite ≤ 𝓟 T := le_principal_iff.mpr (e x).2
-    let y : Πʳ i, [(R i)ˣ, (Submonoid.ofClass (B i)).units]_[𝓟 T] :=
-      ⟨(e x).1, fun i hi => hi⟩
-    let x' : (Πʳ i, [R i, B i]_[𝓟 T])ˣ :=
-      (unitsEquivPrincipal (B := B) T).symm y
-    have hx : Units.map (inclusionMonoidHom (B := B) hT) x' = x := by
+  · exact (by
+      rw [continuous_iff_continuousAt]
+      intro x
+      let T : Set ι := {i | e x i ∈ (Submonoid.ofClass (B i)).units}
+      have hT : cofinite ≤ 𝓟 T := le_principal_iff.mpr (e x).2
+      let y : Πʳ i, [(R i)ˣ, (Submonoid.ofClass (B i)).units]_[𝓟 T] :=
+        ⟨(e x).1, fun i hi => hi⟩
+      let x' : (Πʳ i, [R i, B i]_[𝓟 T])ˣ :=
+        (unitsEquivPrincipal (B := B) T).symm y
+      have hx : Units.map (inclusionMonoidHom (B := B) hT) x' = x := by
+        apply Units.ext
+        apply RestrictedProduct.ext
+        intro i
+        rfl
+      have hLocal : Continuous (fun z : (Πʳ i, [R i, B i]_[𝓟 T])ˣ =>
+          e (Units.map (inclusionMonoidHom (B := B) hT) z)) := by
+        have h := (continuous_inclusion (R := fun i => (R i)ˣ)
+          (A := fun i => ((Submonoid.ofClass (B i)).units : Set (R i)ˣ)) hT).comp
+            (unitsEquivPrincipal (B := B) T).continuous
+        refine h.congr ?_
+        intro z
+        apply RestrictedProduct.ext
+        intro i
+        rfl
+      rw [← hx]
+      exact (isOpenEmbedding_units_inclusion (B := B) hBopen hT).continuousAt_iff.mp
+        hLocal.continuousAt
+    )
+  · exact (by
+      apply (continuous_dom (R := fun i => (R i)ˣ)
+        (A := fun i => ((Submonoid.ofClass (B i)).units : Set (R i)ˣ))).mpr
+      intro T hT
+      have h : Continuous (fun y :
+          (Πʳ i, [(R i)ˣ, (Submonoid.ofClass (B i)).units]_[𝓟 T]) =>
+          Units.map (inclusionMonoidHom (B := B) hT)
+            ((unitsEquivPrincipal (B := B) T).symm y)) :=
+        ((continuous_inclusion (R := R)
+          (A := fun i => (B i : Set (R i))) hT).units_map _).comp
+            (unitsEquivPrincipal (B := B) T).symm.continuous
+      refine h.congr ?_
+      intro y
       apply Units.ext
       apply RestrictedProduct.ext
       intro i
       rfl
-    have hLocal : Continuous (fun z : (Πʳ i, [R i, B i]_[𝓟 T])ˣ =>
-        e (Units.map (inclusionMonoidHom (B := B) hT) z)) := by
-      have h := (continuous_inclusion (R := fun i => (R i)ˣ)
-        (A := fun i => ((Submonoid.ofClass (B i)).units : Set (R i)ˣ)) hT).comp
-          (unitsEquivPrincipal (B := B) T).continuous
-      refine h.congr ?_
-      intro z
-      apply RestrictedProduct.ext
-      intro i
-      rfl
-    rw [← hx]
-    exact (isOpenEmbedding_units_inclusion (B := B) hBopen hT).continuousAt_iff.mp
-      hLocal.continuousAt
-  · apply (continuous_dom (R := fun i => (R i)ˣ)
-      (A := fun i => ((Submonoid.ofClass (B i)).units : Set (R i)ˣ))).mpr
-    intro T hT
-    have h : Continuous (fun y :
-        (Πʳ i, [(R i)ˣ, (Submonoid.ofClass (B i)).units]_[𝓟 T]) =>
-        Units.map (inclusionMonoidHom (B := B) hT)
-          ((unitsEquivPrincipal (B := B) T).symm y)) :=
-      ((continuous_inclusion (R := R)
-        (A := fun i => (B i : Set (R i))) hT).units_map _).comp
-          (unitsEquivPrincipal (B := B) T).symm.continuous
-    refine h.congr ?_
-    intro y
-    apply Units.ext
-    apply RestrictedProduct.ext
-    intro i
-    rfl
+    )
 
 end RestrictedProduct

@@ -28,7 +28,8 @@ evaluation or norm-subgroup arguments.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries Polynomial PowerSeries PowerSeries.WithPiTopology
   Topology Valued WithZero

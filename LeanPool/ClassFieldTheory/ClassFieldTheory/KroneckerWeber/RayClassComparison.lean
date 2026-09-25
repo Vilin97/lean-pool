@@ -23,7 +23,8 @@ field is `ℚ(μ_m)`.
 
 open scoped NumberField Cyclotomic
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

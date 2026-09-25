@@ -40,7 +40,8 @@ open _root_.RamificationTheory.HilbertRamification.ValuationSubring renaming
     ramificationGroup_eq_bot_iff_residueChar_not_dvd_inertia_card
 
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 

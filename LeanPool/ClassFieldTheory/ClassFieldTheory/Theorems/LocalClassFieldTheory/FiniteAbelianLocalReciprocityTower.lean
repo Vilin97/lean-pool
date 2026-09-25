@@ -19,7 +19,8 @@ single compatible construction in the implementation layer.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

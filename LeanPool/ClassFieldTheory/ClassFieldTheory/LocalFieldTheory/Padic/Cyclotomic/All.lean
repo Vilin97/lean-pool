@@ -13,4 +13,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalFieldTheory.Padic.
 Aggregate for the totally ramified and unramified cyclotomic constructions.
 -/
 
-@[expose] public section

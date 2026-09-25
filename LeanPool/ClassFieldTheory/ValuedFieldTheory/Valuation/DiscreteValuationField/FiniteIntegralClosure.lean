@@ -21,7 +21,8 @@ This file provides record-free theorems for the integral closure
 of a complete-DVF valuation ring in a finite separable field extension.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

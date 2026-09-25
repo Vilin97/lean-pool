@@ -26,7 +26,8 @@ Laurent unit multiplying `T` in the changed uniformizer of the completed theta-i
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped LaurentSeries PowerSeries ValuativeRel

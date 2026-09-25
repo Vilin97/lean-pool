@@ -20,7 +20,8 @@ order. Hence a nondegenerate pairing gives an equivalence with that dual.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory.HilbertPairing
 

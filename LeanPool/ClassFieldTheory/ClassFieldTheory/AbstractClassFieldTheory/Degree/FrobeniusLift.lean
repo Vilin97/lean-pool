@@ -23,7 +23,8 @@ the lifting statement of the finite degree-quotient decomposition.  Positivity i
 convention `0 ∉ ℕ` is not lost in Lean's natural numbers.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

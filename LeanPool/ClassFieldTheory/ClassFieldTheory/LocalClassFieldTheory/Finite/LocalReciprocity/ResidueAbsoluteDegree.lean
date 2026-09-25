@@ -33,7 +33,8 @@ global statement from the compatible finite Frobenius coordinates:
 * inversion gives the continuous degree map of the finite local reciprocity construction.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

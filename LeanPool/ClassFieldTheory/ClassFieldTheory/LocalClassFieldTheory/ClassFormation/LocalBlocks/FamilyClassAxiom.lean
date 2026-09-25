@@ -35,7 +35,8 @@ of the finite family of localized class-formation blocks:
 
 open scoped BigOperators
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

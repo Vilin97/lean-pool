@@ -18,7 +18,8 @@ module defines the multivariable intertwining equation and its additive defect.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

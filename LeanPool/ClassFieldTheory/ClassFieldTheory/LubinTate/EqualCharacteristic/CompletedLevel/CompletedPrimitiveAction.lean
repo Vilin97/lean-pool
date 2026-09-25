@@ -22,7 +22,8 @@ algebraic input for extending arithmetic Frobenius to the completed level.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries Polynomial PowerSeries
 

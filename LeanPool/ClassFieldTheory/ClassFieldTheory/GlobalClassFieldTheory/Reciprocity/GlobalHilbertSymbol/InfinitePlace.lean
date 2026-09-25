@@ -22,7 +22,8 @@ The definition below records that evaluation directly in `μₙ(K)`.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

@@ -20,7 +20,8 @@ Frobenius-normalized ray reciprocity maps.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace RayClass
 

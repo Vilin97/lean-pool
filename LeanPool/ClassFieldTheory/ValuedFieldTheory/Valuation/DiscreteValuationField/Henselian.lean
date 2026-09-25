@@ -22,7 +22,8 @@ This file contains the lightweight package for a discretely valued field whose
 valuation ring is Henselian at its maximal ideal.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

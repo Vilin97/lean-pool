@@ -22,7 +22,8 @@ groups.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 namespace Valuations
@@ -260,7 +261,7 @@ noncomputable instance adicQuotientInverseLimit.instTopologicalSpace
   letI : (n : ℕ) → TopologicalSpace (R ⧸ I ^ n) := fun _ => ⊥
   exact (adicQuotientInverseLimitCompatibleFamiliesEquiv I).topologicalSpace
 
-private noncomputable def adicQuotientInverseLimitRepresentationHomeomorph
+noncomputable def adicQuotientInverseLimitRepresentationHomeomorph
     {R : Type*} [CommRing R] (I : Ideal R) :
     letI : (n : ℕ) → TopologicalSpace (R ⧸ I ^ n) := fun _ => ⊥
     adicQuotientInverseLimit I ≃ₜ
@@ -513,7 +514,7 @@ theorem quotient_mk_continuous_adic
   convert hmodel using 1
   rfl
 
-private noncomputable def adicQuotientCompatibleFamiliesHomeomorph
+noncomputable def adicQuotientCompatibleFamiliesHomeomorph
     {R : Type*} [CommRing R] (I : Ideal R) [IsAdicComplete I R] :
     letI : TopologicalSpace R := I.adicTopology
     letI : (n : ℕ) → TopologicalSpace (R ⧸ I ^ n) := fun _ => ⊥
@@ -841,7 +842,7 @@ theorem adicPositiveQuotientInverseLimitEquiv_apply
       Ideal.Quotient.mk (I ^ (n + 1)) x :=
   adicQuotientInverseLimitEquiv_apply I x (n + 1)
 
-private noncomputable def adicPositiveQuotientCompatibleFamiliesHomeomorph
+noncomputable def adicPositiveQuotientCompatibleFamiliesHomeomorph
     {R : Type*} [CommRing R] (I : Ideal R) [IsAdicComplete I R] :
     letI : TopologicalSpace R := I.adicTopology
     letI : (n : ℕ) → TopologicalSpace (R ⧸ I ^ (n + 1)) := fun _ => ⊥

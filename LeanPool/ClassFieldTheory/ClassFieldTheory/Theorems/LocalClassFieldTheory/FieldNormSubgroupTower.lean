@@ -18,7 +18,8 @@ norms in the base field. No local-field or Galois assumption is needed.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

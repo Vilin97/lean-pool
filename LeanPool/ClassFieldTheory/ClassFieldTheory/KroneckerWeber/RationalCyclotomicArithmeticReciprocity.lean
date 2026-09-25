@@ -22,7 +22,8 @@ the native quotient and finite Krull topologies.
 
 open scoped IsMulCommutative NumberField Cyclotomic
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

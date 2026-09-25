@@ -20,7 +20,8 @@ source-producing field extension used for descent of filtered reciprocity.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 

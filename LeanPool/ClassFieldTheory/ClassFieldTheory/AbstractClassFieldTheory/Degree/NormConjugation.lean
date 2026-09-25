@@ -26,7 +26,8 @@ These are the field-conjugation and norm identities used in the abstract recipro
 use only the actual relative norm and the conjugation action.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

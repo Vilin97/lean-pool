@@ -29,7 +29,8 @@ stabilizer.  This is the abstract analogue of the construction
 `a^σ⁻¹ = ζ` and hence the single-radical generation step.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

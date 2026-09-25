@@ -22,4 +22,3 @@ and acting group in the same universe; the affected source sections state that
 constraint explicitly.
 -/
 
-@[expose] public section

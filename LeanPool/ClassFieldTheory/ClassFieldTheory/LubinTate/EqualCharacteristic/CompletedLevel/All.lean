@@ -43,4 +43,3 @@ Public aggregate for completed level fields, Frobenius fixed fields, and
 completed norm calculations.
 -/
 
-@[expose] public section

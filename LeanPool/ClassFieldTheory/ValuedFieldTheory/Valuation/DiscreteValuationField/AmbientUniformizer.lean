@@ -19,7 +19,8 @@ valuation transports that recognition back to the chosen valuation.
 
 namespace ValuationTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x y z
 

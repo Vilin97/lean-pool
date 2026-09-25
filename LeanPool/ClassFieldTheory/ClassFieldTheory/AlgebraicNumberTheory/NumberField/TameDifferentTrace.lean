@@ -29,7 +29,8 @@ factor cannot divide the different. The factor need not be prime.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory.Discriminant
 

@@ -19,7 +19,8 @@ exponential and logarithm maps are continuous for the valuation topology.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

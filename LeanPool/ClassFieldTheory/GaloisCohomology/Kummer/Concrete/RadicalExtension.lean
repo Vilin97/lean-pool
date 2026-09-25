@@ -25,7 +25,8 @@ abelian of exponent dividing `n`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

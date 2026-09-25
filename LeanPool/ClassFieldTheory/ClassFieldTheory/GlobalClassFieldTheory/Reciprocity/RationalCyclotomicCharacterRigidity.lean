@@ -20,7 +20,8 @@ automorphism of the full rational cyclotomic field has square one.
 
 
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

@@ -27,4 +27,3 @@ Public aggregate for the finite-place Kummer character comparison, finite
 support of the Hilbert factors, and the infinite-place comparison.
 -/
 
-@[expose] public section

@@ -26,7 +26,8 @@ integral upper group at `k` with the kernel of restriction to level `k - 1`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 

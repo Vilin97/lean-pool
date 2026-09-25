@@ -21,7 +21,8 @@ extension has the canonical Hilbert reciprocity quotient.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

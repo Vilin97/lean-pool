@@ -16,7 +16,8 @@ of elements fixed by the prescribed completed Frobenius.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries Polynomial PowerSeries
 

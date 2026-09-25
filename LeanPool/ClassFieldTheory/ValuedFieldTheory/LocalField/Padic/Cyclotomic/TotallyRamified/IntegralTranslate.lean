@@ -15,7 +15,8 @@ This file records that translating `ζ` by one preserves the explicit integral c
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

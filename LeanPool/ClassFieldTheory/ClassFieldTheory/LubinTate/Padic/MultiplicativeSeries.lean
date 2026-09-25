@@ -24,7 +24,8 @@ uniformizer of `ℚ_p`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

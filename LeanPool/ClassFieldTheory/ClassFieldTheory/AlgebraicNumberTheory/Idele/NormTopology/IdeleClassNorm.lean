@@ -21,7 +21,8 @@ the norm-one idele-class subgroups.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace IdeleClassGroup
 

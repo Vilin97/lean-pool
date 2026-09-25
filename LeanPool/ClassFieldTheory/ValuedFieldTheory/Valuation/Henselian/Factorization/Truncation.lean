@@ -17,7 +17,8 @@ the residue field may be omitted to impose the required degree bound.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 open scoped BigOperators

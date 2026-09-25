@@ -28,7 +28,8 @@ or external existence assumption is needed.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries
 

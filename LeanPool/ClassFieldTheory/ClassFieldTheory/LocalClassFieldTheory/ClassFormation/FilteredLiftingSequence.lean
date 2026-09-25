@@ -24,7 +24,8 @@ explicit parameter, discharged for the normal-basis filtration in the next
 file.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

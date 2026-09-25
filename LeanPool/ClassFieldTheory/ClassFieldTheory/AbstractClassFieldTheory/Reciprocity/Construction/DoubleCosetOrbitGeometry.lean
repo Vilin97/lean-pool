@@ -26,7 +26,8 @@ universe u
 
 namespace ClassFormation
 
-noncomputable section
+noncomputable
+section
 
 open MulAction
 

@@ -17,7 +17,8 @@ public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

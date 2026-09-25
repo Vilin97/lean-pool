@@ -27,7 +27,8 @@ lattice correspondence between radical subgroups and abelian extensions.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

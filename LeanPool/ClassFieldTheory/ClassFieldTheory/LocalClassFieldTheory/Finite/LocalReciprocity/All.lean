@@ -67,4 +67,3 @@ Exhaustive aggregate for the finite-level reciprocity equivalence, the continuou
 its norm kernel and surjectivity, and the local class-formation construction beneath them.
 -/
 
-@[expose] public section

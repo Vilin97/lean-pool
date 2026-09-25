@@ -20,7 +20,8 @@ ideal map, so taking their subgroup closure adds no new ideals.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

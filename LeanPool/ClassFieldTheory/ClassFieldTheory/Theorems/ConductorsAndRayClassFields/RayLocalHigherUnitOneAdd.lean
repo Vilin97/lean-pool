@@ -25,7 +25,8 @@ the membership criterion below.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

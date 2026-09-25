@@ -16,7 +16,8 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

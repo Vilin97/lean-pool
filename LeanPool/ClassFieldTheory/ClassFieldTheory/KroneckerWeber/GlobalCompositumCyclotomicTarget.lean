@@ -18,7 +18,8 @@ At a ramified prime `p`, the structured local embedding of `L` has order
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

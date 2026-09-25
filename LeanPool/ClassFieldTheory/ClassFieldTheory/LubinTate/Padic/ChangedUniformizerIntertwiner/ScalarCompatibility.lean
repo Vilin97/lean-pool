@@ -16,7 +16,8 @@ This module proves that the changed-uniformizer intertwiner commutes with every 
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

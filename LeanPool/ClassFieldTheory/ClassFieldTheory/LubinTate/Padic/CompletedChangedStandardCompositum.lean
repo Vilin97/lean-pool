@@ -27,7 +27,8 @@ will identify with the actual local Artin symbol.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

@@ -23,7 +23,8 @@ This is distinct from uniqueness of the Artin map itself.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

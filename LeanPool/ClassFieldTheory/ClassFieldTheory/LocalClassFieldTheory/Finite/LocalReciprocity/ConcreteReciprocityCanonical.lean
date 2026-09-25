@@ -30,7 +30,8 @@ to an automorphism of the separable closure, and
 the abstract reciprocity naturality theorem supplies the required naturality.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable (K L : Type) [Field K] [Field L] [Algebra K L]
   [FiniteDimensional K L] [IsGalois K L]

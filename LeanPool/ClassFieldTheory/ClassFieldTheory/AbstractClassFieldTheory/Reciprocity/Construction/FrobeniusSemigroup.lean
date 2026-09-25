@@ -22,7 +22,8 @@ The set `Frob(\widetilde L | K)` from  is closed under multiplication:
 normalized degrees are positive natural numbers and add under products.
 -/
 
-noncomputable section
+noncomputable
+section
 
 namespace DegreeData
 

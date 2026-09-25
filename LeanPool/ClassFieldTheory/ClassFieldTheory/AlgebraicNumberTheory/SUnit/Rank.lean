@@ -23,7 +23,8 @@ understood to be present.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open IsDedekindDomain
 open scoped NumberField nonZeroDivisors

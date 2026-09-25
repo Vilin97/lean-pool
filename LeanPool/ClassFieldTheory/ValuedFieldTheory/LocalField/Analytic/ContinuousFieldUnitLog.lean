@@ -46,7 +46,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
     uniformizerValueUnit_zpow_uniformizerValueExponent_eq_fieldUnitValueUnit
 
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

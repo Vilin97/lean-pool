@@ -20,7 +20,8 @@ and natural indices recover the usual `m^(n+1)` displacement condition.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

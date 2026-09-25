@@ -25,7 +25,8 @@ with the norm subgroup of the original extension.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

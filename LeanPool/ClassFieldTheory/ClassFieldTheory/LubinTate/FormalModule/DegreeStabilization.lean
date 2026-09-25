@@ -26,7 +26,8 @@ truncation of the outer series.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 attribute [local instance] Classical.propDecidable

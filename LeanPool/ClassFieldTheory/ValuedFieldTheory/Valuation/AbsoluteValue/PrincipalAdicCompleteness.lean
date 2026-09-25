@@ -20,7 +20,8 @@ construction and the irreducible-polynomial coefficient estimate.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

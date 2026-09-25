@@ -25,7 +25,8 @@ field-norm subgroup.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

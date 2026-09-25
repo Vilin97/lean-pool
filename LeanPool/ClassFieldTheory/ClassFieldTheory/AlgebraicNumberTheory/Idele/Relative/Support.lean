@@ -31,7 +31,8 @@ integral compatibility of the relative tensor decomposition.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 universe u v

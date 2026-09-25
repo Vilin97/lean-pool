@@ -19,4 +19,3 @@ Public aggregate for the lattice, localization, local tensor decomposition,
 and finite-support results controlling integral relative ideles.
 -/
 
-@[expose] public section

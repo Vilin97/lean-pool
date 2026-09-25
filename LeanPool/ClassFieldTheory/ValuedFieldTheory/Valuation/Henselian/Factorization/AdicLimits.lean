@@ -18,7 +18,8 @@ the coefficientwise proof of Hensel's lemma.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 open scoped BigOperators

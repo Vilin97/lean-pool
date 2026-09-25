@@ -23,7 +23,8 @@ filtration. Choice independence is proved in the companion module.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v y
 
@@ -55,7 +56,15 @@ noncomputable def chosenIntegralClosureTarget
     (base : CompleteDVF.{u, v} K)
     (E : FiniteGaloisIntermediateField K (AlgebraicClosure K)) :
     CompleteDVF.{u, 0} E :=
-  Classical.choose (chosenIntegralClosureData_exists base E)
+  Classical.choose (show ∃ target : CompleteDVF.{u, 0} E,
+      ∃ hExt : base.valuation.HasExtension target.valuation,
+        letI : base.valuation.HasExtension target.valuation := hExt
+        IsIntegralClosure target.valuationSubring
+          base.valuationSubring E ∧
+          degree base.toDVF target.toDVF =
+            ramificationIndex base.toDVF target.toDVF *
+              residueDegree base.toDVF target.toDVF from by
+    exact chosenIntegralClosureData_exists base E)
 
 /-- The valuation on `chosenIntegralClosureTarget` extends the valuation on the base
 complete DVF. -/

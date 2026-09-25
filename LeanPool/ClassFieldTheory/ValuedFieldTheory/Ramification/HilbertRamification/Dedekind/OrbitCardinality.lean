@@ -17,7 +17,8 @@ ramification/inertia API.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification
 namespace Dedekind

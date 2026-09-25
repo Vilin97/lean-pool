@@ -27,7 +27,8 @@ action from valuation-ring units to the standard finite unit parameters.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial PowerSeries
 

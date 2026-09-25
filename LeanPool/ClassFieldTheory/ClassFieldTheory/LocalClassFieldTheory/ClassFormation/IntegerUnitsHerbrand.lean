@@ -33,7 +33,8 @@ Herbrand groups of `V`, together with finiteness of the quotient, gives
 `h(G, 𝒪_Lˣ) = 1` by the Herbrand-quotient multiplicativity theorem.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 open CyclicCohomology.ProfiniteCohomology.Herbrand

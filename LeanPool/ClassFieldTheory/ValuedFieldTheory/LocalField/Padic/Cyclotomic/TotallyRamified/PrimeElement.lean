@@ -15,7 +15,8 @@ This file proves directly from its norm that `1 - ζ` is prime in the explicit D
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

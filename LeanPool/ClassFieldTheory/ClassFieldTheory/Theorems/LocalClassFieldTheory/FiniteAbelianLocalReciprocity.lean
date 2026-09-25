@@ -27,7 +27,8 @@ does not claim that the displayed witness is uniquely determined.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

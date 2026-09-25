@@ -21,7 +21,8 @@ identifies the maximal pairing with the existing local Hilbert symbol.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

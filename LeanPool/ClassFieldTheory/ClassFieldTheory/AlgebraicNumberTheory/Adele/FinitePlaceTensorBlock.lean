@@ -24,7 +24,8 @@ conjugation on the second tensor factor.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open LocalClassFieldTheory
 

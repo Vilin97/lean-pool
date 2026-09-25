@@ -25,7 +25,8 @@ the automorphism of the ring of integers.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

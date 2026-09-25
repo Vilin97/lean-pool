@@ -18,7 +18,8 @@ instances or domain-specific class-field tower are required.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace QuotientGroup
 

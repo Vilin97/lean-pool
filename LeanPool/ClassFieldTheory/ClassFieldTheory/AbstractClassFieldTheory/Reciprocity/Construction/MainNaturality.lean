@@ -32,7 +32,8 @@ eventual the finite reciprocity equivalence reciprocity homomorphisms can be con
 any additional comparison datum.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

@@ -24,7 +24,8 @@ an upstairs prime.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

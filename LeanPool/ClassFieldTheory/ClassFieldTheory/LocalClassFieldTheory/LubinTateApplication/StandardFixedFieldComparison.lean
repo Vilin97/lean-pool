@@ -20,7 +20,8 @@ Artin principal-unit filtration and the local upper filtration.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 

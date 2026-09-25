@@ -16,7 +16,8 @@ by the inverse limit of finite quotient coordinates.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

@@ -18,7 +18,8 @@ chosen separable closure of its base field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 

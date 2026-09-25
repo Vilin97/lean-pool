@@ -22,7 +22,8 @@ therefore compatible with the canonical quotient--class-group equivalences.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

@@ -23,7 +23,8 @@ open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
     integralClosureValuationSubringOfMemOrInv_hasExtension
 
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

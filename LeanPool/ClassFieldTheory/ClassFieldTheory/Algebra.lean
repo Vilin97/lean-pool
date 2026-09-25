@@ -12,4 +12,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Algebra.IntermediateFie
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

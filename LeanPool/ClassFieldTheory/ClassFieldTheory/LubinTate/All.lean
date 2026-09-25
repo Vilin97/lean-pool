@@ -25,4 +25,3 @@ The equal-characteristic construction is organized by its mathematical stages
 below `LubinTate.EqualCharacteristic`.
 -/
 
-@[expose] public section

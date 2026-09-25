@@ -27,7 +27,8 @@ so its conclusion is an equality of genuine determinant-norm ranges.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

@@ -17,7 +17,8 @@ identities for unit norms and their images in the base field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 

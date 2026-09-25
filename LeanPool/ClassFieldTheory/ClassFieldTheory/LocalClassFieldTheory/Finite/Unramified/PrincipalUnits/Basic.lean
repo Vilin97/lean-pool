@@ -14,7 +14,8 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.F
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

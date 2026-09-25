@@ -23,7 +23,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalU
     toPrincipalUnitFiltration
 
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

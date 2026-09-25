@@ -28,7 +28,8 @@ generates the completed splitting field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial PowerSeries
 

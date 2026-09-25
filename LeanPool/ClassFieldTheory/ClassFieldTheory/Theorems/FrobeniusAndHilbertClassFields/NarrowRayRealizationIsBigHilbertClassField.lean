@@ -23,7 +23,8 @@ maximal among finite abelian extensions unramified at finite places.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -17,7 +17,8 @@ the quotient transport has been constructed.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

@@ -21,7 +21,8 @@ sequence and its exact cardinal factorization.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

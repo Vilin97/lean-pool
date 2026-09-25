@@ -30,7 +30,8 @@ then supplies one automorphism solving all coordinates simultaneously.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

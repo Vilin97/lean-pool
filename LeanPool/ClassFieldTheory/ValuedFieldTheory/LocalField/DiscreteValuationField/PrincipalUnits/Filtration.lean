@@ -31,7 +31,8 @@ This file turns that definition into the abstract `AntitoneSubgroupFiltration`
 used by ramification and norm arguments.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

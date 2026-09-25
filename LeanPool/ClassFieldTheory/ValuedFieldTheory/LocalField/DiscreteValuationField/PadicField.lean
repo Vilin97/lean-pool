@@ -20,7 +20,8 @@ statements instead of introducing public aliases for `ℚ_[p]` or its unit group
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory.DiscreteValuationField
 namespace Examples
@@ -315,7 +316,7 @@ theorem tendsto_zero_logSeriesTermField_padic_mulValuation_of_lt_one
       (fun n => Nat.cast_ne_zero.mpr (Nat.succ_ne_zero n))
       (padic_mulValuation_logSeries_denominator p) hvx
 
-open MultiplicativeIntegerValuation renaming
+open _root_.LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation renaming
   tendsto_zero_signedLogSeriesTermField_ofWithZeroValuation_of_lt_one →
     tendsto_zero_signedLogSeriesTermField_ofWithZeroValuation_of_lt_one in
 /-- Signed version of
@@ -336,7 +337,7 @@ theorem tendsto_zero_signedLogSeriesTermField_padic_mulValuation_of_lt_one
       (fun n => Nat.cast_ne_zero.mpr (Nat.succ_ne_zero n))
       (padic_mulValuation_logSeries_denominator p) hvx
 
-open MultiplicativeIntegerValuation renaming
+open _root_.LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuation renaming
   tendsto_zero_expSeriesTermField_ofWithZeroValuation_of_lt_exp_neg_one →
     tendsto_zero_expSeriesTermField_ofWithZeroValuation_of_lt_exp_neg_one in
 /-- Standard p-adic specialization of the exponential-term convergence

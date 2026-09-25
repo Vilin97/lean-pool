@@ -18,7 +18,8 @@ This is the free p-adic factor in the local-field structure theory, the local-fi
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

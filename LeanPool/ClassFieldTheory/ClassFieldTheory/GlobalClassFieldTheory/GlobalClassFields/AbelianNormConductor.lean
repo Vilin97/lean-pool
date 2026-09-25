@@ -28,7 +28,8 @@ unramifiedness.
 
 open scoped NumberField NNReal ValuativeRel
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

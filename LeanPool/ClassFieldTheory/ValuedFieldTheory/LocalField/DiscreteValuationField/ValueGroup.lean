@@ -22,7 +22,8 @@ This file contains the integer value-group subgroup-image lemmas used by
 integer-valued multiplicative valuations and integer lcm divisibility.
 -/
 
-noncomputable section
+noncomputable
+section
 
 namespace DiscreteValuationField
 

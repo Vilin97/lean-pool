@@ -44,4 +44,3 @@ Absolute and profinite reciprocity:
 - `LocalClassFieldTheory.profiniteLocalReciprocity`
 -/
 
-@[expose] public section

@@ -12,4 +12,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.R
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.Splitting.PrimeOrderFixedField
 /-! # Splitting of finite places in field extensions -/
 
-@[expose] public section

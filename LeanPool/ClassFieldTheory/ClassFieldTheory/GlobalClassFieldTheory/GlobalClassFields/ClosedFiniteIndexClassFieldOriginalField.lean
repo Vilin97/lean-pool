@@ -18,7 +18,8 @@ canonical norm-range computation back to the original idèle class group.
 
 open scoped IsMulCommutative NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

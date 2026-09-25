@@ -56,7 +56,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
     mrangeRestrictNontriviallyNormedField
 
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 
@@ -542,12 +543,12 @@ noncomputable def adicPowerSeriesEvalSubringHom
   haveI : IsUniformAddGroup F.residueField :=
     inferInstance
   letI : WithIdeal F.valuationSubring := { i := F.maximalIdeal }
-  haveI : IsLinearTopology F.valuationSubring F.valuationSubring :=
-    valuationSubring_isLinearTopology_withIdeal (F := F)
-  haveI : CompleteSpace F.valuationSubring :=
-    valuationSubring_completeSpace_withIdeal (F := F)
-  haveI : T2Space F.valuationSubring :=
-    valuationSubring_t2Space_withIdeal (F := F)
+  haveI : IsLinearTopology F.valuationSubring F.valuationSubring := by
+    exact valuationSubring_isLinearTopology_withIdeal (F := F)
+  haveI : CompleteSpace F.valuationSubring := by
+    exact valuationSubring_completeSpace_withIdeal (F := F)
+  haveI : T2Space F.valuationSubring := by
+    exact valuationSubring_t2Space_withIdeal (F := F)
   exact
     powerSeriesEvalSubringHom (F := F) p hcard π
       (continuous_coeffSubringHom_of_discrete (F := F) p hcard)
@@ -568,12 +569,12 @@ theorem adicPowerSeriesEvalSubringHom_surjective
   have : DiscreteUniformity F.residueField := inferInstance
   have : IsUniformAddGroup F.residueField := inferInstance
   let : WithIdeal F.valuationSubring := { i := F.maximalIdeal }
-  have : IsLinearTopology F.valuationSubring F.valuationSubring :=
-    valuationSubring_isLinearTopology_withIdeal (F := F)
-  have : CompleteSpace F.valuationSubring :=
-    valuationSubring_completeSpace_withIdeal (F := F)
-  have : T2Space F.valuationSubring :=
-    valuationSubring_t2Space_withIdeal (F := F)
+  have : IsLinearTopology F.valuationSubring F.valuationSubring := by
+    exact valuationSubring_isLinearTopology_withIdeal (F := F)
+  have : CompleteSpace F.valuationSubring := by
+    exact valuationSubring_completeSpace_withIdeal (F := F)
+  have : T2Space F.valuationSubring := by
+    exact valuationSubring_t2Space_withIdeal (F := F)
   intro u
   let R := teichmullerRepresentativeSystem (F := F) p hcard
   let f : F.residueField⟦X⟧ :=
@@ -652,12 +653,12 @@ noncomputable def adicLaurentSeriesEvalHom
   haveI : IsUniformAddGroup F.residueField :=
     inferInstance
   letI : WithIdeal F.valuationSubring := { i := F.maximalIdeal }
-  haveI : IsLinearTopology F.valuationSubring F.valuationSubring :=
-    valuationSubring_isLinearTopology_withIdeal (F := F)
-  haveI : CompleteSpace F.valuationSubring :=
-    valuationSubring_completeSpace_withIdeal (F := F)
-  haveI : T2Space F.valuationSubring :=
-    valuationSubring_t2Space_withIdeal (F := F)
+  haveI : IsLinearTopology F.valuationSubring F.valuationSubring := by
+    exact valuationSubring_isLinearTopology_withIdeal (F := F)
+  haveI : CompleteSpace F.valuationSubring := by
+    exact valuationSubring_completeSpace_withIdeal (F := F)
+  haveI : T2Space F.valuationSubring := by
+    exact valuationSubring_t2Space_withIdeal (F := F)
   exact
     laurentSeriesEvalHom (F := F) p hcard π hπ
       (continuous_coeffSubringHom_of_discrete (F := F) p hcard)
@@ -682,12 +683,12 @@ theorem adicLaurentSeriesEvalHom_algebraMap_C
   have : IsUniformAddGroup F.residueField :=
     inferInstance
   let : WithIdeal F.valuationSubring := { i := F.maximalIdeal }
-  have : IsLinearTopology F.valuationSubring F.valuationSubring :=
-    valuationSubring_isLinearTopology_withIdeal (F := F)
-  have : CompleteSpace F.valuationSubring :=
-    valuationSubring_completeSpace_withIdeal (F := F)
-  have : T2Space F.valuationSubring :=
-    valuationSubring_t2Space_withIdeal (F := F)
+  have : IsLinearTopology F.valuationSubring F.valuationSubring := by
+    exact valuationSubring_isLinearTopology_withIdeal (F := F)
+  have : CompleteSpace F.valuationSubring := by
+    exact valuationSubring_completeSpace_withIdeal (F := F)
+  have : T2Space F.valuationSubring := by
+    exact valuationSubring_t2Space_withIdeal (F := F)
   simpa [adicLaurentSeriesEvalHom] using
     laurentSeriesEvalHom_algebraMap_C
       (F := F) p hcard π hπ
@@ -713,12 +714,12 @@ theorem adicLaurentSeriesEvalHom_algebraMap_X
   have : IsUniformAddGroup F.residueField :=
     inferInstance
   let : WithIdeal F.valuationSubring := { i := F.maximalIdeal }
-  have : IsLinearTopology F.valuationSubring F.valuationSubring :=
-    valuationSubring_isLinearTopology_withIdeal (F := F)
-  have : CompleteSpace F.valuationSubring :=
-    valuationSubring_completeSpace_withIdeal (F := F)
-  have : T2Space F.valuationSubring :=
-    valuationSubring_t2Space_withIdeal (F := F)
+  have : IsLinearTopology F.valuationSubring F.valuationSubring := by
+    exact valuationSubring_isLinearTopology_withIdeal (F := F)
+  have : CompleteSpace F.valuationSubring := by
+    exact valuationSubring_completeSpace_withIdeal (F := F)
+  have : T2Space F.valuationSubring := by
+    exact valuationSubring_t2Space_withIdeal (F := F)
   simpa [adicLaurentSeriesEvalHom] using
     laurentSeriesEvalHom_algebraMap_X
       (F := F) p hcard π hπ
@@ -744,12 +745,12 @@ theorem adicLaurentSeriesEvalHom_comp_powerSeries
   have : DiscreteUniformity F.residueField := inferInstance
   have : IsUniformAddGroup F.residueField := inferInstance
   let : WithIdeal F.valuationSubring := { i := F.maximalIdeal }
-  have : IsLinearTopology F.valuationSubring F.valuationSubring :=
-    valuationSubring_isLinearTopology_withIdeal (F := F)
-  have : CompleteSpace F.valuationSubring :=
-    valuationSubring_completeSpace_withIdeal (F := F)
-  have : T2Space F.valuationSubring :=
-    valuationSubring_t2Space_withIdeal (F := F)
+  have : IsLinearTopology F.valuationSubring F.valuationSubring := by
+    exact valuationSubring_isLinearTopology_withIdeal (F := F)
+  have : CompleteSpace F.valuationSubring := by
+    exact valuationSubring_completeSpace_withIdeal (F := F)
+  have : T2Space F.valuationSubring := by
+    exact valuationSubring_t2Space_withIdeal (F := F)
   simpa [adicLaurentSeriesEvalHom, adicPowerSeriesEvalSubringHom,
     powerSeriesEvalHom] using
     laurentSeriesEvalHom_comp_powerSeries

@@ -23,7 +23,8 @@ compatible local determinant-norm preimages into a global relative idele.
 open scoped NumberField TensorProduct RestrictedProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 variable

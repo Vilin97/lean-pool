@@ -16,4 +16,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.Hilb
 Focused aggregate for valuation-subring actions and their ramification groups.
 -/
 
-@[expose] public section

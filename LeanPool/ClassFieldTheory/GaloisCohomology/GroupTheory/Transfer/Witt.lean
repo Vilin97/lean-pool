@@ -32,7 +32,8 @@ presentation relations are assumed as extra input.
 
 open scoped BigOperators Pointwise
 
-noncomputable section
+noncomputable
+section
 
 namespace GroupTheory
 namespace Transfer

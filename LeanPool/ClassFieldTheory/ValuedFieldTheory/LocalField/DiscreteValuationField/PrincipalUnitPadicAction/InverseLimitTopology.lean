@@ -16,7 +16,8 @@ inverse limit of their finite principal-unit quotients.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

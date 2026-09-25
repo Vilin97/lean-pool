@@ -24,7 +24,8 @@ rank `d`, the module is topologically the product of that cyclic factor and
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

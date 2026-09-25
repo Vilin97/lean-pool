@@ -24,7 +24,8 @@ universe transport for the public statement is separate.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory.Reciprocity
 

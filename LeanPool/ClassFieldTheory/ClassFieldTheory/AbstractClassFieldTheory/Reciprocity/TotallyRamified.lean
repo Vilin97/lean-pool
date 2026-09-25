@@ -35,7 +35,8 @@ compatibility record or theorem-shaped certificate is introduced for that
 comparison.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

@@ -32,7 +32,8 @@ open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
     valuation_hasExtension_of_local_valuationSubring_map
 
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

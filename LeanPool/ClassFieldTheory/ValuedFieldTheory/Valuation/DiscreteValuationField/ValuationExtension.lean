@@ -22,7 +22,8 @@ when they have the same valuation subring.  The results here use the ambient
 valued-extension property directly; no marker object is introduced.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x y
 

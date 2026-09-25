@@ -32,7 +32,8 @@ field, including a non-normal one, the image after the abstract norm is the
 ordinary residue-degree multiple of that value group.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped NNReal ValuativeRel
 /-- **Finite local reciprocity.**  The normalized valuation of a nonarchimedean local

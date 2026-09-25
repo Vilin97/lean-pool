@@ -21,7 +21,8 @@ statements for field units and valuation-ring units.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

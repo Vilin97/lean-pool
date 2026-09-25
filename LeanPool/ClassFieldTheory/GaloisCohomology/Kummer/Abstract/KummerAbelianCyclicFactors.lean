@@ -31,7 +31,8 @@ original normal subgroup.
 No radical generators or field-lattice endpoint are asserted here.
 -/
 
-noncomputable section
+noncomputable
+section
 
 section FiniteAbelianCyclicFactors
 

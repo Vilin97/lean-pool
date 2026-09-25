@@ -24,7 +24,8 @@ This file formalizes the prime-element definition and its two immediate conseque
 unramified and totally ramified extensions.
 -/
 
-noncomputable section
+noncomputable
+section
 
 -- Mathlib's `Rep ℤ G` currently fixes the acting group to universe zero.
 variable {G : IntegralRepGroupType} [Group G] [TopologicalSpace G]

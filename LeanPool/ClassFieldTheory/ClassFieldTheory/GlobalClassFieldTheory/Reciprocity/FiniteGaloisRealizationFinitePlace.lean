@@ -20,7 +20,8 @@ places and completions in the original number-field tower.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

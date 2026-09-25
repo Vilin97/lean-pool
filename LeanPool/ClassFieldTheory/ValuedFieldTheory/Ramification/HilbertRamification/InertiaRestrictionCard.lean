@@ -17,7 +17,8 @@ the base completion is identified with a concrete local field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

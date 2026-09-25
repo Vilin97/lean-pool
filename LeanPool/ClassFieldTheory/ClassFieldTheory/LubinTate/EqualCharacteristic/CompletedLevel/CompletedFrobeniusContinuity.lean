@@ -20,7 +20,8 @@ directly in the completed theta-intertwining theorem.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries NNReal Polynomial PowerSeries Topology Valued WithZero
 

@@ -28,4 +28,3 @@ Aggregate for the comparison of intrinsic Frobenius and norm-residue maps in
 fixed fields, including their ambient-prime and base-change transports.
 -/
 
-@[expose] public section

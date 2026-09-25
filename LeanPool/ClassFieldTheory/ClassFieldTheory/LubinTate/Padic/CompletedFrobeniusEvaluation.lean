@@ -23,7 +23,8 @@ actual multiplicative unit translate.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

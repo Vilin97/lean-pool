@@ -21,4 +21,3 @@ independently compiled representative, quotient, compatibility, membership,
 zero-transport, and final finite-norm-class leaves.
 -/
 
-@[expose] public section

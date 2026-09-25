@@ -13,4 +13,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.NormTheorem
 
 /-! # All -/
 
-@[expose] public section

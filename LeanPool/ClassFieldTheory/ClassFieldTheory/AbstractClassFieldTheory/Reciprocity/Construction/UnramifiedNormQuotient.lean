@@ -31,7 +31,8 @@ correction: the unit-cohomology axiom (`H⁰ = 0`) makes every unit of `K` the n
 of a unit of `L`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 section unramifiedFrobenius
 

@@ -31,4 +31,3 @@ public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleE
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

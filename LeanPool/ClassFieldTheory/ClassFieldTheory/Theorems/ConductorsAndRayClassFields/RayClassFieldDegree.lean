@@ -20,7 +20,8 @@ module does not depend on an implementation-level choice of field.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

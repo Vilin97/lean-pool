@@ -18,7 +18,8 @@ isometry on the maximal ideal.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Filter
 open scoped LaurentSeries NNReal NormedField PowerSeries

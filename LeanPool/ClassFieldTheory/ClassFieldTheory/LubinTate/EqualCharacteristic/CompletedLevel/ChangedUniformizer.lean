@@ -26,7 +26,8 @@ This is the changed-uniformizer algebra used in the proof of the completed theta
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped PowerSeries LaurentSeries Polynomial

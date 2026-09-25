@@ -22,7 +22,8 @@ field degree, hence that every standard level is Galois.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial PowerSeries
 

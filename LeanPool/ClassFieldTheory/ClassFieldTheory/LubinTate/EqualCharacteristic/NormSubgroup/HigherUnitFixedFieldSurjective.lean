@@ -18,7 +18,8 @@ The standard level and the fixed field have the same finite degree
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped LaurentSeries PowerSeries

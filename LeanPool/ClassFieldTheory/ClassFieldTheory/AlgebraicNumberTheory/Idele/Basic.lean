@@ -26,7 +26,8 @@ is the unit group of the finite product of the archimedean completions.
 open scoped NumberField RestrictedProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 variable (K : Type*) [Field K] [NumberField K]

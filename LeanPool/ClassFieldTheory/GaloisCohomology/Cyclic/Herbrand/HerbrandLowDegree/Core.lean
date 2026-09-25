@@ -22,7 +22,8 @@ cohomology are split into focused modules.  This public module retains the
 Herbrand quotient and its multiplicativity result.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

@@ -23,7 +23,8 @@ open NumberField
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

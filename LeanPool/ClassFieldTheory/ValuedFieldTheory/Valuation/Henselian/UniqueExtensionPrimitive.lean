@@ -23,7 +23,8 @@ nonconstant residual factorization.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Polynomial
 

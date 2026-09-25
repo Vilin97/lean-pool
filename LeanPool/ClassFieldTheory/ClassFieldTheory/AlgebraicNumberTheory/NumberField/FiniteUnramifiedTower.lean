@@ -21,7 +21,8 @@ proved from multiplicativity of ramification indices.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 attribute [local instance] Ideal.Quotient.field
 

@@ -21,7 +21,8 @@ algebraic pairing laws alone do not determine the values in `μₙ(K)`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

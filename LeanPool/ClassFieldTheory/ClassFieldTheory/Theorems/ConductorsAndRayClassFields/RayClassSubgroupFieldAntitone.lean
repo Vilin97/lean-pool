@@ -19,7 +19,8 @@ conclusion is literal inclusion rather than merely an abstract embedding.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

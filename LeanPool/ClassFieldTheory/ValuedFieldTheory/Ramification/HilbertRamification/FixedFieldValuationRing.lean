@@ -20,7 +20,8 @@ Henselian assumption.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x
 

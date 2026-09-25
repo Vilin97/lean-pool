@@ -28,7 +28,8 @@ factor remains a `ContinuousMulEquiv`.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

@@ -23,7 +23,8 @@ continuous maps on local factors.
 open scoped NumberField RestrictedProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace IdeleGroup
 

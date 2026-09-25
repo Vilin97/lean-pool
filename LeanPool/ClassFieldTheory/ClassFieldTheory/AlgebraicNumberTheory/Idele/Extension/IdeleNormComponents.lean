@@ -25,7 +25,8 @@ forms of the local idele norm formula.
 open scoped BigOperators NumberField TensorProduct NumberField.LiesOver
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace IdeleGroup
 

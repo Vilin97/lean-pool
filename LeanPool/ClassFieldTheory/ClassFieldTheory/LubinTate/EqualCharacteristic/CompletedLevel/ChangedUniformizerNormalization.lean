@@ -19,7 +19,8 @@ changed-level norm argument.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries LaurentSeries ValuativeRel WithZero
 

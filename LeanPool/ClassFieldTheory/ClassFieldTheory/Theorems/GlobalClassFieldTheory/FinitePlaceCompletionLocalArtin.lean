@@ -28,7 +28,8 @@ to the actual completion and records its image and kernel in public types.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

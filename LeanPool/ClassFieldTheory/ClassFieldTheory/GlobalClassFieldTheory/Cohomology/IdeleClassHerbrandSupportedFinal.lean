@@ -43,7 +43,8 @@ sequence from `S`-units to supported ideles and idele classes.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open RelativeIdeleGroup.Cohomology
 

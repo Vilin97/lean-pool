@@ -22,7 +22,8 @@ identify the reduction of a natural unit modulo `p ^ k`.
 @[expose] public section
 
 open scoped BigOperators
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

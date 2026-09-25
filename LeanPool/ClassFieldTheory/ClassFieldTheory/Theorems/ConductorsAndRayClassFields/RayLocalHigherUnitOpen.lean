@@ -19,7 +19,8 @@ multiplicative group of the finite completion.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

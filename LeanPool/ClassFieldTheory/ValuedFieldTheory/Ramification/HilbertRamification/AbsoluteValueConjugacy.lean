@@ -37,7 +37,8 @@ transitively on the extensions to `L` of a nontrivial absolute value of `K`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

@@ -27,7 +27,8 @@ calculation used by the abstract reciprocity construction, together with
 the norm, action, and iterate identities it requires.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 open scoped BigOperators

@@ -24,7 +24,8 @@ the kernel with the ideles integral at every finite place.
 open scoped NumberField RestrictedProduct WithZero
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 variable {K : Type*} [Field K] [NumberField K]

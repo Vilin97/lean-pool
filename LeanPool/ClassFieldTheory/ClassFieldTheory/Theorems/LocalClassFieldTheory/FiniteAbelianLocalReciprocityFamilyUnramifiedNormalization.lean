@@ -28,7 +28,8 @@ carry a canonical valued-field structure in the public definitions.
 
 open scoped ValuativeRel
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

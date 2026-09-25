@@ -21,7 +21,8 @@ turns that decomposition into a `ℤ̂`-extension.
 
 open scoped Topology
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

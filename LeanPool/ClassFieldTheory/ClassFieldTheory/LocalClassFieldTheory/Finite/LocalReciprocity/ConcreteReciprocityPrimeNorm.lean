@@ -18,7 +18,8 @@ sends the transported base-field norm to the represented Galois automorphism.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

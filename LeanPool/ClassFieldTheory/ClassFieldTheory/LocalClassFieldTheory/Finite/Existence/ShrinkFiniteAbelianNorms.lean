@@ -17,7 +17,8 @@ that intermediate field over the equivalent small base field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 

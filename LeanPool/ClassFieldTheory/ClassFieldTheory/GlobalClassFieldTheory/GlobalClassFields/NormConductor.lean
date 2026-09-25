@@ -36,7 +36,8 @@ is deliberately not defined here.
 
 open scoped NumberField IsMulCommutative
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

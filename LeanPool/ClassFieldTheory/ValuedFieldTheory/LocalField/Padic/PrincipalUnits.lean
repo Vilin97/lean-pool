@@ -74,7 +74,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.WithZeroValuationTopology re
     completeSpace_ofWithZeroValuation
 
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel WithZero
 

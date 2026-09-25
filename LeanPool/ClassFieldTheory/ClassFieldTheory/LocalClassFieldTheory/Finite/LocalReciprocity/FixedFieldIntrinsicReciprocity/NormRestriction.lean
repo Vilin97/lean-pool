@@ -16,7 +16,8 @@ This module proves norm--restriction naturality for actual finite abelian local 
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

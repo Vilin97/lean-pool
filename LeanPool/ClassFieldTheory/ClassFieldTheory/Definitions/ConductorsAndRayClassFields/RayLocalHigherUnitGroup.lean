@@ -17,7 +17,8 @@ public import Mathlib.RingTheory.Ideal.Quotient.Operations
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

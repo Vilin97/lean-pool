@@ -20,7 +20,8 @@ and the induced module of chosen local integer units.
 open scoped NumberField TensorProduct ValuativeRel NNReal
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification

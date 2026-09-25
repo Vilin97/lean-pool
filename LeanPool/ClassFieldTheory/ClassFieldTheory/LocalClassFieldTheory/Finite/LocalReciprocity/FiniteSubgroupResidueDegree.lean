@@ -27,7 +27,8 @@ residue field, so it also applies when the fixed field is not normal over the
 original local field.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped Pointwise ValuativeRel
 open HilbertRamification.ValuationSubring

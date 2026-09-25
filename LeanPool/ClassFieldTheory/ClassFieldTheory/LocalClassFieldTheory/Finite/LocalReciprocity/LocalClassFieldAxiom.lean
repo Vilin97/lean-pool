@@ -31,7 +31,8 @@ then transport its two cardinality statements back to the abstract
 class-field-axiom predicate.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

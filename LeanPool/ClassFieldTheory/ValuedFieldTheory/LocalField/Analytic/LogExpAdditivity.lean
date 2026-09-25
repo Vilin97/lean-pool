@@ -27,7 +27,8 @@ valued field whose normalized valuation restricts to `e * v_p` on the natural
 numbers.
 -/
 
-noncomputable section
+noncomputable
+section
 
 attribute [local instance] Classical.propDecidable
 

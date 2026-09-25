@@ -17,7 +17,8 @@ This module identifies extension subgroups transported through an embedded finit
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

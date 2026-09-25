@@ -20,7 +20,8 @@ Hensel lifting contradicts irreducibility upstairs.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

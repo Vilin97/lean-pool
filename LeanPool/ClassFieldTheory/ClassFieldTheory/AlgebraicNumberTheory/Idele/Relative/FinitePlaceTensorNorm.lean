@@ -31,7 +31,8 @@ in that subgroup, and its corresponding local quotient class is one.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open LocalClassFieldTheory
 

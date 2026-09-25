@@ -50,4 +50,3 @@ Aggregate for norm quotients, Frobenius descent, prime independence, transfer na
 canonical abstract reciprocity map.
 -/
 
-@[expose] public section

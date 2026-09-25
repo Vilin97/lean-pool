@@ -19,4 +19,3 @@ This aggregate module exposes the constructed Frobenius tower, restriction
 equivalences, fixed-source calculation, and the final reciprocity theorem.
 -/
 
-@[expose] public section

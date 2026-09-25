@@ -34,7 +34,8 @@ open scoped NumberField TensorProduct
 open NumberField
 open IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open RelativeIdeleGroup.Cohomology
 

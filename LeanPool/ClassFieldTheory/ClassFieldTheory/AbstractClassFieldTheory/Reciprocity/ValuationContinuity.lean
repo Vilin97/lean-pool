@@ -20,7 +20,8 @@ sends its norm subgroup into the prescribed neighbourhood.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Topology
 

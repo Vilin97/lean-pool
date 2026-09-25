@@ -20,7 +20,8 @@ right coset of a decomposition group to the chosen algebraic localization.
 open scoped NumberField TensorProduct ValuativeRel NNReal
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification

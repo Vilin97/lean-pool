@@ -16,7 +16,8 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.R
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

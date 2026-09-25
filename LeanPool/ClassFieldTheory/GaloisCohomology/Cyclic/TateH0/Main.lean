@@ -20,7 +20,8 @@ namespace CyclicCohomology
 
 open LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 /-- The canonical comparison between mathlib's degree-zero Tate cohomology of
 `Lˣ` and the field norm quotient `Kˣ / N_{L/K}(Lˣ)` for a finite Galois

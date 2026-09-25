@@ -21,7 +21,8 @@ displacement of that one element.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

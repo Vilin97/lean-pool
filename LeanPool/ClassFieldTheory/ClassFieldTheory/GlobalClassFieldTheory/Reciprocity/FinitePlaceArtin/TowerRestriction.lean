@@ -19,7 +19,8 @@ This module restricts finite-place extensions through an intermediate field and 
 open scoped IsMulCommutative NNReal NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

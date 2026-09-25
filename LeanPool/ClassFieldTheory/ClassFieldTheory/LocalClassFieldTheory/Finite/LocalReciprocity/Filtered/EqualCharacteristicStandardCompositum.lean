@@ -21,7 +21,8 @@ injectivity of restriction therefore gives filtered reciprocity upstairs.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 

@@ -28,7 +28,8 @@ with the norm group of a chosen local field extension.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -16,4 +16,3 @@ public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

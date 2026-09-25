@@ -26,7 +26,8 @@ and public Definitions vocabulary; the implementation is used in the proof.
 
 open scoped ValuativeRel
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

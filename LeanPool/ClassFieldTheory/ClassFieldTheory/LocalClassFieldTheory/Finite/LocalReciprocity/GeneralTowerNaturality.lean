@@ -23,7 +23,8 @@ naturality then becomes the actual restriction homomorphism
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

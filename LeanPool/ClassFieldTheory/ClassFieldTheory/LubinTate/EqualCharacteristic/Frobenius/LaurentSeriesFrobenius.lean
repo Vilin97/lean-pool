@@ -31,7 +31,8 @@ postulate an abstract unramified extension.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped LaurentSeries PowerSeries
@@ -212,9 +213,9 @@ basis. -/
 noncomputable def laurentSeriesCoefficientBasis
     (b : Module.Basis ι k l) : Module.Basis ι k⸨X⸩ l⸨X⸩ := by
   letI : Algebra k⸨X⸩ l⸨X⸩ := laurentSeriesCoefficientAlgebra
-  exact Module.Basis.mk
-    (laurentSeriesCoefficientBasis_linearIndependent b)
-    (laurentSeriesCoefficientBasis_span b).ge
+  exact Module.Basis.mk (v := fun i => (HahnSeries.C (Γ := ℤ) (b i) : l⸨X⸩))
+    (by exact laurentSeriesCoefficientBasis_linearIndependent b)
+    (by exact (laurentSeriesCoefficientBasis_span b).ge)
 
 /-- The induced Laurent-series basis consists of constant images of the coefficient basis. -/
 @[simp]

@@ -27,7 +27,8 @@ Hensel lifting identifies the finite residue-field unit group with the lifted ro
 unity in the valuation ring.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

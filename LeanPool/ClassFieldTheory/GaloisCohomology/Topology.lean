@@ -10,4 +10,3 @@ public import LeanPool.ClassFieldTheory.GaloisCohomology.Topology.TotallyDisconn
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

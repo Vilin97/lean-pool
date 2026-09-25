@@ -19,7 +19,8 @@ No Galois, local-field, or topological assumption is required.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

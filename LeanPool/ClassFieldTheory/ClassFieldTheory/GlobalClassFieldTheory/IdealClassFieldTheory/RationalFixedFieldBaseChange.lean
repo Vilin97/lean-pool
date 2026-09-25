@@ -16,7 +16,8 @@ base change.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

@@ -27,7 +27,8 @@ an assumed different-exponent formula is used.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory.Discriminant
 

@@ -19,7 +19,8 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

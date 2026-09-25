@@ -23,7 +23,8 @@ abstract field `Σ`.  Thus `G_Σ` is the inverse image of `Γ` under
 `G_K → G_K / I_L`, embedded back into the ambient profinite group.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable {G : Type*} [Group G] [TopologicalSpace G]
 

@@ -25,7 +25,8 @@ preserves the class of each finite prime, fixing its arithmetic meaning.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

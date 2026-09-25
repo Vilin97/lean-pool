@@ -19,7 +19,8 @@ to a continuous multiplicative equivalence of topological abelianizations.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 
@@ -51,13 +52,14 @@ private theorem topologicalCommutatorClosure_le_comap
     exact Subgroup.mem_map_of_mem e.toMulEquiv.toMonoidHom hx
   · exact (Subgroup.isClosed_topologicalClosure _).preimage e.continuous
 
-private def topologicalAbelianizationMap (e : G ≃ₜ* H) :
+/-- Descend a continuous group equivalence to the topological abelianizations. -/
+def topologicalAbelianizationMap (e : G ≃ₜ* H) :
     TopologicalAbelianization G →* TopologicalAbelianization H :=
   QuotientGroup.map
     (commutator G).topologicalClosure
     (commutator H).topologicalClosure
     e.toMulEquiv.toMonoidHom
-    (topologicalCommutatorClosure_le_comap e)
+    (by exact topologicalCommutatorClosure_le_comap e)
 
 @[simp]
 private theorem topologicalAbelianizationMap_mk
@@ -74,7 +76,8 @@ private theorem topologicalAbelianizationMap_continuous
   change Continuous (QuotientGroup.mk ∘ e.toHomeomorph)
   exact QuotientGroup.continuous_mk.comp e.continuous
 
-private def topologicalAbelianizationMulEquiv (e : G ≃ₜ* H) :
+/-- The multiplicative equivalence induced on topological abelianizations. -/
+def topologicalAbelianizationMulEquiv (e : G ≃ₜ* H) :
     TopologicalAbelianization G ≃* TopologicalAbelianization H where
   toFun := topologicalAbelianizationMap e
   invFun := topologicalAbelianizationMap e.symm
@@ -93,8 +96,8 @@ continuous multiplicative equivalence of topological abelianizations. -/
 noncomputable def topologicalAbelianizationCongr (e : G ≃ₜ* H) :
     TopologicalAbelianization G ≃ₜ* TopologicalAbelianization H :=
   { topologicalAbelianizationMulEquiv e with
-    continuous_toFun := topologicalAbelianizationMap_continuous e
-    continuous_invFun := topologicalAbelianizationMap_continuous e.symm }
+    continuous_toFun := by exact topologicalAbelianizationMap_continuous e
+    continuous_invFun := by exact topologicalAbelianizationMap_continuous e.symm }
 
 /-- States the theorem `topologicalAbelianizationCongr_mk`. -/
 @[simp]

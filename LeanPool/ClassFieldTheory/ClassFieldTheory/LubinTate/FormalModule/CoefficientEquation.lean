@@ -17,7 +17,8 @@ has a unique solution in the valuation ring.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

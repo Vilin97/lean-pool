@@ -32,7 +32,8 @@ open scoped IsMulCommutative NumberField
 open NumberField IsDedekindDomain
 open IdeleGroup
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

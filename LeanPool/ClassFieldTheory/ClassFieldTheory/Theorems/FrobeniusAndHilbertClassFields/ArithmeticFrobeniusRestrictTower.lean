@@ -20,7 +20,8 @@ to an intermediate field is arithmetic Frobenius at the prime below it.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

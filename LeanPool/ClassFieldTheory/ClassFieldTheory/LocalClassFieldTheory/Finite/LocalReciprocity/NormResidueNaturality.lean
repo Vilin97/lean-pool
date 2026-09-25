@@ -17,7 +17,8 @@ between finite abelian intermediate fields of the fixed separable closure.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

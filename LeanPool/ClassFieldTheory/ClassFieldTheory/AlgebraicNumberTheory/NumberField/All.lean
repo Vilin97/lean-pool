@@ -24,4 +24,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.N
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.TameDifferentTrace
 /-! # Finite and everywhere-unramified towers of number fields -/
 
-@[expose] public section

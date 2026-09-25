@@ -177,7 +177,8 @@ subgroup lies in any prescribed open finite-index subgroup of `Kˣ`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

@@ -24,7 +24,8 @@ open scoped NumberField NNReal ValuativeRel TensorProduct
 open NumberField IsDedekindDomain
 open KummerTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory.ClassFieldAxiom
 

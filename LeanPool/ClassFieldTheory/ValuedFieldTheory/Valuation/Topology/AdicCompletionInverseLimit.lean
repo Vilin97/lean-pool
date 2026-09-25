@@ -18,7 +18,8 @@ rings.  The underlying adic ring inverse-limit theory lives in
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 namespace Valuations

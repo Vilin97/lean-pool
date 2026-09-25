@@ -25,7 +25,8 @@ closed subgroups; it does not depend on a separate copied inverse-system impleme
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 open scoped Pointwise
@@ -117,7 +118,7 @@ noncomputable def openFiniteQuotient
   (openFiniteQuotientDiagram G).obj H
 
 /-- The product of all open finite quotients. -/
-private abbrev openFiniteQuotientProduct : ProfiniteGrp :=
+abbrev openFiniteQuotientProduct : ProfiniteGrp :=
   ProfiniteGrp.pi (fun H : OpenFiniteIndexNormalSubgroup G =>
     openFiniteQuotient G H)
 

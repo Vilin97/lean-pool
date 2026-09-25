@@ -102,4 +102,3 @@ Hilbert product formula, general power-residue reciprocity with explicit
 bad-place correction, and Gauss quadratic reciprocity over `ℚ`.
 -/
 
-@[expose] public section

@@ -26,7 +26,8 @@ multiplication by a positive integer identifies `ℤ̂` with the closed subgroup
 `n ℤ̂`, which is the kernel of reduction modulo `n`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 /-- Distinct natural powers of the canonical positive generator of `ℤ̂` are
 distinct.  This common exponent-uniqueness fact is independent of the later

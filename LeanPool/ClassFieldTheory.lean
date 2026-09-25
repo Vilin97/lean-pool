@@ -1,4 +1,10 @@
-module  -- shake: keep-all --deprecated_module: ignore
+/-
+Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: n-yamaguchi-0729
+-/
+module
+
 
 public import LeanPool.ClassFieldTheory.ClassFieldTheory
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory
@@ -1821,3 +1827,14 @@ public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.Com
 public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.Models
 public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.UniqueRing
 public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.ValuedAdicComplete
+
+/-!
+# Local and global class field theory
+
+Source: url:https://github.com/n-yamaguchi-0729/ClassFieldTheory
+Authors: n-yamaguchi-0729
+Status: verified
+Main declarations: `ClassFieldTheory.finiteAbelianLocalReciprocity`, `ClassFieldTheory.topologicalGlobalReciprocity`
+Tags: class-field-theory, local-fields, number-fields, galois-cohomology
+MSC: 11R37, 11S31
+-/

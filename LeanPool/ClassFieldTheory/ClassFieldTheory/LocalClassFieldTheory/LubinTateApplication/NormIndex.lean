@@ -20,7 +20,8 @@ field theory application layer, not to the reusable Lubin--Tate library.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries ValuativeRel
 

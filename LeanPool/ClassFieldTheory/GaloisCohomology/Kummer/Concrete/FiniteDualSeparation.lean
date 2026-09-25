@@ -21,7 +21,8 @@ No lattice correspondence or infinite Kummer endpoint is asserted here.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

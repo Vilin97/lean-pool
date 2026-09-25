@@ -21,7 +21,8 @@ to ideals, ideal-power quotients, principal units, and successive quotients.
 @[expose] public section
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

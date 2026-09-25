@@ -31,7 +31,8 @@ are related by the global ideal decomposition law.
 
 open scoped NumberField BigOperators
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

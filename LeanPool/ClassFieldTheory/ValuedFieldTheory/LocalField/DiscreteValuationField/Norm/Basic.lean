@@ -22,7 +22,8 @@ integer-valued multiplicative valuation and a norm homomorphism satisfying the
 standard valuation formula.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

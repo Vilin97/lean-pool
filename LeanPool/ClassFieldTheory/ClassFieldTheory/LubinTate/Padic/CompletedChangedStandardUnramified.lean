@@ -40,7 +40,8 @@ open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
     moduleIsTorsionFree_target_valuationSubring_of_finite_separable
 
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

@@ -22,7 +22,8 @@ product bounds its degree by the degree of the conductor cyclotomic field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

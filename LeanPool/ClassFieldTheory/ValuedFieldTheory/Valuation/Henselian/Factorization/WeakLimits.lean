@@ -17,7 +17,8 @@ prefixes through the maximal-ideal complete-limit argument.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

@@ -21,7 +21,8 @@ coefficient of the defect is divisible by the chosen uniformizer.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

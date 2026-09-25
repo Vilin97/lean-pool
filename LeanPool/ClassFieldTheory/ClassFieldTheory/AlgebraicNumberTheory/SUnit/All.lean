@@ -16,4 +16,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.S
 Public aggregate for the rank and logarithmic-lattice theory of S-units.
 -/
 
-@[expose] public section

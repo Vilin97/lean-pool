@@ -30,7 +30,8 @@ open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 open LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 open LocalClassFieldTheory
 

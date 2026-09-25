@@ -22,7 +22,8 @@ the continuous map on idèles.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace IdeleGroup
 

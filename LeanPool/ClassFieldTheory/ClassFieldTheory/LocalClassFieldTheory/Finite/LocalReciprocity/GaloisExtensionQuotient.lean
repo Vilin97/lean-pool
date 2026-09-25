@@ -27,7 +27,8 @@ that the resulting abstract class-formation quotient is canonically the actual g
 `Gal(E/K)`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] [IsGalois K Ω]
 

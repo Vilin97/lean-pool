@@ -23,7 +23,8 @@ is the product of all Galois conjugates.
 open scoped BigOperators TensorProduct
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 
 namespace RelativeIdeleGroup

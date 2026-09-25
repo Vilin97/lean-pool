@@ -17,7 +17,8 @@ units, and their successive quotients, together with the resulting actions.
 @[expose] public section
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 
@@ -133,7 +134,7 @@ def maximalIdealPowSuccQuotMapOfIntegerRingEquiv
     maximalIdealPowSuccQuotLift n
       (fun a => maximalIdealPowSuccQuotMk K n
         (maximalIdealPowMapEquivOfIntegerRingEquiv K n e a))
-      (maximalIdealPowSuccQuotMapOfIntegerRingEquiv_respects K n e)
+      (by exact maximalIdealPowSuccQuotMapOfIntegerRingEquiv_respects K n e)
   refine
     { toFun := f
       map_zero' := ?_
@@ -166,7 +167,7 @@ theorem maximalIdealPowSuccQuotMapOfIntegerRingEquiv_mk
   change maximalIdealPowSuccQuotLift n
       (fun b => maximalIdealPowSuccQuotMk K n
         (maximalIdealPowMapEquivOfIntegerRingEquiv K n e b))
-      (maximalIdealPowSuccQuotMapOfIntegerRingEquiv_respects K n e)
+      (by exact maximalIdealPowSuccQuotMapOfIntegerRingEquiv_respects K n e)
       (maximalIdealPowSuccQuotMk K n a) =
     maximalIdealPowSuccQuotMk K n
       (maximalIdealPowMapEquivOfIntegerRingEquiv K n e a)

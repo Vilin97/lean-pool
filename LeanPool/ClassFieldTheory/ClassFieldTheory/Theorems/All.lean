@@ -16,4 +16,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.LocalClassFiel
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.NormTheorems.All
 /-! Stable reader-facing statements of the main class field theory results. -/
 
-@[expose] public section

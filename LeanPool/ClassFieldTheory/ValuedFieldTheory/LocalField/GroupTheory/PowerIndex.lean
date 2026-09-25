@@ -22,7 +22,8 @@ kernel are mathlib's `powMonoidHom`, `MonoidHom.range`, and `MonoidHom.ker`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 

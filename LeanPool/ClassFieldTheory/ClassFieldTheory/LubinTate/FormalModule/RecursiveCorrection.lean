@@ -17,7 +17,8 @@ term and cancels the defect coefficient in precisely that total degree.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

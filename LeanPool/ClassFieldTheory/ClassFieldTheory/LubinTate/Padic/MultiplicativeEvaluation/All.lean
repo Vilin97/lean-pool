@@ -15,4 +15,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.Multipl
 
 /-! # All -/
 
-@[expose] public section

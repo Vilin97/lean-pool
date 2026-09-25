@@ -31,7 +31,8 @@ uses mathlib's equivalence `W(ZMod p) ≃+* ℤ_[p]`, and `φ` is
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

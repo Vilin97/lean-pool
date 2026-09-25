@@ -21,7 +21,8 @@ comparison at the boundary between the two APIs.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

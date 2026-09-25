@@ -20,7 +20,8 @@ of the intermediate field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

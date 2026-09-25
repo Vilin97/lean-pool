@@ -16,7 +16,8 @@ The converse to the small-base transport: an intermediate field over
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 

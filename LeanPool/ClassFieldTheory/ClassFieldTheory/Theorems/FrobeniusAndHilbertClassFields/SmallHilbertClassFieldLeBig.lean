@@ -17,7 +17,8 @@ result is literal containment, not only an abstract embedding.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -21,7 +21,8 @@ completion.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Polynomial
 open UniqueFactorizationMonoid

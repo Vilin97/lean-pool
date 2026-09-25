@@ -26,7 +26,8 @@ quotients and prove it injective.
 open scoped NumberField TensorProduct
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 
 variable

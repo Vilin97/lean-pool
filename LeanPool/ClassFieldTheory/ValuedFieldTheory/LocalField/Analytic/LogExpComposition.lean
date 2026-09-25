@@ -26,7 +26,8 @@ convergence ball.  The source lemmas below justify the Cauchy products and
 the unconditional regrouping involved in power-series substitution.
 -/
 
-noncomputable section
+noncomputable
+section
 
 attribute [local instance] Classical.propDecidable
 

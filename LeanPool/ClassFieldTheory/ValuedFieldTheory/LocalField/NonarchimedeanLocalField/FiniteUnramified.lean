@@ -23,7 +23,8 @@ finite valued extension with ramification index one and full residue degree.
 
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

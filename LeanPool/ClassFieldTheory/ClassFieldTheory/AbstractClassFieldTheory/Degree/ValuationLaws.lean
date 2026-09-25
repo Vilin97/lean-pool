@@ -25,7 +25,8 @@ This file proves the two functorial assertions of normalized-valuation functoria
 source norm laws.
 -/
 
-noncomputable section
+noncomputable
+section
 
 -- Mathlib's `Rep ℤ G` currently fixes the acting group to universe zero.
 variable {G : IntegralRepGroupType} [Group G] [TopologicalSpace G]

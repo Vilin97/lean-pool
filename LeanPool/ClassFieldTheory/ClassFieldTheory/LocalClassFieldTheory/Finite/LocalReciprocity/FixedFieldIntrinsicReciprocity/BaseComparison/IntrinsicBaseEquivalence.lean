@@ -18,7 +18,8 @@ This module compares the intrinsic absolute Galois base of a finite extension wi
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

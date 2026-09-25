@@ -26,7 +26,8 @@ evaluation point for the theta series of the completed theta-intertwining theore
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Filter
 open scoped LaurentSeries NNReal Polynomial PowerSeries Topology WithZero

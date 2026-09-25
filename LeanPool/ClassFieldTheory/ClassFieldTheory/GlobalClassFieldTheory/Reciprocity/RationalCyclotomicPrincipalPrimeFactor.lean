@@ -19,7 +19,8 @@ proved in `RationalCyclotomicFinitePlaceArtin`.
 
 
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

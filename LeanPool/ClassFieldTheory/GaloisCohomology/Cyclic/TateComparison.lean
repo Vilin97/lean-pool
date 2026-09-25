@@ -18,7 +18,8 @@ model: both targets are the homology objects already defined by mathlib.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

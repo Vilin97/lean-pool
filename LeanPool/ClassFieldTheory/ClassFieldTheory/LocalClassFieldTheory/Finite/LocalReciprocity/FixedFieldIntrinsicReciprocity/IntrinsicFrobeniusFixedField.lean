@@ -17,7 +17,8 @@ the intrinsic-to-ambient closure equivalence.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

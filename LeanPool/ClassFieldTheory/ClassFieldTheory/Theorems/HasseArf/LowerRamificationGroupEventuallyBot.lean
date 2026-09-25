@@ -22,7 +22,8 @@ some lower group. Finiteness gives a common bound for all automorphisms.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

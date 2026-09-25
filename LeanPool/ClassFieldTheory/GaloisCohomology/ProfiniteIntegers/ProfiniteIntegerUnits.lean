@@ -19,7 +19,8 @@ This file upgrades the prime-product Chinese-remainder equivalence for
 
 open scoped Topology
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

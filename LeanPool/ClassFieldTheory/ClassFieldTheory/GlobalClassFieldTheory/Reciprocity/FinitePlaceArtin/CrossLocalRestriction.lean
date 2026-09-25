@@ -20,7 +20,8 @@ This module compares localized completions in a square of number fields with dif
 open scoped IsMulCommutative NNReal NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

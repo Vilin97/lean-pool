@@ -22,7 +22,8 @@ the same kernel, giving integral filtered reciprocity over the target field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries ValuativeRel
 

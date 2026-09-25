@@ -19,7 +19,8 @@ construction when it is used at completed points.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries PowerSeries Polynomial
 

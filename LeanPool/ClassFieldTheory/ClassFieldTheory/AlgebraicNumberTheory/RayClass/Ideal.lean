@@ -26,7 +26,8 @@ develops the approximation maps used in ray-class ideal constructions.
 open scoped NumberField WithZero
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 variable {K : Type*} [Field K] [NumberField K]

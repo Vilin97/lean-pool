@@ -15,7 +15,8 @@ This file extracts the unit relation `p · u = (ζ - 1)^φ` from the translated 
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

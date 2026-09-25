@@ -18,7 +18,8 @@ when cardinal-valued indices must also cover infinite towers.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

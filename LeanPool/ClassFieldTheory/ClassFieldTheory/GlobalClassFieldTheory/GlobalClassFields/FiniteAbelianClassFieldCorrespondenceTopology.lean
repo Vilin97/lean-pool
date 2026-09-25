@@ -28,7 +28,8 @@ by `ClosedFiniteIndexClassField`.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

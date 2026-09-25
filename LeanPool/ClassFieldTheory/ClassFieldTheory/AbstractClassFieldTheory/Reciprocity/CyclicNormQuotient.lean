@@ -29,7 +29,8 @@ cardinality assertion of the class field axiom can be applied to the
 reciprocity map.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

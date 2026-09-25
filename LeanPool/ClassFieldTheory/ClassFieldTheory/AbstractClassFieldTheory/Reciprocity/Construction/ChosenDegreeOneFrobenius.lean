@@ -25,7 +25,8 @@ of exponent one.  The chosen object and its specification are kept together
 here so the multiplicativity proof can consume a named choice boundary.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable {G : Type u} [Group G] [TopologicalSpace G]
 

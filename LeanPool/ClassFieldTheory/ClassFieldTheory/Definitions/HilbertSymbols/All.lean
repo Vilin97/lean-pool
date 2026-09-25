@@ -24,4 +24,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymb
 
 /-! # All -/
 
-@[expose] public section

@@ -24,7 +24,8 @@ normality of inertia in the decomposition group, exactness, and quotient form.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification
 namespace Dedekind

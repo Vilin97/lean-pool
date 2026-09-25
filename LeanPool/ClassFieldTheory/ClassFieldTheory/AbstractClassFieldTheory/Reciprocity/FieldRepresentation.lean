@@ -26,7 +26,8 @@ This file identifies the invariant carrier used by
 `A_L`, and compares the representation norm with `N_{L/K}`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

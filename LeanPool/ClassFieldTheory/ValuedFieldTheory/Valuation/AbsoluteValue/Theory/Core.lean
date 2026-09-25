@@ -12,7 +12,8 @@ public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValu
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Filter
 open scoped BigOperators Topology

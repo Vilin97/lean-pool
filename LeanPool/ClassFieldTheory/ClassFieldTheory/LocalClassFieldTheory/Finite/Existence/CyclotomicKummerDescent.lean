@@ -20,7 +20,8 @@ finite Galois extension whose norm subgroup is contained in `Kˣⁿ`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

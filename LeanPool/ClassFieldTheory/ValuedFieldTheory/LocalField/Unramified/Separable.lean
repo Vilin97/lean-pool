@@ -24,7 +24,8 @@ minimal polynomial with its separable reduction.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

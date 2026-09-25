@@ -16,7 +16,8 @@ The generic tower and embedding-monotonicity lemmas extracted from the tame adap
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

@@ -18,7 +18,8 @@ the zeroth and terminal Artin groups use the exact transported norm subgroup.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries ValuativeRel
 

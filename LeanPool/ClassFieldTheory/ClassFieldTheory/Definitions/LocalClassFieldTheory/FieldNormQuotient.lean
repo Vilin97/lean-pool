@@ -14,7 +14,8 @@ public import Mathlib.GroupTheory.QuotientGroup.Basic
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

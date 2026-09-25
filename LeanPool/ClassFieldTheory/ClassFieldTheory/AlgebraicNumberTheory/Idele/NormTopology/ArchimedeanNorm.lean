@@ -19,7 +19,8 @@ preserved by the ordinary norm in a finite number-field extension.
 open scoped BigOperators NumberField NumberField.LiesOver
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace IdeleGroup
 

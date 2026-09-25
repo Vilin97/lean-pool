@@ -20,7 +20,8 @@ powers of the maximal ideal. No choice of a local extension is needed.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

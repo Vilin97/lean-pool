@@ -20,7 +20,8 @@ identity. Its slope on `(m, m + 1)` is `|G_(m+1)| / |G_0|`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

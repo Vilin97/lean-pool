@@ -23,7 +23,8 @@ No finite-dimensionality of `K'/K` is used.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

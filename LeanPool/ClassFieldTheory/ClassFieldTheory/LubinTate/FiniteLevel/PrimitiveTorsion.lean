@@ -23,7 +23,8 @@ does not vanish.  All arguments are characteristic-independent.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

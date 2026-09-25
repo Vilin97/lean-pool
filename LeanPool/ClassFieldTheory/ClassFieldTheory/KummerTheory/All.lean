@@ -13,4 +13,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.A
 Public root for the reusable Kummer-theory layer used by abstract class formations.
 -/
 
-@[expose] public section

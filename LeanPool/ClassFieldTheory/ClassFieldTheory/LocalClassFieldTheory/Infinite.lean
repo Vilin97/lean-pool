@@ -23,4 +23,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.I
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

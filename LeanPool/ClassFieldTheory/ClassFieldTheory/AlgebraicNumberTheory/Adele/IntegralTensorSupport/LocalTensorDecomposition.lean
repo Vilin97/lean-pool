@@ -20,7 +20,8 @@ place.
 open scoped NumberField TensorProduct NNReal
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open AlgebraicNumberTheory.Valuations
 

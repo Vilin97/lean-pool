@@ -23,7 +23,8 @@ Artin automorphism and its Kummer root character are trivial.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

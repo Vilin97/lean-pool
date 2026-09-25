@@ -21,7 +21,8 @@ carried by the abstract package, so this actual extension is abelian Galois.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

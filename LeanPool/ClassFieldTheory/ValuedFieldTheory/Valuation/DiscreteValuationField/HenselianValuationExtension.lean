@@ -22,7 +22,8 @@ lightweight Henselian-DVF core.  The core file is used by Hensel lifting and
 does not need to import mathlib's full `Valuation.HasExtension` API.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x y
 

@@ -62,4 +62,3 @@ and prime-splitting formulas, and conductor minimality.  Each theorem has its
 own leaf module.
 -/
 
-@[expose] public section

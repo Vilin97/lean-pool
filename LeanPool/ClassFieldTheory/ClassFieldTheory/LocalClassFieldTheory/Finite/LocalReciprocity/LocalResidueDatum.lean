@@ -52,7 +52,8 @@ is algebraically closed because its extension to the residue of
 perfect over the finite base residue field.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped Pointwise ValuativeRel
 open HilbertRamification.ValuationSubring

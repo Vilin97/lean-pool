@@ -17,7 +17,8 @@ ramified quotient and constructs its cyclic generator.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

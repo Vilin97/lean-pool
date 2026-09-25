@@ -25,7 +25,8 @@ infinite global Artin map is the ordinary finite global Artin map.
 
 open scoped IsMulCommutative NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

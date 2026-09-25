@@ -21,7 +21,8 @@ reindex the product by `Fin (n / d)`, where `d` is that factor's degree.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

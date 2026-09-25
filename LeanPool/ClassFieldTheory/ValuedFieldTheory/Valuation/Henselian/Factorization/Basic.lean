@@ -19,7 +19,8 @@ lemmas here are the initial lifts and congruences.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

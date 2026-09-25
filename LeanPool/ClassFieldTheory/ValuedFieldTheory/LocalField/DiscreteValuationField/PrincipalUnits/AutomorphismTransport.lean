@@ -24,7 +24,8 @@ A field automorphism preserving the chosen valuation ring acts on the valuation 
 its residue field, its units, and every principal-unit quotient.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

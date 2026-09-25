@@ -26,7 +26,8 @@ their tower compatibility, and compares them with the ambient norm
 subgroups.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 open scoped BigOperators

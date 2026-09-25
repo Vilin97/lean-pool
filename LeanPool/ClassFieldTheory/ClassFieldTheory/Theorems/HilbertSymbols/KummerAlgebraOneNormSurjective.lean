@@ -19,7 +19,8 @@ that norm index and algebra rank are different invariants.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

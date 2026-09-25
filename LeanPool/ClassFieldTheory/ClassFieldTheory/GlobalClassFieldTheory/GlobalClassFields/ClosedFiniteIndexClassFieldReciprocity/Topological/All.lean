@@ -18,4 +18,3 @@ This facade exports the generic norm-range transport, the continuous
 reciprocity composite, and its evaluation law.
 -/
 
-@[expose] public section

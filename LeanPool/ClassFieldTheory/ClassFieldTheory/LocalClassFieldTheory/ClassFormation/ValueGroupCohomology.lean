@@ -21,7 +21,8 @@ open LocalFieldTheory
 
 open CyclicCohomology
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

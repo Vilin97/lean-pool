@@ -24,7 +24,8 @@ element of the discrete ring is fixed by an open normal subgroup, so its
 orbit polynomial is computed in a finite quotient.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped Pointwise
 

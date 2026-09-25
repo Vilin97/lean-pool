@@ -28,7 +28,8 @@ and we identify the ramification group as the subgroup on which all these
 classes are trivial.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

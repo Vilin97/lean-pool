@@ -16,7 +16,8 @@ the relative idele class group of its two actual fixed fields.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

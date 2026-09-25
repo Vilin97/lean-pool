@@ -21,7 +21,8 @@ number field, with degree equal to the narrow class number.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

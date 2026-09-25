@@ -18,7 +18,8 @@ Arithmetic Herbrand functions and valuation-action specializations live in
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

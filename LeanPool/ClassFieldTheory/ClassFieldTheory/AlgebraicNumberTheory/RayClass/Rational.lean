@@ -28,7 +28,8 @@ isomorphism with `(ZMod m)ˣ`.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 namespace RayClass

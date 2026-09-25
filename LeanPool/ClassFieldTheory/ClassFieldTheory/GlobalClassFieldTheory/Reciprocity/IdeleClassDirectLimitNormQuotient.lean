@@ -17,7 +17,8 @@ ordinary idele-class norm range and quotient of the actual fixed-field extension
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

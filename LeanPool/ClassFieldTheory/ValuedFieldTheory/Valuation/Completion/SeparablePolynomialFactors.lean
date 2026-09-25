@@ -18,7 +18,8 @@ factorization facts used in the Chinese-remainder proof of tensor-product decomp
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Polynomial UniqueFactorizationMonoid
 open scoped BigOperators

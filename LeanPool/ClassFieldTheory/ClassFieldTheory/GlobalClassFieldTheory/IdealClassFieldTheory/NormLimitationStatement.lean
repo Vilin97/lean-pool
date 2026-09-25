@@ -20,7 +20,8 @@ declaration signatures avoids repeatedly normalizing the full finite tower.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

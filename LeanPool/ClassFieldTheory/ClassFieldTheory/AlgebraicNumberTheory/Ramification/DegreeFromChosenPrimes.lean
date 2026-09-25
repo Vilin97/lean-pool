@@ -19,7 +19,8 @@ finite-prime inertia, and the finite abelian product bound.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory.Ramification
 

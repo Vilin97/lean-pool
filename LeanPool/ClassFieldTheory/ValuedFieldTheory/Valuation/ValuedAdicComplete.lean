@@ -32,7 +32,8 @@ native topology of the valuation ring is its maximal-ideal adic topology.
 Consequently a complete valued field has an adically complete valuation ring.
 -/
 
-noncomputable section
+noncomputable
+section
 
 namespace Valuations
 

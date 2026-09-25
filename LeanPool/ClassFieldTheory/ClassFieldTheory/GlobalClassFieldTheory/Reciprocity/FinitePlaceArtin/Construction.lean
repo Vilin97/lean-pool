@@ -31,7 +31,8 @@ This module constructs the local Artin map for a chosen extension of a finite pl
 open scoped IsMulCommutative NNReal NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

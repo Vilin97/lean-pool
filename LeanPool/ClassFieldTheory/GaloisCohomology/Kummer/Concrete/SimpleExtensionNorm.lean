@@ -21,7 +21,8 @@ not require the defining power polynomial to be irreducible.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

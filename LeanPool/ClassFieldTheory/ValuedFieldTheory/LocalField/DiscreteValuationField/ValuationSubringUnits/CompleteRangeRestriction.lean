@@ -19,7 +19,8 @@ transports residue finiteness, adic completeness, cyclicity, and discreteness.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

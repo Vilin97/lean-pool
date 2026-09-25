@@ -16,7 +16,8 @@ residue field as the original valuation.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u x
 

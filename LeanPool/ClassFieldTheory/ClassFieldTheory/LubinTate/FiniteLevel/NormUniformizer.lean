@@ -19,7 +19,8 @@ uniformizer.  The power-basis norm formula therefore gives
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

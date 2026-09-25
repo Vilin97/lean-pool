@@ -21,7 +21,8 @@ ray class group to determine any homomorphism into a commutative group.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

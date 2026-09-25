@@ -47,7 +47,8 @@ open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFilt
     inverseHerbrandFunction
 
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

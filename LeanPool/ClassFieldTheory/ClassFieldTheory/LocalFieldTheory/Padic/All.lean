@@ -14,4 +14,3 @@ Aggregate for p-adic additive subgroups, units, local-field instances, and
 cyclotomic extensions.
 -/
 
-@[expose] public section

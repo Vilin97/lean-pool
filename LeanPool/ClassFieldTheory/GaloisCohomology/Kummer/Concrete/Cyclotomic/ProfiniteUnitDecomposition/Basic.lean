@@ -21,7 +21,8 @@ the compiled stages of the profinite-unit decomposition.
 
 open scoped Topology
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

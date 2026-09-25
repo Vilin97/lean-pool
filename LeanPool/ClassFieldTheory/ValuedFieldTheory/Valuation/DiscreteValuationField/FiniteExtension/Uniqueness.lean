@@ -55,7 +55,8 @@ open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
 
 namespace ValuationTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x y
 

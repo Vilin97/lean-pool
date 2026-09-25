@@ -18,7 +18,8 @@ algebraic construction.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 
@@ -184,10 +185,10 @@ theorem fieldUnitLogHomWithUniformizerValue_eq_of_principal_decomposition
       (((1 : CompleteDVF.higherPrincipalUnitGroup.residueRootsOfUnityGroup F), u),
         (1 : Multiplicative ℤ)) hx
 
-open CompleteDVF.higherPrincipalUnitGroup renaming
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
   fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF →
     fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF in
-open CompleteDVF.higherPrincipalUnitGroup renaming
+open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
   fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply →
     fieldUnitsEquivRootsPrincipalUnitsUniformizer_of_completeDVF_apply in
 /-- On first principal units, the corrected field logarithm agrees with the

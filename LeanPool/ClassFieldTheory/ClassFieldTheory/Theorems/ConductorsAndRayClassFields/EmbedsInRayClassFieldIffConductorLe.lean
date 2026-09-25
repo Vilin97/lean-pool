@@ -21,7 +21,8 @@ of ray class fields, the theorem asserts existence of this least modulus.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

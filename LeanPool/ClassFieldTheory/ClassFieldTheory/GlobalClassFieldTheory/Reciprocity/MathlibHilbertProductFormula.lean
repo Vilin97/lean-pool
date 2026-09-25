@@ -18,7 +18,8 @@ roots of unity to Mathlib's `rootsOfUnity`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

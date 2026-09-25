@@ -28,7 +28,8 @@ of `L`.
 open scoped NumberField TensorProduct RestrictedProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 open AlgebraicNumberTheory.Valuations

@@ -16,7 +16,8 @@ proves its restriction, commutation, action, and relative-norm identities.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

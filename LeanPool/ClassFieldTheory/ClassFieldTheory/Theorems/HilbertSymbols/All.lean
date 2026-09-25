@@ -46,4 +46,3 @@ the norm-residue criterion for local Hilbert pairings, and existence of a
 coherent family satisfying the global product formula.
 -/
 
-@[expose] public section

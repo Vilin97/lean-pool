@@ -17,7 +17,8 @@ height-one primes of either the extension ring or the base ring ramify.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 attribute [local instance] FractionRing.liftAlgebra FractionRing.isScalarTower_liftAlgebra
 

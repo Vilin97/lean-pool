@@ -20,7 +20,8 @@ ideal class, and it is trivial precisely when the prime ideal is principal.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

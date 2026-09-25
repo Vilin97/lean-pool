@@ -23,7 +23,8 @@ norm.  This is the convention for which principal ideles have norm one.
 open scoped NumberField RestrictedProduct NNReal
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 variable {K : Type*} [Field K] [NumberField K]

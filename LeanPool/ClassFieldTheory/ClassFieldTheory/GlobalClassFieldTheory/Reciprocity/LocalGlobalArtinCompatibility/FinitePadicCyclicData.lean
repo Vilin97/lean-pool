@@ -24,7 +24,8 @@ open HilbertRamification
 open CyclicCohomology
 open KummerTheory ClassFormation
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

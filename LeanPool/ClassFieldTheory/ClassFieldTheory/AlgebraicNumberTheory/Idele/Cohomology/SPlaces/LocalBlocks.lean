@@ -24,7 +24,8 @@ the local tensor decomposition.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open LocalClassFieldTheory
 open AlgebraicNumberTheory.Valuations

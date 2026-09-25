@@ -24,7 +24,8 @@ open KummerTheory
 
 open CyclicCohomology
 
-noncomputable section
+noncomputable
+section
 open CategoryTheory
 open scoped BigOperators
 -- Mathlib's `Rep ℤ G` currently fixes the acting group to universe zero.

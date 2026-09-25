@@ -15,7 +15,8 @@ public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.Cycloto
 
 open scoped Topology
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

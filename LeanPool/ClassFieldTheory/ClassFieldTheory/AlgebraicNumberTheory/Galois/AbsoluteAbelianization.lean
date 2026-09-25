@@ -21,7 +21,8 @@ construction uniform in every characteristic.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped IsMulCommutative
 

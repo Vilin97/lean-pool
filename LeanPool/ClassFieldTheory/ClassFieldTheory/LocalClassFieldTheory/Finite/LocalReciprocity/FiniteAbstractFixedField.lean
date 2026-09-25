@@ -29,7 +29,8 @@ field.  It is the field-theoretic input needed before the local class-field-axio
 applied.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable (k Ω : Type) [Field k] [Field Ω] [Algebra k Ω] [IsGalois k Ω]
 

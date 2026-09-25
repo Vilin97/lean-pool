@@ -20,7 +20,8 @@ of a fixed target form a decreasing sequence of nonempty compact closed sets.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

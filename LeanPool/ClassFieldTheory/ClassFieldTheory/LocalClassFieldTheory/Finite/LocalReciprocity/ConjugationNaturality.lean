@@ -19,7 +19,8 @@ bundles the resulting map on the topological abelianization continuously.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

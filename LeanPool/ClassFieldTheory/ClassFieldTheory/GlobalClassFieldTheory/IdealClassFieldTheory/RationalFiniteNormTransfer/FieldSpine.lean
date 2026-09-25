@@ -18,7 +18,8 @@ The public dependent type aliases are compiled once here.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

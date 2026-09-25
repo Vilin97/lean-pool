@@ -17,7 +17,8 @@ rational prime with its usual principal ideal.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory.Ramification
 

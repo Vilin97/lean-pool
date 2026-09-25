@@ -22,7 +22,8 @@ Lubin--Tate construction.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open Filter Set

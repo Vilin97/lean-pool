@@ -17,7 +17,8 @@ This module transports extension inertia between an intrinsic finite extension a
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

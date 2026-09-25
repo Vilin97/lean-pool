@@ -20,7 +20,8 @@ The field attached to a fixed modulus and subgroup is well-defined up to
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -19,7 +19,8 @@ Comparing degrees shows that this point generates the whole completed level.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries Polynomial PowerSeries
 

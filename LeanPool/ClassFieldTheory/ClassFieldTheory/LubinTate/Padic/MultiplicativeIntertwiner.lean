@@ -23,7 +23,8 @@ it does not identify the two actions from equality of their kernels.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

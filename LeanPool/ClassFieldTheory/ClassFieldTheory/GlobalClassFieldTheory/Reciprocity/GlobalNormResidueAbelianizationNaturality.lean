@@ -23,7 +23,8 @@ abelianizations.  The intermediate extension `M / K` is not assumed Galois.
 open scoped IsMulCommutative NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

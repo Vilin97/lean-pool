@@ -24,7 +24,8 @@ on a principal idele therefore makes this product equal to one.
 open scoped BigOperators IsMulCommutative NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

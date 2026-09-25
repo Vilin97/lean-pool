@@ -23,7 +23,8 @@ Identifies valuation-ring units modulo first principal units with residue-field 
 records compatibility with valuation-preserving automorphisms.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

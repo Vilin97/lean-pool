@@ -24,7 +24,8 @@ by a continuous multiplicative equivalence.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -33,7 +33,8 @@ completion is introduced.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Filter
 open scoped Polynomial

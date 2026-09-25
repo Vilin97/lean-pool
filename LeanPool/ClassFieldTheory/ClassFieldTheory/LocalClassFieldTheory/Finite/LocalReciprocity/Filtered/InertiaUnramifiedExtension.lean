@@ -21,7 +21,8 @@ result along the infinite Galois correspondence.
 
 open scoped ValuativeRel
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTower.Martinet.Shafarevich
 

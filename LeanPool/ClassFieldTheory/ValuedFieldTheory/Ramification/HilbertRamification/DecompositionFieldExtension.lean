@@ -17,7 +17,8 @@ infinite Galois extensions and for archimedean or nonarchimedean valuations.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

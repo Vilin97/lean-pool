@@ -57,7 +57,8 @@ open HilbertRamification
 open LocalFieldTheory
 open LocalClassFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

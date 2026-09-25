@@ -20,7 +20,8 @@ the decomposition and inertia fixed-field tower.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification
 namespace Dedekind

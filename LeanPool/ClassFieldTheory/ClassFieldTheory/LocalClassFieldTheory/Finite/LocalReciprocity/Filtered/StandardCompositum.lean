@@ -22,7 +22,8 @@ the two restriction maps gives the equality on their compositum.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 

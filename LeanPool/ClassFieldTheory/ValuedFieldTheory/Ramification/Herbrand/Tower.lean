@@ -31,7 +31,8 @@ input is deliberately not packaged here as a hypothesis or data field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

@@ -28,7 +28,8 @@ open scoped NumberField RestrictedProduct WithZero
 open NumberField IsDedekindDomain
 open Topology
 
-noncomputable section
+noncomputable
+section
 
 
 variable {K : Type*} [Field K] [NumberField K]

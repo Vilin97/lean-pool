@@ -19,7 +19,8 @@ different degrees; no factorwise norm-image assertion is made.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -18,7 +18,8 @@ the Kummer extension obtained by adjoining all `n`-th roots is finite.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe v
 

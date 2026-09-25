@@ -21,7 +21,8 @@ to transport this map.
 @[expose] public section
 
 open scoped NumberField
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

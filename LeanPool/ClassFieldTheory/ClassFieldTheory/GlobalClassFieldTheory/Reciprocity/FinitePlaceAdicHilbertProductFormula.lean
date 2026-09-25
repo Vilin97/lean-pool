@@ -20,7 +20,8 @@ of the global Hilbert product formula.
 open scoped BigOperators NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

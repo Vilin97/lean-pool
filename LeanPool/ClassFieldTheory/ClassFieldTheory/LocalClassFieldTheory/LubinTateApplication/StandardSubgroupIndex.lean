@@ -28,7 +28,8 @@ finite standard Lubin--Tate unit-parameter count.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 

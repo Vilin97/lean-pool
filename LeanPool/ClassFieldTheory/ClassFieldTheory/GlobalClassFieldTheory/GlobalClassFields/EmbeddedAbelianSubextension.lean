@@ -23,7 +23,8 @@ needed by concrete class-field realizations.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

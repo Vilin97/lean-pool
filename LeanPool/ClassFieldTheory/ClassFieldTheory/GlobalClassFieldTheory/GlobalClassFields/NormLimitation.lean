@@ -31,7 +31,8 @@ the distinguished copy `E` back to the original field `L`.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

@@ -18,7 +18,8 @@ in the ambient valued-extension context; no extension marker is involved.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x
 

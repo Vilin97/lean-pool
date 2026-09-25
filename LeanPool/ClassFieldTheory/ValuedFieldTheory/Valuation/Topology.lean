@@ -14,4 +14,3 @@ public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.Mod
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

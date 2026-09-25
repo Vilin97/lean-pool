@@ -16,7 +16,8 @@ finite choice spaces.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 attribute [local instance] Classical.propDecidable
 

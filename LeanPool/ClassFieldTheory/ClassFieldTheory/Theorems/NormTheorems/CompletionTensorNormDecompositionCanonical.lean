@@ -23,7 +23,8 @@ equivalence that appears in the determinant-norm product formula.
 
 open scoped BigOperators TensorProduct
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

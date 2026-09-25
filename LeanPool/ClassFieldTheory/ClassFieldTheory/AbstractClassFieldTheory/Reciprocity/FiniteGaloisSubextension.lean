@@ -25,7 +25,8 @@ of a fixed abstract field.  This file packages those extensions and their
 composita contravariantly as intersections of closed subgroups.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

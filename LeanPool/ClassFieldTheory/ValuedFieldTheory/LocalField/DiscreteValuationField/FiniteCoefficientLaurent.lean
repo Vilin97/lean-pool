@@ -25,7 +25,8 @@ coefficientwise map from `F_p((X))` to `k((X))`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

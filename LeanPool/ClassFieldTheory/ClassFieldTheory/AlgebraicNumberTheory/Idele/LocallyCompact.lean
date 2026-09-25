@@ -23,7 +23,8 @@ compact, and then applying the restricted-product theorem.
 open scoped NumberField RestrictedProduct Valued
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 variable (K : Type*) [Field K] [NumberField K]

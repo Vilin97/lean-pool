@@ -21,7 +21,8 @@ filtration, so real filtered reciprocity holds on the named factor.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries ValuativeRel
 

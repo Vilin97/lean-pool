@@ -21,7 +21,8 @@ its constant coefficient is exactly `T`.  It is therefore Eisenstein at
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries LaurentSeries Polynomial
 

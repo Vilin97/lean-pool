@@ -21,7 +21,8 @@ isomorphic as topological groups.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Pointwise
 
@@ -186,7 +187,7 @@ section Comparison
 variable (G : Type u) [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
 
 /-- The model-valued completion map used internally to establish continuity. -/
-private def abstractProfiniteCompletionModelMapMonoidHom :
+def abstractProfiniteCompletionModelMapMonoidHom :
     G →* TopologicalProfiniteCompletion (AbstractProfiniteSource G) :=
   (topologicalProfiniteCompletionMap (AbstractProfiniteSource G)).toMonoidHom.comp
     (AbstractProfiniteSource.mulEquiv G).symm.toMonoidHom

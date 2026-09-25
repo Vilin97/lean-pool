@@ -20,7 +20,8 @@ in the structure itself, so the coefficient package can be reused independently.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

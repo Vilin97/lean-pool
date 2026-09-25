@@ -24,4 +24,3 @@ This aggregate exports the cyclic idele-class norm-index calculation, the
 Hasse norm principle, and the rational idele-class formation.
 -/
 
-@[expose] public section

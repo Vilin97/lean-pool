@@ -16,4 +16,3 @@ Decomposition groups, inertia groups, fixed fields, and tower formulas for
 primes in finite Galois extensions of Dedekind domains.
 -/
 
-@[expose] public section

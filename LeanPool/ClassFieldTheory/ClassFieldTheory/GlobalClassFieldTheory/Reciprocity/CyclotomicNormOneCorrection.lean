@@ -24,7 +24,8 @@ value is trivial, so the normalized value is unchanged.
 open scoped NNReal NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

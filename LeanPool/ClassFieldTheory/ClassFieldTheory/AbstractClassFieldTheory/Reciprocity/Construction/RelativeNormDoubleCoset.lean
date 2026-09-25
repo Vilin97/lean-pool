@@ -28,7 +28,8 @@ This file constructs that partition from Mathlib's class-formula equivalence
 and reindexes the actual relative norm along it.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 
@@ -180,8 +181,9 @@ theorem relativeNorm_eq_sum_chosenOrbit_of_fintype
       (e.symm.sum_comp (relativeCosetAction A K S hSK a)).symm
     _ = _ := Fintype.sum_sigma _
 
+/-- Enumerate the orbit and stabilizer-coset pairs indexing a relative norm. -/
 @[implicit_reducible]
-private noncomputable def relativeNormDoubleCosetSigmaFintype
+noncomputable def relativeNormDoubleCosetSigmaFintype
     (K K' S : ClosedSubgroup G)
     (hSK : S.toSubgroup ≤ K.toSubgroup)
     (hK'K : K'.toSubgroup ≤ K.toSubgroup)
@@ -197,8 +199,9 @@ private noncomputable def relativeNormDoubleCosetSigmaFintype
     (K.toSubgroup ⧸ extensionSubgroup K S hSK)
     (relativeNormDoubleCosetEquiv K K' S hSK hK'K)
 
+/-- Enumerate the finitely many intermediate-subgroup orbits on relative cosets. -/
 @[implicit_reducible]
-private noncomputable def relativeNormDoubleCosetOrbitFintype
+noncomputable def relativeNormDoubleCosetOrbitFintype
     (K K' S : ClosedSubgroup G)
     (hSK : S.toSubgroup ≤ K.toSubgroup)
     (hK'K : K'.toSubgroup ≤ K.toSubgroup)
@@ -215,8 +218,9 @@ private noncomputable def relativeNormDoubleCosetOrbitFintype
       intro q q' h
       exact congrArg Sigma.fst h)
 
+/-- Enumerate the stabilizer cosets in a relative-norm orbit. -/
 @[implicit_reducible]
-private noncomputable def relativeNormDoubleCosetStabilizerFintype
+noncomputable def relativeNormDoubleCosetStabilizerFintype
     (K K' S : ClosedSubgroup G)
     (hSK : S.toSubgroup ≤ K.toSubgroup)
     (hK'K : K'.toSubgroup ≤ K.toSubgroup)

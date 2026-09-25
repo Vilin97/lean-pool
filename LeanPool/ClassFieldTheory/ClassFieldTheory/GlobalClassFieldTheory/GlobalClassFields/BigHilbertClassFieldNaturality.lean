@@ -23,7 +23,8 @@ group, with formulas on genuine idele representatives.
 
 open scoped NumberField NumberField.LiesOver TensorProduct
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

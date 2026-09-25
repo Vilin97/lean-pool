@@ -20,7 +20,8 @@ finite compatibility and then records the two formulas.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

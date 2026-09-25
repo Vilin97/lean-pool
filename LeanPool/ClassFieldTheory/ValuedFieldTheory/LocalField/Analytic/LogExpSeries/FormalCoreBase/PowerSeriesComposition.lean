@@ -18,7 +18,8 @@ logarithm and exponential.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 attribute [local instance] Classical.propDecidable
 

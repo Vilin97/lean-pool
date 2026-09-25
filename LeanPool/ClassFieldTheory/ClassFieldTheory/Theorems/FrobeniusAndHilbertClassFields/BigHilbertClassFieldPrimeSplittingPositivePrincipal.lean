@@ -23,7 +23,8 @@ when its fractional ideal has a totally positive generator.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

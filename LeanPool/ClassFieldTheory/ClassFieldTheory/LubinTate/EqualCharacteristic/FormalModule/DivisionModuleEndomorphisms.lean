@@ -22,7 +22,8 @@ keeps this shift explicit.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped PowerSeries LaurentSeries Polynomial

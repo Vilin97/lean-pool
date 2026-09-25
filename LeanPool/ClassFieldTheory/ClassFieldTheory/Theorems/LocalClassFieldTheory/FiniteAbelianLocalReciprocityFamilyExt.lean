@@ -36,7 +36,8 @@ open _root_.LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtens
 
 open scoped ValuativeRel
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

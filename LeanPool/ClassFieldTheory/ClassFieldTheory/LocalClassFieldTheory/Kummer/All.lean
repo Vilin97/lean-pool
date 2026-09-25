@@ -25,4 +25,3 @@ Aggregate for the local Hilbert symbol, its laws, and the maximal local Kummer
 pairing, including the tame power-residue formula.
 -/
 
-@[expose] public section

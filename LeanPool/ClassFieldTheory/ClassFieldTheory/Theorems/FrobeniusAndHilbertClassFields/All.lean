@@ -40,4 +40,3 @@ and the intrinsic existence, Artin isomorphism, degree, splitting, and
 principalization results for small and big Hilbert class fields.
 -/
 
-@[expose] public section

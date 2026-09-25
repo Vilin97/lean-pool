@@ -23,7 +23,8 @@ have the previously defined algebraic maps as their underlying maps.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

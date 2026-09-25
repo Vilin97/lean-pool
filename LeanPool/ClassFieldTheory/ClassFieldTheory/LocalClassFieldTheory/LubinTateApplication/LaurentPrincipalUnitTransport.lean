@@ -19,7 +19,8 @@ corresponding target principal-unit level.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries PowerSeries ValuativeRel
 

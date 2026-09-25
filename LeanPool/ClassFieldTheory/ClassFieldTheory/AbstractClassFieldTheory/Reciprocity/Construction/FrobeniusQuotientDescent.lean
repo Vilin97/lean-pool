@@ -26,7 +26,8 @@ Birkhoff sums with Frobenius power sums, and proves the finite-support
 descent from the maximal unramified field.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 open scoped BigOperators

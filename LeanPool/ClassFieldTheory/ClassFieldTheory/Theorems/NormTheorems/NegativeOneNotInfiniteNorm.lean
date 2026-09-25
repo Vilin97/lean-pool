@@ -22,7 +22,8 @@ than a single chosen completion, is the object in the public statement.
 open scoped NumberField TensorProduct
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

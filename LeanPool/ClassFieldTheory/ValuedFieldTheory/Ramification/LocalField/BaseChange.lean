@@ -23,7 +23,8 @@ open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFilt
     herbrandFunction_eq_of_card_lower_eq
 
 
-noncomputable section
+noncomputable
+section
 
 namespace RamificationTheory.LocalField
 

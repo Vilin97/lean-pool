@@ -22,7 +22,8 @@ the resulting cyclic equivalences.
 -/
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 
@@ -1983,7 +1984,8 @@ universe u v
 
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace DiscreteValuationField
 namespace ValuedNorm

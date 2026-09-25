@@ -17,7 +17,8 @@ have the same degree `(q - 1) q^n`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped LaurentSeries PowerSeries

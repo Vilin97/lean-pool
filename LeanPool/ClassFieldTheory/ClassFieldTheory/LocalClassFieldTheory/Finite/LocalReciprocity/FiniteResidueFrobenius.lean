@@ -32,7 +32,8 @@ Frobenius `x ↦ x ^ #k`, and the exponent map is obtained by factoring its
 integer powers through `ZMod [L : k]`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 
@@ -40,7 +41,7 @@ variable (k : Type u) (L : Type v)
   [Field k] [Fintype k] [Field L] [Finite L] [Algebra k L]
 
 /-- Integer powers of the arithmetic Frobenius, written additively. -/
-private def finiteResidueFrobeniusIntegerPowers :
+def finiteResidueFrobeniusIntegerPowers :
     ℤ →+ Additive (L ≃ₐ[k] L) :=
   zmultiplesHom (Additive (L ≃ₐ[k] L)) (Additive.ofMul
     (FiniteField.frobeniusAlgEquivOfAlgebraic k L))
@@ -62,7 +63,7 @@ def finiteResidueFrobeniusExponentHom :
   AddMonoidHom.toMultiplicative
     (ZMod.lift (Module.finrank k L)
       ⟨finiteResidueFrobeniusIntegerPowers k L,
-        finiteResidueFrobeniusIntegerPowers_degree_eq_zero k L⟩)
+        by exact finiteResidueFrobeniusIntegerPowers_degree_eq_zero k L⟩)
 
 /-- An integer residue exponent maps to the corresponding power of Frobenius. -/
 @[simp]
@@ -73,7 +74,7 @@ theorem finiteResidueFrobeniusExponentHom_intCast (m : ℤ) :
   change
     (ZMod.lift (Module.finrank k L)
       ⟨finiteResidueFrobeniusIntegerPowers k L,
-        finiteResidueFrobeniusIntegerPowers_degree_eq_zero k L⟩)
+        by exact finiteResidueFrobeniusIntegerPowers_degree_eq_zero k L⟩)
       (m : ZMod (Module.finrank k L)) =
         Additive.ofMul ((FiniteField.frobeniusAlgEquivOfAlgebraic k L) ^ m)
   rw [ZMod.lift_coe]

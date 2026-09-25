@@ -22,7 +22,8 @@ has kernel contained in a finite-index subgroup, it identifies the two left-cose
 transfer commutes with the induced maps on abelianizations.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open Function
 open scoped Pointwise

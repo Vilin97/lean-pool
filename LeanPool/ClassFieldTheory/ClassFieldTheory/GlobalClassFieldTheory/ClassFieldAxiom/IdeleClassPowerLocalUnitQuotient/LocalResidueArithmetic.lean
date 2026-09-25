@@ -46,7 +46,8 @@ open scoped NumberField NNReal ValuativeRel
 open NumberField IsDedekindDomain
 open LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory.ClassFieldAxiom
 

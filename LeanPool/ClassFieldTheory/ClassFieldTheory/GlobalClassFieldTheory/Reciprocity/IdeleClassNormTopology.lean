@@ -23,7 +23,8 @@ ordinary idele-class topology after transport to the actual fixed field.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

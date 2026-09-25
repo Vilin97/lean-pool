@@ -24,7 +24,8 @@ relative Artin candidate with inverse arithmetic Frobenius.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

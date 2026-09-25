@@ -33,7 +33,8 @@ of principalization over the original number field.
 
 open scoped IsMulCommutative NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

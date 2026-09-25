@@ -23,7 +23,8 @@ open KummerTheory
 
 open CyclicCohomology
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 open scoped BigOperators

@@ -21,7 +21,8 @@ fractional ideals and the idelic-to-ideal ray-class equivalence.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory.GlobalClassFields
 

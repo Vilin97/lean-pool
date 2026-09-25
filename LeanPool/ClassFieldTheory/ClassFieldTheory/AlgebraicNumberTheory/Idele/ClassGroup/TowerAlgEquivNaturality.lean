@@ -28,7 +28,8 @@ local components is introduced.
 open scoped NumberField TensorProduct
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 variable
     {K K' L L' : Type}

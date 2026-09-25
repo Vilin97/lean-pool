@@ -21,7 +21,8 @@ the number of factors times `d`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

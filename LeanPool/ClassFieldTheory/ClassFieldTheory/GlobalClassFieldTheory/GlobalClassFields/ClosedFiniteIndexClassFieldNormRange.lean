@@ -18,7 +18,8 @@ idèle-class norm range over the canonical fixed-field base.
 
 open scoped IsMulCommutative NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

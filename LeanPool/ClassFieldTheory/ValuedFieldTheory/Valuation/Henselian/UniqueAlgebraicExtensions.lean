@@ -19,7 +19,8 @@ subring.  This is the same endpoint used in the finite norm-formula theorem.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

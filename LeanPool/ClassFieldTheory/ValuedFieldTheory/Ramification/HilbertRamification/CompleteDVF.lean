@@ -30,7 +30,8 @@ complete-DVF specialization and the finite-Galois surjectivity theorem.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Pointwise
 

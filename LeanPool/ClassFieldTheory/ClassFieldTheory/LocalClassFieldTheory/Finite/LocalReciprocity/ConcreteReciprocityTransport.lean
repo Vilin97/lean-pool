@@ -36,7 +36,8 @@ The coefficient module remains `(SeparableClosure K)ˣ`; this is essential in
 imperfect positive characteristic.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable (K L : Type) [Field K] [Field L] [Algebra K L]
   [FiniteDimensional K L] [IsGalois K L]

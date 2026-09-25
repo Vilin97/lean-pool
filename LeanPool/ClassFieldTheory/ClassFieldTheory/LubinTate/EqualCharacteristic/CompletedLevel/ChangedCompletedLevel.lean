@@ -25,7 +25,8 @@ The repository's primitive polynomial indexed by `n` cuts out division level
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Filter
 open scoped LaurentSeries NNReal Polynomial PowerSeries Topology WithZero

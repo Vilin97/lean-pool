@@ -13,4 +13,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.I
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Relative.Support
 /-! # Relative ideles, tensor norms, and support -/
 
-@[expose] public section

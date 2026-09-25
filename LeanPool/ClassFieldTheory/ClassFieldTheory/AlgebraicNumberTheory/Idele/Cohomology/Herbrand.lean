@@ -29,7 +29,8 @@ norm is proved from the Galois product formula.
 open scoped BigOperators NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 
 open CyclicCohomology.ProfiniteCohomology.Herbrand

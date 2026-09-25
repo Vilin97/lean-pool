@@ -19,4 +19,3 @@ Public aggregate for finite ramification support, rational prime ideals,
 everywhere-unramified rational extensions, and global degree bounds.
 -/
 
-@[expose] public section

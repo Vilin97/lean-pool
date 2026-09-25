@@ -10,4 +10,3 @@ public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SUnitPr
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

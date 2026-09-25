@@ -27,7 +27,8 @@ dimension of the tensor product.
 
 open scoped TensorProduct
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

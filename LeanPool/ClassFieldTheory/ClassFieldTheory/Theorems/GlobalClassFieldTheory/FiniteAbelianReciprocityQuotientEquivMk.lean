@@ -17,7 +17,8 @@ The induced isomorphism maps the class of a ray class to its Artin value.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

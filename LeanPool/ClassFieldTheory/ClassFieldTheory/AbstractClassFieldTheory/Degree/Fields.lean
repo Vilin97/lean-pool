@@ -28,7 +28,8 @@ As in, a field is represented contravariantly by a closed subgroup of the
 ambient profinite group.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

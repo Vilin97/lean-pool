@@ -26,7 +26,8 @@ open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
     mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow
 
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 
@@ -48,8 +49,9 @@ noncomputable def mrangeRestrictValued
     Valued K (MonoidHom.mrange F.valuation.toMonoidWithZeroHom) :=
   Valued.mk' (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrict F)
 
+/-- The range-restricted valuation has its canonical rank-one embedding. -/
 @[instance_reducible]
-private noncomputable def mrangeRestrictValued_rankOne
+noncomputable def mrangeRestrictValuedRankOne
     (F : CompleteDVF.{u, v} K) :
     (@Valued.v K _
       (MonoidHom.mrange F.valuation.toMonoidWithZeroHom) _
@@ -69,7 +71,7 @@ noncomputable def mrangeRestrictNontriviallyNormedField
     (L := K)
     (Γ₀ := MonoidHom.mrange F.valuation.toMonoidWithZeroHom)
     (val := LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
-    (hv := mrangeRestrictValued_rankOne F)
+    (hv := mrangeRestrictValuedRankOne F)
 
 /-- Powers of a uniformizer are cofinal among neighborhoods of zero for the
 range-restricted valuation topology. -/
@@ -314,7 +316,7 @@ theorem mrangeRestrict_integer_compactSpace_of_residueField_finite
         _root_.Valuation K
           (MonoidHom.mrange
             F.valuation.toMonoidWithZeroHom)).RankOne :=
-    mrangeRestrictValued_rankOne F
+    mrangeRestrictValuedRankOne F
   let : NontriviallyNormedField K :=
     Valued.toNontriviallyNormedField
       (L := K)
@@ -361,7 +363,7 @@ theorem mrangeRestrict_properSpace_of_residueField_finite
         _root_.Valuation K
           (MonoidHom.mrange
             F.valuation.toMonoidWithZeroHom)).RankOne :=
-    mrangeRestrictValued_rankOne F
+    mrangeRestrictValuedRankOne F
   let : NontriviallyNormedField K :=
     (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictNontriviallyNormedField F)
   have hcompact : CompactSpace 𝒪[K] :=
@@ -372,14 +374,14 @@ theorem mrangeRestrict_properSpace_of_residueField_finite
     (Valued.toNormedField K
       (MonoidHom.mrange F.valuation.toMonoidWithZeroHom)
       (val := LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
-      (hv := mrangeRestrictValued_rankOne F)).toPseudoMetricSpace
+      (hv := mrangeRestrictValuedRankOne F)).toPseudoMetricSpace
   exact
     (@Valued.integer.properSpace_iff_compactSpace_integer
       K
       (MonoidHom.mrange F.valuation.toMonoidWithZeroHom)
       inferInstance inferInstance
       (LocalFieldTheory.DiscreteValuationField.CompleteDVF.mrangeRestrictValued F)
-      (mrangeRestrictValued_rankOne F)).2 hcompact
+      (mrangeRestrictValuedRankOne F)).2 hcompact
 
 /-- A range-restricted complete DVF with finite residue field is complete for
 the associated normed-field topology. -/

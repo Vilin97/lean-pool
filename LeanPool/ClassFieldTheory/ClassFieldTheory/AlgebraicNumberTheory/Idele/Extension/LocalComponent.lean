@@ -25,7 +25,8 @@ norm calculation to a genuine relative idele.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 universe u v

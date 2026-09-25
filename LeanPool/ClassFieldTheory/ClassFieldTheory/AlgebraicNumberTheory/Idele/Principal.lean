@@ -20,7 +20,8 @@ cohomology across that identification.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open RelativeIdeleGroup.Cohomology
 

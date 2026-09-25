@@ -14,4 +14,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.C
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

@@ -21,7 +21,8 @@ statements do not carry a generator hypothesis.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x
 

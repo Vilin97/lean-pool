@@ -19,4 +19,3 @@ Public facade for the change-of-group, localized algebra, Galois generator,
 low-degree Herbrand equivalence, finiteness, and cardinality leaves.
 -/
 
-@[expose] public section

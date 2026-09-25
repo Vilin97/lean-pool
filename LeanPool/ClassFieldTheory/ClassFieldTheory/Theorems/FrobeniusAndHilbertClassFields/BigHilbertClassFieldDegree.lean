@@ -24,7 +24,8 @@ class group for the modulus containing every real place and no finite prime.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

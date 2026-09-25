@@ -29,7 +29,8 @@ preceding normal-basis calculation `h(G, O_Lˣ) = 1` for the actual action on
 integer units.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 open CyclicCohomology.ProfiniteCohomology.Herbrand

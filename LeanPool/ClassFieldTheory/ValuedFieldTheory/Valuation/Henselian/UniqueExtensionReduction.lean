@@ -24,7 +24,8 @@ open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
     integralClosure_mem_valuationSubring_of_hasExtension
 
 
-noncomputable section
+noncomputable
+section
 
 open Polynomial
 open UniqueFactorizationMonoid

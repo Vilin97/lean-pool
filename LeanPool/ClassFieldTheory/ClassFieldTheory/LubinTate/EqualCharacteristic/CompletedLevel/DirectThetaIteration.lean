@@ -18,7 +18,8 @@ Frobenius repeatedly to the formal identity
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries
 

@@ -17,7 +17,8 @@ generic scalar-action instances in later norm calculations.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped LaurentSeries PowerSeries

@@ -20,7 +20,8 @@ unrestricted relative S-idele factors.
 open scoped NumberField BigOperators ValuativeRel NNReal
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 open AlgebraicNumberTheory.Valuations

@@ -23,7 +23,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuati
     mem_zeroSubgroup_iff
 
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

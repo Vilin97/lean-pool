@@ -17,7 +17,8 @@ the abelian Galois property of every intermediate field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

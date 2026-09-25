@@ -30,7 +30,8 @@ field.  The profinite surjectivity proof is the compact inverse-limit argument
 used in this construction, supplied by `Ideal.Quotient.stabilizerHom_surjective_of_profinite`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

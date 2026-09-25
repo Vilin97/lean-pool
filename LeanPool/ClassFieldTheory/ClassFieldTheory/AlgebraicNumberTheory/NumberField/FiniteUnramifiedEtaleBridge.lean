@@ -20,7 +20,8 @@ notions of formal unramifiedness and étaleness for rings of integers.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

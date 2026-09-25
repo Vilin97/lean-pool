@@ -19,7 +19,8 @@ residue-separability hypothesis of the general inertia-cardinality theorem.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 open ValuationTheory.DiscreteValuationField

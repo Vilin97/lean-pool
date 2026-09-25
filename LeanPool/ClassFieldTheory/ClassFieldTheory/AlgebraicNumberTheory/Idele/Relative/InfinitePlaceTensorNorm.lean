@@ -23,7 +23,8 @@ finite-place tensor-norm comparison.
 open scoped NumberField TensorProduct NumberField.LiesOver
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 open LocalClassFieldTheory
 

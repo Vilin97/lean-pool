@@ -24,7 +24,8 @@ the local tensor decomposition, equivariantly for the full Galois action.
 open scoped NumberField TensorProduct NumberField.LiesOver
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 open LocalClassFieldTheory
 

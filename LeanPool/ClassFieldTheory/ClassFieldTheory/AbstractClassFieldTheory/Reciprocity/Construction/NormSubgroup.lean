@@ -28,7 +28,8 @@ For an infinite abstract extension `E | K`, the abstract class-field constructio
 intermediate fields.  This file records that definition literally.
 -/
 
-noncomputable section
+noncomputable
+section
 
 section finiteIntermediateFields
 

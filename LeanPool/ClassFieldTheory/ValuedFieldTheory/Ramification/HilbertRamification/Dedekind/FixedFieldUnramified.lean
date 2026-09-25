@@ -20,7 +20,8 @@ unramified at every finite prime.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification.Dedekind
 

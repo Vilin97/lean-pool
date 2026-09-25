@@ -27,7 +27,8 @@ subgroup.
 
 open scoped BigOperators
 
-noncomputable section
+noncomputable
+section
 
 namespace CyclicCohomology
 

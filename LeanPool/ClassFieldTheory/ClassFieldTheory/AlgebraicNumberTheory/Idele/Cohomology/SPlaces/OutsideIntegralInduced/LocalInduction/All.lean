@@ -17,4 +17,3 @@ Public facade for the shared completion spine, action, product equivalence,
 and inclusion leaves.
 -/
 
-@[expose] public section

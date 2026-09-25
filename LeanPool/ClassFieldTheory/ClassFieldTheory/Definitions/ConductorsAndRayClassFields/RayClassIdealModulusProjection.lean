@@ -23,7 +23,8 @@ ideals give the canonical quotient map from the larger modulus to the smaller.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 
@@ -120,7 +121,7 @@ def rayClassIdealModulusProjection
     {m n : RayClassModulus K} (hmn : m ≤ n) :
     RayClassGroup n →* RayClassGroup m := by
   let hI : rayClassPrimeToIdeals n ≤ rayClassPrimeToIdeals m :=
-    rayPrimeToIdeals_antitone hmn
+    by exact rayPrimeToIdeals_antitone hmn
   letI : (rayPrincipalIdealSubgroupInPrimeTo m).Normal :=
     Subgroup.normal_of_isMulCommutative _
   refine QuotientGroup.map
@@ -132,6 +133,6 @@ def rayClassIdealModulusProjection
     rayPrincipalIdealSubgroup n at hI'
   change (I : NumberFieldFractionalIdealGroup K) ∈
     rayPrincipalIdealSubgroup m
-  exact rayPrincipalIdeals_antitone hmn hI'
+  exact (by exact rayPrincipalIdeals_antitone hmn hI')
 
 end ClassFieldTheory

@@ -26,7 +26,8 @@ ideal classes.
 open scoped NumberField TensorProduct nonZeroDivisors
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open AlgebraicNumberTheory.Valuations
 

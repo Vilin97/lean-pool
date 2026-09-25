@@ -22,7 +22,8 @@ leaves so their elaboration environments do not remain resident here.
 
 open scoped IsMulCommutative NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

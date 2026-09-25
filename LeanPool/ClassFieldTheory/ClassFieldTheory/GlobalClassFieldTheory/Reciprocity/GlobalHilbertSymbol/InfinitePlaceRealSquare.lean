@@ -20,7 +20,8 @@ infinite-place Hilbert-symbol comparison.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

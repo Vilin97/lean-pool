@@ -28,7 +28,8 @@ units by a valued extension, with degree, trace, norm, and Frobenius results.
 @[expose] public section
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

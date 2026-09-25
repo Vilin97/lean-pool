@@ -18,7 +18,8 @@ the topology-first local-field interface used by this library.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel WithZero
 

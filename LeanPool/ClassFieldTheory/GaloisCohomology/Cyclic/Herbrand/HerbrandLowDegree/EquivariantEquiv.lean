@@ -24,7 +24,8 @@ introducing comparison assumptions.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace CyclicCohomology
 

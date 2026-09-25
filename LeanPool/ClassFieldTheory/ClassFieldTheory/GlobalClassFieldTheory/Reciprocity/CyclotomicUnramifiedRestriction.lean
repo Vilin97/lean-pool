@@ -22,7 +22,8 @@ cyclotomic Artin map with the actual global norm-residue map.
 
 open scoped IsMulCommutative NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

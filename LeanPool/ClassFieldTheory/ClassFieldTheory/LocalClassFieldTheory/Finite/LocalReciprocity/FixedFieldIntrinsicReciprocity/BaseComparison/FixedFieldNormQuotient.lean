@@ -19,7 +19,8 @@ This module compares cohomological finite norm quotients with ordinary field-nor
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

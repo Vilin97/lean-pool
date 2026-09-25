@@ -18,4 +18,3 @@ public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.Profinite
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

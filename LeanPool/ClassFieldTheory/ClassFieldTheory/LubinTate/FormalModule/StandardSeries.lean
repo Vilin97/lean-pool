@@ -21,7 +21,8 @@ polynomial input without making an equal-characteristic assumption.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

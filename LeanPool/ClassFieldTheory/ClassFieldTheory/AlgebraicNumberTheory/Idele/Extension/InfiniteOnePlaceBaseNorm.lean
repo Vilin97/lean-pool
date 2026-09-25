@@ -24,7 +24,8 @@ degree power.
 open scoped BigOperators NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace IdeleGroup
 

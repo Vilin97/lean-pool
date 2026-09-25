@@ -26,7 +26,8 @@ For a nonzero integral ideal `I`, `(a/I)` is the finite product of
 open scoped NumberField BigOperators
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace PowerResidueSymbols

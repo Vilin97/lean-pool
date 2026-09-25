@@ -18,7 +18,8 @@ the Galois group of that field.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -92,4 +92,3 @@ theory, and the actual big and small Hilbert class fields with their maximality
 and reciprocity characterizations.
 -/
 
-@[expose] public section

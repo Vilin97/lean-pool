@@ -23,7 +23,8 @@ fraction back in the Witt ring.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

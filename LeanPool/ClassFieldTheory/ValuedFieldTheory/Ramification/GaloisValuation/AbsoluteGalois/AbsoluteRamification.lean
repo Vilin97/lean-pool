@@ -47,7 +47,8 @@ This file develops the decomposition and inertia subgroups of an absolute
 Galois group after the finite-level valuation-restriction layer.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w z
 

@@ -18,7 +18,8 @@ with nonunit leading coefficient has constant reduction.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Polynomial
 

@@ -22,7 +22,8 @@ archimedean place is always included, a finite set
 open scoped NumberField RestrictedProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 variable {K : Type*} [Field K] [NumberField K]

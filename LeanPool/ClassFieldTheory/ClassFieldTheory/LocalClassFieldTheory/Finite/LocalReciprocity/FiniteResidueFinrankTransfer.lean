@@ -38,7 +38,8 @@ valuation on that fixed field.  This file compares those presentations by
 the uniqueness of the finite extension valuation.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 open HilbertRamification.ValuationSubring

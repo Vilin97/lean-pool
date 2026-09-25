@@ -12,4 +12,3 @@ public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.TateH0.NormImage
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

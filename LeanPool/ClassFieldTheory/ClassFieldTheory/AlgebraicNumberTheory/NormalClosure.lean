@@ -20,7 +20,8 @@ the original field is embedded by the canonical chosen lift.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

@@ -22,7 +22,8 @@ arithmetic.
 open scoped NumberField ValuativeRel
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory.ClassFieldAxiom
 

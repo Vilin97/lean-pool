@@ -17,7 +17,8 @@ restricted radical quotient is canonically the ordinary power-class group.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

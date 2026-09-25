@@ -27,4 +27,3 @@ existence-and-uniqueness construction, including the resulting standard
 commutative formal group and its coefficient-ring endomorphisms.
 -/
 
-@[expose] public section

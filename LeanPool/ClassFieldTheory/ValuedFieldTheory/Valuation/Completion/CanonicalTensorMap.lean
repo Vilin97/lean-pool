@@ -20,7 +20,8 @@ independent of the factorisation argument later used to prove bijectivity.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

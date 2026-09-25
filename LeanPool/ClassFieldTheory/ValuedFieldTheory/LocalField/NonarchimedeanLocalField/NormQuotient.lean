@@ -24,7 +24,8 @@ relates its finite cardinality to the index of the norm subgroup.
 
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

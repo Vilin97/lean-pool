@@ -18,7 +18,8 @@ of orders induces an algebra homomorphism between the corresponding fields.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

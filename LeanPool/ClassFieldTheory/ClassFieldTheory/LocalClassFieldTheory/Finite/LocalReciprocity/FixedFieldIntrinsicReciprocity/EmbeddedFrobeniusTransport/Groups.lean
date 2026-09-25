@@ -22,7 +22,8 @@ This module transports inertia, Frobenius elements, and fixed fields across an e
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

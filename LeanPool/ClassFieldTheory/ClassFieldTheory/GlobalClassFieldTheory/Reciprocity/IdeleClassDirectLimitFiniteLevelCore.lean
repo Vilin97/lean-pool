@@ -22,7 +22,8 @@ canonical embeddings into the rational idele-class direct limit.
 open scoped NumberField TensorProduct
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

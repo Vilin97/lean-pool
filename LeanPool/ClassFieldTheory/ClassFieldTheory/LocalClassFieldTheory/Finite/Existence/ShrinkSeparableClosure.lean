@@ -18,7 +18,8 @@ compatible equivalence with Mathlib's chosen separable closure of `Shrink K`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 

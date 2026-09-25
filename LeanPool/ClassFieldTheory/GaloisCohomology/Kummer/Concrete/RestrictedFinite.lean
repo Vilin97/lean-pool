@@ -27,7 +27,8 @@ No character-surjectivity or lattice-correspondence conclusion is assumed.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

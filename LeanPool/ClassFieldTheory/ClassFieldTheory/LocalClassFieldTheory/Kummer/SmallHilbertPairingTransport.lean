@@ -18,7 +18,8 @@ statements back across the field equivalence.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

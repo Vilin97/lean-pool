@@ -29,7 +29,8 @@ ordinary scalar multiplication in the ambient field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries LaurentSeries
 

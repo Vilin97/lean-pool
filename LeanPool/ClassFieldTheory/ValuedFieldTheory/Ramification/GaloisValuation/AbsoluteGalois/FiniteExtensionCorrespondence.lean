@@ -22,7 +22,8 @@ namespace RamificationTheory
 
 open ValuationTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u v w z
 

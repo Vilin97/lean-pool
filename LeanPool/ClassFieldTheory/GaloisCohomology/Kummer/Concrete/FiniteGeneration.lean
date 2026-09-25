@@ -23,7 +23,8 @@ the Kummer generation theorem; it is not the general abstract-module or infinite
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

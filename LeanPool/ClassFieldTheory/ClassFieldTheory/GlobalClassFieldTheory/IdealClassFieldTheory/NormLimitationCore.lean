@@ -18,7 +18,8 @@ equality and the finite-extension ideal Artin kernel theorem.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

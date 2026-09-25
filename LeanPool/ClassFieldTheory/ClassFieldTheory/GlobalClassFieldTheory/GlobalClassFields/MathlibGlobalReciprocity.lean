@@ -37,7 +37,8 @@ class-field existence, and infinite correspondence modules without adding
 parallel names or existence wrappers.
 -/
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory.GlobalClassFieldComparison
 

@@ -21,7 +21,8 @@ conductor cutoff without assuming that comparison.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

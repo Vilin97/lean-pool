@@ -16,4 +16,3 @@ The logarithm maps deep principal units to maximal-ideal powers. Its inverse
 identities assemble into the underlying and multiplicative equivalences.
 -/
 
-@[expose] public section

@@ -22,7 +22,8 @@ in the global-factor file by `map_ratCast`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

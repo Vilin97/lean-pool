@@ -21,7 +21,8 @@ the canonical identification of the quotient with ZMod n.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

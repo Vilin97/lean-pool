@@ -17,7 +17,8 @@ from the corresponding linear form has total order at least two.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 namespace SameUniformizer

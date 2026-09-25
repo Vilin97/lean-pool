@@ -18,4 +18,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.Up
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

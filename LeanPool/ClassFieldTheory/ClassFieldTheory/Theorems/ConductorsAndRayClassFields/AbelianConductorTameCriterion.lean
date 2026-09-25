@@ -27,7 +27,8 @@ divide the ideal-theoretic ramification index at any place above it.
 open scoped NumberField ValuativeRel
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

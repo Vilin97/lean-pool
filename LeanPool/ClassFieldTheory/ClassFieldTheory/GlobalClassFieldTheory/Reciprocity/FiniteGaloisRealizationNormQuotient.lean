@@ -20,7 +20,8 @@ reciprocity data to the original finite Galois extension.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

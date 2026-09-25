@@ -30,7 +30,8 @@ class norm is surjective.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open RelativeIdeleGroup.Cohomology
 

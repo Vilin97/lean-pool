@@ -16,7 +16,8 @@ finite reciprocity from the constructed fixed source.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

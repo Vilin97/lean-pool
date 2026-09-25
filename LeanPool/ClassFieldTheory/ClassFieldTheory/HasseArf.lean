@@ -83,7 +83,8 @@ only at natural-number indices, every upper jump of a finite Abelian local
 extension is integral (with the separate possible endpoint `-1`).
 -/
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

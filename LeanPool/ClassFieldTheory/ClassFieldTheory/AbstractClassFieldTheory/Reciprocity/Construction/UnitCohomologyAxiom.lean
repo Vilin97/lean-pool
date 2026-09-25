@@ -26,7 +26,8 @@ the action of the actual quotient `G_K / G_L`.  The two Tate groups are the
 homology objects of the finite-cyclic norm complexes.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

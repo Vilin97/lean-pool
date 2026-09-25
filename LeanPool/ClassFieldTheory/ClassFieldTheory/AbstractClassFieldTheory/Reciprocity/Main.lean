@@ -34,7 +34,8 @@ cyclic totally ramified calculation is proved in
 `AbstractClassFieldTheory.Reciprocity.TotallyRamifiedCase`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 -- Mathlib's `Rep ℤ G` currently fixes the acting group to universe zero.
 variable {G : IntegralRepGroupType} [Group G] [TopologicalSpace G]
@@ -997,7 +998,8 @@ printed
 commutative diagrams for the inverse norm-residue symbol.
 -/
 
-noncomputable section
+noncomputable
+section
 
 -- Mathlib's `Rep ℤ G` currently fixes the acting group to universe zero.
 variable {G : IntegralRepGroupType} [Group G] [TopologicalSpace G]

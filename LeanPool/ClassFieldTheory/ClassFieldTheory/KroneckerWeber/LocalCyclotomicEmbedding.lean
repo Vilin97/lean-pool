@@ -29,7 +29,8 @@ then applies it to localizations of finite abelian extensions of `ℚ`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 
@@ -217,7 +218,8 @@ end KroneckerWeber
 
 end
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

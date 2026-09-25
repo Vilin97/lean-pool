@@ -19,7 +19,8 @@ extra container for the chosen extension.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AbsoluteValue
 
@@ -57,7 +58,7 @@ noncomputable def toAlgebraicLocalization
   letI := completionAlgebra vK wL hw
   exact RingHom.codRestrict (toCompletion wL)
     (algebraicLocalization vK wL hw)
-    (toCompletion_mem_algebraicLocalization vK wL hw)
+    (by exact toCompletion_mem_algebraicLocalization vK wL hw)
 
 /-- The absolute value on an algebraic localization evaluates through its
 fraction representation. -/

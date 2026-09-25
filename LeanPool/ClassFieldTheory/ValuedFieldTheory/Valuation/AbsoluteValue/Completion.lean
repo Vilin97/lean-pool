@@ -24,7 +24,8 @@ remain explicit.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Topology
 
@@ -118,7 +119,8 @@ theorem denseRange_toCompletion
       (WithAbs.toAbs_surjective vK).denseRange
       (@UniformSpace.Completion.continuous_coe (WithAbs vK) inferInstance)
 
-private noncomputable def baseToExtensionCompletion
+/-- Embed the valued base field into the completion of the extension field. -/
+noncomputable def baseToExtensionCompletion
     {K : Type u} {L : Type v} [Field K] [Field L] [Algebra K L]
     (vK : AbsoluteValue K ℝ) (wL : AbsoluteValue L ℝ) :
     WithAbs vK →+* wL.Completion :=
@@ -153,7 +155,7 @@ noncomputable def completionMap
     vK.Completion →+* wL.Completion :=
   UniformSpace.Completion.extensionHom
     (baseToExtensionCompletion vK wL)
-    (baseToExtensionCompletion_isometry vK wL hw).continuous
+    (by exact (baseToExtensionCompletion_isometry vK wL hw).continuous)
 
 private theorem completionMap_withAbs_coe
     {K : Type u} {L : Type v} [Field K] [Field L] [Algebra K L]
@@ -163,7 +165,7 @@ private theorem completionMap_withAbs_coe
       baseToExtensionCompletion vK wL x :=
   UniformSpace.Completion.extensionHom_coe
     (baseToExtensionCompletion vK wL)
-    (baseToExtensionCompletion_isometry vK wL hw).continuous x
+    (by exact (baseToExtensionCompletion_isometry vK wL hw).continuous) x
 
 /-- On the canonical copy of the base field, the map between completions is
 the original algebra map followed by the canonical completion map. -/
@@ -318,7 +320,8 @@ section CompleteTarget
 
 variable {K : Type u} {D : Type w} [Field K] [Field D]
 
-private noncomputable def toCompleteTargetRingHom
+/-- Transport a ring homomorphism to the absolute-value models of its fields. -/
+noncomputable def toCompleteTargetRingHom
     (vK : AbsoluteValue K ℝ) (vD : AbsoluteValue D ℝ)
     (i : K →+* D) :
     WithAbs vK →+* WithAbs vD :=
@@ -349,7 +352,7 @@ noncomputable def completionMapToCompleteTarget
     vK.Completion →+* WithAbs vD :=
   UniformSpace.Completion.extensionHom
     (toCompleteTargetRingHom vK vD i)
-    (toCompleteTargetRingHom_isometry vK vD i hi).continuous
+    (by exact (toCompleteTargetRingHom_isometry vK vD i hi).continuous)
 
 private theorem completionMapToCompleteTarget_withAbs_coe
     (vK : AbsoluteValue K ℝ) (vD : AbsoluteValue D ℝ)
@@ -361,7 +364,7 @@ private theorem completionMapToCompleteTarget_withAbs_coe
       toCompleteTargetRingHom vK vD i x :=
   UniformSpace.Completion.extensionHom_coe
     (toCompleteTargetRingHom vK vD i)
-    (toCompleteTargetRingHom_isometry vK vD i hi).continuous x
+    (by exact (toCompleteTargetRingHom_isometry vK vD i hi).continuous) x
 
 /-- The extension map to a complete target agrees with the original map on
 embedded source elements. -/

@@ -26,7 +26,8 @@ of the local field turns the resulting formal recursion into an actual norm
 or coboundary in the initial subgroup.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

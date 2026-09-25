@@ -29,4 +29,3 @@ reciprocity, is exported by
 `LocalClassFieldTheory.LubinTateApplication`.
 -/
 
-@[expose] public section

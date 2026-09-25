@@ -25,7 +25,8 @@ fixes the Artin normalization of the isomorphism.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

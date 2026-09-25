@@ -24,7 +24,8 @@ namespace ClassFormation
 open KummerTheory
 open CyclicCohomology
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

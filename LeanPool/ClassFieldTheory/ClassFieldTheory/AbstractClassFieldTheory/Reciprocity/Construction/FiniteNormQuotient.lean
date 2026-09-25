@@ -28,7 +28,8 @@ contained in the single norm image from `L`.  Hence the reciprocity construction
 canonically to `A_K / N_{L|K}A_L`, the target in the finite reciprocity equivalence.
 -/
 
-noncomputable section
+noncomputable
+section
 
 section finiteNorms
 

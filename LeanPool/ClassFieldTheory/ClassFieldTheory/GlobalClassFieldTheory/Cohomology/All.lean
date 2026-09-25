@@ -13,4 +13,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.
 # Cohomological tools for global class field theory
 -/
 
-@[expose] public section

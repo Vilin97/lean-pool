@@ -18,7 +18,8 @@ isomorphism, with the actual underlying subfields unchanged.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 

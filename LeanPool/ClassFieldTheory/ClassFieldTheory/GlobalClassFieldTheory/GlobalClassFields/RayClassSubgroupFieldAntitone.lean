@@ -18,7 +18,8 @@ a smaller subgroup, as actual subfields of the fixed separable closure.
 @[expose] public section
 
 open scoped NumberField
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -23,7 +23,8 @@ leaf rather than being introduced as an assumption.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

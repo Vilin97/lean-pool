@@ -21,7 +21,8 @@ while using the same topology on every field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 

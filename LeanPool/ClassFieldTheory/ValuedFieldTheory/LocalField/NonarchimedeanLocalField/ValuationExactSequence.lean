@@ -21,7 +21,8 @@ sequence from valuation-ring units through field units to `ℤ`.
 
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

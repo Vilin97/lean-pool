@@ -22,7 +22,8 @@ even though it does not determine all of its nontrivial values.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

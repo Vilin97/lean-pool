@@ -25,7 +25,8 @@ entirely in terms of this norm-defined ideal group.
 
 open scoped NumberField IsMulCommutative
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

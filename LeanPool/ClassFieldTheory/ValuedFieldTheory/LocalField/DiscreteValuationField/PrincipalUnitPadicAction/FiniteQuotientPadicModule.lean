@@ -24,7 +24,8 @@ the transition maps.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

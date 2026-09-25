@@ -18,7 +18,8 @@ local class-field theory is transported to a small representative.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

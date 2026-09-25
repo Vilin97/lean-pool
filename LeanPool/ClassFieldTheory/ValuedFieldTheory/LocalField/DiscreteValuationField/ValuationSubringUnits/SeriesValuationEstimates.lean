@@ -17,7 +17,8 @@ integer valuations of the logarithm and exponential series terms.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

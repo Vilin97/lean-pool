@@ -17,7 +17,8 @@ element, then lift its simple linear factor over the ambient valuation ring.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

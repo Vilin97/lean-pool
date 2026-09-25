@@ -21,7 +21,8 @@ Artin map takes an inverse uniformizer to this automorphism.
 
 open scoped ValuativeRel
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

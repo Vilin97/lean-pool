@@ -36,4 +36,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.FrobeniusAndHi
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

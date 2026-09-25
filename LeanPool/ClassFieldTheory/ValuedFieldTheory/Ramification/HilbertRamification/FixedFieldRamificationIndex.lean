@@ -31,7 +31,8 @@ open _root_.RamificationTheory.DiscreteValuationField.HerbrandGroupTheory.Nonarc
     mem_depthLowerSubgroup_iff
 
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x
 

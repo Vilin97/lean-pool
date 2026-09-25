@@ -26,7 +26,8 @@ open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFilt
     herbrandSlope
 
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries Pointwise PowerSeries
 

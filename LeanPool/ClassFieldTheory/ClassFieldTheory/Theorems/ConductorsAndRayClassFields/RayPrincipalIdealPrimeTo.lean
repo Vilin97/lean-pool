@@ -20,7 +20,8 @@ integral-unit-valued at every finite prime in the modulus support.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

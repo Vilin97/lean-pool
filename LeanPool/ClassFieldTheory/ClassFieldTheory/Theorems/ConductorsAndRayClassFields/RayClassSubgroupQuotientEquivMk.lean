@@ -17,7 +17,8 @@ The quotient isomorphism retains the prescribed Artin normalization.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

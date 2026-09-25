@@ -25,7 +25,8 @@ open NumberField IsDedekindDomain
 open AlgebraicNumberTheory.Valuations
 open LocalClassFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

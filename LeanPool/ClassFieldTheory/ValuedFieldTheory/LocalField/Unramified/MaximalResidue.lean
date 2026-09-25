@@ -17,7 +17,8 @@ forward residue-field inclusion to the corresponding finite statements.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

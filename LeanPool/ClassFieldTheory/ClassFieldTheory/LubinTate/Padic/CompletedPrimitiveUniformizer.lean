@@ -21,7 +21,8 @@ Consequently it is a genuine uniformizer of the completed level.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial Topology
 

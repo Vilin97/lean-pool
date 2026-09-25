@@ -19,7 +19,8 @@ ordinary local multiplicative block and proves injectivity.
 open scoped NumberField TensorProduct ValuativeRel NNReal
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification

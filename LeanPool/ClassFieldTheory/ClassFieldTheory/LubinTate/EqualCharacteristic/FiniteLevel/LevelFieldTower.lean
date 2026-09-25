@@ -18,7 +18,8 @@ level fields nevertheless form an increasing tower.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries Polynomial
 

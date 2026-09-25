@@ -24,7 +24,8 @@ actions.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 open CyclicCohomology.ProfiniteCohomology.Herbrand

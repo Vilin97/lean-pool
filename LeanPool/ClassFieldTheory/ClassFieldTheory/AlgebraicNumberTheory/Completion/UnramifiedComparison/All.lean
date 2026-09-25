@@ -12,4 +12,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.C
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.UnramifiedComparison.RamificationIndex
 /-! # Unramified comparisons between completions and prime ideals -/
 
-@[expose] public section

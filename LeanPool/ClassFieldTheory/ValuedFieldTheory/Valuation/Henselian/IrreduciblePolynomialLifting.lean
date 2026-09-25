@@ -20,7 +20,8 @@ ring, hence the mapped field polynomial is not irreducible.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

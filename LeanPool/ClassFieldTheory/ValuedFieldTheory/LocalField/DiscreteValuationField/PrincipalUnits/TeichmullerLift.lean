@@ -24,7 +24,8 @@ Constructs multiplicative Teichmuller representatives, and in equal characterist
 coefficient-field section of the residue map.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

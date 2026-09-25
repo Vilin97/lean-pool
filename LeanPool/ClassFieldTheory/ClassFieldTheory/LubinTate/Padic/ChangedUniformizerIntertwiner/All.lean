@@ -18,4 +18,3 @@ This aggregate exposes the completed series, defect correction, intertwiner
 construction, scalar endomorphisms, and final semilinear compatibilities.
 -/
 
-@[expose] public section

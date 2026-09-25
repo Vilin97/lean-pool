@@ -16,7 +16,8 @@ This file contains the group-theoretic fixed-field part of the tower
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification
 namespace Dedekind

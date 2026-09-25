@@ -27,7 +27,8 @@ the unit-cohomology axiom, and proves the corrected universal norm-descent
 equation on finite fixed-field towers.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 open scoped BigOperators

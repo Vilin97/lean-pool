@@ -17,7 +17,8 @@ This module specializes the embedded subgroup and inertia comparisons to actual 
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

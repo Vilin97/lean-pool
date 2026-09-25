@@ -18,7 +18,8 @@ for real-valued absolute values.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Filter
 open scoped Topology

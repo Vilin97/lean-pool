@@ -25,7 +25,8 @@ to the finite brackets acting on division points.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries
 

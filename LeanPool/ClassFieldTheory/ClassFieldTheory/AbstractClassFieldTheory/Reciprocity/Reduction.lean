@@ -33,7 +33,8 @@ lemmas below only construct the actual arrows and prove the algebraic diagram
 chases which will be applied to those homomorphisms.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

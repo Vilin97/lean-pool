@@ -19,7 +19,8 @@ the natural-number valuation formula used in the logarithm and exponential theor
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

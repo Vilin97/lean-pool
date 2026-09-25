@@ -34,7 +34,8 @@ first and third isomorphism theorems; no correspondence certificate is
 assumed.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
 

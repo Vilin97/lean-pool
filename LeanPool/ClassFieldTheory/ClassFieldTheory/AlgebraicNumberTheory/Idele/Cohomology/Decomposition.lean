@@ -43,7 +43,8 @@ show that every unramified induced integer-unit block has trivial
 open scoped NumberField RestrictedProduct ValuativeRel
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open LocalClassFieldTheory
 

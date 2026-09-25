@@ -27,7 +27,8 @@ not a separate independently chosen reciprocity map.
 
 open scoped ValuativeRel
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

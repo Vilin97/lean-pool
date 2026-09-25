@@ -20,7 +20,8 @@ prime idèle, with the arithmetic global Artin symbol of that field.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

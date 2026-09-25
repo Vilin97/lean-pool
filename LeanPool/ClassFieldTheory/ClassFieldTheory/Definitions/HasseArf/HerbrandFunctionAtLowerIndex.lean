@@ -19,7 +19,8 @@ public import Mathlib.SetTheory.Cardinal.Finite
 
 open scoped BigOperators
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

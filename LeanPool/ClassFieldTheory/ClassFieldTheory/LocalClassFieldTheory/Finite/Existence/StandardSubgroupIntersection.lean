@@ -23,7 +23,8 @@ This is the elementary subgroup calculation used in local existence proofs.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

@@ -15,4 +15,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.S
 
 /-! # All -/
 
-@[expose] public section

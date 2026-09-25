@@ -25,7 +25,8 @@ particular choice of a radical in their types.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory.LocalClassFieldTheory.Kummer
 

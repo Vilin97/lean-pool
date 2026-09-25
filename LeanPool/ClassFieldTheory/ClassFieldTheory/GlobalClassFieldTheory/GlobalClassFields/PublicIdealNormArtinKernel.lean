@@ -24,7 +24,8 @@ argument and is not asserted here.
 open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory.GlobalClassFieldComparison
 

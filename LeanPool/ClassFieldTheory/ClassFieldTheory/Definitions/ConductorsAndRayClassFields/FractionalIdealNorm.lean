@@ -21,7 +21,8 @@ rule to a multiplicative map on all nonzero fractional ideals.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

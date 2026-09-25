@@ -25,7 +25,8 @@ quotients of any two terms are defined, then the quotient of the third term is
 defined as well.
 -/
 
-noncomputable section
+noncomputable
+section
 
 namespace ProfiniteCohomology
 namespace Herbrand

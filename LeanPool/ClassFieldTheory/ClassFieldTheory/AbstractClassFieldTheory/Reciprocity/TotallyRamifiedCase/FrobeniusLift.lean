@@ -16,7 +16,8 @@ Galois extension used in the totally ramified reciprocity argument.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

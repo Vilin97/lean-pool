@@ -17,7 +17,8 @@ between the additive recodings of its source and target.
 @[expose] public section
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

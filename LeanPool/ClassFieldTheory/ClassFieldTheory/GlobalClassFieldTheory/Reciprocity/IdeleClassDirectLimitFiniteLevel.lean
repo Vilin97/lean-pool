@@ -20,7 +20,8 @@ their tower compatibility live in the reusable core leaf.
 open scoped NumberField TensorProduct
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

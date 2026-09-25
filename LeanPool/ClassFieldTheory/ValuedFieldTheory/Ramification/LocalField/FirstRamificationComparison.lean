@@ -19,7 +19,8 @@ back to the full Galois group.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 open ValuationTheory.DiscreteValuationField

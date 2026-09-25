@@ -21,7 +21,8 @@ group.
 @[expose] public section
 
 open scoped NumberField
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

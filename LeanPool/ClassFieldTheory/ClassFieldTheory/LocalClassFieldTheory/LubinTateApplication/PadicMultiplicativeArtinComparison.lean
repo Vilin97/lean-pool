@@ -27,7 +27,8 @@ action on the chosen primitive root is the explicit cyclotomic action.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 

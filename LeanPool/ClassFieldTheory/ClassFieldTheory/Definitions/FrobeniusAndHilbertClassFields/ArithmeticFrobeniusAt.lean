@@ -19,7 +19,8 @@ public import Mathlib.RingTheory.Frobenius
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

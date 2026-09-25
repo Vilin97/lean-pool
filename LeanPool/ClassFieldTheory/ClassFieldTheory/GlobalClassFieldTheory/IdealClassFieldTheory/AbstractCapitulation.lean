@@ -28,7 +28,8 @@ realization or norm-subgroup equality is assumed here.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

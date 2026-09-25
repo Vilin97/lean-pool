@@ -17,7 +17,8 @@ residue of the remainder has small degree.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

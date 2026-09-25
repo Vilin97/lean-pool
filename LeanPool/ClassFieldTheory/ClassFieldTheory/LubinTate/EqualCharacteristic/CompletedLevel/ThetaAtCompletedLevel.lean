@@ -19,7 +19,8 @@ division point in the completed level field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Filter
 open scoped LaurentSeries NNReal PowerSeries PowerSeries.WithPiTopology

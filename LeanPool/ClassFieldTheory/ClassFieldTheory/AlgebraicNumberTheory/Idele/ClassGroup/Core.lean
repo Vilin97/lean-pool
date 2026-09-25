@@ -22,7 +22,8 @@ ordinary ideal class group.
 open scoped NumberField RestrictedProduct WithZero
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 variable {K : Type*} [Field K] [NumberField K]

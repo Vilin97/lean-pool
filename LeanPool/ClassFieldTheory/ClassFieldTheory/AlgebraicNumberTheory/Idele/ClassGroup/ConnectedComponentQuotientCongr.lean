@@ -21,7 +21,8 @@ of the corresponding quotient topological groups.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -19,7 +19,8 @@ namespace LocalClassFieldTheory
 
 open LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

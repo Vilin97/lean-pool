@@ -23,7 +23,8 @@ an extension of `ℚ_[p]`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification
 

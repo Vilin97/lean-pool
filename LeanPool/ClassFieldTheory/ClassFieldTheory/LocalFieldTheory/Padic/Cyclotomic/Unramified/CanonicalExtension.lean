@@ -54,7 +54,8 @@ open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
     residueField_finiteDimensional_of_moduleFinite
 
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

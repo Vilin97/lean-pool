@@ -22,7 +22,8 @@ commutator-intermediate-field and transfer APIs can be applied to the tower.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

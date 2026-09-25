@@ -19,7 +19,8 @@ has kernel `H_m`.  The first isomorphism theorem therefore identifies
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

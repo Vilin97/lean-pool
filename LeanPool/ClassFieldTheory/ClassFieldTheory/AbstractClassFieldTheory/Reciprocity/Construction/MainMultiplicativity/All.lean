@@ -21,4 +21,3 @@ This aggregate exposes the construction proving that the abstract reciprocity
 map respects multiplication.
 -/
 
-@[expose] public section

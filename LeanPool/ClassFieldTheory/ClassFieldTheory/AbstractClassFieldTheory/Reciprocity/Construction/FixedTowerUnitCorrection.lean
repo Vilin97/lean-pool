@@ -25,7 +25,8 @@ This module constructs the unit-valued correction term on a Frobenius
 fixed-field tower and proves its coefficient and relative-norm identities.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 open scoped BigOperators

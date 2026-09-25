@@ -26,7 +26,8 @@ Concrete valued extensions supply the action quotient estimates; the subgroup
 and normality/antitonicity consequences are proved here.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

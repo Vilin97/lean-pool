@@ -22,7 +22,8 @@ through the Herbrand-index identity and antitonicity.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

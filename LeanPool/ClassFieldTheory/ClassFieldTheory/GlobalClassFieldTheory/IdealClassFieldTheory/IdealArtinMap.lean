@@ -27,7 +27,8 @@ group.
 
 open scoped NumberField BigOperators NumberField.LiesOver
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

@@ -60,7 +60,8 @@ open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFilt
     subgroupFiltration
 
 
-noncomputable section
+noncomputable
+section
 
 universe u w
 

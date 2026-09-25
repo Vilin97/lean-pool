@@ -21,7 +21,8 @@ valuation quotient API.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

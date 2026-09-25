@@ -15,7 +15,8 @@ public import Mathlib.FieldTheory.IsSepClosed
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -28,7 +28,8 @@ proves directly that it induces the unramified norm-quotient isomorphism
 used in the unramified norm-quotient equivalence.
 -/
 
-noncomputable section
+noncomputable
+section
 
 -- Mathlib's `Rep ℤ G` currently fixes the acting group to universe zero.
 variable {G : IntegralRepGroupType} [Group G] [TopologicalSpace G]

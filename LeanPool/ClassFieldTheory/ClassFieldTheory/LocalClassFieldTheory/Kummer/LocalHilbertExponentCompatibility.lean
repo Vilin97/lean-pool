@@ -19,7 +19,8 @@ simple Kummer tower makes its values compatible as the exponent varies.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory.Kummer
 

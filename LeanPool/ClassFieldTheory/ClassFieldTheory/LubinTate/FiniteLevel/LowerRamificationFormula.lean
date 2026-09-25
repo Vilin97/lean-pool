@@ -21,7 +21,8 @@ Its cardinality is therefore `q ^ (n + 1 - k)`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

@@ -23,7 +23,8 @@ formula using only Mathlib objects and the public extension index type.
 
 open scoped BigOperators TensorProduct
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

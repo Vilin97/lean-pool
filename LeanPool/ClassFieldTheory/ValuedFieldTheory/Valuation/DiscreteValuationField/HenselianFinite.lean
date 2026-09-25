@@ -25,7 +25,8 @@ This file keeps the Nakayama and finite-module completion consequences away
 from the lightweight `HenselianDVF` core.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

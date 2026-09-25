@@ -17,7 +17,8 @@ transition on the profinite side and restriction on the Galois side.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

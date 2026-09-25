@@ -20,7 +20,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalU
 
 open scoped Topology
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory.ProfiniteUnitDecomposition.Internal
 

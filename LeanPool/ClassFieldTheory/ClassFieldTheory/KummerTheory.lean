@@ -11,4 +11,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

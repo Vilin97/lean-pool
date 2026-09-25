@@ -34,7 +34,8 @@ hypothesis is substituted for it here.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Topology
 

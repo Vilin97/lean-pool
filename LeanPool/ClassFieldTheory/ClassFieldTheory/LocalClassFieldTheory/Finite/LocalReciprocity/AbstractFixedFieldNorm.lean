@@ -28,7 +28,8 @@ identifies the two presentations.  In particular, it does not assume that the
 finite fixed field is normal over the local ground field.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 variable (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω]

@@ -34,4 +34,3 @@ Public aggregate for the normal-basis, unit-filtration, valuation, and
 cohomology calculations establishing the local class-field axiom.
 -/
 
-@[expose] public section

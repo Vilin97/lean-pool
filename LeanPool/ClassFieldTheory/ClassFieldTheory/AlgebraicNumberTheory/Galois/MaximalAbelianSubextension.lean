@@ -20,7 +20,8 @@ Galois intermediate field contained in the distinguished copy.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped IsMulCommutative
 

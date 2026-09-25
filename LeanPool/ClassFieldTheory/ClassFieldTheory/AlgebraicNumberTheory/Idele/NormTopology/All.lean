@@ -14,4 +14,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.I
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormTopology.NormOne
 /-! # Topological properties of idele norms -/
 
-@[expose] public section

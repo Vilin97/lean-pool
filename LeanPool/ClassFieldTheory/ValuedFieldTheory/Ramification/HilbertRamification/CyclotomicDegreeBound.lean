@@ -19,7 +19,8 @@ by Euler's totient.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification
 

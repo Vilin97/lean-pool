@@ -17,7 +17,8 @@ namespace CyclicCohomology
 
 open LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 
@@ -1626,7 +1627,8 @@ namespace CyclicCohomology
 
 open LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 open Filter

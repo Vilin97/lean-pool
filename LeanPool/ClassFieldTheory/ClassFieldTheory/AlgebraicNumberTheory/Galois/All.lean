@@ -19,4 +19,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.G
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.UnboundedDegree
 /-! # Galois subextensions and fixed-field constructions -/
 
-@[expose] public section

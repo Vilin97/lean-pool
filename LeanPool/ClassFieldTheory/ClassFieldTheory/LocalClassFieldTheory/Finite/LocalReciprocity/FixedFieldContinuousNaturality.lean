@@ -20,7 +20,8 @@ made discrete merely to obtain continuity.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

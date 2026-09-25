@@ -26,7 +26,8 @@ open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 open IdeleGroup RelativeIdeleGroup
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

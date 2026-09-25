@@ -31,7 +31,8 @@ isomorphisms between finite groups.
 open scoped IsMulCommutative NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

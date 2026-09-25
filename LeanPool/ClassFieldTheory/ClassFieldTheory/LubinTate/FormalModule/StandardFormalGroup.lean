@@ -26,7 +26,8 @@ one-variable power-series composition.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 attribute [local instance] Classical.propDecidable
@@ -340,7 +341,8 @@ section StandardFormalGroup
 variable (hπ :
   F.toCompleteDVF.valuation.IsUniformizer (π : K))
 
-private abbrev standardSeries :
+/-- The standard Lubin–Tate series used to construct the two-variable formal group. -/
+abbrev standardSeries :
     LubinTateSeries F π :=
   standardLubinTateSeries hπ
 
@@ -714,7 +716,8 @@ section StandardEndomorphisms
 variable (hπ :
   F.toCompleteDVF.valuation.IsUniformizer (π : K))
 
-private abbrev standardSeries' :
+/-- The standard Lubin–Tate series used to construct the scalar endomorphisms. -/
+abbrev standardSeries' :
     LubinTateSeries F π :=
   standardLubinTateSeries hπ
 

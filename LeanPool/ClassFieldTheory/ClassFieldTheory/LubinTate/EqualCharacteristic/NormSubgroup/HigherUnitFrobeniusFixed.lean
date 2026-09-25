@@ -18,7 +18,8 @@ Frobenius attached to `a` acts trivially on the standard primitive
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped LaurentSeries PowerSeries

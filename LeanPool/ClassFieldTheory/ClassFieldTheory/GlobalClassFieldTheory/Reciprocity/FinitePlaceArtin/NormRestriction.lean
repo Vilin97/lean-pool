@@ -20,7 +20,8 @@ of number fields and their chosen completed local extensions.
 open scoped IsMulCommutative NNReal NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

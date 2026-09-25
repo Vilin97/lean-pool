@@ -27,4 +27,3 @@ Artin maps, the absolute local Artin map, and the profinite local reciprocity
 equivalence.
 -/
 
-@[expose] public section

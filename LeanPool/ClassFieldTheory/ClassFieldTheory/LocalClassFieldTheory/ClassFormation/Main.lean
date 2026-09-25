@@ -27,7 +27,8 @@ cohomology of `Lˣ` has cardinalities `[L : K]` in degree zero and `1` in
 degree minus one.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 open IsNonarchimedeanLocalField

@@ -30,7 +30,8 @@ the explicit cyclotomic action; no such compatibility is assumed here.
 open scoped BigOperators NumberField IsMulCommutative
 open NumberField IsDedekindDomain ClassFormation
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

@@ -17,7 +17,8 @@ at the index itself.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

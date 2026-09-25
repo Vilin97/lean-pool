@@ -20,7 +20,8 @@ order-reversing infinite abelian class-field correspondence.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClosedSubgroup
 

@@ -19,7 +19,8 @@ This is the specific isomorphism induced by the Artin map in
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

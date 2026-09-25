@@ -20,7 +20,8 @@ global reciprocity.  No global choice of ray class field is exposed.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -21,4 +21,3 @@ selection, decomposition-field identifications, and the final local-power
 kernel theorem.
 -/
 
-@[expose] public section

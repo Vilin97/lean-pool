@@ -20,7 +20,8 @@ ambient fixed-field norm-residue construction.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

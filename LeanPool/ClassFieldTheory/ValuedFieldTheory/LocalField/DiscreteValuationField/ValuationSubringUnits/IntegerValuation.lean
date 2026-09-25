@@ -18,7 +18,8 @@ proves the elementary formulas for powers and natural-number denominators.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

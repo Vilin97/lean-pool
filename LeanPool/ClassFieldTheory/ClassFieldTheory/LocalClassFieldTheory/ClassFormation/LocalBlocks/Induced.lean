@@ -25,7 +25,8 @@ For finite extensions this is the entire metric completion by
 
 open scoped TensorProduct
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

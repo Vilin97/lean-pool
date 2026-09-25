@@ -24,7 +24,8 @@ ideal-theoretic Artin map on the same ray modulus.
 open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory.GlobalClassFieldComparison
 

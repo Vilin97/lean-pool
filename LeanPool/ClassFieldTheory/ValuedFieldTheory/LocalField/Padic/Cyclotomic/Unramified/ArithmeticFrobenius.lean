@@ -38,7 +38,8 @@ The proof follows the arithmetic construction directly and uses no comparison ce
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

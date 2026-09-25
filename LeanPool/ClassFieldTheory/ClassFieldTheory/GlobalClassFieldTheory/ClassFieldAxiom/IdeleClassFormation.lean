@@ -27,7 +27,8 @@ open NumberField
 open CyclicCohomology ClassFormation
 open LocalClassFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

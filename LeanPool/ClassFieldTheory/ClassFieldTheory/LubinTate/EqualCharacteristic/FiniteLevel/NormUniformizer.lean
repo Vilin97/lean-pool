@@ -18,7 +18,8 @@ therefore gives the norm identity `N(-λ) = T`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped PowerSeries LaurentSeries Polynomial

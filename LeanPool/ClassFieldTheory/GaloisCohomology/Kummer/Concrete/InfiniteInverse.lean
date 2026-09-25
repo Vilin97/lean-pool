@@ -20,7 +20,8 @@ theorem at that stage shows that the original radical already belongs to
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

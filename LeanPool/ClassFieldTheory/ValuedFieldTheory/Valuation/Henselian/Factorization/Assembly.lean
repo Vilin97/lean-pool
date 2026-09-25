@@ -18,7 +18,8 @@ the displayed-factor complete-limit theorem.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

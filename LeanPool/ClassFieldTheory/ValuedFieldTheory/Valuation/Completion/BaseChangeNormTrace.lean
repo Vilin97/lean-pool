@@ -21,7 +21,8 @@ directly for the canonical element `1 ⊗ₜ x`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ValuationTheory
 namespace Completion

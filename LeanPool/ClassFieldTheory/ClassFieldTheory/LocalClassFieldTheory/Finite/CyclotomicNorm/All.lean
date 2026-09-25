@@ -16,4 +16,3 @@ The prime-power and prime-to-`p` norm-subgroup computations used by local
 Kronecker--Weber, exposed as reusable finite local class field theory.
 -/
 
-@[expose] public section

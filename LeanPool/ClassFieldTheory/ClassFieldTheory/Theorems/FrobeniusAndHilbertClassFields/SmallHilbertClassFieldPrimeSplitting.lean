@@ -23,7 +23,8 @@ ideal-theoretic objects.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

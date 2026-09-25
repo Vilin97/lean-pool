@@ -18,7 +18,8 @@ Lubin--Tate bracket.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries
 

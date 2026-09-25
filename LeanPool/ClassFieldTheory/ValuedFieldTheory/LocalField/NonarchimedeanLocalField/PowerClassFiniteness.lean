@@ -33,7 +33,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField renaming
     finite_fieldUnits_nthPowerQuotient_of_finite_principalUnits
 
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 

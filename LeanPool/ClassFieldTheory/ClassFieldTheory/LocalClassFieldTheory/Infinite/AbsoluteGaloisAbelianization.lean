@@ -18,7 +18,8 @@ the established local names as definitional wrappers for downstream users.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

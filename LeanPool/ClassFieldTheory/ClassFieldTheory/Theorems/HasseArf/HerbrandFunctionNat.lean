@@ -11,7 +11,8 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.He
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

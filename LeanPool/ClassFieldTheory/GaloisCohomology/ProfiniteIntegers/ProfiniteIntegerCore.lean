@@ -28,20 +28,27 @@ Mathlib.
 
 open scoped Topology
 
-private structure ZHatIndex where
+/-- A positive modulus indexing the finite quotients of the profinite integers. -/
+structure ZHatIndex where
+  /-- The natural-number modulus. -/
   modulus : ℕ
+  /-- Every index has a positive modulus. -/
   positive : 0 < modulus
 
-private instance (i : ZHatIndex) : NeZero i.modulus :=
+/-- The modulus of a profinite-integer index is nonzero. -/
+instance (i : ZHatIndex) : NeZero i.modulus :=
   ⟨Nat.ne_of_gt i.positive⟩
 
-private def zHatIndex (n : ℕ) (hn : 0 < n) : ZHatIndex :=
+/-- Package a positive natural number as a profinite-integer modulus. -/
+def zHatIndex (n : ℕ) (hn : 0 < n) : ZHatIndex :=
   ⟨n, hn⟩
 
-private abbrev ZHatAmbient : Type 0 :=
+/-- The product of the finite cyclic rings over all positive moduli. -/
+abbrev ZHatAmbient : Type 0 :=
   ∀ i : ZHatIndex, ZMod i.modulus
 
-private def zHatDiagonal : ℤ →+* ZHatAmbient where
+/-- The diagonal ring homomorphism from the integers into all finite cyclic quotients. -/
+def zHatDiagonal : ℤ →+* ZHatAmbient where
   toFun a i := (a : ZMod i.modulus)
   map_zero' := by
     funext i
@@ -56,10 +63,12 @@ private def zHatDiagonal : ℤ →+* ZHatAmbient where
     funext i
     exact Int.cast_mul a b
 
-private def zHatIntegerSubring : Subring ZHatAmbient :=
+/-- The diagonal image of the integers in the product of finite cyclic rings. -/
+def zHatIntegerSubring : Subring ZHatAmbient :=
   zHatDiagonal.range
 
-private abbrev ZHatClosureModel : Type 0 :=
+/-- The closure of the integer diagonal in the product of finite cyclic rings. -/
+abbrev ZHatClosureModel : Type 0 :=
   zHatIntegerSubring.topologicalClosure
 
 /-- The profinite completion `ℤ̂ = lim ℤ/nℤ` over all positive moduli.

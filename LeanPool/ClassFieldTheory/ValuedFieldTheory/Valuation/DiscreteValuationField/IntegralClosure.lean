@@ -30,7 +30,8 @@ This module uses the actual mathlib integral closure
 structure.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x
 

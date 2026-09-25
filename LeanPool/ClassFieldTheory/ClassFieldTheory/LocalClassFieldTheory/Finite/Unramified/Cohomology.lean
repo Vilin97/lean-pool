@@ -24,7 +24,8 @@ The norm statements are the corresponding actual norm surjections.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

@@ -20,7 +20,8 @@ used here.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries LaurentSeries Polynomial
 

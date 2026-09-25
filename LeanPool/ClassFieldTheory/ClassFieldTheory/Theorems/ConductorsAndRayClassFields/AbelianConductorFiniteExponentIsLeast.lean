@@ -24,7 +24,8 @@ the whole completion tensor algebra, with no arbitrary place above `v`.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

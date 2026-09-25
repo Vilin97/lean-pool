@@ -22,7 +22,8 @@ abstract-operator statement of the Kummer generation theorem.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

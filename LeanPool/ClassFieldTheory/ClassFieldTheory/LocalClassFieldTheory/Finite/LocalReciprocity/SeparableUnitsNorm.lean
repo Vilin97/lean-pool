@@ -32,7 +32,8 @@ is proved first for an arbitrary (possibly infinite) Galois ambient field, so
 it does not require the ground field to be perfect.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

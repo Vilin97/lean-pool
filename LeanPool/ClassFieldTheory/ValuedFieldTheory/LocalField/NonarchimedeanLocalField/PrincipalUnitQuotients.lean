@@ -19,7 +19,8 @@ Develops `U^n/U^(n+1)` and identifies it with the additive ideal quotient
 @[expose] public section
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

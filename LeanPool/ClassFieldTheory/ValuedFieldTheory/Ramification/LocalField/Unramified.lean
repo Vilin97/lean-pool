@@ -18,7 +18,8 @@ the actual upper ramification groups of a finite local extension.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace RamificationTheory.LocalField
 

@@ -18,7 +18,8 @@ comparison, producing its linear and topological forms on first principal units.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

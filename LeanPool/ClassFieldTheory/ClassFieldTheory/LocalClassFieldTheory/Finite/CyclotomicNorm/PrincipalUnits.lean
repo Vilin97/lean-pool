@@ -38,7 +38,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.MultiplicativeIntegerValuati
     expSeriesFieldOfWithZeroValuation
 
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel WithZero
 

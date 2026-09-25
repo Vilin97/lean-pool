@@ -32,7 +32,8 @@ a surjection from `A_K / N A_L` to `Z / [L : K] Z`, and equality of the two
 orders makes this map injective.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 
@@ -467,7 +468,8 @@ as an input; both rows are proved directly from quotient membership and norm
 transitivity.
 -/
 
-noncomputable section
+noncomputable
+section
 
 -- Mathlib's `Rep ℤ G` currently fixes the acting group to universe zero.
 variable {G : IntegralRepGroupType} [Group G] [TopologicalSpace G]

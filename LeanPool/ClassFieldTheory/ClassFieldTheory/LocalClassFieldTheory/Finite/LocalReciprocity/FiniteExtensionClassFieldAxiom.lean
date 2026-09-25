@@ -36,7 +36,8 @@ valuation ring is proved integral over the base valuation ring; no local-field
 structure on the target is assumed.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped NNReal ValuativeRel
 

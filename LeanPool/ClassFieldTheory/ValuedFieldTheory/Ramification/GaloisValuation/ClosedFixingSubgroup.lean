@@ -17,7 +17,8 @@ the Krull topology.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace RamificationTheory
 

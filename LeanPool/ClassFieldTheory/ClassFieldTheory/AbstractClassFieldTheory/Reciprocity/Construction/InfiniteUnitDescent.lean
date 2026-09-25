@@ -27,7 +27,8 @@ the infinite unit subgroup, proves its action and norm stability, and
 descends maximal-unramified norm equations from finite support.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 open scoped BigOperators

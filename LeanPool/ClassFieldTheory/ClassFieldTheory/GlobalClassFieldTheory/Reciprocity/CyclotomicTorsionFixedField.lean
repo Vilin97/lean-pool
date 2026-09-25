@@ -44,7 +44,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalU
     continuousMulEquivOfCompactToT2
 
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

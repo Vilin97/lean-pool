@@ -16,7 +16,8 @@ The transported Frobenius subgroups determine equivalent fixed fields.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

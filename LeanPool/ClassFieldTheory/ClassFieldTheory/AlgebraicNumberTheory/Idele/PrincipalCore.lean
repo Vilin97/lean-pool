@@ -19,7 +19,8 @@ embedding of `Kˣ` into the idele group and the resulting idele class group.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 variable (K : Type*) [Field K] [NumberField K]

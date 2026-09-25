@@ -30,7 +30,8 @@ open scoped NumberField
 open NumberField
 open IdeleGroup RelativeIdeleGroup
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

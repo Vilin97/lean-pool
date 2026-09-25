@@ -19,7 +19,8 @@ canonical normalized additive valuation sends `T⁻¹` to `1`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries LaurentSeries ValuativeRel WithZero
 

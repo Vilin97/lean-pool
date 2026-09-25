@@ -29,7 +29,8 @@ original inertia automorphism.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

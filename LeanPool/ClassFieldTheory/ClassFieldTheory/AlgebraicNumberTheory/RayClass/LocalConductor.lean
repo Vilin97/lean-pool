@@ -21,7 +21,8 @@ global class field.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace RayClass
 

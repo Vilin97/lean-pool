@@ -31,7 +31,8 @@ open AlgebraicNumberTheory.Valuations
 open HilbertRamification
 open LocalClassFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

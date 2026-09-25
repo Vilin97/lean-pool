@@ -22,7 +22,8 @@ the rational cyclotomic calculation.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

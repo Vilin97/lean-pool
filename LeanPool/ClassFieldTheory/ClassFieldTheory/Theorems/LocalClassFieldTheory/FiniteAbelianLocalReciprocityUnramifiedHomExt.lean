@@ -31,7 +31,8 @@ maps for ramified extensions.
 open scoped ValuativeRel
 open LocalFieldTheory.IsNonarchimedeanLocalField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

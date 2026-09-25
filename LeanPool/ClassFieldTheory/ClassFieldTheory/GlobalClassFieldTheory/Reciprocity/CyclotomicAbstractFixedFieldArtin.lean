@@ -28,7 +28,8 @@ reciprocity comparison is assumed in their definitions.
 
 open scoped IsMulCommutative NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

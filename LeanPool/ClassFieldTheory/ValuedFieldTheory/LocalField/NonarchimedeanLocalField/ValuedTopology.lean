@@ -17,7 +17,8 @@ valued field is the valuative topology for that induced relation.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 

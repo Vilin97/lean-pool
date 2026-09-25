@@ -34,7 +34,8 @@ open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
     target_valuationSubring_eq_of_finite_separable
 
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

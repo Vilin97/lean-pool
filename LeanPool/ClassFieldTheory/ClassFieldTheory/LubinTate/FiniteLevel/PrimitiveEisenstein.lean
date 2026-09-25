@@ -30,7 +30,8 @@ The argument is independent of the characteristic of `F`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

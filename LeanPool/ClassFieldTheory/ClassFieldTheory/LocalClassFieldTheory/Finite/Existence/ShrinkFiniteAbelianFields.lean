@@ -19,7 +19,8 @@ transported along the base-field equivalence.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 

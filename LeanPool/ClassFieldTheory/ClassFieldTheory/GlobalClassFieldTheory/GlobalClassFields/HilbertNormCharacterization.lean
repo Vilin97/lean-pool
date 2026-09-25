@@ -26,7 +26,8 @@ factorization and the resulting divisibility of orders.
 
 open scoped IsMulCommutative NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

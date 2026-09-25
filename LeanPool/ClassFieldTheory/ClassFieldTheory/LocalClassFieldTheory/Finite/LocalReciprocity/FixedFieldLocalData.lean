@@ -31,7 +31,8 @@ open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
     valuationSubring_pullback_of_hasExtension_valuation
 
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

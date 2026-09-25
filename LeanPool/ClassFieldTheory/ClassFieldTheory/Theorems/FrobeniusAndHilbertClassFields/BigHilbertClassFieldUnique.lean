@@ -16,7 +16,8 @@ intermediate field of the fixed separable closure.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

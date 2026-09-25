@@ -31,7 +31,8 @@ whole metric completion in infinite degree.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

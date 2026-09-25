@@ -26,7 +26,8 @@ chosen-basis lattice with the product of local integer rings.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 universe u v

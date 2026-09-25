@@ -15,7 +15,8 @@ Compatibility of abstract extension with ordinary idele classes.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

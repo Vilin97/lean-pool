@@ -18,4 +18,3 @@ equal-characteristic local field uses finite local reciprocity and is exported
 by `LocalClassFieldTheory.LubinTateApplication`.
 -/
 
-@[expose] public section

@@ -19,7 +19,8 @@ the given `WithZero (Multiplicative ℤ)`-valued valuation.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

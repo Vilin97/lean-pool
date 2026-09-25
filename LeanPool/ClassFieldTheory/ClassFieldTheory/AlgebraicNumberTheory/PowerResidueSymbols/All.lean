@@ -10,4 +10,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.P
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.PowerResidueSymbols.Ideal
 /-! # Power residue symbols over finite fields and ideals -/
 
-@[expose] public section

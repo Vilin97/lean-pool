@@ -20,7 +20,8 @@ finite one-place idele class with the chosen local Artin homomorphism.
 
 open scoped IsMulCommutative NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

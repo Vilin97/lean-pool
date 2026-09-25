@@ -19,7 +19,8 @@ namespace LocalClassFieldTheory
 
 open CyclicCohomology
 
-noncomputable section
+noncomputable
+section
 
 /-- The `i = -1` half of the local class-field-axiom theorem on the actual field-unit
 representation.  This is Hilbert 90 transported through the cyclic

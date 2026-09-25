@@ -17,4 +17,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.A
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.RestrictedProduct
 /-! # Adelic coordinates and restricted products -/
 
-@[expose] public section

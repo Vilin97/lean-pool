@@ -14,4 +14,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.F
 This facade preserves the import path for the subgroup transports and fixed-field equivalences.
 -/
 
-@[expose] public section

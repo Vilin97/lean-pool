@@ -21,7 +21,8 @@ needed for continuity of adelic transport.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

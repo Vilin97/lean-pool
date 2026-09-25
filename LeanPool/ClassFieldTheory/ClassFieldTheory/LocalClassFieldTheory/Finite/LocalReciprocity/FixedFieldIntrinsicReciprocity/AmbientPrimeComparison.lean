@@ -18,7 +18,8 @@ agree on norm classes and therefore agree pointwise.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

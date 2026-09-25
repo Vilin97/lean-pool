@@ -28,4 +28,3 @@ public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Va
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

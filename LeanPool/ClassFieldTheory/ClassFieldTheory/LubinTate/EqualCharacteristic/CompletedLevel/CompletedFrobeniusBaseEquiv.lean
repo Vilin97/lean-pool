@@ -17,7 +17,8 @@ Laurent base `k((T))`; hence the lift is an actual `k((T))`-automorphism.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries PowerSeries
 

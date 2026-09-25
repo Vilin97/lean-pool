@@ -21,7 +21,8 @@ copy of `Kˣ`, and hence descends to the idele class group.
 open scoped NumberField RestrictedProduct NNReal WithZero
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 variable {K : Type*} [Field K] [NumberField K]

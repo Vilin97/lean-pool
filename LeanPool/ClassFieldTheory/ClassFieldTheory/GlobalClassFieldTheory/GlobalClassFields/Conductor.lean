@@ -28,7 +28,8 @@ assemble into a genuine finitely supported modulus.
 @[expose] public section
 
 open scoped NumberField
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

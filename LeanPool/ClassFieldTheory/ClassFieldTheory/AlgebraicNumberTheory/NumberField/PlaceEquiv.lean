@@ -18,7 +18,8 @@ equivalences reindex placewise products without changing their mathematics.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

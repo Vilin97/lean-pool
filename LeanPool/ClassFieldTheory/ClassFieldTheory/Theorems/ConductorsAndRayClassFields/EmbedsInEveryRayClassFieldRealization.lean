@@ -21,7 +21,8 @@ uniqueness of the embedding itself.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -28,7 +28,8 @@ cosets (the additive form of the multiplicative product), so it does
 not require the extension to be Galois.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

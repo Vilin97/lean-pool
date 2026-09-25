@@ -24,4 +24,3 @@ maximal-abelian statements. The latter are proved via topological comparison
 with the existing restricted-product implementation.
 -/
 
-@[expose] public section

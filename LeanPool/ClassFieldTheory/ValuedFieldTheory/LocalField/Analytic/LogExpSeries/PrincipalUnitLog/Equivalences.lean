@@ -17,7 +17,8 @@ open Filter
 open Polynomial
 open scoped Topology
 open scoped PowerSeries.WithPiTopology
-noncomputable section
+noncomputable
+section
 
 attribute [local instance] Classical.propDecidable
 

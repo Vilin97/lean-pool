@@ -18,7 +18,8 @@ or defect-membership hypothesis remains in the public result.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

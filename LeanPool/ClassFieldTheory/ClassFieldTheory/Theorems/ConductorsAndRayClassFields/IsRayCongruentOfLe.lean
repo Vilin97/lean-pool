@@ -19,7 +19,8 @@ finite prime and at least as many real positivity conditions.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory.IsRayCongruent
 

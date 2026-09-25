@@ -40,4 +40,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacte
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

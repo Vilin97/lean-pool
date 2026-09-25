@@ -19,7 +19,8 @@ positive exponent at most one.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Filter
 

@@ -60,7 +60,8 @@ This file isolates the valuation-restriction and separable-power lemmas
 used to pass from absolute Galois questions to finite intermediate fields.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w z
 

@@ -13,7 +13,8 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.C
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

@@ -23,7 +23,8 @@ Linear-algebraic coordinates for kernels of surjections between finite free modu
 
 open scoped IsMulCommutative
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

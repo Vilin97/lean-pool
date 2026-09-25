@@ -39,4 +39,3 @@ Public aggregate for the idele group and the idele class group of a number
 field.
 -/
 
-@[expose] public section

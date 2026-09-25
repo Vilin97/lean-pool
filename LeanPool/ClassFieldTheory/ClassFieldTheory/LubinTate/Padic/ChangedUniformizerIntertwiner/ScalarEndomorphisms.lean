@@ -21,7 +21,8 @@ This module constructs the completed multiplicative and changed-standard scalar 
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

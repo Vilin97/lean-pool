@@ -18,7 +18,8 @@ that the resulting simple fields nevertheless form an increasing tower.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

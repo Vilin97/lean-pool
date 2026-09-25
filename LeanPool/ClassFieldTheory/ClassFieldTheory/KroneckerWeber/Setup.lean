@@ -27,7 +27,8 @@ larger degree than the cyclotomic subfield.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

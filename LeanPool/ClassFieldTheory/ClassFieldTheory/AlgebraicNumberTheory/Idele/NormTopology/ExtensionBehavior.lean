@@ -21,7 +21,8 @@ reciprocity.
 open scoped BigOperators NumberField NumberField.LiesOver
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace IdeleGroup
 

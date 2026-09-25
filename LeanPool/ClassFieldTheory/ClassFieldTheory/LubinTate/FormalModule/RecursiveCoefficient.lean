@@ -19,7 +19,8 @@ total degree `m ≥ 2`, the remaining scalar equation has factor
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

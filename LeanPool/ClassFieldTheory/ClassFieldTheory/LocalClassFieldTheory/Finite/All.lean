@@ -20,4 +20,3 @@ local Artin map, and the unconditional finite local existence order
 isomorphism.
 -/
 
-@[expose] public section

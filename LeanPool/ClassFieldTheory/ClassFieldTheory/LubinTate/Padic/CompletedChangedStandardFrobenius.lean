@@ -23,7 +23,8 @@ arithmetic Frobenius of the finite unramified extension.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

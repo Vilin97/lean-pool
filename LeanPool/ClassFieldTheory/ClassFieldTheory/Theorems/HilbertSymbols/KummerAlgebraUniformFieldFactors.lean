@@ -20,7 +20,8 @@ factors in the finite product decomposition are isomorphic over the base.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

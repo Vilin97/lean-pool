@@ -15,4 +15,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassF
 
 /-! # All -/
 
-@[expose] public section

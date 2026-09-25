@@ -17,7 +17,8 @@ the division-level inclusion `(T⁻¹) × U^(n+1) ≤ N(L_n/K)`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped LaurentSeries PowerSeries ValuativeRel

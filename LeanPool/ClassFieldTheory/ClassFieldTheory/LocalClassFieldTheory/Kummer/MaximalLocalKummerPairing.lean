@@ -19,7 +19,8 @@ the simple-extension definition of the local Hilbert symbol remains separate.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 namespace Kummer

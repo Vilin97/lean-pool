@@ -18,7 +18,8 @@ thin wrapper around those providers.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

@@ -19,7 +19,8 @@ restricted valuation ring; no completeness or Henselian hypothesis occurs.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x
 
@@ -196,7 +197,9 @@ def subgroupOrbitPolynomialCoeffFixedFieldDVF
     (fun p : Polynomial target.valuationSubring => p.coeff n)
     (subgroupOrbitPolynomialDVF_map_aut
       (base := base) (target := target) huniq H z rho)
-  exact congrArg Subtype.val (by simpa [c] using hmap)
+  have hcoeff := congrArg Subtype.val hmap
+  change (rho : Gal(L/K)) (c : L) = (c : L)
+  simpa [c] using hcoeff
 
 /-- Product of generator displacements over the right coset `sigma H`. -/
 def cosetGeneratorDisplacementProductDVF

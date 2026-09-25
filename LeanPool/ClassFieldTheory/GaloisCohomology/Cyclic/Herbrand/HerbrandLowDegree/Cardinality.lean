@@ -23,7 +23,8 @@ complex.  The resulting cardinality identity is transported to the
 arithmetic `H⁰` and `H⁻¹` presentations.
 -/
 
-noncomputable section
+noncomputable
+section
 
 namespace ProfiniteCohomology
 namespace Herbrand

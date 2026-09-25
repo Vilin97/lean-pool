@@ -22,7 +22,8 @@ Mathlib exposes the simple-root form of Hensel's lemma.  The statements below
 turn it into a linear-factor lifting API for a simple residual linear factor.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

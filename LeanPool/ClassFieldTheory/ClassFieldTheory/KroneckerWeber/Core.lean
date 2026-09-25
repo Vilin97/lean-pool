@@ -38,7 +38,8 @@ semantic support modules under `KroneckerWeber.Global`; this root exposes the
 canonical theorem statement.
 -/
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

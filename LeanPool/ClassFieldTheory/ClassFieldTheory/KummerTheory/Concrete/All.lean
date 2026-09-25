@@ -19,4 +19,3 @@ unramified unit criterion, and the perfect Kummer pairing for actual field
 extensions.
 -/
 
-@[expose] public section

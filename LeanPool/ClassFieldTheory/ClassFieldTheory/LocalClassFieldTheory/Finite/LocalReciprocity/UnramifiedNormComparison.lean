@@ -23,7 +23,8 @@ the valuation quotient have the same finite cardinality.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 namespace LocalClassFieldTheory

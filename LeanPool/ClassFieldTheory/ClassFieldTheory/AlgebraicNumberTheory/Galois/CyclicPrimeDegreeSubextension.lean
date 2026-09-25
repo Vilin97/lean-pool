@@ -20,7 +20,8 @@ the remaining extension has degree `[L : K] / p`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 variable {K L : Type}
     [Field K] [Field L] [Algebra K L]

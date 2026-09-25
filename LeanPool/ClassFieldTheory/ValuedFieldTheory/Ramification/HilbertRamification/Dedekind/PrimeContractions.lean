@@ -16,7 +16,8 @@ of number fields and defines the contracted primes `p`, `P_Z`, and `P_T`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification
 namespace Dedekind

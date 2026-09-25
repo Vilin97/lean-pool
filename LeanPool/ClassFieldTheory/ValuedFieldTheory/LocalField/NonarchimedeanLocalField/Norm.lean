@@ -22,7 +22,8 @@ rings and their unit groups under the appropriate integral hypotheses.
 @[expose] public section
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

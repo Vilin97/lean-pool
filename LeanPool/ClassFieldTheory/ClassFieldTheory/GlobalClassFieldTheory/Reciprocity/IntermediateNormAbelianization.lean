@@ -20,7 +20,8 @@ image.  No normality of the intermediate extension over the base is assumed.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

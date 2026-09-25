@@ -26,7 +26,8 @@ closed.  Closedness follows directly from continuity of each orbit map and
 the discrete topology on the coefficient module.
 -/
 
-noncomputable section
+noncomputable
+section
 
 /-- The subgroup of `G_K` fixing every element of `S`, viewed as a subgroup
 of the ambient abstract Galois group `G`. -/

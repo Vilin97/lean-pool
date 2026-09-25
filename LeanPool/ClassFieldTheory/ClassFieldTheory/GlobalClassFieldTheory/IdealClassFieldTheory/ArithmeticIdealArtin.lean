@@ -24,7 +24,8 @@ norm kernel, and induces the canonical ideal class-field isomorphism.
 @[expose] public section
 
 open scoped NumberField
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

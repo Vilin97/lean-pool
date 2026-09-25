@@ -55,7 +55,8 @@ end Valuation
 
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

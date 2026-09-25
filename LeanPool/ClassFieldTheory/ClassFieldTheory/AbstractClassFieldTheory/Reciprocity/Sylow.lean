@@ -38,7 +38,8 @@ surjectivity to prove finiteness.  No reciprocity surjectivity or
 the finite reciprocity equivalence comparison is assumed here.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
 

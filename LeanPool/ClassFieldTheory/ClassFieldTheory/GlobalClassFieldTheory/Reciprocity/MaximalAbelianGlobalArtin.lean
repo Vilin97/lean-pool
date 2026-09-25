@@ -21,7 +21,8 @@ idele-representative evaluation and its finite Galois projections.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

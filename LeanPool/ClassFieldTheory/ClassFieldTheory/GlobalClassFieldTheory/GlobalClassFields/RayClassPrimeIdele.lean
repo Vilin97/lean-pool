@@ -23,7 +23,8 @@ constructions use exactly the same prime representative.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

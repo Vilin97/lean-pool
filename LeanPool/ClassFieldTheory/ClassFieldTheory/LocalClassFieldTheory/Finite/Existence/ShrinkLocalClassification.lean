@@ -18,7 +18,8 @@ nonarchimedean local field. The transfer respects the actual field-norm subgroup
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 

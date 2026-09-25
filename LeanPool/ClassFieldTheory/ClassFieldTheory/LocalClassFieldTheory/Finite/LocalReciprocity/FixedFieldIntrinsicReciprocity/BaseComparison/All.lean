@@ -18,4 +18,3 @@ This aggregate exposes the intrinsic-to-ambient base, extension, inertia, and
 norm-quotient comparisons for finite fixed fields.
 -/
 
-@[expose] public section

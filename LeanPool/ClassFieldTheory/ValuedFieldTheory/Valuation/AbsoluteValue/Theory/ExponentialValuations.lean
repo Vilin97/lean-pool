@@ -17,7 +17,8 @@ public import Mathlib.RingTheory.Valuation.ValuationSubring
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Filter
 open scoped BigOperators Topology

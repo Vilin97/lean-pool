@@ -20,7 +20,8 @@ membership of the prime's ray class in the defining subgroup.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

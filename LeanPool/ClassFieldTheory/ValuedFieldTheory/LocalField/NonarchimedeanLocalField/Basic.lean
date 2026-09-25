@@ -17,7 +17,8 @@ nonarchimedean local field.
 @[expose] public section
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

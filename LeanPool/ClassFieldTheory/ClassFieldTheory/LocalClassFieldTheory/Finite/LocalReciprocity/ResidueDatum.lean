@@ -29,7 +29,8 @@ degree.  This is the finite-coordinate comparison needed in the local-field
 specialization.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable (k Omega : Type)
   [Field k] [Fintype k] [Field Omega] [Algebra k Omega]

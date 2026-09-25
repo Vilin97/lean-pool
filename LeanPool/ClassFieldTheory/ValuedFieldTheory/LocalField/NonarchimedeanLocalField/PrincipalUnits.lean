@@ -17,7 +17,8 @@ constructs the quotient of valuation-ring units by the first filtration step.
 @[expose] public section
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

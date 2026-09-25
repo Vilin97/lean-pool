@@ -20,7 +20,8 @@ target `uT` Lubin--Tate level through `Sigma`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries PowerSeries
 

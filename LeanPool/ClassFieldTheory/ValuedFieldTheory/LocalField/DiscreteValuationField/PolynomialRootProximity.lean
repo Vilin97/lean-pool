@@ -24,7 +24,8 @@ Repeated roots and zero derivative values are allowed; the statement is in
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

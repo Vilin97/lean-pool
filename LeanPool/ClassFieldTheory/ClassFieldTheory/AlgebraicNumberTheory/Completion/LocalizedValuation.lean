@@ -23,7 +23,8 @@ localized valuation ring with the integral closure of the base valuation ring.
 open scoped NumberField TensorProduct ValuativeRel NNReal
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification

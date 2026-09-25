@@ -30,7 +30,8 @@ the relative norm through the Frobenius fixed field `Σ` constructed in
 the Frobenius fixed-field theorem.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

@@ -23,7 +23,8 @@ This is the basic one-dimensional API for fields equipped with a chosen
 rank-one discrete valuation.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

@@ -25,7 +25,8 @@ normalization `u⁻¹T -> T` used in Corollary the Lubin–Tate endomorphism com
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries
 

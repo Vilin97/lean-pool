@@ -25,7 +25,8 @@ away-from-`p` finite product.  The construction also applies to `k = 0`.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

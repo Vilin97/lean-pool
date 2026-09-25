@@ -48,4 +48,3 @@ provides a characteristic-independent finite abelian factor with its exact
 norm subgroup.
 -/
 
-@[expose] public section

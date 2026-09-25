@@ -22,7 +22,8 @@ analytic evaluation map.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries PowerSeries PowerSeries.WithPiTopology Topology Valued WithZero
 

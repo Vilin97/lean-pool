@@ -17,7 +17,8 @@ determined by its restrictions to those fields.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

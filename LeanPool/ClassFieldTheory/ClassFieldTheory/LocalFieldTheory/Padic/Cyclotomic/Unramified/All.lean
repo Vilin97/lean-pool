@@ -13,4 +13,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalFieldTheory.Padic.
 The prime-to-`p` cyclotomic construction and its arithmetic Frobenius.
 -/
 
-@[expose] public section

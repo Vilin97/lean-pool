@@ -39,7 +39,8 @@ none of the local conclusions is included as input data.
 open scoped NumberField NNReal
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open LocalClassFieldTheory
 

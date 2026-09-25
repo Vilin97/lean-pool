@@ -14,7 +14,8 @@ public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Nonarchimed
 @[expose] public section
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

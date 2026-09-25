@@ -16,7 +16,8 @@ dependent products, giving the product step for low-degree Herbrand quotients.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace CyclicCohomology
 

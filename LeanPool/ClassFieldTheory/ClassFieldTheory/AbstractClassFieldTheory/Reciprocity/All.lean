@@ -36,4 +36,3 @@ Public aggregate for the class-formation reciprocity theorem and the canonical
 construction and naturality of its reciprocity maps.
 -/
 
-@[expose] public section

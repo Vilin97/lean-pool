@@ -19,7 +19,8 @@ unramified Witt ring and records their coefficients and residue reductions.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

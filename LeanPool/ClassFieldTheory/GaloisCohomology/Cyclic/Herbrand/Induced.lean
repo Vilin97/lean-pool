@@ -26,7 +26,8 @@ this module adds the cyclic-coordinate and Herbrand calculations.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace CyclicCohomology
 

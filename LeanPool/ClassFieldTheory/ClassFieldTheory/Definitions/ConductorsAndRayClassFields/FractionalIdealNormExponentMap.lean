@@ -24,7 +24,8 @@ degree. The resulting map on finitely supported exponent vectors is additive.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -31,7 +31,8 @@ norm-formula valuation ring used in the unramified cyclotomic extension theorem.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification
 

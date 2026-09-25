@@ -28,7 +28,8 @@ open _root_.RamificationTheory.DiscreteValuationField.ValuedExtension renaming
 open scoped ValuativeRel
 open LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

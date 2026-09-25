@@ -19,7 +19,8 @@ local reciprocity from the arithmetic existence theorem.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

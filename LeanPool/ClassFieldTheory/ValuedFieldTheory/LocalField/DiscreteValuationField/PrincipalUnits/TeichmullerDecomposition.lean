@@ -24,7 +24,8 @@ Decomposes valuation-ring units and field units into residue roots, first princi
 and a uniformizer factor.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

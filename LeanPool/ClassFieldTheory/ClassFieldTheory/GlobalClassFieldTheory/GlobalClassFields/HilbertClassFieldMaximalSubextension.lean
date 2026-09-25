@@ -30,7 +30,8 @@ big Hilbert class field by the order-reversing finite classification.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

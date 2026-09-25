@@ -21,7 +21,8 @@ nonzero indices are equal, so the containment is an equality.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 

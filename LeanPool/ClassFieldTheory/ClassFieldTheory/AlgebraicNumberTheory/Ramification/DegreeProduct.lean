@@ -20,7 +20,8 @@ group calculation from the arithmetic construction of the chosen primes.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory.Ramification
 

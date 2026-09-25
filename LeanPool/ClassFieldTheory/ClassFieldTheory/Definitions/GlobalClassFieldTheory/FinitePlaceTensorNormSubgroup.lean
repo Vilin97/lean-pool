@@ -23,7 +23,8 @@ factors above `v`; it does not choose a single completion of `L`.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

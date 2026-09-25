@@ -21,7 +21,8 @@ families on every Galois subgroup.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

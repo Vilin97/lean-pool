@@ -15,4 +15,3 @@ This facade exports the underlying multiplicative equivalence of the already
 compiled topological reciprocity provider and its evaluation formula.
 -/
 
-@[expose] public section

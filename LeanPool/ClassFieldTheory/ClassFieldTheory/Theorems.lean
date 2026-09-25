@@ -18,4 +18,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.NormTheorems
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

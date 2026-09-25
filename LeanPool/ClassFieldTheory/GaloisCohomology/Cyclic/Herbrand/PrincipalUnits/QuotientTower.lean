@@ -19,7 +19,8 @@ namespace CyclicCohomology
 
 open LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

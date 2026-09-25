@@ -22,7 +22,8 @@ does not assert uniqueness of the map.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

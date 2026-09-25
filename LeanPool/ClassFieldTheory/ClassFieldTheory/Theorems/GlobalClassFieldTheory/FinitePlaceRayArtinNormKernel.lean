@@ -26,7 +26,8 @@ equality of the Artin values is a separate normalization question.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

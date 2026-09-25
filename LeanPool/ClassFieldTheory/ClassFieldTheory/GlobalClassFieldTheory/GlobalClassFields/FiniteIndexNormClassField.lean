@@ -30,7 +30,8 @@ field, as an exact determinant-norm subgroup.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

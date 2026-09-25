@@ -27,7 +27,8 @@ open scoped NumberField Pointwise RestrictedProduct NNReal
 open NumberField IsDedekindDomain
 open NumberField.Units.dirichletUnitTheorem
 
-noncomputable section
+noncomputable
+section
 
 
 variable {K : Type*} [Field K] [NumberField K]

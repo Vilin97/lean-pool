@@ -19,7 +19,8 @@ of the restriction maps to those levels.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

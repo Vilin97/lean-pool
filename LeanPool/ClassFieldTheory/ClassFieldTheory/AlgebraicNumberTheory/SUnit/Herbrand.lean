@@ -24,7 +24,8 @@ permutation-lattice calculation.
 open scoped BigOperators NumberField nonZeroDivisors Pointwise
 open IsDedekindDomain Module
 
-noncomputable section
+noncomputable
+section
 
 open CyclicCohomology.ProfiniteCohomology.Herbrand
 open CyclicCohomology

@@ -24,7 +24,8 @@ extension map on ordinary idele classes.
 open scoped NumberField TensorProduct
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

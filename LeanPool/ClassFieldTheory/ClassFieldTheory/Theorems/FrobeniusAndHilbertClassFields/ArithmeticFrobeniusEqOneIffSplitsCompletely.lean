@@ -21,7 +21,8 @@ is expressed only with Mathlib's ramification indices and residue degrees.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -20,7 +20,8 @@ valuation-ring unit representatives, and preserves the expected cardinality
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

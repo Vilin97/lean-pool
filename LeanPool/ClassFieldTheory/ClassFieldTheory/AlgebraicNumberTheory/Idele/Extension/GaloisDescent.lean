@@ -25,7 +25,8 @@ the fixed subgroup with the embedded copy of `C_K`.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 
 variable

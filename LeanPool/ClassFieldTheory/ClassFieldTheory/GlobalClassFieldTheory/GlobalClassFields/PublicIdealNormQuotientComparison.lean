@@ -22,7 +22,8 @@ file records the exact comparison, including the principal-ray kernel.
 open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory.GlobalClassFieldComparison
 

@@ -21,7 +21,8 @@ norm image and the principal ray-ideal subgroup.
 open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

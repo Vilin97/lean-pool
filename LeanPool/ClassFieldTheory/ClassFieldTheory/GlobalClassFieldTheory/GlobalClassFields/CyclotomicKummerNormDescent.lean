@@ -32,7 +32,8 @@ open scoped NumberField
 open NumberField IsDedekindDomain
 open KummerTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

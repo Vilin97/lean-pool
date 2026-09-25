@@ -20,7 +20,8 @@ the resulting residue subfield degree with the fundamental inequality.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

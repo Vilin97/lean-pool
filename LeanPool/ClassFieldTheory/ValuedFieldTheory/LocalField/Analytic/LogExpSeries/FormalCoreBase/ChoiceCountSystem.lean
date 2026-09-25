@@ -16,7 +16,8 @@ a choice of the basic factors in `X + Y + XY`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 attribute [local instance] Classical.propDecidable
 

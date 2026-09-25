@@ -32,7 +32,8 @@ open HilbertRamification
 open CyclicCohomology
 open CyclicCohomology.ProfiniteCohomology.Herbrand
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

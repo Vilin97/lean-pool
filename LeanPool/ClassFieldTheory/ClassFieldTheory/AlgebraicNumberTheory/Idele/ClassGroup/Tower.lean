@@ -27,7 +27,8 @@ quotients form a natural right-exact sequence.
 open scoped NumberField TensorProduct
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

@@ -18,7 +18,8 @@ separable closure.  It contains no class-field-theory implementation.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

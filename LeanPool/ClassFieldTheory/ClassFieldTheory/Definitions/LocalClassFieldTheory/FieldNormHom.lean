@@ -13,7 +13,8 @@ public import Mathlib.RingTheory.Norm.Basic
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

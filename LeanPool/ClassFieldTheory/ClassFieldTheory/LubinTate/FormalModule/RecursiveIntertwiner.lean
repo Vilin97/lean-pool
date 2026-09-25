@@ -25,7 +25,8 @@ construction.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 
@@ -44,12 +45,13 @@ theorem linearForm_hasLinearTerm
     HasLinearTerm (linearForm L) L := by
   simp [HasLinearTerm]
 
-private abbrev Approximation
+/-- Formal series with the prescribed linear term. -/
+abbrev Approximation
     (L : sigma → F.valuationSubring) :=
   {H : MvPowerSeries sigma F.valuationSubring // HasLinearTerm H L}
 
 /-- The finite list of all monomials of a fixed total degree. -/
-private noncomputable def degreeIndexList (m : ℕ) :
+noncomputable def degreeIndexList (m : ℕ) :
     List {d : sigma →₀ ℕ // d.degree = m} :=
   letI : Fintype {d : sigma →₀ ℕ // d.degree = m} :=
     (Finsupp.finite_of_degree_eq m).fintype
@@ -68,7 +70,7 @@ private theorem mem_degreeIndexList
 
 /-- One step in a fixed-degree correction list, bundled with preservation of
 the prescribed linear term. -/
-private noncomputable def correctionStep
+noncomputable def correctionStep
     (hpi : F.toCompleteDVF.valuation.IsUniformizer (pi : K))
     (e ebar : LubinTateSeries F pi)
     {L : sigma → F.valuationSubring}
@@ -83,7 +85,7 @@ private noncomputable def correctionStep
       correctedIntertwiner_hasLinearTerm hpi e ebar H.2 d.1 hd⟩
 
 /-- Apply a list of fixed-degree monomial corrections from left to right. -/
-private noncomputable def correctList
+noncomputable def correctList
     (hpi : F.toCompleteDVF.valuation.IsUniformizer (pi : K))
     (e ebar : LubinTateSeries F pi)
     {L : sigma → F.valuationSubring}
@@ -255,7 +257,7 @@ private theorem coeff_defect_correctList_eq_zero_of_mem
           ih (correctionStep hpi e ebar hm H d) hds' hqds
 
 /-- Correct every monomial in one fixed total degree. -/
-private noncomputable def correctDegree
+noncomputable def correctDegree
     (hpi : F.toCompleteDVF.valuation.IsUniformizer (pi : K))
     (e ebar : LubinTateSeries F pi)
     {L : sigma → F.valuationSubring}
@@ -299,7 +301,7 @@ private theorem coeff_defect_correctDegree_eq_zero
 
 /-- The bundled finite-degree approximations.  Stage zero is the prescribed
 linear form, and stage `n + 1` corrects total degree `n + 2`. -/
-private noncomputable def approximation
+noncomputable def approximation
     (hpi : F.toCompleteDVF.valuation.IsUniformizer (pi : K))
     (e ebar : LubinTateSeries F pi)
     (L : sigma → F.valuationSubring) :

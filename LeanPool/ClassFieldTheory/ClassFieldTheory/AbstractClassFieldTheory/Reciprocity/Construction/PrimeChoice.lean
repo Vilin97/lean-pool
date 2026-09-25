@@ -25,7 +25,8 @@ finite abstract field.  Any two choices differ by a unit (additively, their
 difference has value zero).
 -/
 
-noncomputable section
+noncomputable
+section
 
 namespace ValuationData
 

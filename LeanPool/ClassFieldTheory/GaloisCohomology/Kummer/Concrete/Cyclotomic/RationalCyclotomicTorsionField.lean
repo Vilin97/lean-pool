@@ -20,7 +20,8 @@ and fixed field.  No copy of the Galois group is replaced definitionally by
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

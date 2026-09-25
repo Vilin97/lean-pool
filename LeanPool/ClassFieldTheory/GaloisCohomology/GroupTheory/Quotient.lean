@@ -19,7 +19,8 @@ supported ideles represents the full idele class group.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 variable {G : Type*} [CommGroup G]
 

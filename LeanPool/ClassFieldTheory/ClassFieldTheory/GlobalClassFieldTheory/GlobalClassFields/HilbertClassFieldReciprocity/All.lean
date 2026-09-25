@@ -19,4 +19,3 @@ independently compiled big/small, realized-base/original-base reciprocity
 specializations.
 -/
 
-@[expose] public section

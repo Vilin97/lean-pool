@@ -33,7 +33,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalU
     residueRootsOfUnityGroup
 
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

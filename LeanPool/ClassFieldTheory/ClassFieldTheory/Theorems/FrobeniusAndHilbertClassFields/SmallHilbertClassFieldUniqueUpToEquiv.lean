@@ -20,7 +20,8 @@ distinguished or unique choice of one.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

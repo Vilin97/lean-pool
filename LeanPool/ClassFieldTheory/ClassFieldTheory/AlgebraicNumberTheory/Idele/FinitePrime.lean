@@ -27,7 +27,8 @@ class. These constructions are independent of class field theory.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace IdeleGroup
 

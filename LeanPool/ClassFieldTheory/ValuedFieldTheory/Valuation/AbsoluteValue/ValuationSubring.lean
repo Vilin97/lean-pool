@@ -20,7 +20,8 @@ the finite-degree norm construction before any discrete-valuation-field packagin
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

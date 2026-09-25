@@ -30,7 +30,8 @@ fixing group of a finite residue subextension, its degree image has the
 ordinary residue-field index.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

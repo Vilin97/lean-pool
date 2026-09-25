@@ -13,4 +13,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.F
 /-! Provides the public declarations in the
   `LocalClassFieldTheory.Finite.Unramified.PrincipalUnits` Lean module. -/
 
-@[expose] public section

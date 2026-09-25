@@ -22,7 +22,8 @@ the narrow finite conductor/ramification criterion.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

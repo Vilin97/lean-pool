@@ -19,7 +19,8 @@ topologies, and hence their topological abelianizations.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

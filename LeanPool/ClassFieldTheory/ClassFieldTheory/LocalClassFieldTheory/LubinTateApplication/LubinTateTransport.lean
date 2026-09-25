@@ -24,7 +24,8 @@ transports both the finite Galois structure and the actual field-norm subgroup.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries PowerSeries ValuativeRel
 

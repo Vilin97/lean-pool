@@ -24,7 +24,8 @@ identify ideal norms with idèle-class norms.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

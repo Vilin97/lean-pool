@@ -25,7 +25,8 @@ This module records the quotient cardinal and common-compositum facts for
 finite intermediate fields used by the norm-descent tower.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 open scoped BigOperators

@@ -21,7 +21,8 @@ construction at `Type 0`; arbitrary-universe transport remains separate.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

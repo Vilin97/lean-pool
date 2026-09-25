@@ -37,4 +37,3 @@ standard levels and for the transported Laurent-series model.  The lower
 `LocalClassFieldTheory`.
 -/
 
-@[expose] public section

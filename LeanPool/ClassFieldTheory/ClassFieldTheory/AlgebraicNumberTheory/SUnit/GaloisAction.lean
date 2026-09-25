@@ -26,7 +26,8 @@ open IsDedekindDomain Module
 open CyclicCohomology.ProfiniteCohomology.Herbrand
 open CyclicCohomology
 
-noncomputable section
+noncomputable
+section
 
 variable
     (K L : Type*) [Field K] [NumberField K]

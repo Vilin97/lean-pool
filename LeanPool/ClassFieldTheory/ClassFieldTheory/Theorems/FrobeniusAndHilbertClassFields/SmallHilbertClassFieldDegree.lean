@@ -21,7 +21,8 @@ has degree equal to the ordinary class number of the base field.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

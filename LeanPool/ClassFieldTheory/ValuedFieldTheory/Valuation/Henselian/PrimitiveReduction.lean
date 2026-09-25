@@ -19,7 +19,8 @@ that condition with the divisibility notion used by mathlib's Gauss lemma.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Polynomial
 open UniqueFactorizationMonoid

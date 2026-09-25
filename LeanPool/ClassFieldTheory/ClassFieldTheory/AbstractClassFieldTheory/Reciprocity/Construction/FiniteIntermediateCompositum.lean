@@ -23,7 +23,8 @@ These are the finite-stage closure facts used in the proof of the universal norm
 intersection on the Galois-group side.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable {G : Type*} [Group G] [TopologicalSpace G]
 

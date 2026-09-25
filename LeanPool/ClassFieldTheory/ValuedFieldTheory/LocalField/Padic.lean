@@ -14,4 +14,3 @@ public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.UnitD
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

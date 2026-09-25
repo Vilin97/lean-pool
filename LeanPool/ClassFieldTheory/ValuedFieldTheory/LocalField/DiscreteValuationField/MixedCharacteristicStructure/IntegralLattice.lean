@@ -42,7 +42,8 @@ open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
     target_valuationSubring_isIntegralClosure_of_finite_separable
 
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

@@ -29,7 +29,8 @@ recovers the previously constructed actual global norm-residue symbol.
 open scoped IsMulCommutative NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

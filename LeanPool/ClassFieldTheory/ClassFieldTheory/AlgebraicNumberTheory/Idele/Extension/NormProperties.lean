@@ -23,7 +23,8 @@ principal ideles and Galois conjugation.
 open scoped BigOperators
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 
 namespace RelativeIdeleGroup

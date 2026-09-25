@@ -21,7 +21,8 @@ form involving the normalized local absolute value are recorded.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

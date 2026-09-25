@@ -21,7 +21,8 @@ commuting square for the two field embeddings is the only geometric input.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

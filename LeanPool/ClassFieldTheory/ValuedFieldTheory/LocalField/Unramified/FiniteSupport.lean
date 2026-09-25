@@ -19,7 +19,8 @@ the finite-support fact used in the maximal-residue theorem.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

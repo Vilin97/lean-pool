@@ -28,7 +28,8 @@ constructs the induced actions, inclusions, and relative norms on the
 corresponding finite unit groups.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 open scoped BigOperators

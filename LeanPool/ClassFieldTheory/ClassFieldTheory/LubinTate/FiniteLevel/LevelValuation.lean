@@ -20,7 +20,8 @@ needed by the genuine lower- and upper-numbering ramification groups.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

@@ -30,7 +30,8 @@ relative idele group.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open CyclicCohomology
 

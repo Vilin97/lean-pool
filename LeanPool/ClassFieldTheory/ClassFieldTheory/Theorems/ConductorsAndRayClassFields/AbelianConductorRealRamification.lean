@@ -18,7 +18,8 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

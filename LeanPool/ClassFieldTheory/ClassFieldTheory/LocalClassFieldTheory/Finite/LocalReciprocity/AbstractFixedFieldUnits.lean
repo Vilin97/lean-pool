@@ -32,7 +32,8 @@ essential for transporting the actual Tate groups rather than only their
 underlying norm quotients.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

@@ -17,4 +17,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.Up
 
 /-! # All -/
 
-@[expose] public section

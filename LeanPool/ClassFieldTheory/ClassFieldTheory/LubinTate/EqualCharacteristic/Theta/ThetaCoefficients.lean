@@ -32,7 +32,8 @@ by `theta^phi o e_bar = e o theta` when `pi = u * bar_pi`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped PowerSeries Polynomial

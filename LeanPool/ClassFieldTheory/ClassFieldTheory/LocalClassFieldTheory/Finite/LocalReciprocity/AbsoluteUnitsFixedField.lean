@@ -31,7 +31,8 @@ closure is essential in positive characteristic: the fixed field of
 `Aut(K^alg/K)` inside `K^alg` need not be `K` when `K` is imperfect.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω]
 

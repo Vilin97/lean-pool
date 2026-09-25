@@ -24,7 +24,8 @@ entirely in Mathlib and public Definitions vocabulary.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

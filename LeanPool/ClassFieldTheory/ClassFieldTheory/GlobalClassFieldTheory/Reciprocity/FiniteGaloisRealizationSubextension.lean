@@ -21,7 +21,8 @@ normality, and finite-index data for abstract reciprocity.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

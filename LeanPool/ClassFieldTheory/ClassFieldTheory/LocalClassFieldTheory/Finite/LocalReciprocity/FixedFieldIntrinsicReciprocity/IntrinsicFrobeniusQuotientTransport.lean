@@ -17,7 +17,8 @@ maps Frobenius elements before the closure comparisons.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

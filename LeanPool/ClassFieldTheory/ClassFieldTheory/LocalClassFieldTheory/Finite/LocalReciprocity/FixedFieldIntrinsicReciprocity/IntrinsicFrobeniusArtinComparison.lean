@@ -17,7 +17,8 @@ finite fixed-field extension with its ambient fixed-field norm-residue symbol.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

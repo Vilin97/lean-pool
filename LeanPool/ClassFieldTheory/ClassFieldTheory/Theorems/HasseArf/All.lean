@@ -29,4 +29,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.Upper
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.UpperRamificationGroupEventuallyBot
 /-! Public Hasse--Arf theorem and basic lower-filtration identities. -/
 
-@[expose] public section

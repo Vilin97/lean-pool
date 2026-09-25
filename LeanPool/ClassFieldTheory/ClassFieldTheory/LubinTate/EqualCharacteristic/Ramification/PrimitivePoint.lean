@@ -37,7 +37,8 @@ open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
     hasUniqueValuationExtension_of_finite_separable
 
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries Pointwise PowerSeries
 

@@ -39,7 +39,8 @@ calculation and multiplicative weak approximation.
 
 open scoped BigOperators TensorProduct
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

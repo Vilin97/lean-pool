@@ -19,7 +19,8 @@ upgrades that embedding to literal inclusion in the fixed separable closure.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

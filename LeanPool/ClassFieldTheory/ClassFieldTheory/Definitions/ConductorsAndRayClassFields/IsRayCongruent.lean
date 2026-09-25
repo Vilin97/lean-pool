@@ -17,7 +17,8 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsA
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

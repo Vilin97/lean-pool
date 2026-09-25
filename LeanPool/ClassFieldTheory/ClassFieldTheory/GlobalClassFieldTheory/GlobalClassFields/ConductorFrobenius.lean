@@ -28,7 +28,8 @@ forces the narrow finite conductor ray prime class itself to be trivial.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

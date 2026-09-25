@@ -27,7 +27,8 @@ valuation relation is passed explicitly, not registered globally.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

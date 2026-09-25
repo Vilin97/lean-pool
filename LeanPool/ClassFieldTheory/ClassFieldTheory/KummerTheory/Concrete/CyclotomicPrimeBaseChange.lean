@@ -26,7 +26,8 @@ is an actual field, Galois of degree `p` over `K(μ_p)`.
 open scoped NumberField TensorProduct
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

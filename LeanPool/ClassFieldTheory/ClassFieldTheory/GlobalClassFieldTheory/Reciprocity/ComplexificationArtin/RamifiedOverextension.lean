@@ -19,7 +19,8 @@ quadratic overextension above it, and the faithful cyclotomic restriction.
 open scoped IsMulCommutative
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

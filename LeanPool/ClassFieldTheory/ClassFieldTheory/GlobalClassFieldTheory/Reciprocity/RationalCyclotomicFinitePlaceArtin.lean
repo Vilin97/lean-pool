@@ -49,7 +49,8 @@ open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
 open scoped NNReal NumberField ValuativeRel
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

@@ -41,7 +41,8 @@ principal relative ideles.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory.ClassFieldAxiom
 

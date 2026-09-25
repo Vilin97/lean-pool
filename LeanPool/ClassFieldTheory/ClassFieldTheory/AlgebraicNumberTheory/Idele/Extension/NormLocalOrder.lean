@@ -34,7 +34,8 @@ also concrete:
 open scoped NumberField ValuativeRel WithZero
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace FiniteIdeleGroup
 

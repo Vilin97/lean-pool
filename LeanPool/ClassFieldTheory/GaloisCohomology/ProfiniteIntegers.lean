@@ -15,4 +15,3 @@ public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.Topol
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

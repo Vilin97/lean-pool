@@ -19,7 +19,8 @@ global norm-residue-symbol constructions.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

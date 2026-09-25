@@ -19,14 +19,16 @@ arithmetic identification with the units of the base field.
 
 namespace CyclicCohomology
 
-noncomputable section
+noncomputable
+section
 
 /-- The actual invariant submodule of the unit representation `Lˣ` under `Gal(L/K)`. -/
 def unitsInvariantSubmodule (K L : Type) [Field K] [Field L] [Algebra K L] :
     Submodule ℤ (Additive Lˣ) :=
   (Rep.ofAlgebraAutOnUnits K L).ρ.invariants
 
-private noncomputable def invariantUnitToBaseUnit (K L : Type)
+/-- Descend a Galois-invariant extension-field unit to the base field. -/
+noncomputable def invariantUnitToBaseUnit (K L : Type)
     [Field K] [Field L] [Algebra K L] [IsGalois K L] [FiniteDimensional K L]
     (x : unitsInvariantSubmodule K L) : Kˣ := by
   classical
@@ -74,7 +76,8 @@ private lemma invariantUnitToBaseUnit_spec (K L : Type)
   change algebraMap K L (Classical.choose hmem) = (y : L)
   exact Classical.choose_spec hmem
 
-private noncomputable def baseUnitToInvariantUnit (K L : Type)
+/-- Embed a base-field unit as a Galois-invariant extension-field unit. -/
+noncomputable def baseUnitToInvariantUnit (K L : Type)
     [Field K] [Field L] [Algebra K L] (x : Kˣ) : unitsInvariantSubmodule K L where
   val := Additive.ofMul (Units.map (algebraMap K L).toMonoidHom x)
   property := by
@@ -111,7 +114,7 @@ noncomputable def invariantsUnitsAddEquivBaseUnits (K L : Type)
     unitsInvariantSubmodule K L ≃+ Additive Kˣ where
   toFun := fun x => Additive.ofMul (invariantUnitToBaseUnit K L x)
   invFun := fun x => baseUnitToInvariantUnit K L (Additive.toMul x)
-  left_inv := baseUnitToInvariantUnit_invariantUnitToBaseUnit K L
+  left_inv := by exact baseUnitToInvariantUnit_invariantUnitToBaseUnit K L
   right_inv := by
     intro x
     apply Additive.ofMul.injective

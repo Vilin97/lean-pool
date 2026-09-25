@@ -21,7 +21,8 @@ Lubin--Tate level over the canonical local-field package, this gives index
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 

@@ -23,7 +23,8 @@ order is the class number.
 
 open scoped NumberField IsMulCommutative
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

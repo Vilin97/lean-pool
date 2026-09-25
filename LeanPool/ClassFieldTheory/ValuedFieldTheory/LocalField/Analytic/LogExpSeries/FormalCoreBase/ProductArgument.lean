@@ -18,7 +18,8 @@ support description needed for the formal product formula.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 attribute [local instance] Classical.propDecidable
 

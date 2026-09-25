@@ -21,7 +21,8 @@ conductor, equivalently the two finite quotient groups have the same order.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

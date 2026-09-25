@@ -20,7 +20,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.ValuedExtension renaming
     isTotallyRamified_iff_ramificationIndex_eq_degree_of_finite_separable
 
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

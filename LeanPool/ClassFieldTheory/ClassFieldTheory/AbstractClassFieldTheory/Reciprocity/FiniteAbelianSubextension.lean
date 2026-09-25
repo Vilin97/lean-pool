@@ -28,7 +28,8 @@ bijection itself, require the abstract reciprocity theorem and are deliberately 
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

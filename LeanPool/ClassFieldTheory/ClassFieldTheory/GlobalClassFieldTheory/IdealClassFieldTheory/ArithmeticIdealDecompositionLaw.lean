@@ -21,7 +21,8 @@ genuine arithmetic Frobenius automorphism.
 @[expose] public section
 
 open scoped NumberField
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

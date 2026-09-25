@@ -21,7 +21,8 @@ norms. Equality requires the separate reverse approximation theorem.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

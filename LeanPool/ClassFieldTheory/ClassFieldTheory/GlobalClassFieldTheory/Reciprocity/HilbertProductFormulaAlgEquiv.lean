@@ -22,7 +22,8 @@ and the ordinary infinite product by the equivalence of infinite places.
 open scoped BigOperators NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

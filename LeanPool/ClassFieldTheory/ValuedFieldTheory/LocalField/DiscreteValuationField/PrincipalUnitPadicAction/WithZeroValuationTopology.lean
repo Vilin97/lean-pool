@@ -18,7 +18,8 @@ continuous on the original principal-unit carrier.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

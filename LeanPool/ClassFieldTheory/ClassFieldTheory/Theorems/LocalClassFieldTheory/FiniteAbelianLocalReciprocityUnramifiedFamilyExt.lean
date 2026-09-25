@@ -24,7 +24,8 @@ does not assert uniqueness on ramified members of the families.
 
 open scoped ValuativeRel
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

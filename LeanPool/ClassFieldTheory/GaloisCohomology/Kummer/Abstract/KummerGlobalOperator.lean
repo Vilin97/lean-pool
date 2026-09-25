@@ -28,7 +28,8 @@ The result remains only the finite cyclic step of the finite abelian Kummer deco
 full abelian Kummer correspondence.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

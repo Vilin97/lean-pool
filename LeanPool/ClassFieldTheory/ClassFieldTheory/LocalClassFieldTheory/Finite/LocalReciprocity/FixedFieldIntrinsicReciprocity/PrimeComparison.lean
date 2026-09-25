@@ -17,7 +17,8 @@ This module compares intrinsic local Artin maps with the ambient fixed-field nor
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

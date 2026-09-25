@@ -18,7 +18,8 @@ of any cyclotomic or Kronecker--Weber hypotheses.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x
 

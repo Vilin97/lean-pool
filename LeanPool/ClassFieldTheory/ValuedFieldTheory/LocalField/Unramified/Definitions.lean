@@ -17,7 +17,8 @@ degree equality and residue separability condition.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x
 

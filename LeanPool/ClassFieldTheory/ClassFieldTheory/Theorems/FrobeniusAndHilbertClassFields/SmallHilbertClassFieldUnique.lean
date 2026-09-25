@@ -16,7 +16,8 @@ an isomorphism class.  It does not distinguish a unique field automorphism.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

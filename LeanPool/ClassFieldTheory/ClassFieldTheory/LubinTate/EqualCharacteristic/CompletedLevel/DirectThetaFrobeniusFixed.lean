@@ -24,7 +24,8 @@ on the completed division point.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Filter
 open scoped LaurentSeries NNReal NormedField PowerSeries

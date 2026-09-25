@@ -32,7 +32,8 @@ argument.
 
 open scoped NumberField BigOperators
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

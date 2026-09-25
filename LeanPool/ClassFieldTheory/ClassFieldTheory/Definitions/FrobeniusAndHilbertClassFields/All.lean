@@ -18,4 +18,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAn
 
 /-! # All -/
 
-@[expose] public section

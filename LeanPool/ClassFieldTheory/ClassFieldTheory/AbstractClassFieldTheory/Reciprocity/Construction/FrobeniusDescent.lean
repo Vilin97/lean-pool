@@ -25,7 +25,8 @@ have the same
 restriction and degree.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable {G : Type*} [Group G] [TopologicalSpace G]
 

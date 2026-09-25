@@ -22,7 +22,8 @@ coordinate of the rational cyclotomic `ZHat`-extension.
 open scoped NumberField IsMulCommutative
 open NumberField ClassFormation
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

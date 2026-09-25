@@ -20,4 +20,3 @@ Artin maps, decomposition, and principalization.  Reader-facing statements are
 collected in `ClassFieldTheory.Theorems.GlobalClassFieldTheory.All`.
 -/
 
-@[expose] public section

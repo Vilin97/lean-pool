@@ -23,7 +23,8 @@ automorphism, transported back to `μₙ(K)`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 namespace Kummer

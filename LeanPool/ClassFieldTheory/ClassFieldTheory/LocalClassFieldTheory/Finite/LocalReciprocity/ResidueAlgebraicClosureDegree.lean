@@ -30,7 +30,8 @@ Frobenius homomorphism itself; no equivalence with a chosen algebraic closure
 and no generator of a finite cyclic group enters its definition.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

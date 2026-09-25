@@ -27,7 +27,8 @@ local factor comparison used in the adelic restricted-product bridge.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open AlgebraicNumberTheory.Valuations
 

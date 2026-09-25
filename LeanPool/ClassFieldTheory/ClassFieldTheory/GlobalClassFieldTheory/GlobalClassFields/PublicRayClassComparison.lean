@@ -38,7 +38,8 @@ ray-class-field statements in the parent `Theorems` directory.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory.GlobalClassFieldComparison
 

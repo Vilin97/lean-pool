@@ -17,7 +17,8 @@ subgroup, not merely an abstract subgroup assigned by a classification.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 

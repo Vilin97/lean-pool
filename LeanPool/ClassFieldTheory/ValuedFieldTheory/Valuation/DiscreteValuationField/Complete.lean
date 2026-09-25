@@ -19,7 +19,8 @@ namespace ValuationTheory
 # Complete discretely valued fields
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

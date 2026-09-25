@@ -26,7 +26,8 @@ reciprocity therefore gives its narrow-class-group Artin isomorphism.
 open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory.GlobalClassFieldComparison
 

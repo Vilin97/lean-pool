@@ -30,7 +30,8 @@ The formal-series identities and the underlying position calculus live in
 `FormalCoreBase`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 attribute [local instance] Classical.propDecidable
 

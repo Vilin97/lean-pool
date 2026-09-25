@@ -18,7 +18,8 @@ vertical extension and applies the genuine norm--restriction theorem.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

@@ -17,7 +17,8 @@ from `EqualCharacteristicLubinTateEnd` into the action of
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries LaurentSeries
 

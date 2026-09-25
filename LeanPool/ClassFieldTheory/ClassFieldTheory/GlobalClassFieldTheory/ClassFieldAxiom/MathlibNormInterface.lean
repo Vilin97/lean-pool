@@ -22,7 +22,8 @@ Hasse norm theorem into the implementation-independent predicates in
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory.ClassFieldAxiom
 

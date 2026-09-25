@@ -21,7 +21,8 @@ minimality theorem for the full conductor.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

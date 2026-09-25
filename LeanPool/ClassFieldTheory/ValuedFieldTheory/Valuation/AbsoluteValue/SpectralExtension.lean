@@ -18,7 +18,8 @@ absolute value to an algebraic field extension.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AbsoluteValue
 
@@ -136,11 +137,12 @@ noncomputable def spectralExtension
     (hnonarch : IsNonarchimedean (v : K → ℝ))
     (hv : v.IsNontrivial) : AbsoluteValue L ℝ where
   toFun := _root_.spectralNorm (WithAbs v) L
-  map_mul' x y :=
-    spectral_spectralNorm_mul (K := K) (L := L)
+  map_mul' x y := by
+    exact spectral_spectralNorm_mul (K := K) (L := L)
       v hcomplete hnonarch hv x y
   nonneg' x := _root_.spectralNorm_nonneg (K := WithAbs v) (L := L) x
-  eq_zero' x := spectral_spectralNorm_eq_zero_iff (K := K) (L := L) v x
+  eq_zero' x := by
+    exact spectral_spectralNorm_eq_zero_iff (K := K) (L := L) v x
   add_le' x y := by
     have hstrong :=
       spectral_spectralNorm_strong_triangle v hnonarch x y

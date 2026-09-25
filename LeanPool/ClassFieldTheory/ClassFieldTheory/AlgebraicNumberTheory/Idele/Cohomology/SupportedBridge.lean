@@ -30,7 +30,8 @@ relative ideles with the ordinary supported idele subgroup of `L`.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 variable

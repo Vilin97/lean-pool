@@ -22,4 +22,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.R
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

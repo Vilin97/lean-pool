@@ -21,7 +21,8 @@ projection to the ray class group of the smaller modulus.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -22,7 +22,8 @@ open scoped NumberField IsMulCommutative NNReal ValuativeRel
 open NumberField IsDedekindDomain
 open LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

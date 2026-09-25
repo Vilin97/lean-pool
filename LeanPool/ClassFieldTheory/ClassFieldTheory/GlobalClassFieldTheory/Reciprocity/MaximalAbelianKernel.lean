@@ -27,7 +27,8 @@ supplies the detecting finite Galois coordinate.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

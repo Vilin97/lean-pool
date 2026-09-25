@@ -28,7 +28,8 @@ Galois representation on `Lˣ`.  The comparison uses the standard Galois action
 on units; it does not introduce a replacement coefficient object.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 
@@ -82,14 +83,14 @@ def additiveFixedUnitsEquivInvariants :
 Keeping this construction polymorphic prevents typeclass search from unfolding
 the concrete Galois representation while it looks for the quotient's additive
 structure. -/
-private def additiveEquivToQuotientHom
+def additiveEquivToQuotientHom
     {A M : Type} [AddCommGroup A] [AddCommGroup M]
     (e : A ≃+ M) (N : Submodule ℤ M) : A →+ M ⧸ N :=
   N.mkQ.toAddMonoidHom.comp e.toAddMonoidHom
 
 /-- Multiplicative form of an additive homomorphism, kept polymorphic for the
 same elaboration reason as `additiveEquivToQuotientHom`. -/
-private def additiveHomToMultiplicativeHom
+def additiveHomToMultiplicativeHom
     {G B : Type} [Group G] [AddCommGroup B]
     (f : Additive G →+ B) : G →* Multiplicative B :=
   AddMonoidHom.toMultiplicativeRight f
@@ -98,14 +99,14 @@ private def additiveHomToMultiplicativeHom
 This is passed explicitly at concrete call sites to avoid rediscovering it by
 unfolding the coefficient representation. -/
 @[implicit_reducible]
-private def multiplicativeQuotientGroup
+def multiplicativeQuotientGroup
     {M : Type} [AddCommGroup M] (N : Submodule ℤ M) :
     Group (Multiplicative (M ⧸ N)) :=
   Multiplicative.group
 
 /-- Kernel of a homomorphism into a multiplicative additive quotient, with the
 codomain structure supplied directly. -/
-private def kernelOfAdditiveQuotientHom
+def kernelOfAdditiveQuotientHom
     {G M : Type} [Group G] [AddCommGroup M]
     (N : Submodule ℤ M) (f : G →* Multiplicative (M ⧸ N)) : Subgroup G :=
   @MonoidHom.ker G inferInstance (Multiplicative (M ⧸ N))
@@ -113,7 +114,7 @@ private def kernelOfAdditiveQuotientHom
 
 /-- First-isomorphism-theorem comparison for a surjection onto a
 multiplicative additive quotient. -/
-private def quotientMulEquivOfSurjectiveAdditiveQuotient
+def quotientMulEquivOfSurjectiveAdditiveQuotient
     {G M : Type} [CommGroup G] [AddCommGroup M]
     (N : Submodule ℤ M) (S : Subgroup G)
     (f : G →* Multiplicative (M ⧸ N))
@@ -127,7 +128,7 @@ private def quotientMulEquivOfSurjectiveAdditiveQuotient
 
 /-- Forget the type tags in an equivalence whose codomain is the
 multiplicative form of an additive group. -/
-private def mulEquivMultiplicativeToEquiv
+def mulEquivMultiplicativeToEquiv
     {G B : Type} [Group G] [AddCommGroup B]
     (e : G ≃* Multiplicative B) : G ≃ B where
   toFun q := Multiplicative.toAdd (e q)

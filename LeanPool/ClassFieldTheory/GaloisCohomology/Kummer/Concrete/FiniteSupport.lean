@@ -23,7 +23,8 @@ finite Kummer theory; no finite Kummer endpoint is assumed here.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

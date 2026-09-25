@@ -25,7 +25,8 @@ of the given modulus and the extension's full conductor.
 open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory.GlobalClassFields
 

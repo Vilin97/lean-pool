@@ -27,7 +27,8 @@ universe u v
 
 variable {G : Type u} {D : Type v} [Group G] [Group D]
 
-private def kernelToSaturation (d : G →* D) (L K : Subgroup G) :
+/-- Include the kernel intersection into the part saturated by the kernel. -/
+def kernelToSaturation (d : G →* D) (L K : Subgroup G) :
     ↑(K ⊓ d.ker) →* ↑(K ⊓ (L ⊔ d.ker)) :=
   Subgroup.inclusion (inf_le_inf le_rfl le_sup_right)
 
@@ -42,11 +43,13 @@ private theorem kernelToSaturation_rel_iff (d : G →* D) (L K : Subgroup G)
   · intro h
     exact ⟨h, d.ker.mul_mem (d.ker.inv_mem x.property.2) y.property.2⟩
 
-private noncomputable def kernelCosetToSaturationCoset (d : G →* D) (L K : Subgroup G) :
+/-- Map kernel-intersection cosets to cosets in the kernel-saturated subgroup. -/
+noncomputable def kernelCosetToSaturationCoset (d : G →* D) (L K : Subgroup G) :
     (↑(K ⊓ d.ker) ⧸ (L ⊓ d.ker).subgroupOf (K ⊓ d.ker)) →
       (↑(K ⊓ (L ⊔ d.ker)) ⧸ L.subgroupOf (K ⊓ (L ⊔ d.ker))) :=
-  Quotient.map' (kernelToSaturation d L K) fun x y h ↦
-    (kernelToSaturation_rel_iff d L K x y).mp h
+  Quotient.map' (kernelToSaturation d L K) (by
+    intro x y h
+    exact (kernelToSaturation_rel_iff d L K x y).mp h)
 
 private theorem kernelCosetToSaturationCoset_injective (d : G →* D) (L K : Subgroup G) :
     Function.Injective (kernelCosetToSaturationCoset d L K) := by
@@ -88,8 +91,8 @@ noncomputable def kernelCosetEquivSaturation (d : G →* D) {L K : Subgroup G} (
     (↑(K ⊓ d.ker) ⧸ (L ⊓ d.ker).subgroupOf (K ⊓ d.ker)) ≃
       (↑(K ⊓ (L ⊔ d.ker)) ⧸ L.subgroupOf (K ⊓ (L ⊔ d.ker))) :=
   Equiv.ofBijective (kernelCosetToSaturationCoset d L K)
-    ⟨kernelCosetToSaturationCoset_injective d L K,
-      kernelCosetToSaturationCoset_surjective d hLK⟩
+    ⟨by exact kernelCosetToSaturationCoset_injective d L K,
+      by exact kernelCosetToSaturationCoset_surjective d hLK⟩
 
 /-- The index of `L` in the `ker d`-saturated part of `K` is the relative
 index of the corresponding kernel intersections. -/

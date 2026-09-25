@@ -35,7 +35,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField renaming
 open scoped NumberField NNReal ValuativeRel TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory.ClassFieldAxiom
 

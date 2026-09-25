@@ -19,7 +19,8 @@ discrete-valuation APIs can share the same definition.
 @[expose] public section
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

@@ -29,4 +29,3 @@ Each mathematical stage has a reader-facing aggregate below
 namespace.
 -/
 
-@[expose] public section

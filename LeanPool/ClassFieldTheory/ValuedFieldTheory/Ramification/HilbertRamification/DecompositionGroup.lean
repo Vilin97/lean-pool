@@ -20,7 +20,8 @@ in which those groups are defined.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

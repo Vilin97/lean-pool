@@ -21,7 +21,8 @@ ray-class-field realization whose extension is the original field.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

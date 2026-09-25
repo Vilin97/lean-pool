@@ -19,7 +19,8 @@ records that, when the basis is nonempty, this is exactly a countable product.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory.DiscreteValuationField
 

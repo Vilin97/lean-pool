@@ -19,7 +19,8 @@ factorization error after the update
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

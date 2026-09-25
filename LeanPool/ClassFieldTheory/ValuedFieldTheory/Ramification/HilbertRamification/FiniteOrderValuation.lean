@@ -15,7 +15,8 @@ public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRa
 @[expose] public section
 namespace RamificationTheory.HilbertRamification.ValuationSubring
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

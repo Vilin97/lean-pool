@@ -19,7 +19,8 @@ orbit-stabilizer Herbrand quotient calculation.
 
 open scoped BigOperators
 
-noncomputable section
+noncomputable
+section
 
 namespace CyclicCohomology
 

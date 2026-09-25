@@ -24,7 +24,8 @@ open CyclicCohomology
 This file proves the structural laws for the coset-sum norm constructed in `Norm.lean`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators Pointwise
 

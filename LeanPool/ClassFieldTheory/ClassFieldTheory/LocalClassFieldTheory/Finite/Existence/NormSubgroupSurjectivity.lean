@@ -21,7 +21,8 @@ and constructs norm-topology witnesses from concrete finite Galois extensions.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

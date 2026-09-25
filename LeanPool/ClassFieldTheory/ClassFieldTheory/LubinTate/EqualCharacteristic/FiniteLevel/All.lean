@@ -26,4 +26,3 @@ Public aggregate for division torsion, finite level fields, and their Galois
 and norm structure.
 -/
 
-@[expose] public section

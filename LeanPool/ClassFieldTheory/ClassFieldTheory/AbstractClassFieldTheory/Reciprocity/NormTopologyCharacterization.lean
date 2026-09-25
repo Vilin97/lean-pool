@@ -20,7 +20,8 @@ imported valuation-, norm-, and norm-topology modules.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

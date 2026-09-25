@@ -22,7 +22,8 @@ field, and both norms are then the same product of conjugates.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

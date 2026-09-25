@@ -25,7 +25,8 @@ states global reciprocity at its full finite-Galois generality.
 open scoped IsMulCommutative NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

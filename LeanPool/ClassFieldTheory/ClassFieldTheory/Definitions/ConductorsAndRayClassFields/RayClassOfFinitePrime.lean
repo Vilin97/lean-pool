@@ -19,7 +19,8 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAn
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 
@@ -42,7 +43,7 @@ def rayClassOfFinitePrime
     (v : HeightOneSpectrum (𝓞 K))
     (hv : v ∉ m.finitePart.support) : RayClassGroup m :=
   QuotientGroup.mk' (rayPrincipalIdealSubgroupInPrimeTo m)
-    ⟨finitePrimeFractionalIdeal v, finitePrimeFractionalIdeal_mem_primeTo m v hv⟩
+    ⟨finitePrimeFractionalIdeal v, by exact finitePrimeFractionalIdeal_mem_primeTo m v hv⟩
 
 /-- The ordinary ideal class represented by a finite prime. -/
 def ordinaryRayClassOfFinitePrime

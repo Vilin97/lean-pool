@@ -19,7 +19,8 @@ finite module over the base valuation ring.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ValuationTheory.DiscreteValuationField.ValuedExtension
 

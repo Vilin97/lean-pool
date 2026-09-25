@@ -17,7 +17,8 @@ the native topology of a nonarchimedean local field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

@@ -23,7 +23,8 @@ The recursive norm and coboundary constructions are converted here into the
 actual quotient statements `H⁰(G,V)=H⁻¹(G,V)=1` used in the local class-field-axiom theorem.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

@@ -23,7 +23,8 @@ with exactly those reductions.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Polynomial
 

@@ -20,7 +20,8 @@ with the primitive division polynomial and gives the exact degree
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped PowerSeries LaurentSeries Polynomial

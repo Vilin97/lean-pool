@@ -13,4 +13,3 @@ public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisVal
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

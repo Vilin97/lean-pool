@@ -16,7 +16,8 @@ This module builds compatible finite-degree approximations, assembles the change
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

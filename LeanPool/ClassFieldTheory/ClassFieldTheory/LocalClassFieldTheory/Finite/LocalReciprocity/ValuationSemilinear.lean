@@ -22,7 +22,8 @@ open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
     hasExtension_valuation_of_valuationSubring_pullback
 
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTower.Martinet.Shafarevich
 

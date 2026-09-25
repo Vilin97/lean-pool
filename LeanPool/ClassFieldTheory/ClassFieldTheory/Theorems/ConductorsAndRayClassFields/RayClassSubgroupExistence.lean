@@ -22,7 +22,8 @@ construction to that interface.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -16,7 +16,8 @@ and the compatible relative actions and norms used in ramified towers.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

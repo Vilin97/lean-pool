@@ -19,7 +19,8 @@ finiteness results and the canonical family instance providers.
 open scoped NumberField BigOperators ValuativeRel NNReal
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 open AlgebraicNumberTheory.Valuations

@@ -22,7 +22,8 @@ for `ℤᵐ⁰`-valued valuations.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u x
 

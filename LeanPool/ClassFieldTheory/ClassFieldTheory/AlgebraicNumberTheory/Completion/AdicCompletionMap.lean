@@ -21,7 +21,8 @@ completions.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

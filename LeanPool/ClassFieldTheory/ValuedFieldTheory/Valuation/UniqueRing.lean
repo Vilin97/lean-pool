@@ -33,7 +33,8 @@ to be fixed by every automorphism of the extension field.  This is the first
 Galois-theoretic step in the converse direction of the unique-extension characterization.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped Pointwise
 

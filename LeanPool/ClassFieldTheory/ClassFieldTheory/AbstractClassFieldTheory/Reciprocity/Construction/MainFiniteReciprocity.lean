@@ -43,7 +43,8 @@ additivity on the Frobenius semigroup, so the lift supplied by
     the finite reciprocity equivalence.
 -/
 
-noncomputable section
+noncomputable
+section
 
 section finiteReciprocityValues
 
@@ -813,7 +814,8 @@ class.  That class generates the finite norm quotient, so the resulting
 reciprocity homomorphism is promoted to an additive equivalence.
 -/
 
-noncomputable section
+noncomputable
+section
 
 section unramifiedFixedFields
 

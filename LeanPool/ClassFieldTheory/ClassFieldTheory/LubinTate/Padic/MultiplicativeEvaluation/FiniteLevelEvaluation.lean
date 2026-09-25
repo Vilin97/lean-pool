@@ -20,7 +20,8 @@ comparison identity, and injectivity of the evaluated comparison.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

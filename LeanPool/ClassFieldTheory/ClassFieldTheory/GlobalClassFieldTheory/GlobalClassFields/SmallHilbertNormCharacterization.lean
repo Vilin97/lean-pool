@@ -29,7 +29,8 @@ by the class number.
 
 open scoped IsMulCommutative NumberField NumberField.LiesOver
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

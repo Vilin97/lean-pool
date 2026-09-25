@@ -25,7 +25,8 @@ intrinsic finite-field degree map to the residue of an algebraic closure of a
 local field.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

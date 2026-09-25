@@ -16,7 +16,8 @@ the decomposition group of a conjugate prime ideal is the conjugate subgroup.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification
 namespace Dedekind

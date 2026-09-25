@@ -28,7 +28,8 @@ objects are mathlib's Tate cohomology objects directly; no parallel
 low-degree model is introduced.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 
@@ -55,7 +56,7 @@ noncomputable def cyclicH1IsoHminusOne {k G : Type} [CommRing k] [Group G]
     [Fintype G] (A : Rep k G) (g : G)
     (hg : ∀ x : G, x ∈ Subgroup.zpowers g) :
     groupCohomology A 1 ≅ tateCohomology A (-1) := by
-  letI : IsCyclic G := isCyclic_of_forall_mem_zpowers g hg
+  letI : IsCyclic G := by exact isCyclic_of_forall_mem_zpowers g hg
   letI : CommGroup G := IsCyclic.commGroup (α := G)
   exact Rep.FiniteCyclicGroup.groupCohomologyIsoOdd A g hg 1 (by decide) ≪≫
     (TateCohomology.isoFiniteCyclicNegOne A g hg).symm

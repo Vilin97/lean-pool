@@ -16,7 +16,8 @@ its canonical finite Artin map, not merely the same norm kernel.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTower.Martinet.Shafarevich
 

@@ -15,4 +15,3 @@ public import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.Transfer
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

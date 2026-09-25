@@ -21,7 +21,8 @@ This module identifies localized completions associated with conjugate extension
 open scoped IsMulCommutative NNReal NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

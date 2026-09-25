@@ -21,7 +21,8 @@ field degrees.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ValuationTheory
 namespace Completion

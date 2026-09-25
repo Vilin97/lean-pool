@@ -30,7 +30,8 @@ are fixed rather than merely asserted to exist.
 
 open scoped IsMulCommutative NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

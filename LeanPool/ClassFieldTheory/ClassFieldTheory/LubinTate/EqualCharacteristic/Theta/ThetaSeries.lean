@@ -25,7 +25,8 @@ convergence or evaluation hypothesis is inserted into its definition.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries
 

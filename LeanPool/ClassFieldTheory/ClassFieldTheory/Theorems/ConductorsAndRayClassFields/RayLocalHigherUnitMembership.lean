@@ -21,7 +21,8 @@ where the condition reduces to being an integral unit.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

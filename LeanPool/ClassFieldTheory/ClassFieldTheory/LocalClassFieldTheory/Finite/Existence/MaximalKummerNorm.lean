@@ -20,7 +20,8 @@ exponent-`n` Kummer extension with the subgroup of `n`-th powers.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

@@ -19,7 +19,8 @@ that only the latter contributes to the local ramification index.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification
 

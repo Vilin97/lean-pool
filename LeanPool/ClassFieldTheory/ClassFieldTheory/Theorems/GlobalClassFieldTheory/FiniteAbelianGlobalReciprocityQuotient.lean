@@ -20,7 +20,8 @@ normalization are carried by `FiniteAbelianReciprocityData`.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

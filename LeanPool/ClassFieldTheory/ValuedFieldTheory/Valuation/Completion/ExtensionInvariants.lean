@@ -50,7 +50,8 @@ open _root_.ValuationTheory.DiscreteValuationField.ResidueField renaming
     residue_eq_residue_iff_sub_mem_maximalIdeal
 
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

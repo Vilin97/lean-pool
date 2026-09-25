@@ -33,4 +33,3 @@ classes in extensions, normal-closure and splitting results, ray class groups,
 S-units, and the ramification and degree results needed by global applications.
 -/
 
-@[expose] public section

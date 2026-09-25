@@ -18,7 +18,8 @@ canonical API definitionally aligned with that reusable construction.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

@@ -16,7 +16,8 @@ degrees used in the prime-decomposition tower identity.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification
 namespace Dedekind

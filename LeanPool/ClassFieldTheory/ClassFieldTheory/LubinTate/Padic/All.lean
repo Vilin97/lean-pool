@@ -36,4 +36,3 @@ Aggregate for the multiplicative Lubin--Tate series and its completed-level,
 Frobenius, residue, fixed-field, and changed-uniformizer constructions.
 -/
 
-@[expose] public section

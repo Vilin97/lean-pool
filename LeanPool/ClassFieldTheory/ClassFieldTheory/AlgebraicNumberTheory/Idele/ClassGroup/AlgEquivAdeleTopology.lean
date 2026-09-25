@@ -21,7 +21,8 @@ completion map preserves the local valuation subring.
 open scoped NumberField RestrictedProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

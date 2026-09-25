@@ -22,7 +22,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.ValuedExtension renaming
     target_maximalIdeal_pow_not_le_pow_succ
 
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

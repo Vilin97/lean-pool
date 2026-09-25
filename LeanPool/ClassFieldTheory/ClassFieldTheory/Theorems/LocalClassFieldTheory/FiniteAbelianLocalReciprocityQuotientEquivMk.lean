@@ -23,7 +23,8 @@ uniquely by its values on classes of nonzero field elements.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

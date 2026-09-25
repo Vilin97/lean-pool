@@ -27,7 +27,8 @@ open KummerTheory
 open CyclicCohomology
 open CategoryTheory
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 open MulAction

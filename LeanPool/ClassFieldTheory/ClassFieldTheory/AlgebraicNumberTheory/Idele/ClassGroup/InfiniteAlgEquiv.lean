@@ -20,7 +20,8 @@ inverse. This is the archimedean local input for the topology of `adeleCongr`.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

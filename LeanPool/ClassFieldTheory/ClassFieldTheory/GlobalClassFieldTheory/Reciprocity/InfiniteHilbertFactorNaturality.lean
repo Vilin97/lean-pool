@@ -22,7 +22,8 @@ the product formula when a field is replaced by a small model.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

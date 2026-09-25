@@ -17,7 +17,8 @@ subgroup into , providing the key continuity input.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

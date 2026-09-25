@@ -19,7 +19,8 @@ is inherited without reconstructing the selected class-field instance tower.
 
 open scoped IsMulCommutative NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

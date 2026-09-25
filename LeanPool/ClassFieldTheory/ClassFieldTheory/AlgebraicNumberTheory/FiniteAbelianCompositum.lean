@@ -19,7 +19,8 @@ canonical factor embeddings and their elementary degree bounds.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 

@@ -25,7 +25,8 @@ transfer theorem.
 
 open scoped Pointwise
 
-noncomputable section
+noncomputable
+section
 
 namespace GroupTheory
 namespace Augmentation

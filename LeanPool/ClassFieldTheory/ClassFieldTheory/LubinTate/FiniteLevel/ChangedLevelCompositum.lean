@@ -28,7 +28,8 @@ higher-unit hypothesis is used.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

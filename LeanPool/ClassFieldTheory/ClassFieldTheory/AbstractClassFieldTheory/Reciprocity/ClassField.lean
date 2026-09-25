@@ -19,7 +19,8 @@ consequences rather than extra assumptions.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

@@ -20,7 +20,8 @@ A compatibility hypothesis for a norm and two unit filtrations immediately
 produces homomorphisms on every filtration level.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

@@ -22,7 +22,8 @@ map forms the naturality square with the existing ideal-class extension
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

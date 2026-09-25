@@ -30,4 +30,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsA
 
 /-! # All -/
 
-@[expose] public section

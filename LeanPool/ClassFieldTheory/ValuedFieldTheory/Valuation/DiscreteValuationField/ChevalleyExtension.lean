@@ -25,7 +25,8 @@ Chevalley's valuation extension theorem from mathlib's maximal local subring
 construction: a local subring of a field is dominated by a valuation subring.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x y z
 

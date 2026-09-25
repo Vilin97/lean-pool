@@ -23,7 +23,8 @@ principal ray ideals are absorbed by the ray quotient.
 open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

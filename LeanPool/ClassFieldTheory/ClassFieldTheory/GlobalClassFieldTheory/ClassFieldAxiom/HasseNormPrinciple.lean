@@ -40,7 +40,8 @@ follows from degree-minus-one Tate-cohomology vanishing.
 open scoped NumberField TensorProduct
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory.ClassFieldAxiom
 

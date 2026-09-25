@@ -32,7 +32,8 @@ identification to compare the abstract class-formation coset norm with the ordin
 norm, without a normality assumption on `E / K`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

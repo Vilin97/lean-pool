@@ -19,4 +19,3 @@ factorization of the global norm-residue map through every finite-place
 local Artin map.
 -/
 
-@[expose] public section

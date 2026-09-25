@@ -19,7 +19,8 @@ irreducible over the completed-unramified fraction field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

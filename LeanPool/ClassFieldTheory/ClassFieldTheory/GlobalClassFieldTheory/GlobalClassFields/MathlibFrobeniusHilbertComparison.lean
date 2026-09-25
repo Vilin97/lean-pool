@@ -51,7 +51,8 @@ Frobenius at every unramified finite prime.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory.GlobalClassFieldComparison
 

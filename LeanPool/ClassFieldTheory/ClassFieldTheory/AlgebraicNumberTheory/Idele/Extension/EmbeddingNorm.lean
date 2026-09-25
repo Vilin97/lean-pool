@@ -22,7 +22,8 @@ product over all `K`-embeddings `L → M`.
 open scoped BigOperators TensorProduct
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace RelativeIdeleGroup
 

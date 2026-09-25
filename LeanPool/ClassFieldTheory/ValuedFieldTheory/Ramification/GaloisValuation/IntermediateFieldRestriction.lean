@@ -17,7 +17,8 @@ auxiliary algebra and scalar-tower instances.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace RamificationTheory
 

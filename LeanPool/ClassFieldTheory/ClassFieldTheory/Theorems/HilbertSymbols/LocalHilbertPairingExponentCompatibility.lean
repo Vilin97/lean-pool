@@ -25,7 +25,8 @@ sides of the exponent comparison and does not change the formula below.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

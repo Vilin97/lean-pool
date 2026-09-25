@@ -21,7 +21,8 @@ open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
     exists_extension_valuationSubring_with_hasExtension
 
 
-noncomputable section
+noncomputable
+section
 
 open Polynomial
 

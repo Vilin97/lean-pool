@@ -17,7 +17,8 @@ family of places. It is the finite-support part of the localized class formation
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

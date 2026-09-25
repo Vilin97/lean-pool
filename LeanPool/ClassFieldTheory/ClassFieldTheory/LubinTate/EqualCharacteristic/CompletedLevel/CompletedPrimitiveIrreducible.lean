@@ -22,7 +22,8 @@ is extended to the completed level field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries Polynomial PowerSeries
 

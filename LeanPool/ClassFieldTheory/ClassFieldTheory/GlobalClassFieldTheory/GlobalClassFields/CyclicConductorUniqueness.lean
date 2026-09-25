@@ -21,7 +21,8 @@ cyclic class-field correspondence at a fixed narrow finite conductor.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

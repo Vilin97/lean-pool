@@ -21,7 +21,8 @@ class group as a closed normal subgroup and names the corresponding quotient.
 
 open scoped NNReal NumberField Topology
 
-noncomputable section
+noncomputable
+section
 
 variable (K : Type*) [Field K] [NumberField K]
 

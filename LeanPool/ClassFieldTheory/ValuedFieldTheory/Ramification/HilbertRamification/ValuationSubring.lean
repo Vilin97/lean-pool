@@ -27,7 +27,8 @@ onto the full residue automorphism group; the canonical theorem is the exact
 sequence with target equal to the range of the residue action.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

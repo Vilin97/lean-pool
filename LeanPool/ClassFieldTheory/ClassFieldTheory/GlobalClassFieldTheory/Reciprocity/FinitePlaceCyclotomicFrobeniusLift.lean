@@ -39,7 +39,8 @@ open ClassFormation
 open NumberField IsDedekindDomain
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

@@ -27,7 +27,8 @@ the same cardinality for `K^x / (<T^-1> U^(n+1))`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped LaurentSeries PowerSeries ValuativeRel WithZero

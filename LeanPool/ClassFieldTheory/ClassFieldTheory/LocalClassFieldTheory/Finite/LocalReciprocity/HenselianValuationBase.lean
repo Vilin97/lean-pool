@@ -30,7 +30,8 @@ in `ℤ̂`.  Its range is proved to be exactly the ordinary integers inside
 source-producing parts of the Henselian valuation condition.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
   [IsNonarchimedeanLocalField K]

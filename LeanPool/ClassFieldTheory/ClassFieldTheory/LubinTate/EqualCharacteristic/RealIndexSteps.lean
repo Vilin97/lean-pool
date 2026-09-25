@@ -19,7 +19,8 @@ the real upper filtration is constant on the natural-ceiling steps.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries
 

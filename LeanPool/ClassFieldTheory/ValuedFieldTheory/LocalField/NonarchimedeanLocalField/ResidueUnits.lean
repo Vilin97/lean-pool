@@ -20,7 +20,8 @@ identifies it, multiplicatively and additively, with the residue-field units.
 @[expose] public section
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

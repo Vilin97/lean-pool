@@ -19,7 +19,8 @@ the intrinsic value of its displacement ideal.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x
 

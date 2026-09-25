@@ -17,4 +17,3 @@ Public aggregate for coefficient Frobenius, Laurent-series Frobenius, and the
 completed unramified field.
 -/
 
-@[expose] public section

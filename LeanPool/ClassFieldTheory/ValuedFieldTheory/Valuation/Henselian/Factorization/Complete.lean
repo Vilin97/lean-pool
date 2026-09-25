@@ -18,7 +18,8 @@ initial error coefficients in the proof core.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

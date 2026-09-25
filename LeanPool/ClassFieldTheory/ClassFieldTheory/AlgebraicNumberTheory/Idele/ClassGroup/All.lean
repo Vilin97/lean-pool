@@ -29,4 +29,3 @@ Public aggregate for the ordinary ideal class quotient of the ideles and its
 base-change, norm-comparison, tower, and algebra-equivalence constructions.
 -/
 
-@[expose] public section

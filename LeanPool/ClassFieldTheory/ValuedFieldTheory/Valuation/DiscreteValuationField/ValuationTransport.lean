@@ -22,7 +22,8 @@ transport is by comapping the valuation along a field equivalence; no
 valuation-comparison hypothesis is added.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

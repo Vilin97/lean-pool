@@ -36,4 +36,3 @@ For a smaller production dependency closure, import
 `KroneckerWeber` directly.
 -/
 
-@[expose] public section

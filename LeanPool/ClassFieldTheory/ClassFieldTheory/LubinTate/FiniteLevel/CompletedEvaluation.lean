@@ -26,7 +26,8 @@ nilpotent and is therefore a valid evaluation point.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Filter
 open scoped PowerSeries

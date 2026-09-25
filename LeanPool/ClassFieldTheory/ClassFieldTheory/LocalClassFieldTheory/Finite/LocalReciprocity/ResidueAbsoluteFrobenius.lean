@@ -29,7 +29,8 @@ map in finite local reciprocity. The construction itself does not require a
 bijectivity hypothesis.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

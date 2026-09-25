@@ -19,4 +19,3 @@ This module collects the reader-facing finite and topological vocabulary.
 It imports definitions only; assertions are in the corresponding `Theorems` module.
 -/
 
-@[expose] public section

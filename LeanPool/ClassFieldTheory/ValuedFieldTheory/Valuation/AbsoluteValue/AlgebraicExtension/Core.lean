@@ -21,7 +21,8 @@ branches are included.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AbsoluteValue
 
@@ -411,7 +412,7 @@ private noncomputable def algebraicExtension_baseRingEquiv
             simpa using (hvσ (σ.symm z)).symm }
 
 /-- The archimedean branch of the unique algebraic-extension construction. -/
-private noncomputable def algebraicExtension_archimedean
+noncomputable def algebraicExtensionArchimedean
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [Algebra.IsAlgebraic K L]
     (v : AbsoluteValue K ℝ)
@@ -459,7 +460,7 @@ private noncomputable def algebraicExtension_archimedean
 
 /-- nonarchimedean algebraic-extension theorem:
 existence and uniqueness of the extension over any algebraic extension. -/
-private noncomputable def algebraicExtension_nonarchimedean
+noncomputable def algebraicExtensionNonarchimedean
     {K L : Type*} [Field K] [Field L] [Algebra K L]
     [Algebra.IsAlgebraic K L]
     (v : AbsoluteValue K ℝ)
@@ -489,9 +490,9 @@ noncomputable def uniqueAlgebraicExtension
     (hv : v.IsNontrivial) :
     UniqueExtension (K := K) (L := L) v := by
   by_cases hnonarch : IsNonarchimedean (v : K → ℝ)
-  · exact algebraicExtension_nonarchimedean
+  · exact algebraicExtensionNonarchimedean
       v hcomplete hnonarch hv
-  · exact algebraicExtension_archimedean
+  · exact algebraicExtensionArchimedean
       v hcomplete hnonarch
 
 

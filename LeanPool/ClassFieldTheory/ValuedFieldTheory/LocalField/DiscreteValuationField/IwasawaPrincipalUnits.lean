@@ -93,7 +93,8 @@ and establishes its algebraic injectivity.  The convergent global product is
 assembled in `IwasawaPrincipalUnits`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 
@@ -1585,7 +1586,8 @@ end higherPrincipalUnitGroup
 end CompleteDVF
 end LocalFieldTheory.DiscreteValuationField
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

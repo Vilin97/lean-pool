@@ -18,4 +18,3 @@ Aggregate for the local block families, their induced and tensor
 constructions, and the resulting class-field axiom.
 -/
 
-@[expose] public section

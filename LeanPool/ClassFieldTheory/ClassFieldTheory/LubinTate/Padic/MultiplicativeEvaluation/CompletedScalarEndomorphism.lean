@@ -23,7 +23,8 @@ composition, torsion, and injectivity identities for their analytic actions.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

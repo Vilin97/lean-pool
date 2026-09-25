@@ -22,7 +22,8 @@ of `L` in the algebraic localization, proved in
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

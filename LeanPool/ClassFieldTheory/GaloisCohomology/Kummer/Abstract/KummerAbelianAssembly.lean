@@ -26,7 +26,8 @@ a family of such radicals whose subgroups intersect in `G_L` generates the
 abstract field `L` over `K`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable {G : IntegralRepGroupType} [Group G] [TopologicalSpace G]
 

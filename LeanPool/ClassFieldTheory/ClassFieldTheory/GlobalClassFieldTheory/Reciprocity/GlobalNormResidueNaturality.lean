@@ -21,7 +21,8 @@ statement is directly usable by fixed-field overextension arguments.
 
 open scoped IsMulCommutative
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

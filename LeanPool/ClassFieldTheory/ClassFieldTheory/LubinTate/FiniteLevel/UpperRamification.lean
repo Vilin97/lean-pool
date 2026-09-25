@@ -18,7 +18,8 @@ integral-closure valuation on a standard finite Lubin--Tate level.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

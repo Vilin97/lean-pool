@@ -22,7 +22,8 @@ coefficients and remainders satisfying
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 namespace Valuations

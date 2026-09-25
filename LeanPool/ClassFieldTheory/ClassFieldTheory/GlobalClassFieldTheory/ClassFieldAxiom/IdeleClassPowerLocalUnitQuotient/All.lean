@@ -21,4 +21,3 @@ This aggregate preserves the public import path while the implementation is
 organized by the mathematical stages of the norm-index argument.
 -/
 
-@[expose] public section

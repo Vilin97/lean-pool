@@ -17,4 +17,3 @@ Public aggregate for the Lubin--Tate action and its division-module
 endomorphisms.
 -/
 
-@[expose] public section

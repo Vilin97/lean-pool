@@ -17,4 +17,3 @@ Public aggregate for the local, finite-family, and factor-transport Herbrand
 calculations.
 -/
 
-@[expose] public section

@@ -34,4 +34,3 @@ norm-subgroup statements.  The theorem statements use Mathlib and the public
 definitions layer; their proofs may import implementation modules.
 -/
 
-@[expose] public section

@@ -25,7 +25,8 @@ its restriction to `[-1,∞)` is exactly the normalized function on this range.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

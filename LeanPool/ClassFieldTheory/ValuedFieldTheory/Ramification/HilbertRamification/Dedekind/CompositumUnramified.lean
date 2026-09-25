@@ -20,7 +20,8 @@ field compositum is unramified from the inertia groups of its two factors.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification.Dedekind
 

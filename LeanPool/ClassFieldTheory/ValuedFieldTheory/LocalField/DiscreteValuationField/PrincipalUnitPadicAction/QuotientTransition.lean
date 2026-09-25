@@ -17,7 +17,8 @@ discrete valuation field. Neither finiteness nor a scalar action is required.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
 

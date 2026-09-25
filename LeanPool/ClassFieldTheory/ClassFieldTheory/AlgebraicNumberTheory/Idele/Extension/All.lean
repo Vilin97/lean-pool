@@ -28,4 +28,3 @@ Public aggregate for base change, extension, and norm maps on ideles and
 idele classes.
 -/
 
-@[expose] public section

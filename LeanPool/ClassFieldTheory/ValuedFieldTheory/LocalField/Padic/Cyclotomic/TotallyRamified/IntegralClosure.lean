@@ -21,7 +21,8 @@ open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
     integralClosure_isDiscreteValuationRing_of_finite_separable
 
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

@@ -18,4 +18,3 @@ Public aggregate for theta coefficients, the theta series, evaluation, and
 the first theta identity.
 -/
 
-@[expose] public section

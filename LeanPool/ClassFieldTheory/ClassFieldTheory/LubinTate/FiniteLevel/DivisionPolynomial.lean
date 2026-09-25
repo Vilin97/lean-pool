@@ -35,7 +35,8 @@ Lubin--Tate extensions is made here.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial PowerSeries
 

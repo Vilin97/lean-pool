@@ -29,7 +29,8 @@ open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
 open scoped NumberField NNReal ValuativeRel
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open AlgebraicNumberTheory.Valuations
 open LocalClassFieldTheory

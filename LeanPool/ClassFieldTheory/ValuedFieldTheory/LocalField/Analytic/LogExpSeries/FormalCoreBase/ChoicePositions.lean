@@ -16,7 +16,8 @@ sets and proves the resulting position-count formulas.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 attribute [local instance] Classical.propDecidable
 

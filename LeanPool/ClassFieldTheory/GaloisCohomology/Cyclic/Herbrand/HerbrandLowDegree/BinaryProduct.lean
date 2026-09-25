@@ -19,7 +19,8 @@ integral parts of a supported idele group.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace CyclicCohomology
 

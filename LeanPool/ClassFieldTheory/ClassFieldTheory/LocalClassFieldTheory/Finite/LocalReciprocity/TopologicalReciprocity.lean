@@ -31,7 +31,8 @@ open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
     valuationSubring_isIntegralClosure_of_isIntegral
 
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

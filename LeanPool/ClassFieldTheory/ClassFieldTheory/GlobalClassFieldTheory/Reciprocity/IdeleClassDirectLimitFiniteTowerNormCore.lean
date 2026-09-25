@@ -19,7 +19,8 @@ proof from rebuilding the helper environment.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

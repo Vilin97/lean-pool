@@ -49,7 +49,8 @@ open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFilt
     truncatedLowerDepth
 
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

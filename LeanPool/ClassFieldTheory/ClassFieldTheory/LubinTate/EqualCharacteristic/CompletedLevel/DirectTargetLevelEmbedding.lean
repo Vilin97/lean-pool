@@ -21,7 +21,8 @@ embedding of the finite target Lubin--Tate level into the completed field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries Polynomial PowerSeries
 

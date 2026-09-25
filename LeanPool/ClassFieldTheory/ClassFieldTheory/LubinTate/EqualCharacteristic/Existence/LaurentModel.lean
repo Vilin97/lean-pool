@@ -20,7 +20,8 @@ or norm-subgroup statement is assumed.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries LaurentSeries
 

@@ -27,7 +27,8 @@ This is an equal-characteristic specialization of the general local-field constr
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries
 

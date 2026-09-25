@@ -20,7 +20,8 @@ the canonical algebra equivalence used in scalar-extension decompositions.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ValuationTheory
 namespace Completion

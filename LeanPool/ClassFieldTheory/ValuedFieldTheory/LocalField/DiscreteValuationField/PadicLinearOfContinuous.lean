@@ -22,7 +22,8 @@ p-adic scalar.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory.DiscreteValuationField
 

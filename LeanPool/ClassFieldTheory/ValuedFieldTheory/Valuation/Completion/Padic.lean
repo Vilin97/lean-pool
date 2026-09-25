@@ -21,7 +21,8 @@ without adding any hypothesis to the global theorem.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory.Valuations
 

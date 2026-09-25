@@ -30,7 +30,8 @@ between the two conventions replaces a generator by its inverse and does not
 change either quotient below.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

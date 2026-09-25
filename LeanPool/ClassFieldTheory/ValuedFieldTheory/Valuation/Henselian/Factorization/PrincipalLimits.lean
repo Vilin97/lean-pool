@@ -18,7 +18,8 @@ whose maximal ideal is not assumed principal or adically separated.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

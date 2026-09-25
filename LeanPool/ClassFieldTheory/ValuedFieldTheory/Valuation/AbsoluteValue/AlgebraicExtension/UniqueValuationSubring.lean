@@ -18,7 +18,8 @@ the unique maximal ideal, so the overring is the integral closure itself.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

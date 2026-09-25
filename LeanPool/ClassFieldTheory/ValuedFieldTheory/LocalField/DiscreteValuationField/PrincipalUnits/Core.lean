@@ -24,7 +24,8 @@ namespace LocalFieldTheory
 
 open ValuationTheory
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

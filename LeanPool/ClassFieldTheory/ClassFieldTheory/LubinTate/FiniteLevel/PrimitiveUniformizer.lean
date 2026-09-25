@@ -31,7 +31,8 @@ one.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 
@@ -232,7 +233,15 @@ noncomputable def standardLubinTateLevelCompleteDVF
     {F : LocalField.{u, v} K} {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K)) (n : ℕ) :
     CompleteDVF.{u, 0} (standardLubinTateLevelField hπ n) :=
-  Classical.choose (standardLubinTateLevelCompleteDVFData_exists hπ n)
+  Classical.choose (show ∃ target : CompleteDVF.{u, 0} (standardLubinTateLevelField hπ n),
+      ∃ hExt : F.toCompleteDVF.valuation.HasExtension target.valuation,
+        letI : F.toCompleteDVF.valuation.HasExtension target.valuation := hExt
+        IsIntegralClosure target.valuationSubring F.valuationSubring
+            (standardLubinTateLevelField hπ n) ∧
+          degree F.toCompleteDVF.toDVF target.toDVF =
+            ramificationIndex F.toCompleteDVF.toDVF target.toDVF *
+              residueDegree F.toCompleteDVF.toDVF target.toDVF from by
+    exact standardLubinTateLevelCompleteDVFData_exists hπ n)
 
 /-- The chosen level valuation extends the given base valuation. -/
 theorem standardLubinTateLevelCompleteDVF_hasExtension

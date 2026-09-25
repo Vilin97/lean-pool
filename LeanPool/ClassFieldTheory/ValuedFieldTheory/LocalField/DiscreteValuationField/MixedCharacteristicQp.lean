@@ -40,7 +40,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
     mrangeRestrictNontriviallyNormedField
 
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

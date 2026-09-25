@@ -22,7 +22,8 @@ make this family downward directed.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

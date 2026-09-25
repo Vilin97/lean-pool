@@ -26,4 +26,3 @@ Focused aggregate for abstract fields, normalized degrees, Frobenius, norms, pri
 valuation laws used by class formations.
 -/
 
-@[expose] public section

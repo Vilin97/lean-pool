@@ -22,7 +22,8 @@ standard `ℝ` and `ℂ` absolute values.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

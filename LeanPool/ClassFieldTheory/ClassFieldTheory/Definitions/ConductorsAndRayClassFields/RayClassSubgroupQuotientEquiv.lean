@@ -19,7 +19,8 @@ the first isomorphism theorem.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

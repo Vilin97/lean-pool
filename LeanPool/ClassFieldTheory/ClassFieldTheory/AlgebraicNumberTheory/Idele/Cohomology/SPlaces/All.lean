@@ -12,4 +12,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.I
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Cohomology.SPlaces.Reassociation
 /-! # Cohomological decompositions over finite sets of places -/
 
-@[expose] public section

@@ -25,7 +25,8 @@ reciprocity construction through the ray class comparison.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -16,7 +16,8 @@ open CategoryTheory
 
 namespace CyclicCohomology.ProfiniteCohomology.Herbrand
 
-noncomputable section
+noncomputable
+section
 
 universe u w
 
@@ -146,7 +147,8 @@ private theorem repSigmaMinusOne_toMul
   rw [toMul_sub]
   exact div_eq_mul_inv _ _
 
-private def fixedCyclesAddEquiv :
+/-- Identify degree-zero cohomological cycles with the additive form of the fixed subgroup. -/
+def fixedCyclesAddEquiv :
     LinearMap.ker
         (groupCohomology.d₀₁ (Rep.ofMulDistribMulAction G A)).hom ≃+
       Additive (fixedSubgroup G A) where
@@ -251,7 +253,8 @@ noncomputable def tateH0IsoHerbrandH0 :
   exact TateCohomology.isoZeroBoundary M ≪≫
     S.moduleCatHomologyIso ≪≫ eQ.toModuleIso
 
-private def normKernelCyclesAddEquiv :
+/-- Identify norm-kernel cycles with the additive form of the multiplicative norm kernel. -/
+def normKernelCyclesAddEquiv :
     LinearMap.ker
         (Rep.ofMulDistribMulAction G A).norm.toModuleCatHom.hom ≃+
       Additive (normKernelSubgroup G A) where
@@ -296,7 +299,8 @@ private theorem normKernelCyclesAddEquiv_coe
     (x : LinearMap.ker (Rep.ofMulDistribMulAction G A).norm.toModuleCatHom.hom) :
     (normKernelCyclesAddEquiv (G := G) (A := A) x).toMul.val = x.val.toMul := rfl
 
-private noncomputable def tateHMinusOneIsoHerbrandHMinusOne_of_commGroup
+/-- Identify degree-minus-one Tate cohomology with the Herbrand quotient for a commutative cyclic group. -/
+noncomputable def tateHMinusOneIsoHerbrandHMinusOneOfCommGroup
     {G A : Type} [CommGroup G] [Fintype G] [CommGroup A]
     [MulDistribMulAction G A]
     (σ : G) (hgen : ∀ g : G, g ∈ Subgroup.zpowers σ) :
@@ -367,7 +371,7 @@ noncomputable def tateHMinusOneIsoHerbrandHMinusOne
       ModuleCat.of ℤ (Additive (HerbrandHMinusOne G A σ)) := by
   letI : IsCyclic G := ⟨⟨σ, hgen⟩⟩
   letI : CommGroup G := IsCyclic.commGroup
-  exact tateHMinusOneIsoHerbrandHMinusOne_of_commGroup σ hgen
+  exact tateHMinusOneIsoHerbrandHMinusOneOfCommGroup σ hgen
 
 end
 

@@ -24,4 +24,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.Unramifi
 
 /-! # All -/
 
-@[expose] public section

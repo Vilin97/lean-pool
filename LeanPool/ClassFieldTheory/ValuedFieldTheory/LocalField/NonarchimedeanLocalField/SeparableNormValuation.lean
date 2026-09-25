@@ -29,7 +29,8 @@ ramification and residue degrees below are the actual invariants of the
 valuation-ring extension; no packaged norm-valuation hypothesis is assumed.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

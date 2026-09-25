@@ -20,7 +20,8 @@ calculation needed when passing from ideals to norm-defined ray subgroups.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

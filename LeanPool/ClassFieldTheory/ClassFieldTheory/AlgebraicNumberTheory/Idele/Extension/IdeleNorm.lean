@@ -22,7 +22,8 @@ field transports that existing norm to the usual map
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace IdeleGroup
 

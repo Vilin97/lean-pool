@@ -18,7 +18,8 @@ acting on the fraction field and use mathlib's Galois correspondence.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification
 namespace Dedekind

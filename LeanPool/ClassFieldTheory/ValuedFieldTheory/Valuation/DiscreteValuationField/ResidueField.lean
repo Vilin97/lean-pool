@@ -22,7 +22,8 @@ Henselian and unramified parts of the DVF library.  It keeps mathlib's
 objects.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

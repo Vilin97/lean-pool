@@ -26,7 +26,8 @@ proves their inclusion, exponent, normality, unramifiedness, finiteness,
 degree, quotient-cardinality, and generator properties.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 open scoped BigOperators

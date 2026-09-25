@@ -36,7 +36,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
     mrangeRestrict_completeSpace_of_residueField_finite
 
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

@@ -32,7 +32,8 @@ closure shows that the centres are precisely the finite places above `v`.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open AlgebraicNumberTheory.Valuations
 

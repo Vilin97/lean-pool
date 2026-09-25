@@ -21,7 +21,8 @@ coordinatewise tensor-conjugation action.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 universe u v w

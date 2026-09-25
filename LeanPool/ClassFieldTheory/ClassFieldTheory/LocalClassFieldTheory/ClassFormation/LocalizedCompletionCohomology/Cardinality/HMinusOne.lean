@@ -21,7 +21,8 @@ open CyclicCohomology
 open CyclicCohomology.ProfiniteCohomology.Herbrand
 open scoped TensorProduct
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

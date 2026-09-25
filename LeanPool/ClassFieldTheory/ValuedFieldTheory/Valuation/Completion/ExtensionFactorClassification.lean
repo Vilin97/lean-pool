@@ -22,7 +22,8 @@ of the chosen embedding to the completed field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Polynomial
 open scoped Topology

@@ -17,7 +17,8 @@ formulation uses absolute values and therefore includes the archimedean case.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

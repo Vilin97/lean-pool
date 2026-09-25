@@ -16,7 +16,8 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacte
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped LaurentSeries PowerSeries

@@ -20,7 +20,8 @@ been proved from the unramified norm-quotient equivalence.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

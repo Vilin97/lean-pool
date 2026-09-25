@@ -17,4 +17,3 @@ Public facade for the degree-zero, degree-minus-one, triviality, and Herbrand
 quotient leaves.
 -/
 
-@[expose] public section

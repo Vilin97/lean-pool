@@ -29,7 +29,8 @@ the induced local-block calculation.
 
 open scoped TensorProduct
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

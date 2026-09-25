@@ -27,7 +27,8 @@ norm produces a norm-one idele without changing its Artin symbol.
 open scoped IsMulCommutative NNReal NumberField Topology
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

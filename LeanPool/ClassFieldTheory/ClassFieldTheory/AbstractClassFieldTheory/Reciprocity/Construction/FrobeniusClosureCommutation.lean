@@ -26,7 +26,8 @@ procyclic subgroup and derives the conjugation identities for the associated
 fixed field.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 open scoped BigOperators

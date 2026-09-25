@@ -20,7 +20,8 @@ This file constructs the canonical map
 
 open scoped Topology
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

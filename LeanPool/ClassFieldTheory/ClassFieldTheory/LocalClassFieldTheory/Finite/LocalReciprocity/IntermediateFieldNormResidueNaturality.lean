@@ -25,7 +25,8 @@ to an inclusion `E ≤ F`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

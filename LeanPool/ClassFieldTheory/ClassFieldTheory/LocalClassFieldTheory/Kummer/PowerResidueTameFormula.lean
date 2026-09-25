@@ -27,7 +27,8 @@ residue symbol, and derives the tame formula for the local Hilbert symbol.
 
 open scoped ValuativeRel
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 namespace Kummer

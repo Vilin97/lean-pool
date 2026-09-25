@@ -18,7 +18,8 @@ equivalences preserves the actual field norms, not merely their index.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

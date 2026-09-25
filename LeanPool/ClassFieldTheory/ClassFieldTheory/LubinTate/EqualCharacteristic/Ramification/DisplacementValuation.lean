@@ -19,7 +19,8 @@ the corresponding unit parameter.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries Pointwise PowerSeries
 

@@ -28,7 +28,8 @@ All three actions are the concrete actions from `ValuationReal`: the Galois
 action on integer and field units, and the trivial action on the value group.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 open CyclicCohomology.ProfiniteCohomology.Herbrand

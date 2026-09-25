@@ -23,7 +23,8 @@ This file connects mathlib's `Algebra.norm` with the unit-group and valued-norm
 APIs used by local CFT.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

@@ -20,7 +20,8 @@ class modulo the subgroup defining the extension.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

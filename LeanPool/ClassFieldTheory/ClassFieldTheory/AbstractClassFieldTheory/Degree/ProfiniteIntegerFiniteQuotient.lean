@@ -29,7 +29,8 @@ with the multiples of its index, then uses the existing reduction to `ZMod`
 and Mathlib's `ZMod.lift`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 private theorem finiteIndexNormalAddSubgroup_eq_zmultiples_index
     (H : FiniteIndexNormalAddSubgroup ℤ) :
@@ -61,7 +62,8 @@ private theorem finiteIndexNormalAddSubgroup_index_mem
     simpa only [n] using finiteIndexNormalAddSubgroup_eq_zmultiples_index H
   rw [hH, Int.mem_zmultiples_iff]
 
-private noncomputable def zHatFiniteIndexQuotientReduction
+/-- Reduction modulo the subgroup index followed by the corresponding integer quotient map. -/
+noncomputable def zHatFiniteIndexQuotientReduction
     (H : FiniteIndexNormalAddSubgroup ℤ) :
     ZMod H.toAddSubgroup.index →+ ℤ ⧸ H.toAddSubgroup :=
   ZMod.lift H.toAddSubgroup.index
@@ -80,7 +82,7 @@ noncomputable def zHatReductionToFiniteIndexQuotient
       continuous_toFun := continuous_of_discreteTopology }
   exact quotientReduction.comp
     (zHatReduction H.toAddSubgroup.index
-      (finiteIndexNormalAddSubgroup_index_pos H))
+      (by exact finiteIndexNormalAddSubgroup_index_pos H))
 
 /-- The finite quotient reduction extends the ordinary quotient map on integers. -/
 @[simp]
@@ -90,7 +92,7 @@ theorem zHatReductionToFiniteIndexQuotient_intCast
       QuotientAddGroup.mk' H.toAddSubgroup a := by
   change zHatFiniteIndexQuotientReduction H
       (zHatReduction H.toAddSubgroup.index
-        (finiteIndexNormalAddSubgroup_index_pos H) (a : ZHat)) =
+        (by exact finiteIndexNormalAddSubgroup_index_pos H) (a : ZHat)) =
     QuotientAddGroup.mk' H.toAddSubgroup a
   rw [zHatReduction_intCast]
   unfold zHatFiniteIndexQuotientReduction
@@ -114,7 +116,7 @@ noncomputable def zHatFiniteIndexQuotientDiagramLeg
   let reduction : ZHat →ₜ+ Q :=
     quotientReduction.comp
       (zHatReduction H.toAddSubgroup.index
-        (finiteIndexNormalAddSubgroup_index_pos H))
+        (by exact finiteIndexNormalAddSubgroup_index_pos H))
   exact ProfiniteAddGrp.ofHom reduction
 
 /-- The diagram leg agrees with quotient reduction on the dense copy of
@@ -269,9 +271,9 @@ private theorem zHatToIntegerProfiniteCompletion_injective :
           (zHatToIntegerProfiniteCompletion_fac H) y
   have hreduction :
       zHatReduction H.toAddSubgroup.index
-          (finiteIndexNormalAddSubgroup_index_pos H) x =
+          (by exact finiteIndexNormalAddSubgroup_index_pos H) x =
         zHatReduction H.toAddSubgroup.index
-          (finiteIndexNormalAddSubgroup_index_pos H) y := by
+          (by exact finiteIndexNormalAddSubgroup_index_pos H) y := by
     apply zHatFiniteIndexQuotientReduction_injective H
     change zHatReductionToFiniteIndexQuotient H x =
       zHatReductionToFiniteIndexQuotient H y
@@ -320,8 +322,8 @@ noncomputable def zHatContinuousAddEquivIntegerProfiniteCompletion :
     { (Continuous.homeoOfEquivCompactToT2
       (f := Equiv.ofBijective
         (fun z : ZHat => zHatToIntegerProfiniteCompletion z)
-        ⟨zHatToIntegerProfiniteCompletion_injective,
-          zHatToIntegerProfiniteCompletion_surjective⟩)
+        ⟨by exact zHatToIntegerProfiniteCompletion_injective,
+          by exact zHatToIntegerProfiniteCompletion_surjective⟩)
       hcontinuous) with
       map_add' := zHatToIntegerProfiniteCompletion.hom.map_add }
 

@@ -37,7 +37,8 @@ supplies the norm-range field of the concrete henselian valuation data.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

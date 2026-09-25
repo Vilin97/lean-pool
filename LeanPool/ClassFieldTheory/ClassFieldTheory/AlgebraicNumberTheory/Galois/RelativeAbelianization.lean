@@ -19,7 +19,8 @@ intermediate field fixed by the closed commutator subgroup.
 
 open scoped IsMulCommutative
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

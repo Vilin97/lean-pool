@@ -22,7 +22,8 @@ local tensor components have first been chosen place by place.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 universe u v

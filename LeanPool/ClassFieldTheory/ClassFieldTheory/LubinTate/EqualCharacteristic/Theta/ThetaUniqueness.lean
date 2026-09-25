@@ -18,7 +18,8 @@ the equal-characteristic specialization.  The identity
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries
 

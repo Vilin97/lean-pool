@@ -34,7 +34,8 @@ principal ray ideals, is the norm-defined ideal group
 open scoped BigOperators NumberField Topology
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace RayClass
 

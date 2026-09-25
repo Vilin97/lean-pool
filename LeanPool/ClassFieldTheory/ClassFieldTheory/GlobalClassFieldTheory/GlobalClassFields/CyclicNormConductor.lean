@@ -22,7 +22,8 @@ residual norm-subgroup image order and the extension degree.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

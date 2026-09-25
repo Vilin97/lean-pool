@@ -19,7 +19,8 @@ the global norm-residue symbol to the corresponding quotient class.
 
 open scoped IsMulCommutative NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

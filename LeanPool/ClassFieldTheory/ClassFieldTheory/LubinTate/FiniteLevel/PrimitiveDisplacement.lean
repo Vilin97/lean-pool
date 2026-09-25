@@ -27,7 +27,8 @@ valuation of the topologically nilpotent input that it multiplies.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial PowerSeries
 

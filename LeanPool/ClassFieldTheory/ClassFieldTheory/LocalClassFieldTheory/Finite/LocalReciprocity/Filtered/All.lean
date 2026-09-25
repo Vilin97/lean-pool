@@ -22,4 +22,3 @@ Public aggregate for the filtered Artin-map API and its unramified,
 equal-characteristic, compositum, and finite-Abelian specializations.
 -/
 
-@[expose] public section

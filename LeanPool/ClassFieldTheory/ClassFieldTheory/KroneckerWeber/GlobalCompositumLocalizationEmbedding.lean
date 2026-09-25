@@ -19,7 +19,8 @@ identifies the restriction to the chosen localization as a genuine
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

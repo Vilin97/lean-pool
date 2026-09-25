@@ -20,7 +20,8 @@ The general unramified Galois identity `r * f = n` belongs to
 @[expose] public section
 
 open scoped NumberField
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

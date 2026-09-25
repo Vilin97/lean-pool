@@ -29,7 +29,8 @@ norm-orbit representatives, fiber calculations, fixed-field arithmetic, and
 the final Frobenius transfer formula.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

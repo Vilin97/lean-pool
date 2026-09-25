@@ -52,7 +52,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalU
     fieldUnitsEquivRootsPrincipalUnitsUniformizerOfCompleteDVF
 
 
-noncomputable section
+noncomputable
+section
 
 open ValuationTheory.DiscreteValuationField
 open LocalFieldTheory.DiscreteValuationField

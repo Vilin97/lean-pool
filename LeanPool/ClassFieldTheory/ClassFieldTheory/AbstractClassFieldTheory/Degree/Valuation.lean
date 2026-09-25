@@ -27,7 +27,8 @@ file formalizes the valuation-quotient axiom and constructs the normalized valua
 normalized-valuation functoriality.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

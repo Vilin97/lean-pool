@@ -21,7 +21,8 @@ value `1` reduce to nonzero elements.  Hence the first coefficient of value
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial
 

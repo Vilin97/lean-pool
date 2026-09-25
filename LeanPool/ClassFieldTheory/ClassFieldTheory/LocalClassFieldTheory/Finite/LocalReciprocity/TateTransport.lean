@@ -25,7 +25,8 @@ transport the local class-field-axiom theorem: reindexing a representation along
 isomorphism and replacing a representation by an isomorphic one.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

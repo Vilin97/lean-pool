@@ -20,7 +20,8 @@ open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 open KummerTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory.ClassFieldAxiom
 

@@ -20,7 +20,8 @@ The ambient field need not be a normal extension of the base field.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

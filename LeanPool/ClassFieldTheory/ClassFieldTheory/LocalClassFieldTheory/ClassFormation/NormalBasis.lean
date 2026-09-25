@@ -34,7 +34,8 @@ open LocalFieldTheory
 
 open CyclicCohomology
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

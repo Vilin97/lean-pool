@@ -20,7 +20,8 @@ makes every integral ideal of the base number field principal.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

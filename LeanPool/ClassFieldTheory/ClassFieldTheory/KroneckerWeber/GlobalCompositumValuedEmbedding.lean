@@ -19,7 +19,8 @@ normal-compositum embedding preserves this exact left restriction.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

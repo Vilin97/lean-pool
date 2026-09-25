@@ -28,7 +28,8 @@ root-counting argument below.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped PowerSeries LaurentSeries Polynomial

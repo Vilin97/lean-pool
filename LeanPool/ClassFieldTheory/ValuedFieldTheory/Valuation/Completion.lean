@@ -24,4 +24,3 @@ public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.T
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

@@ -26,7 +26,8 @@ finite positive norm under scalar extension.
 open scoped BigOperators NNReal NumberField NumberField.LiesOver
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace IdeleGroup
 

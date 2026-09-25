@@ -20,7 +20,8 @@ layer and does not depend on the separate pro-\(C\) groups library.
 
 open scoped Topology
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory.QuotientGroup
 

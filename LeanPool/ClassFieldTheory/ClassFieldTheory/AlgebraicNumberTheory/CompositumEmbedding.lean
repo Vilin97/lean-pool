@@ -19,7 +19,8 @@ inertia-field compositum in one cyclotomic target.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 

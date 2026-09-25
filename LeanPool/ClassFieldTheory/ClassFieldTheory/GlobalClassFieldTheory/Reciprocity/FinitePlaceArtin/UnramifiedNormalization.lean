@@ -23,7 +23,8 @@ open scoped NumberField ValuativeRel
 open NumberField IsDedekindDomain
 open AlgebraicNumberTheory.Valuations LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

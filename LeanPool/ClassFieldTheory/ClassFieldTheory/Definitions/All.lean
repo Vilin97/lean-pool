@@ -22,4 +22,3 @@ definition leaves.  Topic-level `All` modules and this root module are
 aggregation-only, and no public definition imports an implementation module.
 -/
 
-@[expose] public section

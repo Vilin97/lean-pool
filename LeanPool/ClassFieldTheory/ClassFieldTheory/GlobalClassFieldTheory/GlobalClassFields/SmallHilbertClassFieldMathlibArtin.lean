@@ -28,7 +28,8 @@ the Artin map, with its prime normalization obtained from the prime idèle.
 open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory.SmallHilbertClassFieldComparison
 

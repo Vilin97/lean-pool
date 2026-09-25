@@ -35,7 +35,8 @@ open AlgebraicNumberTheory.Valuations
 open HilbertRamification
 open HilbertRamification.Dedekind
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

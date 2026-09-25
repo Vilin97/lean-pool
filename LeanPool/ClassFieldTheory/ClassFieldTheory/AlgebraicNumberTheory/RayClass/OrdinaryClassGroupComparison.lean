@@ -23,7 +23,8 @@ finite-prime classes.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 
@@ -51,10 +52,11 @@ private theorem ordinary_rayPrincipalIdealSubgroup_eq_range :
       rw [rayPrincipalIdealSubgroup, hSet]
     _ = _ := Subgroup.closure_eq _
 
-private noncomputable def ordinaryRayIdealsEquiv :
+/-- For the trivial modulus, every fractional ideal is prime to the modulus. -/
+noncomputable def ordinaryRayIdealsEquiv :
     rayClassPrimeToIdeals (ordinaryRayClassModulus K) ≃*
       NumberFieldFractionalIdealGroup K :=
-  (MulEquiv.subgroupCongr ordinary_rayClassPrimeToIdeals_eq_top).trans
+  (MulEquiv.subgroupCongr (by exact ordinary_rayClassPrimeToIdeals_eq_top)).trans
     Subgroup.topEquiv
 
 private theorem ordinaryRayIdealsEquiv_apply
@@ -91,7 +93,7 @@ noncomputable def ordinaryRayClassGroupEquivClassGroup :
       (rayPrincipalIdealSubgroupInPrimeTo (ordinaryRayClassModulus K))
       (toPrincipalIdeal (𝓞 K) K).range
       ordinaryRayIdealsEquiv
-      ordinary_rayPrincipalIdealSubgroup_map).trans
+      (by exact ordinary_rayPrincipalIdealSubgroup_map)).trans
     (ClassGroup.equiv K).symm
 
 /-- The equivalence takes the ordinary ray class of a finite prime to the

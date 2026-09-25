@@ -25,7 +25,8 @@ field range then transports both the Artin and upper filtrations back.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped ValuativeRel
 

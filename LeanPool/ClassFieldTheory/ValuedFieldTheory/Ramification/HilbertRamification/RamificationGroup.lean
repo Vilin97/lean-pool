@@ -22,7 +22,8 @@ subgroup `R_w`.  The key point for the later character map
 `I_w`, not merely a subgroup.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

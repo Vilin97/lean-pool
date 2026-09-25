@@ -18,7 +18,8 @@ Together with the fixed-field generation theorem this gives the exact extension 
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries Polynomial PowerSeries
 

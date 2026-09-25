@@ -21,7 +21,8 @@ For a field of finite residue degree, this file constructs the map
 `d(G_K) = f_K ℤ̂`.  The Frobenius is then the unique class mapping to `1`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable {G : Type*} [Group G] [TopologicalSpace G]
 
@@ -174,7 +175,7 @@ def maximalUnramifiedDegreeEquiv (D : DegreeData G)
   let dquot : (K.field.toSubgroup ⧸ D.fieldInertiaWithin K.field) →* ZHatMul :=
     QuotientGroup.lift (D.fieldInertiaWithin K.field)
       (D.normalizedDegree K).toMonoidHom
-      (D.fieldInertiaWithin_le_normalizedDegree_ker K)
+      (by exact D.fieldInertiaWithin_le_normalizedDegree_ker K)
   apply MulEquiv.ofBijective dquot
   constructor
   · intro x y hxy
@@ -192,7 +193,7 @@ def maximalUnramifiedDegreeEquiv (D : DegreeData G)
       (D.fieldInertiaWithin K.field)
       (D.normalizedDegree K).toMonoidHom
       (D.normalizedDegree_surjective K)
-      (D.fieldInertiaWithin_le_normalizedDegree_ker K)
+      (by exact D.fieldInertiaWithin_le_normalizedDegree_ker K)
 
 /-- On quotient representatives, the maximal-unramified degree equivalence is normalized degree. -/
 @[simp]
@@ -292,7 +293,7 @@ def maximalUnramifiedRestriction (D : DegreeData G) {L K : ClosedSubgroup G}
     (L.toSubgroup ⧸ D.fieldInertiaWithin L) →*
       (K.toSubgroup ⧸ D.fieldInertiaWithin K) :=
   QuotientGroup.map (D.fieldInertiaWithin L) (D.fieldInertiaWithin K)
-    (Subgroup.inclusion hLK) (D.fieldInertiaWithin_le_comap_inclusion hLK)
+    (Subgroup.inclusion hLK) (by exact D.fieldInertiaWithin_le_comap_inclusion hLK)
 
 /-- Maximal-unramified restriction sends a quotient representative to its
 restricted representative. -/

@@ -14,4 +14,3 @@ Public root for reusable local-field infrastructure. This layer may depend on `V
 but not on `RamificationTheory`, `ClassFormation`, or `LocalClassFieldTheory`.
 -/
 
-@[expose] public section

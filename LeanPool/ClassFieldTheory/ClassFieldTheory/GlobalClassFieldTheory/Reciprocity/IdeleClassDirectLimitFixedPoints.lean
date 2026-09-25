@@ -17,7 +17,8 @@ identified with the corresponding fixed subgroup of the direct limit.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

@@ -21,7 +21,8 @@ over the finite group.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace CyclicCohomology
 

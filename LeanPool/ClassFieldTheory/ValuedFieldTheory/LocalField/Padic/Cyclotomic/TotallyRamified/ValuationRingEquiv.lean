@@ -15,7 +15,8 @@ This file constructs the concrete equivalence from `ℤ_[p][ζ - 1]` to the actu
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory
 namespace Valuations

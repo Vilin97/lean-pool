@@ -30,7 +30,8 @@ No perfectness hypothesis is imposed; this includes equal-characteristic
 local fields such as finite extensions of `𝔽_q((t))`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable (K L : Type) [Field K] [Field L] [Algebra K L]
   [FiniteDimensional K L] [IsGalois K L]

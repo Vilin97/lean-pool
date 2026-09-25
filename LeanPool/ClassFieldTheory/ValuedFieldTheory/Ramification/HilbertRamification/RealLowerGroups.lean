@@ -27,7 +27,8 @@ and is the full Galois group for `s <= -1`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped Pointwise
 

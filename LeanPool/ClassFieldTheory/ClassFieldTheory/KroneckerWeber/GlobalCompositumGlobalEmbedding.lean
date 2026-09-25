@@ -17,7 +17,8 @@ valued compositum construction.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

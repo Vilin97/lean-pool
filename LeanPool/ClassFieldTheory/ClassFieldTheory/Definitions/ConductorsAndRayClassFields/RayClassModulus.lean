@@ -22,7 +22,8 @@ A modulus consists of finite-prime exponents and a finite set of real places.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

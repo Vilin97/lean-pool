@@ -25,7 +25,8 @@ from the integral group rings themselves.
 
 open scoped Pointwise
 
-noncomputable section
+noncomputable
+section
 
 namespace GroupTheory
 namespace Transfer

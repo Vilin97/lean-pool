@@ -26,7 +26,8 @@ open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
     moduleFinite_target_valuationSubring_of_finite_separable
 
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 

@@ -26,7 +26,8 @@ Frobenius-normalized realizations intertwines both Artin actions.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

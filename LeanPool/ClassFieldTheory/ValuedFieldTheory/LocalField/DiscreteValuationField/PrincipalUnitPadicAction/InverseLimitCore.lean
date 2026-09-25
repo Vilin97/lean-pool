@@ -23,7 +23,8 @@ finite coordinate, and compatibility of reduction transports the action to
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators
 

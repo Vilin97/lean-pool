@@ -42,7 +42,8 @@ that original field, and obtain the genuine reciprocity equivalence
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

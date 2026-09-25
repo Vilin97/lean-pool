@@ -19,7 +19,8 @@ complex place, and identifies ambient complex conjugation on that field.
 open scoped IsMulCommutative
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

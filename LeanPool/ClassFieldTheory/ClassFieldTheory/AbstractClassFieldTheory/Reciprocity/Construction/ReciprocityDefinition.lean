@@ -31,7 +31,8 @@ class is the class of `N_{Σ|K}(π_Σ)` in
 element is proved separately from the unit-cohomology axiom.
 -/
 
-noncomputable section
+noncomputable
+section
 
 section frobeniusFixedFields
 

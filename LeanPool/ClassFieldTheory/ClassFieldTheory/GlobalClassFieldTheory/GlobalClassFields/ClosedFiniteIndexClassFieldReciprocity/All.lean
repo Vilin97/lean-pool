@@ -20,4 +20,3 @@ prevents downstream ray-class-field consumers from rebuilding the entire
 reciprocity layer as one declaration block.
 -/
 
-@[expose] public section

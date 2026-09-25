@@ -21,7 +21,8 @@ then bound every coefficient by the larger endpoint coefficient.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Polynomial
 

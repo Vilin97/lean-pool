@@ -21,7 +21,8 @@ then puts every level-`n+1` higher unit in the standard norm subgroup.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 open scoped LaurentSeries PowerSeries

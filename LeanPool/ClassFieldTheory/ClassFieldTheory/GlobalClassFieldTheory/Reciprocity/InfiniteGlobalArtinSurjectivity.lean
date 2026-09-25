@@ -25,7 +25,8 @@ open scoped IsMulCommutative NNReal NumberField Topology
 open NumberField IsDedekindDomain
 open NumberField.Units.dirichletUnitTheorem
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

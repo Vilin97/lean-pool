@@ -26,7 +26,8 @@ proofs from elaborating it together with the tensor-block API.
 open scoped NumberField ValuativeRel NNReal
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification

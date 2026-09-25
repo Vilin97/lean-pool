@@ -22,7 +22,8 @@ ideal-theoretic definition does not depend on the ray class group.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

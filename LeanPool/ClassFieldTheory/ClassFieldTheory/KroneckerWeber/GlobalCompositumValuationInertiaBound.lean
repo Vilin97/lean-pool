@@ -19,7 +19,8 @@ bound therefore gives the sharp factor `φ(p^e)`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

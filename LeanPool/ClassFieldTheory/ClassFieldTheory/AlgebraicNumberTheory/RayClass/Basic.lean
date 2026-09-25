@@ -21,7 +21,8 @@ A full modulus, including a selected set of real places, is defined in
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 variable {K : Type*} [Field K] [NumberField K]

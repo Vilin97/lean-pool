@@ -37,4 +37,3 @@ transfer square, and principalization of every integral and fractional ideal
 in the selected small Hilbert class field.
 -/
 
-@[expose] public section

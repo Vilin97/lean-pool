@@ -27,7 +27,8 @@ valuation-ring comparison used in the finite local reciprocity construction befo
 degrees.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w
 

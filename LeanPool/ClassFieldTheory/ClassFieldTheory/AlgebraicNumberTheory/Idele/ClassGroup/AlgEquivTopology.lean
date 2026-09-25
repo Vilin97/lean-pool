@@ -20,7 +20,8 @@ local continuity input for transporting the restricted-product topology.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

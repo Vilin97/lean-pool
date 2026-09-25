@@ -16,4 +16,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.
 
 /-! # All -/
 
-@[expose] public section

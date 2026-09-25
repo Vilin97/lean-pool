@@ -23,7 +23,8 @@ conductor exponent of the chosen localized extension.
 
 open scoped NumberField NNReal ValuativeRel
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

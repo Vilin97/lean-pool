@@ -18,7 +18,8 @@ filtration.  For `1 ≤ k ≤ n + 1`, that image has cardinality
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

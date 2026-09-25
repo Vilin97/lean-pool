@@ -151,7 +151,8 @@ used in the Hasse--Arf development.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

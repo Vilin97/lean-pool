@@ -21,7 +21,8 @@ the resulting kernels and stabilizers with inertia subgroups.
 
 namespace LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

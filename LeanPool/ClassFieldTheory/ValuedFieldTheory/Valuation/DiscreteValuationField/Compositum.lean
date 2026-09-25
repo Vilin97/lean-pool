@@ -26,7 +26,8 @@ intersection degree square, and separability of the common top.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 
@@ -385,7 +386,7 @@ local instance tensorProductIdealHasQuotient
   @Ideal.instHasQuotient (K' ⊗[K] L)
     (inferInstance : CommRing (K' ⊗[K] L)).toRing
 
-private noncomputable def quotientKerAlgEquivOfSurjectiveCommRing
+noncomputable def quotientKerAlgEquivOfSurjectiveCommRing
     {R A B : Type*}
     [ringR : CommSemiring R] [ringA : CommRing A]
     [algebraRA : Algebra R A]

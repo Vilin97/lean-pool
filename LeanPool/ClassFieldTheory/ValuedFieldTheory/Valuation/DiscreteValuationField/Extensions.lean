@@ -30,7 +30,8 @@ proof-irrelevant marker object.  All invariants and maps are defined once for
 discretely valued fields through their canonical `toDVF` projections.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x
 

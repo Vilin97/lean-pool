@@ -20,7 +20,8 @@ idèle-class congruence subgroups without fixing an archimedean convention.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 variable {K : Type*} [Field K] [NumberField K]
 

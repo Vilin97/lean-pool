@@ -26,7 +26,8 @@ open scoped Topology
 
 namespace ClassFormation
 
-noncomputable section
+noncomputable
+section
 
 universe u
 

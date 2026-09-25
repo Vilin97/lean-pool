@@ -25,7 +25,8 @@ ramification index to be one.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

@@ -38,7 +38,8 @@ open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
     valuationSubring_eq_of_le_of_mem_maximalIdeal_iff
 
 
-noncomputable section
+noncomputable
+section
 
 namespace HilbertRamification.Dedekind
 

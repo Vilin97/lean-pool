@@ -25,7 +25,8 @@ the corresponding completion using the extension-factor correspondence.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Polynomial
 open scoped BigOperators TensorProduct

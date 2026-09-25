@@ -23,7 +23,8 @@ compatibility, order relations, and maximal ray-class criteria.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

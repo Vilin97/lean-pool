@@ -29,7 +29,8 @@ uses the topological-group structure to obtain continuity everywhere.
 open scoped BigOperators NumberField NumberField.LiesOver
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace IdeleGroup
 

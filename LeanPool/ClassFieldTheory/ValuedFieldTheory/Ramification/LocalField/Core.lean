@@ -32,7 +32,8 @@ open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFilt
     herbrandFunction_of_nonpos
 
 
-noncomputable section
+noncomputable
+section
 
 open ValuationTheory.DiscreteValuationField
 open ValuationTheory.DiscreteValuationField.ValuedExtension

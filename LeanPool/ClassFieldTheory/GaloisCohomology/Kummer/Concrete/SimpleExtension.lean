@@ -18,7 +18,8 @@ the `n`-th roots of unity, this is a finite cyclic Galois extension.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

@@ -19,7 +19,8 @@ prime ideals of the ring of integers.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory.Ramification
 

@@ -20,7 +20,8 @@ is the Galois image of the `k`-th principal-unit subgroup and has order
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe u v
 

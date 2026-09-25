@@ -29,7 +29,8 @@ is contained in the normal core of `H`; therefore it is trivial when
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 universe uG
 

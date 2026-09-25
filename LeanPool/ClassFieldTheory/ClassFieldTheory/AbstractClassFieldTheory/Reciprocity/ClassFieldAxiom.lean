@@ -25,7 +25,8 @@ original statement the class-field axiom, rather than cardinality data attached 
 auxiliary reciprocity map.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 

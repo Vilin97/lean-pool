@@ -29,7 +29,8 @@ equality of degrees or an abstract comparison of finite groups.
 
 open scoped IsMulCommutative NumberField Cyclotomic
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

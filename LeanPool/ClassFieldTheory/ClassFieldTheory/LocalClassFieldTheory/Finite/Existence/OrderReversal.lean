@@ -24,7 +24,8 @@ the norm subgroup of a finite abelian extension.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

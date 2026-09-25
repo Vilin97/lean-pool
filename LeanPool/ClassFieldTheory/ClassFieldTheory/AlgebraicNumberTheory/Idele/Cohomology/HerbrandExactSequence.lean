@@ -27,7 +27,8 @@ its cardinality, and hence the norm index, is at least `|G| = [L : K]`.
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 open RelativeIdeleGroup.Cohomology
 

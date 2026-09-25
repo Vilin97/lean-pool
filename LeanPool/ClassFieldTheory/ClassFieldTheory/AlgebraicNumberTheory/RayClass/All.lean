@@ -25,4 +25,3 @@ Public aggregate for approximation, congruence subgroups, and ray class
 groups of number fields.
 -/
 
-@[expose] public section

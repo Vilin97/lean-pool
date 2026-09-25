@@ -17,7 +17,8 @@ public import Mathlib.Analysis.Complex.Order
 open scoped ComplexConjugate ComplexOrder NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

@@ -26,7 +26,8 @@ valuations, and the algebra equivalence identifying an actual integral-closure
 valuation ring with mathlib's `integralClosure`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x y
 

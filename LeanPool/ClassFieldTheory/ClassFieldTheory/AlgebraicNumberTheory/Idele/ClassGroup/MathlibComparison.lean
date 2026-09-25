@@ -22,7 +22,8 @@ needed for the public local--global reciprocity theorem is recorded below.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace IdeleGroup
 

@@ -20,7 +20,8 @@ This file contains small generic source lemmas used to pass from completeness
 for a positive power `I ^ n` back to completeness for `I`.
 -/
 
-noncomputable section
+noncomputable
+section
 
 namespace DiscreteValuationField
 

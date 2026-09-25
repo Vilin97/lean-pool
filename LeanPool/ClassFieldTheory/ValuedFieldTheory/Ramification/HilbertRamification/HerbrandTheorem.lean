@@ -45,7 +45,8 @@ open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFilt
     inverseHerbrandFunction
 
 
-noncomputable section
+noncomputable
+section
 
 namespace RamificationTheory.HilbertRamification
 namespace Higher

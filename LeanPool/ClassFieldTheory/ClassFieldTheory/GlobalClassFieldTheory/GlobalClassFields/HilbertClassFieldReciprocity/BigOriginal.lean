@@ -19,7 +19,8 @@ specialization and reuses the shared reciprocity transport provider.
 
 open scoped IsMulCommutative NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

@@ -27,7 +27,8 @@ into the abstract reciprocity theorem.  The resulting isomorphism is independent
 embedding used to realize the finite Galois extension in that closure.
 -/
 
-noncomputable section
+noncomputable
+section
 
 variable (K L : Type) [Field K] [Field L] [Algebra K L]
   [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]

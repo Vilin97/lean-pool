@@ -23,7 +23,8 @@ multiplicative group.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

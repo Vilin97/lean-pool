@@ -18,7 +18,8 @@ so every positive principal-unit image is trivial.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

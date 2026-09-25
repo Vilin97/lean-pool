@@ -9,17 +9,18 @@ module
 public import Mathlib.FieldTheory.Galois.Basic
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FixedFieldIntrinsicReciprocity.AmbientNormResidue
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FixedFieldIntrinsicReciprocity.AmbientPrimeNormTransport
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FixedFieldIntrinsicReciprocity.AmbientPrimeTarget
 /-!
 # Ambient prime witnesses
-public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FixedFieldIntrinsicReciprocity.AmbientPrimeTarget
-
-@[expose] public section
 
 This module constructs a valuation-one prime witness for each abelianized Galois element
 using the corresponding intrinsic Frobenius lift.
 -/
 
-noncomputable section
+@[expose] public section
+
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

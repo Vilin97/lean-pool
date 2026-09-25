@@ -14,4 +14,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacte
 
 /-! # All -/
 
-@[expose] public section

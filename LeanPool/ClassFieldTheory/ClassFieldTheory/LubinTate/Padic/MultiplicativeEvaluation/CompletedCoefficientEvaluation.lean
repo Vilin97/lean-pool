@@ -19,7 +19,8 @@ general injectivity criterion for evaluation with unit linear coefficient.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LubinTate
 

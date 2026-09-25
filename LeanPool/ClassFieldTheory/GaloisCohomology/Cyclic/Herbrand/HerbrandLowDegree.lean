@@ -17,4 +17,3 @@ public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.Herbran
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

@@ -22,7 +22,8 @@ corresponding ray class.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

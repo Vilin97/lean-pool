@@ -23,7 +23,8 @@ open KummerTheory
 
 open CyclicCohomology
 
-noncomputable section
+noncomputable
+section
 
 variable {G : IntegralRepGroupType} [Group G] [TopologicalSpace G]
 

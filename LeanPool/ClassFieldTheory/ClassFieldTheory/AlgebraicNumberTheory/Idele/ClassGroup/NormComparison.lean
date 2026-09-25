@@ -25,7 +25,8 @@ proved in relative coordinates be stated with the usual norm
 open scoped NumberField
 open NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace RelativeIdeleGroup
 

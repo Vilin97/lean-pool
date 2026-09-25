@@ -20,7 +20,8 @@ primitive Eisenstein polynomial, and the chosen sign convention gives
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped LaurentSeries Polynomial PowerSeries
 

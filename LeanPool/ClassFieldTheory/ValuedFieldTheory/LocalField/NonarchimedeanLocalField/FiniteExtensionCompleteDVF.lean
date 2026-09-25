@@ -20,7 +20,8 @@ and an integral-closure valuation chosen on each finite separable extension.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalFieldTheory
 
@@ -136,7 +137,12 @@ noncomputable def chosenLocalExtensionCompleteDVF
     [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] :
     CompleteDVF.{0, 0} L :=
-  Classical.choose (chosenLocalExtensionCompleteDVF_exists K L)
+  Classical.choose (show ∃ target : CompleteDVF.{0, 0} L,
+      ∃ hExt : (localCompleteDVF K).valuation.HasExtension target.valuation,
+        letI : (localCompleteDVF K).valuation.HasExtension target.valuation := hExt
+        IsIntegralClosure target.valuationSubring
+          (localCompleteDVF K).valuationSubring L from by
+    exact chosenLocalExtensionCompleteDVF_exists K L)
 
 /-- The chosen valuation on a finite local extension extends the canonical
 valuation of its base field. -/

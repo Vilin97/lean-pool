@@ -34,7 +34,8 @@ and the chosen local Artin map on one-place ideles.
 
 open scoped NumberField NumberField.LiesOver
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

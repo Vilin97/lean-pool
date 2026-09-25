@@ -28,7 +28,8 @@ open HilbertRamification
 open KummerTheory
 open LocalFieldTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory.ClassFieldAxiom
 

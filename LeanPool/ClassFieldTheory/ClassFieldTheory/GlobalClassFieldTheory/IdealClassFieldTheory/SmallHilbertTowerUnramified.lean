@@ -24,7 +24,8 @@ unramifiedness at both finite and infinite places.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace IdealClassFieldTheory

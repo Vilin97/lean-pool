@@ -17,7 +17,8 @@ boundary and carries out the source-producing fixed-element calculation.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFormation
 

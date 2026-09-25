@@ -23,4 +23,3 @@ This is the public import entry point for the local integral induced-block
 construction and its chosen-finite-place specialization.
 -/
 
-@[expose] public section

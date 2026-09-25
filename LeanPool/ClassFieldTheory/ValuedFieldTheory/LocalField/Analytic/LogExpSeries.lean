@@ -19,4 +19,3 @@ public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.Lo
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

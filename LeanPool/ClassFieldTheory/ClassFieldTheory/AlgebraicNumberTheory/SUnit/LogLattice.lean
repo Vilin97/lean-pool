@@ -27,7 +27,8 @@ lattice.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open IsDedekindDomain Module
 open scoped NumberField nonZeroDivisors
@@ -1197,7 +1198,7 @@ noncomputable def rootsOfUnityEquivTorsion :
 open scoped Classical in
 /-- A linear section of the quotient by torsion.  It exists because
 the quotient is a free, hence projective, `ℤ`-module. -/
-private noncomputable def torsionQuotientSection :
+noncomputable def torsionQuotientSection :
     FreeQuotient (K := K) S →ₗ[ℤ]
       Additive (SUnitGroup (K := K) S) :=
   (Module.projective_lifting_property
@@ -1218,7 +1219,7 @@ private theorem torsionQuotientSection_spec :
 open scoped Classical in
 /-- Splitting the exact sequence consisting of torsion, the `S`-unit
 group, and its torsion-free quotient. -/
-private noncomputable def torsionProdFreeQuotientEquiv :
+noncomputable def torsionProdFreeQuotientEquiv :
     Additive (SUnitGroup (K := K) S) ≃ₗ[ℤ]
       TorsionAdditive (K := K) S ×
         FreeQuotient (K := K) S :=
@@ -1226,7 +1227,9 @@ private noncomputable def torsionProdFreeQuotientEquiv :
     (TorsionAdditive (K := K) S).injective_subtype
     (by
       rw [Submodule.range_subtype, Submodule.ker_mkQ])
-    (torsionQuotientSection_spec (K := K) S)).symm
+    (show (TorsionAdditive (K := K) S).mkQ.comp
+      (torsionQuotientSection (K := K) S) = LinearMap.id from
+      by exact torsionQuotientSection_spec (K := K) S)).symm
 
 open scoped Classical in
 /-- **`S`-unit theorem, decomposition form.**  Additively, the

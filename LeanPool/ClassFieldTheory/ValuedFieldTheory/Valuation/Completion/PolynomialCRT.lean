@@ -18,7 +18,8 @@ simple factor algebras.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ValuationTheory
 namespace Completion

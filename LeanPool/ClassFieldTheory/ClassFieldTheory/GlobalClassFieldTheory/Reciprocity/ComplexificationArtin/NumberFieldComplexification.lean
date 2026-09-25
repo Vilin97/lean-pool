@@ -21,7 +21,8 @@ and proves that restriction to the rational cyclotomic factor is faithful.
 open scoped IsMulCommutative
 open AlgebraicNumberTheory NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace Reciprocity

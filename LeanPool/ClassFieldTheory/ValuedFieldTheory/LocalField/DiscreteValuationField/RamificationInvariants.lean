@@ -35,7 +35,8 @@ open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
     ramificationIndex_mul_residueDegree_eq_degree_of_finite_separable
 
 
-noncomputable section
+noncomputable
+section
 
 universe u v w x
 

@@ -27,7 +27,8 @@ its compatibility with conjugate-stable actions, relative norms, inclusions,
 and Frobenius power sums.
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory
 open scoped BigOperators

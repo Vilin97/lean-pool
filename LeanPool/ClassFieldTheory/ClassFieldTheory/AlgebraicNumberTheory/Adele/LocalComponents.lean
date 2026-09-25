@@ -22,7 +22,8 @@ tensor decomposition has been established.
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 
 universe u v

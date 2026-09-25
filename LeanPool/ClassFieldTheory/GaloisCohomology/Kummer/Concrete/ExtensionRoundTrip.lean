@@ -18,7 +18,8 @@ to the actual radical subgroup of `E` recovers `E` itself.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KummerTheory
 

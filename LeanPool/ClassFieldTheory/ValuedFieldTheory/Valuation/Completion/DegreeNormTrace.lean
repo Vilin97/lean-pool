@@ -20,7 +20,8 @@ norm and trace lie in `K`, their Lean statements are mapped into `K_v`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped BigOperators TensorProduct
 open ValuationTheory.Completion

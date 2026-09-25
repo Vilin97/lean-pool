@@ -17,4 +17,3 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.C
 public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.UnramifiedComparison.All
 /-! # Completions of number fields and their local comparisons -/
 
-@[expose] public section

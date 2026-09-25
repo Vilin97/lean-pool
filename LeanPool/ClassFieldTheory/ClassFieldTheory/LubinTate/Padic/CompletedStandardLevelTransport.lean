@@ -23,7 +23,8 @@ used in the changed-uniformizer norm argument.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries
 

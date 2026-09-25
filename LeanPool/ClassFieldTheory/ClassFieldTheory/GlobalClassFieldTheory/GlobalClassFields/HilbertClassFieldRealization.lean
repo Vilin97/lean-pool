@@ -36,7 +36,8 @@ the ordinary class number for the small Hilbert class field.
 
 open scoped NumberField
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

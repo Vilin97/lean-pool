@@ -22,7 +22,8 @@ the exact `p`-primary factor `φ(p ^ n)`.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace KroneckerWeber
 

@@ -18,7 +18,8 @@ intrinsic lift and proves its compatibility with quotient equivalences.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace LocalClassFieldTheory
 

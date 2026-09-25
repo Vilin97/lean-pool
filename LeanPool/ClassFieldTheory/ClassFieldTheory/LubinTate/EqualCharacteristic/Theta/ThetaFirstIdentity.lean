@@ -25,7 +25,8 @@ unique contracting solutions forced by commutation with
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open scoped PowerSeries
 

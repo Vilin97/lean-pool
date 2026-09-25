@@ -30,7 +30,8 @@ whole extension degree.
 open scoped NumberField
 open NumberField UniqueFactorizationMonoid
 
-noncomputable section
+noncomputable
+section
 
 namespace AlgebraicNumberTheory.Discriminant
 

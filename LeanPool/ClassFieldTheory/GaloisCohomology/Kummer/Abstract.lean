@@ -15,4 +15,3 @@ public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Abstract.KummerG
 
 /-! Supporting modules for Local and global class field theory. -/
 
-@[expose] public section

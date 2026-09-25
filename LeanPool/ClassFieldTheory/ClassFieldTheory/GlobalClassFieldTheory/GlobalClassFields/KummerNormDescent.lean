@@ -35,7 +35,8 @@ extension and then viewed over the original number field.
 open scoped BigOperators NumberField NumberField.LiesOver
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace GlobalClassFieldTheory
 namespace GlobalClassFields

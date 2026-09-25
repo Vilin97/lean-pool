@@ -14,7 +14,8 @@ public import Mathlib.NumberTheory.NumberField.InfinitePlace.Ramification
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 
 

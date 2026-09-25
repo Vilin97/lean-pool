@@ -26,7 +26,8 @@ and follows the source torsion orbit until the finite bracket terminates.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 open Filter
 open scoped LaurentSeries NNReal NormedField PowerSeries

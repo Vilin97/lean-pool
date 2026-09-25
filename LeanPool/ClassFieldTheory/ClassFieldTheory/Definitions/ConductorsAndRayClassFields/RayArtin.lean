@@ -13,7 +13,8 @@ public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsA
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory.RayClassFieldRealization
 

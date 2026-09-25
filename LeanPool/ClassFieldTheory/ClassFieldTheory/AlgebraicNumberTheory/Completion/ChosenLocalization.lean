@@ -21,7 +21,8 @@ unramifiedness for that actual completed extension.
 open scoped NumberField ValuativeRel NNReal
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 open AlgebraicNumberTheory.Valuations
 open LocalFieldTheory

@@ -15,4 +15,3 @@ Public root for reusable finite and profinite ramification infrastructure. It is
 `ValuationTheory` and `LocalFieldTheory` and upstream of local class field theory.
 -/
 
-@[expose] public section

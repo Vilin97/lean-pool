@@ -46,4 +46,3 @@ primitive uniformizer.  It also exports stability of a standard level under
 a principal-unit change of its defining uniformizer.
 -/
 
-@[expose] public section

@@ -39,7 +39,8 @@ The Henselian factorization condition and the residual linear-factor lemmas used
 residual linear-factor criterion.
 -/
 
-noncomputable section
+noncomputable
+section
 
 namespace DiscreteValuationField
 

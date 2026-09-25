@@ -21,4 +21,3 @@ the complex-conjugation overextension at a ramified real place, and the
 resulting infinite-place local-global Artin comparison.
 -/
 
-@[expose] public section

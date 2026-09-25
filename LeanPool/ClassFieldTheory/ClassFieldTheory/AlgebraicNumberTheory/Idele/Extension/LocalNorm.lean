@@ -22,7 +22,8 @@ this calculation to the canonical completion decomposition.
 
 open scoped BigOperators TensorProduct
 
-noncomputable section
+noncomputable
+section
 
 
 namespace RelativeIdeleGroup

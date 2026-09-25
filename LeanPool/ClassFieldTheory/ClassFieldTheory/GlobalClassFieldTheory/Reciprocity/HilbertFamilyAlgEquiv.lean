@@ -21,7 +21,8 @@ can therefore be transported without changing their normalization.
 open scoped NumberField
 open NumberField IsDedekindDomain
 
-noncomputable section
+noncomputable
+section
 
 namespace ClassFieldTheory
 

@@ -18,7 +18,8 @@ subgroup filtration to the real line by the natural-number ceiling.
 
 @[expose] public section
 
-noncomputable section
+noncomputable
+section
 
 namespace RamificationTheory
 

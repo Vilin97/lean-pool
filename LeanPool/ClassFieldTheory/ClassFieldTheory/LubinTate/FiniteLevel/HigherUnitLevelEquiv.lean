@@ -47,7 +47,8 @@ open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalU
     isUnit_one_add_of_mem_maximalIdeal_pow
 
 
-noncomputable section
+noncomputable
+section
 
 open scoped Polynomial IntermediateField
 
