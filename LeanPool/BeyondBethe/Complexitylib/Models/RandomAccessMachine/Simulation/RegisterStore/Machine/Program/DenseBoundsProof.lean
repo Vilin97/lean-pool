@@ -685,17 +685,52 @@ private theorem denseResourceMagnitudeSq_le_unit
         (encodedStoreLength overlay + inputLength + width + 1) *
           (width + 1) := Nat.mul_le_mul
       (Nat.mul_le_mul_left _ (by omega)) (by omega)
-private theorem denseExecuteInstructionTime_le_product {m : ℕ}
-    (tapes : ControlInstructionTapes m) (input : List Bool)
-    (instruction : Instr) (pcValue : ℕ) (overlay : Store)
-    (width magnitude : ℕ) (hvalid : DenseOverlay.Valid overlay)
-    (hstatic : RegisterStore.Instr.staticWidth instruction ≤ width)
-    (hcost : instruction.logCost
-      (DenseOverlay.Snapshot.decode input { pc := pcValue, overlay }) ≤ width)
-    (hfixed : instructionResourceMagnitude instruction ≤ magnitude)
+/-- Shared copying, lookup, update, and program-counter costs fit the resource unit. -/
+private theorem denseInstruction_resourceBounds
+    {m : ℕ} (tapes : ControlInstructionTapes m) (input : List Bool)
+    (pcValue : ℕ) (overlay : Store) (width magnitude : ℕ)
+    (hvalid : DenseOverlay.Valid overlay)
     (hpc : pcValue ≤ magnitude) :
-    denseExecuteInstructionTime tapes input instruction pcValue overlay ≤
-      6000000 * denseResourceUnit magnitude input.length overlay width := by
+    let unit := denseResourceUnit magnitude input.length overlay width
+    (1 ≤ unit) ∧
+    ((encodedStoreLength overlay + input.length + width + 1) *
+      (width + 1) ≤ unit) ∧
+    (encodedStoreLength overlay + input.length + width + 1 ≤
+      unit) ∧
+    ((width + 1) ^ 2 ≤ unit) ∧
+    ((magnitude + 1) ^ 2 ≤ unit) ∧
+    (encodedStoreLength overlay ≤ unit) ∧
+    ((overlay.flatMap Entry.encode).length ≤ unit) ∧
+    (∀ fixedValue, fixedValue ≤ magnitude →
+      TM.binaryAddConstTime fixedValue 0 ≤ 4 * unit) ∧
+    (∀ address, bitlen address ≤ width →
+      address ≤ magnitude →
+      denseOverlayLookupStaticTime tapes.data.lhsLookup input.length overlay
+        address ≤ 1000000 * unit) ∧
+    (∀ address, bitlen address ≤ width →
+      address ≤ magnitude →
+      denseOverlayLookupStaticTime tapes.data.rhsLookup input.length overlay
+        address ≤ 1000000 * unit) ∧
+    (∀ address, bitlen address ≤ width →
+      denseOverlayLookupTime tapes.data.indirectLoadLookup input.length overlay
+        address ≤ 800000 * unit) ∧
+    (∀ address value,
+      bitlen address ≤ width → bitlen value ≤ width →
+      taggedEntryUpdateTime tapes.data.update overlay address value ≤
+        20000 * unit) ∧
+    (∀ op lhs rhs, bitlen lhs ≤ width →
+      bitlen rhs ≤ width →
+      binaryInstructionArithmeticTime op lhs rhs ≤ 1000 * unit) ∧
+    (∀ value, bitlen value ≤ width →
+      TM.binaryCopyTime value 0 ≤ 23 * unit) ∧
+    (∀ value, bitlen value ≤ width →
+      TM.resetBinaryWorkTime 1 value.bits.length ≤ 11 * unit) ∧
+    (pcValue.size ≤ magnitude) ∧
+    (TM.binarySuccTime pcValue ≤ 2 * pcValue.size + 2) ∧
+    (TM.binarySuccTime pcValue ≤ 4 * unit) ∧
+    (TM.resetBinaryWorkTime 1 pcValue.bits.length ≤
+      11 * unit) := by
+  dsimp only
   let unit := denseResourceUnit magnitude input.length overlay width
   have hunit : 1 ≤ unit := denseResourceUnit_pos magnitude input.length
     overlay width
@@ -807,6 +842,78 @@ private theorem denseExecuteInstructionTime_le_product {m : ℕ}
     have hbits : pcValue.bits.length ≤ magnitude := by
       simpa [Nat.size_eq_bits_len] using! hpcSize
     nlinarith
+  exact ⟨hunit, hbase, hvolume, hwidthSq, hmagnitudeSq, hencoded, hencodedBits,
+      hfixedAdd, hstaticLookup, hstaticLookupRhs, hdynamicLookup, htaggedUpdate,
+      harithmetic, hcopy, hreset, hpcSize, hpcSucc, hpcSucc', hpcReset⟩
+
+/-- The conditional jump cost is bounded after reading and clearing its test register. -/
+private theorem denseExecuteZeroJumpTime_le_product
+    {m : ℕ} (tapes : ControlInstructionTapes m) (input : List Bool)
+    (pcValue : ℕ) (overlay : Store) (width magnitude : ℕ)
+    (hvalid : DenseOverlay.Valid overlay)
+    (source target : ℕ)
+    (hstatic : RegisterStore.Instr.staticWidth (.jz source target) ≤ width)
+    (hcost : (Instr.jz source target).logCost
+      (DenseOverlay.Snapshot.decode input { pc := pcValue, overlay }) ≤ width)
+    (hfixed : instructionResourceMagnitude (.jz source target) ≤ magnitude)
+    (hpc : pcValue ≤ magnitude) :
+    denseExecuteInstructionTime tapes input (.jz source target) pcValue overlay ≤
+      6000000 * denseResourceUnit magnitude input.length overlay width := by
+  let unit := denseResourceUnit magnitude input.length overlay width
+  obtain ⟨hunit, hbase, hvolume, hwidthSq, hmagnitudeSq, hencoded, hencodedBits,
+      hfixedAdd, hstaticLookup, hstaticLookupRhs, hdynamicLookup, htaggedUpdate,
+      harithmetic, hcopy, hreset, hpcSize, hpcSucc, hpcSucc', hpcReset⟩ :=
+    denseInstruction_resourceBounds tapes input pcValue overlay width magnitude hvalid hpc
+  simp only [RegisterStore.Instr.staticWidth] at hstatic
+  simp only [instructionResourceMagnitude] at hfixed
+  simp only [Instr.logCost, DenseOverlay.Snapshot.decode,
+    DenseOverlay.decode] at hcost
+  have hsourceWidth : bitlen source ≤ width :=
+    le_trans (le_max_left _ _) hstatic
+  have hvalue : bitlen (DenseOverlay.read input overlay source) ≤ width :=
+    by omega
+  have hlookupRaw := denseOverlayLookupStaticTime_le_product
+    tapes.lifted.data.lhsLookup input.length overlay source width magnitude
+    hvalid hsourceWidth (by omega)
+  have hlookup : denseOverlayLookupStaticTime
+      tapes.lifted.data.lhsLookup input.length overlay source ≤
+      1000000 * unit := by
+    calc
+      denseOverlayLookupStaticTime tapes.lifted.data.lhsLookup input.length
+          overlay source ≤ 1000000 * (magnitude + 1) ^ 2 *
+            (encodedStoreLength overlay + input.length + width + 1) *
+            (width + 1) := hlookupRaw
+      _ = 1000000 * unit := by
+        dsimp only [unit, denseResourceUnit]
+        ring
+  have htargetAdd := hfixedAdd target (by omega)
+  have hset : setProgramCounterTime pcValue target ≤ 16 * unit := by
+    unfold setProgramCounterTime
+    omega
+  have hbranch : max (setProgramCounterTime pcValue target)
+      (TM.binarySuccTime pcValue) ≤ 16 * unit :=
+    max_le hset (by omega)
+  have hresetValue := hreset (DenseOverlay.read input overlay source) hvalue
+  simp only [denseExecuteInstructionTime, denseZeroJumpInstructionTime,
+    TM.branchWorkBlankTime]
+  omega
+
+private theorem denseExecuteInstructionTime_le_product {m : ℕ}
+    (tapes : ControlInstructionTapes m) (input : List Bool)
+    (instruction : Instr) (pcValue : ℕ) (overlay : Store)
+    (width magnitude : ℕ) (hvalid : DenseOverlay.Valid overlay)
+    (hstatic : RegisterStore.Instr.staticWidth instruction ≤ width)
+    (hcost : instruction.logCost
+      (DenseOverlay.Snapshot.decode input { pc := pcValue, overlay }) ≤ width)
+    (hfixed : instructionResourceMagnitude instruction ≤ magnitude)
+    (hpc : pcValue ≤ magnitude) :
+    denseExecuteInstructionTime tapes input instruction pcValue overlay ≤
+      6000000 * denseResourceUnit magnitude input.length overlay width := by
+  let unit := denseResourceUnit magnitude input.length overlay width
+  obtain ⟨hunit, hbase, hvolume, hwidthSq, hmagnitudeSq, hencoded, hencodedBits,
+      hfixedAdd, hstaticLookup, hstaticLookupRhs, hdynamicLookup, htaggedUpdate,
+      harithmetic, hcopy, hreset, hpcSize, hpcSucc, hpcSucc', hpcReset⟩ :=
+    denseInstruction_resourceBounds tapes input pcValue overlay width magnitude hvalid hpc
   cases instruction with
   | imm destination value =>
       simp only [RegisterStore.Instr.staticWidth] at hstatic
@@ -959,39 +1066,8 @@ private theorem denseExecuteInstructionTime_le_product {m : ℕ}
       simp only [denseExecuteInstructionTime, denseIndirectStoreInstructionTime]
       omega
   | jz source target =>
-      simp only [RegisterStore.Instr.staticWidth] at hstatic
-      simp only [instructionResourceMagnitude] at hfixed
-      simp only [Instr.logCost, DenseOverlay.Snapshot.decode,
-        DenseOverlay.decode] at hcost
-      have hsourceWidth : bitlen source ≤ width :=
-        le_trans (le_max_left _ _) hstatic
-      have hvalue : bitlen (DenseOverlay.read input overlay source) ≤ width :=
-        by omega
-      have hlookupRaw := denseOverlayLookupStaticTime_le_product
-        tapes.lifted.data.lhsLookup input.length overlay source width magnitude
-        hvalid hsourceWidth (by omega)
-      have hlookup : denseOverlayLookupStaticTime
-          tapes.lifted.data.lhsLookup input.length overlay source ≤
-          1000000 * unit := by
-        calc
-          denseOverlayLookupStaticTime tapes.lifted.data.lhsLookup input.length
-              overlay source ≤ 1000000 * (magnitude + 1) ^ 2 *
-                (encodedStoreLength overlay + input.length + width + 1) *
-                (width + 1) := hlookupRaw
-          _ = 1000000 * unit := by
-            dsimp only [unit, denseResourceUnit]
-            ring
-      have htargetAdd := hfixedAdd target (by omega)
-      have hset : setProgramCounterTime pcValue target ≤ 16 * unit := by
-        unfold setProgramCounterTime
-        omega
-      have hbranch : max (setProgramCounterTime pcValue target)
-          (TM.binarySuccTime pcValue) ≤ 16 * unit :=
-        max_le hset (by omega)
-      have hresetValue := hreset (DenseOverlay.read input overlay source) hvalue
-      simp only [denseExecuteInstructionTime, denseZeroJumpInstructionTime,
-        TM.branchWorkBlankTime]
-      omega
+      exact denseExecuteZeroJumpTime_le_product tapes input pcValue overlay
+        width magnitude hvalid source target hstatic hcost hfixed hpc
   | jmp target =>
       simp only [instructionResourceMagnitude] at hfixed
       have htargetAdd := hfixedAdd target (by omega)

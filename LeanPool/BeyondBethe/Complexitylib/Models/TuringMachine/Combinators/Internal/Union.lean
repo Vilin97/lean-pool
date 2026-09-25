@@ -830,6 +830,83 @@ private theorem rewind_input_work_idle (tm₁ : TM n₁) (tm₂ : TM n₂)
       hidle'
     exact ⟨c'', .step hstep hreach, hidle''⟩
 
+/-- The rejection check leaves the input rewind distance at most one past its original head. -/
+private theorem unionReject_rewindInput_head_bound
+    (tm₁ : TM n₁) (tm₂ : TM n₂) (x : List Bool)
+    (c₁ : Cfg n₁ tm₁.Q)
+    (c_rw c_at0 : Cfg (n₁ + 1 + n₂) (UnionQ tm₁.Q tm₂.Q)) (h_rw : ℕ)
+    (hhalt : tm₁.halted c₁)
+    (hinput_cells : c₁.input.cells = (Tape.init (x.map Γ.ofBool)).cells)
+    (hstep1 : (unionTM tm₁ tm₂).step (unionPhase1Cfg tm₁ tm₂ c₁) = some c_rw)
+    (hreach_rw : (unionTM tm₁ tm₂).reachesIn h_rw c_rw c_at0)
+    (hinp_at0 : c_rw.input.head ≥ 1 →
+      (∀ i, i ≥ 1 → c_rw.input.cells i ≠ Γ.start) →
+      c_at0.input.head = c_rw.input.head) :
+    let checkInput := c_at0.input.move (idleDir c_at0.input.read)
+    let rewindInput := checkInput.move (idleDir checkInput.read)
+    rewindInput.head ≤ c₁.input.head + 1 := by
+  dsimp only
+  let checkInput := c_at0.input.move (idleDir c_at0.input.read)
+  let rewindInput := checkInput.move (idleDir checkInput.read)
+  -- c_rw.input.cells = c₁.input.cells (input cells preserved through step)
+  have hcrw_cells : c_rw.input.cells = c₁.input.cells := by
+    have := union_input_cells_of_step tm₁ tm₂ hstep1
+    rw [this]; rfl
+  -- c_rw.input cells[≥1] ≠ Γ.start
+  have hcrw_ino : ∀ i, i ≥ 1 → c_rw.input.cells i ≠ Γ.start := by
+    intro i hi; rw [hcrw_cells, hinput_cells]
+    simp only [Tape.init, show i ≠ 0 from by omega, ↓reduceIte]
+    intro heq
+    cases hget : (x.map Γ.ofBool)[i - 1]? with
+    | none => simp [hget, Option.getD] at heq
+    | some v =>
+      simp [hget, Option.getD] at heq; subst heq
+      have hmem := List.mem_of_getElem? hget
+      simp [List.mem_map] at hmem; rcases hmem with ⟨_, hb⟩ | ⟨_, hb⟩ <;> simp [Γ.ofBool] at hb
+  -- c_rw.input.head ≤ c₁.input.head + 1
+  -- From step_inl_qhalt_cfg, the input direction is idleDir(input.read)
+  -- Use step_inl_qhalt_cfg to get the exact form of c_rw.input
+  have hstateq : (unionPhase1Cfg tm₁ tm₂ c₁).state = Sum.inl tm₁.qhalt := by
+    show Sum.inl c₁.state = Sum.inl tm₁.qhalt; rw [hhalt]
+  have hstep_eq := step_inl_qhalt_cfg tm₁ tm₂ hstateq
+  -- c_rw.input = c₁.input.move (idleDir c₁.input.read) since unionPhase1Cfg.input = c₁.input
+  have hcrw_input_eq : c_rw.input = c₁.input.move (idleDir c₁.input.read) := by
+    have heq : some c_rw = some _ := hstep1.symm.trans hstep_eq
+    simp only [Option.some.injEq] at heq
+    rw [heq]; rfl
+  -- c_rw.input.head ≤ c₁.input.head + 1
+  have hcrw_head : c_rw.input.head ≤ c₁.input.head + 1 := by
+    rw [hcrw_input_eq]; cases (idleDir c₁.input.read) <;> simp [Tape.move]; omega
+  -- c_rw.input.head ≥ 1
+  have hcrw_hge : c_rw.input.head ≥ 1 := by
+    rw [hcrw_input_eq]
+    by_cases hh : c₁.input.head = 0
+    · have hread0 : c₁.input.read = Γ.start := by
+        rw [Tape.read, hh, hinput_cells]; simp [Tape.init]
+      rw [hread0, idleDir, ite_eq_left rfl]; simp [Tape.move, hh]
+    · have hge : c₁.input.head ≥ 1 := by omega
+      have hc1_ino : ∀ i, i ≥ 1 → c₁.input.cells i ≠ Γ.start := by
+        intro i hi; rw [← hcrw_cells]; exact hcrw_ino i hi
+      rw [idleDir_stay_of_ge_one _ hge hc1_ino]; simp [Tape.move]; omega
+  -- Through rewind_fakeOut loop: input head preserved
+  have hat0_head : c_at0.input.head = c_rw.input.head :=
+    hinp_at0 hcrw_hge hcrw_ino
+  -- c_at0.input.cells[≥1] ≠ start (preserved through reachesIn)
+  have hat0_ino : ∀ i, i ≥ 1 → c_at0.input.cells i ≠ Γ.start := by
+    intro i hi; rw [union_input_cells_of_reachesIn tm₁ tm₂ hreach_rw]; exact hcrw_ino i hi
+  -- checkInput.head = c_at0.input.head (idleDir step from head ≥ 1)
+  have hcr_head : checkInput.head = c_at0.input.head := by
+    show (c_at0.input.move (idleDir c_at0.input.read)).head = _
+    exact idle_move_preserves_head _ (by omega) hat0_ino
+  -- rewindInput.head = checkInput.head (idleDir step from head ≥ 1)
+  have hcr_ino : ∀ i, i ≥ 1 → checkInput.cells i ≠ Γ.start := by
+    intro i hi; show (c_at0.input.move _).cells i ≠ _; rw [Tape.move_cells]; exact hat0_ino i hi
+  have hri_head : rewindInput.head = checkInput.head := by
+    show (checkInput.move (idleDir checkInput.read)).head = _
+    exact idle_move_preserves_head _ (by omega) hcr_ino
+  -- Chain: rewindInput.head = rewindInput.head = c_rw.input.head ≤ c₁.input.head + 1
+  omega
+
 /-- After Phase 1, if tm₁ rejected, the union machine transitions to a
     config ready for Phase 2: state is `Sum.inr (Sum.inr tm₂.qstart)`,
     input/output/active work tapes match `tm₂.initCfg x`. -/
@@ -1099,65 +1176,9 @@ theorem unionTM_transition_reject (tm₁ : TM n₁) (tm₂ : TM n₂) (x : List 
   -- Need: 1 + (h_rw + 2) + (h_ri + 2) = h_rw + h_ri + 5 ≤ c₁.output.head + c₁.input.head + 7
   -- Suffices: h_rw + h_ri ≤ c₁.output.head + c₁.input.head + 2, which holds.
   -- Prove h_ri ≤ c₁.input.head + 1:
-  have hri_bound : h_ri ≤ c₁.input.head + 1 := by
-    -- c_rw.input.cells = c₁.input.cells (input cells preserved through step)
-    have hcrw_cells : c_rw.input.cells = c₁.input.cells := by
-      have := union_input_cells_of_step tm₁ tm₂ hstep1
-      rw [this]; rfl
-    -- c_rw.input cells[≥1] ≠ Γ.start
-    have hcrw_ino : ∀ i, i ≥ 1 → c_rw.input.cells i ≠ Γ.start := by
-      intro i hi; rw [hcrw_cells, hinput_cells]
-      simp only [Tape.init, show i ≠ 0 from by omega, ↓reduceIte]
-      intro heq
-      cases hget : (x.map Γ.ofBool)[i - 1]? with
-      | none => simp [hget, Option.getD] at heq
-      | some v =>
-        simp [hget, Option.getD] at heq; subst heq
-        have hmem := List.mem_of_getElem? hget
-        simp [List.mem_map] at hmem; rcases hmem with ⟨_, hb⟩ | ⟨_, hb⟩ <;> simp [Γ.ofBool] at hb
-    -- c_rw.input.head ≤ c₁.input.head + 1
-    -- From step_inl_qhalt_cfg, the input direction is idleDir(input.read)
-    -- Use step_inl_qhalt_cfg to get the exact form of c_rw.input
-    have hstateq : (unionPhase1Cfg tm₁ tm₂ c₁).state = Sum.inl tm₁.qhalt := by
-      show Sum.inl c₁.state = Sum.inl tm₁.qhalt; rw [hhalt]
-    have hstep_eq := step_inl_qhalt_cfg tm₁ tm₂ hstateq
-    -- c_rw.input = c₁.input.move (idleDir c₁.input.read) since unionPhase1Cfg.input = c₁.input
-    have hcrw_input_eq : c_rw.input = c₁.input.move (idleDir c₁.input.read) := by
-      have heq : some c_rw = some _ := hstep1.symm.trans hstep_eq
-      simp only [Option.some.injEq] at heq
-      rw [heq]; rfl
-    -- c_rw.input.head ≤ c₁.input.head + 1
-    have hcrw_head : c_rw.input.head ≤ c₁.input.head + 1 := by
-      rw [hcrw_input_eq]; cases (idleDir c₁.input.read) <;> simp [Tape.move]; omega
-    -- c_rw.input.head ≥ 1
-    have hcrw_hge : c_rw.input.head ≥ 1 := by
-      rw [hcrw_input_eq]
-      by_cases hh : c₁.input.head = 0
-      · have hread0 : c₁.input.read = Γ.start := by
-          rw [Tape.read, hh, hinput_cells]; simp [Tape.init]
-        rw [hread0, idleDir, ite_eq_left rfl]; simp [Tape.move, hh]
-      · have hge : c₁.input.head ≥ 1 := by omega
-        have hc1_ino : ∀ i, i ≥ 1 → c₁.input.cells i ≠ Γ.start := by
-          intro i hi; rw [← hcrw_cells]; exact hcrw_ino i hi
-        rw [idleDir_stay_of_ge_one _ hge hc1_ino]; simp [Tape.move]; omega
-    -- Through rewind_fakeOut loop: input head preserved
-    have hat0_head : c_at0.input.head = c_rw.input.head :=
-      hinp_at0 hcrw_hge hcrw_ino
-    -- c_at0.input.cells[≥1] ≠ start (preserved through reachesIn)
-    have hat0_ino : ∀ i, i ≥ 1 → c_at0.input.cells i ≠ Γ.start := by
-      intro i hi; rw [union_input_cells_of_reachesIn tm₁ tm₂ hreach_rw]; exact hcrw_ino i hi
-    -- c_cr.input.head = c_at0.input.head (idleDir step from head ≥ 1)
-    have hcr_head : c_cr.input.head = c_at0.input.head := by
-      show (c_at0.input.move (idleDir c_at0.input.read)).head = _
-      exact idle_move_preserves_head _ (by omega) hat0_ino
-    -- c_ri.input.head = c_cr.input.head (idleDir step from head ≥ 1)
-    have hcr_ino : ∀ i, i ≥ 1 → c_cr.input.cells i ≠ Γ.start := by
-      intro i hi; show (c_at0.input.move _).cells i ≠ _; rw [Tape.move_cells]; exact hat0_ino i hi
-    have hri_head : c_ri.input.head = c_cr.input.head := by
-      show (c_cr.input.move (idleDir c_cr.input.read)).head = _
-      exact idle_move_preserves_head _ (by omega) hcr_ino
-    -- Chain: h_ri = c_ri.input.head = c_rw.input.head ≤ c₁.input.head + 1
-    omega
+  have hri_bound : h_ri ≤ c₁.input.head + 1 :=
+    unionReject_rewindInput_head_bound tm₁ tm₂ x c₁ c_rw c_at0 h_rw
+      hhalt hinput_cells hstep1 hreach_rw hinp_at0
   have htime : 1 + (h_rw + (1 + 1)) + (h_ri + (1 + 1)) ≤ c₁.output.head + c₁.input.head + 7 := by
     omega
   refine ⟨1 + (h_rw + (1 + 1)) + (h_ri + (1 + 1)), c_mid, ?_, hst_mid, hin_mid, hwork_mid,

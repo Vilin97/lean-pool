@@ -594,6 +594,106 @@ private theorem header_negated1 {gateStart base : ℕ}
   rw [header_high store (gateStart + 2) hlarge, hready.code_eq 2]
   simp [codeBits, CircuitCode.RawGate.encode]
 
+/-- The two decoded operands and preserved metadata satisfy the parsed-gate interface. -/
+private theorem parsed_of_decoder_state {gateStart base : ℕ}
+    {gate : CircuitCode.RawGate} {tail wires : List Bool} {store second : Store}
+    (hready : Ready gateStart base gate tail wires store)
+    (hsecondVerdict : second UnaryDecode.verdictReg = 1)
+    (hsecondValue : second UnaryDecode.valueReg = gate.input₁)
+    (hsecondPointer : second UnaryDecode.pointerReg = gateStart + gate.encode.length)
+    (hsecondRemaining : second UnaryDecode.remainingReg = tail.length)
+    (hsecondActive : second UnaryDecode.activeReg = 0)
+    (hmeta : ∀ index, UnaryDecode.inputBase ≤ index → index ≠ savedInput0Reg →
+      second index = headerStore store index)
+    (hpreserved : ∀ index, 10 < index → second index = store index)
+    (hinput0 : second savedInput0Reg = gate.input₀) :
+    Parsed gateStart (gateStart + gate.encode.length)
+      tail.length base gate wires second := by
+  constructor
+  · exact hready.base_ge
+  · exact hready.memo_before_code
+  · exact hsecondVerdict
+  · exact hsecondValue
+  · exact hsecondPointer
+  · exact hsecondRemaining
+  · exact hsecondActive
+  · rw [hmeta memoBaseReg]
+    · simpa [headerStore, headerOps, setupStore, setupOps, Basic.execList,
+        Basic.exec, memoBaseReg, UnaryDecode.verdictReg,
+        UnaryDecode.valueReg, UnaryDecode.pointerReg,
+        UnaryDecode.remainingReg, UnaryDecode.oneReg,
+        UnaryDecode.activeReg, gateStartReg] using hready.memoBase_eq
+    · simp [memoBaseReg, UnaryDecode.inputBase]
+    · simp [memoBaseReg, savedInput0Reg]
+  · rw [hmeta wireCountMetaReg]
+    · simpa [headerStore, headerOps, setupStore, setupOps, Basic.execList,
+        Basic.exec, wireCountMetaReg, UnaryDecode.verdictReg,
+        UnaryDecode.valueReg, UnaryDecode.pointerReg,
+        UnaryDecode.remainingReg, UnaryDecode.oneReg,
+        UnaryDecode.activeReg, gateStartReg] using hready.wireCount_eq
+    · simp [wireCountMetaReg, UnaryDecode.inputBase]
+    · simp [wireCountMetaReg, savedInput0Reg]
+  · rw [hmeta gateStartReg]
+    · simp [headerStore, headerOps, setupStore, setupOps, Basic.execList,
+        Basic.exec, gateStartReg, UnaryDecode.pointerReg,
+        UnaryDecode.remainingReg]
+      exact hready.pointer_eq
+    · simp [gateStartReg, UnaryDecode.inputBase]
+    · simp [gateStartReg, savedInput0Reg]
+  · exact hinput0
+  · rw [hpreserved gateStart]
+    · exact hready.code_eq 0 |>.trans (by
+        simp [codeBits, CircuitCode.RawGate.encode])
+    · have hbase := hready.base_ge
+      have hcode := hready.memo_before_code
+      simp only [spillRemainingReg] at hbase
+      omega
+  · rw [hpreserved (gateStart + 1)]
+    · simpa [codeBits, CircuitCode.RawGate.encode] using
+        hready.code_eq 1
+    · have hbase := hready.base_ge
+      have hcode := hready.memo_before_code
+      simp only [spillRemainingReg] at hbase
+      omega
+  · rw [hpreserved (gateStart + 2)]
+    · simpa [codeBits, CircuitCode.RawGate.encode] using
+        hready.code_eq 2
+    · have hbase := hready.base_ge
+      have hcode := hready.memo_before_code
+      simp only [spillRemainingReg] at hbase
+      omega
+  · intro index
+    rw [hpreserved (base + index)]
+    · exact hready.wire_eq index
+    · have hbase := hready.base_ge
+      simp only [spillRemainingReg] at hbase
+      omega
+
+/-- Decoder preservation above the register block retains the complete trailing code stream. -/
+private theorem decoder_tail_preserved {gateStart base : ℕ}
+    {gate : CircuitCode.RawGate} {tail wires : List Bool} {store second : Store}
+    (hready : Ready gateStart base gate tail wires store)
+    (hpreserved : ∀ index, 10 < index → second index = store index) :
+    ∀ delta,
+      second (gateStart + gate.encode.length + delta) =
+        match tail[delta]? with
+        | some bit => Input.bitValue bit
+        | none => 0 := by
+  intro delta
+  rw [hpreserved (gateStart + gate.encode.length + delta)]
+  · have hcode := hready.code_eq (gate.encode.length + delta)
+    rw [show gateStart + (gate.encode.length + delta) =
+        gateStart + gate.encode.length + delta by omega] at hcode
+    rw [show (codeBits gate tail)[gate.encode.length + delta]? =
+        tail[delta]? by
+      rw [codeBits, List.getElem?_append_right (by simp)]
+      simp] at hcode
+    exact hcode
+  · have hbase := hready.base_ge
+    have hcode := hready.memo_before_code
+    simp only [spillRemainingReg] at hbase
+    omega
+
 private theorem decoders_internal {gateStart base : ℕ} {gate : CircuitCode.RawGate}
     {tail wires : List Bool} {store : Store}
     (hready : Ready gateStart base gate tail wires store)
@@ -793,86 +893,9 @@ private theorem decoders_internal {gateStart base : ℕ} {gate : CircuitCode.Raw
     simp [saveRestartStore, saveRestartOps, Basic.execList, Basic.exec,
       savedInput0Reg, UnaryDecode.verdictReg, UnaryDecode.valueReg,
       UnaryDecode.activeReg, hvalue, hactive]
-  have hparsed : Parsed gateStart (gateStart + gate.encode.length)
-      tail.length base gate wires second := by
-    constructor
-    · exact hready.base_ge
-    · exact hready.memo_before_code
-    · exact hsecondResult.1
-    · exact hsecondValue
-    · exact hsecondPointer
-    · exact hsecondRemaining
-    · exact hsecondActive
-    · rw [hmeta memoBaseReg]
-      · simpa [headerStore, headerOps, setupStore, setupOps, Basic.execList,
-          Basic.exec, memoBaseReg, UnaryDecode.verdictReg,
-          UnaryDecode.valueReg, UnaryDecode.pointerReg,
-          UnaryDecode.remainingReg, UnaryDecode.oneReg,
-          UnaryDecode.activeReg, gateStartReg] using hready.memoBase_eq
-      · simp [memoBaseReg, UnaryDecode.inputBase]
-      · simp [memoBaseReg, savedInput0Reg]
-    · rw [hmeta wireCountMetaReg]
-      · simpa [headerStore, headerOps, setupStore, setupOps, Basic.execList,
-          Basic.exec, wireCountMetaReg, UnaryDecode.verdictReg,
-          UnaryDecode.valueReg, UnaryDecode.pointerReg,
-          UnaryDecode.remainingReg, UnaryDecode.oneReg,
-          UnaryDecode.activeReg, gateStartReg] using hready.wireCount_eq
-      · simp [wireCountMetaReg, UnaryDecode.inputBase]
-      · simp [wireCountMetaReg, savedInput0Reg]
-    · rw [hmeta gateStartReg]
-      · simp [headerStore, headerOps, setupStore, setupOps, Basic.execList,
-          Basic.exec, gateStartReg, UnaryDecode.pointerReg,
-          UnaryDecode.remainingReg]
-        exact hready.pointer_eq
-      · simp [gateStartReg, UnaryDecode.inputBase]
-      · simp [gateStartReg, savedInput0Reg]
-    · exact hinput0
-    · rw [hpreserved gateStart]
-      · exact hready.code_eq 0 |>.trans (by
-          simp [codeBits, CircuitCode.RawGate.encode])
-      · have hbase := hready.base_ge
-        have hcode := hready.memo_before_code
-        simp only [spillRemainingReg] at hbase
-        omega
-    · rw [hpreserved (gateStart + 1)]
-      · simpa [codeBits, CircuitCode.RawGate.encode] using
-          hready.code_eq 1
-      · have hbase := hready.base_ge
-        have hcode := hready.memo_before_code
-        simp only [spillRemainingReg] at hbase
-        omega
-    · rw [hpreserved (gateStart + 2)]
-      · simpa [codeBits, CircuitCode.RawGate.encode] using
-          hready.code_eq 2
-      · have hbase := hready.base_ge
-        have hcode := hready.memo_before_code
-        simp only [spillRemainingReg] at hbase
-        omega
-    · intro index
-      rw [hpreserved (base + index)]
-      · exact hready.wire_eq index
-      · have hbase := hready.base_ge
-        simp only [spillRemainingReg] at hbase
-        omega
-  have hsecondCode : ∀ delta,
-      second (gateStart + gate.encode.length + delta) =
-        match tail[delta]? with
-        | some bit => Input.bitValue bit
-        | none => 0 := by
-    intro delta
-    rw [hpreserved (gateStart + gate.encode.length + delta)]
-    · have hcode := hready.code_eq (gate.encode.length + delta)
-      rw [show gateStart + (gate.encode.length + delta) =
-          gateStart + gate.encode.length + delta by omega] at hcode
-      rw [show (codeBits gate tail)[gate.encode.length + delta]? =
-          tail[delta]? by
-        rw [codeBits, List.getElem?_append_right (by simp)]
-        simp] at hcode
-      exact hcode
-    · have hbase := hready.base_ge
-      have hcode := hready.memo_before_code
-      simp only [spillRemainingReg] at hbase
-      omega
+  have hparsed := parsed_of_decoder_state hready hsecondResult.1 hsecondValue
+    hsecondPointer hsecondRemaining hsecondActive hmeta hpreserved hinput0
+  have hsecondCode := decoder_tail_preserved hready hpreserved
   refine ⟨first, saved, second, firstCost, firstSpace, secondCost,
     secondSpace, hfirst, rfl, hsecond, hparsed, hsecondCode, ?_⟩
   simpa [hcursorEnd] using hsecondBound

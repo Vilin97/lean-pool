@@ -280,6 +280,77 @@ private theorem denseProgramInitialStore_eq (input : List Bool) :
   simp [denseProgramInitialStore, DenseOverlay.Snapshot.initial,
     DenseOverlay.write, RegisterStore.write]
 
+/-- Compose initialization phases whose parked tapes are unchanged by the phase transition. -/
+private theorem denseInit_sequence_parked {tapeCount : ℕ}
+    (first second : TM tapeCount)
+    {firstTime secondTime : ℕ}
+    {initial middle : Cfg tapeCount first.Q} {final : Cfg tapeCount second.Q}
+    (hfirst : first.reachesIn firstTime initial middle)
+    (hhalt : first.halted middle)
+    (hsecond : second.reachesIn secondTime
+      { state := second.qstart, input := middle.input,
+        work := middle.work, output := middle.output } final)
+    (hinput : TM.Parked middle.input) (hwork : ∀ i, TM.Parked (middle.work i))
+    (houtput : TM.Parked middle.output) :
+    (TM.seqTM first second).reachesIn (firstTime + 1 + secondTime)
+      (TM.phase1Wrap first second initial) (TM.phase2Wrap first second final) := by
+  obtain ⟨hinputTransition, hworkTransition, houtputTransition⟩ :=
+    TM.phaseTransition_eq_self_of_reads_ne_start hinput.read_ne_start
+      (fun i => (hwork i).read_ne_start) houtput.read_ne_start
+  apply TM.seqTM_reachesIn_of_reachesIn first second hfirst hhalt
+  simpa only [hinputTransition, hworkTransition, houtputTransition] using! hsecond
+
+/-- The installed dense snapshot provides the complete parked frame needed for input rewind. -/
+private theorem denseInitialRewind_preconditions
+    (tapes : ControlInstructionTapes n) (input : List Bool)
+    (abiInput : Tape) (abiWork : Fin (n + 1) → Tape) (abiOutput emitOutput : Tape)
+    (habiInputCells : abiInput.cells = (Tape.init (input.map Γ.ofBool)).cells)
+    (habiInputHead : abiInput.head = input.length + 1)
+    (habiWork : abiWork = programSnapshotWork tapes
+      { pc := 0, store := denseProgramInitialStore input })
+    (habiOutput : abiOutput = emitOutput)
+    (hemitOutputParked : TM.Parked emitOutput)
+    (hemitOutputBlank : emitOutput = TM.resetBinaryBlank) :
+    InstructionExecutionReady tapes (denseProgramInitialStore input) 0
+      (programSnapshotWork tapes { pc := 0, store := denseProgramInitialStore input }) ∧
+    (abiInput.cells 0 = Γ.start ∧
+      (∀ j, j ≥ 1 → abiInput.cells j ≠ Γ.start) ∧
+      abiInput.head ≤ input.length + 1 ∧
+      abiOutput.read ≠ Γ.start ∧ abiOutput.head ≥ 1 ∧
+      (∀ i, (abiWork i).read ≠ Γ.start ∧
+        (abiWork i).head ≥ 1) ∧
+      (abiInput.cells = (Tape.init (input.map Γ.ofBool)).cells ∧
+        abiWork = denseProgramSnapshotWork tapes
+          (DenseOverlay.Snapshot.initial input) ∧
+        abiOutput = TM.resetBinaryBlank)) := by
+  let sparseInitial : Snapshot :=
+    { pc := 0, store := denseProgramInitialStore input }
+  have hsparseCanonical : Canonical sparseInitial.store := by
+    simpa [sparseInitial, denseProgramInitialStore] using!
+      DenseOverlay.Snapshot.initial_canonical input
+  have habiReady : InstructionExecutionReady tapes sparseInitial.store 0
+      (programSnapshotWork tapes sparseInitial) :=
+    programSnapshotWork_ready_internal tapes sparseInitial hsparseCanonical
+  refine ⟨habiReady, ?_⟩
+  refine ⟨?_, ?_, by omega, ?_, ?_, ?_, habiInputCells, ?_, ?_⟩
+  · rw [habiInputCells]
+    simp [Tape.init]
+  · intro j hj
+    rw [habiInputCells]
+    exact Tape.init_ofBool_cells_ne_start input j hj
+  · rw [habiOutput]
+    exact hemitOutputParked.read_ne_start
+  · rw [habiOutput]
+    exact hemitOutputParked.1
+  · intro i
+    have hiParked := habiReady.control.lookup.scanner.parked i
+    have hworkEq : abiWork = programSnapshotWork tapes sparseInitial :=
+      habiWork
+    rw [hworkEq]
+    exact ⟨hiParked.read_ne_start, hiParked.1⟩
+  · simpa [denseProgramSnapshotWork, sparseInitial] using! habiWork
+  · exact habiOutput.trans hemitOutputBlank
+
 /-- Complete dense public-input initialization reaches the exact one-entry
 snapshot image and rewinds the immutable input bank to cell one. -/
 theorem denseProgramInitTM_hoareTime_internal
@@ -379,12 +450,6 @@ theorem denseProgramInitTM_hoareTime_internal
     omega
   let sparseInitial : Snapshot :=
     { pc := 0, store := denseProgramInitialStore input }
-  have hsparseCanonical : Canonical sparseInitial.store := by
-    simpa [sparseInitial, denseProgramInitialStore] using!
-      DenseOverlay.Snapshot.initial_canonical input
-  have habiReady : InstructionExecutionReady tapes sparseInitial.store 0
-      (programSnapshotWork tapes sparseInitial) :=
-    programSnapshotWork_ready_internal tapes sparseInitial hsparseCanonical
   have hrewind := TM.rewindInputTM_hoareTime_frame
     (n := n + 1) (input.length + 1)
     (P := fun inp work out =>
@@ -396,35 +461,10 @@ theorem denseProgramInitTM_hoareTime_internal
       intro inp work out inp' work' out' hP hcells _hhead hwork' hout'
       exact ⟨hcells.trans hP.1,
         hwork'.trans hP.2.1, hout'.trans hP.2.2⟩)
-  have hrewindPre :
-      abiDone.input.cells 0 = Γ.start ∧
-      (∀ j, j ≥ 1 → abiDone.input.cells j ≠ Γ.start) ∧
-      abiDone.input.head ≤ input.length + 1 ∧
-      abiDone.output.read ≠ Γ.start ∧ abiDone.output.head ≥ 1 ∧
-      (∀ i, (abiDone.work i).read ≠ Γ.start ∧
-        (abiDone.work i).head ≥ 1) ∧
-      (abiDone.input.cells = (Tape.init (input.map Γ.ofBool)).cells ∧
-        abiDone.work = denseProgramSnapshotWork tapes
-          (DenseOverlay.Snapshot.initial input) ∧
-        abiDone.output = TM.resetBinaryBlank) := by
-    refine ⟨?_, ?_, by omega, ?_, ?_, ?_, habiInputCells, ?_, ?_⟩
-    · rw [habiInputCells]
-      simp [Tape.init]
-    · intro j hj
-      rw [habiInputCells]
-      exact Tape.init_ofBool_cells_ne_start input j hj
-    · rw [habiOutput]
-      exact hemitOutputParked.read_ne_start
-    · rw [habiOutput]
-      exact hemitOutputParked.1
-    · intro i
-      have hiParked := habiReady.control.lookup.scanner.parked i
-      have hworkEq : abiDone.work = programSnapshotWork tapes sparseInitial :=
-        habiWork
-      rw [hworkEq]
-      exact ⟨hiParked.read_ne_start, hiParked.1⟩
-    · simpa [denseProgramSnapshotWork, sparseInitial] using! habiWork
-    · exact habiOutput.trans hemitOutputBlank
+  obtain ⟨habiReady, hrewindPre⟩ := denseInitialRewind_preconditions
+    tapes input abiDone.input abiDone.work abiDone.output emitDone.output
+    habiInputCells habiInputHead habiWork habiOutput
+    hemitOutputParked hemitOutputBlank
   obtain ⟨rewindDone, rewindTime, hrewindTime, hrewindReach,
       hrewindHalt, hrewindHead, hrewindCells, hrewindWork,
       hrewindOutput⟩ := hrewind _ _ _ hrewindPre
@@ -437,23 +477,9 @@ theorem denseProgramInitTM_hoareTime_internal
     intro i
     rw [habiWork]
     exact habiReady.control.lookup.scanner.parked i
-  obtain ⟨habiInputTransition, habiWorkTransition,
-      habiOutputTransition⟩ :=
-    TM.phaseTransition_eq_self_of_reads_ne_start
-      habiInputParked.read_ne_start
-      (fun i => (habiWorkParked i).read_ne_start)
-      habiOutputParked.read_ne_start
-  have hrewindReach' : TM.rewindInputTM.reachesIn rewindTime
-      { state := TM.rewindInputTM.qstart
-        input := TM.transitionInput abiDone.input
-        work := fun i => TM.transitionTape (abiDone.work i)
-        output := TM.transitionTape abiDone.output }
-      rewindDone := by
-    simpa only [habiInputTransition, habiWorkTransition,
-      habiOutputTransition] using! hrewindReach
-  have habiRewindReach := TM.seqTM_reachesIn_of_reachesIn
-    (initialAbiInstallTM tapes) TM.rewindInputTM habiReach habiHalt
-    hrewindReach'
+  have habiRewindReach := denseInit_sequence_parked
+    (initialAbiInstallTM tapes) TM.rewindInputTM habiReach habiHalt hrewindReach
+    habiInputParked habiWorkParked habiOutputParked
   let abiRewindDone := TM.phase2Wrap (initialAbiInstallTM tapes)
     TM.rewindInputTM rewindDone
   have habiRewindHalt :
@@ -461,27 +487,11 @@ theorem denseProgramInitTM_hoareTime_internal
         abiRewindDone := by
     rw [TM.phase2Wrap_halted_iff]
     exact hrewindHalt
-  obtain ⟨hemitInputTransition, hemitWorkTransition,
-      hemitOutputTransition⟩ :=
-    TM.phaseTransition_eq_self_of_reads_ne_start
-      hemitInputParked.read_ne_start
-      (fun i => (hemitReady.parked i).read_ne_start)
-      hemitOutputParked.read_ne_start
-  have habiRewindReach' :
-      (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM).reachesIn
-        (abiTime + 1 + rewindTime)
-        { state :=
-            (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM).qstart
-          input := TM.transitionInput emitDone.input
-          work := fun i => TM.transitionTape (emitDone.work i)
-          output := TM.transitionTape emitDone.output }
-        abiRewindDone := by
-    simpa only [hemitInputTransition, hemitWorkTransition,
-      hemitOutputTransition] using! habiRewindReach
-  have emitTailReach := TM.seqTM_reachesIn_of_reachesIn
+  have emitTailReach := denseInit_sequence_parked
     (initialLengthEmitTM tapes)
     (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM)
-    hemitReach hemitHalt habiRewindReach'
+    hemitReach hemitHalt habiRewindReach hemitInputParked
+    hemitReady.parked hemitOutputParked
   let emitTailDone := TM.phase2Wrap (initialLengthEmitTM tapes)
     (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM)
     abiRewindDone
@@ -493,31 +503,12 @@ theorem denseProgramInitTM_hoareTime_internal
       (initialLengthEmitTM tapes)
       (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM) abiRewindDone).mpr
       habiRewindHalt
-  obtain ⟨hloopInputTransition, hloopWorkTransition,
-      hloopOutputTransition⟩ :=
-    TM.phaseTransition_eq_self_of_reads_ne_start
-      hloopInputParked.read_ne_start
-      (fun i => (hloopReady.parked i).read_ne_start)
-      hloopOutputParked.read_ne_start
-  have emitTailReach' :
-      (TM.seqTM (initialLengthEmitTM tapes)
-        (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM)).reachesIn
-        (emitTime + 1 + (abiTime + 1 + rewindTime))
-        { state :=
-            (TM.seqTM (initialLengthEmitTM tapes)
-              (TM.seqTM (initialAbiInstallTM tapes)
-                TM.rewindInputTM)).qstart
-          input := TM.transitionInput loopDone.input
-          work := fun i => TM.transitionTape (loopDone.work i)
-          output := TM.transitionTape loopDone.output }
-        emitTailDone := by
-    simpa only [hloopInputTransition, hloopWorkTransition,
-      hloopOutputTransition] using! emitTailReach
-  have loopTailReach := TM.seqTM_reachesIn_of_reachesIn
+  have loopTailReach := denseInit_sequence_parked
     (denseInitialLengthLoopTM tapes)
     (TM.seqTM (initialLengthEmitTM tapes)
       (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM))
-    hloopReach hloopHalt emitTailReach'
+    hloopReach hloopHalt emitTailReach hloopInputParked
+    hloopReady.parked hloopOutputParked
   let loopTailDone := TM.phase2Wrap (denseInitialLengthLoopTM tapes)
     (TM.seqTM (initialLengthEmitTM tapes)
       (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM))
@@ -532,35 +523,13 @@ theorem denseProgramInitTM_hoareTime_internal
       (TM.seqTM (initialLengthEmitTM tapes)
         (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM)) emitTailDone).mpr
       emitTailHalt
-  obtain ⟨hsetupInputTransition, hsetupWorkTransition,
-      hsetupOutputTransition⟩ :=
-    TM.phaseTransition_eq_self_of_reads_ne_start
-      hsetupInputParked.read_ne_start
-      (fun i => (hsetupReady.parked i).read_ne_start)
-      hsetupOutputParked.read_ne_start
-  have loopTailReach' :
-      (TM.seqTM (denseInitialLengthLoopTM tapes)
-        (TM.seqTM (initialLengthEmitTM tapes)
-          (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM))).reachesIn
-        (loopTime + 1 +
-          (emitTime + 1 + (abiTime + 1 + rewindTime)))
-        { state :=
-            (TM.seqTM (denseInitialLengthLoopTM tapes)
-              (TM.seqTM (initialLengthEmitTM tapes)
-                (TM.seqTM (initialAbiInstallTM tapes)
-                  TM.rewindInputTM))).qstart
-          input := TM.transitionInput setupDone.input
-          work := fun i => TM.transitionTape (setupDone.work i)
-          output := TM.transitionTape setupDone.output }
-        loopTailDone := by
-    simpa only [hsetupInputTransition, hsetupWorkTransition,
-      hsetupOutputTransition] using! loopTailReach
-  have hreach := TM.seqTM_reachesIn_of_reachesIn
+  have hreach := denseInit_sequence_parked
     (initialSetupTM tapes)
     (TM.seqTM (denseInitialLengthLoopTM tapes)
       (TM.seqTM (initialLengthEmitTM tapes)
         (TM.seqTM (initialAbiInstallTM tapes) TM.rewindInputTM)))
-    hsetupReach hsetupHalt loopTailReach'
+    hsetupReach hsetupHalt loopTailReach hsetupInputParked
+    hsetupReady.parked hsetupOutputParked
   let finalCfg := TM.phase2Wrap (initialSetupTM tapes)
     (TM.seqTM (denseInitialLengthLoopTM tapes)
       (TM.seqTM (initialLengthEmitTM tapes)

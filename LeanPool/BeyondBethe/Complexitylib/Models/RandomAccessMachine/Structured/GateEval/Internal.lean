@@ -1309,6 +1309,117 @@ private theorem routineFinal_frame {base : ℕ} {gate : CircuitCode.RawGate}
       (addressed outputReg) index = store index
   rw [haddress, Function.update_of_ne happend, haddressed, hevaluated]
 
+/-- The six evaluation operations preserve the store envelope and their measured cost. -/
+private theorem routine_evaluation_measured {bound base : ℕ}
+    {gate : CircuitCode.RawGate} {wires : List Bool} {store : Store}
+    (hready : ReadyAt base gate wires store)
+    (hnegated1 : StoreEnvelope bound bound (routineNegated1 store))
+    (hsmall : 10 < bound)
+    (value0 value1 : Bool) (hvalue0 : wires[gate.input₀]? = some value0)
+    (hvalue1 : wires[gate.input₁]? = some value1) :
+    StoreEnvelope bound bound (routineEvaluated store) ∧
+      MeasuredRuns (.basics evalOps) (routineNegated1 store)
+        (routineEvaluated store) 6 (24 * valueWidth bound)
+        (envelopeSpace bound bound) := by
+  have htwo : 2 ≤ bound := by omega
+  have hvalue0Eq := routineNegated1_value0 hready value0 hvalue0
+  have hvalue1Eq := routineNegated1_value hready value1 hvalue1
+  have hopEq := routineNegated1_op hready
+  let product := (Basic.mul scratchReg value0Reg value1Reg).exec
+    (routineNegated1 store)
+  let sum := (Basic.add outputReg value0Reg value1Reg).exec product
+  let orStore := (Basic.sub outputReg outputReg scratchReg).exec sum
+  let delta := (Basic.sub address0Reg outputReg scratchReg).exec orStore
+  let selected := (Basic.mul address0Reg opReg address0Reg).exec delta
+  have hproduct : StoreEnvelope bound bound product := by
+    apply hnegated1.execBasic (.mul scratchReg value0Reg value1Reg)
+    · simp [scratchReg]
+      omega
+    · change routineNegated1 store value0Reg *
+        routineNegated1 store value1Reg ≤ bound
+      rw [hvalue0Eq, hvalue1Eq]
+      cases gate.negated₀ <;> cases gate.negated₁ <;>
+        cases value0 <;> cases value1 <;> simp [Input.bitValue] <;> omega
+  have hproductValue0 : product value0Reg =
+      Input.bitValue (gate.negated₀.xor value0) := by
+    rw [show product value0Reg = routineNegated1 store value0Reg by
+      simp [product, Basic.exec, Function.update_of_ne, value0Reg, scratchReg]]
+    exact hvalue0Eq
+  have hproductValue1 : product value1Reg =
+      Input.bitValue (gate.negated₁.xor value1) := by
+    rw [show product value1Reg = routineNegated1 store value1Reg by
+      simp [product, Basic.exec, Function.update_of_ne, value1Reg, scratchReg]]
+    exact hvalue1Eq
+  have hsum : StoreEnvelope bound bound sum := by
+    apply hproduct.execBasic (.add outputReg value0Reg value1Reg)
+    · simp [outputReg]
+      omega
+    · change product value0Reg + product value1Reg ≤ bound
+      rw [hproductValue0, hproductValue1]
+      cases gate.negated₀ <;> cases gate.negated₁ <;>
+        cases value0 <;> cases value1 <;> simp [Input.bitValue] <;> omega
+  have hsumOutput : sum outputReg ≤ 2 := by
+    change product value0Reg + product value1Reg ≤ 2
+    rw [hproductValue0, hproductValue1]
+    cases gate.negated₀ <;> cases gate.negated₁ <;>
+      cases value0 <;> cases value1 <;> simp [Input.bitValue]
+  have hor : StoreEnvelope bound bound orStore := by
+    apply hsum.execBasic (.sub outputReg outputReg scratchReg)
+    · simp [outputReg]
+      omega
+    · exact le_trans (Nat.sub_le _ _) (le_trans hsumOutput htwo)
+  have horOutput : orStore outputReg ≤ 2 :=
+    le_trans (Nat.sub_le _ _) hsumOutput
+  have hdelta : StoreEnvelope bound bound delta := by
+    apply hor.execBasic (.sub address0Reg outputReg scratchReg)
+    · simp [address0Reg]
+      omega
+    · exact le_trans (Nat.sub_le _ _) (le_trans horOutput htwo)
+  have hdeltaValue : delta address0Reg ≤ 2 :=
+    le_trans (Nat.sub_le _ _) horOutput
+  have hselected : StoreEnvelope bound bound selected := by
+    apply hdelta.execBasic (.mul address0Reg opReg address0Reg)
+    · simp [address0Reg]
+      omega
+    · have hop : delta opReg = Input.bitValue gate.opBit := by
+        rw [show delta opReg = routineNegated1 store opReg by
+          simp [delta, orStore, sum, product, Basic.exec,
+            Function.update_of_ne, opReg, address0Reg, outputReg, scratchReg,
+            value0Reg, value1Reg]]
+        exact hopEq
+      change delta opReg * delta address0Reg ≤ bound
+      rw [hop]
+      cases gate.opBit <;> simp [Input.bitValue]
+      exact le_trans hdeltaValue htwo
+  have hevaluated : StoreEnvelope bound bound (routineEvaluated store) := by
+    change StoreEnvelope bound bound
+      ((Basic.sub outputReg outputReg address0Reg).exec selected)
+    apply hselected.execBasic (.sub outputReg outputReg address0Reg)
+    · simp [outputReg]
+      omega
+    · exact le_trans (Nat.sub_le _ _) (hselected.value_le outputReg)
+  have hevalRun0 := MeasuredRuns.basicEnvelope
+    (.mul scratchReg value0Reg value1Reg) (routineNegated1 store)
+    hnegated1 hproduct
+  have hevalRun1 := MeasuredRuns.basicEnvelope
+    (.add outputReg value0Reg value1Reg) product hproduct hsum
+  have hevalRun2 := MeasuredRuns.basicEnvelope
+    (.sub outputReg outputReg scratchReg) sum hsum hor
+  have hevalRun3 := MeasuredRuns.basicEnvelope
+    (.sub address0Reg outputReg scratchReg) orStore hor hdelta
+  have hevalRun4 := MeasuredRuns.basicEnvelope
+    (.mul address0Reg opReg address0Reg) delta hdelta hselected
+  have hevalRun5 := MeasuredRuns.basicEnvelope
+    (.sub outputReg outputReg address0Reg) selected hselected hevaluated
+  have hevalRun : MeasuredRuns (.basics evalOps) (routineNegated1 store)
+      (routineEvaluated store) 6 (24 * valueWidth bound)
+      (envelopeSpace bound bound) := by
+    have hrun := hevalRun0.seq (hevalRun1.seq (hevalRun2.seq
+      (hevalRun3.seq (hevalRun4.seq hevalRun5))))
+    convert! hrun using 1
+    ring
+  exact ⟨hevaluated, hevalRun⟩
+
 theorem routine_measured_internal {bound base : ℕ}
     {gate : CircuitCode.RawGate} {wires : List Bool} {store : Store}
     (hready : ReadyAt base gate wires store)
@@ -1434,102 +1545,8 @@ theorem routine_measured_internal {bound base : ℕ}
       (routineNegated0 store) (routineNegated1 store) 4
       (16 * valueWidth bound) (envelopeSpace bound bound) := by
     simpa [routineNegated1] using! hxor1.1
-  have hvalue0Eq := routineNegated1_value0 hready value0 hvalue0
-  have hvalue1Eq := routineNegated1_value hready value1 hvalue1
-  have hopEq := routineNegated1_op hready
-  let product := (Basic.mul scratchReg value0Reg value1Reg).exec
-    (routineNegated1 store)
-  let sum := (Basic.add outputReg value0Reg value1Reg).exec product
-  let orStore := (Basic.sub outputReg outputReg scratchReg).exec sum
-  let delta := (Basic.sub address0Reg outputReg scratchReg).exec orStore
-  let selected := (Basic.mul address0Reg opReg address0Reg).exec delta
-  have hproduct : StoreEnvelope bound bound product := by
-    apply hnegated1.execBasic (.mul scratchReg value0Reg value1Reg)
-    · simp [scratchReg]
-      omega
-    · change routineNegated1 store value0Reg *
-        routineNegated1 store value1Reg ≤ bound
-      rw [hvalue0Eq, hvalue1Eq]
-      cases gate.negated₀ <;> cases gate.negated₁ <;>
-        cases value0 <;> cases value1 <;> simp [Input.bitValue] <;> omega
-  have hproductValue0 : product value0Reg =
-      Input.bitValue (gate.negated₀.xor value0) := by
-    rw [show product value0Reg = routineNegated1 store value0Reg by
-      simp [product, Basic.exec, Function.update_of_ne, value0Reg, scratchReg]]
-    exact hvalue0Eq
-  have hproductValue1 : product value1Reg =
-      Input.bitValue (gate.negated₁.xor value1) := by
-    rw [show product value1Reg = routineNegated1 store value1Reg by
-      simp [product, Basic.exec, Function.update_of_ne, value1Reg, scratchReg]]
-    exact hvalue1Eq
-  have hsum : StoreEnvelope bound bound sum := by
-    apply hproduct.execBasic (.add outputReg value0Reg value1Reg)
-    · simp [outputReg]
-      omega
-    · change product value0Reg + product value1Reg ≤ bound
-      rw [hproductValue0, hproductValue1]
-      cases gate.negated₀ <;> cases gate.negated₁ <;>
-        cases value0 <;> cases value1 <;> simp [Input.bitValue] <;> omega
-  have hsumOutput : sum outputReg ≤ 2 := by
-    change product value0Reg + product value1Reg ≤ 2
-    rw [hproductValue0, hproductValue1]
-    cases gate.negated₀ <;> cases gate.negated₁ <;>
-      cases value0 <;> cases value1 <;> simp [Input.bitValue]
-  have hor : StoreEnvelope bound bound orStore := by
-    apply hsum.execBasic (.sub outputReg outputReg scratchReg)
-    · simp [outputReg]
-      omega
-    · exact le_trans (Nat.sub_le _ _) (le_trans hsumOutput htwo)
-  have horOutput : orStore outputReg ≤ 2 :=
-    le_trans (Nat.sub_le _ _) hsumOutput
-  have hdelta : StoreEnvelope bound bound delta := by
-    apply hor.execBasic (.sub address0Reg outputReg scratchReg)
-    · simp [address0Reg]
-      omega
-    · exact le_trans (Nat.sub_le _ _) (le_trans horOutput htwo)
-  have hdeltaValue : delta address0Reg ≤ 2 :=
-    le_trans (Nat.sub_le _ _) horOutput
-  have hselected : StoreEnvelope bound bound selected := by
-    apply hdelta.execBasic (.mul address0Reg opReg address0Reg)
-    · simp [address0Reg]
-      omega
-    · have hop : delta opReg = Input.bitValue gate.opBit := by
-        rw [show delta opReg = routineNegated1 store opReg by
-          simp [delta, orStore, sum, product, Basic.exec,
-            Function.update_of_ne, opReg, address0Reg, outputReg, scratchReg,
-            value0Reg, value1Reg]]
-        exact hopEq
-      change delta opReg * delta address0Reg ≤ bound
-      rw [hop]
-      cases gate.opBit <;> simp [Input.bitValue]
-      exact le_trans hdeltaValue htwo
-  have hevaluated : StoreEnvelope bound bound (routineEvaluated store) := by
-    change StoreEnvelope bound bound
-      ((Basic.sub outputReg outputReg address0Reg).exec selected)
-    apply hselected.execBasic (.sub outputReg outputReg address0Reg)
-    · simp [outputReg]
-      omega
-    · exact le_trans (Nat.sub_le _ _) (hselected.value_le outputReg)
-  have hevalRun0 := MeasuredRuns.basicEnvelope
-    (.mul scratchReg value0Reg value1Reg) (routineNegated1 store)
-    hnegated1 hproduct
-  have hevalRun1 := MeasuredRuns.basicEnvelope
-    (.add outputReg value0Reg value1Reg) product hproduct hsum
-  have hevalRun2 := MeasuredRuns.basicEnvelope
-    (.sub outputReg outputReg scratchReg) sum hsum hor
-  have hevalRun3 := MeasuredRuns.basicEnvelope
-    (.sub address0Reg outputReg scratchReg) orStore hor hdelta
-  have hevalRun4 := MeasuredRuns.basicEnvelope
-    (.mul address0Reg opReg address0Reg) delta hdelta hselected
-  have hevalRun5 := MeasuredRuns.basicEnvelope
-    (.sub outputReg outputReg address0Reg) selected hselected hevaluated
-  have hevalRun : MeasuredRuns (.basics evalOps) (routineNegated1 store)
-      (routineEvaluated store) 6 (24 * valueWidth bound)
-      (envelopeSpace bound bound) := by
-    have hrun := hevalRun0.seq (hevalRun1.seq (hevalRun2.seq
-      (hevalRun3.seq (hevalRun4.seq hevalRun5))))
-    convert! hrun using 1
-    ring
+  obtain ⟨hevaluated, hevalRun⟩ := routine_evaluation_measured hready
+    hnegated1 hsmall value0 value1 hvalue0 hvalue1
   let appendAddressed :=
     (Basic.add address1Reg baseReg wireCountReg).exec (routineEvaluated store)
   have happendAddressed : StoreEnvelope bound bound appendAddressed := by
