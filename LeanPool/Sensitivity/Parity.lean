@@ -32,7 +32,7 @@ must have a "majority" parity-sign class strictly larger than `2^{n-1}`.
   degree, one parity-sign class has more than `2^{n-1}` vertices.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPoolSensitivity
 

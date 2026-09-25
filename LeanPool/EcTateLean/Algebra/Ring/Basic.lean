@@ -16,7 +16,7 @@ import Mathlib.Tactic.NormNum.Pow
 Imported Lean Pool material for `LeanPool.EcTateLean.Algebra.Ring.Basic`.
 -/
 
-@[expose] public section
+public section
 
 
 

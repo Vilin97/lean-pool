@@ -27,7 +27,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.EcTateLean.Algebra.EllipticCurve.Model`.
 -/
 
-@[expose] public section
+public section
 -- import Aesop
 
 
@@ -161,7 +161,7 @@ def rstTransform := {urst : urstTransform R // urst.u = 1}
 --TODO instance Group
 /-- The Weierstrass model obtained from `e` by the change of coordinates
 `(1, r, s, t)`. -/
-def rstIso (r s t : R) (e : Model R) : Model R :=
+@[expose] def rstIso (r s t : R) (e : Model R) : Model R :=
 { a1 := e.a1 + 2*s
   a2 := e.a2 - s*e.a1 + 3*r - s*s
   a3 := e.a3 + r*e.a1 + 2*t
@@ -211,7 +211,7 @@ lemma rst_discr (r s t : R) (e : Model R) : (rstIso r s t e).discr = e.discr := 
 variable {S : Type u} [CommRing S] (f : R →+* S)
 
 /-- Pushes a Weierstrass model forward along a ring homomorphism `f`. -/
-@[simps]
+@[expose, simps]
 def map : Model R → Model S := fun e => ⟨f e.a1, f e.a2, f e.a3, f e.a4, f e.a6⟩
 
 @[simp] lemma map_b2 : (map f e).b2 = f e.b2 := by simp [Model.b2, map_ofNat]
@@ -336,7 +336,7 @@ theorem dweierstrassDy_iso_eq_varChange (e : Model R) (P : R × R) :
 
 /-- The change of coordinates `(1, r, s, t)` applied to `e`, with the triple
 `rst = (r, s, t)` packaged as a single argument. -/
-def rstTriple (e : Model R) (rst : R × R × R) : Model R :=
+@[expose] def rstTriple (e : Model R) (rst : R × R × R) : Model R :=
   rstIso rst.fst rst.snd.fst rst.snd.snd e
 
 lemma rstIso_to_triple (e : Model R) (r s t : R) : rstIso r s t e = rstTriple e (r, s, t) := rfl
@@ -354,7 +354,7 @@ variable {R : Type u} [CommRing R]
 instance [Repr R] : Repr (ValidModel R) := ⟨fun (e : ValidModel R) _ => repr e.toModel⟩
 
 /-- The valid model obtained from `e` by the change of coordinates `(1, r, s, t)`. -/
-@[simps!]
+@[expose, simps!]
 def rstIso (r s t : R) (e : ValidModel R) : ValidModel R := {
   toModel := Model.rstIso r s t e.toModel,
   discr_not_zero := by
@@ -419,7 +419,7 @@ lemma st_of_b8 (e : ValidModel R) (s t : R) : (rstIso 0 s t e).b8 = e.b8 := by
 
 /-- The change of coordinates `(1, r, s, t)` applied to the valid model `e`, with
 the triple `rst = (r, s, t)` packaged as a single argument. -/
-def rstTriple (e : ValidModel R) (rst : R × R × R) : ValidModel R :=
+@[expose] def rstTriple (e : ValidModel R) (rst : R × R × R) : ValidModel R :=
   rstIso rst.fst rst.snd.fst rst.snd.snd e
 
 lemma rstIso_to_triple (e : ValidModel R) (r s t : R) : rstIso r s t e = rstTriple e (r, s, t) :=

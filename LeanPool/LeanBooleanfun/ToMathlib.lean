@@ -15,4 +15,4 @@ This index aggregates small auxiliary results that are not specific to Boolean
 functions and could plausibly live in Mathlib.
 -/
 
-@[expose] public section
+public section

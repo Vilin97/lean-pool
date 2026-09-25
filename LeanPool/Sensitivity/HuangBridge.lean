@@ -26,7 +26,7 @@ project, a community formalisation of Huang's proof carried out shortly after
 the original paper appeared in 2019.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPoolSensitivity
 

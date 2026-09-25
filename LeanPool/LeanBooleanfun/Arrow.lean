@@ -30,7 +30,7 @@ This is mainly facilitated by introducing an auxiliary linear operator, see `_Tn
 * [R. O'Donnell, *Analysis of Boolean functions*][odonnell2014]
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
