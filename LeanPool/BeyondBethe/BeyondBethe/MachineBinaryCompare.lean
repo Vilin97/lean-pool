@@ -22,13 +22,17 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Tests whether the first encoded natural number is at most the second using truncated
+subtraction. -/
 def machineBinaryNatLeBit (word : List Bool) : List Bool :=
   machineIfEmpty (machineBinarySubBits word) [true] [false]
 
+/-- Tests strict inequality of the encoded natural numbers using reversed truncated subtraction. -/
 def machineBinaryNatLtBit (word : List Bool) : List Bool :=
   let swapped := pair (machinePairSecond word) (machinePairFirst word)
   machineIfEmpty (machineBinarySubBits swapped) [false] [true]
 
+/-- Tests equality of the encoded natural numbers by comparing them in both directions. -/
 def machineBinaryNatEqBit (word : List Bool) : List Bool :=
   machineAndBit (machineBinaryNatLeBit word)
     (machineBinaryNatLeBit

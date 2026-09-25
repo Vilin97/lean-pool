@@ -22,15 +22,19 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extract the encoded matrix from an optimizer result word. -/
 def machineOptimizerMatrixWord (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extract the row-and-column potential payload from an optimizer result word. -/
 def machineOptimizerPotentialsWord (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extract the encoded row-potential vector. -/
 def machineOptimizerRowPotentialWord (word : List Bool) : List Bool :=
   machinePairFirst (machineOptimizerPotentialsWord word)
 
+/-- Extract the encoded column-potential vector. -/
 def machineOptimizerColumnPotentialWord (word : List Bool) : List Bool :=
   machinePairSecond (machineOptimizerPotentialsWord word)
 
@@ -77,16 +81,19 @@ theorem machineOptimizerColumnPotentialWord_mem_FP :
   simp [machineOptimizerColumnPotentialWord, machineOptimizerPotentialsWord,
     rationalOptimizerOutputCode]
 
+/-- Compute the raw-rational sum of the encoded row potentials. -/
 def machineCertificateRowPotentialRawSumCode
     (word : List Bool) : List Bool :=
   machineRationalVectorRawSumCode
     (machineOptimizerRowPotentialWord word)
 
+/-- Compute the raw-rational sum of the encoded column potentials. -/
 def machineCertificateColumnPotentialRawSumCode
     (word : List Bool) : List Bool :=
   machineRationalVectorRawSumCode
     (machineOptimizerColumnPotentialWord word)
 
+/-- Add the encoded row- and column-potential sums. -/
 def machineCertificatePotentialRawSumCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
@@ -113,6 +120,7 @@ theorem machineCertificatePotentialRawSumCode_mem_FP :
   simpa only [machineCertificatePotentialRawSumCode] using!
     machineCompose_mem_FP hpair machineRawRatAddCode_mem_FP
 
+/-- The raw-rational sum of every row and column potential, using zero-initialized list sums. -/
 def rawCertificatePotentialSum {n : ℕ}
     (R C : Fin n → ℚ) : RawRat :=
   (rawRatListSum RawRat.zero (List.ofFn R)).add

@@ -26,8 +26,11 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- The raw-rational representation of the fixed pair-eligibility threshold. -/
 def rawExplicitKappa : RawRat := rawRatOfRat explicitKappa
 
+/-- The constant machine returning the encoded pair-eligibility threshold, independently of its
+input. -/
 def machineExplicitKappaRawCode (_word : List Bool) : List Bool :=
   rawRatBinaryCode rawExplicitKappa
 
@@ -37,55 +40,73 @@ theorem machineExplicitKappaRawCode_mem_FP :
 
 /-! ## The inner scan: second columns for a fixed first column -/
 
+/-- Extract the unary first-row index from a fixed-first-column eligibility query. -/
 def machineFixedAFirstRowRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- The eligibility-query payload following the first-row index. -/
 def machineFixedARest₁ (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extract the unary second-row index from the eligibility query. -/
 def machineFixedASecondRowRuler (word : List Bool) : List Bool :=
   machinePairFirst (machineFixedARest₁ word)
 
+/-- The eligibility-query payload following both row indices. -/
 def machineFixedARest₂ (word : List Bool) : List Bool :=
   machinePairSecond (machineFixedARest₁ word)
 
+/-- Extract the unary first-column index held fixed during the scan. -/
 def machineFixedAFirstColumnRuler (word : List Bool) : List Bool :=
   machinePairFirst (machineFixedARest₂ word)
 
+/-- Extract the optimizer result carried by the eligibility query. -/
 def machineFixedAOptimizerWord (word : List Bool) : List Bool :=
   machinePairSecond (machineFixedARest₂ word)
 
+/-- Recover the matrix-dimension ruler from the query's optimizer result. -/
 def machineFixedADimensionRuler (word : List Bool) : List Bool :=
   machineCertificateDimensionUnary (machineFixedAOptimizerWord word)
 
+/-- Encode the range of possible second-column indices using the dimension ruler. -/
 def machineFixedAColumnRange (word : List Bool) : List Bool :=
   machineUnaryRangeCode (machineFixedADimensionRuler word)
 
+/-- Package the unprocessed column-list code, found flag, and original eligibility query. -/
 def machineFixedAPack
     (remaining found source : List Bool) : List Bool :=
   pair remaining (pair found source)
 
+/-- Extract the encoded list of unprocessed second-column candidates. -/
 def machineFixedARemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extract the accumulated flag recording whether an eligible column pair has been found. -/
 def machineFixedAFound (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extract the immutable source query from the scan state. -/
 def machineFixedASource (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Read the first unprocessed second-column index from the encoded candidate list. -/
 def machineFixedACurrentSecondColumn (state : List Bool) : List Bool :=
   machineListHead (machineFixedARemaining state)
 
+/-- Compare the fixed and current column indices by converting their unary lengths to binary
+naturals. -/
 def machineFixedAColumnsEqualBit (state : List Bool) : List Bool :=
   machineBinaryNatEqBit
     (pair (machineLengthBits
         (machineFixedAFirstColumnRuler (machineFixedASource state)))
       (machineLengthBits (machineFixedACurrentSecondColumn state)))
 
+/-- Negate the equality test for the fixed and current column indices. -/
 def machineFixedAColumnsDistinctBit (state : List Bool) : List Bool :=
   machineNotBit (machineFixedAColumnsEqualBit state)
 
+/-- Package both fixed row indices, the fixed and current column indices, and the optimizer
+result for four-core cost evaluation. -/
 def machineFixedAFourCoreInput (state : List Bool) : List Bool :=
   pair (machineFixedAFirstRowRuler (machineFixedASource state))
     (pair (machineFixedASecondRowRuler (machineFixedASource state))
@@ -93,42 +114,57 @@ def machineFixedAFourCoreInput (state : List Bool) : List Bool :=
         (pair (machineFixedACurrentSecondColumn state)
           (machineFixedAOptimizerWord (machineFixedASource state)))))
 
+/-- Compute the directed raw-rational upper bound on the current four-core transfer cost. -/
 def machineFixedAFourCoreRawCode (state : List Bool) : List Bool :=
   machineDirectedFourCoreCostUpperRawCode
     (machineFixedAFourCoreInput state)
 
+/-- Test whether the computed four-core cost upper bound is at most the fixed eligibility
+threshold. -/
 def machineFixedACostPassesBit (state : List Bool) : List Bool :=
   machineRawRatLeBit
     (pair (machineFixedAFourCoreRawCode state)
       (rawRatBinaryCode rawExplicitKappa))
 
+/-- Accept the current candidate exactly when its column differs from the fixed column and its
+cost passes the threshold test. -/
 def machineFixedACandidateBit (state : List Bool) : List Bool :=
   machineAndBit (machineFixedAColumnsDistinctBit state)
     (machineFixedACostPassesBit state)
 
+/-- A scan-length bound word obtained by pairing the source query with its encoded column range. -/
 def machineFixedAInputBound (word : List Bool) : List Bool :=
   pair word (machineFixedAColumnRange word)
 
+/-- Accumulate the current eligibility result by Boolean OR, truncating the result to the
+source-derived bound length. -/
 def machineFixedANextFound (state : List Bool) : List Bool :=
   (machineOrBit (machineFixedAFound state)
       (machineFixedACandidateBit state)).take
     (machineFixedAInputBound (machineFixedASource state)).length
 
+/-- Consume one second-column candidate and update the found flag while preserving the source
+query. -/
 def machineFixedAProcess (state : List Bool) : List Bool :=
   machineFixedAPack (machineListTail (machineFixedARemaining state))
     (machineFixedANextFound state) (machineFixedASource state)
 
+/-- Leave a state with no remaining candidates fixed; otherwise process its next column. -/
 def machineFixedAStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineFixedARemaining state) state
     (machineFixedAProcess state)
 
+/-- Initialize the eligibility scan with the full column range and a false found flag. -/
 def machineFixedAInit (word : List Bool) : List Bool :=
   machineFixedAPack (machineFixedAColumnRange word) [false] word
 
+/-- A uniform scan-state width envelope formed from three copies of the source-derived bound
+word. -/
 def machineFixedAWidth (word : List Bool) : List Bool :=
   let bound := machineFixedAInputBound word
   machineFixedAPack bound bound bound
 
+/-- Run the eligibility scan for the number of columns indicated by the dimension ruler. -/
 def machineFixedAFinalState (word : List Bool) : List Bool :=
   (machineFixedAStep)^[(machineFixedADimensionRuler word).length]
     (machineFixedAInit word)
@@ -279,6 +315,8 @@ theorem machineFixedAWidth_mem_FP : machineFixedAWidth ∈ FP := by
     machineFixedASource (machineFixedAPack remaining found source) = source := by
   simp [machineFixedASource, machineFixedAPack]
 
+/-- The scan has its canonical three-field layout, bounded remaining and found words, and the
+original source query unchanged. -/
 def MachineFixedAStateBound (word state : List Bool) : Prop :=
   let B := (machineFixedAInputBound word).length
   state = machineFixedAPack (machineFixedARemaining state)
@@ -370,6 +408,8 @@ theorem machineFixedAEligibilityBit_mem_FP :
 
 /-! ## Exact inner-scan semantics -/
 
+/-- Encode a fixed-column eligibility query from the rational optimizer data and three unary
+row/column indices. -/
 def fixedAMachineInput {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (R C : Fin n → ℚ)
     (r s a : Fin n) : List Bool :=
@@ -377,6 +417,8 @@ def fixedAMachineInput {n : ℕ}
     (pair (finUnaryCode s)
       (pair (finUnaryCode a) (rationalOptimizerOutputCode ⟨X, R, C⟩)))
 
+/-- The semantic Boolean test for distinct columns whose directed four-core cost upper bound is
+at most `explicitKappa`. -/
 def certifiedColumnPairTest {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (r s a b : Fin n) : Bool :=
   decide (a ≠ b ∧
@@ -468,10 +510,14 @@ def certifiedColumnPairTest {n : ℕ}
       X r s a b (directedPairCostPrecision n) ≤ explicitKappa <;>
       simp [hdistinct, hcost]
 
+/-- Test whether any of the first `k` columns in the canonical finite enumeration passes the
+fixed-column eligibility test. -/
 def fixedAScanFound {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (r s a : Fin n) (k : ℕ) : Bool :=
   ((List.finRange n).take k).any (certifiedColumnPairTest X r s a)
 
+/-- The canonical scan state after `k` candidates: the remaining column suffix, the accumulated
+semantic test result, and the original query. -/
 def machineFixedASemanticState {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (R C : Fin n → ℚ)
     (r s a : Fin n) (k : ℕ) : List Bool :=
@@ -543,73 +589,96 @@ theorem machineFixedAIterate_semantics {n : ℕ}
 
 /-! ## The outer scan: first columns for a fixed row pair -/
 
+/-- Extracts the unary first-row index from a row-pair eligibility query. -/
 def machineRowPairFirstRowRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the second-row index and optimizer payload from the row-pair query. -/
 def machineRowPairRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the unary second-row index from the eligibility query. -/
 def machineRowPairSecondRowRuler (word : List Bool) : List Bool :=
   machinePairFirst (machineRowPairRest word)
 
+/-- Extracts the optimizer matrix and potentials carried by the row-pair query. -/
 def machineRowPairOptimizerWord (word : List Bool) : List Bool :=
   machinePairSecond (machineRowPairRest word)
 
+/-- Recovers the matrix-dimension ruler from the query's optimizer result. -/
 def machineRowPairDimensionRuler (word : List Bool) : List Bool :=
   machineCertificateDimensionUnary (machineRowPairOptimizerWord word)
 
+/-- Encodes the range of possible first-column indices for the outer eligibility scan. -/
 def machineRowPairColumnRange (word : List Bool) : List Bool :=
   machineUnaryRangeCode (machineRowPairDimensionRuler word)
 
+/-- Encodes an outer scan state as remaining first-column candidates, found flag, and source
+query. -/
 def machineRowPairScanPack
     (remaining found source : List Bool) : List Bool :=
   pair remaining (pair found source)
 
+/-- Extracts the encoded list of unprocessed first-column candidates. -/
 def machineRowPairScanRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the flag recording whether an eligible column pair has been found. -/
 def machineRowPairScanFound (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the immutable row-pair query from the scan state. -/
 def machineRowPairScanSource (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Reads the first unprocessed first-column index from the encoded candidate list. -/
 def machineRowPairCurrentFirstColumn (state : List Bool) : List Bool :=
   machineListHead (machineRowPairScanRemaining state)
 
+/-- Builds the inner eligibility query with the current first column fixed. -/
 def machineRowPairFixedAInput (state : List Bool) : List Bool :=
   pair (machineRowPairFirstRowRuler (machineRowPairScanSource state))
     (pair (machineRowPairSecondRowRuler (machineRowPairScanSource state))
       (pair (machineRowPairCurrentFirstColumn state)
         (machineRowPairOptimizerWord (machineRowPairScanSource state))))
 
+/-- Runs the fixed-first-column eligibility test for the current outer-scan candidate. -/
 def machineRowPairCandidateBit (state : List Bool) : List Bool :=
   machineFixedAEligibilityBit (machineRowPairFixedAInput state)
 
+/-- Pairs the row-pair query with its encoded column range to bound the scan state. -/
 def machineRowPairInputBound (word : List Bool) : List Bool :=
   pair word (machineRowPairColumnRange word)
 
+/-- Combines the previous found flag with the current result and truncates to the source-derived
+bound. -/
 def machineRowPairNextFound (state : List Bool) : List Bool :=
   (machineOrBit (machineRowPairScanFound state)
       (machineRowPairCandidateBit state)).take
     (machineRowPairInputBound (machineRowPairScanSource state)).length
 
+/-- Consumes the current first-column candidate and updates the found flag. -/
 def machineRowPairProcess (state : List Bool) : List Bool :=
   machineRowPairScanPack
     (machineListTail (machineRowPairScanRemaining state))
     (machineRowPairNextFound state) (machineRowPairScanSource state)
 
+/-- Processes the next first-column candidate, leaving an exhausted scan state fixed. -/
 def machineRowPairScanStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineRowPairScanRemaining state) state
     (machineRowPairProcess state)
 
+/-- Initializes the outer eligibility scan with all first-column candidates and a false found
+flag. -/
 def machineRowPairScanInit (word : List Bool) : List Bool :=
   machineRowPairScanPack (machineRowPairColumnRange word) [false] word
 
+/-- Packs three copies of the source-derived bound to bound the encoded outer scan state. -/
 def machineRowPairScanWidth (word : List Bool) : List Bool :=
   let bound := machineRowPairInputBound word
   machineRowPairScanPack bound bound bound
 
+/-- Runs the outer scan for the number of columns specified by the dimension ruler. -/
 def machineRowPairScanFinalState (word : List Bool) : List Bool :=
   (machineRowPairScanStep)^[(machineRowPairDimensionRuler word).length]
     (machineRowPairScanInit word)
@@ -721,6 +790,8 @@ theorem machineRowPairScanWidth_mem_FP : machineRowPairScanWidth ∈ FP :=
         (machineRowPairScanPack remaining found source) = source := by
   simp [machineRowPairScanSource, machineRowPairScanPack]
 
+/-- Bounds the packed state's remaining-candidate and flag lengths while preserving the source
+query. -/
 def MachineRowPairScanStateBound (word state : List Bool) : Prop :=
   let B := (machineRowPairInputBound word).length
   state = machineRowPairScanPack (machineRowPairScanRemaining state)
@@ -818,16 +889,21 @@ theorem machineCertifiedRowPairEligibilityBit_mem_FP :
 
 /-! ## Exact outer-scan semantics -/
 
+/-- Encodes a matrix, its row and column potentials, and the two row indices for eligibility
+testing. -/
 def certifiedRowPairMachineInput {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (R C : Fin n → ℚ)
     (r s : Fin n) : List Bool :=
   pair (finUnaryCode r)
     (pair (finUnaryCode s) (rationalOptimizerOutputCode ⟨X, R, C⟩))
 
+/-- Tests whether some distinct second column meets the certified cost threshold for a fixed
+first column. -/
 def certifiedFirstColumnTest {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (r s a : Fin n) : Bool :=
   (List.finRange n).any (certifiedColumnPairTest X r s a)
 
+/-- Tests whether some column pair meets the certified cost threshold for the two given rows. -/
 def certifiedRowPairEligibilityTest {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (r s : Fin n) : Bool :=
   (List.finRange n).any (certifiedFirstColumnTest X r s)
@@ -866,10 +942,13 @@ def certifiedRowPairEligibilityTest {n : ℕ}
   change machineFixedAEligibilityBit (fixedAMachineInput X R C r s a) = _
   exact machineFixedAEligibilityBit_encode X R C r s a
 
+/-- Tests whether any of the first `k` first-column candidates yields an eligible column pair. -/
 def outerScanFound {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (r s : Fin n) (k : ℕ) : Bool :=
   ((List.finRange n).take k).any (certifiedFirstColumnTest X r s)
 
+/-- Encodes the outer scan after `k` candidates with the remaining columns and accumulated test
+result. -/
 def machineRowPairSemanticState {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (R C : Fin n → ℚ)
     (r s : Fin n) (k : ℕ) : List Bool :=
@@ -959,6 +1038,7 @@ theorem certifiedRowPairEligibilityTest_eq_true_iff {n : ℕ}
     refine ⟨b, by simp, ?_⟩
     simp [certifiedColumnPairTest, hab, hcost]
 
+/-- Builds an eligibility query from the two rows of a `RowPair` and the optimizer result. -/
 def certifiedRowPairEligibilityMachineInput {n : ℕ}
     (X : Matrix (Fin n) (Fin n) ℚ) (R C : Fin n → ℚ)
     (q : RowPair n) : List Bool :=

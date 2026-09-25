@@ -23,11 +23,13 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Pairs the encoded height coefficient `-1` with the directed affine-gradient vector. -/
 def machineDirectedEpigraphNormalSnocInput
     (word : List Bool) : List Bool :=
   pair (rationalEntryBinaryCode (-1))
     (machineDirectedAffineGradientVectorCode word)
 
+/-- Appends `-1` to the directed affine-gradient vector to encode an epigraph-cut normal. -/
 def machineDirectedEpigraphNormalVectorCode
     (word : List Bool) : List Bool :=
   machineBinaryListSnoc (machineDirectedEpigraphNormalSnocInput word)

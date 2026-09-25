@@ -28,16 +28,20 @@ open Complexity
 def machineBinaryListSnocEntry (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the encoded list to which an entry will be appended. -/
 def machineBinaryListSnocList (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Reverses the encoded list before appending its new final entry. -/
 def machineBinaryListSnocReversedList (word : List Bool) : List Bool :=
   machineListReverse (machineBinaryListSnocList word)
 
+/-- Prepends the new entry to the reversed encoded list. -/
 def machineBinaryListSnocPrependInput (word : List Bool) : List Bool :=
   pair (machineBinaryListSnocEntry word)
     (machineBinaryListSnocReversedList word)
 
+/-- Appends an encoded entry to a list by reversing the prepended reversed list. -/
 def machineBinaryListSnoc (word : List Bool) : List Bool :=
   machineListReverse (machineBinaryListSnocPrependInput word)
 

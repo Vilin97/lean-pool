@@ -40,102 +40,132 @@ open Complexity
 def machineDirectedObjectiveSumDimension (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the objective-sum input payload after its dimension field. -/
 def machineDirectedObjectiveSumRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the unary precision field from an objective-sum input. -/
 def machineDirectedObjectiveSumPrecision (word : List Bool) : List Bool :=
   machinePairFirst (machineDirectedObjectiveSumRest word)
 
+/-- Extracts the objective-sum payload after its dimension and precision fields. -/
 def machineDirectedObjectiveSumAfterPrecision (word : List Bool) : List Bool :=
   machinePairSecond (machineDirectedObjectiveSumRest word)
 
+/-- Extracts the encoded regularization parameter from an objective-sum input. -/
 def machineDirectedObjectiveSumTau (word : List Bool) : List Bool :=
   machinePairFirst (machineDirectedObjectiveSumAfterPrecision word)
 
+/-- Extracts the matrix-and-vector payload following the regularization parameter. -/
 def machineDirectedObjectiveSumAfterTau (word : List Bool) : List Bool :=
   machinePairSecond (machineDirectedObjectiveSumAfterPrecision word)
 
+/-- Extracts the encoded matrix from an objective-sum input. -/
 def machineDirectedObjectiveSumMatrix (word : List Bool) : List Bool :=
   machinePairFirst (machineDirectedObjectiveSumAfterTau word)
 
+/-- Extracts the encoded free-coordinate vector from an objective-sum input. -/
 def machineDirectedObjectiveSumVector (word : List Bool) : List Bool :=
   machinePairSecond (machineDirectedObjectiveSumAfterTau word)
 
 /-! ## Row-major state and one coordinate evaluation -/
 
+/-- Packs the row, column, accumulator, length bound, completion bit, and fixed payload into an
+objective-sum state. -/
 def machineDirectedObjectiveSumPack
     (row column acc bound done payload : List Bool) : List Bool :=
   pair row (pair column (pair acc (pair bound (pair done payload))))
 
+/-- Extracts the unary row index from an objective-sum state. -/
 def machineDirectedObjectiveSumRow (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the unary column index from an objective-sum state. -/
 def machineDirectedObjectiveSumColumn (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the accumulated raw rational code from an objective-sum state. -/
 def machineDirectedObjectiveSumAcc (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the word whose length bounds objective-sum accumulator and index updates. -/
 def machineDirectedObjectiveSumBound (state : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Extracts the completion-bit word from an objective-sum state. -/
 def machineDirectedObjectiveSumDone (state : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond
       (machinePairSecond (machinePairSecond (machinePairSecond state))))
 
+/-- Extracts the fixed dimension, precision, parameter, matrix, and vector payload from an
+objective-sum state. -/
 def machineDirectedObjectiveSumPayload (state : List Bool) : List Bool :=
   machinePairSecond
     (machinePairSecond
       (machinePairSecond (machinePairSecond (machinePairSecond state))))
 
+/-- Reads the unary dimension field from the fixed payload of an objective-sum state. -/
 def machineDirectedObjectiveSumStateDimension
     (state : List Bool) : List Bool :=
   machineDirectedObjectiveSumDimension
     (machineDirectedObjectiveSumPayload state)
 
+/-- Reads the unary precision field from the fixed payload of an objective-sum state. -/
 def machineDirectedObjectiveSumStatePrecision
     (state : List Bool) : List Bool :=
   machineDirectedObjectiveSumPrecision
     (machineDirectedObjectiveSumPayload state)
 
+/-- Reads the encoded regularization parameter from the fixed payload of an objective-sum state. -/
 def machineDirectedObjectiveSumStateTau
     (state : List Bool) : List Bool :=
   machineDirectedObjectiveSumTau
     (machineDirectedObjectiveSumPayload state)
 
+/-- Reads the encoded matrix from the fixed payload of an objective-sum state. -/
 def machineDirectedObjectiveSumStateMatrix
     (state : List Bool) : List Bool :=
   machineDirectedObjectiveSumMatrix
     (machineDirectedObjectiveSumPayload state)
 
+/-- Reads the encoded free-coordinate vector from the fixed payload of an objective-sum state. -/
 def machineDirectedObjectiveSumStateVector
     (state : List Bool) : List Bool :=
   machineDirectedObjectiveSumVector
     (machineDirectedObjectiveSumPayload state)
 
+/-- Tests whether the current unary row ruler equals the dimension ruler, identifying the final
+matrix row on canonical states. -/
 def machineDirectedObjectiveSumLastRowBit (state : List Bool) : List Bool :=
   machineUnaryRulersEqualBit (machineDirectedObjectiveSumRow state)
     (machineDirectedObjectiveSumStateDimension state)
 
+/-- Tests whether the current unary column ruler equals the dimension ruler, identifying the
+final matrix column on canonical states. -/
 def machineDirectedObjectiveSumLastColumnBit
     (state : List Bool) : List Bool :=
   machineUnaryRulersEqualBit (machineDirectedObjectiveSumColumn state)
     (machineDirectedObjectiveSumStateDimension state)
 
+/-- Pairs the current row and column rulers with the encoded matrix to request one matrix
+coefficient. -/
 def machineDirectedObjectiveSumMatrixEntryInput
     (state : List Bool) : List Bool :=
   pair (machineDirectedObjectiveSumRow state)
     (pair (machineDirectedObjectiveSumColumn state)
       (machineDirectedObjectiveSumStateMatrix state))
 
+/-- Looks up the current matrix coefficient and normalizes its raw rational code. -/
 def machineDirectedObjectiveSumMatrixEntryRaw
     (state : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineMatrixEntryAtUnary
       (machineDirectedObjectiveSumMatrixEntryInput state))
 
+/-- Packages the dimension, current row and column, and free-coordinate vector for affine-entry
+evaluation. -/
 def machineDirectedObjectiveSumAffineEntryInput
     (state : List Bool) : List Bool :=
   pair (machineDirectedObjectiveSumStateDimension state)
@@ -143,12 +173,15 @@ def machineDirectedObjectiveSumAffineEntryInput
       (pair (machineDirectedObjectiveSumColumn state)
         (machineDirectedObjectiveSumStateVector state)))
 
+/-- Evaluates the current affine matrix entry and normalizes its raw rational code. -/
 def machineDirectedObjectiveSumAffineEntryRaw
     (state : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineBetheAffineEntryRawCode
       (machineDirectedObjectiveSumAffineEntryInput state))
 
+/-- Packages the precision, regularization parameter, normalized matrix coefficient, and
+normalized affine entry for one objective summand. -/
 def machineDirectedObjectiveSumCoordinateInput
     (state : List Bool) : List Bool :=
   pair (machineDirectedObjectiveSumStatePrecision state)
@@ -156,28 +189,36 @@ def machineDirectedObjectiveSumCoordinateInput
       (pair (machineDirectedObjectiveSumMatrixEntryRaw state)
         (machineDirectedObjectiveSumAffineEntryRaw state)))
 
+/-- Computes the directed lower approximation of the negative-objective summand at the current
+row and column. -/
 def machineDirectedObjectiveSumCoordinateRawCode
     (state : List Bool) : List Bool :=
   machineDirectedNegativeObjectiveCoordinateLowerRawCode
     (machineDirectedObjectiveSumCoordinateInput state)
 
+/-- Adds the current directed objective summand to the accumulated raw rational code. -/
 def machineDirectedObjectiveSumCandidate (state : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineDirectedObjectiveSumAcc state)
       (machineDirectedObjectiveSumCoordinateRawCode state))
 
+/-- Truncates the updated accumulator to the length of the state bound word. -/
 def machineDirectedObjectiveSumNextAcc (state : List Bool) : List Bool :=
   (machineDirectedObjectiveSumCandidate state).take
     (machineDirectedObjectiveSumBound state).length
 
+/-- Increments the unary row ruler and truncates it to the length of the state bound word. -/
 def machineDirectedObjectiveSumNextRow (state : List Bool) : List Bool :=
   (machineDirectedObjectiveSumRow state ++ [true]).take
     (machineDirectedObjectiveSumBound state).length
 
+/-- Increments the unary column ruler and truncates it to the length of the state bound word. -/
 def machineDirectedObjectiveSumNextColumn (state : List Bool) : List Bool :=
   (machineDirectedObjectiveSumColumn state ++ [true]).take
     (machineDirectedObjectiveSumBound state).length
 
+/-- Includes the current summand in the bounded accumulator and marks the objective scan
+complete, retaining its final indices. -/
 def machineDirectedObjectiveSumFinish (state : List Bool) : List Bool :=
   machineDirectedObjectiveSumPack
     (machineDirectedObjectiveSumRow state)
@@ -186,6 +227,8 @@ def machineDirectedObjectiveSumFinish (state : List Bool) : List Bool :=
     (machineDirectedObjectiveSumBound state) [true]
     (machineDirectedObjectiveSumPayload state)
 
+/-- Includes the current summand, advances the row, and resets the column ruler for the next
+row. -/
 def machineDirectedObjectiveSumAdvanceRow (state : List Bool) : List Bool :=
   machineDirectedObjectiveSumPack
     (machineDirectedObjectiveSumNextRow state) []
@@ -194,6 +237,8 @@ def machineDirectedObjectiveSumAdvanceRow (state : List Bool) : List Bool :=
     (machineDirectedObjectiveSumDone state)
     (machineDirectedObjectiveSumPayload state)
 
+/-- Includes the current summand and advances the column while retaining the current row and
+fixed payload. -/
 def machineDirectedObjectiveSumAdvanceColumn
     (state : List Bool) : List Bool :=
   machineDirectedObjectiveSumPack
@@ -204,6 +249,8 @@ def machineDirectedObjectiveSumAdvanceColumn
     (machineDirectedObjectiveSumDone state)
     (machineDirectedObjectiveSumPayload state)
 
+/-- Processes one matrix entry, finishing at the last row and column, advancing rows at other
+row ends, and otherwise advancing the column. -/
 def machineDirectedObjectiveSumProcess (state : List Bool) : List Bool :=
   machineIfHead (machineHeadBit
       (machineDirectedObjectiveSumLastColumnBit state))
@@ -213,20 +260,27 @@ def machineDirectedObjectiveSumProcess (state : List Bool) : List Bool :=
       (machineDirectedObjectiveSumAdvanceRow state))
     (machineDirectedObjectiveSumAdvanceColumn state)
 
+/-- Leaves completed objective-sum states unchanged and otherwise processes one matrix entry. -/
 def machineDirectedObjectiveSumStep (state : List Bool) : List Bool :=
   machineIfHead (machineHeadBit (machineDirectedObjectiveSumDone state))
     state (machineDirectedObjectiveSumProcess state)
 
 /-! ## Explicit iteration and state bounds -/
 
+/-- Builds the accumulator length-bound word by applying the binary-width construction six times
+to the input. -/
 def machineDirectedObjectiveSumAccumulatorBound
     (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 6 word
 
+/-- Builds a common field envelope by applying the binary-width construction seven times to the
+input. -/
 def machineDirectedObjectiveSumStateEnvelope
     (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 7 word
 
+/-- Initializes the objective scan at row and column zero with a zero raw accumulator, its
+computed bound, and an unset completion bit. -/
 def machineDirectedObjectiveSumInit (word : List Bool) : List Bool :=
   machineDirectedObjectiveSumPack [] []
     (rawRatBinaryCode RawRat.zero)
@@ -237,15 +291,18 @@ for `(m+1)^2`; it depends only on the first component of the word. -/
 def machineDirectedObjectiveSumRuler (word : List Bool) : List Bool :=
   machineBetheFloorScanRuler word
 
+/-- Packs six copies of the common field envelope to bound the encoded objective-sum state. -/
 def machineDirectedObjectiveSumWidth (word : List Bool) : List Bool :=
   let envelope := machineDirectedObjectiveSumStateEnvelope word
   machineDirectedObjectiveSumPack envelope envelope envelope envelope
     envelope envelope
 
+/-- Iterates the bounded objective scan for the number of steps specified by its scan ruler. -/
 def machineDirectedObjectiveSumFinalState (word : List Bool) : List Bool :=
   (machineDirectedObjectiveSumStep)^[(machineDirectedObjectiveSumRuler word).length]
     (machineDirectedObjectiveSumInit word)
 
+/-- Extracts the encoded raw accumulator after the scheduled objective-sum iteration. -/
 def machineDirectedNegativeObjectiveSumRawCode
     (word : List Bool) : List Bool :=
   machineDirectedObjectiveSumAcc
@@ -569,6 +626,8 @@ theorem machineDirectedObjectiveSumWidth_mem_FP :
       payload := by
   simp [machineDirectedObjectiveSumPayload, machineDirectedObjectiveSumPack]
 
+/-- Requires a correctly packed scan state with bounded row, column, and accumulator lengths,
+the prescribed bound and payload, and at most one completion bit. -/
 def MachineDirectedObjectiveSumStateBound
     (word state : List Bool) : Prop :=
   state = machineDirectedObjectiveSumPack
@@ -791,6 +850,8 @@ theorem machineDirectedNegativeObjectiveSumRawCode_mem_FP :
 
 /-! ## Canonical inputs and exact coordinate semantics -/
 
+/-- Encodes dimension `m`, precision `p`, regularization parameter, the `(m + 1)` square matrix,
+and the free-coordinate vector for the objective scan. -/
 def machineDirectedObjectiveSumCanonicalWord {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ) : List Bool :=
@@ -854,6 +915,8 @@ def machineDirectedObjectiveSumCanonicalWord {m : ℕ}
     machineDirectedObjectiveSumRest,
     machineDirectedObjectiveSumCanonicalWord]
 
+/-- Encodes a semantic scan position, raw accumulator, completion flag, and bound together with
+the fixed objective payload. -/
 def machineDirectedObjectiveSumCanonicalState {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ)
@@ -1138,6 +1201,8 @@ theorem machineDirectedObjectiveSumWork_le_guard {m : ℕ}
 
 /-! ## Typed row-major semantics -/
 
+/-- Evaluates the raw directed negative-objective summand using matrix coefficient `A i j` and
+the corresponding affine entry of `y`. -/
 def rawDirectedBetheObjectiveCoordinate {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ)
@@ -1145,6 +1210,8 @@ def rawDirectedBetheObjectiveCoordinate {m : ℕ}
   rawDirectedNegativeObjectiveCoordinateLower tau (A i j)
     (betheAffineMatrixQ y i j) p
 
+/-- Bounds a raw directed coordinate expression by adding the widths of its inputs and three
+logarithm approximations, counting the coordinate width twice. -/
 def rawDirectedNegativeObjectiveCoordinateWidthBudget
     (tau a x : ℚ) (p : ℕ) : ℕ :=
   2 * rawRatWidth (rawRatOfRat x) +
@@ -1369,6 +1436,7 @@ theorem rawBetheAffineTotal_width_le_word {m : ℕ}
       1 + m * m * (L + 1) := hsum.trans (by omega)
   simpa only [values, L] using! hfinal
 
+/-- Provides the polynomial affine-entry width budget `m * m * (L + 1) + m + L + 8`. -/
 def rawBetheAffineEntryWidthBudget (m L : ℕ) : ℕ :=
   m * m * (L + 1) + m + L + 8
 
@@ -1457,16 +1525,22 @@ theorem rawBetheAffineMatrixQ_width_le_word {m : ℕ}
         (machineDirectedObjectiveSumCanonicalWord tau A y p).length := by
       omega
 
+/-- Provides the encoded coordinate budget `20 + 12 * rawBetheAffineEntryWidthBudget m L`. -/
 def rawDirectedObjectiveCoordinateWordXBudget (m L : ℕ) : ℕ :=
   20 + 12 * rawBetheAffineEntryWidthBudget m L
 
+/-- Provides the encoded complement budget by scaling the coordinate budget by twelve and adding
+forty-four. -/
 def rawDirectedObjectiveCoordinateWordComplementBudget
     (m L : ℕ) : ℕ :=
   44 + 12 * rawDirectedObjectiveCoordinateWordXBudget m L
 
+/-- Provides the polynomial scheduled-logarithm word budget `64 * (L + 2 * W + 4)^2 * (W + 2)`. -/
 def rawScheduledLogWordBudget (L W : ℕ) : ℕ :=
   64 * (L + 2 * W + 4) ^ 2 * (W + 2)
 
+/-- Combines coordinate, complement, parameter, and three scheduled-logarithm budgets into a
+bound for one encoded objective summand. -/
 def rawDirectedObjectiveCoordinateWordBudget (m L : ℕ) : ℕ :=
   let WX := rawDirectedObjectiveCoordinateWordXBudget m L
   let WC := rawDirectedObjectiveCoordinateWordComplementBudget m L
@@ -1527,11 +1601,17 @@ theorem rawDirectedBetheObjectiveCoordinate_width_le_word_budget {m : ℕ}
     WX, WC, L, x] using! hfinal
 
 structure DirectedObjectiveSumSemanticState (m : ℕ) where
+  /-- The current matrix row of the semantic objective scan. -/
   row : Fin (m + 1)
+  /-- The current matrix column of the semantic objective scan. -/
   column : Fin (m + 1)
+  /-- The raw rational accumulator of the semantic objective scan. -/
   acc : RawRat
+  /-- Whether the semantic objective scan has included its last matrix entry. -/
   done : Bool
 
+/-- Initializes the semantic scan at the first matrix entry with zero accumulator and an unset
+completion flag. -/
 def directedObjectiveSumSemanticInit (m : ℕ) :
     DirectedObjectiveSumSemanticState m where
   row := ⟨0, by omega⟩
@@ -1539,6 +1619,8 @@ def directedObjectiveSumSemanticInit (m : ℕ) :
   acc := RawRat.zero
   done := false
 
+/-- Adds one directed objective summand and advances in row-major order, setting the completion
+flag after the final entry and fixing completed states. -/
 def directedObjectiveSumSemanticStep {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ)
@@ -1590,6 +1672,7 @@ theorem directedObjectiveSumSemanticStep_acc_width {m B C : ℕ}
   · simpa [directedObjectiveSumSemanticStep] using!
       hacc.trans (by omega)
 
+/-- Encodes a semantic objective-sum state with the supplied bound and fixed problem parameters. -/
 def machineDirectedObjectiveSumSemanticCode {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ) (bound : List Bool)
@@ -1907,6 +1990,7 @@ theorem machineDirectedObjectiveSumStep_semanticCode {m : ℕ}
     machineDirectedObjectiveSumCanonicalState,
     directedObjectiveSumSemanticInit]
 
+/-- Runs the semantic objective scan for `(m + 1)^2` steps, one per matrix entry. -/
 def finalDirectedObjectiveSumSemanticState {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ) :
@@ -1914,6 +1998,7 @@ def finalDirectedObjectiveSumSemanticState {m : ℕ}
   (directedObjectiveSumSemanticStep tau A y p)^[(m + 1) * (m + 1)]
     (directedObjectiveSumSemanticInit m)
 
+/-- Runs the semantic objective scan for exactly `k` steps from its initial state. -/
 def directedObjectiveSumSemanticStateAt {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p k : ℕ) :
@@ -2229,6 +2314,7 @@ theorem machineDirectedObjectiveSumFinalState_encode_of_large {m : ℕ}
   simpa only [directedObjectiveSumSemanticStateAt,
     finalDirectedObjectiveSumSemanticState] using! hiterate
 
+/-- Returns the raw rational accumulator after scanning all matrix entries. -/
 def rawDirectedNegativeObjectiveSum {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ) : RawRat :=
@@ -2265,6 +2351,7 @@ theorem machineDirectedNegativeObjectiveSumRawCode_encode_of_large {m : ℕ}
 
 /-! ## Mathematical value of the row-major sum -/
 
+/-- Evaluates the rational directed negative-objective summand at a pair of matrix indices. -/
 def directedNegativeObjectivePairValue {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ)
@@ -2272,6 +2359,8 @@ def directedNegativeObjectivePairValue {m : ℕ}
   directedNegativeObjectiveCoordinateLower tau (A ij.1 ij.2)
     (betheAffineMatrixQ y ij.1 ij.2) p
 
+/-- Sums the directed negative-objective summands whose row-major scan ordinals are less than
+`k`. -/
 def directedNegativeObjectivePrefix {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p k : ℕ) : ℚ :=
@@ -2349,6 +2438,8 @@ theorem directedNegativeObjectivePrefix_full {m : ℕ}
     Fintype.sum_prod_type]
   rfl
 
+/-- Relates a completed scan to the full directed objective sum, or an unfinished scan at
+ordinal `k` to the corresponding prefix sum. -/
 def DirectedObjectiveSumValueInvariant {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p k : ℕ)

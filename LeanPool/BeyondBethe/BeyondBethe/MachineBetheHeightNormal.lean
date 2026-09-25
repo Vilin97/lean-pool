@@ -22,24 +22,30 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Produces the encoded zero entry used in the non-height coordinates of the cut normal. -/
 def machineBetheHeightNormalEntryCode (_word : List Bool) : List Bool :=
   rationalEntryBinaryCode 0
 
+/-- Supplies a twice-iterated binary width bound for generating the height-cut normal. -/
 def machineBetheHeightNormalBound (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 2 word
 
+/-- Packages the coordinate ruler, entry bound, and payload for generating zero normal entries. -/
 def machineBetheHeightNormalGeneratorInput
     (word : List Bool) : List Bool :=
   pair word (pair (machineBetheHeightNormalBound word) word)
 
+/-- Generates the encoded list of zero entries preceding the height coordinate of the normal. -/
 def machineBetheHeightNormalBaseCode (word : List Bool) : List Bool :=
   machineUnaryGridGeneratorCode machineBetheHeightNormalEntryCode
     (machineBetheHeightNormalGeneratorInput word)
 
+/-- Pairs the encoded unit entry with the zero prefix for appending the height coordinate. -/
 def machineBetheHeightNormalSnocInput (word : List Bool) : List Bool :=
   pair (rationalEntryBinaryCode 1)
     (machineBetheHeightNormalBaseCode word)
 
+/-- Encodes the height-cap cut normal by appending one to a vector of zero entries. -/
 def machineBetheHeightNormalVectorCode (word : List Bool) : List Bool :=
   machineBinaryListSnoc (machineBetheHeightNormalSnocInput word)
 

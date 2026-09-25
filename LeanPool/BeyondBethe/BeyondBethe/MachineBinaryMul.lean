@@ -25,38 +25,48 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes multiplication state as remaining multiplier bits, shifted multiplicand, and
+accumulator. -/
 def machineBinaryMulPack
     (remaining shift acc : List Bool) : List Bool :=
   pair remaining (pair shift acc)
 
+/-- Extracts the unprocessed multiplier bits from the multiplication state. -/
 def machineBinaryMulRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the shifted multiplicand from the multiplication state. -/
 def machineBinaryMulShift (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the accumulated product from the multiplication state. -/
 def machineBinaryMulAcc (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Doubles the shifted multiplicand for the next multiplier bit. -/
 def machineBinaryMulNextShift (state : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineBinaryMulShift state) (machineBinaryMulShift state))
 
+/-- Adds the shifted multiplicand to the accumulator when the current multiplier bit is set. -/
 def machineBinaryMulNextAcc (state : List Bool) : List Bool :=
   machineIfHead (machineHeadBit (machineBinaryMulRemaining state))
     (machineBinaryAddBits
       (pair (machineBinaryMulAcc state) (machineBinaryMulShift state)))
     (machineBinaryMulAcc state)
 
+/-- Consumes one multiplier bit, doubles the shift, and conditionally updates the accumulator. -/
 def machineBinaryMulStep (state : List Bool) : List Bool :=
   machineBinaryMulPack
     (machineBinaryMulRemaining state).tail
     (machineBinaryMulNextShift state)
     (machineBinaryMulNextAcc state)
 
+/-- Initializes multiplication with the second operand as multiplier and a zero accumulator. -/
 def machineBinaryMulInit (word : List Bool) : List Bool :=
   machineBinaryMulPack (machinePairSecond word) (machinePairFirst word) []
 
+/-- Uses the second operand's bits as the multiplication iteration ruler. -/
 def machineBinaryMulRuler (word : List Bool) : List Bool :=
   machinePairSecond word
 
@@ -65,10 +75,12 @@ def machineBinaryMulWidth (word : List Bool) : List Bool :=
   let padded := List.replicate 16 false ++ word
   List.replicate (padded.length * padded.length) false
 
+/-- Runs one multiplication step for each bit of the second operand. -/
 def machineBinaryMulFinalState (word : List Bool) : List Bool :=
   machineBinaryMulStep^[(machineBinaryMulRuler word).length]
     (machineBinaryMulInit word)
 
+/-- Extracts the accumulated product from the final multiplication state. -/
 def machineBinaryMulBits (word : List Bool) : List Bool :=
   machineBinaryMulAcc (machineBinaryMulFinalState word)
 
@@ -194,6 +206,8 @@ theorem machineBinaryMulIterate_length
         machineBinaryMulStep_pack, ih]
       rfl
 
+/-- Bounds the remaining multiplier length and the growth of the shifted operand and
+accumulator. -/
 def MachineBinaryMulReachable
     (lhs rhs : List Bool) (iterations : ℕ) (state : List Bool) : Prop :=
   ∃ remaining shift acc,

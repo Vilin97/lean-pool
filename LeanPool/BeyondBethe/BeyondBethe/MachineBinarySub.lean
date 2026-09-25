@@ -24,16 +24,20 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes subtraction state as remaining operands, borrow, and reversed accumulated bits. -/
 def machineBinarySubPack
     (x y borrow accRev : List Bool) : List Bool :=
   pair x (pair y (pair borrow accRev))
 
+/-- Extracts the unprocessed minuend bits from the subtraction state. -/
 def machineBinarySubX (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the unprocessed subtrahend bits from the subtraction state. -/
 def machineBinarySubY (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the borrow word from the binary-subtraction state. -/
 def machineBinarySubBorrow (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 

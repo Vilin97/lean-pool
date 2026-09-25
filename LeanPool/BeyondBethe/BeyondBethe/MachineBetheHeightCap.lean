@@ -24,25 +24,32 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the unary height-coordinate index from the height-cap input. -/
 def machineBetheHeightCapDimension (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the paired upper bound and rational vector from the height-cap input. -/
 def machineBetheHeightCapRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the encoded rational upper bound from the height-cap input. -/
 def machineBetheHeightCapUpper (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheHeightCapRest word)
 
+/-- Extracts the encoded rational vector from the height-cap input. -/
 def machineBetheHeightCapVector (word : List Bool) : List Bool :=
   machinePairSecond (machineBetheHeightCapRest word)
 
+/-- Pairs the unary height-coordinate index with the encoded vector for list lookup. -/
 def machineBetheHeightCapIndexInput (word : List Bool) : List Bool :=
   pair (machineBetheHeightCapDimension word)
     (machineBetheHeightCapVector word)
 
+/-- Looks up the encoded height coordinate in the rational vector. -/
 def machineBetheHeightCapEntryCode (word : List Bool) : List Bool :=
   machineListIndex (machineBetheHeightCapIndexInput word)
 
+/-- Tests whether the encoded height coordinate is at most the encoded upper bound. -/
 def machineBetheHeightLeUpperBit (word : List Bool) : List Bool :=
   machineRawRatLeBit
     (pair (machineBetheHeightCapEntryCode word)
@@ -94,6 +101,7 @@ theorem machineBetheHeightCapViolationBit_mem_FP :
   simpa only [machineBetheHeightCapViolationBit] using!
     machineNotBit_mem_FP machineBetheHeightLeUpperBit_mem_FP
 
+/-- Encodes a rational upper bound and a vector whose final coordinate is its height. -/
 def machineBetheHeightCapCanonicalWord {d : ℕ}
     (upper : RawRat) (q : Fin (d + 1) → ℚ) : List Bool :=
   pair (List.replicate d true)

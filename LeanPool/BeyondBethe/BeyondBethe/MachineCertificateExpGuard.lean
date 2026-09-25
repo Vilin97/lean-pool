@@ -24,9 +24,12 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- The natural ceiling of the reciprocal of the fixed exponential evaluation loss. -/
 def explicitExpReciprocalCeil : ℕ :=
   rationalCeilNat (1 / explicitExpEvaluationLoss)
 
+/-- The odd exponential step bound `2*(K + K^2*C)+1`, where `K = 34*sourceLength^2` and `C` is
+the reciprocal-loss ceiling. -/
 def explicitCertificateExpStepBound (sourceLength : ℕ) : ℕ :=
   let K := 34 * sourceLength ^ 2
   2 * (K + K ^ 2 * explicitExpReciprocalCeil) + 1
@@ -166,10 +169,13 @@ theorem optimizerCertificate_expApproxSteps_le_sourceBound
   exact certificate_expApproxSteps_le_sourceBound_of_abs_le m B q
     (by simpa only [q] using! habsR)
 
+/-- Iterate the binary-multiplication width constructor the specified number of times. -/
 def machineIteratedBinaryWidth : ℕ → List Bool → List Bool
   | 0, word => word
   | k + 1, word => machineBinaryMulWidth (machineIteratedBinaryWidth k word)
 
+/-- The numerical width recurrence starting at `L` and replacing each width by its padded square
+`(width+16)^2`. -/
 def certificateExpGuardWidth : ℕ → ℕ → ℕ
   | 0, L => L
   | k + 1, L => (certificateExpGuardWidth k L + 16) ^ 2
@@ -214,6 +220,8 @@ theorem certificateExpGuardWidth_pow_lower (k S : ℕ) :
           Nat.pow_le_pow_left ih 2
         _ ≤ (certificateExpGuardWidth (k + 1) S + 16) ^ 2 := hmono
 
+/-- The coefficient `2312*C+69` in the explicit exponential step estimate, with `C` the
+reciprocal-loss ceiling. -/
 def explicitCertificateExpCoefficient : ℕ :=
   2312 * explicitExpReciprocalCeil + 69
 
@@ -260,6 +268,8 @@ theorem explicitCertificateExpStepBound_le_guardWidth
   exact hstepCoeff.trans <| hguardPolynomial.trans <|
     (by simpa using! certificateExpGuardWidth_pow_lower 5 S)
 
+/-- Construct the certificate exponentiation guard by applying six binary-width expansions to
+the stored source word. -/
 def machineOptimizerCertificateExpGuard (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 6 (machineCertificateSourceWord word)
 

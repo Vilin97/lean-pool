@@ -26,112 +26,144 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the unary precision field from an objective-coordinate request. -/
 def machineDirectedObjectiveCoordinatePrecision
     (word : List Bool) : List Bool := machinePairFirst word
 
+/-- Extracts the objective-coordinate payload after its precision field. -/
 def machineDirectedObjectiveCoordinateRest
     (word : List Bool) : List Bool := machinePairSecond word
 
+/-- Extracts the encoded regularization parameter from an objective-coordinate request. -/
 def machineDirectedObjectiveCoordinateTau
     (word : List Bool) : List Bool :=
   machinePairFirst (machineDirectedObjectiveCoordinateRest word)
 
+/-- Extracts the encoded matrix coefficient from an objective-coordinate request. -/
 def machineDirectedObjectiveCoordinateA
     (word : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond
     (machineDirectedObjectiveCoordinateRest word))
 
+/-- Extracts the encoded affine coordinate from an objective-coordinate request. -/
 def machineDirectedObjectiveCoordinateX
     (word : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond
     (machineDirectedObjectiveCoordinateRest word))
 
+/-- Computes the raw rational code for one minus the requested affine coordinate. -/
 def machineDirectedObjectiveCoordinateComplementRaw
     (word : List Bool) : List Bool :=
   machineRawRatSubCode
     (pair (rawRatBinaryCode RawRat.one)
       (machineDirectedObjectiveCoordinateX word))
 
+/-- Normalizes the raw code for the complement of the requested affine coordinate. -/
 def machineDirectedObjectiveCoordinateComplement
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineDirectedObjectiveCoordinateComplementRaw word)
 
+/-- Pairs the requested unary precision with the matrix coefficient for directed logarithm
+evaluation. -/
 def machineDirectedObjectiveCoordinateLogAInput
     (word : List Bool) : List Bool :=
   pair (machineDirectedObjectiveCoordinatePrecision word)
     (machineDirectedObjectiveCoordinateA word)
 
+/-- Pairs the requested unary precision with the affine coordinate for directed logarithm
+evaluation. -/
 def machineDirectedObjectiveCoordinateLogXInput
     (word : List Bool) : List Bool :=
   pair (machineDirectedObjectiveCoordinatePrecision word)
     (machineDirectedObjectiveCoordinateX word)
 
+/-- Pairs the requested unary precision with the normalized coordinate complement for directed
+logarithm evaluation. -/
 def machineDirectedObjectiveCoordinateLogComplementInput
     (word : List Bool) : List Bool :=
   pair (machineDirectedObjectiveCoordinatePrecision word)
     (machineDirectedObjectiveCoordinateComplement word)
 
+/-- Computes the encoded scheduled upper approximation to the logarithm of the matrix
+coefficient. -/
 def machineDirectedObjectiveCoordinateLogAUpper
     (word : List Bool) : List Bool :=
   machineScheduledLogUpperRawCode
     (machineDirectedObjectiveCoordinateLogAInput word)
 
+/-- Computes the encoded scheduled lower approximation to the logarithm of the affine
+coordinate. -/
 def machineDirectedObjectiveCoordinateLogXLower
     (word : List Bool) : List Bool :=
   machineScheduledLogLowerRawCode
     (machineDirectedObjectiveCoordinateLogXInput word)
 
+/-- Computes the encoded scheduled upper approximation to the logarithm of the coordinate
+complement. -/
 def machineDirectedObjectiveCoordinateLogComplementUpper
     (word : List Bool) : List Bool :=
   machineScheduledLogUpperRawCode
     (machineDirectedObjectiveCoordinateLogComplementInput word)
 
+/-- Negates the encoded affine coordinate for the first objective summand. -/
 def machineDirectedObjectiveCoordinateNegX
     (word : List Bool) : List Bool :=
   machineRawRatNegCode (machineDirectedObjectiveCoordinateX word)
 
+/-- Computes the raw code for minus the affine coordinate times the upper logarithm
+approximation of the matrix coefficient. -/
 def machineDirectedObjectiveCoordinateFirstTerm
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineDirectedObjectiveCoordinateNegX word)
       (machineDirectedObjectiveCoordinateLogAUpper word))
 
+/-- Computes the raw rational code for one plus the regularization parameter. -/
 def machineDirectedObjectiveCoordinateOnePlusTau
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (rawRatBinaryCode RawRat.one)
       (machineDirectedObjectiveCoordinateTau word))
 
+/-- Computes the raw code for the affine coordinate multiplied by one plus the regularization
+parameter. -/
 def machineDirectedObjectiveCoordinateMiddleScale
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineDirectedObjectiveCoordinateOnePlusTau word)
       (machineDirectedObjectiveCoordinateX word))
 
+/-- Computes the middle objective summand by multiplying the scaled affine coordinate by its
+lower logarithm approximation. -/
 def machineDirectedObjectiveCoordinateMiddleTerm
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineDirectedObjectiveCoordinateMiddleScale word)
       (machineDirectedObjectiveCoordinateLogXLower word))
 
+/-- Computes the raw code for the coordinate complement times its upper logarithm approximation. -/
 def machineDirectedObjectiveCoordinateComplementProduct
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineDirectedObjectiveCoordinateComplement word)
       (machineDirectedObjectiveCoordinateLogComplementUpper word))
 
+/-- Negates the complement-logarithm product to obtain the last objective summand. -/
 def machineDirectedObjectiveCoordinateLastTerm
     (word : List Bool) : List Bool :=
   machineRawRatNegCode
     (machineDirectedObjectiveCoordinateComplementProduct word)
 
+/-- Adds the first and middle directed objective summands in raw rational code. -/
 def machineDirectedObjectiveCoordinateFirstTwo
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineDirectedObjectiveCoordinateFirstTerm word)
       (machineDirectedObjectiveCoordinateMiddleTerm word))
 
+/-- Adds all three directed summands to encode the lower approximation of one negative-objective
+coordinate. -/
 def machineDirectedNegativeObjectiveCoordinateLowerRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
@@ -282,6 +314,8 @@ theorem machineDirectedNegativeObjectiveCoordinateLowerRawCode_mem_FP :
   simpa only [machineDirectedNegativeObjectiveCoordinateLowerRawCode] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
+/-- Encodes precision `p` as a unary ruler followed by the raw rational codes for `tau`, `a`,
+and `x`. -/
 def machineDirectedObjectiveCoordinateCanonicalWord
     (tau a x : ℚ) (p : ℕ) : List Bool :=
   pair (List.replicate p true)
@@ -289,6 +323,8 @@ def machineDirectedObjectiveCoordinateCanonicalWord
       (pair (rawRatBinaryCode (rawRatOfRat a))
         (rawRatBinaryCode (rawRatOfRat x))))
 
+/-- Forms the raw rational expression `-x * logUpper(a) + (1 + tau) * x * logLower(x) - (1 - x)
+* logUpper(1 - x)` at precision `p`. -/
 def rawDirectedNegativeObjectiveCoordinateLower
     (tau a x : ℚ) (p : ℕ) : RawRat :=
   let rawTau := rawRatOfRat tau

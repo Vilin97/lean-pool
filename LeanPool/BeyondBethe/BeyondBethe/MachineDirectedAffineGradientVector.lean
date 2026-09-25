@@ -24,6 +24,7 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Normalizes the raw affine-gradient entry into an encoded rational vector entry. -/
 def machineDirectedAffineGradientEntryCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineDirectedAffineGradientEntryRawCode word)
@@ -49,14 +50,18 @@ theorem machineDirectedAffineGradientEntryCode_mem_FP :
     binaryNormalizeRawRat_eq_value,
     rawDirectedAffineGradientEntry_value]
 
+/-- Uses six binary-width iterations to bound generated affine-gradient entries. -/
 def machineDirectedAffineGradientVectorBound (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 6 word
 
+/-- Packages the dimension ruler, entry-width bound, and objective payload for gradient
+generation. -/
 def machineDirectedAffineGradientVectorGeneratorInput
     (word : List Bool) : List Bool :=
   pair (machineDirectedObjectiveSumDimension word)
     (pair (machineDirectedAffineGradientVectorBound word) word)
 
+/-- Generates the encoded vector of directed affine-gradient entries over the coordinate grid. -/
 def machineDirectedAffineGradientVectorCode (word : List Bool) : List Bool :=
   machineUnaryGridGeneratorCode machineDirectedAffineGradientEntryCode
     (machineDirectedAffineGradientVectorGeneratorInput word)
@@ -79,6 +84,8 @@ theorem machineDirectedAffineGradientVectorCode_mem_FP :
     machineCompose_mem_FP
       machineDirectedAffineGradientVectorGeneratorInput_mem_FP hgenerator
 
+/-- Flattens the affine pullback of the directed negative-gradient matrix into a coordinate
+vector. -/
 def directedAffineGradientVector {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ) : Fin (m * m) → ℚ :=
@@ -87,6 +94,8 @@ def directedAffineGradientVector {m : ℕ}
       (directedNegativeGradientLowerMatrix tau A
         (betheAffineMatrixQ y) p))
 
+/-- Budgets raw-rational coordinate width using the regularization and three directed logarithm
+widths. -/
 def rawDirectedGradientCoordinateWidthBudget
     (tau a x : ℚ) (p : ℕ) : ℕ :=
   2 * rawRatWidth (rawRatOfRat tau) +

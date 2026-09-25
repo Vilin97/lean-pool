@@ -26,55 +26,69 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- The binary encoding of the raw-rational constant two. -/
 def rawRatTwoCode : List Bool := rawRatBinaryCode (RawRat.ofNat 2)
 
+/-- Extracts the unary series-length ruler from a directed-logarithm input. -/
 def machineDirectedLogRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the encoded raw-rational argument of the directed logarithm. -/
 def machineDirectedLogArgumentCode (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Computes the numerator `y - 1` of the logarithmic series parameter. -/
 def machineDirectedLogParameterNumeratorCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineDirectedLogArgumentCode word)
       (machineRawRatNegCode rawRatOneCode))
 
+/-- Computes the denominator `y + 1` of the logarithmic series parameter. -/
 def machineDirectedLogParameterDenominatorCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineDirectedLogArgumentCode word) rawRatOneCode)
 
+/-- Computes the raw-rational logarithmic series parameter `(y - 1) / (y + 1)`. -/
 def machineDirectedLogParameterCode (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineDirectedLogParameterNumeratorCode word)
       (machineDirectedLogParameterDenominatorCode word))
 
+/-- Evaluates the rational logarithmic series at the transformed argument for the supplied ruler
+length. -/
 def machineDirectedLogSeriesSumCode (word : List Bool) : List Bool :=
   machineRawRationalLogSeriesSumCode
     (pair (machineDirectedLogRuler word)
       (machineDirectedLogParameterCode word))
 
+/-- Doubles the truncated series sum to produce the unit-logarithm lower approximation. -/
 def machineDirectedLogUnitLowerRawCode (word : List Bool) : List Bool :=
   machineRawRatMulCode (pair rawRatTwoCode
     (machineDirectedLogSeriesSumCode word))
 
+/-- Builds a unary ruler of length `2 * N + 1` from the series-length ruler. -/
 def machineDirectedLogOddPowerRuler (word : List Bool) : List Bool :=
   true :: (machineDirectedLogRuler word ++ machineDirectedLogRuler word)
 
+/-- Raises the logarithmic series parameter to the odd power `2 * N + 1`. -/
 def machineDirectedLogOddPowerCode (word : List Bool) : List Bool :=
   machineRawRatPowerCode
     (pair (machineDirectedLogOddPowerRuler word)
       (machineDirectedLogParameterCode word))
 
+/-- Computes the square of the logarithmic series parameter. -/
 def machineDirectedLogParameterSquareCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineDirectedLogParameterCode word)
       (machineDirectedLogParameterCode word))
 
+/-- Computes the tail-estimate denominator `1 - x^2` for the series parameter `x`. -/
 def machineDirectedLogErrorDenominatorCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair rawRatOneCode
       (machineRawRatNegCode (machineDirectedLogParameterSquareCode word)))
 
+/-- Computes the geometric tail expression `2 * x^(2*N+1) / (1 - x^2)`. -/
 def machineDirectedLogSeriesErrorCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair rawRatTwoCode
@@ -82,6 +96,7 @@ def machineDirectedLogSeriesErrorCode (word : List Bool) : List Bool :=
         (pair (machineDirectedLogOddPowerCode word)
           (machineDirectedLogErrorDenominatorCode word))))
 
+/-- Adds the geometric tail expression to the unit-logarithm lower approximation. -/
 def machineDirectedLogUnitUpperRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineDirectedLogUnitLowerRawCode word)
@@ -177,33 +192,43 @@ theorem machineDirectedLogUnitUpperRawCode_mem_FP :
 
 /-! ## Dyadic range reduction -/
 
+/-- Extracts the absolute numerator bits of the encoded logarithm argument. -/
 def machineDirectedLogNumeratorAbsBits (word : List Bool) : List Bool :=
   machineIntegerNatAbsBits (machinePairFirst (machineDirectedLogArgumentCode word))
 
+/-- Extracts the denominator bits of the encoded logarithm argument. -/
 def machineDirectedLogDenominatorBits (word : List Bool) : List Bool :=
   machinePairSecond (machineDirectedLogArgumentCode word)
 
+/-- Drops one numerator bit to form the ruler for its binary logarithmic scale. -/
 def machineDirectedLogNumeratorLogRuler (word : List Bool) : List Bool :=
   (machineDirectedLogNumeratorAbsBits word).tail
 
+/-- Drops one denominator bit to form the ruler for its binary logarithmic scale. -/
 def machineDirectedLogDenominatorLogRuler (word : List Bool) : List Bool :=
   (machineDirectedLogDenominatorBits word).tail
 
+/-- Encodes the length of the numerator's logarithmic ruler in binary. -/
 def machineDirectedLogNumeratorLogBits (word : List Bool) : List Bool :=
   machineLengthBits (machineDirectedLogNumeratorLogRuler word)
 
+/-- Encodes the length of the denominator's logarithmic ruler in binary. -/
 def machineDirectedLogDenominatorLogBits (word : List Bool) : List Bool :=
   machineLengthBits (machineDirectedLogDenominatorLogRuler word)
 
+/-- Encodes the signed difference between numerator and denominator binary logarithmic scales. -/
 def machineDirectedLogExponentIntegerCode (word : List Bool) : List Bool :=
   machineIntegerAddCode
     (pair (machineNaturalIntegerCode (machineDirectedLogNumeratorLogBits word))
       (machineIntegerNegCode
         (machineNaturalIntegerCode (machineDirectedLogDenominatorLogBits word))))
 
+/-- Encodes `2^ruler.length` as a binary natural number. -/
 def machineDirectedLogPowerTwoBits (ruler : List Bool) : List Bool :=
   List.replicate ruler.length false ++ [true]
 
+/-- Encodes the ratio of the numerator and denominator powers of two used for logarithmic
+scaling. -/
 def machineDirectedLogScaleCode (word : List Bool) : List Bool :=
   pair
     (machineNaturalIntegerCode
@@ -212,28 +237,36 @@ def machineDirectedLogScaleCode (word : List Bool) : List Bool :=
     (machineDirectedLogPowerTwoBits
       (machineDirectedLogDenominatorLogRuler word))
 
+/-- Divides the logarithm argument by its encoded power-of-two scale. -/
 def machineDirectedLogResidualCode (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineDirectedLogArgumentCode word)
       (machineDirectedLogScaleCode word))
 
+/-- Tests whether the scaled residual is at least one. -/
 def machineDirectedLogResidualAtLeastOne (word : List Bool) : List Bool :=
   machineRawRatLeBit (pair rawRatOneCode (machineDirectedLogResidualCode word))
 
+/-- Chooses the residual or its reciprocal according to whether the residual is at least one. -/
 def machineDirectedLogUnitCode (word : List Bool) : List Bool :=
   machineIfHead (machineDirectedLogResidualAtLeastOne word)
     (machineDirectedLogResidualCode word)
     (machineRawRatInvCode (machineDirectedLogResidualCode word))
 
+/-- Builds a logarithm-series query for two with the original series-length ruler. -/
 def machineDirectedLogTwoInput (word : List Bool) : List Bool :=
   pair (machineDirectedLogRuler word) rawRatTwoCode
 
+/-- Builds a logarithm-series query for the chosen unit residual with the original ruler. -/
 def machineDirectedLogUnitInput (word : List Bool) : List Bool :=
   pair (machineDirectedLogRuler word) (machineDirectedLogUnitCode word)
 
+/-- Encodes the signed binary scaling exponent as a raw rational with denominator one. -/
 def machineDirectedLogExponentRawRatCode (word : List Bool) : List Bool :=
   pair (machineDirectedLogExponentIntegerCode word) [true]
 
+/-- Computes the lower approximation to the exponent times `log 2`, reversing bounds for
+negative exponents. -/
 def machineDirectedLogIntegerLowerCode (word : List Bool) : List Bool :=
   let lo := machineDirectedLogUnitLowerRawCode (machineDirectedLogTwoInput word)
   let hi := machineDirectedLogUnitUpperRawCode (machineDirectedLogTwoInput word)
@@ -242,6 +275,8 @@ def machineDirectedLogIntegerLowerCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineDirectedLogExponentRawRatCode word) factor)
 
+/-- Computes the upper approximation to the exponent times `log 2`, reversing bounds for
+negative exponents. -/
 def machineDirectedLogIntegerUpperCode (word : List Bool) : List Bool :=
   let lo := machineDirectedLogUnitLowerRawCode (machineDirectedLogTwoInput word)
   let hi := machineDirectedLogUnitUpperRawCode (machineDirectedLogTwoInput word)
@@ -250,31 +285,39 @@ def machineDirectedLogIntegerUpperCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineDirectedLogExponentRawRatCode word) factor)
 
+/-- Chooses the unit-log lower approximation or negated upper approximation for the residual
+term. -/
 def machineDirectedLogResidualLowerCode (word : List Bool) : List Bool :=
   let lo := machineDirectedLogUnitLowerRawCode (machineDirectedLogUnitInput word)
   let hi := machineDirectedLogUnitUpperRawCode (machineDirectedLogUnitInput word)
   machineIfHead (machineDirectedLogResidualAtLeastOne word) lo
     (machineRawRatNegCode hi)
 
+/-- Chooses the unit-log upper approximation or negated lower approximation for the residual
+term. -/
 def machineDirectedLogResidualUpperCode (word : List Bool) : List Bool :=
   let lo := machineDirectedLogUnitLowerRawCode (machineDirectedLogUnitInput word)
   let hi := machineDirectedLogUnitUpperRawCode (machineDirectedLogUnitInput word)
   machineIfHead (machineDirectedLogResidualAtLeastOne word) hi
     (machineRawRatNegCode lo)
 
+/-- Adds the scaling and residual lower approximations to encode a directed logarithm result. -/
 def machineDirectedLogLowerRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineDirectedLogIntegerLowerCode word)
       (machineDirectedLogResidualLowerCode word))
 
+/-- Adds the scaling and residual upper approximations to encode a directed logarithm result. -/
 def machineDirectedLogUpperRawCode (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineDirectedLogIntegerUpperCode word)
       (machineDirectedLogResidualUpperCode word))
 
+/-- Normalizes the raw lower logarithm approximation into canonical rational encoding. -/
 def machineDirectedLogLowerCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode (machineDirectedLogLowerRawCode word)
 
+/-- Normalizes the raw upper logarithm approximation into canonical rational encoding. -/
 def machineDirectedLogUpperCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode (machineDirectedLogUpperRawCode word)
 
@@ -462,16 +505,21 @@ theorem machineDirectedLogUpperCode_mem_FP :
 
 namespace RawRat
 
+/-- The raw-rational series parameter `(y - 1) / (y + 1)` for logarithm evaluation. -/
 def logUnitParameter (y : RawRat) : RawRat :=
   (y.add one.neg).div (y.add one)
 
+/-- Twice the truncated logarithmic series at the transformed argument. -/
 def logUnitLower (y : RawRat) (N : ℕ) : RawRat :=
   (ofNat 2).mul (logSeriesSum (logUnitParameter y) N)
 
+/-- The raw-rational geometric tail expression `2 * x^(2*N+1) / (1 - x^2)` for the transformed
+argument. -/
 def logSeriesError (y : RawRat) (N : ℕ) : RawRat :=
   let x := logUnitParameter y
   (ofNat 2).mul ((x.pow (2 * N + 1)).div (one.add (x.mul x).neg))
 
+/-- The unit-logarithm lower approximation plus its geometric tail expression. -/
 def logUnitUpper (y : RawRat) (N : ℕ) : RawRat :=
   (logUnitLower y N).add (logSeriesError y N)
 
@@ -696,13 +744,18 @@ theorem machineDirectedLogDenominatorLogRuler_length
 
 namespace RawRat
 
+/-- The ratio of powers of two determined by the binary logarithms of the numerator and
+denominator. -/
 def logScale (q : ℚ) : RawRat :=
   ⟨(2 ^ binaryNatLog2 q.num.natAbs : ℕ),
     2 ^ binaryNatLog2 q.den, by positivity⟩
 
+/-- The raw-rational residual obtained by dividing `q` by its power-of-two scale. -/
 def logResidual (q : ℚ) : RawRat :=
   (rawRatOfRat q).div (logScale q)
 
+/-- Selects the scaled residual or its reciprocal according to whether the residual is at least
+one. -/
 def logUnit (q : ℚ) : RawRat :=
   if 1 ≤ (logResidual q).value then logResidual q else (logResidual q).inv
 
@@ -781,34 +834,45 @@ end RawRat
 
 namespace RawRat
 
+/-- Embeds an integer as a raw rational with denominator one. -/
 def ofInt (z : ℤ) : RawRat := ⟨z, 1, by omega⟩
 
 @[simp] theorem value_ofInt (z : ℤ) : (ofInt z).value = z := by
   simp [ofInt, value]
 
+/-- Approximates the binary exponent times `log 2` from below, with bound choice determined by
+its sign. -/
 def logIntegerLower (q : ℚ) (N : ℕ) : RawRat :=
   let k := binaryRationalBinaryExponent q
   (ofInt k).mul
     (if 0 ≤ k then logUnitLower (ofNat 2) N
       else logUnitUpper (ofNat 2) N)
 
+/-- Approximates the binary exponent times `log 2` from above, with bound choice determined by
+its sign. -/
 def logIntegerUpper (q : ℚ) (N : ℕ) : RawRat :=
   let k := binaryRationalBinaryExponent q
   (ofInt k).mul
     (if 0 ≤ k then logUnitUpper (ofNat 2) N
       else logUnitLower (ofNat 2) N)
 
+/-- Selects the unit-log lower approximation or negated upper approximation for the scaled
+residual. -/
 def logResidualLower (q : ℚ) (N : ℕ) : RawRat :=
   if 1 ≤ (logResidual q).value then logUnitLower (logUnit q) N
   else (logUnitUpper (logUnit q) N).neg
 
+/-- Selects the unit-log upper approximation or negated lower approximation for the scaled
+residual. -/
 def logResidualUpper (q : ℚ) (N : ℕ) : RawRat :=
   if 1 ≤ (logResidual q).value then logUnitUpper (logUnit q) N
   else (logUnitLower (logUnit q) N).neg
 
+/-- Adds the lower approximations for the binary scaling and residual logarithms. -/
 def logLower (q : ℚ) (N : ℕ) : RawRat :=
   (logIntegerLower q N).add (logResidualLower q N)
 
+/-- Adds the upper approximations for the binary scaling and residual logarithms. -/
 def logUpper (q : ℚ) (N : ℕ) : RawRat :=
   (logIntegerUpper q N).add (logResidualUpper q N)
 

@@ -25,12 +25,16 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the unary precision ruler from a dyadic-rounding request. -/
 def machineDyadicPrecisionRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the raw rational code from a dyadic-rounding request. -/
 def machineDyadicRawCode (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the signed numerator code from the raw rational payload of a dyadic-rounding
+request. -/
 def machineDyadicNumeratorCode (word : List Bool) : List Bool :=
   machinePairFirst (machineDyadicRawCode word)
 

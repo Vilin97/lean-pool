@@ -26,78 +26,95 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the unary row index of an affine-gradient coordinate query. -/
 def machineDirectedAffineGradientEntryRow
     (word : List Bool) : List Bool := machinePairFirst word
 
+/-- Extracts the column index and objective-evaluation payload of the gradient query. -/
 def machineDirectedAffineGradientEntryRest
     (word : List Bool) : List Bool := machinePairSecond word
 
+/-- Extracts the unary column index of an affine-gradient coordinate query. -/
 def machineDirectedAffineGradientEntryColumn
     (word : List Bool) : List Bool :=
   machinePairFirst (machineDirectedAffineGradientEntryRest word)
 
+/-- Extracts the shared objective-evaluation payload from the gradient query. -/
 def machineDirectedAffineGradientEntryPayload
     (word : List Bool) : List Bool :=
   machinePairSecond (machineDirectedAffineGradientEntryRest word)
 
+/-- Recovers the affine dimension parameter from the gradient query's objective payload. -/
 def machineDirectedAffineGradientEntryDimension
     (word : List Bool) : List Bool :=
   machineDirectedObjectiveSumDimension
     (machineDirectedAffineGradientEntryPayload word)
 
+/-- Uses the original query for the interior matrix entry in the affine-gradient formula. -/
 def machineDirectedAffineGradientUpperLeftInput
     (word : List Bool) : List Bool := word
 
+/-- Builds the gradient query at the given row and the last matrix column. -/
 def machineDirectedAffineGradientUpperRightInput
     (word : List Bool) : List Bool :=
   pair (machineDirectedAffineGradientEntryRow word)
     (pair (machineDirectedAffineGradientEntryDimension word)
       (machineDirectedAffineGradientEntryPayload word))
 
+/-- Builds the gradient query at the last matrix row and the given column. -/
 def machineDirectedAffineGradientLowerLeftInput
     (word : List Bool) : List Bool :=
   pair (machineDirectedAffineGradientEntryDimension word)
     (pair (machineDirectedAffineGradientEntryColumn word)
       (machineDirectedAffineGradientEntryPayload word))
 
+/-- Builds the gradient query at the last row and last column. -/
 def machineDirectedAffineGradientLowerRightInput
     (word : List Bool) : List Bool :=
   pair (machineDirectedAffineGradientEntryDimension word)
     (pair (machineDirectedAffineGradientEntryDimension word)
       (machineDirectedAffineGradientEntryPayload word))
 
+/-- Computes the directed negative-gradient value at the interior matrix entry. -/
 def machineDirectedAffineGradientUpperLeftRaw
     (word : List Bool) : List Bool :=
   machineDirectedNegativeGradientEntryRawCode
     (machineDirectedAffineGradientUpperLeftInput word)
 
+/-- Computes the directed negative-gradient value at the given row and last column. -/
 def machineDirectedAffineGradientUpperRightRaw
     (word : List Bool) : List Bool :=
   machineDirectedNegativeGradientEntryRawCode
     (machineDirectedAffineGradientUpperRightInput word)
 
+/-- Computes the directed negative-gradient value at the last row and given column. -/
 def machineDirectedAffineGradientLowerLeftRaw
     (word : List Bool) : List Bool :=
   machineDirectedNegativeGradientEntryRawCode
     (machineDirectedAffineGradientLowerLeftInput word)
 
+/-- Computes the directed negative-gradient value at the last row and last column. -/
 def machineDirectedAffineGradientLowerRightRaw
     (word : List Bool) : List Bool :=
   machineDirectedNegativeGradientEntryRawCode
     (machineDirectedAffineGradientLowerRightInput word)
 
+/-- Subtracts the last-column gradient value from the interior gradient value. -/
 def machineDirectedAffineGradientFirstDifference
     (word : List Bool) : List Bool :=
   machineRawRatSubCode
     (pair (machineDirectedAffineGradientUpperLeftRaw word)
       (machineDirectedAffineGradientUpperRightRaw word))
 
+/-- Subtracts the last-row gradient value from the interior-minus-last-column difference. -/
 def machineDirectedAffineGradientSecondDifference
     (word : List Bool) : List Bool :=
   machineRawRatSubCode
     (pair (machineDirectedAffineGradientFirstDifference word)
       (machineDirectedAffineGradientLowerLeftRaw word))
 
+/-- Forms the affine-gradient entry by adding the corner value to the two successive
+differences. -/
 def machineDirectedAffineGradientEntryRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
@@ -199,6 +216,8 @@ theorem machineDirectedAffineGradientEntryRawCode_mem_FP :
   simpa only [machineDirectedAffineGradientEntryRawCode] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
+/-- Encodes affine coordinate indices together with regularization, matrix, point, and precision
+data. -/
 def machineDirectedAffineGradientEntryCanonicalWord {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ) (a b : Fin m) : List Bool :=
@@ -206,6 +225,7 @@ def machineDirectedAffineGradientEntryCanonicalWord {m : ℕ}
     (pair (List.replicate b.1 true)
       (machineDirectedObjectiveSumCanonicalWord tau A y p))
 
+/-- Forms the raw affine-gradient entry `G(a,b) - G(a,m) - G(m,b) + G(m,m)`. -/
 def rawDirectedAffineGradientEntry {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ) (a b : Fin m) : RawRat :=

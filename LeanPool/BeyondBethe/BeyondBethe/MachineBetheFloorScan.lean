@@ -27,98 +27,123 @@ open Complexity
 
 /-! ## Input and state layout -/
 
+/-- Extracts the unary dimension parameter from the floor-scan input. -/
 def machineBetheFloorScanDimension (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the paired threshold and coordinate vector from the floor-scan input. -/
 def machineBetheFloorScanRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the encoded rational floor threshold from the scan input. -/
 def machineBetheFloorScanThreshold (word : List Bool) : List Bool :=
   machinePairFirst (machineBetheFloorScanRest word)
 
+/-- Extracts the encoded rational coordinate vector from the scan input. -/
 def machineBetheFloorScanVector (word : List Bool) : List Bool :=
   machinePairSecond (machineBetheFloorScanRest word)
 
+/-- Encodes a floor-scan state as row, column, found flag, done flag, and input payload. -/
 def machineBetheFloorScanPack (row column found done payload : List Bool) :
     List Bool :=
   pair row (pair column (pair found (pair done payload)))
 
+/-- Extracts the current unary row index from the floor-scan state. -/
 def machineBetheFloorScanRow (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the current unary column index from the floor-scan state. -/
 def machineBetheFloorScanColumn (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the flag recording discovery of an entry below the floor threshold. -/
 def machineBetheFloorScanFound (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the flag recording completion of the floor scan. -/
 def machineBetheFloorScanDone (state : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Extracts the original scan input stored in the state. -/
 def machineBetheFloorScanPayload (state : List Bool) : List Bool :=
   machinePairSecond
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Reads the unary dimension parameter from the state's stored input. -/
 def machineBetheFloorScanStateDimension (state : List Bool) : List Bool :=
   machineBetheFloorScanDimension (machineBetheFloorScanPayload state)
 
+/-- Reads the rational floor threshold from the state's stored input. -/
 def machineBetheFloorScanStateThreshold (state : List Bool) : List Bool :=
   machineBetheFloorScanThreshold (machineBetheFloorScanPayload state)
 
+/-- Reads the rational coordinate vector from the state's stored input. -/
 def machineBetheFloorScanStateVector (state : List Bool) : List Bool :=
   machineBetheFloorScanVector (machineBetheFloorScanPayload state)
 
+/-- Tests whether the current row ruler equals the dimension ruler, marking the last row. -/
 def machineBetheFloorScanLastRowBit (state : List Bool) : List Bool :=
   machineUnaryRulersEqualBit (machineBetheFloorScanRow state)
     (machineBetheFloorScanStateDimension state)
 
+/-- Tests whether the current column ruler equals the dimension ruler, marking the last column. -/
 def machineBetheFloorScanLastColumnBit (state : List Bool) : List Bool :=
   machineUnaryRulersEqualBit (machineBetheFloorScanColumn state)
     (machineBetheFloorScanStateDimension state)
 
+/-- Assembles the dimension, current indices, and coordinate vector for an affine-entry query. -/
 def machineBetheFloorScanEntryWord (state : List Bool) : List Bool :=
   pair (machineBetheFloorScanStateDimension state)
     (pair (machineBetheFloorScanRow state)
       (pair (machineBetheFloorScanColumn state)
         (machineBetheFloorScanStateVector state)))
 
+/-- Pairs the floor threshold with the current affine-entry query. -/
 def machineBetheFloorScanTestWord (state : List Bool) : List Bool :=
   pair (machineBetheFloorScanStateThreshold state)
     (machineBetheFloorScanEntryWord state)
 
+/-- Tests whether the current affine matrix entry violates the floor constraint. -/
 def machineBetheFloorScanViolationBit (state : List Bool) : List Bool :=
   machineBetheFloorViolationBit (machineBetheFloorScanTestWord state)
 
+/-- Increments the current unary row index by appending one bit. -/
 def machineBetheFloorScanNextRow (state : List Bool) : List Bool :=
   machineBetheFloorScanRow state ++ [true]
 
+/-- Increments the current unary column index by appending one bit. -/
 def machineBetheFloorScanNextColumn (state : List Bool) : List Bool :=
   machineBetheFloorScanColumn state ++ [true]
 
+/-- Sets the found flag while retaining the current indices and input payload. -/
 def machineBetheFloorScanMarkFound (state : List Bool) : List Bool :=
   machineBetheFloorScanPack (machineBetheFloorScanRow state)
     (machineBetheFloorScanColumn state) [true]
     (machineBetheFloorScanDone state)
     (machineBetheFloorScanPayload state)
 
+/-- Sets the done flag while retaining the current indices and input payload. -/
 def machineBetheFloorScanFinish (state : List Bool) : List Bool :=
   machineBetheFloorScanPack (machineBetheFloorScanRow state)
     (machineBetheFloorScanColumn state)
     (machineBetheFloorScanFound state) [true]
     (machineBetheFloorScanPayload state)
 
+/-- Advances to the next row and resets the column index to zero. -/
 def machineBetheFloorScanAdvanceRow (state : List Bool) : List Bool :=
   machineBetheFloorScanPack (machineBetheFloorScanNextRow state) []
     (machineBetheFloorScanFound state) (machineBetheFloorScanDone state)
     (machineBetheFloorScanPayload state)
 
+/-- Advances the column index while retaining the current row and flags. -/
 def machineBetheFloorScanAdvanceColumn (state : List Bool) : List Bool :=
   machineBetheFloorScanPack (machineBetheFloorScanRow state)
     (machineBetheFloorScanNextColumn state)
     (machineBetheFloorScanFound state) (machineBetheFloorScanDone state)
     (machineBetheFloorScanPayload state)
 
+/-- Advances in row-major order, marking completion after the final matrix entry. -/
 def machineBetheFloorScanAdvance (state : List Bool) : List Bool :=
   machineIfHead (machineHeadBit (machineBetheFloorScanLastColumnBit state))
     (machineIfHead (machineHeadBit (machineBetheFloorScanLastRowBit state))
@@ -126,48 +151,59 @@ def machineBetheFloorScanAdvance (state : List Bool) : List Bool :=
       (machineBetheFloorScanAdvanceRow state))
     (machineBetheFloorScanAdvanceColumn state)
 
+/-- Marks a floor violation at the current entry or advances to the next entry. -/
 def machineBetheFloorScanProcess (state : List Bool) : List Bool :=
   machineIfHead (machineHeadBit (machineBetheFloorScanViolationBit state))
     (machineBetheFloorScanMarkFound state)
     (machineBetheFloorScanAdvance state)
 
+/-- Performs one floor-scan step, leaving found or completed states fixed. -/
 def machineBetheFloorScanStep (state : List Bool) : List Bool :=
   machineIfHead (machineHeadBit (machineBetheFloorScanFound state)) state
     (machineIfHead (machineHeadBit (machineBetheFloorScanDone state)) state
       (machineBetheFloorScanProcess state))
 
+/-- Initializes the floor scan at row and column zero with both flags false. -/
 def machineBetheFloorScanInit (word : List Bool) : List Bool :=
   machineBetheFloorScanPack [] [] [false] [false] word
 
 /-! ## Exact polynomial iteration ruler -/
 
+/-- Computes binary bits for the length of the input's dimension ruler. -/
 def machineBetheFloorScanDimensionBits (word : List Bool) : List Bool :=
   machineLengthBits (machineBetheFloorScanDimension word)
 
+/-- Computes binary bits for one plus the dimension-ruler length. -/
 def machineBetheFloorScanOrderBits (word : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineBetheFloorScanDimensionBits word) [true])
 
+/-- Computes the square of one plus the dimension-ruler length as binary bits. -/
 def machineBetheFloorScanWorkBits (word : List Bool) : List Bool :=
   machineBinaryMulBits
     (pair (machineBetheFloorScanOrderBits word)
       (machineBetheFloorScanOrderBits word))
 
+/-- Supplies the binary-multiplication width bound used to construct the scan ruler. -/
 def machineBetheFloorScanGuard (word : List Bool) : List Bool :=
   machineBinaryMulWidth word
 
+/-- Converts the square of the matrix order to a unary iteration ruler within the guard bound. -/
 def machineBetheFloorScanRuler (word : List Bool) : List Bool :=
   machineBoundedUnary
     (pair (machineBetheFloorScanGuard word)
       (machineBetheFloorScanWorkBits word))
 
+/-- Applies the binary-multiplication width bound twice to bound encoded scan components. -/
 def machineBetheFloorScanStateEnvelope (word : List Bool) : List Bool :=
   machineBinaryMulWidth (machineBinaryMulWidth word)
 
+/-- Packs five copies of the state envelope to provide an encoded-state width bound. -/
 def machineBetheFloorScanWidth (word : List Bool) : List Bool :=
   let bound := machineBetheFloorScanStateEnvelope word
   machineBetheFloorScanPack bound bound bound bound bound
 
+/-- Runs the floor-scan step for the number of iterations specified by its unary ruler. -/
 def machineBetheFloorScanFinalState (word : List Bool) : List Bool :=
   (machineBetheFloorScanStep)^[(machineBetheFloorScanRuler word).length]
     (machineBetheFloorScanInit word)
@@ -434,6 +470,8 @@ theorem machineBetheFloorScanWidth_mem_FP :
         (machineBetheFloorScanPack row column found done payload) = payload := by
   simp [machineBetheFloorScanPayload, machineBetheFloorScanPack]
 
+/-- Bounds a canonically packed scan state's index lengths, single-bit flags, and payload
+length. -/
 def MachineBetheFloorScanStateBound
     (word : List Bool) (iterations : ℕ) (state : List Bool) : Prop :=
   state = machineBetheFloorScanPack
@@ -665,6 +703,8 @@ theorem machineBetheFloorScanResultCode_mem_FP :
 
 /-! ## Canonical ruler semantics -/
 
+/-- Encodes a dimension, rational threshold, and coordinate vector as a canonical floor-scan
+input. -/
 def machineBetheFloorScanCanonicalWord {m : ℕ}
     (delta : RawRat) (y : Fin (m * m) → ℚ) : List Bool :=
   pair (List.replicate m true)
@@ -752,11 +792,16 @@ def betheFloorScanNextFin {m : ℕ} (i : Fin (m + 1)) : Fin (m + 1) :=
 
 /-- Typed semantic state mirrored by the finite-word scan. -/
 structure BetheFloorScanSemanticState (m : ℕ) where
+  /-- Current row of the affine matrix, whose indices range from zero through `m`. -/
   row : Fin (m + 1)
+  /-- Current column of the affine matrix, whose indices range from zero through `m`. -/
   column : Fin (m + 1)
+  /-- Records whether the scan has found an entry below the floor threshold. -/
   found : Bool
+  /-- Records whether the scan has examined all matrix entries without stopping at a violation. -/
   done : Bool
 
+/-- Initializes the semantic floor scan at the first matrix entry with both flags false. -/
 def betheFloorScanSemanticInit (m : ℕ) :
     BetheFloorScanSemanticState m where
   row := ⟨0, by omega⟩
@@ -764,6 +809,8 @@ def betheFloorScanSemanticInit (m : ℕ) :
   found := false
   done := false
 
+/-- Scans one affine matrix entry in row-major order, stopping at a floor violation or
+completion. -/
 def betheFloorScanSemanticStep {m : ℕ} (delta : RawRat)
     (y : Fin (m * m) → ℚ) (state : BetheFloorScanSemanticState m) :
     BetheFloorScanSemanticState m :=
@@ -781,6 +828,7 @@ def betheFloorScanSemanticStep {m : ℕ} (delta : RawRat)
   else
     { state with column := betheFloorScanNextFin state.column }
 
+/-- Encodes a semantic scan state with unary indices, Boolean flags, and its canonical input. -/
 def machineBetheFloorScanCanonicalState {m : ℕ}
     (delta : RawRat) (y : Fin (m * m) → ℚ)
     (state : BetheFloorScanSemanticState m) : List Bool :=
@@ -1139,6 +1187,7 @@ theorem machineBetheFloorScanIterate_canonicalState {m : ℕ}
   simp [machineBetheFloorScanInit, machineBetheFloorScanCanonicalState,
     betheFloorScanSemanticInit]
 
+/-- Runs the semantic scan for `(m + 1)^2` steps, enough to examine every matrix entry. -/
 def finalBetheFloorScanSemanticState {m : ℕ} (delta : RawRat)
     (y : Fin (m * m) → ℚ) : BetheFloorScanSemanticState m :=
   (betheFloorScanSemanticStep delta y)^[(m + 1) * (m + 1)]
@@ -1155,6 +1204,7 @@ def finalBetheFloorScanSemanticState {m : ℕ} (delta : RawRat)
     machineBetheFloorScanIterate_canonicalState]
   rfl
 
+/-- Encodes the found flag and the row and column at which the semantic scan stopped. -/
 def betheFloorScanSemanticResultCode {m : ℕ}
     (state : BetheFloorScanSemanticState m) : List Bool :=
   pair [state.found]
@@ -1173,6 +1223,7 @@ def betheFloorScanSemanticResultCode {m : ℕ}
 
 /-! ## Mathematical correctness of the row-major semantic scan -/
 
+/-- Numbers matrix entries in row-major order by `i * (m + 1) + j`. -/
 def betheFloorScanOrdinal {m : ℕ}
     (i j : Fin (m + 1)) : ℕ := i.1 * (m + 1) + j.1
 
@@ -1277,6 +1328,8 @@ theorem betheFloorScanOrdinal_lt_last_of_ne {m : ℕ}
       _ ≤ betheFloorScanOrdinal (Fin.last m) (Fin.last m) := by
         simp [betheFloorScanOrdinal]
 
+/-- Records either the first violating entry, successful completion, or the next unchecked
+ordinal. -/
 def BetheFloorScanInvariant {m : ℕ} (delta : RawRat)
     (y : Fin (m * m) → ℚ) (k : ℕ)
     (state : BetheFloorScanSemanticState m) : Prop :=

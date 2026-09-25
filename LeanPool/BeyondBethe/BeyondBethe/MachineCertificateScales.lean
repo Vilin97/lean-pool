@@ -25,9 +25,11 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extract the optimizer matrix dimension in binary. -/
 def machineCertificateDimensionBits (word : List Bool) : List Bool :=
   machineMatrixDimensionWord (machineOptimizerMatrixWord word)
 
+/-- Extract a unary ruler for the optimizer matrix dimension. -/
 def machineCertificateDimensionUnary (word : List Bool) : List Bool :=
   machineMatrixDimensionUnary (machineOptimizerMatrixWord word)
 
@@ -35,37 +37,47 @@ def machineCertificateDimensionUnary (word : List Bool) : List Bool :=
 def machineCertificateLogPrecisionRuler (word : List Bool) : List Bool :=
   machineCertificateDimensionUnary word ++ List.replicate 400 true
 
+/-- Encode the matrix dimension as a nonnegative integer numerator with denominator one. -/
 def machineCertificateDimensionRawCode (word : List Bool) : List Bool :=
   pair (machineNaturalIntegerCode (machineCertificateDimensionBits word))
     [true]
 
+/-- The raw-rational natural number four. -/
 def rawCertificateFour : RawRat := RawRat.ofNat 4
 
+/-- Compute the encoded raw-rational value four times the matrix dimension. -/
 def machineCertificateFourDimensionRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawCertificateFour)
       (machineCertificateDimensionRawCode word))
 
+/-- The raw-rational representation of the fixed structural gain parameter `explicitXi`. -/
 def rawExplicitXi : RawRat := rawRatOfRat explicitXi
 
+/-- Divide the fixed gain parameter by four times the encoded matrix dimension to obtain the
+regularization scale. -/
 def machineCertificateRegularizationScaleRawCode
     (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (rawRatBinaryCode rawExplicitXi)
       (machineCertificateFourDimensionRawCode word))
 
+/-- The raw-rational representation of the fixed KKT error allowance. -/
 def rawExplicitKKTError : RawRat := rawRatOfRat explicitKKTError
 
+/-- Multiply the KKT error allowance by the encoded matrix dimension. -/
 def machineCertificateKKTPenaltyRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode rawExplicitKKTError)
       (machineCertificateDimensionRawCode word))
 
+/-- The raw-rational representation of the fixed exponential evaluation loss. -/
 def rawExplicitExpEvaluationLoss : RawRat :=
   rawRatOfRat explicitExpEvaluationLoss
 
+/-- Multiply the exponential evaluation loss by the encoded matrix dimension. -/
 def machineCertificateExpLossRawCode
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
@@ -162,15 +174,19 @@ theorem machineCertificateExpLossRawCode_mem_FP :
     machineNaturalIntegerCode_natBits]
   simp [RawRat.ofNat, rawRatBinaryCode]
 
+/-- The raw-rational product of four and the natural dimension. -/
 def rawCertificateFourDimension (n : ℕ) : RawRat :=
   rawCertificateFour.mul (RawRat.ofNat n)
 
+/-- The raw-rational regularization scale obtained by dividing the fixed gain by `4*n`. -/
 def rawCertificateRegularizationScale (n : ℕ) : RawRat :=
   rawExplicitXi.div (rawCertificateFourDimension n)
 
+/-- The raw-rational KKT penalty, equal to the dimension times the fixed error allowance. -/
 def rawCertificateKKTPenalty (n : ℕ) : RawRat :=
   rawExplicitKKTError.mul (RawRat.ofNat n)
 
+/-- The raw-rational exponential loss scaled by the dimension. -/
 def rawCertificateExpLoss (n : ℕ) : RawRat :=
   rawExplicitExpEvaluationLoss.mul (RawRat.ofNat n)
 

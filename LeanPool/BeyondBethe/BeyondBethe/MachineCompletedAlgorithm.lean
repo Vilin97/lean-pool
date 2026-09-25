@@ -49,43 +49,52 @@ def PositiveRawStringRealizes
     F (rationalMatrixBinaryEncoding.encode ⟨n, A⟩) =
       rawRatBinaryCode (rawRatOfRat (alg n A))
 
+/-- Tests whether the encoded matrix dimension is less than two. -/
 def machineCompletedDimensionLtTwoBit (word : List Bool) : List Bool :=
   machineBinaryNatLtBit
     (pair (machineMatrixDimensionWord word) (2 : ℕ).bits)
 
+/-- Encodes the matrix obtained by smoothing the input with rational parameter `χ`. -/
 def machineCompletedSmoothedMatrixCode (χ : ℚ)
     (word : List Bool) : List Bool :=
   machineSmoothedMatrixCode
     (pair (rawRatBinaryCode (rawRatOfRat χ)) word)
 
+/-- Runs the supplied positive-input machine on the encoded smoothed matrix. -/
 def machineCompletedPositiveRawCode
     (positiveMachine : List Bool → List Bool) (χ : ℚ)
     (word : List Bool) : List Bool :=
   positiveMachine (machineCompletedSmoothedMatrixCode χ word)
 
+/-- Obtains the raw-rational dimension code through the smoothing input format. -/
 def machineCompletedDimensionRawCode (χ : ℚ)
     (word : List Bool) : List Bool :=
   machineSmoothingDimensionRawCode
     (pair (rawRatBinaryCode (rawRatOfRat χ)) word)
 
+/-- Computes the encoded product of `χ` and the matrix dimension. -/
 def machineCompletedChiTimesDimensionRawCode (χ : ℚ)
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (rawRatBinaryCode (rawRatOfRat χ))
       (machineCompletedDimensionRawCode χ word))
 
+/-- Computes the encoded smoothing correction term `χ * n / 2`. -/
 def machineCompletedHalfChiDimensionRawCode (χ : ℚ)
     (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineCompletedChiTimesDimensionRawCode χ word)
       (rawRatBinaryCode (RawRat.ofNat 2)))
 
+/-- Computes the encoded denominator correction `1 + χ * n / 2`. -/
 def machineCompletedCorrectionRawCode (χ : ℚ)
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (rawRatBinaryCode RawRat.one)
       (machineCompletedHalfChiDimensionRawCode χ word))
 
+/-- Multiplies the positive-machine output by the matrix normalization scale raised to its
+dimension. -/
 def machineCompletedLargeNumeratorRawCode
     (positiveMachine : List Bool → List Bool) (χ : ℚ)
     (word : List Bool) : List Bool :=
@@ -93,6 +102,7 @@ def machineCompletedLargeNumeratorRawCode
     (pair (machineMatrixNormalizationScalePowerRawCode word)
       (machineCompletedPositiveRawCode positiveMachine χ word))
 
+/-- Divides the scaled positive-machine output by the smoothing correction `1 + χ * n / 2`. -/
 def machineCompletedLargeRawCode
     (positiveMachine : List Bool → List Bool) (χ : ℚ)
     (word : List Bool) : List Bool :=
@@ -100,12 +110,15 @@ def machineCompletedLargeRawCode
     (pair (machineCompletedLargeNumeratorRawCode positiveMachine χ word)
       (machineCompletedCorrectionRawCode χ word))
 
+/-- Normalizes the raw-rational result of the large-dimension branch. -/
 def machineCompletedLargeCode
     (positiveMachine : List Bool → List Bool) (χ : ℚ)
     (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode
     (machineCompletedLargeRawCode positiveMachine χ word)
 
+/-- Runs the corrected positive branch when the support has a perfect matching, returning zero
+otherwise. -/
 def machineCompletedMatchingBranchCode
     (positiveMachine : List Bool → List Bool) (χ : ℚ)
     (word : List Bool) : List Bool :=
@@ -113,6 +126,8 @@ def machineCompletedMatchingBranchCode
     (machineCompletedLargeCode positiveMachine χ word)
     (rationalBinaryCode 0)
 
+/-- Handles dimensions below two directly and otherwise dispatches to the perfect-matching
+branch. -/
 def machineCompletedNonnegativeBranchCode
     (positiveMachine : List Bool → List Bool) (χ : ℚ)
     (word : List Bool) : List Bool :=
@@ -120,6 +135,8 @@ def machineCompletedNonnegativeBranchCode
     (machineSmallDimensionPermanentCode word)
     (machineCompletedMatchingBranchCode positiveMachine χ word)
 
+/-- Dispatches nonnegative matrices to the completed algorithm and returns zero for a failed
+sign test. -/
 def machineCompletedAlgorithmCode
     (positiveMachine : List Bool → List Bool) (χ : ℚ)
     (word : List Bool) : List Bool :=

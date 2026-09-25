@@ -24,29 +24,36 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the remainder component of the encoded division-with-remainder result. -/
 def machineBinaryRemainderBits (word : List Bool) : List Bool :=
   machinePairSecond (machineBinaryDivModBits word)
 
+/-- Performs a Euclidean step, leaving states with zero second operand fixed. -/
 def machineBinaryGcdStep (state : List Bool) : List Bool :=
   machineIfEmpty (machinePairSecond state) state
     (pair (machinePairSecond state) (machineBinaryRemainderBits state))
 
+/-- Initializes the Euclidean algorithm after trimming high zeros from both operands. -/
 def machineBinaryGcdInit (word : List Bool) : List Bool :=
   pair (machineTrimHighZeros (machinePairFirst word))
     (machineTrimHighZeros (machinePairSecond word))
 
+/-- Uses twice the normalized second-operand bit length as the Euclidean iteration budget. -/
 def machineBinaryGcdRuler (word : List Bool) : List Bool :=
   let second := machineTrimHighZeros (machinePairSecond word)
   second ++ second
 
+/-- Provides a quadratic encoded-state width ruler for the Euclidean algorithm. -/
 def machineBinaryGcdWidth (word : List Bool) : List Bool :=
   let padded := List.replicate 16 false ++ word
   List.replicate (padded.length * padded.length) false
 
+/-- Runs the Euclidean step for twice the normalized second-operand bit length. -/
 def machineBinaryGcdFinalState (word : List Bool) : List Bool :=
   machineBinaryGcdStep^[(machineBinaryGcdRuler word).length]
     (machineBinaryGcdInit word)
 
+/-- Extracts the greatest common divisor from the final Euclidean state. -/
 def machineBinaryGcdBits (word : List Bool) : List Bool :=
   machinePairFirst (machineBinaryGcdFinalState word)
 
@@ -105,6 +112,8 @@ theorem machineBinaryGcdStep_pair_natBits (a b : ℕ) :
       machineBinaryDivModBits_pair_natBits, machinePairSecond_pair,
       hb, ite_false, Prod.fst, Prod.snd]
 
+/-- Expresses a state as a pair of canonical natural-number bit strings bounded by the input
+length. -/
 def MachineBinaryGcdReachable (word state : List Bool) : Prop :=
   ∃ a b : ℕ,
     state = pair a.bits b.bits ∧

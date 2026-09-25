@@ -24,19 +24,25 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes binary-addition state as two remaining operands, carry, and reversed accumulated
+bits. -/
 def machineBinaryAddPack
     (x y carry accRev : List Bool) : List Bool :=
   pair x (pair y (pair carry accRev))
 
+/-- Extracts the unprocessed bits of the first addition operand. -/
 def machineBinaryAddX (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the unprocessed bits of the second addition operand. -/
 def machineBinaryAddY (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the carry word from the binary-addition state. -/
 def machineBinaryAddCarry (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the accumulated sum bits in reverse order. -/
 def machineBinaryAddAccRev (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
@@ -105,18 +111,21 @@ def machineBinaryAddActive (state : List Bool) : List Bool :=
       (machineBinaryAddCarry state) [true])
     [true]
 
+/-- Computes the next sum bit from the two operand heads and the carry. -/
 def machineBinaryAddSumBit (state : List Bool) : List Bool :=
   machineFullAdderSum
     (machineHeadBit (machineBinaryAddX state))
     (machineHeadBit (machineBinaryAddY state))
     (machineBinaryAddCarry state)
 
+/-- Computes the next carry from the two operand heads and the current carry. -/
 def machineBinaryAddNextCarry (state : List Bool) : List Bool :=
   machineFullAdderCarry
     (machineHeadBit (machineBinaryAddX state))
     (machineHeadBit (machineBinaryAddY state))
     (machineBinaryAddCarry state)
 
+/-- Consumes one bit from each operand, updates the carry, and prepends the new sum bit. -/
 def machineBinaryAddAdvanced (state : List Bool) : List Bool :=
   machineBinaryAddPack
     (machineBinaryAddX state).tail

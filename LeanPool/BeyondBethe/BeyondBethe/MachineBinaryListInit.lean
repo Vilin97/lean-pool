@@ -23,12 +23,16 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Reverses an encoded list before removing its final entry. -/
 def machineBinaryListInitReversed (word : List Bool) : List Bool :=
   machineListReverse word
 
+/-- Removes the head of the reversed encoded list. -/
 def machineBinaryListInitReversedTail (word : List Bool) : List Bool :=
   machineListTail (machineBinaryListInitReversed word)
 
+/-- Returns the encoded list without its last entry by reversing, taking the tail, and reversing
+again. -/
 def machineBinaryListInit (word : List Bool) : List Bool :=
   machineListReverse (machineBinaryListInitReversedTail word)
 

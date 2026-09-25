@@ -26,15 +26,19 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the encoded rational threshold from a floor-test input. -/
 def machineBetheFloorTestThreshold (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the affine-entry query from a floor-test input. -/
 def machineBetheFloorTestEntryWord (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Computes the encoded raw rational value of the queried affine matrix entry. -/
 def machineBetheFloorTestEntryRawCode (word : List Bool) : List Bool :=
   machineBetheAffineEntryRawCode (machineBetheFloorTestEntryWord word)
 
+/-- Compares the encoded floor threshold with the queried affine matrix entry. -/
 def machineBetheFloorTestThresholdLeEntryBit
     (word : List Bool) : List Bool :=
   machineRawRatLeBit
@@ -72,6 +76,7 @@ theorem machineBetheFloorViolationBit_mem_FP :
     machineNotBit_mem_FP
       machineBetheFloorTestThresholdLeEntryBit_mem_FP
 
+/-- Encodes a threshold, matrix indices, and coordinate vector for a canonical floor test. -/
 def machineBetheFloorTestCanonicalWord {m : ℕ}
     (delta : RawRat) (i j : Fin (m + 1))
     (y : Fin (m * m) → ℚ) : List Bool :=

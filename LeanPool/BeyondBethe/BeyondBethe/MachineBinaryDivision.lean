@@ -24,76 +24,93 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes division state as remaining dividend bits, divisor, quotient, and remainder. -/
 def machineBinaryDivPack
     (remaining divisor quotient remainder : List Bool) : List Bool :=
   pair remaining (pair divisor (pair quotient remainder))
 
+/-- Extracts the dividend bits still to be processed by long division. -/
 def machineBinaryDivRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the fixed divisor from the binary-division state. -/
 def machineBinaryDivDivisor (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the current quotient from the binary-division state. -/
 def machineBinaryDivQuotient (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the current remainder from the binary-division state. -/
 def machineBinaryDivRemainder (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
+/-- Doubles the current quotient before processing the next dividend bit. -/
 def machineBinaryDivDoubleQuotient (state : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineBinaryDivQuotient state)
       (machineBinaryDivQuotient state))
 
+/-- Doubles the current remainder before processing the next dividend bit. -/
 def machineBinaryDivDoubleRemainder (state : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineBinaryDivRemainder state)
       (machineBinaryDivRemainder state))
 
+/-- Forms the trial remainder by doubling the remainder and adding the next dividend bit. -/
 def machineBinaryDivTrial (state : List Bool) : List Bool :=
   machineIfHead (machineHeadBit (machineBinaryDivRemaining state))
     (machineBinaryAddBits
       (pair (machineBinaryDivDoubleRemainder state) [true]))
     (machineBinaryDivDoubleRemainder state)
 
+/-- Tests whether the nonempty divisor is at most the trial remainder. -/
 def machineBinaryDivTake (state : List Bool) : List Bool :=
   machineIfEmpty (machineBinaryDivDivisor state) [false]
     (machineBinaryNatLeBit
       (pair (machineBinaryDivDivisor state) (machineBinaryDivTrial state)))
 
+/-- Forms twice the current quotient plus one for a successful subtraction step. -/
 def machineBinaryDivIncrementedQuotient (state : List Bool) : List Bool :=
   machineBinaryAddBits
     (pair (machineBinaryDivDoubleQuotient state) [true])
 
+/-- Updates the quotient according to the trial comparison, returning zero for an empty divisor. -/
 def machineBinaryDivNextQuotient (state : List Bool) : List Bool :=
   machineIfEmpty (machineBinaryDivDivisor state) []
     (machineIfHead (machineBinaryDivTake state)
       (machineBinaryDivIncrementedQuotient state)
       (machineBinaryDivDoubleQuotient state))
 
+/-- Subtracts the divisor from the trial remainder when the comparison permits it. -/
 def machineBinaryDivNextRemainder (state : List Bool) : List Bool :=
   machineIfHead (machineBinaryDivTake state)
     (machineBinarySubBits
       (pair (machineBinaryDivTrial state) (machineBinaryDivDivisor state)))
     (machineBinaryDivTrial state)
 
+/-- Consumes one dividend bit and updates the quotient and remainder. -/
 def machineBinaryDivStep (state : List Bool) : List Bool :=
   machineBinaryDivPack (machineBinaryDivRemaining state).tail
     (machineBinaryDivDivisor state)
     (machineBinaryDivNextQuotient state)
     (machineBinaryDivNextRemainder state)
 
+/-- Initializes long division with reversed dividend bits and zero quotient and remainder. -/
 def machineBinaryDivInit (word : List Bool) : List Bool :=
   machineBinaryDivPack (machinePairFirst word).reverse
     (machinePairSecond word) [] []
 
+/-- Uses the dividend bits as the iteration ruler for long division. -/
 def machineBinaryDivRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Provides a quadratic state-width ruler of length `(word.length + 16)^2`. -/
 def machineBinaryDivWidth (word : List Bool) : List Bool :=
   let padded := List.replicate 16 false ++ word
   List.replicate (padded.length * padded.length) false
 
+/-- Runs one long-division step per dividend bit. -/
 def machineBinaryDivFinalState (word : List Bool) : List Bool :=
   machineBinaryDivStep^[(machineBinaryDivRuler word).length]
     (machineBinaryDivInit word)
@@ -260,6 +277,7 @@ theorem machineBinaryDivWidth_mem_FP :
       (machineBinaryDivPack remaining divisor quotient remainder) =
         remainder := by simp [machineBinaryDivRemainder, machineBinaryDivPack]
 
+/-- Bounds the remaining dividend length and the growth of quotient and remainder encodings. -/
 def MachineBinaryDivReachable
     (dividend divisor : List Bool) (iterations : ℕ)
     (state : List Bool) : Prop :=

@@ -26,18 +26,25 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the unary row index from a negative-gradient entry query. -/
 def machineDirectedGradientEntryRow (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the column index and payload from a negative-gradient entry query. -/
 def machineDirectedGradientEntryRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the unary column index from a negative-gradient entry query. -/
 def machineDirectedGradientEntryColumn (word : List Bool) : List Bool :=
   machinePairFirst (machineDirectedGradientEntryRest word)
 
+/-- Extracts the encoded objective payload following the row and column of a gradient-entry
+request. -/
 def machineDirectedGradientEntryPayload (word : List Bool) : List Bool :=
   machinePairSecond (machineDirectedGradientEntryRest word)
 
+/-- Builds an objective-sum state for the requested gradient entry, with zero accumulator, empty
+bound word, and an unset completion bit. -/
 def machineDirectedGradientEntryAsObjectiveState
     (word : List Bool) : List Bool :=
   machineDirectedObjectiveSumPack
@@ -46,11 +53,15 @@ def machineDirectedGradientEntryAsObjectiveState
     (rawRatBinaryCode RawRat.zero) [] [false]
     (machineDirectedGradientEntryPayload word)
 
+/-- Assembles precision, regularization parameter, matrix entry, and affine entry for the
+requested gradient coordinate. -/
 def machineDirectedGradientEntryScalarInput
     (word : List Bool) : List Bool :=
   machineDirectedObjectiveSumCoordinateInput
     (machineDirectedGradientEntryAsObjectiveState word)
 
+/-- Computes the encoded directed lower approximation to the negative gradient at the requested
+matrix entry. -/
 def machineDirectedNegativeGradientEntryRawCode
     (word : List Bool) : List Bool :=
   machineDirectedNegativeGradientLowerRawCode
@@ -105,6 +116,8 @@ theorem machineDirectedNegativeGradientEntryRawCode_mem_FP :
     machineCompose_mem_FP machineDirectedGradientEntryScalarInput_mem_FP
       machineDirectedNegativeGradientLowerRawCode_mem_FP
 
+/-- Encodes row and column as unary rulers preceding the canonical objective payload for `tau`,
+`A`, `y`, and precision `p`. -/
 def machineDirectedGradientEntryCanonicalWord {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (y : Fin (m * m) → ℚ) (p : ℕ)

@@ -27,40 +27,49 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Negates the directed upper approximation to the logarithm of the matrix coefficient. -/
 def machineDirectedGradientCoordinateNegLogA
     (word : List Bool) : List Bool :=
   machineRawRatNegCode
     (machineDirectedObjectiveCoordinateLogAUpper word)
 
+/-- Multiplies the directed lower approximation to `log x` by `1 + tau`. -/
 def machineDirectedGradientCoordinateScaledLogX
     (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineDirectedObjectiveCoordinateOnePlusTau word)
       (machineDirectedObjectiveCoordinateLogXLower word))
 
+/-- Computes the directed lower logarithm approximation for the complementary coordinate `1 -
+x`. -/
 def machineDirectedGradientCoordinateLogComplementLower
     (word : List Bool) : List Bool :=
   machineScheduledLogLowerRawCode
     (machineDirectedObjectiveCoordinateLogComplementInput word)
 
+/-- Adds the negated coefficient logarithm and the scaled coordinate logarithm. -/
 def machineDirectedGradientCoordinateFirstTwo
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineDirectedGradientCoordinateNegLogA word)
       (machineDirectedGradientCoordinateScaledLogX word))
 
+/-- Adds the complementary-coordinate logarithm to the first two gradient terms. -/
 def machineDirectedGradientCoordinateFirstThree
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineDirectedGradientCoordinateFirstTwo word)
       (machineDirectedGradientCoordinateLogComplementLower word))
 
+/-- Computes the raw-rational constant term `2 + tau` in the negative-gradient formula. -/
 def machineDirectedGradientCoordinateTwoPlusTau
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (rawRatBinaryCode RawRat.one)
       (machineDirectedObjectiveCoordinateOnePlusTau word))
 
+/-- Combines the three directed logarithm terms with `2 + tau` into a negative-gradient
+approximation. -/
 def machineDirectedNegativeGradientLowerRawCode
     (word : List Bool) : List Bool :=
   machineRawRatAddCode
@@ -120,6 +129,8 @@ theorem machineDirectedNegativeGradientLowerRawCode_mem_FP :
   simpa only [machineDirectedNegativeGradientLowerRawCode] using!
     machineCompose_mem_FP hinput machineRawRatAddCode_mem_FP
 
+/-- The raw formula `-logUpper(a) + (1+tau)*logLower(x) + logLower(1-x) + 2+tau` at precision
+`p`. -/
 def rawDirectedNegativeGradientLower
     (tau a x : ℚ) (p : ℕ) : RawRat :=
   let rawTau := rawRatOfRat tau
