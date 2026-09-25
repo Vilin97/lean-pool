@@ -42,7 +42,8 @@ for operators between **arbitrary** `𝕜`-Banach spaces.
 * `approximationNumber_le_sqrt_mul_kolmogorovNumber` —
   `aₙ(S) ≤ (1 + √n)·dₙ(S)`.
 * `approximationNumber_le_sqrt_mul_min` — the combined bound
-  `aₙ(S) ≤ (1 + √n)·min(cₙ(S), dₙ(S))` (Pietsch [Pie87, 2.10.2]).
+  `aₙ(S) ≤ (1 + √n)·min(cₙ(S), dₙ(S))`, obtained here by combining
+  the two preceding projection bounds.
 * Ingredients for the **maximal difference theorem**
   `aₙ(S) ≤ e·(n+1)·hₙ(S)` (proved in `SNumbers.MaxDifference` via the
   determinant quantities `Δₖ`): the identity `∏ aₖ(T) = ‖det T‖`
@@ -98,12 +99,15 @@ admissible `(A, B)` yields `hₙ(S) ≤ sₙ(S)`.
 * A. Pietsch, *Eigenvalues and s-numbers*, Cambridge Studies in Advanced
   Mathematics 13, Cambridge University Press, 1987,
   [link](https://zbmath.org/3996455) ([Pie87]); the projection theorems are
-  1.7.17 (Garling–Gordon) and 1.5.5 (Kadets–Snobar).
+  1.7.17 (Garling–Gordon) and 1.5.5 (Kadets–Snobar); the classical
+  approximation/Gelfand comparison is 2.10.2. The `min(cₙ,dₙ)` form above
+  combines the Gelfand and Kolmogorov estimates proved in this file.
 * M. Ullrich, *Inequalities between s-numbers*, Advances in Operator
   Theory **9** (2024), no. 4, article no. 82,
   [doi](https://doi.org/10.1007/s43036-024-00386-x),
-  [arxiv](https://arxiv.org/abs/2405.05509). The `aₙ ≤ (1+√n)·min(cₙ,dₙ)`
-  bound is from here.
+  [arxiv](https://arxiv.org/abs/2405.05509). Theorem 3 bounds `max(cₙ,dₙ)`
+  using a product of Hilbert numbers. Its discussion cites the classical
+  `aₙ ≤ (1+√n)·cₙ` estimate from [Pie87, 2.10.2].
 -/
 
 @[expose] public section

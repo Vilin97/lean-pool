@@ -10208,7 +10208,6 @@ projects:
       - 35B65
       - 42B20
       - 28A78
-
   - slug: lean-snumbers
     title: Pietsch s-numbers and the maximal difference theorem
     summary: Formalizes the five classical s-number sequences, their comparison inequalities, the maximal
