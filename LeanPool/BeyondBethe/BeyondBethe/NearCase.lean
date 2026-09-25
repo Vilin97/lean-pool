@@ -198,11 +198,14 @@ theorem univ_sdiff_coreOutside_of_ne
     Finset.mem_filter, true_and, Finset.mem_insert, Finset.mem_singleton]
   tauto
 
+/-- Computes row `i`'s transfer cost on the two columns selected by `f` and `g`, using the
+complement of their outside set. -/
 noncomputable def encodedCoreRowTransferCost
     {n : ℕ} (f g : Equiv.Perm (Fin n))
     (P U : Matrix (Fin n) (Fin n) ℝ) (i : Fin n) : ℝ :=
   transferCostOn (Finset.univ \ coreOutside (f i) (g i)) (P i) (U i)
 
+/-- Sums the encoded row-transfer costs over the two rows of a clean cycle. -/
 noncomputable def cleanCycleWeightedCost
     {n : ℕ} {η : ℝ} {P : Matrix (Fin n) (Fin n) ℝ}
     {f g : Equiv.Perm (Fin n)}
@@ -347,6 +350,7 @@ theorem cleanCycle_minCost_mul_fourCore
     mul_le_mul_of_nonneg_right hsa (hlog s a),
     mul_le_mul_of_nonneg_right hsb (hlog s b)]
 
+/-- Selects clean cycles whose associated four-core transfer cost exceeds the threshold `κ`. -/
 noncomputable def failedCleanCycles
     {n : ℕ} (κ τ η : ℝ)
     (P X : Matrix (Fin n) (Fin n) ℝ)
@@ -358,6 +362,7 @@ noncomputable def failedCleanCycles
       (cleanCycleRow c 0) (cleanCycleRow c 1)
       (f (cleanCycleRow c 0)) (g (cleanCycleRow c 0))
 
+/-- Selects the clean cycles outside the failed-cost set. -/
 noncomputable def successfulCleanCycles
     {n : ℕ} (κ τ η : ℝ)
     (P X : Matrix (Fin n) (Fin n) ℝ)
@@ -562,21 +567,26 @@ theorem successfulCleanCycles_gain_sum
 canonical orientation whenever a formula such as `pairGain` expects one. -/
 abbrev RowPair (n : ℕ) := {q : Finset (Fin n) // q.card = 2}
 
+/-- Enumerates the two rows of a row pair through their increasing finite-set order isomorphism. -/
 def rowPairRow {n : ℕ} (q : RowPair n) : Fin 2 → Fin n :=
   fun k ↦ (q.1.orderIsoOfFin q.2 k).1
 
+/-- Requires distinct selected row pairs to have disjoint underlying row sets. -/
 def IsRowMatching {n : ℕ} (M : Finset (RowPair n)) : Prop :=
   (↑M : Set (RowPair n)).PairwiseDisjoint fun q ↦ q.1
 
+/-- Assigns a row pair the nonnegative part of its logarithmic pair gain. -/
 noncomputable def rowPairWeight
     {n : ℕ} (A X : Matrix (Fin n) (Fin n) ℝ) (q : RowPair n) : ℝ :=
   max 0 (Real.log (pairGain A X (rowPairRow q 0) (rowPairRow q 1)))
 
+/-- Sums the row-pair weights over a selected matching. -/
 noncomputable def rowMatchingWeight
     {n : ℕ} (A X : Matrix (Fin n) (Fin n) ℝ)
     (M : Finset (RowPair n)) : ℝ :=
   ∑ q ∈ M, rowPairWeight A X q
 
+/-- Enumerates all finite sets of row pairs satisfying pairwise disjointness. -/
 noncomputable def allRowMatchings (n : ℕ) : Finset (Finset (RowPair n)) := by
   classical
   exact Finset.univ.filter IsRowMatching
@@ -586,6 +596,7 @@ theorem allRowMatchings_nonempty (n : ℕ) :
   refine ⟨∅, ?_⟩
   simp [allRowMatchings, IsRowMatching]
 
+/-- Takes the maximum total row-pair weight over all row matchings. -/
 noncomputable def maximumMatchingGain
     {n : ℕ} (A X : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
   (allRowMatchings n).sup' (allRowMatchings_nonempty n)
@@ -679,6 +690,7 @@ theorem exists_positive_maximumRowMatching
   intro q hq
   exact positiveRowPairs_logGain_pos hq
 
+/-- Uses a clean two-cycle's support as its two-element row pair. -/
 noncomputable def cleanCycleRowPair
     {n : ℕ} {η : ℝ} {P : Matrix (Fin n) (Fin n) ℝ}
     {f g : Equiv.Perm (Fin n)}
@@ -713,6 +725,7 @@ theorem cleanCycleRowPair_injective
   have hr := cleanCycleRow_mem_support c 0
   exact (Finset.disjoint_left.mp hdisj) hr (by rwa [← hsupp])
 
+/-- Maps successful clean cycles to their underlying row pairs. -/
 noncomputable def successfulRowPairs
     {n : ℕ} (κ τ η : ℝ)
     (P X : Matrix (Fin n) (Fin n) ℝ)
@@ -1022,21 +1035,26 @@ theorem rowPairRow_ne
   have hk := rowPairRow_injective q h
   norm_num at hk
 
+/-- Takes the union of all rows occurring in the selected row pairs. -/
 noncomputable def matchingRows
     {n : ℕ} (M : Finset (RowPair n)) : Finset (Fin n) :=
   M.biUnion fun q ↦ q.1
 
+/-- The subtype of rows absent from all selected row pairs. -/
 abbrev UnmatchedRow {n : ℕ} (M : Finset (RowPair n)) :=
   {i : Fin n // i ∉ matchingRows M}
 
+/-- A cluster is either a selected row pair or one unmatched row. -/
 abbrev MatchingCluster {n : ℕ} (M : Finset (RowPair n)) :=
   M ⊕ UnmatchedRow M
 
+/-- Assigns size two to a matched pair cluster and size one to an unmatched-row cluster. -/
 def matchingClusterSize
     {n : ℕ} {M : Finset (RowPair n)} : MatchingCluster M → ℕ
   | Sum.inl _ => 2
   | Sum.inr _ => 1
 
+/-- Maps a cluster and its local position back to the corresponding original matrix row. -/
 noncomputable def matchingRowMap
     {n : ℕ} (M : Finset (RowPair n)) :
     (Σ c : MatchingCluster M, Fin (matchingClusterSize c)) → Fin n
@@ -1204,6 +1222,8 @@ theorem pairCertificateValue_eq_exp_logGain_mul_singletons
   rw [Real.exp_log (zero_lt_one.trans hone)]
   exact pairCertificateValue_eq_pairGain_mul_singletons hcard hA hX hXpos r s
 
+/-- Assigns a matched pair cluster its logarithmic pair gain and an unmatched-row cluster zero
+gain. -/
 noncomputable def matchingClusterLogGain
     {n : ℕ} (A X : Matrix (Fin n) (Fin n) ℝ)
     {M : Finset (RowPair n)} : MatchingCluster M → ℝ
@@ -1566,6 +1586,7 @@ theorem exists_completion_scales
   exact ⟨η, δ, ξ, hη, hηtenth, hδ, hξ, hξξ₀,
     by simpa [hratio] using hr128, hcycle.le, htransfer, hξδ, hξγ⟩
 
+/-- The real paper scale `max 1 (log n / log 2)`. -/
 noncomputable def paperScaleEll (n : ℕ) : ℝ :=
   max 1 (Real.log n / Real.log 2)
 

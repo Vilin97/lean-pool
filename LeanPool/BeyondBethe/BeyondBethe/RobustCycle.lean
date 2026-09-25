@@ -359,6 +359,7 @@ theorem twoMatching_coreEncoding_sum_coordinates
   rw [shannonEntropy_rowOrientedMass] at hcore
   linarith
 
+/-- Selects the matrix rows satisfying the good-row predicate at threshold `η`. -/
 noncomputable def goodRows
     {n : ℕ} (η : ℝ) (P : Matrix (Fin n) (Fin n) ℝ) : Finset (Fin n) := by
   classical
@@ -545,16 +546,19 @@ theorem sum_cycleSupport_inter_card_le
         (fun c ↦ (t c).card)
     _ ≤ S.card := hcard
 
+/-- Counts the good rows in a permutation cycle factor's support. -/
 noncomputable def cycleGoodCount
     {n : ℕ} (η : ℝ) (P : Matrix (Fin n) (Fin n) ℝ)
     (h : Equiv.Perm (Fin n)) (c : h.cycleFactorsFinset) : ℕ :=
   ((c : Equiv.Perm (Fin n)).support ∩ goodRows η P).card
 
+/-- Counts the bad rows in a permutation cycle factor's support. -/
 noncomputable def cycleBadCount
     {n : ℕ} (η : ℝ) (P : Matrix (Fin n) (Fin n) ℝ)
     (h : Equiv.Perm (Fin n)) (c : h.cycleFactorsFinset) : ℕ :=
   ((c : Equiv.Perm (Fin n)).support ∩ badRows η P).card
 
+/-- Sums the long-component good-row contribution over all cycle factors of the permutation. -/
 noncomputable def longCycleGoodRows
     {n : ℕ} (η : ℝ) (P : Matrix (Fin n) (Fin n) ℝ)
     (h : Equiv.Perm (Fin n)) : ℕ :=
@@ -570,6 +574,7 @@ noncomputable def cleanCycleIndicator
   if (c : Equiv.Perm (Fin n)).support.card = 2 ∧
       cycleGoodCount η P h c = 2 then 1 else 0
 
+/-- Sums clean-cycle indicators over the permutation's cycle factors. -/
 noncomputable def cleanCycleCount
     {n : ℕ} (η : ℝ) (P : Matrix (Fin n) (Fin n) ℝ)
     (h : Equiv.Perm (Fin n)) : ℕ :=

@@ -26,21 +26,27 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the fixed raw divisor from a row-division request. -/
 def machineRationalRowDivideScale (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the encoded rational row from a row-division request. -/
 def machineRationalRowDivideRow (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Concatenates two copies of a word for row-division width padding. -/
 def machineRationalRowDividePadTwo (word : List Bool) : List Bool :=
   word ++ word
 
+/-- Concatenates four copies of a word for row-division width padding. -/
 def machineRationalRowDividePadFour (word : List Bool) : List Bool :=
   machineRationalRowDividePadTwo word ++ machineRationalRowDividePadTwo word
 
+/-- Concatenates eight copies of a word for row-division width padding. -/
 def machineRationalRowDividePadEight (word : List Bool) : List Bool :=
   machineRationalRowDividePadFour word ++ machineRationalRowDividePadFour word
 
+/-- Concatenates sixteen copies of a word for row-division width padding. -/
 def machineRationalRowDividePadSixteen (word : List Bool) : List Bool :=
   machineRationalRowDividePadEight word ++ machineRationalRowDividePadEight word
 
@@ -50,39 +56,51 @@ the impractical quartic padding used by an earlier draft. -/
 def machineRationalRowDivideInputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth (machineRationalRowDividePadSixteen word)
 
+/-- Packs the unprocessed row, reversed output accumulator, fixed divisor, and bound for row
+division. -/
 def machineRationalRowDividePack
     (remaining accumulator scale bound : List Bool) : List Bool :=
   pair remaining (pair accumulator (pair scale bound))
 
+/-- Extracts the unprocessed encoded row from a row-division state. -/
 def machineRationalRowDivideRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the reverse-order output accumulator from a row-division state. -/
 def machineRationalRowDivideAccumulator (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the fixed raw divisor from a row-division state. -/
 def machineRationalRowDivideScaleField (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the accumulator length-bound word from a row-division state. -/
 def machineRationalRowDivideBound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
+/-- Divides the next row entry by the fixed scale in raw rational arithmetic. -/
 def machineRationalRowDivideRawEntry (state : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (machineListHead (machineRationalRowDivideRemaining state))
       (machineRationalRowDivideScaleField state))
 
+/-- Normalizes the divided row entry into its rational entry encoding. -/
 def machineRationalRowDivideEntry (state : List Bool) : List Bool :=
   machineNormalizeRawRatEntryCode
     (machineRationalRowDivideRawEntry state)
 
+/-- Prepends the normalized divided entry to the reverse-order output accumulator. -/
 def machineRationalRowDivideCandidate (state : List Bool) : List Bool :=
   pair (machineRationalRowDivideEntry state)
     (machineRationalRowDivideAccumulator state)
 
+/-- Truncates the candidate row-division accumulator to the stored bound length. -/
 def machineRationalRowDivideNextAccumulator (state : List Bool) : List Bool :=
   (machineRationalRowDivideCandidate state).take
     (machineRationalRowDivideBound state).length
 
+/-- Consumes the next row entry and stores the bounded updated accumulator, preserving divisor
+and bound. -/
 def machineRationalRowDivideAdvance (state : List Bool) : List Bool :=
   machineRationalRowDividePack
     (machineListTail (machineRationalRowDivideRemaining state))
@@ -90,23 +108,29 @@ def machineRationalRowDivideAdvance (state : List Bool) : List Bool :=
     (machineRationalRowDivideScaleField state)
     (machineRationalRowDivideBound state)
 
+/-- Fixes an exhausted row-division state and otherwise processes one entry. -/
 def machineRationalRowDivideStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineRationalRowDivideRemaining state) state
     (machineRationalRowDivideAdvance state)
 
+/-- Initializes row division with the requested row, empty accumulator, fixed divisor, and
+computed bound. -/
 def machineRationalRowDivideInit (word : List Bool) : List Bool :=
   machineRationalRowDividePack (machineRationalRowDivideRow word) []
     (machineRationalRowDivideScale word)
     (machineRationalRowDivideInputBound word)
 
+/-- Packs input and bound words in the four-field layout to bound the row-division state. -/
 def machineRationalRowDivideWidth (word : List Bool) : List Bool :=
   let bound := machineRationalRowDivideInputBound word
   machineRationalRowDividePack word bound word bound
 
+/-- Runs the row-division scan once per input bit from its initial state. -/
 def machineRationalRowDivideFinalState (word : List Bool) : List Bool :=
   (machineRationalRowDivideStep)^[word.length]
     (machineRationalRowDivideInit word)
 
+/-- Reverses the final accumulator to return the divided rational row in its original order. -/
 def machineRationalRowDivide (word : List Bool) : List Bool :=
   machineListReverse
     (machineRationalRowDivideAccumulator
@@ -259,6 +283,8 @@ theorem machineRationalRowDivideWidth_mem_FP :
       (machineRationalRowDividePack a b c d) = d := by
   simp [machineRationalRowDivideBound, machineRationalRowDividePack]
 
+/-- Requires exact row-division state packing, input-bounded remaining row and divisor, a
+bounded accumulator, and the prescribed bound word. -/
 def MachineRationalRowDivideStateBound (word state : List Bool) : Prop :=
   state = machineRationalRowDividePack
       (machineRationalRowDivideRemaining state)
@@ -445,14 +471,18 @@ theorem machineRationalRowDivide_output_length_le_bound
 
 /-! ## Exact semantics -/
 
+/-- Divides each rational row entry by the raw scale and normalizes each resulting raw fraction. -/
 def rationalRowDivideValues (scale : RawRat) (row : List ℚ) : List ℚ :=
   row.map fun q ↦ binaryNormalizeRawRat ((rawRatOfRat q).div scale)
 
+/-- Encodes a raw divisor paired with the rational row to divide. -/
 def machineRationalRowDivideCanonicalInput
     (scale : RawRat) (row : List ℚ) : List Bool :=
   pair (rawRatBinaryCode scale)
     (binaryListCode rationalEntryBinaryCode row)
 
+/-- Encodes the unprocessed row suffix and reversed divided prefix after `k` entries, preserving
+divisor and bound. -/
 def machineRationalRowDivideSemanticState
     (scale : RawRat) (row : List ℚ) (k : ℕ) : List Bool :=
   let output := rationalRowDivideValues scale row

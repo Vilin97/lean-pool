@@ -286,6 +286,7 @@ theorem rationalMatrixAbsBound_centralUpdate_le {d : ℕ}
 def rationalCenterAbsBound {d : ℕ} (c : Fin d → ℚ) : ℚ :=
   1 + ∑ i, abs (c i)
 
+/-- Adds the rational absolute bounds for an ellipsoid state's center and basis matrix. -/
 def rationalStateAbsBound {d : ℕ} (E : RationalEllipsoidState d) : ℚ :=
   rationalCenterAbsBound E.center + rationalMatrixAbsBound E.basis
 

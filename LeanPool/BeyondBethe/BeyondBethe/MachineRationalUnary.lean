@@ -23,10 +23,13 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Negates a raw rational's signed numerator while preserving its denominator. -/
 def machineRawRatNegCode (word : List Bool) : List Bool :=
   pair (machineIntegerNegCode (machinePairFirst word))
     (machinePairSecond word)
 
+/-- Encodes the reciprocal of a nonzero raw rational using its old denominator with the original
+numerator sign as the new numerator, and the old numerator magnitude as the new denominator. -/
 def machineRawRatInvNonzeroCode (word : List Bool) : List Bool :=
   pair
     (machineCanonicalIntegerFromSignedAbs
@@ -34,21 +37,26 @@ def machineRawRatInvNonzeroCode (word : List Bool) : List Bool :=
         (machinePairSecond word)))
     (machineIntegerNatAbsBits (machinePairFirst word))
 
+/-- Returns canonical raw zero for a zero numerator and the signed reciprocal code otherwise. -/
 def machineRawRatInvCode (word : List Bool) : List Bool :=
   machineIfEmpty (machineIntegerNatAbsBits (machinePairFirst word))
     (pair [false] [true]) (machineRawRatInvNonzeroCode word)
 
+/-- Multiplies the left raw rational by the totalized reciprocal of the right. -/
 def machineRawRatDivCode (word : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machinePairFirst word)
       (machineRawRatInvCode (machinePairSecond word)))
 
+/-- Normalizes a raw negation into the rational binary output encoding. -/
 def machineRationalNegCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode (machineRawRatNegCode word)
 
+/-- Normalizes a totalized raw reciprocal into the rational binary output encoding. -/
 def machineRationalInvCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode (machineRawRatInvCode word)
 
+/-- Normalizes a raw quotient into the rational binary output encoding. -/
 def machineRationalDivCode (word : List Bool) : List Bool :=
   machineNormalizeRawRatBinaryCode (machineRawRatDivCode word)
 

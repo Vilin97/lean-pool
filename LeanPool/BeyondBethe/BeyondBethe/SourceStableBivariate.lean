@@ -86,6 +86,7 @@ theorem bivariate_rayleigh_of_bistable
 
 /-! ## The scalar capacity inequality -/
 
+/-- The boundary factor `α^α * (1 - α)^(1 - α)` with real exponents. -/
 noncomputable def stableBoundaryScalar (α : ℝ) : ℝ :=
   (α : ℝ) ^ α * (1 - α) ^ (1 - α)
 
@@ -115,6 +116,7 @@ theorem normalized_weighted_geometric_mean_le_add
     _ = (α ^ α * (1 - α) ^ (1 - α)) * (u + v) := by
       field_simp [hα0.ne', (sub_pos.mpr hα1).ne']
 
+/-- The candidate minimizing point `α * v / ((1 - α) * u)` for the linear capacity calculation. -/
 noncomputable def linearCapacityCandidate (α u v : ℝ) : ℝ :=
   α * v / ((1 - α) * u)
 

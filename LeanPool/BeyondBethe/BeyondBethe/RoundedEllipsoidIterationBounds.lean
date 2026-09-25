@@ -24,12 +24,15 @@ The bound is independent of feasibility: it uses only nonsingularity and
 nonzero cuts.
 -/
 
+/-- Applies adaptive rounded central updates successively along a list of cut normals. -/
 def adaptiveRoundedEllipsoidIterate {d : ℕ} :
     RationalEllipsoidState d → List (Fin d → ℚ) → RationalEllipsoidState d
   | E, [] => E
   | E, a :: cuts => adaptiveRoundedEllipsoidIterate
       (adaptiveRoundedEllipsoidCentralUpdate E a) cuts
 
+/-- Requires every cut normal to remain nonzero after pullback at its corresponding adaptively
+updated ellipsoid state. -/
 def AdaptiveCutSequenceRegular {d : ℕ} :
     RationalEllipsoidState d → List (Fin d → ℚ) → Prop
   | _, [] => True
@@ -186,6 +189,8 @@ theorem rationalEllipsoidCentralUpdate_precision_upper
         (rationalEllipsoidCentralUpdate_two_pow_state_magnitude_upper
           hd E a hb hM)
 
+/-- Computes the next precision bound from the accumulated radius term and dimension-dependent
+denominator exponent. -/
 def roundedEllipsoidNextPrecisionBound (d L K t : ℕ) : ℕ :=
   (L + 2 * t + 1) +
     roundedEllipsoidDenominatorExponent d
@@ -326,9 +331,11 @@ theorem roundedEllipsoidStateGrowthFactor_le_two_pow (d : ℕ) :
       congr 1
       omega
 
+/-- The affine magnitude exponent `K + t * (5 + 3 * d)` after `t` updates. -/
 def roundedEllipsoidMagnitudeExponent (d K t : ℕ) : ℕ :=
   K + t * (5 + 3 * d)
 
+/-- The affine state-magnitude exponent `K + t * (6 + 3 * d)` after `t` updates. -/
 def roundedEllipsoidStateMagnitudeExponent (d K t : ℕ) : ℕ :=
   K + t * (6 + 3 * d)
 

@@ -25,75 +25,96 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes an ordered row pair by pairing its two unary finite-index codes. -/
 def orderedRowPairCode {n : ℕ} (q : Fin n × Fin n) : List Bool :=
   pair (finUnaryCode q.1) (finUnaryCode q.2)
 
+/-- Extracts the first candidate row ruler from a row-pair disjointness request. -/
 def machineDisjointCandidateFirst (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the disjointness request payload after its first candidate row. -/
 def machineDisjointRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the second candidate row ruler from a row-pair disjointness request. -/
 def machineDisjointCandidateSecond (word : List Bool) : List Bool :=
   machinePairFirst (machineDisjointRest word)
 
+/-- Extracts the encoded list of already selected row pairs. -/
 def machineDisjointSelectedList (word : List Bool) : List Bool :=
   machinePairSecond (machineDisjointRest word)
 
+/-- Packs the unprocessed selected-pair list, accumulated conflict bit, and fixed request. -/
 def machineDisjointPack
     (remaining conflict source : List Bool) : List Bool :=
   pair remaining (pair conflict source)
 
+/-- Extracts the remaining selected pairs from a disjointness scan state. -/
 def machineDisjointRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the accumulated conflict bit from a disjointness scan state. -/
 def machineDisjointConflict (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the fixed candidate-and-selected-list request from a disjointness state. -/
 def machineDisjointSource (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Reads the next selected row pair to compare with the candidate. -/
 def machineDisjointCurrentPair (state : List Bool) : List Bool :=
   machineListHead (machineDisjointRemaining state)
 
+/-- Extracts the first row ruler of the current selected pair. -/
 def machineDisjointCurrentFirst (state : List Bool) : List Bool :=
   machinePairFirst (machineDisjointCurrentPair state)
 
+/-- Extracts the second row ruler of the current selected pair. -/
 def machineDisjointCurrentSecond (state : List Bool) : List Bool :=
   machinePairSecond (machineDisjointCurrentPair state)
 
+/-- Tests equality of ruler lengths by computing and comparing their binary lengths. -/
 def machineUnaryRulersEqualBit (lhs rhs : List Bool) : List Bool :=
   machineBinaryNatEqBit (pair (machineLengthBits lhs) (machineLengthBits rhs))
 
+/-- Compares the first candidate row with the first row of the current selected pair. -/
 def machineDisjointIFirstBit (state : List Bool) : List Bool :=
   machineUnaryRulersEqualBit
     (machineDisjointCandidateFirst (machineDisjointSource state))
     (machineDisjointCurrentFirst state)
 
+/-- Compares the first candidate row with the second row of the current selected pair. -/
 def machineDisjointISecondBit (state : List Bool) : List Bool :=
   machineUnaryRulersEqualBit
     (machineDisjointCandidateFirst (machineDisjointSource state))
     (machineDisjointCurrentSecond state)
 
+/-- Compares the second candidate row with the first row of the current selected pair. -/
 def machineDisjointJFirstBit (state : List Bool) : List Bool :=
   machineUnaryRulersEqualBit
     (machineDisjointCandidateSecond (machineDisjointSource state))
     (machineDisjointCurrentFirst state)
 
+/-- Compares the second candidate row with the second row of the current selected pair. -/
 def machineDisjointJSecondBit (state : List Bool) : List Bool :=
   machineUnaryRulersEqualBit
     (machineDisjointCandidateSecond (machineDisjointSource state))
     (machineDisjointCurrentSecond state)
 
+/-- Tests whether either candidate row coincides with either row of the current selected pair. -/
 def machineDisjointCurrentConflictBit (state : List Bool) : List Bool :=
   machineOrBit (machineDisjointIFirstBit state)
     (machineOrBit (machineDisjointISecondBit state)
       (machineOrBit (machineDisjointJFirstBit state)
         (machineDisjointJSecondBit state)))
 
+/-- Pairs a false bit with the source request to form the disjointness scan's input-bound word. -/
 def machineDisjointInputBound (word : List Bool) : List Bool :=
   pair [false] word
 
+/-- Accumulates the current row-pair conflict using Boolean disjunction and truncates the result
+to the input-bound length. -/
 def machineDisjointNextConflict (state : List Bool) : List Bool :=
   (machineOrBit (machineDisjointConflict state)
       (machineDisjointCurrentConflictBit state)).take

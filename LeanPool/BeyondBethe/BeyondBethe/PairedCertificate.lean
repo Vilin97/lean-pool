@@ -25,10 +25,13 @@ each row by its cluster and its position inside that cluster.  Pair
 certificates use the special case in which every size is one or two, but the
 coefficient identity below holds for arbitrary cluster sizes. -/
 structure RowClustering (n : ℕ) where
+  /-- The type indexing the row clusters. -/
   Cluster : Type
   clusterFintype : Fintype Cluster
   clusterDecidableEq : DecidableEq Cluster
+  /-- The number of local row positions assigned to each cluster. -/
   size : Cluster → ℕ
+  /-- An equivalence identifying all cluster-local row positions with the original matrix rows. -/
   rows : (Σ c, Fin (size c)) ≃ Fin n
 
 attribute [instance] RowClustering.clusterFintype

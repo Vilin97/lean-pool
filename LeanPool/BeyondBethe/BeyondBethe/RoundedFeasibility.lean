@@ -28,6 +28,8 @@ target preservation, nonsingularity, and finite termination with the weaker
 rounded contraction constant.
 -/
 
+/-- Runs the central oracle until it accepts the current center or the budget is exhausted,
+applying adaptive rounded updates after cuts. -/
 def runRoundedRationalFeasibility {d : ℕ}
     (oracle : RationalCentralOracle d) :
     ℕ → RationalEllipsoidState d → RationalFeasibilityResult d

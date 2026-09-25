@@ -38,10 +38,12 @@ def IsRealStableOrZero
     {σ : Type*} (p : MvPolynomial σ ℝ) : Prop :=
   p = 0 ∨ IsRealStable p
 
+/-- Requires every real coefficient of the multivariate polynomial to be nonnegative. -/
 def HasNonnegativeCoefficients
     {σ : Type*} (p : MvPolynomial σ ℝ) : Prop :=
   ∀ d, 0 ≤ p.coeff d
 
+/-- Requires the real multivariate polynomial to have degree at most one in each variable. -/
 def IsMultiaffine
     {σ : Type*} (p : MvPolynomial σ ℝ) : Prop :=
   ∀ i, p.degreeOf i ≤ 1

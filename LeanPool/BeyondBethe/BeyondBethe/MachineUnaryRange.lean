@@ -24,51 +24,67 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Encodes a finite index as a ruler containing that many true bits. -/
 def finUnaryCode {n : ℕ} (i : Fin n) : List Bool :=
   List.replicate i.1 true
 
+/-- Encodes the complete range of finite indices using unary codes in increasing order. -/
 def finRangeUnaryCode (n : ℕ) : List Bool :=
   binaryListCode finUnaryCode (List.finRange n)
 
+/-- Packs the remaining unary countdown, accumulated encoded range, and bound. -/
 def machineUnaryRangePack
     (remaining acc bound : List Bool) : List Bool :=
   pair remaining (pair acc bound)
 
+/-- Extracts the remaining countdown ruler from a unary-range state. -/
 def machineUnaryRangeRemaining (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the accumulated encoded index range from a unary-range state. -/
 def machineUnaryRangeAcc (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the accumulator length-bound word from a unary-range state. -/
 def machineUnaryRangeBound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Prepends the predecessor countdown ruler to the accumulated range. -/
 def machineUnaryRangeCandidate (state : List Bool) : List Bool :=
   pair (machineUnaryRangeRemaining state).tail
     (machineUnaryRangeAcc state)
 
+/-- Truncates the candidate range accumulator to the stored bound length. -/
 def machineUnaryRangeNextAcc (state : List Bool) : List Bool :=
   (machineUnaryRangeCandidate state).take
     (machineUnaryRangeBound state).length
 
+/-- Fixes an exhausted countdown and otherwise decreases it while prepending the next bounded
+range entry. -/
 def machineUnaryRangeStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineUnaryRangeRemaining state) state
     (machineUnaryRangePack (machineUnaryRangeRemaining state).tail
       (machineUnaryRangeNextAcc state) (machineUnaryRangeBound state))
 
+/-- Reuses the list-update input bound to bound unary-range generation. -/
 def machineUnaryRangeInputBound (ruler : List Bool) : List Bool :=
   machineListUpdateInputBound ruler
 
+/-- Initializes unary-range generation with the input countdown, empty accumulator, and computed
+bound. -/
 def machineUnaryRangeInit (ruler : List Bool) : List Bool :=
   machineUnaryRangePack ruler [] (machineUnaryRangeInputBound ruler)
 
+/-- Packs three copies of the computed bound to bound the unary-range generation state. -/
 def machineUnaryRangeWidth (ruler : List Bool) : List Bool :=
   let bound := machineUnaryRangeInputBound ruler
   machineUnaryRangePack bound bound bound
 
+/-- Runs unary-range generation once per bit of the input ruler. -/
 def machineUnaryRangeFinalState (ruler : List Bool) : List Bool :=
   (machineUnaryRangeStep)^[ruler.length] (machineUnaryRangeInit ruler)
 
+/-- Extracts the final encoded increasing index range. -/
 def machineUnaryRangeCode (ruler : List Bool) : List Bool :=
   machineUnaryRangeAcc (machineUnaryRangeFinalState ruler)
 
@@ -135,6 +151,8 @@ theorem machineUnaryRangeWidth_mem_FP :
     machineUnaryRangeBound (machineUnaryRangePack a b c) = c := by
   simp [machineUnaryRangeBound, machineUnaryRangePack]
 
+/-- Requires exact unary-range state packing and bounds every field length by the input-derived
+bound. -/
 def MachineUnaryRangeStateBound (ruler state : List Bool) : Prop :=
   let B := (machineUnaryRangeInputBound ruler).length
   state = machineUnaryRangePack
@@ -220,6 +238,8 @@ theorem machineUnaryRangeCode_mem_FP :
 
 /-! ## Exact semantics -/
 
+/-- Encodes the remaining countdown `n - k` and the corresponding generated suffix of the finite
+index range. -/
 def machineUnaryRangeSemanticState (n k : ℕ) : List Bool :=
   machineUnaryRangePack (List.replicate (n - k) true)
     (binaryListCode finUnaryCode ((List.finRange n).drop (n - k)))

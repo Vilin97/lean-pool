@@ -160,6 +160,8 @@ instance instDecidableStrictTripleOrder
   unfold StrictTripleOrder
   infer_instance
 
+/-- The uniform probability that a permutation places the three specified indices in strict
+order. -/
 noncomputable def tripleOrderProbability
     {n : ℕ} (a b c : Fin n) : ℝ := by
   classical
@@ -850,9 +852,11 @@ arguments are used below. -/
 noncomputable def rowStabilityH (x : ℝ) : ℝ :=
   rowStabilityF x / x
 
+/-- The row-stability derivative expression `log (1 - x) + 1 + x + x^2`. -/
 noncomputable def rowStabilityFPrime (x : ℝ) : ℝ :=
   Real.log (1 - x) + 1 + x + x ^ 2
 
+/-- The row-stability derivative expression `(log (1 - x) + x + x^2 / 2 + 2 * x^3 / 3) / x^2`. -/
 noncomputable def rowStabilityHPrime (x : ℝ) : ℝ :=
   (Real.log (1 - x) + x + x ^ 2 / 2 + 2 * x ^ 3 / 3) / x ^ 2
 
@@ -1054,6 +1058,8 @@ noncomputable def halfHalfVector
     {n : ℕ} (a b : Fin n) (j : Fin n) : ℝ :=
   if j = a ∨ j = b then 1 / 2 else 0
 
+/-- The L1 distance from the row vector to the half-half vector supported on the selected
+indices. -/
 noncomputable def halfHalfL1Distance
     {n : ℕ} (p : Fin n → ℝ) (a b : Fin n) : ℝ :=
   ∑ j, |p j - halfHalfVector a b j|
@@ -1269,6 +1275,8 @@ theorem separableDefect_eq_sum_gap
       intro i _
       ring
 
+/-- The defect between applying the row-stability function to the total tail mass and summing it
+over individual tail entries. -/
 noncomputable def tailSeparableDefect
     {n : ℕ} (p : Fin n → ℝ) (a : Fin n) : ℝ :=
   rowStabilityF (1 - p a) -
@@ -1367,6 +1375,7 @@ theorem one_add_cube_third_le_artanh
   norm_num [Finset.sum_range_succ] at hseries ⊢
   simpa [pow_succ] using hseries
 
+/-- Subtracts the quartic correction `u^4 / 12` from the Bernoulli excess. -/
 noncomputable def correctedBernoulliExcess (u : ℝ) : ℝ :=
   bernoulliExcess u - u ^ 4 / 12
 

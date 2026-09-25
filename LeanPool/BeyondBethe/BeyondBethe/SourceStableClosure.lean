@@ -504,6 +504,7 @@ theorem liebSokal_linear_contraction
 
 /-! ## Specializing an arbitrary multiaffine coordinate -/
 
+/-- Requires the complex multivariate polynomial to have degree at most one in each variable. -/
 def IsComplexMultiaffine
     {σ : Type*} (p : MvPolynomial σ ℂ) : Prop :=
   ∀ i, p.degreeOf i ≤ 1
@@ -516,10 +517,12 @@ theorem IsUpperHalfPlaneStable.rename
   rw [MvPolynomial.eval_rename]
   exact hp (z ∘ f) (fun i ↦ hz (f i))
 
+/-- Extracts the coefficient of degree zero in the distinguished optional variable. -/
 noncomputable def optionConstantCoefficient
     {σ : Type*} (p : MvPolynomial (Option σ) ℂ) : MvPolynomial σ ℂ :=
   (MvPolynomial.optionEquivLeft ℂ σ p).coeff 0
 
+/-- Extracts the coefficient of degree one in the distinguished optional variable. -/
 noncomputable def optionLinearCoefficient
     {σ : Type*} (p : MvPolynomial (Option σ) ℂ) : MvPolynomial σ ℂ :=
   (MvPolynomial.optionEquivLeft ℂ σ p).coeff 1
@@ -666,12 +669,16 @@ theorem option_specialization_multiaffine
   · exact (MvPolynomial.degreeOf_C_mul_le _ i _).trans
       ((degreeOf_optionLinearCoefficient_le p i).trans (hp (some i)))
 
+/-- Renames coordinate `i` as the distinguished optional variable and all other coordinates by
+their unequal-index subtype. -/
 noncomputable def coordinateReindex
     {σ : Type*} (p : MvPolynomial σ ℂ) (i : σ) :
     MvPolynomial (Option {j : σ // j ≠ i}) ℂ := by
   classical
   exact MvPolynomial.rename (Equiv.optionSubtypeNe i).symm p
 
+/-- Adds the distinguished constant coefficient to `c` times its linear coefficient after
+reindexing coordinate `i`. -/
 noncomputable def coordinateSpecialization
     {σ : Type*} (p : MvPolynomial σ ℂ) (i : σ) (c : ℝ) :
     MvPolynomial {j : σ // j ≠ i} ℂ := by

@@ -24,6 +24,8 @@ need not be byte-for-byte equal to the earlier runner's point.
 
 namespace BeyondBethe
 
+/-- Tests the midpoint with scanned threshold feasibility, lowering the upper endpoint and
+recording a witness on acceptance or raising the lower endpoint otherwise. -/
 def scannedBetheBisectionStep {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (p : ℕ) (delta : RawRat) (r : ℚ)
@@ -35,6 +37,7 @@ def scannedBetheBisectionStep {m : ℕ}
   | .accepted q => ⟨s.low, mid, some q⟩
   | .exhausted _ => ⟨mid, s.high, s.witness⟩
 
+/-- Iterates scanned Bethe bisection for the requested number of steps. -/
 def runScannedBetheBisection {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (p : ℕ) (delta : RawRat) (r : ℚ) :
@@ -44,6 +47,8 @@ def runScannedBetheBisection {m : ℕ}
   | N + 1, s => runScannedBetheBisection tau A p delta r N
       (scannedBetheBisectionStep tau A p delta r s)
 
+/-- Initializes the scanned bisection interval and records a witness exactly when feasibility
+accepts the initial high threshold. -/
 def initialScannedBetheBisectionState {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (p : ℕ) (delta : RawRat) (mix r : ℚ) :
@@ -70,6 +75,8 @@ def initialScannedBetheBisectionState {m : ℕ}
   rw [initialScannedBetheBisectionState]
   split <;> rfl
 
+/-- Requires any stored witness to be the scanned feasibility result at the current high
+threshold and to satisfy the accepted epigraph-oracle predicate. -/
 def ScannedBetheBisectionWitnessValid {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (p : ℕ) (delta : RawRat) (r : ℚ)

@@ -22,13 +22,16 @@ last part of the file identifies this list functional with the canonical
 `Fin n` functional used by the rest of the development.
 -/
 
+/-- Sums each list entry times the logarithm of the suffix sum starting at that entry. -/
 noncomputable def anariRezaeiRightScore : List ℝ → ℝ
   | [] => 0
   | x :: xs => x * Real.log ((x :: xs).sum) + anariRezaeiRightScore xs
 
+/-- Sums the complement terms `(1 - x) * log (1 - x)` over a list. -/
 noncomputable def anariRezaeiComplementScore (p : List ℝ) : ℝ :=
   (p.map fun x ↦ (1-x)*Real.log (1-x)).sum
 
+/-- Adds forward and reverse suffix-log scores and subtracts twice the complement score. -/
 noncomputable def anariRezaeiListPhi (p : List ℝ) : ℝ :=
   anariRezaeiRightScore p + anariRezaeiRightScore p.reverse -
     2*anariRezaeiComplementScore p
@@ -58,6 +61,8 @@ theorem anariRezaeiComplementScore_merge
   simp [anariRezaeiComplementScore]
   ring
 
+/-- The expanded logarithmic gap for merging adjacent masses `r` and `s` with surrounding masses
+`q` and `t`. -/
 noncomputable def anariRezaeiMergeExpandedGap (q r s t : ℝ) : ℝ :=
   r*(Real.log (q+r)-Real.log (q+r+s)) +
     s*(Real.log (s+t)-Real.log (r+s+t)) -

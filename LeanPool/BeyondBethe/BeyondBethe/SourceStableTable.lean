@@ -26,16 +26,20 @@ one recursion step into two nested `linearExtension`s, exactly the form used
 by the formal Lieb--Sokal contraction.
 -/
 
+/-- A real coefficient table indexed by two Boolean selectors on `n` coordinates. -/
 abbrev PairTable (n : ℕ) :=
   (Fin n → Bool) → (Fin n → Bool) → ℝ
 
+/-- Prepends one Boolean head coordinate to a finite Boolean selector. -/
 def prependBool {n : ℕ} (b : Bool) (S : Fin n → Bool) : Fin (n + 1) → Bool :=
   Fin.cases b S
 
+/-- Fixes the two head selector bits and retains a table on the remaining coordinates. -/
 def pairTableSection {n : ℕ} (c : PairTable (n + 1))
     (left right : Bool) : PairTable n :=
   fun S T ↦ c (prependBool left S) (prependBool right T)
 
+/-- A recursively encoded type containing two fresh optional variables for each coordinate. -/
 def PairVariables : ℕ → Type
   | 0 => PEmpty
   | n + 1 => Option (Option (PairVariables n))
@@ -50,6 +54,8 @@ noncomputable instance pairVariablesFintype (n : ℕ) : Fintype (PairVariables n
       change Fintype (Option (Option (PairVariables n)))
       exact inferInstance
 
+/-- Builds the signed polynomial associated with a pair table using two linear extensions per
+coordinate and negative right-variable coefficients. -/
 noncomputable def pairTableStablePolynomial :
     ∀ n : ℕ, PairTable n → MvPolynomial (PairVariables n) ℂ
   | 0, c => MvPolynomial.C (c (fun i ↦ Fin.elim0 i) (fun i ↦ Fin.elim0 i) : ℂ)
@@ -60,13 +66,16 @@ noncomputable def pairTableStablePolynomial :
       let D := pairTableStablePolynomial n (pairTableSection c false false)
       linearExtension (linearExtension D (-C)) (linearExtension B (-A))
 
+/-- Requires every coefficient-table entry to be nonnegative. -/
 def PairTableNonnegative {n : ℕ} (c : PairTable n) : Prop :=
   ∀ S T, 0 ≤ c S T
 
+/-- Requires the associated signed polynomial to be zero or upper-half-plane stable. -/
 def PairTableStableOrZero {n : ℕ} (c : PairTable n) : Prop :=
   pairTableStablePolynomial n c = 0 ∨
     IsUpperHalfPlaneStable (pairTableStablePolynomial n c)
 
+/-- Recursively evaluates a pair table on real vectors by its four head-coordinate sections. -/
 noncomputable def pairTableEval :
     ∀ n : ℕ, PairTable n → (Fin n → ℝ) → (Fin n → ℝ) → ℝ
   | 0, c, _, _ => c (fun i ↦ Fin.elim0 i) (fun i ↦ Fin.elim0 i)
@@ -79,17 +88,20 @@ noncomputable def pairTableEval :
       let d := pairTableEval n (pairTableSection c false false) yt zt
       a * y 0 * z 0 + b * y 0 + cc * z 0 + d
 
+/-- Sums diagonal table coefficients by recursively retaining only equal head-selector pairs. -/
 noncomputable def pairTableDiagonalSum : ∀ n : ℕ, PairTable n → ℝ
   | 0, c => c (fun i ↦ Fin.elim0 i) (fun i ↦ Fin.elim0 i)
   | n + 1, c =>
       pairTableDiagonalSum n (pairTableSection c false false) +
         pairTableDiagonalSum n (pairTableSection c true true)
 
+/-- Multiplies the scalar stability-boundary factors over all coordinates. -/
 noncomputable def pairTableBoundary : ∀ n : ℕ, (Fin n → ℝ) → ℝ
   | 0, _ => 1
   | n + 1, α =>
       stableBoundaryScalar (α 0) * pairTableBoundary n (fun i ↦ α i.succ)
 
+/-- Multiplies the coordinate powers `x i ^ α i` with real exponents. -/
 noncomputable def pairTableMonomial :
     ∀ n : ℕ, (Fin n → ℝ) → (Fin n → ℝ) → ℝ
   | 0, _, _ => 1
@@ -124,9 +136,11 @@ theorem pairTableSection_nonnegative
   intro S T
   exact hc _ _
 
+/-- Adds pair tables entrywise. -/
 def pairTableAdd {n : ℕ} (c d : PairTable n) : PairTable n :=
   fun S T ↦ c S T + d S T
 
+/-- Contracts a head coordinate by adding its false-false and true-true coefficient sections. -/
 def pairTableContract {n : ℕ} (c : PairTable (n + 1)) : PairTable n :=
   pairTableAdd (pairTableSection c false false)
     (pairTableSection c true true)

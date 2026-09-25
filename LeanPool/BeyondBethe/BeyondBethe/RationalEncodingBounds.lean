@@ -313,6 +313,7 @@ def rationalEllipsoidStatePayload {d : ℕ} (E : RationalEllipsoidState d) :
     List ℚ × List (List ℚ) :=
   (List.ofFn E.center, rationalMatrixRows E.basis)
 
+/-- The encoded bit length of the ellipsoid state's center-vector and basis-row payload. -/
 def rationalEllipsoidStateEncodedBitLength {d : ℕ}
     (E : RationalEllipsoidState d) : ℕ :=
   encodedBitLength (List ℚ × List (List ℚ))

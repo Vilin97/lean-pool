@@ -41,9 +41,12 @@ noncomputable def anariRezaeiMergePsi (r s : ℝ) : ℝ :=
     2*(1-s)*Real.log (1-s) +
     2*(1-r-s)*Real.log (1-r-s)
 
+/-- Restricts the merge comparison function to the line where its two arguments sum to `C`. -/
 noncomputable def anariRezaeiMergePsiAlong (C x : ℝ) : ℝ :=
   anariRezaeiMergePsi x (C-x)
 
+/-- The explicit logarithmic and reciprocal derivative expression used for the two-mass merge
+comparison. -/
 noncomputable def anariRezaeiMergePsiDerivative (r s : ℝ) : ℝ :=
   -2*Real.log ((1+s)/(1+r)) -
     (s-r)*(1/(1+r)+1/(1+s)) +
@@ -204,9 +207,13 @@ theorem anariRezaeiMergePsi_nonpos
   · rw [anariRezaeiMergePsi_comm hr0 hs0]
     exact anariRezaeiMergePsi_nonpos_ordered hs0 hsr (by linarith)
 
+/-- The candidate outer mass `(1 - r * (1 + r + s)) / (2 + r + s)` in the merge-gap
+optimization. -/
 noncomputable def anariRezaeiMergeQStar (r s : ℝ) : ℝ :=
   (1-r*(1+r+s))/(2+r+s)
 
+/-- The symmetric candidate outer mass `(1 - s * (1 + r + s)) / (2 + r + s)` in the merge-gap
+optimization. -/
 noncomputable def anariRezaeiMergeTStar (r s : ℝ) : ℝ :=
   (1-s*(1+r+s))/(2+r+s)
 
@@ -240,9 +247,11 @@ theorem anariRezaeiMergeStars_sum (r s : ℝ) (hden : 2+r+s ≠ 0) :
   field_simp [hden]
   ring
 
+/-- Restricts the merge gap to outer masses `x` and `1 - r - s - x`, keeping total mass one. -/
 noncomputable def anariRezaeiMergeGapAlong (r s x : ℝ) : ℝ :=
   anariRezaeiMergeGap x r s (1-r-s-x)
 
+/-- The explicit derivative expression for the merge gap along the fixed-total-mass line. -/
 noncomputable def anariRezaeiMergeGapDerivative (r s x : ℝ) : ℝ :=
   r*s*(1/((x+r)*(x+r+s)) -
     1/((1-r-x)*(1-x)))

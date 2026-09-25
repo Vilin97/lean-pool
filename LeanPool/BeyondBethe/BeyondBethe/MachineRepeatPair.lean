@@ -27,6 +27,7 @@ matrices.  Its iteration count is supplied in unary and its accumulator is
 clamped by an explicit quadratic envelope.
 -/
 
+/-- Prepends `n` copies of an encoded item to the supplied tail through nested pairing. -/
 def repeatPairCode : ℕ → List Bool → List Bool → List Bool
   | 0, _, tail => tail
   | n + 1, item, tail => pair item (repeatPairCode n item tail)
@@ -57,56 +58,71 @@ theorem repeatPairCode_binaryListCode {α : Type*}
       rw [repeatPairCode_succ, ih]
       simp only [List.replicate_succ, List.cons_append, binaryListCode]
 
+/-- Extracts the unary repetition ruler from a repeated-pair request. -/
 def machineRepeatPairRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the encoded item to repeat from a repeated-pair request. -/
 def machineRepeatPairItem (word : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond word)
 
+/-- Extracts the encoded tail following the repeated items. -/
 def machineRepeatPairTail (word : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond word)
 
+/-- Applies the binary-multiplication width construction to bound repeated pairing. -/
 def machineRepeatPairBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth word
 
+/-- Packs the fixed repeated item, accumulated tail, and length bound. -/
 def machineRepeatPairPack
     (item acc bound : List Bool) : List Bool :=
   pair item (pair acc bound)
 
+/-- Extracts the fixed item from a repeated-pair state. -/
 def machineRepeatPairStateItem (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the accumulated encoded tail from a repeated-pair state. -/
 def machineRepeatPairStateAcc (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the length-bound word from a repeated-pair state. -/
 def machineRepeatPairStateBound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Prepends one copy of the fixed item to the accumulated tail. -/
 def machineRepeatPairCandidate (state : List Bool) : List Bool :=
   pair (machineRepeatPairStateItem state)
     (machineRepeatPairStateAcc state)
 
+/-- Truncates the candidate repeated-pair accumulator to the stored bound length. -/
 def machineRepeatPairNextAcc (state : List Bool) : List Bool :=
   (machineRepeatPairCandidate state).take
     (machineRepeatPairStateBound state).length
 
+/-- Updates the bounded accumulator while preserving the repeated item and bound. -/
 def machineRepeatPairStep (state : List Bool) : List Bool :=
   machineRepeatPairPack (machineRepeatPairStateItem state)
     (machineRepeatPairNextAcc state)
     (machineRepeatPairStateBound state)
 
+/-- Initializes repeated pairing with the requested item, initial tail, and computed bound. -/
 def machineRepeatPairInit (word : List Bool) : List Bool :=
   machineRepeatPairPack (machineRepeatPairItem word)
     (machineRepeatPairTail word) (machineRepeatPairBound word)
 
+/-- Packs three copies of the computed bound to bound the repeated-pair state. -/
 def machineRepeatPairWidth (word : List Bool) : List Bool :=
   machineRepeatPairPack (machineRepeatPairBound word)
     (machineRepeatPairBound word) (machineRepeatPairBound word)
 
+/-- Iterates bounded pairing for the length of the unary repetition ruler. -/
 def machineRepeatPairFinalState (word : List Bool) : List Bool :=
   (machineRepeatPairStep)^[(machineRepeatPairRuler word).length]
     (machineRepeatPairInit word)
 
+/-- Extracts the final repeated-pair accumulator. -/
 def machineRepeatPairCode (word : List Bool) : List Bool :=
   machineRepeatPairStateAcc (machineRepeatPairFinalState word)
 
@@ -177,6 +193,8 @@ theorem machineRepeatPairWidth_mem_FP : machineRepeatPairWidth ∈ FP :=
     machineRepeatPairStateBound (machineRepeatPairPack a b c) = c := by
   simp [machineRepeatPairStateBound, machineRepeatPairPack]
 
+/-- Requires exact repeated-pair state packing and bounds all three field lengths by the
+input-derived bound. -/
 def MachineRepeatPairStateBound (word state : List Bool) : Prop :=
   let B := (machineRepeatPairBound word).length
   state = machineRepeatPairPack
@@ -251,10 +269,12 @@ theorem machineRepeatPairCode_mem_FP : machineRepeatPairCode ∈ FP := by
 
 /-! ## Exact semantics on well-formed unary calls -/
 
+/-- Encodes unary repetition count `n` followed by the item and initial tail. -/
 def machineRepeatPairCanonicalInput
     (n : ℕ) (item tail : List Bool) : List Bool :=
   pair (List.replicate n true) (pair item tail)
 
+/-- Encodes the semantic state containing `k` repeated items before the original tail. -/
 def machineRepeatPairCanonicalState
     (n : ℕ) (item tail : List Bool) (k : ℕ) : List Bool :=
   let word := machineRepeatPairCanonicalInput n item tail

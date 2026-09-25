@@ -25,6 +25,8 @@ file gives that exact oracle its semantic feasibility runner.  The older
 no equality between the two tie-breaking rules is needed.
 -/
 
+/-- Runs ball-based rational feasibility with the scanned bounded epigraph oracle, explicit
+threshold budget, and epigraph outer radius. -/
 def runExplicitScannedBetheThresholdFeasibility {m : ℕ}
     (tau : ℚ) (A : Matrix (Fin (m + 1)) (Fin (m + 1)) ℚ)
     (p : ℕ) (delta upper : RawRat) (r : ℚ) :

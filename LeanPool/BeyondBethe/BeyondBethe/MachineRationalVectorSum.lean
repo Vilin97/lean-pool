@@ -76,6 +76,8 @@ list.  The unused matrix-dimension component is the empty word. -/
 def machineRationalVectorAsRowsWord (word : List Bool) : List Bool :=
   pair [] (pair word [])
 
+/-- Sums the encoded rational vector by viewing it as matrix rows and reusing the raw matrix-sum
+machine. -/
 def machineRationalVectorRawSumCode (word : List Bool) : List Bool :=
   machineMatrixRawSumCode (machineRationalVectorAsRowsWord word)
 

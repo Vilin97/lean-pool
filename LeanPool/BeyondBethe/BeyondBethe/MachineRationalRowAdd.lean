@@ -476,11 +476,14 @@ fraction. -/
 def rationalRowAddValues (delta : RawRat) (row : List ℚ) : List ℚ :=
   row.map fun q ↦ binaryNormalizeRawRat ((rawRatOfRat q).add delta)
 
+/-- Encodes a raw increment paired with the rational row to update. -/
 def machineRationalRowAddCanonicalInput
     (delta : RawRat) (row : List ℚ) : List Bool :=
   pair (rawRatBinaryCode delta)
     (binaryListCode rationalEntryBinaryCode row)
 
+/-- Encodes the unprocessed row suffix and reversed incremented prefix after `k` entries,
+preserving increment and bound. -/
 def machineRationalRowAddSemanticState
     (delta : RawRat) (row : List ℚ) (k : ℕ) : List Bool :=
   let output := rationalRowAddValues delta row

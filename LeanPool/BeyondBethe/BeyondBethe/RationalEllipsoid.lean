@@ -770,7 +770,9 @@ theorem rationalEllipsoid_direction_containment_of_rational
 
 /-- Entirely rational state stored by the cutting-plane algorithm. -/
 structure RationalEllipsoidState (d : ℕ) where
+  /-- The rational center stored by the cutting-plane algorithm. -/
   center : Fin d → ℚ
+  /-- The rational basis matrix mapping unit-ball coordinates to ellipsoid displacements. -/
   basis : Matrix (Fin d) (Fin d) ℚ
 
 /-- Pull a physical cut normal back to unit-ball coordinates. -/

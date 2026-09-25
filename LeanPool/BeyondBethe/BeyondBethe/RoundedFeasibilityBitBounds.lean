@@ -25,6 +25,8 @@ iteration bounds.  No feasibility assumption is needed for the size bounds;
 oracle validity supplies only the nonzero-cut invariant.
 -/
 
+/-- Records the cuts encountered by the adaptive rounded feasibility run, stopping on acceptance
+or budget exhaustion. -/
 def roundedRationalFeasibilityCuts {d : ℕ}
     (oracle : RationalCentralOracle d) :
     ℕ → RationalEllipsoidState d → List (Fin d → ℚ)

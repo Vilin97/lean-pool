@@ -30,8 +30,14 @@ constants can be hard-coded in a Turing machine and the regularization scale
 positive-matrix dichotomy.  Analytic expressions are compared after casting
 the rational constants to `ℝ`. -/
 structure RationalCompletionScales (κ₀ ξ₀ γ₀ : ℚ) where
+  /-- The positive rational concentration parameter, constrained by the certificate to be at
+  most one-tenth. -/
   η : ℚ
+  /-- The positive rational error scale controlling the row, cycle, and transfer smallness
+  estimates. -/
   δ : ℚ
+  /-- The positive rational regularization numerator, bounded by the source scale and chosen
+  below the error and gain margins. -/
   ξ : ℚ
   η_pos : 0 < η
   η_le_tenth : (η : ℝ) ≤ 1 / 10
@@ -291,13 +297,19 @@ theorem log_natCast_le_natCast_mul_log_two
 /-- All absolute constants needed by the structural argument, now retained
 as rational data instead of being erased into an existential real constant. -/
 structure RationalStructuralScales where
+  /-- The positive rational transfer-cost threshold in the clean-pair gain guarantee. -/
   κ₀ : ℚ
+  /-- The positive rational upper bound on the regularization numerator in the clean-pair
+  guarantee. -/
   ξ₀ : ℚ
+  /-- The positive rational lower bound on the logarithmic gain of eligible clean pairs. -/
   γ₀ : ℚ
   κ₀_pos : 0 < κ₀
   ξ₀_pos : 0 < ξ₀
   γ₀_pos : 0 < γ₀
   cleanGain : CleanPairGainGuarantee (κ₀ : ℝ) (ξ₀ : ℝ) (γ₀ : ℝ)
+  /-- Rational completion parameters satisfying the smallness inequalities for these structural
+  constants. -/
   completion : RationalCompletionScales κ₀ ξ₀ γ₀
 
 theorem exists_rational_structuralScales :

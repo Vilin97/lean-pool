@@ -29,44 +29,57 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Extracts the unary dimension from a matrix-generation request. -/
 def machineUnaryMatrixGeneratorDimension (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the bound-and-entry-payload portion of a matrix-generation request. -/
 def machineUnaryMatrixGeneratorRest (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Extracts the output-bound word from a matrix-generation request. -/
 def machineUnaryMatrixGeneratorInputBound (word : List Bool) : List Bool :=
   machinePairFirst (machineUnaryMatrixGeneratorRest word)
 
+/-- Extracts the fixed entry-function payload from a matrix-generation request. -/
 def machineUnaryMatrixGeneratorInputPayload (word : List Bool) : List Bool :=
   machinePairSecond (machineUnaryMatrixGeneratorRest word)
 
+/-- Packs row and column indices, reversed current row, reversed completed rows, bound,
+completion flag, and fixed request. -/
 def machineUnaryMatrixGeneratorPack
     (row column current rows bound done payload : List Bool) : List Bool :=
   pair row (pair column (pair current
     (pair rows (pair bound (pair done payload)))))
 
+/-- Extracts the unary row index from a matrix-generation state. -/
 def machineUnaryMatrixGeneratorRow (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the unary column index from a matrix-generation state. -/
 def machineUnaryMatrixGeneratorColumn (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the reversed current-row accumulator from a matrix-generation state. -/
 def machineUnaryMatrixGeneratorCurrent (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the reverse-order completed-row accumulator from a matrix-generation state. -/
 def machineUnaryMatrixGeneratorRows (state : List Bool) : List Bool :=
   machinePairFirst
     (machinePairSecond (machinePairSecond (machinePairSecond state)))
 
+/-- Extracts the output-bound word from a matrix-generation state. -/
 def machineUnaryMatrixGeneratorBound (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond
     (machinePairSecond (machinePairSecond (machinePairSecond state))))
 
+/-- Extracts the completion flag from a matrix-generation state. -/
 def machineUnaryMatrixGeneratorDone (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond
     (machinePairSecond (machinePairSecond (machinePairSecond state)))))
 
+/-- Extracts the fixed request from a matrix-generation state. -/
 def machineUnaryMatrixGeneratorPayload (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond
     (machinePairSecond (machinePairSecond (machinePairSecond state)))))
@@ -113,60 +126,73 @@ def machineUnaryMatrixGeneratorPayload (state : List Bool) : List Bool :=
         (machineUnaryMatrixGeneratorPack row column current rows bound done payload) = payload := by
   simp [machineUnaryMatrixGeneratorPayload, machineUnaryMatrixGeneratorPack]
 
+/-- Reads the requested unary dimension from the matrix-generation state's fixed payload. -/
 def machineUnaryMatrixGeneratorStateDimension (state : List Bool) : List Bool :=
   machineUnaryMatrixGeneratorDimension
     (machineUnaryMatrixGeneratorPayload state)
 
+/-- Packages the current row and column with the fixed entry-function payload. -/
 def machineUnaryMatrixGeneratorEntryInput (state : List Bool) : List Bool :=
   pair (machineUnaryMatrixGeneratorRow state)
     (pair (machineUnaryMatrixGeneratorColumn state)
       (machineUnaryMatrixGeneratorInputPayload
         (machineUnaryMatrixGeneratorPayload state)))
 
+/-- Increments the unary row index and truncates it to the length of the fixed request. -/
 def machineUnaryMatrixGeneratorNextRow (state : List Bool) : List Bool :=
   (machineUnaryMatrixGeneratorRow state ++ [true]).take
     (machineUnaryMatrixGeneratorPayload state).length
 
+/-- Increments the unary column index and truncates it to the length of the fixed request. -/
 def machineUnaryMatrixGeneratorNextColumn (state : List Bool) : List Bool :=
   (machineUnaryMatrixGeneratorColumn state ++ [true]).take
     (machineUnaryMatrixGeneratorPayload state).length
 
+/-- Tests whether the next column ruler has reached the requested dimension. -/
 def machineUnaryMatrixGeneratorColumnCompletesBit
     (state : List Bool) : List Bool :=
   machineHeadBit (machineUnaryRulersEqualBit
     (machineUnaryMatrixGeneratorNextColumn state)
     (machineUnaryMatrixGeneratorStateDimension state))
 
+/-- Tests whether the next row ruler has reached the requested dimension. -/
 def machineUnaryMatrixGeneratorRowCompletesBit
     (state : List Bool) : List Bool :=
   machineHeadBit (machineUnaryRulersEqualBit
     (machineUnaryMatrixGeneratorNextRow state)
     (machineUnaryMatrixGeneratorStateDimension state))
 
+/-- Prepends the generated current entry to the reversed current-row accumulator. -/
 def machineUnaryMatrixGeneratorCurrentCandidate
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   pair (entry (machineUnaryMatrixGeneratorEntryInput state))
     (machineUnaryMatrixGeneratorCurrent state)
 
+/-- Truncates the updated current-row accumulator to the stored output-bound length. -/
 def machineUnaryMatrixGeneratorNextCurrent
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   (machineUnaryMatrixGeneratorCurrentCandidate entry state).take
     (machineUnaryMatrixGeneratorBound state).length
 
+/-- Reverses the updated current-row accumulator to obtain a completed row in column order. -/
 def machineUnaryMatrixGeneratorCompletedRow
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   machineListReverse (machineUnaryMatrixGeneratorNextCurrent entry state)
 
+/-- Prepends the completed current row to the reverse-order matrix accumulator. -/
 def machineUnaryMatrixGeneratorRowsCandidate
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   pair (machineUnaryMatrixGeneratorCompletedRow entry state)
     (machineUnaryMatrixGeneratorRows state)
 
+/-- Truncates the updated completed-row accumulator to the stored output-bound length. -/
 def machineUnaryMatrixGeneratorNextRows
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   (machineUnaryMatrixGeneratorRowsCandidate entry state).take
     (machineUnaryMatrixGeneratorBound state).length
 
+/-- Stores the final completed row, clears the current-row accumulator, and sets the matrix
+completion flag. -/
 def machineUnaryMatrixGeneratorFinish
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   machineUnaryMatrixGeneratorPack
@@ -176,6 +202,8 @@ def machineUnaryMatrixGeneratorFinish
     (machineUnaryMatrixGeneratorBound state) [true]
     (machineUnaryMatrixGeneratorPayload state)
 
+/-- Stores the completed row, advances the row index, and resets the column and current-row
+accumulators. -/
 def machineUnaryMatrixGeneratorAdvanceRow
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   machineUnaryMatrixGeneratorPack
@@ -185,6 +213,8 @@ def machineUnaryMatrixGeneratorAdvanceRow
     (machineUnaryMatrixGeneratorDone state)
     (machineUnaryMatrixGeneratorPayload state)
 
+/-- Advances the column index and updates the bounded current row while retaining completed
+rows. -/
 def machineUnaryMatrixGeneratorAdvanceColumn
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   machineUnaryMatrixGeneratorPack
@@ -196,6 +226,8 @@ def machineUnaryMatrixGeneratorAdvanceColumn
     (machineUnaryMatrixGeneratorDone state)
     (machineUnaryMatrixGeneratorPayload state)
 
+/-- Finishes at the final row end, advances rows at other row ends, and otherwise generates the
+next column. -/
 def machineUnaryMatrixGeneratorProcess
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   machineIfHead (machineUnaryMatrixGeneratorColumnCompletesBit state)
@@ -204,48 +236,62 @@ def machineUnaryMatrixGeneratorProcess
       (machineUnaryMatrixGeneratorAdvanceRow entry state))
     (machineUnaryMatrixGeneratorAdvanceColumn entry state)
 
+/-- Fixes completed matrix-generation states and processes one entry otherwise. -/
 def machineUnaryMatrixGeneratorStep
     (entry : List Bool → List Bool) (state : List Bool) : List Bool :=
   machineIfHead (machineHeadBit (machineUnaryMatrixGeneratorDone state)) state
     (machineUnaryMatrixGeneratorProcess entry state)
 
+/-- Initializes matrix generation with zero indices, empty row accumulators, supplied bound, and
+unset completion flag. -/
 def machineUnaryMatrixGeneratorInit (word : List Bool) : List Bool :=
   machineUnaryMatrixGeneratorPack [] [] [] []
     (machineUnaryMatrixGeneratorInputBound word) [false] word
 
+/-- Converts the unary matrix dimension to its binary length. -/
 def machineUnaryMatrixGeneratorDimensionBits (word : List Bool) : List Bool :=
   machineLengthBits (machineUnaryMatrixGeneratorDimension word)
 
+/-- Computes the square of the matrix dimension in binary as the generation work count. -/
 def machineUnaryMatrixGeneratorWorkBits (word : List Bool) : List Bool :=
   machineBinaryMulBits (pair
     (machineUnaryMatrixGeneratorDimensionBits word)
     (machineUnaryMatrixGeneratorDimensionBits word))
 
+/-- Applies the binary-multiplication width construction to guard conversion of the work count
+to unary. -/
 def machineUnaryMatrixGeneratorGuard (word : List Bool) : List Bool :=
   machineBinaryMulWidth word
 
+/-- Converts the squared dimension to a bounded unary iteration ruler. -/
 def machineUnaryMatrixGeneratorRuler (word : List Bool) : List Bool :=
   machineBoundedUnary (pair (machineUnaryMatrixGeneratorGuard word)
     (machineUnaryMatrixGeneratorWorkBits word))
 
+/-- Adds sixteen padding bits and applies the binary-width construction twice to obtain a common
+state-field envelope. -/
 def machineUnaryMatrixGeneratorEnvelope (word : List Bool) : List Bool :=
   machineIteratedBinaryWidth 2 (word ++ List.replicate 16 false)
 
+/-- Packs seven copies of the common envelope to bound the full matrix-generation state. -/
 def machineUnaryMatrixGeneratorWidth (word : List Bool) : List Bool :=
   let envelope := machineUnaryMatrixGeneratorEnvelope word
   machineUnaryMatrixGeneratorPack envelope envelope envelope envelope
     envelope envelope envelope
 
+/-- Iterates matrix generation for the length of the computed work ruler. -/
 def machineUnaryMatrixGeneratorFinalState
     (entry : List Bool → List Bool) (word : List Bool) : List Bool :=
   (machineUnaryMatrixGeneratorStep entry)^[(machineUnaryMatrixGeneratorRuler word).length]
     (machineUnaryMatrixGeneratorInit word)
 
+/-- Extracts the completed matrix rows in reverse order from the final generation state. -/
 def machineUnaryMatrixGeneratorReversedRowsCode
     (entry : List Bool → List Bool) (word : List Bool) : List Bool :=
   machineUnaryMatrixGeneratorRows
     (machineUnaryMatrixGeneratorFinalState entry word)
 
+/-- Reverses the accumulated completed rows to restore the original row order. -/
 def machineUnaryMatrixGeneratorRowsCode
     (entry : List Bool → List Bool) (word : List Bool) : List Bool :=
   machineListReverse (machineUnaryMatrixGeneratorReversedRowsCode entry word)
@@ -503,6 +549,8 @@ theorem machineUnaryMatrixGeneratorWidth_mem_FP :
         (machinePair_mem_FP h
           (machinePair_mem_FP h (machinePair_mem_FP h h)))))
 
+/-- Requires exact matrix-state packing, input-bounded indices, bounded current and completed
+rows, fixed bound and request, and at most one completion bit. -/
 def MachineUnaryMatrixGeneratorStateBound
     (word state : List Bool) : Prop :=
   state = machineUnaryMatrixGeneratorPack
@@ -737,6 +785,7 @@ theorem machineUnaryMatrixGeneratorRowsCode_mem_FP
 
 /-! ## Canonical inputs and exact traversal -/
 
+/-- Encodes unary dimension `m` followed by the supplied output bound and fixed entry payload. -/
 def machineUnaryMatrixGeneratorCanonicalWord
     (m : ℕ) (bound payload : List Bool) : List Bool :=
   pair (List.replicate m true) (pair bound payload)
@@ -802,6 +851,7 @@ theorem machineUnaryMatrixGeneratorWork_le_guard
 
 /-! ## Typed row-major semantics -/
 
+/-- Lists the matrix rows and their entries in finite-index order. -/
 def unaryMatrixRows {m : ℕ}
     (f : Fin m → Fin m → ℚ) : List (List ℚ) :=
   List.ofFn fun i ↦ List.ofFn fun j ↦ f i j
@@ -816,17 +866,22 @@ def unaryMatrixRows {m : ℕ}
       List.ofFn (f ⟨i, by simpa using! hi⟩) := by
   simp [unaryMatrixRows]
 
+/-- Returns the reversed processed prefix of the current row, or the empty row after completion. -/
 def unaryMatrixCurrent {m : ℕ}
     (f : Fin m → Fin m → ℚ) (state : UnaryGridSemanticState m) : List ℚ :=
   if state.done then []
   else (List.ofFn (f state.row)).take state.column.1 |>.reverse
 
+/-- Returns all completed rows in reverse order, using the whole matrix when the scan is
+complete. -/
 def unaryMatrixCompletedRows {m : ℕ}
     (f : Fin m → Fin m → ℚ) (state : UnaryGridSemanticState m) :
     List (List ℚ) :=
   if state.done then (unaryMatrixRows f).reverse
   else ((unaryMatrixRows f).take state.row.1).reverse
 
+/-- Encodes the semantic grid position together with its reversed current-row prefix and
+reversed completed rows. -/
 def machineUnaryMatrixGeneratorSemanticCode {m : ℕ}
     (f : Fin m → Fin m → ℚ) (bound payload : List Bool)
     (state : UnaryGridSemanticState m) : List Bool :=

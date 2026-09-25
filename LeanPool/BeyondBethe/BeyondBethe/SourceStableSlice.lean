@@ -24,6 +24,8 @@ reversed.  The finite closure theorem says that the resulting polynomial in
 the next left--right pair is stable or zero.
 -/
 
+/-- Assigns `y` to left variables and `-z` to right variables in the recursive paired-variable
+encoding. -/
 def pairVariablesSignedRealPoint :
     ∀ n : ℕ, (Fin n → ℝ) → (Fin n → ℝ) → PairVariables n → ℝ
   | 0, _, _, i => PEmpty.elim i
@@ -111,6 +113,8 @@ def pairHeadTailEquiv (n : ℕ) :
     | inl x => rfl
     | inr x => cases x <;> rfl
 
+/-- Renames the signed pair-table polynomial into tail variables and a Boolean-indexed head
+pair. -/
 noncomputable def pairTableHeadPolynomial
     {n : ℕ} (c : PairTable (n + 1)) :
     MvPolynomial (PairVariables n ⊕ Bool) ℂ :=
@@ -136,6 +140,8 @@ theorem pairTableHeadPolynomial_stable
     IsUpperHalfPlaneStable (pairTableHeadPolynomial c) := by
   exact hstable.rename (pairHeadTailEquiv n)
 
+/-- Specializes all tail variables at the signed real point, retaining the two head variables as
+a complex bivariate polynomial. -/
 noncomputable def pairTableBivariateSlice
     {n : ℕ} (c : PairTable (n + 1))
     (y z : Fin n → ℝ) : MvPolynomial Bool ℂ :=

@@ -23,6 +23,8 @@ namespace BeyondBethe
 # Encoding multiaffine polynomials by Boolean coefficient tables
 -/
 
+/-- Converts a Boolean coordinate selector to its finitely supported zero-or-one exponent
+vector. -/
 noncomputable def boolExponent {n : ℕ} (S : Fin n → Bool) : Fin n →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm (fun i ↦ bif S i then 1 else 0)
 
@@ -39,6 +41,7 @@ theorem boolExponent_injective {n : ℕ} :
   simp only [boolExponent_apply] at hi
   cases hS : S i <;> cases hT : T i <;> simp [hS, hT] at hi ⊢
 
+/-- Marks exactly the coordinates where a finitely supported exponent vector equals one. -/
 noncomputable def exponentBool {n : ℕ} (d : Fin n →₀ ℕ) : Fin n → Bool :=
   fun i ↦ decide (d i = 1)
 
@@ -98,6 +101,7 @@ theorem multiaffine_eq_boolExpansion
     rw [← h, boolExponent_apply]
     cases S i <;> simp
 
+/-- The real squarefree monomial selected by the true coordinates of a Boolean vector. -/
 noncomputable def boolMonomial {n : ℕ}
     (x : Fin n → ℝ) (S : Fin n → Bool) : ℝ :=
   ∏ i, (x i) ^ (bif S i then (1 : ℕ) else 0)
@@ -217,6 +221,7 @@ theorem pairTableEval_eq_boolDoubleSum :
       simp only [pairTableEval]
       ring
 
+/-- The table of products of the two polynomials' coefficients at Boolean exponent vectors. -/
 noncomputable def coefficientPairTable {n : ℕ}
     (p q : MvPolynomial (Fin n) ℝ) : PairTable n :=
   fun S T ↦ p.coeff (boolExponent S) * q.coeff (boolExponent T)
@@ -238,6 +243,7 @@ theorem coefficientPairTable_eval
   simp [coefficientPairTable]
   ring
 
+/-- The complex squarefree monomial selected by the true coordinates of a Boolean vector. -/
 noncomputable def complexBoolMonomial {n : ℕ}
     (x : Fin n → ℂ) (S : Fin n → Bool) : ℂ :=
   ∏ i, (x i) ^ (bif S i then (1 : ℕ) else 0)
@@ -266,6 +272,7 @@ theorem multiaffine_eval₂_eq_boolSum
       · intro i
         simp
 
+/-- Recursively evaluates a pair table on complex vectors by its four head-coordinate sections. -/
 noncomputable def pairTableComplexEval :
     ∀ n : ℕ, PairTable n → (Fin n → ℂ) → (Fin n → ℂ) → ℂ
   | 0, c, _, _ => (c (fun i ↦ Fin.elim0 i) (fun i ↦ Fin.elim0 i) : ℂ)
@@ -354,11 +361,15 @@ theorem coefficientPairTable_complexEval
   push_cast
   ring
 
+/-- Reads the left member of each recursively encoded variable pair into a finite complex
+vector. -/
 def pairVariablesLeft :
     ∀ n : ℕ, (PairVariables n → ℂ) → Fin n → ℂ
   | 0, _, i => Fin.elim0 i
   | n + 1, w, i => Fin.cases (w none) (pairVariablesLeft n ((w ∘ some) ∘ some)) i
 
+/-- Reads the right member of each recursively encoded variable pair into a finite complex
+vector. -/
 def pairVariablesRight :
     ∀ n : ℕ, (PairVariables n → ℂ) → Fin n → ℂ
   | 0, _, i => Fin.elim0 i

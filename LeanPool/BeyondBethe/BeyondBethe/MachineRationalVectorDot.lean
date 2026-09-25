@@ -26,42 +26,53 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Packs the unprocessed left and right vectors, raw dot-product accumulator, and bound. -/
 def machineRationalVectorDotPack
     (left right acc bound : List Bool) : List Bool :=
   pair left (pair right (pair acc bound))
 
+/-- Extracts the unprocessed left vector from a dot-product state. -/
 def machineRationalVectorDotLeft (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the unprocessed right vector from a dot-product state. -/
 def machineRationalVectorDotRight (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the raw dot-product accumulator from the scan state. -/
 def machineRationalVectorDotAcc (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the accumulator length-bound word from a dot-product state. -/
 def machineRationalVectorDotBound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
+/-- Reads the next encoded entry of the left vector in a dot-product scan. -/
 def machineRationalVectorDotLeftEntry (state : List Bool) : List Bool :=
   machineListHead (machineRationalVectorDotLeft state)
 
+/-- Reads the next encoded entry of the right vector in a dot-product scan. -/
 def machineRationalVectorDotRightEntry (state : List Bool) : List Bool :=
   machineListHead (machineRationalVectorDotRight state)
 
+/-- Multiplies the two current vector entries in raw rational arithmetic. -/
 def machineRationalVectorDotProduct (state : List Bool) : List Bool :=
   machineRawRatMulCode
     (pair (machineRationalVectorDotLeftEntry state)
       (machineRationalVectorDotRightEntry state))
 
+/-- Adds the current entry product to the raw dot-product accumulator. -/
 def machineRationalVectorDotCandidate (state : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineRationalVectorDotAcc state)
       (machineRationalVectorDotProduct state))
 
+/-- Truncates the updated dot-product accumulator to the stored bound length. -/
 def machineRationalVectorDotNextAcc (state : List Bool) : List Bool :=
   (machineRationalVectorDotCandidate state).take
     (machineRationalVectorDotBound state).length
 
+/-- Consumes one entry from each vector and stores the bounded updated dot-product accumulator. -/
 def machineRationalVectorDotAdvance (state : List Bool) : List Bool :=
   machineRationalVectorDotPack
     (machineListTail (machineRationalVectorDotLeft state))
@@ -75,18 +86,23 @@ def machineRationalVectorDotStep (state : List Bool) : List Bool :=
     (machineIfEmpty (machineRationalVectorDotRight state) state
       (machineRationalVectorDotAdvance state))
 
+/-- Applies the binary-multiplication width construction to bound the dot-product accumulator. -/
 def machineRationalVectorDotInputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth word
 
+/-- Initializes the dot-product scan with both input vectors, zero raw accumulator, and computed
+bound. -/
 def machineRationalVectorDotInit (word : List Bool) : List Bool :=
   machineRationalVectorDotPack (machinePairFirst word)
     (machinePairSecond word) (rawRatBinaryCode RawRat.zero)
     (machineRationalVectorDotInputBound word)
 
+/-- Packs two input words and two bound words to bound the dot-product state. -/
 def machineRationalVectorDotWidth (word : List Bool) : List Bool :=
   let bound := machineRationalVectorDotInputBound word
   machineRationalVectorDotPack word word bound bound
 
+/-- Runs the dot-product scan once per input bit from its initial state. -/
 def machineRationalVectorDotFinalState (word : List Bool) : List Bool :=
   (machineRationalVectorDotStep)^[word.length]
     (machineRationalVectorDotInit word)
@@ -215,6 +231,8 @@ theorem machineRationalVectorDotWidth_mem_FP :
       (machineRationalVectorDotPack left right acc bound) = bound := by
   simp [machineRationalVectorDotBound, machineRationalVectorDotPack]
 
+/-- Requires exact dot-product state packing, input-bounded remaining vectors, a bounded
+accumulator, and the prescribed bound word. -/
 def MachineRationalVectorDotStateBound
     (word state : List Bool) : Prop :=
   state = machineRationalVectorDotPack
@@ -322,12 +340,15 @@ theorem machineRationalVectorDotEntryCode_mem_FP :
 
 /-! ## Exact semantics -/
 
+/-- Sums both input widths plus two per paired entry, stopping when either list is exhausted. -/
 def rawRatListDotCost : List ℚ → List ℚ → ℕ
   | q :: qs, r :: rs =>
       rawRatWidth (rawRatOfRat q) + rawRatWidth (rawRatOfRat r) + 2 +
         rawRatListDotCost qs rs
   | _, _ => 0
 
+/-- Accumulates raw products of paired rational entries from left to right, stopping when either
+list is exhausted. -/
 def rawRatListDot : RawRat → List ℚ → List ℚ → RawRat
   | acc, q :: qs, r :: rs =>
       rawRatListDot
@@ -380,10 +401,15 @@ theorem rawRatListDotCost_le_codeLength : ∀ xs ys : List ℚ,
           omega
 
 structure RationalVectorDotSemState where
+  /-- The unprocessed left entries of the semantic dot-product scan. -/
   left : List ℚ
+  /-- The unprocessed right entries of the semantic dot-product scan. -/
   right : List ℚ
+  /-- The raw rational accumulator of the semantic dot-product scan. -/
   acc : RawRat
 
+/-- Adds one paired-entry product and drops both entries, fixing the semantic state when either
+list is empty. -/
 def rationalVectorDotSemStep
     (s : RationalVectorDotSemState) : RationalVectorDotSemState :=
   match s.left, s.right with
@@ -391,6 +417,8 @@ def rationalVectorDotSemStep
       ⟨qs, rs, s.acc.add ((rawRatOfRat q).mul (rawRatOfRat r))⟩
   | _, _ => s
 
+/-- Encodes the semantic remaining vectors and raw dot-product accumulator with the supplied
+bound. -/
 def rationalVectorDotSemCode (bound : List Bool)
     (s : RationalVectorDotSemState) : List Bool :=
   machineRationalVectorDotPack
@@ -398,6 +426,8 @@ def rationalVectorDotSemCode (bound : List Bool)
     (binaryListCode rationalEntryBinaryCode s.right)
     (rawRatBinaryCode s.acc) bound
 
+/-- Bounds the raw accumulator width plus the remaining paired-entry cost by the specified
+budget. -/
 def RationalVectorDotSemInvariant (budget : ℕ)
     (s : RationalVectorDotSemState) : Prop :=
   rawRatWidth s.acc + rawRatListDotCost s.left s.right ≤ budget

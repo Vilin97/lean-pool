@@ -28,49 +28,64 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Packs the source request, unprocessed row, raw upper-sum accumulator, and bound. -/
 def machineRowUpperPack
     (source current acc bound : List Bool) : List Bool :=
   pair source (pair current (pair acc bound))
 
+/-- Extracts the fixed request from a row-complement upper-sum state. -/
 def machineRowUpperSource (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the unprocessed row suffix from a row-complement upper-sum state. -/
 def machineRowUpperCurrent (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the raw accumulated upper sum from the row scan state. -/
 def machineRowUpperAcc (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the accumulator length-bound word from the row scan state. -/
 def machineRowUpperBound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the unary selected-row index from a row-complement upper-sum request. -/
 def machineRowUpperRowRuler (word : List Bool) : List Bool :=
   machinePairFirst word
 
+/-- Extracts the optimizer payload from a row-complement upper-sum request. -/
 def machineRowUpperOptimizerWord (word : List Bool) : List Bool :=
   machinePairSecond word
 
+/-- Reads the encoded matrix from the optimizer payload of the row-sum request. -/
 def machineRowUpperMatrixWord (word : List Bool) : List Bool :=
   machineOptimizerMatrixWord (machineRowUpperOptimizerWord word)
 
+/-- Looks up the selected matrix row to initialize the upper-sum scan. -/
 def machineRowUpperInitialRow (word : List Bool) : List Bool :=
   machineListIndex
     (pair (machineRowUpperRowRuler word)
       (machineMatrixRowsWord (machineRowUpperMatrixWord word)))
 
+/-- Reads the next rational entry of the current row suffix. -/
 def machineRowUpperEntry (state : List Bool) : List Bool :=
   machineListHead (machineRowUpperCurrent state)
 
+/-- Packages certificate precision, zero reference parameter, and current entry for complement
+evaluation. -/
 def machineRowUpperComplementInput (state : List Bool) : List Bool :=
   pair
     (machineCertificateLogPrecisionRuler
       (machineRowUpperOptimizerWord (machineRowUpperSource state)))
     (pair (rawRatBinaryCode RawRat.zero) (machineRowUpperEntry state))
 
+/-- Computes the normalized complement of the current row entry. -/
 def machineRowUpperComplementCode (state : List Bool) : List Bool :=
   machineNearbyCoordinateComplementCode
     (machineRowUpperComplementInput state)
 
+/-- Computes the scheduled upper logarithm approximation of the current entry's complement at
+certificate precision. -/
 def machineRowUpperLogRawCode (state : List Bool) : List Bool :=
   machineScheduledLogUpperRawCode
     (pair
@@ -78,13 +93,17 @@ def machineRowUpperLogRawCode (state : List Bool) : List Bool :=
         (machineRowUpperOptimizerWord (machineRowUpperSource state)))
       (machineRowUpperComplementCode state))
 
+/-- Adds the current complement-logarithm upper approximation to the raw accumulator. -/
 def machineRowUpperCandidate (state : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineRowUpperAcc state) (machineRowUpperLogRawCode state))
 
+/-- Truncates the updated upper-sum accumulator to the stored bound length. -/
 def machineRowUpperNextAcc (state : List Bool) : List Bool :=
   (machineRowUpperCandidate state).take (machineRowUpperBound state).length
 
+/-- Fixes an exhausted row scan and otherwise consumes one entry while accumulating its bounded
+upper logarithm term. -/
 def machineRowUpperStep (state : List Bool) : List Bool :=
   machineIfEmpty (machineRowUpperCurrent state) state
     (machineRowUpperPack
@@ -93,18 +112,24 @@ def machineRowUpperStep (state : List Bool) : List Bool :=
       (machineRowUpperNextAcc state)
       (machineRowUpperBound state))
 
+/-- Applies the binary-multiplication width construction three times to bound the row-complement
+upper sum. -/
 def machineRowUpperInputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth
     (machineBinaryMulWidth (machineBinaryMulWidth word))
 
+/-- Initializes the row scan with its fixed request, selected matrix row, zero accumulator, and
+computed bound. -/
 def machineRowUpperInit (word : List Bool) : List Bool :=
   machineRowUpperPack word (machineRowUpperInitialRow word)
     (rawRatBinaryCode RawRat.zero) (machineRowUpperInputBound word)
 
+/-- Packs two input words and two bound words to bound the upper-sum scan state. -/
 def machineRowUpperWidth (word : List Bool) : List Bool :=
   let bound := machineRowUpperInputBound word
   machineRowUpperPack word word bound bound
 
+/-- Runs the row-complement upper-sum scan once per input bit from its initial state. -/
 def machineRowUpperFinalState (word : List Bool) : List Bool :=
   (machineRowUpperStep)^[word.length] (machineRowUpperInit word)
 
@@ -230,6 +255,8 @@ theorem machineRowUpperWidth_mem_FP : machineRowUpperWidth ∈ FP := by
     machineRowUpperBound (machineRowUpperPack source current acc bound) =
       bound := by simp [machineRowUpperBound, machineRowUpperPack]
 
+/-- Requires exact row-scan packing, the original source, input-bounded current row, bounded
+accumulator, and prescribed bound word. -/
 def MachineRowUpperStateBound (word state : List Bool) : Prop :=
   state = machineRowUpperPack (machineRowUpperSource state)
       (machineRowUpperCurrent state) (machineRowUpperAcc state)
@@ -316,9 +343,13 @@ theorem machineRowComplementUpperSumRawCode_mem_FP :
 
 /-! ## Exact semantics -/
 
+/-- Sums the raw widths of scheduled upper complement logarithms, adding one per row entry for
+accumulator growth. -/
 def rawRowComplementUpperCost (p : ℕ) (xs : List ℚ) : ℕ :=
   (xs.map fun q => rawRatWidth (rawScheduledLogUpper (1 - q) p) + 1).sum
 
+/-- Accumulates scheduled upper logarithms of entry complements from left to right at precision
+`p`. -/
 def rawRowComplementUpperSum (p : ℕ) : RawRat → List ℚ → RawRat
   | acc, [] => acc
   | acc, q :: qs =>
@@ -326,20 +357,28 @@ def rawRowComplementUpperSum (p : ℕ) : RawRat → List ℚ → RawRat
         (acc.add (rawScheduledLogUpper (1 - q) p)) qs
 
 structure RowUpperSemState where
+  /-- The unprocessed rational row suffix of the semantic upper-sum scan. -/
   current : List ℚ
+  /-- The raw rational accumulator of the semantic row upper-sum scan. -/
   acc : RawRat
 
+/-- Adds one scheduled upper complement logarithm and consumes its entry, fixing an exhausted
+semantic state. -/
 def rowUpperSemStep (p : ℕ) (s : RowUpperSemState) : RowUpperSemState :=
   match s.current with
   | [] => s
   | q :: qs => ⟨qs, s.acc.add (rawScheduledLogUpper (1 - q) p)⟩
 
+/-- Encodes a semantic remaining row and raw upper-sum accumulator with the supplied source and
+bound. -/
 def rowUpperSemCode (source bound : List Bool)
     (s : RowUpperSemState) : List Bool :=
   machineRowUpperPack source
     (binaryListCode rationalEntryBinaryCode s.current)
     (rawRatBinaryCode s.acc) bound
 
+/-- Bounds the raw upper-sum accumulator width plus all remaining logarithm-term costs by the
+supplied budget. -/
 def RowUpperSemInvariant (p budget : ℕ) (s : RowUpperSemState) : Prop :=
   rawRatWidth s.acc + rawRowComplementUpperCost p s.current ≤ budget
 
@@ -504,6 +543,8 @@ theorem machineRowUpper_done_iterate
       rw [Function.iterate_succ_apply', ih]
       simp [machineRowUpperStep]
 
+/-- Provides the explicit polynomial width budget for an upper complement-logarithm term from an
+input-width bound `L`. -/
 def rawRowComplementUpperInputWidthBudget (L : ℕ) : ℕ :=
   64 * ((L + 400) + 2 * (44 + 12 * L) + 4) ^ 2 *
     ((44 + 12 * L) + 2)

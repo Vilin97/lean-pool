@@ -28,7 +28,10 @@ namespace BeyondBethe
 two-sided approximation guarantee and a concrete Turing-machine
 polynomial-time claim. -/
 structure TheoremOneSpec where
+  /-- The approximation base, certified positive and strictly below `sqrt 2` by `guarantee`. -/
   c : ℝ
+  /-- The dimension-uniform rational matrix algorithm whose output approximates the permanent
+  within the certified factor `c^n`. -/
   alg : ∀ n, Matrix (Fin n) (Fin n) ℚ → ℚ
   guarantee : ApproximationGuarantee alg c
   polynomialTime : RunsInPolynomialTime alg

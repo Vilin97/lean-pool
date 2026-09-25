@@ -26,14 +26,19 @@ central cut for every point satisfying the inequality.
 -/
 
 structure RationalHalfspace (d : ℕ) where
+  /-- The nonzero rational normal vector defining the halfspace. -/
   normal : Fin d → ℚ
+  /-- The rational upper offset in the halfspace inequality. -/
   offset : ℚ
   normal_ne_zero : normal ≠ 0
 
+/-- Requires the real point's dot product with the cast rational normal to be at most the cast
+offset. -/
 def RationalHalfspace.SatisfiedBy {d : ℕ}
     (h : RationalHalfspace d) (x : Fin d → ℝ) : Prop :=
   finiteDot (fun i ↦ (h.normal i : ℝ)) x ≤ (h.offset : ℝ)
 
+/-- Requires the rational point's dot product with the rational normal to be at most the offset. -/
 def RationalHalfspace.satisfiedByRational {d : ℕ}
     (h : RationalHalfspace d) (x : Fin d → ℚ) : Prop :=
   finiteDot h.normal x ≤ h.offset

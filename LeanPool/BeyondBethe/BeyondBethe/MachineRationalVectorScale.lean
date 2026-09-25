@@ -24,15 +24,19 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Multiplies every rational vector coordinate by the scalar `s`. -/
 def rationalVectorScale {d : ℕ}
     (s : ℚ) (v : Fin d → ℚ) : Fin d → ℚ :=
   fun i ↦ s * v i
 
+/-- Computes raw one divided by the requested vector-scaling factor. -/
 def machineRationalVectorScaleReciprocalCode
     (word : List Bool) : List Bool :=
   machineRawRatDivCode
     (pair (rawRatBinaryCode RawRat.one) (machinePairFirst word))
 
+/-- Scales the encoded vector by dividing each entry by the totalized reciprocal of the
+requested factor. -/
 def machineRationalVectorScaleCode
     (word : List Bool) : List Bool :=
   machineRationalRowDivide

@@ -749,8 +749,11 @@ structure UnaryGridSemanticState (m : ℕ) where
   row : Fin m
   column : Fin m
   accumulator : List ℚ
+  /-- Whether the semantic grid scan has included its final entry. -/
   done : Bool
 
+/-- Initializes a nonempty square-grid scan at row and column zero with empty accumulator and
+unset completion flag. -/
 def unaryGridSemanticInit {m : ℕ} (hm : 0 < m) :
     UnaryGridSemanticState m where
   row := ⟨0, hm⟩
@@ -758,6 +761,8 @@ def unaryGridSemanticInit {m : ℕ} (hm : 0 < m) :
   accumulator := []
   done := false
 
+/-- Prepends the current grid value, advances in row-major order, and marks the final position
+complete; completed states are fixed. -/
 def unaryGridSemanticStep {m : ℕ}
     (f : Fin m → Fin m → ℚ) (state : UnaryGridSemanticState m) :
     UnaryGridSemanticState m :=
@@ -777,6 +782,8 @@ def unaryGridSemanticStep {m : ℕ}
           column := ⟨state.column.1 + 1, by omega⟩
           accumulator := nextAccumulator }
 
+/-- Encodes semantic grid indices, reverse-order accumulator, completion flag, bound, and
+canonical fixed payload. -/
 def machineUnaryGridGeneratorSemanticCode {m : ℕ}
     (bound payload : List Bool) (state : UnaryGridSemanticState m) :
     List Bool :=
@@ -950,6 +957,7 @@ theorem machineUnaryGridGeneratorStep_semanticCode {m : ℕ}
   · simp [machineUnaryGridGeneratorStep, unaryGridSemanticStep,
       machineUnaryGridGeneratorSemanticCode]
 
+/-- The row-major grid ordinal `row * m + column`. -/
 def unaryGridOrdinal {m : ℕ} (row column : Fin m) : ℕ :=
   row.1 * m + column.1
 
@@ -1013,10 +1021,12 @@ theorem unaryGridOrdinal_last {m : ℕ}
   simp [unaryGridOrdinal]
   nlinarith
 
+/-- Lists all square-grid values in the order supplied by the finite product equivalence. -/
 def unaryGridValues {m : ℕ} (f : Fin m → Fin m → ℚ) : List ℚ :=
   List.ofFn (fun k : Fin (m * m) =>
     f (finProdFinEquiv.symm k).1 (finProdFinEquiv.symm k).2)
 
+/-- Takes the first `k` values from the complete grid-value list. -/
 def unaryGridPrefix {m : ℕ}
     (f : Fin m → Fin m → ℚ) (k : ℕ) : List ℚ :=
   (unaryGridValues f).take k
@@ -1049,6 +1059,8 @@ theorem unaryGridPrefix_succ_of_ordinal {m k : ℕ}
   simpa only [List.concat_eq_append, hget] using!
     (List.take_concat_get hk).symm
 
+/-- Relates a completed grid accumulator to all values in reverse order, or an unfinished
+position at ordinal `k` to the reversed prefix. -/
 def UnaryGridValueInvariant {m : ℕ}
     (f : Fin m → Fin m → ℚ) (k : ℕ)
     (state : UnaryGridSemanticState m) : Prop :=
@@ -1125,6 +1137,7 @@ theorem unaryGridSemanticStep_valueInvariant {m k : ℕ}
       rw [unaryGridOrdinal_nextColumn state.row state.column hcolumn,
         hordinal]
 
+/-- Runs the semantic grid scan for exactly `k` steps from its nonempty initial state. -/
 def unaryGridSemanticStateAt {m : ℕ} (hm : 0 < m)
     (f : Fin m → Fin m → ℚ) (k : ℕ) : UnaryGridSemanticState m :=
   (unaryGridSemanticStep f)^[k] (unaryGridSemanticInit hm)

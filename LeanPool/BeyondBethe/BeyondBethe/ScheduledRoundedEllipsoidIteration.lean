@@ -25,12 +25,16 @@ budget.  Induction proves that it is sufficient at every reachable regular
 state.  No determinant is evaluated by the scheduled iteration.
 -/
 
+/-- Applies central ellipsoid updates at the fixed rounding precision `p` along a list of cut
+normals. -/
 def scheduledRoundedEllipsoidIterate {d : ℕ} (p : ℕ) :
     RationalEllipsoidState d → List (Fin d → ℚ) → RationalEllipsoidState d
   | E, [] => E
   | E, a :: cuts => scheduledRoundedEllipsoidIterate p
       (scheduledRoundedEllipsoidCentralUpdate p E a) cuts
 
+/-- Requires each cut to have nonzero pullback at its corresponding ellipsoid state under the
+fixed-precision update schedule. -/
 def ScheduledCutSequenceRegular {d : ℕ} (p : ℕ) :
     RationalEllipsoidState d → List (Fin d → ℚ) → Prop
   | _, [] => True

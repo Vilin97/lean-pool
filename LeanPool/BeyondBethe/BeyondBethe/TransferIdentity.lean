@@ -32,6 +32,7 @@ def HasLogKKT
   ∀ i j, Real.log (A i j) = r i + c j +
     (1 + τ) * Real.log (X i j) + Real.log (1 - X i j)
 
+/-- The regularized Bethe coordinate `x * log a - (1 + τ) * x * log x + (1 - x) * log (1 - x)`. -/
 noncomputable def regularizedBetheCoordinate
     (τ a x : ℝ) : ℝ :=
   x * Real.log a + Real.negMulLog x +

@@ -27,14 +27,17 @@ the explicit gradient-error budget prove that the returned normal is a strict
 central cut for the exact epigraph.
 -/
 
+/-- Projects an epigraph point to its first `d` base coordinates. -/
 def epigraphBase {d : ℕ} {R : Type*}
     (x : Fin (d + 1) → R) : Fin d → R :=
   fun i ↦ x i.castSucc
 
+/-- Reads the final height coordinate of an epigraph point. -/
 def epigraphHeight {d : ℕ} {R : Type*}
     (x : Fin (d + 1) → R) : R :=
   x (Fin.last d)
 
+/-- Appends minus one to a base gradient to form the epigraph supporting normal. -/
 def epigraphNormal {d : ℕ} {R : Type*} [Neg R] [OfNat R 1]
     (g : Fin d → R) : Fin (d + 1) → R :=
   Fin.snoc g (-1)
@@ -105,7 +108,9 @@ theorem approximateVectorEpigraphCut_valid {d : ℕ}
 
 /-- Executable lower endpoint and executable approximate gradient. -/
 structure DirectedEpigraphData (d : ℕ) where
+  /-- The executable rational lower-endpoint function evaluated on a base point. -/
   lower : (Fin d → ℚ) → ℚ
+  /-- The executable rational approximate-gradient function evaluated on a base point. -/
   gradient : (Fin d → ℚ) → Fin d → ℚ
 
 /-- The nonlinear oracle accepts unless the rational lower endpoint exceeds

@@ -30,6 +30,8 @@ def rationalTransposeMulVector {d : ℕ}
     (A : Matrix (Fin d) (Fin d) ℚ) (v : Fin d → ℚ) : Fin d → ℚ :=
   fun j ↦ ∑ i, A i j * v i
 
+/-- Computes coordinate `j` of the transpose-matrix product as a raw dot product of column `j`
+with the vector. -/
 def rawRationalTransposeCoordinate {d : ℕ}
     (A : Matrix (Fin d) (Fin d) ℚ) (v : Fin d → ℚ)
     (j : Fin d) : RawRat :=
@@ -46,6 +48,8 @@ theorem rawRationalTransposeCoordinate_value {d : ℕ}
     rationalColumnOfRows_matrix]
   exact rawRatListDot_ofFn_value (fun i => A i j) v
 
+/-- Encodes unary dimension followed by the matrix rows and vector for transpose-matrix
+multiplication. -/
 def rationalTransposeMulVectorCanonicalWord {d : ℕ}
     (A : Matrix (Fin d) (Fin d) ℚ) (v : Fin d → ℚ) : List Bool :=
   pair (List.replicate d true)
@@ -97,6 +101,8 @@ theorem rationalTransposeMulVector_entry_code_length_le {d : ℕ}
     (Nat.mul_le_mul_left 36
       (rawRationalTransposeCoordinate_width_le_word A v j)) 64)
 
+/-- Applies the binary-multiplication width construction three times to bound transpose-matrix
+vector computations. -/
 def machineRationalTransposeMulVectorInputBound
     (word : List Bool) : List Bool :=
   machineBinaryMulWidth
@@ -146,56 +152,71 @@ theorem rationalTransposeMulVector_code_length_le_bound {d : ℕ}
 
 /-! ## Finite-word transducer -/
 
+/-- Extracts the unary dimension from a transpose-matrix vector request. -/
 def machineRationalTransposeMulVectorDimension
     (word : List Bool) : List Bool := machinePairFirst word
 
+/-- Extracts the matrix-and-vector payload from a transpose-matrix vector request. -/
 def machineRationalTransposeMulVectorPayload
     (word : List Bool) : List Bool := machinePairSecond word
 
+/-- Builds the complete encoded coordinate-index range from the request's unary dimension. -/
 def machineRationalTransposeMulVectorIndices
     (word : List Bool) : List Bool :=
   machineUnaryRangeCode
     (machineRationalTransposeMulVectorDimension word)
 
+/-- Packs remaining indices, reversed output accumulator, fixed payload, and bound for a
+coordinate scan. -/
 def machineRationalTransposeMulVectorPack
     (remaining accumulator payload bound : List Bool) : List Bool :=
   pair remaining (pair accumulator (pair payload bound))
 
+/-- Extracts the remaining coordinate indices from the scan state. -/
 def machineRationalTransposeMulVectorRemaining
     (state : List Bool) : List Bool := machinePairFirst state
 
+/-- Extracts the reverse-order coordinate accumulator from the scan state. -/
 def machineRationalTransposeMulVectorAccumulator
     (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the fixed matrix-and-vector payload from the scan state. -/
 def machineRationalTransposeMulVectorStatePayload
     (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond (machinePairSecond state))
 
+/-- Extracts the accumulator length-bound word from the scan state. -/
 def machineRationalTransposeMulVectorBound
     (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond (machinePairSecond state))
 
+/-- Reads the first remaining coordinate index of the scan. -/
 def machineRationalTransposeMulVectorCurrentIndex
     (state : List Bool) : List Bool :=
   machineListHead (machineRationalTransposeMulVectorRemaining state)
 
+/-- Computes the transpose-matrix vector product entry at the current coordinate index. -/
 def machineRationalTransposeMulVectorCurrentEntry
     (state : List Bool) : List Bool :=
   machineRationalMatrixTransposeMulVectorEntryCode
     (pair (machineRationalTransposeMulVectorCurrentIndex state)
       (machineRationalTransposeMulVectorStatePayload state))
 
+/-- Prepends the current transpose-product entry to the reverse-order accumulator. -/
 def machineRationalTransposeMulVectorCandidate
     (state : List Bool) : List Bool :=
   pair (machineRationalTransposeMulVectorCurrentEntry state)
     (machineRationalTransposeMulVectorAccumulator state)
 
+/-- Truncates the candidate coordinate accumulator to the stored bound length. -/
 def machineRationalTransposeMulVectorNextAccumulator
     (state : List Bool) : List Bool :=
   (machineRationalTransposeMulVectorCandidate state).take
     (machineRationalTransposeMulVectorBound state).length
 
+/-- Drops the processed coordinate index and stores the bounded updated accumulator while
+preserving payload and bound. -/
 def machineRationalTransposeMulVectorAdvance
     (state : List Bool) : List Bool :=
   machineRationalTransposeMulVectorPack
@@ -204,26 +225,32 @@ def machineRationalTransposeMulVectorAdvance
     (machineRationalTransposeMulVectorStatePayload state)
     (machineRationalTransposeMulVectorBound state)
 
+/-- Fixes an exhausted coordinate scan and otherwise computes its next transpose-product entry. -/
 def machineRationalTransposeMulVectorStep
     (state : List Bool) : List Bool :=
   machineIfEmpty (machineRationalTransposeMulVectorRemaining state) state
     (machineRationalTransposeMulVectorAdvance state)
 
+/-- Initializes the transpose-product scan with all indices, empty accumulator, fixed payload,
+and computed bound. -/
 def machineRationalTransposeMulVectorInit (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorPack
     (machineRationalTransposeMulVectorIndices word) []
     (machineRationalTransposeMulVectorPayload word)
     (machineRationalTransposeMulVectorInputBound word)
 
+/-- Packs four copies of the computed bound to bound the complete coordinate-scan state. -/
 def machineRationalTransposeMulVectorWidth (word : List Bool) : List Bool :=
   let bound := machineRationalTransposeMulVectorInputBound word
   machineRationalTransposeMulVectorPack bound bound bound bound
 
+/-- Runs the transpose-product scan once per input bit from its initial state. -/
 def machineRationalTransposeMulVectorFinalState
     (word : List Bool) : List Bool :=
   (machineRationalTransposeMulVectorStep)^[word.length]
     (machineRationalTransposeMulVectorInit word)
 
+/-- Extracts the transpose-product coordinates in reverse order from the final scan state. -/
 def machineRationalTransposeMulVectorReversedCode
     (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorAccumulator
@@ -348,6 +375,8 @@ theorem machineRationalTransposeMulVectorWidth_mem_FP :
   simp [machineRationalTransposeMulVectorBound,
     machineRationalTransposeMulVectorPack]
 
+/-- Requires exact coordinate-state packing, all data fields bounded by the computed input
+bound, and the prescribed bound word. -/
 def MachineRationalTransposeMulVectorStateBound
     (word state : List Bool) : Prop :=
   let bound := machineRationalTransposeMulVectorInputBound word
@@ -473,12 +502,15 @@ theorem machineRationalTransposeMulVectorCode_mem_FP :
 
 /-! ## Exact iteration semantics -/
 
+/-- Lists the first `k` coordinates of the rational transpose-matrix vector product. -/
 def rationalTransposePrefix {d : ℕ}
     (A : Matrix (Fin d) (Fin d) ℚ) (v : Fin d → ℚ)
     (k : ℕ) : List ℚ :=
   ((List.finRange d).take k).map
     fun j ↦ rationalTransposeMulVector A v j
 
+/-- Encodes the remaining coordinate indices and reversed transpose-product prefix after `k`
+coordinates, retaining payload and bound. -/
 def machineRationalTransposeMulVectorSemanticState {d : ℕ}
     (A : Matrix (Fin d) (Fin d) ℚ) (v : Fin d → ℚ)
     (k : ℕ) : List Bool :=

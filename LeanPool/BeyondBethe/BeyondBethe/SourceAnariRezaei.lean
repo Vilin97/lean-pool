@@ -521,6 +521,8 @@ private theorem anariRezaeiEdgeCertificate_eq (v : ℝ) :
     Fin.sum_univ_succ]
   ring
 
+/-- The explicit quartic edge polynomial with constants `11/25` and `14/25` used in the
+Anari-Rezaei edge estimate. -/
 noncomputable def anariRezaeiEdgePolynomial (q : ℝ) : ℝ :=
   2*(11/25)*(14/25)*q*(q+11/25)^2 + q^2*(1-q)^2 -
     (14/25)^2*(q+11/25)^4
@@ -596,6 +598,7 @@ theorem hasDerivAt_anariRezaeiPhiThree_edge
       (anariRezaeiPhiThree_comm (11/25) x).symm
   exact hd.congr_of_eventuallyEq heq
 
+/-- The edge second-derivative expression `1/q - 2/(q + 11/25) - (1 - q - 11/25)/(1 - q)^2`. -/
 noncomputable def anariRezaeiEdgeSecondDerivative (q : ℝ) : ℝ :=
   1/q - 2/(q+11/25) - (1-q-11/25)/(1-q)^2
 
@@ -811,6 +814,7 @@ theorem anariRezaeiPhiThree_le_log_two
     exact (anariRezaeiPhiThree_le_boundary hs0 hsq hq).trans
       (anariRezaeiPhiThree_edge_le hs0 hs)
 
+/-- The three-coordinate vector with entries `q`, `1 - q - s`, and `s`. -/
 def anariRezaeiThreeVector (q s : ℝ) : Fin 3 → ℝ :=
   ![q, 1-q-s, s]
 

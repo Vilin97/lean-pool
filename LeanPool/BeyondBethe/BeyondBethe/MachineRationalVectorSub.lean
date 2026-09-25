@@ -24,10 +24,13 @@ namespace BeyondBethe
 
 open Complexity
 
+/-- Subtracts rational vectors coordinatewise. -/
 def rationalVectorSub {d : ℕ}
     (x y : Fin d → ℚ) : Fin d → ℚ :=
   fun i ↦ x i - y i
 
+/-- Looks up both requested vector entries, subtracts them in raw arithmetic, and normalizes the
+resulting entry code. -/
 def machineRationalVectorSubEntryCode
     (word : List Bool) : List Bool :=
   let index := machinePairFirst word
@@ -77,6 +80,7 @@ theorem machineRationalVectorSubEntryCode_mem_FP :
   · simp
   · simp
 
+/-- Computes one rational vector-difference coordinate in raw arithmetic. -/
 def rawRationalVectorSubCoordinate {d : ℕ}
     (x y : Fin d → ℚ) (i : Fin d) : RawRat :=
   (rawRatOfRat (x i)).sub (rawRatOfRat (y i))
@@ -89,6 +93,7 @@ theorem rawRationalVectorSubCoordinate_value {d : ℕ}
     RawRat.sub, RawRat.value_add, RawRat.value_neg, rawRatOfRat_value,
     sub_eq_add_neg]
 
+/-- Encodes unary dimension followed by both rational vectors for subtraction. -/
 def rationalVectorSubCanonicalWord {d : ℕ}
     (x y : Fin d → ℚ) : List Bool :=
   pair (List.replicate d true)
@@ -156,6 +161,7 @@ theorem rationalVectorSub_entry_code_length_le {d : ℕ}
   have hwidth := rawRationalVectorSubCoordinate_width_le x y i
   omega
 
+/-- Reuses the transpose-matrix vector input bound for the vector-subtraction scan. -/
 def machineRationalVectorSubInputBound
     (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorInputBound word
@@ -200,22 +206,26 @@ theorem rationalVectorSub_code_length_le_bound {d : ℕ}
 
 /-! ## Bounded scan -/
 
+/-- Computes the normalized difference entry at the current scan index. -/
 def machineRationalVectorSubCurrentEntry
     (state : List Bool) : List Bool :=
   machineRationalVectorSubEntryCode
     (pair (machineRationalTransposeMulVectorCurrentIndex state)
       (machineRationalTransposeMulVectorStatePayload state))
 
+/-- Prepends the current difference entry to the reverse-order accumulator. -/
 def machineRationalVectorSubCandidate
     (state : List Bool) : List Bool :=
   pair (machineRationalVectorSubCurrentEntry state)
     (machineRationalTransposeMulVectorAccumulator state)
 
+/-- Truncates the candidate difference accumulator to the stored bound length. -/
 def machineRationalVectorSubNextAccumulator
     (state : List Bool) : List Bool :=
   (machineRationalVectorSubCandidate state).take
     (machineRationalTransposeMulVectorBound state).length
 
+/-- Consumes the current coordinate index and stores the bounded updated difference accumulator. -/
 def machineRationalVectorSubAdvance
     (state : List Bool) : List Bool :=
   machineRationalTransposeMulVectorPack
@@ -224,31 +234,38 @@ def machineRationalVectorSubAdvance
     (machineRationalTransposeMulVectorStatePayload state)
     (machineRationalTransposeMulVectorBound state)
 
+/-- Fixes an exhausted vector-subtraction scan and otherwise computes its next entry. -/
 def machineRationalVectorSubStep
     (state : List Bool) : List Bool :=
   machineIfEmpty (machineRationalTransposeMulVectorRemaining state) state
     (machineRationalVectorSubAdvance state)
 
+/-- Initializes subtraction with all coordinate indices, empty accumulator, both-vector payload,
+and computed bound. -/
 def machineRationalVectorSubInit (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorPack
     (machineRationalTransposeMulVectorIndices word) []
     (machineRationalTransposeMulVectorPayload word)
     (machineRationalVectorSubInputBound word)
 
+/-- Packs four copies of the computed bound to bound the vector-subtraction state. -/
 def machineRationalVectorSubWidth (word : List Bool) : List Bool :=
   let bound := machineRationalVectorSubInputBound word
   machineRationalTransposeMulVectorPack bound bound bound bound
 
+/-- Runs the vector-subtraction scan once per input bit from its initial state. -/
 def machineRationalVectorSubFinalState
     (word : List Bool) : List Bool :=
   (machineRationalVectorSubStep)^[word.length]
     (machineRationalVectorSubInit word)
 
+/-- Extracts the difference entries in reverse order from the final scan state. -/
 def machineRationalVectorSubReversedCode
     (word : List Bool) : List Bool :=
   machineRationalTransposeMulVectorAccumulator
     (machineRationalVectorSubFinalState word)
 
+/-- Reverses the accumulated entries to return the difference vector in coordinate order. -/
 def machineRationalVectorSubCode
     (word : List Bool) : List Bool :=
   machineListReverse (machineRationalVectorSubReversedCode word)
@@ -377,10 +394,13 @@ theorem machineRationalVectorSubCode_mem_FP :
 
 /-! ## Exact scan semantics -/
 
+/-- Lists the first `k` coordinates of the rational vector difference. -/
 def rationalVectorSubPrefix {d : ℕ}
     (x y : Fin d → ℚ) (k : ℕ) : List ℚ :=
   ((List.finRange d).take k).map fun i ↦ rationalVectorSub x y i
 
+/-- Encodes remaining coordinate indices and the reversed difference prefix after `k`
+coordinates, retaining both vectors and the bound. -/
 def machineRationalVectorSubSemanticState {d : ℕ}
     (x y : Fin d → ℚ) (k : ℕ) : List Bool :=
   let word := rationalVectorSubCanonicalWord x y

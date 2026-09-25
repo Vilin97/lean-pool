@@ -24,6 +24,8 @@ extensionally equal to it below; the wrapper can therefore remain independent
 of propositional decidability throughout that refinement.
 -/
 
+/-- Decides whether the matrix support contains a permutation selecting a nonzero entry in every
+column. -/
 def supportMatchingDecision {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℚ) : Bool :=
   decide (∃ σ : Equiv.Perm (Fin n), ∀ i, A (σ i) i ≠ 0)

@@ -25,6 +25,8 @@ proof keeps the two classes of variables separated by a sum type and performs
 an explicit induction on the recursively finite type `PairVariables`.
 -/
 
+/-- Evaluates the left summand variables at real constants while retaining the right summand as
+polynomial variables. -/
 noncomputable def partialSpecialization
     {κ τ : Type*} (p : MvPolynomial (κ ⊕ τ) ℂ) (x : κ → ℝ) :
     MvPolynomial τ ℂ :=
@@ -69,11 +71,15 @@ def optionSumEquiv (κ τ : Type*) : (Option κ ⊕ τ) ≃ Option (κ ⊕ τ) w
     | none => rfl
     | some x => cases x <;> rfl
 
+/-- Renames the distinguished variable in the left summand into an optional variable over the
+combined remaining indices. -/
 noncomputable def sumOptionReindex
     {κ τ : Type*} (p : MvPolynomial (Option κ ⊕ τ) ℂ) :
     MvPolynomial (Option (κ ⊕ τ)) ℂ :=
   MvPolynomial.rename (optionSumEquiv κ τ) p
 
+/-- Forms the distinguished constant coefficient plus `c` times its linear coefficient after
+sum-option reindexing. -/
 noncomputable def sumOptionSpecialization
     {κ τ : Type*} (p : MvPolynomial (Option κ ⊕ τ) ℂ) (c : ℝ) :
     MvPolynomial (κ ⊕ τ) ℂ :=

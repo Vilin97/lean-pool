@@ -18,6 +18,8 @@ namespace BeyondBethe
 
 open MvPolynomial
 
+/-- The multivariate linear polynomial whose variable coefficients are `u`; coefficient
+positivity is a separate hypothesis. -/
 noncomputable def positiveLinearPolynomial
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (u : ι → ℝ) : MvPolynomial ι ℝ :=
@@ -52,14 +54,17 @@ theorem positiveLinearPolynomial_isRealStable
   simp at hzero
   linarith
 
+/-- The finite real dot product of coordinate functions `a` and `x`. -/
 noncomputable def realDot
     {ι : Type*} [Fintype ι] (a x : ι → ℝ) : ℝ :=
   ∑ i, a i * x i
 
+/-- The product of two linear forms with their diagonal quadratic contribution removed. -/
 noncomputable def pairQuadraticForm
     {ι : Type*} [Fintype ι] (u v x : ι → ℝ) : ℝ :=
   realDot u x * realDot v x - ∑ i, u i * v i * x i ^ 2
 
+/-- The symmetric bilinear polarization of the pair quadratic form. -/
 noncomputable def pairBilinearForm
     {ι : Type*} [Fintype ι] (u v x y : ι → ℝ) : ℝ :=
   realDot u x * realDot v y + realDot u y * realDot v x -

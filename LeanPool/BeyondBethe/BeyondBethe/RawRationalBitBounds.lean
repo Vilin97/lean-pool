@@ -86,6 +86,7 @@ def inv (q : RawRat) : RawRat :=
       <;> norm_num
       <;> ring
 
+/-- Divides raw fractions by multiplying by the totalized reciprocal of the divisor. -/
 def div (q r : RawRat) : RawRat := q.mul r.inv
 
 @[simp] theorem value_div (q r : RawRat) :
@@ -313,36 +314,43 @@ def binaryRatAdd (q r : ℚ) : ℚ :=
 theorem binaryRatAdd_eq_add (q r : ℚ) : binaryRatAdd q r = q + r := by
   simp [binaryRatAdd, binaryNormalizeRawRat_eq_value]
 
+/-- Subtracts rational inputs through raw arithmetic and binary normalization. -/
 def binaryRatSub (q r : ℚ) : ℚ :=
   binaryNormalizeRawRat ((rawRatOfRat q).sub (rawRatOfRat r))
 
 theorem binaryRatSub_eq_sub (q r : ℚ) : binaryRatSub q r = q - r := by
   simp [binaryRatSub, binaryNormalizeRawRat_eq_value]
 
+/-- Negates a rational input through raw arithmetic and binary normalization. -/
 def binaryRatNeg (q : ℚ) : ℚ :=
   binaryNormalizeRawRat (rawRatOfRat q).neg
 
 theorem binaryRatNeg_eq_neg (q : ℚ) : binaryRatNeg q = -q := by
   simp [binaryRatNeg, binaryNormalizeRawRat_eq_value]
 
+/-- Multiplies rational inputs through raw arithmetic and binary normalization. -/
 def binaryRatMul (q r : ℚ) : ℚ :=
   binaryNormalizeRawRat ((rawRatOfRat q).mul (rawRatOfRat r))
 
 theorem binaryRatMul_eq_mul (q r : ℚ) : binaryRatMul q r = q * r := by
   simp [binaryRatMul, binaryNormalizeRawRat_eq_value]
 
+/-- Computes a rational input's totalized reciprocal through raw arithmetic and binary
+normalization. -/
 def binaryRatInv (q : ℚ) : ℚ :=
   binaryNormalizeRawRat (rawRatOfRat q).inv
 
 theorem binaryRatInv_eq_inv (q : ℚ) : binaryRatInv q = q⁻¹ := by
   simp [binaryRatInv, binaryNormalizeRawRat_eq_value]
 
+/-- Divides rational inputs through raw arithmetic and binary normalization. -/
 def binaryRatDiv (q r : ℚ) : ℚ :=
   binaryNormalizeRawRat ((rawRatOfRat q).div (rawRatOfRat r))
 
 theorem binaryRatDiv_eq_div (q r : ℚ) : binaryRatDiv q r = q / r := by
   simp [binaryRatDiv, binaryNormalizeRawRat_eq_value]
 
+/-- Raises a rational input to a natural power in raw arithmetic and then normalizes it. -/
 def binaryRatPow (q : ℚ) (k : ℕ) : ℚ :=
   binaryNormalizeRawRat ((rawRatOfRat q).pow k)
 

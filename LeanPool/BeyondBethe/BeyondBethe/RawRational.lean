@@ -29,28 +29,37 @@ and Euclid recurrences.
 /-- A signed fraction with a strictly positive, not necessarily reduced,
 denominator. -/
 structure RawRat where
+  /-- The signed integer numerator of an unreduced rational representation. -/
   num : ℤ
+  /-- The positive natural-number denominator of an unreduced rational representation. -/
   den : ℕ
   den_pos : 0 < den
 deriving DecidableEq
 
 namespace RawRat
 
+/-- The raw rational zero represented by numerator zero and denominator one. -/
 def zero : RawRat := ⟨0, 1, by omega⟩
 
+/-- The raw rational one represented by numerator and denominator both one. -/
 def one : RawRat := ⟨1, 1, by omega⟩
 
 /-- Mathematical value of an unreduced fraction. -/
 def value (q : RawRat) : ℚ := (q.num : ℚ) / (q.den : ℚ)
 
+/-- Negates the numerator while preserving the positive denominator. -/
 def neg (q : RawRat) : RawRat := ⟨-q.num, q.den, q.den_pos⟩
 
+/-- Adds raw fractions by cross-multiplying numerators and multiplying denominators, without
+reduction. -/
 def add (q r : RawRat) : RawRat :=
   ⟨q.num * r.den + r.num * q.den, q.den * r.den,
     Nat.mul_pos q.den_pos r.den_pos⟩
 
+/-- Subtracts raw fractions by adding the negation of the second. -/
 def sub (q r : RawRat) : RawRat := add q (neg r)
 
+/-- Multiplies raw numerators and denominators without reducing the result. -/
 def mul (q r : RawRat) : RawRat :=
   ⟨q.num * r.num, q.den * r.den, Nat.mul_pos q.den_pos r.den_pos⟩
 

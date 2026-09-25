@@ -85,55 +85,69 @@ theorem machineRawRatMagnitudeCode_mem_FP :
   rw [machineCanonicalIntegerFromSignedAbs_pair]
   simp [signedMagnitudeValue, rawRatBinaryCode]
 
+/-- Packs the remaining vector, raw L1 accumulator, and bound word. -/
 def machineRationalVectorL1Pack
     (current acc bound : List Bool) : List Bool :=
   pair current (pair acc bound)
 
+/-- Extracts the unprocessed vector from an L1 scan state. -/
 def machineRationalVectorL1Current (state : List Bool) : List Bool :=
   machinePairFirst state
 
+/-- Extracts the raw accumulated L1 sum from the scan state. -/
 def machineRationalVectorL1Acc (state : List Bool) : List Bool :=
   machinePairFirst (machinePairSecond state)
 
+/-- Extracts the accumulator length-bound word from an L1 scan state. -/
 def machineRationalVectorL1Bound (state : List Bool) : List Bool :=
   machinePairSecond (machinePairSecond state)
 
+/-- Reads the next rational entry of the L1 scan. -/
 def machineRationalVectorL1Entry (state : List Bool) : List Bool :=
   machineListHead (machineRationalVectorL1Current state)
 
+/-- Computes the raw magnitude of the next rational vector entry. -/
 def machineRationalVectorL1Magnitude (state : List Bool) : List Bool :=
   machineRawRatMagnitudeCode (machineRationalVectorL1Entry state)
 
+/-- Adds the next entry's magnitude to the raw L1 accumulator. -/
 def machineRationalVectorL1Candidate (state : List Bool) : List Bool :=
   machineRawRatAddCode
     (pair (machineRationalVectorL1Acc state)
       (machineRationalVectorL1Magnitude state))
 
+/-- Truncates the updated L1 accumulator to the stored bound length. -/
 def machineRationalVectorL1NextAcc (state : List Bool) : List Bool :=
   (machineRationalVectorL1Candidate state).take
     (machineRationalVectorL1Bound state).length
 
+/-- Consumes the next vector entry and stores the bounded updated L1 accumulator. -/
 def machineRationalVectorL1Advance (state : List Bool) : List Bool :=
   machineRationalVectorL1Pack
     (machineListTail (machineRationalVectorL1Current state))
     (machineRationalVectorL1NextAcc state)
     (machineRationalVectorL1Bound state)
 
+/-- Fixes an exhausted L1 scan and otherwise processes its next entry. -/
 def machineRationalVectorL1Step (state : List Bool) : List Bool :=
   machineIfEmpty (machineRationalVectorL1Current state) state
     (machineRationalVectorL1Advance state)
 
+/-- Applies the binary-multiplication width construction to bound the L1 accumulator. -/
 def machineRationalVectorL1InputBound (word : List Bool) : List Bool :=
   machineBinaryMulWidth word
 
+/-- Initializes the L1 scan with the input vector, zero raw accumulator, and computed bound. -/
 def machineRationalVectorL1Init (word : List Bool) : List Bool :=
   machineRationalVectorL1Pack word (rawRatBinaryCode RawRat.zero)
     (machineRationalVectorL1InputBound word)
 
+/-- Packs the input vector and two bound words to bound the complete L1 scan state. -/
 def machineRationalVectorL1Width (word : List Bool) : List Bool :=
   let bound := machineRationalVectorL1InputBound word
   machineRationalVectorL1Pack word bound bound
 
+/-- Runs the L1 scan once per input bit from its initial state. -/
 def machineRationalVectorL1FinalState (word : List Bool) : List Bool :=
   (machineRationalVectorL1Step)^[word.length]
     (machineRationalVectorL1Init word)
@@ -229,6 +243,8 @@ theorem machineRationalVectorL1Width_mem_FP :
       (machineRationalVectorL1Pack current acc bound) = bound := by
   simp [machineRationalVectorL1Bound, machineRationalVectorL1Pack]
 
+/-- Requires exact L1 state packing, input-bounded remaining vector, a bounded accumulator, and
+the prescribed bound word. -/
 def MachineRationalVectorL1StateBound
     (word state : List Bool) : Prop :=
   state = machineRationalVectorL1Pack
@@ -321,6 +337,7 @@ theorem machineRationalVectorL1EntryCode_mem_FP :
 
 /-! ## Exact semantics -/
 
+/-- Adds rational entry magnitudes into a raw accumulator from left to right. -/
 def rawRatListL1Sum : RawRat → List ℚ → RawRat
   | acc, [] => acc
   | acc, q :: qs =>
@@ -341,21 +358,26 @@ theorem rawRatWidth_listL1Sum_le (acc : RawRat) : ∀ xs : List ℚ,
       omega
 
 structure RationalVectorL1SemState where
+  /-- The unprocessed entries of the semantic L1 scan. -/
   current : List ℚ
+  /-- The raw rational accumulator of the semantic L1 scan. -/
   acc : RawRat
 
+/-- Adds the next entry's magnitude and consumes it, fixing an exhausted semantic L1 state. -/
 def rationalVectorL1SemStep
     (s : RationalVectorL1SemState) : RationalVectorL1SemState :=
   match s.current with
   | q :: qs => ⟨qs, s.acc.add (rawRatOfRat q).magnitude⟩
   | [] => s
 
+/-- Encodes the semantic remaining vector and raw L1 accumulator with the supplied bound. -/
 def rationalVectorL1SemCode (bound : List Bool)
     (s : RationalVectorL1SemState) : List Bool :=
   machineRationalVectorL1Pack
     (binaryListCode rationalEntryBinaryCode s.current)
     (rawRatBinaryCode s.acc) bound
 
+/-- Bounds the raw L1 accumulator width plus the remaining list cost by the specified budget. -/
 def RationalVectorL1SemInvariant (budget : ℕ)
     (s : RationalVectorL1SemState) : Prop :=
   rawRatWidth s.acc + rawRatListCost s.current ≤ budget
