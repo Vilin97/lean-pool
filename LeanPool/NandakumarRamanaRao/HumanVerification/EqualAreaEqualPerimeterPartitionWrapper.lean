@@ -21,8 +21,8 @@ namespace HumanVerification
 
 /--
 Internal generic wrapper.  Its conclusion is definitionally equal to the
-human-facing statement once `Main.lean` supplies the model instance locally inside the proof of its
-public theorem.
+human-facing statement once `Main.lean` supplies the public
+`ConvexFigure.instConvexFigureModel` instance.
 -/
 theorem equalAreaEqualPerimeterPartitionWrapper
     {α : Type} [NRR.HumanExport.ConvexFigureModel α]
