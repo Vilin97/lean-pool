@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joris Roos
 -/
 module
-
 /-
 Copyright (c) 2026 Joris Roos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
@@ -26,6 +25,5 @@ Joris Roos, and Po-Lam Yung, *A new type of superorthogonality*, *Proceedings
 of the American Mathematical Society* 152 (2024), no. 2, 665--675.
 doi:10.1090/proc/16631.
 -/
-
 
 /- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/

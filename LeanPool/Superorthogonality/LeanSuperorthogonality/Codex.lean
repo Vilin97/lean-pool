@@ -5,9 +5,7 @@ Authors: Joris Roos
 -/
 module
 
-
 public import LeanPool.Superorthogonality.LeanSuperorthogonality.Codex.MainTheorem
 public import LeanPool.Superorthogonality.LeanSuperorthogonality.Codex.PointwiseEstimate
 
 /-! Supporting modules for Square-function estimates from type IV superorthogonality. -/
-

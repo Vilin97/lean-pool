@@ -5,14 +5,13 @@ Authors: Joris Roos
 -/
 module
 
-
-public import LeanPool.Superorthogonality.LeanSuperorthogonality
-public import LeanPool.Superorthogonality.LeanSuperorthogonality.Codex
 public import LeanPool.Superorthogonality.LeanSuperorthogonality.Codex.MainTheorem
 public import LeanPool.Superorthogonality.LeanSuperorthogonality.Codex.PointwiseEstimate
+public import LeanPool.Superorthogonality.LeanSuperorthogonality.Codex
 public import LeanPool.Superorthogonality.LeanSuperorthogonality.Defs
 public import LeanPool.Superorthogonality.LeanSuperorthogonality.MainTheorem
 public import LeanPool.Superorthogonality.LeanSuperorthogonality.PointwiseEstimate
+public import LeanPool.Superorthogonality.LeanSuperorthogonality
 public import LeanPool.Superorthogonality.Solution
 
 /-!
