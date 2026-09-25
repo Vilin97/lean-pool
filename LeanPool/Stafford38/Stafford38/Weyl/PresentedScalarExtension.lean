@@ -90,7 +90,7 @@ def presentedWeylScalarExtension (n : Nat) :
     PresentedWeyl k n →ₐ[k] PresentedWeyl K n :=
   freeWeylLift (Matrix.J (Fin n) k)
     (fun i => freeWeylGenerator (Matrix.J (Fin n) K) i)
-    (presentedWeylScalarExtension_commutator n)
+    (by exact presentedWeylScalarExtension_commutator n)
 
 @[simp]
 theorem presentedWeylScalarExtension_generator (n : Nat)
