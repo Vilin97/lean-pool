@@ -33,6 +33,70 @@ open scoped Polynomial TensorProduct
 
 namespace BGS.HasseWeil
 
+noncomputable section CountOneBridge
+open BGS.CorvajaZannier
+variable (C S N : Type*) [Field C] [Field S] [Field N]
+  [Fintype C] [Finite S]
+  [Algebra (RatFunc C) N] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N]
+  [Algebra C S] [FiniteDimensional C S] [IsGalois C S]
+local instance : Algebra C N := bridgeBaseConstantAlgebra C N
+local instance : IsScalarTower C (RatFunc C) N := IsScalarTower.of_algebraMap_eq' rfl
+
+private theorem exactConstantExtensionClosedPlaceExtensionCount_one_eq_baseCount
+    (hExact : algebraicClosure C N = (⊥ : IntermediateField C N)) :
+    let : Fintype S := Fintype.ofFinite S
+    let : DecidableEq C := Classical.decEq C
+    let : DecidableEq (RatFunc C) := Classical.decEq (RatFunc C)
+    exactConstantExtensionClosedPlaceExtensionCount C S N hExact 1 =
+      finiteExtensionClosedPlaceExtensionCount C N (Module.finrank C S) := by
+  intro finiteS decideC decideRatFuncC
+  classical
+  rw [exactConstantExtensionClosedPlaceExtensionCount_eq_classical_decidableEq]
+  have h := exactConstantExtensionClosedPlaceExtensionCount_eq C S N hExact 1
+  simpa using h
+
+private theorem rationalExactConstantCount_eq_of_algEquiv
+    (E : Type*) [Field E] [Algebra (RatFunc C) E]
+    [FiniteDimensional (RatFunc C) E] [Algebra.IsSeparable (RatFunc C) E]
+    (hExact : algebraicClosure C N = (⊥ : IntermediateField C N))
+    (e : E ≃ₐ[RatFunc C] N) :
+    let : Fintype S := Fintype.ofFinite S
+    let : DecidableEq C := Classical.decEq C
+    let : DecidableEq (RatFunc C) := Classical.decEq (RatFunc C)
+    let : DecidableEq S := Classical.decEq S
+    let : DecidableEq (RatFunc S) := Classical.decEq (RatFunc S)
+    let EM := ExactConstantExtension C N S
+    let : Field EM := exactConstantExtensionField C N S hExact
+    let : Algebra (RatFunc S) EM := ratFuncExactConstantExtensionAlgebra C S N hExact
+    let : SMul (RatFunc S) EM := Algebra.toSMul
+    let : Module (RatFunc S) EM := Algebra.toModule
+    let : FiniteDimensional (RatFunc S) EM :=
+      finiteDimensional_over_extendedRatFunc C S N hExact
+    let : Algebra.IsSeparable (RatFunc S) EM :=
+      isSeparable_over_extendedRatFunc C S N hExact
+    finiteExtensionRationalPlaceCount S EM =
+      finiteExtensionClosedPlaceExtensionCount C E (Module.finrank C S) := by
+  intro finiteS decideC decideRatFuncC decideS decideRatFuncS EM
+    fieldEM algebraEM smulEM moduleEM finiteEM separableEM
+  classical
+  have hFirst := exactConstantExtensionClosedPlaceExtensionCount_one_eq_rationalPlaceCount
+    C S N hExact
+  have hMiddle := exactConstantExtensionClosedPlaceExtensionCount_one_eq_baseCount C S N hExact
+  have hLast := finiteExtensionClosedPlaceExtensionCount_eq_of_algEquiv C E N e
+    (Module.finrank C S)
+  exact hFirst.symm.trans (hMiddle.trans hLast.symm)
+
+end CountOneBridge
+
+private theorem finite_of_injective_field_tower
+    (B M N : Type*) [Field B] [Field M] [Field N]
+    [Algebra B M] [Algebra B N] [Algebra M N] [IsScalarTower B M N]
+    [Module.Finite B N] : Module.Finite B M :=
+  Module.Finite.of_injective (IsScalarTower.toAlgHom B M N).toLinearMap
+    (IsScalarTower.toAlgHom B M N).injective
+
+
 noncomputable section
 
 
@@ -170,6 +234,16 @@ variable (hExact : algebraicClosure K F =
   (functionFieldNormalClosureConstantBaseToOriginalCompositum
     K F hExact).toAlgebra
 
+local instance constantBaseOriginalCompositumSmul :
+    SMul (FunctionFieldNormalClosureConstantBase K F)
+      (FunctionFieldNormalClosureOriginalCompositum K F hExact) :=
+  (functionFieldNormalClosureConstantBaseOriginalCompositumAlgebra K F hExact).toSMul
+
+local instance constantBaseOriginalCompositumModule :
+    Module (FunctionFieldNormalClosureConstantBase K F)
+      (FunctionFieldNormalClosureOriginalCompositum K F hExact) :=
+  (functionFieldNormalClosureConstantBaseOriginalCompositumAlgebra K F hExact).toModule
+
 /-- The embeddings of the constant base into `CF` and then into the normal
 closure agree with its direct inclusion. -/
 noncomputable instance
@@ -214,10 +288,7 @@ noncomputable instance
   let B := FunctionFieldNormalClosureConstantBase K F
   let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
   let N := FunctionFieldNormalClosure K F
-  letI : Module.Finite B M :=
-    Module.Finite.of_injective
-      (IsScalarTower.toAlgHom B M N).toLinearMap
-      (IsScalarTower.toAlgHom B M N).injective
+  let : Module.Finite B M := finite_of_injective_field_tower B M N
   exact Module.Finite.trans B M
 
 end OriginalCompositum
@@ -288,8 +359,7 @@ theorem
 /-- The original compositum remains separable over the canonical rational
 function field of the full constant field.  This is transported from the
 original function field after exact extension of constants. -/
-noncomputable instance
-    functionFieldNormalClosureOriginalCompositum_isSeparable_over_constantRatFunc
+private theorem originalCompositum_separable_constantRatFunc
     (hExact : algebraicClosure K F = (⊥ : IntermediateField K F)) :
     Algebra.IsSeparable
       (RatFunc (FunctionFieldNormalClosureConstantField K F))
@@ -316,6 +386,14 @@ noncomputable instance
   have hex : IsSeparable (RatFunc C) (e (e.symm x)) :=
     (AlgEquiv.isSeparable_iff e).mpr hx
   simpa using hex
+
+noncomputable instance
+    functionFieldNormalClosureOriginalCompositum_isSeparable_over_constantRatFunc
+    (hExact : algebraicClosure K F = (⊥ : IntermediateField K F)) :
+    Algebra.IsSeparable
+      (RatFunc (FunctionFieldNormalClosureConstantField K F))
+      (FunctionFieldNormalClosureOriginalCompositum K F hExact) :=
+  originalCompositum_separable_constantRatFunc K F hExact
 
 section ConstantExtension
 
@@ -881,115 +959,67 @@ theorem
     functionFieldNormalClosureOriginalCompositumConstantExtension_rationalPlaceCount_eq_originalExactConstantExtensionCount
     (hExact : algebraicClosure K F = (⊥ : IntermediateField K F)) :
     let N := FunctionFieldNormalClosure K F
-    letI : Algebra K N := functionFieldNormalClosureConstantAlgebra K F
+    let : Algebra K N := functionFieldNormalClosureConstantAlgebra K F
     let C := FunctionFieldNormalClosureConstantField K F
-    letI : Algebra K C :=
+    let : Algebra K C :=
       SubalgebraClass.toAlgebra (algebraicClosure K N)
-    letI : Module.Finite K C :=
+    let : Module.Finite K C :=
       functionFieldConstantField_finiteDimensional K N
-    letI : IsGalois K C := functionFieldConstantField_isGalois K N
+    let : IsGalois K C := functionFieldConstantField_isGalois K N
     let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
-    letI : Algebra (RatFunc C) M :=
+    let : Algebra (RatFunc C) M :=
       functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgebra
         K F hExact
-    letI : Algebra C M :=
+    let : Algebra C M :=
       exactConstantExtensionTowerCanonicalConstantAlgebra C M
     let hExactM :=
       functionFieldNormalClosureOriginalCompositumConstantField_isExact_for_constantRatFunc
         K F hExact
     let E_M := ExactConstantExtension C M S
-    letI : Field E_M :=
+    let : Field E_M :=
       functionFieldNormalClosureOriginalCompositumConstantExtensionField
         K F S hExact
-    letI : Algebra (RatFunc S) E_M :=
+    let : Algebra (RatFunc S) E_M :=
       functionFieldNormalClosureOriginalCompositumConstantExtensionRatFuncAlgebra
         K F S hExact
-    letI : Module (RatFunc S) E_M := Algebra.toModule
-    letI : Module.Finite (RatFunc S) E_M :=
+    let : Module (RatFunc S) E_M := Algebra.toModule
+    let : Module.Finite (RatFunc S) E_M :=
       finiteDimensional_over_extendedRatFunc C S M hExactM
-    letI : Algebra.IsSeparable (RatFunc S) E_M :=
+    let : Algebra.IsSeparable (RatFunc S) E_M :=
       isSeparable_over_extendedRatFunc C S M hExactM
-    letI : Finite C := functionFieldConstantField_finite K N
-    letI : Fintype C := Fintype.ofFinite C
-    letI : Finite S := Module.finite_of_finite C
-    letI : Fintype S := Fintype.ofFinite S
-    letI : DecidableEq C := Classical.decEq C
-    letI : DecidableEq (RatFunc C) := Classical.decEq (RatFunc C)
-    letI : DecidableEq S := Classical.decEq S
-    letI : DecidableEq (RatFunc S) := Classical.decEq (RatFunc S)
+    let : Finite C := functionFieldConstantField_finite K N
+    let : Fintype C := Fintype.ofFinite C
+    let : Finite S := Module.finite_of_finite C
+    let : Fintype S := Fintype.ofFinite S
+    let : DecidableEq C := Classical.decEq C
+    let : DecidableEq (RatFunc C) := Classical.decEq (RatFunc C)
+    let : DecidableEq S := Classical.decEq S
+    let : DecidableEq (RatFunc S) := Classical.decEq (RatFunc S)
     finiteExtensionRationalPlaceCount S E_M =
       exactConstantExtensionClosedPlaceExtensionCount
         K C F hExact (Module.finrank C S) := by
+  intro N model1 C model3 model4 model5 M model7 model8 hExactM E_M
+    model11 model12 model13 model14 model15 model16 model17 model18 model19 model20 model21 model22 model23
   classical
-  let N := FunctionFieldNormalClosure K F
-  let : Algebra K N := functionFieldNormalClosureConstantAlgebra K F
-  let C := FunctionFieldNormalClosureConstantField K F
-  let : Algebra K C :=
-    SubalgebraClass.toAlgebra (algebraicClosure K N)
-  let : Module.Finite K C :=
-    functionFieldConstantField_finiteDimensional K N
-  let : IsGalois K C := functionFieldConstantField_isGalois K N
-  let M := FunctionFieldNormalClosureOriginalCompositum K F hExact
-  let : Algebra (RatFunc C) M :=
-    functionFieldNormalClosureOriginalCompositumConstantRatFuncAlgebra
-      K F hExact
-  let : Algebra C M :=
-    exactConstantExtensionTowerCanonicalConstantAlgebra C M
-  let hExactM :=
-    functionFieldNormalClosureOriginalCompositumConstantField_isExact_for_constantRatFunc
-      K F hExact
-  let E_M := ExactConstantExtension C M S
-  let : Field E_M :=
-    functionFieldNormalClosureOriginalCompositumConstantExtensionField
-      K F S hExact
-  letI : Algebra (RatFunc S) E_M :=
-    functionFieldNormalClosureOriginalCompositumConstantExtensionRatFuncAlgebra
-      K F S hExact
-  letI : Module (RatFunc S) E_M := Algebra.toModule
-  letI : Module.Finite (RatFunc S) E_M :=
-    finiteDimensional_over_extendedRatFunc C S M hExactM
-  letI : Algebra.IsSeparable (RatFunc S) E_M :=
-    isSeparable_over_extendedRatFunc C S M hExactM
-  letI : Finite C := functionFieldConstantField_finite K N
-  letI : Fintype C := Fintype.ofFinite C
-  letI : Finite S := Module.finite_of_finite C
-  letI : Fintype S := Fintype.ofFinite S
-  letI : DecidableEq C := Classical.decEq C
-  letI : DecidableEq (RatFunc C) := Classical.decEq (RatFunc C)
-  letI : DecidableEq S := Classical.decEq S
-  letI : DecidableEq (RatFunc S) := Classical.decEq (RatFunc S)
+  let : Module (RatFunc C) M := model7.toModule
+  let : FiniteDimensional (RatFunc C) M :=
+    functionFieldNormalClosureOriginalCompositum_finiteDimensional_over_constantRatFunc K F hExact
+  let : Algebra.IsSeparable (RatFunc C) M :=
+    functionFieldNormalClosureOriginalCompositum_isSeparable_over_constantRatFunc K F hExact
   let E := ExactConstantExtension K F C
-  letI : Field E := exactConstantExtensionField K F C hExact
-  letI : Algebra (RatFunc C) E :=
-    ratFuncExactConstantExtensionAlgebra K C F hExact
-  letI : Module (RatFunc C) E := Algebra.toModule
-  letI : Module.Finite (RatFunc C) E :=
+  let : Field E := exactConstantExtensionField K F C hExact
+  let : Algebra (RatFunc C) E := ratFuncExactConstantExtensionAlgebra K C F hExact
+  let : Module (RatFunc C) E := Algebra.toModule
+  let : FiniteDimensional (RatFunc C) E :=
     finiteDimensional_over_extendedRatFunc K C F hExact
-  letI : Algebra.IsSeparable (RatFunc C) E :=
+  let : Algebra.IsSeparable (RatFunc C) E :=
     isSeparable_over_extendedRatFunc K C F hExact
   let e : E ≃ₐ[RatFunc C] M :=
-    exactConstantExtensionOriginalCompositumCanonicalRatFuncAlgEquiv
-      K F hExact
-  calc
-    finiteExtensionRationalPlaceCount S E_M =
-        exactConstantExtensionClosedPlaceExtensionCount
-          C S M hExactM 1 :=
-      functionFieldNormalClosureOriginalCompositumConstantExtension_rationalPlaceCount_eq_exactConstantExtensionCount
-        K F S hExact
-    _ = finiteExtensionClosedPlaceExtensionCount C M
-        (Module.finrank C S) := by
-      rw [exactConstantExtensionClosedPlaceExtensionCount_eq_classical_decidableEq]
-      have h := exactConstantExtensionClosedPlaceExtensionCount_eq
-        C S M hExactM 1
-      simpa using h
-    _ = finiteExtensionClosedPlaceExtensionCount C E
-        (Module.finrank C S) := by
-      symm
-      exact finiteExtensionClosedPlaceExtensionCount_eq_of_algEquiv
-        C E M e (Module.finrank C S)
-    _ = exactConstantExtensionClosedPlaceExtensionCount
-        K C F hExact (Module.finrank C S) := by
-      rw [exactConstantExtensionClosedPlaceExtensionCount_eq_classical_decidableEq]
+    exactConstantExtensionOriginalCompositumCanonicalRatFuncAlgEquiv K F hExact
+  have hRational := rationalExactConstantCount_eq_of_algEquiv C S M E hExactM e
+  have hLast := exactConstantExtensionClosedPlaceExtensionCount_eq_classical_decidableEq
+    K C F hExact (Module.finrank C S)
+  exact hRational.trans hLast.symm
 
 end ConstantExtension
 

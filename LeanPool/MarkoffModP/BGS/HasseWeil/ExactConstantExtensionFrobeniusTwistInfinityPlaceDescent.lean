@@ -568,75 +568,48 @@ theorem frobeniusTwistField_infinityPlace_ramificationIdx_eq_one
       (⊥ : IntermediateField C N))
     (g : N ≃ₐ[RatFunc C] N)
     (hdiv : Nat.card (N ≃ₐ[RatFunc C] N) ∣ Module.finrank C S) :
-    letI : Field (ExactConstantExtension C N S) :=
+    let : Field (ExactConstantExtension C N S) :=
       exactConstantExtensionField C N S hExact
-    letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
+    let : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
       exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-    letI : SMul (RatFunc C) (ExactConstantExtension C N S) :=
+    let : SMul (RatFunc C) (ExactConstantExtension C N S) :=
       Algebra.toSMul
-    letI : Module (RatFunc C) (ExactConstantExtension C N S) :=
+    let : Module (RatFunc C) (ExactConstantExtension C N S) :=
       Algebra.toModule
-    letI : FiniteDimensional (RatFunc C)
+    let : FiniteDimensional (RatFunc C)
         (ExactConstantExtension C N S) :=
       finiteDimensional_exactConstantExtension_over_baseRatFunc
         C S N hExact
-    letI : Algebra.IsSeparable (RatFunc C)
+    let : Algebra.IsSeparable (RatFunc C)
         (ExactConstantExtension C N S) :=
       isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
     let F := exactConstantExtensionFrobeniusTwistField
       C (RatFunc C) N S hExact g
-    letI : Algebra (RatFunc C) F :=
+    let : Algebra (RatFunc C) F :=
       SubalgebraClass.toAlgebra F.toSubalgebra
-    letI : SMul (RatFunc C) F := Algebra.toSMul
-    letI : Module (RatFunc C) F := Algebra.toModule
-    letI : FiniteDimensional (RatFunc C) F :=
+    let : SMul (RatFunc C) F := Algebra.toSMul
+    let : Module (RatFunc C) F := Algebra.toModule
+    let : FiniteDimensional (RatFunc C) F :=
       finiteDimensional_frobeniusTwistField_over_ratFunc C N S hExact g
-    letI : Algebra.IsSeparable (RatFunc C) F :=
+    let : Algebra.IsSeparable (RatFunc C) F :=
       isSeparable_frobeniusTwistField_over_ratFunc C N S hExact g
-    letI : Algebra F (ExactConstantExtension C N S) := F.toAlgebra
-    letI : SMul F (ExactConstantExtension C N S) := Algebra.toSMul
-    letI : Module F (ExactConstantExtension C N S) := Algebra.toModule
-    letI : IsScalarTower (RatFunc C) F
+    let : Algebra F (ExactConstantExtension C N S) := F.toAlgebra
+    let : SMul F (ExactConstantExtension C N S) := Algebra.toSMul
+    let : Module F (ExactConstantExtension C N S) := Algebra.toModule
+    let : IsScalarTower (RatFunc C) F
         (ExactConstantExtension C N S) := inferInstance
-    letI : FiniteDimensional F (ExactConstantExtension C N S) :=
+    let : FiniteDimensional F (ExactConstantExtension C N S) :=
       finiteDimensional_exactConstantExtension_over_frobeniusTwistField
         C (RatFunc C) N S hExact g
-    letI : IsGalois F (ExactConstantExtension C N S) :=
+    let : IsGalois F (ExactConstantExtension C N S) :=
       isGalois_exactConstantExtension_over_frobeniusTwistField
         C (RatFunc C) N S hExact g
     ∀ Q : FiniteExtensionInfinityPlace C (ExactConstantExtension C N S),
       infinityPlaceRelativeRamificationIdx C F
         (ExactConstantExtension C N S) Q = 1 := by
+  intro model0 model1 model2 model3 model4 model5 F model7 model8 model9 model10 model11 model12
+    model13 model14 model15 model16 model17
   let T := ExactConstantExtension C N S
-  let : Field T := exactConstantExtensionField C N S hExact
-  let : Algebra (RatFunc C) T :=
-    exactConstantExtensionBaseAlgebra C (RatFunc C) N S
-  let : SMul (RatFunc C) T := Algebra.toSMul
-  let : Module (RatFunc C) T := Algebra.toModule
-  let : FiniteDimensional (RatFunc C) T :=
-    finiteDimensional_exactConstantExtension_over_baseRatFunc C S N hExact
-  let : Algebra.IsSeparable (RatFunc C) T :=
-    isSeparable_exactConstantExtension_over_baseRatFunc C S N hExact
-  let F := exactConstantExtensionFrobeniusTwistField
-    C (RatFunc C) N S hExact g
-  let : Algebra (RatFunc C) F :=
-    SubalgebraClass.toAlgebra F.toSubalgebra
-  let : SMul (RatFunc C) F := Algebra.toSMul
-  let : Module (RatFunc C) F := Algebra.toModule
-  let : FiniteDimensional (RatFunc C) F :=
-    finiteDimensional_frobeniusTwistField_over_ratFunc C N S hExact g
-  let : Algebra.IsSeparable (RatFunc C) F :=
-    isSeparable_frobeniusTwistField_over_ratFunc C N S hExact g
-  let : Algebra F T := F.toAlgebra
-  let : SMul F T := Algebra.toSMul
-  let : Module F T := Algebra.toModule
-  let : IsScalarTower (RatFunc C) F T := inferInstance
-  let : FiniteDimensional F T :=
-    finiteDimensional_exactConstantExtension_over_frobeniusTwistField
-      C (RatFunc C) N S hExact g
-  let : IsGalois F T :=
-    isGalois_exactConstantExtension_over_frobeniusTwistField
-      C (RatFunc C) N S hExact g
   let V := RatFuncInfinityIntegers C
   let : Algebra V (RatFunc C) :=
     RingHom.toAlgebra
@@ -695,7 +668,6 @@ theorem frobeniusTwistField_infinityPlace_ramificationIdx_eq_one
     IsIntegralClosure.isDedekindDomain V (RatFunc C) T A
   let : MulSemiringAction (T ≃ₐ[F] T) A :=
     infinityIntegralClosureGalAction C F T
-  dsimp only
   intro Q
   rw [← infinityPlaceInertiaGroup_card_eq_ramificationIdx C F T Q]
   have hInertia : infinityPlaceInertiaGroup C F T Q = ⊥ := by
