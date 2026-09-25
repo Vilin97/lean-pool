@@ -25,6 +25,70 @@ open scoped BigOperators
 
 noncomputable section
 
+/-- A nonnegative scalar multiple of a finite sum inherits its polynomial-moment
+bound, including when the observable is identified only almost everywhere. -/
+private theorem integral_abs_scaled_finsetSum_pow_rpow_inv_le_of_ae_eq
+    {Ω ι : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {D : Finset ι} {Z : ι → Ω → ℝ} {A : Ω → ℝ} {p : ℕ} {c B : ℝ}
+    (hp : 1 ≤ p) (hc_nonneg : 0 ≤ c)
+    (hZ_aemeas : ∀ i ∈ D, AEMeasurable (Z i) P)
+    (hZ_int : ∀ i ∈ D, Integrable (fun a => |Z i a| ^ p) P)
+    (hA : A =ᵐ[P] c • (fun a => ∑ i ∈ D, Z i a))
+    (hsum : (∫ a, |∑ i ∈ D, Z i a| ^ p ∂P) ^ (1 / (p : ℝ)) ≤ B) :
+    (∫ a, |A a| ^ p ∂P) ^ (1 / (p : ℝ)) ≤ c * B := by
+  classical
+  have hp_nat_ne_zero : p ≠ 0 := by omega
+  let S : Ω → ℝ := fun a => ∑ i ∈ D, Z i a
+  have hS_aemeas : AEMeasurable S P := by
+    have hsum : AEMeasurable (∑ R ∈ D, Z R) P :=
+      Finset.aemeasurable_sum _ (fun R hR => hZ_aemeas R hR)
+    convert hsum using 1
+    ext a
+    simp [S]
+  have hS_memLp : MemLp S (p : ENNReal) P := by
+    dsimp [S]
+    refine memLp_finsetSum _ ?_
+    intro R hR
+    refine (integrable_norm_rpow_iff
+      (hZ_aemeas R hR).aestronglyMeasurable
+      (by exact_mod_cast hp_nat_ne_zero) (by simp)).1 ?_
+    simpa [Real.norm_eq_abs] using hZ_int R hR
+  have hS_int : Integrable (fun a => |S a| ^ p) P := by
+    simpa [S, Real.norm_eq_abs] using hS_memLp.integrable_norm_pow hp_nat_ne_zero
+  let Aavg : Ω → ℝ := c • S
+  have hAavg_aemeas : AEMeasurable Aavg P := hS_aemeas.const_smul c
+  have hAavg_memLp : MemLp Aavg (p : ENNReal) P := hS_memLp.const_smul c
+  have hAavg_int : Integrable (fun a => |Aavg a| ^ p) P := by
+    simpa [Aavg, S, Real.norm_eq_abs] using hAavg_memLp.integrable_norm_pow hp_nat_ne_zero
+  have hS_toReal :
+      ENNReal.toReal (eLpNorm S (p : ENNReal) P) =
+        (∫ a, |S a| ^ p ∂P) ^ (1 / (p : ℝ)) := by
+    exact toReal_eLpNorm_eq_integral_abs_pow_rpow_inv_aemeasurable
+      hp hS_aemeas hS_int
+  have hAavg_toReal :
+      ENNReal.toReal (eLpNorm Aavg (p : ENNReal) P) =
+        (∫ a, |Aavg a| ^ p ∂P) ^ (1 / (p : ℝ)) := by
+    exact toReal_eLpNorm_eq_integral_abs_pow_rpow_inv_aemeasurable
+      hp hAavg_aemeas hAavg_int
+  have hscale :
+      ENNReal.toReal (eLpNorm Aavg (p : ENNReal) P) =
+        c * ENNReal.toReal (eLpNorm S (p : ENNReal) P) := by
+    rw [show Aavg = c • S by rfl, eLpNorm_const_smul]
+    rw [ENNReal.toReal_mul]
+    simp [Real.norm_eq_abs, abs_of_nonneg hc_nonneg]
+  have hA_integral_eq : ∫ a, |A a| ^ p ∂P = ∫ a, |Aavg a| ^ p ∂P :=
+    integral_congr_ae (by
+      filter_upwards [hA] with a ha
+      change A a = Aavg a at ha
+      rw [ha])
+  calc
+    (∫ a, |A a| ^ p ∂P) ^ (1 / (p : ℝ)) =
+        ENNReal.toReal (eLpNorm Aavg (p : ENNReal) P) := by
+      rw [hA_integral_eq, ← hAavg_toReal]
+    _ = c * ENNReal.toReal (eLpNorm S (p : ENNReal) P) := hscale
+    _ = c * (∫ a, |S a| ^ p ∂P) ^ (1 / (p : ℝ)) := by rw [hS_toReal]
+    _ ≤ c * B := mul_le_mul_of_nonneg_left hsum hc_nonneg
+
 /-- Centered polynomial-moment fluctuation bound for restriction-centered
 descendant averages over an arbitrary parent cube. -/
 theorem integral_abs_restrictionCenteredDescendantAverageOnCube_pow_rpow_inv_le_of_restrictionUnitRangeDependentLaw
@@ -165,70 +229,13 @@ theorem integral_abs_restrictionCenteredDescendantAverageOnCube_pow_rpow_inv_le_
     integral_abs_finsetSum_pow_rpow_inv_le_rosenthal_uniform_descendantsAtScale_of_restrictionUnitRangeDependentLaw
       (Q := Q) (k := n) (P := P)
       hPdep hp hK_nonneg Z hZ_local hZ_aemeas hZ_int hZ_mean hZ_bound
-  let S : RegCoeffField d → ℝ :=
-    fun a => ∑ R ∈ descendantsAtScale Q n, Z R a
-  have hS_aemeas : AEMeasurable S P := by
-    have hsum : AEMeasurable (∑ R ∈ descendantsAtScale Q n, Z R) P :=
-      Finset.aemeasurable_sum _ (fun R hR => hZ_aemeas R hR)
-    convert hsum using 1
-    ext a
-    simp [S]
-  have hS_memLp : MemLp S (p : ENNReal) P := by
-    dsimp [S]
-    refine memLp_finsetSum _ ?_
-    intro R hR
-    refine (integrable_norm_rpow_iff
-      (hZ_aemeas R hR).aestronglyMeasurable
-      (by exact_mod_cast hp_nat_ne_zero) (by simp)).1 ?_
-    simpa [Real.norm_eq_abs] using hZ_int R hR
-  have hS_int : Integrable (fun a => |S a| ^ p) P := by
-    simpa [S, Real.norm_eq_abs] using hS_memLp.integrable_norm_pow hp_nat_ne_zero
-  let Aavg : RegCoeffField d → ℝ := c • S
-  have hAavg_aemeas : AEMeasurable Aavg P := hS_aemeas.const_smul c
-  have hAavg_memLp : MemLp Aavg (p : ENNReal) P := hS_memLp.const_smul c
-  have hAavg_int : Integrable (fun a => |Aavg a| ^ p) P := by
-    simpa [Aavg, S, Real.norm_eq_abs] using hAavg_memLp.integrable_norm_pow hp_nat_ne_zero
-  have hS_toReal :
-      ENNReal.toReal (eLpNorm S (p : ENNReal) P) =
-        (∫ a, |S a| ^ p ∂P) ^ (1 / (p : ℝ)) := by
-    exact toReal_eLpNorm_eq_integral_abs_pow_rpow_inv_aemeasurable
-      (show 1 ≤ p by omega) hS_aemeas hS_int
-  have hAavg_toReal :
-      ENNReal.toReal (eLpNorm Aavg (p : ENNReal) P) =
-        (∫ a, |Aavg a| ^ p ∂P) ^ (1 / (p : ℝ)) := by
-    exact toReal_eLpNorm_eq_integral_abs_pow_rpow_inv_aemeasurable
-      (show 1 ≤ p by omega) hAavg_aemeas hAavg_int
-  have hscale :
-      ENNReal.toReal (eLpNorm Aavg (p : ENNReal) P) =
-        c * ENNReal.toReal (eLpNorm S (p : ENNReal) P) := by
-    rw [show Aavg = c • S by rfl, eLpNorm_const_smul]
-    rw [ENNReal.toReal_mul]
-    simp [Real.norm_eq_abs, abs_of_nonneg hc_nonneg]
-  have hAavg_eq : Aavg = restrictionCenteredDescendantAverageOnCube P Q n X := by
-    funext a
-    simp [Aavg, S, Z, restrictionCenteredDescendantAverageOnCube, μ0, c, N]
-  calc
-    (∫ a, |restrictionCenteredDescendantAverageOnCube P Q n X a| ^ p ∂P) ^ (1 / (p : ℝ))
-        = ENNReal.toReal (eLpNorm Aavg (p : ENNReal) P) := by
-            rw [hAavg_toReal]
-            simp [hAavg_eq]
-    _ = c * ENNReal.toReal (eLpNorm S (p : ENNReal) P) := hscale
-    _ = c * (∫ a, |S a| ^ p ∂P) ^ (1 / (p : ℝ)) := by
-          rw [hS_toReal]
-    _ ≤ c *
-          (rosenthalDescendantsAtScaleLpConst d n p * N ^ (1 / (p : ℝ)) * K +
-            rosenthalDescendantsAtScaleSqrtConst d n p * Real.sqrt N * K) := by
-              exact mul_le_mul_of_nonneg_left (by simpa [S, N] using hsum) hc_nonneg
-    _ = N⁻¹ *
-          (rosenthalDescendantsAtScaleLpConst d n p * N ^ (1 / (p : ℝ)) * K +
-            rosenthalDescendantsAtScaleSqrtConst d n p * Real.sqrt N * K) := by
-              simp [c]
-    _ = ((descendantsAtScale Q n).card : ℝ)⁻¹ *
-          (rosenthalDescendantsAtScaleLpConst d n p *
-              ((descendantsAtScale Q n).card : ℝ) ^ (1 / (p : ℝ)) * K +
-            rosenthalDescendantsAtScaleSqrtConst d n p *
-              Real.sqrt ((descendantsAtScale Q n).card : ℝ) * K) := by
-              simp [N]
+  have haverage : restrictionCenteredDescendantAverageOnCube P Q n X =ᵐ[P]
+      c • (fun a => ∑ R ∈ descendantsAtScale Q n, Z R a) := by
+    filter_upwards [] with a
+    simp [Z, restrictionCenteredDescendantAverageOnCube, μ0, c, N]
+  simpa only [c, N] using
+    integral_abs_scaled_finsetSum_pow_rpow_inv_le_of_ae_eq
+      (by omega : 1 ≤ p) hc_nonneg hZ_aemeas hZ_int haverage hsum
 
 /-- Completed-local version of
 `integral_abs_restrictionCenteredDescendantAverageOnCube_pow_rpow_inv_le_of_restrictionUnitRangeDependentLaw`.
@@ -441,43 +448,7 @@ theorem integral_abs_restrictionCenteredDescendantAverageOnCube_pow_rpow_inv_le_
     filter_upwards [hAll] with a hAll_a
     simp [Sraw, S]
     exact Finset.sum_congr rfl fun R hR => by simp [hAll_a R hR]
-  have hS_aemeas : AEMeasurable S P := by
-    have hsum : AEMeasurable (∑ R ∈ D, Z R) P :=
-      Finset.aemeasurable_sum _ (fun R hR => hZ_aemeas R hR)
-    convert hsum using 1
-    ext a
-    simp [S]
-  have hS_memLp : MemLp S (p : ENNReal) P := by
-    dsimp [S]
-    refine memLp_finsetSum _ ?_
-    intro R hR
-    refine (integrable_norm_rpow_iff
-      (hZ_aemeas R hR).aestronglyMeasurable
-      (by exact_mod_cast hp_nat_ne_zero) (by simp)).1 ?_
-    simpa [Real.norm_eq_abs] using hZ_int R hR
-  have hS_int : Integrable (fun a => |S a| ^ p) P := by
-    simpa [S, Real.norm_eq_abs] using hS_memLp.integrable_norm_pow hp_nat_ne_zero
   let Aavg : RegCoeffField d → ℝ := c • S
-  have hAavg_aemeas : AEMeasurable Aavg P := hS_aemeas.const_smul c
-  have hAavg_memLp : MemLp Aavg (p : ENNReal) P := hS_memLp.const_smul c
-  have hAavg_int : Integrable (fun a => |Aavg a| ^ p) P := by
-    simpa [Aavg, S, Real.norm_eq_abs] using hAavg_memLp.integrable_norm_pow hp_nat_ne_zero
-  have hS_toReal :
-      ENNReal.toReal (eLpNorm S (p : ENNReal) P) =
-        (∫ a, |S a| ^ p ∂P) ^ (1 / (p : ℝ)) := by
-    exact toReal_eLpNorm_eq_integral_abs_pow_rpow_inv_aemeasurable
-      (show 1 ≤ p by omega) hS_aemeas hS_int
-  have hAavg_toReal :
-      ENNReal.toReal (eLpNorm Aavg (p : ENNReal) P) =
-        (∫ a, |Aavg a| ^ p ∂P) ^ (1 / (p : ℝ)) := by
-    exact toReal_eLpNorm_eq_integral_abs_pow_rpow_inv_aemeasurable
-      (show 1 ≤ p by omega) hAavg_aemeas hAavg_int
-  have hscale :
-      ENNReal.toReal (eLpNorm Aavg (p : ENNReal) P) =
-        c * ENNReal.toReal (eLpNorm S (p : ENNReal) P) := by
-    rw [show Aavg = c • S by rfl, eLpNorm_const_smul]
-    rw [ENNReal.toReal_mul]
-    simp [Real.norm_eq_abs, abs_of_nonneg hc_nonneg]
   have hCentered_eq_Aavg :
       restrictionCenteredDescendantAverageOnCube P Q n X =ᵐ[P] Aavg := by
     filter_upwards [hSraw_eq_S] with a hS_a
@@ -486,33 +457,10 @@ theorem integral_abs_restrictionCenteredDescendantAverageOnCube_pow_rpow_inv_le_
         simp [restrictionCenteredDescendantAverageOnCube, Sraw, Zraw, μ0, c, N, D]
       _ = c * S a := by rw [hS_a]
       _ = Aavg a := by simp [Aavg]
-  have hCentered_integral_eq :
-      ∫ a, |restrictionCenteredDescendantAverageOnCube P Q n X a| ^ p ∂P =
-        ∫ a, |Aavg a| ^ p ∂P :=
-    integral_congr_ae (by
-      filter_upwards [hCentered_eq_Aavg] with a ha
-      simp [ha])
-  calc
-    (∫ a, |restrictionCenteredDescendantAverageOnCube P Q n X a| ^ p ∂P) ^ (1 / (p : ℝ))
-        = ENNReal.toReal (eLpNorm Aavg (p : ENNReal) P) := by
-            rw [hCentered_integral_eq, ← hAavg_toReal]
-    _ = c * ENNReal.toReal (eLpNorm S (p : ENNReal) P) := hscale
-    _ = c * (∫ a, |S a| ^ p ∂P) ^ (1 / (p : ℝ)) := by
-          rw [hS_toReal]
-    _ ≤ c *
-          (rosenthalDescendantsAtScaleLpConst d n p * N ^ (1 / (p : ℝ)) * K +
-            rosenthalDescendantsAtScaleSqrtConst d n p * Real.sqrt N * K) := by
-              exact mul_le_mul_of_nonneg_left (by simpa [S, D, N] using hsum) hc_nonneg
-    _ = N⁻¹ *
-          (rosenthalDescendantsAtScaleLpConst d n p * N ^ (1 / (p : ℝ)) * K +
-            rosenthalDescendantsAtScaleSqrtConst d n p * Real.sqrt N * K) := by
-              simp [c]
-    _ = ((descendantsAtScale Q n).card : ℝ)⁻¹ *
-          (rosenthalDescendantsAtScaleLpConst d n p *
-              ((descendantsAtScale Q n).card : ℝ) ^ (1 / (p : ℝ)) * K +
-            rosenthalDescendantsAtScaleSqrtConst d n p *
-              Real.sqrt ((descendantsAtScale Q n).card : ℝ) * K) := by
-              simp [N, D]
+  simpa only [c, N, D] using
+    integral_abs_scaled_finsetSum_pow_rpow_inv_le_of_ae_eq
+      (by omega : 1 ≤ p) hc_nonneg hZ_aemeas hZ_int hCentered_eq_Aavg
+      (by simpa only [D] using hsum)
 
 end
 

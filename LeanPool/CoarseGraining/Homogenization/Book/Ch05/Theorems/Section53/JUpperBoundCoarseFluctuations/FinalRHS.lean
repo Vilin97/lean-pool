@@ -126,6 +126,36 @@ private theorem finalRHS_combine_three
       rw [← add_assoc A C (D + E)]
     _ ≤ Y + Z := add_le_add hA hD
 
+private theorem finalRHS_bound
+    {first T Osc LinProd COsc ε D CLin Center CPair Pairs Ssum C : ℝ}
+    (hCLin_nonneg : 0 ≤ CLin) (hε_inv_nonneg : 0 ≤ ε⁻¹)
+    (hLin' : LinProd ≤ CLin * ε * Center + CLin * ε⁻¹ * Pairs)
+    (hPair' : Pairs ≤ CPair * Ssum)
+    (hS_nonneg : 0 ≤ Ssum) (hD_le_Ssum : D ≤ Ssum)
+    (hCOsc_nonneg : 0 ≤ COsc) (hCOscPair_le : COsc + CLin * CPair ≤ C)
+    (hOsc' : Osc ≤ COsc * ε⁻¹ * D)
+    (hT_nonneg : 0 ≤ T) (hCenter_nonneg : 0 ≤ Center)
+    (hε_nonneg : 0 ≤ ε) (hFirstCoeff_le : first ≤ C) (hCLin_le : CLin ≤ C) :
+    first * T + Osc + LinProd ≤ C * T + C * ε * Center + C * ε⁻¹ * Ssum := by
+  have hLinPair :=
+    finalRHS_linear_pair hCLin_nonneg hε_inv_nonneg hLin' hPair'
+  have hOscPair :=
+    finalRHS_osc_pair hε_inv_nonneg hS_nonneg hD_le_Ssum hCOsc_nonneg
+      hCOscPair_le
+  have hosc_lin :
+      Osc + LinProd ≤
+      COsc * ε⁻¹ * D +
+        (CLin * ε * Center + (CLin * CPair) * ε⁻¹ * Ssum) :=
+    add_le_add hOsc' hLinPair
+  have hfirst_center :=
+    finalRHS_first_center hT_nonneg hCenter_nonneg hε_nonneg hFirstCoeff_le hCLin_le
+  have hcombine :
+      first * T +
+          (Osc + LinProd) ≤
+        (C * T + C * ε * Center) + C * ε⁻¹ * Ssum :=
+    finalRHS_combine_three hosc_lin hfirst_center hOscPair
+  simpa [add_assoc] using hcombine
+
 private theorem finalRHS_sum_four_nonneg
     {A B R D : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B) (hR : 0 ≤ R) (hD : 0 ≤ D) :
     0 ≤ A + B + R + D := by
@@ -375,40 +405,8 @@ theorem specialWeakNormManuscriptRHSAtScale_le_coarseFluctuationManuscriptRHSAtS
   have hPair' : Pairs ≤ CPair * Ssum := by
     simpa [Pairs, Ssum, A, B, R, D, β, s, t, Q, p_e, q_e, p0_e, q0_e,
       σ, θ, gradWeak, fluxWeak, G, F] using hPair
-  have hβ_pos : 0 < β := by
-    simpa [β] using section53CoarseFluctuationBeta_pos hP4
-  have hθ_one : 1 ≤ θ := by
-    simpa [θ] using one_le_thetaAtScale_of_P4 hP hStruct hP4 m
-  have hθ_nonneg : 0 ≤ θ := le_trans zero_le_one hθ_one
-  have hA_nonneg : 0 ≤ A := by
-    dsimp [A]
-    exact mul_nonneg
-      (mul_nonneg (inv_nonneg.mpr hβ_pos.le) hθ_nonneg)
-      (coarseFluctuationFullBlockSumAtScale_nonneg hP hStruct hP4 k m)
-  have hB_nonneg : 0 ≤ B := by
-    dsimp [B]
-    exact mul_nonneg
-      (mul_nonneg (inv_nonneg.mpr (sq_nonneg _))
-        (coarseFluctuationScalarWeightAtScale_nonneg hP hStruct hP4 m))
-      (coarseFluctuationTauSumAtScale_nonneg hP hstat hStruct hP4 k m e)
-  have hR_nonneg : 0 ≤ R := by
-    dsimp [R]
-    exact mul_nonneg
-      (mul_nonneg
-        (mul_nonneg
-          (mul_nonneg (by exact_mod_cast Nat.zero_le hP4.xi)
-            (inv_nonneg.mpr (pow_nonneg hβ_pos.le 3)))
-          (Real.rpow_nonneg (by norm_num : 0 ≤ (3 : ℝ)) _))
-        (coarseFluctuationUnitMomentWeightAtScale_nonneg hP hStruct hP4 m))
-      (coarseFluctuationResponseMomentAtScale_nonneg hP hStruct hP4 k m e)
-  have hD_nonneg : 0 ≤ D := by
-    dsimp [D]
-    exact mul_nonneg
-      (mul_nonneg
-        (mul_nonneg (inv_nonneg.mpr (sq_nonneg _))
-          (Real.rpow_nonneg (by norm_num : 0 ≤ (3 : ℝ)) _))
-        (coarseFluctuationScalarWeightAtScale_nonneg hP hStruct hP4 m))
-      (by linarith)
+  obtain ⟨hA_nonneg, hB_nonneg, hR_nonneg, hD_nonneg⟩ :=
+    coarseFluctuationTerms_nonneg hP hstat hStruct hP4 k m e
   have hS_nonneg : 0 ≤ Ssum := by
     simpa [Ssum] using
       finalRHS_sum_four_nonneg hA_nonneg hB_nonneg hR_nonneg hD_nonneg
@@ -448,25 +446,10 @@ theorem specialWeakNormManuscriptRHSAtScale_le_coarseFluctuationManuscriptRHSAtS
   have hBound :
       specialWeakNormManuscriptRHSAtScale hP hStruct hP4 k m e ≤
         C * T + C * ε * Center + C * ε⁻¹ * Ssum := by
-    have hLinPair :=
-      finalRHS_linear_pair hCLin_nonneg hε_inv_nonneg hLin' hPair'
-    have hOscPair :=
-      finalRHS_osc_pair hε_inv_nonneg hS_nonneg hD_le_Ssum hCOsc_nonneg
-        hCOscPair_le
-    have hosc_lin :
-        Osc + LinProd ≤
-        COsc * ε⁻¹ * D +
-          (CLin * ε * Center + (CLin * CPair) * ε⁻¹ * Ssum) :=
-      add_le_add hOsc' hLinPair
-    have hfirst_center :=
-      finalRHS_first_center hT_nonneg hCenter_nonneg hε_nonneg hFirstCoeff_le hCLin_le
-    have hcombine :
-        (2 * (1 + JUpperBoundWeakNorms.section53CutoffBound Q)) * T +
-            (Osc + LinProd) ≤
-          (C * T + C * ε * Center) + C * ε⁻¹ * Ssum :=
-      finalRHS_combine_three hosc_lin hfirst_center hOscPair
     rw [hSpecial_eq]
-    simpa [add_assoc] using hcombine
+    exact finalRHS_bound hCLin_nonneg hε_inv_nonneg hLin' hPair' hS_nonneg
+      hD_le_Ssum hCOsc_nonneg hCOscPair_le hOsc' hT_nonneg hCenter_nonneg
+      hε_nonneg hFirstCoeff_le hCLin_le
   rw [hCoarse_eq]
   exact hBound
 

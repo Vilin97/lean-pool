@@ -316,6 +316,23 @@ theorem section52_annealedMomentRoot_positiveExcess_le_one_add_finset_scaled
       hξ hInitial_nonneg hH_nonneg hH_aemeas hH_int hExcess_int
       hPointI hRootI hCoeffI
 
+/-- An attached-sum upper bound transfers to the corresponding ordinary finite
+sum while replacing its initial summand by a larger one. -/
+private theorem section52_le_add_finsetSum_of_le_add_attachSum
+    {ι : Type*} {s : Finset ι} {F : {i // i ∈ s} → ℝ} {G : ι → ℝ}
+    {x a b : ℝ}
+    (hsplit : x ≤ a + ∑ i ∈ s.attach, F i)
+    (hsmall : a ≤ b) (hFG : ∀ i, F i = G i.1) :
+    x ≤ b + ∑ i ∈ s, G i := by
+  have hsum : ∑ i ∈ s.attach, F i = ∑ i ∈ s, G i := by
+    calc
+      ∑ i ∈ s.attach, F i = ∑ i ∈ s.attach, G i.1 :=
+        Finset.sum_congr rfl (fun i _ => hFG i)
+      _ = ∑ i ∈ s, G i := Finset.sum_attach s G
+  calc
+    x ≤ b + ∑ i ∈ s.attach, F i := hsplit.trans (add_le_add_right hsmall _)
+    _ = b + ∑ i ∈ s, G i := congrArg (b + ·) hsum
+
 theorem upperPositiveExcessMomentAtScale_integrable_and_le_raw_twoExponentCoeff
     {d : ℕ} [NeZero d] {P : Ch04.RestrictionCoeffLaw d}
     (hP : Ch04.RestrictionLawCarrier P) (hStruct : Ch04.RestrictionStructuralLaw P)
@@ -463,117 +480,21 @@ theorem upperPositiveExcessMomentAtScale_integrable_and_le_raw_twoExponentCoeff
     have hsmall :=
       upperSmallTailTerm_le_raw_unitDescendantSup
         (d := d) m (s := s) (r := r) hs hsr hr_lt_one a
+    refine section52_le_add_finsetSum_of_le_add_attachSum
+      (G := fun n => G n a) hsplit hsmall ?_
+    intro n
+    dsimp [G]
+    rw [dif_pos n.2]
+  have hRoot0 : Ch04.annealedMomentRoot P ξ G0 ≤ coeff0 * initial := by
+    have hSRoot := upper_unitDescendantSup_momentRoot_le_card_mul_origin
+      (d := d) (P := P) hP hStruct (s := s) (ξ := ξ) (m := m)
+      hs hξ_one hUpperSourceInt
     calc
-      max
-          (Ch04.LambdaSqCoeffField (originCube d (m : ℤ)) r (.finite 1) a -
-            scalarization.barSigma 0)
-          0 ≤
-        upperSmallSqrtTailCoeffField (d := d) m r a ^ 2 /
-            section52SmallTailWeight r m +
-          ((section52LargeScaleSet m).attach.sum fun n =>
-            section52LargeScaleWeight r m n.1 *
-              (let parents := descendantsAtScale (originCube d (m : ℤ)) n.1
-               let hparents : parents.Nonempty :=
-                descendantsAtScale_nonempty (originCube d (m : ℤ))
-                  (section52LargeScaleSet_mem_le_m n.2)
-               parents.sup' hparents
-                (fun Q =>
-                  max
-                    (Ch02.matrixNorm (coarseBlockMatrix (cubeSet Q) a.toFun).upperLeft -
-                      Ch02.matrixNorm (scalarization.barSigma 0 • (1 : Mat d)))
-                    0))) := by
-              exact hsplit
-      _ ≤ G0 a +
-          ((section52LargeScaleSet m).attach.sum fun n =>
-            section52LargeScaleWeight r m n.1 *
-              (let parents := descendantsAtScale (originCube d (m : ℤ)) n.1
-               let hparents : parents.Nonempty :=
-                descendantsAtScale_nonempty (originCube d (m : ℤ))
-                  (section52LargeScaleSet_mem_le_m n.2)
-               parents.sup' hparents
-                (fun Q =>
-                  max
-                    (Ch02.matrixNorm (coarseBlockMatrix (cubeSet Q) a.toFun).upperLeft -
-                      Ch02.matrixNorm (scalarization.barSigma 0 • (1 : Mat d)))
-                    0))) := by
-              exact
-                add_le_add_left hsmall
-                  (((section52LargeScaleSet m).attach.sum fun n =>
-                    section52LargeScaleWeight r m n.1 *
-                      (let parents := descendantsAtScale (originCube d (m : ℤ)) n.1
-                       let hparents : parents.Nonempty :=
-                        descendantsAtScale_nonempty (originCube d (m : ℤ))
-                          (section52LargeScaleSet_mem_le_m n.2)
-                       parents.sup' hparents
-                        (fun Q =>
-                          max
-                            (Ch02.matrixNorm (coarseBlockMatrix (cubeSet Q) a.toFun).upperLeft -
-                              Ch02.matrixNorm (scalarization.barSigma 0 • (1 : Mat d)))
-                            0))))
-      _ = G0 a + ∑ n ∈ section52LargeScaleSet m, G n a := by
-              have hsum_eq :
-                  ((section52LargeScaleSet m).attach.sum fun n =>
-                    section52LargeScaleWeight r m n.1 *
-                      (let parents := descendantsAtScale (originCube d (m : ℤ)) n.1
-                       let hparents : parents.Nonempty :=
-                        descendantsAtScale_nonempty (originCube d (m : ℤ))
-                          (section52LargeScaleSet_mem_le_m n.2)
-                       parents.sup' hparents
-                        (fun Q =>
-                          max
-                            (Ch02.matrixNorm (coarseBlockMatrix (cubeSet Q) a.toFun).upperLeft -
-                              Ch02.matrixNorm (scalarization.barSigma 0 • (1 : Mat d)))
-                            0))) =
-                    ∑ n ∈ section52LargeScaleSet m, G n a := by
-                have hattach :
-                    ((section52LargeScaleSet m).attach.sum fun n =>
-                      section52LargeScaleWeight r m n.1 *
-                        (let parents := descendantsAtScale (originCube d (m : ℤ)) n.1
-                         let hparents : parents.Nonempty :=
-                          descendantsAtScale_nonempty (originCube d (m : ℤ))
-                            (section52LargeScaleSet_mem_le_m n.2)
-                         parents.sup' hparents
-                          (fun Q =>
-                            max
-                              (Ch02.matrixNorm (coarseBlockMatrix (cubeSet Q) a.toFun).upperLeft -
-                                Ch02.matrixNorm (scalarization.barSigma 0 • (1 : Mat d)))
-                              0))) =
-                      ∑ n ∈ (section52LargeScaleSet m).attach, G n.1 a := by
-                  refine Finset.sum_congr rfl ?_
-                  intro n hn
-                  dsimp [G]
-                  rw [dif_pos n.2]
-                exact hattach.trans
-                  (Finset.sum_attach (section52LargeScaleSet m)
-                    (fun n => G n a))
-              rw [hsum_eq]
-  have hRoot0 :
-      Ch04.annealedMomentRoot P ξ G0 ≤ coeff0 * initial := by
-    have hSRoot :
-        Ch04.annealedMomentRoot P ξ S ≤
-          (D.card : ℝ) ^ (1 / (ξ : ℝ)) * initial := by
-      change
-        Ch04.annealedMomentRoot P ξ
-            (fun a : RegCoeffField d =>
-              D.sup' hD (fun U => Ch04.LambdaSqCoeffField U s (.finite 1) a)) ≤
-          (D.card : ℝ) ^ (1 / (ξ : ℝ)) *
-            Ch04.LambdaMomentAtScale P 0 s ξ
-      exact
-        upper_unitDescendantSup_momentRoot_le_card_mul_origin
-          (d := d) (P := P) hP hStruct (s := s) (ξ := ξ) (m := m)
-          hs hξ_one hUpperSourceInt
-    calc
-      Ch04.annealedMomentRoot P ξ G0 =
-          c0 * Ch04.annealedMomentRoot P ξ S := by
-            exact
-              section52_annealedMomentRoot_const_mul_of_nonneg
-                (P := P) (ξ := ξ) (c := c0) (X := S)
-                hξ_one hc0_nonneg hS_nonneg
+      Ch04.annealedMomentRoot P ξ G0 = c0 * Ch04.annealedMomentRoot P ξ S :=
+        section52_annealedMomentRoot_const_mul_of_nonneg hξ_one hc0_nonneg hS_nonneg
       _ ≤ c0 * ((D.card : ℝ) ^ (1 / (ξ : ℝ)) * initial) :=
-            mul_le_mul_of_nonneg_left hSRoot hc0_nonneg
-      _ = coeff0 * initial := by
-            dsimp [coeff0]
-            ring
+        mul_le_mul_of_nonneg_left hSRoot hc0_nonneg
+      _ = coeff0 * initial := (mul_assoc c0 _ initial).symm
   have hRoot :
       ∀ n ∈ section52LargeScaleSet m,
         Ch04.annealedMomentRoot P ξ (G n) ≤ coeff n * initial := by
@@ -618,46 +539,7 @@ theorem upperPositiveExcessMomentAtScale_integrable_and_le_raw_twoExponentCoeff
       (base := scalarization.barSigma 0) (G0 := G0) (G := G)
       hξ_one hG0_nonneg hG_nonneg hG0_aemeas hG_aemeas
       hG0_int hG_int hX_aemeas hPoint
-  have hPowInt :
-      Integrable
-        (fun a : RegCoeffField d =>
-          (max
-            (Ch04.LambdaSqCoeffField (originCube d (m : ℤ)) r (.finite 1) a -
-              hP.barSigmaAtScale hStruct 0)
-            0) ^ ξ) P := by
-    change
-      Integrable
-        (fun a : RegCoeffField d =>
-          (max
-            (Ch04.LambdaSqCoeffField (originCube d (m : ℤ)) r (.finite 1) a -
-              scalarization.barSigma 0)
-            0) ^ ξ) P
-    exact hPowIntScalar
-  have hBound :
-      LambdaPositiveExcessMomentAtScale P (m : ℤ) r ξ
-          hP hStruct ≤
-        ((((25 * s⁻¹ * (r - s)⁻¹ *
-              Real.rpow (3 : ℝ) (-r * (m : ℝ))) ^ 2 /
-            section52SmallTailWeight r m) *
-            (D.card : ℝ) ^ (1 / (ξ : ℝ))) +
-          ((Fintype.card (Fin d) : ℝ) * (Fintype.card (Fin d) : ℝ)) *
-            (∑ n ∈ section52LargeScaleSet m,
-              section52LargeScaleRootCoeff d ξ r m n)) *
-          Ch04.LambdaMomentAtScale P 0 s ξ := by
-    change
-      Ch04.annealedMomentRoot P ξ
-          (fun a : RegCoeffField d =>
-            max
-              (Ch04.LambdaSqCoeffField (originCube d (m : ℤ)) r (.finite 1) a -
-                scalarization.barSigma 0)
-              0) ≤
-        ((c0 * (D.card : ℝ) ^ (1 / (ξ : ℝ))) +
-          ((Fintype.card (Fin d) : ℝ) * (Fintype.card (Fin d) : ℝ)) *
-            (∑ n ∈ section52LargeScaleSet m,
-              section52LargeScaleRootCoeff d ξ r m n)) *
-          initial
-    exact hmain
-  exact ⟨hPowInt, hBound⟩
+  exact ⟨hPowIntScalar, hmain⟩
 
 theorem upperPositiveExcessMomentAtScale_le_raw_twoExponentCoeff
     {d : ℕ} [NeZero d] {P : Ch04.RestrictionCoeffLaw d}
@@ -840,117 +722,21 @@ theorem lowerPositiveExcessMomentAtScale_integrable_and_le_raw_twoExponentCoeff
     have hsmall :=
       lowerSmallTailTerm_le_raw_unitDescendantSup
         (d := d) m (s := s) (r := r) hs hsr hr_lt_one a
+    refine section52_le_add_finsetSum_of_le_add_attachSum
+      (G := fun n => G n a) hsplit hsmall ?_
+    intro n
+    dsimp [G]
+    rw [dif_pos n.2]
+  have hRoot0 : Ch04.annealedMomentRoot P ξ G0 ≤ coeff0 * initial := by
+    have hSRoot := lower_unitDescendantSup_momentRoot_le_card_mul_origin
+      (d := d) (P := P) hP hStruct (s := s) (ξ := ξ) (m := m)
+      hs hξ_one hLowerSourceInt
     calc
-      max
-          ((Ch04.lambdaSqCoeffField (originCube d (m : ℤ)) r (.finite 1) a)⁻¹ -
-            (scalarization.barSigmaStar 0)⁻¹)
-          0 ≤
-        lowerSmallSqrtTailCoeffField (d := d) m r a ^ 2 /
-            section52SmallTailWeight r m +
-          ((section52LargeScaleSet m).attach.sum fun n =>
-            section52LargeScaleWeight r m n.1 *
-              (let parents := descendantsAtScale (originCube d (m : ℤ)) n.1
-               let hparents : parents.Nonempty :=
-                descendantsAtScale_nonempty (originCube d (m : ℤ))
-                  (section52LargeScaleSet_mem_le_m n.2)
-               parents.sup' hparents
-                (fun Q =>
-                  max
-                    (Ch02.matrixNorm (coarseBlockMatrix (cubeSet Q) a.toFun).lowerRight -
-                      Ch02.matrixNorm ((scalarization.barSigmaStar 0)⁻¹ • (1 : Mat d)))
-                    0))) := by
-              exact hsplit
-      _ ≤ G0 a +
-          ((section52LargeScaleSet m).attach.sum fun n =>
-            section52LargeScaleWeight r m n.1 *
-              (let parents := descendantsAtScale (originCube d (m : ℤ)) n.1
-               let hparents : parents.Nonempty :=
-                descendantsAtScale_nonempty (originCube d (m : ℤ))
-                  (section52LargeScaleSet_mem_le_m n.2)
-               parents.sup' hparents
-                (fun Q =>
-                  max
-                    (Ch02.matrixNorm (coarseBlockMatrix (cubeSet Q) a.toFun).lowerRight -
-                      Ch02.matrixNorm ((scalarization.barSigmaStar 0)⁻¹ • (1 : Mat d)))
-                    0))) := by
-              exact
-                add_le_add_left hsmall
-                  (((section52LargeScaleSet m).attach.sum fun n =>
-                    section52LargeScaleWeight r m n.1 *
-                      (let parents := descendantsAtScale (originCube d (m : ℤ)) n.1
-                       let hparents : parents.Nonempty :=
-                        descendantsAtScale_nonempty (originCube d (m : ℤ))
-                          (section52LargeScaleSet_mem_le_m n.2)
-                       parents.sup' hparents
-                        (fun Q =>
-                          max
-                            (Ch02.matrixNorm (coarseBlockMatrix (cubeSet Q) a.toFun).lowerRight -
-                              Ch02.matrixNorm ((scalarization.barSigmaStar 0)⁻¹ • (1 : Mat d)))
-                            0))))
-      _ = G0 a + ∑ n ∈ section52LargeScaleSet m, G n a := by
-              have hsum_eq :
-                  ((section52LargeScaleSet m).attach.sum fun n =>
-                    section52LargeScaleWeight r m n.1 *
-                      (let parents := descendantsAtScale (originCube d (m : ℤ)) n.1
-                       let hparents : parents.Nonempty :=
-                        descendantsAtScale_nonempty (originCube d (m : ℤ))
-                          (section52LargeScaleSet_mem_le_m n.2)
-                       parents.sup' hparents
-                        (fun Q =>
-                          max
-                            (Ch02.matrixNorm (coarseBlockMatrix (cubeSet Q) a.toFun).lowerRight -
-                              Ch02.matrixNorm ((scalarization.barSigmaStar 0)⁻¹ • (1 : Mat d)))
-                            0))) =
-                    ∑ n ∈ section52LargeScaleSet m, G n a := by
-                have hattach :
-                    ((section52LargeScaleSet m).attach.sum fun n =>
-                      section52LargeScaleWeight r m n.1 *
-                        (let parents := descendantsAtScale (originCube d (m : ℤ)) n.1
-                         let hparents : parents.Nonempty :=
-                          descendantsAtScale_nonempty (originCube d (m : ℤ))
-                            (section52LargeScaleSet_mem_le_m n.2)
-                         parents.sup' hparents
-                          (fun Q =>
-                            max
-                              (Ch02.matrixNorm (coarseBlockMatrix (cubeSet Q) a.toFun).lowerRight -
-                                Ch02.matrixNorm ((scalarization.barSigmaStar 0)⁻¹ • (1 : Mat d)))
-                              0))) =
-                      ∑ n ∈ (section52LargeScaleSet m).attach, G n.1 a := by
-                  refine Finset.sum_congr rfl ?_
-                  intro n hn
-                  dsimp [G]
-                  rw [dif_pos n.2]
-                exact hattach.trans
-                  (Finset.sum_attach (section52LargeScaleSet m)
-                    (fun n => G n a))
-              rw [hsum_eq]
-  have hRoot0 :
-      Ch04.annealedMomentRoot P ξ G0 ≤ coeff0 * initial := by
-    have hSRoot :
-        Ch04.annealedMomentRoot P ξ S ≤
-          (D.card : ℝ) ^ (1 / (ξ : ℝ)) * initial := by
-      change
-        Ch04.annealedMomentRoot P ξ
-            (fun a : RegCoeffField d =>
-              D.sup' hD (fun U => (Ch04.lambdaSqCoeffField U s (.finite 1) a)⁻¹)) ≤
-          (D.card : ℝ) ^ (1 / (ξ : ℝ)) *
-            Ch04.lambdaInvMomentAtScale P 0 s ξ
-      exact
-        lower_unitDescendantSup_momentRoot_le_card_mul_origin
-          (d := d) (P := P) hP hStruct (s := s) (ξ := ξ) (m := m)
-          hs hξ_one hLowerSourceInt
-    calc
-      Ch04.annealedMomentRoot P ξ G0 =
-          c0 * Ch04.annealedMomentRoot P ξ S := by
-            exact
-              section52_annealedMomentRoot_const_mul_of_nonneg
-                (P := P) (ξ := ξ) (c := c0) (X := S)
-                hξ_one hc0_nonneg hS_nonneg
+      Ch04.annealedMomentRoot P ξ G0 = c0 * Ch04.annealedMomentRoot P ξ S :=
+        section52_annealedMomentRoot_const_mul_of_nonneg hξ_one hc0_nonneg hS_nonneg
       _ ≤ c0 * ((D.card : ℝ) ^ (1 / (ξ : ℝ)) * initial) :=
-            mul_le_mul_of_nonneg_left hSRoot hc0_nonneg
-      _ = coeff0 * initial := by
-            dsimp [coeff0]
-            ring
+        mul_le_mul_of_nonneg_left hSRoot hc0_nonneg
+      _ = coeff0 * initial := (mul_assoc c0 _ initial).symm
   have hRoot :
       ∀ n ∈ section52LargeScaleSet m,
         Ch04.annealedMomentRoot P ξ (G n) ≤ coeff n * initial := by
@@ -995,46 +781,7 @@ theorem lowerPositiveExcessMomentAtScale_integrable_and_le_raw_twoExponentCoeff
       (base := (scalarization.barSigmaStar 0)⁻¹) (G0 := G0) (G := G)
       hξ_one hG0_nonneg hG_nonneg hG0_aemeas hG_aemeas
       hG0_int hG_int hX_aemeas hPoint
-  have hPowInt :
-      Integrable
-        (fun a : RegCoeffField d =>
-          (max
-            ((Ch04.lambdaSqCoeffField (originCube d (m : ℤ)) r (.finite 1) a)⁻¹ -
-              (hP.barSigmaStarAtScale hStruct 0)⁻¹)
-            0) ^ ξ) P := by
-    change
-      Integrable
-        (fun a : RegCoeffField d =>
-          (max
-            ((Ch04.lambdaSqCoeffField (originCube d (m : ℤ)) r (.finite 1) a)⁻¹ -
-              (scalarization.barSigmaStar 0)⁻¹)
-            0) ^ ξ) P
-    exact hPowIntScalar
-  have hBound :
-      lambdaInvPositiveExcessMomentAtScale P (m : ℤ) r ξ
-          hP hStruct ≤
-        ((((25 * s⁻¹ * (r - s)⁻¹ *
-              Real.rpow (3 : ℝ) (-r * (m : ℝ))) ^ 2 /
-            section52SmallTailWeight r m) *
-            (D.card : ℝ) ^ (1 / (ξ : ℝ))) +
-          ((Fintype.card (Fin d) : ℝ) * (Fintype.card (Fin d) : ℝ)) *
-            (∑ n ∈ section52LargeScaleSet m,
-              section52LargeScaleRootCoeff d ξ r m n)) *
-          Ch04.lambdaInvMomentAtScale P 0 s ξ := by
-    change
-      Ch04.annealedMomentRoot P ξ
-          (fun a : RegCoeffField d =>
-            max
-              ((Ch04.lambdaSqCoeffField (originCube d (m : ℤ)) r (.finite 1) a)⁻¹ -
-                (scalarization.barSigmaStar 0)⁻¹)
-              0) ≤
-        ((c0 * (D.card : ℝ) ^ (1 / (ξ : ℝ))) +
-          ((Fintype.card (Fin d) : ℝ) * (Fintype.card (Fin d) : ℝ)) *
-            (∑ n ∈ section52LargeScaleSet m,
-              section52LargeScaleRootCoeff d ξ r m n)) *
-          initial
-    exact hmain
-  exact ⟨hPowInt, hBound⟩
+  exact ⟨hPowIntScalar, hmain⟩
 
 theorem lowerPositiveExcessMomentAtScale_le_raw_twoExponentCoeff
     {d : ℕ} [NeZero d] {P : Ch04.RestrictionCoeffLaw d}

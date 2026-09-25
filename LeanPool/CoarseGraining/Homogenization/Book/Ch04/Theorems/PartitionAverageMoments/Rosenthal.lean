@@ -116,6 +116,141 @@ theorem integral_abs_finsetSum_pow_rpow_inv_le_rosenthal_uniform_descendantsAtSc
     rw [hleft_zero]
     simpa [S, hS_empty, one_div] using hrhs_nonneg
 
+private lemma rosenthal_scaleColor_cardinality_bounds
+    {d : ℕ} {Q : TriadicCube d} {k : ℤ} {p : ℕ} {K : ℝ}
+    (hp : 2 ≤ p) (hK_nonneg : 0 ≤ K) :
+    (∑ c ∈ (descendantsAtScale Q k).image (cubeScaleColor k),
+      2 * (p : ℝ) *
+        (((descendantsAtScaleScaleColorClass Q k c).card : ℝ) ^
+          (1 / (p : ℝ)) * K) ≤
+      rosenthalDescendantsAtScaleLpConst d k p *
+        ((descendantsAtScale Q k).card : ℝ) ^ (1 / (p : ℝ)) * K) ∧
+    (∑ c ∈ (descendantsAtScale Q k).image (cubeScaleColor k),
+      4 * rosenthalBennettIntegralConst *
+        (Real.sqrt p *
+          (Real.sqrt ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) * K)) ≤
+      rosenthalDescendantsAtScaleSqrtConst d k p *
+        Real.sqrt ((descendantsAtScale Q k).card : ℝ) * K) := by
+  let s : Finset (ScaleColor d k) := (descendantsAtScale Q k).image (cubeScaleColor k)
+  have hsum_card_eq :
+      ∑ c ∈ s, ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) =
+        ((descendantsAtScale Q k).card : ℝ) := by
+    rw [← Nat.cast_sum]
+    exact_mod_cast (card_descendantsAtScale_eq_sum_card_scaleColorClass_image Q k).symm
+  have hs_card_le :
+      (s.card : ℝ) ≤ ((((scaleColorPeriod k) ^ d : ℕ) : ℝ)) := by
+    exact_mod_cast (card_image_cubeScaleColor_descendantsAtScale_le Q k)
+  have hs_card_rpow_le :
+      (s.card : ℝ) ^ (1 - 1 / (p : ℝ)) ≤
+        ((((scaleColorPeriod k) ^ d : ℕ) : ℝ)) ^ (1 - 1 / (p : ℝ)) := by
+    have hexp_nonneg : 0 ≤ 1 - 1 / (p : ℝ) := by
+      have hp_one : (1 : ℝ) ≤ p := by
+        exact_mod_cast (show 1 ≤ p by omega)
+      have hpinv_le_one : 1 / (p : ℝ) ≤ 1 := by
+        simpa using (one_div_le_one_div_of_le zero_lt_one hp_one)
+      linarith
+    exact Real.rpow_le_rpow (by positivity) hs_card_le hexp_nonneg
+  have hsqrt_card_le :
+      Real.sqrt (s.card : ℝ) ≤ Real.sqrt ((((scaleColorPeriod k) ^ d : ℕ) : ℝ)) := by
+    exact Real.sqrt_le_sqrt hs_card_le
+  have hsum_rpow_le :
+      ∑ c ∈ s, ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) ^
+          (1 / (p : ℝ)) ≤
+        ((((scaleColorPeriod k) ^ d : ℕ) : ℝ)) ^ (1 - 1 / (p : ℝ)) *
+          ((descendantsAtScale Q k).card : ℝ) ^ (1 / (p : ℝ)) := by
+    have hbase :=
+      sum_rpow_inv_le_card_rpow_mul_rpow_sum
+        (s := s) (p := p)
+        (f := fun c => ((descendantsAtScaleScaleColorClass Q k c).card : ℝ))
+        (show 1 ≤ p by omega)
+        (fun c hc => by positivity)
+    rw [hsum_card_eq] at hbase
+    exact hbase.trans <| mul_le_mul_of_nonneg_right hs_card_rpow_le (by positivity)
+  have hsqrt_sum_le :
+      ∑ c ∈ s, Real.sqrt ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) ≤
+        Real.sqrt ((((scaleColorPeriod k) ^ d : ℕ) : ℝ)) *
+          Real.sqrt ((descendantsAtScale Q k).card : ℝ) := by
+    have hbase :
+        ∑ c ∈ s, Real.sqrt ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) ≤
+          Real.sqrt (s.card : ℝ) *
+            Real.sqrt ((descendantsAtScale Q k).card : ℝ) := by
+      simpa [hsum_card_eq] using
+        (Real.sum_sqrt_mul_sqrt_le
+          (s := s)
+          (f := fun _ => (1 : ℝ))
+          (g := fun c => ((descendantsAtScaleScaleColorClass Q k c).card : ℝ))
+          (hf := by intro c; positivity)
+          (hg := by intro c; positivity))
+    exact hbase.trans <|
+      mul_le_mul_of_nonneg_right hsqrt_card_le (by positivity)
+  have hA_sum :
+      ∑ c ∈ s,
+        2 * (p : ℝ) *
+          (((descendantsAtScaleScaleColorClass Q k c).card : ℝ) ^
+            (1 / (p : ℝ)) * K) ≤
+        rosenthalDescendantsAtScaleLpConst d k p *
+          ((descendantsAtScale Q k).card : ℝ) ^ (1 / (p : ℝ)) * K := by
+    calc
+      ∑ c ∈ s,
+          2 * (p : ℝ) *
+            (((descendantsAtScaleScaleColorClass Q k c).card : ℝ) ^
+              (1 / (p : ℝ)) * K)
+          = (2 * (p : ℝ) * K) *
+              ∑ c ∈ s, ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) ^
+                (1 / (p : ℝ)) := by
+                rw [Finset.mul_sum]
+                refine Finset.sum_congr rfl ?_
+                intro c hc
+                ring
+      _ ≤ 2 * (p : ℝ) *
+            ((((scaleColorPeriod k) ^ d : ℕ) : ℝ) ^ (1 - 1 / (p : ℝ)) *
+              ((descendantsAtScale Q k).card : ℝ) ^ (1 / (p : ℝ)) * K) := by
+              have hconst_nonneg : 0 ≤ 2 * (p : ℝ) * K := by positivity
+              have hmul := mul_le_mul_of_nonneg_left hsum_rpow_le hconst_nonneg
+              simpa [mul_assoc, mul_left_comm, mul_comm] using hmul
+      _ = rosenthalDescendantsAtScaleLpConst d k p *
+            ((descendantsAtScale Q k).card : ℝ) ^ (1 / (p : ℝ)) * K := by
+              simp [rosenthalDescendantsAtScaleLpConst]
+              ring
+  have hB_sum :
+      ∑ c ∈ s,
+        4 * rosenthalBennettIntegralConst *
+          (Real.sqrt p *
+            (Real.sqrt ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) * K)) ≤
+        rosenthalDescendantsAtScaleSqrtConst d k p *
+          Real.sqrt ((descendantsAtScale Q k).card : ℝ) * K := by
+    have hRB_nonneg : 0 ≤ rosenthalBennettIntegralConst := by
+      dsimp [rosenthalBennettIntegralConst, IndependentSums.rosenthalBennettIntegralConst]
+      positivity
+    calc
+      ∑ c ∈ s,
+          4 * rosenthalBennettIntegralConst *
+            (Real.sqrt p *
+              (Real.sqrt ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) * K))
+          = (4 * rosenthalBennettIntegralConst * Real.sqrt p * K) *
+              ∑ c ∈ s,
+                Real.sqrt ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) := by
+                  rw [Finset.mul_sum]
+                  refine Finset.sum_congr rfl ?_
+                  intro c hc
+                  ring
+      _ ≤ 4 * rosenthalBennettIntegralConst *
+            (Real.sqrt p *
+              ((Real.sqrt ((((scaleColorPeriod k) ^ d : ℕ) : ℝ)) *
+                Real.sqrt ((descendantsAtScale Q k).card : ℝ)) * K)) := by
+              have hconst_nonneg :
+                  0 ≤ 4 * rosenthalBennettIntegralConst * Real.sqrt p * K := by
+                have htmp : 0 ≤ 4 * rosenthalBennettIntegralConst * Real.sqrt p := by
+                  exact mul_nonneg (mul_nonneg (by positivity) hRB_nonneg) (by positivity)
+                exact mul_nonneg htmp hK_nonneg
+              have hmul := mul_le_mul_of_nonneg_left hsqrt_sum_le hconst_nonneg
+              simpa [mul_assoc, mul_left_comm, mul_comm] using hmul
+      _ = rosenthalDescendantsAtScaleSqrtConst d k p *
+            Real.sqrt ((descendantsAtScale Q k).card : ℝ) * K := by
+              simp [rosenthalDescendantsAtScaleSqrtConst]
+              ring
+  exact ⟨hA_sum, hB_sum⟩
+
 /-- Rosenthal's `L^p` bound for sums over all descendants at a fixed scale,
 using the restriction-local and restriction-unit-range interfaces. -/
 theorem integral_abs_finsetSum_pow_rpow_inv_le_rosenthal_uniform_descendantsAtScale_of_restrictionUnitRangeDependentLaw
@@ -236,123 +371,8 @@ theorem integral_abs_finsetSum_pow_rpow_inv_le_rosenthal_uniform_descendantsAtSc
                 exact disjoint_descendantsAtScaleScaleColorClass_of_ne Q k hneq)
         _ = ∑ i ∈ descendantsAtScale Q k, X i a := by
               rw [descendantsAtScale_eq_biUnion_image_cubeScaleColor Q k]
-    have hsum_card_eq :
-        ∑ c ∈ s, ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) =
-          ((descendantsAtScale Q k).card : ℝ) := by
-      rw [← Nat.cast_sum]
-      exact_mod_cast (card_descendantsAtScale_eq_sum_card_scaleColorClass_image Q k).symm
-    have hs_card_le :
-        (s.card : ℝ) ≤ ((((scaleColorPeriod k) ^ d : ℕ) : ℝ)) := by
-      exact_mod_cast (card_image_cubeScaleColor_descendantsAtScale_le Q k)
-    have hs_card_rpow_le :
-        (s.card : ℝ) ^ (1 - 1 / (p : ℝ)) ≤
-          ((((scaleColorPeriod k) ^ d : ℕ) : ℝ)) ^ (1 - 1 / (p : ℝ)) := by
-      have hexp_nonneg : 0 ≤ 1 - 1 / (p : ℝ) := by
-        have hp_one : (1 : ℝ) ≤ p := by
-          exact_mod_cast (show 1 ≤ p by omega)
-        have hpinv_le_one : 1 / (p : ℝ) ≤ 1 := by
-          simpa using (one_div_le_one_div_of_le zero_lt_one hp_one)
-        linarith
-      exact Real.rpow_le_rpow (by positivity) hs_card_le hexp_nonneg
-    have hsqrt_card_le :
-        Real.sqrt (s.card : ℝ) ≤ Real.sqrt ((((scaleColorPeriod k) ^ d : ℕ) : ℝ)) := by
-      exact Real.sqrt_le_sqrt hs_card_le
-    have hsum_rpow_le :
-        ∑ c ∈ s, ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) ^
-            (1 / (p : ℝ)) ≤
-          ((((scaleColorPeriod k) ^ d : ℕ) : ℝ)) ^ (1 - 1 / (p : ℝ)) *
-            ((descendantsAtScale Q k).card : ℝ) ^ (1 / (p : ℝ)) := by
-      have hbase :=
-        sum_rpow_inv_le_card_rpow_mul_rpow_sum
-          (s := s) (p := p)
-          (f := fun c => ((descendantsAtScaleScaleColorClass Q k c).card : ℝ))
-          (show 1 ≤ p by omega)
-          (fun c hc => by positivity)
-      rw [hsum_card_eq] at hbase
-      exact hbase.trans <| mul_le_mul_of_nonneg_right hs_card_rpow_le (by positivity)
-    have hsqrt_sum_le :
-        ∑ c ∈ s, Real.sqrt ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) ≤
-          Real.sqrt ((((scaleColorPeriod k) ^ d : ℕ) : ℝ)) *
-            Real.sqrt ((descendantsAtScale Q k).card : ℝ) := by
-      have hbase :
-          ∑ c ∈ s, Real.sqrt ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) ≤
-            Real.sqrt (s.card : ℝ) *
-              Real.sqrt ((descendantsAtScale Q k).card : ℝ) := by
-        simpa [hsum_card_eq] using
-          (Real.sum_sqrt_mul_sqrt_le
-            (s := s)
-            (f := fun _ => (1 : ℝ))
-            (g := fun c => ((descendantsAtScaleScaleColorClass Q k c).card : ℝ))
-            (hf := by intro c; positivity)
-            (hg := by intro c; positivity))
-      exact hbase.trans <|
-        mul_le_mul_of_nonneg_right hsqrt_card_le (by positivity)
-    have hA_sum :
-        ∑ c ∈ s,
-          2 * (p : ℝ) *
-            (((descendantsAtScaleScaleColorClass Q k c).card : ℝ) ^
-              (1 / (p : ℝ)) * K) ≤
-          rosenthalDescendantsAtScaleLpConst d k p *
-            ((descendantsAtScale Q k).card : ℝ) ^ (1 / (p : ℝ)) * K := by
-      calc
-        ∑ c ∈ s,
-            2 * (p : ℝ) *
-              (((descendantsAtScaleScaleColorClass Q k c).card : ℝ) ^
-                (1 / (p : ℝ)) * K)
-            = (2 * (p : ℝ) * K) *
-                ∑ c ∈ s, ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) ^
-                  (1 / (p : ℝ)) := by
-                  rw [Finset.mul_sum]
-                  refine Finset.sum_congr rfl ?_
-                  intro c hc
-                  ring
-        _ ≤ 2 * (p : ℝ) *
-              ((((scaleColorPeriod k) ^ d : ℕ) : ℝ) ^ (1 - 1 / (p : ℝ)) *
-                ((descendantsAtScale Q k).card : ℝ) ^ (1 / (p : ℝ)) * K) := by
-                have hconst_nonneg : 0 ≤ 2 * (p : ℝ) * K := by positivity
-                have hmul := mul_le_mul_of_nonneg_left hsum_rpow_le hconst_nonneg
-                simpa [mul_assoc, mul_left_comm, mul_comm] using hmul
-        _ = rosenthalDescendantsAtScaleLpConst d k p *
-              ((descendantsAtScale Q k).card : ℝ) ^ (1 / (p : ℝ)) * K := by
-                simp [rosenthalDescendantsAtScaleLpConst]
-                ring
-    have hB_sum :
-        ∑ c ∈ s,
-          4 * rosenthalBennettIntegralConst *
-            (Real.sqrt p *
-              (Real.sqrt ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) * K)) ≤
-          rosenthalDescendantsAtScaleSqrtConst d k p *
-            Real.sqrt ((descendantsAtScale Q k).card : ℝ) * K := by
-      have hRB_nonneg : 0 ≤ rosenthalBennettIntegralConst := by
-        dsimp [rosenthalBennettIntegralConst, IndependentSums.rosenthalBennettIntegralConst]
-        positivity
-      calc
-        ∑ c ∈ s,
-            4 * rosenthalBennettIntegralConst *
-              (Real.sqrt p *
-                (Real.sqrt ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) * K))
-            = (4 * rosenthalBennettIntegralConst * Real.sqrt p * K) *
-                ∑ c ∈ s,
-                  Real.sqrt ((descendantsAtScaleScaleColorClass Q k c).card : ℝ) := by
-                    rw [Finset.mul_sum]
-                    refine Finset.sum_congr rfl ?_
-                    intro c hc
-                    ring
-        _ ≤ 4 * rosenthalBennettIntegralConst *
-              (Real.sqrt p *
-                ((Real.sqrt ((((scaleColorPeriod k) ^ d : ℕ) : ℝ)) *
-                  Real.sqrt ((descendantsAtScale Q k).card : ℝ)) * K)) := by
-                have hconst_nonneg :
-                    0 ≤ 4 * rosenthalBennettIntegralConst * Real.sqrt p * K := by
-                  have htmp : 0 ≤ 4 * rosenthalBennettIntegralConst * Real.sqrt p := by
-                    exact mul_nonneg (mul_nonneg (by positivity) hRB_nonneg) (by positivity)
-                  exact mul_nonneg htmp hK_nonneg
-                have hmul := mul_le_mul_of_nonneg_left hsqrt_sum_le hconst_nonneg
-                simpa [mul_assoc, mul_left_comm, mul_comm] using hmul
-        _ = rosenthalDescendantsAtScaleSqrtConst d k p *
-              Real.sqrt ((descendantsAtScale Q k).card : ℝ) * K := by
-                simp [rosenthalDescendantsAtScaleSqrtConst]
-                ring
+    obtain ⟨hA_sum, hB_sum⟩ :=
+      rosenthal_scaleColor_cardinality_bounds (Q := Q) (k := k) hp hK_nonneg
     calc
       (∫ a, |∑ R ∈ descendantsAtScale Q k, X R a| ^ p ∂P) ^ (1 / (p : ℝ))
           = (∫ a, |∑ c ∈ s, Y c a| ^ p ∂P) ^ (1 / (p : ℝ)) := by
