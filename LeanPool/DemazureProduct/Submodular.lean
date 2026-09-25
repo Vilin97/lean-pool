@@ -22,7 +22,7 @@ It corresponds roughly to Section 4 of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DemazureProduct
 
@@ -406,7 +406,8 @@ private lemma AspSlipValley (α β : AspPerm) (a b : ℤ) :
   suffices (AspValley α β a b).f = (SlipFace.SlipValley α.s β.s a b).f by
     rwa [Valley.mk.injEq]
   ext l
-  dsimp [AspValley, SlipFace.SlipValley, AspPerm.s]
+  rw [SlipFace.SlipValley_f]
+  rfl
 
 /-- If `τ = α ⋆ β` in the Demazure sense, then the minimum of
 `AspValley α β a b` is `τ.s a b`. -/
@@ -557,7 +558,7 @@ lemma AspValley_step_b (α β : AspPerm) (a b : ℤ) :
     intro n
     subst v w; simp only [AspValley]
     rw [β.b_step n b]
-    unfold Valley.shiftDown
+    rw [Valley.shiftDown_f]
     by_cases h : n ≤ β b
     · simp only [h, ↓reduceIte, sub_add_cancel, add_right_inj, sub_eq_self,
         ite_eq_right_iff, one_ne_zero, imp_false, not_lt]
@@ -1306,6 +1307,7 @@ instance : PartialOrder AspPerm where
 /-- The relation $\alpha \leq_\chi \beta$ from
 [An extended Demazure product](https://arxiv.org/abs/2206.14227): Bruhat order together with
 equality of shifts. In Lean this is the infix `≤χ`. -/
+@[expose]
 def leChi (σ τ : AspPerm) : Prop := σ ≤ τ ∧ σ.χ = τ.χ
 /-- Infix notation for Bruhat order plus equality of shifts. -/
 infix:50 " ≤χ " => leChi

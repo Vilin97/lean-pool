@@ -24,7 +24,7 @@ to keep track of the set where the minimum value is achieved, and some facts abo
 changes when the valley is modified in simple ways.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DemazureProduct
 
@@ -115,6 +115,8 @@ def shiftDown (k : ℤ) : Valley where
       simp_all
     rw [this]
     apply v.rises
+
+lemma shiftDown_f (k : ℤ) : (v.shiftDown k).f = fun n => v.f n - k := by rfl
 
 /-- Shifting a valley downward does not change its rightmost minimizer. -/
 lemma shift_down_M (k : ℤ) : (v.shiftDown k).M = v.M := by
