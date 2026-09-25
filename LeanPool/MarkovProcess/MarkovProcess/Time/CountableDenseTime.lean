@@ -136,10 +136,10 @@ theorem exists_cast_btwn {a b : NNReal} (hab : a < b) :
   · rw [hcoe, hcast]
     exact hqb
 
-private instance : Infinite DenseTime :=
+instance : Infinite DenseTime :=
   Infinite.of_injective (fun n : ℕ ↦ (n : DenseTime)) Nat.cast_injective
 
-private instance : Countable DenseTime where
+instance : Countable DenseTime where
   exists_injective_nat' :=
     ⟨fun q ↦ Encodable.encode (q : ℚ), fun _ _ h ↦
       NNRat.ext (Encodable.encode_injective h)⟩

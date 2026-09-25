@@ -27,7 +27,7 @@ namespace ContinuousPath
 variable {alpha : Type*} [PseudoMetricSpace alpha]
 
 /-- The positive thresholds used to detect zero distance to a closed set. -/
-private def detectionThreshold (n : ℕ) : ℝ := 1 / (n + 1 : ℝ)
+def detectionThreshold (n : ℕ) : ℝ := 1 / (n + 1 : ℝ)
 
 private theorem detectionThreshold_pos (n : ℕ) : 0 < detectionThreshold n := by
   exact one_div_pos.mpr (Nat.cast_add_one_pos n)

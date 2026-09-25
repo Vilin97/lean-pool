@@ -59,7 +59,7 @@ section CompleteSpace
 
 variable [CompleteSpace E]
 
-private instance : NormedAlgebra ℚ (E →L[ℝ] E) :=
+instance normedAlgebraRatEnd : NormedAlgebra ℚ (E →L[ℝ] E) :=
   NormedAlgebra.restrictScalars ℚ ℝ (E →L[ℝ] E)
 
 /-- The exponential of the bounded Yosida generator at nonnegative time. -/

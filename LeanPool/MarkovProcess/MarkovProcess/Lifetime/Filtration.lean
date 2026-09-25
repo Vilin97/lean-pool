@@ -69,7 +69,8 @@ theorem measurable_shift_canonicalFiltration (S t : NNReal) :
     exact coordinate_shift S u omega
   rw [hfun]
   exact le_iSup_of_le
-    (⟨S + u, by exact add_le_add_left u.property S⟩ :
+    (⟨S + u, by
+      exact add_le_add (le_refl S) (show (u : NNReal) ≤ t from u.property)⟩ :
       Set.Iic (S + t)) le_rfl
 
 /-- The lifetime is a stopping time for the raw canonical filtration. -/

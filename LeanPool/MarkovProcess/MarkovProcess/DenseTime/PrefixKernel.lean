@@ -51,7 +51,7 @@ private theorem denseTime_mem_physicalPrefix (e : ℕ ≃ D) (ι : D ↪ NNReal)
 /-- Reindex a path on the physical prefix by its enumeration positions. -/
 def denseTimePrefixReindex (e : ℕ ≃ D) (ι : D ↪ NNReal) (n : ℕ)
     (path : denseTimePhysicalPrefix e ι n → α) : Fin n → α :=
-  fun i ↦ path ⟨ι (e i), denseTime_mem_physicalPrefix e ι n i⟩
+  fun i ↦ path ⟨ι (e i), by exact denseTime_mem_physicalPrefix e ι n i⟩
 
 /-- Reindexing a physical-prefix path by enumeration positions is measurable. -/
 theorem measurable_denseTimePrefixReindex (e : ℕ ≃ D) (ι : D ↪ NNReal) (n : ℕ) :

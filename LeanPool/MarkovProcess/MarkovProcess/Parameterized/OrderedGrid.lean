@@ -35,7 +35,8 @@ variable {Theta alpha : Type*} [MeasurableSpace Theta] [MeasurableSpace alpha]
 
 variable (P : ParameterizedSubMarkovKernelSemigroup Theta alpha)
 
-private def lastIndex (n : ℕ) : Finset.Iic n :=
+/-- The final coordinate in the finite history through step `n`. -/
+def lastIndex (n : ℕ) : Finset.Iic n :=
   ⟨n, Finset.mem_Iic.mpr le_rfl⟩
 
 /-- The jointly measurable transition kernel at one fixed time increment. -/
