@@ -367,6 +367,34 @@ MSC: 16S32
 
 
 /-
+Vendored dependency provenance:
+
+`LeanPool/Stafford38/AlgebraicAnalysis/` adapts the separately distributed
+AlgebraicAnalysis library from https://github.com/itpplasma/algebraic-analysis
+at commit 4aae47967f6ba02ffe2f639ab06564c9a9d1ecc8, the dependency pinned in
+https://github.com/itpplasma/stafford38-formal/blob/1e234855eee36d2541dd69580501408288760e21/lake-manifest.json.
+It is distributed under Apache-2.0:
+https://github.com/itpplasma/algebraic-analysis/blob/4aae47967f6ba02ffe2f639ab06564c9a9d1ecc8/LICENSE.
+
+Retained AlgebraicAnalysis NOTICE:
+
+AlgebraicAnalysis
+
+This project is distributed under the Apache License, Version 2.0. See
+LICENSE for the complete license text.
+
+The package depends on Lean and Mathlib. Exact toolchain and dependency
+revisions are recorded in lean-toolchain and lake-manifest.json.
+
+Some declarations were extracted from the historical Stafford38 development
+repository under the Apache-2.0 project license. The exact source revisions,
+paths, declaration mappings, and historical downstream compatibility
+relationships are recorded in docs/provenance.yaml.
+
+Pinned dependency notice and detailed source provenance:
+https://github.com/itpplasma/algebraic-analysis/blob/4aae47967f6ba02ffe2f639ab06564c9a9d1ecc8/NOTICE
+https://github.com/itpplasma/algebraic-analysis/blob/4aae47967f6ba02ffe2f639ab06564c9a9d1ecc8/docs/provenance.yaml.
+
 Retained upstream notice:
 
 Copyright 2026 Christopher Albert
