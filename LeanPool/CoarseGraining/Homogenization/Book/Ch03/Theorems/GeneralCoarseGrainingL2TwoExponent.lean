@@ -138,6 +138,65 @@ private theorem generalCoarseGrainingL2TwoExponentTheory_of_scalarSolutionCompar
     _ ≤ generalCoarseGrainingL2TwoExponentRHS C Q a a0 s r r₂ j g w.u :=
         hlocalized ha0_saved w hs hr hrs hs_lt hr₂ hg
 
+private theorem localizedCoarseResponse_le_twoExponentBound_public
+    {d : ℕ} [NeZero d] (Q : TriadicCube d) (a : CoeffFamily d)
+    (a0 : ConstantCoeffMatrix d)
+    (u : H1Function (Ch02.cubeDomain Q : Set (Vec d)))
+    (g : Vec d → Vec d) (j : ℕ) {r r₂ : ℝ}
+    (hr : 0 < r) (hr₂ : r ≤ r₂) (hg₂ : ForceBesovRegularity Q r₂ g)
+    (hData : _root_.Homogenization.OpenCubeDescendantDeterministicCoarseData Q
+      (publicCoeffField Q a)) :
+    _root_.Homogenization.localizedCoarseFluxResponseRHSBound Q (publicCoeffField Q a)
+        a0.matrix r j u.grad g ≤
+      _root_.Homogenization.coarseGrainingL2FluxDefectBoundTwoExponent Q (publicCoeffField Q a)
+        a0.matrix r r₂ j u.grad g := by
+  let A : CoeffField d := publicCoeffField Q a
+  have hEll : IsEllipticFieldOn (a.coeffOn Q).lam (a.coeffOn Q).Lam
+      (cubeSet Q) A := by
+    dsimp [A]
+    exact publicCoeffField_isEllipticFieldOn_cubeSet Q a
+  have henergy_int :
+      MeasureTheory.IntegrableOn (coefficientEnergyDensity A u.grad)
+        (cubeSet Q) MeasureTheory.volume := by
+    have hgrad : MemVectorL2 (cubeSet Q) u.grad := by
+      simpa [publicH1ToCubeSet_grad] using
+        (publicH1ToCubeSet u).grad_memVectorL2
+    exact integrableOn_coefficientEnergyDensity_of_isEllipticFieldOn hEll hgrad
+  have hr_half_pos : 0 < r / 2 := by
+    nlinarith
+  have hsumB :
+      Summable (fun n : ℕ =>
+        geometricWeight (r / 2) 2 n *
+          Real.rpow
+            (maxDescendantBBlockNormAtScale Q (Q.scale - (n : ℤ)) A)
+            (2 / 2)) := by
+    have hsum :
+        Summable (fun n : ℕ =>
+          geometricWeight (r / 2) 2 n *
+            maxDescendantBBlockNormAtScale Q (Q.scale - (n : ℤ)) A) :=
+      summable_qtwo_maxDescendantBBlockNormAtScale_of_isEllipticFieldOn_of_openCubeDescendantDeterministicCoarseData
+        (Q := Q) (a := A) (s := r / 2) hr_half_pos hEll hData
+    simpa [Real.rpow_one] using hsum
+  have hsumSigma :
+      Summable (fun n : ℕ =>
+        geometricWeight (r / 2) 2 n *
+          Real.rpow
+            (maxDescendantSigmaStarInvNormAtScale Q (Q.scale - (n : ℤ)) A)
+            (2 / 2)) := by
+    have hsum :
+        Summable (fun n : ℕ =>
+          geometricWeight (r / 2) 2 n *
+            maxDescendantSigmaStarInvNormAtScale Q (Q.scale - (n : ℤ)) A) :=
+      summable_qtwo_maxDescendantSigmaStarInvNormAtScale_of_isEllipticFieldOn_of_openCubeDescendantDeterministicCoarseData
+        (Q := Q) (a := A) (s := r / 2) hr_half_pos hEll hData
+    simpa [Real.rpow_one] using hsum
+  exact
+    _root_.Homogenization.localizedCoarseFluxResponseRHSBound_le_coarseGrainingL2FluxDefectBoundTwoExponent_of_bddAbove_of_isEllipticFieldOn_of_summable
+      Q A a0.matrix j u.grad g hr hr₂ hEll henergy_int
+      hg₂.partialSeminorms_bddAbove
+      (fun R hR => forceBesovRegularity_descendant_partialSeminorms_bddAbove hg₂ hR)
+      hsumB hsumSigma
+
 private theorem generalCoarseGrainingL2TwoExponentTheory_of_scalarSolutionComparisonDualityEstimateExponentLoss_of_const_mul_descendantCoarseFluxResponseRHSBound_of_openCubeDescendantDeterministicCoarseData
     {d : ℕ} [NeZero d] {Cdual K : ℝ}
     (hdual : ScalarSolutionComparisonDualityEstimateExponentLoss d Cdual)
@@ -202,53 +261,10 @@ private theorem generalCoarseGrainingL2TwoExponentTheory_of_scalarSolutionCompar
       localizedFluxDefectNegativeBesovAverageTwo_fluxDefect_le_const_mul_localizedCoarseFluxResponseRHSBound_of_descendant_bounds
         Q (publicCoeffField Q a) a0.matrix w.u.grad g j hK_nonneg
         hdefect_bdd (hdescendantRHS ha0 w hr hr_lt hg₁)
-  have hEll : IsEllipticFieldOn (a.coeffOn Q).lam (a.coeffOn Q).Lam
-      (cubeSet Q) A := by
-    dsimp [A]
-    exact publicCoeffField_isEllipticFieldOn_cubeSet Q a
-  have henergy_int :
-      MeasureTheory.IntegrableOn (coefficientEnergyDensity A w.u.grad)
-        (cubeSet Q) MeasureTheory.volume := by
-    have hgrad : MemVectorL2 (cubeSet Q) w.u.grad := by
-      simpa [publicH1ToCubeSet_grad] using
-        (publicH1ToCubeSet w.u).grad_memVectorL2
-    exact integrableOn_coefficientEnergyDensity_of_isEllipticFieldOn hEll hgrad
-  have hr_half_pos : 0 < r / 2 := by
-    nlinarith
-  have hsumB :
-      Summable (fun n : ℕ =>
-        geometricWeight (r / 2) 2 n *
-          Real.rpow
-            (maxDescendantBBlockNormAtScale Q (Q.scale - (n : ℤ)) A)
-            (2 / 2)) := by
-    have hsum :
-        Summable (fun n : ℕ =>
-          geometricWeight (r / 2) 2 n *
-            maxDescendantBBlockNormAtScale Q (Q.scale - (n : ℤ)) A) :=
-      summable_qtwo_maxDescendantBBlockNormAtScale_of_isEllipticFieldOn_of_openCubeDescendantDeterministicCoarseData
-        (Q := Q) (a := A) (s := r / 2) hr_half_pos hEll (hData Q a)
-    simpa [Real.rpow_one] using hsum
-  have hsumSigma :
-      Summable (fun n : ℕ =>
-        geometricWeight (r / 2) 2 n *
-          Real.rpow
-            (maxDescendantSigmaStarInvNormAtScale Q (Q.scale - (n : ℤ)) A)
-            (2 / 2)) := by
-    have hsum :
-        Summable (fun n : ℕ =>
-          geometricWeight (r / 2) 2 n *
-            maxDescendantSigmaStarInvNormAtScale Q (Q.scale - (n : ℤ)) A) :=
-      summable_qtwo_maxDescendantSigmaStarInvNormAtScale_of_isEllipticFieldOn_of_openCubeDescendantDeterministicCoarseData
-        (Q := Q) (a := A) (s := r / 2) hr_half_pos hEll (hData Q a)
-    simpa [Real.rpow_one] using hsum
   have hL_le_B : L ≤ B := by
-    dsimp [L, B]
-    exact
-      _root_.Homogenization.localizedCoarseFluxResponseRHSBound_le_coarseGrainingL2FluxDefectBoundTwoExponent_of_bddAbove_of_isEllipticFieldOn_of_summable
-        Q A a0.matrix j w.u.grad g hr hr₂ hEll henergy_int
-        hg₂.partialSeminorms_bddAbove
-        (fun R hR => forceBesovRegularity_descendant_partialSeminorms_bddAbove hg₂ hR)
-        hsumB hsumSigma
+    dsimp [L, B, A]
+    exact localizedCoarseResponse_le_twoExponentBound_public Q a a0 w.u g j
+      hr hr₂ hg₂ (hData Q a)
   have hZ_le_B : Z ≤ K * B :=
     hZ_le_L.trans (mul_le_mul_of_nonneg_left hL_le_B hK_nonneg)
   have hB_nonneg : 0 ≤ B := by
