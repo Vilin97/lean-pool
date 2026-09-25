@@ -3,9 +3,11 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-import Mathlib.Analysis.InnerProductSpace.Adjoint
+module
+
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 /-!
 # The multiplication operator `M_f` on `L²`
@@ -43,6 +45,8 @@ Mathlib reuse: Hölder's inequality for `L^∞ · L²`
 (`eLpNorm_smul_le_eLpNorm_top_mul_eLpNorm`), the `MemLp.toLp` /
 `MemLp.coeFn_toLp` interface to `Lp`, and `LinearMap.mkContinuous`.
 -/
+
+@[expose] public section
 
 open scoped ENNReal NNReal
 open MeasureTheory

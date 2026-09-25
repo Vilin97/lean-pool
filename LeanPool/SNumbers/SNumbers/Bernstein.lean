@@ -3,9 +3,11 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Helpers
-import LeanPool.SNumbers.SNumbers.Injectivity
-import Mathlib.LinearAlgebra.Dimension.RankNullity
+module
+
+public import LeanPool.SNumbers.SNumbers.Helpers
+public import LeanPool.SNumbers.SNumbers.Injectivity
+public import Mathlib.LinearAlgebra.Dimension.RankNullity
 
 /-!
 # Bernstein numbers `b_n`
@@ -25,6 +27,8 @@ The Bernstein numbers are the *smallest injective strict s-number sequence*
 
 The development needs only `[NontriviallyNormedField 𝕜]`.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Gelfand
-import LeanPool.SNumbers.SNumbers.Kolmogorov
+module
+
+public import LeanPool.SNumbers.SNumbers.Gelfand
+public import LeanPool.SNumbers.SNumbers.Kolmogorov
 
 /-!
 # Injective and surjective `s`-number sequences
@@ -57,6 +59,8 @@ quotient-norms, and these are literally unchanged when `S` is composed with
 an isometry / a metric surjection (`‖J ∘ T‖ = ‖T‖`, `‖T ∘ Q‖ = ‖T‖`), so
 the infimum sets coincide.
 -/
+
+@[expose] public section
 
 universe u
 

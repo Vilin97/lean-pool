@@ -3,13 +3,15 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.LinearMap
-import Mathlib.Analysis.InnerProductSpace.Positive
-import Mathlib.Analysis.Normed.Operator.Compact.Basic
-import LeanPool.SNumbers.SNumbers.Approximation
-import LeanPool.SNumbers.SNumbers.Bernstein
-import LeanPool.SNumbers.BasicResults.Spectral.Representation
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.InnerProductSpace.LinearMap
+public import Mathlib.Analysis.InnerProductSpace.Positive
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import LeanPool.SNumbers.SNumbers.Approximation
+public import LeanPool.SNumbers.SNumbers.Bernstein
+public import LeanPool.SNumbers.BasicResults.Spectral.Representation
 
 /-!
 # Singular value decomposition of a Hilbert-space operator
@@ -46,6 +48,8 @@ operators.
   `SVD.sum_norm_sq_apply_le_of_rows` derives such a bound from the rows of an
   operator (Bessel plus a row bound).
 -/
+
+@[expose] public section
 
 universe u
 

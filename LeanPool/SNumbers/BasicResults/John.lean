@@ -3,24 +3,26 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.BasicResults.Determinant
-import LeanPool.SNumbers.BasicResults.JohnAux
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.Dual
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.InnerProductSpace.Spectrum
-import Mathlib.Analysis.InnerProductSpace.Trace
-import Mathlib.Analysis.LocallyConvex.Separation
-import Mathlib.Analysis.Normed.Group.Quotient
-import Mathlib.Analysis.Normed.Module.DoubleDual
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Analysis.Normed.Module.HahnBanach
-import Mathlib.Algebra.Order.Algebra
-import Mathlib.Analysis.Normed.Group.Basic
-import Mathlib.Data.EReal.Operations
-import Mathlib.Topology.Algebra.InfiniteSum.Order
-import Mathlib.Topology.MetricSpace.Bounded
-import Mathlib.Topology.Order.Compact
+module
+
+public import LeanPool.SNumbers.BasicResults.Determinant
+public import LeanPool.SNumbers.BasicResults.JohnAux
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.InnerProductSpace.Dual
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.InnerProductSpace.Spectrum
+public import Mathlib.Analysis.InnerProductSpace.Trace
+public import Mathlib.Analysis.LocallyConvex.Separation
+public import Mathlib.Analysis.Normed.Group.Quotient
+public import Mathlib.Analysis.Normed.Module.DoubleDual
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.Analysis.Normed.Module.HahnBanach
+public import Mathlib.Algebra.Order.Algebra
+public import Mathlib.Analysis.Normed.Group.Basic
+public import Mathlib.Data.EReal.Operations
+public import Mathlib.Topology.Algebra.InfiniteSum.Order
+public import Mathlib.Topology.MetricSpace.Bounded
+public import Mathlib.Topology.Order.Compact
 
 /-!
 # John's ellipsoid — the maximal-volume position
@@ -65,6 +67,8 @@ norm (`c‖x‖ ≤ p x ≤ C‖x‖`, `c > 0`). The ellipsoid `T (B₂)` lies i
   on the dual `(X ⧸ M)*`, representing contact points via `Φ.flip` (avoiding the
   topological double dual).
 -/
+
+@[expose] public section
 
 universe u
 

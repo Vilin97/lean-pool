@@ -3,8 +3,10 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.AddOns.Approximable
-import LeanPool.SNumbers.AddOns.Compact
+module
+
+public import LeanPool.SNumbers.AddOns.Approximable
+public import LeanPool.SNumbers.AddOns.Compact
 
 /-!
 # Add-ons: compactness measured by s-numbers
@@ -28,5 +30,6 @@ The singular value decomposition itself — including the **scalar
 factorisation** `SVD.exists_scalar_factorisation` consumed by the
 `s`-numbers uniqueness theorem — lives in `BasicResults.SVD`.
 -/
+
 
 /- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/

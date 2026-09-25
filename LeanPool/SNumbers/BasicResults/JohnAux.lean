@@ -3,23 +3,25 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import Mathlib.Analysis.Convex.Caratheodory
-import Mathlib.Analysis.Convex.Combination
-import Mathlib.Analysis.Convex.StdSimplex
-import Mathlib.Analysis.Convex.Topology
-import Mathlib.Analysis.Convex.Cone.Extension
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.Dual
-import Mathlib.Analysis.InnerProductSpace.Trace
-import Mathlib.Analysis.LocallyConvex.HahnBanach
-import Mathlib.Analysis.Normed.Module.Span
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
-import Mathlib.LinearAlgebra.Basis.Defs
-import Mathlib.LinearAlgebra.Determinant
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.LinearAlgebra.Matrix.ToLin
+module
+
+public import Mathlib.Analysis.Convex.Caratheodory
+public import Mathlib.Analysis.Convex.Combination
+public import Mathlib.Analysis.Convex.StdSimplex
+public import Mathlib.Analysis.Convex.Topology
+public import Mathlib.Analysis.Convex.Cone.Extension
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.InnerProductSpace.Dual
+public import Mathlib.Analysis.InnerProductSpace.Trace
+public import Mathlib.Analysis.LocallyConvex.HahnBanach
+public import Mathlib.Analysis.Normed.Module.Span
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
+public import Mathlib.LinearAlgebra.Basis.Defs
+public import Mathlib.LinearAlgebra.Determinant
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.LinearAlgebra.Matrix.ToLin
 
 /-!
 # Auxiliary lemmas for John's ellipsoid theorem
@@ -46,6 +48,8 @@ candidate for upstreaming to Mathlib:
   the endomorphisms of a finite-dimensional inner product space is `A ↦ tr (A ∘ G)`
   for some endomorphism `G`.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace ComplexConjugate
 

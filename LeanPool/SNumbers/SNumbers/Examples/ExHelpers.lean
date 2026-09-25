@@ -3,9 +3,11 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Basic
-import LeanPool.SNumbers.SNumbers.PiLpCoordinates
-import Mathlib.Analysis.Convex.KreinMilman
+module
+
+public import LeanPool.SNumbers.SNumbers.Basic
+public import LeanPool.SNumbers.SNumbers.PiLpCoordinates
+public import Mathlib.Analysis.Convex.KreinMilman
 
 /-!
 # Shared helpers for the worked examples
@@ -32,6 +34,8 @@ subspace of large enough dimension, a vector that is "flat" in the sense of
 saturating a prescribed coordinate bound on many coordinates. The proof is an
 extreme-point argument (Krein–Milman) combined with the pigeonhole lemma.
 -/
+
+@[expose] public section
 
 universe u
 

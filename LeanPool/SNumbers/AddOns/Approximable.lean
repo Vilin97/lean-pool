@@ -3,8 +3,10 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Approximation
-import Mathlib.Analysis.Normed.Operator.Compact.Basic
+module
+
+public import LeanPool.SNumbers.SNumbers.Approximation
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
 
 /-!
 # Approximable operators
@@ -36,6 +38,8 @@ treated in `AddOns.Compact` via the singular value decomposition.
   compact; `SVD.isCompactOperator_of_rank_le` specialises this to operators of
   finite rank.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import LeanPool.SNumbers.BasicResults.John
+module
+
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.Analysis.RCLike.Basic
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.SNumbers.BasicResults.John
 
 /-!
 # The Kadets–Snobar projection theorem
@@ -21,6 +23,8 @@ The theorem is reduced to the John's-ellipsoid development in `BasicResults.John
 weaken `dim V` to `n`; the underlying input is `John.john_decomposition`, the
 John decomposition of identity.
 -/
+
+@[expose] public section
 
 universe u
 

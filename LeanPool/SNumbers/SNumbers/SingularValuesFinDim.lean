@@ -3,9 +3,11 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Uniqueness
-import Mathlib.Analysis.InnerProductSpace.SingularValues
-import Mathlib.Analysis.Normed.Operator.Compact.Basic
+module
+
+public import LeanPool.SNumbers.SNumbers.Uniqueness
+public import Mathlib.Analysis.InnerProductSpace.SingularValues
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
 
 /-!
 # Singular numbers coincide with all `s`-numbers (finite dimension)
@@ -44,6 +46,8 @@ s S n  =  aₙ(S)            (Pietsch uniqueness on Hilbert spaces)
   sequence. This is general: specialising `s` to the approximation numbers
   gives `aₙ = σₙ`, so no separate statement is needed.
 -/
+
+@[expose] public section
 
 universe u
 

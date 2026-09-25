@@ -3,10 +3,12 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.AddOns.Approximable
-import LeanPool.SNumbers.BasicResults.SVD
-import LeanPool.SNumbers.SNumbers.EntropyBounds
-import LeanPool.SNumbers.SNumbers.Uniqueness
+module
+
+public import LeanPool.SNumbers.AddOns.Approximable
+public import LeanPool.SNumbers.BasicResults.SVD
+public import LeanPool.SNumbers.SNumbers.EntropyBounds
+public import LeanPool.SNumbers.SNumbers.Uniqueness
 
 /-!
 # Compactness measured by `s`-numbers
@@ -76,6 +78,8 @@ operators. On Hilbert spaces the Schmidt representation repairs this, and then
   North-Holland, 1980, [doi](<https://doi.org/10.1016/S0924-6509(09)X7001-7>),
   12.3.
 -/
+
+@[expose] public section
 
 universe u
 

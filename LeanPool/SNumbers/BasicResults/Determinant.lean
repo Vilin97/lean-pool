@@ -3,9 +3,11 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.LinearAlgebra.Determinant
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.LinearAlgebra.Determinant
 
 /-!
 # Determinant facts: adjoint, singular values, diagonal and bordered matrices
@@ -22,6 +24,8 @@ import Mathlib.LinearAlgebra.Determinant
   elementary column-operation form of the Schur determinant formula, over any
   commutative ring and with no invertibility hypothesis.
 -/
+
+@[expose] public section
 
 open LinearMap
 open scoped ComplexConjugate

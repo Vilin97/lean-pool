@@ -3,19 +3,21 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Hilbert
-import LeanPool.SNumbers.SNumbers.Uniqueness
-import LeanPool.SNumbers.SNumbers.Bernstein
-import LeanPool.SNumbers.SNumbers.Gelfand
-import LeanPool.SNumbers.SNumbers.Kolmogorov
-import LeanPool.SNumbers.SNumbers.SingularValuesFinDim
-import LeanPool.SNumbers.BasicResults.Determinant
-import LeanPool.SNumbers.BasicResults.GarlingGordon
-import LeanPool.SNumbers.BasicResults.KadetsSnobar
-import Mathlib.Analysis.Normed.Module.HahnBanach
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.InnerProductSpace.NormDet
-import Mathlib.Analysis.SpecialFunctions.Sqrt
+module
+
+public import LeanPool.SNumbers.SNumbers.Hilbert
+public import LeanPool.SNumbers.SNumbers.Uniqueness
+public import LeanPool.SNumbers.SNumbers.Bernstein
+public import LeanPool.SNumbers.SNumbers.Gelfand
+public import LeanPool.SNumbers.SNumbers.Kolmogorov
+public import LeanPool.SNumbers.SNumbers.SingularValuesFinDim
+public import LeanPool.SNumbers.BasicResults.Determinant
+public import LeanPool.SNumbers.BasicResults.GarlingGordon
+public import LeanPool.SNumbers.BasicResults.KadetsSnobar
+public import Mathlib.Analysis.Normed.Module.HahnBanach
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.InnerProductSpace.NormDet
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Comparison of `s`-number sequences (general spaces)
@@ -103,6 +105,8 @@ admissible `(A, B)` yields `hₙ(S) ≤ sₙ(S)`.
   [arxiv](https://arxiv.org/abs/2405.05509). The `aₙ ≤ (1+√n)·min(cₙ,dₙ)`
   bound is from here.
 -/
+
+@[expose] public section
 
 universe u
 

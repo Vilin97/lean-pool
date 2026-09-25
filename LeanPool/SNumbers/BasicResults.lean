@@ -3,20 +3,22 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.BasicResults.Auerbach
-import LeanPool.SNumbers.BasicResults.SVD
-import LeanPool.SNumbers.BasicResults.Determinant
-import LeanPool.SNumbers.BasicResults.GarlingGordon
-import LeanPool.SNumbers.BasicResults.KadetsSnobar
-import LeanPool.SNumbers.BasicResults.LittleGrothendieck
-import LeanPool.SNumbers.BasicResults.John
-import LeanPool.SNumbers.BasicResults.JohnAux
-import LeanPool.SNumbers.BasicResults.Spectral.MonotoneConvergence
-import LeanPool.SNumbers.BasicResults.Spectral.Complexification
-import LeanPool.SNumbers.BasicResults.Spectral.Projection
-import LeanPool.SNumbers.BasicResults.Spectral.RealProjection
-import LeanPool.SNumbers.BasicResults.Spectral.Representation
-import LeanPool.SNumbers.BasicResults.Spectral.MultiplicationOperator
+module
+
+public import LeanPool.SNumbers.BasicResults.Auerbach
+public import LeanPool.SNumbers.BasicResults.SVD
+public import LeanPool.SNumbers.BasicResults.Determinant
+public import LeanPool.SNumbers.BasicResults.GarlingGordon
+public import LeanPool.SNumbers.BasicResults.KadetsSnobar
+public import LeanPool.SNumbers.BasicResults.LittleGrothendieck
+public import LeanPool.SNumbers.BasicResults.John
+public import LeanPool.SNumbers.BasicResults.JohnAux
+public import LeanPool.SNumbers.BasicResults.Spectral.MonotoneConvergence
+public import LeanPool.SNumbers.BasicResults.Spectral.Complexification
+public import LeanPool.SNumbers.BasicResults.Spectral.Projection
+public import LeanPool.SNumbers.BasicResults.Spectral.RealProjection
+public import LeanPool.SNumbers.BasicResults.Spectral.Representation
+public import LeanPool.SNumbers.BasicResults.Spectral.MultiplicationOperator
 
 /-!
 # Basic results
@@ -84,5 +86,6 @@ pipeline:
 
 Each module here (especially `Complexification`) is a candidate for upstreaming to Mathlib.
 -/
+
 
 /- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/

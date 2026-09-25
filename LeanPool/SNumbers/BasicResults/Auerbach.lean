@@ -3,10 +3,12 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.LinearAlgebra.Determinant
-import Mathlib.Topology.Compactness.Compact
-import Mathlib.Topology.Instances.Matrix
+module
+
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.LinearAlgebra.Determinant
+public import Mathlib.Topology.Compactness.Compact
+public import Mathlib.Topology.Instances.Matrix
 
 /-!
 # Auerbach's Lemma
@@ -17,6 +19,8 @@ whose dual coordinate functionals also satisfy `‖eⁱ‖ = 1`.
 The proof maximizes `|det|` on the product of unit balls, then reads off the basis
 and dual functionals from the maximizer.
 -/
+
+@[expose] public section
 
 noncomputable section
 

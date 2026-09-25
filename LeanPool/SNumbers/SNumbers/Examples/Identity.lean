@@ -3,9 +3,11 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Approximation
-import LeanPool.SNumbers.SNumbers.Examples.ExHelpers
-import Mathlib.Analysis.MeanInequalities
+module
+
+public import LeanPool.SNumbers.SNumbers.Approximation
+public import LeanPool.SNumbers.SNumbers.Examples.ExHelpers
+public import Mathlib.Analysis.MeanInequalities
 
 /-!
 # Example: s-numbers of the identity embedding `ℓ^q_m → ℓ^p_m`
@@ -36,6 +38,8 @@ This file develops the case `1 ≤ p ≤ q < ∞`:
   flatness / extreme-point lemma `exists_flat_vector` of
   `SNumbers.Examples.ExHelpers`.
 -/
+
+@[expose] public section
 
 universe u
 

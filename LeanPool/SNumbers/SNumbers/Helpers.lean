@@ -3,8 +3,10 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Basic
-import Mathlib.Analysis.Normed.Group.Quotient
+module
+
+public import LeanPool.SNumbers.SNumbers.Basic
+public import Mathlib.Analysis.Normed.Group.Quotient
 
 /-!
 # Helpers shared across s-number constructions
@@ -34,6 +36,8 @@ Mathlib ships the `ContinuousLinearMap` wrappers `Submodule.mkQL` and
 topological modules but without operator-norm information; the lemmas here
 add the missing norm bounds in the normed setting.
 -/
+
+@[expose] public section
 
 universe u
 

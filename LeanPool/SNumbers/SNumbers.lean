@@ -3,26 +3,28 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Basic
-import LeanPool.SNumbers.SNumbers.Helpers
-import LeanPool.SNumbers.SNumbers.PiLpCoordinates
-import LeanPool.SNumbers.SNumbers.Approximation
-import LeanPool.SNumbers.SNumbers.Bernstein
-import LeanPool.SNumbers.SNumbers.Gelfand
-import LeanPool.SNumbers.SNumbers.Kolmogorov
-import LeanPool.SNumbers.SNumbers.KolmogorovLifting
-import LeanPool.SNumbers.SNumbers.Hilbert
-import LeanPool.SNumbers.SNumbers.Inequalities
-import LeanPool.SNumbers.SNumbers.MaxDifference
-import LeanPool.SNumbers.SNumbers.Uniqueness
-import LeanPool.SNumbers.SNumbers.SingularValuesFinDim
-import LeanPool.SNumbers.SNumbers.Injectivity
-import LeanPool.SNumbers.SNumbers.Entropy
-import LeanPool.SNumbers.SNumbers.EntropyBounds
-import LeanPool.SNumbers.SNumbers.Examples.ExHelpers
-import LeanPool.SNumbers.SNumbers.Examples.Identity
-import LeanPool.SNumbers.SNumbers.Examples.DiagonalMatrices
-import LeanPool.SNumbers.SNumbers.Examples.IdentityL1Linfty
+module
+
+public import LeanPool.SNumbers.SNumbers.Basic
+public import LeanPool.SNumbers.SNumbers.Helpers
+public import LeanPool.SNumbers.SNumbers.PiLpCoordinates
+public import LeanPool.SNumbers.SNumbers.Approximation
+public import LeanPool.SNumbers.SNumbers.Bernstein
+public import LeanPool.SNumbers.SNumbers.Gelfand
+public import LeanPool.SNumbers.SNumbers.Kolmogorov
+public import LeanPool.SNumbers.SNumbers.KolmogorovLifting
+public import LeanPool.SNumbers.SNumbers.Hilbert
+public import LeanPool.SNumbers.SNumbers.Inequalities
+public import LeanPool.SNumbers.SNumbers.MaxDifference
+public import LeanPool.SNumbers.SNumbers.Uniqueness
+public import LeanPool.SNumbers.SNumbers.SingularValuesFinDim
+public import LeanPool.SNumbers.SNumbers.Injectivity
+public import LeanPool.SNumbers.SNumbers.Entropy
+public import LeanPool.SNumbers.SNumbers.EntropyBounds
+public import LeanPool.SNumbers.SNumbers.Examples.ExHelpers
+public import LeanPool.SNumbers.SNumbers.Examples.Identity
+public import LeanPool.SNumbers.SNumbers.Examples.DiagonalMatrices
+public import LeanPool.SNumbers.SNumbers.Examples.IdentityL1Linfty
 
 /-!
 # s-Numbers of bounded linear operators between Banach spaces
@@ -168,5 +170,6 @@ operators, and which `s`-number sequences detect compactness.
   preprint, 2026, [arxiv](https://arxiv.org/abs/2608.05024) (the maximal
   difference theorem).
 -/
+
 
 /- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/

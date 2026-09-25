@@ -3,9 +3,11 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Helpers
-import Mathlib.Analysis.Normed.Module.RieszLemma
-import Mathlib.Analysis.Normed.Module.FiniteDimension
+module
+
+public import LeanPool.SNumbers.SNumbers.Helpers
+public import Mathlib.Analysis.Normed.Module.RieszLemma
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
 
 /-!
 # Approximation numbers
@@ -49,6 +51,8 @@ s-number sequence `s`).
 * `SNumbers.sn_le_approximationNumber` : `s_n S ≤ a_n S` for every s-number
     sequence `s` — the approximation numbers are the largest.
 -/
+
+@[expose] public section
 
 universe u
 
@@ -353,12 +357,12 @@ lemma approximationNumber_id_euclidean (n : ℕ) :
 /-! ### Summary: approximation numbers form a strict s-number sequence -/
 
 /-- The approximation-numbers family. -/
-private noncomputable def approxFamily : Family 𝕜 :=
+noncomputable def approximationFamily : Family 𝕜 :=
   fun {_X _Y} _ _ _ _ S n => approximationNumber S n
 
 /-- The approximation numbers form an s-number sequence in the sense of Pietsch. -/
 theorem isSNumberSequence_approximationNumber :
-    IsSNumberSequence (𝕜 := 𝕜) approxFamily where
+    IsSNumberSequence (𝕜 := 𝕜) approximationFamily where
   norm_at_zero := fun S => approximationNumber_zero_eq_norm S
   antitone := fun S n => approximationNumber_antitone S n
   nonneg := fun S n => approximationNumber_nonneg S n
@@ -371,7 +375,7 @@ theorem isSNumberSequence_approximationNumber :
 (S1)–(S5) they satisfy (S5'), the strong normalisation `a_n (id_X) = 1` for
 every Banach space `X` with `dim X > n`. -/
 theorem isStrictSNumberSequence_approximationNumber :
-    IsStrictSNumberSequence (𝕜 := 𝕜) approxFamily where
+    IsStrictSNumberSequence (𝕜 := 𝕜) approximationFamily where
   toIsSNumberSequence := isSNumberSequence_approximationNumber
   strictly_normalised_at_id := fun n h => approximationNumber_strict n h
 

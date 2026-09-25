@@ -3,11 +3,13 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import Mathlib.Algebra.BigOperators.Group.Finset.Powerset
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.Normed.Lp.lpSpace
-import Mathlib.Analysis.Normed.Operator.Basic
-import Mathlib.Topology.Algebra.InfiniteSum.Real
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Powerset
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Normed.Lp.lpSpace
+public import Mathlib.Analysis.Normed.Operator.Basic
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
 
 /-!
 # Sign averaging and two little-Grothendieck bounds
@@ -48,6 +50,8 @@ Both are stated as bounds on *finite* partial sums. For the index set `ℕ` this
 makes `∑_j ‖w_j‖²` summable (`summable_norm_sq_row`), recorded at the end
 together with the `ℓ₂`-norm identity `norm_sq_eq_tsum_norm_sq`.
 -/
+
+@[expose] public section
 
 open scoped ENNReal
 

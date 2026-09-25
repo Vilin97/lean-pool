@@ -3,10 +3,12 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Approximation
-import Mathlib.Analysis.InnerProductSpace.l2Space
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.Normed.Module.HahnBanach
+module
+
+public import LeanPool.SNumbers.SNumbers.Approximation
+public import Mathlib.Analysis.InnerProductSpace.l2Space
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.Normed.Module.HahnBanach
 
 /-!
 # Hilbert numbers `h_n`
@@ -40,6 +42,8 @@ The two non-trivial halves are:
   `A ∘ B = id`) reduces the bound to `aₙ(id_{ℓ₂ⁿ⁺¹}) = 1`
   (`approximationNumber_id_euclidean`) via the (S3) ideal property.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Approximation
-import LeanPool.SNumbers.SNumbers.Kolmogorov
-import Mathlib.Analysis.Normed.Lp.lpSpace
-import Mathlib.Analysis.Normed.Module.RieszLemma
-import Mathlib.Analysis.Normed.Module.FiniteDimension
+module
+
+public import LeanPool.SNumbers.SNumbers.Approximation
+public import LeanPool.SNumbers.SNumbers.Kolmogorov
+public import Mathlib.Analysis.Normed.Lp.lpSpace
+public import Mathlib.Analysis.Normed.Module.RieszLemma
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
 
 /-!
 # Kolmogorov numbers `d_n` — Pietsch's lifting identity
@@ -89,6 +91,8 @@ with `section` blocks switching to stronger hypotheses when needed:
 * (S5'/S5): Riesz + density-of-norm scaling (extra
   `[DenselyNormedField 𝕜] + [CompleteSpace 𝕜]`).
 -/
+
+@[expose] public section
 
 universe u
 
@@ -322,10 +326,10 @@ private lemma Aw_in_ball {A : W →L[𝕜] X} {c : 𝕜} (hc : ‖A‖ ≤ ‖c�
   exact (mul_le_of_le_one_left (norm_nonneg _) w.2).trans hc
 
 /-- The basis-vector image of the lift. -/
-private noncomputable def liftBasis {A : W →L[𝕜] X} {c : 𝕜}
+noncomputable def liftBasis {A : W →L[𝕜] X} {c : 𝕜}
     (hc : ‖A‖ ≤ ‖c‖) (hc_ne : c ≠ 0) (w : Ball W) : BallLp 𝕜 X :=
   letI : DecidableEq (Ball X) := Classical.decEq _
-  lp.single 1 (⟨c⁻¹ • A (w : W), Aw_in_ball hc hc_ne w⟩ : Ball X) c
+  lp.single 1 (⟨c⁻¹ • A (w : W), by exact Aw_in_ball hc hc_ne w⟩ : Ball X) c
 
 omit [CompleteSpace 𝕜] [CompleteSpace W] [CompleteSpace X] in
 private lemma norm_liftBasis {A : W →L[𝕜] X} {c : 𝕜} (hc : ‖A‖ ≤ ‖c‖) (hc_ne : c ≠ 0)

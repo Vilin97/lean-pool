@@ -3,8 +3,10 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Approximation
-import LeanPool.SNumbers.BasicResults.Spectral.RealProjection
+module
+
+public import LeanPool.SNumbers.SNumbers.Approximation
+public import LeanPool.SNumbers.BasicResults.Spectral.RealProjection
 
 /-!
 # The spectral projection of `S*S` and the lower-bound subspace
@@ -33,6 +35,8 @@ derives the geometric fact the factorisation needs.
   `≥ n+1` (else `S∘E` is rank `≤ n` with `‖S - S∘E‖ ≤ c`, contradicting `aₙ(S) > c`), and `S` is
   bounded below by `c` there. This is the geometric heart of `SVD.exists_scalar_factorisation`.
 -/
+
+@[expose] public section
 
 open ContinuousLinearMap Complexification RCLike
 

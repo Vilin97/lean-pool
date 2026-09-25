@@ -3,8 +3,10 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.BasicResults.Spectral.Complexification
-import LeanPool.SNumbers.BasicResults.Spectral.Projection
+module
+
+public import LeanPool.SNumbers.BasicResults.Spectral.Complexification
+public import LeanPool.SNumbers.BasicResults.Spectral.Projection
 
 /-!
 # Spectral projection over `ℝ` via complexification
@@ -24,6 +26,8 @@ every `ℝ`-linear map commuting with `Sℂ*Sℂ`, and conjugation is such a map
 complexification). Hence `Eℂ` maps the real subspace `range ofReal` into itself, and restricts to
 a real operator `E` inheriting the two operator-norm bounds.
 -/
+
+@[expose] public section
 
 open Complexification ContinuousLinearMap
 

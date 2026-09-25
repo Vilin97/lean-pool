@@ -3,8 +3,10 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import Mathlib.Analysis.InnerProductSpace.StarOrder
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
+module
+
+public import Mathlib.Analysis.InnerProductSpace.StarOrder
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 
 /-!
 # Monotone convergence of positive operators (analytic core)
@@ -18,6 +20,8 @@ The key inequality is, for a positive operator `A` on a complex Hilbert space,
 `A² ≤ ‖A‖ • A` (true because `t² ≤ ‖A‖·t` on the spectrum `[0, ‖A‖]`) together
 with `‖A x‖² = re⟪A² x, x⟫`.
 -/
+
+@[expose] public section
 
 open ContinuousLinearMap RCLike
 open scoped InnerProductSpace

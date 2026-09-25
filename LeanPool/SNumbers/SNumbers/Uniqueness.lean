@@ -3,8 +3,10 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Approximation
-import LeanPool.SNumbers.BasicResults.SVD
+module
+
+public import LeanPool.SNumbers.SNumbers.Approximation
+public import LeanPool.SNumbers.BasicResults.SVD
 
 /-!
 # Uniqueness of `s`-numbers on Hilbert spaces (Pietsch 2.11.9)
@@ -57,6 +59,8 @@ input is `SpectralRepresentation.exists_spectral_projection`.
 * `SNumbers.allSNumbers_eq_on_HilbertSpace` — the coincidence
   `sₙ(S) = aₙ(S)`.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import Mathlib.Analysis.Normed.Lp.PiLp
-import Mathlib.Analysis.Normed.Module.FiniteDimension
+module
+
+public import Mathlib.Analysis.Normed.Lp.PiLp
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
 
 /-!
 # Coordinate embedding and projection between `ℓ^p_n` and `ℓ^p_m`
@@ -28,6 +30,8 @@ quantities `Δₖ(S)` (`SNumbers.MaxDifference`).
 This is generic `PiLp` material (no s-number content); it is a candidate for
 upstreaming to `Mathlib.Analysis.Normed.Lp.PiLp`.
 -/
+
+@[expose] public section
 
 universe u
 

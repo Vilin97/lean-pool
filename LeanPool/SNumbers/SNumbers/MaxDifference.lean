@@ -3,10 +3,12 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Inequalities
-import LeanPool.SNumbers.SNumbers.PiLpCoordinates
-import LeanPool.SNumbers.BasicResults.Determinant
-import LeanPool.SNumbers.BasicResults.SVD
+module
+
+public import LeanPool.SNumbers.SNumbers.Inequalities
+public import LeanPool.SNumbers.SNumbers.PiLpCoordinates
+public import LeanPool.SNumbers.BasicResults.Determinant
+public import LeanPool.SNumbers.BasicResults.SVD
 
 /-!
 # The maximal difference theorem: `aₙ ≤ e·(n+1)·hₙ`
@@ -116,6 +118,8 @@ Hilbert space is **not** formalised here.
   preprint, 2026, [arxiv](https://arxiv.org/abs/2608.05024), Theorem 1
   (general case).
 -/
+
+@[expose] public section
 
 universe u
 

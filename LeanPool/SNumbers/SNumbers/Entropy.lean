@@ -3,8 +3,10 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Basic
-import Mathlib.Analysis.Normed.Operator.Compact.Basic
+module
+
+public import LeanPool.SNumbers.SNumbers.Basic
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
 
 /-!
 # Entropy numbers
@@ -103,6 +105,8 @@ with a `Finset` of centres, which also hands back an explicit finite cover
 where one is needed; the topological work is done by
 `Metric.totallyBounded_iff`.
 -/
+
+@[expose] public section
 
 universe u
 

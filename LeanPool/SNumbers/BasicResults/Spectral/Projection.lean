@@ -3,9 +3,11 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
-import LeanPool.SNumbers.BasicResults.Spectral.MonotoneConvergence
+module
+
+public import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
+public import LeanPool.SNumbers.BasicResults.Spectral.MonotoneConvergence
 
 /-!
 # The spectral projection of `S*S` over `ℂ`
@@ -29,6 +31,8 @@ decreases pointwise to `𝟙_{[t,∞)}`. This part of the file develops its
 elementary properties (continuity, `0 ≤ · ≤ 1`, antitone in `n`, value `1`
 above the threshold).
 -/
+
+@[expose] public section
 
 open ContinuousLinearMap
 

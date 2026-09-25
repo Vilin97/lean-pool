@@ -3,8 +3,10 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Helpers
-import Mathlib.Analysis.Normed.Module.FiniteDimension
+module
+
+public import LeanPool.SNumbers.SNumbers.Helpers
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
 
 /-!
 # Gelfand numbers `c_n`
@@ -33,6 +35,8 @@ require Riesz's lemma: the inclusion `M.subtypeL` is an isometry, so
 particular, the strict-normalisation proof needs no `[CompleteSpace 𝕜]`
 hypothesis.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import Mathlib.Analysis.Normed.Operator.NormedSpace
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.LinearAlgebra.Dimension.LinearMap
+module
+
+public import Mathlib.Analysis.Normed.Operator.NormedSpace
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.LinearAlgebra.Dimension.LinearMap
 
 /-!
 # s-Numbers: rank definition and the Pietsch axioms
@@ -55,6 +57,8 @@ Pietsch's class function on `𝓛 = ⋃_{X,Y} 𝓛(X,Y)`. Completeness is **not*
 required at the level of axioms; downstream constructions add
 `[CompleteSpace X]` where needed.
 -/
+
+@[expose] public section
 
 universe u
 

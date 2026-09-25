@@ -3,16 +3,18 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import LeanPool.SNumbers.SNumbers.Approximation
-import LeanPool.SNumbers.SNumbers.Bernstein
-import LeanPool.SNumbers.SNumbers.Gelfand
-import LeanPool.SNumbers.SNumbers.Kolmogorov
-import LeanPool.SNumbers.SNumbers.Hilbert
-import LeanPool.SNumbers.SNumbers.PiLpCoordinates
-import LeanPool.SNumbers.SNumbers.Examples.ExHelpers
-import LeanPool.SNumbers.SNumbers.Examples.Identity
-import Mathlib.Analysis.Normed.Lp.PiLp
-import Mathlib.Analysis.MeanInequalities
+module
+
+public import LeanPool.SNumbers.SNumbers.Approximation
+public import LeanPool.SNumbers.SNumbers.Bernstein
+public import LeanPool.SNumbers.SNumbers.Gelfand
+public import LeanPool.SNumbers.SNumbers.Kolmogorov
+public import LeanPool.SNumbers.SNumbers.Hilbert
+public import LeanPool.SNumbers.SNumbers.PiLpCoordinates
+public import LeanPool.SNumbers.SNumbers.Examples.ExHelpers
+public import LeanPool.SNumbers.SNumbers.Examples.Identity
+public import Mathlib.Analysis.Normed.Lp.PiLp
+public import Mathlib.Analysis.MeanInequalities
 
 /-!
 # Example: s-numbers of diagonal operators
@@ -70,6 +72,8 @@ maps `projFin` / `padFin` in `SNumbers.PiLpCoordinates`.
   Mathematics 13, Cambridge University Press, 1987,
   [link](https://zbmath.org/3996455).
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Tactic.Module
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Tactic.Module
 
 /-!
 # Complexification of a real inner product space
@@ -37,6 +39,8 @@ and prove that this makes `Complexification H` a complex inner product space
 of a real *inner product space* with its complex inner product. This file
 constructs it, kept deliberately elementary and self-contained.
 -/
+
+@[expose] public section
 
 noncomputable section
 

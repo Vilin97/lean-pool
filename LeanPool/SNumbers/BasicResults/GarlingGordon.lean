@@ -3,10 +3,12 @@ Copyright (c) 2026 Mario Ullrich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Ullrich
 -/
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import LeanPool.SNumbers.BasicResults.John
+module
+
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.Analysis.RCLike.Basic
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.SNumbers.BasicResults.John
 
 /-!
 # The Garling–Gordon projection theorem
@@ -25,6 +27,8 @@ is intrinsic to the general Banach setting
 (the quotient norm is an infimum that need not be attained); the applications in
 `SNumbers.Inequalities` recover the sharp constant by letting `ε → 0`.
 -/
+
+@[expose] public section
 
 universe u
 
