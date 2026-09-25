@@ -3,7 +3,9 @@ Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bastiaan J Braams
 -/
-import LeanPool.SeveralComplexVariables.SeveralComplexVariables
+module
+
+public import LeanPool.SeveralComplexVariables.SeveralComplexVariables
 
 /-!
 # Several complex variables: principal statements (`Solution.lean`)
@@ -46,6 +48,8 @@ Noetherian (item 44; entry PALOMAR-2026-08-30-000001, which also contains the lo
 Nullstellensatz, not treated here). Neither is used here. Mathlib's Weierstrass preparation
 theorem concerns formal power series over complete local rings and is likewise not used.
 -/
+
+@[expose] public section
 
 
 open Complex Filter Function MeasureTheory Metric Set
