@@ -40,6 +40,7 @@ namespace RS
 
 variable {α : Type}
 
+open scoped Classical in
 /-- **The separated four-label parity identity**: when the canonical
 directions at the `x`-end and the `y`-end differ, the two
 anti-canonicality indicators of the new chords plus the intrinsic
@@ -81,6 +82,7 @@ theorem fourLabel_parity_sep [LinearOrder α]
         lt_asymm h1, lt_asymm h2, lt_asymm h3, lt_asymm h4,
         lt_asymm h5, lt_asymm h6]
 
+open scoped Classical in
 /-- **The non-separated four-label parity identity**: when the
 canonical directions at the `x`-end and the `y`-end agree, the
 anchor flip toggles the `y`-side directions and cancels the

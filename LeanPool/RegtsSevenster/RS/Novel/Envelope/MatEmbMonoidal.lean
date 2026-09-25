@@ -503,7 +503,7 @@ noncomputable instance matEmbeddingBraided
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [MonoidalPreadditive C] [BraidedCategory C] :
     Functor.Braided (Mat_.embedding C) where
-  braided := matEmb_braided
+  braided := by exact matEmb_braided
 
 end Braided
 

@@ -953,7 +953,7 @@ theorem colourMerge_coord_odd {k ℓ : ℕ} (a b : ℕ)
       else
         (colourPowerEquiv k ℓ a).oddEquiv x ⟨c.firstHalf, h⟩ *
         (colourPowerEquiv k ℓ b).evenEquiv w ⟨c.secondHalf,
-          c.secondHalf_isEven_of_not hc h⟩ :=
+          by exact c.secondHalf_isEven_of_not hc h⟩ :=
   (colourMerge_pair_odd a x b).1 w c hc
 
 /-- **The odd-pair merge coordinate product rule**: even

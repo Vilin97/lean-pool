@@ -77,6 +77,7 @@ theorem decide_lt_flip [LinearOrder α]
   · rw [decide_eq_true h1, decide_eq_false (asymm h1)]
     rfl
 
+open scoped Classical in
 /-- **The directed matching a transition system induces on the used
 labels** — RS21's `M(ω,κ)`.  Partners are the two ends of a trail;
 the direction is the trail's own, read from the orientation where

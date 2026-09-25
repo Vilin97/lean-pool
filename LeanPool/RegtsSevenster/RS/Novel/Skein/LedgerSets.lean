@@ -37,6 +37,7 @@ section PairSets
 
 variable {k ℓ : ℕ} {α : Type}
 
+open scoped Classical in
 /-- Symmetric difference of two finite sets — the composition law
 of `stateOddFlipSet` (`stateOddFlipSet_symmU`). -/
 noncomputable def symmU (E₁ E₂ : Finset α) : Finset α :=
@@ -91,6 +92,7 @@ theorem symmU_assoc (E₁ E₂ E₃ : Finset α) :
   rw [mem_symmU, mem_symmU, mem_symmU, mem_symmU]
   tauto
 
+open scoped Classical in
 /-- The two-element label set of a label pair. -/
 noncomputable def pairSet (p : α × α) : Finset α := {p.1, p.2}
 

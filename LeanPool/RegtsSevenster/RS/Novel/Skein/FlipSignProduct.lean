@@ -26,6 +26,7 @@ namespace RS
 
 variable {α : Type} {ℓ : ℕ}
 
+open scoped Classical in
 /-- The colour relabel of one flip. -/
 noncomputable def flipColours (f : α → Fin (2 * ℓ))
     (p : α × α) : α → Fin (2 * ℓ) :=

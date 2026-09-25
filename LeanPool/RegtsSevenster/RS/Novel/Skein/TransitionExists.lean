@@ -386,7 +386,7 @@ section Orientation
 variable {α : Type} {W : Fragment α} {F : EdgeSubset W}
 
 /-- In a linear order, a ≠ b implies decide(a < b) = !decide(b < a). -/
-theorem decide_lt_flip {γ : Type} [LinearOrder γ]
+theorem transition_decide_lt_flip {γ : Type} [LinearOrder γ]
     [DecidableRel ((· < ·) : γ → γ → Prop)]
     {a b : γ} (h : a ≠ b) : decide (a < b) = !decide (b < a) := by
   rcases lt_or_gt_of_ne h with hab | hab
@@ -466,7 +466,7 @@ noncomputable def EdgeSubset.TransitionSystem.buildOrientation
     intro g hg
     simp only [isOut, dite_eq_left hg, dite_eq_left (κ.match_mem g hg)]
     rw [orbitMin_pairing_match ⟨g, hg⟩, orbitMin_match ⟨g, hg⟩]
-    exact decide_lt_flip (Ne.symm (orbitMin_pairing_ne ⟨g, hg⟩))
+    exact transition_decide_lt_flip (Ne.symm (orbitMin_pairing_ne ⟨g, hg⟩))
   -- pairing_flip
   have hpairing_flip : ∀ g ∈ F.flags, isOut (W.pairing g) = !isOut g := by
     intro g hg
@@ -479,7 +479,7 @@ noncomputable def EdgeSubset.TransitionSystem.buildOrientation
         {f : W.Flag // f ∈ F.flags}) = F.pairingPerm ⟨g, hg⟩ :=
       Subtype.ext (by simp)
     rw [hσσ, hσ_eq]
-    exact decide_lt_flip (Ne.symm (orbitMin_pairing_ne ⟨g, hg⟩))
+    exact transition_decide_lt_flip (Ne.symm (orbitMin_pairing_ne ⟨g, hg⟩))
   exact ⟨isOut, hmatch_flip, hpairing_flip⟩
 
 /-! ### The main theorem -/

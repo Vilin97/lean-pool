@@ -38,6 +38,7 @@ namespace EdgeSubset
 
 variable {α : Type}
 
+open scoped Classical in
 /-- **RS21's colouring sum** over the colourings of the whole
 subset. -/
 noncomputable def edgeSum {W : Fragment α}

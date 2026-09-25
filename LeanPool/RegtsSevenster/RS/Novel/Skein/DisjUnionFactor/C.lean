@@ -38,6 +38,7 @@ variable {α β : Type}
 
 /-! ### Boundary membership over the union -/
 
+open scoped Classical in
 /-- Being a boundary flag is componentwise on the left. -/
 theorem inl_mem_boundary
     {W₁ : Fragment α} {W₂ : Fragment β} {F : EdgeSubset (W₁.disjUnion W₂)}
@@ -54,6 +55,7 @@ theorem inl_mem_boundary
     exact Finset.mem_filter.mpr
       ⟨mem_leftSub_flags.mp hf, attach_inl_label_iff.mpr hl⟩
 
+open scoped Classical in
 /-- And on the right. -/
 theorem inr_mem_boundary
     {W₁ : Fragment α} {W₂ : Fragment β} {F : EdgeSubset (W₁.disjUnion W₂)}
@@ -74,6 +76,7 @@ theorem inr_mem_boundary
 
 -- The proof introduces the lexicographic order on the sum, which
 -- needs both component orders even though the statement does not.
+open scoped Classical in
 /-- A left boundary flag's chain stays left, so the product
 system's path matching is the left component's. -/
 theorem pathMatch_prodRel_inl
@@ -110,6 +113,7 @@ theorem pathMatch_prodRel_inl
 
 -- The proof introduces the lexicographic order on the sum, which
 -- needs both component orders even though the statement does not.
+open scoped Classical in
 /-- And likewise on the right. -/
 theorem pathMatch_prodRel_inr
     {W₁ : Fragment α} {W₂ : Fragment β}
