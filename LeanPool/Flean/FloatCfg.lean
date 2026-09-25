@@ -18,7 +18,7 @@ describe a floating-point format, along with the available `RoundingMode`s and a
 `Rounding` typeclass selecting the mode in scope.
 -/
 
-@[expose] public section
+public section
 
 /-- A floating-point format: a precision `prec` and an exponent range
 `[emin, emax]`. -/

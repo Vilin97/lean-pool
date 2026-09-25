@@ -14,7 +14,7 @@ This module proves the power-series logarithm additivity and coefficient identit
 transport the Connes-Kreimer Eulerian idempotent calculation to convolution algebras.
 -/
 
-@[expose] public section
+public section
 
 namespace PowerSeries
 

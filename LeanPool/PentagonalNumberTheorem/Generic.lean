@@ -24,7 +24,7 @@ Reference:
 https://math.stackexchange.com/questions/55738/how-to-prove-eulers-pentagonal-theorem-some-hints-will-help
 -/
 
-@[expose] public section
+public section
 
 open Filter
 
@@ -67,7 +67,7 @@ We define an auxiliary sequence
 $$Γ_N = \sum_{n=0}^{\infty} gamma_{k, n} =
 \sum_{n=0}^{\infty} \left( x^{(k+1)n} \prod_{i=0}^{n} 1 - x^{k + i + 1} \right)$$
 -/
-def gamma (k n : ℕ) (x : R) : R :=
+@[expose] def gamma (k n : ℕ) (x : R) : R :=
   x ^ ((k + 1) * n) * ∏ i ∈ Finset.range (n + 1), (1 - x ^ (k + i + 1))
 
 /-- And a second auxiliary sequence

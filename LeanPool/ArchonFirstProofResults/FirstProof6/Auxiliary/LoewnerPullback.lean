@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Star.Real
 Congruence pullbacks for Loewner order and epsilon-lightness from Loewner bound.
 -/
 
-@[expose] public section
+public section
 
 open Finset Matrix BigOperators
 

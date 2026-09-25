@@ -21,7 +21,7 @@ The integral `∫₀¹ x · exp(-(t · x)) · T(t · x) dt` and the polynomial `
 together with the calculus identities relating them for Niven's argument.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open Complex
@@ -32,7 +32,7 @@ open scoped BigOperators
 noncomputable section
 
 /-- The integral `∫₀¹ x * exp(-(t * x)) * T(t * x) dt`. -/
-def intExpNegPoly (T : ℤ[X]) (x : ℂ) : ℂ :=
+@[expose] def intExpNegPoly (T : ℤ[X]) (x : ℂ) : ℂ :=
   ∫ t in 0..1, (fun (t : ℝ) => x * cexp (-(t * x)) * aeval (t * x) T) t
 
 /-- The polynomial `∑ᵢ₌₀ᵈ T⁽ⁱ⁾` with `d = deg(T)`. -/

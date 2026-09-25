@@ -23,7 +23,7 @@ import Mathlib.Tactic.Ring.RingNF
 Imported Lean Pool material for `LeanPool.FriezePatterns.Chapter1`.
 -/
 
-@[expose] public section
+public section
 
 /-- A field-valued frieze pattern of height `n`: a function `f : ℕ × ℕ → F` with `0`s on
 the row `i = 0`, `1`s on rows `i = 1` and `i = n`, `0`s on rows `i ≥ n + 1`, satisfying the

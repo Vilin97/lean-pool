@@ -19,7 +19,7 @@ for real/complex numbers.
 
 -/
 
-@[expose] public section
+public section
 
 open Filter
 variable {K : Type*} [RCLike K]

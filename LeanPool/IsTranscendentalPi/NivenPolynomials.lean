@@ -16,7 +16,7 @@ The auxiliary polynomials `Fₚ = Xᵖ⁻¹ Tᵖ` and basic facts about their de
 to build the integer that drives the contradiction in Niven's proof.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open Complex
@@ -27,7 +27,7 @@ open scoped BigOperators
 noncomputable section
 
 /-- `Fₚ = Xᵖ⁻¹ Tᵖ`. -/
-def Fp {R : Type*} [Semiring R] (T : R[X]) (p : ℕ) : R[X] := X^(p - 1) * T^p
+@[expose] def Fp {R : Type*} [Semiring R] (T : R[X]) (p : ℕ) : R[X] := X^(p - 1) * T^p
 
 /-- If `T ≠ 0`, then `deg(Fₚ) = (p - 1) + p deg(T)`. -/
 lemma natDegree_Fp {R : Type*} [Semiring R] [Nontrivial R] [NoZeroDivisors R]
@@ -132,7 +132,7 @@ lemma aeval_Fpd (T : ℤ[X]) (p m : ℕ) (a : ℂ) (hT : T ≠ 0)
       (hm := by simpa using hmFp))
 
 /-- The definition of `∑ᵢ₌ₚᵈ Fₚ⁽ⁱ⁾` with `d = deg(Fₚ)`. -/
-def sumStartpDerivFp {R : Type*} [Semiring R] (T : R[X]) (p : ℕ) : R[X]
+@[expose] def sumStartpDerivFp {R : Type*} [Semiring R] (T : R[X]) (p : ℕ) : R[X]
   := ∑ i ∈ Finset.Icc p (Fp T p).natDegree, derivative^[i] (Fp T p)
 
 /-- If `a` is a root of `T`, then `T ≠ 0`. -/

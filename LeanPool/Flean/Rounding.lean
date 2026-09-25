@@ -21,7 +21,7 @@ correctness and error-bound results (such as `roundf_close`) controlling the
 distance between a rational and its rounded floating-point value.
 -/
 
-@[expose] public section
+public section
 
 variable {C : FloatCfg}
 
@@ -61,7 +61,7 @@ lemma normalize_neg (f : FloatRep C) :
   split_ifs with h' <;> simp [h']
 
 /-- Round a rational to a normal representation using the rounder `r`. -/
-def roundf (r : IntRounder) (q : ℚ) : FloatRep C :=
+@[expose] def roundf (r : IntRounder) (q : ℚ) : FloatRep C :=
   let exp := Int.log 2 |q|
   let mantissa := (|q| * (2^exp)⁻¹ - 1) * C.prec
   FloatRep.normalize ⟨q < 0, exp, r (q < 0) mantissa⟩
@@ -270,7 +270,7 @@ lemma e_le_iff_log (f1 f2 : FloatRep C) (vm1 : f1.validM) (vm2 : f2.validM) :
   rw [q_exp_eq_exp vm1, q_exp_eq_exp vm2]
 
 /-- The `IntRounder` selected by the rounding mode in scope. -/
-def roundFunction (R : Rounding) :=
+@[expose] def roundFunction (R : Rounding) :=
   match R.mode with
   | RoundingMode.nearest => roundnearest
   | RoundingMode.tozero => round0
@@ -284,7 +284,7 @@ instance (R : Rounding) : ValidRounder (roundFunction R) := by
   <;> infer_instance
 
 /-- Round a rational to a representation using the rounding mode in scope. -/
-def roundRep [R : Rounding] (q : ℚ) : FloatRep C := roundf (roundFunction R) q
+@[expose] def roundRep [R : Rounding] (q : ℚ) : FloatRep C := roundf (roundFunction R) q
 
 lemma round_rep_coe [R : Rounding] (f : FloatRep C) (h : f.validM) :
   roundRep (coeQ f) = f := roundf_coe (roundFunction R) f h

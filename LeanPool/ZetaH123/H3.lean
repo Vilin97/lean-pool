@@ -24,7 +24,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 # H3 for Thakur's hypotheses on power sums
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaH123.H3
 

@@ -18,13 +18,13 @@ mantissa, together with their basic correctness properties such as round-to-even
 behaviour on half-integers.
 -/
 
-@[expose] public section
+public section
 
 /-- An integer-valued rounding rule taking a sign bit and a rational mantissa. -/
 abbrev IntRounder := Bool → ℚ → ℕ
 
 /-- Round toward zero: the rounded mantissa is `⌊q⌋`, ignoring the sign. -/
-def round0 (s : Bool) (q : ℚ) := if s then ⌊q⌋.natAbs else ⌊q⌋.natAbs
+@[expose] def round0 (s : Bool) (q : ℚ) := if s then ⌊q⌋.natAbs else ⌊q⌋.natAbs
 
 /-- `round0` ignores its sign argument. -/
 @[simp] lemma round0_apply (s : Bool) (q : ℚ) : round0 s q = ⌊q⌋.natAbs := by
@@ -38,13 +38,13 @@ def roundinf (s : Bool) (q : ℚ) := if s then ⌈q⌉.natAbs else ⌈q⌉.natAb
   simp only [roundinf, ite_self]
 
 /-- Round down (toward negative infinity), branching on the sign. -/
-def roundup := fun (s : Bool) q => if s then round0 s q else roundinf s q
+@[expose] def roundup := fun (s : Bool) q => if s then round0 s q else roundinf s q
 
 /-- Round up (toward positive infinity), branching on the sign. -/
-def rounddown := fun (s : Bool) (q : ℚ) => if s then roundinf s q else round0 s q
+@[expose] def rounddown := fun (s : Bool) (q : ℚ) => if s then roundinf s q else round0 s q
 
 /-- Round to the nearest integer, with ties broken to the even integer. -/
-def roundNearInt (q : ℚ) :=
+@[expose] def roundNearInt (q : ℚ) :=
   let i1 := ⌊q⌋
   let i2 := ⌈q⌉
   if Int.fract q < 1/2 then
@@ -395,7 +395,7 @@ instance : ValidRounder roundnearest where
 
 /-- The rounder obtained by flipping the sign bit, used to relate rounding of
 `q` and `-q`. -/
-def IntRounder.neg (r : IntRounder) : IntRounder := fun s ↦ r !s
+@[expose] def IntRounder.neg (r : IntRounder) : IntRounder := fun s ↦ r !s
 
 lemma neg_neg_r (r : IntRounder) :
   r.neg.neg = r := by

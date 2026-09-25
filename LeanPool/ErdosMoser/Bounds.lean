@@ -17,7 +17,7 @@ This file derives direct and square-root forms of the largest-element bound
 from Leo Moser's exact sum-of-squares inequality.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ErdosMoser
 

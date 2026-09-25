@@ -53,7 +53,7 @@ Note on `noncomputable`: on `ℝ`, `DecidableEq` and the order are noncomputable
 `noncomputable`.
 -/
 
-@[expose] public section
+public section
 
 namespace SteinhausThreeGap
 
@@ -103,7 +103,7 @@ noncomputable def sortedVal (a : ℝ) (N : ℕ) (i : ℕ) : ℝ :=
       over `Finset.range (k - 1)`;
     * the wrap-around gap `g 0 + 1 - g (k - 1)` (i.e. `min + 1 - max`), added as a
       singleton. -/
-noncomputable def gaps (a : ℝ) (N : ℕ) : Multiset ℝ :=
+@[expose] noncomputable def gaps (a : ℝ) (N : ℕ) : Multiset ℝ :=
   ((Finset.range (orbitCard a N - 1)).val.map
       (fun i => sortedVal a N (i + 1) - sortedVal a N i)) +
     {sortedVal a N 0 + 1 - sortedVal a N (orbitCard a N - 1)}
@@ -165,7 +165,7 @@ theorem sortedVal_mem (a : ℝ) {N : ℕ} {i : ℕ} (h : i < orbitCard a N) :
 /-! ## Phase 2 — gap infrastructure and the distinct-gap-count reduction -/
 
 /-- The `i`-th adjacent gap of the sorted enumeration. -/
-noncomputable def gapAt (a : ℝ) (N : ℕ) (i : ℕ) : ℝ :=
+@[expose] noncomputable def gapAt (a : ℝ) (N : ℕ) (i : ℕ) : ℝ :=
   sortedVal a N (i + 1) - sortedVal a N i
 
 /-- `gaps` written through `gapAt` (definitional). -/

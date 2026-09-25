@@ -18,7 +18,7 @@ transcendental over `ℚ`, assembling the analytic and algebraic estimates of th
 preceding modules into Niven's contradiction argument.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 

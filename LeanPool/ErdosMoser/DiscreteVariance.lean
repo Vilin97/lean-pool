@@ -29,7 +29,7 @@ compares all pairwise differences with those of an initial interval, and
 evaluates the resulting quadratic sum.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ErdosMoser
 

@@ -17,7 +17,7 @@ of nondeterministic Büchi automata (`NBW`), and state the theorem that every
 `LTL` formula has an equivalent finite-state `NBW`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanModelChecking
 
@@ -34,7 +34,7 @@ abbrev Letter (AP : Type) := Set AP
 
 /-- The language of a Linear Temporal Logic formula,
 defined as a predicate over a word. -/
-def LTL.language {AP} (f : LTL AP) (w : ℕ → Letter AP) : Prop :=
+@[expose] def LTL.language {AP} (f : LTL AP) (w : ℕ → Letter AP) : Prop :=
   match f with
   | .atom p => p ∈ w 0
   | .not φ => ¬language φ w
@@ -58,12 +58,12 @@ structure NBW (S : Type) where
 
 /-- Whether the sequence of states `p` is a run on the
 word `w` on the Büchi automaton `A`. -/
-def NBW.run {S} (A : NBW S) (p : ℕ → A.Q) (w : ℕ → S) :=
+@[expose] def NBW.run {S} (A : NBW S) (p : ℕ → A.Q) (w : ℕ → S) :=
   p 0 ∈ A.q₀ ∧ ∀ i, A.δ (p i) (w i) (p (i + 1))
 
 /-- The language of a Büchi automaton,
 defined as a predicate over a word. -/
-def NBW.language {S} (A : NBW S) (w : ℕ → S) :=
+@[expose] def NBW.language {S} (A : NBW S) (w : ℕ → S) :=
   ∃ p, A.run p w ∧ ∀ i, ∃ j ≥ i, p j ∈ A.F
 
 /-- The statement that every Linear Temporal Logic formula has an equivalent
@@ -71,7 +71,7 @@ def NBW.language {S} (A : NBW S) (w : ℕ → S) :=
 can be reused. Without the `Finite A.Q` conjunct the statement would be much
 weaker, since an automaton with infinitely many states can encode arbitrary
 languages. -/
-def forAnyLTLFormulaExistsAnEquivalentNBWStatement :=
+@[expose] def forAnyLTLFormulaExistsAnEquivalentNBWStatement :=
   ∀ {AP} (φ : LTL AP), ∃ (A : NBW (Letter AP)), Finite A.Q ∧ φ.language = A.language
 
 end LeanModelChecking

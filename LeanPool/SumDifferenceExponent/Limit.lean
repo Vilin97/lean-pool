@@ -10,7 +10,7 @@ public import LeanPool.SumDifferenceExponent.Basic
 
 /-! The asymptotic lower bound for the explicit construction. -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Pointwise
 open Filter Topology

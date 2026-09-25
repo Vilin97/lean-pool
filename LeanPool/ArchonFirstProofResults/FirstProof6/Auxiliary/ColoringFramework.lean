@@ -32,7 +32,7 @@ and `barrier_parameter_bound`.
 - `Problem6.barrier_parameter_bound`: final parameter bound
 -/
 
-@[expose] public section
+public section
 
 open Finset Matrix BigOperators
 

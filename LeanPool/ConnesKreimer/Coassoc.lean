@@ -11,7 +11,7 @@ Authors: Carles Marín
    not literal list equality. WIP, LOCAL only. -/
 module
 
-@[expose] public section
+public section
 
 namespace CK.Coassoc
 
@@ -32,10 +32,10 @@ def tmul (x y : Tens) : Tens :=
 
 mutual
   /-- The Connes-Kreimer coproduct on one rooted tree, as a formal list of tensor terms. -/
-  def coprodTree : RTree → Tens
+  @[expose] def coprodTree : RTree → Tens
     | .node F => ([RTree.node F], []) :: (coprodForest F).map (fun (p, r) => (p, [RTree.node r]))
   /-- The multiplicative extension of the coproduct from trees to forests. -/
-  def coprodForest : Forest → Tens
+  @[expose] def coprodForest : Forest → Tens
     | []      => [([], [])]
     | t :: ts => tmul (coprodTree t) (coprodForest ts)
 end
