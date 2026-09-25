@@ -3,11 +3,13 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import LeanPool.RearrangementNumber.NonMRR.Main
+public import LeanPool.RearrangementNumber.NonMRR.Main
 
 /-!
 # Proved Palomar declarations
@@ -16,6 +18,8 @@ These declarations discharge the three statements in `Challenge.lean` using
 the substantive proof development in this repository. Challenge and Solution
 are separate environments: never import Challenge here.
 -/
+
+@[expose] public section
 
 open Cardinal
 

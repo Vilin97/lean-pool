@@ -3,12 +3,14 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.Bounding
+public import LeanPool.RearrangementNumber.NonMRR.Bounding
 
 /-!
 # A common sparse set ordered eventually by a small family of permutations
@@ -16,6 +18,8 @@ import LeanPool.RearrangementNumber.NonMRR.Bounding
 An eventually bounded family of permutation controls admits a common increasing
 sequence whose tail is preserved in order by the inverse of each permutation.
 -/
+
+@[expose] public section
 
 open Filter Finset Cardinal
 

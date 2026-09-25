@@ -3,19 +3,23 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import Mathlib.Basic.Real.Basic
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.NormNum
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.NormNum
 
 /-! Finite analytic estimates. -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,15 +3,17 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.Category
-import Mathlib.Analysis.Real.OfDigits
-import Mathlib.Topology.Baire.BaireMeasurable
-import Mathlib.Topology.Homeomorph.Lemmas
+public import LeanPool.RearrangementNumber.NonMRR.Category
+public import Mathlib.Analysis.Real.OfDigits
+public import Mathlib.Topology.Baire.BaireMeasurable
+public import Mathlib.Topology.Homeomorph.Lemmas
 
 /-!
 # Transferring category from binary sequences to the real line
@@ -21,6 +23,8 @@ the unit interval. Each nonempty open set of sequences has an image with
 nonempty real interior. This suffices to preserve nonmeagreness of images;
 injectivity and an identification of the spaces are unnecessary.
 -/
+
+@[expose] public section
 
 open Set Filter Finset Cardinal Topology
 

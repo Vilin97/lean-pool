@@ -3,12 +3,14 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.BlockAnalysis
+public import LeanPool.RearrangementNumber.NonMRR.BlockAnalysis
 
 /-!
 # Selecting the good blocks
@@ -17,6 +19,8 @@ This file formalizes the implication from eventual avoidance of the bad-value
 slalom to a common zero-sum witness. All hypotheses describe the concrete finite
 blocks and the chosen functions; no cardinal-invariant inequality is assumed.
 -/
+
+@[expose] public section
 
 open Filter Finset Topology
 

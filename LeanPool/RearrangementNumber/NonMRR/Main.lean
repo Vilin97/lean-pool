@@ -3,13 +3,15 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.CategoryBound
-import LeanPool.RearrangementNumber.NonMRR.RiemannBaire
+public import LeanPool.RearrangementNumber.NonMRR.CategoryBound
+public import LeanPool.RearrangementNumber.NonMRR.RiemannBaire
 
 /-!
 # The uniformity of the meagre ideal is at most the rearrangement number
@@ -18,6 +20,8 @@ Both cardinals have their literal definitions: `nonM` uses nonmeagre subsets
 of the real line, and `rr` uses rearranging families of permutations of ℕ.
 All preceding construction and category lemmas have been proved over mathlib.
 -/
+
+@[expose] public section
 
 open Cardinal
 

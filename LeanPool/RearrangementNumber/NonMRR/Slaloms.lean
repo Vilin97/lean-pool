@@ -3,14 +3,16 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.Relations
-import Mathlib.Order.Filter.AtTopBot.Basic
-import Mathlib.Data.Finset.Card
+public import LeanPool.RearrangementNumber.NonMRR.Relations
+public import Mathlib.Order.Filter.AtTopBot.Basic
+public import Mathlib.Data.Finset.Card
 
 /-!
 # Bounded slaloms as a relation
@@ -18,6 +20,8 @@ import Mathlib.Data.Finset.Card
 This defines the actual finite-set-valued slaloms of the manuscript.
 Their relation norm is not identified with `nonM` by definition.
 -/
+
+@[expose] public section
 
 open Filter Cardinal
 

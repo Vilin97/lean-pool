@@ -3,36 +3,37 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.RearrangementNumber.NonMRR.BlockAnalysis
-import LeanPool.RearrangementNumber.NonMRR.Bounding
-import LeanPool.RearrangementNumber.NonMRR.Catalogue
-import LeanPool.RearrangementNumber.NonMRR.Category
-import LeanPool.RearrangementNumber.NonMRR.CategoryBlocks
-import LeanPool.RearrangementNumber.NonMRR.CategoryBound
-import LeanPool.RearrangementNumber.NonMRR.CategoryReduction
-import LeanPool.RearrangementNumber.NonMRR.CategoryTransfer
-import LeanPool.RearrangementNumber.NonMRR.Construction
-import LeanPool.RearrangementNumber.NonMRR.FiniteAnalytic
-import LeanPool.RearrangementNumber.NonMRR.FiniteEmbedding
-import LeanPool.RearrangementNumber.NonMRR.FiniteVectors
-import LeanPool.RearrangementNumber.NonMRR.GapBounding
-import LeanPool.RearrangementNumber.NonMRR.LowerBound
-import LeanPool.RearrangementNumber.NonMRR.Main
-import LeanPool.RearrangementNumber.NonMRR.Morphism
-import LeanPool.RearrangementNumber.NonMRR.Padding
-import LeanPool.RearrangementNumber.NonMRR.PermutationBounds
-import LeanPool.RearrangementNumber.NonMRR.Relations
-import LeanPool.RearrangementNumber.NonMRR.Riemann
-import LeanPool.RearrangementNumber.NonMRR.RiemannBaire
-import LeanPool.RearrangementNumber.NonMRR.Selection
-import LeanPool.RearrangementNumber.NonMRR.Series
-import LeanPool.RearrangementNumber.NonMRR.SlalomBound
-import LeanPool.RearrangementNumber.NonMRR.SlalomCoding
-import LeanPool.RearrangementNumber.NonMRR.Slaloms
-import LeanPool.RearrangementNumber.NonMRR.Walsh
-import LeanPool.RearrangementNumber.NonMRR
-import LeanPool.RearrangementNumber.Solution
+public import LeanPool.RearrangementNumber.NonMRR.BlockAnalysis
+public import LeanPool.RearrangementNumber.NonMRR.Bounding
+public import LeanPool.RearrangementNumber.NonMRR.Catalogue
+public import LeanPool.RearrangementNumber.NonMRR.Category
+public import LeanPool.RearrangementNumber.NonMRR.CategoryBlocks
+public import LeanPool.RearrangementNumber.NonMRR.CategoryBound
+public import LeanPool.RearrangementNumber.NonMRR.CategoryReduction
+public import LeanPool.RearrangementNumber.NonMRR.CategoryTransfer
+public import LeanPool.RearrangementNumber.NonMRR.Construction
+public import LeanPool.RearrangementNumber.NonMRR.FiniteAnalytic
+public import LeanPool.RearrangementNumber.NonMRR.FiniteEmbedding
+public import LeanPool.RearrangementNumber.NonMRR.FiniteVectors
+public import LeanPool.RearrangementNumber.NonMRR.GapBounding
+public import LeanPool.RearrangementNumber.NonMRR.LowerBound
+public import LeanPool.RearrangementNumber.NonMRR.Main
+public import LeanPool.RearrangementNumber.NonMRR.Morphism
+public import LeanPool.RearrangementNumber.NonMRR.Padding
+public import LeanPool.RearrangementNumber.NonMRR.PermutationBounds
+public import LeanPool.RearrangementNumber.NonMRR.Relations
+public import LeanPool.RearrangementNumber.NonMRR.Riemann
+public import LeanPool.RearrangementNumber.NonMRR.RiemannBaire
+public import LeanPool.RearrangementNumber.NonMRR.Selection
+public import LeanPool.RearrangementNumber.NonMRR.Series
+public import LeanPool.RearrangementNumber.NonMRR.SlalomBound
+public import LeanPool.RearrangementNumber.NonMRR.SlalomCoding
+public import LeanPool.RearrangementNumber.NonMRR.Slaloms
+public import LeanPool.RearrangementNumber.NonMRR.Walsh
+public import LeanPool.RearrangementNumber.NonMRR
+public import LeanPool.RearrangementNumber.Solution
 
 /-!
 # The nonmeagre lower bound for the rearrangement number
@@ -44,3 +45,5 @@ Main declarations: `NonMRR.nonM_le_rr`
 Tags: set-theory, cardinal-characteristics, series
 MSC: 03E17, 40A05
 -/
+
+@[expose] public section

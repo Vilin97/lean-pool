@@ -3,14 +3,16 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import Mathlib.Analysis.PSeries
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.SetTheory.Cardinal.Basic
+public import Mathlib.Analysis.PSeries
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import Mathlib.SetTheory.Cardinal.Basic
 
 /-!
 # The rearrangement number
@@ -19,6 +21,8 @@ Convergence is taken along the natural partial sums. In particular, ordinary
 `Summable a` would be the wrong definition of conditional convergence over `ℝ`.
 We use mathlib's `SummationFilter.conditional ℕ` explicitly.
 -/
+
+@[expose] public section
 
 open Filter Finset Cardinal
 open scoped Topology

@@ -3,13 +3,15 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.Riemann
-import Mathlib.Topology.Order.LiminfLimsup
+public import LeanPool.RearrangementNumber.NonMRR.Riemann
+public import Mathlib.Topology.Order.LiminfLimsup
 
 /-!
 # A rearrangement with unbounded partial sums
@@ -18,6 +20,8 @@ The finite extension lemma supplies dense open conditions in the complete
 space of injections. Simultaneously requiring each integer in the range
 turns the resulting injection into a permutation.
 -/
+
+@[expose] public section
 
 open Filter Finset Set Topology
 

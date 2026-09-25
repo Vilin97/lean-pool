@@ -3,12 +3,14 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.CategoryBlocks
+public import LeanPool.RearrangementNumber.NonMRR.CategoryBlocks
 
 /-!
 # From coincidence families to a nonmeagre set
@@ -16,6 +18,8 @@ import LeanPool.RearrangementNumber.NonMRR.CategoryBlocks
 The finite-block description is combined with the explicit pasting of
 separated blocks. All cardinal estimates use images of actual families.
 -/
+
+@[expose] public section
 
 open Set Filter Cardinal
 

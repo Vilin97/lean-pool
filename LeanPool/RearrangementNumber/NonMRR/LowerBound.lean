@@ -3,13 +3,15 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.Padding
-import LeanPool.RearrangementNumber.NonMRR.PermutationBounds
+public import LeanPool.RearrangementNumber.NonMRR.Padding
+public import LeanPool.RearrangementNumber.NonMRR.PermutationBounds
 
 /-!
 # The classical lower bound by the bounding number
@@ -19,6 +21,8 @@ conditionally convergent real series. Thus every rearranging family has size at
 least the bounding number. This statement does not presume that a rearranging
 family has already been constructed.
 -/
+
+@[expose] public section
 
 open Filter Cardinal Topology
 

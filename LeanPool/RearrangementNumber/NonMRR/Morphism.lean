@@ -3,13 +3,15 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.Catalogue
-import LeanPool.RearrangementNumber.NonMRR.RiemannBaire
+public import LeanPool.RearrangementNumber.NonMRR.Catalogue
+public import LeanPool.RearrangementNumber.NonMRR.RiemannBaire
 
 /-!
 # The morphism into the slaloms
@@ -19,6 +21,8 @@ Its challenge map sends `e` to `e` together with the conditional series selected
 from each catalogue indexed by `g`. Its response map records the exceptional
 blocks of a growth function and a permutation.
 -/
+
+@[expose] public section
 
 open Filter
 

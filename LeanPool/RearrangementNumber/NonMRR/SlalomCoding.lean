@@ -3,18 +3,20 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.Slaloms
-import Mathlib.Data.Finset.Sort
-import Mathlib.Data.Nat.Pairing
-import Mathlib.Data.Set.Countable
-import Mathlib.Logic.Encodable.Lattice
-import Mathlib.Order.Filter.Cofinite
-import Mathlib.Tactic
+public import LeanPool.RearrangementNumber.NonMRR.Slaloms
+public import Mathlib.Data.Finset.Sort
+public import Mathlib.Data.Nat.Pairing
+public import Mathlib.Data.Set.Countable
+public import Mathlib.Logic.Encodable.Lattice
+public import Mathlib.Order.Filter.Cofinite
+public import Mathlib.Tactic
 
 /-!
 # Coding a slalom cover into strong infinite coincidence
@@ -24,6 +26,8 @@ read at stage `Nat.pair n j`; at each stage the decoder chooses a fresh argument
 A sufficiently large graph coded by a caught value therefore yields a fresh
 correct coincidence, even on any prescribed infinite subset of the naturals.
 -/
+
+public section
 
 open Finset Filter Cardinal
 

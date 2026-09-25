@@ -3,13 +3,15 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.Catalogue
-import LeanPool.RearrangementNumber.NonMRR.LowerBound
+public import LeanPool.RearrangementNumber.NonMRR.Catalogue
+public import LeanPool.RearrangementNumber.NonMRR.LowerBound
 
 /-!
 # The cardinal conclusion for the concrete slalom relation
@@ -18,6 +20,8 @@ This is the analytic/combinatorial reduction of the manuscript, including the
 classical bounding-number lower bound. The category comparison needed for
 the topological cardinal `nonM` is proved in `NonMRR.CategoryBound`.
 -/
+
+@[expose] public section
 
 open Cardinal
 

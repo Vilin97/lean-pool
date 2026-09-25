@@ -3,15 +3,19 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.FiniteAnalytic
-import LeanPool.RearrangementNumber.NonMRR.Walsh
+public import LeanPool.RearrangementNumber.NonMRR.FiniteAnalytic
+public import LeanPool.RearrangementNumber.NonMRR.Walsh
 
 /-! Finite vector constructions. -/
+
+@[expose] public section
 
 open scoped BigOperators
 

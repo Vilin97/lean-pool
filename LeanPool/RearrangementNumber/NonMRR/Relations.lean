@@ -3,12 +3,14 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import Mathlib.SetTheory.Cardinal.Arithmetic
+public import Mathlib.SetTheory.Cardinal.Arithmetic
 
 /-!
 # Relation norms and Galois–Tukey morphisms
@@ -17,6 +19,8 @@ The definitions and inequalities in the preliminary section of the manuscript.
 The direction of a morphism agrees with that section: a morphism from `A` to `B`
 gives `B.norm ≤ A.norm`.
 -/
+
+@[expose] public section
 
 open Cardinal Set
 

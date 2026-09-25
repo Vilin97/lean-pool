@@ -3,15 +3,17 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.Relations
-import Mathlib.Data.Finset.Lattice.Fold
-import Mathlib.Order.Filter.AtTopBot.Basic
-import Mathlib.Tactic
+public import LeanPool.RearrangementNumber.NonMRR.Relations
+public import Mathlib.Data.Finset.Lattice.Fold
+public import Mathlib.Order.Filter.AtTopBot.Basic
+public import Mathlib.Tactic
 
 /-!
 # The bounding relation
@@ -19,6 +21,8 @@ import Mathlib.Tactic
 The relation `boundingRelation` has `f` related to `g` when `f n < g n`
 infinitely often. Its norm is the bounding number in the manuscript.
 -/
+
+@[expose] public section
 
 open Filter Cardinal Set
 

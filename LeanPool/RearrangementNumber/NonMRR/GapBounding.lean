@@ -3,12 +3,14 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.PermutationBounds
+public import LeanPool.RearrangementNumber.NonMRR.PermutationBounds
 
 /-!
 # Unbounded families of interval gaps
@@ -17,6 +19,8 @@ An eventually unbounded family gives, without increasing its cardinality, a
 family of increasing sequences whose successive gaps escape any prescribed
 function. This is the bounding-number ingredient in the category reduction.
 -/
+
+@[expose] public section
 
 open Filter Finset Cardinal
 

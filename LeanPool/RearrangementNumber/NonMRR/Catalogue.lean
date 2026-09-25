@@ -3,14 +3,16 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.FiniteEmbedding
-import LeanPool.RearrangementNumber.NonMRR.Construction
-import Mathlib.Analysis.SpecificLimits.Basic
+public import LeanPool.RearrangementNumber.NonMRR.FiniteEmbedding
+public import LeanPool.RearrangementNumber.NonMRR.Construction
+public import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
 # The concrete catalogue of balanced finite blocks
@@ -18,6 +20,8 @@ import Mathlib.Analysis.SpecificLimits.Basic
 The blocks are Walsh vectors supported on consecutive disjoint intervals. The
 geometrically decaying error bound makes their eventual prefix bounds summable.
 -/
+
+@[expose] public section
 
 open Finset Filter
 open scoped BigOperators

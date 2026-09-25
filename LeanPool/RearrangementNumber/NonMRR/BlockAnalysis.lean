@@ -3,15 +3,17 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import Mathlib.Analysis.Normed.Group.Tannery
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Topology.Algebra.InfiniteSum.Order
-import Mathlib.Tactic.Convert
+public import Mathlib.Analysis.Normed.Group.Tannery
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Topology.Algebra.InfiniteSum.Order
+public import Mathlib.Tactic.Convert
 
 /-!
 # Analytic lemmas for the block construction
@@ -20,6 +22,8 @@ Convergence of a real series is expressed through its ordered partial sums.
 In particular, the conclusion below is deliberately a `Tendsto` statement:
 `Summable` for real series would assert unconditional (absolute) convergence.
 -/
+
+@[expose] public section
 
 open Filter Finset Topology
 

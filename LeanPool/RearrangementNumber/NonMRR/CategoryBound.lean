@@ -3,16 +3,18 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.SlalomCoding
-import LeanPool.RearrangementNumber.NonMRR.GapBounding
-import LeanPool.RearrangementNumber.NonMRR.CategoryReduction
-import LeanPool.RearrangementNumber.NonMRR.CategoryTransfer
-import LeanPool.RearrangementNumber.NonMRR.SlalomBound
+public import LeanPool.RearrangementNumber.NonMRR.SlalomCoding
+public import LeanPool.RearrangementNumber.NonMRR.GapBounding
+public import LeanPool.RearrangementNumber.NonMRR.CategoryReduction
+public import LeanPool.RearrangementNumber.NonMRR.CategoryTransfer
+public import LeanPool.RearrangementNumber.NonMRR.SlalomBound
 
 /-!
 # The lower bound by the real meagre-ideal uniformity
@@ -21,6 +23,8 @@ The proof constructs a nonmeagre set of real numbers of cardinality at most
 that of any rearranging family. All block, coding and category ingredients
 are instantiated by the constructions in the preceding modules.
 -/
+
+@[expose] public section
 
 open Cardinal
 

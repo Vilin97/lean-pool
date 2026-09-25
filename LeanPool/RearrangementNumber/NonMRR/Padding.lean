@@ -3,13 +3,15 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.Series
-import Mathlib.Algebra.BigOperators.Group.Finset.Preimage
+public import LeanPool.RearrangementNumber.NonMRR.Series
+public import Mathlib.Algebra.BigOperators.Group.Finset.Preimage
 
 /-!
 # Inserting zero terms along an eventually increasing injection
@@ -19,6 +21,8 @@ an injective placement that is increasing beyond a finite index preserves the
 natural sum of a series, and inserting zeros preserves failure of absolute
 convergence.
 -/
+
+@[expose] public section
 
 open Filter Finset Topology
 

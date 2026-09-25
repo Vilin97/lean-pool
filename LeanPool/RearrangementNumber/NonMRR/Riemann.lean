@@ -3,19 +3,23 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.Series
-import Mathlib.Topology.Algebra.InfiniteSum.Real
-import Mathlib.Topology.Baire.CompleteMetrizable
-import Mathlib.Logic.Equiv.Fintype
-import Mathlib.Data.Finset.Sort
-import Mathlib.Tactic
+public import LeanPool.RearrangementNumber.NonMRR.Series
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
+public import Mathlib.Topology.Baire.CompleteMetrizable
+public import Mathlib.Logic.Equiv.Fintype
+public import Mathlib.Data.Finset.Sort
+public import Mathlib.Tactic
 
 /-! Rearranging a conditionally convergent series through Baire category. -/
+
+@[expose] public section
 
 open Filter Finset Set Topology
 open scoped BigOperators

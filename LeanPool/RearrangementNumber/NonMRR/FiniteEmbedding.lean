@@ -3,16 +3,20 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.Selection
-import LeanPool.RearrangementNumber.NonMRR.FiniteVectors
-import Mathlib.Data.Finset.Sort
+public import LeanPool.RearrangementNumber.NonMRR.Selection
+public import LeanPool.RearrangementNumber.NonMRR.FiniteVectors
+public import Mathlib.Data.Finset.Sort
 
 /-! Embedding finite vectors into series. -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Finset

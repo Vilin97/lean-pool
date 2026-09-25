@@ -3,15 +3,17 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vinicius de Oliveira Rodrigues
 -/
+module
+
 /-
 Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import LeanPool.RearrangementNumber.NonMRR.Selection
-import LeanPool.RearrangementNumber.NonMRR.Series
-import LeanPool.RearrangementNumber.NonMRR.Bounding
-import LeanPool.RearrangementNumber.NonMRR.Slaloms
+public import LeanPool.RearrangementNumber.NonMRR.Selection
+public import LeanPool.RearrangementNumber.NonMRR.Series
+public import LeanPool.RearrangementNumber.NonMRR.Bounding
+public import LeanPool.RearrangementNumber.NonMRR.Slaloms
 
 /-!
 # The challenge and response maps
@@ -20,6 +22,8 @@ This file proves the reduction from concrete finite block catalogues to slaloms.
 The analytic hypotheses are precisely the conclusions of the finite construction;
 they do not assume an inequality between cardinal characteristics.
 -/
+
+@[expose] public section
 
 open Filter Finset Cardinal Set
 open scoped Topology
