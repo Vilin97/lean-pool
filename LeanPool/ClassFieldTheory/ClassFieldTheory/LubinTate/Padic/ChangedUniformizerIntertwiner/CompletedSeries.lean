@@ -3,17 +3,21 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.ChangedUniformizer
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.StandardSeries
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedUnramifiedField
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeSeries
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.ChangedUniformizer
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.StandardSeries
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedUnramifiedField
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeSeries
 /-!
 # Completed p-adic Lubin--Tate series
 
 This module extends the multiplicative and changed-standard Lubin--Tate series to the completed
 unramified Witt ring and records their coefficients and residue reductions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

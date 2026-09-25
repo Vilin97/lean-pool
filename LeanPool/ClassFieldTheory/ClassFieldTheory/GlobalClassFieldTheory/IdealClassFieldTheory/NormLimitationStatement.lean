@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.NormLimitation
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.IdealArtinMap
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.NormLimitation
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.IdealArtinMap
 /-!
 # Statement boundary for ideal norm limitation
 
@@ -13,6 +15,8 @@ This leaf packages the ideal norm-limitation equality behind a named
 proposition.  Keeping the expanded normal-closure expression out of later
 declaration signatures avoids repeatedly normalizing the full finite tower.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

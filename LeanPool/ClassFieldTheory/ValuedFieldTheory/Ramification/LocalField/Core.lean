@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteExtensionCompleteDVF
-import Mathlib.FieldTheory.Galois.Basic
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.IntermediateFieldRestriction
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.Herbrand.Function
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FiniteGaloisLevelIndependence
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.HerbrandFunction
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.HerbrandTheorem
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteExtensionCompleteDVF
+public import Mathlib.FieldTheory.Galois.Basic
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.IntermediateFieldRestriction
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.Herbrand.Function
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FiniteGaloisLevelIndependence
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.HerbrandFunction
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.HerbrandTheorem
 /-!
 # Upper ramification jumps
 
@@ -18,6 +20,8 @@ The actual finite-level upper filtration attached to the canonical
 complete-DVF structure of a nonarchimedean local field, together with its
 right-limit subgroup and the intrinsic predicate for an upper jump.
 -/
+
+@[expose] public section
 
 open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
   herbrandFunction_eq_of_card_lower_eq →

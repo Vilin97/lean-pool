@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.AbsoluteAbelianization
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.IntrinsicAbsoluteData
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.AbsoluteAbelianization
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.IntrinsicAbsoluteData
 /-!
 # Compatibility names for the absolute abelianization
 
@@ -13,6 +15,8 @@ The field-generic construction is owned by
 `AlgebraicNumberTheory.Galois.AbsoluteAbelianization`.  This module preserves
 the established local names as definitional wrappers for downstream users.
 -/
+
+@[expose] public section
 
 noncomputable section
 

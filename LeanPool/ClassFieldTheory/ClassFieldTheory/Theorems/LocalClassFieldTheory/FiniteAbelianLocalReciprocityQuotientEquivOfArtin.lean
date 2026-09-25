@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormQuotient
-import Mathlib.FieldTheory.Galois.Abelian
-import Mathlib.FieldTheory.KrullTopology
-import Mathlib.NumberTheory.LocalField.Basic
-import Mathlib.RingTheory.Valuation.ValuativeRel.Basic
-import Mathlib.Topology.Algebra.Constructions
-import Mathlib.Topology.Algebra.Group.Quotient
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormQuotient
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.FieldTheory.KrullTopology
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.RingTheory.Valuation.ValuativeRel.Basic
+public import Mathlib.Topology.Algebra.Constructions
+public import Mathlib.Topology.Algebra.Group.Quotient
 /-!
 # The norm quotient induced by a specified finite local Artin map
 
@@ -18,6 +20,8 @@ The first isomorphism theorem determines the quotient equivalence from any
 specified continuous surjective homomorphism with the field-norm kernel.
 This is distinct from uniqueness of the Artin map itself.
 -/
+
+@[expose] public section
 
 noncomputable section
 

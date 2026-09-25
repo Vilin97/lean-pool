@@ -3,12 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.GroupTheory.Index
-import Mathlib.GroupTheory.QuotientGroup.Basic
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.GroupTheory.Index
+public import Mathlib.GroupTheory.QuotientGroup.Basic
 
 /-! # Units -/
+
+@[expose] public section
 namespace LocalFieldTheory
 
 /-!

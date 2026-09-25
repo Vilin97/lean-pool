@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteUnramified
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.GaloisIntegerRing
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteUnramified
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.GaloisIntegerRing
 /-!
 # Ramification groups of unramified local extensions
 
 This file connects the concrete unramified-valued-extension predicate with
 the actual upper ramification groups of a finite local extension.
 -/
+
+@[expose] public section
 
 noncomputable section
 

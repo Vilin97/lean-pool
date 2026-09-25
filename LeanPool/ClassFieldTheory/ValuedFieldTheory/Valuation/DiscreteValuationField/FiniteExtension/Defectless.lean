@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Extensions
-import Mathlib.LinearAlgebra.Dimension.Localization
-import Mathlib.RingTheory.RamificationInertia.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Extensions
+public import Mathlib.LinearAlgebra.Dimension.Localization
+public import Mathlib.RingTheory.RamificationInertia.Basic
 /-!
 # Defectlessness from a finite extension of valuation rings
 
@@ -14,6 +16,8 @@ The local Dedekind fundamental identity only needs discretely valued fields.
 Completeness and Henselianity play no role once the target valuation ring is a
 finite module over the base valuation ring.
 -/
+
+@[expose] public section
 
 noncomputable section
 

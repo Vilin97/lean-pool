@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassIdealNorm
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassIdealNorm
 /-!
 # Prime exponents of a fractional-ideal norm
 
@@ -12,6 +14,8 @@ At a finite prime of the base, the exponent of the norm is the sum of the
 upstairs exponents, each weighted by its inertia degree.  This is the
 calculation needed when passing from ideals to norm-defined ray subgroups.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

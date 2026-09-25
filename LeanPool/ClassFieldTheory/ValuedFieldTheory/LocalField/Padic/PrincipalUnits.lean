@@ -3,16 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.PrincipalUnitExpLogEquiv
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicField
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicPowerIndex
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.IdealQuotients
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.UniformizerPrincipalQuotient
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.NonarchimedeanLocalField
-import Mathlib.NumberTheory.Padics.ValuativeRel
-import Mathlib.NumberTheory.Padics.ProperSpace
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.PrincipalUnitExpLogEquiv
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicField
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicPowerIndex
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.IdealQuotients
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.UniformizerPrincipalQuotient
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.NonarchimedeanLocalField
+public import Mathlib.NumberTheory.Padics.ValuativeRel
+public import Mathlib.NumberTheory.Padics.ProperSpace
 /-!
 # Principal units of the p-adic field
 
@@ -20,6 +22,8 @@ This file identifies the standard p-adic integer and complete-DVF models,
 computes their principal-unit quotients, and records the logarithm/exponential
 power formulas used by local cyclotomic norm calculations.
 -/
+
+@[expose] public section
 
 open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
   card_unitsModHigherPrincipalUnitGroup_eq_quotientUnits →

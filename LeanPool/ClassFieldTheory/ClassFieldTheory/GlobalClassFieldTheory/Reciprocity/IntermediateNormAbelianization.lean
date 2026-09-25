@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidueAbelianizationNaturality
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.NormTowerConductor
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidueAbelianizationNaturality
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.NormTowerConductor
 /-!
 # Abelianized restriction over intermediate fields
 
@@ -15,6 +17,8 @@ subgroup.  It then proves naturality for the ordinary idèle-class norm and
 identifies its range as the Artin preimage of that abelianized fixing-subgroup
 image.  No normality of the intermediate extension over the base is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

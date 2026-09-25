@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RingTheory.Norm.Transitivity
+
+public import Mathlib.RingTheory.Norm.Transitivity
 
 /-!
 # Field norms on unit groups
@@ -13,6 +15,8 @@ This file provides the common algebraic norm map on unit groups.  It is
 independent of any valuation or local-field structure, so valued-field and
 discrete-valuation APIs can share the same definition.
 -/
+
+@[expose] public section
 namespace LocalFieldTheory
 
 noncomputable section

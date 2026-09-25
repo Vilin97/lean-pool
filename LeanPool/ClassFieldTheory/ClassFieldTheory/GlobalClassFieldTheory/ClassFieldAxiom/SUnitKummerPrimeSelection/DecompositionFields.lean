@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.Splitting.NormalClosure
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.SUnitKummerPrimeSelection.CoordinatePlaces
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.SUnitKummerPrimeSelection.PrimeSet
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.Splitting.NormalClosure
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.SUnitKummerPrimeSelection.CoordinatePlaces
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.SUnitKummerPrimeSelection.PrimeSet
 /-!
 # Decomposition groups and fields for S-unit Kummer prime selection
 
@@ -14,6 +16,8 @@ This file identifies the chosen decomposition groups with the cyclic
 coordinate subgroups, proves complete splitting in the prescribed extension,
 and identifies the associated decomposition fields.
 -/
+
+@[expose] public section
 
 open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain

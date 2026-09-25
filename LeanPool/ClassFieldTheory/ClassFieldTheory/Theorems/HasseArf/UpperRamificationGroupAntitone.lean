@@ -3,12 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.UpperRamificationGroup
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.HerbrandFunctionCanonical
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.HerbrandFunctionInverseHerbrandFunction
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.RealLowerRamificationGroupCanonical
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.UpperRamificationGroup
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.HerbrandFunctionCanonical
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.HerbrandFunctionInverseHerbrandFunction
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.RealLowerRamificationGroupCanonical
 /-! # Antitonicity of the canonical upper filtration -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

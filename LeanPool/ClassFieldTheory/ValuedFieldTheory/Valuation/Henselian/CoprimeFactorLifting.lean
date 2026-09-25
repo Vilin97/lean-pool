@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.EtaleLifting
-import Mathlib.RingTheory.Polynomial.UniversalFactorizationRing
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.EtaleLifting
+public import Mathlib.RingTheory.Polynomial.UniversalFactorizationRing
 /-!
 # Coprime factor lifting from the simple-root Hensel property
 
@@ -14,6 +16,8 @@ universal coprime factorization algebra. This algebra is etale, so its residue
 point lifts over a Henselian pair. The universal factors give the requested
 factorization, with their degrees and prescribed reductions.
 -/
+
+@[expose] public section
 
 namespace ValuationTheory.Henselian
 

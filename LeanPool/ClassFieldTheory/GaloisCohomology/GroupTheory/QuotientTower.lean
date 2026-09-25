@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.GroupTheory.Index
+
+public import Mathlib.GroupTheory.Index
 /-!
 # Quotients in subgroup towers
 
@@ -13,6 +15,8 @@ subgroup and the corresponding quotient after viewing that subgroup inside a
 larger group. They complement Mathlib's natural-number relative-index laws
 when cardinal-valued indices must also cover infinite towers.
 -/
+
+@[expose] public section
 
 noncomputable section
 

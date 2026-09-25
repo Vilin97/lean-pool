@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormApproximation.FinitePlaces
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RootCharacters
-import Mathlib.Algebra.Group.Hom.Basic
-import Mathlib.Algebra.Group.Subgroup.Ker
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormApproximation.FinitePlaces
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RootCharacters
+public import Mathlib.Algebra.Group.Hom.Basic
+public import Mathlib.Algebra.Group.Subgroup.Ker
 /-!
 # Kummer radicals and finite-place decomposition fields
 
@@ -20,6 +22,8 @@ finite-place completion and the algebraic localization realization of
 the decomposition field.  The only Kummer input is the usual fact that
 two roots with the same `n`-th power differ by an `n`-th root of unity.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

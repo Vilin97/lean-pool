@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.Cyclotomic.TotallyRamified.IntegralClosure
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.Cyclotomic.TotallyRamified.IntegralClosure
 /-!
 # A prime element for the totally ramified cyclotomic extension
 
 This file proves directly from its norm that `1 - ζ` is prime in the explicit DVR `ℤ_[p][ζ]`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

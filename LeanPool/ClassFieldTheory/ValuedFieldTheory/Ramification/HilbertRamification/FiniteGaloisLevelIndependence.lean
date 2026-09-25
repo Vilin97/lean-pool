@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FiniteGaloisLevel
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FiniteGaloisLevel
 /-!
 # Choice independence at finite Galois levels
 
@@ -14,6 +16,8 @@ field, uniqueness of the extended valuation therefore identifies the
 filtration formed from the chosen integral-closure target with the filtration
 formed from any other complete-DVF target extending the base valuation.
 -/
+
+@[expose] public section
 
 open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
   inverseHerbrandFunction →

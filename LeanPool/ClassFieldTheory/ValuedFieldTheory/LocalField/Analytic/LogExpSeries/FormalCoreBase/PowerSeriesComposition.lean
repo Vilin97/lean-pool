@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RingTheory.PowerSeries.Log
-import Mathlib.RingTheory.PowerSeries.WellKnown
+
+public import Mathlib.RingTheory.PowerSeries.Log
+public import Mathlib.RingTheory.PowerSeries.WellKnown
 /-!
 # Formal logarithm and exponential composition
 
@@ -13,6 +15,8 @@ This module develops the formal composition identities between Mathlib's
 `PowerSeries.log` and `PowerSeries.exp` that are used by the local-field
 logarithm and exponential.
 -/
+
+@[expose] public section
 
 noncomputable section
 

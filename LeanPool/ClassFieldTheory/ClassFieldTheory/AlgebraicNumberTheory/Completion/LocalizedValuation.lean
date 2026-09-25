@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.IntegralLocalFactor
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionFieldLocalization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.FiniteLocalization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuativeExtension
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.IntegralLocalFactor
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionFieldLocalization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.FiniteLocalization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuativeExtension
 /-!
 # Valuation rings of algebraic localizations
 
@@ -15,6 +17,8 @@ This file equips nonarchimedean absolute-value completions and their algebraic
 localizations with the norm-induced valuation structures. It identifies the
 localized valuation ring with the integral closure of the base valuation ring.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct ValuativeRel NNReal
 open NumberField IsDedekindDomain

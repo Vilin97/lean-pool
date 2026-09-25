@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.RamificationInertia.Galois
-import Mathlib.NumberTheory.RamificationInertia.Inertia
-import Mathlib.Algebra.Exact.Basic
-import Mathlib.RingTheory.DedekindDomain.Factorization
+
+public import Mathlib.NumberTheory.RamificationInertia.Galois
+public import Mathlib.NumberTheory.RamificationInertia.Inertia
+public import Mathlib.Algebra.Exact.Basic
+public import Mathlib.RingTheory.DedekindDomain.Factorization
 /-!
 # Hilbert ramification theory: Dedekind-domain layer
 
@@ -19,6 +21,8 @@ are already the source proof, but the decomposition/inertia/residue-action
 interface is proved here: membership criteria, residue-action formula,
 normality of inertia in the decomposition group, exactness, and quotient form.
 -/
+
+@[expose] public section
 
 noncomputable section
 

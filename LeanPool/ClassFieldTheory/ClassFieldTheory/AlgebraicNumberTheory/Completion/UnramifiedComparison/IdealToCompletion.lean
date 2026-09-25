@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.IntegerRingComparison
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.RamificationIdeal
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.IntegerRingComparison
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.RamificationIdeal
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
 /-!
 # From ideal-theoretic to completed unramifiedness
 
@@ -14,6 +16,8 @@ This file proves that ideal-theoretic unramifiedness at the centre of the
 actual chosen finite-place extension implies unramifiedness of its localized
 completion.
 -/
+
+@[expose] public section
 
 open scoped NumberField NNReal ValuativeRel
 open NumberField IsDedekindDomain

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.StandardArtinComparison
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.EqualCharacteristicTransportedLevelTower
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.StandardArtinComparison
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.EqualCharacteristicTransportedLevelTower
 /-!
 # Restriction kernels for transported upper ramification groups
 
@@ -14,6 +16,8 @@ a restriction kernel.  The base-field transport equivalences commute with
 level restriction, so the same kernel description holds for the
 transported target-field algebra.
 -/
+
+@[expose] public section
 
 noncomputable section
 

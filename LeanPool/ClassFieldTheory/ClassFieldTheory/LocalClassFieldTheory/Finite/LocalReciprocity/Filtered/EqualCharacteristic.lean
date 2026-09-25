@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.EqualCharacteristicDominatingExtension
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.Filtered.EqualCharacteristicStandardCompositum
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.Filtered.Core
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.EqualCharacteristicTransportedFixedFieldComparison
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.BaseChange
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Unramified
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.EqualCharacteristicDominatingExtension
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.Filtered.EqualCharacteristicStandardCompositum
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.Filtered.Core
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.EqualCharacteristicTransportedFixedFieldComparison
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.BaseChange
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Unramified
 /-!
 # Filtered local reciprocity in equal characteristic
 
@@ -20,6 +22,8 @@ inside the fixed separable closure lets filtered reciprocity descend by
 restriction.  A base-linear equivalence from the original extension to that
 field range then transports both the Artin and upper filtrations back.
 -/
+
+@[expose] public section
 
 noncomputable section
 

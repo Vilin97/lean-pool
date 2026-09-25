@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Principal
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitPreparation.SUnitPowerQuotient
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Principal
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitPreparation.SUnitPowerQuotient
 /-!
 # Power-local-unit subgroups of the idele group
 
@@ -13,6 +15,8 @@ This module defines the subgroup of ideles that are local powers at selected
 places and integral units elsewhere, together with its intersection with
 principal ideles and the corresponding subgroup of S-unit powers.
 -/
+
+@[expose] public section
 
 open scoped NumberField NNReal IsMulCommutative
 open NumberField IsDedekindDomain

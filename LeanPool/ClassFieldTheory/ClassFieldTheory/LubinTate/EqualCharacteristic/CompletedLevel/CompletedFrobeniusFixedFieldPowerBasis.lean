@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedFieldPrimitive
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedFieldPrimitive
 /-!
 # The completed theta-intertwining theorem: the fixed primitive completed power basis
 
 The direct theta value supplies the power basis used to descend coefficients
 of elements fixed by the prescribed completed Frobenius.
 -/
+
+@[expose] public section
 
 noncomputable section
 

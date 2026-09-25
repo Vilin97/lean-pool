@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Infinite.AbsoluteGaloisAbelianization
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidueNaturality
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.IntrinsicAbsoluteData
-import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Limits
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Infinite.AbsoluteGaloisAbelianization
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidueNaturality
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.IntrinsicAbsoluteData
+public import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Limits
 /-!
 # Finite quotients of the absolute abelianized Galois group
 
@@ -17,6 +19,8 @@ fixed separable closure.  The corresponding finite quotient is canonically
 identified, as a topological group, with the actual Galois group of that
 subextension.
 -/
+
+@[expose] public section
 
 noncomputable section
 

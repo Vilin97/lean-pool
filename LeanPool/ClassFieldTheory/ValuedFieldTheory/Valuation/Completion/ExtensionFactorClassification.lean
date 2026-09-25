@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.PolynomialFactors
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.FiniteLocalization
-import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.PolynomialFactors
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.FiniteLocalization
+public import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
 /-!
 # Classification of extensions of a completed absolute value
 
@@ -17,6 +19,8 @@ the completion, of an irreducible polynomial having `α` as a root.  The final
 theorem below also records the explicit pullback valuation and the extension
 of the chosen embedding to the completed field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

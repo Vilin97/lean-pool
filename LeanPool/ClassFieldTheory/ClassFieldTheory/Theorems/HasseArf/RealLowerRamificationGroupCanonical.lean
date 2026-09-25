@@ -3,18 +3,22 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.RealLowerRamificationGroup
-import Mathlib.FieldTheory.Galois.Abelian
-import Mathlib.NumberTheory.LocalField.Basic
-import Mathlib.RingTheory.Valuation.Extension
-import Mathlib.RingTheory.Valuation.ValuativeRel.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.RealLowerRamificationGroup
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.RingTheory.Valuation.Extension
+public import Mathlib.RingTheory.Valuation.ValuativeRel.Basic
 /-!
 # Canonical real lower ramification groups
 
 The real-index filtration is decreasing directly from the antitonicity of
 powers of the maximal ideal. No choice of a local extension is needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

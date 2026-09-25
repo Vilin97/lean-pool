@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAndHilbertClassFields.ArithmeticFrobeniusAt
-import Mathlib.NumberTheory.RamificationInertia.Unramified
-import Mathlib.RingTheory.DedekindDomain.Factorization
-import Mathlib.RingTheory.Frobenius
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAndHilbertClassFields.ArithmeticFrobeniusAt
+public import Mathlib.NumberTheory.RamificationInertia.Unramified
+public import Mathlib.RingTheory.DedekindDomain.Factorization
+public import Mathlib.RingTheory.Frobenius
 /-!
 # Independence of arithmetic Frobenius from the prime above
 
@@ -16,6 +18,8 @@ finite base prime give the same canonical arithmetic Frobenius element.
 This is the equality, rather than merely conjugacy, needed to avoid choosing
 an upstairs prime.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

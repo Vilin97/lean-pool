@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Infinite.ProfiniteCompletion
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Infinite.ProfiniteCompletion
 /-!
 # Bijectivity criteria for maps out of the open-quotient completion
 
@@ -14,6 +16,8 @@ target are cofinal among the defining open finite-index normal subgroups of
 the source.  These criteria isolate the purely topological part of infinite
 local reciprocity from the arithmetic existence theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

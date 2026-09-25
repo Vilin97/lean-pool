@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveUniformizer
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedUnramifiedField
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeSeries
-import Mathlib.FieldTheory.SplittingField.Construction
-import Mathlib.RingTheory.AdicCompletion.Topology
-import Mathlib.RingTheory.PowerSeries.Evaluation
-import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveUniformizer
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedUnramifiedField
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeSeries
+public import Mathlib.FieldTheory.SplittingField.Construction
+public import Mathlib.RingTheory.AdicCompletion.Topology
+public import Mathlib.RingTheory.PowerSeries.Evaluation
+public import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
 /-!
 # Completed p-adic Lubin--Tate levels
 
@@ -28,6 +30,8 @@ The integral polynomial, splitting field, and valuations below are the
 existing mathlib/LCFT objects.  No parallel p-adic field, integer ring, or
 completion is introduced.
 -/
+
+@[expose] public section
 
 noncomputable section
 

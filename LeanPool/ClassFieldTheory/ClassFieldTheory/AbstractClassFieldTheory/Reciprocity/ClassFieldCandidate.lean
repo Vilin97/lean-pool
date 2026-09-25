@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.NormTopology
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteAbelianSubextension
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.IntermediateExtension
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.NormTopology
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteAbelianSubextension
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.IntermediateExtension
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
 /-!
 # A finite class-field candidate from a norm-open subgroup
 
@@ -25,6 +27,8 @@ the reciprocity map.  No existence statement, norm-kernel equality, or
 classification conclusion depending on that specialization is
 asserted here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Topology
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.LocallyCompact
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PrincipalNorm
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Theory.AbsoluteValues
-import Mathlib.NumberTheory.NumberField.Completion.InfinitePlace
-import Mathlib.Topology.Algebra.IsOpenUnits
-import Mathlib.Topology.Algebra.Ring.Compact
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Topology
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.LocallyCompact
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PrincipalNorm
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Theory.AbsoluteValues
+public import Mathlib.NumberTheory.NumberField.Completion.InfinitePlace
+public import Mathlib.Topology.Algebra.IsOpenUnits
+public import Mathlib.Topology.Algebra.Ring.Compact
 /-!
 # Ideals prime to a ray-class modulus
 
@@ -18,6 +20,8 @@ This file defines the subgroup of fractional ideals prime to a modulus,
 connects it with the corresponding finite-idele higher-unit conditions, and
 develops the approximation maps used in ray-class ideal constructions.
 -/
+
+@[expose] public section
 
 open scoped NumberField WithZero
 open NumberField IsDedekindDomain

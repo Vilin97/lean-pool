@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertSymbol
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertSymbol
 /-!
 # Kernel laws for the local Hilbert symbol
 
@@ -15,6 +17,8 @@ the base field.  Consequently its kernel is exactly the local norm subgroup.
 This also makes the induced character on the concrete norm quotient
 injective.
 -/
+
+@[expose] public section
 
 noncomputable section
 

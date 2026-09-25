@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.Cyclotomic.RationalCyclotomicField
-import Mathlib.FieldTheory.Galois.Profinite
-import Mathlib.GroupTheory.Torsion
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.Cyclotomic.RationalCyclotomicField
+public import Mathlib.FieldTheory.Galois.Profinite
+public import Mathlib.GroupTheory.Torsion
 /-!
 # The torsion fixed field in the rational cyclotomic extension
 
@@ -15,6 +17,8 @@ of the torsion subgroup in `Gal(ℚ(μ∞)/ℚ)`.  This file defines that actual
 and fixed field.  No copy of the Galois group is replaced definitionally by
 `ℤ̂ˣ`; the comparison with profinite units is a later theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

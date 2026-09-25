@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldNorm
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Norm
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldNorm
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Norm
 /-!
 # Integer-valued valuations
 
 Relates membership in the valuation ring to the ambient valuation and exposes
 the associated surjective multiplicative valuation with a uniformizer.
 -/
+
+@[expose] public section
 namespace LocalFieldTheory
 
 noncomputable section

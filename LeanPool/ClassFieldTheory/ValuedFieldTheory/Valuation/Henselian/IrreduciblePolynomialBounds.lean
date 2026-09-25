@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.ValuationSubring
-import Mathlib.Algebra.Polynomial.Div
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.ValuationSubring
+public import Mathlib.Algebra.Polynomial.Div
 /-!
 # reduction input for the coefficient estimate
 
@@ -16,6 +18,8 @@ absolute value, coefficients of value `< 1` reduce to zero and coefficients of
 value `1` reduce to nonzero elements.  Hence the first coefficient of value
 `1` gives the exact initial `X`-power dividing the reduced polynomial.
 -/
+
+@[expose] public section
 
 noncomputable section
 

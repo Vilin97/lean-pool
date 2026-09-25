@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.ChangedUniformizer
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.ChangedUniformizer
 /-!
 # The completed theta-intertwining theorem: evaluation of changed Lubin--Tate polynomials
 
@@ -14,6 +16,8 @@ with their ambient Lubin--Tate endomorphisms.  Keeping the evaluation layer
 separate avoids rebuilding the larger algebraic changed-uniformizer
 construction when it is used at completed points.
 -/
+
+@[expose] public section
 
 noncomputable section
 

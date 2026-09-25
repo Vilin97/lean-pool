@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicUnramifiedGeometricRestriction
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidueNaturality
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicUnramifiedGeometricRestriction
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidueNaturality
 /-!
 # Cyclotomic unramified local--global compatibility
 
@@ -13,6 +15,8 @@ For an unramified finite abelian subextension of an abstract rational
 fixed field, the actual global norm-residue homomorphism agrees on every
 finite one-place idele class with the chosen local Artin homomorphism.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NumberField
 

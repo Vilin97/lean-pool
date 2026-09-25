@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FiniteAbelianLocalExtension
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.OpenFiniteIndexSubgroup
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.Classification
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.OrderReversal
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FiniteAbelianLocalExtension
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.OpenFiniteIndexSubgroup
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.Classification
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.OrderReversal
 /-!
 # Mathlib intermediate fields and finite local class-field theory
 
@@ -15,6 +17,8 @@ The finite-existence theorem is formulated internally using closed subgroups
 of the absolute Galois group.  Here we identify those objects with finite
 abelian intermediate fields of Mathlib's chosen separable closure.
 -/
+
+@[expose] public section
 
 noncomputable section
 

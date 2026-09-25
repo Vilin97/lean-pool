@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RootCharacters
-import Mathlib.NumberTheory.NumberField.InfinitePlace.Basic
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RootCharacters
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.Basic
 /-!
 # Hilbert symbols at infinite places
 
@@ -14,6 +16,8 @@ base field contains the relevant roots of unity, the only nontrivial case is
 the quadratic one: its value is `-1` exactly when both arguments are negative.
 The definition below records that evaluation directly in `μₙ(K)`.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField

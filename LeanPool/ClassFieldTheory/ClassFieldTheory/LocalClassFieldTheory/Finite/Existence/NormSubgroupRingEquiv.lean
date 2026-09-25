@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormSubgroup
-import Mathlib.RingTheory.Norm.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormSubgroup
+public import Mathlib.RingTheory.Norm.Basic
 /-!
 # Transport of finite-extension norm subgroups
 
@@ -13,6 +15,8 @@ Compatible field equivalences carry the actual group of field norms to the
 actual group of field norms.  This is the norm comparison needed when finite
 local class-field theory is transported to a small representative.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.IdealArtinMap
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.IdealArtinMap
 /-!
 # The ideal Artin quotient
 
@@ -12,6 +14,8 @@ For a defining modulus `m`, the ideal-theoretic Artin map is surjective and
 has kernel `H_m`.  The first isomorphism theorem therefore identifies
 `J_K^m / H_m` with the corresponding idelic norm quotient `C_K / N`.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

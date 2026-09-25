@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.GroupTheory.DoubleCoset
-import Mathlib.GroupTheory.Sylow
+
+public import Mathlib.GroupTheory.DoubleCoset
+public import Mathlib.GroupTheory.Sylow
 /-!
 # Finite group theory for the splitting corollaries
 
@@ -24,6 +26,8 @@ surjective.  If it does not decrease cardinality, its right subgroup
 is contained in the normal core of `H`; therefore it is trivial when
 `H` is core-free.
 -/
+
+@[expose] public section
 
 noncomputable section
 

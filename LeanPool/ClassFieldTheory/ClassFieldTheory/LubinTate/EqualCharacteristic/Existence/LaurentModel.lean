@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.IwasawaPrincipalUnits
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.IwasawaPrincipalUnits
 /-!
 # Equal-characteristic Laurent-series model
 
@@ -15,6 +17,8 @@ series evaluation is onto.  Here we package that concrete evaluation as the
 actual field equivalence needed by the Lubin--Tate construction; no existence
 or norm-subgroup statement is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,47 +3,51 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Complete
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.AdicLimits
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Assembly
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Basic
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.CoefficientMinimum
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Complete
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.DegreeBounds
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.DivisionBounds
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.ErrorPowers
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.FiniteApproximation
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.InfiniteApproximation
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Iteration
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.PrincipalLimits
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Step
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Truncation
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.WeakLimits
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.IrreduciblePolynomialBounds
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.IrreduciblePolynomialLifting
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.MonicFactorization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.NonmonicReduction
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.PrimitiveFactorization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.PrimitiveReduction
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.UniqueAlgebraicExtensions
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.UniqueExtensionPrimitive
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.UniqueExtensionReduction
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.ValuationExtensionCriterion
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.Ramification
-import Mathlib.Algebra.Exact.Basic
-import Mathlib.FieldTheory.AbsoluteGaloisGroup
-import Mathlib.FieldTheory.Galois.Infinite
-import Mathlib.FieldTheory.Galois.Profinite
-import Mathlib.FieldTheory.PurelyInseparable.Basic
-import Mathlib.RingTheory.Valuation.RamificationGroup
-import Mathlib.Topology.Algebra.ContinuousMonoidHom
-import Mathlib.Topology.Maps.Basic
-import Mathlib.Topology.Sets.Opens
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Complete
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.AdicLimits
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Assembly
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Basic
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.CoefficientMinimum
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Complete
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.DegreeBounds
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.DivisionBounds
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.ErrorPowers
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.FiniteApproximation
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.InfiniteApproximation
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Iteration
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.PrincipalLimits
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Step
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Truncation
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.WeakLimits
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.IrreduciblePolynomialBounds
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.IrreduciblePolynomialLifting
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.MonicFactorization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.NonmonicReduction
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.PrimitiveFactorization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.PrimitiveReduction
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.UniqueAlgebraicExtensions
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.UniqueExtensionPrimitive
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.UniqueExtensionReduction
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.ValuationExtensionCriterion
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.Ramification
+public import Mathlib.Algebra.Exact.Basic
+public import Mathlib.FieldTheory.AbsoluteGaloisGroup
+public import Mathlib.FieldTheory.Galois.Infinite
+public import Mathlib.FieldTheory.Galois.Profinite
+public import Mathlib.FieldTheory.PurelyInseparable.Basic
+public import Mathlib.RingTheory.Valuation.RamificationGroup
+public import Mathlib.Topology.Algebra.ContinuousMonoidHom
+public import Mathlib.Topology.Maps.Basic
+public import Mathlib.Topology.Sets.Opens
 
 /-! # Finite Level Valuation Restriction -/
+
+@[expose] public section
 namespace RamificationTheory
 
 open ValuationTheory

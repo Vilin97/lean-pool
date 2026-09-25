@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Basic
-import Mathlib.RingTheory.AdicCompletion.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Basic
+public import Mathlib.RingTheory.AdicCompletion.Basic
 /-!
 # coefficientwise limit preparation
 
@@ -13,6 +15,8 @@ This file records the coefficientwise Cauchy form of the infinite Hensel
 approximants.  It is the input needed for the adic-completeness step in
 the coefficientwise proof of Hensel's lemma.
 -/
+
+@[expose] public section
 
 noncomputable section
 

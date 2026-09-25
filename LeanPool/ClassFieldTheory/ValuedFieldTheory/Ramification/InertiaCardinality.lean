@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Group.Subgroup.Finite
-import Mathlib.Algebra.Group.Subgroup.Lattice
-import Mathlib.SetTheory.Cardinal.NatCard
+
+public import Mathlib.Algebra.Group.Subgroup.Finite
+public import Mathlib.Algebra.Group.Subgroup.Lattice
+public import Mathlib.SetTheory.Cardinal.NatCard
 /-!
 # The finite-group count in the global cyclotomic inertia argument
 
@@ -16,6 +18,8 @@ abelian, the cardinality of the subgroup that they generate is at most the
 product of their cardinalities.  This file isolates that elementary count
 from the arithmetic part of the proof.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,15 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.Algebra.Module.MinimalAxioms
-import Mathlib.Algebra.Module.ZMod
-import Mathlib.NumberTheory.Padics.RingHoms
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.DenominatorValuation
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.InverseLimitTopology
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.PadicReductionContinuous
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.QuotientTransition
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.Algebra.Module.MinimalAxioms
+public import Mathlib.Algebra.Module.ZMod
+public import Mathlib.NumberTheory.Padics.RingHoms
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.DenominatorValuation
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.InverseLimitTopology
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.PadicReductionContinuous
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.QuotientTransition
 /-!
 # P-adic modules on finite principal-unit quotients
 
@@ -19,6 +21,8 @@ Finite principal-unit quotients have the expected residue-characteristic exponen
 Reduction of p-adic integers therefore supplies canonical module structures, compatible with
 the transition maps.
 -/
+
+@[expose] public section
 
 noncomputable section
 

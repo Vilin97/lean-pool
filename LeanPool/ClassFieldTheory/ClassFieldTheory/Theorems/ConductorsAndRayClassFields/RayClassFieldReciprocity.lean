@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassFieldRealization
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.ConductorsAndRayClassFields.RayClassSubgroupExistence
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassFieldRealization
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.ConductorsAndRayClassFields.RayClassSubgroupExistence
 /-!
 # Ray class reciprocity
 
@@ -13,6 +15,8 @@ For a modulus `m`, there exists a finite abelian extension whose Galois group
 is the ideal-theoretic ray class group modulo `m`, compatibly with finite
 global reciprocity.  No global choice of ray class field is exposed.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

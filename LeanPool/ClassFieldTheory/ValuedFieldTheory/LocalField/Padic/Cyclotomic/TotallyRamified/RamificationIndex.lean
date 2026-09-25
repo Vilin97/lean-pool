@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.Cyclotomic.TotallyRamified.ValuationRingEquiv
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.RamificationIdeal
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.Cyclotomic.TotallyRamified.ValuationRingEquiv
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.RamificationIdeal
 /-!
 # The ramification index of the totally ramified cyclotomic extension
 
 This file maps the Eisenstein unit relation into the target valuation ring and proves `e = [L :
   ℚ_[p]]`, together with the uniformizer statement.
 -/
+
+@[expose] public section
 
 open _root_.LocalFieldTheory.DiscreteValuationField.ValuedExtension renaming
   target_maximalIdeal_pow_not_le_pow_succ →

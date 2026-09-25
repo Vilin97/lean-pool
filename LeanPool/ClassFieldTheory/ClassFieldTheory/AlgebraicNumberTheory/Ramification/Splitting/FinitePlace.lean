@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormApproximation.FinitePlaces
-import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.Finite
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormApproximation.FinitePlaces
+public import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.Finite
 /-!
 # Decomposition groups and complete splitting at finite places
 
@@ -22,6 +24,8 @@ the decomposition group is exactly the local degree.  Consequently
 complete splitting is equivalent both to cardinality one and to local
 degree one.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.ValuedAdicComplete
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.CompatibleInverseLimit
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Theory.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.Models
-import Mathlib.Algebra.Ring.TransferInstance
-import Mathlib.Topology.Homeomorph.TransferInstance
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.ValuedAdicComplete
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.CompatibleInverseLimit
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Theory.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.Models
+public import Mathlib.Algebra.Ring.TransferInstance
+public import Mathlib.Topology.Homeomorph.TransferInstance
 /-!
 # Adic completion and inverse limits
 
@@ -17,6 +19,8 @@ This file contains the algebraic and topological projective-limit descriptions
 of adically complete rings, complete discrete valuation rings, and their unit
 groups.
 -/
+
+@[expose] public section
 
 noncomputable section
 

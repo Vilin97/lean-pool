@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassSubgroupQuotientEquiv
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassSubgroupQuotientEquiv
 /-!
 # Quotient form of ray-class subgroup reciprocity
 
 The quotient of a ray class group by the subgroup defining a class field is
 the Galois group of that field.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

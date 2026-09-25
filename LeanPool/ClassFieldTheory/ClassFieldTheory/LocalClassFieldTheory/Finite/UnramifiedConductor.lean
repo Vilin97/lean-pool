@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.FieldTheory.Galois.Abelian
-import Mathlib.GroupTheory.Abelianization.Defs
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Conductor
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.UnramifiedNormComparison
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.GroupTheory.Abelianization.Defs
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Conductor
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.UnramifiedNormComparison
 /-!
 # Conductors and unramified extensions
 
@@ -20,6 +22,8 @@ Conversely, conductor one identifies the norm quotient order with the residue
 degree. Finite local reciprocity and the degree formula then force the
 ramification index to be one.
 -/
+
+@[expose] public section
 
 noncomputable section
 

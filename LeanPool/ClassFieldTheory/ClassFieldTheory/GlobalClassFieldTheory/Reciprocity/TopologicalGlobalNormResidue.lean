@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.NormConductor
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidue
-import Mathlib.FieldTheory.KrullTopology
-import Mathlib.Topology.Algebra.Group.Quotient
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.NormConductor
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidue
+public import Mathlib.FieldTheory.KrullTopology
+public import Mathlib.Topology.Algebra.Group.Quotient
 /-!
 # Topological global norm-residue reciprocity
 
@@ -21,6 +23,8 @@ This file also bundles the quotient map and the global norm-residue map
 as continuous homomorphisms, and proves that forgetting their topology
 recovers the previously constructed actual global norm-residue symbol.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NumberField
 open NumberField

@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.ValuationSubring
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Completeness
-import Mathlib.RingTheory.AdicCompletion.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.ValuationSubring
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Completeness
+public import Mathlib.RingTheory.AdicCompletion.Basic
 /-!
 # Principal adic filtrations in complete nonarchimedean valuation rings
 
@@ -15,6 +17,8 @@ unit ball generates a separated and precomplete principal filtration on the
 closed unit ball.  These facts are shared by the coefficientwise Hensel
 construction and the irreducible-polynomial coefficient estimate.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,11 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Construction.NormSubgroup
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Construction.NormSubgroup
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
 
 /-! # Finite Norm Quotient -/
+
+@[expose] public section
 universe u
 
 namespace ClassFormation

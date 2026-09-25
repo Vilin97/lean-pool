@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Ideal
-import Mathlib.Data.Nat.Factorization.Basic
-import Mathlib.Data.Nat.GCD.BigOperators
-import Mathlib.Data.ZMod.Units
-import Mathlib.NumberTheory.NumberField.Units.Basic
-import Mathlib.NumberTheory.Padics.HeightOneSpectrum
-import Mathlib.NumberTheory.Padics.RingHoms
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Ideal
+public import Mathlib.Data.Nat.Factorization.Basic
+public import Mathlib.Data.Nat.GCD.BigOperators
+public import Mathlib.Data.ZMod.Units
+public import Mathlib.NumberTheory.NumberField.Units.Basic
+public import Mathlib.NumberTheory.Padics.HeightOneSpectrum
+public import Mathlib.NumberTheory.Padics.RingHoms
 /-!
 # Ray class groups of the rational numbers
 
@@ -20,6 +22,8 @@ This file computes ray class groups of the rational numbers. A positive integer
 positive generator of an ideal prime to this modulus gives the explicit
 isomorphism with `(ZMod m)ˣ`.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

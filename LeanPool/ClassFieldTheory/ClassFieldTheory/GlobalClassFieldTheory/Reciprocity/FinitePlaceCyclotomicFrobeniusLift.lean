@@ -3,17 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.CyclicPrimeSubextension
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.OnePlaceBaseNorm
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Degree.FrobeniusLift
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteIntegerPrimeProduct
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicPrincipalIdele
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicZHatBaseChange
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.RationalCyclotomicPrincipalPrimeFactor
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.ClosedAddSubgroup
-import Mathlib.GroupTheory.Nilpotent
-import Mathlib.Topology.Algebra.ContinuousMonoidHom
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.CyclicPrimeSubextension
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.OnePlaceBaseNorm
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Degree.FrobeniusLift
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteIntegerPrimeProduct
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicPrincipalIdele
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicZHatBaseChange
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.RationalCyclotomicPrincipalPrimeFactor
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.ClosedAddSubgroup
+public import Mathlib.GroupTheory.Nilpotent
+public import Mathlib.Topology.Algebra.ContinuousMonoidHom
 /-!
 # Decomposition-compatible cyclotomic Frobenius lifts
 
@@ -27,6 +29,8 @@ group upstairs onto the decomposition group of the restricted
 valuation.  The proof uses the actual valuation-conjugacy correction
 in `absoluteValueDecompositionGroup_map_restrictNormalHom`.
 -/
+
+@[expose] public section
 
 open AlgebraicNumberTheory.Valuations
 open AlgebraicNumberTheory

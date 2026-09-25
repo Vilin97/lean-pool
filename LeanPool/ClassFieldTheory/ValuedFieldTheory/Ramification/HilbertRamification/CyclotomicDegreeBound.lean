@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Group.Subgroup.Finite
-import Mathlib.NumberTheory.Cyclotomic.PrimitiveRoots
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.ValuationSubring
+
+public import Mathlib.Algebra.Group.Subgroup.Finite
+public import Mathlib.NumberTheory.Cyclotomic.PrimitiveRoots
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.ValuationSubring
 /-!
 # Cyclotomic degree bounds for inertia
 
@@ -14,6 +16,8 @@ An inertia group is bounded by the degree of its Galois extension.  An
 embedding into a concrete cyclotomic field therefore bounds its cardinality
 by Euler's totient.
 -/
+
+@[expose] public section
 
 noncomputable section
 

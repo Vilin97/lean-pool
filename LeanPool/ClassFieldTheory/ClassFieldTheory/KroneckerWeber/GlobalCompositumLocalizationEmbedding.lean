@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumValuedEmbedding
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumValuedEmbedding
 /-!
 # Embedding the localized global compositum in the common cyclotomic target
 
@@ -14,6 +16,8 @@ It therefore extends to completions.  Compatibility on the completed base
 identifies the restriction to the chosen localization as a genuine
 `ℚ_p`-algebra embedding into the same common cyclotomic target.
 -/
+
+@[expose] public section
 
 noncomputable section
 

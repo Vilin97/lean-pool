@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.AlgebraicLocalization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.LocalizationDensity
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.AlgebraicLocalization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.LocalizationDensity
 /-!
 # Localization of inertia and ramification groups
 
@@ -17,6 +19,8 @@ ramification groups.  The difficult global-to-local implications use density
 of `L` in the algebraic localization, proved in
 `RamificationTheory.HilbertRamification.LocalizationDensity`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

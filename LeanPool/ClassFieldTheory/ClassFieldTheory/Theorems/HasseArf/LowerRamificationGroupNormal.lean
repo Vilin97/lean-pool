@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.LowerRamificationGroup
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.LowerRamificationGroup
 /-!
 # Normality of lower ramification groups
 
@@ -12,6 +14,8 @@ Every level of the lower ramification filtration is normal in the
 decomposition group: conjugation preserves the maximal-ideal powers that
 define the filtration.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

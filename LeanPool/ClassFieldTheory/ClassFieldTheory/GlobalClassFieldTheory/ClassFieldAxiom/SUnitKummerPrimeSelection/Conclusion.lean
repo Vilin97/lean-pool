@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.SUnitKummerPrimeSelection.DecompositionFields
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.FinitePlaceDecomposition
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.SUnitKummerPrimeSelection.DecompositionFields
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.FinitePlaceDecomposition
 /-!
 # The conclusion of S-unit Kummer prime selection
 
@@ -13,6 +15,8 @@ This file proves that the selected local power conditions cut out exactly
 the finite Kummer radical and records the support-enlargement consequence
 used by the global reciprocity argument.
 -/
+
+@[expose] public section
 
 open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain

@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.Product
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.EquivariantEquiv
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandFiniteness
-import Mathlib.Data.ZMod.QuotientGroup
-import Mathlib.GroupTheory.GroupAction.Quotient
-import Mathlib.SetTheory.Cardinal.Finite
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.Product
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.EquivariantEquiv
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandFiniteness
+public import Mathlib.Data.ZMod.QuotientGroup
+public import Mathlib.GroupTheory.GroupAction.Quotient
+public import Mathlib.SetTheory.Cardinal.Finite
 /-!
 # Herbrand quotients of permutation lattices
 
@@ -20,6 +22,8 @@ transitive permutation lattices, and multiplies over a finite family of
 orbits.  It also records invariance under passage to a finite-index stable
 subgroup.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

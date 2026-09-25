@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.HerbrandFunction
-import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
-import Mathlib.NumberTheory.LocalField.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.HerbrandFunction
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
+public import Mathlib.NumberTheory.LocalField.Basic
 /-!
 # Strict growth of the public Herbrand function
 
@@ -15,6 +17,8 @@ with the existing Herbrand function of the local lower filtration. Its strict
 growth is consequently available without exposing that filtration in the
 public theorem statement.
 -/
+
+@[expose] public section
 
 noncomputable section
 

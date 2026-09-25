@@ -3,17 +3,21 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.RationalCyclotomicPrincipalProduct
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.InfiniteOnePlaceBaseNorm
-import Mathlib.NumberTheory.NumberField.CMField
-import Mathlib.RingTheory.RootsOfUnity.Complex
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.RationalCyclotomicPrincipalProduct
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.InfiniteOnePlaceBaseNorm
+public import Mathlib.NumberTheory.NumberField.CMField
+public import Mathlib.RingTheory.RootsOfUnity.Complex
 /-!
 # The rational cyclotomic complexification
 
 This module realizes the quadratic complexification as the fourth-root
 cyclotomic field and proves the rational principal-idele Artin formula.
 -/
+
+@[expose] public section
 
 open scoped BigOperators IsMulCommutative NumberField
 open NumberField IsDedekindDomain

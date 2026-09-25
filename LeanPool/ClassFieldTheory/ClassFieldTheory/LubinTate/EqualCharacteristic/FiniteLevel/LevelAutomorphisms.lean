@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.LevelField
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.PrimitiveAction
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.FiniteParameters
-import Mathlib.FieldTheory.Galois.Basic
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.LevelField
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.PrimitiveAction
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.FiniteParameters
+public import Mathlib.FieldTheory.Galois.Basic
 /-!
 # The uniformizer norm identity: automorphisms of equal-characteristic Lubin--Tate level fields
 
@@ -23,6 +25,8 @@ No commutativity of the automorphism group is asserted here: that requires
 the multiplicative composition law for the bracket action, not merely the
 root-counting argument below.
 -/
+
+@[expose] public section
 
 noncomputable section
 

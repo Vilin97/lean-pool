@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionField
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionField
 /-!
 # Decomposition-field extension comparison
 
@@ -12,6 +14,8 @@ This file starts with clause (i): the restriction of `w` to its decomposition
 field has a unique extension back to `L`.  The proof works for finite or
 infinite Galois extensions and for archimedean or nonarchimedean valuations.
 -/
+
+@[expose] public section
 
 noncomputable section
 

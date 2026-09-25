@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldUnitDecomposition
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.GroupTheory.PowerIndex
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldUnitDecomposition
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.GroupTheory.PowerIndex
 /-!
 # Power-index computations for complete discrete valuation fields
 
@@ -14,6 +16,8 @@ This LubinTate consumer specializes the public commutative-group power-index
 API to the unit and principal-unit decompositions of a complete discrete
 valuation field.
 -/
+
+@[expose] public section
 
 open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
   card_principalUnitSubquotient_one_eq_residue_pow_of_uniformizer →

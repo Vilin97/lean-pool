@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.DivisionPolynomial
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.DivisionPolynomial
 /-!
 # The uniformizer norm identity: primitive equal-characteristic division points
 
@@ -15,6 +17,8 @@ iterate.  This file chooses one such root in the fixed separable closure and
 records that exact-level property.  No irreducibility or Galois assertion is
 used here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

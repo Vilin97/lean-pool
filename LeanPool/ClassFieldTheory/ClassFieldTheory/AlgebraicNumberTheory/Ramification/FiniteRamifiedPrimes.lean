@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RingTheory.DedekindDomain.Different
-import Mathlib.RingTheory.DedekindDomain.Factorization
+
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import Mathlib.RingTheory.DedekindDomain.Factorization
 /-!
 # Finiteness of ramified primes in Dedekind extensions
 
 In a finite separable extension of Dedekind domains, only finitely many
 height-one primes of either the extension ring or the base ring ramify.
 -/
+
+@[expose] public section
 
 noncomputable section
 

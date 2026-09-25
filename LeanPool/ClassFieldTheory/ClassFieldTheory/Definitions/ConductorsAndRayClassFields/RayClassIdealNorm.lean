@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.FractionalIdealNorm
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassGroup
-import Mathlib.Algebra.BigOperators.Finsupp.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.FractionalIdealNorm
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassGroup
+public import Mathlib.Algebra.BigOperators.Finsupp.Basic
 /-!
 # Ideal norms in an ideal-theoretic ray class group
 
@@ -16,6 +18,8 @@ this group into the fractional ideals of `K` prime to `m`; composing with the
 ray quotient gives its genuine ideal-norm image.  This construction does not
 identify ideal norms with idèle-class norms.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

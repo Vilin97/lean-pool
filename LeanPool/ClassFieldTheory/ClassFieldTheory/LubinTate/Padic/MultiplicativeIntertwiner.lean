@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.StandardFormalGroup
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeSeries
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.StandardFormalGroup
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeSeries
 /-!
 # Comparing the standard and multiplicative Lubin--Tate series over `ℚ_p`
 
@@ -18,6 +20,8 @@ Consequently, evaluation of `H` carries standard Lubin--Tate division points
 to multiplicative division points.  This file constructs that series directly;
 it does not identify the two actions from equality of their kernels.
 -/
+
+@[expose] public section
 
 noncomputable section
 

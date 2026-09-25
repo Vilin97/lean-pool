@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Algebra.IntermediateFieldAlgEquivOrderIso
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Algebra.AbelianGaloisEquiv
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Algebra.IntermediateFieldAlgEquivOrderIso
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Algebra.AbelianGaloisEquiv
 /-!
 # Finite abelian intermediate fields under an ambient algebra equivalence
 
 An algebra equivalence of ambient fields transports finite-dimensionality and
 the abelian Galois property of every intermediate field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

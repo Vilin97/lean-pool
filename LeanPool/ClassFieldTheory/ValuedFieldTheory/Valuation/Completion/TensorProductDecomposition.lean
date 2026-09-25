@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Completion
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.ExtensionFactorClassification
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.SeparablePolynomialFactors
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.BaseChangeAdjoinRoot
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.PolynomialCRT
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.CanonicalTensorMap
-import Mathlib.Algebra.Group.Pi.Units
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Completion
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.ExtensionFactorClassification
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.SeparablePolynomialFactors
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.BaseChangeAdjoinRoot
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.PolynomialCRT
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.CanonicalTensorMap
+public import Mathlib.Algebra.Group.Pi.Units
 /-!
 # Tensor-product decomposition over a completion
 
@@ -20,6 +22,8 @@ construction: choose a primitive element, factor its mapped minimal polynomial,
 apply the Chinese remainder theorem, and identify every simple factor with
 the corresponding completion using the extension-factor correspondence.
 -/
+
+@[expose] public section
 
 noncomputable section
 

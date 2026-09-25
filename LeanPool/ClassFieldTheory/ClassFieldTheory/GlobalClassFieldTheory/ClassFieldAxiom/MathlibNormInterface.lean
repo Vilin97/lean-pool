@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.IsFieldNorm
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.NormTheorems.All
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.HasseNormPrinciple
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.IsFieldNorm
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.NormTheorems.All
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.HasseNormPrinciple
 /-!
 # Mathlib-facing Hasse norm theorem
 
@@ -14,6 +16,8 @@ This module translates the idele-theoretic implementation of the cyclic
 Hasse norm theorem into the implementation-independent predicates in
 `ClassFieldTheory.Definitions.NormTheorems`.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain

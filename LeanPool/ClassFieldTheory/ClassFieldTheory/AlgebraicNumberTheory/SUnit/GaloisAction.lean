@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SUnit.LogLattice
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.Permutation.LatticeHerbrand
-import Mathlib.NumberTheory.NumberField.InfinitePlace.Ramification
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SUnit.LogLattice
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.Permutation.LatticeHerbrand
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.Ramification
 /-!
 # Galois actions on `S`-units and their logarithmic lattice
 
@@ -16,6 +18,8 @@ integers, on infinite places by precomposition, and on field units in the
 usual way.  For a stable finite set of finite places these actions restrict
 to the actual `S`-unit group.
 -/
+
+@[expose] public section
 
 open scoped BigOperators NumberField nonZeroDivisors
 open IsDedekindDomain Module

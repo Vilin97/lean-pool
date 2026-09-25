@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IdeleClassDirectLimitFiniteTowerNormCore
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IdeleClassDirectLimitFiniteTowerNormCore
 /-!
 # Ordinary norms in finite towers of rational fixed fields
 
@@ -16,6 +18,8 @@ The construction is kept separate from the foundational direct-limit norm
 module so that the normal-closure and coset-product proof elaborates in a
 fresh command environment.
 -/
+
+@[expose] public section
 
 noncomputable section
 

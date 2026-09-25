@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.CoefficientMinimum
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.WeakLimits
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.PrincipalLimits
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.CoefficientMinimum
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.WeakLimits
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.PrincipalLimits
 /-!
 # explicit valuation-ring Hensel statement
 
 This file connects the chosen finite-minimum coefficient to
 the displayed-factor complete-limit theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

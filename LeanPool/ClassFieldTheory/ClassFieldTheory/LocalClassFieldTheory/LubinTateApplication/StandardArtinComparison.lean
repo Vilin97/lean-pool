@@ -3,16 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Ramification.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.BaseChange
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Unramified
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.IntermediateFieldRestriction
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidueNaturality
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.NormSubgroup
-import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.RestrictionKernel
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.LevelFieldTower
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Ramification.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.BaseChange
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Unramified
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.IntermediateFieldRestriction
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidueNaturality
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.NormSubgroup
+public import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.RestrictionKernel
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.LevelFieldTower
 /-!
 # Standard local Artin map on equal-characteristic Lubin--Tate levels
 
@@ -24,6 +26,8 @@ The proof uses restriction to the lower Lubin--Tate level rather than a
 pointwise comparison between the standard Artin map and the explicit
 power-series action.
 -/
+
+@[expose] public section
 
 noncomputable section
 

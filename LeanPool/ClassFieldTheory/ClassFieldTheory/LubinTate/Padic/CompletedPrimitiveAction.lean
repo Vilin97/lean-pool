@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelAutomorphisms
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedPrimitiveIrreducible
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeEvaluation.Core
-import Mathlib.SetTheory.Cardinal.Finite
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelAutomorphisms
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedPrimitiveIrreducible
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeEvaluation.Core
+public import Mathlib.SetTheory.Cardinal.Finite
 /-!
 # Primitive unit action on a completed p-adic Lubin--Tate level
 
@@ -23,6 +25,8 @@ unit-parameter automorphisms then give every completed root.  Comparing
 cardinalities proves that these are all the roots, and hence that each one
 generates the completed splitting field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

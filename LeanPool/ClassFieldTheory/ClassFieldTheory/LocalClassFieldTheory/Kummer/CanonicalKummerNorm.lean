@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtension
-import Mathlib.FieldTheory.KummerExtension
-import Mathlib.FieldTheory.Separable
-import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import Mathlib.RingTheory.Norm.Basic
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtension
+public import Mathlib.FieldTheory.KummerExtension
+public import Mathlib.FieldTheory.Separable
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.RingTheory.Norm.Basic
 /-!
 # Norms from an irreducible Kummer algebra
 
@@ -17,6 +19,8 @@ When `X^n - a` is irreducible, the canonical algebra obtained by adjoining a
 root is isomorphic to the chosen simple Kummer field.  This file transports
 the algebra norm through that isomorphism.
 -/
+
+@[expose] public section
 
 noncomputable section
 

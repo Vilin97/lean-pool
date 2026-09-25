@@ -3,11 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.NormKernelVanishing
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.NormKernelVanishing
 
 /-! # Kummer Cyclic Operator -/
+
+@[expose] public section
 namespace KummerTheory
 
 open CyclicCohomology

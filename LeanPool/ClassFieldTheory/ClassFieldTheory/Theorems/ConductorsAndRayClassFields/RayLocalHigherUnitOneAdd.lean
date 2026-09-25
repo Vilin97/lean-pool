@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayLocalHigherUnitGroup
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.ConductorsAndRayClassFields.RayLocalHigherUnitMembership
-import Mathlib.RingTheory.Ideal.Operations
-import Mathlib.RingTheory.LocalRing.Basic
-import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
-import Mathlib.Tactic.Ring
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayLocalHigherUnitGroup
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.ConductorsAndRayClassFields.RayLocalHigherUnitMembership
+public import Mathlib.RingTheory.Ideal.Operations
+public import Mathlib.RingTheory.LocalRing.Basic
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
+public import Mathlib.Tactic.Ring
 /-!
 # Positive-depth higher units as `1 + 𝔪ᵛⁿ`
 
@@ -17,6 +19,8 @@ At positive depth, every element of `1 + 𝔪ᵛⁿ` is automatically a unit in
 the local integer ring. Consequently no integral-unit witness is needed in
 the membership criterion below.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

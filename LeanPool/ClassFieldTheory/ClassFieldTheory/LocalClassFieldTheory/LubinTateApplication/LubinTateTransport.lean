@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.CharP.Subring
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Existence.LaurentUniformizerNormalization
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.NormSubgroup
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
+
+public import Mathlib.Algebra.CharP.Subring
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Existence.LaurentUniformizerNormalization
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.NormSubgroup
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
 /-!
 # Lubin--Tate application: transport to an equal-characteristic local field
 
@@ -19,6 +21,8 @@ chosen field equivalence sends the inverse Laurent parameter to the prescribed
 positive uniformizer, controls the required principal-unit filtration, and
 transports both the finite Galois structure and the actual field-norm subgroup.
 -/
+
+@[expose] public section
 
 noncomputable section
 

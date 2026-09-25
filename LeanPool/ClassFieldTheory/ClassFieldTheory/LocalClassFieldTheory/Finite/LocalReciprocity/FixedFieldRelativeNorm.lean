@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Basic
-import Mathlib.FieldTheory.PrimitiveElement
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.AbstractFixedFieldUnits
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.SeparableNormProduct
+
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.FieldTheory.PrimitiveElement
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.AbstractFixedFieldUnits
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.SeparableNormProduct
 /-!
 # Relative norms on actual fixed fields
 
@@ -17,6 +19,8 @@ intermediate extension need not be normal: relative left cosets are
 identified with field embeddings into the common separably closed ambient
 field, and both norms are then the same product of conjugates.
 -/
+
+@[expose] public section
 
 noncomputable section
 

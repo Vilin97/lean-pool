@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PowerIndex
-import Mathlib.NumberTheory.Padics.RingHoms
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PowerIndex
+public import Mathlib.NumberTheory.Padics.RingHoms
 /-!
 # The `n`-fold multiple quotient of `Z_p`
 
 This is the free p-adic factor in the local-field structure theory, the local-field power-index
   formula.
 -/
+
+@[expose] public section
 
 noncomputable section
 

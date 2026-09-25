@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.IsFieldNorm
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.MathlibInterface
-import Mathlib.FieldTheory.Galois.Abelian
-import Mathlib.NumberTheory.LocalField.Basic
-import Mathlib.Topology.Algebra.ContinuousMonoidHom
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.IsFieldNorm
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.MathlibInterface
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.Topology.Algebra.ContinuousMonoidHom
 /-!
 # Finite abelian local reciprocity
 
@@ -22,6 +24,8 @@ This finite quotient statement deliberately leaves the usual uniformizer
 normalization and tower functoriality to separate compatibility theorems; it
 does not claim that the displayed witness is uniquely determined.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.GroupTheory.FiniteAbelian.Duality
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteCharacterEquiv
+
+public import Mathlib.GroupTheory.FiniteAbelian.Duality
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteCharacterEquiv
 /-!
 # finite actual-field form
 
@@ -18,6 +20,8 @@ The proof uses finite-abelian character separation and the finite Kummer
 character isomorphism.  It is the finite `n`-th-power, actual-field form of
 the Kummer generation theorem; it is not the general abstract-module or infinite statement.
 -/
+
+@[expose] public section
 
 noncomputable section
 

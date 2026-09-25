@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.Basic
 /-!
 # Hilbert ramification theory: prime-decomposition cardinalities
 
@@ -12,6 +14,8 @@ This file records the parts of the prime-decomposition tower identity that are
 already available from the Dedekind-domain Galois action and mathlib's
 ramification/inertia API.
 -/
+
+@[expose] public section
 
 noncomputable section
 

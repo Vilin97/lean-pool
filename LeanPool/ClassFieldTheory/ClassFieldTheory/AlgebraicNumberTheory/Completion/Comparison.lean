@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.ExtensionIndex
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.ExtensionIndex
+public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
 /-!
 # Comparing finite-place completion models
 
@@ -19,6 +21,8 @@ Composing with the existing comparison between the standard
 absolute-value completion and mathlib's concrete adic completion gives the
 local factor comparison used in the adelic restricted-product bridge.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

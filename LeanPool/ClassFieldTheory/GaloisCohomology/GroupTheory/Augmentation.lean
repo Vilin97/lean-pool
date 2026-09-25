@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.MonoidAlgebra.Lift
-import Mathlib.Algebra.Module.BigOperators
-import Mathlib.GroupTheory.Abelianization.Defs
-import Mathlib.RingTheory.TwoSidedIdeal.Kernel
-import Mathlib.RingTheory.TwoSidedIdeal.Operations
-import Mathlib.Tactic.NoncommRing
+
+public import Mathlib.Algebra.MonoidAlgebra.Lift
+public import Mathlib.Algebra.Module.BigOperators
+public import Mathlib.GroupTheory.Abelianization.Defs
+public import Mathlib.RingTheory.TwoSidedIdeal.Kernel
+public import Mathlib.RingTheory.TwoSidedIdeal.Operations
+public import Mathlib.Tactic.NoncommRing
 /-!
 # Integral group-ring augmentation
 
@@ -18,6 +20,8 @@ the transfer/augmentation comparison. It is kept separate from the transfer calc
 that the group-ring identities can be reused in the proof of Witt's
 transfer theorem.
 -/
+
+@[expose] public section
 
 open scoped Pointwise
 

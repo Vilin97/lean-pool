@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RamificationNumberFormula
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.Herbrand.FixedField
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FixedFieldRamification
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RamificationNumberRestriction
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RamificationDepth
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RamificationNumberFormula
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.Herbrand.FixedField
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FixedFieldRamification
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RamificationNumberRestriction
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RamificationDepth
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
 /-!
 # Herbrand's theorem for general discrete valuation fields
 
@@ -19,6 +21,8 @@ the Herbrand quotient theorem and the quotient and tower filtration theorems.  T
   lemmas below isolate
 the finite-group averaging argument used in the quotient-filtration comparison.
 -/
+
+@[expose] public section
 
 open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
   herbrandFunction →

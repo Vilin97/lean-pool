@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Core
-import LeanPool.ClassFieldTheory.ProCGroups.InducedFunctions
-import Mathlib.Logic.Equiv.Fin.Rotate
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Core
+public import LeanPool.ClassFieldTheory.ProCGroups.InducedFunctions
+public import Mathlib.Logic.Equiv.Fin.Rotate
 /-!
 # Multiplicative induced modules
 
@@ -21,6 +23,8 @@ used for the products of the local multiplicative groups above a place.
 The basic equivariant-function model is supplied by `ProCGroups.InducedFunctions`;
 this module adds the cyclic-coordinate and Herbrand calculations.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Group.Int.TypeTags
-import Mathlib.Data.ZMod.QuotientGroup
-import Mathlib.Tactic
+
+public import Mathlib.Algebra.Group.Int.TypeTags
+public import Mathlib.Data.ZMod.QuotientGroup
+public import Mathlib.Tactic
 
 /-!
 # Integer multiple subgroups
@@ -21,6 +23,8 @@ The declarations retain the established
 group is used by the valuation API; their implementation has no valued-field
 hypotheses.
 -/
+
+@[expose] public section
 namespace LocalFieldTheory.DiscreteValuationField
 
 /-- The subgroup of `Multiplicative ℤ` consisting of elements whose additive

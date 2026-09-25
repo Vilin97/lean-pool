@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Theory.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.DegreeNormTrace
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.Padic
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.AlgebraicLocalization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionFieldLocalization
-import Mathlib.FieldTheory.Galois.Abelian
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Theory.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.DegreeNormTrace
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.Padic
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.AlgebraicLocalization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionFieldLocalization
+public import Mathlib.FieldTheory.Galois.Abelian
 /-!
 # Localizations at rational p-adic absolute values
 
@@ -18,6 +20,8 @@ This file collects the reusable algebra, finiteness, Galois, and
 nonarchimedean facts needed to compare a global algebraic localization with
 an extension of `ℚ_[p]`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

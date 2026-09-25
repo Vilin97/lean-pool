@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Topology.Algebra.Group.Quotient
-import Mathlib.Topology.Algebra.ContinuousMonoidHom
+
+public import Mathlib.Topology.Algebra.Group.Quotient
+public import Mathlib.Topology.Algebra.ContinuousMonoidHom
 /-!
 # Continuous equivalences of quotient groups
 
@@ -13,6 +15,8 @@ This module supplies the quotient equivalence induced by a continuous
 multiplicative equivalence.  It belongs to the general local-field support
 layer and does not depend on the separate pro-\(C\) groups library.
 -/
+
+@[expose] public section
 
 open scoped Topology
 

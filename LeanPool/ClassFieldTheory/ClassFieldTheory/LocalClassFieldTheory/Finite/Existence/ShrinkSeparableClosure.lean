@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ShrinkTransport
-import Mathlib.FieldTheory.IsSepClosed
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ShrinkTransport
+public import Mathlib.FieldTheory.IsSepClosed
 /-!
 # Separable closures over the small local-field representative
 
@@ -13,6 +15,8 @@ The existing separable closure of `K` is also a separable closure of
 `Shrink.{0} K` after transporting the base-field embedding.  This gives a
 compatible equivalence with Mathlib's chosen separable closure of `Shrink K`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.MaximalLocalKummerPairing
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertSymbolLaws
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidueNaturality
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtensionNorm
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.MaximalLocalKummerPairing
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertSymbolLaws
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidueNaturality
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtensionNorm
 /-!
 # Comparison of maximal and simple local Kummer pairings
 
@@ -16,6 +18,8 @@ finite Kummer extension.  Restriction of the maximal local Artin automorphism
 to that simple extension, together with functoriality of root quotients,
 identifies the maximal pairing with the existing local Hilbert symbol.
 -/
+
+@[expose] public section
 
 noncomputable section
 

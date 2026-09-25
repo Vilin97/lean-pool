@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Construction.MainMultiplicativity.FrobeniusActionRemainder
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Construction.MainMultiplicativity.FrobeniusActionRemainder
 /-!
 # Correction sums for reciprocity multiplicativity
 
 This file packages the three correction coefficients and action elements,
 proves their degree-zero property, and identifies their action-difference sum.
 -/
+
+@[expose] public section
 
 universe u
 

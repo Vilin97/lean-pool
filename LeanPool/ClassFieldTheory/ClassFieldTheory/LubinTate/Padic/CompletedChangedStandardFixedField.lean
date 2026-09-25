@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedChangedStandardCompositum
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedChangedStandardCompositum
 /-!
 # Fixed field of the finite changed-uniformizer Artin candidate
 
@@ -13,6 +15,8 @@ by the inverse completed Frobenius has fixed field exactly the changed
 Lubin--Tate factor.  Thus the automorphisms over the changed factor are
 precisely the powers of the finite Artin candidate.
 -/
+
+@[expose] public section
 
 noncomputable section
 

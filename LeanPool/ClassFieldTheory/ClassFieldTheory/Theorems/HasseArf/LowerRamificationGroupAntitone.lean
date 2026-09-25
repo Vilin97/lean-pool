@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.LowerRamificationGroup
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.LowerRamificationGroup
 /-!
 # The lower ramification filtration decreases
 
 The definition uses powers of the maximal ideal of a valuation subring.
 The inclusion below holds without local-field or finiteness hypotheses.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

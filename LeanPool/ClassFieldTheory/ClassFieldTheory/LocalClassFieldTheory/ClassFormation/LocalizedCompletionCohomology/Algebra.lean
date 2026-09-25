@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.LocalizedCompletionCohomology.CompMulEquiv
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.LocalizedCompletionCohomology.CompMulEquiv
 /-!
 # Algebra for localized completion cohomology
 
 This file provides named algebra, finite-dimensional, Galois, scalar-tower, and
 global-to-local embedding providers for localized completions.
 -/
+
+@[expose] public section
 
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification

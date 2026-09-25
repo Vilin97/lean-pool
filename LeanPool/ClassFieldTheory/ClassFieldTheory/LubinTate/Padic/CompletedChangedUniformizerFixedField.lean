@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedChangedUniformizerPrimitive
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedChangedUniformizerThetaFixed
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedUnramifiedFrobeniusFixed
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedChangedUniformizerPrimitive
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedChangedUniformizerThetaFixed
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedUnramifiedFrobeniusFixed
 /-!
 # The changed p-adic Lubin--Tate level as a completed Frobenius fixed field
 
@@ -22,6 +24,8 @@ the fixed-field theorem for Witt Frobenius puts that coefficient in
 `ℚ_[p]`.  The final norm formula is therefore transported from the actual
 finite changed level, with no comparison hypothesis.
 -/
+
+@[expose] public section
 
 noncomputable section
 

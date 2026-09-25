@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.BaseChange
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Unramified
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.StandardLocalField
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.HerbrandFormula
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelFieldTower
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.BaseChange
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Unramified
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.StandardLocalField
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.HerbrandFormula
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelFieldTower
 /-!
 # Upper ramification groups of standard Lubin--Tate levels
 
@@ -21,6 +23,8 @@ upper-ramification API.  This identifies their upper filtrations.
 The explicit Herbrand formula and the finite-level tower then identify the
 integral upper group at `k` with the kernel of restriction to level `k - 1`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

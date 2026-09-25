@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.HenselReduction
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.Separable
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.HenselReduction
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.Separable
 /-!
 # the unramified base-change theorem: primitive Hensel base-change core
 
@@ -15,6 +17,8 @@ a finite unramified extension.  The proof takes the actual integral minimal
 polynomial, proves its reduction irreducible by Hensel's lemma, and compares
 the resulting residue subfield degree with the fundamental inequality.
 -/
+
+@[expose] public section
 
 noncomputable section
 

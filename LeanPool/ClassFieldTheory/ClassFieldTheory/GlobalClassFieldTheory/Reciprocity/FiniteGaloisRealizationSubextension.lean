@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteAbelianSubextension
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.FiniteGaloisRealizationCore
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteAbelianSubextension
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.FiniteGaloisRealizationCore
 /-!
 # The finite Galois subextension attached to a number-field tower
 
@@ -13,6 +15,8 @@ This module realizes `L / K` as a finite Galois subextension inside the common
 rational separable closure.  It packages the relevant fixing subgroups,
 normality, and finite-index data for abstract reciprocity.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField

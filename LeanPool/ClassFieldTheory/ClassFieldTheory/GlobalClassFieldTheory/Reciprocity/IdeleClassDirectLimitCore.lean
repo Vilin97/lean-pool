@@ -3,17 +3,21 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.AlgEquiv
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.NormKernelVanishing
-import Mathlib.Algebra.Colimit.DirectLimit
-import Mathlib.FieldTheory.Galois.Profinite
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.AlgEquiv
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.NormKernelVanishing
+public import Mathlib.Algebra.Colimit.DirectLimit
+public import Mathlib.FieldTheory.Galois.Profinite
 /-!
 # The rational absolute idele-class direct limit
 
 Finite Galois relative idele class groups over `ℚ`, their scalar-extension
 maps, and the induced absolute Galois representation.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct
 open NumberField

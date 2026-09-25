@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Group.Action.Basic
-import Mathlib.Algebra.Group.Pi.Basic
-import Mathlib.Algebra.Group.Subgroup.Basic
+
+public import Mathlib.Algebra.Group.Action.Basic
+public import Mathlib.Algebra.Group.Pi.Basic
+public import Mathlib.Algebra.Group.Subgroup.Basic
 /-!
 # Induced groups of equivariant functions
 
@@ -15,6 +17,8 @@ group consists of functions satisfying `f (h * x) = h • f x`. Right
 translation gives its `G`-action. Evaluation at the identity is an
 `H`-equivariant epimorphism, without any finite-index assumption.
 -/
+
+@[expose] public section
 
 namespace ProCGroups.InducedFunctions
 

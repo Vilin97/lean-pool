@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.RealLowerRamificationGroup
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.RealLowerRamificationGroup
 /-!
 # Normality of real lower ramification groups
 
 Conjugation preserves powers of the maximal ideal, so the real lower groups
 are normal in the decomposition group.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

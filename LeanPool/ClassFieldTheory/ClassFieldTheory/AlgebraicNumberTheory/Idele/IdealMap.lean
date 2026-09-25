@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Basic
-import Mathlib.RingTheory.DedekindDomain.Factorization
-import Mathlib.RingTheory.ClassGroup.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Basic
+public import Mathlib.RingTheory.DedekindDomain.Factorization
+public import Mathlib.RingTheory.ClassGroup.Basic
 /-!
 # The ideal attached to an idele
 
@@ -16,6 +18,8 @@ vector, and unique factorization of fractional ideals identifies that vector
 with a nonzero fractional ideal.  We prove both stages surjective and identify
 the kernel with the ideles integral at every finite place.
 -/
+
+@[expose] public section
 
 open scoped NumberField RestrictedProduct WithZero
 open NumberField IsDedekindDomain

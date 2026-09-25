@@ -3,16 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.PowerClass
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.KummerAlgebraNormSubgroup
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormSubgroup
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.CanonicalKummerNorm
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.MathlibInterface
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtension
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteGeneration
-import Mathlib.FieldTheory.Galois.Basic
-import Mathlib.NumberTheory.LocalField.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.PowerClass
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.KummerAlgebraNormSubgroup
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormSubgroup
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.CanonicalKummerNorm
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.MathlibInterface
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtension
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteGeneration
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.NumberTheory.LocalField.Basic
 /-!
 # Chosen Kummer radical: norm index and power-class degree
 
@@ -20,6 +22,8 @@ Implementation-level comparisons for the chosen simple Kummer extension. The
 reader-facing Hilbert-symbol theorems state these results without exposing this
 particular choice of a radical in their types.
 -/
+
+@[expose] public section
 
 noncomputable section
 

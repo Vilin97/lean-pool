@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.IsSepClosed
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.GaloisExtensionQuotient
+
+public import Mathlib.FieldTheory.IsSepClosed
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.GaloisExtensionQuotient
 /-!
 # Intrinsic absolute Galois data
 
@@ -13,6 +15,8 @@ This module packages the absolute Galois group of a field, its integral unit
 representation, and its distinguished abstract base field using the chosen
 separable closure.
 -/
+
+@[expose] public section
 
 noncomputable section
 

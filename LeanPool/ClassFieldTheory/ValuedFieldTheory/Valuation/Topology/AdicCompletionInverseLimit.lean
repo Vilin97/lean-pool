@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.AdicCompletionInverseLimitRing
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.AdicCompletionInverseLimitRing
 /-!
 # Adic unit and higher-unit inverse limits
 
@@ -13,6 +15,8 @@ of unit groups of adically complete rings and complete discrete valuation
 rings.  The underlying adic ring inverse-limit theory lives in
 `AdicCompletionInverseLimitRing`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

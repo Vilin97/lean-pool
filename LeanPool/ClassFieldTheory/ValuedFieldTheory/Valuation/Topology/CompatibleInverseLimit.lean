@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Ring.Subring.Basic
-import Mathlib.Algebra.Ring.Pi
+
+public import Mathlib.Algebra.Ring.Subring.Basic
+public import Mathlib.Algebra.Ring.Pi
 /-!
 # Compatible families in inverse systems
 
@@ -16,6 +18,8 @@ transition map.  Keeping this construction at the level of `Subring` and
 `Subgroup` lets Lean inherit the ambient algebraic structure instead of
 rebuilding the same pointwise instances for each inverse system.
 -/
+
+@[expose] public section
 
 namespace LubinTate
 

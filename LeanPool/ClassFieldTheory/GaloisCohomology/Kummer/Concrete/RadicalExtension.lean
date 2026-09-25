@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.IsSepClosed
-import Mathlib.FieldTheory.Galois.Abelian
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteGeneration
+
+public import Mathlib.FieldTheory.IsSepClosed
+public import Mathlib.FieldTheory.Galois.Abelian
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteGeneration
 /-!
 # the radical-extension construction
 
@@ -20,6 +22,8 @@ the characteristic.  It is used exactly to make `X ^ n - a` separable.  The
 primitive-root hypothesis is used later to make the resulting Galois group
 abelian of exponent dividing `n`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

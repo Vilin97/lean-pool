@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicZHatBaseChange
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalArtin
-import Mathlib.FieldTheory.Galois.Profinite
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicZHatBaseChange
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalArtin
+public import Mathlib.FieldTheory.Galois.Profinite
 /-!
 # The infinite global Artin homomorphism
 
@@ -19,6 +21,8 @@ The positive archimedean section below is the cyclotomic normalization device:
 multiplying an idele by the section of its absolute
 norm produces a norm-one idele without changing its Artin symbol.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NNReal NumberField Topology
 open NumberField IsDedekindDomain

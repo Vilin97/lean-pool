@@ -3,12 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Degree.FrobeniusLift
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.TopologicalGeneration
-import LeanPool.ClassFieldTheory.GaloisCohomology.Topology.TotallyDisconnectedQuotients
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Degree.FrobeniusLift
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.TopologicalGeneration
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Topology.TotallyDisconnectedQuotients
 
 /-! # Frobenius Fixed Field -/
+
+@[expose] public section
 namespace ClassFormation
 
 open CyclicCohomology

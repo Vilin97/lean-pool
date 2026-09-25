@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.GroupTheory.Abelianization.Defs
-import Mathlib.GroupTheory.QuotientGroup.Basic
+
+public import Mathlib.GroupTheory.Abelianization.Defs
+public import Mathlib.GroupTheory.QuotientGroup.Basic
 /-!
 # Quotients represented by a supporting subgroup
 
@@ -14,6 +16,8 @@ second subgroup has a representative in the first.  This is the precise
 group-theoretic comparison used when a sufficiently large group of
 supported ideles represents the full idele class group.
 -/
+
+@[expose] public section
 
 noncomputable section
 

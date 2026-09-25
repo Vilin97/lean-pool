@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.Padics.RingHoms
-import Mathlib.Topology.Algebra.Module.Basic
-import Mathlib.LinearAlgebra.Pi
-import Mathlib.LinearAlgebra.Isomorphisms
-import Mathlib.RingTheory.Finiteness.Finsupp
+
+public import Mathlib.NumberTheory.Padics.RingHoms
+public import Mathlib.Topology.Algebra.Module.Basic
+public import Mathlib.LinearAlgebra.Pi
+public import Mathlib.LinearAlgebra.Isomorphisms
+public import Mathlib.RingTheory.Finiteness.Finsupp
 /-!
 # Continuous additive maps of p-adic modules are p-adic linear
 
@@ -17,6 +19,8 @@ the field-unit structure theorem: compatibility with ordinary integral powers, t
 continuity of the p-adic scalar orbit, forces compatibility with every
 p-adic scalar.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.Comparison
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.RestrictedProduct
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Relative.SPlaces
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.Comparison
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.RestrictedProduct
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Relative.SPlaces
 /-!
 # Finite restricted products under scalar extension
 
@@ -20,6 +22,8 @@ The main point is restrictedness: coefficientwise restrictedness in a fixed
 set, to the usual valuation-ring-unit condition at almost every finite place
 of `L`.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct RestrictedProduct
 open NumberField IsDedekindDomain

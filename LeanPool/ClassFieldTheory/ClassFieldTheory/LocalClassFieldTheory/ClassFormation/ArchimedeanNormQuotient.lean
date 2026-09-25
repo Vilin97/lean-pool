@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.ArchimedeanHilbert90
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.InfinitePlaceTensorBlock
-import Mathlib.Basic.Real.Sign
-import Mathlib.NumberTheory.NumberField.Completion.Ramification
-import Mathlib.RingTheory.Complex
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.ArchimedeanHilbert90
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.InfinitePlaceTensorBlock
+public import Mathlib.Basic.Real.Sign
+public import Mathlib.NumberTheory.NumberField.Completion.Ramification
+public import Mathlib.RingTheory.Complex
 /-!
 # The real/complex norm quotient
 
@@ -16,6 +18,8 @@ At a ramified infinite place the local extension is `ℂ/ℝ`.  Its norm
 subgroup consists exactly of the positive real units, so the sign map
 identifies the norm quotient with `ℤˣ`, a group of order two.
 -/
+
+@[expose] public section
 
 open LocalFieldTheory
 open CyclicCohomology.ProfiniteCohomology.Herbrand

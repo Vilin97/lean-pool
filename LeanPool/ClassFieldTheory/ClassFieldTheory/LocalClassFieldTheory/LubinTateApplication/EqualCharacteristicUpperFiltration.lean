@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Ramification.Core
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.UnitQuotientGalois
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.BaseChange
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Unramified
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Ramification.Core
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.UnitQuotientGalois
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.BaseChange
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Unramified
 /-!
 # Equal-characteristic Lubin--Tate upper filtration
 
@@ -16,6 +18,8 @@ This file identifies the image of the `k`-th higher-unit subgroup under the
 explicit finite-level Artin map `a ↦ [a⁻¹]` with the actual upper
 ramification group `G^k`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

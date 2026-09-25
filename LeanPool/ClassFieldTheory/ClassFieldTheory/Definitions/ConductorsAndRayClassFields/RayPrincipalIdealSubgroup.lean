@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.IsRayCongruent
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassPrimeToIdeals
-import Mathlib.RingTheory.ClassGroup.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.IsRayCongruent
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassPrimeToIdeals
+public import Mathlib.RingTheory.ClassGroup.Basic
 /-!
 # Ray-principal ideals
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField

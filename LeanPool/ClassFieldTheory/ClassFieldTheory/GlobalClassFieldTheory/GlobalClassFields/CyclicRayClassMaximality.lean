@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.CyclicNormConductor
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.NormRayClassMaximality
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.CyclicNormConductor
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.NormRayClassMaximality
 /-!
 # Maximal cyclic quotients at the narrow finite conductor
 
@@ -18,6 +20,8 @@ when the ray class number already equals the extension degree.
 Equivalently, the actual norm subgroup is then exactly the ray congruence
 subgroup at its narrow finite conductor.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

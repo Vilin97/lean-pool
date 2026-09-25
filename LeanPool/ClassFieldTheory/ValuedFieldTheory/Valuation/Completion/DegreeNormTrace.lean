@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Completion
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.TensorProductDecomposition
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.TensorProductProductFormulas
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Completion
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.TensorProductDecomposition
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.TensorProductProductFormulas
 /-!
 # Compatibility of local degree, norm, and trace
 
@@ -15,6 +17,8 @@ The canonical decomposition of the completion tensor-product decomposition gives
 degrees and the product/sum formulas for norm and trace.  Since the global
 norm and trace lie in `K`, their Lean statements are mapped into `K_v`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

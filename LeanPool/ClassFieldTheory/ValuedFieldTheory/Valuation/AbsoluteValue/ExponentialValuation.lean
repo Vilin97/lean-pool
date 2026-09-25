@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.HenselianAlgebraicExtension
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.HenselianAlgebraicExtension
 /-!
 # Canonical exponential valuation attached to an absolute value
 
@@ -14,6 +16,8 @@ unramified predicates of the unramified-extension construction use additive expo
   valuations.  This file
 supplies the canonical conversion `v(x) = -log |x|`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

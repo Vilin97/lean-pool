@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelAutomorphisms
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.CompleteDVF
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RealLowerGroups
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelAutomorphisms
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.CompleteDVF
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RealLowerGroups
 /-!
 # Uniqueness of the valuation on standard Lubin--Tate levels
 
@@ -15,6 +17,8 @@ Consequently the complete discrete valuation selected from its integral
 closure is the unique extension of the base valuation.  This is the bridge
 needed by the genuine lower- and upper-numbering ramification groups.
 -/
+
+@[expose] public section
 
 noncomputable section
 

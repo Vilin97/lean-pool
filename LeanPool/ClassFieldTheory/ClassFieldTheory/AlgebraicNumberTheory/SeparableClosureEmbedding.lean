@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.IsSepClosed
-import Mathlib.FieldTheory.KrullTopology
-import Mathlib.NumberTheory.NumberField.Basic
+
+public import Mathlib.FieldTheory.IsSepClosed
+public import Mathlib.FieldTheory.KrullTopology
+public import Mathlib.NumberTheory.NumberField.Basic
 /-!
 # Embeddings into a separable closure
 
 This file provides the common realization of a separable extension inside the
 chosen separable closure of its base field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

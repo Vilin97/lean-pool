@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.IwasawaIndexing
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitInverseLimitSurjectivity
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.EqualCharacteristicLaurent
-import Mathlib.LinearAlgebra.Finsupp.LinearCombination
-import Mathlib.LinearAlgebra.Finsupp.VectorSpace
-import Mathlib.NumberTheory.Padics.ProperSpace
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.IwasawaIndexing
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitInverseLimitSurjectivity
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.EqualCharacteristicLaurent
+public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+public import Mathlib.LinearAlgebra.Finsupp.VectorSpace
+public import Mathlib.NumberTheory.Padics.ProperSpace
 /-!
 # The convergent Iwasawa product for principal units
 
@@ -18,6 +20,8 @@ This module assembles the finite-level Iwasawa factors into a compatible
 family in the principal-unit inverse limit, proves continuity and bijectivity,
 and packages the resulting topological additive equivalence.
 -/
+
+@[expose] public section
 
 open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF renaming
   higherPrincipalUnitGroup →

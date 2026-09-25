@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormContinuity
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ProfiniteUnits
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuationExactSequence
-import Mathlib.Topology.LocallyConstant.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormContinuity
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ProfiniteUnits
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuationExactSequence
+public import Mathlib.Topology.LocallyConstant.Basic
 /-!
 # Topological decomposition of a local multiplicative group
 
@@ -16,6 +18,8 @@ decomposition of `Kˣ` as continuous homomorphisms. After fixing a
 noncanonical uniformizer internally, the resulting parameter-free map lets
 downstream separation arguments avoid carrying a uniformizer parameter.
 -/
+
+@[expose] public section
 
 noncomputable section
 

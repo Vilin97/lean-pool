@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Basic
 /-!
 # Principal units
 
 Defines the filtration `U^n = 1 + 𝓂^n`, proves its basic order properties, and
 constructs the quotient of valuation-ring units by the first filtration step.
 -/
+
+@[expose] public section
 namespace LocalFieldTheory
 
 noncomputable section

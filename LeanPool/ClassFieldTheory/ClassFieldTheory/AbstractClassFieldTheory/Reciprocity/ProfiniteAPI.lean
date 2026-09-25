@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Basic
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.ClassField
+
+public import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Basic
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.ClassField
 /-!
 # Profinite reciprocity facade
 
@@ -14,6 +16,8 @@ bundled profinite group.  The bundle supplies the ambient topology, compactness,
 separation, and total disconnectedness instances required by the generic
 theorems.
 -/
+
+@[expose] public section
 
 noncomputable section
 

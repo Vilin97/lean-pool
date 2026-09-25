@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.SinglePlace
-import Mathlib.NumberTheory.NumberField.AdeleRing
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.SinglePlace
+public import Mathlib.NumberTheory.NumberField.AdeleRing
 /-!
 # Comparison with Mathlib's idèle class group
 
@@ -14,6 +16,8 @@ already multiplicatively equivalent. The principal subgroups correspond,
 so the equivalence descends to idèle classes. The one-place map comparison
 needed for the public local--global reciprocity theorem is recorded below.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

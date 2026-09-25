@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.Definitions
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.Definitions
 /-!
 # Henselianity along algebraic valued extensions
 
@@ -15,6 +17,8 @@ algebraic field is again Henselian.  The result is derived from the unique
 extension criterion of the unique-extension criterion, rather than added as an assumption to
 the unramified base-change theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

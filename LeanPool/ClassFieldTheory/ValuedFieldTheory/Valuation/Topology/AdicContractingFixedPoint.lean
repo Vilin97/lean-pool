@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RingTheory.AdicCompletion.Basic
+
+public import Mathlib.RingTheory.AdicCompletion.Basic
 /-!
 # Fixed points of adically contracting additive maps
 
@@ -17,6 +19,8 @@ solves the affine fixed-point equation
 uniquely.  The proof uses the successive approximations
 `x₀ = 0`, `xₙ₊₁ = b + T xₙ` and mathlib's `IsPrecomplete.prec`.
 -/
+
+@[expose] public section
 
 namespace IsAdicComplete
 

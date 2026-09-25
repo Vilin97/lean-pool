@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.FiniteUnramifiedField
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.StandardLocalField
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelAbelian
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.RamificationInvariants
-import Mathlib.FieldTheory.LinearDisjoint
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.FiniteUnramifiedField
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.StandardLocalField
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelAbelian
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.RamificationInvariants
+public import Mathlib.FieldTheory.LinearDisjoint
 /-!
 # The unramified--Lubin--Tate diagonal field for an explicit uniformizer
 
@@ -18,6 +20,8 @@ finite Lubin--Tate unit action.  Arithmetic Frobenius on that factor and the
 inverse unit action on the Lubin--Tate level therefore glue to one automorphism
 of their compositum.
 -/
+
+@[expose] public section
 
 noncomputable section
 

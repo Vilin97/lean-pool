@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Infinite.TopologicalAbelianizationCongr
-import Mathlib.FieldTheory.AbsoluteGaloisGroup
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.AbsoluteGalois.InfiniteGaloisCorrespondence
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Infinite.TopologicalAbelianizationCongr
+public import Mathlib.FieldTheory.AbsoluteGaloisGroup
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.AbsoluteGalois.InfiniteGaloisCorrespondence
 /-!
 # Comparison with Mathlib's absolute Galois abelianization
 
@@ -15,6 +17,8 @@ Mathlib's absolute Galois group with the separable-closure model. The induced
 map on topological abelianizations is a homeomorphism of groups, not merely
 an abstract group isomorphism.
 -/
+
+@[expose] public section
 
 noncomputable section
 

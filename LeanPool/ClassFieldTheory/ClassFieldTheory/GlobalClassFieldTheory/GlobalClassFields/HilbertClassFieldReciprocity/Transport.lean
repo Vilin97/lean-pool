@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.HilbertClassFieldRealization
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.HilbertClassFieldRealization
 /-!
 # Generic transport core for Hilbert class-field reciprocity
 
@@ -13,6 +15,8 @@ this leaf.  Big/small and actual/original Hilbert reciprocity specializations
 reuse the named data provider without rebuilding the generic reciprocity
 composite.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NumberField
 

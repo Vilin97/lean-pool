@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IdeleClassDirectLimitFiniteLevelCore
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IdeleClassDirectLimitFiniteLevelCore
 /-!
 # Tensor comparison and injectivity at finite rational levels
 
@@ -12,6 +14,8 @@ This endpoint leaf contains the tensor-unflattening comparisons and the
 resulting injectivity theorems.  The finite-level normal-closure maps and
 their tower compatibility live in the reusable core leaf.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct
 open NumberField

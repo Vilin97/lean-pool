@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.NormSubgroup.HigherUnitFixedFieldSurjective
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.NormSubgroup.HigherUnitFixedFieldSurjective
 /-!
 # LubinTate the explicit norm-subgroup computation: the standard level is the higher-unit fixed
   field
@@ -12,6 +14,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.
 The standard-level embedding is an equivalence because its source and target
 have the same degree `(q - 1) q^n`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

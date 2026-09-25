@@ -3,19 +3,23 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.FieldTheory.Galois.Basic
-import Mathlib.RingTheory.DedekindDomain.Factorization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ResidueGalois
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuationExactSequence
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.IdealQuotients
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.RingTheory.DedekindDomain.Factorization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ResidueGalois
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuationExactSequence
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.IdealQuotients
 /-!
 # Finite unramified valued extensions
 
 Develops the ideal, residue-field, Galois, trace, and norm consequences of a
 finite valued extension with ramification index one and full residue degree.
 -/
+
+@[expose] public section
 
 namespace LocalFieldTheory
 

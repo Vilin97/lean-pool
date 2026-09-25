@@ -3,17 +3,21 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Polynomial.Eval.Defs
-import Mathlib.Algebra.Ring.GeomSum
-import Mathlib.RingTheory.Ideal.Defs
-import Mathlib.Tactic.Ring
+
+public import Mathlib.Algebra.Polynomial.Eval.Defs
+public import Mathlib.Algebra.Ring.GeomSum
+public import Mathlib.RingTheory.Ideal.Defs
+public import Mathlib.Tactic.Ring
 /-!
 # Hilbert ramification theory: polynomial sources
 
 This file contains the generic polynomial congruence lemma used by the
 completion-free formalization of ramification-number theory.
 -/
+
+@[expose] public section
 
 namespace RamificationTheory.HilbertRamification
 namespace Higher

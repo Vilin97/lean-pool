@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Basic
-import Mathlib.FieldTheory.Normal.Closure
-import Mathlib.NumberTheory.NumberField.Basic
+
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.FieldTheory.Normal.Closure
+public import Mathlib.NumberTheory.NumberField.Basic
 /-!
 # A finite normal closure of a number-field extension
 
@@ -15,6 +17,8 @@ global theory below the adelic and splitting developments that consume
 it.  The closure is formed inside mathlib's fixed algebraic closure, and
 the original field is embedded by the canonical chosen lift.
 -/
+
+@[expose] public section
 
 noncomputable section
 

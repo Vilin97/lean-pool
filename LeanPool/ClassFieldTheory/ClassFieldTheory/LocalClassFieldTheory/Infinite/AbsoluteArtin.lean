@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Infinite.AbsoluteFiniteQuotientTransitions
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Infinite.AbsoluteFiniteQuotientTransitions
 /-!
 # The absolute local Artin map from compatible finite quotients
 
@@ -13,6 +15,8 @@ finite quotient of the absolute topological abelianization.  This module
 assembles those maps into the absolute Artin map and records its finite-stage
 compatibility.
 -/
+
+@[expose] public section
 
 noncomputable section
 

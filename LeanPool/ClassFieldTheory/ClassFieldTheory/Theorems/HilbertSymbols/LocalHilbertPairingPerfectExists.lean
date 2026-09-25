@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsLocalHilbertPairing
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.HilbertPairingPerfect
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.LocalHilbertPairingExists
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.PowerClassGroupFinite
-import Mathlib.NumberTheory.LocalField.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsLocalHilbertPairing
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.HilbertPairingPerfect
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.LocalHilbertPairingExists
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.PowerClassGroupFinite
+public import Mathlib.NumberTheory.LocalField.Basic
 /-!
 # A perfect local Hilbert pairing
 
@@ -16,6 +18,8 @@ For a nonarchimedean local field in which `n` is nonzero and the `n`-th
 roots of unity are present, the Hilbert pairing identifies power classes
 with all `μₙ`-valued characters of the power-class group.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

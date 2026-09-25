@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.NumberField.Completion.InfinitePlace
-import Mathlib.RingTheory.Norm.Basic
-import Mathlib.RingTheory.TensorProduct.Basic
+
+public import Mathlib.NumberTheory.NumberField.Completion.InfinitePlace
+public import Mathlib.RingTheory.Norm.Basic
+public import Mathlib.RingTheory.TensorProduct.Basic
 /-!
 # Norms at infinite places
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct
 open NumberField

@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalFieldTheory.Padic.Cyclotomic.Unramified.CanonicalExtension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.InertiaRamificationCard
-import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.PadicCyclotomicRamificationIndexBound
-import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.RamificationIndexComparison
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalFieldTheory.Padic.Cyclotomic.Unramified.CanonicalExtension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.InertiaRamificationCard
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.PadicCyclotomicRamificationIndexBound
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.RamificationIndexComparison
 /-!
 # Canonical p-adic inertia bounds
 
@@ -15,6 +17,8 @@ This file identifies the inertia cardinality of the canonical valuation on a
 finite Galois extension of `ℚ_p` with the intrinsic value-group ramification
 index, then applies the prime-power cyclotomic ramification bound.
 -/
+
+@[expose] public section
 
 open _root_.RamificationTheory.HilbertRamification.CompleteDVF renaming
   natCard_decompositionInertiaSubgroup_eq_ramificationIndex →

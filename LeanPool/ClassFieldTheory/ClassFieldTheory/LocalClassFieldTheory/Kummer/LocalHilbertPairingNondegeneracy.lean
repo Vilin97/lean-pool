@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertPairing
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.MaximalKummerNorm
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertPairing
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.MaximalKummerNorm
 /-!
 # Nondegeneracy of the local Hilbert pairing
 
@@ -14,6 +16,8 @@ local Hilbert-symbol characters with the subgroup of powers.  The resulting
 symbol therefore descends to a nondegenerate pairing on the local power-class
 group.
 -/
+
+@[expose] public section
 
 noncomputable section
 

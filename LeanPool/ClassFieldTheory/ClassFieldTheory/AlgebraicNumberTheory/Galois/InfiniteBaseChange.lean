@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.GaloisClosure
-import Mathlib.FieldTheory.Normal.Basic
-import Mathlib.FieldTheory.SeparableClosure
+
+public import Mathlib.FieldTheory.Galois.GaloisClosure
+public import Mathlib.FieldTheory.Normal.Basic
+public import Mathlib.FieldTheory.SeparableClosure
 /-!
 # Infinite Galois base change from finite layers
 
@@ -15,6 +17,8 @@ their union after a change of base field.  It is stated entirely in terms of
 mathlib's actual intermediate fields and uses no abstract replacement for the
 compositum.
 -/
+
+@[expose] public section
 
 noncomputable section
 

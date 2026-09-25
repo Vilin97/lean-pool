@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteInteger
-import Mathlib.GroupTheory.Torsion
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteInteger
+public import Mathlib.GroupTheory.Torsion
 /-!
 # The torsion quotient in the cyclotomic decomposition
 
@@ -14,6 +16,8 @@ The cyclotomic torsion calculation uses the decomposition
 second factor.  This file proves the topological-group calculation which
 turns that decomposition into a `ℤ̂`-extension.
 -/
+
+@[expose] public section
 
 open scoped Topology
 

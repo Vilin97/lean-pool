@@ -3,19 +3,23 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.CompletelySplitPrimes
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.DegreeOnePrimes
-import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
-import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
-import Mathlib.NumberTheory.RamificationInertia.Unramified
-import Mathlib.NumberTheory.LegendreSymbol.Basic
-import Mathlib.LinearAlgebra.Dimension.FreeAndStrongRankCondition
-import Mathlib.RingTheory.RamificationInertia.Inertia
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import Mathlib.Data.Nat.ModEq
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.CompletelySplitPrimes
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.DegreeOnePrimes
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
+public import Mathlib.NumberTheory.RamificationInertia.Unramified
+public import Mathlib.NumberTheory.LegendreSymbol.Basic
+public import Mathlib.LinearAlgebra.Dimension.FreeAndStrongRankCondition
+public import Mathlib.RingTheory.RamificationInertia.Inertia
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.Data.Nat.ModEq
 
 /-! # Completely Split Primes Mod Four -/
+
+@[expose] public section
 open scoped NumberField
 open NumberField IsDedekindDomain
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.GlobalHilbertPairingProperties
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.HilbertProductFormula
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.GlobalHilbertPairingProperties
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.HilbertProductFormula
 /-!
 # Finite support of every local Hilbert-pairing family
 
@@ -15,6 +17,8 @@ finite support of one constructed family transfers to every family satisfying
 the local Hilbert-pairing laws.  No product-formula assumption is made about
 the family being studied.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

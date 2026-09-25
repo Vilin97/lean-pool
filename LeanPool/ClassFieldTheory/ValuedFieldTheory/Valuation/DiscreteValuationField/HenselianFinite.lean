@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Henselian
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.AdicPower
-import Mathlib.Algebra.Module.Shrink
-import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
-import Mathlib.RingTheory.AdicCompletion.Noetherian
-import Mathlib.RingTheory.Nakayama
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Henselian
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.AdicPower
+public import Mathlib.Algebra.Module.Shrink
+public import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
+public import Mathlib.RingTheory.AdicCompletion.Noetherian
+public import Mathlib.RingTheory.Nakayama
 
 /-! # Henselian Finite -/
+
+@[expose] public section
 namespace ValuationTheory
 
 /-!

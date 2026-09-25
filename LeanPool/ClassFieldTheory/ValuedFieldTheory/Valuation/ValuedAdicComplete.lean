@@ -3,12 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Complete
-import Mathlib.RingTheory.AdicCompletion.Topology
-import Mathlib.Topology.Algebra.Valued.ValuedField
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Complete
+public import Mathlib.RingTheory.AdicCompletion.Topology
+public import Mathlib.Topology.Algebra.Valued.ValuedField
 
 /-! # Valued Adic Complete -/
+
+@[expose] public section
 
 open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
   mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow →

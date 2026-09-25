@@ -3,19 +3,21 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.All
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.All
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.All
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.All
-import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.All
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.All
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.All
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalFieldTheory.All
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.All
-import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.All
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.All
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.All
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.All
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.All
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.All
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.All
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.All
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.All
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalFieldTheory.All
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.All
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.All
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.All
 /-!
 # Class field theory
 
@@ -33,3 +35,5 @@ For a smaller production dependency closure, import
 `LocalClassFieldTheory`, `GlobalClassFieldTheory`, `HasseArf`, or
 `KroneckerWeber` directly.
 -/
+
+@[expose] public section

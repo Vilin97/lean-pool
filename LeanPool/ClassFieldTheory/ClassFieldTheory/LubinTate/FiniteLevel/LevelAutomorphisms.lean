@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.FiniteParameters
-import Mathlib.FieldTheory.Galois.Basic
-import Mathlib.SetTheory.Cardinal.Finite
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.FiniteParameters
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.SetTheory.Cardinal.Finite
 /-!
 # Automorphisms of standard Lubin--Tate level fields
 
@@ -17,6 +19,8 @@ automorphisms.  Faithfulness of the finite action and the parameter-cardinality
 formula then show that the automorphism group has cardinality equal to the
 field degree, hence that every standard level is Galois.
 -/
+
+@[expose] public section
 
 noncomputable section
 

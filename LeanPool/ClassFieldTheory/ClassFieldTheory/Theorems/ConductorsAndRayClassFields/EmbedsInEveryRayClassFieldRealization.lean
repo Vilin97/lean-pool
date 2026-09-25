@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.EmbedsInRayClassField
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.ConductorsAndRayClassFields.RayClassFieldModulusMonotone
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.ConductorsAndRayClassFields.RayClassFieldReciprocity
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.EmbedsInRayClassField
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.ConductorsAndRayClassFields.RayClassFieldModulusMonotone
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.ConductorsAndRayClassFields.RayClassFieldReciprocity
 /-!
 # Independence of the ray class field realization
 
@@ -14,6 +16,8 @@ The existential definition of `EmbedsInRayClassField` is independent of
 which Frobenius-normalized realization is chosen.  It does not assert
 uniqueness of the embedding itself.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

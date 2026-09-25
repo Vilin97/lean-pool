@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Basic
+
+public import Mathlib.FieldTheory.Galois.Basic
 /-!
 # Fixed fields and subgroup lattice operations
 
@@ -12,6 +14,8 @@ Small order-theoretic facts about fixed fields of automorphism subgroups.
 They do not depend on class field theory and belong with the general Galois
 infrastructure rather than a concrete reciprocity construction.
 -/
+
+@[expose] public section
 
 namespace IntermediateField
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedPrimitiveAction
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedPrimitiveAction
 /-!
 # Frobenius lifts on completed p-adic Lubin--Tate levels
 
@@ -18,6 +20,8 @@ The construction is an actual field automorphism.  Surjectivity follows from
 the theorem that every completed unit-parameter root generates the completed
 level.
 -/
+
+@[expose] public section
 
 noncomputable section
 

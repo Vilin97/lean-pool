@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Exact.Basic
-import Mathlib.Algebra.Group.Units.Equiv
-import Mathlib.Algebra.Group.Subgroup.Map
-import Mathlib.FieldTheory.Galois.Basic
-import Mathlib.GroupTheory.QuotientGroup.Basic
-import Mathlib.RingTheory.Valuation.RamificationGroup
+
+public import Mathlib.Algebra.Exact.Basic
+public import Mathlib.Algebra.Group.Units.Equiv
+public import Mathlib.Algebra.Group.Subgroup.Map
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.GroupTheory.QuotientGroup.Basic
+public import Mathlib.RingTheory.Valuation.RamificationGroup
 
 /-! # Valuation Subring -/
+
+@[expose] public section
 namespace RamificationTheory
 
 /-!

@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.CompositumRestriction
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.Filtered.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.BaseChange
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Unramified
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.CompositumRestriction
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.Filtered.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.BaseChange
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Unramified
 /-!
 # Filtered reciprocity for a compositum
 
@@ -17,6 +19,8 @@ trivially to both the principal-unit Artin image and the upper ramification
 group.  Equality on the other factor can then be recovered upstairs from the
 joint injectivity of the two restriction maps.
 -/
+
+@[expose] public section
 
 noncomputable section
 

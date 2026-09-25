@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Module.Equiv.Basic
+
+public import Mathlib.Algebra.Module.Equiv.Basic
 /-!
 # Additive recoding of multiplicative equivalences
 
 Turns a multiplicative group equivalence into the corresponding equivalence
 between the additive recodings of its source and target.
 -/
+
+@[expose] public section
 namespace LocalFieldTheory
 
 noncomputable section

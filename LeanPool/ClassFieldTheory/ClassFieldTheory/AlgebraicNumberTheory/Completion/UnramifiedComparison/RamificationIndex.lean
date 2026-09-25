@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.UnramifiedComparison.IdealToCompletion
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.AlgebraicExtensionUniqueness
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.UnramifiedComparison.IdealToCompletion
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.AlgebraicExtensionUniqueness
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
 /-!
 # Ramification index and finite-place completion
 
@@ -16,6 +18,8 @@ localized completions.  The comparison uses a global integral uniformizer:
 its valuation in the completed target is the global ramification index, and
 its image generates the completed base maximal ideal.
 -/
+
+@[expose] public section
 
 open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
   mem_maximalIdeal_pow_iff_valuation_le_uniformizer_pow →

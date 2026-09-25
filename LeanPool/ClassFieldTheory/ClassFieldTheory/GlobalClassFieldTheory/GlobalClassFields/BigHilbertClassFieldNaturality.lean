@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.AlgEquiv
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.BigHilbertClassField
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.AlgEquiv
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.BigHilbertClassField
 /-!
 # Naturality of the big Hilbert class field
 
@@ -16,6 +18,8 @@ the corresponding subgroup of the target field.  This gives canonical
 transport on the big-Hilbert reciprocity quotient and on the narrow class
 group, with formulas on genuine idele representatives.
 -/
+
+@[expose] public section
 
 open scoped NumberField NumberField.LiesOver TensorProduct
 

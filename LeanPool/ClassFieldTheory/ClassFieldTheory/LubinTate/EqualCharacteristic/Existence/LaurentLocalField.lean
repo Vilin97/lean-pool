@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Existence.LaurentModel
-import Mathlib.RingTheory.PowerSeries.PiTopology
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Existence.LaurentModel
+public import Mathlib.RingTheory.PowerSeries.PiTopology
 /-!
 # The local-field structure on a finite-coefficient Laurent field
 
@@ -17,6 +19,8 @@ ring, and obtains local compactness of `k((T))`.  This supplies the genuine
 `IsNonarchimedeanLocalField` input needed by the equal-characteristic
 Lubin--Tate construction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

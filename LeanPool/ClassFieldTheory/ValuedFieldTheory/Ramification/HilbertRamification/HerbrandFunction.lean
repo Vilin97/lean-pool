@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.Herbrand.Function
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RealLowerGroups
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.Herbrand.Function
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RealLowerGroups
 /-!
 # Herbrand functions for a general discretely valued field
 
@@ -16,6 +18,8 @@ field is the unique extension of the base valuation.  In particular, none of
 the definitions or elementary inverse-function facts below assumes that either
 field is complete.
 -/
+
+@[expose] public section
 
 open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
   herbrandFunction_inverseHerbrandFunction →

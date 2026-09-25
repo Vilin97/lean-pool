@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.HenselianAlgebraicExtension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.BasicInvariants
-import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
-import Mathlib.FieldTheory.PrimitiveElement
-import Mathlib.FieldTheory.SeparableClosure
-import Mathlib.RingTheory.Adjoin.PowerBasis
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.HenselianAlgebraicExtension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.BasicInvariants
+public import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
+public import Mathlib.FieldTheory.PrimitiveElement
+public import Mathlib.FieldTheory.SeparableClosure
+public import Mathlib.RingTheory.Adjoin.PowerBasis
 /-!
 # Separability sources for finite unramified extensions
 
@@ -19,6 +21,8 @@ primitive generator of the separable residue extension, use the fundamental ineq
 to show that its powers are a basis of the field extension, and compare its
 minimal polynomial with its separable reduction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

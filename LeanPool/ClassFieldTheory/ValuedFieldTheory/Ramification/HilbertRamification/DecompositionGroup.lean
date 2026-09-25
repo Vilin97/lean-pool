@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.AbsoluteValueConjugacy
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.ValuationSubring
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.AbsoluteValueConjugacy
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.ValuationSubring
 /-!
 # Decomposition-group restriction law
 
@@ -15,6 +17,8 @@ absolute values, including the archimedean case.  The inertia and ramification
 statements use valuation subrings and therefore cover the nonarchimedean case
 in which those groups are defined.
 -/
+
+@[expose] public section
 
 noncomputable section
 

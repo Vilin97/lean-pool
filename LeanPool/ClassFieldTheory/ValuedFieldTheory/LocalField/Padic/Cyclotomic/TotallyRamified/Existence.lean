@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.Cyclotomic.TotallyRamified.RamificationIndex
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.Cyclotomic.TotallyRamified.RamificationIndex
 /-!
 # The totally ramified cyclotomic endpoint
 
 This file packages the actual integral-closure complete-DVF model as a totally ramified extension.
 -/
+
+@[expose] public section
 
 open _root_.LocalFieldTheory.DiscreteValuationField.ValuedExtension renaming
   isTotallyRamified_iff_ramificationIndex_eq_degree_of_finite_separable →

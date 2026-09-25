@@ -3,16 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.Main
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FiniteExtensionClassFieldAxiom
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormContinuity
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.UnitTopology
-import Mathlib.FieldTheory.KrullTopology
-import Mathlib.Topology.Algebra.Group.Quotient
-import Mathlib.Topology.Algebra.Group.TopologicalAbelianization
-import Mathlib.Topology.Algebra.Group.Units
-import Mathlib.Topology.Algebra.OpenSubgroup
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.Main
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FiniteExtensionClassFieldAxiom
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormContinuity
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.UnitTopology
+public import Mathlib.FieldTheory.KrullTopology
+public import Mathlib.Topology.Algebra.Group.Quotient
+public import Mathlib.Topology.Algebra.Group.TopologicalAbelianization
+public import Mathlib.Topology.Algebra.Group.Units
+public import Mathlib.Topology.Algebra.OpenSubgroup
 /-!
 # Topological finite local reciprocity
 
@@ -21,6 +23,8 @@ homeomorphic group isomorphism.  The key input is that the norm subgroup of a
 finite Galois extension is open.  Consequently its quotient is discrete, as
 is the topological abelianization of the finite Krull Galois group.
 -/
+
+@[expose] public section
 
 open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
   valuationSubring_isIntegralClosure_of_isIntegral →

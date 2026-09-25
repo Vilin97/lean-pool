@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Construction.MainTransfer
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Construction.MainTransfer
 /-!
 # Abstract reciprocity: the maximal-unramified symbol
 
@@ -15,6 +17,8 @@ arithmetic Frobenius.  The valuation--Frobenius map below is kept as a
 candidate until its compatibility with the finite norm-residue symbols has
 been proved from the unramified norm-quotient equivalence.
 -/
+
+@[expose] public section
 
 noncomputable section
 

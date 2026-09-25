@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.BaseChangeNormTrace
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.FiniteProductNormTrace
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.BaseChangeNormTrace
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.FiniteProductNormTrace
 /-!
 # Degree, norm, and trace through a tensor-product decomposition
 
@@ -15,6 +17,8 @@ algebra equivalence.  A tensor-product decomposition identifies those components
 with the canonical images in `L_w`; no compatibility theorem is assumed
 here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

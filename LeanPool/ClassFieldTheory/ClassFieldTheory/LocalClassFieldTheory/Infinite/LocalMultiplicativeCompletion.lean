@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Infinite.ProfiniteCompletion
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.MultiplicativeDecomposition
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Tactic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Infinite.ProfiniteCompletion
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.MultiplicativeDecomposition
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Tactic
 /-!
 # The profinite completion of a local multiplicative group
 
@@ -17,6 +19,8 @@ of valuation zero is detected by a finite quotient of the profinite unit
 group.  Consequently the canonical map from `Kˣ` to its completion by open
 finite quotients is injective.
 -/
+
+@[expose] public section
 
 noncomputable section
 

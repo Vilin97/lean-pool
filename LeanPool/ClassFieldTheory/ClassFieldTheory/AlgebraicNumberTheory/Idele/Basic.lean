@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.NumberField.AdeleRing
-import Mathlib.NumberTheory.NumberField.Completion.FinitePlace
-import Mathlib.Topology.Algebra.Group.Units
+
+public import Mathlib.NumberTheory.NumberField.AdeleRing
+public import Mathlib.NumberTheory.NumberField.Completion.FinitePlace
+public import Mathlib.Topology.Algebra.Group.Units
 /-!
 # Ideles of a number field
 
@@ -18,6 +20,8 @@ valuation rings.  This is deliberately not the topology induced from the
 finite adele ring: the latter is not the idele topology.  The infinite factor
 is the unit group of the finite product of the archimedean completions.
 -/
+
+@[expose] public section
 
 open scoped NumberField RestrictedProduct
 open NumberField IsDedekindDomain

@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Profinite
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteIntegralClosure
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.HerbrandFunction
+
+public import Mathlib.FieldTheory.Galois.Profinite
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteIntegralClosure
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.HerbrandFunction
 /-!
 # Chosen integral-closure ramification filtrations at finite Galois levels
 
@@ -18,6 +20,8 @@ then gives uniqueness of the extended valuation, so real lower groups and
 Herbrand upper groups can be formed without asking a caller to provide a
 filtration. Choice independence is proved in the companion module.
 -/
+
+@[expose] public section
 
 noncomputable section
 

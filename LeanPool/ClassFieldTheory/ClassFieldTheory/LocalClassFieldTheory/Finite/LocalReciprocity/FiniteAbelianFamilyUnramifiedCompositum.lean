@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.FiniteUnramifiedField
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidueNaturality
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.UnramifiedNormalization
-import Mathlib.GroupTheory.SpecificGroups.Cyclic.Basic
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuationExactSequence
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.CompositumRestriction
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.FiniteUnramifiedField
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidueNaturality
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.UnramifiedNormalization
+public import Mathlib.GroupTheory.SpecificGroups.Cyclic.Basic
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuationExactSequence
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.CompositumRestriction
 /-!
 # An unramified factor large enough for finite Artin rigidity
 
@@ -19,6 +21,8 @@ that degree. Restriction to the unramified factor sends the normalized Artin
 value of a valuation-one unit to a generator. These are the two field-level
 inputs to cyclic-quotient rigidity.
 -/
+
+@[expose] public section
 
 noncomputable section
 

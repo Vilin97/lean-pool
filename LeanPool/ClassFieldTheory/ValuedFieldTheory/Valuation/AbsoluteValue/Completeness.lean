@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Analysis.Normed.Field.WithAbs
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.RingTheory.Norm.Defs
-import Mathlib.Topology.UniformSpace.AbsoluteValue
+
+public import Mathlib.Analysis.Normed.Field.WithAbs
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.RingTheory.Norm.Defs
+public import Mathlib.Topology.UniformSpace.AbsoluteValue
 /-!
 # Minimal absolute-value norm API
 
@@ -16,6 +18,8 @@ current Section 4 formalization.  The old experimental completion and norm
 formula development was removed because it duplicated mathlib APIs and no
 longer compiled.
 -/
+
+@[expose] public section
 
 noncomputable section
 

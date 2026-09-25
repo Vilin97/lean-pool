@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.SchurPrimeDivisors
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.IntegralPrimitiveElement
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.FiniteRamifiedPrimes
-import Mathlib.NumberTheory.NumberField.Ideal.KummerDedekind
-import Mathlib.NumberTheory.Divisors
-import Mathlib.Data.ZMod.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.SchurPrimeDivisors
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.IntegralPrimitiveElement
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.FiniteRamifiedPrimes
+public import Mathlib.NumberTheory.NumberField.Ideal.KummerDedekind
+public import Mathlib.NumberTheory.Divisors
+public import Mathlib.Data.ZMod.Basic
 
 /-! # Degree One Primes -/
+
+@[expose] public section
 open scoped NumberField
 open NumberField IsDedekindDomain Polynomial
 

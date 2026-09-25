@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.AdeleBaseChange
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.BaseChange
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.AdeleBaseChange
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.BaseChange
 /-!
 # The norm on ordinary ideles
 
@@ -14,6 +16,8 @@ scalar-extension equivalence with the ordinary ideles of the extension
 field transports that existing norm to the usual map
 `N_{L/K} : I_L → I_K`.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField

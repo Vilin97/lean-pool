@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ClosedFiniteIndexClassFieldReciprocity.Algebraic.Construction
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ClosedFiniteIndexClassFieldReciprocity.Algebraic.Construction
 /-!
 # Evaluation of algebraic closed finite-index reciprocity
 
@@ -12,6 +14,8 @@ Since the algebraic equivalence is definitionally the underlying
 multiplicative equivalence of the continuous provider, its evaluation theorem
 is inherited without reconstructing the selected class-field instance tower.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NumberField
 

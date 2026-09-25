@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.GlobalClassFieldTheory.IsMaximalAbelianGlobalArtin
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.TopologicalGlobalReciprocity
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.GlobalClassFieldTheory.IsMaximalAbelianGlobalArtin
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.TopologicalGlobalReciprocity
 /-!
 # The maximal abelian global Artin map
 
@@ -15,6 +17,8 @@ its kernel. It is induced by a topological reciprocity isomorphism. The
 statement does not yet fix Frobenius normalization at finite levels, so it
 does not assert uniqueness of the map.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

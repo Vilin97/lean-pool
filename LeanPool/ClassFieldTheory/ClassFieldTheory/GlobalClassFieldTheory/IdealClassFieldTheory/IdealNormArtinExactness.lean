@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.ArithmeticIdealDecompositionLaw
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.ArithmeticIdealDecompositionLaw
 /-!
 # Ideal norms and arithmetic Artin exactness
 
@@ -18,6 +20,8 @@ kernel of the arithmetic ideal Artin map, descends that map to the
 corresponding quotient, and states the unramified decomposition law
 entirely in terms of this norm-defined ideal group.
 -/
+
+@[expose] public section
 
 open scoped NumberField IsMulCommutative
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedFrobeniusLift
-import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedFrobeniusLift
+public import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
 /-!
 # Semilinear evaluation for completed p-adic Frobenius lifts
 
@@ -18,6 +20,8 @@ Applying this to the standard-to-multiplicative comparison identifies the
 image of the genuine completed multiplicative primitive point with its
 actual multiplicative unit translate.
 -/
+
+@[expose] public section
 
 noncomputable section
 

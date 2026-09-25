@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FiniteAbelianLocalExtension
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.LocalClassFieldTheory.FiniteAbelianLocalReciprocityUnramifiedHomExt
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.UnramifiedResidueUniqueness
-import Mathlib.NumberTheory.LocalField.Basic
-import Mathlib.RingTheory.DedekindDomain.Factorization
-import Mathlib.RingTheory.Valuation.Extension
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FiniteAbelianLocalExtension
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.LocalClassFieldTheory.FiniteAbelianLocalReciprocityUnramifiedHomExt
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.UnramifiedResidueUniqueness
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.RingTheory.DedekindDomain.Factorization
+public import Mathlib.RingTheory.Valuation.Extension
 /-!
 # Uniqueness of normalized families on unramified members
 
@@ -17,6 +19,8 @@ Two finite local reciprocity families with the norm kernels and arithmetic
 Frobenius residue normalization agree on every unramified valued member. This
 does not assert uniqueness on ramified members of the families.
 -/
+
+@[expose] public section
 
 open scoped ValuativeRel
 

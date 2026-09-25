@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormQuotient
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.MathlibInterface
-import Mathlib.FieldTheory.Galois.Abelian
-import Mathlib.NumberTheory.LocalField.Basic
-import Mathlib.Topology.Algebra.ContinuousMonoidHom
-import Mathlib.Topology.Algebra.Group.Quotient
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormQuotient
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.MathlibInterface
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.Topology.Algebra.ContinuousMonoidHom
+public import Mathlib.Topology.Algebra.Group.Quotient
 /-!
 # Quotient form of finite abelian local reciprocity
 
@@ -19,6 +21,8 @@ finite-dimensional, abelian-Galois, valuative, and topological assumptions,
 the conclusion identifies `Kˣ / N_{L/K}(Lˣ)` with the ordinary Galois group
 by a continuous multiplicative equivalence.
 -/
+
+@[expose] public section
 
 noncomputable section
 

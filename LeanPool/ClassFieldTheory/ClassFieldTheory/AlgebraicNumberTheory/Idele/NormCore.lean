@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.IdealMap
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Principal
-import Mathlib.NumberTheory.NumberField.ProductFormula
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.IdealMap
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Principal
+public import Mathlib.NumberTheory.NumberField.ProductFormula
 /-!
 # The absolute norm of an idele
 
@@ -15,6 +17,8 @@ This file constructs the homomorphism `𝓝 : I_K → ℝ₊ˣ`. At a finite pla
 of its prime ideal; at infinity we divide by the normalized archimedean
 norm.  This is the convention for which principal ideles have norm one.
 -/
+
+@[expose] public section
 
 open scoped NumberField RestrictedProduct NNReal
 open NumberField IsDedekindDomain

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.SmallHilbertClassField
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.SmallHilbertClassField
 /-!
 # Comparison of the big and small Hilbert class fields
 
@@ -14,6 +16,8 @@ canonical map from the narrow class group to the ordinary class group.
 It then transports the archimedean sign exact sequence to a precise
 description of the kernel of that transition.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NumberField
 

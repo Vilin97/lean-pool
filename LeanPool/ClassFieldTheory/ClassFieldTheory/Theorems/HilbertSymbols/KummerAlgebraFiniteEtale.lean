@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.KummerAlgebra
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.KummerAlgebraFiniteFree
-import Mathlib.RingTheory.Etale.StandardEtale
-import Mathlib.RingTheory.Localization.Away.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.KummerAlgebra
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.KummerAlgebraFiniteFree
+public import Mathlib.RingTheory.Etale.StandardEtale
+public import Mathlib.RingTheory.Localization.Away.Basic
 /-!
 # Finite étaleness of a Kummer algebra
 
@@ -15,6 +17,8 @@ The quotient by `X ^ n - a` is finite étale when the exponent is invertible in
 the base field.  This includes reducible polynomials: the algebra need not be
 a field.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

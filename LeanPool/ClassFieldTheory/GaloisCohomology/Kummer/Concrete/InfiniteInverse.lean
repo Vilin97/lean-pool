@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteSupport
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RestrictedFinite
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteSupport
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RestrictedFinite
 /-!
 # infinite inverse inclusion
 
@@ -15,6 +17,8 @@ adjoined roots.  The corresponding admissible finite-support subgroup
 theorem at that stage shows that the original radical already belongs to
 `Δ₀`, hence to `Δ`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

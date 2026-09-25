@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Group.Subgroup.Lattice
-import Mathlib.Algebra.Order.Floor.Ring
-import Mathlib.Algebra.Order.Archimedean.Real.Basic
+
+public import Mathlib.Algebra.Group.Subgroup.Lattice
+public import Mathlib.Algebra.Order.Floor.Ring
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
 /-!
 # Natural-ceiling subgroup filtrations
 
 Generic order-theoretic infrastructure for extending a natural-number-indexed
 subgroup filtration to the real line by the natural-number ceiling.
 -/
+
+@[expose] public section
 
 noncomputable section
 

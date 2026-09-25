@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.NormFormulaIntegralClosure
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.NormFormulaIntegralClosure
 /-!
 # the finite norm-formula absolute value
 
@@ -13,6 +15,8 @@ finite norm-formula value equal to the integral elements over the base
 valuation ring.  This supplies the strong triangle inequality and hence the
 absolute value without completeness or separatedness assumptions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

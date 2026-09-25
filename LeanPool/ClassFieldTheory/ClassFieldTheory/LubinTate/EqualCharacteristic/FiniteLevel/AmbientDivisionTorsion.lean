@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FormalModule.AmbientBracketAction
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FormalModule.AmbientBracketAction
 /-!
 # Ambient Lubin--Tate division groups
 
@@ -13,6 +15,8 @@ stable under all truncated brackets.  Units of `κ⟦T⟧` therefore act on it b
 actual additive automorphisms.  This is the version needed in the separable
 closure, where the nonzero division points live.
 -/
+
+@[expose] public section
 
 noncomputable section
 

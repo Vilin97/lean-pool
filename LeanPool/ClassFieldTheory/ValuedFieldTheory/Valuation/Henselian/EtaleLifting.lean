@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.StandardEtaleLifting
-import Mathlib.RingTheory.Unramified.LocalStructure
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.StandardEtaleLifting
+public import Mathlib.RingTheory.Unramified.LocalStructure
 /-!
 # Lifting residue points of etale algebras
 
@@ -13,6 +15,8 @@ At the kernel of a residue point, an etale algebra has a standard etale
 localization. The Henselian root lift on that localization restricts to
 the requested lift on the original algebra.
 -/
+
+@[expose] public section
 
 namespace ValuationTheory.Henselian
 

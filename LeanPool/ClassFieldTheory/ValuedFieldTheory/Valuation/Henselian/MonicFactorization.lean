@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.CoefficientMinimum
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.PrimitiveFactorization
-import Mathlib.FieldTheory.Normal.Basic
-import Mathlib.RingTheory.Norm.Basic
-import Mathlib.RingTheory.Polynomial.Vieta
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.CoefficientMinimum
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.PrimitiveFactorization
+public import Mathlib.FieldTheory.Normal.Basic
+public import Mathlib.RingTheory.Norm.Basic
+public import Mathlib.RingTheory.Polynomial.Vieta
 /-!
 # Monic Hensel factor lifting
 
@@ -18,6 +20,8 @@ The condition is the exact condition: a monic polynomial whose
 reduction is a product of relatively prime monic polynomials has monic factors
 with exactly those reductions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

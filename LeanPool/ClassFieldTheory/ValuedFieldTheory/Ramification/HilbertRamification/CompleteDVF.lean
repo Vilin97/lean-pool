@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Exact.Basic
-import Mathlib.FieldTheory.Galois.IsGaloisGroup
-import Mathlib.GroupTheory.GroupAction.Quotient
-import Mathlib.RingTheory.Invariant.Basic
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.ValuationSubring
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteExtension.Core
+
+public import Mathlib.Algebra.Exact.Basic
+public import Mathlib.FieldTheory.Galois.IsGaloisGroup
+public import Mathlib.GroupTheory.GroupAction.Quotient
+public import Mathlib.RingTheory.Invariant.Basic
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.ValuationSubring
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteExtension.Core
 /-!
 # Decomposition and inertia for finite extensions of complete DVFs
 
@@ -25,6 +27,8 @@ The valuation-subring definitions and their ordinary exactness are reused
 from `HilbertRamification.ValuationSubring`; this file only supplies the
 complete-DVF specialization and the finite-Galois surjectivity theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

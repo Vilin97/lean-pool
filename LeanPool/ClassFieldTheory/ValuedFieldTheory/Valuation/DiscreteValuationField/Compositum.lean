@@ -3,15 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Algebra.Subalgebra.Lattice
-import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
-import Mathlib.FieldTheory.Relrank
-import Mathlib.FieldTheory.LinearDisjoint
-import Mathlib.FieldTheory.SeparableClosure
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import Mathlib.RingTheory.Unramified.Field
-import Mathlib.RingTheory.TensorProduct.Finite
+
+public import Mathlib.Algebra.Algebra.Subalgebra.Lattice
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
+public import Mathlib.FieldTheory.Relrank
+public import Mathlib.FieldTheory.LinearDisjoint
+public import Mathlib.FieldTheory.SeparableClosure
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.RingTheory.Unramified.Field
+public import Mathlib.RingTheory.TensorProduct.Finite
 /-!
 # Field-theoretic composita for finite valued extensions
 
@@ -21,6 +23,8 @@ purely field-theoretic source facts before any valuation extension is added:
 finite-dimensionality over either branch, degree bounds and equalities, the
 intersection degree square, and separability of the common top.
 -/
+
+@[expose] public section
 
 noncomputable section
 

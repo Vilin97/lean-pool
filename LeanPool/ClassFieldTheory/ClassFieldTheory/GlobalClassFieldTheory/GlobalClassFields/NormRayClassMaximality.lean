@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.NormConductor
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.NormConductor
 /-!
 # Exact narrow finite ray-class presentations of norm quotients
 
@@ -14,6 +16,8 @@ file characterizes when that presentation has no residual kernel: the norm
 subgroup is then exactly the congruence subgroup at its narrow finite
 conductor, equivalently the two finite quotient groups have the same order.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

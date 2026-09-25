@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.NumberField.Basic
-import Mathlib.NumberTheory.NumberField.InfinitePlace.Ramification
-import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.Ramification
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
 /-!
 # Places under a number-field equivalence
 
 A field equivalence bijects both the finite and infinite places. These
 equivalences reindex placewise products without changing their mathematics.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.ContinuousFieldUnitLog
-import Mathlib.GroupTheory.SpecificGroups.Cyclic
-import Mathlib.Topology.Instances.ZMod
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.ContinuousFieldUnitLog
+public import Mathlib.GroupTheory.SpecificGroups.Cyclic
+public import Mathlib.Topology.Instances.ZMod
 /-!
 # Finite and uniformizer factors of the field-unit group
 
@@ -15,6 +17,8 @@ This file isolates the two factors of the field-unit structure theorem which do 
 the structure theorem for first principal units.  The Teichmuller factor is
 the cyclic group of order `q - 1`, with its (necessarily discrete) topology.
 -/
+
+@[expose] public section
 
 open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
   fieldUnitDecompositionFactors →

@@ -3,17 +3,21 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidue
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.FiniteIdeleArtin
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.FinitePlaceCyclotomicFrobeniusLift
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Degree.PadicCyclicClosure
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidue
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.FiniteIdeleArtin
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.FinitePlaceCyclotomicFrobeniusLift
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Degree.PadicCyclicClosure
 /-!
 # Separable-closure p-adic lifts for local-global Artin compatibility
 
 This module constructs the finite-place decomposition restriction maps and
 the positive p-adic cyclotomic lifts used in the local-global comparison.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open AlgebraicNumberTheory IsDedekindDomain NumberField

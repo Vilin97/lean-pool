@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.DenominatorValuation
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.AdicPadicModule
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.DenominatorValuation
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.AdicPadicModule
 /-!
 # Principal-unit topology from a normalized valuation
 
@@ -13,6 +15,8 @@ For a complete discrete valuation with value group `WithZero (Multiplicative ℤ
 inherited topology agrees with the canonical adic model, so the p-adic action and addition are
 continuous on the original principal-unit carrier.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldUnitDecomposition
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldUnitDecomposition
 /-!
 # Uniqueness of logarithms on local-field units
 
@@ -12,6 +14,8 @@ This module isolates the torsion and unit-decomposition argument used to prove
 that an extension of the principal-unit logarithm is determined by its value
 on a uniformizer.
 -/
+
+@[expose] public section
 
 noncomputable section
 

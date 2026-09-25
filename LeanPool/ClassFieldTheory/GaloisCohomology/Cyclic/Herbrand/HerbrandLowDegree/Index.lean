@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandFiniteness
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandFiniteness
 /-!
 # Cardinal consequences of a Herbrand quotient
 
@@ -14,6 +16,8 @@ quotient equal to a natural number `n`, then its degree-zero cardinality is
 `n` times its negative-first cardinality.  In particular the degree-zero
 cardinality is at least `n`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.NormTopology
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.NormTopology
 /-!
 # Continuity of norms
 
@@ -12,6 +14,8 @@ For a finite extension `L / K`, the base change to `L` of a finite Galois
 extension `M / K` is finite Galois.  Norm transitivity then sends its norm
 subgroup into , providing the key continuity input.
 -/
+
+@[expose] public section
 
 noncomputable section
 

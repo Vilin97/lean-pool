@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Main
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.ValuationContinuity
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.NormContinuity
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Main
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.ValuationContinuity
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.NormContinuity
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
 /-!
 # The norm-topology characterization
 
@@ -15,6 +17,8 @@ This file supplies part (i), whose finite-index assertion uses the actual
 reciprocity isomorphism of the abstract reciprocity theorem.  Parts (ii)--(iv) are proved in the
 imported valuation-, norm-, and norm-topology modules.
 -/
+
+@[expose] public section
 
 noncomputable section
 

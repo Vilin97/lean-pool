@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Abelian
-import Mathlib.FieldTheory.Galois.GaloisClosure
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SeparableClosureEmbedding
+
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.FieldTheory.Galois.GaloisClosure
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SeparableClosureEmbedding
 /-!
 # Finite abelian composita
 
@@ -14,6 +16,8 @@ This file gives a common realization, in a chosen separable closure, of the
 compositum of two finite abelian Galois extensions.  It also records the
 canonical factor embeddings and their elementary degree bounds.
 -/
+
+@[expose] public section
 
 noncomputable section
 

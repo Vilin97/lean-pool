@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RingTheory.AdjoinRoot
-import Mathlib.RingTheory.Ideal.Quotient.Operations
+
+public import Mathlib.RingTheory.AdjoinRoot
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
 /-!
 # Polynomial Chinese remainder equivalence
 
@@ -13,6 +15,8 @@ This is the algebraic core of tensor-product decompositions.  A squarefree facto
 of the base-changed primitive polynomial gives the canonical product of its
 simple factor algebras.
 -/
+
+@[expose] public section
 
 noncomputable section
 

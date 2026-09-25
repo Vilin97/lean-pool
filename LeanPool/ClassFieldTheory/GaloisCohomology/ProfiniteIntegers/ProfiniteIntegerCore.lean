@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Topology.Instances.ZMod
-import Mathlib.Topology.Algebra.Ring.Basic
-import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Basic
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.TopologicalGeneration
+
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Topology.Instances.ZMod
+public import Mathlib.Topology.Algebra.Ring.Basic
+public import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Basic
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.TopologicalGeneration
 
 /-! # Profinite Integer Core -/
+
+@[expose] public section
 namespace ClassFormation
 
 /-!

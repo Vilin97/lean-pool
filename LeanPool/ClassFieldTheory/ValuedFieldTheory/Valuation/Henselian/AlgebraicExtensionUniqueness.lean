@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.AlgebraicIntegralClosure
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.UniqueValuationSubring
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.AlgebraicIntegralClosure
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.UniqueValuationSubring
 /-!
 # Uniqueness over an algebraic extension of a Henselian valued field
 
 The integral closure is an actual valuation ring. Every extension valuation
 has this ring of integers, so any two extension valuations are equivalent.
 -/
+
+@[expose] public section
 
 namespace ValuationTheory.Henselian
 

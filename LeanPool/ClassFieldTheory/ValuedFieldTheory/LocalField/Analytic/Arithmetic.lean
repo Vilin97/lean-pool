@@ -3,15 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Data.Nat.Factorization.Basic
-import Mathlib.Data.Nat.Prime.Basic
-import Mathlib.Algebra.EuclideanDomain.Basic
-import Mathlib.Algebra.Order.Field.Power
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.NumberTheory.Padics.PadicVal.Basic
-import Mathlib.Topology.Algebra.Order.Field
-import Mathlib.Tactic
+
+public import Mathlib.Data.Nat.Factorization.Basic
+public import Mathlib.Data.Nat.Prime.Basic
+public import Mathlib.Algebra.EuclideanDomain.Basic
+public import Mathlib.Algebra.Order.Field.Power
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
+public import Mathlib.Topology.Algebra.Order.Field
+public import Mathlib.Tactic
 /-!
 # Arithmetic lemmas for local-field index calculations
 
@@ -23,6 +25,8 @@ It also contains the elementary `p`-adic valuation estimates used in the local-f
 the logarithm and exponential estimates for the convergence and valuation behavior of the
 logarithm and exponential series.
 -/
+
+@[expose] public section
 
 namespace LocalFieldTheory.DiscreteValuationField
 

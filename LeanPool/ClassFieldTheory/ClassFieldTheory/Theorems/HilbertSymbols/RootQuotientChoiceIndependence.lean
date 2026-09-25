@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Basic
-import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 /-!
 # Independence of the chosen Kummer root
 
@@ -13,6 +15,8 @@ When the base field contains the `n`-th roots of unity, the quotient
 `σ(u) / u` depends only on `u ^ n`. In particular, the Artin root quotient
 used to normalize a local Hilbert symbol does not depend on the root chosen.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

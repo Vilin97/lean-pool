@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.CompletedIterates
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveAction
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelValuation
-import Mathlib.RingTheory.MvPowerSeries.Inverse
-import Mathlib.RingTheory.PowerSeries.Inverse
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.CompletedIterates
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveAction
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelValuation
+public import Mathlib.RingTheory.MvPowerSeries.Inverse
+public import Mathlib.RingTheory.PowerSeries.Inverse
 /-!
 # Displacements of primitive Lubin--Tate points
 
@@ -22,6 +24,8 @@ endomorphism is `X` times an invertible power series.  Likewise
 two-variable power series.  Consequently neither operation changes the
 valuation of the topologically nilpotent input that it multiplies.
 -/
+
+@[expose] public section
 
 noncomputable section
 

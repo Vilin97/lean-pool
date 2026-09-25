@@ -3,12 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RepresentationTheory.Homological.GroupCohomology.FiniteCyclic
-import Mathlib.RepresentationTheory.Homological.GroupCohomology.Hilbert90
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.TateComparison
+
+public import Mathlib.RepresentationTheory.Homological.GroupCohomology.FiniteCyclic
+public import Mathlib.RepresentationTheory.Homological.GroupCohomology.Hilbert90
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.TateComparison
 
 /-! # Galois Cohomology -/
+
+@[expose] public section
 namespace CyclicCohomology
 
 /-!

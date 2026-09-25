@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveDisplacement
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.GaloisParameterFiltration
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LowerRamification
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveDisplacement
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.GaloisParameterFiltration
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LowerRamification
 /-!
 # Explicit lower ramification groups of finite Lubin--Tate levels
 
@@ -16,6 +18,8 @@ to the finite-level Galois group.  At the break `q ^ k - 1`, and throughout
 the interval `q ^ (k - 1) ≤ r < q ^ k`, the group is the image of `U_F^k`.
 Its cardinality is therefore `q ^ (n + 1 - k)`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

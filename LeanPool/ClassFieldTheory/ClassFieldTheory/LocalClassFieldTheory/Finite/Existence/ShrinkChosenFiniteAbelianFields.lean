@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.UnshrinkFiniteAbelianFields
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Algebra.FiniteAbelianIntermediateFieldAlgEquiv
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.UnshrinkFiniteAbelianFields
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Algebra.FiniteAbelianIntermediateFieldAlgEquiv
 /-!
 # Finite abelian fields in the chosen small-base separable closure
 
@@ -13,6 +15,8 @@ The base equivalence and the equivalence between the two chosen separable
 closures together transport finite abelian intermediate fields, preserving
 their inclusion order.
 -/
+
+@[expose] public section
 
 noncomputable section
 

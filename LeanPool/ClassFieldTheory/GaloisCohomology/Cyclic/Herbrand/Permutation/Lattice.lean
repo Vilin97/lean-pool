@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Module.ZLattice.Basic
-import Mathlib.LinearAlgebra.FreeModule.Finite.Quotient
-import Mathlib.LinearAlgebra.Matrix.Gershgorin
+
+public import Mathlib.Algebra.Module.ZLattice.Basic
+public import Mathlib.LinearAlgebra.FreeModule.Finite.Quotient
+public import Mathlib.LinearAlgebra.Matrix.Gershgorin
 /-!
 # Permutation-stable sublattices
 
@@ -16,6 +18,8 @@ permutation basis with more than one orbit: approximate every large coordinate
 vector by a lattice point and average all these approximations equivariantly
 over the finite group.
 -/
+
+@[expose] public section
 
 noncomputable section
 

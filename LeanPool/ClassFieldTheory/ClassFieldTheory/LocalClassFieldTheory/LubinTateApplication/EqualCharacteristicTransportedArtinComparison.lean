@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.EqualCharacteristicTransportedUpperRestriction
-import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.RestrictionKernel
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.TransportedNormSubgroupExact
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.GeneralTowerNaturality
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.EqualCharacteristicTransportedUpperRestriction
+public import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.RestrictionKernel
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.TransportedNormSubgroupExact
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.GeneralTowerNaturality
 /-!
 # Local Artin comparison on transported Lubin--Tate levels
 
@@ -17,6 +19,8 @@ group with the kernel of restriction to the corresponding lower transported
 Lubin--Tate level.  The transported upper-ramification calculation identifies
 the same kernel, giving integral filtered reciprocity over the target field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

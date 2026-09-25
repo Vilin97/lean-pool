@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpComposition
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpContinuity
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpComposition
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpContinuity
 /-!
 # Exponential and logarithm on deep principal units
 
@@ -13,6 +15,8 @@ This file combines the two evaluated formal composition identities with the
 valuation-theoretic endpoint maps and their continuity.  No finite-quotient
 or defect-membership hypothesis remains in the public result.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.DirectThetaSeries
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Theta.ThetaFirstIdentity
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.DirectThetaSeries
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Theta.ThetaFirstIdentity
 /-!
 # The completed theta-intertwining theorem: iterating the direct second theta identity
 
@@ -13,6 +15,8 @@ For the direct orientation `T → uT`, this file applies coefficient
 Frobenius repeatedly to the formal identity
 `theta^φ ∘ e_T = e_(uT) ∘ theta`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

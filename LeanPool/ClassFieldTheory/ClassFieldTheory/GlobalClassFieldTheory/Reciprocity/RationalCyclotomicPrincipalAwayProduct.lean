@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.RationalCyclotomicFinitePlaceArtin
-import Mathlib.Algebra.BigOperators.Finprod
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.RationalCyclotomicFinitePlaceArtin
+public import Mathlib.Algebra.BigOperators.Finprod
 /-!
 # Away-from-p factors of a rational cyclotomic principal idele
 
@@ -17,6 +19,8 @@ finite prime factorization support of the principal rational number.
 The final theorem separates the genuine `p`-factor from the explicit
 away-from-`p` finite product.  The construction also applies to `k = 0`.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

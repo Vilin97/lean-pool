@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumLocalizationEmbedding
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalPadicPrimePowInertiaBound
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumLocalizationEmbedding
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalPadicPrimePowInertiaBound
 /-!
 # The fixed-conductor local inertia bound for the auxiliary compositum
 
@@ -14,6 +16,8 @@ compositum embeds in the common local cyclotomic field whose `p`-power part
 is exactly the exponent selected from `L`.  The arbitrary-coprime local
 bound therefore gives the sharp factor `φ(p^e)`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

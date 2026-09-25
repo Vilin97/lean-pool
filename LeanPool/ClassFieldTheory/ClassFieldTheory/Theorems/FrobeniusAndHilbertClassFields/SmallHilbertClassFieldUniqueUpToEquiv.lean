@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAndHilbertClassFields.IsSmallHilbertClassField
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.FrobeniusAndHilbertClassFields.SmallHilbertClassFieldUnique
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAndHilbertClassFields.IsSmallHilbertClassField
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.FrobeniusAndHilbertClassFields.SmallHilbertClassFieldUnique
 /-!
 # Small Hilbert class fields are isomorphic
 
@@ -13,6 +15,8 @@ The intrinsic maximality condition determines a small Hilbert class field up to
 an isomorphism over the base.  This asserts existence of an isomorphism, not a
 distinguished or unique choice of one.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveRoot
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveRoot
 /-!
 # Primitive Lubin--Tate torsion points
 
@@ -18,6 +20,8 @@ next iterate shows that the level-`n + 1` iterate vanishes.  The primitive
 equation and nonvanishing of the uniformizer show that the level-`n` iterate
 does not vanish.  All arguments are characteristic-independent.
 -/
+
+@[expose] public section
 
 noncomputable section
 

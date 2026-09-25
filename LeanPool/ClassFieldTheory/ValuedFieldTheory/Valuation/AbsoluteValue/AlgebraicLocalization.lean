@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Completion
-import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Completion
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
 /-!
 # Algebraic localization inside an absolute-value completion
 
@@ -14,6 +16,8 @@ the compositum of `L` and the completed base field inside `wL.Completion`.
 The construction applies to arbitrary algebraic extensions and does not use a
 extra container for the chosen extension.
 -/
+
+@[expose] public section
 
 noncomputable section
 

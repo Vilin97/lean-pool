@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RepresentationTheory.Invariants
-import Mathlib.FieldTheory.Galois.Basic
+
+public import Mathlib.RepresentationTheory.Invariants
+public import Mathlib.FieldTheory.Galois.Basic
 /-!
 # Invariant units
 
 The actual invariant submodule of the unit representation, together with its
 arithmetic identification with the units of the base field.
 -/
+
+@[expose] public section
 
 namespace CyclicCohomology
 

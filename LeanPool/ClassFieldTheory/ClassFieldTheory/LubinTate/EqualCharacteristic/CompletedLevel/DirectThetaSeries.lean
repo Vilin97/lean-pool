@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Theta.ThetaSeries
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Theta.ThetaSeries
 /-!
 # The completed theta-intertwining theorem: the direct-orientation theta series
 
@@ -20,6 +22,8 @@ constructed specialization `u⁻¹T → T`.  The first theta identity and
 analytic evaluation at division points are developed in the corresponding
 companion modules.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.HilbertPairing
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.HilbertPairingSymbol
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsKummerNorm
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsLocalHilbertPairing
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.HilbertPairing
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.HilbertPairingSymbol
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsKummerNorm
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsLocalHilbertPairing
 /-!
 # Norm-residue criterion for a local Hilbert pairing
 
@@ -16,6 +18,8 @@ norm condition.  The Kummer algebra is the canonical Mathlib quotient
 `K[X] / (X^n - a)`, so the statement does not choose a root in an algebraic
 closure.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

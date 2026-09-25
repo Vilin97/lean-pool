@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Abelian
-import Mathlib.FieldTheory.IsSepClosed
-import Mathlib.NumberTheory.NumberField.Basic
+
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.FieldTheory.IsSepClosed
+public import Mathlib.NumberTheory.NumberField.Basic
 /-!
 # Finite abelian extensions of number fields
 
 This module packages finite abelian extensions inside Mathlib's chosen
 separable closure.  It contains no class-field-theory implementation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Basic
 /-!
 # Valuation-subring units inside field units
 
 This file defines the canonical homomorphism from units of a complete-DVF
 valuation ring to units of its fraction field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

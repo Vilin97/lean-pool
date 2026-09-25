@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.GroupTheory.QuotientGroup.Basic
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.NormKernelVanishing
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Degree.Indices
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteInteger
+
+public import Mathlib.GroupTheory.QuotientGroup.Basic
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.NormKernelVanishing
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Degree.Indices
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteInteger
 
 /-! # Fields -/
+
+@[expose] public section
 namespace ClassFormation
 
 open CyclicCohomology

@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.BaseChangeCore
-import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
-import Mathlib.RingTheory.IntegralClosure.IsIntegralClosure.Basic
-import Mathlib.RingTheory.Polynomial.Cyclotomic.Factorization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.BaseChangeCore
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
+public import Mathlib.RingTheory.IntegralClosure.IsIntegralClosure.Basic
+public import Mathlib.RingTheory.Polynomial.Cyclotomic.Factorization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
 /-!
 # Arithmetic Frobenius on the unramified cyclotomic extension
 
@@ -33,6 +35,8 @@ The proof follows the arithmetic construction directly and uses no comparison ce
 * the reverse integral-ring inclusion by residue generation, ramification
   index one, and Nakayama, yielding `O_{K(ζ)} = O_K[ζ]`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

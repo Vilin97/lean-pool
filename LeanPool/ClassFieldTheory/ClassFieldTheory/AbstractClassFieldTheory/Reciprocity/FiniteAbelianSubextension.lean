@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteGaloisSubextension
-import Mathlib.Algebra.Group.Subgroup.Pointwise
-import Mathlib.Topology.Algebra.Group.Pointwise
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteGaloisSubextension
+public import Mathlib.Algebra.Group.Subgroup.Pointwise
+public import Mathlib.Topology.Algebra.Group.Pointwise
 /-!
 # Finite abelian extensions in abstract reciprocity
 
@@ -23,6 +25,8 @@ correspondence independently of the reciprocity isomorphism:
 The reverse inclusions in the two norm formulas, and hence the classification
 bijection itself, require the abstract reciprocity theorem and are deliberately not postulated.
 -/
+
+@[expose] public section
 
 noncomputable section
 

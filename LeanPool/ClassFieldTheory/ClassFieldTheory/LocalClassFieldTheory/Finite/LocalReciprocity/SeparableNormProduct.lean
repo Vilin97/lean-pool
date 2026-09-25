@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.PrimitiveElement
-import Mathlib.FieldTheory.IsSepClosed
-import Mathlib.RingTheory.Norm.Transitivity
-import Mathlib.RingTheory.AlgebraTower
+
+public import Mathlib.FieldTheory.PrimitiveElement
+public import Mathlib.FieldTheory.IsSepClosed
+public import Mathlib.RingTheory.Norm.Transitivity
+public import Mathlib.RingTheory.AlgebraTower
 /-!
 # Separable field norms as products of embeddings
 
@@ -15,6 +17,8 @@ For a finite separable extension, the field norm becomes the product over all
 base-field embeddings after mapping into a separably closed ambient field.
 The ambient field need not be a normal extension of the base field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

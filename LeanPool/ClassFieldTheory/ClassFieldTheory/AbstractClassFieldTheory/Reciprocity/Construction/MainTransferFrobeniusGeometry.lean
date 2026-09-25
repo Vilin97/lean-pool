@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Construction.MainNaturality
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Construction.DoubleCosetOrbitGeometry
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Construction.MainNaturality
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Construction.DoubleCosetOrbitGeometry
 /-!
 # Transfer--norm Frobenius geometry
 
@@ -14,6 +16,8 @@ Frobenius-side subgroup and orbit equivalences used in transfer--norm
 naturality.  The reusable orbit and double-coset constructions are isolated in
 `DoubleCosetOrbitGeometry`.
 -/
+
+@[expose] public section
 
 universe u
 

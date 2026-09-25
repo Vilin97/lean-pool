@@ -3,15 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormSubgroup
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.UnramifiedNormComparison
-import Mathlib.FieldTheory.Galois.Abelian
-import Mathlib.NumberTheory.LocalField.Basic
-import Mathlib.RingTheory.DedekindDomain.Factorization
-import Mathlib.Topology.Algebra.ContinuousMonoidHom
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteExtensionCompleteDVF
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuationExactSequence
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormSubgroup
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.UnramifiedNormComparison
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.RingTheory.DedekindDomain.Factorization
+public import Mathlib.Topology.Algebra.ContinuousMonoidHom
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteExtensionCompleteDVF
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuationExactSequence
 /-!
 # Uniqueness from an unramified norm kernel and a uniformizer value
 
@@ -23,6 +25,8 @@ with this kernel from its value on that inverse uniformizer.
 This is the unramified generator step, not uniqueness of finite local Artin
 maps for ramified extensions.
 -/
+
+@[expose] public section
 
 open scoped ValuativeRel
 open LocalFieldTheory.IsNonarchimedeanLocalField

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.MaximalSubextension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.Composition
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.MaximalSubextension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.Composition
 /-!
 # Finite support in the maximal unramified field
 
@@ -14,6 +16,8 @@ of a simple intermediate field and stability under finite composita imply that e
 elements already belongs to a single finite unramified subextension.  This is
 the finite-support fact used in the maximal-residue theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

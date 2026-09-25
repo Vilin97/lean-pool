@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.HerbrandFunctionAtLowerIndex
-import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.HerbrandFunctionAtLowerIndex
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
 /-!
 # Herbrand-function increment at integral lower indices
 
 The sum starts at index one: the increment from `n` to `n + 1` is the
 cardinality of the next lower group divided by that of the zeroth group.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

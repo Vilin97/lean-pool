@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedFrobeniusEvaluation
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedFrobeniusEvaluation
 /-!
 # Fixedness of completed p-adic changed-uniformizer theta values
 
@@ -15,6 +17,8 @@ the first changed-uniformizer identity changes the evaluation point by the
 unit itself.  The unit and inverse-unit actions cancel, so the actual
 convergent theta value is fixed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

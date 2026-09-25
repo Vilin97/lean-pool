@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Extensions
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.RamificationInvariants
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Extensions
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.RamificationInvariants
 /-!
 # Comparing exponential and canonical ramification indices
 
@@ -13,6 +15,8 @@ This module compares the exponential-valuation presentation of ramification
 with the canonical complete-DVF presentation.  The comparison is independent
 of any cyclotomic or Kronecker--Weber hypotheses.
 -/
+
+@[expose] public section
 
 noncomputable section
 

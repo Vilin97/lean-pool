@@ -3,18 +3,22 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.IdeleClassPowerLocalUnitQuotient.ArchimedeanPowerIndex
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.SupportedIdelePowerLocalUnitQuotient
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Cohomology.SupportedBridge
-import Mathlib.Algebra.Group.Equiv.Basic
-import Mathlib.Algebra.Group.Subgroup.Ker
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.IdeleClassPowerLocalUnitQuotient.ArchimedeanPowerIndex
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.SupportedIdelePowerLocalUnitQuotient
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Cohomology.SupportedBridge
+public import Mathlib.Algebra.Group.Equiv.Basic
+public import Mathlib.Algebra.Group.Subgroup.Ker
 /-!
 # Supported principal ideles and the idele-class quotient
 
 This file identifies supported principal ideles with the corresponding
 `S`-unit group and derives the exact-sequence cardinal identities.
 -/
+
+@[expose] public section
 
 open scoped NumberField NNReal ValuativeRel TensorProduct
 open NumberField IsDedekindDomain

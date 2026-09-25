@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.Induced
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandFiniteness
-import Mathlib.SetTheory.Cardinal.Finite
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.Induced
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandFiniteness
+public import Mathlib.SetTheory.Cardinal.Finite
 /-!
 # Low-degree Tate cohomology under equivariant equivalences
 
@@ -19,6 +21,8 @@ These transport results let calculations made on field units or local
 coordinates be applied to their actual images inside idele groups without
 introducing comparison assumptions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

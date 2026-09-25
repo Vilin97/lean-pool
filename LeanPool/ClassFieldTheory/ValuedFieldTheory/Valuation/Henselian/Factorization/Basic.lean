@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Polynomial.Div
-import Mathlib.Algebra.Polynomial.Lifts
-import Mathlib.RingTheory.LocalRing.ResidueField.Basic
+
+public import Mathlib.Algebra.Polynomial.Div
+public import Mathlib.Algebra.Polynomial.Lifts
+public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
 /-!
 # algebraic input for Hensel's lemma
 
@@ -14,6 +16,8 @@ This file records the residue-polynomial data used at the start of the
 proof of Hensel's lemma.  The analytic convergence step is kept separate; the
 lemmas here are the initial lifts and congruences.
 -/
+
+@[expose] public section
 
 noncomputable section
 

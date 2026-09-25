@@ -3,19 +3,23 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Group.Equiv.TypeTags
-import Mathlib.Algebra.Module.ZMod
-import Mathlib.Data.Finsupp.Fintype
-import Mathlib.Data.ZMod.Basic
-import Mathlib.FieldTheory.IntermediateField.Basic
-import Mathlib.RingTheory.LocalRing.Module
+
+public import Mathlib.Algebra.Group.Equiv.TypeTags
+public import Mathlib.Algebra.Module.ZMod
+public import Mathlib.Data.Finsupp.Fintype
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.FieldTheory.IntermediateField.Basic
+public import Mathlib.RingTheory.LocalRing.Module
 /-!
 # Prime-power kernel coordinates
 
 Linear-algebraic coordinates for kernels of surjections between finite free modules over `ZMod
   (p ^ v)`.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative
 

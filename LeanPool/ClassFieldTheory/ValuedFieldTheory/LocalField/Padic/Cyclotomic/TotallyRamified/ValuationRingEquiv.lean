@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.Cyclotomic.TotallyRamified.IntegralTranslate
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.Cyclotomic.TotallyRamified.IntegralTranslate
 /-!
 # The valuation-ring equivalence for the totally ramified cyclotomic extension
 
 This file constructs the concrete equivalence from `ℤ_[p][ζ - 1]` to the actual valuation subring.
 -/
+
+@[expose] public section
 
 noncomputable section
 

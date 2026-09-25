@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.FinitePlaceAdicHilbertComparison
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.FinitePlaceAdicHilbertComparison
 /-!
 # A coherent Hilbert pairing family in a small number field
 
@@ -12,6 +14,8 @@ The finite-place family already constructed from the local norm-residue
 pairing satisfies the local laws. Its finite factors agree with the factors
 of the global Hilbert product formula.
 -/
+
+@[expose] public section
 
 open scoped BigOperators NumberField
 open NumberField IsDedekindDomain

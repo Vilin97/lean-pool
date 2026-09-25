@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Small
-import Mathlib.Algebra.Field.Shrink
-import Mathlib.Topology.Instances.Shrink
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Small
+public import Mathlib.Algebra.Field.Shrink
+public import Mathlib.Topology.Instances.Shrink
 /-!
 # Transporting local-field structures to a small representative
 
 This file records the valuation and topology on the `Type 0` representative
 of an arbitrary-universe nonarchimedean local field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

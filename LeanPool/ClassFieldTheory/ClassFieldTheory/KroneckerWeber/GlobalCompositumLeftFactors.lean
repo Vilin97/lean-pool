@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.CompositumEmbedding
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumCyclotomicTarget
-import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.PadicLocalizationCanonicalValuation
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.CompositumEmbedding
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumCyclotomicTarget
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.PadicLocalizationCanonicalValuation
 /-!
 # The left-factor ring embedding for the global compositum
 
@@ -17,6 +19,8 @@ local cyclotomic target, so elaborating its type never unfolds completion
 or transported-algebra instances.  Rational linearity is added separately
 in the global-factor file by `map_ratCast`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

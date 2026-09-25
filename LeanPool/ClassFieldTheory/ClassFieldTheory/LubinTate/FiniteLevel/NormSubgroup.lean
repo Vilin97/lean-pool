@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.NormUniformizer
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormQuotient
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.NormUniformizer
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormQuotient
 /-!
 # The norm subgroup of a standard Lubin--Tate level
 
@@ -17,6 +19,8 @@ entire cyclic subgroup of integral powers lies in the norm subgroup.
 The higher-principal-unit contribution is intentionally left to the later
 norm calculation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

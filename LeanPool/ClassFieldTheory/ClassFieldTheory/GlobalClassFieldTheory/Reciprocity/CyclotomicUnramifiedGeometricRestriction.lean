@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicUnramifiedRestriction
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicUnramifiedRestriction
 /-!
 # Geometric restriction from the cyclotomic unramified field
 
@@ -18,6 +20,8 @@ The field-range form of the finite layer is also bundled in the finite
 Galois inverse system.  Consequently the geometric restriction of the
 infinite global Artin map is the ordinary finite global Artin map.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NumberField
 

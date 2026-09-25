@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.HilbertClassFieldRealization
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.HilbertClassFieldRealization
 /-!
 # The small Hilbert class field over the original number field
 
@@ -18,6 +20,8 @@ Galois extension of the original field itself.
 This is the scalar structure used by the final extension-of-ideals map
 in the principal ideal theorem.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NumberField
 

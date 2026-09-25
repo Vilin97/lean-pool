@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.IsFieldNorm
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.NormTheorems.IsEverywhereLocalNorm
-import Mathlib.Algebra.Group.DivInvMonoid
-import Mathlib.FieldTheory.Galois.Basic
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.MathlibNormInterface
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.IsFieldNorm
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.NormTheorems.IsEverywhereLocalNorm
+public import Mathlib.Algebra.Group.DivInvMonoid
+public import Mathlib.FieldTheory.Galois.Basic
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.MathlibNormInterface
 /-!
 # The cyclic Hasse norm theorem
 
@@ -18,6 +20,8 @@ conclusion identifies membership in the global field-norm subgroup with the
 condition of being a norm after base change to every finite and infinite
 completion of `K`.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

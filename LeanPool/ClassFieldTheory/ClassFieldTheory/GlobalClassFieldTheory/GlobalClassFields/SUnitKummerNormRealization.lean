@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.SUnitKummerNormCore
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidue
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitKummerUnramified
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.StandardSubgroupIndex
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.SUnitKummerNormCore
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidue
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitKummerUnramified
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.StandardSubgroupIndex
 /-!
 # Exact norm realization by the full S-unit Kummer extension
 
@@ -19,6 +21,8 @@ the Kummer extension away from the canonical support.  Equality follows
 from the independently computed quotient cardinal and the global
 norm-residue index formula.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 noncomputable section

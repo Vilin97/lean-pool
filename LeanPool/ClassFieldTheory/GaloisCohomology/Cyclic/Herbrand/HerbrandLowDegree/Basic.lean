@@ -3,18 +3,22 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Set.Finite.Range
-import Mathlib.GroupTheory.Coset.Card
-import Mathlib.GroupTheory.GroupAction.Basic
-import Mathlib.GroupTheory.Index
-import Mathlib.GroupTheory.OrderOfElement
-import Mathlib.GroupTheory.QuotientGroup.Basic
-import Mathlib.GroupTheory.SpecificGroups.Cyclic
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Data.Set.Finite.Range
+public import Mathlib.GroupTheory.Coset.Card
+public import Mathlib.GroupTheory.GroupAction.Basic
+public import Mathlib.GroupTheory.Index
+public import Mathlib.GroupTheory.OrderOfElement
+public import Mathlib.GroupTheory.QuotientGroup.Basic
+public import Mathlib.GroupTheory.SpecificGroups.Cyclic
 
 /-! # Basic -/
+
+@[expose] public section
 namespace CyclicCohomology
 
 /-!

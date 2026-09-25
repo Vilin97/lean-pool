@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.HilbertPairingSymbol
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.HilbertPairingSymbol
 /-!
 # Multiplicativity of Hilbert-pairing symbols
 
 A Hilbert pairing is a homomorphism in each power-class argument.  These
 formulas expose that structure directly on representatives in `Kˣ`.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory.HilbertPairing
 

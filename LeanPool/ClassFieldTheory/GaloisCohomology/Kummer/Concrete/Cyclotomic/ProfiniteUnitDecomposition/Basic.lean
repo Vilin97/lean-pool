@@ -3,17 +3,21 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.CyclotomicTorsionQuotient
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteIntegerUnits
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.UnitDecomposition
-import Mathlib.GroupTheory.Torsion
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.CyclotomicTorsionQuotient
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteIntegerUnits
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.UnitDecomposition
+public import Mathlib.GroupTheory.Torsion
 /-!
 # Basic topological product equivalences for profinite units
 
 This module contains the reusable, inexpensive product equivalences used by
 the compiled stages of the profinite-unit decomposition.
 -/
+
+@[expose] public section
 
 open scoped Topology
 

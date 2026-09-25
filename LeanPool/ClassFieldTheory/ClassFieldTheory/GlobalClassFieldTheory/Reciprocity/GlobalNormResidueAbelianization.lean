@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidue
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidue
 /-!
 # The global norm-residue symbol for finite Galois extensions
 
@@ -17,6 +19,8 @@ The abelian specialization in `GlobalNormResidue` identifies this target
 further with `Gal(L / K)`.  This file retains the abelianization and therefore
 states global reciprocity at its full finite-Galois generality.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NumberField
 open NumberField

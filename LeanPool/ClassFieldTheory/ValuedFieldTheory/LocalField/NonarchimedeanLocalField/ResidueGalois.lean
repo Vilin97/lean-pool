@@ -3,17 +3,21 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.FieldTheory.Galois.Basic
-import Mathlib.NumberTheory.RamificationInertia.Galois
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.GaloisIntegerRing
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.NumberTheory.RamificationInertia.Galois
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.GaloisIntegerRing
 /-!
 # Galois actions on residue fields
 
 Restricts field automorphisms to residue-field automorphisms and identifies
 the resulting kernels and stabilizers with inertia subgroups.
 -/
+
+@[expose] public section
 
 namespace LocalFieldTheory
 

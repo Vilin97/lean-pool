@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedLevel
-import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
-import Mathlib.RingTheory.PowerSeries.Ideal
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedLevel
+public import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
+public import Mathlib.RingTheory.PowerSeries.Ideal
 /-!
 # The completed theta-intertwining theorem: irreducibility after completed unramified base change
 
@@ -17,6 +19,8 @@ irreducible over `(AlgebraicClosure κ)((T))`.  This is the algebraic input
 needed to prescribe the image of a primitive point when arithmetic Frobenius
 is extended to the completed level field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

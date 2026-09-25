@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
+
+public import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
 /-!
 # Gauss reciprocity and its supplementary laws
 
@@ -13,6 +15,8 @@ This file proves Gauss reciprocity and its supplementary laws. Mathlib's Jacobi 
 denominator, so an integer denominator `b` is written canonically as
 `jacobiSym a b.natAbs`, as is forced by the principal ideal `(b)`.
 -/
+
+@[expose] public section
 
 open scoped NumberTheorySymbols
 

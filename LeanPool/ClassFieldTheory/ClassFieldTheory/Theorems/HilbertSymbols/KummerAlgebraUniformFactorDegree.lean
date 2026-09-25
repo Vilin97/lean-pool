@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.KummerAlgebra
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.KummerAlgebraUniformFieldFactors
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.KummerAlgebraFinrank
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.KummerAlgebraFiniteEtale
-import Mathlib.LinearAlgebra.Dimension.Constructions
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.KummerAlgebra
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.KummerAlgebraUniformFieldFactors
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.KummerAlgebraFinrank
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HilbertSymbols.KummerAlgebraFiniteEtale
+public import Mathlib.LinearAlgebra.Dimension.Constructions
 /-!
 # Degree and number of uniform Kummer factors
 
@@ -16,6 +18,8 @@ When the `n`-th roots of unity lie in the base field, every field factor of
 the Kummer algebra has the same positive degree `d`. The total rank `n` is
 the number of factors times `d`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

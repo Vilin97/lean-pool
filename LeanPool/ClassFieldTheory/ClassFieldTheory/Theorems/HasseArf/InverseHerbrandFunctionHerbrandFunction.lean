@@ -3,12 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.HerbrandFunction
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.InverseHerbrandFunction
-import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
-import Mathlib.NumberTheory.LocalField.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.HerbrandFunction
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.InverseHerbrandFunction
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
+public import Mathlib.NumberTheory.LocalField.Basic
 /-! # The inverse Herbrand function is a left inverse -/
+
+@[expose] public section
 
 noncomputable section
 

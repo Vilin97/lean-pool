@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Topology.Algebra.ContinuousMonoidHom
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteCharacterEquiv
+
+public import Mathlib.Topology.Algebra.ContinuousMonoidHom
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteCharacterEquiv
 /-!
 # continuity of Kummer characters for infinite extensions
 
@@ -19,6 +21,8 @@ The final construction descends these continuous characters through the
 ambient-power quotient `Δ / (Δ ∩ Kˣⁿ)`.  No surjectivity or lattice correspondence is
 asserted here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.RecursiveIntertwiner
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.StandardSeries
-import Mathlib.RingTheory.FormalGroup.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.RecursiveIntertwiner
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.StandardSeries
+public import Mathlib.RingTheory.FormalGroup.Basic
 /-!
 # The standard Lubin--Tate formal group
 
@@ -21,6 +23,8 @@ standard series: intertwiners remain intertwiners after a change of
 variables, after substituting an intertwining family, and after
 one-variable power-series composition.
 -/
+
+@[expose] public section
 
 noncomputable section
 

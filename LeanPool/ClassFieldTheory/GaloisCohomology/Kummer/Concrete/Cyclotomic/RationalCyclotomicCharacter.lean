@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.Cyclotomic.RationalCyclotomicField
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteIntegerUnits
-import Mathlib.NumberTheory.Cyclotomic.CyclotomicCharacter
-import Mathlib.NumberTheory.NumberField.Cyclotomic.Galois
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.Cyclotomic.RationalCyclotomicField
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteIntegerUnits
+public import Mathlib.NumberTheory.Cyclotomic.CyclotomicCharacter
+public import Mathlib.NumberTheory.NumberField.Cyclotomic.Galois
 /-!
 # The cyclotomic character of the rational cyclotomic field
 
@@ -20,6 +22,8 @@ topological Chinese-remainder equivalence identifies that product with
 No abstract copy of either the Galois group or its expected target is
 introduced here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

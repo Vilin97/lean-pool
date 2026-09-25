@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FiniteAbelianLocalExtension
-import Mathlib.FieldTheory.Galois.Basic
-import Mathlib.FieldTheory.IntermediateField.Algebraic
-import Mathlib.Topology.Algebra.ContinuousMonoidHom
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FiniteAbelianLocalExtension
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.FieldTheory.IntermediateField.Algebraic
+public import Mathlib.Topology.Algebra.ContinuousMonoidHom
 /-!
 # Subgroup data of coherent finite local reciprocity families
 
@@ -16,6 +18,8 @@ of an intermediate field. Transporting that field into the chosen separable
 closure lets the common norm-kernel and tower conditions compare two Artin
 families on every Galois subgroup.
 -/
+
+@[expose] public section
 
 noncomputable section
 

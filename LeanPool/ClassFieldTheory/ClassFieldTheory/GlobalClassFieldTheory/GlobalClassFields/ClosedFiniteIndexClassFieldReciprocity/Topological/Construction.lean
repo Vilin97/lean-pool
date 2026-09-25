@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ClosedFiniteIndexClassFieldReciprocity.Topological.QuotientTransport
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ClosedFiniteIndexClassFieldReciprocity.Topological.QuotientTransport
 /-!
 # Continuous closed finite-index class-field reciprocity
 
@@ -13,6 +15,8 @@ continuous transport induced by the exact norm-range equality.  Equality
 elimination preserves the native quotient topology, so no discrete topology
 instances are reconstructed here.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NumberField
 

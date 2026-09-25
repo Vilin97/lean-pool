@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.FixedFieldTower
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.FixedFieldTower
 /-!
 # Hilbert ramification theory: number-field prime contractions
 
 This file specializes the fixed fields `Z_P` and `T_P` to rings of integers
 of number fields and defines the contracted primes `p`, `P_Z`, and `P_T`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

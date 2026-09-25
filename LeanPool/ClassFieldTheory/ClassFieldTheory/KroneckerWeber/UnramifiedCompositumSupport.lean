@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.NumberField.Cyclotomic.Ideal
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.RationalPrime
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.Setup
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.CompositumUnramified
+
+public import Mathlib.NumberTheory.NumberField.Cyclotomic.Ideal
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.RationalPrime
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.Setup
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.CompositumUnramified
 /-!
 # Ramification support of the auxiliary compositum
 
@@ -24,6 +26,8 @@ to inertia automorphisms of both factors.  Since the factors generate the
 compositum, triviality of both restrictions implies triviality of the
 original inertia automorphism.
 -/
+
+@[expose] public section
 
 noncomputable section
 

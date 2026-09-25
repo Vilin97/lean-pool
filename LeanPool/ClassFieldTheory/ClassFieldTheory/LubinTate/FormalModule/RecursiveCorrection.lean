@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.RecursiveCoefficient
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.RecursiveCoefficient
 /-!
 # Recursive monomial corrections for Lubin--Tate intertwiners
 
@@ -12,6 +14,8 @@ The coefficient selected in `RecursiveCoefficient` is inserted as a single
 monomial.  This file proves that the insertion preserves the prescribed linear
 term and cancels the defect coefficient in precisely that total degree.
 -/
+
+@[expose] public section
 
 noncomputable section
 

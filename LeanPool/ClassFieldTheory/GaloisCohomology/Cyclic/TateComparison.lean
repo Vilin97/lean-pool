@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RepresentationTheory.Homological.FiniteCyclic
-import Mathlib.RepresentationTheory.Homological.TateCohomology.Basic
+
+public import Mathlib.RepresentationTheory.Homological.FiniteCyclic
+public import Mathlib.RepresentationTheory.Homological.TateCohomology.Basic
 /-!
 # Boundary-degree Tate cohomology for finite cyclic groups
 
@@ -13,6 +15,8 @@ This file identifies mathlib's Tate cohomology in degrees `0` and `-1` with the
 standard finite-cyclic short complexes.  It adds no alternative cohomology
 model: both targets are the homology objects already defined by mathlib.
 -/
+
+@[expose] public section
 
 noncomputable section
 

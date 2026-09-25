@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.MaximalAbelianSubextension
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.NormalClosureNorm
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IntermediateNormAbelianization
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.MaximalAbelianSubextension
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.NormalClosureNorm
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IntermediateNormAbelianization
 /-!
 # The norm limitation theorem
 
@@ -23,6 +25,8 @@ the fixing subgroup of `E` by adjoining the commutator subgroup, which is
 killed by abelianization.  The final step transports the norm range from
 the distinguished copy `E` back to the original field `L`.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField

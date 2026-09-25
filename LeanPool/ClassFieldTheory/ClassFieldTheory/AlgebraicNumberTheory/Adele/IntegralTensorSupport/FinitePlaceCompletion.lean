@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.IntegralTensorSupport.Lattice
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.IntegralTensorSupport.Lattice
 /-!
 # Finite-place completion maps for relative tensor factors
 
 This module compares the absolute-value and adic-completion models at finite
 places and records how the resulting maps preserve norms and integrality.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct NNReal
 open NumberField IsDedekindDomain

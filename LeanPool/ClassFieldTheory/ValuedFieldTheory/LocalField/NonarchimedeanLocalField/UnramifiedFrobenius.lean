@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.FieldTheory.Galois.Basic
-import Mathlib.FieldTheory.Finite.Extension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteUnramified
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.HenselLemma
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.FieldTheory.Finite.Extension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteUnramified
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.HenselLemma
 
 /-! # Unramified Frobenius -/
+
+@[expose] public section
 namespace LocalFieldTheory
 
 /-!

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.Setup
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.Setup
 /-!
 # The common local cyclotomic target
 
@@ -13,6 +15,8 @@ At a ramified prime `p`, the structured local embedding of `L` has order
 `c` prime to `p`.  Their common target has order
 `((p^f - 1) * c) * p^e`; crucially, it uses the same exponent `e`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

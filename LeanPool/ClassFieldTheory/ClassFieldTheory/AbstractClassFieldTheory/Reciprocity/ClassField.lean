@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteAbelianClassification
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteAbelianClassification
 /-!
 # The abstract class-field correspondence
 
@@ -14,6 +16,8 @@ inverse of the order isomorphism proved by abstract class field theory, so
 the defining norm-subgroup equality and the two lattice formulas are
 consequences rather than extra assumptions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

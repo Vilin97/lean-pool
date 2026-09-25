@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.FiniteParameters
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.FiniteParameters
 /-!
 # Principal-unit filtration on finite Lubin--Tate parameters
 
@@ -13,6 +15,8 @@ The parameter group at primitive level `n + 1` is
 filtration.  For `1 ≤ k ≤ n + 1`, that image has cardinality
 `q ^ (n + 1 - k)`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

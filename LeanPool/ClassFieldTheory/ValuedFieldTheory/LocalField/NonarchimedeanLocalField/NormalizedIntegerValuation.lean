@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteExtensionCompleteDVF
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.AdicPower
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteExtensionCompleteDVF
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.AdicPower
 /-!
 # The normalized integer valuation of a local field
 
@@ -16,6 +18,8 @@ canonical valuation in an intrinsic value group.  This file transports that
 valuation to the integer model and proves that completeness and the finite
 residue field are preserved.
 -/
+
+@[expose] public section
 
 open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
   moduleFinite_target_valuationSubring_of_finite_separable →

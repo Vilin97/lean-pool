@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.AdeleBaseChange
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.AdicCompletionComparison
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.Core
-import Mathlib.NumberTheory.RamificationInertia.Valuation
-import Mathlib.RingTheory.ClassGroup.ExtendedHom
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.AdeleBaseChange
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.AdicCompletionComparison
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.Core
+public import Mathlib.NumberTheory.RamificationInertia.Valuation
+public import Mathlib.RingTheory.ClassGroup.ExtendedHom
 /-!
 # Extension of ideles and ideal classes
 
@@ -18,6 +20,8 @@ gives the usual extension map on ideles.  This file descends that map to
 idele classes and compares it with extension of fractional ideals and
 ideal classes.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct nonZeroDivisors
 open NumberField IsDedekindDomain

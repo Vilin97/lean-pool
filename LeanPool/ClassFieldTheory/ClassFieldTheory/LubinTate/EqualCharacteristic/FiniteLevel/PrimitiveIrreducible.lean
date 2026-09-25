@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.DivisionPolynomial
-import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
-import Mathlib.RingTheory.PowerSeries.Ideal
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.DivisionPolynomial
+public import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
+public import Mathlib.RingTheory.PowerSeries.Ideal
 /-!
 # The uniformizer norm identity: irreducibility of the equal-characteristic primitive polynomial
 
@@ -16,6 +18,8 @@ Modulo `T` this lift is the single monomial `Y ^ ((q - 1) * q ^ n)`, while
 its constant coefficient is exactly `T`.  It is therefore Eisenstein at
 `(T)`, and Gauss's lemma gives irreducibility over `κ((T))`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

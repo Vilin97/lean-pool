@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.RingTheory.Filtration
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.PrincipalUnits
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.RingTheory.Filtration
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.PrincipalUnits
 /-!
 # Successive principal-unit quotients
 
 Develops `U^n/U^(n+1)` and identifies it with the additive ideal quotient
 `𝓂^n/𝓂^(n+1)` through the first-order map `a ↦ 1 + a`.
 -/
+
+@[expose] public section
 namespace LocalFieldTheory
 
 noncomputable section

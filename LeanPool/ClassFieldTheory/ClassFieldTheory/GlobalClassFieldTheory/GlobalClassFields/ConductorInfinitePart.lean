@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ConductorLocalComparison
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ConductorLocalComparison
 /-!
 # Removing one real place from a defining modulus
 
@@ -13,6 +15,8 @@ Removing the positivity condition at a real place preserves the defining
 property exactly when the whole one-place idèle-class image is already
 contained in the target subgroup.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 noncomputable section

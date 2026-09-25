@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveUniformizer
-import Mathlib.RingTheory.Norm.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveUniformizer
+public import Mathlib.RingTheory.Norm.Basic
 /-!
 # Norm of a primitive standard Lubin--Tate point
 
@@ -14,6 +16,8 @@ standard Eisenstein polynomial, whose constant coefficient is the base
 uniformizer.  The power-basis norm formula therefore gives
 `N(-lambda) = pi`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.UpperRamificationGroup
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.InverseHerbrandFunctionHerbrandFunction
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.UpperRamificationGroup
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.InverseHerbrandFunctionHerbrandFunction
 /-!
 # Upper groups at Herbrand indices
 
 The public inverse Herbrand identity identifies the upper group at `φ(s)`
 with the public real lower group at `s`.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

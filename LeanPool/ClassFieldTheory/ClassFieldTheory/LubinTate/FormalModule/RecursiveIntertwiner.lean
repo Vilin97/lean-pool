@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.DegreeStabilization
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.RecursiveCorrection
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.DegreeStabilization
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.RecursiveCorrection
 /-!
 # Finite-degree approximations to Lubin--Tate intertwiners
 
@@ -20,6 +22,8 @@ coefficients unchanged.  The stabilized coefficient series and its
 intertwining equation are established below after the finite-degree
 construction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

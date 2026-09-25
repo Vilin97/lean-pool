@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtension
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteGeneration
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtension
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteGeneration
 /-!
 # Divisibility of simple Kummer extensions
 
@@ -13,6 +15,8 @@ If `m ∣ n` and the base contains `μₘ`, an `m`-th root of `a` differs from
 the `(n/m)`-th power of an `n`-th root by a base-field root of unity. Thus
 the chosen simple extensions form an actual tower in the separable closure.
 -/
+
+@[expose] public section
 
 noncomputable section
 

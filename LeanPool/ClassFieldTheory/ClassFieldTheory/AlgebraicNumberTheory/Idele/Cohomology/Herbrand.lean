@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.GaloisDescent
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.GaloisNorm
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.Permutation.Module
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandFiniteness
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.GaloisDescent
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.GaloisNorm
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.Permutation.Module
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandFiniteness
 /-!
 # Herbrand cohomology of the relative idele class group
 
@@ -21,6 +23,8 @@ tensor-product model of relative adeles.  The class norm is descended from
 the determinant norm on relative ideles, and its relation with the Tate
 norm is proved from the Galois product formula.
 -/
+
+@[expose] public section
 
 open scoped BigOperators NumberField
 open NumberField

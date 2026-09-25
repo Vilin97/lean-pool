@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Narrow
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Topology
-import Mathlib.NumberTheory.NumberField.ClassNumber
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.BigHilbertClassField
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Narrow
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Topology
+public import Mathlib.NumberTheory.NumberField.ClassNumber
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.BigHilbertClassField
 /-!
 # The small Hilbert class field
 
@@ -16,6 +18,8 @@ group of the ideles integral at every finite place.  Its reciprocity
 quotient is canonically the ordinary ideal class group; consequently its
 order is the class number.
 -/
+
+@[expose] public section
 
 open scoped NumberField IsMulCommutative
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Ramification.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Ramification.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Basic
 /-!
 # Real-index steps for equal-characteristic Lubin--Tate levels
 
@@ -14,6 +16,8 @@ and the integral values of its inverse Herbrand function.  Together they show
 that, on the positive range covered by an explicit finite Lubin--Tate level,
 the real upper filtration is constant on the natural-ceiling steps.
 -/
+
+@[expose] public section
 
 noncomputable section
 

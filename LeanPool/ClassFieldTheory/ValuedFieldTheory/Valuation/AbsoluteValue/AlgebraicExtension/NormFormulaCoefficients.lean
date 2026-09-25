@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.IrreduciblePolynomialLifting
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Core
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.IrreduciblePolynomialLifting
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Core
 /-!
 # coefficient bound from primitive Hensel factorization
 
@@ -15,6 +17,8 @@ factorization form of Hensel's lemma in the primitive factorization definition, 
   completeness or
 separatedness hypothesis is needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

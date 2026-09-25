@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormQuotient
-import Mathlib.GroupTheory.Coset.Card
-import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormQuotient
+public import Mathlib.GroupTheory.Coset.Card
+public import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
 /-!
 # Norm witnesses in simple Kummer extensions
 
@@ -16,6 +18,8 @@ unit and its nonzero complement.  The construction uses the finite quotient
 of the roots of unity by the image of the simple Kummer character, so it does
 not require the defining power polynomial to be irreducible.
 -/
+
+@[expose] public section
 
 noncomputable section
 

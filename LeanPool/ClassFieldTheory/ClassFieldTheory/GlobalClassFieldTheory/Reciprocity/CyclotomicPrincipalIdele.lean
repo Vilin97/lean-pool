@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicIdeleValue
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicIdeleValue
 /-!
 # Principal ideles and the rational cyclotomic value
 
@@ -22,6 +24,8 @@ Artin maps.  Proving that product trivial requires a pointwise
 compatibility theorem between the chosen finite-place Artin map and
 the explicit cyclotomic action; no such compatibility is assumed here.
 -/
+
+@[expose] public section
 
 open scoped BigOperators NumberField IsMulCommutative
 open NumberField IsDedekindDomain ClassFormation

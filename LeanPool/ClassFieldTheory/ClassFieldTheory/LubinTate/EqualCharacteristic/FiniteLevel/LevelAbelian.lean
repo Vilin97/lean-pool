@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.LevelAutomorphisms
-import Mathlib.FieldTheory.Galois.Abelian
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.LevelAutomorphisms
+public import Mathlib.FieldTheory.Galois.Abelian
 /-!
 # The uniformizer norm identity: abelian equal-characteristic Lubin--Tate level fields
 
@@ -18,6 +20,8 @@ truncated brackets on division points and commutativity of power-series
 multiplication then show that any two parameter automorphisms commute on the
 power-basis generator, hence everywhere.
 -/
+
+@[expose] public section
 
 noncomputable section
 

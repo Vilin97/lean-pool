@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.Cyclotomic.RationalCyclotomicCharacterEquiv
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.Cyclotomic.RationalCyclotomicCharacterEquiv
 /-!
 # Rigidity of the rational cyclotomic character
 
@@ -13,6 +15,8 @@ prime-power reductions.  In particular, if every reduction of every
 `p`-adic character coordinate has square one, then the underlying
 automorphism of the full rational cyclotomic field has square one.
 -/
+
+@[expose] public section
 
 
 

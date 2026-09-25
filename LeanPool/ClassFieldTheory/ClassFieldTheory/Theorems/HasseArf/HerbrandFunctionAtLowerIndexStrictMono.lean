@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.HerbrandFunctionAtLowerIndex
-import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
-import Mathlib.Order.Monotone.Basic
-import Mathlib.SetTheory.Cardinal.Finite
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.HerbrandFunctionAtLowerIndex
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
+public import Mathlib.Order.Monotone.Basic
+public import Mathlib.SetTheory.Cardinal.Finite
 /-!
 # Strict growth of the integral-index Herbrand function
 
@@ -15,6 +17,8 @@ For a finite extension, each lower ramification group is finite and
 nonempty. Thus every increment of the rational Herbrand function is
 strictly positive. This does not assert integrality of its values.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

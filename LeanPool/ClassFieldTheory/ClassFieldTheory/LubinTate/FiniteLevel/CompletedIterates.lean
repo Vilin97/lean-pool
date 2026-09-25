@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.CompletedEvaluation
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.CompletedEvaluation
 /-!
 # Valuations of standard Lubin--Tate iterates at a primitive point
 
@@ -18,6 +20,8 @@ The first summand has valuation `q ^ (i + 1)`.  The second has strictly
 larger valuation because the image of the base uniformizer has valuation
 equal to the totally ramified level degree `(q - 1) q ^ n`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

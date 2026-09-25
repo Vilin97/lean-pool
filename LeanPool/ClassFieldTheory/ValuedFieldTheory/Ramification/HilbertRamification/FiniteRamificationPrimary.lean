@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RamificationPrimeToResidueTorsion
-import Mathlib.Algebra.Group.Subgroup.Finite
-import Mathlib.Algebra.CharP.Defs
-import Mathlib.Data.Nat.Factorization.Basic
-import Mathlib.GroupTheory.OrderOfElement
-import Mathlib.GroupTheory.PGroup
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RamificationPrimeToResidueTorsion
+public import Mathlib.Algebra.Group.Subgroup.Finite
+public import Mathlib.Algebra.CharP.Defs
+public import Mathlib.Data.Nat.Factorization.Basic
+public import Mathlib.GroupTheory.OrderOfElement
+public import Mathlib.GroupTheory.PGroup
 /-!
 # Finite ramification groups in positive and zero residue characteristic
 
@@ -23,6 +25,8 @@ constructions. Only finiteness of the ramification group is used;
 no normality, Henselianity, discreteness, perfectness, or finite residue field
 is required.
 -/
+
+@[expose] public section
 
 namespace RamificationTheory.HilbertRamification.ValuationSubring
 

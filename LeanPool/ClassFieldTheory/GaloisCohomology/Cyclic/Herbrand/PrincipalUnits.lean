@@ -3,8 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.PrincipalUnits.QuotientReps
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.PrincipalUnits.QuotientTower
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.PrincipalUnits.QuotientReps
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.PrincipalUnits.QuotientTower
 
 /-! Supporting modules for Local and global class field theory. -/
+
+@[expose] public section

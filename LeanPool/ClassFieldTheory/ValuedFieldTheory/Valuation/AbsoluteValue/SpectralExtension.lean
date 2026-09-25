@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Extension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Nonarchimedean
-import Mathlib.Analysis.Normed.Unbundled.SpectralNorm
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Extension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Nonarchimedean
+public import Mathlib.Analysis.Normed.Unbundled.SpectralNorm
 /-!
 # Spectral extensions of nonarchimedean absolute values
 
 The spectral norm gives the unique extension of a complete nonarchimedean
 absolute value to an algebraic field extension.
 -/
+
+@[expose] public section
 
 noncomputable section
 

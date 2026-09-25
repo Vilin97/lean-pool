@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitPreparation.Core
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitPreparation.Core
 /-!
 # Restriction kernels of S-unit Kummer extensions
 
@@ -12,6 +14,8 @@ This file specializes the chosen restriction-kernel coordinates of an
 enlarged S-unit Kummer extension to coordinate generators, their required
 number, and their cyclic fixed fields.
 -/
+
+@[expose] public section
 
 open scoped NumberField IsMulCommutative
 open NumberField IsDedekindDomain

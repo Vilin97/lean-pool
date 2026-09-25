@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionGroup
-import Mathlib.FieldTheory.Galois.Infinite
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionGroup
+public import Mathlib.FieldTheory.Galois.Infinite
 /-!
 # Decomposition field
 
 The decomposition field is the fixed field of the decomposition group.  This
 formulation uses absolute values and therefore includes the archimedean case.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.Arithmetic
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.ValueGroup
-import Mathlib.Data.Int.WithZero
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.Arithmetic
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.ValueGroup
+public import Mathlib.Data.Int.WithZero
 /-!
 # Integer valuations induced by `ℤᵐ⁰`-valued valuations
 
 This file constructs the sign-normalized integer valuation on field units and
 proves the elementary formulas for powers and natural-number denominators.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Finsupp.Basic
-import Mathlib.NumberTheory.NumberField.Basic
-import Mathlib.RingTheory.DedekindDomain.Factorization
-import Mathlib.RingTheory.Ideal.GoingUp
-import Mathlib.RingTheory.Ideal.Norm.RelNorm
+
+public import Mathlib.Algebra.BigOperators.Finsupp.Basic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.Factorization
+public import Mathlib.RingTheory.Ideal.GoingUp
+public import Mathlib.RingTheory.Ideal.Norm.RelNorm
 /-!
 # Norm of a fractional-ideal exponent vector
 
@@ -16,6 +18,8 @@ A finite prime of an extension contracts to a finite prime of the base.
 The norm sends its exponent to the prime below, multiplied by the inertia
 degree. The resulting map on finitely supported exponent vectors is additive.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

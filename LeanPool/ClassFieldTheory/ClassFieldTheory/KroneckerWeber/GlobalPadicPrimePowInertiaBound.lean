@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.InertiaRestrictionCard
-import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.PadicCyclotomicInertiaBound
-import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.PadicLocalizationCanonicalValuation
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.LocalCyclotomicEmbedding
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.InertiaRestrictionCard
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.PadicCyclotomicInertiaBound
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.PadicLocalizationCanonicalValuation
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.LocalCyclotomicEmbedding
 /-!
 # The one-prime p-primary inertia bound
 
@@ -17,6 +19,8 @@ local cyclotomic embedding, and the ramification comparison to replace the full 
   totient by
 the exact `p`-primary factor `φ(p ^ n)`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

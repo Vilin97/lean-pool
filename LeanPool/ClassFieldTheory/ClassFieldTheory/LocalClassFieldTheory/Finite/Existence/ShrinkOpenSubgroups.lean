@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ShrinkTransport
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.OpenFiniteIndexSubgroup
-import Mathlib.Topology.Algebra.Group.Units
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ShrinkTransport
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.OpenFiniteIndexSubgroup
+public import Mathlib.Topology.Algebra.Group.Units
 /-!
 # Open finite-index subgroups under a small field equivalence
 
@@ -14,6 +16,8 @@ The topological field equivalence between `K` and its small representative
 induces an order equivalence between their open finite-index subgroups of
 units.
 -/
+
+@[expose] public section
 
 noncomputable section
 

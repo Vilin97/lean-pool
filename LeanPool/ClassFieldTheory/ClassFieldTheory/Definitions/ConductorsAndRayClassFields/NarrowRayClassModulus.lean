@@ -3,12 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassModulus
-import Mathlib.NumberTheory.NumberField.InfinitePlace.Ramification
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassModulus
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.Ramification
 /-!
 # The narrow class-group modulus
 -/
+
+@[expose] public section
 
 noncomputable section
 

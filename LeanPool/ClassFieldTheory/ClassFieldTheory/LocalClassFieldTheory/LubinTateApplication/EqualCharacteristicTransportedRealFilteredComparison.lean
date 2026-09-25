@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.EqualCharacteristicRealFilteredComparison
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.EqualCharacteristicTransportedArtinComparison
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.EqualCharacteristicRealFilteredComparison
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.EqualCharacteristicTransportedArtinComparison
 /-!
 # Real filtered reciprocity on transported Lubin--Tate levels
 
@@ -13,6 +15,8 @@ The integral target-field comparison is extended to every nonnegative real
 index.  The upper filtration is transported from the Laurent model, while
 the zeroth and terminal Artin groups use the exact transported norm subgroup.
 -/
+
+@[expose] public section
 
 noncomputable section
 

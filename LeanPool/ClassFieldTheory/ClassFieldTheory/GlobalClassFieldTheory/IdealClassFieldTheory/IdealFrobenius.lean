@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.IdealArtinQuotient
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.IdealArtinQuotient
 /-!
 # Ideal Frobenius classes and the decomposition law
 
@@ -14,6 +16,8 @@ Artin quotient, and the first isomorphism theorem preserves its order.
 The general unramified Galois identity `r * f = n` belongs to
 `RamificationTheory.HilbertRamification.Dedekind.Basic`.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 noncomputable section

@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.CoefficientEquation
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.Intertwiner
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.RingTheory.MvPowerSeries.Expand
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.CoefficientEquation
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.Intertwiner
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.RingTheory.MvPowerSeries.Expand
 /-!
 # Reduction of a Lubin--Tate intertwining defect
 
@@ -16,6 +18,8 @@ After reduction to the finite residue field, both series become the Frobenius
 power series. The two sides of the intertwining equation then agree, so every
 coefficient of the defect is divisible by the chosen uniformizer.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.Cyclotomic.TotallyRamified.EisensteinPolynomial
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.Cyclotomic.TotallyRamified.EisensteinPolynomial
 /-!
 # The integral closure in the totally ramified cyclotomic extension
 
 This file identifies `ℤ_[p][ζ]` with the actual integral closure and proves
 that it is a discrete valuation ring.
 -/
+
+@[expose] public section
 
 open _root_.ValuationTheory.DiscreteValuationField.ValuedExtension renaming
   integralClosure_isDiscreteValuationRing_of_finite_separable →

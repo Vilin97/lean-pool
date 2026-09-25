@@ -3,17 +3,21 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ResidueField
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Complete
-import Mathlib.RingTheory.Valuation.Extension
-import Mathlib.RingTheory.RamificationInertia.Basic
-import Mathlib.NumberTheory.RamificationInertia.Inertia
-import Mathlib.NumberTheory.RamificationInertia.Ramification
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.Algebra.Group.Units.Hom
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ResidueField
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Complete
+public import Mathlib.RingTheory.Valuation.Extension
+public import Mathlib.RingTheory.RamificationInertia.Basic
+public import Mathlib.NumberTheory.RamificationInertia.Inertia
+public import Mathlib.NumberTheory.RamificationInertia.Ramification
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+public import Mathlib.Algebra.Group.Units.Hom
 
 /-! # Extensions -/
+
+@[expose] public section
 namespace ValuationTheory
 
 /-!

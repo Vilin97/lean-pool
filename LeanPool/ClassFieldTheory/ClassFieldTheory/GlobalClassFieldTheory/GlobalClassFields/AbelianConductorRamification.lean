@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.AbelianNormConductor
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.AbelianNormConductor
 /-!
 # Ramification support of abelian narrow finite norm conductors
 
@@ -14,6 +16,8 @@ unramified.  Its support therefore gives the exact chosen-completion
 ramification locus, while the minimal narrow finite conductor has support
 contained in that locus.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 noncomputable section

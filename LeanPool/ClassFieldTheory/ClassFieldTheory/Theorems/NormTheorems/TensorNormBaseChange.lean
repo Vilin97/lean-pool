@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RingTheory.Norm.Basic
-import Mathlib.RingTheory.TensorProduct.Basic
+
+public import Mathlib.RingTheory.Norm.Basic
+public import Mathlib.RingTheory.TensorProduct.Basic
 /-!
 # Determinant norm and scalar extension
 
@@ -14,6 +16,8 @@ base change, in the sense that the determinant norm of `1 ⊗ y` over a
 commutative `K`-algebra `A` is the image of its field norm over `K`.
 This applies to the whole tensor algebra, whether or not it is a field.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

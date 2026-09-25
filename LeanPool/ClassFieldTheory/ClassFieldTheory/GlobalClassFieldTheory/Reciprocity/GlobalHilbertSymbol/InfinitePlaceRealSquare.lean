@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalHilbertSymbol.InfinitePlace
-import Mathlib.NumberTheory.NumberField.Completion.InfinitePlace
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalHilbertSymbol.InfinitePlace
+public import Mathlib.NumberTheory.NumberField.Completion.InfinitePlace
 /-!
 # Positive global units are local squares at real places
 
 This is the arithmetic input for the positive-radicand branch of the real
 infinite-place Hilbert-symbol comparison.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField

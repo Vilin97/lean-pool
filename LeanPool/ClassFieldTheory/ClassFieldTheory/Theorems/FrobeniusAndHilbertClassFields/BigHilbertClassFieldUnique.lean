@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAndHilbertClassFields.IsBigHilbertClassField
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAndHilbertClassFields.IsBigHilbertClassField
 /-!
 # Uniqueness of the big Hilbert class field inside a separable closure
 
 Maximality among finite-prime-unramified abelian extensions determines one
 intermediate field of the fixed separable closure.
 -/
+
+@[expose] public section
 
 noncomputable section
 

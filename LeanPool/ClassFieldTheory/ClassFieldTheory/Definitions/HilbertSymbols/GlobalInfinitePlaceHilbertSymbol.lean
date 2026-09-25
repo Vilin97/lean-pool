@@ -3,12 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.NumberField.InfinitePlace.Basic
-import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.Basic
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 /-!
 # Infinite-place Hilbert factors
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField

@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.SimpleRootFactorization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.MonicFactorization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
-import Mathlib.Algebra.Polynomial.Lifts
-import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
-import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.SimpleRootFactorization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.MonicFactorization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
+public import Mathlib.Algebra.Polynomial.Lifts
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
 /-!
 # Integral closures of Henselian valuation rings
 
@@ -19,6 +21,8 @@ closure, uses equality of the values of conjugate roots, and bounds the
 coefficients of the minimal polynomial by the nonarchimedean Vieta bound.
 No restriction on the rank or value group is imposed.
 -/
+
+@[expose] public section
 
 namespace ValuationTheory.Henselian
 

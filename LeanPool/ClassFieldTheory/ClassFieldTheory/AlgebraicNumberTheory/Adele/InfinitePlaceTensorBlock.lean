@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.RestrictedAction
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.LocalBlocks.Tensor
-import Mathlib.NumberTheory.NumberField.Completion.LiesOverInstances
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.RestrictedAction
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.LocalBlocks.Tensor
+public import Mathlib.NumberTheory.NumberField.Completion.LiesOverInstances
 /-!
 # Archimedean relative-idele factors as induced local blocks
 
@@ -16,6 +18,8 @@ library is canonically the completion of the underlying absolute value
 archimedean component of a relative idele to the local tensor block of
 the local tensor decomposition, equivariantly for the full Galois action.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct NumberField.LiesOver
 open NumberField

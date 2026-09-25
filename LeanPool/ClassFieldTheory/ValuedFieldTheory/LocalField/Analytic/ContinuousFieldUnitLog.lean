@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.DenominatorValuation
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.FieldUnitLogUniqueness
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpAdditivity
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.FieldUnitLogExtension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.WithZeroValuationTopology
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.DenominatorValuation
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.FieldUnitLogUniqueness
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpAdditivity
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.FieldUnitLogExtension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.WithZeroValuationTopology
 /-!
 # The local-field logarithm
 
@@ -16,6 +18,8 @@ This file packages the ramification-scaled principal-unit logarithm as a
 continuous homomorphism and extends it to field units with the unique
 uniformizer value forced by `log p = 0`.
 -/
+
+@[expose] public section
 
 open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
   mem_zeroSubgroup_iff_exists_valuationSubringUnitFieldUnitHom_eq →

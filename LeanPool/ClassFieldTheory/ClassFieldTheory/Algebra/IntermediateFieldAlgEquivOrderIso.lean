@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.IntermediateField.Basic
+
+public import Mathlib.FieldTheory.IntermediateField.Basic
 /-!
 # Intermediate fields under an algebra equivalence
 
@@ -12,6 +14,8 @@ An algebra equivalence of ambient fields induces an order equivalence of
 their intermediate-field lattices.  This is the ambient-change step used for
 Mathlib's chosen separable closures.
 -/
+
+@[expose] public section
 
 noncomputable section
 

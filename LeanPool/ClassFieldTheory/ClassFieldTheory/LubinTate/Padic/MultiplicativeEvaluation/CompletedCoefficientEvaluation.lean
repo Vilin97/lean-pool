@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedLevel
-import Mathlib.RingTheory.AdicCompletion.Topology
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedLevel
+public import Mathlib.RingTheory.AdicCompletion.Topology
 /-!
 # Coefficient maps and analytic evaluation on completed p-adic levels
 
@@ -14,6 +16,8 @@ coefficient maps used by polynomial and power-series evaluation.  It also
 establishes the exact completed primitive-point torsion relations and the
 general injectivity criterion for evaluation with unit linear coefficient.
 -/
+
+@[expose] public section
 
 noncomputable section
 

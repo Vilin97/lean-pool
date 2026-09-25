@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Truncation
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Truncation
 /-!
 # the power step in Hensel's iteration
 
@@ -14,6 +16,8 @@ the maximal ideal; here it is converted into the actual improvement of the
 factorization error after the update
 `g ↦ g + π^n p`, `h ↦ h + π^n q`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

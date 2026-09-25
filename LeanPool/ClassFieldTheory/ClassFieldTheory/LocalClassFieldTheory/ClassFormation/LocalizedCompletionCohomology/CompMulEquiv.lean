@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.TateH0.Invariants
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.TateH0.NormImage
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.TateH0.Main
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.LocalBlocks.Induced
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FiniteExtensionClassFieldAxiom
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionFieldLocalization
-import Mathlib.FieldTheory.Galois.Infinite
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.TateH0.Invariants
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.TateH0.NormImage
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.TateH0.Main
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.LocalBlocks.Induced
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FiniteExtensionClassFieldAxiom
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionFieldLocalization
+public import Mathlib.FieldTheory.Galois.Infinite
 /-!
 # The local class-field axiom for decomposition-group blocks
 
@@ -28,6 +30,8 @@ class-field axiom then gives:
 * `H⁻¹` is trivial;
 * the cardinality and Herbrand quotient equal the local degree.
 -/
+
+@[expose] public section
 
 open AlgebraicNumberTheory.Valuations
 open HilbertRamification

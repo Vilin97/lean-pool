@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveAction
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnits.Core
-import Mathlib.GroupTheory.Coset.Card
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveAction
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnits.Core
+public import Mathlib.GroupTheory.Coset.Card
 /-!
 # Finite unit parameters for standard Lubin--Tate levels
 
@@ -21,6 +23,8 @@ where `q` is the residue-field cardinality.  The final declarations descend
 the standard Lubin--Tate action on the chosen primitive point to this finite
 parameter quotient.
 -/
+
+@[expose] public section
 
 noncomputable section
 

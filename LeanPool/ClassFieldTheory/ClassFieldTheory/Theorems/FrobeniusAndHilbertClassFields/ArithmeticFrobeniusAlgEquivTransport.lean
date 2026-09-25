@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAndHilbertClassFields.ArithmeticFrobeniusAt
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.FrobeniusAndHilbertClassFields.ArithmeticFrobeniusIndependentOfPrime
-import Mathlib.NumberTheory.NumberField.Basic
-import Mathlib.NumberTheory.RamificationInertia.Unramified
-import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAndHilbertClassFields.ArithmeticFrobeniusAt
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.FrobeniusAndHilbertClassFields.ArithmeticFrobeniusIndependentOfPrime
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.NumberTheory.RamificationInertia.Unramified
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
 /-!
 # Arithmetic Frobenius under transport of a prime
 
@@ -17,6 +19,8 @@ prime. At an unramified prime, the arithmetic Frobenius element is unchanged.
 The prime transport is Mathlib's equivalence of height-one spectra induced by
 the automorphism of the ring of integers.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

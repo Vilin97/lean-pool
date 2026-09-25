@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.GroupTheory.QuotientGroup.Finite
+
+public import Mathlib.GroupTheory.QuotientGroup.Finite
 /-!
 # Named quotients of antitone normal-subgroup filtrations
 
@@ -13,6 +15,8 @@ filtration and their construction, elimination, lifting, and mapping API.
 Arithmetic Herbrand functions and valuation-action specializations live in
 `RamificationTheory.GaloisValuation.Ramification`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

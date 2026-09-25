@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.Ramification
-import Mathlib.Algebra.Order.Floor.Ring
-import Mathlib.Topology.Order.MonotoneContinuity
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.Ramification
+public import Mathlib.Algebra.Order.Floor.Ring
+public import Mathlib.Topology.Order.MonotoneContinuity
 /-!
 # The Herbrand function
 
@@ -20,6 +22,8 @@ shifted definition here.
 The definition is made on all of `ℝ`.  Below zero it is the identity, so
 its restriction to `[-1,∞)` is exactly the normalized function on this range.
 -/
+
+@[expose] public section
 
 noncomputable section
 

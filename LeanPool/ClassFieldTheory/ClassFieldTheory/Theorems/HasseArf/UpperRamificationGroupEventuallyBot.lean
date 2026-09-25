@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.UpperRamificationGroup
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.LowerRamificationGroupEventuallyBot
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.RealLowerRamificationGroupNat
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.UpperRamificationGroupAntitone
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.UpperRamificationGroupCanonical
-import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.UpperRamificationGroup
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.LowerRamificationGroupEventuallyBot
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.RealLowerRamificationGroupNat
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.UpperRamificationGroupAntitone
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.UpperRamificationGroupCanonical
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
 /-!
 # Eventual triviality of upper ramification groups
 
@@ -17,6 +19,8 @@ The public real lower group agrees with the original natural-index lower
 group at each integer. Eventual triviality then passes to upper numbering
 through the Herbrand-index identity and antitonicity.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,12 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.GroupTheory.OrderOfElement
-import Mathlib.Order.Iterate
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.CharacterMap
+
+public import Mathlib.GroupTheory.OrderOfElement
+public import Mathlib.Order.Iterate
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.CharacterMap
 
 /-! # Finite Order Valuation -/
+
+@[expose] public section
 namespace RamificationTheory.HilbertRamification.ValuationSubring
 
 noncomputable section

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumLeftFactors
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumLeftFactors
 /-!
 # The global cyclotomic factor inside the common local target
 
@@ -12,6 +14,8 @@ The global conductor cyclotomic field embeds, after base change and enlargement
 of the order, into the common `p`-adic cyclotomic target used by the synchronized
 valued compositum construction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

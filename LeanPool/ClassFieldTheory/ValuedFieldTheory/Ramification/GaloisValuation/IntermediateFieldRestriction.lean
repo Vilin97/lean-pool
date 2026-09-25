@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Basic
+
+public import Mathlib.FieldTheory.Galois.Basic
 /-!
 # Restriction between normal intermediate fields
 
@@ -12,6 +14,8 @@ This module packages the canonical restriction map between two intermediate
 fields in a common ambient extension without requiring callers to install the
 auxiliary algebra and scalar-tower instances.
 -/
+
+@[expose] public section
 
 noncomputable section
 

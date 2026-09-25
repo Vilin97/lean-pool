@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.AbsoluteValueExtensions
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.RingTheory.TensorProduct.Finite
-import Mathlib.RingTheory.TensorProduct.Maps
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.AbsoluteValueExtensions
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.RingTheory.TensorProduct.Finite
+public import Mathlib.RingTheory.TensorProduct.Maps
 /-!
 # Finite localizations inside metric completions
 
@@ -17,6 +19,8 @@ the metric completion `L_w` is already all of `L_w`.  The proof uses no
 separability: the image of `K_v ⊗_K L` is finite-dimensional and closed,
 but contains the dense copy of `L`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

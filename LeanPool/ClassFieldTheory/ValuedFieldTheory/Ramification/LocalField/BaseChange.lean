@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
 /-!
 # Transport of upper ramification groups under an equivalent base field
 
@@ -13,6 +15,8 @@ identified by a valuation-preserving field equivalence.  This file proves
 that the resulting Galois groups have the same upper filtration, after
 identifying their automorphisms by their common action on the target.
 -/
+
+@[expose] public section
 
 open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
   herbrandFunction_eq_of_card_lower_eq →

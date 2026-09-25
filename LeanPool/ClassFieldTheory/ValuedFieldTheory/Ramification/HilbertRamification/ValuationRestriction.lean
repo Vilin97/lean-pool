@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RamificationDepth
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Extensions
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RamificationDepth
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Extensions
 /-!
 # Compatibility of valuation-ring actions with Galois restriction
 
@@ -14,6 +16,8 @@ valuations, the valuation-ring action of an automorphism of `M / K` on an
 element coming from `L` is the image of the valuation-ring action of its
 restriction to `L / K`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

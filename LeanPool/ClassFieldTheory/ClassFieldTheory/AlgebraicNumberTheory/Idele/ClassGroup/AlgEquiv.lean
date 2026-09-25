@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.NormComparison
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.LocalComponent
-import Mathlib.RingTheory.Norm.Basic
-import Mathlib.RingTheory.TensorProduct.Maps
-import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.NormComparison
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.LocalComponent
+public import Mathlib.RingTheory.Norm.Basic
+public import Mathlib.RingTheory.TensorProduct.Maps
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
 /-!
 # Relative idele classes under an isomorphic realization
 
@@ -25,6 +27,8 @@ The construction is the direct tensor-product congruence
 induced by an algebra equivalence `L ≃ₐ[K] M`.  In particular, no second
 model of relative adeles or of the idele-class norm is introduced.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct
 open NumberField

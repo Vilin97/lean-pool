@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.IdealFrobenius
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.SmallHilbertClassField
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.IdealFrobenius
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.SmallHilbertClassField
 /-!
 # Splitting in the small Hilbert class field
 
@@ -13,6 +15,8 @@ The small Hilbert class field has reciprocity quotient the ordinary ideal
 class group.  Thus the Frobenius class of a finite prime is its ordinary
 ideal class, and it is trivial precisely when the prime ideal is principal.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

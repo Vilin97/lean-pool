@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Topology.Algebra.ClopenNhdofOne
-import Mathlib.Topology.Algebra.Group.Quotient
+
+public import Mathlib.Topology.Algebra.ClopenNhdofOne
+public import Mathlib.Topology.Algebra.Group.Quotient
 /-!
 # Totally disconnected quotient groups
 
 This file proves that a closed normal quotient of a compact Hausdorff totally
 disconnected topological group is totally disconnected.
 -/
+
+@[expose] public section
 
 namespace QuotientGroup
 

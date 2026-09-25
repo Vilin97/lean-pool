@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.ErrorPowers
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.DegreeBounds
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.ErrorPowers
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.DegreeBounds
 /-!
 # one Hensel iteration step
 
@@ -13,6 +15,8 @@ This file packages the algebraic correction, degree truncation, and `π`-power
 update into the single step used recursively in the proof of Hensel's
 lemma.
 -/
+
+@[expose] public section
 
 noncomputable section
 

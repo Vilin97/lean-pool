@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.TameDifferentTrace
-import Mathlib.NumberTheory.RamificationInertia.Galois
-import Mathlib.RingTheory.RamificationInertia.Ramification
-import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
-import Mathlib.RingTheory.RamificationInertia.Inertia
-import Mathlib.FieldTheory.Galois.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.TameDifferentTrace
+public import Mathlib.NumberTheory.RamificationInertia.Galois
+public import Mathlib.RingTheory.RamificationInertia.Ramification
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Mathlib.RingTheory.RamificationInertia.Inertia
+public import Mathlib.FieldTheory.Galois.Basic
 /-!
 # The different at a prime not dividing a Galois degree
 
@@ -19,6 +21,8 @@ extension degree, so it is prime to q. The literal CRT trace witness then
 proves that P^e does not divide the different. No completion comparison or
 an assumed different-exponent formula is used.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField

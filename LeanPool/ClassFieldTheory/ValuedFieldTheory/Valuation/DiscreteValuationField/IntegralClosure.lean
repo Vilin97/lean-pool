@@ -3,19 +3,23 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Extensions
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.HenselianFinite
-import Mathlib.RingTheory.DedekindDomain.IntegralClosure
-import Mathlib.RingTheory.DiscreteValuationRing.TFAE
-import Mathlib.RingTheory.Ideal.GoingUp
-import Mathlib.RingTheory.QuasiFinite.Basic
-import Mathlib.RingTheory.Spectrum.Prime.Topology
-import Mathlib.RingTheory.TensorProduct.Quotient
-import Mathlib.RingTheory.Valuation.Integral
-import Mathlib.LinearAlgebra.TensorProduct.RightExactness
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Extensions
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.HenselianFinite
+public import Mathlib.RingTheory.DedekindDomain.IntegralClosure
+public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
+public import Mathlib.RingTheory.Ideal.GoingUp
+public import Mathlib.RingTheory.QuasiFinite.Basic
+public import Mathlib.RingTheory.Spectrum.Prime.Topology
+public import Mathlib.RingTheory.TensorProduct.Quotient
+public import Mathlib.RingTheory.Valuation.Integral
+public import Mathlib.LinearAlgebra.TensorProduct.RightExactness
 
 /-! # Integral Closure -/
+
+@[expose] public section
 namespace ValuationTheory
 
 /-!

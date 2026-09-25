@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteDualSeparation
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RadicalExtension
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteDualSeparation
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RadicalExtension
 /-!
 # finite restricted Kummer pairing
 
@@ -22,6 +24,8 @@ because an automorphism in its kernel fixes every generator.
 
 No character-surjectivity or lattice-correspondence conclusion is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

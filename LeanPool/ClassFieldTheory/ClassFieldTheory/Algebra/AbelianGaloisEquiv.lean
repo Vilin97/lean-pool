@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Abelian
+
+public import Mathlib.FieldTheory.Galois.Abelian
 /-!
 # Abelian Galois extensions under equivalent field presentations
 
@@ -13,6 +15,8 @@ Galois automorphisms and preserve the abelian Galois property. These results
 use only Mathlib's algebra and Galois APIs; they do not depend on local class
 field theory or ramification.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Iteration
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Iteration
 /-!
 # finite Hensel prefixes
 
@@ -12,6 +14,8 @@ This file isolates the reusable one-step extension in the finite
 Hensel construction.  Compatible prefixes themselves are assembled once, as
 HenselFactorizationFinitePrefixState, in the next layer.
 -/
+
+@[expose] public section
 
 noncomputable section
 

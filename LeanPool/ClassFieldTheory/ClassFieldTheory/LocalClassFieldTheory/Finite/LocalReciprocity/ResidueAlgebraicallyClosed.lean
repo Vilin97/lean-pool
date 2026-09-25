@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.ResidueAlgebraicClosureDegree
-import Mathlib.FieldTheory.PurelyInseparable.Basic
-import Mathlib.RingTheory.Valuation.Integral
-import Mathlib.RingTheory.Valuation.ValuationSubring
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.ResidueAlgebraicClosureDegree
+public import Mathlib.FieldTheory.PurelyInseparable.Basic
+public import Mathlib.RingTheory.Valuation.Integral
+public import Mathlib.RingTheory.Valuation.ValuationSubring
 
 /-! # Residue Algebraically Closed -/
+
+@[expose] public section
 namespace LocalClassFieldTheory
 
 /-!

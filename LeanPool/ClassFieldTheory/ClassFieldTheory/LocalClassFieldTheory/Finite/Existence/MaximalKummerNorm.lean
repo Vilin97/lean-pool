@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.LocalMaximalKummerExtension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.PowerClassFiniteness
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.Main
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.LocalMaximalKummerExtension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.PowerClassFiniteness
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.Main
 /-!
 # Norm group of the maximal Kummer extension
 
@@ -15,6 +17,8 @@ When the base field contains the `n`-th roots of unity, Kummer duality and
 finite local reciprocity identify the norm subgroup of the maximal
 exponent-`n` Kummer extension with the subgroup of `n`-th powers.
 -/
+
+@[expose] public section
 
 noncomputable section
 

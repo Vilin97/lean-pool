@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Module.MinimalAxioms
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.FiniteQuotientPadicModule
+
+public import Mathlib.Algebra.Module.MinimalAxioms
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.FiniteQuotientPadicModule
 /-!
 # The p-adic module on the prodiscrete principal-unit limit
 
 Coordinatewise scalar multiplication makes the prodiscrete inverse limit a topological
 module over the p-adic integers.
 -/
+
+@[expose] public section
 
 noncomputable section
 

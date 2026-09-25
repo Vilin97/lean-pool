@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RingTheory.IntegralClosure.IsIntegralClosure.Basic
-import Mathlib.RingTheory.Valuation.Extension
-import Mathlib.Topology.Algebra.Valued.ValuativeRel
+
+public import Mathlib.RingTheory.IntegralClosure.IsIntegralClosure.Basic
+public import Mathlib.RingTheory.Valuation.Extension
+public import Mathlib.Topology.Algebra.Valued.ValuativeRel
 /-!
 # Valuative extensions
 
 Records when the valuation ring of an extension field is integral over the
 base valuation ring, the hypothesis needed to restrict field norms integrally.
 -/
+
+@[expose] public section
 namespace Valuation
 
 /-- A nontrivial valuation stays nontrivial after passing to any valuation

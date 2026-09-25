@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.ThetaAtCompletedLevel
-import Mathlib.Topology.Algebra.InfiniteSum.Nonarchimedean
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.ThetaAtCompletedLevel
+public import Mathlib.Topology.Algebra.InfiniteSum.Nonarchimedean
 /-!
 # The completed theta-intertwining theorem: local injectivity of theta
 
@@ -13,6 +15,8 @@ The theta series has a unit linear coefficient and integral higher
 coefficients.  This file records the resulting nonarchimedean local
 isometry on the maximal ideal.
 -/
+
+@[expose] public section
 
 noncomputable section
 

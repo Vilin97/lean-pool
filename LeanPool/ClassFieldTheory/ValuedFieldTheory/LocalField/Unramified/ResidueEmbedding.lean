@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.MaximalSubextension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.BasicInvariants
-import Mathlib.FieldTheory.SeparableClosure
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.MaximalSubextension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.BasicInvariants
+public import Mathlib.FieldTheory.SeparableClosure
 /-!
 # Finite-subextension sources for residue embeddings
 
@@ -19,6 +21,8 @@ Passing these statements through the whole supremum requires closure under
 finite composita (stability under finite composita); that missing step is not inserted here as an
 extra hypothesis.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,17 +3,21 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PrincipalTopology
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormOneCompact
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PositiveArchimedeanSection
-import LeanPool.ClassFieldTheory.GaloisCohomology.Topology.TotallyDisconnectedQuotients
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PrincipalTopology
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormOneCompact
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PositiveArchimedeanSection
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Topology.TotallyDisconnectedQuotients
 /-!
 # The identity component of the idele class group
 
 This module packages the connected component of the identity in the idele
 class group as a closed normal subgroup and names the corresponding quotient.
 -/
+
+@[expose] public section
 
 open scoped NNReal NumberField Topology
 

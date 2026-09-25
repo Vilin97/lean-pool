@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Complete
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.NormFormulaExtension
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Complete
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.NormFormulaExtension
 /-!
 # Complete nonarchimedean absolute values are Henselian
 
@@ -16,6 +18,8 @@ degree-controlled factorization statement for every complete
 nonarchimedean absolute value.  This file records the direct the primitive factorization definition
 consequence used in the henselianity criterion.
 -/
+
+@[expose] public section
 
 noncomputable section
 

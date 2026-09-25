@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.SplittingField.IsSplittingField
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.LevelAutomorphisms
+
+public import Mathlib.FieldTheory.SplittingField.IsSplittingField
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.LevelAutomorphisms
 /-!
 # Towers of equal-characteristic Lubin--Tate level fields
 
@@ -13,6 +15,8 @@ The primitive roots used to define the finite levels are chosen independently
 inside one separable closure.  This file proves that the resulting standard
 level fields nevertheless form an increasing tower.
 -/
+
+@[expose] public section
 
 noncomputable section
 

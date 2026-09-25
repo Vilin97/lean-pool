@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.MaximalResidue
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.MaximalResidue
 /-!
 # Lifting separable residue elements to unramified extensions
 
@@ -12,6 +14,8 @@ The reverse residue-field inclusion in the maximal-residue theorem is the Hensel
 from the residue-lifting argument: lift the minimal polynomial of a separable ambient residue
 element, then lift its simple linear factor over the ambient valuation ring.
 -/
+
+@[expose] public section
 
 noncomputable section
 

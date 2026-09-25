@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Group.TransferInstance
-import Mathlib.Topology.Algebra.FilterBasis
-import Mathlib.Topology.Algebra.Group.ClosedSubgroup
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteGaloisSubextension
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.Models
+
+public import Mathlib.Algebra.Group.TransferInstance
+public import Mathlib.Topology.Algebra.FilterBasis
+public import Mathlib.Topology.Algebra.Group.ClosedSubgroup
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteGaloisSubextension
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.Models
 /-!
 # Abstract reciprocity: the norm topology
 
@@ -17,6 +19,8 @@ The neighbourhood basis at zero consists literally of the norm subgroups
 `N_{L/K} A_L` as `L / K` ranges over finite Galois extensions.  Composita
 make this family downward directed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

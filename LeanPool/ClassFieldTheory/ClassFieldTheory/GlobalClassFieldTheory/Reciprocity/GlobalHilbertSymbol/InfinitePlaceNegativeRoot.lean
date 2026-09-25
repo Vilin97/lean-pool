@@ -3,12 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalHilbertSymbol.InfinitePlaceRamification
-import Mathlib.Analysis.Complex.Order
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalHilbertSymbol.InfinitePlaceRamification
+public import Mathlib.Analysis.Complex.Order
 /-!
 # Complex conjugation on a negative quadratic Kummer root
 -/
+
+@[expose] public section
 
 open scoped ComplexConjugate ComplexOrder NumberField
 open NumberField

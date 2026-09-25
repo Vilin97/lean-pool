@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicPrincipalIdele
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.RationalCyclotomicCharacterRigidity
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicPrincipalIdele
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.RationalCyclotomicCharacterRigidity
 /-!
 # Prime-power detection for the rational cyclotomic `ZHat`-Artin map
 
@@ -14,6 +16,8 @@ full rational cyclotomic automorphism.  Restricting that automorphism
 through actual finite cyclotomic levels then detects every finite
 coordinate of the rational cyclotomic `ZHat`-extension.
 -/
+
+@[expose] public section
 
 open scoped NumberField IsMulCommutative
 open NumberField ClassFormation

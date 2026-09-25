@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.MaximalAbelianKernel
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.MaximalAbelianKernel
 /-!
 # Infinite abelian class-field correspondence
 
@@ -13,6 +15,8 @@ component quotient to closed subgroups of the maximal abelian Galois group.
 Composing this transport with the infinite Galois correspondence gives the
 order-reversing infinite abelian class-field correspondence.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

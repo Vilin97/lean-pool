@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedFrobeniusLift
-import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedFrobeniusLift
+public import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
 /-!
 # Transporting a finite p-adic Lubin--Tate level to the completed level
 
@@ -18,6 +20,8 @@ the image of the finite action with the *same* unit-parameter class.
 This fixes the parameter orientation before the completed Frobenius is
 used in the changed-uniformizer norm argument.
 -/
+
+@[expose] public section
 
 noncomputable section
 

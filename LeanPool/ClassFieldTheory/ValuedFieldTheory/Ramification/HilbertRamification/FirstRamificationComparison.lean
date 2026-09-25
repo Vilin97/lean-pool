@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.UniformizerGradedHom
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.CharacterMap
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.CompleteDVF
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RamificationCharacterization
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.UniformizerGradedHom
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.CharacterMap
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.CompleteDVF
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RamificationCharacterization
 /-!
 # Comparing first principal units in the two ramification conventions
 
@@ -15,6 +17,8 @@ The DVF filtration uses units of the valuation ring, whereas Hilbert's
 ramification group uses the principal-unit subgroup of the field units.
 This file identifies their first levels before comparing group actions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Infinite.ProfiniteLocalReciprocity
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Infinite.ProfiniteLocalReciprocity
 /-!
 # Actual finite values of the absolute local Artin map
 
 Projecting the absolute Artin map to a finite abelian subextension recovers
 its canonical finite Artin map, not merely the same norm kernel.
 -/
+
+@[expose] public section
 
 noncomputable section
 

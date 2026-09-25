@@ -3,20 +3,24 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldUnitStructure
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicField
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.NonarchimedeanLocalField
-import Mathlib.Topology.Algebra.Group.Units
-import Mathlib.NumberTheory.Padics.ValuativeRel
-import Mathlib.NumberTheory.Padics.ProperSpace
-import Mathlib.GroupTheory.Torsion
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldUnitStructure
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicField
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.NonarchimedeanLocalField
+public import Mathlib.Topology.Algebra.Group.Units
+public import Mathlib.NumberTheory.Padics.ValuativeRel
+public import Mathlib.NumberTheory.Padics.ProperSpace
+public import Mathlib.GroupTheory.Torsion
 /-!
 # Unit decomposition of the p-adic integers
 
 This file constructs the reusable topological decomposition of
 `ℤ_[p]ˣ` into its finite factor and its principal `p`-adic factor.
 -/
+
+@[expose] public section
 
 open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
   continuousMulEquivOfCompactToT2 →

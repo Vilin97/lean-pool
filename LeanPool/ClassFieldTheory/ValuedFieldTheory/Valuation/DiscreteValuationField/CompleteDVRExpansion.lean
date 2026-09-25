@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Complete
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.Models
-import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Complete
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.Models
+public import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
 /-!
 # Coefficients for a complete DVR expansion
 
@@ -17,6 +19,8 @@ coefficients and remainders satisfying
 
 `u = a 0 + a 1 * π + ... + a (n - 1) * π ^ (n - 1) + π ^ n * b n`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,16 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Complete
-import Mathlib.Algebra.CharP.Algebra
-import Mathlib.Algebra.CharP.Lemmas
-import Mathlib.Data.Rat.Cast.CharZero
-import Mathlib.Data.Rat.Lemmas
-import Mathlib.FieldTheory.Perfect
-import Mathlib.NumberTheory.LocalField.Basic
-import Mathlib.NumberTheory.Padics.PadicNumbers
-import Mathlib.RingTheory.Algebraic.Integral
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Complete
+public import Mathlib.Algebra.CharP.Algebra
+public import Mathlib.Algebra.CharP.Lemmas
+public import Mathlib.Data.Rat.Cast.CharZero
+public import Mathlib.Data.Rat.Lemmas
+public import Mathlib.FieldTheory.Perfect
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.NumberTheory.Padics.PadicNumbers
+public import Mathlib.RingTheory.Algebraic.Integral
 /-!
 # Local fields
 
@@ -20,6 +22,8 @@ A local-field package here is a chosen complete discretely valued field with
 finite residue field.  The topology-first mathlib class remains available
 through imports; this file only adds the chosen-valuation API needed downstream.
 -/
+
+@[expose] public section
 
 universe u v w x
 

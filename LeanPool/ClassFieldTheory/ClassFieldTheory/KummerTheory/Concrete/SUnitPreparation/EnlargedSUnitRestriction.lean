@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitPreparation.FullSUnitKummerExtension
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitPreparation.FiniteRadicalSupport
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitPreparation.FullSUnitKummerExtension
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitPreparation.FiniteRadicalSupport
 /-!
 # Restriction from an enlarged S-unit Kummer extension
 
 The concrete embedding and Galois restriction map, its fixing subgroup, and the cyclic fixed
   fields attached to kernel elements.
 -/
+
+@[expose] public section
 
 open scoped NumberField IsMulCommutative NNReal ValuativeRel
 open NumberField IsDedekindDomain

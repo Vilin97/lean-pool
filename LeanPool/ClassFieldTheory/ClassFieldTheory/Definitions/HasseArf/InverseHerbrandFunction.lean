@@ -3,18 +3,22 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.HerbrandFunction
-import Mathlib.FieldTheory.Galois.Abelian
-import Mathlib.Logic.Function.Basic
-import Mathlib.NumberTheory.LocalField.Basic
-import Mathlib.RingTheory.Valuation.Extension
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.HerbrandFunction
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.Logic.Function.Basic
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.RingTheory.Valuation.Extension
 /-!
 # The inverse Herbrand function for a canonical local extension
 
 The defining choice is verified to be a two-sided inverse for finite Abelian
 local extensions in the theorem layer.
 -/
+
+@[expose] public section
 
 noncomputable section
 

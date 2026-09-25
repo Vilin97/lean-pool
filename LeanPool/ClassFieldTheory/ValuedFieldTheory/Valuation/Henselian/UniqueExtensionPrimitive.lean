@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.UniqueExtensionReduction
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.MonicFactorization
-import Mathlib.GroupTheory.OrderOfElement
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.UniqueExtensionReduction
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.MonicFactorization
+public import Mathlib.GroupTheory.OrderOfElement
 /-!
 # primitive irreducible reductions
 
@@ -18,6 +20,8 @@ irreducible polynomial has either full-degree reduction or constant
 reduction; in the full-degree case the monic normalization has no coprime
 nonconstant residual factorization.
 -/
+
+@[expose] public section
 
 noncomputable section
 

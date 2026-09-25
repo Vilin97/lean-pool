@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.LocalComponents
-import Mathlib.Algebra.Group.TransferInstance
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.LocalComponents
+public import Mathlib.Algebra.Group.TransferInstance
 /-!
 # The restricted local product of a relative adele algebra
 
@@ -18,6 +20,8 @@ restricted-product model of the relative idele group.
 This construction is independent of the later identification of the
 chosen-basis lattice with the product of local integer rings.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain

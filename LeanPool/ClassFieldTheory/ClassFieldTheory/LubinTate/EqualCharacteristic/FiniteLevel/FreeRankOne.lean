@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.AmbientDivisionTorsion
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.FiniteParameters
-import Mathlib.Algebra.Module.RingHom
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.LinearAlgebra.FreeModule.Basic
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.AmbientDivisionTorsion
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.FiniteParameters
+public import Mathlib.Algebra.Module.RingHom
+public import Mathlib.Data.Fintype.EquivFin
+public import Mathlib.LinearAlgebra.FreeModule.Basic
 /-!
 # The primitive-division-module equivalence: equal-characteristic division points are free of
   rank one
@@ -20,6 +22,8 @@ the `(n + 1)`-st iterate form a free rank-one module over
 The primitive polynomial is indexed by `n`, while its roots lie at division
 level `n + 1`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

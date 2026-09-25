@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormQuotient
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormQuotient
 /-!
 # Functoriality of finite-extension norm subgroups
 
@@ -12,6 +14,8 @@ The local existence proof repeatedly enlarges a finite extension and replaces
 finite extensions by isomorphic realizations.  This file records the resulting
 identities for unit norms and their images in the base field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

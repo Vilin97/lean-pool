@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.LinearDisjoint
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.TensorProduct.Basis
+
+public import Mathlib.FieldTheory.LinearDisjoint
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.TensorProduct.Basis
 /-!
 # Coprime tensor-product base change of a Galois extension
 
@@ -20,6 +22,8 @@ For Galoisness, every automorphism of `L / K` is extended by
 `id_M ⊗ σ`; these distinct automorphisms already account for the full
 dimension of the tensor product.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

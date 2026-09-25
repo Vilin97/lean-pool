@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Group.Subgroup.Finite
-import Mathlib.FieldTheory.Finite.Basic
+
+public import Mathlib.Algebra.Group.Subgroup.Finite
+public import Mathlib.FieldTheory.Finite.Basic
 /-!
 # Power-residue symbols over finite fields
 
@@ -16,6 +18,8 @@ power-residue symbol is
 
 Its kernel is exactly the subgroup of `n`-th powers.
 -/
+
+@[expose] public section
 
 namespace AlgebraicNumberTheory
 namespace PowerResidueSymbols

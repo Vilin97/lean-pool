@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.GroupTheory.Abelianization.Defs
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.TopologicalReciprocity
+
+public import Mathlib.GroupTheory.Abelianization.Defs
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.TopologicalReciprocity
 /-!
 # The actual abelian local Artin map
 
@@ -14,6 +16,8 @@ in the actual Galois group, not merely its abelianization.  This module
 provides both the algebraic homomorphism and its continuous refinement for
 the native topologies.
 -/
+
+@[expose] public section
 
 noncomputable section
 

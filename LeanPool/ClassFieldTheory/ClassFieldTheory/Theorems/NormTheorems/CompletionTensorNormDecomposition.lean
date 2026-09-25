@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.NormTheorems.ExtendingAbsoluteValue
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.LocalNorm
-import Mathlib.RingTheory.Norm.Basic
-import Mathlib.RingTheory.TensorProduct.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.NormTheorems.ExtendingAbsoluteValue
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.LocalNorm
+public import Mathlib.RingTheory.Norm.Basic
+public import Mathlib.RingTheory.TensorProduct.Basic
 /-!
 # Local norm as a product over completions
 
@@ -16,6 +18,8 @@ the absolute values above `v`.  Its determinant norm is the product of the
 norms of those components.  The theorem exposes the decomposition and norm
 formula using only Mathlib objects and the public extension index type.
 -/
+
+@[expose] public section
 
 open scoped BigOperators TensorProduct
 

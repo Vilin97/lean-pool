@@ -3,18 +3,22 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Basic
-import Mathlib.Algebra.Order.Hom.Units
-import Mathlib.NumberTheory.LocalField.Basic
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteIntegralClosure
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.ValuedAdicComplete
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Basic
+public import Mathlib.Algebra.Order.Hom.Units
+public import Mathlib.NumberTheory.LocalField.Basic
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteIntegralClosure
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.ValuedAdicComplete
 /-!
 # Complete-DVF packages for local fields and their finite extensions
 
 The canonical complete discrete valuation on a nonarchimedean local field,
 and an integral-closure valuation chosen on each finite separable extension.
 -/
+
+@[expose] public section
 
 noncomputable section
 

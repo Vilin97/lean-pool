@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IdeleClassDirectLimitExtensionAction
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IdeleClassDirectLimitExtensionAction
 /-!
 # Norms on rational fixed-field idele classes
 
 Compatibility of fixed-field inclusion and relative norm with the actual
 idele-class extension attached to the abstract subgroup tower.
 -/
+
+@[expose] public section
 
 noncomputable section
 

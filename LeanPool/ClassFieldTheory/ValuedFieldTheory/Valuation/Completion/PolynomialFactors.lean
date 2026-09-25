@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
-import Mathlib.FieldTheory.Minpoly.IsConjRoot
-import Mathlib.Algebra.Polynomial.FieldDivision
-import Mathlib.RingTheory.Adjoin.PowerBasis
+
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import Mathlib.FieldTheory.Minpoly.IsConjRoot
+public import Mathlib.Algebra.Polynomial.FieldDivision
+public import Mathlib.RingTheory.Adjoin.PowerBasis
 /-!
 # Irreducible factors as conjugacy classes of roots
 
@@ -16,6 +18,8 @@ the extension-factor correspondence.  Multiplicities are deliberately discarded:
 valuation correspond to the *distinct* irreducible factors over the
 completion.
 -/
+
+@[expose] public section
 
 noncomputable section
 

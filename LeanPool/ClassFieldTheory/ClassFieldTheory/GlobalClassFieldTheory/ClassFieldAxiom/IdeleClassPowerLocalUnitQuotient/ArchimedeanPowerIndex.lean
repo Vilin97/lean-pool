@@ -3,18 +3,22 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.IdelePowerLocalUnitSubgroup
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormApproximation.InfinitePlaces
-import Mathlib.Algebra.Group.Equiv.Basic
-import Mathlib.Basic.Sign.Basic
-import Mathlib.NumberTheory.NumberField.ProductFormula
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.IdelePowerLocalUnitSubgroup
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormApproximation.InfinitePlaces
+public import Mathlib.Algebra.Group.Equiv.Basic
+public import Mathlib.Basic.Sign.Basic
+public import Mathlib.NumberTheory.NumberField.ProductFormula
 /-!
 # Archimedean power indices in idele class quotients
 
 This file defines the concrete idele-class subgroup attached to local power
 conditions and computes its archimedean local indices.
 -/
+
+@[expose] public section
 
 open scoped NumberField NNReal ValuativeRel TensorProduct
 open NumberField IsDedekindDomain

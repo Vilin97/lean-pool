@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Group.Subgroup.Finite
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionGroup
+
+public import Mathlib.Algebra.Group.Subgroup.Finite
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionGroup
 /-!
 # Cardinality under inertia scalar restriction
 
 This is the finite-cardinality consequence of the inertia-subgroup cardinality formula used when
 the base completion is identified with a concrete local field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

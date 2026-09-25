@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.NormUniformizer
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormQuotient
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.NormUniformizer
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormQuotient
 /-!
 # LubinTate the explicit norm-subgroup computation: canonical algebra and norm subgroup at a
   finite level
@@ -14,6 +16,8 @@ This light leaf names the canonical base algebra and its norm subgroup once,
 so the later inclusion and index arguments do not repeat expensive fallback
 typeclass searches.
 -/
+
+@[expose] public section
 
 noncomputable section
 

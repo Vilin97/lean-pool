@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.MaximalUnramifiedSymbol
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Main
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.MaximalUnramifiedSymbol
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Main
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.IntegralRepUniverse
 /-!
 # Abstract reciprocity, maximal-unramified reciprocity
 
@@ -15,6 +17,8 @@ valuation--Frobenius map whose restriction to every finite unramified
 extension is the inverse of the unramified norm-quotient equivalence.  This file first proves that
 finite compatibility and then records the two formulas.
 -/
+
+@[expose] public section
 
 noncomputable section
 

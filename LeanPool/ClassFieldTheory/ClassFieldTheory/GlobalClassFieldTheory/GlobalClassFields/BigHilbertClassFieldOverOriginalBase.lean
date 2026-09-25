@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.HilbertClassFieldRealization
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.HilbertClassFieldRealization
 /-!
 # The big Hilbert class field over the original number field
 
@@ -14,6 +16,8 @@ with the original field supplies the actual scalar map used here.  Thus
 the selected field is a finite abelian Galois extension of the original
 number field, with degree equal to the narrow class number.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

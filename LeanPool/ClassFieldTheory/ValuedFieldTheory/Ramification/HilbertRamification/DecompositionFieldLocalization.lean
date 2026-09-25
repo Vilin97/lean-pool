@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.AlgebraicLocalization
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.LocalizationDensity
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionFieldExtension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.ExtensionInvariants
-import Mathlib.FieldTheory.SeparableClosure
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.AlgebraicLocalization
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.LocalizationDensity
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionFieldExtension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.ExtensionInvariants
+public import Mathlib.FieldTheory.SeparableClosure
 /-!
 # Decomposition-field value and residue comparison
 
@@ -18,6 +20,8 @@ This file identifies the decomposition field with the literal intersection
 canonical residue-field isomorphism and equality of absolute-value ranges in
 the nonarchimedean case.
 -/
+
+@[expose] public section
 
 open _root_.ValuationTheory.DiscreteValuationField.ResidueField renaming
   residue_eq_residue_iff_sub_mem_maximalIdeal →

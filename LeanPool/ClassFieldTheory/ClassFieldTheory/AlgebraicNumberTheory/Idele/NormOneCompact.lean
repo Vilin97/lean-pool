@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.LocallyCompact
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PrincipalNorm
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PrincipalTopology
-import Mathlib.Algebra.Module.ZLattice.Basic
-import Mathlib.Analysis.Normed.Field.ProperSpace
-import Mathlib.NumberTheory.NumberField.ClassNumber
-import Mathlib.NumberTheory.NumberField.Units.DirichletTheorem
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.LocallyCompact
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PrincipalNorm
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PrincipalTopology
+public import Mathlib.Algebra.Module.ZLattice.Basic
+public import Mathlib.Analysis.Normed.Field.ProperSpace
+public import Mathlib.NumberTheory.NumberField.ClassNumber
+public import Mathlib.NumberTheory.NumberField.Units.DirichletTheorem
 /-!
 # Compactness of norm-one idele classes
 
@@ -18,6 +20,8 @@ This module combines local compactness, the logarithmic unit lattice, and the
 principal-idele norm formula to prove compactness of the norm-one subgroup of
 the idele class group.
 -/
+
+@[expose] public section
 
 open scoped NumberField Pointwise RestrictedProduct NNReal
 open NumberField IsDedekindDomain

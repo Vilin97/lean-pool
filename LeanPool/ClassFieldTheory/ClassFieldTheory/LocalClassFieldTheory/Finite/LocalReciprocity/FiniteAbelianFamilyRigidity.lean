@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.GroupTheory.OrderOfElement
+
+public import Mathlib.GroupTheory.OrderOfElement
 /-!
 # Rigidity from a cyclic quotient and subgroup data
 
@@ -13,6 +15,8 @@ subgroups together with its action on a sufficiently large cyclic quotient.
 The group-theoretic statement below isolates the part of uniqueness of a
 coherent local Artin family that does not involve fields or valuations.
 -/
+
+@[expose] public section
 
 namespace LocalClassFieldTheory
 

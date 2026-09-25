@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.Padics.RingHoms
-import Mathlib.Topology.Algebra.Group.Basic
-import Mathlib.Topology.MetricSpace.Ultra.Basic
+
+public import Mathlib.NumberTheory.Padics.RingHoms
+public import Mathlib.Topology.Algebra.Group.Basic
+public import Mathlib.Topology.MetricSpace.Ultra.Basic
 /-!
 # Continuity of reduction of p-adic integers
 
 Reduction modulo `p^n` has open kernel and is continuous for the discrete
 topology on the quotient. This source has no local-field dependencies.
 -/
+
+@[expose] public section
 
 namespace LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
 

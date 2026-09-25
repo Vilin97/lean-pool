@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Reduction
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.Reduction
 /-!
 # Restriction transport for finite Galois subextensions
 
 This file constructs quotient restriction maps, their coset equivalences,
 and the compatible relative actions and norms used in ramified towers.
 -/
+
+@[expose] public section
 
 noncomputable section
 

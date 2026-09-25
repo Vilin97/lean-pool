@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Topology.Algebra.ContinuousMonoidHom
-import Mathlib.Topology.Algebra.Group.Quotient
-import Mathlib.Topology.Algebra.Group.TopologicalAbelianization
+
+public import Mathlib.Topology.Algebra.ContinuousMonoidHom
+public import Mathlib.Topology.Algebra.Group.Quotient
+public import Mathlib.Topology.Algebra.Group.TopologicalAbelianization
 /-!
 # Functoriality of topological abelianization under equivalence
 
@@ -14,6 +16,8 @@ A continuous multiplicative equivalence carries the closure of the
 commutator subgroup onto the corresponding closure.  It therefore descends
 to a continuous multiplicative equivalence of topological abelianizations.
 -/
+
+@[expose] public section
 
 noncomputable section
 

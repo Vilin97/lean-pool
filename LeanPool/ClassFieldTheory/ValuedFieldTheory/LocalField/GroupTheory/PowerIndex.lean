@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.Algebra.Group.Subgroup.Ker
-import Mathlib.Algebra.Group.Hom.Basic
-import Mathlib.Algebra.Group.Subgroup.Basic
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.GroupTheory.IntegerMultipleSubgroup
-import Mathlib.RingTheory.RootsOfUnity.Basic
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.Algebra.Group.Subgroup.Ker
+public import Mathlib.Algebra.Group.Hom.Basic
+public import Mathlib.Algebra.Group.Subgroup.Basic
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.GroupTheory.IntegerMultipleSubgroup
+public import Mathlib.RingTheory.RootsOfUnity.Basic
 /-!
 # Power indices in commutative groups
 
@@ -17,6 +19,8 @@ Reusable kernel, quotient, product, and additive-transport formulas for
 `n`-th powers in commutative groups.  The basic power map and its image and
 kernel are mathlib's `powMonoidHom`, `MonoidHom.range`, and `MonoidHom.ker`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

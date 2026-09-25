@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.HilbertPairing
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsLocalHilbertPairing
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.SmallHilbertPairingTransport
-import Mathlib.NumberTheory.LocalField.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.HilbertPairing
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsLocalHilbertPairing
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.SmallHilbertPairingTransport
+public import Mathlib.NumberTheory.LocalField.Basic
 /-!
 # Existence of the local Hilbert pairing
 
@@ -25,6 +27,8 @@ Kummer norm-residue vanishing criterion.  Multiplicativity is already part
 of the type `HilbertPairing K n`.  These properties still leave the harmless
 choice of a normalization of the values in `μₙ` explicit.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

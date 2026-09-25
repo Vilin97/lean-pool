@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.NormTheorems.ExtendingAbsoluteValue
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.LocalNorm
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.TensorProductDecomposition
-import Mathlib.RingTheory.Norm.Basic
-import Mathlib.RingTheory.TensorProduct.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.NormTheorems.ExtendingAbsoluteValue
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.LocalNorm
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.TensorProductDecomposition
+public import Mathlib.RingTheory.Norm.Basic
+public import Mathlib.RingTheory.TensorProduct.Basic
 /-!
 # Canonical evaluation in the completion tensor decomposition
 
@@ -16,6 +18,8 @@ The finite product decomposition sends a pure tensor to the product of its
 two canonical images in each completion. This specifies the same algebra
 equivalence that appears in the determinant-norm product formula.
 -/
+
+@[expose] public section
 
 open scoped BigOperators TensorProduct
 

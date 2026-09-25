@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAndHilbertClassFields.FinitePrimeFractionalIdeal
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAndHilbertClassFields.NumberFieldFractionalIdealGroup
-import Mathlib.Algebra.BigOperators.Finsupp.Basic
-import Mathlib.RingTheory.DedekindDomain.Factorization
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAndHilbertClassFields.FinitePrimeFractionalIdeal
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.FrobeniusAndHilbertClassFields.NumberFieldFractionalIdealGroup
+public import Mathlib.Algebra.BigOperators.Finsupp.Basic
+public import Mathlib.RingTheory.DedekindDomain.Factorization
 /-!
 # Prime factorization of nonzero fractional ideals
 
@@ -16,6 +18,8 @@ the multiplicative group of nonzero fractional ideals with the finitely
 supported integer exponents of finite primes. This equivalence is formulated
 entirely in Mathlib and public Definitions vocabulary.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

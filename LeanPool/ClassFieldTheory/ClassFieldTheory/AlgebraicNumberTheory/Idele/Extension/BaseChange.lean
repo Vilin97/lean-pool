@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Basic
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PrincipalCore
-import Mathlib.FieldTheory.Galois.NormalBasis
-import Mathlib.GroupTheory.GroupAction.Defs
-import Mathlib.LinearAlgebra.TensorProduct.Basis
-import Mathlib.RingTheory.Norm.Basic
-import Mathlib.RingTheory.TensorProduct.Maps
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Basic
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PrincipalCore
+public import Mathlib.FieldTheory.Galois.NormalBasis
+public import Mathlib.GroupTheory.GroupAction.Defs
+public import Mathlib.LinearAlgebra.TensorProduct.Basis
+public import Mathlib.RingTheory.Norm.Basic
+public import Mathlib.RingTheory.TensorProduct.Maps
 /-!
 # Ideles in finite extensions: the tensor-product model
 
@@ -18,6 +20,8 @@ This file uses the canonical presentation
 `𝔸_L = 𝔸_K ⊗_K L`.  This makes extension, Galois conjugation, and the
 idele norm formal linear-algebra operations.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct
 open NumberField

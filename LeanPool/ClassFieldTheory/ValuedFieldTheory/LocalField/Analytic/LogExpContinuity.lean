@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.ContinuousFieldUnitLog
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.ContinuousFieldUnitLog
 /-!
 # Topology of exponential and logarithm
 
@@ -14,6 +16,8 @@ ramified endpoint `n > e / (p - 1)`.  The algebraic construction of the maps is 
 here we prove that the endpoint
 exponential and logarithm maps are continuous for the valuation topology.
 -/
+
+@[expose] public section
 
 noncomputable section
 

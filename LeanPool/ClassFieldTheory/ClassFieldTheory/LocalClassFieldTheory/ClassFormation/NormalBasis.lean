@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.NormalBasisLattice
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Basic
-import Mathlib.FieldTheory.Galois.NormalBasis
-import Mathlib.LinearAlgebra.Quotient.Pi
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.NormalBasisLattice
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Basic
+public import Mathlib.FieldTheory.Galois.NormalBasis
+public import Mathlib.LinearAlgebra.Quotient.Pi
 /-! Provides the public declarations in the `LocalClassFieldTheory.ClassFormation.NormalBasis`
   Lean module. -/
+
+@[expose] public section
 
 open _root_.CyclicCohomology.ProfiniteCohomology.Herbrand renaming
   herbrandH0_subsingleton_of_addEquiv_rightRegularFunction →

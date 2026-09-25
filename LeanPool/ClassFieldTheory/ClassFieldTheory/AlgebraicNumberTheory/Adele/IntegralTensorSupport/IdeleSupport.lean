@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.IntegralTensorSupport.LocalTensorDecomposition
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.IntegralTensorSupport.LocalTensorDecomposition
 /-!
 # Finite support for integral relative ideles
 
@@ -12,6 +14,8 @@ This module combines coefficient support with the exceptional places of the
 local tensor decomposition, producing one finite set that controls integrality
 of a relative idele and its inverse.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct NNReal
 open NumberField IsDedekindDomain

@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Analysis.AbsoluteValue.Equivalence
-import Mathlib.Algebra.Order.Ring.IsNonarchimedean
-import Mathlib.NumberTheory.Ostrowski
-import Mathlib.Topology.UniformSpace.AbsoluteValue
+
+public import Mathlib.Analysis.AbsoluteValue.Equivalence
+public import Mathlib.Algebra.Order.Ring.IsNonarchimedean
+public import Mathlib.NumberTheory.Ostrowski
+public import Mathlib.Topology.UniformSpace.AbsoluteValue
 /-!
 # Absolute values and exponential valuations
 
@@ -16,6 +18,8 @@ theory. General results on equivalence of absolute values, Ostrowski theory,
 approximation, and rational-function examples are imported from Mathlib where
 needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

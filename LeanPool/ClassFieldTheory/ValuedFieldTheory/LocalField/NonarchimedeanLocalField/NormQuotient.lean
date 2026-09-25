@@ -3,20 +3,24 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NormUnits
-import Mathlib.Algebra.Group.Subgroup.Basic
-import Mathlib.Data.Finset.Basic
-import Mathlib.GroupTheory.OrderOfElement
-import Mathlib.GroupTheory.QuotientGroup.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.RingTheory.Norm.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NormUnits
+public import Mathlib.Algebra.Group.Subgroup.Basic
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.GroupTheory.OrderOfElement
+public import Mathlib.GroupTheory.QuotientGroup.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+public import Mathlib.RingTheory.Norm.Basic
 /-!
 # Quotients by local norm subgroups
 
 Constructs `Kˣ/N(Lˣ)`, its universal maps and comparison equivalences, and
 relates its finite cardinality to the index of the norm subgroup.
 -/
+
+@[expose] public section
 
 namespace LocalFieldTheory
 

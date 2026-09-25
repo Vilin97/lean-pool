@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Core
-import Mathlib.RingTheory.Polynomial.GaussLemma
-import Mathlib.RingTheory.Polynomial.ContentIdeal
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Core
+public import Mathlib.RingTheory.Polynomial.GaussLemma
+public import Mathlib.RingTheory.Polynomial.ContentIdeal
 /-!
 # Primitive polynomials detected by reduction
 
@@ -14,6 +16,8 @@ The construction calls a polynomial over a valuation ring primitive when its
 reduction modulo the maximal ideal is nonzero.  The lemma below identifies
 that condition with the divisibility notion used by mathlib's Gauss lemma.
 -/
+
+@[expose] public section
 
 noncomputable section
 

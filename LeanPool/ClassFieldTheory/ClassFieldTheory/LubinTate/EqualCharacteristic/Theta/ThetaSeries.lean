@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Theta.ThetaCoefficients
-import Mathlib.RingTheory.PowerSeries.Expand
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Theta.ThetaCoefficients
+public import Mathlib.RingTheory.PowerSeries.Expand
 /-!
 # LubinTate the equal-characteristic theta construction: the equal-characteristic theta series
 
@@ -20,6 +22,8 @@ genuine sparse power series
 This file packages that outer series as an actual `PowerSeries`; no
 convergence or evaluation hypothesis is inserted into its definition.
 -/
+
+@[expose] public section
 
 noncomputable section
 

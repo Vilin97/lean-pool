@@ -3,16 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.Algebra.Polynomial.Div
-import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
-import Mathlib.Algebra.BigOperators.GroupWithZero.Finset
-import Mathlib.Order.Filter.TendstoCofinite
-import Mathlib.Data.Nat.Prime.Defs
-import Mathlib.Data.Int.Basic
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Tactic.Ring
+
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.Algebra.Polynomial.Div
+public import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+public import Mathlib.Algebra.BigOperators.GroupWithZero.Finset
+public import Mathlib.Order.Filter.TendstoCofinite
+public import Mathlib.Data.Nat.Prime.Defs
+public import Mathlib.Data.Int.Basic
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Tactic.Ring
 /-!
 # New prime divisors of integer-polynomial values
 
@@ -22,6 +24,8 @@ its values have shape A * (1 + P*b). Finite fibres allow a value different
 from 0, A and -A. A prime divisor of the second factor is therefore new.
 This is the elementary Schur argument and does not invoke prime density.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

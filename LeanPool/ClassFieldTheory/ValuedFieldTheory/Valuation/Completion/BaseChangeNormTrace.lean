@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.LinearAlgebra.Charpoly.BaseChange
-import Mathlib.LinearAlgebra.Trace
-import Mathlib.RingTheory.Norm.Basic
-import Mathlib.RingTheory.Trace.Basic
-import Mathlib.RingTheory.TensorProduct.Basic
+
+public import Mathlib.LinearAlgebra.Charpoly.BaseChange
+public import Mathlib.LinearAlgebra.Trace
+public import Mathlib.RingTheory.Norm.Basic
+public import Mathlib.RingTheory.Trace.Basic
+public import Mathlib.RingTheory.TensorProduct.Basic
 /-!
 # Norm and trace under scalar extension
 
@@ -16,6 +18,8 @@ Norm and trace formulas compare multiplication by an element of `L` before and a
 extending scalars from `K` to `K_v`.  These lemmas state that comparison
 directly for the canonical element `1 ⊗ₜ x`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

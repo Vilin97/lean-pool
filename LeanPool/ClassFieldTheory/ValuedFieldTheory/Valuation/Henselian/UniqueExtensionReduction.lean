@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.UniqueRing
-import Mathlib.RingTheory.Polynomial.GaussLemma
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.UniqueRing
+public import Mathlib.RingTheory.Polynomial.GaussLemma
 /-!
 # reduction of irreducible factors
 
@@ -14,6 +16,8 @@ monic polynomial over the base valuation ring whose roots lie in a splitting
 field in fact splits over every extension valuation ring: its roots are
 integral over the base and hence belong to that ring.
 -/
+
+@[expose] public section
 
 open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
   integralClosure_mem_valuationSubring_of_hasExtension →

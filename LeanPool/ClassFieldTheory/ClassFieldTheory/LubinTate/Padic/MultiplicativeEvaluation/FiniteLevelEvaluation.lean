@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveDisplacement
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeIntertwiner
-import Mathlib.RingTheory.AdicCompletion.Topology
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveDisplacement
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeIntertwiner
+public import Mathlib.RingTheory.AdicCompletion.Topology
 /-!
 # Finite-level evaluation of the p-adic multiplicative comparison
 
@@ -15,6 +17,8 @@ on topologically nilpotent integers in a standard finite level.  It proves
 the functional equation, compatibility with scalar endomorphisms, the inverse
 comparison identity, and injectivity of the evaluated comparison.
 -/
+
+@[expose] public section
 
 noncomputable section
 

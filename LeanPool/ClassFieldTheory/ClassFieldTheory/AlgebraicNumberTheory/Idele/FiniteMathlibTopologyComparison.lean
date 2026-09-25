@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Topology
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.RestrictedProductUnitsTopology
-import Mathlib.Topology.Algebra.RestrictedProduct.TopologicalSpace
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Topology
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.RestrictedProductUnitsTopology
+public import Mathlib.Topology.Algebra.RestrictedProduct.TopologicalSpace
 /-!
 # The finite idèle topology and adele units
 
@@ -15,6 +17,8 @@ is continuous for the restricted-product topology on idèles and the graph
 topology on units.  Both the value and inverse-value maps are induced by
 continuous maps on local factors.
 -/
+
+@[expose] public section
 
 open scoped NumberField RestrictedProduct
 open NumberField IsDedekindDomain

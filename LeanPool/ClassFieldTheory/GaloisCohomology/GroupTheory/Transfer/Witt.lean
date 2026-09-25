@@ -3,18 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.Augmentation
-import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.Transfer.RelativeAugmentation
-import Mathlib.GroupTheory.Finiteness
-import Mathlib.GroupTheory.Transfer
-import Mathlib.GroupTheory.Torsion
-import Mathlib.GroupTheory.FreeGroup.GeneratorEquiv
-import Mathlib.LinearAlgebra.Dimension.Localization
-import Mathlib.LinearAlgebra.Dimension.Torsion.Finite
-import Mathlib.LinearAlgebra.FreeModule.Finite.CardQuotient
-import Mathlib.LinearAlgebra.FreeModule.PID
-import Mathlib.LinearAlgebra.Matrix.Adjugate
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.Augmentation
+public import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.Transfer.RelativeAugmentation
+public import Mathlib.GroupTheory.Finiteness
+public import Mathlib.GroupTheory.Transfer
+public import Mathlib.GroupTheory.Torsion
+public import Mathlib.GroupTheory.FreeGroup.GeneratorEquiv
+public import Mathlib.LinearAlgebra.Dimension.Localization
+public import Mathlib.LinearAlgebra.Dimension.Torsion.Finite
+public import Mathlib.LinearAlgebra.FreeModule.Finite.CardQuotient
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.LinearAlgebra.Matrix.Adjugate
 /-!
 # Witt's transfer theorem
 
@@ -25,6 +27,8 @@ The proof follows Witt's group-ring argument. This file first
 constructs the required right Fox coefficients directly from free words; no
 presentation relations are assumed as extra input.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Pointwise
 

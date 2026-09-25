@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.FreeRankOne
-import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
-import Mathlib.GroupTheory.QuotientGroup.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.FreeRankOne
+public import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
+public import Mathlib.GroupTheory.QuotientGroup.Basic
 /-!
 # The endomorphism-ring equivalence: endomorphisms and automorphisms of division modules
 
@@ -17,6 +19,8 @@ the `m`-th higher unit subgroup.  The division-tower sources use a primitive
 polynomial indexed by `n` for division level `m = n + 1`; every statement below
 keeps this shift explicit.
 -/
+
+@[expose] public section
 
 noncomputable section
 

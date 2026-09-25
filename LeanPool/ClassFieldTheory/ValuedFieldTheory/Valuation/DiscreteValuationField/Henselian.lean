@@ -3,12 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Basic
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Ideal.Quotient.Operations
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Basic
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
 
 /-! # Henselian -/
+
+@[expose] public section
 namespace ValuationTheory
 
 /-!

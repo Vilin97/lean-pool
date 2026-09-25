@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.All
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.HilbertProductFormula
-import Mathlib.Algebra.BigOperators.Finprod
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.All
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.HilbertProductFormula
+public import Mathlib.Algebra.BigOperators.Finprod
 /-!
 # Mathlib-facing Hilbert product formula
 
 The established product formula is transported from the internal subgroup of
 roots of unity to Mathlib's `rootsOfUnity`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldNorm
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldNorm
 /-!
 # Field-norm subgroups under algebra equivalence
 
@@ -12,6 +14,8 @@ An algebra equivalence over the base field preserves the field norm and
 therefore identifies the corresponding norm subgroups of the base unit
 group.
 -/
+
+@[expose] public section
 
 noncomputable section
 

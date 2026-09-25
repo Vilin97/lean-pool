@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Step
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Step
 /-!
 # recursive Hensel iterates
 
@@ -12,6 +14,8 @@ This file records the recursive polynomial iterates used in the proof
 of Hensel's lemma and the coefficientwise adic estimates needed for the later
 completion argument.
 -/
+
+@[expose] public section
 
 noncomputable section
 

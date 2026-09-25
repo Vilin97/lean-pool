@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.Series
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.Series
 /-!
 # Coefficient equations for a fixed uniformizer
 
@@ -12,6 +14,8 @@ For a positive degree, the scalar factor 1 - π ^ r is a unit whenever π
 is a uniformizer. Consequently the corresponding scalar coefficient equation
 has a unique solution in the valuation ring.
 -/
+
+@[expose] public section
 
 noncomputable section
 

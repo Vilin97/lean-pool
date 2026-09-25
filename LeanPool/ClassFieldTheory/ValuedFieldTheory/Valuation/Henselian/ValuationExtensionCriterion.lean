@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.NonmonicReduction
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.NonmonicReduction
 /-!
 # the factor-lifting criterion
 
 Artin's monic coprime-factor lifting criterion implies the exact primitive
 factorization form of Hensel's lemma from the primitive factorization definition.
 -/
+
+@[expose] public section
 
 open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
   exists_extension_valuationSubring_with_hasExtension →

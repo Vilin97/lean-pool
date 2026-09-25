@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Rational
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Rational
 /-!
 # Prime factorization of a nonzero rational number
 
@@ -16,6 +18,8 @@ the powers of all primes different from `p`.
 The last declarations package rational `p`-adic units as units of `ℤ_[p]` and
 identify the reduction of a natural unit modulo `p ^ k`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 noncomputable section

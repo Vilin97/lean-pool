@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LowerRamificationFormula
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.UpperRamification
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LowerRamificationFormula
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.UpperRamification
 /-!
 # Herbrand formula for finite Lubin--Tate levels
 
@@ -15,6 +17,8 @@ integral upper breaks `k`.  Consequently the upper ramification group at `k`
 is the Galois image of the `k`-th principal-unit subgroup and has order
 `q ^ (n + 1 - k)`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.PowerClassFiniteness
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.MaximalKummerSubgroup
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.KummerCorrespondenceFormula
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.PowerClassFiniteness
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.MaximalKummerSubgroup
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.KummerCorrespondenceFormula
 /-!
 # Maximal finite Kummer extensions of local fields
 
 For a positive integer `n` that is nonzero in a nonarchimedean local field,
 the Kummer extension obtained by adjoining all `n`-th roots is finite.
 -/
+
+@[expose] public section
 
 noncomputable section
 

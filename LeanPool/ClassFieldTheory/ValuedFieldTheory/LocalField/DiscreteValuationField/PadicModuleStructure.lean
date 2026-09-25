@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicLinearOfContinuous
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldUnitFactors
-import Mathlib.Algebra.Module.PID
-import Mathlib.NumberTheory.Padics.ProperSpace
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicLinearOfContinuous
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldUnitFactors
+public import Mathlib.Algebra.Module.PID
+public import Mathlib.NumberTheory.Padics.ProperSpace
 /-!
 # Topological structure of a finite p-adic module
 
@@ -19,6 +21,8 @@ be a finite cyclic group of order `p^a`, and the torsion-free quotient has
 rank `d`, the module is topologically the product of that cyclic factor and
 `d` copies of `Z_p`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

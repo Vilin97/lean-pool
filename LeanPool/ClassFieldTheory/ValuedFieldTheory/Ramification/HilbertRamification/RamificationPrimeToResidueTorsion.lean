@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.ValuationSubring
-import Mathlib.Algebra.BigOperators.Field
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.ValuationSubring
+public import Mathlib.Algebra.BigOperators.Field
 /-!
 # Prime-to-residue torsion in the actual ramification group
 
@@ -18,6 +20,8 @@ then send the number of terms to zero.
 The argument uses the existing ramification subgroup and its principal-unit
 condition. It requires no discreteness, Henselianity, or finite extension.
 -/
+
+@[expose] public section
 
 namespace RamificationTheory.HilbertRamification.ValuationSubring
 

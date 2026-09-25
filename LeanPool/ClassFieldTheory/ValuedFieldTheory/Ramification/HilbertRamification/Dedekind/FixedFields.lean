@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.Basic
 /-!
 # Hilbert ramification theory: decomposition and inertia fields
 
@@ -13,6 +15,8 @@ Dedekind-domain file defines the decomposition and inertia groups attached to
 a prime ideal; here we view those groups as subgroups of a finite Galois group
 acting on the fraction field and use mathlib's Galois correspondence.
 -/
+
+@[expose] public section
 
 noncomputable section
 

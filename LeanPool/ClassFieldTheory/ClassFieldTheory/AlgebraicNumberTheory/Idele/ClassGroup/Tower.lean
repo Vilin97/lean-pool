@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.ClassGroup
-import Mathlib.LinearAlgebra.TensorProduct.Basis
-import Mathlib.RingTheory.TensorProduct.Maps
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.ClassGroup
+public import Mathlib.LinearAlgebra.TensorProduct.Basis
+public import Mathlib.RingTheory.TensorProduct.Maps
 /-!
 # Idele-class norms in a field tower
 
@@ -19,6 +21,8 @@ This gives an actual norm `C_L → C_M` whose composite with
 `C_M → C_K` is the tower norm.  The resulting three concrete norm
 quotients form a natural right-exact sequence.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct
 open NumberField

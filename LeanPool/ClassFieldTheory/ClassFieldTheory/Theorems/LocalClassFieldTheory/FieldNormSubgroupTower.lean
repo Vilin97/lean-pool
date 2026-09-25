@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormSubgroup
-import Mathlib.RingTheory.Norm.Transitivity
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormSubgroup
+public import Mathlib.RingTheory.Norm.Transitivity
 /-!
 # Norm subgroups in a tower
 
@@ -13,6 +15,8 @@ The norm from a larger field factors through the norm from every intermediate
 field. Thus enlarging a finite extension can only shrink its subgroup of
 norms in the base field. No local-field or Galois assumption is needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

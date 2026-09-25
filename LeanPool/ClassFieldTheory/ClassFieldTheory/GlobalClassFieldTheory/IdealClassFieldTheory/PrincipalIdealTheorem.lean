@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.IdealClass
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.HilbertClassFieldComparison
-import Mathlib.RingTheory.ClassGroup.ExtendedHom
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.IdealClass
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.HilbertClassFieldComparison
+public import Mathlib.RingTheory.ClassGroup.ExtendedHom
 /-!
 # The principal ideal theorem
 
@@ -15,6 +17,8 @@ defining the two small Hilbert class fields and proves that the resulting
 map forms the naturality square with the existing ideal-class extension
 `ClassGroup.extendedHom`.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

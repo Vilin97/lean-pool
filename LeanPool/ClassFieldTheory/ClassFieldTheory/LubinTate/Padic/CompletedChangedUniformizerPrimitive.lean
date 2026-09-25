@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedPrimitiveAction
+
+public import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedPrimitiveAction
 /-!
 # Primitive changed-uniformizer points in the completed p-adic level
 
@@ -16,6 +18,8 @@ value constructed in the standard completed level has the changed
 primitive polynomial as its minimal polynomial and generates the whole
 completed level over the completed-unramified coefficient field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

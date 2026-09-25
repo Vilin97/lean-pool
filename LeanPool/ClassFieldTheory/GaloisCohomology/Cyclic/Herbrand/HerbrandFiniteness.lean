@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Core
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.TateComparison
-import Mathlib.RepresentationTheory.Homological.GroupCohomology.FiniteCyclic
-import Mathlib.RepresentationTheory.Homological.GroupHomology.FiniteCyclic
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Core
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.TateComparison
+public import Mathlib.RepresentationTheory.Homological.GroupCohomology.FiniteCyclic
+public import Mathlib.RepresentationTheory.Homological.GroupHomology.FiniteCyclic
 
 /-! # Herbrand Finiteness -/
+
+@[expose] public section
 namespace CyclicCohomology
 
 /-!

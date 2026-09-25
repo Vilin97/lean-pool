@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.NormSubgroup.HigherUnitFixedFieldEmbedding
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedFieldDegree
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.NormSubgroup.HigherUnitFixedFieldEmbedding
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedFieldDegree
 /-!
 # LubinTate the explicit norm-subgroup computation: surjectivity of the higher-unit fixed-field
   embedding
@@ -13,6 +15,8 @@ import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.
 The standard level and the fixed field have the same finite degree
 `(q - 1) q^n`; hence the canonical injective embedding is surjective.
 -/
+
+@[expose] public section
 
 noncomputable section
 

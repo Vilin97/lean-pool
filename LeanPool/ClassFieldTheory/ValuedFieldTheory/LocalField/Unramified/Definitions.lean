@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.RamificationInvariants
-import Mathlib.FieldTheory.IntermediateField.Adjoin.Algebra
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.RamificationInvariants
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Algebra
 /-!
 # Finite and algebraic unramified valued extensions
 
 Finite unramified valued extensions are expressed directly by the
 degree equality and residue separability condition.
 -/
+
+@[expose] public section
 
 noncomputable section
 

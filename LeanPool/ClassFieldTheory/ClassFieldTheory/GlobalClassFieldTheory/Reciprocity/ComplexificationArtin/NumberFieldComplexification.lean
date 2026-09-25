@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.ComplexificationArtin.RationalComplexification
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SeparableClosureEmbedding
-import Mathlib.FieldTheory.Galois.Abelian
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.ComplexificationArtin.RationalComplexification
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SeparableClosureEmbedding
+public import Mathlib.FieldTheory.Galois.Abelian
 /-!
 # Complexification of a number field
 
 This module forms the actual compositum with the rational fourth-root field
 and proves that restriction to the rational cyclotomic factor is faithful.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative
 open AlgebraicNumberTheory NumberField

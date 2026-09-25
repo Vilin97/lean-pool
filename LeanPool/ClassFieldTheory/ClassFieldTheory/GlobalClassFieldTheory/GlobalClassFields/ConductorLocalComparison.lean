@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.Conductor
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.LocalConductor
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.Conductor
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.LocalConductor
 /-!
 # Narrow finite and local conductor exponents
 
@@ -20,6 +22,8 @@ one exponent of a fixed defining modulus by the local minimum and split an
 idele into its one-place component and the remaining defining-modulus
 component.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 noncomputable section

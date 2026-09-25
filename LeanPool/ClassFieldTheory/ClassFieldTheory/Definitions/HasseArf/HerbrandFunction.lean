@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.HerbrandFunctionAtLowerIndex
-import Mathlib.Algebra.Order.Floor.Ring
-import Mathlib.Algebra.Order.Archimedean.Real.Basic
-import Mathlib.Basic.Real.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.HerbrandFunctionAtLowerIndex
+public import Mathlib.Algebra.Order.Floor.Ring
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+public import Mathlib.Basic.Real.Basic
 /-!
 # The real Herbrand function from integral lower groups
 
@@ -15,6 +17,8 @@ Between consecutive nonnegative integers, the function interpolates linearly
 between the rational Herbrand values. On the negative half-line it is the
 identity. Its slope on `(m, m + 1)` is `|G_(m+1)| / |G_0|`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

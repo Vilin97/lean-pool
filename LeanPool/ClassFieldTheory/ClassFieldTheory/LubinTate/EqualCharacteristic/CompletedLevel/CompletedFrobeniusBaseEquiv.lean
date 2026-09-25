@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusContinuity
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusContinuity
 /-!
 # The completed theta-intertwining theorem: the completed Frobenius lift over the Laurent base
 
@@ -12,6 +14,8 @@ The prescribed completed lift is semilinear over the completed maximal
 unramified field.  Arithmetic Frobenius on that field fixes the embedded
 Laurent base `k((T))`; hence the lift is an actual `k((T))`-automorphism.
 -/
+
+@[expose] public section
 
 noncomputable section
 

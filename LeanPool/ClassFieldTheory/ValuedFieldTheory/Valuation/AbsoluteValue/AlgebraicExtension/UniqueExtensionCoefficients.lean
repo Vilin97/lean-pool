@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.IrreduciblePolynomialBounds
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.IrreduciblePolynomialBounds
 /-!
 # the nonarchimedean valuation construction, the irreducible coefficient estimate: the
   coefficient norm of an irreducible polynomial
@@ -16,6 +18,8 @@ forces all conjugate roots of an irreducible polynomial to have one common
 absolute value.  Vieta's factorization and the strong triangle inequality
 then bound every coefficient by the larger endpoint coefficient.
 -/
+
+@[expose] public section
 
 noncomputable section
 

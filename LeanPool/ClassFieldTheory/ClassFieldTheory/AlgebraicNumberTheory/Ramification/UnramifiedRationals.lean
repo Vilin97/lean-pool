@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.NumberField.Discriminant.Different
+
+public import Mathlib.NumberTheory.NumberField.Discriminant.Different
 /-!
 # No nontrivial everywhere-unramified extension of ℚ
 
@@ -14,6 +16,8 @@ discriminant bound to show that this field is ℚ.  This file records that
 source theorem directly in terms of the local unramified predicates on the
 prime ideals of the ring of integers.
 -/
+
+@[expose] public section
 
 noncomputable section
 

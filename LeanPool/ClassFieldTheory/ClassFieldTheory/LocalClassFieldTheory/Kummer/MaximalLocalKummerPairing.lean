@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertSymbol
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertSymbol
 /-!
 # The maximal local Kummer pairing
 
@@ -14,6 +16,8 @@ gives a multiplicative character in the radical variable.  This file packages
 that evaluation as a right-variable monoid homomorphism.  Its comparison with
 the simple-extension definition of the local Hilbert symbol remains separate.
 -/
+
+@[expose] public section
 
 noncomputable section
 

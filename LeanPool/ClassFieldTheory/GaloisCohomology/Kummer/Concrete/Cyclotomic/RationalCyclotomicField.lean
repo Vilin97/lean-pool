@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.Cyclotomic.Basic
+
+public import Mathlib.NumberTheory.Cyclotomic.Basic
 /-!
 # The rational cyclotomic closure
 
@@ -17,6 +19,8 @@ The finite levels form the divisibility-directed system whose supremum is
 the whole cyclotomic field.  This supplies the field-theoretic source for
 the rational cyclotomic calculation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

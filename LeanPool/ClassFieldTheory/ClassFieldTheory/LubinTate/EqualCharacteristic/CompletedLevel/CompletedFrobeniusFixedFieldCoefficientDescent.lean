@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedFieldPowerBasis
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedFieldPowerBasis
 /-!
 # The completed theta-intertwining theorem: coefficient descent in the completed fixed field
 
@@ -12,6 +14,8 @@ Expansion in the direct-theta power basis turns Frobenius fixedness into
 coefficientwise fixedness.  The coefficients therefore descend from the
 completed unramified field to the original Laurent base.
 -/
+
+@[expose] public section
 
 noncomputable section
 

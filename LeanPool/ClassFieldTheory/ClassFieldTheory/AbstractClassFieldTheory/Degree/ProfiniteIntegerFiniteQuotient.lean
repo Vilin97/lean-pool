@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Data.ZMod.QuotientGroup
-import Mathlib.GroupTheory.Archimedean
-import Mathlib.GroupTheory.FiniteIndexNormalSubgroup
-import Mathlib.Topology.Algebra.Group.Quotient
-import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Completion
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteIntegerCore
+
+public import Mathlib.Data.ZMod.QuotientGroup
+public import Mathlib.GroupTheory.Archimedean
+public import Mathlib.GroupTheory.FiniteIndexNormalSubgroup
+public import Mathlib.Topology.Algebra.Group.Quotient
+public import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Completion
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteIntegerCore
 
 /-! # Profinite Integer Finite Quotient -/
+
+@[expose] public section
 namespace ClassFormation
 
 open CategoryTheory CategoryTheory.Limits

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.NormSubgroup.HigherUnits
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedField
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.NormSubgroup.HigherUnits
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedField
 /-!
 # LubinTate the explicit norm-subgroup computation: higher units fix the primitive point
 
@@ -13,6 +15,8 @@ If `a` is congruent to one modulo `T^(n+1)`, the completed the completed theta-i
 Frobenius attached to `a` acts trivially on the standard primitive
 `(n+1)`-division point.
 -/
+
+@[expose] public section
 
 noncomputable section
 

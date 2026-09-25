@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SUnit.GaloisAction
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.Splitting.FinitePlace
-import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Basic
-import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Norm
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SUnit.GaloisAction
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.Splitting.FinitePlace
+public import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Norm
 /-!
 # The Herbrand quotient of the global S-unit group
 
@@ -16,6 +18,8 @@ This file computes the Herbrand quotient of the global `S`-unit group. It connec
 integer direction, and combines the resulting exact sequences with the
 permutation-lattice calculation.
 -/
+
+@[expose] public section
 
 open scoped BigOperators NumberField nonZeroDivisors Pointwise
 open IsDedekindDomain Module

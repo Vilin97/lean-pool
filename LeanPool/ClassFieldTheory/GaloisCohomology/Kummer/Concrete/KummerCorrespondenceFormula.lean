@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Profinite
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.ExtensionRoundTrip
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.InfiniteInverse
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.InfiniteContinuity
+
+public import Mathlib.FieldTheory.Galois.Profinite
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.ExtensionRoundTrip
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.InfiniteInverse
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.InfiniteContinuity
 /-!
 # the Kummer pairing formula
 
@@ -25,6 +27,8 @@ the quotient by their common open kernel.  Finite roots-of-unity duality
 solves that finite problem, and compactness of the profinite Galois group
 then supplies one automorphism solving all coordinates simultaneously.
 -/
+
+@[expose] public section
 
 noncomputable section
 

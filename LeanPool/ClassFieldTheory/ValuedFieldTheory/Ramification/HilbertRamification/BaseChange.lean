@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionGroup
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ResidueField
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.DecompositionGroup
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ResidueField
 /-!
 # Conjugation and base change
 
@@ -16,6 +18,8 @@ Galois group.  The decomposition statement for absolute values includes
 the archimedean case; the valuation-subring statements give the three
 nonarchimedean homomorphisms.
 -/
+
+@[expose] public section
 
 open _root_.ValuationTheory.DiscreteValuationField.ResidueField renaming
   residue_eq_residue_iff_sub_mem_maximalIdeal →

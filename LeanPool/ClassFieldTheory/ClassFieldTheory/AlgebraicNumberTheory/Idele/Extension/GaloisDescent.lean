@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.ClassGroup
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.GaloisCohomology
-import Mathlib.Algebra.Group.Action.Basic
-import Mathlib.GroupTheory.GroupAction.Quotient
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.ClassGroup
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.GaloisCohomology
+public import Mathlib.Algebra.Group.Action.Basic
+public import Mathlib.GroupTheory.GroupAction.Quotient
 /-!
 # Galois descent for idele classes
 
@@ -17,6 +19,8 @@ group. Noether's form of Hilbert 90 then shows that every fixed
 class has a fixed representative. Together with fixed-idele descent, this identifies
 the fixed subgroup with the embedded copy of `C_K`.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField

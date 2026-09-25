@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Module.MinimalAxioms
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.ProdiscretePadicModule
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.AdicProdiscreteComparison
+
+public import Mathlib.Algebra.Module.MinimalAxioms
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.ProdiscretePadicModule
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.AdicProdiscreteComparison
 /-!
 # The p-adic module on adic principal units
 
 The coordinatewise p-adic action is transported across the canonical adic/prodiscrete
 comparison, producing its linear and topological forms on first principal units.
 -/
+
+@[expose] public section
 
 noncomputable section
 

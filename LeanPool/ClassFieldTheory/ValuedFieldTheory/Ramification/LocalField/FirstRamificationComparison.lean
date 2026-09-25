@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FirstRamificationComparison
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.LocalField.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FirstRamificationComparison
 /-!
 # The first lower ramification group of a local field extension
 
@@ -14,6 +16,8 @@ the general comparison between the first lower group and Hilbert's
 ramification group. The latter is transported from the decomposition group
 back to the full Galois group.
 -/
+
+@[expose] public section
 
 noncomputable section
 

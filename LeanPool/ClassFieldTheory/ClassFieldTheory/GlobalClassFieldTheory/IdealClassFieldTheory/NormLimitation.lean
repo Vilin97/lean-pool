@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.NormLimitationCore
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.NormLimitationCore
 /-!
 # Ideal and ray consequences of norm limitation
 
@@ -14,6 +16,8 @@ normal closure.  This leaf transports that equality to the corresponding
 ideal norm group for every defining modulus and to the image of the norm
 range in every ray class group.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

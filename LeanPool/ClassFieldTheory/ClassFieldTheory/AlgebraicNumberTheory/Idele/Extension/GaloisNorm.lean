@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.NormProperties
-import Mathlib.Algebra.Module.LinearMap.Polynomial
-import Mathlib.LinearAlgebra.Charpoly.BaseChange
-import Mathlib.RingTheory.TensorProduct.MvPolynomial
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.NormProperties
+public import Mathlib.Algebra.Module.LinearMap.Polynomial
+public import Mathlib.LinearAlgebra.Charpoly.BaseChange
+public import Mathlib.RingTheory.TensorProduct.MvPolynomial
 /-!
 # The Galois product formula for the relative idele norm
 
@@ -15,6 +17,8 @@ This file proves that, in the tensor-product presentation
 `𝔸_L = 𝔸_K ⊗_K L`, extension of the determinant norm back to `𝔸_L`
 is the product of all Galois conjugates.
 -/
+
+@[expose] public section
 
 open scoped BigOperators TensorProduct
 open NumberField

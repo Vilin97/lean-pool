@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
 /-!
 # uniqueness from the integral-closure valuation ring
 
@@ -13,6 +15,8 @@ valuative dichotomy, it is contained in every extension valuation ring.  Its
 integrality over the base then forces the center of every such overring to be
 the unique maximal ideal, so the overring is the integral closure itself.
 -/
+
+@[expose] public section
 
 noncomputable section
 

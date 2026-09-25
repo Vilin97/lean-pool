@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.HenselLemma
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.UniqueExtensionIntegralClosure
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Polynomial
-import Mathlib.NumberTheory.RamificationInertia.Inertia
-import Mathlib.NumberTheory.RamificationInertia.Ramification
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.HenselLemma
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.UniqueExtensionIntegralClosure
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Polynomial
+public import Mathlib.NumberTheory.RamificationInertia.Inertia
+public import Mathlib.NumberTheory.RamificationInertia.Ramification
 /-!
 # Monogeneity over a noncomplete discretely valued field
 
@@ -17,6 +19,8 @@ used in the monogenic integral-generator theorem.  The proof uses the finite int
 closure supplied by unique extension, a primitive residue element, the
 representative adjustment , and Nakayama's lemma.
 -/
+
+@[expose] public section
 
 noncomputable section
 

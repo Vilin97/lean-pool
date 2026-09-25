@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.Herbrand.Function
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.Herbrand.Tower
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.Herbrand.Function
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.Herbrand.Tower
 /-!
 # The fibre average in Herbrand's theorem
 
@@ -23,6 +25,8 @@ maximal depth, with the Herbrand function of the above filtration.  The
 valued-field equality between this average and the actual quotient depth is
 the separate input of the quotient-depth identity.
 -/
+
+@[expose] public section
 
 open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
   herbrandFunction →

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.ShrinkSeparableClosure
-import Mathlib.FieldTheory.IntermediateField.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.ShrinkSeparableClosure
+public import Mathlib.FieldTheory.IntermediateField.Basic
 /-!
 # Intermediate fields under a small change of base field
 
@@ -13,6 +15,8 @@ The base-field equivalence `Shrink K ≃+* K` does not change the subfields of
 the original separable closure.  This file records that fact as an order
 isomorphism, with the actual underlying subfields unchanged.
 -/
+
+@[expose] public section
 
 noncomputable section
 

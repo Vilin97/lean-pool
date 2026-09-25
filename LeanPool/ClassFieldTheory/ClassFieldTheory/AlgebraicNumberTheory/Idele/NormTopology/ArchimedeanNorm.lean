@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormTopology.FiniteNormArithmetic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormTopology.FiniteNormArithmetic
 /-!
 # Archimedean behavior of idele norms
 
 The positive archimedean norm, and consequently the absolute idele norm, is
 preserved by the ordinary norm in a finite number-field extension.
 -/
+
+@[expose] public section
 
 open scoped BigOperators NumberField NumberField.LiesOver
 open NumberField IsDedekindDomain

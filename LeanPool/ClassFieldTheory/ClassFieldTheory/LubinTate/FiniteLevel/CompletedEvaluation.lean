@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveUniformizer
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.StandardFormalGroup
-import Mathlib.RingTheory.AdicCompletion.Topology
-import Mathlib.RingTheory.PowerSeries.Evaluation
-import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveUniformizer
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.StandardFormalGroup
+public import Mathlib.RingTheory.AdicCompletion.Topology
+public import Mathlib.RingTheory.PowerSeries.Evaluation
+public import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
 /-!
 # Analytic evaluation in standard Lubin--Tate level fields
 
@@ -21,6 +23,8 @@ valued extension.  The target carries its maximal-ideal adic topology.  The
 chosen primitive division point is a uniformizer, hence is topologically
 nilpotent and is therefore a valid evaluation point.
 -/
+
+@[expose] public section
 
 noncomputable section
 

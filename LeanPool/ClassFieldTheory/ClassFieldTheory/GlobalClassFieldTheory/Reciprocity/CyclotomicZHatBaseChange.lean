@@ -3,18 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicTorsionFixedField
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteInteger
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.InfiniteBaseChange
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SeparableClosureEmbedding
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FiniteAbstractFixedField
-import Mathlib.FieldTheory.Galois.Abelian
-import Mathlib.FieldTheory.IntermediateField.Algebraic
-import Mathlib.FieldTheory.Normal.Closure
-import Mathlib.FieldTheory.IsSepClosed
-import Mathlib.FieldTheory.SeparableClosure
-import Mathlib.GroupTheory.Index
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicTorsionFixedField
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteInteger
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.InfiniteBaseChange
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SeparableClosureEmbedding
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FiniteAbstractFixedField
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.FieldTheory.IntermediateField.Algebraic
+public import Mathlib.FieldTheory.Normal.Closure
+public import Mathlib.FieldTheory.IsSepClosed
+public import Mathlib.FieldTheory.SeparableClosure
+public import Mathlib.GroupTheory.Index
 /-!
 # Base change of the rational cyclotomic `ZHat`-extension
 
@@ -29,6 +31,8 @@ All fields in this file are the actual mathlib intermediate fields in
 `SeparableClosure ℚ`; no abstract copy of the compositum or of its
 Galois group is introduced.
 -/
+
+@[expose] public section
 
 open _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup renaming
   continuousMulEquivOfCompactToT2 →

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.FiniteGaloisRealizationSubextension
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.FiniteGaloisRealizationSubextension
 /-!
 # Norm quotients in the compatible Galois realization
 
@@ -12,6 +14,8 @@ This module identifies the abstract fixed fields with the embedded copies of
 `K` and `L`, and transports the resulting idèle-class norm quotient and
 reciprocity data to the original finite Galois extension.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField

@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnits.Filtration
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.HenselLemma
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.RingTheory.RootsOfUnity.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnits.Filtration
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.HenselLemma
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.RingTheory.RootsOfUnity.Basic
 
 /-! # Residue Roots -/
+
+@[expose] public section
 namespace LocalFieldTheory
 
 open ValuationTheory

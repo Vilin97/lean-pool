@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.GroupTheory.FiniteAbelian.Basic
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RadicalExtension
+
+public import Mathlib.GroupTheory.FiniteAbelian.Basic
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RadicalExtension
 /-!
 # finite radical support
 
@@ -18,6 +20,8 @@ its `n`-th power in that finitely generated subgroup.
 These are the concrete finite-support data needed for the later reduction to
 finite Kummer theory; no finite Kummer endpoint is assumed here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

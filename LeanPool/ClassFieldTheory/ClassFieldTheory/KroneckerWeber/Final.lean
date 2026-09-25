@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumValuationInertiaBound
-import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.Dedekind.PadicValuationInertia
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.UnramifiedCompositumSupport
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.DegreeFromChosenPrimes
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumValuationInertiaBound
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.Dedekind.PadicValuationInertia
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.UnramifiedCompositumSupport
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.DegreeFromChosenPrimes
 /-!
 # Global Kronecker--Weber
 
@@ -17,6 +19,8 @@ Outside that support the auxiliary compositum is unramified.  The finite
 inertia groups therefore generate its full abelian Galois group, and their
 product bounds its degree by the degree of the conductor cyclotomic field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

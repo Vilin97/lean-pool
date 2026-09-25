@@ -3,25 +3,29 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.FieldTheory.Finite.GaloisField
-import Mathlib.LinearAlgebra.Dimension.DivisionRing
-import Mathlib.NumberTheory.RamificationInertia.Inertia
-import Mathlib.NumberTheory.RamificationInertia.Ramification
-import Mathlib.RingTheory.Ideal.Norm.AbsNorm
-import Mathlib.RingTheory.RamificationInertia.Basic
-import Mathlib.RingTheory.SimpleModule.Basic
-import Mathlib.RingTheory.DedekindDomain.IntegralClosure
-import Mathlib.RingTheory.Trace.Basic
-import Mathlib.RingTheory.Valuation.Extension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ResidueUnits
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.FieldTheory.Finite.GaloisField
+public import Mathlib.LinearAlgebra.Dimension.DivisionRing
+public import Mathlib.NumberTheory.RamificationInertia.Inertia
+public import Mathlib.NumberTheory.RamificationInertia.Ramification
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Mathlib.RingTheory.RamificationInertia.Basic
+public import Mathlib.RingTheory.SimpleModule.Basic
+public import Mathlib.RingTheory.DedekindDomain.IntegralClosure
+public import Mathlib.RingTheory.Trace.Basic
+public import Mathlib.RingTheory.Valuation.Extension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ResidueUnits
 /-!
 # Residue extensions
 
 Constructs the maps induced on valuation rings, residue fields, and residue
 units by a valued extension, with degree, trace, norm, and Frobenius results.
 -/
+
+@[expose] public section
 namespace LocalFieldTheory
 
 noncomputable section

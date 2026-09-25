@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.HilbertFamilyAlgEquiv
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.InfiniteHilbertFactorNaturality
-import Mathlib.Algebra.BigOperators.Finprod
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.HilbertFamilyAlgEquiv
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.InfiniteHilbertFactorNaturality
+public import Mathlib.Algebra.BigOperators.Finprod
 /-!
 # Transport of the Hilbert product formula
 
@@ -14,6 +16,8 @@ The product formula is invariant under a number-field equivalence. The
 finite product is reindexed by the induced equivalence of finite places,
 and the ordinary infinite product by the equivalence of infinite places.
 -/
+
+@[expose] public section
 
 open scoped BigOperators NumberField
 open NumberField IsDedekindDomain

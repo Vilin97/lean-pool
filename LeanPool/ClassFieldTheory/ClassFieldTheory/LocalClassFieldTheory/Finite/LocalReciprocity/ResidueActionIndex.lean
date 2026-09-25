@@ -3,11 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.ResidueDatum
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.ResidueExactSequence
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.ResidueDatum
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.ResidueExactSequence
 
 /-! # Residue Action Index -/
+
+@[expose] public section
 namespace LocalClassFieldTheory
 
 open RamificationTheory

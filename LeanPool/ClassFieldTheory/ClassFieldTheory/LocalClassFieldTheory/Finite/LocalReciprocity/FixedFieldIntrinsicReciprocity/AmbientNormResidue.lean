@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FixedFieldIntrinsicReciprocity.EmbeddedFrobeniusTransport
-import Mathlib.GroupTheory.Abelianization.Defs
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FixedFieldIntrinsicReciprocity.EmbeddedFrobeniusTransport
+public import Mathlib.GroupTheory.Abelianization.Defs
 /-!
 # Ambient embedded norm-residue values
 
@@ -14,6 +16,8 @@ to a unit of the intrinsically presented base field, both before and
 after identifying the abelianization of an abelian Galois group with
 the group itself.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.Cyclotomic.Basic
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.TopologicalReciprocity
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.MaximalKummerNorm
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormSubgroupFunctoriality
+
+public import Mathlib.NumberTheory.Cyclotomic.Basic
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.TopologicalReciprocity
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.MaximalKummerNorm
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.NormSubgroupFunctoriality
 /-!
 # Cyclotomic descent for maximal Kummer norm subgroups
 
@@ -15,6 +17,8 @@ For an exponent nonzero in the base field, adjoining the roots of unity,
 applying maximal Kummer theory, and descending the norm inclusion produces a
 finite Galois extension whose norm subgroup is contained in `Kˣⁿ`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

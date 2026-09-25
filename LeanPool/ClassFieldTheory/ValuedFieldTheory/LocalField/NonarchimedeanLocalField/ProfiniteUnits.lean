@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Basic
-import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Basic
-import Mathlib.Topology.Algebra.ClopenNhdofOne
-import Mathlib.Topology.Algebra.Group.Units
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Basic
+public import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Basic
+public import Mathlib.Topology.Algebra.ClopenNhdofOne
+public import Mathlib.Topology.Algebra.Group.Units
 /-!
 # Profinite valuation-ring units
 
@@ -16,6 +18,8 @@ valuation balls are clopen. This file records those structures as named results,
 registering additional global instances, and packages the valuation-ring unit group as a
 profinite group.
 -/
+
+@[expose] public section
 
 noncomputable section
 

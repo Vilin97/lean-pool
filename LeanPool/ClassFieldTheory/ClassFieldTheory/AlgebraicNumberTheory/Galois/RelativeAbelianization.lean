@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.AbsoluteAbelianization
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.AbsoluteAbelianization
 /-!
 # Relative topological abelianization
 
@@ -12,6 +14,8 @@ For a possibly infinite Galois extension `M/F`, this file identifies the
 topological abelianization of `Gal(M/F)` with the Galois group of the
 intermediate field fixed by the closed commutator subgroup.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative
 

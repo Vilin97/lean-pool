@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RingTheory.DiscreteValuationRing.Basic
+
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 /-!
 # Normalized additive valuations on discrete valuation rings
 
@@ -12,6 +14,8 @@ This file supplies general-purpose facts about Mathlib's normalized additive
 valuation on a discrete valuation ring which are independent of any chosen
 valued-field presentation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

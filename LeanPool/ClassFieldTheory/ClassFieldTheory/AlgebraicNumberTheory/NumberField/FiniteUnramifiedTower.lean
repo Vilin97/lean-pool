@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.ExtensionIndex
-import Mathlib.NumberTheory.RamificationInertia.Unramified
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.ExtensionIndex
+public import Mathlib.NumberTheory.RamificationInertia.Unramified
 /-!
 # Finite-prime unramifiedness in towers of number fields
 
@@ -13,6 +15,8 @@ This file records the tower properties of being unramified at every
 finite prime.  The transitivity and intermediate-field arguments are
 proved from multiplicativity of ramification indices.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsLocalHilbertPairing
-import Mathlib.Algebra.Group.Hom.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsLocalHilbertPairing
+public import Mathlib.Algebra.Group.Hom.Basic
 /-!
 # Inverting the values of a local Hilbert pairing
 
@@ -14,6 +16,8 @@ of every value. Thus these conditions alone do not distinguish the value
 convention used by a normalized local Artin map. This theorem does not assert
 that a pairing and its inverse are distinct.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory.HilbertPairing
 

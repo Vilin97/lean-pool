@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NormalClosure
-import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.Quotient
-import Mathlib.FieldTheory.Galois.Abelian
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NormalClosure
+public import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.Quotient
+public import Mathlib.FieldTheory.Galois.Abelian
 /-!
 # Maximal abelian subextensions inside finite normal closures
 
@@ -15,6 +17,8 @@ distinguished copy of `L`.  The subgroup fixing that copy, together with the
 commutator subgroup of the full Galois group, cuts out the largest abelian
 Galois intermediate field contained in the distinguished copy.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayLocalHigherUnitGroup
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Basic
-import Mathlib.RingTheory.Ideal.Quotient.Defs
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayLocalHigherUnitGroup
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.Defs
 /-!
 # Congruence description of local higher units
 
@@ -14,6 +16,8 @@ An element of the `n`-th higher-unit group is an integral unit congruent to
 `1` modulo the `n`-th power of the maximal ideal. This also applies at `n = 0`,
 where the condition reduces to being an integral unit.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

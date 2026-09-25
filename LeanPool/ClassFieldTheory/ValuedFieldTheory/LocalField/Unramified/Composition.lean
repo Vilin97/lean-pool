@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.BaseChange
-import Mathlib.FieldTheory.SeparableDegree
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.BaseChange
+public import Mathlib.FieldTheory.SeparableDegree
 /-!
 # Finite composita of unramified extensions
 
@@ -15,6 +17,8 @@ the unramified base-change theorem to one extension along the other and then use
 of residue separability and multiplicativity of the field and residue
 degrees.
 -/
+
+@[expose] public section
 
 noncomputable section
 

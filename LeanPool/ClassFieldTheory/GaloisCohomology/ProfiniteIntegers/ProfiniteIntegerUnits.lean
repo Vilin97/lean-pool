@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteIntegerPrimeProduct
-import Mathlib.Topology.Algebra.Group.Units
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteIntegerPrimeProduct
+public import Mathlib.Topology.Algebra.Group.Units
 /-!
 # Units of the profinite integers
 
 This file upgrades the prime-product Chinese-remainder equivalence for
 `ℤ̂` to topological additive, multiplicative, and unit-group equivalences.
 -/
+
+@[expose] public section
 
 open scoped Topology
 

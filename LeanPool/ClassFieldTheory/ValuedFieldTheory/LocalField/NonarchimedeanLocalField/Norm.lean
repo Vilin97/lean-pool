@@ -3,19 +3,23 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.LinearAlgebra.Determinant
-import Mathlib.RingTheory.Norm.Transitivity
-import Mathlib.RingTheory.Valuation.Integral
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NormUnits
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuativeExtension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Basic
+
+public import Mathlib.LinearAlgebra.Determinant
+public import Mathlib.RingTheory.Norm.Transitivity
+public import Mathlib.RingTheory.Valuation.Integral
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NormUnits
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuativeExtension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Basic
 /-!
 # Norms in valued field extensions
 
 Packages field norms as homomorphisms on units and restricts them to valuation
 rings and their unit groups under the appropriate integral hypotheses.
 -/
+
+@[expose] public section
 namespace LocalFieldTheory
 
 noncomputable section

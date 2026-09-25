@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Cohomology.SPlaces.OutsideIntegralInduced.LocalInduction.Spine
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Cohomology.SPlaces.OutsideIntegralInduced.LocalInduction.Spine
 /-!
 # Integral local induced modules
 
 This file identifies the product of valuation-ring unit groups over the
 extensions of a finite place with the corresponding induced module.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct ValuativeRel NNReal
 open NumberField IsDedekindDomain

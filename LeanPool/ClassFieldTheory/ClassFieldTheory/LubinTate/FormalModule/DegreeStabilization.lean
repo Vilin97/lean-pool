@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.RecursiveCoefficient
-import Mathlib.RingTheory.MvPowerSeries.Trunc
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.RecursiveCoefficient
+public import Mathlib.RingTheory.MvPowerSeries.Trunc
 /-!
 # Finite-degree stabilization for Lubin--Tate intertwining defects
 
@@ -21,6 +23,8 @@ zero constant coefficient into the fixed Lubin--Tate series.  On the right
 side, truncation of multivariable substitution depends only on the same
 truncation of the outer series.
 -/
+
+@[expose] public section
 
 noncomputable section
 

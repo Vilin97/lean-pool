@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteExtension.Core
-import Mathlib.RingTheory.DedekindDomain.Different
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteExtension.Core
+public import Mathlib.RingTheory.DedekindDomain.Different
 /-!
 # Different and codifferent for valued finite extensions
 
@@ -14,6 +16,8 @@ DVF valuation rings.  The ideal itself remains mathlib's `differentIdeal`; the
 extra API here connects it to the chosen valuation rings, the codifferent, and
 the local unramified criterion.
 -/
+
+@[expose] public section
 
 noncomputable section
 

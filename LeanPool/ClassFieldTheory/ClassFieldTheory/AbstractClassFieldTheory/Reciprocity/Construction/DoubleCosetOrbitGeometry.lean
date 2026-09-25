@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.TopologicalGeneration
-import Mathlib.GroupTheory.DoubleCoset
-import Mathlib.GroupTheory.GroupAction.Quotient
-import Mathlib.Topology.Algebra.Group.ClosedSubgroup
-import Mathlib.Topology.Algebra.Group.SubmonoidClosure
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.TopologicalGeneration
+public import Mathlib.GroupTheory.DoubleCoset
+public import Mathlib.GroupTheory.GroupAction.Quotient
+public import Mathlib.Topology.Algebra.Group.ClosedSubgroup
+public import Mathlib.Topology.Algebra.Group.SubmonoidClosure
 /-!
 # Orbit quotients and double-coset geometry
 
@@ -17,6 +19,8 @@ orbit quotients of coset spaces, inversion of double cosets, transport along
 surjective equivariant maps, and replacement of a cyclic subgroup by its
 topological closure.  It has no class-formation or field-theoretic input.
 -/
+
+@[expose] public section
 
 universe u
 

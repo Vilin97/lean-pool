@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.NumberField.Completion.FinitePlace
-import Mathlib.RingTheory.Norm.Basic
-import Mathlib.RingTheory.TensorProduct.Basic
+
+public import Mathlib.NumberTheory.NumberField.Completion.FinitePlace
+public import Mathlib.RingTheory.Norm.Basic
+public import Mathlib.RingTheory.TensorProduct.Basic
 /-!
 # Finite-place tensor-norm subgroup
 
@@ -15,6 +17,8 @@ The local algebra of `L / K` at a finite place `v` is
 `K_vˣ`.  This definition retains the whole tensor algebra, including all
 factors above `v`; it does not choose a single completion of `L`.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain

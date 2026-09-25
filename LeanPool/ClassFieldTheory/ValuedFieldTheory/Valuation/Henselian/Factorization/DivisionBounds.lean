@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Basic
 /-!
 # degree bounds for the division remainder
 
@@ -12,6 +14,8 @@ This file supplies the degree estimate for the remainder in the coefficientwise 
 correction step.  It removes the later need to assume separately that the
 residue of the remainder has small degree.
 -/
+
+@[expose] public section
 
 noncomputable section
 

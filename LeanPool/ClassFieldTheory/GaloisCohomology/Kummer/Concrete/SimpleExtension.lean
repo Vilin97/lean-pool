@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.LocalMaximalKummerExtension
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.LocalMaximalKummerExtension
 /-!
 # Simple Kummer extensions
 
@@ -13,6 +15,8 @@ Kummer theory.  For `b : Kˣ`, it chooses an embedded field
 `K(ⁿ√b)` inside the separable closure and proves that, when `K` contains
 the `n`-th roots of unity, this is a finite cyclic Galois extension.
 -/
+
+@[expose] public section
 
 noncomputable section
 

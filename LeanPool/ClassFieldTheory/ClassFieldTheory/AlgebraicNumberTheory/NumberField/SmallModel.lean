@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Field.Shrink
-import Mathlib.Algebra.Ring.Shrink
-import Mathlib.Basic.Countable.Small
-import Mathlib.Data.Rat.Encodable
-import Mathlib.LinearAlgebra.Countable
-import Mathlib.NumberTheory.NumberField.Basic
+
+public import Mathlib.Algebra.Field.Shrink
+public import Mathlib.Algebra.Ring.Shrink
+public import Mathlib.Basic.Countable.Small
+public import Mathlib.Data.Rat.Encodable
+public import Mathlib.LinearAlgebra.Countable
+public import Mathlib.NumberTheory.NumberField.Basic
 /-!
 # Small models of number fields
 
@@ -17,6 +19,8 @@ A number field has finite dimension over the countable field `ℚ`, so its
 underlying type has a representative in the lowest universe.  The ring
 equivalence to that representative preserves the number-field structure.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

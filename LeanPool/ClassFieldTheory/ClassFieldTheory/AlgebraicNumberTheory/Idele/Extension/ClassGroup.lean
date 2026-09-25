@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.NormProperties
-import Mathlib.LinearAlgebra.Basis.VectorSpace
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.NormProperties
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
 /-!
 # Idele classes in finite extensions
 
@@ -18,6 +20,8 @@ an elementary linear-algebra statement.  A linear retraction of
 come from the same scalar in `K`.  We then descend the idele inclusion to
 quotients and prove it injective.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct
 open NumberField

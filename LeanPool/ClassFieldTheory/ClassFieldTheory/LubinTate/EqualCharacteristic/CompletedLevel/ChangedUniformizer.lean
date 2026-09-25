@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.NormUniformizer
-import Mathlib.FieldTheory.IsSepClosed
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.NormUniformizer
+public import Mathlib.FieldTheory.IsSepClosed
 /-!
 # The completed theta-intertwining theorem: changing the equal-characteristic uniformizer
 
@@ -21,6 +23,8 @@ irreducible over `κ((T))`; its simple root extension has degree
 This is the changed-uniformizer algebra used in the proof of the completed theta-intertwining
   theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

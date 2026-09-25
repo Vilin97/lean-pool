@@ -3,17 +3,21 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SUnit.LogLattice
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.KummerCorrespondenceFormula
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.GroupTheory.PowerIndex
-import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SUnit.LogLattice
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.KummerCorrespondenceFormula
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.GroupTheory.PowerIndex
+public import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
 /-!
 # Power quotients of S-unit groups
 
 The finite `n`-th-power quotient of an `S`-unit group, its cardinality, and explicit `ZMod n`
   coordinates.
 -/
+
+@[expose] public section
 
 open scoped NumberField IsMulCommutative NNReal ValuativeRel
 open NumberField IsDedekindDomain

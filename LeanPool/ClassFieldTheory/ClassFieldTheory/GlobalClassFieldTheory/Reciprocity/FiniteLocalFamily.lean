@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.NormQuotient
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.SinglePlace
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.NormQuotient
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.SinglePlace
 /-!
 # Finite local families of ideles
 
@@ -14,6 +16,8 @@ one-place ideles.  Applying the global norm-quotient map gives the finite
 product identity.  The quotient map itself factors through idele classes
 and therefore kills principal ideles.
 -/
+
+@[expose] public section
 
 open scoped NumberField BigOperators
 open NumberField IsDedekindDomain

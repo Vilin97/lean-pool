@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeEvaluation.FiniteLevelEvaluation
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelAbelian
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
-import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeEvaluation.FiniteLevelEvaluation
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelAbelian
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 /-!
 # Primitive roots from finite p-adic Lubin--Tate levels
 
@@ -16,6 +18,8 @@ The evaluated multiplicative point yields an actual primitive
 identifies the genuine finite-level Galois action with the cyclotomic power
 action.
 -/
+
+@[expose] public section
 
 noncomputable section
 

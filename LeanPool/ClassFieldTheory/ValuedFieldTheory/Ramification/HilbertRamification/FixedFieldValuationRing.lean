@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.UniqueExtensionIntegralClosure
-import Mathlib.RingTheory.DiscreteValuationRing.TFAE
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.UniqueExtensionIntegralClosure
+public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
 /-!
 # Restricted valuation rings on actual fixed fields
 
@@ -15,6 +17,8 @@ extension identifies that restricted ring with the integral closure of the
 base valuation ring.  It is consequently a DVR, without a completeness or
 Henselian assumption.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,21 +3,23 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Relative.Support
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Relative.FinitePlaceTensorNorm
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.RamificationInvariants
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.ExponentialValuation
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Complete
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.TensorProductDecomposition
-import Mathlib.Algebra.Module.Torsion.Basic
-import Mathlib.LinearAlgebra.Basis.SMul
-import Mathlib.RingTheory.Algebraic.Integral
-import Mathlib.RingTheory.DedekindDomain.Factorization
-import Mathlib.RingTheory.Discriminant
-import Mathlib.RingTheory.Localization.Finiteness
-import Mathlib.RingTheory.Valuation.LocalSubring
-import Mathlib.RingTheory.Valuation.ValuationSubring
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Relative.Support
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Relative.FinitePlaceTensorNorm
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.RamificationInvariants
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.ExponentialValuation
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Complete
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.TensorProductDecomposition
+public import Mathlib.Algebra.Module.Torsion.Basic
+public import Mathlib.LinearAlgebra.Basis.SMul
+public import Mathlib.RingTheory.Algebraic.Integral
+public import Mathlib.RingTheory.DedekindDomain.Factorization
+public import Mathlib.RingTheory.Discriminant
+public import Mathlib.RingTheory.Localization.Finiteness
+public import Mathlib.RingTheory.Valuation.LocalSubring
+public import Mathlib.RingTheory.Valuation.ValuationSubring
 /-!
 # Integral lattices for the relative tensor basis
 
@@ -39,6 +41,8 @@ the product of the completion valuation rings; applying the statement
 to a unit and its inverse gives the actual product of local integer
 unit groups needed in the finite-support decomposition.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct NNReal
 open NumberField IsDedekindDomain

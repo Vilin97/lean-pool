@@ -3,11 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.GroupTheory.FiniteAbelian.Basic
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Abstract.KummerGlobalOperator
+
+public import Mathlib.GroupTheory.FiniteAbelian.Basic
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Abstract.KummerGlobalOperator
 
 /-! # Kummer Abelian Cyclic Factors -/
+
+@[expose] public section
 namespace KummerTheory
 
 open CyclicCohomology

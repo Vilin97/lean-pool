@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FormalModule.LubinTateAction
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FormalModule.LubinTateAction
 /-!
 # The finite Lubin–Tate bracket construction: Lubin--Tate brackets in an ambient extension field
 
@@ -16,6 +18,8 @@ field `A` of the same characteristic, from a chosen coefficient embedding
 construction will be specialized to a separable closure when forming the
 Lubin--Tate level fields.
 -/
+
+@[expose] public section
 
 noncomputable section
 

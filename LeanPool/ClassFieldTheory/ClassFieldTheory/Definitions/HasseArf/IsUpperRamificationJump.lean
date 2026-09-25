@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.UpperRamificationGroup
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.UpperRamificationGroup
 /-!
 # Upper ramification jumps
 
@@ -12,6 +14,8 @@ The right-limit group is the supremum of upper groups at strictly larger
 indices. A jump occurs exactly when that right limit differs from the group
 at the index itself.
 -/
+
+@[expose] public section
 
 noncomputable section
 

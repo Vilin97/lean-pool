@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Basic
-import Mathlib.RingTheory.PowerSeries.Basic
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Basic
+public import Mathlib.RingTheory.PowerSeries.Basic
 /-!
 # Lubin--Tate power series
 
@@ -15,6 +17,8 @@ coefficient, prescribed linear coefficient, and reduces to the residue-field
 Frobenius power series. The chosen element is not required to be a uniformizer
 in the structure itself, so the coefficient package can be reused independently.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,15 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
-import Mathlib.FieldTheory.Galois.GaloisClosure
-import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
-import Mathlib.NumberTheory.Padics.HeightOneSpectrum
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.FiniteAbelianCompositum
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.FiniteRamifiedPrimes
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.LocalCyclotomicEmbedding
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicLocalization
+public import Mathlib.FieldTheory.Galois.GaloisClosure
+public import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
+public import Mathlib.NumberTheory.Padics.HeightOneSpectrum
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.FiniteAbelianCompositum
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.FiniteRamifiedPrimes
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.LocalCyclotomicEmbedding
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.Basic
 /-!
 # Setup for the global Kronecker--Weber theorem
 
@@ -22,6 +24,8 @@ field and a cyclotomic field.  The remaining arithmetic step is to choose the
 cyclotomic order from the local data and prove that the compositum has no
 larger degree than the cyclotomic subfield.
 -/
+
+@[expose] public section
 
 noncomputable section
 

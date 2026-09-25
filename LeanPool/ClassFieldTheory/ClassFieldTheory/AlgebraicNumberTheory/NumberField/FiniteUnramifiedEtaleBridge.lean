@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.FiniteUnramifiedTower
-import Mathlib.RingTheory.Etale.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.FiniteUnramifiedTower
+public import Mathlib.RingTheory.Etale.Basic
 /-!
 # Finite-place unramifiedness bridges for number fields
 
@@ -13,6 +15,8 @@ This file transports finite-place unramifiedness across an equivalence of top
 fields and connects the number-theoretic predicate to the commutative-algebra
 notions of formal unramifiedness and étaleness for rings of integers.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

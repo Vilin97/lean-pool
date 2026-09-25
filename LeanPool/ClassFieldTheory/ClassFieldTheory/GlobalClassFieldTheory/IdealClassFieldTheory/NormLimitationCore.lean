@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.NormLimitationStatement
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.NormLimitationStatement
 /-!
 # Proof core for ideal norm limitation
 
 This leaf proves the packaged statement using the idèle-class norm-range
 equality and the finite-extension ideal Artin kernel theorem.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

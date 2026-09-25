@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.SPlaces
-import Mathlib.Algebra.Exact.Basic
-import Mathlib.LinearAlgebra.Dimension.Torsion.Finite
-import Mathlib.LinearAlgebra.StdBasis
-import Mathlib.NumberTheory.NumberField.ClassNumber
-import Mathlib.NumberTheory.NumberField.Units.Regulator
-import Mathlib.RingTheory.DedekindDomain.Factorization
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.SPlaces
+public import Mathlib.Algebra.Exact.Basic
+public import Mathlib.LinearAlgebra.Dimension.Torsion.Finite
+public import Mathlib.LinearAlgebra.StdBasis
+public import Mathlib.NumberTheory.NumberField.ClassNumber
+public import Mathlib.NumberTheory.NumberField.Units.Regulator
+public import Mathlib.RingTheory.DedekindDomain.Factorization
 /-!
 # Torsion and rank sources for `S`-units
 
@@ -18,6 +20,8 @@ This file supplies the algebraic rank and torsion input for `S`-units.
 The finite set `S` contains the finite places; all infinite places are
 understood to be present.
 -/
+
+@[expose] public section
 
 noncomputable section
 

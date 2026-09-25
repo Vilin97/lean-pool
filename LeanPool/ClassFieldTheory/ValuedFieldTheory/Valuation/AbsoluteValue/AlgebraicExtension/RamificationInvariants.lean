@@ -3,15 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.UniqueAlgebraicExtensions
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.LinearAlgebra.Dimension.Free
-import Mathlib.Algebra.Order.WithTop.Untop0
-import Mathlib.GroupTheory.Index
-import Mathlib.Data.ZMod.QuotientGroup
-import Mathlib.Algebra.Algebra.Tower
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.UniqueAlgebraicExtensions
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.LinearAlgebra.Dimension.Free
+public import Mathlib.Algebra.Order.WithTop.Untop0
+public import Mathlib.GroupTheory.Index
+public import Mathlib.Data.ZMod.QuotientGroup
+public import Mathlib.Algebra.Algebra.Tower
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.LocalRingEquiv
 /-!
 # the fundamental inequality and identity
 
@@ -23,6 +25,8 @@ finite separable extension, the finite norm-formula theorem identifies the targe
 with the integral closure, so the local Dedekind ramification identity applies
 without completeness.
 -/
+
+@[expose] public section
 
 noncomputable section
 

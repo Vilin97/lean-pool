@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.AmbientDivisionTorsion
-import Mathlib.FieldTheory.IsSepClosed
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.AmbientDivisionTorsion
+public import Mathlib.FieldTheory.IsSepClosed
 /-!
 # The uniformizer norm identity: equal-characteristic Lubin--Tate division polynomials
 
@@ -19,6 +21,8 @@ cuts out the primitive level-`n+1` division points.  Here we construct these
 polynomials over `κ((T))`, prove the degree calculation, and choose an actual
 primitive root in the separable closure.
 -/
+
+@[expose] public section
 
 noncomputable section
 

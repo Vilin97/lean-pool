@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.Reduction
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.Reduction
 /-!
 # Recursive coefficients for Lubin--Tate intertwiners
 
@@ -14,6 +16,8 @@ every coefficient of the current defect divisible by the uniformizer.  In
 total degree `m ≥ 2`, the remaining scalar equation has factor
 `1 - π ^ (m - 1)`, which is a unit.
 -/
+
+@[expose] public section
 
 noncomputable section
 

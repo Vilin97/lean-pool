@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpSeries.FormalCoreBase.PowerSeriesComposition
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Finset.Finsupp
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpSeries.FormalCoreBase.PowerSeriesComposition
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Data.Finset.Finsupp
 /-!
 # The two-variable formal logarithm product argument
 
 This module defines `X + Y + XY`, its logarithmic substitution, and the
 support description needed for the formal product formula.
 -/
+
+@[expose] public section
 
 noncomputable section
 

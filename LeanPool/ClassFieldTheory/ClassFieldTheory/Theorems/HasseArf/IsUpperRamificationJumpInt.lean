@@ -3,17 +3,21 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.IsUpperRamificationJump
-import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
-import Mathlib.Algebra.Group.Subgroup.Ker
-import Mathlib.NumberTheory.LocalField.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.IsUpperRamificationJump
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.HasseArf
+public import Mathlib.Algebra.Group.Subgroup.Ker
+public import Mathlib.NumberTheory.LocalField.Basic
 /-!
 # Integrality of upper ramification jumps
 
 The public upper filtration is transported to the existing local upper
 filtration in the implementation layer, including its right limit.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

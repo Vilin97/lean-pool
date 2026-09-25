@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormOneCompact
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PositiveArchimedeanSection
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.InfiniteGlobalArtinDescent
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormOneCompact
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PositiveArchimedeanSection
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.InfiniteGlobalArtinDescent
 /-!
 # Surjectivity of the infinite global Artin homomorphism
 
@@ -16,6 +18,8 @@ Artin homomorphism, and hence the infinite global Artin homomorphism, kills
 it.  Multiplication by this section therefore replaces any idele by a
 norm-one idele without changing its Artin symbol.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NNReal NumberField Topology
 open NumberField IsDedekindDomain

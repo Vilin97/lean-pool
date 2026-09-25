@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.GaloisCohomology
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.GaloisCohomology
 /-!
 # Root characters for Kummer theory
 
 Support API for root-quotient constructions in concrete Kummer extensions.
 -/
+
+@[expose] public section
 
 namespace KummerTheory
 

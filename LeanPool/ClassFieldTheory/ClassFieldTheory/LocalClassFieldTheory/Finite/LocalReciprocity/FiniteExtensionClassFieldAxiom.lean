@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.Analysis.Normed.Unbundled.SpectralNorm
-import Mathlib.Topology.Algebra.Module.FiniteDimension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuedTopology
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.Main
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.Analysis.Normed.Unbundled.SpectralNorm
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuedTopology
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.Main
 
 /-! # Finite Extension Class Field Axiom -/
+
+@[expose] public section
 namespace LocalClassFieldTheory
 
 open LocalFieldTheory

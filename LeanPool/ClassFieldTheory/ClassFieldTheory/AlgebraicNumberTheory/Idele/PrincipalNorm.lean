@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.Core
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormCore
-import Mathlib.RingTheory.FractionalIdeal.Norm
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.Core
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormCore
+public import Mathlib.RingTheory.FractionalIdeal.Norm
 /-!
 # The product formula for principal ideles
 
 This file proves that the absolute idele norm is trivial on the diagonal
 copy of `Kˣ`, and hence descends to the idele class group.
 -/
+
+@[expose] public section
 
 open scoped NumberField RestrictedProduct NNReal WithZero
 open NumberField IsDedekindDomain

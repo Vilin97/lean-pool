@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.Data.ZMod.QuotientGroup
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Basic
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.Valuation
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.Data.ZMod.QuotientGroup
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Basic
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.ClassFormation.Valuation
 /-! Provides the public declarations in the
   `LocalClassFieldTheory.ClassFormation.ValueGroupCohomology` Lean module. -/
+
+@[expose] public section
 
 namespace LocalClassFieldTheory
 

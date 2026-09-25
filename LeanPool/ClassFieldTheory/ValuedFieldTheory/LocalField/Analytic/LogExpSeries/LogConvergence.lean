@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Topology.Algebra.InfiniteSum.Nonarchimedean
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpSeries.ExpConvergence
+
+public import Mathlib.Topology.Algebra.InfiniteSum.Nonarchimedean
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpSeries.ExpConvergence
 /-!
 Establishes convergence and summability of the logarithm series on the nonarchimedean open unit
 ball.
 -/
+
+@[expose] public section
 
 open Filter
 open Polynomial

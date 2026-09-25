@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedChangedStandardResidue
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedResidueFrobenius
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedChangedStandardResidue
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedResidueFrobenius
 /-!
 # Frobenius orientation in the completed standard/changed compositum
 
@@ -18,6 +20,8 @@ coefficient Frobenius and relative residue arithmetic Frobenius are the same
 `p`-power map, so the explicit candidate is the inverse of the actual
 arithmetic Frobenius of the finite unramified extension.
 -/
+
+@[expose] public section
 
 noncomputable section
 

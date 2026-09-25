@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.Core
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Completeness
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.ValuationSubring
-import Mathlib.Analysis.Normed.Unbundled.SpectralNorm
-import Mathlib.RingTheory.Norm.Transitivity
-import Mathlib.RingTheory.Complex
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.AlgebraicExtension.Core
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Completeness
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.ValuationSubring
+public import Mathlib.Analysis.Normed.Unbundled.SpectralNorm
+public import Mathlib.RingTheory.Norm.Transitivity
+public import Mathlib.RingTheory.Complex
 /-!
 # Finite-extension norm formula for complete valuations
 
@@ -17,6 +19,8 @@ The nonarchimedean branch uses mathlib's spectral norm.  The archimedean branch
 uses the completed Ostrowski theorem, reducing the statement to the
 standard `ℝ` and `ℂ` absolute values.
 -/
+
+@[expose] public section
 
 noncomputable section
 

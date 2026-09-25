@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.NumberField.Discriminant.Different
-import Mathlib.NumberTheory.NumberField.Ideal.Basic
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.NumberFieldPrimes
+
+public import Mathlib.NumberTheory.NumberField.Discriminant.Different
+public import Mathlib.NumberTheory.NumberField.Ideal.Basic
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.NumberFieldPrimes
 /-!
 # Global cyclotomic inertia argument: the inertia-generated fixed field is unramified
 
@@ -15,6 +17,8 @@ Kronecker--Weber theorem.  If a subgroup of a finite Galois group contains
 the inertia group at every prime of the top field, then its fixed field is
 unramified at every finite prime.
 -/
+
+@[expose] public section
 
 noncomputable section
 

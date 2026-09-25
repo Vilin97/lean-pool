@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RingTheory.Valuation.ValuationRing
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.ErrorPowers
+
+public import Mathlib.RingTheory.Valuation.ValuationRing
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.ErrorPowers
 /-!
 # the finite minimum coefficient
 
@@ -15,6 +17,8 @@ valuation and calls it `π`.  In a valuation ring this is the same algebraic
 input as choosing one coefficient that divides all coefficients in the finite
 set.
 -/
+
+@[expose] public section
 
 noncomputable section
 

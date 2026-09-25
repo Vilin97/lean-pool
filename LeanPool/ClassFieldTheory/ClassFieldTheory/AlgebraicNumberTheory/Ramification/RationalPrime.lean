@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.Padics.HeightOneSpectrum
-import Mathlib.NumberTheory.NumberField.Ideal.Basic
+
+public import Mathlib.NumberTheory.Padics.HeightOneSpectrum
+public import Mathlib.NumberTheory.NumberField.Ideal.Basic
 /-!
 # Rational prime ideals
 
 This file identifies the height-one ideal of `ℤ` attached to a positive
 rational prime with its usual principal ideal.
 -/
+
+@[expose] public section
 
 noncomputable section
 

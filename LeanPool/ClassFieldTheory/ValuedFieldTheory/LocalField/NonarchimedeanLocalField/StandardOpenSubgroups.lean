@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.PrincipalUnitQuotients
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.PrincipalUnitQuotients
 /-!
 # Standard open subgroups of a nonarchimedean local field
 
@@ -12,6 +14,8 @@ An open finite-index subgroup of a nonarchimedean local field multiplicative gro
 contains a standard subgroup built from a uniformizer and a sufficiently deep
 principal-unit group.
 -/
+
+@[expose] public section
 
 noncomputable section
 

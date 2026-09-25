@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeEvaluation.CompletedScalarEndomorphism
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.ChangedUniformizer
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.MultiplicativeEvaluation.CompletedScalarEndomorphism
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.ChangedUniformizer
 /-!
 # The completed multiplicative primitive point
 
@@ -14,6 +16,8 @@ completed standard primitive point.  It proves the exact standard and
 changed-uniformizer torsion bounds and constructs the actual unit action on
 that point.
 -/
+
+@[expose] public section
 
 noncomputable section
 

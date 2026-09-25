@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormQuotient
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.MathlibInterface
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.LocalClassFieldTheory.FiniteAbelianLocalReciprocityQuotientEquivOfArtin
-import Mathlib.FieldTheory.KrullTopology
-import Mathlib.Topology.Algebra.Constructions
-import Mathlib.Topology.Algebra.Group.Quotient
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormQuotient
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.MathlibInterface
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.LocalClassFieldTheory.FiniteAbelianLocalReciprocityQuotientEquivOfArtin
+public import Mathlib.FieldTheory.KrullTopology
+public import Mathlib.Topology.Algebra.Constructions
+public import Mathlib.Topology.Algebra.Group.Quotient
 /-!
 # The local norm quotient is induced by the Artin map
 
@@ -18,6 +20,8 @@ isomorphism alone do not say that their witnesses agree. Here a single
 canonical Artin map is chosen, and its quotient isomorphism is characterized
 uniquely by its values on classes of nonzero field elements.
 -/
+
+@[expose] public section
 
 noncomputable section
 

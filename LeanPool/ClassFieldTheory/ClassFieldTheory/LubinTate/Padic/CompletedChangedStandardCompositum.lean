@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.FiniteAbelianCompositum
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedChangedUniformizerFixedField
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedStandardLevelTransport
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.FiniteAbelianCompositum
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedChangedUniformizerFixedField
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedStandardLevelTransport
 /-!
 # The finite standard/changed compositum in the completed p-adic level
 
@@ -22,6 +24,8 @@ factor, and acts on the standard factor by the direct unit parameter.  This
 is the finite automorphism which the changed-uniformizer norm calculation
 will identify with the actual local Artin symbol.
 -/
+
+@[expose] public section
 
 noncomputable section
 

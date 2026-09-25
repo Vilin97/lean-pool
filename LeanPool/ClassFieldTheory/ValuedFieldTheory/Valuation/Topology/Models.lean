@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Topology.Homeomorph.Defs
-import Mathlib.Topology.Order
-import Mathlib.Topology.WithTopology
+
+public import Mathlib.Topology.Homeomorph.Defs
+public import Mathlib.Topology.Order
+public import Mathlib.Topology.WithTopology
 /-!
 # Topological API for `WithTopology`
 
@@ -15,6 +17,8 @@ underlying type, topology, and basic API come directly from Mathlib. Algebraic
 structures needed on a particular topology-indexed copy are installed at that
 copy's owner rather than globally in the root `WithTopology` namespace.
 -/
+
+@[expose] public section
 
 universe u v
 

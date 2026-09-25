@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedFieldGeneration
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedFieldGeneration
 /-!
 # The completed theta-intertwining theorem: degree of the completed Frobenius fixed field
 
@@ -13,6 +15,8 @@ The direct theta value has the changed primitive polynomial over `k((T))`.
 Together with the fixed-field generation theorem this gives the exact extension degree `(q - 1)
   q^n`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IdeleClassDirectLimitFixedPointDescent
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Abstract.KummerDelta
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IdeleClassDirectLimitFixedPointDescent
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Abstract.KummerDelta
 /-!
 # Fixed points of the rational idele-class direct limit
 
 The actual idele class group of a finite rational intermediate field is
 identified with the corresponding fixed subgroup of the direct limit.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Polynomial.Splits
-import Mathlib.Data.Finset.Max
-import Mathlib.RingTheory.DiscreteValuationRing.Basic
+
+public import Mathlib.Algebra.Polynomial.Splits
+public import Mathlib.Data.Finset.Max
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 /-!
 # A root-proximity estimate over a discrete valuation ring
 
@@ -19,6 +21,8 @@ ultrametric inequality.
 Repeated roots and zero derivative values are allowed; the statement is in
 `ℕ∞`, so the estimate also covers infinite additive valuations.
 -/
+
+@[expose] public section
 
 noncomputable section
 

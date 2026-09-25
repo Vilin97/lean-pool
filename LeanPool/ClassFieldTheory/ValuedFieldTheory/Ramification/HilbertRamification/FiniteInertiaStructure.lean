@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FiniteRamificationPrimary
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FiniteOrderValuation
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.CharacterMap
-import Mathlib.Algebra.CharP.Reduced
-import Mathlib.GroupTheory.Sylow
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FiniteRamificationPrimary
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FiniteOrderValuation
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.CharacterMap
+public import Mathlib.Algebra.CharP.Reduced
+public import Mathlib.GroupTheory.Sylow
 /-!
 # Structure of finite inertia
 
@@ -17,6 +19,8 @@ values, so this character is defined on all inertia. In residue characteristic
 zero its kernel is trivial and inertia is commutative. In residue characteristic
 p every p-subgroup lies in the ramification kernel, which is itself a p-group.
 -/
+
+@[expose] public section
 
 namespace RamificationTheory.HilbertRamification.ValuationSubring
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.ArithmeticNormalization
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.RationalRayClassFieldCyclotomic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.ArithmeticNormalization
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.RationalRayClassFieldCyclotomic
 /-!
 # Arithmetic reciprocity for rational cyclotomic ray class fields
 
@@ -15,6 +17,8 @@ prime `q` acts on roots of unity by the direct power `q`.  The finite
 Galois/ray-class comparison is retained as a `ContinuousMulEquiv` with
 the native quotient and finite Krull topologies.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NumberField Cyclotomic
 

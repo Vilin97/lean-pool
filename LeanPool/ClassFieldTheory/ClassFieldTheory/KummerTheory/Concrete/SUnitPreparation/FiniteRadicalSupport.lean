@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitPreparation.SUnitLocalPowerKernel
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KummerTheory.Concrete.SUnitPreparation.SUnitLocalPowerKernel
 /-!
 # Finite support for Kummer radicals
 
 A chosen finite enlargement of places containing representatives of every class in a finite
   Kummer radical.
 -/
+
+@[expose] public section
 
 open scoped NumberField IsMulCommutative NNReal ValuativeRel
 open NumberField IsDedekindDomain

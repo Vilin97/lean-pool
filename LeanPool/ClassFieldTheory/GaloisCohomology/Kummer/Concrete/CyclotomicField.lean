@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Abelian
-import Mathlib.NumberTheory.Cyclotomic.Basic
+
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.NumberTheory.Cyclotomic.Basic
 /-!
 # Concrete cyclotomic fields
 
@@ -13,6 +15,8 @@ This file records two structural facts about the concrete cyclotomic-field
 model: it admits a primitive generator of the defining order, and divisibility
 of orders induces an algebra homomorphism between the corresponding fields.
 -/
+
+@[expose] public section
 
 noncomputable section
 

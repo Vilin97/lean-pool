@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NormalClosure
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.PowerCongruenceCore
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.CyclotomicKummerNormDescent
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NormalClosure
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.PowerCongruenceCore
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.CyclotomicKummerNormDescent
 /-!
 # Class fields of closed finite-index idele-class subgroups
 
@@ -23,6 +25,8 @@ Finite-abelian classification applied to that actual norm neighbourhood
 then realizes `H`, transported to the canonical embedded copy of the base
 field, as an exact determinant-norm subgroup.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LowerRamification
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.HerbrandFunction
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LowerRamification
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.HerbrandFunction
 /-!
 # Herbrand functions and upper groups of standard Lubin--Tate levels
 
@@ -13,6 +15,8 @@ This file names the lower filtration, Herbrand function, inverse Herbrand
 function, and genuine real upper ramification groups attached to the chosen
 integral-closure valuation on a standard finite Lubin--Tate level.
 -/
+
+@[expose] public section
 
 noncomputable section
 

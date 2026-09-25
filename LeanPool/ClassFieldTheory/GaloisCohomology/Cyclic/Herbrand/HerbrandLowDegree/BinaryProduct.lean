@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Product
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.EquivariantEquiv
-import Mathlib.Algebra.GroupWithZero.Action.Prod
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Product
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.EquivariantEquiv
+public import Mathlib.Algebra.GroupWithZero.Action.Prod
 /-!
 # Low-degree Tate cohomology of binary products
 
@@ -14,6 +16,8 @@ This specializes the dependent-product calculation to two possibly
 different coefficient groups.  It is used to join the unrestricted and
 integral parts of a supported idele group.
 -/
+
+@[expose] public section
 
 noncomputable section
 

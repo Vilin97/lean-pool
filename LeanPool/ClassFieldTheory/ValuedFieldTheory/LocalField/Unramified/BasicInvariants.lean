@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.Definitions
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.Definitions
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 /-!
 # Value-group invariants of finite unramified extensions
 
@@ -15,6 +17,8 @@ and the fundamental inequality of the fundamental inequality.  The actual quotie
 value groups is finite; degree equality then forces its cardinality to be one,
 and hence the source and target value subgroups coincide.
 -/
+
+@[expose] public section
 
 noncomputable section
 

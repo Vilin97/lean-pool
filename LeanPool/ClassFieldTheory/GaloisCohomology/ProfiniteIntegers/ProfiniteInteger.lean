@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.Topology.Neighborhoods
-import Mathlib.Algebra.Group.Subgroup.Ker
-import Mathlib.GroupTheory.Index
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteIntegerCore
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.Topology.Neighborhoods
+public import Mathlib.Algebra.Group.Subgroup.Ker
+public import Mathlib.GroupTheory.Index
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteIntegerCore
 
 /-! # Profinite Integer -/
+
+@[expose] public section
 namespace ClassFormation
 
 /-!

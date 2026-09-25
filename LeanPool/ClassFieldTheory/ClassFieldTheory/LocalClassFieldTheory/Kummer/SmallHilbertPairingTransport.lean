@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.MathlibHilbertPairing
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ShrinkTransport
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.MathlibHilbertPairing
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ShrinkTransport
 /-!
 # Transport of Hilbert pairings across field equivalences
 
@@ -13,6 +15,8 @@ The Type 0 local construction can be applied to a small representative of a
 local field.  This file transports its public power-class and Kummer-norm
 statements back across the field equivalence.
 -/
+
+@[expose] public section
 
 noncomputable section
 

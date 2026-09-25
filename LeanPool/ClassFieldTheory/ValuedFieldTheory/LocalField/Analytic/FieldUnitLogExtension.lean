@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpSeries.Homomorphisms
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpSeries.Homomorphisms
 /-!
 # Extending the logarithm to the field-unit group
 
@@ -13,6 +15,8 @@ uniformizer.  Its uniformizer value must instead be chosen so that the
 distinguished rational prime has logarithm zero.  This file isolates that
 algebraic construction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

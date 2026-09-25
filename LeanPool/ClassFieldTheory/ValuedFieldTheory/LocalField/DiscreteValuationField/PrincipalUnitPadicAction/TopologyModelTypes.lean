@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.InverseLimitCore
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.Models
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.InverseLimitCore
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.Models
 /-!
 # Type-level topology models for principal units
 
@@ -13,6 +15,8 @@ Adic principal units, discrete finite quotients, and the prodiscrete inverse lim
 represented by distinct wrapper types so that their topologies cannot be confused by instance
 selection.
 -/
+
+@[expose] public section
 
 noncomputable section
 

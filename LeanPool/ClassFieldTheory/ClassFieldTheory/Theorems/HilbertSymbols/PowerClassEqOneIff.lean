@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.PowerClass
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.PowerClass
 /-!
 # Power-class laws and representatives
 
@@ -12,6 +14,8 @@ For a field `K` and a positive integer `n`, `PowerClassGroup K n` is the
 quotient of `Kˣ` by the subgroup of `n`-th powers. A class is the identity
 exactly when its representative belongs to the power subgroup.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Frobenius.CoefficientFrobenius
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Existence.LaurentLocalField
-import Mathlib.RingTheory.PowerSeries.Evaluation
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Frobenius.CoefficientFrobenius
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Existence.LaurentLocalField
+public import Mathlib.RingTheory.PowerSeries.Evaluation
 /-!
 # The equal-characteristic completed-unramified construction: the completed maximal-unramified
   field in equal characteristic
@@ -23,6 +25,8 @@ source in the equal-characteristic completed-unramified construction.  In partic
 equivalence; it is not a theorem-shaped replacement for later theta
 evaluation or norm-subgroup arguments.
 -/
+
+@[expose] public section
 
 noncomputable section
 

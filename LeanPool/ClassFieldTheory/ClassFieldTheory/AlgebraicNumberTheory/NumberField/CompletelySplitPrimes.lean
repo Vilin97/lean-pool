@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.DegreeOnePrimes
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.Splitting.FinitePlaceIdeal
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.Basic
-import Mathlib.FieldTheory.Galois.IsGaloisGroup
-import Mathlib.NumberTheory.Padics.HeightOneSpectrum
-import Mathlib.RingTheory.RamificationInertia.Ramification
-import Mathlib.Algebra.Group.Subgroup.Finite
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.DegreeOnePrimes
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.Splitting.FinitePlaceIdeal
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.Basic
+public import Mathlib.FieldTheory.Galois.IsGaloisGroup
+public import Mathlib.NumberTheory.Padics.HeightOneSpectrum
+public import Mathlib.RingTheory.RamificationInertia.Ramification
+public import Mathlib.Algebra.Group.Subgroup.Finite
 
 /-! # Completely Split Primes -/
+
+@[expose] public section
 open scoped NumberField Pointwise
 open NumberField IsDedekindDomain HilbertRamification.Dedekind
 

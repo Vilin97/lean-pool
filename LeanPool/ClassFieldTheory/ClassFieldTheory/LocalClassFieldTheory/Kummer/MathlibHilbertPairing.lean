@@ -3,20 +3,24 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.All
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.CanonicalKummerNorm
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertSymbol
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertPairingNondegeneracy
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteGeneration
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteDualSeparation
-import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.All
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.CanonicalKummerNorm
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertSymbol
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertPairingNondegeneracy
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteGeneration
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.FiniteDualSeparation
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 /-!
 # Mathlib-facing local Hilbert pairing
 
 The existing local Artin construction is transported to the public
 power-class group and root-of-unity subgroup.
 -/
+
+@[expose] public section
 
 noncomputable section
 

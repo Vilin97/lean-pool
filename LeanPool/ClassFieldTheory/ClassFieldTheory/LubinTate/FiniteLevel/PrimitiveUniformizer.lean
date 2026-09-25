@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveTorsion
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.RamificationAddVal
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.AddVal
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteIntegralClosure
-import Mathlib.RingTheory.Finiteness.Cardinality
-import Mathlib.RingTheory.Discriminant
-import Mathlib.RingTheory.Polynomial.Eisenstein.IsIntegral
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveTorsion
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.RamificationAddVal
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.AddVal
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteIntegralClosure
+public import Mathlib.RingTheory.Finiteness.Cardinality
+public import Mathlib.RingTheory.Discriminant
+public import Mathlib.RingTheory.Polynomial.Eisenstein.IsIntegral
 /-!
 # Uniformizers in standard Lubin--Tate level fields
 
@@ -26,6 +28,8 @@ maximal-ideal filtration.  Comparing with the leading term and the
 fundamental identity forces the normalized additive valuation of `λₙ` to be
 one.
 -/
+
+@[expose] public section
 
 noncomputable section
 

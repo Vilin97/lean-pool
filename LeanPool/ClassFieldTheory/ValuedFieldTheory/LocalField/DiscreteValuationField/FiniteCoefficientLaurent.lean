@@ -3,16 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.Algebra.ZMod
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.LinearAlgebra.Basis.Basic
-import Mathlib.LinearAlgebra.Dimension.Free
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.RingTheory.Finiteness.Basic
-import Mathlib.RingTheory.LaurentSeries
-import Mathlib.RingTheory.Localization.Away.Basic
-import Mathlib.RingTheory.RingHom.Finite
+
+public import Mathlib.Algebra.Algebra.ZMod
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.LinearAlgebra.Basis.Basic
+public import Mathlib.LinearAlgebra.Dimension.Free
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.RingTheory.Finiteness.Basic
+public import Mathlib.RingTheory.LaurentSeries
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Mathlib.RingTheory.RingHom.Finite
 /-!
 # Coefficient-field descent for Laurent series
 
@@ -20,6 +22,8 @@ This file starts the remaining equal-characteristic descent in the local-field s
   classification: a finite coefficient field `k` of characteristic `p` gives a canonical
 coefficientwise map from `F_p((X))` to `k((X))`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

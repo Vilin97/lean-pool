@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.RamificationInertia.Unramified
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.PrimeContractions
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.OrbitCardinality
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.TowerInvariants
+
+public import Mathlib.NumberTheory.RamificationInertia.Unramified
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.PrimeContractions
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.OrbitCardinality
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.TowerInvariants
 /-!
 # Hilbert ramification theory: number-field prime ideals in the fixed fields
 
@@ -15,6 +17,8 @@ This file proves the ramification and inertia invariant statements for the
 contracted primes `P_Z` and `P_T` appearing in
 the decomposition and inertia fixed-field tower.
 -/
+
+@[expose] public section
 
 noncomputable section
 

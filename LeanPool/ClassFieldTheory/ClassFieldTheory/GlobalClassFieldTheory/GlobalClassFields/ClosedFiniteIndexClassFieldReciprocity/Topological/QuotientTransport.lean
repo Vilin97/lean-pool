@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ClosedFiniteIndexClassFieldReciprocity.Degree
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ClosedFiniteIndexClassFieldReciprocity.Degree
 /-!
 # Continuous transport between equal quotient groups
 
@@ -13,6 +15,8 @@ native quotient topology.  Eliminating the equality therefore gives the
 continuous multiplicative equivalence directly; no discrete-topology
 instances or domain-specific class-field tower are required.
 -/
+
+@[expose] public section
 
 noncomputable section
 

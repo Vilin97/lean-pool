@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Abelian
-import Mathlib.FieldTheory.Galois.Profinite
-import Mathlib.FieldTheory.IsSepClosed
-import Mathlib.Topology.Algebra.Group.TopologicalAbelianization
+
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.FieldTheory.Galois.Profinite
+public import Mathlib.FieldTheory.IsSepClosed
+public import Mathlib.Topology.Algebra.Group.TopologicalAbelianization
 /-!
 # Absolute abelianization inside the separable closure
 
@@ -16,6 +18,8 @@ of the Galois group of its separable closure with the Galois group of the
 maximal abelian subextension.  Working inside the separable closure makes the
 construction uniform in every characteristic.
 -/
+
+@[expose] public section
 
 noncomputable section
 

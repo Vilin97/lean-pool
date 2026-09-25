@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.StandardSeries
-import Mathlib.Algebra.Polynomial.Monic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.StandardSeries
+public import Mathlib.Algebra.Polynomial.Monic
 /-!
 # Standard Lubin--Tate division polynomials
 
@@ -30,6 +32,8 @@ The factorization
 is purely polynomial.  No assertion about roots, irreducibility, or finite
 Lubin--Tate extensions is made here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

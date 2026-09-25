@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.IdealMap
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Topology
-import Mathlib.RingTheory.DedekindDomain.SInteger
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.IdealMap
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Topology
+public import Mathlib.RingTheory.DedekindDomain.SInteger
 /-!
 # Ideles and units with finite support
 
@@ -14,6 +16,8 @@ This file formalizes finite-support objects for ideles and units. Since every
 archimedean place is always included, a finite set
 `S` below records only its finite places.
 -/
+
+@[expose] public section
 
 open scoped NumberField RestrictedProduct
 open NumberField IsDedekindDomain

@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalHilbertSymbol.InfinitePlace
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.InfinitePlaceArtin
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtension
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalHilbertSymbol.InfinitePlace
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.InfinitePlaceArtin
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtension
 /-!
 # Infinite-place Kummer root characters
 
@@ -15,6 +17,8 @@ character of the actual infinite-place Artin map.  The complex-place branch
 is completed here.  The real quadratic action is kept as the next arithmetic
 leaf rather than being introduced as an assumption.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField

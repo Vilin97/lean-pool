@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedField
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedField
 /-!
 # The completed theta-intertwining theorem: the canonical base algebra on the fixed field
 
@@ -12,6 +14,8 @@ This light leaf names the base algebra already determined by the completed
 Frobenius action.  Naming it prevents repeated fallback searches through
 generic scalar-action instances in later norm calculations.
 -/
+
+@[expose] public section
 
 noncomputable section
 

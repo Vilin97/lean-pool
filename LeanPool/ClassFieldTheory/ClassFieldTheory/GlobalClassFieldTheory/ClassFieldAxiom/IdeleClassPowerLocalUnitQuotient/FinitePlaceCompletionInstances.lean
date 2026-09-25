@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.LocallyCompact
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.ValuedAdicComplete
-import Mathlib.NumberTheory.NumberField.ProductFormula
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.LocallyCompact
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.ValuedAdicComplete
+public import Mathlib.NumberTheory.NumberField.ProductFormula
 /-!
 # Canonical structures on finite completions
 
@@ -14,6 +16,8 @@ This module installs the complete discrete valuation, characteristic-zero,
 and finite residue-field structures used by finite-place class-field
 arithmetic.
 -/
+
+@[expose] public section
 
 open scoped NumberField ValuativeRel
 open NumberField IsDedekindDomain

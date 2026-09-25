@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.UnramifiedRationals
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.FixedFieldUnramified
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.FixedFields
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.UnramifiedRationals
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.FixedFieldUnramified
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.FixedFields
 /-!
 # Global cyclotomic inertia argument: completion of the inertia-generation step
 
@@ -15,6 +17,8 @@ groups has an everywhere-unramified fixed field.  Minkowski's discriminant
 bound makes that fixed field equal to `ℚ`, and Galois correspondence then
 makes the subgroup equal to the full Galois group.
 -/
+
+@[expose] public section
 
 noncomputable section
 

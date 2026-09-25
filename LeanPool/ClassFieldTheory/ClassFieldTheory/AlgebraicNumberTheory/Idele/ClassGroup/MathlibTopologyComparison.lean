@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.MathlibComparison
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.FiniteMathlibTopologyComparison
-import Mathlib.Topology.Algebra.Group.Quotient
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.MathlibComparison
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.FiniteMathlibTopologyComparison
+public import Mathlib.Topology.Algebra.Group.Quotient
 /-!
 # Continuity of the comparison with Mathlib's idèle class group
 
@@ -14,6 +16,8 @@ The algebraic equivalence from the restricted-product idèle class group to
 Mathlib's adele-unit quotient is continuous. This is the quotient descent of
 the continuous map on idèles.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.CyclicRayClassMaximality
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.CyclicRayClassMaximality
 /-!
 # Uniqueness of maximal cyclic norm subgroups at a narrow finite conductor
 
@@ -14,6 +16,8 @@ actual idèle-class norm subgroup.  Thus their concrete norm quotients are
 canonically equivalent.  This is the norm-subgroup uniqueness part of the
 cyclic class-field correspondence at a fixed narrow finite conductor.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

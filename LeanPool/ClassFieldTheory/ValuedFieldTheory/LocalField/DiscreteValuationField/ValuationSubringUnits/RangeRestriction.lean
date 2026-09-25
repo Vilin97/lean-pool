@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Basic
 /-!
 # Restricting a valuation to its multiplicative range
 
 The restricted valuation has the same valuation ring, maximal ideal, and
 residue field as the original valuation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

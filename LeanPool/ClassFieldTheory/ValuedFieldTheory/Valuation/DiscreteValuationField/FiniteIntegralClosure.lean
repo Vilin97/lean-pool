@@ -3,11 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteExtension.Core
-import Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteExtension.Core
+public import Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing
 
 /-! # Finite Integral Closure -/
+
+@[expose] public section
 namespace ValuationTheory
 
 /-!

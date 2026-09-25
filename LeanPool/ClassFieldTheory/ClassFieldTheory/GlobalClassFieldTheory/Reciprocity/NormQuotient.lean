@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.IdeleNorm
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.IdeleNorm
 /-!
 # Ideles in the ordinary idele-class norm quotient
 
@@ -12,6 +14,8 @@ This file supplies the useful composite from ideles to the quotient
 of `C_K` by the range of the ordinary norm `C_L → C_K`, used by the
 global norm-residue-symbol constructions.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

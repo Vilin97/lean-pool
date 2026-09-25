@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumGlobalEmbedding
-import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.PadicLocalizationCanonicalValuation
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumGlobalEmbedding
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.PadicLocalizationCanonicalValuation
 /-!
 # A valued global embedding of the auxiliary compositum
 
@@ -14,6 +16,8 @@ Consequently the pullback of the canonical absolute value on the common
 local cyclotomic target is exactly the chosen `p`-adic place.  The corrected
 normal-compositum embedding preserves this exact left restriction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

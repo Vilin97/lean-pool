@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Topology
-import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
-import Mathlib.Topology.Algebra.Valued.LocallyCompact
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Topology
+public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+public import Mathlib.Topology.Algebra.Valued.LocallyCompact
 /-!
 # Local compactness of the idele group
 
@@ -15,6 +17,8 @@ The topology on the finite ideles is the restricted-product topology from
 that every finite completion is proper, that its integral unit group is
 compact, and then applying the restricted-product theorem.
 -/
+
+@[expose] public section
 
 open scoped NumberField RestrictedProduct Valued
 open NumberField IsDedekindDomain

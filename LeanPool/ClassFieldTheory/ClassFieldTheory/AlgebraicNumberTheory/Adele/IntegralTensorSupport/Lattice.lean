@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.IntegralTensorSupport.AbsoluteValue
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.IntegralTensorSupport.AbsoluteValue
 /-!
 # Integral lattices in relative tensor coordinates
 
@@ -12,6 +14,8 @@ This module chooses a common integral scale for a field basis, constructs the
 associated integer lattice, and isolates the finite set of primes where its
 local integrality properties can fail.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct NNReal
 open NumberField IsDedekindDomain

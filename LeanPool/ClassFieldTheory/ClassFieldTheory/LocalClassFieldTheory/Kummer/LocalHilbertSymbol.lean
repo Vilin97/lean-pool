@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtension
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidue
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.SimpleExtension
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidue
 /-!
 # Local Hilbert symbols
 
@@ -18,6 +20,8 @@ and the literal simple extension `K(β)` is formed.  If `K` contains the
 Galois.  The Hilbert symbol is the root quotient of the local Artin
 automorphism, transported back to `μₙ(K)`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RingTheory.Norm.Basic
-import Mathlib.RingTheory.Trace.Basic
-import Mathlib.LinearAlgebra.Dimension.Constructions
+
+public import Mathlib.RingTheory.Norm.Basic
+public import Mathlib.RingTheory.Trace.Basic
+public import Mathlib.LinearAlgebra.Dimension.Constructions
 /-!
 # Norms and traces on finite dependent products
 
@@ -16,6 +18,8 @@ determinant of a binary product map; the dependent finite-product versions
 are recorded here so that the local factors are allowed to have different
 field degrees.
 -/
+
+@[expose] public section
 
 noncomputable section
 

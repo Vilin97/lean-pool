@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ClosedFiniteIndexClassFieldReciprocity.Topological.EvaluationValue
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ClosedFiniteIndexClassFieldReciprocity.Topological.EvaluationValue
 /-!
 # Generic evaluation core for transported reciprocity
 
@@ -12,6 +14,8 @@ This theorem works for an arbitrary finite abelian extension and subgroup
 equality.  It proves the composition formula once without unfolding a
 domain-specific selected-field construction.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NumberField
 

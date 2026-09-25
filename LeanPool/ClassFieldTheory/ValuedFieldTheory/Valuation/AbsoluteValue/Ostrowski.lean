@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Nonarchimedean
-import Mathlib.Analysis.Normed.Algebra.GelfandMazur
-import Mathlib.NumberTheory.Ostrowski
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Nonarchimedean
+public import Mathlib.Analysis.Normed.Algebra.GelfandMazur
+public import Mathlib.NumberTheory.Ostrowski
 /-!
 # Ostrowski classification for complete valued fields
 
@@ -14,6 +16,8 @@ A complete field with an archimedean real-valued absolute value is isomorphic
 to ℝ or ℂ, with the absolute value obtained from the standard norm by a
 positive exponent at most one.
 -/
+
+@[expose] public section
 
 noncomputable section
 

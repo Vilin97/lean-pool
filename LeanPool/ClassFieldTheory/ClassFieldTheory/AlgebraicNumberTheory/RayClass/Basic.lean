@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PrincipalTopology
-import Mathlib.RingTheory.Ideal.Quotient.Operations
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.PrincipalTopology
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
 /-!
 # Finite ray-modulus data
 
@@ -13,6 +15,8 @@ This file contains the finite local data used by ray congruence subgroups.
 A full modulus, including a selected set of real places, is defined in
 `AlgebraicNumberTheory.RayClass.FullModulus`.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

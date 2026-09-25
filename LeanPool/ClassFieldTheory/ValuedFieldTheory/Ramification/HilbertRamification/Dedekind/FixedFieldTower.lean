@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.FixedFields
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.FixedFields
 /-!
 # Hilbert ramification theory: decomposition and inertia tower
 
 This file contains the group-theoretic fixed-field part of the tower
 `Z_P ⊆ T_P ⊆ L` in prime-decomposition theory.
 -/
+
+@[expose] public section
 
 noncomputable section
 

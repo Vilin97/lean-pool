@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.RationalCyclotomicPrincipalAwayProduct
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.RationalCyclotomicPrincipalAwayProduct
 /-!
 # The ramified prime factor of a rational cyclotomic principal idele
 
@@ -12,6 +14,8 @@ The level-zero factor is trivial.  At every positive level, the finite-place
 character specification reduces the claim to the ramified chosen-Artin formula
 proved in `RationalCyclotomicFinitePlaceArtin`.
 -/
+
+@[expose] public section
 
 
 

@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.PowerResidueReciprocity
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.PowerResidueReciprocity
 /-!
 # Rational quadratic reciprocity from global class field theory
 
 The dyadic correction specializes power-residue reciprocity over `ℚ` and
 derives Gauss's quadratic reciprocity law.
 -/
+
+@[expose] public section
 
 open scoped BigOperators NumberField NumberTheorySymbols ValuativeRel WithZero
 open NumberField IsDedekindDomain

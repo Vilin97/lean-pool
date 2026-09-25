@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Topology
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ConductorLocalComparison
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Topology
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ConductorLocalComparison
 /-!
 # Lattice operations on narrow finite conductors
 
@@ -16,6 +18,8 @@ Under class-field correspondence, this is the finite-part lcm formula
 for a compositum.  For a generated subgroup one obtains the
 complementary divisibility by the pointwise minimum.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 noncomputable section

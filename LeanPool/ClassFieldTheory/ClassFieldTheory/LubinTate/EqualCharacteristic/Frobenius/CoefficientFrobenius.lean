@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Frobenius.LaurentSeriesFrobenius
-import Mathlib.RingTheory.PowerSeries.Basic
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Frobenius.LaurentSeriesFrobenius
+public import Mathlib.RingTheory.PowerSeries.Basic
 /-!
 # The equal-characteristic completed-unramified construction: equal-characteristic Frobenius on
   the completed unramified ring
@@ -22,6 +24,8 @@ This is an equal-characteristic specialization of the general local-field constr
   claim that Lemma the equal-characteristic completed-unramified construction is complete in
   general.
 -/
+
+@[expose] public section
 
 noncomputable section
 

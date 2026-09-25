@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteInteger
-import Mathlib.Data.ZMod.QuotientRing
-import Mathlib.NumberTheory.Padics.RingHoms
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.ProfiniteIntegers.ProfiniteInteger
+public import Mathlib.Data.ZMod.QuotientRing
+public import Mathlib.NumberTheory.Padics.RingHoms
 /-!
 # Prime decomposition of the profinite integers
 
 This file constructs the canonical map
 `ℤ̂ → ∏ p : Nat.Primes, ℤ_p` from the compatible finite reductions.
 -/
+
+@[expose] public section
 
 open scoped Topology
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Assembly
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.IrreduciblePolynomialBounds
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Assembly
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.IrreduciblePolynomialBounds
 /-!
 # Hensel obstruction to irreducibility
 
@@ -15,6 +17,8 @@ core contradiction for irreducible-polynomial lifting: a nontrivial factorizatio
 the reduction gives a nontrivial factorization over the complete valuation
 ring, hence the mapped field polynomial is not irreducible.
 -/
+
+@[expose] public section
 
 noncomputable section
 

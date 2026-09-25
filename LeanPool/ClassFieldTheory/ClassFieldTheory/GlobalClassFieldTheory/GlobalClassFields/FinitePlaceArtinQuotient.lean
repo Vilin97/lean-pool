@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.FinitePlaceArtin.Core
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.FinitePlaceArtin.Core
 /-!
 # Finite-place Artin quotients
 
@@ -15,6 +17,8 @@ codomain and applying the first isomorphism theorem therefore
 identifies the concrete local norm quotient with the decomposition
 group.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 noncomputable section

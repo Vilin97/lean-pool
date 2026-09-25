@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Topology.Algebra.Group.Units
-import Mathlib.Topology.Algebra.RestrictedProduct.TopologicalSpace
-import Mathlib.Topology.Algebra.RestrictedProduct.Units
+
+public import Mathlib.Topology.Algebra.Group.Units
+public import Mathlib.Topology.Algebra.RestrictedProduct.TopologicalSpace
+public import Mathlib.Topology.Algebra.RestrictedProduct.Units
 /-!
 # Topology on units of a restricted product
 
@@ -15,6 +17,8 @@ is a topological group equivalence when each distinguished local submonoid
 is open. The units on the left carry their graph topology; the right side
 has the restricted-product topology of the local unit groups.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped RestrictedProduct

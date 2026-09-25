@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FiniteAbelianLocalExtension
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidueNaturality
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.UnramifiedResidueUniqueness
-import Mathlib.NumberTheory.LocalField.Basic
-import Mathlib.RingTheory.DedekindDomain.Factorization
-import Mathlib.RingTheory.Valuation.Discrete.Basic
-import Mathlib.RingTheory.Valuation.Extension
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FiniteAbelianLocalExtension
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidueNaturality
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.UnramifiedResidueUniqueness
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.RingTheory.DedekindDomain.Factorization
+public import Mathlib.RingTheory.Valuation.Discrete.Basic
+public import Mathlib.RingTheory.Valuation.Extension
 /-!
 # Arithmetic Frobenius in the coherent local reciprocity family
 
@@ -20,6 +22,8 @@ reduction is the arithmetic `q`-power Frobenius.  The uniqueness clause is
 essential: residue-field behavior is a normalization of the same family,
 not a separate independently chosen reciprocity map.
 -/
+
+@[expose] public section
 
 open scoped ValuativeRel
 

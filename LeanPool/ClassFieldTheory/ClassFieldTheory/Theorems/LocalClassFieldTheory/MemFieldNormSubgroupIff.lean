@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.IsFieldNorm
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.IsFieldNorm
 /-!
 # Membership in the field-norm subgroup
 
@@ -14,6 +16,8 @@ unit `x` of `K`, it states that `x` belongs to the range of the unit-valued
 field norm exactly when some unit of `L` has algebra norm equal to `x`.
 No Galois, local-field, or topological assumption is required.
 -/
+
+@[expose] public section
 
 noncomputable section
 

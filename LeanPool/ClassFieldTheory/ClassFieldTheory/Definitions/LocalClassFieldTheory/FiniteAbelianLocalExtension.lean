@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormSubgroup
-import Mathlib.FieldTheory.Galois.Abelian
-import Mathlib.FieldTheory.IsSepClosed
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.FieldNormSubgroup
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.FieldTheory.IsSepClosed
 /-!
 # Finite abelian local extensions
 -/
+
+@[expose] public section
 
 noncomputable section
 

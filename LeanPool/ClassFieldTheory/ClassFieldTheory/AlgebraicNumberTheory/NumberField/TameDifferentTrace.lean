@@ -3,15 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.NumberField.Discriminant.Different
-import Mathlib.RingTheory.Ideal.Int
-import Mathlib.FieldTheory.Finiteness
-import Mathlib.RingTheory.DedekindDomain.Different
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import Mathlib.RingTheory.Ideal.Norm.AbsNorm
-import Mathlib.RingTheory.Trace.Defs
-import Mathlib.RingTheory.Trace.Basic
+
+public import Mathlib.NumberTheory.NumberField.Discriminant.Different
+public import Mathlib.RingTheory.Ideal.Int
+public import Mathlib.FieldTheory.Finiteness
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Mathlib.RingTheory.Trace.Defs
+public import Mathlib.RingTheory.Trace.Basic
 /-!
 # A trace witness bounds a primary factor of the different
 
@@ -21,6 +23,8 @@ factor. If that factor has norm q^m and q does not divide m, its trace is
 nonzero modulo q. Mathlib's trace-dual criterion then shows that the first
 factor cannot divide the different. The factor need not be prime.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField

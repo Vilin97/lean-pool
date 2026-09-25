@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteExtensionCompleteDVF
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.InertiaRamificationCard
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.FiniteExtensionCompleteDVF
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.InertiaRamificationCard
 /-!
 # Inertia order and ramification index for a chosen local extension
 
@@ -14,6 +16,8 @@ extension of its chosen complete discrete valuation has finite-dimensional
 residue field, hence a separable residue extension.  This supplies the
 residue-separability hypothesis of the general inertia-cardinality theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

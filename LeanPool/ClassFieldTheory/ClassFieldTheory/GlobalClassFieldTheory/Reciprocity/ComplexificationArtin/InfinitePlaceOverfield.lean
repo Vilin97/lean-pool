@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.ComplexificationArtin.RationalComplexification
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.ComplexificationArtin.RationalComplexification
 /-!
 # The complex-conjugation overfield at an infinite place
 
 This module realizes the embedded field `L(i)` inside `ℂ`, constructs its
 complex place, and identifies ambient complex conjugation on that field.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative
 open NumberField

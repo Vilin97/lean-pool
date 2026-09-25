@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.OrbitPolynomialIdeal
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FixedFieldRamificationIndex
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.OrbitPolynomialIdeal
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FixedFieldRamificationIndex
 /-!
 # quotient-depth identity over a general DVF
 
@@ -14,6 +16,8 @@ The public endpoint has no generator argument.  The monogenic integral-generator
 integral generator internally, while the fixed-field ramification number is
 the intrinsic value of its displacement ideal.
 -/
+
+@[expose] public section
 
 noncomputable section
 

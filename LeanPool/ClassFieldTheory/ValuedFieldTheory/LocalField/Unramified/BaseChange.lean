@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.BaseChangeCore
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Compositum
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.BaseChangeCore
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Compositum
 /-!
 # A base-change polynomial model for unramified extensions
 
@@ -18,6 +20,8 @@ polynomial vanishing at the mapped generator, and separable reduction.
 
 No finite-dimensionality of `K'/K` is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusLift
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusLift
 /-!
 # The completed theta-intertwining theorem: continuity of the standard completed Frobenius lift
 
@@ -15,6 +17,8 @@ base.  Spectral-norm uniqueness therefore makes the lift an isometry and in
 particular continuous.  We also name the `a = u⁻¹` specialization used
 directly in the completed theta-intertwining theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

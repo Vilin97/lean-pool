@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Theory.Core
-import Mathlib.Algebra.Polynomial.Lifts
-import Mathlib.RingTheory.LocalRing.ResidueField.Basic
-import Mathlib.RingTheory.Valuation.LocalSubring
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Theory.Core
+public import Mathlib.Algebra.Polynomial.Lifts
+public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
+public import Mathlib.RingTheory.Valuation.LocalSubring
 /-!
 # Closed unit balls of nonarchimedean absolute values
 
@@ -15,6 +17,8 @@ This file records the valuation ring attached directly to a multiplicative
 absolute value in the nonarchimedean case.  It is the section-3 object used by
 the finite-degree norm construction before any discrete-valuation-field packaging.
 -/
+
+@[expose] public section
 
 noncomputable section
 

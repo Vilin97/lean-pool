@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.ValuationSubringUnits.IntegerValuation
-import Mathlib.Order.Filter.AtTopBot.Tendsto
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.ValuationSubringUnits.IntegerValuation
+public import Mathlib.Order.Filter.AtTopBot.Tendsto
 /-!
 # Valuation estimates for logarithm and exponential series
 
 This file proves lower bounds and divergence-to-infinity statements for the
 integer valuations of the logarithm and exponential series terms.
 -/
+
+@[expose] public section
 
 noncomputable section
 

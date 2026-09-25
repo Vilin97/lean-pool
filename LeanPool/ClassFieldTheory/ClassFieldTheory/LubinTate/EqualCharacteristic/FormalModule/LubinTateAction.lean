@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FormalModule.LubinTateEndomorphism
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FormalModule.LubinTateEndomorphism
 /-!
 # Equal-characteristic Lubin--Tate action
 
@@ -12,6 +14,8 @@ This file proves the algebraic identities needed to turn the finite brackets
 from `EqualCharacteristicLubinTateEnd` into the action of
 `(κ⟦T⟧ / T^n)ˣ` on the `T^n`-division points.
 -/
+
+@[expose] public section
 
 noncomputable section
 

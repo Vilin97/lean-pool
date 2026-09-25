@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SUnit.Rank
-import Mathlib.Algebra.Module.PID
-import Mathlib.Algebra.Module.ZLattice.Basic
-import Mathlib.NumberTheory.NumberField.ProductFormula
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SUnit.Rank
+public import Mathlib.Algebra.Module.PID
+public import Mathlib.Algebra.Module.ZLattice.Basic
+public import Mathlib.NumberTheory.NumberField.ProductFormula
 /-!
 # The logarithmic lattice of `S`-units
 
@@ -22,6 +24,8 @@ be a complete `ℤ`-lattice.  The normalized, all-place logarithmic map
 and its coordinate-sum-zero hyperplane are constructed below from this
 lattice.
 -/
+
+@[expose] public section
 
 noncomputable section
 

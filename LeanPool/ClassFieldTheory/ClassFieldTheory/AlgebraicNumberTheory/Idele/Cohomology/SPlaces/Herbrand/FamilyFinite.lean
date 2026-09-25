@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Cohomology.SPlaces.Herbrand.Local
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Cohomology.SPlaces.Herbrand.Local
 /-!
 # Finite unrestricted local-block families
 
 This leaf assembles the local Herbrand calculations over the finite family of
 unrestricted places.
 -/
+
+@[expose] public section
 
 open scoped NumberField BigOperators ValuativeRel NNReal
 open NumberField IsDedekindDomain

@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.FiniteRestrictedProductBaseChange
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NormalClosure
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.InfinitePlaceTensorBlock
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.FiniteRestrictedProductBaseChange
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NormalClosure
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.InfinitePlaceTensorBlock
 /-!
 # Scalar extension from relative to ordinary ideles
 
@@ -16,6 +18,8 @@ infinite place of the base field are identified with exact extensions of
 its absolute value.  Surjectivity is reduced through the finite normal
 closure to the Galois valuation-extension comparison.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct RestrictedProduct
 open NumberField IsDedekindDomain

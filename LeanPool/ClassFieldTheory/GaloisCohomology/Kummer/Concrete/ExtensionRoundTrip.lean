@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.InfiniteGeneration
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RadicalExtension
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.InfiniteGeneration
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RadicalExtension
 /-!
 # extension-side round trip
 
@@ -13,6 +15,8 @@ For an abelian Galois intermediate extension `E/K` of exponent dividing
 `n`, adjoining in the ambient algebraic closure all `n`-th roots belonging
 to the actual radical subgroup of `E` recovers `E` itself.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpSeries.Homomorphisms
-import Mathlib.NumberTheory.Padics.RingHoms
-import Mathlib.RingTheory.Polynomial.Cyclotomic.Roots
-import Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Analytic.LogExpSeries.Homomorphisms
+public import Mathlib.NumberTheory.Padics.RingHoms
+public import Mathlib.RingTheory.Polynomial.Cyclotomic.Roots
+public import Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing
 /-!
 # The concrete p-adic field `ℚ_[p]`
 
@@ -15,6 +17,8 @@ This file is the first concrete example leaf for the DVF navigation library.
 It deliberately uses mathlib's public p-adic objects directly in theorem
 statements instead of introducing public aliases for `ℚ_[p]` or its unit group.
 -/
+
+@[expose] public section
 
 noncomputable section
 

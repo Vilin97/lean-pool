@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Theta.ThetaFirstIdentity
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.Theta.ThetaFirstIdentity
 /-!
 # The completed theta-intertwining theorem: the standard equal-characteristic Lubin--Tate bracket
 
@@ -20,6 +22,8 @@ coefficients are the unique contracting solutions forced by commutation with
   opposed to the
 normalization `u⁻¹T -> T` used in Corollary the Lubin–Tate endomorphism commutation law.
 -/
+
+@[expose] public section
 
 noncomputable section
 

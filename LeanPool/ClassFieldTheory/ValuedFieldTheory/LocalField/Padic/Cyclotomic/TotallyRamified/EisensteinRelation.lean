@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.Cyclotomic.TotallyRamified.PrimeElement
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.Cyclotomic.TotallyRamified.PrimeElement
 /-!
 # The Eisenstein relation for the cyclotomic uniformizer
 
 This file extracts the unit relation `p · u = (ζ - 1)^φ` from the translated Eisenstein polynomial.
 -/
+
+@[expose] public section
 
 noncomputable section
 

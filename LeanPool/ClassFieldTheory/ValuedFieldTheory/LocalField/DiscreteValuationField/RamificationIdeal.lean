@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.RamificationInvariants
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.RamificationInvariants
 /-!
 # Ramification ideals in finite complete-DVF extensions
 
@@ -13,6 +15,8 @@ The base maximal ideal maps to the `e`-th power of the target maximal ideal, whe
 `e` is the canonical ramification index.  Every statement is expressed directly
 in the ambient valued-extension context; no extension marker is involved.
 -/
+
+@[expose] public section
 
 noncomputable section
 

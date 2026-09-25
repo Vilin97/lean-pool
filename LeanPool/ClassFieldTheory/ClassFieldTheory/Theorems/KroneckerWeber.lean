@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.Cyclotomic.Basic
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Algebra.AbelianGaloisEquiv
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.SmallModel
-import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.Core
+
+public import Mathlib.NumberTheory.Cyclotomic.Basic
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Algebra.AbelianGaloisEquiv
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.SmallModel
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.Core
 /-!
 # Kronecker--Weber theorem
 
@@ -16,6 +18,8 @@ asserts that `L` is contained in a cyclotomic extension: there is a positive
 integer `n` and a `ℚ`-algebra embedding of `L` into `ℚ(ζₙ)`.  The positivity
 condition excludes the degenerate order-zero cyclotomic construction.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

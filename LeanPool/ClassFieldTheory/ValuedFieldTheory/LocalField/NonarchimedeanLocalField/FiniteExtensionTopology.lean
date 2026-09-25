@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Basic
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuedTopology
-import Mathlib.Analysis.Normed.Unbundled.SpectralNorm
-import Mathlib.RingTheory.Valuation.Extension
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Basic
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.ValuedTopology
+public import Mathlib.Analysis.Normed.Unbundled.SpectralNorm
+public import Mathlib.RingTheory.Valuation.Extension
 /-!
 # The canonical topology on a finite extension of a local field
 
@@ -16,6 +18,8 @@ nonarchimedean local field.  The definitions are deliberately explicit: they
 let downstream constructions put several finite extensions in one diagram
 while using the same topology on every field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RingTheory.PowerSeries.Basic
-import Mathlib.Algebra.BigOperators.NatAntidiagonal
+
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Mathlib.Algebra.BigOperators.NatAntidiagonal
 /-!
 # LubinTate the contracting Frobenius equation: the contracting Frobenius equation
 
@@ -23,6 +25,8 @@ than `n`.
 This file records that source-producing recursion directly.  No completeness
 or external existence assumption is needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

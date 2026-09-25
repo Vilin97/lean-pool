@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Compositum
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalFieldTheory.Padic.Cyclotomic.Unramified.CanonicalExtension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.CyclotomicDegreeBound
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Compositum
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalFieldTheory.Padic.Cyclotomic.Unramified.CanonicalExtension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.CyclotomicDegreeBound
 /-!
 # A p-primary ramification bound for p-adic cyclotomic fields
 
@@ -14,6 +16,8 @@ A cyclotomic field of order `r * p ^ n`, with `r` prime to `p`, splits into
 an unramified prime-to-`p` branch and a `p`-power branch. This file records
 that only the latter contributes to the local ramification index.
 -/
+
+@[expose] public section
 
 noncomputable section
 

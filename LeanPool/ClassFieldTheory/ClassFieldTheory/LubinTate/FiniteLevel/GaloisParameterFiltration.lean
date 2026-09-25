@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.FiniteParameterFiltration
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelAbelian
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.FiniteParameterFiltration
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelAbelian
 /-!
 # Principal-unit filtration on finite Lubin--Tate Galois groups
 
@@ -15,6 +17,8 @@ group.  This file records membership both for quotient parameters and for
 valuation-ring unit representatives, and preserves the expected cardinality
 `q ^ (n + 1 - k)`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

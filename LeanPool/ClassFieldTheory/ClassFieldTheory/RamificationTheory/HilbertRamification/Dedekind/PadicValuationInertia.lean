@@ -3,15 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.Padics.HeightOneSpectrum
-import Mathlib.RingTheory.DedekindDomain.Dvr
-import Mathlib.RingTheory.Localization.AsSubring
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.RationalPrime
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.Basic
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.LocalizationRamificationGroups
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.PadicLocalization
+
+public import Mathlib.NumberTheory.Padics.HeightOneSpectrum
+public import Mathlib.RingTheory.DedekindDomain.Dvr
+public import Mathlib.RingTheory.Localization.AsSubring
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.RationalPrime
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Dedekind.Basic
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.LocalizationRamificationGroups
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.PadicLocalization
 /-!
 # The global valuation/prime-ideal bridge in the global cyclotomic inertia argument
 
@@ -28,6 +30,8 @@ by
     extra compatibility
 hypothesis.
 -/
+
+@[expose] public section
 
 open _root_.ValuationTheory.DiscreteValuationField.Valuation renaming
   valuationSubring_eq_of_le_of_mem_maximalIdeal_iff →

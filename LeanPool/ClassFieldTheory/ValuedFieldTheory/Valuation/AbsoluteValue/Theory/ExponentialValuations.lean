@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Theory.AbsoluteValues
-import Mathlib.GroupTheory.QuotientGroup.Basic
-import Mathlib.RingTheory.DiscreteValuationRing.Basic
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Ideal.IsPrincipalPowQuotient
-import Mathlib.RingTheory.Valuation.ValuationSubring
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Theory.AbsoluteValues
+public import Mathlib.GroupTheory.QuotientGroup.Basic
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.Ideal.IsPrincipalPowQuotient
+public import Mathlib.RingTheory.Valuation.ValuationSubring
 /-! Provides the public declarations in the
   `ValuationTheory.AbsoluteValue.Theory.ExponentialValuations` Lean module. -/
+
+@[expose] public section
 
 noncomputable section
 

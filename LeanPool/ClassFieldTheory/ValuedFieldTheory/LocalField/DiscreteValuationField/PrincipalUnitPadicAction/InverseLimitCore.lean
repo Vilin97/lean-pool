@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.AdicCompletionInverseLimit
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnits.Core
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.AdicCompletionInverseLimit
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnits.Core
 /-!
 # The canonical p-adic action on first principal units
 
@@ -18,6 +20,8 @@ Reduction of a p-adic integer modulo these powers therefore acts on every
 finite coordinate, and compatibility of reduction transports the action to
 `U^1`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

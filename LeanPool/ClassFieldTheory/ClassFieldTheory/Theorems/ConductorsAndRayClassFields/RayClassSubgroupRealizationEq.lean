@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassSubgroupRealization
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.ConductorsAndRayClassFields.RayClassSubgroupFieldAntitone
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassSubgroupRealization
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.ConductorsAndRayClassFields.RayClassSubgroupFieldAntitone
 /-!
 # Uniqueness of a ray-class subgroup field inside the fixed closure
 
@@ -13,6 +15,8 @@ The class field is independent of the Frobenius-normalized realization as an
 actual intermediate field, not just up to abstract isomorphism.  This does
 not assert uniqueness of the embedding or of the Artin map.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

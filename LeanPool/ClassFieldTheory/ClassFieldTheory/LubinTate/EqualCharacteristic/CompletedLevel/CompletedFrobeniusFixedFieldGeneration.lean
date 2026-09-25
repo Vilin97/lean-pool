@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedFieldCoefficientDescent
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedFrobeniusFixedFieldCoefficientDescent
 /-!
 # The completed theta-intertwining theorem: generation of the completed Frobenius fixed field
 
@@ -12,6 +14,8 @@ The coefficient-descent inclusion and the already proved fixedness of the
 direct theta value identify the fixed field with its simple Laurent-base
 extension.
 -/
+
+@[expose] public section
 
 noncomputable section
 

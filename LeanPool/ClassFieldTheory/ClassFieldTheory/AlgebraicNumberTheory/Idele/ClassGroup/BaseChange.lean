@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.Tower
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.LocalComponent
-import Mathlib.RingTheory.IsTensorProduct
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.ClassGroup.Tower
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.LocalComponent
+public import Mathlib.RingTheory.IsTensorProduct
 /-!
 # Base change of idele-class norms along a pushout square
 
@@ -24,6 +26,8 @@ that occur after adjoining roots of unity.
 Keeping the bottom adele ring fixed makes the norm square an actual
 determinant-norm base-change identity.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct
 open NumberField

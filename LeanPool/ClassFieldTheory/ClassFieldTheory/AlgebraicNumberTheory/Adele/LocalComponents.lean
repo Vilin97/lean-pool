@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.Coordinates
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele.Coordinates
 /-!
 # Joint local components of relative adeles and ideles
 
@@ -14,6 +16,8 @@ homomorphism on relative ideles.  Surjectivity onto the restricted local
 product is handled separately, once integral compatibility with the local
 tensor decomposition has been established.
 -/
+
+@[expose] public section
 
 open scoped NumberField TensorProduct
 open NumberField IsDedekindDomain

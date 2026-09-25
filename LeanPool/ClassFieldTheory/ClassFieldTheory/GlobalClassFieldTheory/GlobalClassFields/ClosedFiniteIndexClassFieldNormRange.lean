@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ClosedFiniteIndexClassFieldConstruction
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ClosedFiniteIndexClassFieldConstruction
 /-!
 # Norm range over the canonical fixed-field base
 
 This leaf compares the selected abstract norm subgroup with the actual
 idèle-class norm range over the canonical fixed-field base.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NumberField
 

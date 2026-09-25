@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.GaloisClosure
-import Mathlib.NumberTheory.Cyclotomic.PrimitiveRoots
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.InertiaCardinality
+
+public import Mathlib.FieldTheory.Galois.GaloisClosure
+public import Mathlib.NumberTheory.Cyclotomic.PrimitiveRoots
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.InertiaCardinality
 /-!
 # A finite-group degree product
 
@@ -15,6 +17,8 @@ their orders satisfy the local prime-power bounds, the global degree is at
 most the totient of the conductor candidate.  This file isolates that finite
 group calculation from the arithmetic construction of the chosen primes.
 -/
+
+@[expose] public section
 
 noncomputable section
 

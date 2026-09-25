@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsLocalHilbertPairing
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.PowerClass
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertExponentCompatibility
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.SmallHilbertPairingTransport
-import Mathlib.NumberTheory.LocalField.Basic
-import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsLocalHilbertPairing
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.PowerClass
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.LocalHilbertExponentCompatibility
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.SmallHilbertPairingTransport
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 /-!
 # Compatibility of Hilbert pairings at divisible exponents
 
@@ -20,6 +22,8 @@ radical in the first argument. With that convention, the root-quotient
 formula for arithmetic Artin has an inverse; the inverse occurs on both
 sides of the exponent comparison and does not change the formula below.
 -/
+
+@[expose] public section
 
 noncomputable section
 

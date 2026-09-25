@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.Ramification
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.GaloisValuation.Ramification
 /-!
 # Finite-group sources for Herbrand's theorem
 
@@ -26,6 +28,8 @@ remaining valued-field input for the Herbrand quotient theorem is the quotient-d
 on the quotient is the normalized sum of the depths in this fibre.  That
 input is deliberately not packaged here as a hypothesis or data field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

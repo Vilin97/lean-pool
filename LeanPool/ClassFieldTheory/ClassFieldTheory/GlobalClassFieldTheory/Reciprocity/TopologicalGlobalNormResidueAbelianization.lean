@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.NormConductor
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidueAbelianization
-import Mathlib.FieldTheory.KrullTopology
-import Mathlib.Topology.Algebra.Group.Quotient
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.NormConductor
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidueAbelianization
+public import Mathlib.FieldTheory.KrullTopology
+public import Mathlib.Topology.Algebra.Group.Quotient
 /-!
 # Topological global reciprocity for finite Galois extensions
 
@@ -23,6 +25,8 @@ The evaluation lemmas below ensure that these are the already
 constructed actual global symbols, rather than unrelated abstract
 isomorphisms between finite groups.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NumberField
 open NumberField

@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.GaloisNorm
-import Mathlib.FieldTheory.Normal.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.GaloisNorm
+public import Mathlib.FieldTheory.Normal.Basic
 /-!
 # Norms through an ambient Galois extension
 
@@ -14,6 +16,8 @@ If `L/K` is embedded in a finite Galois extension `M/K`, extending the
 determinant norm of an element of `A ⊗[K] L` to `A ⊗[K] M` gives the
 product over all `K`-embeddings `L → M`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators TensorProduct
 open NumberField

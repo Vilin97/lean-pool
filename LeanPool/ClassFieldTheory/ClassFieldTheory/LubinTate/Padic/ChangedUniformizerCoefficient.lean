@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicField
-import Mathlib.RingTheory.WittVector.Compare
-import Mathlib.RingTheory.WittVector.Complete
-import Mathlib.RingTheory.WittVector.FrobeniusFractionField
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.AdicContractingFixedPoint
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicField
+public import Mathlib.RingTheory.WittVector.Compare
+public import Mathlib.RingTheory.WittVector.Complete
+public import Mathlib.RingTheory.WittVector.FrobeniusFractionField
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Topology.AdicContractingFixedPoint
 /-!
 # The coefficient source for the p-adic changed-uniformizer intertwiner
 
@@ -26,6 +28,8 @@ No second p-adic integer ring or Frobenius is introduced here: the base map
 uses mathlib's equivalence `W(ZMod p) ≃+* ℤ_[p]`, and `φ` is
 `WittVector.frobenius`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Basic
-import Mathlib.Algebra.Order.Group.Cyclic
-import Mathlib.Algebra.Group.Int.TypeTags
-import Mathlib.Data.Int.WithZero
-import Mathlib.RingTheory.Valuation.Archimedean
-import Mathlib.RingTheory.Valuation.RankOne
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Basic
+public import Mathlib.Algebra.Order.Group.Cyclic
+public import Mathlib.Algebra.Group.Int.TypeTags
+public import Mathlib.Data.Int.WithZero
+public import Mathlib.RingTheory.Valuation.Archimedean
+public import Mathlib.RingTheory.Valuation.RankOne
 /-!
 # Cyclic value groups and normalized uniformizers
 
@@ -17,6 +19,8 @@ This file supplies the ordered-group and rank-one facts used for actual
 multiplicative valuation ranges, together with normalized uniformizer results
 for `ℤᵐ⁰`-valued valuations.
 -/
+
+@[expose] public section
 
 noncomputable section
 

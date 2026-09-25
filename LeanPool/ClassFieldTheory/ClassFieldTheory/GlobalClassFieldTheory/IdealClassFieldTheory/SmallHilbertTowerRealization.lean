@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.HilbertClassFieldRealization
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.SmallHilbertTowerConjugation
-import Mathlib.Data.Rat.Cast.Defs
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.HilbertClassFieldRealization
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.IdealClassFieldTheory.SmallHilbertTowerConjugation
+public import Mathlib.Data.Rat.Cast.Defs
 /-!
 # Actual realization of the two-stage small Hilbert tower
 
@@ -23,6 +25,8 @@ copy of the middle number field would produce a class field over a
 conjugate closed subgroup rather than over the first-stage subgroup
 itself.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.StandardNormIndex
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.StandardSubgroupIndex
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.HigherUnitLevelEquiv
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.StandardNormIndex
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.LubinTateApplication.StandardSubgroupIndex
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.HigherUnitLevelEquiv
 /-!
 # The norm subgroup of a standard Lubin--Tate level
 
@@ -16,6 +18,8 @@ known norm of the chosen uniformizer, this contains the canonical standard
 open subgroup in the norm subgroup.  Their independently computed,
 nonzero indices are equal, so the containment is an equality.
 -/
+
+@[expose] public section
 
 noncomputable section
 

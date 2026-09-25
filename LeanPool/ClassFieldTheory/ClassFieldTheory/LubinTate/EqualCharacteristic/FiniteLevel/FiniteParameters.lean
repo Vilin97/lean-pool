@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.PrimitiveAction
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.PrimitiveAction
 /-!
 # The uniformizer norm identity: finite parameters for the Lubin--Tate action
 
@@ -16,6 +18,8 @@ power-series units, and prove that their bracket images of a primitive point
 are pairwise distinct.  Its cardinality is `(q - 1) q^n`, exactly the degree
 of the primitive polynomial.
 -/
+
+@[expose] public section
 
 noncomputable section
 

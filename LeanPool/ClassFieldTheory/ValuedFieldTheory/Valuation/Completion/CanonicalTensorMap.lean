@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Completion
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.FiniteLocalization
-import Mathlib.Algebra.Algebra.Pi
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.AbsoluteValue.Completion
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.FiniteLocalization
+public import Mathlib.Algebra.Algebra.Pi
 /-!
 # The canonical tensor map to all completions
 
@@ -15,6 +17,8 @@ For every exact extension `w | v`, multiplication in `L_w` gives the map
 which occurs in the tensor-product decomposition over a completion.  This construction is
 independent of the factorisation argument later used to prove bijectivity.
 -/
+
+@[expose] public section
 
 noncomputable section
 

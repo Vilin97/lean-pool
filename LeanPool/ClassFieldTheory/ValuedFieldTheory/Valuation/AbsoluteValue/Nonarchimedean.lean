@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Analysis.AbsoluteValue.Equivalence
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
-import Mathlib.Algebra.Order.Ring.IsNonarchimedean
+
+public import Mathlib.Analysis.AbsoluteValue.Equivalence
+public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+public import Mathlib.Algebra.Order.Ring.IsNonarchimedean
 /-!
 # Nonarchimedean absolute values
 
 The strong triangle inequality is equivalent to boundedness on natural numbers
 for real-valued absolute values.
 -/
+
+@[expose] public section
 
 noncomputable section
 

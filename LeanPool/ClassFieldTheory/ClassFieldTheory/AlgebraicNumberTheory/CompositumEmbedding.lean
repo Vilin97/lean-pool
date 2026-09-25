@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.Cyclotomic.PrimitiveRoots
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.FiniteAbelianCompositum
+
+public import Mathlib.NumberTheory.Cyclotomic.PrimitiveRoots
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.FiniteAbelianCompositum
 /-!
 # Embedding a finite Galois compositum into a common field
 
@@ -14,6 +16,8 @@ compositum as their chosen realizations in the separable closure.  This
 normality argument is the field-theoretic mechanism used to place the local
 inertia-field compositum in one cyclotomic target.
 -/
+
+@[expose] public section
 
 noncomputable section
 

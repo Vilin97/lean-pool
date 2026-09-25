@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Monogeneity
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.Monogeneity
 /-!
 # First ramification-quotient homomorphism over general DVFs
 
@@ -14,6 +16,8 @@ injectivity statement includes the necessary separability hypothesis on the
 residue extension; the unconditional printed assertion is false for fiercely
 ramified extensions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

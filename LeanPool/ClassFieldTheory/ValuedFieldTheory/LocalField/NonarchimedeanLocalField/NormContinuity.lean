@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NormUnits
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Basic
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Topology.Instances.Matrix
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NormUnits
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.NonarchimedeanLocalField.Basic
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.Topology.Instances.Matrix
 /-!
 # Continuity of finite field norms
 
@@ -16,6 +18,8 @@ reciprocity law: on a finite-dimensional normed algebra, the field norm is a
 determinant and is therefore continuous.  It also bundles the corresponding
 statements for field units and valuation-ring units.
 -/
+
+@[expose] public section
 
 noncomputable section
 

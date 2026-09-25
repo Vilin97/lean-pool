@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.DivisionPolynomial
-import Mathlib.RingTheory.Ideal.Quotient.Operations
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.DivisionPolynomial
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
 /-!
 # Parameter congruences for standard Lubin--Tate polynomials
 
@@ -23,6 +25,8 @@ levels attached to two sufficiently close uniformizers; it is independent
 of the characteristic and does not assume an equivalence between the two
 levels.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,11 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Profinite
-import Mathlib.RingTheory.Invariant.Profinite
+
+public import Mathlib.FieldTheory.Galois.Profinite
+public import Mathlib.RingTheory.Invariant.Profinite
 
 /-! # Profinite Invariant -/
+
+@[expose] public section
 namespace RamificationTheory
 
 /-!

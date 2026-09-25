@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.FullModulus
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormOneCompact
-import Mathlib.Analysis.Complex.Convex
-import Mathlib.Basic.Sign.Basic
-import Mathlib.Topology.Algebra.Ring.Compact
-import Mathlib.Topology.Connected.Clopen
-import Mathlib.Topology.Instances.Sign
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.FullModulus
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormOneCompact
+public import Mathlib.Analysis.Complex.Convex
+public import Mathlib.Basic.Sign.Basic
+public import Mathlib.Topology.Algebra.Ring.Compact
+public import Mathlib.Topology.Connected.Clopen
+public import Mathlib.Topology.Instances.Sign
 /-!
 # The congruence topology on the idele class group
 
@@ -19,6 +21,8 @@ the ray congruence subgroups are open (and hence closed) of finite index, and
 the congruence subgroups are cofinal among the closed finite-index subgroups
 of the idele class group.
 -/
+
+@[expose] public section
 
 open scoped NumberField RestrictedProduct WithZero
 open NumberField IsDedekindDomain

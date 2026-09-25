@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.ExtensionIndex
-import Mathlib.NumberTheory.RamificationInertia.Valuation
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.ExtensionIndex
+public import Mathlib.NumberTheory.RamificationInertia.Valuation
 /-!
 # The canonical map between adic completions
 
@@ -13,6 +15,8 @@ A finite place above a base finite place determines the continuous
 extension of the number-field algebra map to their concrete adic
 completions.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

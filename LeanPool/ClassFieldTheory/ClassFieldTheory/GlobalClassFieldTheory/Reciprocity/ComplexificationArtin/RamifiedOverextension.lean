@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.ComplexificationArtin.InfinitePlaceOverfield
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.ComplexificationArtin.InfinitePlaceOverfield
 /-!
 # The quadratic overextension at a ramified real place
 
 This module constructs the real fixed field of complex conjugation, the
 quadratic overextension above it, and the faithful cyclotomic restriction.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative
 open NumberField

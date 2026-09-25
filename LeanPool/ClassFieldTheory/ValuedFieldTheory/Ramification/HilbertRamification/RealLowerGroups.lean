@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Basic
-import Mathlib.Algebra.Order.Archimedean.Real.Basic
-import Mathlib.RingTheory.Valuation.Extension
-import Mathlib.FieldTheory.Galois.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.Basic
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+public import Mathlib.RingTheory.Valuation.Extension
+public import Mathlib.FieldTheory.Galois.Basic
 /-!
 # Real lower ramification groups
 
@@ -22,6 +24,8 @@ the condition at `s` is membership in `m ^ ceil(s + 1)`.  The exponent is
 truncated at zero, so the definition extends harmlessly to every real number
 and is the full Galois group for `s <= -1`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

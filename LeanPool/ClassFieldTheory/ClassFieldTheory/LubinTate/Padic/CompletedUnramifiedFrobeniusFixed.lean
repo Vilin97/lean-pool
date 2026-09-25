@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Finite.Basic
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedUnramifiedField
+
+public import Mathlib.FieldTheory.Finite.Basic
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedUnramifiedField
 /-!
 # Fixed points of p-adic completed-unramified Frobenius
 
@@ -18,6 +20,8 @@ The fraction-field argument is integral: after writing a denominator as a
 power of `p` times a unit, multiplication by that power of `p` puts a fixed
 fraction back in the Witt ring.
 -/
+
+@[expose] public section
 
 noncomputable section
 

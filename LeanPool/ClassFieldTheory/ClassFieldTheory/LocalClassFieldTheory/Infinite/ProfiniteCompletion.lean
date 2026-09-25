@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Basic
-import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Limits
-import Mathlib.Topology.Algebra.Group.Quotient
-import Mathlib.Topology.Algebra.OpenSubgroup
+
+public import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Basic
+public import Mathlib.Topology.Algebra.Category.ProfiniteGrp.Limits
+public import Mathlib.Topology.Algebra.Group.Quotient
+public import Mathlib.Topology.Algebra.OpenSubgroup
 /-!
 # Completion by open finite quotients
 
@@ -20,6 +22,8 @@ reciprocity.
 The construction uses Mathlib's category of profinite groups, products, and
 closed subgroups; it does not depend on a separate copied inverse-system implementation.
 -/
+
+@[expose] public section
 
 noncomputable section
 

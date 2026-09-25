@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormTopology.ExtensionBehavior
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicIdeleValue
-import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormTopology.ExtensionBehavior
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.CyclotomicIdeleValue
+public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 /-!
 # Norm-one correction for the normalized cyclotomic idele value
 
@@ -16,6 +18,8 @@ cyclotomic norm-one reduction.  After taking a positive
 that section cancels the absolute norm.  Its rational cyclotomic Artin
 value is trivial, so the normalized value is unchanged.
 -/
+
+@[expose] public section
 
 open scoped NNReal NumberField
 open NumberField

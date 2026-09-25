@@ -3,12 +3,14 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.Algebra.Group.Hom.Basic
-import Mathlib.Algebra.Group.Subgroup.Basic
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicPowerIndex
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldUnitStructure
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.Algebra.Group.Hom.Basic
+public import Mathlib.Algebra.Group.Subgroup.Basic
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicPowerIndex
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.FieldUnitStructure
 /-!
 # Power indices in local-field unit groups
 
@@ -16,6 +18,8 @@ The index formulas below use the actual principal-unit structures from
 the field-unit structure theorem.  Both the natural-cardinality form and the literal rational
 form involving the normalized local absolute value are recorded.
 -/
+
+@[expose] public section
 
 noncomputable section
 

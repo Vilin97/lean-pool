@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.StandardSubgroupIntersection
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.PrincipalUnits
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.Existence.StandardSubgroupIntersection
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Padic.PrincipalUnits
 /-!
 # Standard p-adic norm-subgroup intersections
 
@@ -13,6 +15,8 @@ The p-adic prime element used by the cyclotomic norm calculation has
 normalized valuation `-1`.  This file records the corresponding orientation
 of the standard unramified/principal-unit intersection lemma.
 -/
+
+@[expose] public section
 
 noncomputable section
 

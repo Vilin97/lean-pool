@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayPrincipalIdealSubgroup
-import Mathlib.Algebra.Group.Subgroup.Lattice
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayPrincipalIdealSubgroup
+public import Mathlib.Algebra.Group.Subgroup.Lattice
 /-!
 # Membership in the ray-principal ideal subgroup
 
 The ray-congruent generators already form a subgroup under the principal
 ideal map, so taking their subgroup closure adds no new ideals.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField

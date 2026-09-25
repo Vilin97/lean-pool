@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelAutomorphisms
-import Mathlib.FieldTheory.Galois.Abelian
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.LevelAutomorphisms
+public import Mathlib.FieldTheory.Galois.Abelian
 /-!
 # Abelian standard Lubin--Tate level fields
 
@@ -19,6 +21,8 @@ parameter group bijectively with the full Galois group.  We package that
 identification as a multiplicative equivalence and transport commutativity
 to the Galois group.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.Basic
 /-!
 # coefficient truncation for the Hensel correction step
 
@@ -12,6 +14,8 @@ This file contains the finite coefficient-cutting step used in the
 proof of Hensel's lemma: after the division step, coefficients already zero in
 the residue field may be omitted to impose the required degree bound.
 -/
+
+@[expose] public section
 
 noncomputable section
 

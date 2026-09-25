@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.Induced
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.AlgebraicLocalization
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.Induced
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.AlgebraicLocalization
 /-!
 # Local blocks of the idele group
 
@@ -18,6 +20,8 @@ The local field is expressed as the canonical algebraic localization.
 For finite extensions this is the entire metric completion by
 `absoluteValueExtension_finiteLocalization_eq_top`.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

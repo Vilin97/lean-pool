@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Product
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.Herbrand.HerbrandLowDegree.Product
 /-!
 # Herbrand quotients of finite products
 
@@ -12,6 +14,8 @@ This file extracts the cardinality consequence of the product
 decompositions of low-degree Tate cohomology, giving the corresponding
 product formula for Herbrand quotients.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

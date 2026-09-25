@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.Augmentation
-import Mathlib.Algebra.MonoidAlgebra.MapDomain
-import Mathlib.GroupTheory.Transfer
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.GroupTheory.Augmentation
+public import Mathlib.Algebra.MonoidAlgebra.MapDomain
+public import Mathlib.GroupTheory.Transfer
 /-!
 # Transfer and relative augmentation quotients
 
@@ -18,6 +20,8 @@ relative augmentation quotient
 The two vertical augmentation maps in the transfer square are developed
 from the integral group rings themselves.
 -/
+
+@[expose] public section
 
 open scoped Pointwise
 

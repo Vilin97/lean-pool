@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedLevel
-import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.Padic.CompletedLevel
+public import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
 /-!
 # Irreducibility of the completed p-adic primitive polynomial
 
@@ -14,6 +16,8 @@ Eisenstein after extending its integer coefficients to the valuation ring of
 the completed maximal unramified field.  In particular it remains
 irreducible over the completed-unramified fraction field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

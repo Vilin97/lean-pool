@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.UnramifiedComparison.IdealToCompletion
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.RamificationIdeal
-import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Basic
-import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Norm
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion.UnramifiedComparison.IdealToCompletion
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.RamificationIdeal
+public import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.HasFiniteQuotients.Norm
 /-!
 # From completed to ideal-theoretic unramifiedness
 
@@ -15,6 +17,8 @@ This file recovers ideal-theoretic unramifiedness from the actual chosen
 localized completion and propagates it to every place above the base place in
 a finite Galois extension.
 -/
+
+@[expose] public section
 
 open scoped NumberField NNReal ValuativeRel
 open NumberField IsDedekindDomain

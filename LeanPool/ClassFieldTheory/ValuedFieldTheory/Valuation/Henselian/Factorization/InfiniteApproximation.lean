@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.FiniteApproximation
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization.FiniteApproximation
 /-!
 # compatible Hensel prefixes
 
@@ -12,6 +14,8 @@ This file turns the finite Hensel-prefix construction into a recursive family
 of compatible prefixes.  The completion/limit argument is kept for the next
 layer.
 -/
+
+@[expose] public section
 
 noncomputable section
 

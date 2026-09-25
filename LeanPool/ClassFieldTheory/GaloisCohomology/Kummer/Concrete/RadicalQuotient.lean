@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.FieldTheory.Galois.Infinite
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RootCharacters
+
+public import Mathlib.FieldTheory.Galois.Infinite
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RootCharacters
 /-!
 # Ambient radical quotients
 
@@ -18,6 +20,8 @@ The denominator is the subgroup of elements of `D.carrier` which are `n`-th
 powers in the ambient group `Kˣ`, in the ambient group, rather than the generally
 smaller subgroup of `n`-th powers of elements of `D.carrier`.
 -/
+
+@[expose] public section
 
 namespace KummerTheory
 

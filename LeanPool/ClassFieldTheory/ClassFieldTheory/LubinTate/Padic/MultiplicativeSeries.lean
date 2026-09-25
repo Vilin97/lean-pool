@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicField
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.Series
-import Mathlib.RingTheory.PowerSeries.Binomial
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicField
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.Series
+public import Mathlib.RingTheory.PowerSeries.Binomial
 /-!
 # The multiplicative Lubin--Tate series over `ℚ_p`
 
@@ -19,6 +21,8 @@ coefficient `p`, and reduction `X ^ p`.  Thus it is the Lubin--Tate series
 attached to the multiplicative formal group and the canonical prime
 uniformizer of `ℚ_p`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

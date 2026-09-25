@@ -3,11 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Norm.Quotients
-import Mathlib.Data.Int.ModEq
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Norm.Quotients
+public import Mathlib.Data.Int.ModEq
 
 /-! # Value Group -/
+
+@[expose] public section
 namespace LocalFieldTheory
 
 /-!

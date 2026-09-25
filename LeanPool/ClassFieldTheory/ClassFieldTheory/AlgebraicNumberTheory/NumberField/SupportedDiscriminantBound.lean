@@ -3,15 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.GaloisDifferentBound
-import Mathlib.RingTheory.UniqueFactorizationDomain.NormalizedFactors
-import Mathlib.Data.Multiset.Count
-import Mathlib.NumberTheory.NumberField.Discriminant.Different
-import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
-import Mathlib.RingTheory.Ideal.Norm.AbsNorm
-import Mathlib.RingTheory.KrullDimension.Basic
-import Mathlib.RingTheory.RamificationInertia.Ramification
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField.GaloisDifferentBound
+public import Mathlib.RingTheory.UniqueFactorizationDomain.NormalizedFactors
+public import Mathlib.Data.Multiset.Count
+public import Mathlib.NumberTheory.NumberField.Discriminant.Different
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Mathlib.RingTheory.KrullDimension.Basic
+public import Mathlib.RingTheory.RamificationInertia.Ramification
 /-!
 # A discriminant bound from a prime-to-degree ramification support
 
@@ -22,6 +24,8 @@ in the corresponding rational prime ideal. Hence the different divides
 The Galois hypothesis is retained: it is what makes each e*f divide the
 whole extension degree.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField UniqueFactorizationMonoid

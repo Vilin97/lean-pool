@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Basic
-import Mathlib.NumberTheory.Padics.PadicVal.Basic
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.Basic
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
 /-!
 # Valuations of natural-number denominators
 
@@ -14,6 +16,8 @@ and finite residue field, this file constructs the ramification index
 `e = v_K(p)` from the valuation itself.  In mixed characteristic it then proves
 the natural-number valuation formula used in the logarithm and exponential theorems.
 -/
+
+@[expose] public section
 
 noncomputable section
 

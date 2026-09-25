@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RealLowerGroups
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
-import Mathlib.Algebra.Polynomial.Lifts
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.RealLowerGroups
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.ChevalleyExtension
+public import Mathlib.Algebra.Polynomial.Lifts
 /-!
 # Integral closure for a unique discrete valuation extension
 
@@ -18,6 +20,8 @@ valuation ring is integral, hence finite, over the base valuation ring.
 
 No completeness or Henselian hypothesis is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 

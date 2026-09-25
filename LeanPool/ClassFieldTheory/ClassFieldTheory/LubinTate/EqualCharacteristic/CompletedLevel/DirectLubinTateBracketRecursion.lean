@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.DirectLubinTateBracket
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.DirectLubinTateBracket
 /-!
 # The completed theta-intertwining theorem: recursion for the standard Lubin--Tate bracket
 
@@ -20,6 +22,8 @@ This file proves the identity from uniqueness of the commuting `q`-additive
 series.  It is the bridge from the formal bracket used in the theta identity
 to the finite brackets acting on division points.
 -/
+
+@[expose] public section
 
 noncomputable section
 

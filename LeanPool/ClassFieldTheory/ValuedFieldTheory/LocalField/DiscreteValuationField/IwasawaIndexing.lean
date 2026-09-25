@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.Padics.RingHoms
-import Mathlib.Topology.Homeomorph.Lemmas
-import Mathlib.Basic.Denumerable
+
+public import Mathlib.NumberTheory.Padics.RingHoms
+public import Mathlib.Topology.Homeomorph.Lemmas
+public import Mathlib.Basic.Denumerable
 /-!
 # Topological structure of local-field units: reindexing the Iwasawa product
 
@@ -14,6 +16,8 @@ The equal-characteristic proof naturally indexes copies of `ℤ_[p]` by a
 positive integer prime to `p` and a residue-field basis vector.  This file
 records that, when the basis is nonempty, this is exactly a countable product.
 -/
+
+@[expose] public section
 
 noncomputable section
 

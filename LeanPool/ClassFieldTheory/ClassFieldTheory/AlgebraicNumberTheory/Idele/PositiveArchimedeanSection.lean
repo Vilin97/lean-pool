@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormApproximation.InfinitePlaces
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormCore
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.SinglePlace
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormApproximation.InfinitePlaces
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.NormCore
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.SinglePlace
+public import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
 /-!
 # Positive archimedean section of the idele norm
 
@@ -15,6 +17,8 @@ This module constructs an idele supported at one infinite place whose absolute
 norm is a prescribed inverse.  Its finite components are trivial and all of
 its infinite components lie in the standard positive subgroups.
 -/
+
+@[expose] public section
 
 open scoped IsMulCommutative NNReal NumberField Topology
 open NumberField IsDedekindDomain

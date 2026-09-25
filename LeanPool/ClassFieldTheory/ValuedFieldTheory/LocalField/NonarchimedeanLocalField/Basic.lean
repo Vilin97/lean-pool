@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.NumberTheory.LocalField.Basic
+
+public import Mathlib.NumberTheory.LocalField.Basic
 /-!
 # Basic structure of nonarchimedean local fields
 
 Compactness facts and the normalized integer-valued valuation attached to a
 nonarchimedean local field.
 -/
+
+@[expose] public section
 namespace LocalFieldTheory
 
 noncomputable section

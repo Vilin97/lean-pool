@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteExtension.Uniqueness
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteExtension.Uniqueness
 /-!
 # Uniformizers detected in an ambient complete discrete valuation field
 
@@ -12,6 +14,8 @@ An embedding into an ambient complete DVF can make a uniformizer easier to
 recognize.  For a finite separable extension, uniqueness of the extended
 valuation transports that recognition back to the chosen valuation.
 -/
+
+@[expose] public section
 
 namespace ValuationTheory
 

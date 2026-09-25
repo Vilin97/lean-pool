@@ -3,15 +3,19 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.ResidueEmbedding
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.FiniteSupport
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.ResidueEmbedding
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.Unramified.FiniteSupport
 /-!
 # The maximal unramified subextension from residue-field data
 
 Finite support in the compositum reduces the value-group equality and the
 forward residue-field inclusion to the corresponding finite statements.
 -/
+
+@[expose] public section
 
 noncomputable section
 

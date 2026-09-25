@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedPrimitiveAction
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.CompletedLevel.CompletedPrimitiveAction
 /-!
 # The completed theta-intertwining theorem: a prescribed Frobenius lift on the completed level
 
@@ -15,6 +17,8 @@ primitive point to be a chosen unit bracket.  The resulting semilinear field
 endomorphism is surjective because that bracket is again a primitive
 generator.
 -/
+
+@[expose] public section
 
 noncomputable section
 

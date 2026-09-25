@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FixedFieldRamification
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.UniformizerGradedHom
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.FixedFieldRamification
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.HilbertRamification.UniformizerGradedHom
 /-!
 # Quotient-depth identity over a general DVF
 
@@ -14,6 +16,8 @@ This file proves the orbit-polynomial ideal identity before normalization of
 the fixed-field valuation.  It uses the literal fixed field and its literal
 restricted valuation ring; no completeness or Henselian hypothesis occurs.
 -/
+
+@[expose] public section
 
 noncomputable section
 

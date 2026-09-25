@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.Cyclotomic.RationalCyclotomicCharacter
-import Mathlib.FieldTheory.Galois.Profinite
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.Cyclotomic.RationalCyclotomicCharacter
+public import Mathlib.FieldTheory.Galois.Profinite
 /-!
 # The rational cyclotomic character equivalence
 
@@ -14,6 +16,8 @@ using mathlib's Chinese-remainder equivalence for `ZMod`.  Surjectivity
 is obtained from the finite-intersection property for the closed fibers
 of the restriction maps to those levels.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Algebra.CharP.Subring
-import Mathlib.RingTheory.LocalRing.ResidueField.Basic
-import Mathlib.RingTheory.Valuation.Discrete.Basic
-import Mathlib.RingTheory.Valuation.LocalSubring
+
+public import Mathlib.Algebra.CharP.Subring
+public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
+public import Mathlib.RingTheory.Valuation.Discrete.Basic
+public import Mathlib.RingTheory.Valuation.LocalSubring
 
 /-! # Basic -/
+
+@[expose] public section
 namespace ValuationTheory
 
 /-!

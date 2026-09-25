@@ -3,14 +3,16 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Norm
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.IdeleNormComponents
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.IdealClass
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.NormLocalOrder
-import Mathlib.Algebra.BigOperators.Finprod
-import Mathlib.NumberTheory.NumberField.Completion.Ramification
-import Mathlib.RingTheory.Ideal.Norm.RelNorm
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Norm
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.IdeleNormComponents
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.IdealClass
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Extension.NormLocalOrder
+public import Mathlib.Algebra.BigOperators.Finprod
+public import Mathlib.NumberTheory.NumberField.Completion.Ramification
+public import Mathlib.RingTheory.Ideal.Norm.RelNorm
 /-!
 # Finite-place arithmetic of idele norms
 
@@ -18,6 +20,8 @@ This file relates the finite components of the ordinary idele norm to local
 orders and positive prime norms. It also proves the degree formula for the
 finite positive norm under scalar extension.
 -/
+
+@[expose] public section
 
 open scoped BigOperators NNReal NumberField NumberField.LiesOver
 open NumberField IsDedekindDomain

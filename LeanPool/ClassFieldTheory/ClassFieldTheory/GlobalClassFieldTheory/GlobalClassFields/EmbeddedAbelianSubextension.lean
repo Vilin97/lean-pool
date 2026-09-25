@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteAbelianSubextension
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidueNaturality
-import Mathlib.FieldTheory.Galois.Abelian
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteAbelianSubextension
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.GlobalNormResidueNaturality
+public import Mathlib.FieldTheory.Galois.Abelian
 /-!
 # Embedded finite abelian subextensions
 
@@ -16,6 +18,8 @@ subgroup of the embedded base field. This file also allows that base fixing
 subgroup to be replaced by a propositionally equal selected subgroup, as is
 needed by concrete class-field realizations.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

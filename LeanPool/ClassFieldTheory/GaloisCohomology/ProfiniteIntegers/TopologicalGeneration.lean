@@ -3,11 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.Topology.Algebra.ClopenNhdofOne
-import Mathlib.Topology.Algebra.ContinuousMonoidHom
+
+public import Mathlib.Topology.Algebra.ClopenNhdofOne
+public import Mathlib.Topology.Algebra.ContinuousMonoidHom
 
 /-! # Topological Generation -/
+
+@[expose] public section
 namespace ClassFormation
 
 /-!

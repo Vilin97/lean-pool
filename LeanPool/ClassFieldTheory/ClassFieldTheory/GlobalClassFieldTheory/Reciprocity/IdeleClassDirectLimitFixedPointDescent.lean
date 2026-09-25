@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IdeleClassDirectLimitFixedPointDescentCore
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IdeleClassDirectLimitFixedPointDescentCore
 /-!
 # Finite-level and direct-limit fixed-point descent endpoints
 
@@ -12,6 +14,8 @@ This endpoint leaf turns the reusable fixed-point comparisons into actual
 descent witnesses first at one finite Galois level and then in the rational
 idèle-class direct limit.
 -/
+
+@[expose] public section
 
 noncomputable section
 

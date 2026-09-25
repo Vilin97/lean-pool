@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RadicalQuotient
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Kummer.Concrete.RadicalQuotient
 /-!
 # finite Kummer character isomorphism
 
@@ -22,6 +24,8 @@ Noether's Hilbert theorem 90.  This is the finite actual-field character-
 isomorphism half of The finite Kummer character equivalence; it does not assert the full
 lattice correspondence between radical subgroups and abelian extensions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

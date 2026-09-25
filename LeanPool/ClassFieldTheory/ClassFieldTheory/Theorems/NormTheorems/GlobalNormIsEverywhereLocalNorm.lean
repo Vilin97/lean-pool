@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.IsFieldNorm
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.NormTheorems.IsEverywhereLocalNorm
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.NormTheorems.TensorNormBaseChange
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.LocalClassFieldTheory.IsFieldNorm
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.NormTheorems.IsEverywhereLocalNorm
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.NormTheorems.TensorNormBaseChange
 /-!
 # Global norms are local norms everywhere
 
@@ -16,6 +18,8 @@ a unit `x` of `K`.  The conclusion says that if `x` lies in the
 global norm subgroup, then after scalar extension it is a determinant norm
 at every finite and every infinite completion of `K`.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 

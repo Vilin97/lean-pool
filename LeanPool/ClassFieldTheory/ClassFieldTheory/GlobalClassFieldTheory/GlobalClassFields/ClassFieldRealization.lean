@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteAbelianSubextension
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FiniteAbstractFixedField
-import Mathlib.FieldTheory.Galois.Abelian
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AbstractClassFieldTheory.Reciprocity.FiniteAbelianSubextension
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.FiniteAbstractFixedField
+public import Mathlib.FieldTheory.Galois.Abelian
 /-!
 # Concrete realization of finite abelian subextensions
 
@@ -16,6 +18,8 @@ upper relative fixed field is an actual finite extension of the lower fixed
 field.  The quotient-to-Galois-group equivalence transports the commutativity
 carried by the abstract package, so this actual extension is abelian Galois.
 -/
+
+@[expose] public section
 
 noncomputable section
 

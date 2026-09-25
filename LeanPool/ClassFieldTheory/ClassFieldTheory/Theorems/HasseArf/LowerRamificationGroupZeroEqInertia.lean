@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.LowerRamificationGroup
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HasseArf.LowerRamificationGroup
 /-!
 # The zeroth lower group is the inertia group
 
@@ -12,6 +14,8 @@ Mathlib defines inertia through the action on the residue field.  The
 valuation-subring definition of `G₀` uses the equivalent condition that
 every difference `σ • x - x` belongs to the maximal ideal.
 -/
+
+@[expose] public section
 
 namespace ClassFieldTheory
 

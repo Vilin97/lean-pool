@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.Core
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PrincipalUnitPadicAction.Core
 /-!
 # Compact surjectivity criterion for the principal-unit inverse limit
 
@@ -15,6 +17,8 @@ For a map from a compact space to the inverse limit
 surjectivity on the inverse limit.  Indeed, the fibers over the coordinates
 of a fixed target form a decreasing sequence of nonempty compact closed sets.
 -/
+
+@[expose] public section
 
 noncomputable section
 

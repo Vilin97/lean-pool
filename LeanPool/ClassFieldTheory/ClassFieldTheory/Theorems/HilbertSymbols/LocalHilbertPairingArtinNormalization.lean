@@ -3,19 +3,23 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsLocalHilbertPairing
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.PowerClass
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.MathlibHilbertPairing
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidue
-import Mathlib.FieldTheory.Galois.Basic
-import Mathlib.Topology.Algebra.ContinuousMonoidHom
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.IsLocalHilbertPairing
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.HilbertSymbols.PowerClass
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Kummer.MathlibHilbertPairing
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LocalClassFieldTheory.Finite.LocalReciprocity.NormResidue
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.Topology.Algebra.ContinuousMonoidHom
 /-!
 # A local Hilbert pairing compatible with arithmetic Artin reciprocity
 
 The pairing and the Artin maps in this theorem are chosen together. The
 algebraic pairing laws alone do not determine the values in `μₙ(K)`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

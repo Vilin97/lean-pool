@@ -3,16 +3,20 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.Series
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.LinearTerm
-import Mathlib.RingTheory.MvPowerSeries.Substitution
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.Series
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FormalModule.LinearTerm
+public import Mathlib.RingTheory.MvPowerSeries.Substitution
 /-!
 # Intertwining equations for Lubin--Tate series
 
 For two Lubin--Tate series with the same prescribed linear coefficient, this
 module defines the multivariable intertwining equation and its additive defect.
 -/
+
+@[expose] public section
 
 noncomputable section
 

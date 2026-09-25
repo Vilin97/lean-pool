@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IdeleClassDirectLimitFiniteTowerNormStatement
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.Reciprocity.IdeleClassDirectLimitFiniteTowerNormStatement
 /-!
 # Proof of ordinary norm comparison in finite towers of rational fixed fields
 
@@ -13,6 +15,8 @@ the normal-closure embedding calculation, the pointwise coset action, and the
 finite product calculation into separate commands.  The public theorem is a
 thin wrapper around those providers.
 -/
+
+@[expose] public section
 
 noncomputable section
 

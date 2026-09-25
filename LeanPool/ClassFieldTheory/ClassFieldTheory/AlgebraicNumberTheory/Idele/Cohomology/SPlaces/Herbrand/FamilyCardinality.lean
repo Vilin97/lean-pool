@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Cohomology.SPlaces.Herbrand.FamilyFinite
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele.Cohomology.SPlaces.Herbrand.FamilyFinite
 /-!
 # Cardinalities of finite unrestricted local-block families
 
 This leaf computes the two finite-family Herbrand cardinalities from the
 finiteness results and the canonical family instance providers.
 -/
+
+@[expose] public section
 
 open scoped NumberField BigOperators ValuativeRel NNReal
 open NumberField IsDedekindDomain

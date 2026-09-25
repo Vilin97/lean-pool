@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.PrimitiveReduction
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.PrimitiveReduction
 /-!
 # Primitive irreducible reductions and Hensel factorization
 
@@ -15,6 +17,8 @@ power of one irreducible residual polynomial.  Unique factorization then
 partitions the fraction-field irreducible factors along any coprime residual
 factorization.
 -/
+
+@[expose] public section
 
 noncomputable section
 

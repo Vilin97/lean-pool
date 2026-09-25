@@ -3,13 +3,15 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicField
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteIntegralClosure
-import Mathlib.NumberTheory.Cyclotomic.Gal
-import Mathlib.NumberTheory.Cyclotomic.Discriminant
-import Mathlib.RingTheory.Polynomial.Eisenstein.IsIntegral
-import Mathlib.RingTheory.IsAdjoinRoot
+
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.LocalField.DiscreteValuationField.PadicField
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.DiscreteValuationField.FiniteIntegralClosure
+public import Mathlib.NumberTheory.Cyclotomic.Gal
+public import Mathlib.NumberTheory.Cyclotomic.Discriminant
+public import Mathlib.RingTheory.Polynomial.Eisenstein.IsIntegral
+public import Mathlib.RingTheory.IsAdjoinRoot
 /-!
 # The Eisenstein polynomial of the `p`-power cyclotomic extension
 
@@ -24,6 +26,8 @@ The source is the translated cyclotomic Eisenstein polynomial
 to the actual p-adic integer ring; no irreducibility or ramification
 conclusion is assumed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

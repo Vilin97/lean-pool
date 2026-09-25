@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.IsRayCongruent
-import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassGroup
-import Mathlib.Data.Finsupp.Order
-import Mathlib.GroupTheory.QuotientGroup.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.IsRayCongruent
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.Definitions.ConductorsAndRayClassFields.RayClassGroup
+public import Mathlib.Data.Finsupp.Order
+public import Mathlib.GroupTheory.QuotientGroup.Basic
 /-!
 # Projection between ideal-theoretic ray class groups
 
@@ -15,6 +17,8 @@ Enlarging a modulus strengthens its finite congruences and real positivity
 conditions. The induced inclusions of prime-to-modulus ideals and ray-principal
 ideals give the canonical quotient map from the larger modulus to the smaller.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 open NumberField IsDedekindDomain

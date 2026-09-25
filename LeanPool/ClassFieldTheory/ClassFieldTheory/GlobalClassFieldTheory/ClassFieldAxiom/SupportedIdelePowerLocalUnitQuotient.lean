@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.IdelePowerLocalUnitSubgroup
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Approximation
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.ClassFieldAxiom.IdelePowerLocalUnitSubgroup
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Approximation
 /-!
 # Supported idele power-local-unit quotient
 
@@ -13,6 +15,8 @@ This module restricts the power-local-unit subgroup to ideles supported at
 the prescribed finite places and identifies the resulting quotient with the
 product of its archimedean and finite local power-class groups.
 -/
+
+@[expose] public section
 
 open scoped NumberField NNReal IsMulCommutative
 open NumberField IsDedekindDomain

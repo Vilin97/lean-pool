@@ -3,8 +3,10 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Topology
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Topology
 /-!
 # Narrow finite conductors
 
@@ -22,6 +24,8 @@ exponent is the least exponent occurring among all defining moduli.  A
 single defining modulus bounds the support, so these pointwise minima
 assemble into a genuine finitely supported modulus.
 -/
+
+@[expose] public section
 
 open scoped NumberField
 noncomputable section

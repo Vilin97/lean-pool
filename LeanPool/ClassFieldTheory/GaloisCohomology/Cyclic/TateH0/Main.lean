@@ -3,14 +3,18 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.TateH0.NormImage
+
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.TateH0.NormImage
 /-!
 # Degree-zero Tate cohomology and the norm quotient
 
 This module identifies degree-zero Tate cohomology of the multiplicative group
 of a finite Galois extension with the corresponding field norm quotient.
 -/
+
+@[expose] public section
 
 namespace CyclicCohomology
 

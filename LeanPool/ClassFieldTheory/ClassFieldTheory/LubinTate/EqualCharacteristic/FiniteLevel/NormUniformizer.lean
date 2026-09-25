@@ -3,9 +3,11 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.LevelField
-import Mathlib.RingTheory.Norm.Basic
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.EqualCharacteristic.FiniteLevel.LevelField
+public import Mathlib.RingTheory.Norm.Basic
 /-!
 # The uniformizer norm identity: the uniformizer norm in the equal-characteristic level field
 
@@ -13,6 +15,8 @@ For a primitive level-`n+1` division point `λ`, its Eisenstein minimal
 polynomial has constant coefficient `T`.  The power-basis norm formula
 therefore gives the norm identity `N(-λ) = T`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

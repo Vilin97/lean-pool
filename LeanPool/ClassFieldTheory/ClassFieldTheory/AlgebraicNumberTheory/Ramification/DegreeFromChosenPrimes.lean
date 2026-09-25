@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.DegreeProduct
-import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.Dedekind.ChosenInertiaCoverage
-import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.Dedekind.InertiaGeneration
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification.DegreeProduct
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.Dedekind.ChosenInertiaCoverage
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.RamificationTheory.HilbertRamification.Dedekind.InertiaGeneration
 /-!
 # Global degree bound from chosen finite-prime inertia groups
 
@@ -14,6 +16,8 @@ This combines three generic steps in the global degree estimate: coverage by one
 prime over each member of `S`, generation of the full Galois group by all
 finite-prime inertia, and the finite abelian product bound.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,13 +3,17 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.RepresentationTheory.Homological.GroupCohomology.FiniteCyclic
-import Mathlib.RepresentationTheory.Invariants
-import Mathlib.Topology.Algebra.Group.ClosedSubgroup
-import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.TateComparison
+
+public import Mathlib.RepresentationTheory.Homological.GroupCohomology.FiniteCyclic
+public import Mathlib.RepresentationTheory.Invariants
+public import Mathlib.Topology.Algebra.Group.ClosedSubgroup
+public import LeanPool.ClassFieldTheory.GaloisCohomology.Cyclic.TateComparison
 
 /-! # Norm Kernel Vanishing -/
+
+@[expose] public section
 namespace CyclicCohomology
 
 /-!

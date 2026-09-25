@@ -3,11 +3,13 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveEisenstein
-import Mathlib.FieldTheory.IsSepClosed
-import Mathlib.RingTheory.Polynomial.GaussLemma
-import Mathlib.SetTheory.Cardinal.Finite
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.LubinTate.FiniteLevel.PrimitiveEisenstein
+public import Mathlib.FieldTheory.IsSepClosed
+public import Mathlib.RingTheory.Polynomial.GaussLemma
+public import Mathlib.SetTheory.Cardinal.Finite
 /-!
 # Primitive roots and standard Lubin--Tate level fields
 
@@ -25,6 +27,8 @@ uses the identity
 for `f(X) = X ^ q + π * X`, together with the fact that `q - 1` is nonzero
 in the base field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

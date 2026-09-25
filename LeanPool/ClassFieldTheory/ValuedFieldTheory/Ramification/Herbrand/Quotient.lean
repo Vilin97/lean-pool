@@ -3,10 +3,12 @@ Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: n-yamaguchi-0729
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Finite
-import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.Herbrand.Function
-import Mathlib.GroupTheory.Index
+
+public import Mathlib.SetTheory.Cardinal.Finite
+public import LeanPool.ClassFieldTheory.ValuedFieldTheory.Ramification.Herbrand.Function
+public import Mathlib.GroupTheory.Index
 /-!
 # Pure group theory for Herbrand towers
 
@@ -21,6 +23,8 @@ Valued-field endpoints combine these structural lemmas with ramification-number
 averaging; the inverse-function and upper-numbering statements are proved directly
 in the Hilbert-ramification Herbrand theorem module.
 -/
+
+@[expose] public section
 
 open _root_.RamificationTheory.DiscreteValuationField.AntitoneNormalSubgroupFiltration renaming
   herbrandFunction →
