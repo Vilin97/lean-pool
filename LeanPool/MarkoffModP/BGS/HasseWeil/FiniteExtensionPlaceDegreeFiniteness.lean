@@ -37,7 +37,7 @@ noncomputable section
 /-- Finite fields have only finitely many finite rational-function places of
 degree at most `n`. -/
 theorem ratFuncFinitePlace_degree_le_finite
-    (K : Type*) [Field K] [Fintype K] [DecidableEq K] (n : ℕ) :
+    (K : Type*) [Field K] [Finite K] [DecidableEq K] (n : ℕ) :
     Finite {p : IsDedekindDomain.HeightOneSpectrum K[X] //
       ratFuncFinitePlaceDegree p ≤ n} := by
   let f : {p : IsDedekindDomain.HeightOneSpectrum K[X] //
@@ -70,7 +70,7 @@ theorem ratFuncFinitePlace_degree_le_finite
 /-- A finite extension of `K(X)` has only finitely many finite places of
 degree at most `n`. -/
 theorem finiteExtensionFinitePlace_degree_le_finite
-    (K L : Type*) [Field K] [Fintype K] [DecidableEq K]
+    (K L : Type*) [Field K] [Finite K] [DecidableEq K]
     [DecidableEq (RatFunc K)] [Field L] [Algebra (RatFunc K) L]
     [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
     (n : ℕ) :
@@ -120,7 +120,7 @@ theorem finiteExtensionFinitePlace_degree_le_finite
 degree at most `n`.  The finite branch is the preceding theorem; the branch
 above the unique base infinity place is finite without a degree restriction. -/
 theorem finiteExtensionPlace_degree_le_finite
-    (K L : Type*) [Field K] [Fintype K] [DecidableEq K]
+    (K L : Type*) [Field K] [Finite K] [DecidableEq K]
     [DecidableEq (RatFunc K)] [Field L] [Algebra (RatFunc K) L]
     [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L]
     (n : ℕ) :

@@ -116,6 +116,7 @@ theorem finiteExtensionEffectiveFiniteDivisorDegree_eq_placeDegree
   intro P _
   rw [finiteExtensionFinitePlace_degree_eq_finrank_residueField K L P]
 
+omit [Fintype K] in
 /-- Degree is additive across the finite/infinity split. -/
 theorem finiteExtensionEffectiveDivisorDegree_split
     (D : FiniteExtensionEffectiveDivisor K L) :
@@ -154,6 +155,7 @@ theorem finiteExtensionEffectiveDivisorToDivisor_apply
     finiteExtensionEffectiveDivisorToDivisor K L D P = D P := by
   simp [finiteExtensionEffectiveDivisorToDivisor]
 
+omit [Fintype K] [DecidableEq K] in
 /-- The cast divisor is effective. -/
 theorem finiteExtensionEffectiveDivisorToDivisor_effective
     (D : FiniteExtensionEffectiveDivisor K L) (P : FiniteExtensionPlace K L) :
@@ -201,15 +203,17 @@ def finiteExtensionEffectiveDivisorAffineInfinityEquiv :
     ((finiteExtensionAffineIdealEffectiveDivisorEquiv K L).symm.prodCongr
       (Equiv.refl _))
 
+omit [Fintype K] in
 /-- Under the ideal/infinity equivalence, exhaustive degree is affine ideal
 degree plus infinity degree. -/
-theorem finiteExtensionEffectiveDivisorDegree_eq_affine_add_infinity
+theorem finiteExtensionEffectiveDivisorDegree_eq_affine_add_infinity [Finite K]
     (D : FiniteExtensionEffectiveDivisor K L) :
     finiteExtensionEffectiveDivisorDegree K L D =
       finiteExtensionAffineIdealDegree K L
           (finiteExtensionEffectiveDivisorAffineInfinityEquiv K L D).1 +
         finiteExtensionEffectiveInfinityDivisorDegree K L
           (finiteExtensionEffectiveDivisorAffineInfinityEquiv K L D).2 := by
+  let : Fintype K := Fintype.ofFinite K
   rw [finiteExtensionEffectiveDivisorDegree_split]
   rw [finiteExtensionAffineIdealDegree_eq_divisorDegree]
   simp [finiteExtensionEffectiveDivisorAffineInfinityEquiv]

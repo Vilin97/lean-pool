@@ -26,9 +26,10 @@ open scoped BigOperators
 /-- For a nonempty finite transitive `G`-set, the sum over group elements of
 the number of fixed points is exactly the order of `G`. -/
 theorem sum_card_fixedBy_eq_card_group_of_isPretransitive
-    (G X : Type*) [Group G] [Fintype G] [MulAction G X] [Fintype X]
+    (G X : Type*) [Group G] [Fintype G] [MulAction G X] [Finite X]
     [MulAction.IsPretransitive G X] [Nonempty X] :
     (∑ g : G, Nat.card (MulAction.fixedBy X g)) = Nat.card G := by
+  let : Fintype X := Fintype.ofFinite X
   let (g : G) : Fintype (MulAction.fixedBy X g) := Fintype.ofFinite _
   let Ω := MulAction.orbitRel.Quotient G X
   let : Fintype Ω := Fintype.ofFinite Ω
@@ -43,7 +44,7 @@ theorem sum_card_fixedBy_eq_card_group_of_isPretransitive
 points per fiber after summing over all group elements. -/
 theorem sum_card_fixedBy_fibers_eq_card_mul_card_group
     {ι G : Type*} [Fintype ι] [Group G] [Fintype G]
-    (X : ι → Type*) [∀ i, MulAction G (X i)] [∀ i, Fintype (X i)]
+    (X : ι → Type*) [∀ i, MulAction G (X i)] [∀ i, Finite (X i)]
     [∀ i, MulAction.IsPretransitive G (X i)] [∀ i, Nonempty (X i)] :
     (∑ g : G, ∑ i : ι, Nat.card (MulAction.fixedBy (X i) g)) =
       Nat.card ι * Nat.card G := by
@@ -247,7 +248,7 @@ def fixedByEquivSigmaInvariantFiberFixedBy
 /-- Cardinal form of the invariant-fiber fixed-point decomposition. -/
 theorem natCard_fixedBy_eq_sum_natCard_invariantFiberFixedBy
     {G X ι : Type*} [Group G] [MulAction G X]
-    [Fintype X] [Fintype ι]
+    [Finite X] [Fintype ι]
     (base : X → ι) (hbase : ∀ (g : G) (x : X), base (g • x) = base x)
     (g : G) :
     Nat.card (MulAction.fixedBy X g) =
