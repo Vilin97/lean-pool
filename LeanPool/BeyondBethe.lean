@@ -66,7 +66,6 @@ import LeanPool.BeyondBethe.BeyondBethe.GoodRowScore
 import LeanPool.BeyondBethe.BeyondBethe.GreedyRowMatching
 import LeanPool.BeyondBethe.BeyondBethe.KuhnMatching
 import LeanPool.BeyondBethe.BeyondBethe.KuhnSmallStep
-import LeanPool.BeyondBethe.BeyondBethe.MachineArithmeticTests
 import LeanPool.BeyondBethe.BeyondBethe.MachineBetheAffineEntry
 import LeanPool.BeyondBethe.BeyondBethe.MachineBetheAffineLineSum
 import LeanPool.BeyondBethe.BeyondBethe.MachineBetheEpigraphOracle
@@ -159,7 +158,6 @@ import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerInteriorScale
 import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerMatrixBitBound
 import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerRoundingSchedule
 import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerStateBound
-import LeanPool.BeyondBethe.BeyondBethe.MachineOptimizerTests
 import LeanPool.BeyondBethe.BeyondBethe.MachineOutputEncoding
 import LeanPool.BeyondBethe.BeyondBethe.MachinePerfectMatching
 import LeanPool.BeyondBethe.BeyondBethe.MachinePositiveAlgorithm
