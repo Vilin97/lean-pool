@@ -268,6 +268,82 @@ private theorem storeUpdate_ready
       Function.update_of_ne hresultCountReplacement, queryWork,
       Function.update_of_ne hresultCountQuery] using! hresultCount
 
+/-- The sparse-store update stage preserves operand witnesses, source cells, and encoded output. -/
+private theorem sparseStore_updateStage
+    (tapes : BinaryInstructionTapes n) (store : Store)
+    (addressRegister source : ℕ) (emittedBits : List Bool)
+    (initialWork : Fin n → Tape) (inp₀ out₀ : Tape)
+    (hcanonical : Canonical store)
+    (hinitial : EntryLookupStaticReady tapes.lhsLookup store initialWork)
+    (hinput : TM.Parked inp₀) (houtput : out₀.HasBinaryPrefix emittedBits) :
+    let address := RegisterStore.read store addressRegister
+    let value := RegisterStore.read store source
+    (entryUpdateTM tapes.update).HoareTime
+      (fun inp work out =>
+        inp = inp₀ ∧
+        (∃ operandsWork queryWork,
+          DirectBinaryOperandsResult tapes store addressRegister source
+            initialWork operandsWork ∧
+          queryWork = Function.update operandsWork tapes.update.entry.query
+            ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right) ∧
+          work = Function.update queryWork tapes.update.replacement
+            ((Tape.init (value.bits.map Γ.ofBool)).move Dir3.right)) ∧
+        out = out₀)
+      (fun inp work out =>
+        inp = inp₀ ∧
+        IndirectStoreInstructionResult tapes store addressRegister source
+          initialWork work ∧
+        out.HasBinaryPrefix
+          (emittedBits ++
+            (RegisterStore.write store address value).flatMap Entry.encode))
+      (entryUpdateTime tapes.update store address value) := by
+  dsimp only
+  let address := RegisterStore.read store addressRegister
+  let value := RegisterStore.read store source
+  rintro inp work out ⟨hinp, ⟨operandsWork, queryWork, hops,
+    hqueryWork, hwork⟩, hout⟩
+  subst queryWork
+  subst work
+  have hready := storeUpdate_ready tapes store addressRegister source
+    initialWork operandsWork hinitial hops
+  let updateWork := Function.update
+    (Function.update operandsWork tapes.update.entry.query
+      ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right))
+    tapes.update.replacement
+    ((Tape.init (value.bits.map Γ.ofBool)).move Dir3.right)
+  have hrun := entryUpdateTM_hoareTime_frame tapes.update store address value
+    emittedBits updateWork inp₀ out₀ hcanonical hready.1 hready.2.1
+    hready.2.2.1 hready.2.2.2.1 hready.2.2.2.2.1 hinput houtput
+  obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
+      houtcome, hfinalOutput, hsourceCells⟩ :=
+    hrun inp updateWork out ⟨hinp, rfl, hout⟩
+  exact ⟨final, time, htime, hreach, hhalt, hfinalInput,
+    ⟨operandsWork,
+      Function.update operandsWork tapes.update.entry.query
+        ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right),
+      updateWork, hops, rfl, rfl, by simpa [address, value] using! houtcome,
+      by
+        rcases hops with ⟨lhsWork, hlhs, hrhs⟩
+        calc
+          (final.work tapes.update.entry.source).cells =
+              (updateWork tapes.update.entry.source).cells := hsourceCells
+          _ = (operandsWork tapes.update.entry.source).cells := by
+            rw [show updateWork tapes.update.entry.source =
+                (Function.update operandsWork tapes.update.entry.query
+                  ((Tape.init (address.bits.map Γ.ofBool)).move
+                    Dir3.right)) tapes.update.entry.source by
+              exact Function.update_of_ne (tapes.update.ne (by decide)) _ _]
+            rw [show (Function.update operandsWork
+                  tapes.update.entry.query
+                  ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right))
+                  tapes.update.entry.source =
+                operandsWork tapes.update.entry.source by
+              exact Function.update_of_ne (tapes.update.ne (by decide)) _ _]
+          _ = (lhsWork tapes.update.entry.source).cells := hrhs.sourceCells
+          _ = (initialWork tapes.update.entry.source).cells :=
+            hlhs.sourceCells⟩,
+    by simpa [address, value] using! hfinalOutput⟩
+
 /-- Exact semantic and time contract for one indirect sparse store. -/
 theorem indirectStoreInstructionTM_hoareTime_frame_internal
     (tapes : BinaryInstructionTapes n) (store : Store)
@@ -406,68 +482,8 @@ theorem indirectStoreInstructionTM_hoareTime_frame_internal
       ⟨operandsWork, queryWork, hops, rfl,
         by simpa [value] using! hfinalWork⟩,
       hfinalOutput.trans hout⟩
-  have hupdate : (entryUpdateTM tapes.update).HoareTime
-      (fun inp work out =>
-        inp = inp₀ ∧
-        (∃ operandsWork queryWork,
-          DirectBinaryOperandsResult tapes store addressRegister source
-            initialWork operandsWork ∧
-          queryWork = Function.update operandsWork tapes.update.entry.query
-            ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right) ∧
-          work = Function.update queryWork tapes.update.replacement
-            ((Tape.init (value.bits.map Γ.ofBool)).move Dir3.right)) ∧
-        out = out₀)
-      (fun inp work out =>
-        inp = inp₀ ∧
-        IndirectStoreInstructionResult tapes store addressRegister source
-          initialWork work ∧
-        out.HasBinaryPrefix
-          (emittedBits ++
-            (RegisterStore.write store address value).flatMap Entry.encode))
-      (entryUpdateTime tapes.update store address value) := by
-    rintro inp work out ⟨hinp, ⟨operandsWork, queryWork, hops,
-      hqueryWork, hwork⟩, hout⟩
-    subst queryWork
-    subst work
-    have hready := storeUpdate_ready tapes store addressRegister source
-      initialWork operandsWork hinitial hops
-    let updateWork := Function.update
-      (Function.update operandsWork tapes.update.entry.query
-        ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right))
-      tapes.update.replacement
-      ((Tape.init (value.bits.map Γ.ofBool)).move Dir3.right)
-    have hrun := entryUpdateTM_hoareTime_frame tapes.update store address value
-      emittedBits updateWork inp₀ out₀ hcanonical hready.1 hready.2.1
-      hready.2.2.1 hready.2.2.2.1 hready.2.2.2.2.1 hinput houtput
-    obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
-        houtcome, hfinalOutput, hsourceCells⟩ :=
-      hrun inp updateWork out ⟨hinp, rfl, hout⟩
-    exact ⟨final, time, htime, hreach, hhalt, hfinalInput,
-      ⟨operandsWork,
-        Function.update operandsWork tapes.update.entry.query
-          ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right),
-        updateWork, hops, rfl, rfl, by simpa [address, value] using! houtcome,
-        by
-          rcases hops with ⟨lhsWork, hlhs, hrhs⟩
-          calc
-            (final.work tapes.update.entry.source).cells =
-                (updateWork tapes.update.entry.source).cells := hsourceCells
-            _ = (operandsWork tapes.update.entry.source).cells := by
-              rw [show updateWork tapes.update.entry.source =
-                  (Function.update operandsWork tapes.update.entry.query
-                    ((Tape.init (address.bits.map Γ.ofBool)).move
-                      Dir3.right)) tapes.update.entry.source by
-                exact Function.update_of_ne (tapes.update.ne (by decide)) _ _]
-              rw [show (Function.update operandsWork
-                    tapes.update.entry.query
-                    ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right))
-                    tapes.update.entry.source =
-                  operandsWork tapes.update.entry.source by
-                exact Function.update_of_ne (tapes.update.ne (by decide)) _ _]
-            _ = (lhsWork tapes.update.entry.source).cells := hrhs.sourceCells
-            _ = (initialWork tapes.update.entry.source).cells :=
-              hlhs.sourceCells⟩,
-      by simpa [address, value] using! hfinalOutput⟩
+  have hupdate := sparseStore_updateStage tapes store addressRegister source emittedBits
+    initialWork inp₀ out₀ hcanonical hinitial hinput houtput
   have hvalueUpdate := TM.seqTM_hoareTime
     (TM.binaryCopyIntoTM tapes.rhs tapes.update.replacement tapes.update.found)
     (entryUpdateTM tapes.update) hvalue

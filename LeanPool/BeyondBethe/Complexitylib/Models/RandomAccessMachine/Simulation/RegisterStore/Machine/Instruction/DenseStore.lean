@@ -218,6 +218,66 @@ private theorem denseStoreUpdate_ready
   · simpa only [updateWork, Function.update_of_ne hresultCountReplacement,
       queryWork, Function.update_of_ne hresultCountQuery] using! hresultCount
 
+/-- The dense-store update stage preserves its operand witnesses and exact encoded-write output. -/
+private theorem denseStore_updateStage
+    (tapes : BinaryInstructionTapes n) (input : List Bool)
+    (overlay : Store) (addressRegister source : ℕ) (emittedBits : List Bool)
+    (initialWork : Fin n → Tape) (out₀ : Tape)
+    (hvalid : DenseOverlay.Valid overlay)
+    (hinitial : EntryLookupStaticReady tapes.lhsLookup overlay initialWork)
+    (hinput : TM.Parked ((Tape.init (input.map Γ.ofBool)).move Dir3.right))
+    (houtput : out₀.HasBinaryPrefix emittedBits) :
+    let inp₀ := (Tape.init (input.map Γ.ofBool)).move Dir3.right
+    let address := DenseOverlay.read input overlay addressRegister
+    let value := DenseOverlay.read input overlay source
+    (taggedEntryUpdateTM tapes.update).HoareTime
+      (fun inp work out =>
+        inp = inp₀ ∧
+        (∃ operandsWork queryWork,
+          DenseDirectBinaryOperandsResult tapes input overlay addressRegister
+            source initialWork operandsWork ∧
+          queryWork = Function.update operandsWork tapes.update.entry.query
+            ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right) ∧
+          work = Function.update queryWork tapes.update.replacement
+            ((Tape.init (value.bits.map Γ.ofBool)).move Dir3.right)) ∧
+        out = out₀)
+      (fun inp work out =>
+        inp = inp₀ ∧
+        DenseIndirectStoreInstructionResult tapes input overlay addressRegister
+          source initialWork work ∧
+        out.HasBinaryPrefix
+          (emittedBits ++
+            (DenseOverlay.write overlay address value).flatMap Entry.encode))
+      (taggedEntryUpdateTime tapes.update overlay address value) := by
+  dsimp only
+  let inp₀ := (Tape.init (input.map Γ.ofBool)).move Dir3.right
+  let address := DenseOverlay.read input overlay addressRegister
+  let value := DenseOverlay.read input overlay source
+  rintro inp work out ⟨hinp, ⟨operandsWork, queryWork, hops,
+    hqueryWork, hwork⟩, hout⟩
+  subst queryWork
+  subst work
+  have hready := denseStoreUpdate_ready tapes input overlay addressRegister
+    source initialWork operandsWork hinitial hops
+  let updateWork := Function.update
+    (Function.update operandsWork tapes.update.entry.query
+      ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right))
+    tapes.update.replacement
+    ((Tape.init (value.bits.map Γ.ofBool)).move Dir3.right)
+  have hrun := taggedEntryUpdateTM_hoareTime_frame tapes.update overlay
+    address value emittedBits updateWork inp₀ out₀ hvalid.1 hready.1
+    hready.2.1 hready.2.2.1 hready.2.2.2.1 hready.2.2.2.2.1 hinput
+    houtput
+  obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
+      houtcome, hfinalOutput⟩ :=
+    hrun inp updateWork out ⟨hinp, rfl, hout⟩
+  exact ⟨final, time, htime, hreach, hhalt, hfinalInput,
+    ⟨operandsWork,
+      Function.update operandsWork tapes.update.entry.query
+        ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right),
+      updateWork, hops, rfl, rfl, by simpa [address, value] using! houtcome⟩,
+    by simpa [address, value] using! hfinalOutput⟩
+
 /-- Exact semantic and time contract for one dense-overlay indirect store. -/
 theorem denseIndirectStoreInstructionTM_hoareTime_frame
     (tapes : BinaryInstructionTapes n) (input : List Bool)
@@ -358,49 +418,8 @@ theorem denseIndirectStoreInstructionTM_hoareTime_frame
       ⟨operandsWork, queryWork, hops, rfl,
         by simpa [value] using! hfinalWork⟩,
       hfinalOutput.trans hout⟩
-  have hupdate : (taggedEntryUpdateTM tapes.update).HoareTime
-      (fun inp work out =>
-        inp = inp₀ ∧
-        (∃ operandsWork queryWork,
-          DenseDirectBinaryOperandsResult tapes input overlay addressRegister
-            source initialWork operandsWork ∧
-          queryWork = Function.update operandsWork tapes.update.entry.query
-            ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right) ∧
-          work = Function.update queryWork tapes.update.replacement
-            ((Tape.init (value.bits.map Γ.ofBool)).move Dir3.right)) ∧
-        out = out₀)
-      (fun inp work out =>
-        inp = inp₀ ∧
-        DenseIndirectStoreInstructionResult tapes input overlay addressRegister
-          source initialWork work ∧
-        out.HasBinaryPrefix
-          (emittedBits ++
-            (DenseOverlay.write overlay address value).flatMap Entry.encode))
-      (taggedEntryUpdateTime tapes.update overlay address value) := by
-    rintro inp work out ⟨hinp, ⟨operandsWork, queryWork, hops,
-      hqueryWork, hwork⟩, hout⟩
-    subst queryWork
-    subst work
-    have hready := denseStoreUpdate_ready tapes input overlay addressRegister
-      source initialWork operandsWork hinitial hops
-    let updateWork := Function.update
-      (Function.update operandsWork tapes.update.entry.query
-        ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right))
-      tapes.update.replacement
-      ((Tape.init (value.bits.map Γ.ofBool)).move Dir3.right)
-    have hrun := taggedEntryUpdateTM_hoareTime_frame tapes.update overlay
-      address value emittedBits updateWork inp₀ out₀ hvalid.1 hready.1
-      hready.2.1 hready.2.2.1 hready.2.2.2.1 hready.2.2.2.2.1 hinput
-      houtput
-    obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
-        houtcome, hfinalOutput⟩ :=
-      hrun inp updateWork out ⟨hinp, rfl, hout⟩
-    exact ⟨final, time, htime, hreach, hhalt, hfinalInput,
-      ⟨operandsWork,
-        Function.update operandsWork tapes.update.entry.query
-          ((Tape.init (address.bits.map Γ.ofBool)).move Dir3.right),
-        updateWork, hops, rfl, rfl, by simpa [address, value] using! houtcome⟩,
-      by simpa [address, value] using! hfinalOutput⟩
+  have hupdate := denseStore_updateStage tapes input overlay addressRegister source emittedBits
+    initialWork out₀ hvalid hinitial hinput houtput
   have hvalueUpdate := TM.seqTM_hoareTime
     (TM.binaryCopyIntoTM tapes.rhs tapes.update.replacement tapes.update.found)
     (taggedEntryUpdateTM tapes.update) hvalue

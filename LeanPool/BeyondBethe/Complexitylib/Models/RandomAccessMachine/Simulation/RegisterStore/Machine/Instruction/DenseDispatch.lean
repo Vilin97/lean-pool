@@ -51,6 +51,115 @@ private theorem phaseTransition_of_parked
   TM.phaseTransition_eq_self_of_reads_ne_start hinput.read_ne_start
     (fun i => (hwork i).read_ne_start) houtput.read_ne_start
 
+/-- Dispatch's temporary selector update preserves parking of every work tape. -/
+private theorem denseDispatch_work_parked
+    {tapes : ControlInstructionTapes n} {overlay : Store} {pcValue selector : ℕ}
+    {cleanWork work₀ : Fin (n + 1) → Tape}
+    (hready : DispatchReady tapes overlay pcValue selector cleanWork work₀) :
+    ∀ i, TM.Parked (work₀ i) := by
+  intro i
+  rw [hready.2]
+  by_cases hi : i = tapes.liftedLhs
+  · subst i
+    simp only [Function.update_self]
+    exact hasBinaryNat_parked
+      (Tape.init_move_right_hasBinaryNat selector)
+  · simp only [Function.update_of_ne hi]
+    exact hready.1.control.lookup.scanner.parked i
+
+/-- A zero dispatch selector leaves the clean work configuration unchanged. -/
+private theorem denseDispatch_zero_work
+    {tapes : ControlInstructionTapes n} {overlay : Store} {pcValue : ℕ}
+    {cleanWork work₀ : Fin (n + 1) → Tape}
+    (hready : DispatchReady tapes overlay pcValue 0 cleanWork work₀) :
+    work₀ = cleanWork := by
+  have hcleanLhs := Tape.HasBinaryNat.eq_init_move_right
+    hready.1.control.lookup.destination
+  change cleanWork tapes.liftedLhs =
+    (Tape.init []).move Dir3.right at hcleanLhs
+  rw [hready.2]
+  funext i
+  by_cases hi : i = tapes.liftedLhs
+  · subst i
+    simp only [Function.update_self]
+    exact hcleanLhs.symm
+  · simp only [Function.update_of_ne hi]
+
+/-- An empty dense program clears the dispatch selector and executes the halt instruction. -/
+private theorem denseDispatchEmpty_hoareTime
+    (tapes : ControlInstructionTapes n)
+    (input : List Bool) (overlay : Store) (pcValue selector : ℕ)
+    (cleanWork work₀ : Fin (n + 1) → Tape)
+    (hvalid : DenseOverlay.Valid overlay)
+    (hready : DispatchReady tapes overlay pcValue selector cleanWork work₀) :
+    (denseDispatchProgramTM tapes ([] : Program)).HoareTime
+      (fun inp work out =>
+        inp = (Tape.init (input.map Γ.ofBool)).move Dir3.right ∧
+        work = work₀ ∧ out = (Tape.init []).move Dir3.right)
+      (fun inp work out =>
+        inp = (Tape.init (input.map Γ.ofBool)).move Dir3.right ∧
+        DenseInstructionExecutionResult tapes input
+          (selectedInstruction ([] : Program) selector) pcValue overlay work ∧
+        out = (Tape.init []).move Dir3.right)
+      (denseDispatchProgramTime tapes input overlay pcValue ([] : Program)
+        selector) := by
+  let inp₀ := (Tape.init (input.map Γ.ofBool)).move Dir3.right
+  let out₀ := (Tape.init []).move Dir3.right
+  have hinput : TM.Parked inp₀ := by
+    simpa only [inp₀] using! denseInput_parked input
+  have houtput : TM.Parked out₀ := by
+    simpa only [out₀] using! blankOutput_parked
+  let blankTape := (Tape.init []).move Dir3.right
+  have hselector : (work₀ tapes.liftedLhs).HasBinaryNat selector := by
+    rw [hready.2]
+    simp only [Function.update_self]
+    exact Tape.init_move_right_hasBinaryNat selector
+  have hcleanLhs : cleanWork tapes.liftedLhs = blankTape := by
+    have hzero := hready.1.control.lookup.destination
+    change (cleanWork tapes.liftedLhs).HasBinaryNat 0 at hzero
+    simpa only [blankTape] using!
+      Tape.HasBinaryNat.eq_init_move_right hzero
+  have hwork₀Parked : ∀ i, TM.Parked (work₀ i) :=
+    denseDispatch_work_parked hready
+  have hreset := TM.resetBinaryWorkTM_hoareTime_frame tapes.liftedLhs
+    selector.bits 1 inp₀ work₀ out₀
+    hselector.2.hasBinaryContent hselector.1
+    ⟨by rw [hselector.2.1], by rw [hselector.2.1]⟩
+    hinput (fun i _ => hwork₀Parked i) houtput
+  have hreset' : (TM.resetBinaryWorkTM tapes.liftedLhs).HoareTime
+      (fun inp work out => inp = inp₀ ∧ work = work₀ ∧ out = out₀)
+      (fun inp work out =>
+        inp = inp₀ ∧ work = cleanWork ∧ out = out₀)
+      (TM.resetBinaryWorkTime 1 selector.bits.length) := by
+    apply hreset.consequence
+    · exact fun _ _ _ h => h
+    · rintro inp work out ⟨hinp, hworkEq, hout⟩
+      refine ⟨hinp, ?_, hout⟩
+      rw [hworkEq, hready.2, Function.update_idem]
+      change Function.update cleanWork tapes.liftedLhs blankTape =
+        cleanWork
+      rw [← hcleanLhs, Function.update_eq_self]
+    · exact le_rfl
+  have hhalt := denseExecuteInstructionTM_hoareTime_frame tapes input
+    .halt overlay pcValue cleanWork hvalid hready.1
+  have hseq := TM.seqTM_hoareTime
+    (TM.resetBinaryWorkTM tapes.liftedLhs)
+    (denseExecuteInstructionTM tapes .halt) hreset'
+    (by
+      rintro inp work out ⟨hinp, hworkEq, hout⟩
+      obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
+        (inp := inp) (work := work) (out := out)
+        (by simpa [hinp] using! hinput)
+        (by simpa [hworkEq] using!
+          hready.1.control.lookup.scanner.parked)
+        (by simpa [hout] using! houtput)
+      rw [hi, hw, ho]
+      exact ⟨hinp, hworkEq, hout⟩)
+    hhalt
+  simpa only [denseDispatchProgramTM, dispatchWithTM,
+    denseDispatchProgramTime, dispatchWithTime,
+    selectedInstruction, inp₀, out₀] using! hseq
+
 /-- The decrementing branch tree selects the corresponding dense instruction,
 including the out-of-range halt convention. -/
 theorem denseDispatchProgramTM_hoareTime_frame
@@ -78,64 +187,8 @@ theorem denseDispatchProgramTM_hoareTime_frame
     simpa only [out₀] using! blankOutput_parked
   induction program generalizing selector work₀ with
   | nil =>
-      let blankTape := (Tape.init []).move Dir3.right
-      have hselector : (work₀ tapes.liftedLhs).HasBinaryNat selector := by
-        rw [hready.2]
-        simp only [Function.update_self]
-        exact Tape.init_move_right_hasBinaryNat selector
-      have hcleanLhs : cleanWork tapes.liftedLhs = blankTape := by
-        have hzero := hready.1.control.lookup.destination
-        change (cleanWork tapes.liftedLhs).HasBinaryNat 0 at hzero
-        simpa only [blankTape] using!
-          Tape.HasBinaryNat.eq_init_move_right hzero
-      have hwork₀Parked : ∀ i, TM.Parked (work₀ i) := by
-        intro i
-        rw [hready.2]
-        by_cases hi : i = tapes.liftedLhs
-        · subst i
-          simp only [Function.update_self]
-          exact hasBinaryNat_parked
-            (Tape.init_move_right_hasBinaryNat selector)
-        · simp only [Function.update_of_ne hi]
-          exact hready.1.control.lookup.scanner.parked i
-      have hreset := TM.resetBinaryWorkTM_hoareTime_frame tapes.liftedLhs
-        selector.bits 1 inp₀ work₀ out₀
-        hselector.2.hasBinaryContent hselector.1
-        ⟨by rw [hselector.2.1], by rw [hselector.2.1]⟩
-        hinput (fun i _ => hwork₀Parked i) houtput
-      have hreset' : (TM.resetBinaryWorkTM tapes.liftedLhs).HoareTime
-          (fun inp work out => inp = inp₀ ∧ work = work₀ ∧ out = out₀)
-          (fun inp work out =>
-            inp = inp₀ ∧ work = cleanWork ∧ out = out₀)
-          (TM.resetBinaryWorkTime 1 selector.bits.length) := by
-        apply hreset.consequence
-        · exact fun _ _ _ h => h
-        · rintro inp work out ⟨hinp, hworkEq, hout⟩
-          refine ⟨hinp, ?_, hout⟩
-          rw [hworkEq, hready.2, Function.update_idem]
-          change Function.update cleanWork tapes.liftedLhs blankTape =
-            cleanWork
-          rw [← hcleanLhs, Function.update_eq_self]
-        · exact le_rfl
-      have hhalt := denseExecuteInstructionTM_hoareTime_frame tapes input
-        .halt overlay pcValue cleanWork hvalid hready.1
-      have hseq := TM.seqTM_hoareTime
-        (TM.resetBinaryWorkTM tapes.liftedLhs)
-        (denseExecuteInstructionTM tapes .halt) hreset'
-        (by
-          rintro inp work out ⟨hinp, hworkEq, hout⟩
-          obtain ⟨hi, hw, ho⟩ := phaseTransition_of_parked
-            (inp := inp) (work := work) (out := out)
-            (by simpa [hinp] using! hinput)
-            (by simpa [hworkEq] using!
-              hready.1.control.lookup.scanner.parked)
-            (by simpa [hout] using! houtput)
-          rw [hi, hw, ho]
-          exact ⟨hinp, hworkEq, hout⟩)
-        hhalt
-      simpa only [denseDispatchProgramTM, dispatchWithTM,
-        denseDispatchProgramTime, dispatchWithTime,
-        selectedInstruction, inp₀, out₀] using! hseq
+      exact denseDispatchEmpty_hoareTime tapes input overlay pcValue selector
+        cleanWork work₀ hvalid hready
   | cons instruction program ih =>
       let pre : TM.TapePred (n + 1) := fun inp work out =>
         inp = inp₀ ∧ work = work₀ ∧ out = out₀
@@ -153,34 +206,16 @@ theorem denseDispatchProgramTM_hoareTime_frame
         rw [hready.2]
         simp only [Function.update_self]
         exact Tape.init_move_right_hasBinaryNat selector
-      have hwork₀Parked : ∀ i, TM.Parked (work₀ i) := by
-        intro i
-        rw [hready.2]
-        by_cases hi : i = tapes.liftedLhs
-        · subst i
-          simp only [Function.update_self]
-          exact hasBinaryNat_parked
-            (Tape.init_move_right_hasBinaryNat selector)
-        · simp only [Function.update_of_ne hi]
-          exact hready.1.control.lookup.scanner.parked i
+      have hwork₀Parked : ∀ i, TM.Parked (work₀ i) :=
+        denseDispatch_work_parked hready
       have hblank : (denseExecuteInstructionTM tapes instruction).HoareTime
           blankPre post
           (denseExecuteInstructionTime tapes input instruction pcValue
             overlay) := by
         rintro inp work out ⟨⟨hinp, hworkEq, hout⟩, hzero⟩
         subst selector
-        have hcleanLhs := Tape.HasBinaryNat.eq_init_move_right
-          hready.1.control.lookup.destination
-        change cleanWork tapes.liftedLhs =
-          (Tape.init []).move Dir3.right at hcleanLhs
-        have hworkClean : work = cleanWork := by
-          rw [hworkEq, hready.2]
-          funext i
-          by_cases hi : i = tapes.liftedLhs
-          · subst i
-            simp only [Function.update_self]
-            exact hcleanLhs.symm
-          · simp only [Function.update_of_ne hi]
+        have hworkClean : work = cleanWork :=
+          hworkEq.trans (denseDispatch_zero_work hready)
         obtain ⟨final, time, htime, hreach, hhalt, hfinalInput,
             hresult, hfinalOutput⟩ :=
           denseExecuteInstructionTM_hoareTime_frame tapes input instruction

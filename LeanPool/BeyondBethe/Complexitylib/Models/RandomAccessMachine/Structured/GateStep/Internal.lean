@@ -671,17 +671,27 @@ private theorem input_wire (gate : CircuitCode.RawGate) (wires : List Bool)
   simp
   rfl
 
-theorem program_measured_internal (gate : CircuitCode.RawGate) (wires : List Bool)
-    (value0 value1 : Bool) (hvalue0 : wires[gate.input₀]? = some value0)
-    (hvalue1 : wires[gate.input₁]? = some value1) :
-    ∃ final cost space,
-      Exec program (inputStore gate wires) final (stepCount gate) cost space ∧
-      cost ≤ timeBound gate wires ∧ space ≤ spaceBound gate wires ∧
-      final GateEval.outputReg = Input.bitValue (gate.eval value0 value1) ∧
-      final (memoBase gate + wires.length) =
-        Input.bitValue (gate.eval value0 value1) ∧
-      ∀ index (hindex : index < wires.length),
-        final (memoBase gate + index) = Input.bitValue wires[index] := by
+/-- Decode the first operand and restore the cursor for the second operand. -/
+private theorem firstDecode_restart_measured
+    (gate : CircuitCode.RawGate) (wires : List Bool) :
+    let firstRemaining := CircuitCode.NatCode.encode gate.input₀ ++
+      CircuitCode.NatCode.encode gate.input₁ ++ wires
+    let secondRemaining := CircuitCode.NatCode.encode gate.input₁ ++ wires
+    ∃ (first : Store) (firstCost firstSpace : ℕ),
+      Exec UnaryDecode.mainLoop (headerStore gate wires) first
+        (UnaryDecode.loopStepCount firstRemaining) firstCost firstSpace ∧
+      firstCost ≤ UnaryDecode.timeBound (inputBits gate wires).length ∧
+      firstSpace ≤ UnaryDecode.spaceBound (inputBits gate wires).length ∧
+      first UnaryDecode.valueReg = gate.input₀ ∧
+      first UnaryDecode.activeReg = 0 ∧
+      (∀ index, UnaryDecode.inputBase ≤ index →
+        first index = headerStore gate wires index) ∧
+      CursorEnvelope gate wires first ∧
+      10 < cursorBound gate wires ∧
+      UnaryDecode.CursorReady (inputBits gate wires).length
+        secondRemaining (4 + gate.input₀) 0 (saveRestartStore first) ∧
+      CursorEnvelope gate wires (saveRestartStore first) := by
+  dsimp only
   let firstRemaining := CircuitCode.NatCode.encode gate.input₀ ++
     CircuitCode.NatCode.encode gate.input₁ ++ wires
   let secondRemaining := CircuitCode.NatCode.encode gate.input₁ ++ wires
@@ -795,6 +805,97 @@ theorem program_measured_internal (gate : CircuitCode.RawGate) (wires : List Boo
       ((inputBits gate wires).length + UnaryDecode.inputBase)
       ((inputBits gate wires).length + UnaryDecode.inputBase) saved := by
     simpa [cursorBound] using hsavedBound
+  exact ⟨first, firstCost, firstSpace, hfirst, hfirstCost, hfirstSpace,
+    hfirstValue, hfirstActive, hfirstFrame, hfirstBound, hlarge,
+    hsecondReady, hsecondBound⟩
+
+/-- Marshal decoded operands and preserve the memoized wires for gate evaluation. -/
+private theorem marshal_ready_of_decoded
+    (gate : CircuitCode.RawGate) (wires : List Bool) (first second : Store)
+    (hsecondOp : second headerOpReg = Input.bitValue gate.opBit)
+    (hsecondNegated0 : second headerNegated0Reg = Input.bitValue gate.negated₀)
+    (hsecondNegated1 : second headerNegated1Reg = Input.bitValue gate.negated₁)
+    (hsecondInput0 : second savedInput0Reg = gate.input₀)
+    (hsecondValue : second UnaryDecode.valueReg = gate.input₁)
+    (hsecondActive : second UnaryDecode.activeReg = 0)
+    (hsecondRemaining : second UnaryDecode.remainingReg = wires.length)
+    (hsecondPointer : second UnaryDecode.pointerReg = memoBase gate)
+    (hfirstFrame : ∀ index, UnaryDecode.inputBase ≤ index →
+      first index = headerStore gate wires index)
+    (hsecondFrame : ∀ index, UnaryDecode.inputBase ≤ index →
+      second index = saveRestartStore first index) :
+    GateEval.ReadyAt (memoBase gate) gate wires (marshalStore second) := by
+  constructor
+  · simp [memoBase, CircuitCode.RawGate.length_encode, GateEval.wireBase,
+      UnaryDecode.inputBase]
+    omega
+  · change marshalStore second GateEval.opReg = _
+    rw [marshal_op, hsecondOp, hsecondActive]
+    omega
+  · change marshalStore second GateEval.negated0Reg = _
+    rw [marshal_negated0, hsecondNegated0, hsecondActive]
+    omega
+  · change marshalStore second GateEval.negated1Reg = _
+    rw [marshal_negated1, hsecondNegated1, hsecondActive]
+    omega
+  · change marshalStore second GateEval.address0Reg = gate.input₀
+    rw [marshal_address0, hsecondInput0, hsecondActive]
+    omega
+  · change marshalStore second GateEval.address1Reg = gate.input₁
+    rw [marshal_address1, hsecondValue, hsecondActive]
+    omega
+  · change marshalStore second GateEval.wireCountReg = wires.length
+    rw [marshal_wireCount, hsecondRemaining, hsecondActive]
+    omega
+  · change marshalStore second GateEval.baseReg = memoBase gate
+    rw [marshal_base, hsecondPointer, hsecondActive]
+    omega
+  · intro index hindex
+    change marshalStore second (memoBase gate + index) = _
+    rw [marshal_high second _ (by
+      simp [memoBase, CircuitCode.RawGate.length_encode,
+        UnaryDecode.inputBase]
+      omega)]
+    rw [hsecondFrame _ (by
+      simp [memoBase, CircuitCode.RawGate.length_encode,
+        UnaryDecode.inputBase]
+      omega)]
+    change saveRestartStore first (memoBase gate + index) = _
+    rw [saveRestart_high first _ (by
+      simp [memoBase, CircuitCode.RawGate.length_encode,
+        UnaryDecode.inputBase]
+      omega)]
+    rw [hfirstFrame _ (by
+      simp [memoBase, CircuitCode.RawGate.length_encode,
+        UnaryDecode.inputBase]
+      omega)]
+    rw [header_high gate wires _ (by
+      simp [memoBase, CircuitCode.RawGate.length_encode,
+        UnaryDecode.inputBase]
+      omega)]
+    exact input_wire gate wires index
+
+theorem program_measured_internal (gate : CircuitCode.RawGate) (wires : List Bool)
+    (value0 value1 : Bool) (hvalue0 : wires[gate.input₀]? = some value0)
+    (hvalue1 : wires[gate.input₁]? = some value1) :
+    ∃ final cost space,
+      Exec program (inputStore gate wires) final (stepCount gate) cost space ∧
+      cost ≤ timeBound gate wires ∧ space ≤ spaceBound gate wires ∧
+      final GateEval.outputReg = Input.bitValue (gate.eval value0 value1) ∧
+      final (memoBase gate + wires.length) =
+        Input.bitValue (gate.eval value0 value1) ∧
+      ∀ index (hindex : index < wires.length),
+        final (memoBase gate + index) = Input.bitValue wires[index] := by
+  let firstRemaining := CircuitCode.NatCode.encode gate.input₀ ++
+    CircuitCode.NatCode.encode gate.input₁ ++ wires
+  let secondRemaining := CircuitCode.NatCode.encode gate.input₁ ++ wires
+  obtain ⟨first, firstCost, firstSpace, hfirst, hfirstCost, hfirstSpace,
+      hfirstValue, hfirstActive, hfirstFrame, hfirstBound, hlarge,
+      hsecondReady, hsecondBound⟩ := firstDecode_restart_measured gate wires
+  let saved := saveRestartStore first
+  have hdecode0 : CircuitCode.NatCode.decodePrefix? firstRemaining =
+      some (gate.input₀, secondRemaining) := by
+    simp [firstRemaining, secondRemaining, List.append_assoc]
   obtain ⟨second, secondCost, secondSpace, hsecond, hsecondCost, hsecondSpace,
       hsecondResult, hsecondActive, _hsecondOne, hsecondFrame, hsecondFinalBound⟩ :=
     UnaryDecode.mainLoop_measured_internal hsecondReady hsecondBound
@@ -847,56 +948,10 @@ theorem program_measured_internal (gate : CircuitCode.RawGate) (wires : List Boo
     rw [hfirstValue, hfirstActive]
     omega
   let marshaled := marshalStore second
-  have hready : GateEval.ReadyAt (memoBase gate) gate wires marshaled := by
-    constructor
-    · simp [memoBase, CircuitCode.RawGate.length_encode, GateEval.wireBase,
-        UnaryDecode.inputBase]
-      omega
-    · change marshalStore second GateEval.opReg = _
-      rw [marshal_op, hsecondOp, hsecondActive]
-      omega
-    · change marshalStore second GateEval.negated0Reg = _
-      rw [marshal_negated0, hsecondNegated0, hsecondActive]
-      omega
-    · change marshalStore second GateEval.negated1Reg = _
-      rw [marshal_negated1, hsecondNegated1, hsecondActive]
-      omega
-    · change marshalStore second GateEval.address0Reg = gate.input₀
-      rw [marshal_address0, hsecondInput0, hsecondActive]
-      omega
-    · change marshalStore second GateEval.address1Reg = gate.input₁
-      rw [marshal_address1, hsecondValue, hsecondActive]
-      omega
-    · change marshalStore second GateEval.wireCountReg = wires.length
-      rw [marshal_wireCount, hsecondRemaining, hsecondActive]
-      omega
-    · change marshalStore second GateEval.baseReg = memoBase gate
-      rw [marshal_base, hsecondPointer, hsecondActive]
-      omega
-    · intro index hindex
-      change marshalStore second (memoBase gate + index) = _
-      rw [marshal_high second _ (by
-        simp [memoBase, CircuitCode.RawGate.length_encode,
-          UnaryDecode.inputBase]
-        omega)]
-      rw [hsecondFrame _ (by
-        simp [memoBase, CircuitCode.RawGate.length_encode,
-          UnaryDecode.inputBase]
-        omega)]
-      change saveRestartStore first (memoBase gate + index) = _
-      rw [saveRestart_high first _ (by
-        simp [memoBase, CircuitCode.RawGate.length_encode,
-          UnaryDecode.inputBase]
-        omega)]
-      rw [hfirstFrame _ (by
-        simp [memoBase, CircuitCode.RawGate.length_encode,
-          UnaryDecode.inputBase]
-        omega)]
-      rw [header_high gate wires _ (by
-        simp [memoBase, CircuitCode.RawGate.length_encode,
-          UnaryDecode.inputBase]
-        omega)]
-      exact input_wire gate wires index
+  have hready : GateEval.ReadyAt (memoBase gate) gate wires marshaled :=
+    marshal_ready_of_decoded gate wires first second hsecondOp hsecondNegated0
+      hsecondNegated1 hsecondInput0 hsecondValue hsecondActive hsecondRemaining
+      hsecondPointer hfirstFrame hsecondFrame
   have hcursorLe : cursorBound gate wires ≤ storeBound gate wires := by
     simp [cursorBound, storeBound]
   have hwidthLe : valueWidth (cursorBound gate wires) ≤

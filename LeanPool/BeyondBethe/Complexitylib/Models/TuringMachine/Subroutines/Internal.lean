@@ -886,50 +886,13 @@ theorem blankWorkTM_started_hoareTime {n : ℕ}
       hhead0 hcell00 hblank0 hdata0 htail0
   refine ⟨c', x.length + 1, le_rfl, hreach, hhalt, hhead, hcell0, hblank⟩
 
-/-- Rich HoareTime for `blankWorkTM`: erase a started Boolean work tape while
-preserving arbitrary frame data on the input tape, output tape, and all other
-work tapes. This is the form needed to recycle a staged work tape inside a
-larger verifier pipeline. -/
-theorem blankWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
-    (idx : Fin n) (x : List Bool)
-    {P : Tape → (Fin n → Tape) → Tape → Prop}
-    (hP_preserved : ∀ (inp : Tape) (work : Fin n → Tape) (out : Tape)
-      (inp' : Tape) (work' : Fin n → Tape) (out' : Tape),
-      P inp work out →
-      (work' idx).head = x.length + 1 →
-      (work' idx).cells 0 = Γ.start →
-      (∀ i, (work' idx).cells (i + 1) = Γ.blank) →
-      inp' = inp →
-      out' = out →
-      (∀ i, i ≠ idx → work' i = work i) →
-      P inp' work' out') :
-    (blankWorkTM idx).HoareTime
-      (fun inp work out =>
-        work idx = (Tape.init (x.map Γ.ofBool)).move Dir3.right ∧
-        inp.read ≠ Γ.start ∧
-        out.read ≠ Γ.start ∧ out.head ≥ 1 ∧
-        (∀ i, i ≠ idx → (work i).read ≠ Γ.start ∧ (work i).head ≥ 1) ∧
-        P inp work out)
-      (fun inp work out =>
-        (work idx).head = x.length + 1 ∧
-        (work idx).cells 0 = Γ.start ∧
-        (∀ i, (work idx).cells (i + 1) = Γ.blank) ∧
-        P inp work out)
-      (x.length + 1) := by
-  intro inp work out ⟨hwork, hinp_ns, hout_ns, hout_h, hother_wf, hP⟩
-  have tape_idle_preserve : ∀ (t : Tape), t.read ≠ Γ.start → t.head ≥ 1 →
-      t.writeAndMove (readBackWrite t.read) (idleDir t.read) = t := by
-    intro t hns hh
-    simp only [Tape.writeAndMove, idleDir, hns, ↓reduceIte, Tape.move, Tape.write]
-    split
-    · omega
-    · simp only [Tape.read] at hns ⊢
-      rw [toΓ_readBackWrite_of_ne_start hns, Function.update_eq_self]
-  have input_idle_preserve : ∀ (t : Tape), t.read ≠ Γ.start →
-      t.move (idleDir t.read) = t := by
-    intro t hns
-    simp [idleDir, hns, Tape.move]
-  suffices h_loop : ∀ rem k (c : Cfg n (blankWorkTM idx).Q),
+/-- The blanking scan erases the remaining Boolean suffix and preserves the tape frame. -/
+private theorem blankWorkTM_loop_frame {n : ℕ}
+    (idx : Fin n) (x : List Bool) (inp : Tape) (work : Fin n → Tape) (out : Tape)
+    (hinp_ns : inp.read ≠ Γ.start) (hout_ns : out.read ≠ Γ.start)
+    (hout_h : out.head ≥ 1)
+    (hother_wf : ∀ i, i ≠ idx → (work i).read ≠ Γ.start ∧ (work i).head ≥ 1) :
+    ∀ rem k (c : Cfg n (blankWorkTM idx).Q),
       rem = x.length - k →
       k ≤ x.length →
       c.state = ScanPhase.scanning →
@@ -950,36 +913,19 @@ theorem blankWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
         (∀ i, (c'.work idx).cells (i + 1) = Γ.blank) ∧
         c'.input = inp ∧
         c'.output = out ∧
-        (∀ i, i ≠ idx → c'.work i = work i) by
-    have hhead0 : (work idx).head = 1 := by
-      rw [hwork]
-      simp [Tape.move, Tape.init]
-    have hcell00 : (work idx).cells 0 = Γ.start := by
-      rw [hwork]
-      simp [Tape.move, Tape.init]
-    have hblank0 : ∀ i, i < 0 → (work idx).cells (i + 1) = Γ.blank := by
-      intro i hi
-      exact (Nat.not_lt_zero i hi).elim
-    have hdata0 : ∀ i, ∀ _ : 0 ≤ i, ∀ hi : i < x.length,
-        (work idx).cells (i + 1) = Γ.ofBool (x[i]'hi) := by
-      intro i _ hi
-      rw [hwork]
-      exact Tape.init_ofBool_cells_lt x i hi
-    have htail0 : ∀ i, x.length ≤ i → (work idx).cells (i + 1) = Γ.blank := by
-      intro i hi
-      rw [hwork]
-      exact Tape.init_ofBool_cells_ge x i hi
-    obtain ⟨c', hreach, hhalt, hhead, hcell0, hblank, hinp', hout', hwork'⟩ :=
-      h_loop x.length 0
-        { state := ScanPhase.scanning, input := inp, work := work, output := out }
-        (by simp)
-        (Nat.zero_le _)
-        rfl
-        hhead0 hcell00 hblank0 hdata0 htail0
-        rfl rfl (fun _ _ => rfl)
-    refine ⟨c', x.length + 1, le_rfl, hreach, hhalt, hhead, hcell0, hblank, ?_⟩
-    exact hP_preserved inp work out c'.input c'.work c'.output hP
-      hhead hcell0 hblank hinp' hout' hwork'
+        (∀ i, i ≠ idx → c'.work i = work i) := by
+  have tape_idle_preserve : ∀ (t : Tape), t.read ≠ Γ.start → t.head ≥ 1 →
+      t.writeAndMove (readBackWrite t.read) (idleDir t.read) = t := by
+    intro t hns hh
+    simp only [Tape.writeAndMove, idleDir, hns, ↓reduceIte, Tape.move, Tape.write]
+    split
+    · omega
+    · simp only [Tape.read] at hns ⊢
+      rw [toΓ_readBackWrite_of_ne_start hns, Function.update_eq_self]
+  have input_idle_preserve : ∀ (t : Tape), t.read ≠ Γ.start →
+      t.move (idleDir t.read) = t := by
+    intro t hns
+    simp [idleDir, hns, Tape.move]
   intro rem
   induction rem with
   | zero =>
@@ -1151,6 +1097,69 @@ theorem blankWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
             ih (k + 1) c1 hrem1 (by omega) rfl hhead1 hcell01 hblank_prefix1 hdata1
               hblank_tail1 hinput_keep houtput_keep hwork_keep
           exact ⟨c', .step hstep1 hreach, hhalt, hhead', hcell0', hblank', hinp', hout', hwork'⟩
+
+/-- Rich HoareTime for `blankWorkTM`: erase a started Boolean work tape while
+preserving arbitrary frame data on the input tape, output tape, and all other
+work tapes. This is the form needed to recycle a staged work tape inside a
+larger verifier pipeline. -/
+theorem blankWorkTM_hoareTime_frame_of_binaryString {n : ℕ}
+    (idx : Fin n) (x : List Bool)
+    {P : Tape → (Fin n → Tape) → Tape → Prop}
+    (hP_preserved : ∀ (inp : Tape) (work : Fin n → Tape) (out : Tape)
+      (inp' : Tape) (work' : Fin n → Tape) (out' : Tape),
+      P inp work out →
+      (work' idx).head = x.length + 1 →
+      (work' idx).cells 0 = Γ.start →
+      (∀ i, (work' idx).cells (i + 1) = Γ.blank) →
+      inp' = inp →
+      out' = out →
+      (∀ i, i ≠ idx → work' i = work i) →
+      P inp' work' out') :
+    (blankWorkTM idx).HoareTime
+      (fun inp work out =>
+        work idx = (Tape.init (x.map Γ.ofBool)).move Dir3.right ∧
+        inp.read ≠ Γ.start ∧
+        out.read ≠ Γ.start ∧ out.head ≥ 1 ∧
+        (∀ i, i ≠ idx → (work i).read ≠ Γ.start ∧ (work i).head ≥ 1) ∧
+        P inp work out)
+      (fun inp work out =>
+        (work idx).head = x.length + 1 ∧
+        (work idx).cells 0 = Γ.start ∧
+        (∀ i, (work idx).cells (i + 1) = Γ.blank) ∧
+        P inp work out)
+      (x.length + 1) := by
+  intro inp work out ⟨hwork, hinp_ns, hout_ns, hout_h, hother_wf, hP⟩
+  have h_loop := blankWorkTM_loop_frame idx x inp work out
+    hinp_ns hout_ns hout_h hother_wf
+  have hhead0 : (work idx).head = 1 := by
+    rw [hwork]
+    simp [Tape.move, Tape.init]
+  have hcell00 : (work idx).cells 0 = Γ.start := by
+    rw [hwork]
+    simp [Tape.move, Tape.init]
+  have hblank0 : ∀ i, i < 0 → (work idx).cells (i + 1) = Γ.blank := by
+    intro i hi
+    exact (Nat.not_lt_zero i hi).elim
+  have hdata0 : ∀ i, ∀ _ : 0 ≤ i, ∀ hi : i < x.length,
+      (work idx).cells (i + 1) = Γ.ofBool (x[i]'hi) := by
+    intro i _ hi
+    rw [hwork]
+    exact Tape.init_ofBool_cells_lt x i hi
+  have htail0 : ∀ i, x.length ≤ i → (work idx).cells (i + 1) = Γ.blank := by
+    intro i hi
+    rw [hwork]
+    exact Tape.init_ofBool_cells_ge x i hi
+  obtain ⟨c', hreach, hhalt, hhead, hcell0, hblank, hinp', hout', hwork'⟩ :=
+    h_loop x.length 0
+      { state := ScanPhase.scanning, input := inp, work := work, output := out }
+      (by simp)
+      (Nat.zero_le _)
+      rfl
+      hhead0 hcell00 hblank0 hdata0 htail0
+      rfl rfl (fun _ _ => rfl)
+  refine ⟨c', x.length + 1, le_rfl, hreach, hhalt, hhead, hcell0, hblank, ?_⟩
+  exact hP_preserved inp work out c'.input c'.work c'.output hP
+    hhead hcell0 hblank hinp' hout' hwork'
 
 /-- Rich HoareTime for `clearWorkTM`: erase a started Boolean work tape and
 rewind it to the standard started blank tape while preserving the external
