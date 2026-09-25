@@ -143,7 +143,7 @@ lemma generating_euclidean_invariant
     The bound |Z[f]| ≤ 1 does NOT hold for general complex f.
     Instead, use gff_generating_L2_bound from OS.os1Regularity for the general case.
 -/
-lemma gff_generating_norm_le_one_real (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
+lemma gff_generating_norm_le_one_real (m : ℝ) [Fact (0 < m)] (f : OSforGFF.TestFunction) :
     ‖GJGeneratingFunctionalℂ (gaussianFreeFieldFree m) (toComplex f)‖ ≤ 1 := by
   rw [gff_complex_generating m (toComplex f)]
   rw [Complex.norm_exp]
@@ -178,7 +178,7 @@ lemma gff_generating_norm_le_one_real (m : ℝ) [Fact (0 < m)] (f : TestFunction
     - Exponential estimate: |exp(-z) - 1| ≤ 2|z| for |z| ≤ 1
 -/
 lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
-    (f g : TestFunction) (a : SpaceTime) (δ : ℝ) (_hδ_pos : δ > 0) (hδ_small : δ ≤ 1)
+    (f g : OSforGFF.TestFunction) (a : SpaceTime) (δ : ℝ) (_hδ_pos : δ > 0) (hδ_small : δ ≤ 1)
     (h_decay : ‖SchwingerFunction₂ (gaussianFreeFieldFree m) f (g.translate a)‖ < δ) :
     ‖GJGeneratingFunctional (gaussianFreeFieldFree m) (f + g.translate a) -
      GJGeneratingFunctional (gaussianFreeFieldFree m) f *
@@ -292,7 +292,7 @@ lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
     S₂(f, T_a g) = ∫∫ f(x) · C(x-y) · g(y-a) dx dy
 -/
 theorem schwartz_cross_covariance_decay_real (m : ℝ) [Fact (0 < m)]
-    (f g : TestFunction) (ε : ℝ) (hε : ε > 0) :
+    (f g : OSforGFF.TestFunction) (ε : ℝ) (hε : ε > 0) :
     ∃ R > 0, ∀ a : SpaceTime, ‖a‖ > R →
       ‖SchwingerFunction₂ (gaussianFreeFieldFree m) f (g.translate a)‖ < ε := by
   -- Step 1: Get the kernel decay bound
@@ -460,7 +460,7 @@ but kept as an alternative qualitative formulation of clustering.
 
 /-- Covariance clustering property: the 2-point function decays at large separations. -/
 def covarianceClusteringReal (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
-  ∀ (f g : TestFunction) (ε : ℝ), ε > 0 →
+  ∀ (f g : OSforGFF.TestFunction) (ε : ℝ), ε > 0 →
     ∃ R > 0, ∀ a : SpaceTime, ‖a‖ > R →
       ‖SchwingerFunction₂ dμ_config f (g.translate a)‖ < ε
 

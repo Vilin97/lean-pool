@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wouter Cames van Batenburg, Samuel Korsky
 -/
 
-import LeanPool.MooreBound.DegreeDiameter.HalvedFlags
-import Mathlib.LinearAlgebra.Projectivization.Cardinality
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+module
+
+public import LeanPool.MooreBound.DegreeDiameter.HalvedFlags
+public import Mathlib.LinearAlgebra.Projectivization.Cardinality
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # Exact counting of one-step refinements and parity completions
@@ -22,6 +24,8 @@ an injection, since a graph neighbor need not have a unique common odd part.
 Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
+
+@[expose] public section
 
 namespace MooreBound
 

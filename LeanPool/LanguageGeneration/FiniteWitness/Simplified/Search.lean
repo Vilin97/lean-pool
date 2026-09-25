@@ -3,12 +3,16 @@ Copyright (c) 2026 Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao. All rights r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
-import LeanPool.LanguageGeneration.FiniteWitness.Simplified.Checkpoints
-import Mathlib.Tactic.Push
+module
+
+public import LeanPool.LanguageGeneration.FiniteWitness.Simplified.Checkpoints
+public import Mathlib.Tactic.Push
 
 /-!
 # Canonical candidate searches and target error sequences
 -/
+
+@[expose] public section
 
 namespace GenLimit.FiniteWitness.Simplified
 variable {α : Type*} [Encodable α] [DecidableEq α]

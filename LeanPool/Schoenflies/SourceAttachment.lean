@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.SourceOverlay
+module
+
+public import LeanPool.Schoenflies.SourceOverlay
 
 /-!
 # Auxiliary-crosscut source overlays
@@ -23,6 +25,8 @@ outer curve separate.
   `crosscutOverlay_edge_dichotomy` — the local plane and domain geometry needed by finite
   transfer.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

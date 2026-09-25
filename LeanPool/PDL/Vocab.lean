@@ -4,14 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PDL formalization contributors (see project card)
 -/
 
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Finset.Union
-import Mathlib.Data.Finset.Fold
-import Mathlib.Data.Finset.Lattice.Fold
+module
 
-import LeanPool.PDL.Syntax
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.Data.Finset.Union
+public import Mathlib.Data.Finset.Fold
+public import Mathlib.Data.Finset.Lattice.Fold
+
+public import LeanPool.PDL.Syntax
 
 /-! # Vocabulary and other Syntax functions (part of Section 2.1) -/
+
+@[expose] public section
 
 namespace PDL
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Jonathan Conrad, Paula Muermann, Maryna Viazovska. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.Defs
-import Mathlib.Algebra.BigOperators.Ring.Finset
+module
+
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries.Defs
+public import Mathlib.Algebra.BigOperators.Ring.Finset
 
 /-!
 # Finite q-binomial theorem
@@ -16,6 +18,8 @@ $$\prod_{k=0}^{n-1}(1 + z q^k) = \sum_{k=0}^{n} q^{\binom{k}{2}} \binom{n}{k}_q 
 
 * `QSeries.prod_one_add_mul_pow_eq_sum_qBinom` — the finite q-binomial theorem.
 -/
+
+@[expose] public section
 
 open Finset Filter
 open scoped Topology

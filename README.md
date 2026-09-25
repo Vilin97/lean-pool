@@ -11,20 +11,21 @@
 [![Semantic Search](https://img.shields.io/badge/semantic_search-Octo-2f80ed)](https://octo.axiomatic-ai.com/search?scopes=repo%3AVilin97%2Flean-pool)
 [![License](https://img.shields.io/github/license/Vilin97/lean-pool)](LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20513444.svg)](https://doi.org/10.5281/zenodo.20513444)
+[![arXiv](https://img.shields.io/badge/arXiv-2609.25199-b31b1b)](https://arxiv.org/abs/2609.25199)
 
 Lean Pool sits between [`mathlib`](https://github.com/leanprover-community/mathlib4) and [`merely-true`](https://github.com/merely-true/merely-true), preserving Lean 4 formalizations that don't fit mathlib's scope. Instead of mathlib's high-bar human review, it relies on deterministic linters and LLM judgment, so it can grow faster while staying `sorry`-free and pinned to the latest Mathlib. See [`MOTIVATION.md`](MOTIVATION.md) for the why, browse the API docs at <https://vilin97.github.io/lean-pool/>, and explore each project's dependency graph and declarations in the [exposition site](https://vilin97.github.io/lean-pool/exposition/).
 
 Semantic search is also available via the [API](https://search.octo.axiomatic-ai.com/api/search).
 
 <!-- BEGIN STATS -->
-**213** formalization projects · **3,232,582** lines of Lean · **2** open challenges
+**215** formalization projects · **3,255,089** lines of Lean · **2** open challenges
 <!-- END STATS -->
 
 <sub>(stats above are refreshed automatically by the [generated-metadata workflow](.github/workflows/notice.yml) — edit [`python/lean_pool/stats.py`](python/lean_pool/stats.py), not the numbers)</sub>
 
 So far, projects have been added by hand: each is a suitable, permissively licensed (Apache-2.0 or MIT) Lean repository, bumped to the latest Lean and Mathlib, made to pass [CI](.github/workflows/lean_action_ci.yml) — it builds warning-free and clears Mathlib's linters, the style checker, and the repository quality gates (no `sorry`/`admit`, no axioms beyond `Classical.choice`/`propext`/`Quot.sound`, no `unsafe`/`partial`, file headers, size limits) — and an [LLM review](.github/REVIEW_RULES.md) of fit and significance, then merged.
 
-LLM reviews use GPT-6-Astra at `xhigh` reasoning effort through the Azure VM's Codex account pool, without paid OpenAI API requests or an API fallback. Reviews also show an estimated dollar cost at official Standard API token rates, labeled separately from Codex quota billing. See [review operations](python/azure-review.md) for deployment and diagnostics.
+LLM reviews use GPT-6-Astra at `xhigh` reasoning effort through a privately operated Codex worker, without paid OpenAI API requests or an API fallback. Reviews also show an estimated dollar cost at official Standard API token rates, labeled separately from Codex quota billing. See [review operations](python/review-operations.md) for deployment and diagnostics.
 
 Project PRs also receive an advisory Greptile review, configured in [`.greptile/`](.greptile/), for cross-file integration, reusable abstractions, completeness, maintainability, and measured cost. It supplements rather than replaces the independent LLM verdict.
 
@@ -80,3 +81,20 @@ Created as part of the [UW Lean Hackathon](https://uw2026leanhackathon.github.io
 - Palomar is a registry, not a unified repository.
 
 Projects accepted to the Palomar Registry may be submitted to Lean Pool, and priority will be given to them.
+
+### Citation
+
+To cite Lean Pool, use the [paper](https://arxiv.org/abs/2609.25199):
+
+```bibtex
+@misc{ilin2026leanpool,
+  title = {{Lean Pool}: An {AI}-Maintained Archive of Formalized Mathematics},
+  author = {Vasily Ilin},
+  year = {2026},
+  eprint = {2609.25199},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.AI},
+  doi = {10.48550/arXiv.2609.25199},
+  url = {https://arxiv.org/abs/2609.25199}
+}
+```

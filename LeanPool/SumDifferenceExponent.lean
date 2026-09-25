@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Haowei Lin, Shanda Li
 -/
 
-import LeanPool.SumDifferenceExponent.Quantitative
+module
+
+public import LeanPool.SumDifferenceExponent.Quantitative
 
 /-!
 # The optimal exponent relating sumsets and difference sets

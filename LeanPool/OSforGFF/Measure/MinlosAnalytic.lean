@@ -44,14 +44,14 @@ namespace MinlosAnalytic
 -/
 structure CovarianceForm where
   /-- The real covariance bilinear form. -/
-  Q : TestFunction → TestFunction → ℝ
+  Q : OSforGFF.TestFunction → OSforGFF.TestFunction → ℝ
   symm : ∀ f g, Q f g = Q g f
   psd  : ∀ f, 0 ≤ Q f f
   cont_diag : Continuous fun f => Q f f
   add_left : ∀ f₁ f₂ g, Q (f₁ + f₂) g = Q f₁ g + Q f₂ g
   smul_left : ∀ (c : ℝ) f g, Q (c • f) g = c * Q f g
   gaussian_cf_pd : IsPositiveDefinite
-    (fun f : TestFunction => Complex.exp (-(1/2 : ℂ) * (Q f f : ℂ)))
+    (fun f : OSforGFF.TestFunction => Complex.exp (-(1/2 : ℂ) * (Q f f : ℂ)))
 
 /-- The negation map on field configurations: T(ω) = -ω -/
 def negMap : FieldConfiguration → FieldConfiguration := fun ω => -ω
@@ -61,31 +61,36 @@ lemma negMap_measurable : Measurable negMap := by
   rw [measurable_iff_comap_le]
   -- Unfold the cylinder σ-algebra instance and distribute comap over iSup
   change (⨆ f,
-    (borel ℝ).comap (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) f)).comap negMap ≤
-    ⨆ f, (borel ℝ).comap (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) f)
+    (borel ℝ).comap
+      (fun l : FieldConfiguration => (l : OSforGFF.TestFunction →L[ℝ] ℝ) f)).comap negMap ≤
+    ⨆ f, (borel ℝ).comap (fun l : FieldConfiguration => (l : OSforGFF.TestFunction →L[ℝ] ℝ) f)
   rw [MeasurableSpace.comap_iSup]
   apply iSup_le; intro g
   rw [MeasurableSpace.comap_comp]
-  conv_lhs => rw [show (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) g) ∘ negMap =
-      Neg.neg ∘ (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) g) from by
+  conv_lhs => rw [show
+    (fun l : FieldConfiguration => (l : OSforGFF.TestFunction →L[ℝ] ℝ) g) ∘ negMap =
+      Neg.neg ∘ (fun l : FieldConfiguration => (l : OSforGFF.TestFunction →L[ℝ] ℝ) g) from by
     ext ω; change (-ω) g = -(ω g); rfl]
   rw [← MeasurableSpace.comap_comp]
   have h_neg_meas : (borel ℝ).comap (Neg.neg : ℝ → ℝ) ≤ borel ℝ :=
     measurable_iff_comap_le.mp measurable_neg
-  calc ((borel ℝ).comap Neg.neg).comap (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) g)
-      ≤ (borel ℝ).comap (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) g) :=
+  calc
+    ((borel ℝ).comap Neg.neg).comap
+      (fun l : FieldConfiguration => (l : OSforGFF.TestFunction →L[ℝ] ℝ) g)
+      ≤ (borel ℝ).comap (fun l : FieldConfiguration => (l : OSforGFF.TestFunction →L[ℝ] ℝ) g) :=
         MeasurableSpace.comap_mono h_neg_meas
-    _ ≤ _ := le_iSup (fun f => (borel ℝ).comap (fun l : FieldConfiguration => (l : TestFunction
-      →L[ℝ] ℝ) f)) g
+    _ ≤ _ := le_iSup (fun f => (borel ℝ).comap
+      (fun l : FieldConfiguration => (l : OSforGFF.TestFunction →L[ℝ] ℝ) f)) g
 
 /-- Symmetry under global sign flip induced by the real Gaussian CF.
     Uses Minlos uniqueness from the bochner library.
 -/
 lemma integral_neg_invariance
-  [IsHilbertNuclear TestFunction] [SeparableSpace TestFunction] [Nonempty TestFunction]
-  [IsTopologicalAddGroup TestFunction] [ContinuousSMul ℝ TestFunction]
+  [IsHilbertNuclear OSforGFF.TestFunction] [SeparableSpace OSforGFF.TestFunction]
+  [Nonempty OSforGFF.TestFunction]
+  [IsTopologicalAddGroup OSforGFF.TestFunction] [ContinuousSMul ℝ OSforGFF.TestFunction]
   (C : CovarianceForm) (μ : ProbabilityMeasure FieldConfiguration)
-  (h_realCF : ∀ f : TestFunction,
+  (h_realCF : ∀ f : OSforGFF.TestFunction,
      ∫ ω, Complex.exp (Complex.I * (ω f)) ∂μ.toMeasure
        = Complex.exp (-(1/2 : ℂ) * (C.Q f f))) :
   ∀ (f : FieldConfiguration → ℂ), Integrable f μ.toMeasure →
@@ -98,7 +103,7 @@ lemma integral_neg_invariance
     exact (Measure.isProbabilityMeasure_map_iff
       (Measurable.aemeasurable negMap_measurable)).mpr inferInstance
   -- Step 2: Show characteristic functionals are equal
-  have hCF_equal : ∀ g : TestFunction,
+  have hCF_equal : ∀ g : OSforGFF.TestFunction,
       ∫ ω, Complex.exp (Complex.I * (distributionPairing ω g)) ∂μneg
         = ∫ ω, Complex.exp (Complex.I * (distributionPairing ω g)) ∂μ.toMeasure := by
     intro g
@@ -134,9 +139,9 @@ lemma integral_neg_invariance
   -- Step 3: Apply uniqueness of measures (Minlos theorem)
   let μneg_prob : ProbabilityMeasure FieldConfiguration := ⟨μneg, hμneg_prob⟩
   have h_cf_cont : Continuous
-      (fun f : TestFunction => Complex.exp (-(1/2 : ℂ) * (C.Q f f : ℂ))) :=
+      (fun f : OSforGFF.TestFunction => Complex.exp (-(1/2 : ℂ) * (C.Q f f : ℂ))) :=
     continuous_exp.comp (continuous_const.mul (continuous_ofReal.comp C.cont_diag))
-  have h_cf_norm : (fun f : TestFunction =>
+  have h_cf_norm : (fun f : OSforGFF.TestFunction =>
       Complex.exp (-(1/2 : ℂ) * (C.Q f f : ℂ))) 0 = 1 := by
     simp [show C.Q 0 0 = 0 from by simpa using C.smul_left 0 0 0]
   have hμeq_prob : μneg_prob = μ := by
@@ -157,13 +162,14 @@ lemma integral_neg_invariance
 
 /-- Zero mean from the real Gaussian characteristic functional, via symmetry and L¹. -/
 lemma moment_zero_from_realCF
-  [IsHilbertNuclear TestFunction] [SeparableSpace TestFunction] [Nonempty TestFunction]
-  [IsTopologicalAddGroup TestFunction] [ContinuousSMul ℝ TestFunction]
+  [IsHilbertNuclear OSforGFF.TestFunction] [SeparableSpace OSforGFF.TestFunction]
+  [Nonempty OSforGFF.TestFunction]
+  [IsTopologicalAddGroup OSforGFF.TestFunction] [ContinuousSMul ℝ OSforGFF.TestFunction]
   (C : CovarianceForm) (μ : ProbabilityMeasure FieldConfiguration)
-  (h_realCF : ∀ f : TestFunction,
+  (h_realCF : ∀ f : OSforGFF.TestFunction,
      ∫ ω, Complex.exp (Complex.I * (ω f)) ∂μ.toMeasure
        = Complex.exp (-(1/2 : ℂ) * (C.Q f f)))
-  (a : TestFunction)
+  (a : OSforGFF.TestFunction)
   (hInt1 : Integrable (fun ω => (ω a : ℂ)) μ.toMeasure) :
   ∫ ω, (ω a : ℂ) ∂μ.toMeasure = 0 := by
   classical

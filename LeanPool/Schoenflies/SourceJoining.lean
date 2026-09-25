@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.OverlayExtension
-import LeanPool.Schoenflies.StageTransition
+module
+
+public import LeanPool.Schoenflies.OverlayExtension
+public import LeanPool.Schoenflies.StageTransition
 
 /-!
 # Polygonal joining ears for boundary-touching source crosscuts
@@ -18,6 +20,8 @@ This module begins with the finite inner construction: re-overlay the already-su
 core, crosscut, and grid together with the joining segments, retaining every old inner vertex.
 `OverlayExtension` then supplies the plane-subdivision certificate automatically.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph

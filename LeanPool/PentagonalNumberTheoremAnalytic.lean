@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Conrad, Paula Muermann, Maryna Viazovska
 -/
 
-import LeanPool.PentagonalNumberTheoremAnalytic.Franklin
-import LeanPool.PentagonalNumberTheoremAnalytic.QSeries
+module
+
+public import LeanPool.PentagonalNumberTheoremAnalytic.Franklin
+public import LeanPool.PentagonalNumberTheoremAnalytic.QSeries
 
 /-!
 # Euler's pentagonal number theorem, two independent proofs, and the Jacobi triple product
