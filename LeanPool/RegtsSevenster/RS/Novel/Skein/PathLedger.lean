@@ -375,7 +375,7 @@ theorem chain_arg_ne_of_periodic {δ f : W.Flag}
     exact hpp.mem_internal
   | succ s =>
     have hnp := not_periodic_of_chain_segment κ hcontδ htermδ
-      (by omega : 1 ≤ s + 1) (by omega : s + 1 ≤ kδ)
+      (by omega : s + 1 ≤ kδ)
     rw [h2] at hnp
     exact hnp hpp
 
@@ -926,7 +926,7 @@ theorem orbitFlag_match {g f : W.Flag} (hg : κ.PeriodicFlag g)
   have hg' : κ.PeriodicFlag g := ⟨hgint, n, hn1, hcont, hper⟩
   obtain ⟨m, rfl | rfl⟩ := hf
   · have hshift : iterWalk κ g (n + m) = iterWalk κ g m :=
-      iterWalk_add_period κ g n m hper hcont
+      iterWalk_add_period κ g n m hper
     obtain ⟨m₀, hm₀⟩ : ∃ m₀, n + m = m₀ + 1 := ⟨n + m - 1, by omega⟩
     have hmm : κ.match_ (iterWalk κ g m) =
         W.pairing (iterWalk κ g m₀) := by

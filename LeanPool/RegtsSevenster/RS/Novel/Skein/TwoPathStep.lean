@@ -52,14 +52,7 @@ theorem not_periodic_of_onBoundaryChain {β f : W.Flag}
   intro hper
   obtain ⟨k, t, htk, hcont, hterm, hft⟩ := h
   rcases hft with rfl | rfl
-  · cases t with
-    | zero =>
-      rw [iterWalk_zero] at hper
-      exact Finset.disjoint_left.mp
-        F.internalFlags_disjoint_boundaryFlags hper.mem_internal hβ
-    | succ t =>
-      exact not_periodic_of_chain_segment κ hcont hterm
-        (by omega) htk hper
+  · exact not_periodic_of_chain_segment κ hcont hterm htk hper
   · rcases Nat.lt_or_ge t k with hlt | hge
     · exact chain_arg_ne_of_periodic hβ hcont hterm hper hlt rfl
     · obtain rfl : t = k := by omega
@@ -221,8 +214,6 @@ theorem not_periodic_repair_of_tail (hsq : RepairSquare κ a b c d v)
       W.pairing (iterWalk κ β j) ≠ d) :
     ¬ (κ.repair a b c d v hsq).PeriodicFlag
       (iterWalk κ β (s + 1)) := by
-  have hYint : iterWalk κ β (s + 1) ∈ F.internalFlags :=
-    iterWalk_mem_internal κ k (by omega) (by omega) hcont
   have hYW : ∀ t, iterWalk κ (iterWalk κ β (s + 1)) t =
       iterWalk κ β (s + 1 + t) :=
     fun t => (iterWalk_add κ β (s + 1) t).symm
@@ -236,7 +227,6 @@ theorem not_periodic_repair_of_tail (hsq : RepairSquare κ a b c d v)
     exact hav (s + 1 + t) (by omega) (by omega)
   have hagree := repair_iterWalk_of_avoid hsq (k := k - s - 1) havY
   apply not_periodic_of_boundary_chain (κ.repair a b c d v hsq) _
-    hYint
   refine ⟨(k - s - 1) + 1,
     W.pairing (iterWalk (κ.repair a b c d v hsq)
       (iterWalk κ β (s + 1)) (k - s - 1)), ?_⟩

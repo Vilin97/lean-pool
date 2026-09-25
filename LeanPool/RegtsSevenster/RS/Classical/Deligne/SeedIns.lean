@@ -2227,20 +2227,6 @@ private theorem pairSeed_match
     (α_ M'.X (𝟙_ D) M.X).hom ≫
       (M'.X ◁ (chainSeed A M M' d ▷ M.X)) :=
     associator_naturality_middle _ _ _
-  have hD10 : (chainSeed A M M' d ▷ M.X) ≫
-      (β_ (chainStage2 A M M' 0 0) M.X).hom =
-    (β_ (𝟙_ D) M.X).hom ≫ (M.X ◁ chainSeed A M M' d) :=
-    BraidedCategory.braiding_naturality_left _ _
-  have hD11 : (M.X ◁ chainSeed A M M' d) ≫
-      ((ρ_ M.X).inv ▷ (chainStage2 A M M' 0 0)) =
-    ((ρ_ M.X).inv ▷ (𝟙_ D)) ≫
-      ((M.X ⊗ (𝟙_ D)) ◁ chainSeed A M M' d) :=
-    whisker_exchange _ _
-  have hD12 : ((M.X ⊗ (𝟙_ D)) ◁ chainSeed A M M' d) ≫
-      (α_ M.X (𝟙_ D) (chainStage2 A M M' 0 0)).hom =
-    (α_ M.X (𝟙_ D) (𝟙_ D)).hom ≫
-      (M.X ◁ ((𝟙_ D) ◁ chainSeed A M M' d)) :=
-    associator_naturality_right _ _ _
   have hSeed : chainSeed A M M' d ≫
       chainDelta2 A M M' d 0 0 =
     (ρ_ (𝟙_ D)).inv ≫ ((𝟙_ D) ◁ chainSeed A M M' d) ≫
