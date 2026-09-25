@@ -540,6 +540,8 @@ public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Stru
 public import LeanPool.BeyondBethe.Complexitylib.Models.RandomAccessMachine.Structured.UnaryDecode.Internal
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators.Defs
+public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators.Helpers
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators.Apply
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators.ForBinaryWork
 public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinators.ForBinaryWork.Defs

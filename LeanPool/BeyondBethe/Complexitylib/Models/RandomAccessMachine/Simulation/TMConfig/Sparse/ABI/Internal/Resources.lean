@@ -252,6 +252,68 @@ theorem marshalConstants_measured_internal (tm : TM n) (x : List Bool) :
   simpa [marshalStart] using! And.intro hmeasured.1
     (And.intro hmarshal (marshalStart_invariant_internal n x))
 
+/-- Loading, clearing, and encoding a positive source cursor retain the cursor register. -/
+private theorem marshalLoop_encodedState (n : ℕ) (store : Structured.Store) (cursor : ℕ)
+    (hcursor : 0 < cursor) (hstate : store stateReg = cursor) :
+    let sourceAddressed :=
+      (Structured.Basic.add (addressReg n) stateReg (zeroReg n)).exec store
+    let sourceLoaded :=
+      (Structured.Basic.load (valueReg n) (addressReg n)).exec sourceAddressed
+    let sourceCleared :=
+      (Structured.Basic.store (addressReg n) (zeroReg n)).exec sourceLoaded
+    let zeroed := (Structured.Basic.imm (zeroReg n) 0).exec sourceCleared
+    let oned := (Structured.Basic.imm (oneReg n) 1).exec zeroed
+    let counted :=
+      (Structured.Basic.imm (tapeCountReg n) (n + 2)).exec oned
+    let based :=
+      (Structured.Basic.imm (stateScratchReg n) (cellBase n)).exec counted
+    let encoded :=
+      (Structured.Basic.add (valueReg n) (valueReg n) (oneReg n)).exec based
+    sourceLoaded (addressReg n) = cursor → encoded stateReg = cursor := by
+  dsimp only
+  intro hloadedAddress
+  let sourceAddressed :=
+    (Structured.Basic.add (addressReg n) stateReg (zeroReg n)).exec store
+  let sourceLoaded :=
+    (Structured.Basic.load (valueReg n) (addressReg n)).exec sourceAddressed
+  let sourceCleared :=
+    (Structured.Basic.store (addressReg n) (zeroReg n)).exec sourceLoaded
+  let zeroed := (Structured.Basic.imm (zeroReg n) 0).exec sourceCleared
+  let oned := (Structured.Basic.imm (oneReg n) 1).exec zeroed
+  let counted :=
+    (Structured.Basic.imm (tapeCountReg n) (n + 2)).exec oned
+  let based :=
+    (Structured.Basic.imm (stateScratchReg n) (cellBase n)).exec counted
+  let encoded :=
+    (Structured.Basic.add (valueReg n) (valueReg n) (oneReg n)).exec based
+  have hsourceAddressedState : sourceAddressed stateReg = cursor := by
+    simp only [sourceAddressed, Structured.Basic.exec]
+    rw [Function.update_of_ne (by simp [stateReg, addressReg])]
+    exact hstate
+  have hsourceLoadedState : sourceLoaded stateReg = cursor := by
+    simp only [sourceLoaded, Structured.Basic.exec]
+    rw [Function.update_of_ne (by simp [stateReg, valueReg])]
+    exact hsourceAddressedState
+  have hsourceClearedState : sourceCleared stateReg = cursor := by
+    simp only [sourceCleared, Structured.Basic.exec]
+    rw [Function.update_of_ne]
+    · exact hsourceLoadedState
+    · rw [hloadedAddress]
+      simp [stateReg]
+      omega
+  have hbasedState : based stateReg = cursor := by
+    simp only [based, counted, oned, zeroed, Structured.Basic.exec]
+    rw [Function.update_of_ne (by simp [stateReg, stateScratchReg]),
+      Function.update_of_ne (by simp [stateReg, tapeCountReg]),
+      Function.update_of_ne (by simp [stateReg, oneReg]),
+      Function.update_of_ne (by simp [stateReg, zeroReg])]
+    exact hsourceClearedState
+  have hencodedState : encoded stateReg = cursor := by
+    simp only [encoded, Structured.Basic.exec]
+    rw [Function.update_of_ne (by simp [stateReg, valueReg])]
+    exact hbasedState
+  exact hencodedState
+
 private theorem marshalLoopOps_envelopeChain (n : ℕ) (x : List Bool)
     {cursor processed : ℕ} {store : Structured.Store}
     (hcursor : 0 < cursor)
@@ -400,32 +462,8 @@ private theorem marshalLoopOps_envelopeChain (n : ℕ) (x : List Bool)
     · simp only [Structured.Internal.Basic.writeValue]
       rw [hbasedOne]
       exact Nat.add_le_add_right hbasedValue 1
-  have hsourceAddressedState : sourceAddressed stateReg = cursor := by
-    simp only [sourceAddressed, Structured.Basic.exec]
-    rw [Function.update_of_ne (by simp [stateReg, addressReg])]
-    exact hstate
-  have hsourceLoadedState : sourceLoaded stateReg = cursor := by
-    simp only [sourceLoaded, Structured.Basic.exec]
-    rw [Function.update_of_ne (by simp [stateReg, valueReg])]
-    exact hsourceAddressedState
-  have hsourceClearedState : sourceCleared stateReg = cursor := by
-    simp only [sourceCleared, Structured.Basic.exec]
-    rw [Function.update_of_ne]
-    · exact hsourceLoadedState
-    · rw [hloadedAddress]
-      simp [stateReg]
-      omega
-  have hbasedState : based stateReg = cursor := by
-    simp only [based, counted, oned, zeroed, Structured.Basic.exec]
-    rw [Function.update_of_ne (by simp [stateReg, stateScratchReg]),
-      Function.update_of_ne (by simp [stateReg, tapeCountReg]),
-      Function.update_of_ne (by simp [stateReg, oneReg]),
-      Function.update_of_ne (by simp [stateReg, zeroReg])]
-    exact hsourceClearedState
-  have hencodedState : encoded stateReg = cursor := by
-    simp only [encoded, Structured.Basic.exec]
-    rw [Function.update_of_ne (by simp [stateReg, valueReg])]
-    exact hbasedState
+  have hencodedState : encoded stateReg = cursor :=
+    marshalLoop_encodedState n store cursor hcursor hstate hloadedAddress
   have hencodedCount : encoded (tapeCountReg n) = n + 2 := by
     simp [encoded, based, counted, Structured.Basic.exec, tapeCountReg,
       stateScratchReg, valueReg, Function.update_of_ne]

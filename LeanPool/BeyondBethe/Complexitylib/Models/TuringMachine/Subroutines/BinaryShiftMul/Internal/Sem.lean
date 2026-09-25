@@ -242,6 +242,19 @@ private def binaryShiftMulDoublePost {n : ℕ} (abi : BinaryShiftMulABI n)
       work i = work₀ i) ∧
     out = out₀
 
+/-- Replacing one work tape by a natural-number encoding preserves parking of every tape. -/
+private theorem binaryShiftMulUpdate_parked {n : ℕ}
+    (work : Fin n → Tape) (index : Fin n) (value : ℕ)
+    (hwork : ∀ i, Parked (work i)) :
+    ∀ i, Parked (Function.update work index (binaryShiftMulNatTape value) i) := by
+  intro i
+  by_cases hi : i = index
+  · subst i
+    simp only [Function.update_self]
+    exact hasBinaryNat_parked (binaryShiftMulNatTape_hasBinaryNat value)
+  simp only [Function.update_of_ne hi]
+  exact hwork i
+
 private theorem binaryShiftMulDoubleTM_hoareTime_frame {n : ℕ}
     (abi : BinaryShiftMulABI n) (shift : ℕ)
     (inp₀ : Tape) (work₀ : Fin n → Tape) (out₀ : Tape)
@@ -264,14 +277,8 @@ private theorem binaryShiftMulDoubleTM_hoareTime_frame {n : ℕ}
       (fun inp work out => inp = inp₀ ∧ work = work₁ ∧ out = out₀)
       (binaryCopyTime shift 0) := by
     simpa only [work₁, binaryShiftMulNatTape] using hcopy₁
-  have hwork₁ : ∀ i, Parked (work₁ i) := by
-    intro i
-    by_cases hi : i = abi.tmp
-    · subst i
-      simp only [work₁, Function.update_self]
-      exact hasBinaryNat_parked (binaryShiftMulNatTape_hasBinaryNat shift)
-    simp only [work₁, Function.update_of_ne hi]
-    exact hwork i
+  have hwork₁ : ∀ i, Parked (work₁ i) :=
+    binaryShiftMulUpdate_parked work₀ abi.tmp shift hwork
   have hshift₁ : (work₁ abi.shift).HasBinaryNat shift := by
     simpa only [work₁, Function.update_of_ne abi.shift_ne_tmp] using hshift
   have htmp₁ : (work₁ abi.tmp).HasBinaryNat shift := by
@@ -331,14 +338,8 @@ private theorem binaryShiftMulDoubleTM_hoareTime_frame {n : ℕ}
         (resetBinaryWorkTime 1 shift.size) := by
       simpa only [work₂, binaryShiftMulNatTape,
         Nat.size_eq_bits_len] using! hresetTmp
-    have hwork₂ : ∀ i, Parked (work₂ i) := by
-      intro i
-      by_cases hi : i = abi.tmp
-      · subst i
-        simp only [work₂, Function.update_self]
-        exact hasBinaryNat_parked (binaryShiftMulNatTape_hasBinaryNat 0)
-      simp only [work₂, Function.update_of_ne hi]
-      exact hworkNow i
+    have hwork₂ : ∀ i, Parked (work₂ i) :=
+      binaryShiftMulUpdate_parked work abi.tmp 0 hworkNow
     have hdbl₂ : (work₂ abi.dbl).HasBinaryNat (shift + shift) := by
       simpa only [work₂, Function.update_of_ne abi.tmp_ne_dbl.symm] using
         hdblNow
@@ -360,15 +361,8 @@ private theorem binaryShiftMulDoubleTM_hoareTime_frame {n : ℕ}
         (fun inp' work' out' => inp' = inp ∧ work' = work₃ ∧ out' = out)
         (binaryCopyTime (shift + shift) shift) := by
       simpa only [work₃, binaryShiftMulNatTape] using hcopy₂
-    have hwork₃ : ∀ i, Parked (work₃ i) := by
-      intro i
-      by_cases hi : i = abi.shift
-      · subst i
-        simp only [work₃, Function.update_self]
-        exact hasBinaryNat_parked
-          (binaryShiftMulNatTape_hasBinaryNat (shift + shift))
-      simp only [work₃, Function.update_of_ne hi]
-      exact hwork₂ i
+    have hwork₃ : ∀ i, Parked (work₃ i) :=
+      binaryShiftMulUpdate_parked work₂ abi.shift (shift + shift) hwork₂
     have hdbl₃ : (work₃ abi.dbl).HasBinaryNat (shift + shift) := by
       simpa only [work₃, Function.update_of_ne abi.shift_ne_dbl.symm] using
         hdbl₂
@@ -1017,6 +1011,75 @@ private def binaryShiftMulLoopPost {n : ℕ} (abi : BinaryShiftMulABI n)
       i ≠ abi.shift → i ≠ abi.tmp → i ≠ abi.dbl → work i = work₀ i) ∧
     out = out₀
 
+/-- The completed bit loop has the full multiplication result and preserves its outside frame. -/
+private theorem binaryShiftMulDoneCfg_post {n : ℕ}
+    (abi : BinaryShiftMulABI n) (lhs rhs : ℕ)
+    (inp₀ : Tape) (work₀ : Fin n → Tape) (out₀ : Tape)
+    (hlhs : (work₀ abi.lhs).HasBinaryNat lhs)
+    (hrhs : (work₀ abi.rhs).HasBinaryNat rhs) :
+    binaryShiftMulLoopPost abi lhs rhs inp₀ work₀ out₀
+      (binaryShiftMulDoneCfg abi lhs rhs inp₀ work₀ out₀).input
+      (binaryShiftMulDoneCfg abi lhs rhs inp₀ work₀ out₀).work
+      (binaryShiftMulDoneCfg abi lhs rhs inp₀ work₀ out₀).output := by
+  let doneWork := binaryShiftMulPartialWork abi work₀ lhs rhs rhs.size
+  let doneCfg := binaryShiftMulDoneCfg abi lhs rhs inp₀ work₀ out₀
+  refine ⟨rfl, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, rfl⟩
+  · rw [show doneCfg.work = doneWork by rfl]
+    dsimp only [doneWork]
+    rw [binaryShiftMulPartialWork,
+      binaryShiftMulLoopWork_other abi work₀ rhs.size
+        (BinaryShiftMul.partialAcc lhs rhs rhs.size)
+        (BinaryShiftMul.partialShift lhs rhs.size) abi.lhs
+        abi.lhs_ne_rhs abi.lhs_ne_acc abi.lhs_ne_shift abi.lhs_ne_tmp
+        abi.lhs_ne_dbl]
+    exact hlhs
+  · rw [show doneCfg.work = doneWork by rfl]
+    dsimp only [doneWork]
+    rw [binaryShiftMulPartialWork,
+      binaryShiftMulLoopWork_rhs]
+    simpa [binaryShiftMulCursorTape, Tape.HasBinaryContent] using
+      hrhs.2.hasBinaryContent
+  · rw [show doneCfg.work = doneWork by rfl]
+    dsimp only [doneWork]
+    rw [binaryShiftMulPartialWork,
+      binaryShiftMulLoopWork_rhs]
+    simpa [binaryShiftMulCursorTape] using hrhs.1
+  · rw [show doneCfg.work = doneWork by rfl]
+    dsimp only [doneWork]
+    rw [binaryShiftMulPartialWork,
+      binaryShiftMulLoopWork_rhs]
+    simp [binaryShiftMulCursorTape]
+  · rw [show doneCfg.work = doneWork by rfl]
+    dsimp only [doneWork]
+    rw [binaryShiftMulPartialWork,
+      binaryShiftMulLoopWork_acc,
+      BinaryShiftMul.partialAcc_full_internal]
+    exact binaryShiftMulNatTape_hasBinaryNat (lhs * rhs)
+  · rw [show doneCfg.work = doneWork by rfl]
+    dsimp only [doneWork]
+    rw [binaryShiftMulPartialWork,
+      binaryShiftMulLoopWork_shift,
+      BinaryShiftMul.partialShift_full_internal]
+    exact binaryShiftMulNatTape_hasBinaryNat (lhs * 2 ^ rhs.size)
+  · rw [show doneCfg.work = doneWork by rfl]
+    dsimp only [doneWork]
+    rw [binaryShiftMulPartialWork,
+      binaryShiftMulLoopWork_tmp]
+    exact binaryShiftMulNatTape_hasBinaryNat 0
+  · rw [show doneCfg.work = doneWork by rfl]
+    dsimp only [doneWork]
+    rw [binaryShiftMulPartialWork,
+      binaryShiftMulLoopWork_dbl]
+    exact binaryShiftMulNatTape_hasBinaryNat 0
+  · intro i hlhsIdx hrhsIdx haccIdx hshiftIdx htmpIdx hdblIdx
+    rw [show doneCfg.work = doneWork by rfl]
+    dsimp only [doneWork]
+    rw [binaryShiftMulPartialWork,
+      binaryShiftMulLoopWork_other abi work₀ rhs.size
+        (BinaryShiftMul.partialAcc lhs rhs rhs.size)
+        (BinaryShiftMul.partialShift lhs rhs.size) i hrhsIdx haccIdx
+        hshiftIdx htmpIdx hdblIdx]
+
 private theorem binaryShiftMulLoopTM_hoareTime_frame {n : ℕ}
     (abi : BinaryShiftMulABI n) (lhs rhs : ℕ)
     (inp₀ : Tape) (work₀ : Fin n → Tape) (out₀ : Tape)
@@ -1167,62 +1230,7 @@ private theorem binaryShiftMulLoopTM_hoareTime_frame {n : ℕ}
       hinitialWork, doneCfg, body] using! hloop
   refine ⟨doneCfg, forBinaryWorkLoopTime bodyTime 0 rhs.size,
     (by simpa [binaryShiftMulLoopBound] using hloopTime), hreach, rfl, ?_⟩
-  refine ⟨rfl, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, rfl⟩
-  · rw [show doneCfg.work = doneWork by rfl]
-    dsimp only [doneWork]
-    rw [binaryShiftMulPartialWork,
-      binaryShiftMulLoopWork_other abi work₀ rhs.size
-        (BinaryShiftMul.partialAcc lhs rhs rhs.size)
-        (BinaryShiftMul.partialShift lhs rhs.size) abi.lhs
-        abi.lhs_ne_rhs abi.lhs_ne_acc abi.lhs_ne_shift abi.lhs_ne_tmp
-        abi.lhs_ne_dbl]
-    exact hlhs
-  · rw [show doneCfg.work = doneWork by rfl]
-    dsimp only [doneWork]
-    rw [binaryShiftMulPartialWork,
-      binaryShiftMulLoopWork_rhs]
-    simpa [binaryShiftMulCursorTape, Tape.HasBinaryContent] using
-      hrhs.2.hasBinaryContent
-  · rw [show doneCfg.work = doneWork by rfl]
-    dsimp only [doneWork]
-    rw [binaryShiftMulPartialWork,
-      binaryShiftMulLoopWork_rhs]
-    simpa [binaryShiftMulCursorTape] using hrhs.1
-  · rw [show doneCfg.work = doneWork by rfl]
-    dsimp only [doneWork]
-    rw [binaryShiftMulPartialWork,
-      binaryShiftMulLoopWork_rhs]
-    simp [binaryShiftMulCursorTape]
-  · rw [show doneCfg.work = doneWork by rfl]
-    dsimp only [doneWork]
-    rw [binaryShiftMulPartialWork,
-      binaryShiftMulLoopWork_acc,
-      BinaryShiftMul.partialAcc_full_internal]
-    exact binaryShiftMulNatTape_hasBinaryNat (lhs * rhs)
-  · rw [show doneCfg.work = doneWork by rfl]
-    dsimp only [doneWork]
-    rw [binaryShiftMulPartialWork,
-      binaryShiftMulLoopWork_shift,
-      BinaryShiftMul.partialShift_full_internal]
-    exact binaryShiftMulNatTape_hasBinaryNat (lhs * 2 ^ rhs.size)
-  · rw [show doneCfg.work = doneWork by rfl]
-    dsimp only [doneWork]
-    rw [binaryShiftMulPartialWork,
-      binaryShiftMulLoopWork_tmp]
-    exact binaryShiftMulNatTape_hasBinaryNat 0
-  · rw [show doneCfg.work = doneWork by rfl]
-    dsimp only [doneWork]
-    rw [binaryShiftMulPartialWork,
-      binaryShiftMulLoopWork_dbl]
-    exact binaryShiftMulNatTape_hasBinaryNat 0
-  · intro i hlhsIdx hrhsIdx haccIdx hshiftIdx htmpIdx hdblIdx
-    rw [show doneCfg.work = doneWork by rfl]
-    dsimp only [doneWork]
-    rw [binaryShiftMulPartialWork,
-      binaryShiftMulLoopWork_other abi work₀ rhs.size
-        (BinaryShiftMul.partialAcc lhs rhs rhs.size)
-        (BinaryShiftMul.partialShift lhs rhs.size) i hrhsIdx haccIdx
-        hshiftIdx htmpIdx hdblIdx]
+  exact binaryShiftMulDoneCfg_post abi lhs rhs inp₀ work₀ out₀ hlhs hrhs
 
 private def binaryShiftMulCleanupBits {n : ℕ}
     (abi : BinaryShiftMulABI n) (lhs rhs : ℕ) (i : Fin n) : List Bool :=
