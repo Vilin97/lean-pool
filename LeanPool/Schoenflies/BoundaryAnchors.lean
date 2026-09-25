@@ -3,7 +3,9 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.InteriorHomeomorphism
+module
+
+public import LeanPool.Schoenflies.InteriorHomeomorphism
 
 /-!
 # Boundary anchors retained by the quantitative recursion
@@ -18,6 +20,8 @@ source anchor.
 This discharges `lem:anchor-density` and constructs the `HasAnchorCrosscuts` and `HasSpokes`
 inputs used in `prop:boundary-continuity`.
 -/
+
+@[expose] public section
 
 open Filter Metric Set
 open scoped Graph

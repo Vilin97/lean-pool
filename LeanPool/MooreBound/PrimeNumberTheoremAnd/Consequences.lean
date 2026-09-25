@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: PrimeNumberTheoremAnd contributors
 -/
 
-import LeanPool.MooreBound.PrimeNumberTheoremAnd.Mathlib.Analysis.SpecialFunctions.Log.Basic
-import LeanPool.MooreBound.PrimeNumberTheoremAnd.Wiener
+module
+
+public import LeanPool.MooreBound.PrimeNumberTheoremAnd.Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import LeanPool.MooreBound.PrimeNumberTheoremAnd.Wiener
 
 /-!
 Ported for Lean Pool from PrimeNumberTheoremAnd commit
@@ -15,6 +17,8 @@ The port adds the MooreBound namespace and updates Mathlib APIs and proof style.
 Wiener and Consequences retain the PNT and prime-interval dependency closure;
 unrelated later developments and LeanArchitect annotations are omitted.
 -/
+
+@[expose] public section
 
 namespace MooreBound
 

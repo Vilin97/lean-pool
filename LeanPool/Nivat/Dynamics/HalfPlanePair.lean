@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Boon Suan Ho
 -/
 
-import LeanPool.Nivat.Core.Basic
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Linarith
+module
+
+public import LeanPool.Nivat.Core.Basic
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Linarith
 
 /-
 Upstream: https://github.com/boonsuan/nivat
@@ -50,6 +52,8 @@ The main results are `exists_halfPlane_pair` for a closed shift-invariant space
 and `exists_halfPlane_pair_coordinates` with the normal written as a coordinate
 pair.
 -/
+
+@[expose] public section
 
 namespace Nivat.Dynamics
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.Graph.Cycle
-import LeanPool.Schoenflies.Graph.Degree
+module
+
+public import LeanPool.Schoenflies.Graph.Cycle
+public import LeanPool.Schoenflies.Graph.Degree
 
 /-!
 # Trees
@@ -57,6 +59,8 @@ single edge, and a path takes no edge twice.
 
 The root `Graph` namespace, as in `Walk.lean`, `Degree.lean` and `Cycle.lean`.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Graph
@@ -239,7 +243,8 @@ edges are vertices it visits, so they too survive. -/
 theorem IsWalk.deleteVerts {X : Set α} (h : G.IsWalk u W v)
     (hX : ∀ z ∈ G.walkVertices u W, z ∉ X) : (G.deleteVerts X).IsWalk u W v := by
   refine h.anti deleteVerts_le ?_ fun g hg ↦ ?_
-  · exact ⟨h.left_mem, hX u mem_walkVertices_self⟩
+  · rw [vertexSet_deleteVerts]
+    exact ⟨h.left_mem, hX u mem_walkVertices_self⟩
   · obtain ⟨p, q, hpq⟩ := exists_isLink_of_mem_edgeSet (h.edge_mem hg)
     simp only [edgeSet_deleteVerts, Set.mem_ofPred_eq]
     exact ⟨p, q, hpq, hX p (mem_walkVertices_of_mem_covered ⟨g, hg, hpq.inc_left⟩),

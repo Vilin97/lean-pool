@@ -3,9 +3,11 @@ Copyright (c) 2026 Álvaro Begué. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Álvaro Begué
 -/
-import LeanPool.Schoenflies.CombinatorialInvariance
-import LeanPool.Schoenflies.Graph.PathGraph
-import LeanPool.Schoenflies.GeneralCrosscut
+module
+
+public import LeanPool.Schoenflies.CombinatorialInvariance
+public import LeanPool.Schoenflies.Graph.PathGraph
+public import LeanPool.Schoenflies.GeneralCrosscut
 
 /-!
 # Generated matched cell structures
@@ -87,6 +89,8 @@ contains that cell, and (i) says a closed cell is the union of its open subcells
 definitions below therefore declare `σ ≼ σ` for every new cell; that is the only place where
 this module adds a pair the blueprint's prose does not list.
 -/
+
+@[expose] public section
 
 open Set Schoenflies
 open scoped Graph

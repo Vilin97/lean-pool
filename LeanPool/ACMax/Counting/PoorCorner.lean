@@ -3,15 +3,17 @@ Copyright (c) 2026 Zeru Zhu, Jinzheng Li, Yuanjie Ren. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zeru Zhu, Jinzheng Li, Yuanjie Ren
 -/
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Tauto
-import LeanPool.ACMax.Reduction.Residual
-import LeanPool.ACMax.Counting.FarPair
-import LeanPool.ACMax.Counting.DoubleStar
+module
+
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Tauto
+public import LeanPool.ACMax.Reduction.Residual
+public import LeanPool.ACMax.Counting.FarPair
+public import LeanPool.ACMax.Counting.DoubleStar
 
 /-!
 # The far-pair closure of the poor corner
@@ -43,6 +45,8 @@ bounds algebraic connectivity by `2`.
 * `x0_corner_close` — the corner closure `algConn G ≤ 2` for every `n ≥ 23`,
   assembled from the three results above.
 -/
+
+@[expose] public section
 
 namespace ACMax
 

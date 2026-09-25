@@ -8,7 +8,7 @@ Lean Pool uses deterministic CI for mechanical quality checks and LLM review for
 
 [`lean_action_ci.yml`](workflows/lean_action_ci.yml) currently runs:
 
-- `lake exe mk_all --check` (all three library indexes)
+- `lake exe mk_all --module --check` (all three library indexes must use `module` and `public import`)
 - `lake build LeanPool`
 - a warning scan over the build log
 - [`scripts/ci/build-challenges.sh`](../scripts/ci/build-challenges.sh) — `lake build Challenge Solution` with a warning scan that tolerates only Lean's `declaration uses 'sorry'` notices, which challenge statements are expected to emit
@@ -17,6 +17,8 @@ Lean Pool uses deterministic CI for mechanical quality checks and LLM review for
 - `python -m lean_pool.quality --repo ..`
 
 The Lean workflow runs on Lean, Lake, project metadata, quality-checker, and workflow changes. It restores and saves Lake caches and pulls Mathlib oleans with `lake exe cache get` when the cache is cold.
+
+The generated module-system indexes import every library file, so building them rejects any file missing a `module` header. Regenerate the indexes with `lake exe mk_all --module`. Package-level `requiresModuleSystem = true` also makes Lake warn when a legacy file imports Lean Pool.
 
 ### 2. Repository Quality Checker
 
@@ -109,7 +111,7 @@ Branch protection to require these checks before merge is future work.
 
 ### 6. LLM Review
 
-[`llm-review.yml`](workflows/llm-review.yml) runs after successful Lean Action CI on a PR head, or manually through `/review` and `workflow_dispatch`. It fetches the PR diff with `gh`, classifies the PR, and posts a sticky PR comment containing the reviewed head SHA, structured assessment, verdict, findings, token counts, and billing source. Reviews use GPT-6-Astra through the Azure VM's Codex account pool, without an OpenAI API key or paid API fallback. See [Azure review operations](../python/azure-review.md).
+A private worker polls open PRs and `/review` comments every ten minutes. Automatic content reviews wait for successful Lean Action CI on the current head. Anyone can request a review on any open PR with `/review`. The worker posts the existing sticky comment with the reviewed head SHA, rubric verdicts, findings, and token accounting. Reviews use GPT-6-Astra at `xhigh` with Codex subscription quota and no paid API fallback. See [review operations](../python/review-operations.md).
 
 The rules applied depend on what the PR does:
 
