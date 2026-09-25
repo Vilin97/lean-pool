@@ -19,6 +19,8 @@ space, the smooth Malliavin derivative, its graph closure, predictable
 projection, and the natural predictable process space.  The theorem supplies
 the time realization and Brownian Itô isometry and states martingale
 representation together with the Clark--Ocone identity on the closed graph.
+The explicit boundary definitions support independent statement auditing;
+named bridges transfer their witnesses to the shared library API.
 -/
 
 @[expose] public section
@@ -159,52 +161,47 @@ structure IsSmoothBounded
 
 namespace IsSmoothBounded
 
+/-- Convert the independent statement boundary to the library's smoothness predicate. -/
+theorem toMalliavin
+    {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
+    {F : W → ℝ} (hF : IsSmoothBounded F) : Malliavin.IsSmoothBounded F :=
+  ⟨hF.contDiff, hF.bounded, hF.bounded_fderiv⟩
+
 theorem continuous_fderiv
     {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
     {F : W → ℝ} (hF : IsSmoothBounded F) : Continuous (fderiv ℝ F) :=
-  hF.contDiff.continuous_fderiv one_ne_zero
+  Malliavin.IsSmoothBounded.continuous_fderiv hF.toMalliavin
 
 theorem memLp
     {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
     [MeasurableSpace W] [BorelSpace W]
     {F : W → ℝ} (P : Measure W) [IsGaussian P]
-    (hF : IsSmoothBounded F) (p : ℝ≥0∞) : MemLp F p P := by
-  obtain ⟨C, hC⟩ := hF.bounded
-  exact MemLp.of_bound hF.contDiff.continuous.aestronglyMeasurable C
-    (Filter.Eventually.of_forall fun x ↦ by simpa [Real.norm_eq_abs] using hC x)
+    (hF : IsSmoothBounded F) (p : ℝ≥0∞) : MemLp F p P :=
+  Malliavin.IsSmoothBounded.memLp P hF.toMalliavin p
 
 theorem continuous_mderiv
     {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
     [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
     [SecondCountableTopology W]
     {F : W → ℝ} (P : Measure W) [IsGaussian P]
-    (hF : IsSmoothBounded F) : Continuous (mderiv P F) := by
-  unfold mderiv
-  exact (InnerProductSpace.toDual ℝ (CameronMartin.Space P)).symm.continuous.comp
-    (hF.continuous_fderiv.clm_comp continuous_const)
+    (hF : IsSmoothBounded F) : Continuous (mderiv P F) :=
+  Malliavin.IsSmoothBounded.continuous_mderiv (μ := P) hF.toMalliavin
 
 theorem exists_norm_mderiv_le
     {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
     [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
     [SecondCountableTopology W]
     {F : W → ℝ} (P : Measure W) [IsGaussian P]
-    (hF : IsSmoothBounded F) : ∃ C, ∀ x, ‖mderiv P F x‖ ≤ C := by
-  obtain ⟨C, hC⟩ := hF.bounded_fderiv
-  refine ⟨C * ‖CameronMartin.inclusion P‖, fun x ↦ ?_⟩
-  unfold mderiv
-  rw [LinearIsometryEquiv.norm_map]
-  exact (ContinuousLinearMap.opNorm_comp_le _ _).trans
-    (mul_le_mul_of_nonneg_right (hC x) (ContinuousLinearMap.opNorm_nonneg _))
+    (hF : IsSmoothBounded F) : ∃ C, ∀ x, ‖mderiv P F x‖ ≤ C :=
+  Malliavin.IsSmoothBounded.exists_norm_mderiv_le (μ := P) hF.toMalliavin
 
 theorem memLp_mderiv
     {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
     [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
     [SecondCountableTopology W]
     {F : W → ℝ} (P : Measure W) [IsGaussian P]
-    (hF : IsSmoothBounded F) (p : ℝ≥0∞) : MemLp (mderiv P F) p P := by
-  obtain ⟨C, hC⟩ := hF.exists_norm_mderiv_le P
-  exact MemLp.of_bound (hF.continuous_mderiv P).aestronglyMeasurable C
-    (Filter.Eventually.of_forall hC)
+    (hF : IsSmoothBounded F) (p : ℝ≥0∞) : MemLp (mderiv P F) p P :=
+  Malliavin.IsSmoothBounded.memLp_mderiv P hF.toMalliavin p
 
 /-- A smooth functional as a scalar `L²` class. -/
 noncomputable def toLp
@@ -235,6 +232,17 @@ def InGraphClosure
   ∃ Fk : ℕ → {f : W → ℝ // IsSmoothBounded f},
     Tendsto (fun k ↦ (Fk k).2.toLp P) atTop (𝓝 F) ∧
       Tendsto (fun k ↦ (Fk k).2.mderivLp P) atTop (𝓝 η)
+
+/-- Transfer the independently stated graph closure to the library graph closure. -/
+theorem InGraphClosure.toMalliavin
+    {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
+    [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
+    [SecondCountableTopology W]
+    {P : Measure W} [IsGaussian P]
+    {F : Lp ℝ 2 P} {η : Lp (CameronMartin.Space P) 2 P}
+    (h : InGraphClosure P F η) : Malliavin.InGraphClosure P F η := by
+  obtain ⟨Fk, hFk, hDk⟩ := h
+  exact ⟨fun k ↦ ⟨(Fk k).1, (Fk k).2.toMalliavin⟩, hFk, hDk⟩
 
 /-- The predictable sigma-algebra lies below the ambient product sigma-algebra. -/
 theorem predictable_le_prod
@@ -286,14 +294,7 @@ private theorem clarkOcone_of_graphClosure
               I (predictableProjection (P := P) filtration (T η)) := by
   dsimp only
   intro F η hgraph
-  have hgraph' : Malliavin.InGraphClosure P F η := by
-    rcases hgraph with ⟨Fk, hFk, hDk⟩
-    let Fk' : ℕ → {f : W → ℝ // Malliavin.IsSmoothBounded f} := fun k ↦
-      ⟨(Fk k).1, ⟨(Fk k).2.contDiff, (Fk k).2.bounded,
-        (Fk k).2.bounded_fderiv⟩⟩
-    refine ⟨Fk', ?_, ?_⟩
-    · exact hFk
-    · exact hDk
+  have hgraph' : Malliavin.InGraphClosure P F η := hgraph.toMalliavin
   let F' : Malliavin.D12 P := ⟨F, ⟨η, hgraph'⟩⟩
   have hderiv : Malliavin.mderivD12 P F' = η :=
     Malliavin.mderivClosure_eq P hgraph'

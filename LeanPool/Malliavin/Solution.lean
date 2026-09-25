@@ -15,7 +15,9 @@ public import LeanPool.Malliavin.Malliavin
 # Closability of the Malliavin derivative (Solution)
 
 This module repeats the Mathlib-only statement boundary from `Challenge` and
-discharges the advertised theorem using the development in `Malliavin`.
+discharges the advertised theorem using the development in `Malliavin`. The
+boundary definitions remain explicit for independent statement auditing;
+`IsSmoothBounded.toMalliavin` transfers their witnesses to the shared library API.
 -/
 
 @[expose] public section
@@ -110,22 +112,25 @@ structure IsSmoothBounded {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 namespace IsSmoothBounded
 
+/-- Convert the independent statement boundary to the library's smoothness predicate. -/
+theorem toMalliavin
+    {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
+    {F : W → ℝ} (hF : IsSmoothBounded F) : Malliavin.IsSmoothBounded F :=
+  ⟨hF.contDiff, hF.bounded, hF.bounded_fderiv⟩
+
 /-- A smooth bounded functional has a continuous Fréchet derivative. -/
 theorem continuous_fderiv
     {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
     {F : W → ℝ} (hF : IsSmoothBounded F) : Continuous (fderiv ℝ F) :=
-  hF.contDiff.continuous_fderiv one_ne_zero
+  Malliavin.IsSmoothBounded.continuous_fderiv hF.toMalliavin
 
 /-- A smooth bounded functional belongs to every finite or infinite `Lᵖ` space. -/
 theorem memLp
     {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
     [MeasurableSpace W] [BorelSpace W]
     {F : W → ℝ} (μ : Measure W) [IsGaussian μ]
-    (hF : IsSmoothBounded F) (p : ℝ≥0∞) : MemLp F p μ := by
-  obtain ⟨C, hC⟩ := hF.bounded
-  exact MemLp.of_bound hF.contDiff.continuous.aestronglyMeasurable C
-    (Filter.Eventually.of_forall fun x ↦ by
-      simpa [Real.norm_eq_abs] using hC x)
+    (hF : IsSmoothBounded F) (p : ℝ≥0∞) : MemLp F p μ :=
+  Malliavin.IsSmoothBounded.memLp μ hF.toMalliavin p
 
 /-- The Malliavin derivative of a smooth bounded functional is continuous. -/
 theorem continuous_mderiv
@@ -133,10 +138,8 @@ theorem continuous_mderiv
     [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
     [SecondCountableTopology W]
     {F : W → ℝ} (μ : Measure W) [IsGaussian μ]
-    (hF : IsSmoothBounded F) : Continuous (mderiv μ F) := by
-  unfold mderiv
-  exact (InnerProductSpace.toDual ℝ (CameronMartin.Space μ)).symm.continuous.comp
-    (hF.continuous_fderiv.clm_comp continuous_const)
+    (hF : IsSmoothBounded F) : Continuous (mderiv μ F) :=
+  Malliavin.IsSmoothBounded.continuous_mderiv (μ := μ) hF.toMalliavin
 
 /-- The norm of the Malliavin derivative is uniformly bounded. -/
 theorem exists_norm_mderiv_le
@@ -144,14 +147,8 @@ theorem exists_norm_mderiv_le
     [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
     [SecondCountableTopology W]
     {F : W → ℝ} (μ : Measure W) [IsGaussian μ]
-    (hF : IsSmoothBounded F) : ∃ C, ∀ x, ‖mderiv μ F x‖ ≤ C := by
-  obtain ⟨C, hC⟩ := hF.bounded_fderiv
-  refine ⟨C * ‖CameronMartin.inclusion μ‖, fun x ↦ ?_⟩
-  unfold mderiv
-  rw [LinearIsometryEquiv.norm_map]
-  exact (ContinuousLinearMap.opNorm_comp_le _ _).trans
-    (mul_le_mul_of_nonneg_right (hC x)
-      (ContinuousLinearMap.opNorm_nonneg _))
+    (hF : IsSmoothBounded F) : ∃ C, ∀ x, ‖mderiv μ F x‖ ≤ C :=
+  Malliavin.IsSmoothBounded.exists_norm_mderiv_le (μ := μ) hF.toMalliavin
 
 /-- The Malliavin derivative of a smooth bounded functional belongs to `Lᵖ` for every `p`. -/
 theorem memLp_mderiv
@@ -159,10 +156,8 @@ theorem memLp_mderiv
     [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
     [SecondCountableTopology W]
     {F : W → ℝ} (μ : Measure W) [IsGaussian μ]
-    (hF : IsSmoothBounded F) (p : ℝ≥0∞) : MemLp (mderiv μ F) p μ := by
-  obtain ⟨C, hC⟩ := hF.exists_norm_mderiv_le μ
-  exact MemLp.of_bound (hF.continuous_mderiv μ).aestronglyMeasurable C
-    (Filter.Eventually.of_forall hC)
+    (hF : IsSmoothBounded F) (p : ℝ≥0∞) : MemLp (mderiv μ F) p μ :=
+  Malliavin.IsSmoothBounded.memLp_mderiv μ hF.toMalliavin p
 
 /-- The L²(μ) equivalence class of a smooth bounded functional. -/
 noncomputable def toLp
@@ -197,10 +192,7 @@ theorem integral_inner_mderiv
     {F : W → ℝ} (hF : IsSmoothBounded F) (h : CameronMartin.Space μ) :
     ∫ x, ⟪mderiv μ F x, h⟫_ℝ ∂μ =
       ∫ x, F x * (h : Lp ℝ 2 μ) x ∂μ :=
-  Malliavin.integral_inner_mderiv μ
-    (Malliavin.IsSmoothBounded.mk
-      hF.contDiff hF.bounded hF.bounded_fderiv)
-    h
+  Malliavin.integral_inner_mderiv μ hF.toMalliavin h
 
 theorem mderiv_closable
     {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
@@ -213,8 +205,7 @@ theorem mderiv_closable
     (hD : Tendsto (fun k ↦ (F k).2.mderivLp μ) atTop (𝓝 η)) :
     η = 0 :=
   Malliavin.mderiv_closable μ
-    (fun k ↦ ⟨(F k).1, Malliavin.IsSmoothBounded.mk
-      (F k).2.contDiff (F k).2.bounded (F k).2.bounded_fderiv⟩)
+    (fun k ↦ ⟨(F k).1, (F k).2.toMalliavin⟩)
     hF hD
 
 /- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/
