@@ -216,7 +216,7 @@ theorem gFun_mem_sphere (y : Sphere n) :
 theorem gFun_mem_band (y : Sphere n) :
     (⟨gFun n y, gFun_mem_sphere n y⟩ : Sphere (n + 1)) ∈ sphereBand n := by
       constructor <;> intro h <;> simp_all? +decide [  ];
-      · injection h with h; replace h := congr_arg ( fun z => z 0 ) h; simp_all +decide [ gFun ];
+      · injection h with h; replace h := congr_arg ( fun z => z 0 ) h; simp_all? +decide [ gFun ];
         exact absurd h ( by erw [ PiLp.single_apply ]; norm_num );
       · injection h with h; have := congr_arg ( fun x => x 0 ) h; norm_num [ southPole ] at this;
         simp +decide [ gFun, northVec ] at this

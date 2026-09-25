@@ -55,7 +55,8 @@ theorem sphere_zero_eq_or_neg (x y : Sphere 0) : x = y ∨ x = -y := by
   simp_all +decide only [Nat.reduceAdd, Finset.univ_unique, Fin.eq_zero, Fin.isValue,
     Finset.sum_const, Finset.card_singleton, one_smul, sq_eq_one_iff, Subtype.ext_iff,
     coe_neg_sphere]
-  cases hx <;> cases hy <;> simp_all? +decide
+  cases hx <;> cases hy <;> simp_all +decide only
+    [Nat.reduceAdd, mem_sphere_iff_norm, sub_zero, Fin.isValue]
   · exact Or.inl (by ext i; fin_cases i; aesop)
   · exact Or.inr (by ext i; fin_cases i; aesop)
   · exact Or.inr (by ext i; fin_cases i; aesop)

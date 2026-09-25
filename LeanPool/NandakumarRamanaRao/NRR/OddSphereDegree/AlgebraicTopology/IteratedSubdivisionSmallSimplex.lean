@@ -87,7 +87,9 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
   unfold prefixBarycenter stepVertices;
   ext j; simp? +decide [ SphereOddDegree.FiniteSimplex.map,
     SphereOddDegree.FiniteSimplex.barycenter,  stdVerts ];
-  unfold FunOnFinite.linearMap; simp +decide [ Finset.mul_sum _ _ _ ];
+  unfold FunOnFinite.linearMap; simp +decide only
+    [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
+      Finsupp.lmapDomain_apply, Finsupp.linearEquivFunOnFinite_apply];
   simp +decide [ Finsupp.mapDomain, Finsupp.linearEquivFunOnFinite, Pi.single_apply ];
   simp +decide [ Finsupp.sum_fintype, prefixVertex ];
   rw [ ← Finset.sum_subset ( show Finset.image ( fun x : Fin ( k.val + 1 ) => ⟨ x, by
@@ -159,7 +161,7 @@ theorem affineCompMap_succ (n N : ℕ) (ρs : Fin (N + 1) → Equiv.Perm (Fin (n
 theorem affineCompMap_coe (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (n + 1))) (x : Delta n) :
     (affineCompMap n N ρs x).val = affineCompLinear n N ρs x.val := by
   induction N generalizing x with
-  | zero => simp_all +decide [affineCompMap_succ, affineCompLinear_succ]
+  | zero => simp_all +decide
   | succ N ih =>
     simp_all? +decide [affineCompMap_succ, affineCompLinear_succ]
     rw [← affineSubdivLinear_coe]

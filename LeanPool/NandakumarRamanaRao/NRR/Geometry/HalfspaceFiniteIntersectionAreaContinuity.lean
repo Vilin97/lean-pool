@@ -121,7 +121,8 @@ theorem continuous_finiteHalfspaceIntersectionArea_pi [Finite ι]
       by_cases hxK : x ∈ (K : Set Plane) <;> simp_all +decide only
         [mem_coe, finiteHalfspaceIntersection, Set.mem_inter_iff, Set.mem_iInter,
           mem_lowerClosedHalfspace, true_and, false_and, Filter.eventually_true];
-      by_cases h : ∀ i, ⟪u i, x⟫ ≤ f₀ i <;> simp_all? +decide;
+      by_cases h : ∀ i, ⟪u i, x⟫ ≤ f₀ i <;> simp_all +decide only
+        [implies_true, iff_true, Filter.eventually_all, not_forall, not_le];
       · exact fun i => Filter.eventually_of_mem ( IsOpen.mem_nhds ( isOpen_lt ( continuous_const
           ) ( continuous_apply i ) ) ( lt_of_le_of_ne ( h i ) ( hx i ) ) ) fun f hf => hf.le;
       · obtain ⟨ i, hi ⟩ := h;

@@ -71,7 +71,7 @@ theorem exists_generic_assignment_close
       AssignmentClose a' a eps ∧
         ∀ i, MvPolynomial.eval a' (P i) ≠ 0 := by
   classical
-  letI := Fintype.ofFinite J
+  let := Fintype.ofFinite J
   obtain ⟨b, t₀, ht₀, ht₀one, hgeneric₀⟩ :=
     FiniteMultivariateGenericPerturbation.exists_small_positive_generic
       P hP a (show (0 : Real) < 1 by positivity)

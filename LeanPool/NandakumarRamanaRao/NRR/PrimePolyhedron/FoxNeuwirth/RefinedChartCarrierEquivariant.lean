@@ -277,8 +277,8 @@ theorem decorated_value_eq_of_decorated_chart_eq
       (Equiv.sum_comp (Fin.castOrderIso (Nat.sub_add_cancel hp.pos).symm).toEquiv
         (fun i => w i * F
           ((ReferenceAffineOrbitCount.topRepr hp q.1).refinedContinuousMap N q.2
-            (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) j)) using 1 <;>
-      simp [s, maximalCoordinateIndex, Simplex.refinedVertex]
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) j)) using 1
+    simp [s, maximalCoordinateIndex, Simplex.refinedVertex]
   have htvalue : simplexValue t N r.2 F v = value hp N F r v := by
     funext j
     unfold simplexValue value vertexValue vertex chart
@@ -288,8 +288,8 @@ theorem decorated_value_eq_of_decorated_chart_eq
       (Equiv.sum_comp (Fin.castOrderIso (Nat.sub_add_cancel hp.pos).symm).toEquiv
         (fun i => v i * F
           ((ReferenceAffineOrbitCount.topRepr hp r.1).refinedContinuousMap N r.2
-            (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) j)) using 1 <;>
-      simp [t, maximalCoordinateIndex, Simplex.refinedVertex]
+            (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)) j)) using 1
+    simp [t, maximalCoordinateIndex, Simplex.refinedVertex]
   rw [← hsvalue, ← htvalue]
   exact hresult
 
