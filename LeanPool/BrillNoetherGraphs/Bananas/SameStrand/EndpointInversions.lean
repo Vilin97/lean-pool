@@ -108,10 +108,14 @@ private theorem rankSlip_duality (M : TwiceMarked) (D : CFDiv M.graph)
 slipface. -/
 noncomputable def rankSlipFace (M : TwiceMarked) (D : CFDiv M.graph)
     (hconn : graphConnected M.graph) : SlipFace :=
-  Classical.choose (SlipFace.sf_of_D_props (rankSlip_duality M D hconn)
-    ⟨rankSlipFunction_D_props M D,
-      rankSlipFunction_D_props (mark M.graph M.v M.u)
-        (canonicalDivisor M.graph - D)⟩)
+  Classical.choose (show ∃ sf : SlipFace,
+    (sf.func = rankSlipFunction M D ∧ sf.χ = deg D - genus M.graph + 1) ∧
+      sf.dual.func = rankSlipFunction (mark M.graph M.v M.u) (canonicalDivisor M.graph - D)
+    from by
+      exact SlipFace.sf_of_D_props (rankSlip_duality M D hconn)
+        ⟨rankSlipFunction_D_props M D,
+          rankSlipFunction_D_props (mark M.graph M.v M.u)
+            (canonicalDivisor M.graph - D)⟩)
 
 @[simp] theorem rankSlipFace_apply (M : TwiceMarked) (D : CFDiv M.graph)
     (hconn : graphConnected M.graph)

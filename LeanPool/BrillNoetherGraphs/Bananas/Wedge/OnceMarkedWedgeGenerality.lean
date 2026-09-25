@@ -65,7 +65,9 @@ rank `-1`, so this is also the first twist among all integers. -/
 noncomputable def pointedRankThreshold
     (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (i : ℕ) : ℤ :=
-  (Nat.find (exists_normalized_twist_rank_ge G hG D q i) : ℤ) - deg D
+  (Nat.find (show ∃ n : ℕ,
+    rank G (D + ((n : ℤ) - deg D) • oneChip q) ≥ (i : ℤ) from by
+      exact exists_normalized_twist_rank_ge G hG D q i) : ℤ) - deg D
 
 theorem rank_at_pointedRankThreshold_ge
     (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)

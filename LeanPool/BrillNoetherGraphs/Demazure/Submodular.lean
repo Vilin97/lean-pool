@@ -376,8 +376,9 @@ Its minimum is $s_{\alpha \star \beta}(a,b)$, and its rightmost minimizer is
 the $M_{\alpha \star \beta}(a,b)$ of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227). In Lean that rightmost
 minimizer is `(aspValley α β a b).M`. *Definition 4.6 of
-[An extended Demazure product](https://arxiv.org/abs/2206.14227), unlabeled in source.* -/
-/-- The valley of the sum of the two ASP slipfaces along the intermediate integer. -/
+[An extended Demazure product](https://arxiv.org/abs/2206.14227), unlabeled in source.* 
+
+ The valley of the sum of the two ASP slipfaces along the intermediate integer. -/
 noncomputable def aspValley (α β : AspPerm) (a b : ℤ) : Valley where
     f := fun l => α.s a l + β.s l b
     rises := by
@@ -1056,7 +1057,8 @@ $$
 
 In Lean this operation is written `α ⋆ β`. -/
 noncomputable def star (α β : AspPerm) : AspPerm :=
-  Classical.choose (star_exists α β)
+  Classical.choose (show ∃! τ : AspPerm, τ.s = α.s ⋆ β.s from by
+    exact star_exists α β)
 
 /-- The Demazure product on ASP is characterized by the equation
 $s_{\alpha \star \beta} = s_\alpha \star s_\beta$.
@@ -1073,7 +1075,8 @@ $s_{\alpha \triangleleft \beta} = s_\alpha \triangleleft s_\beta$.
 
 In Lean this operation is written `α ◃ β`. -/
 noncomputable def lres (α β : AspPerm) : AspPerm :=
-  Classical.choose (lres_exists α β)
+  Classical.choose (show ∃! τ : AspPerm, τ.s = α.s ◃ β.s from by
+    exact lres_exists α β)
 
 /-- Left residual on ASP permutations is characterized by
 $s_{\alpha \triangleleft \beta} = s_\alpha \triangleleft s_\beta$.
@@ -1091,7 +1094,8 @@ $s_{\alpha \triangleright \beta} = s_\alpha \triangleright s_\beta$.
 
 In Lean this operation is written `α ▹ β`. -/
 noncomputable def rres (α β : AspPerm) : AspPerm :=
-  Classical.choose (rres_exists α β)
+  Classical.choose (show ∃! τ : AspPerm, τ.s = α.s ▹ β.s from by
+    exact rres_exists α β)
 
 /-- Right residual on ASP permutations is characterized by
 $s_{\alpha \triangleright \beta} = s_\alpha \triangleright s_\beta$.

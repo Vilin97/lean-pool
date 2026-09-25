@@ -306,7 +306,7 @@ end OneSplitData
 /-- The vertex map for the canonical split.  On the selected subdivided path,
 the new core vertex occupies path position `first`; all other positions keep
 their evident old-slot names. -/
-private def canonicalSplitVertexMap
+def canonicalSplitVertexMap
     (source : SubdivisionGraph.Spec n p) (split : Fin p)
     (first second : ℕ) (hFirst : 0 < first) (hSecond : 0 < second)
     (hLength : source.length split = first + second) :
@@ -348,7 +348,7 @@ private def canonicalSplitVertexMap
 
 /-- The inverse of `canonicalSplitVertexMap`, written by cases on the fresh
 core vertex and fresh edge slot. -/
-private def canonicalSplitVertexMapInv
+def canonicalSplitVertexMapInv
     (source : SubdivisionGraph.Spec n p) (split : Fin p)
     (first second : ℕ) (hFirst : 0 < first) (hSecond : 0 < second)
     (hLength : source.length split = first + second) :
@@ -457,7 +457,7 @@ def canonicalSplitVertexEquiv
 core vertex remains in the old slot; every later step is moved to the new
 second slot.  Thus this is a reclassification of the same unit-edge path,
 not an edge contraction or a change of the discrete graph. -/
-private def canonicalSplitStepMap
+def canonicalSplitStepMap
     (source : SubdivisionGraph.Spec n p) (split : Fin p)
     (first second : ℕ) (hFirst : 0 < first) (hSecond : 0 < second)
     (hLength : source.length split = first + second) :
@@ -481,7 +481,7 @@ private def canonicalSplitStepMap
           exact offset.isLt⟩⟩
 
 /-- Inverse occurrence map for `canonicalSplitStepMap`. -/
-private def canonicalSplitStepMapInv
+def canonicalSplitStepMapInv
     (source : SubdivisionGraph.Spec n p) (split : Fin p)
     (first second : ℕ) (hFirst : 0 < first) (hSecond : 0 < second)
     (hLength : source.length split = first + second) :
