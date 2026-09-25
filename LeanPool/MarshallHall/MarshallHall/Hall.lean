@@ -386,47 +386,8 @@ theorem marshallHall
   have hq0 : q0 ∈ A := by
     exact one_mem_coreStateSet H S 1
   let base : A := ⟨q0, hq0⟩
-  let genPerm : α → Equiv.Perm A := fun a =>
-    Equiv.extendSubtype (restrictedEquiv A (leftMulEquiv H (FreeGroup.of a)))
-  let rho : FreeGroup α →* Equiv.Perm A := FreeGroup.lift genPerm
+  obtain ⟨rho, word_action⟩ := exists_finite_core_representation H A base rfl
   let : MulAction (FreeGroup α) A := MulAction.compHom A rho
-  have genPerm_apply {a : α} {z : A}
-      (hz : leftMulEquiv H (FreeGroup.of a) z.1 ∈ A) :
-      genPerm a z = ⟨leftMulEquiv H (FreeGroup.of a) z.1, hz⟩ := by
-    apply Subtype.ext
-    dsimp [genPerm]
-    have h := Equiv.extendSubtype_apply_of_mem
-      (restrictedEquiv A (leftMulEquiv H (FreeGroup.of a))) z hz
-    simpa [restrictedEquiv] using congrArg Subtype.val h
-  have genPerm_inv_apply {a : α} {z : A}
-      (hz : leftMulEquiv H (FreeGroup.of a)⁻¹ z.1 ∈ A) :
-      (genPerm a).symm z =
-        ⟨leftMulEquiv H (FreeGroup.of a)⁻¹ z.1, hz⟩ := by
-    let y : A := ⟨leftMulEquiv H (FreeGroup.of a)⁻¹ z.1, hz⟩
-    have hy : leftMulEquiv H (FreeGroup.of a) y.1 ∈ A := by
-      have he : leftMulEquiv H (FreeGroup.of a)
-          (leftMulEquiv H (FreeGroup.of a)⁻¹ z.1) = z.1 := by
-        exact (leftMulEquiv H (FreeGroup.of a)).apply_symm_apply z.1
-      rw [show y.1 = leftMulEquiv H (FreeGroup.of a)⁻¹ z.1 by rfl, he]
-      exact z.2
-    have hforward : genPerm a y = z := by
-      rw [genPerm_apply hy]
-      exact Subtype.ext (by
-        exact (leftMulEquiv H (FreeGroup.of a)).apply_symm_apply z.1)
-    have hback := congrArg (genPerm a).symm hforward
-    simpa [y] using hback.symm
-  have rho_singleton (x : α × Bool) :
-      rho (FreeGroup.mk [x]) =
-        if x.2 then genPerm x.1 else (genPerm x.1).symm := by
-    cases x with
-    | mk a b =>
-        cases b <;> simp [rho, FreeGroup.lift_mk, Equiv.Perm.inv_def]
-  have word_action : ∀ (w : List (α × Bool)),
-      coreCondition A w →
-      ((rho (FreeGroup.mk w)) base : A).1 =
-        (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) :=
-    word_action_of_generator_extensions H A base rfl genPerm rho
-      genPerm_apply genPerm_inv_apply rho_singleton
   have hS_core : ∀ s ∈ S, coreCondition A s.toWord := by
     intro s hs u hu x hx
     change (Quotient.mk'' x : LeftCosetQuotient H) ∈

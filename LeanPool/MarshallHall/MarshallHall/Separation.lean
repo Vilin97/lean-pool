@@ -191,27 +191,20 @@ theorem word_action_of_generator_extensions {α : Type*}
               rw [leftMulEquiv_mk]
               simp [wordValue, signedLetter]
 
-theorem freeGroup_finite_permutation_separator_proved
-    {α : Type*} (H : Subgroup (FreeGroup α))
-    [Group.FG H]
-    (g : FreeGroup α)
-    (hg : g ∉ H) :
-    Nonempty (FinitePermutationSeparator H g) := by
+/-- Every finite set of coset states has a permutation representation agreeing with the
+coset action on words whose suffix action states remain in the set. -/
+theorem exists_finite_core_representation
+    (H : Subgroup (FreeGroup α)) (A : Set (LeftCosetQuotient H)) [Fintype A]
+    (base : A) (hbase : base.1 = Quotient.mk'' (1 : FreeGroup α)) :
+    ∃ rho : FreeGroup α →* Equiv.Perm A, ∀ w : List (α × Bool),
+      (∀ u ∈ List.tails w, ∀ x ∈ actionStates u,
+        (Quotient.mk'' x : LeftCosetQuotient H) ∈ A) →
+      ((rho (FreeGroup.mk w)) base : A).1 =
+        (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) := by
   classical
-  let : DecidableEq α := Classical.decEq α
-  obtain ⟨S, hS⟩ := (Group.fg_iff_subgroup_fg H).mp (inferInstance : Group.FG H)
-  let A : Set (LeftCosetQuotient H) := coreStateSet H S g
-  have hAfin : A.Finite := by
-    exact coreStateSet_finite H S g
-  let : Fintype A := hAfin.fintype
-  let q0 : LeftCosetQuotient H := Quotient.mk'' (1 : FreeGroup α)
-  have hq0 : q0 ∈ A := by
-    exact one_mem_coreStateSet H S g
-  let base : A := ⟨q0, hq0⟩
   let genPerm : α → Equiv.Perm A := fun a =>
     Equiv.extendSubtype (restrictedEquiv A (leftMulEquiv H (FreeGroup.of a)))
   let rho : FreeGroup α →* Equiv.Perm A := FreeGroup.lift genPerm
-  let : MulAction (FreeGroup α) A := MulAction.compHom A rho
   have genPerm_apply {a : α} {z : A}
       (hz : leftMulEquiv H (FreeGroup.of a) z.1 ∈ A) :
       genPerm a z = ⟨leftMulEquiv H (FreeGroup.of a) z.1, hz⟩ := by
@@ -243,13 +236,28 @@ theorem freeGroup_finite_permutation_separator_proved
     cases x with
     | mk a b =>
         cases b <;> simp [rho, FreeGroup.lift_mk, Equiv.Perm.inv_def]
-  have word_action : ∀ (w : List (α × Bool)),
-      (∀ u ∈ List.tails w, ∀ x ∈ actionStates u,
-        (Quotient.mk'' x : LeftCosetQuotient H) ∈ A) →
-      ((rho (FreeGroup.mk w)) base : A).1 =
-        (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) :=
-    word_action_of_generator_extensions H A base rfl genPerm rho
-      genPerm_apply genPerm_inv_apply rho_singleton
+  exact ⟨rho, word_action_of_generator_extensions H A base hbase genPerm rho
+    genPerm_apply genPerm_inv_apply rho_singleton⟩
+
+theorem freeGroup_finite_permutation_separator_proved
+    {α : Type*} (H : Subgroup (FreeGroup α))
+    [Group.FG H]
+    (g : FreeGroup α)
+    (hg : g ∉ H) :
+    Nonempty (FinitePermutationSeparator H g) := by
+  classical
+  let : DecidableEq α := Classical.decEq α
+  obtain ⟨S, hS⟩ := (Group.fg_iff_subgroup_fg H).mp (inferInstance : Group.FG H)
+  let A : Set (LeftCosetQuotient H) := coreStateSet H S g
+  have hAfin : A.Finite := by
+    exact coreStateSet_finite H S g
+  let : Fintype A := hAfin.fintype
+  let q0 : LeftCosetQuotient H := Quotient.mk'' (1 : FreeGroup α)
+  have hq0 : q0 ∈ A := by
+    exact one_mem_coreStateSet H S g
+  let base : A := ⟨q0, hq0⟩
+  obtain ⟨rho, word_action⟩ := exists_finite_core_representation H A base rfl
+  let : MulAction (FreeGroup α) A := MulAction.compHom A rho
   let K : Subgroup (FreeGroup α) := MulAction.stabilizer (FreeGroup α) base
   have gen_mem : ∀ s ∈ S, s ∈ K := by
     intro s hs
