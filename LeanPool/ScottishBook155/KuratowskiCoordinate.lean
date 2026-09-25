@@ -3,8 +3,11 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import Mathlib.Analysis.Normed.Lp.lpSpace
-import LeanPool.ScottishBook155.Paper1
+module
+
+public import Mathlib.Analysis.Normed.Lp.lpSpace
+public import LeanPool.ScottishBook155.Paper1
+
 
 /-!
 # An unrestricted Kuratowski injectivity coordinate
@@ -14,6 +17,8 @@ Here the same functions are represented in `ℓ∞(P, ℝ)`, indexed by every po
 of `P`.  Unlike Mathlib's countable Kuratowski embedding, this construction
 does not require separability.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

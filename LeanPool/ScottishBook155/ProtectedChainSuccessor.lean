@@ -3,8 +3,11 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.ProtectedChainReindex
-import LeanPool.ScottishBook155.ProtectedChainCore
+module
+
+public import LeanPool.ScottishBook155.ProtectedChainReindex
+public import LeanPool.ScottishBook155.ProtectedChainCore
+
 
 /-!
 # Appending a protected successor to a coherent chain
@@ -12,6 +15,8 @@ import LeanPool.ScottishBook155.ProtectedChainCore
 This file packages the successor clause independently of the transfinite
 recursion.  The new index is the top point of `WithTop ι`.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

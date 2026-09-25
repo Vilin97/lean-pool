@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.BentSeedStage
+module
+
+public import LeanPool.ScottishBook155.BentSeedStage
+
 
 /-!
 # Final-union assembly for claim 14
@@ -13,6 +16,8 @@ data below state exactly what the increasing union and bookkeeping must
 provide; the theorem proves that those data yield the canonical claim-14
 witness.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

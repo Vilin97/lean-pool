@@ -3,12 +3,17 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.ProtectedChainLimit
-import LeanPool.ScottishBook155.ProtectedChainSuccessor
+module
+
+public import LeanPool.ScottishBook155.ProtectedChainLimit
+public import LeanPool.ScottishBook155.ProtectedChainSuccessor
+
 
 /-!
 # Appending a completed limit stage to a coherent chain
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

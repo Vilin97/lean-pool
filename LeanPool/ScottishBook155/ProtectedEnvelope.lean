@@ -3,9 +3,12 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.CombinedEmbedding
-import LeanPool.ScottishBook155.DenseSequenceCardinal
-import LeanPool.ScottishBook155.RetractiveEnvelope
+module
+
+public import LeanPool.ScottishBook155.CombinedEmbedding
+public import LeanPool.ScottishBook155.DenseSequenceCardinal
+public import LeanPool.ScottishBook155.RetractiveEnvelope
+
 
 /-!
 # A globally injective linearly retractive envelope
@@ -14,6 +17,8 @@ The retractive dual-evaluation coordinate supplies the linear projection and
 all selected exact distances.  The collapsed-quotient Kuratowski coordinate
 separates the remaining pairs without changing those metric estimates.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

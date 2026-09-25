@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.StageSystem
+module
+
+public import LeanPool.ScottishBook155.StageSystem
+
 
 /-!
 # Coherent links in a protected-stage chain
@@ -11,6 +14,8 @@ import LeanPool.ScottishBook155.StageSystem
 The uniform recovery law is stable when one more active or idle successor is
 attached. This is the successor induction step used by the transfinite chain.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

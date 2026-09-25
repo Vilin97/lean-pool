@@ -3,8 +3,11 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.AdjunctionRetraction
-import LeanPool.ScottishBook155.RetractiveEnvelope
+module
+
+public import LeanPool.ScottishBook155.AdjunctionRetraction
+public import LeanPool.ScottishBook155.RetractiveEnvelope
+
 
 /-!
 # The adjunction inside a linearly retractive Banach envelope
@@ -15,6 +18,8 @@ protected short source distances, extends the linear isometric copy of the old
 target, and recovers the nonlinear adjunction retraction by a contractive
 linear projection.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

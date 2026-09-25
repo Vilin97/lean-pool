@@ -3,11 +3,16 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.RecursionCardinal
+module
+
+public import LeanPool.ScottishBook155.RecursionCardinal
+
 
 /-!
 # Closed initial segments as an open segment with a new top
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 
@@ -15,11 +20,13 @@ universe u
 
 variable {J : Type u} [LinearOrder J]
 
-private noncomputable def initialSegmentToWithTop (j : J) :
+/-- Map the endpoint of a closed initial segment to the added top element. -/
+noncomputable def initialSegmentToWithTop (j : J) :
     Set.Iic j → WithTop (Set.Iio j) := fun x ↦
   if hx : x.1 < j then ((⟨x.1, hx⟩ : Set.Iio j) : WithTop (Set.Iio j)) else ⊤
 
-private def initialSegmentFromWithTop (j : J) :
+/-- Insert the added top element as the endpoint of the closed initial segment. -/
+def initialSegmentFromWithTop (j : J) :
     WithTop (Set.Iio j) → Set.Iic j := fun x ↦
   x.recTopCoe ⟨j, le_rfl⟩ (fun i ↦ ⟨i.1, i.2.le⟩)
 
@@ -76,8 +83,8 @@ noncomputable def initialSegmentWithTop (j : J) :
   toEquiv := {
     toFun := initialSegmentToWithTop j
     invFun := initialSegmentFromWithTop j
-    left_inv := initialSegment_leftInverse j
-    right_inv := initialSegment_rightInverse j }
+    left_inv := by exact initialSegment_leftInverse j
+    right_inv := by exact initialSegment_rightInverse j }
   map_rel_iff' := by
     intro x y
     change initialSegmentToWithTop j x ≤ initialSegmentToWithTop j y ↔ x ≤ y

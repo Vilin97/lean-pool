@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.AttachmentMap
+module
+
+public import LeanPool.ScottishBook155.AttachmentMap
+
 
 /-!
 # The source-side metric-adjunction formula
@@ -15,6 +18,8 @@ the source--source distance candidate from the manuscript and prove its key
 short-scale property: an excursion through the old target cannot shorten a
 source pair of distance at most `r`.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

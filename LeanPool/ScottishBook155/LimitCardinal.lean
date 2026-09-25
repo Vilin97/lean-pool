@@ -3,12 +3,17 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.ProtectedChainLimit
-import LeanPool.ScottishBook155.RecursionCardinal
+module
+
+public import LeanPool.ScottishBook155.ProtectedChainLimit
+public import LeanPool.ScottishBook155.RecursionCardinal
+
 
 /-!
 # Cardinal bounds at protected limit stages
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

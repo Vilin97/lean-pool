@@ -3,8 +3,11 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.AdjunctionFormula
-import LeanPool.ScottishBook155.ProtectedExtension
+module
+
+public import LeanPool.ScottishBook155.AdjunctionFormula
+public import LeanPool.ScottishBook155.ProtectedExtension
+
 
 /-!
 # The nonlinear retraction of the metric adjunction
@@ -13,6 +16,8 @@ The flat source retraction agrees with the attachment map.  Together with the
 identity on the old target it is nonexpansive for the adjunction predistance,
 so it descends through metric separation.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

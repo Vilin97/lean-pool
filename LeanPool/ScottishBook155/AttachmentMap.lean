@@ -3,8 +3,11 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.Preliminaries
-import Mathlib.Analysis.Normed.Lp.ProdLp
+module
+
+public import LeanPool.ScottishBook155.Preliminaries
+public import Mathlib.Analysis.Normed.Lp.ProdLp
+
 
 /-!
 # The attachment map for the protected extension
@@ -13,6 +16,8 @@ This module formalizes the metric input to the adjunction construction.  The
 attachment set in `M ⊕₁ ℝ` is parametrized by `M ⊕ Unit`: the left summand is
 the base hyperplane and the right summand is the single elevated point.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

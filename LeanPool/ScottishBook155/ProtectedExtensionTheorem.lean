@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.ProtectedExtensionAssembly
+module
+
+public import LeanPool.ScottishBook155.ProtectedExtensionAssembly
+
 
 /-!
 # Existence form of the protected one-point extension
@@ -12,6 +15,8 @@ The preceding files construct the extension from a height satisfying explicit
 inequalities.  Here the height is chosen and the resulting properties are
 packaged in the hypothesis form of the manuscript's protected-extension lemma.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.ProtectedChain
+module
+
+public import LeanPool.ScottishBook155.ProtectedChain
+
 
 /-!
 # The limit clause for protected chains
@@ -12,6 +15,8 @@ The uniform recovery identity passes from a coherent protected chain to its
 completed direct limit. Together with `DirectedLimitStage`, this constructs a
 new protected stage at every nonempty limit segment.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

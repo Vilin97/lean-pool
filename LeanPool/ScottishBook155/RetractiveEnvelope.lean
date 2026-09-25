@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.RelativeEnvelope
+module
+
+public import LeanPool.ScottishBook155.RelativeEnvelope
+
 
 /-!
 # A retractive dual-evaluation envelope
@@ -12,6 +15,8 @@ The dual-evaluation coordinate already gives the metric part of the relative
 envelope.  Adjoining the old target as a max-product coordinate makes the
 retraction linear and explicit: it is first-coordinate projection.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

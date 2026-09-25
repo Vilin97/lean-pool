@@ -3,8 +3,11 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.Claim14
-import LeanPool.ScottishBook155.ProtectedExtensionTheorem
+module
+
+public import LeanPool.ScottishBook155.Claim14
+public import LeanPool.ScottishBook155.ProtectedExtensionTheorem
+
 
 /-!
 # Successor-stage interface for claim 14
@@ -12,6 +15,8 @@ import LeanPool.ScottishBook155.ProtectedExtensionTheorem
 This file packages exactly the data exported by the protected one-point
 extension in the form needed by the transfinite construction.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

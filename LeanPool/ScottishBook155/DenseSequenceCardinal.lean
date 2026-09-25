@@ -3,10 +3,13 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Analysis.RCLike.Basic
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Tactic
+
 
 /-!
 # Cardinal control from a dense range
@@ -16,6 +19,8 @@ dense range.  Besides its later cardinal consequences, the explicit embedding
 keeps the completion estimates independent of the internal representation of
 Mathlib's completion.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 
@@ -37,7 +42,8 @@ private theorem exists_approx (hf : DenseRange f) (x : X) (n : ℕ) :
 
 /-- A chosen `1 / (n+1)` approximation from the dense source. -/
 noncomputable def approx (hf : DenseRange f) (x : X) (n : ℕ) : D :=
-  Classical.choose (exists_approx f hf x n)
+  Classical.choose (show ∃ d : D, dist (f d) x < (1 : ℝ) / (n + 1) from by
+    exact exists_approx f hf x n)
 
 theorem approx_spec (hf : DenseRange f) (x : X) (n : ℕ) :
     dist (f (approx f hf x n)) x < (1 : ℝ) / (n + 1) :=

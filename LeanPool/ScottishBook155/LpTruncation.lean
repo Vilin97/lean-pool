@@ -3,9 +3,12 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.LimitStageCore
-import Mathlib.Analysis.Normed.Lp.lpSpace
-import Mathlib.Analysis.Normed.Lp.ProdLp
+module
+
+public import LeanPool.ScottishBook155.LimitStageCore
+public import Mathlib.Analysis.Normed.Lp.lpSpace
+public import Mathlib.Analysis.Normed.Lp.ProdLp
+
 
 /-!
 # Finite-coordinate truncations in l-one
@@ -14,6 +17,8 @@ These are the common finite truncations used in the coherent limit-stage
 argument.  They converge to the original vector and never increase pairwise
 distance.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

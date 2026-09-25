@@ -3,10 +3,13 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.PrefixGlue
-import LeanPool.ScottishBook155.BookkeepingSchedule
-import LeanPool.ScottishBook155.FinalChainAssembly
-import Mathlib.CategoryTheory.SmallObject.WellOrderInductionData
+module
+
+public import LeanPool.ScottishBook155.PrefixGlue
+public import LeanPool.ScottishBook155.BookkeepingSchedule
+public import LeanPool.ScottishBook155.FinalChainAssembly
+public import Mathlib.CategoryTheory.SmallObject.WellOrderInductionData
+
 
 /-!
 # Unconditional transfinite construction for Claim 14
@@ -17,9 +20,11 @@ schedule, limit stages glue and complete the earlier prefixes, and the resulting
 scheduled chain supplies the unconditional witness for `Claim14`.
 -/
 
+@[expose] public section
+
 namespace ScottishBook155
 
-private abbrev RI := RecursionIndex.{0}
+local notation "RI" => RecursionIndex.{0}
 
 @[simp]
 theorem successorSegmentWithTop_apply_top (j : RI) :

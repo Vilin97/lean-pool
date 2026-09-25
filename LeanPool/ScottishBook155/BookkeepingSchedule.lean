@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.RecursionCardinal
+module
+
+public import LeanPool.ScottishBook155.RecursionCardinal
+
 
 /-!
 # Delayed injective bookkeeping
@@ -14,11 +17,13 @@ order type and recursively choose a fresh point in the full-size tail above
 `α`.
 -/
 
+@[expose] public section
+
 namespace ScottishBook155
 
 noncomputable section
 
-private abbrev RI := RecursionIndex.{0}
+local notation "RI" => RecursionIndex.{0}
 
 private structure Requirement where
   stage : RI

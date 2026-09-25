@@ -3,10 +3,13 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.CompletedLimitMap
-import LeanPool.ScottishBook155.CoherentRetractionLimit
-import LeanPool.ScottishBook155.LimitStageCore
-import LeanPool.ScottishBook155.StageSystem
+module
+
+public import LeanPool.ScottishBook155.CompletedLimitMap
+public import LeanPool.ScottishBook155.CoherentRetractionLimit
+public import LeanPool.ScottishBook155.LimitStageCore
+public import LeanPool.ScottishBook155.StageSystem
+
 
 /-!
 # Protected stages from completed directed limits
@@ -16,6 +19,8 @@ target projections. Contractive source projections prove short-distance
 preservation; eventual target recovery and injectivity of the earlier stages
 prove injectivity of the completed map.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

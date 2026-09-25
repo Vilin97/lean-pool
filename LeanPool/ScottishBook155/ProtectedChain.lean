@@ -3,9 +3,12 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.CoherentBiSystem
-import LeanPool.ScottishBook155.DirectedLimitStage
-import LeanPool.ScottishBook155.ProtectedChainCore
+module
+
+public import LeanPool.ScottishBook155.CoherentBiSystem
+public import LeanPool.ScottishBook155.DirectedLimitStage
+public import LeanPool.ScottishBook155.ProtectedChainCore
+
 
 /-!
 # Coherent protected chains
@@ -14,6 +17,8 @@ This is the invariant carried by the transfinite recursion: protected stages,
 coherent forward embeddings and backward projections, and the fixed-band
 recovery identity between every two stages.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

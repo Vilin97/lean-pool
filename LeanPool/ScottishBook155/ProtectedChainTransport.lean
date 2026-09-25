@@ -3,8 +3,11 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.ProtectedChainReindex
-import LeanPool.ScottishBook155.ProtectedChainSuccessor
+module
+
+public import LeanPool.ScottishBook155.ProtectedChainReindex
+public import LeanPool.ScottishBook155.ProtectedChainSuccessor
+
 
 /-!
 # Transport along equal protected stages and chains
@@ -13,6 +16,8 @@ The transfinite construction compares restrictions whose stage types are only
 propositionally equal.  These pointwise transport operations keep all large
 dependent elimination out of the coherence proofs.
  -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.BookkeepingSchedule
+module
+
+public import LeanPool.ScottishBook155.BookkeepingSchedule
+
 
 /-!
 # Regular direct limits
@@ -14,11 +17,13 @@ the manuscript's assertion that a countable Cauchy sequence is contained in
 one earlier stage.
 -/
 
+@[expose] public section
+
 namespace ScottishBook155
 
 open Filter
 
-private abbrev RI := RecursionIndex.{0}
+local notation "RI" => RecursionIndex.{0}
 
 /-- A countable family of recursion indices has a strict upper bound. -/
 theorem recursionIndex_nat_bounded (a : ℕ → RI) :

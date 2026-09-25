@@ -3,17 +3,22 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.TransfinitePrefix
-import LeanPool.ScottishBook155.ProtectedChainSuccessor
-import LeanPool.ScottishBook155.ProtectedChainTransport
+module
+
+public import LeanPool.ScottishBook155.TransfinitePrefix
+public import LeanPool.ScottishBook155.ProtectedChainSuccessor
+public import LeanPool.ScottishBook155.ProtectedChainTransport
+
 
 /-!
 # Gluing compatible closed prefixes below a limit
 -/
 
+@[expose] public section
+
 namespace ScottishBook155
 
-private abbrev RI := RecursionIndex.{0}
+local notation "RI" => RecursionIndex.{0}
 
 /-- A family of closed prefixes which literally restrict to one another. -/
 structure CompatiblePrefixFamily (j : RI) where

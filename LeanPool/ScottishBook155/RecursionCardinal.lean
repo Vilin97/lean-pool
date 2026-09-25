@@ -3,8 +3,11 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import Mathlib.Analysis.Real.Cardinality
-import LeanPool.ScottishBook155.CardinalControl
+module
+
+public import Mathlib.Analysis.Real.Cardinality
+public import LeanPool.ScottishBook155.CardinalControl
+
 
 /-!
 # The regular cardinal used for bookkeeping
@@ -13,6 +16,8 @@ We use `θ = 2^𝔠` for the uniform stage bound and its successor `κ = θ⁺`
 for the recursion.  The identities below are precisely the cardinal arithmetic
 used in the manuscript.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

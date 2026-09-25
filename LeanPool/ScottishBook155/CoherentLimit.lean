@@ -3,8 +3,11 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.StageSystem
-import LeanPool.ScottishBook155.LpTruncation
+module
+
+public import LeanPool.ScottishBook155.StageSystem
+public import LeanPool.ScottishBook155.LpTruncation
+
 
 /-!
 # Coherent completed limit stages
@@ -13,6 +16,8 @@ This file packages the two limit-stage arguments: common finite truncations
 preserve the protected metric scale, and coherent prefix recovery forces
 global injectivity.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

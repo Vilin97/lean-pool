@@ -3,11 +3,16 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.ProtectedChain
+module
+
+public import LeanPool.ScottishBook155.ProtectedChain
+
 
 /-!
 # Constant coherent protected chains
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

@@ -3,8 +3,11 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import Mathlib.Analysis.Normed.Affine.AddTorsor
-import LeanPool.ScottishBook155.Paper1
+module
+
+public import Mathlib.Analysis.Normed.Affine.AddTorsor
+public import LeanPool.ScottishBook155.Paper1
+
 
 /-!
 # Fixed short scale implies global nonexpansiveness
@@ -12,6 +15,8 @@ import LeanPool.ScottishBook155.Paper1
 This module formalizes the line-segment subdivision argument from the
 preliminaries of `paper1`.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

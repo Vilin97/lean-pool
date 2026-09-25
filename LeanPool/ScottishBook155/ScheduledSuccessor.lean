@@ -3,8 +3,11 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.BentSeedStage
-import LeanPool.ScottishBook155.SuccessorCardinal
+module
+
+public import LeanPool.ScottishBook155.BentSeedStage
+public import LeanPool.ScottishBook155.SuccessorCardinal
+
 
 /-!
 # The active-or-idle scheduled successor
@@ -13,6 +16,8 @@ At a scheduled transition the named target point is either already hit, in
 which case the transition is idle, or it is added by the protected one-point
 extension.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 
@@ -25,7 +30,7 @@ noncomputable def scheduledSuccessor
     ProtectedTransition S 1 := by
   classical
   exact if hy : y ∈ Set.range S.map then idleTransition S
-    else (protectedSuccessor half_pos one_pos S y hy).toTransition
+    else (protectedSuccessor (by exact half_pos) (by exact one_pos) S y hy).toTransition
 
 theorem scheduledSuccessor_hits
     (S : ProtectedStage.{0} ((1 : ℝ) / 2)) (y : S.target) :
@@ -37,7 +42,7 @@ theorem scheduledSuccessor_hits
     change ∃ x, S.map x = y
     exact hy
   · rw [scheduledSuccessor, dite_eq_right hy]
-    let P := protectedSuccessor half_pos one_pos S y hy
+    let P := protectedSuccessor (by exact half_pos) (by exact one_pos) S y hy
     change ∃ x : P.next.source,
       P.next.map x = P.targetEmbedding y
     refine ⟨P.sourceEquiv (WithLp.toLp 1 ((0 : S.source), P.height)), ?_⟩
@@ -52,7 +57,8 @@ theorem scheduledSuccessor_source_mk_le
     simpa [idleTransition] using hM
   · rw [scheduledSuccessor, dite_eq_right hy]
     change Cardinal.mk
-      ((protectedSuccessor half_pos one_pos S y hy).next.source) ≤ stageCardinal
+      ((protectedSuccessor (by exact half_pos) (by exact one_pos)
+        S y hy).next.source) ≤ stageCardinal
     exact protectedSuccessor_source_mk_le half_pos one_pos S y hy hM
 
 theorem scheduledSuccessor_target_mk_le
@@ -65,7 +71,8 @@ theorem scheduledSuccessor_target_mk_le
     simpa [idleTransition] using hN
   · rw [scheduledSuccessor, dite_eq_right hy]
     change Cardinal.mk
-      ((protectedSuccessor half_pos one_pos S y hy).next.target) ≤ stageCardinal
+      ((protectedSuccessor (by exact half_pos) (by exact one_pos)
+        S y hy).next.target) ≤ stageCardinal
     exact protectedSuccessor_target_mk_le half_pos one_pos S y hy hM hN
 
 theorem bentSeedStage_source_mk_le :

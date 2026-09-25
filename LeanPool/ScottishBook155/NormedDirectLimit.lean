@@ -3,12 +3,15 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import Mathlib.Algebra.Colimit.Module
-import Mathlib.Analysis.Normed.Group.Seminorm
-import Mathlib.Analysis.Normed.Module.Basic
-import Mathlib.Analysis.Normed.Module.Completion
-import Mathlib.Analysis.Normed.Operator.Extend
-import Mathlib.Analysis.Normed.Operator.LinearIsometry
+module
+
+public import Mathlib.Algebra.Colimit.Module
+public import Mathlib.Analysis.Normed.Group.Seminorm
+public import Mathlib.Analysis.Normed.Module.Basic
+public import Mathlib.Analysis.Normed.Module.Completion
+public import Mathlib.Analysis.Normed.Operator.Extend
+public import Mathlib.Analysis.Normed.Operator.LinearIsometry
+
 
 /-!
 # Normed direct limits of isometric systems
@@ -17,6 +20,8 @@ Mathlib supplies the algebraic direct limit of modules.  For a directed system
 whose transition maps are linear isometries, this file equips that algebraic
 direct limit with the unique norm making every canonical map isometric.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

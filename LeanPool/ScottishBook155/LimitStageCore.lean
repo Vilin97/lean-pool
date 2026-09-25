@@ -3,8 +3,11 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.Preliminaries
-import Mathlib.Topology.MetricSpace.Completion
+module
+
+public import LeanPool.ScottishBook155.Preliminaries
+public import Mathlib.Topology.MetricSpace.Completion
+
 
 /-!
 # Completion and recovery lemmas for coherent limit stages
@@ -15,6 +18,8 @@ limit distance.  This file isolates the two consequences needed later:
 short-distance preservation passes to the completion, and a jointly separating
 family of recovered coordinates forces injectivity.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

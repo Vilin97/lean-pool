@@ -3,8 +3,11 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.ProtectedEnvelope
-import LeanPool.ScottishBook155.NormedDirectLimit
+module
+
+public import LeanPool.ScottishBook155.ProtectedEnvelope
+public import LeanPool.ScottishBook155.NormedDirectLimit
+
 
 /-!
 # Cardinal bounds for the transfinite construction
@@ -13,6 +16,8 @@ The estimates are stated against one ambient infinite cardinal `θ`.  The
 successor target is controlled by its explicit dense set of finite linear
 combinations, followed by the generic sequence encoding of metric closure.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

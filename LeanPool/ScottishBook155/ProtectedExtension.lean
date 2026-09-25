@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.AttachmentMap
+module
+
+public import LeanPool.ScottishBook155.AttachmentMap
+
 
 /-!
 # The flat cutoff used in the protected extension
@@ -12,6 +15,8 @@ This module formalizes the scalar cutoff from the last part of
 `lem:protected-extension`.  It is independent of the still-missing
 Lipschitz-free-space construction.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.Paper1
+module
+
+public import LeanPool.ScottishBook155.Paper1
+
 
 /-!
 # Formal target for canonical claim 14
@@ -13,6 +16,8 @@ construction is assembled.  The witness packages two real Banach spaces and a
 bijection satisfying the paper's closed-ball conclusion while failing to be a
 global isometry.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

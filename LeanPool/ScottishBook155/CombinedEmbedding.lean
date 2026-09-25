@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.CollapsedQuotient
+module
+
+public import LeanPool.ScottishBook155.CollapsedQuotient
+
 
 /-!
 # Combining the relative and injectivity coordinates
@@ -14,6 +17,8 @@ arbitrary first coordinate.  Pairing it with the quotient Kuratowski coordinate
 in the max product preserves its metric estimates and supplies global
 injectivity once the first coordinate separates the collapsed subset.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

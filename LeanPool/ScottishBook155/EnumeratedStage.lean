@@ -3,15 +3,20 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.ScheduledSuccessor
+module
+
+public import LeanPool.ScottishBook155.ScheduledSuccessor
+
 
 /-!
 # Cardinal-controlled enumerated stages
 -/
 
+@[expose] public section
+
 namespace ScottishBook155
 
-private abbrev RI := RecursionIndex.{0}
+local notation "RI" => RecursionIndex.{0}
 
 /-- A protected stage together with the uniform cardinal bounds and the
 enumeration used by bookkeeping. -/

@@ -3,21 +3,26 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.EnumeratedStage
-import LeanPool.ScottishBook155.ProtectedChainReindex
-import LeanPool.ScottishBook155.ProtectedChainSingleton
-import LeanPool.ScottishBook155.ProtectedChainSuccessor
-import LeanPool.ScottishBook155.InitialSegmentOrder
-import LeanPool.ScottishBook155.ProtectedChainLimitAppend
-import LeanPool.ScottishBook155.LimitCardinal
+module
+
+public import LeanPool.ScottishBook155.EnumeratedStage
+public import LeanPool.ScottishBook155.ProtectedChainReindex
+public import LeanPool.ScottishBook155.ProtectedChainSingleton
+public import LeanPool.ScottishBook155.ProtectedChainSuccessor
+public import LeanPool.ScottishBook155.InitialSegmentOrder
+public import LeanPool.ScottishBook155.ProtectedChainLimitAppend
+public import LeanPool.ScottishBook155.LimitCardinal
+
 
 /-!
 # Cardinal-controlled protected prefixes
 -/
 
+@[expose] public section
+
 namespace ScottishBook155
 
-private abbrev RI := RecursionIndex.{0}
+local notation "RI" => RecursionIndex.{0}
 
 /-- A coherent chain on a closed initial segment, with the cardinal bounds
 needed to enumerate every target stage. -/

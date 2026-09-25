@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.NormedDirectLimit
+module
+
+public import LeanPool.ScottishBook155.NormedDirectLimit
+
 
 /-!
 # Coherent nonlinear maps on completed normed direct limits
@@ -12,6 +15,8 @@ A coherent family of nonexpansive maps between two isometric directed
 systems induces a nonexpansive map between their completed normed direct
 limits. Linearity of the stage maps is neither assumed nor used.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

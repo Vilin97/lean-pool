@@ -3,9 +3,12 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.FinalAssembly
-import LeanPool.ScottishBook155.ProtectedChainLimit
-import LeanPool.ScottishBook155.RegularDirectLimit
+module
+
+public import LeanPool.ScottishBook155.FinalAssembly
+public import LeanPool.ScottishBook155.ProtectedChainLimit
+public import LeanPool.ScottishBook155.RegularDirectLimit
+
 
 /-!
 # Final assembly from a scheduled protected chain
@@ -16,9 +19,11 @@ that the completed direct limits contain no points beyond the stage union, and
 the schedule gives surjectivity of the final map.
 -/
 
+@[expose] public section
+
 namespace ScottishBook155
 
-private abbrev RI := RecursionIndex.{0}
+local notation "RI" => RecursionIndex.{0}
 
 /-- The exact output required from the transfinite recursion. -/
 structure ScheduledProtectedChain where

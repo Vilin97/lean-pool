@@ -3,9 +3,12 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import Mathlib.Analysis.Normed.Module.HahnBanach
-import LeanPool.ScottishBook155.AdjunctionFormula
-import LeanPool.ScottishBook155.KuratowskiCoordinate
+module
+
+public import Mathlib.Analysis.Normed.Module.HahnBanach
+public import LeanPool.ScottishBook155.AdjunctionFormula
+public import LeanPool.ScottishBook155.KuratowskiCoordinate
+
 
 /-!
 # The dual-evaluation model of the relative Banach envelope
@@ -22,6 +25,8 @@ that coordinate.  McShane extension and Hahn--Banach then supply enough
 admissible functionals to prove that the induced linear copy of the old space
 is isometric.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

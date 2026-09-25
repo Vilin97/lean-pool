@@ -3,12 +3,17 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.RecursionCardinal
-import LeanPool.ScottishBook155.StageSystem
+module
+
+public import LeanPool.ScottishBook155.RecursionCardinal
+public import LeanPool.ScottishBook155.StageSystem
+
 
 /-!
 # Cardinal bounds for protected successors
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 

@@ -31,56 +31,59 @@ SOFTWARE.
 
 -/
 
-import LeanPool.ScottishBook155.AdjunctionFormula
-import LeanPool.ScottishBook155.AdjunctionRetraction
-import LeanPool.ScottishBook155.AdjunctionRetractiveEnvelope
-import LeanPool.ScottishBook155.AttachmentMap
-import LeanPool.ScottishBook155.BentSeedStage
-import LeanPool.ScottishBook155.BookkeepingSchedule
-import LeanPool.ScottishBook155.CardinalControl
-import LeanPool.ScottishBook155.Claim14
-import LeanPool.ScottishBook155.CoherentBiSystem
-import LeanPool.ScottishBook155.CoherentLimit
-import LeanPool.ScottishBook155.CoherentRetractionLimit
-import LeanPool.ScottishBook155.CollapsedQuotient
-import LeanPool.ScottishBook155.CombinedEmbedding
-import LeanPool.ScottishBook155.CompletedLimitMap
-import LeanPool.ScottishBook155.DenseSequenceCardinal
-import LeanPool.ScottishBook155.DirectedLimitStage
-import LeanPool.ScottishBook155.EnumeratedStage
-import LeanPool.ScottishBook155.FinalAssembly
-import LeanPool.ScottishBook155.FinalChainAssembly
-import LeanPool.ScottishBook155.InitialSegmentOrder
-import LeanPool.ScottishBook155.KuratowskiCoordinate
-import LeanPool.ScottishBook155.LimitCardinal
-import LeanPool.ScottishBook155.LimitStageCore
-import LeanPool.ScottishBook155.LpTruncation
-import LeanPool.ScottishBook155.NormedDirectLimit
-import LeanPool.ScottishBook155.Paper1
-import LeanPool.ScottishBook155.PrefixGlue
-import LeanPool.ScottishBook155.Preliminaries
-import LeanPool.ScottishBook155.ProtectedChain
-import LeanPool.ScottishBook155.ProtectedChainCore
-import LeanPool.ScottishBook155.ProtectedChainLimit
-import LeanPool.ScottishBook155.ProtectedChainLimitAppend
-import LeanPool.ScottishBook155.ProtectedChainReindex
-import LeanPool.ScottishBook155.ProtectedChainSingleton
-import LeanPool.ScottishBook155.ProtectedChainSuccessor
-import LeanPool.ScottishBook155.ProtectedChainTransport
-import LeanPool.ScottishBook155.ProtectedEnvelope
-import LeanPool.ScottishBook155.ProtectedExtension
-import LeanPool.ScottishBook155.ProtectedExtensionAssembly
-import LeanPool.ScottishBook155.ProtectedExtensionTheorem
-import LeanPool.ScottishBook155.RecursionCardinal
-import LeanPool.ScottishBook155.RegularDirectLimit
-import LeanPool.ScottishBook155.RelativeEnvelope
-import LeanPool.ScottishBook155.RetractiveEnvelope
-import LeanPool.ScottishBook155.ScheduledSuccessor
-import LeanPool.ScottishBook155.Solution
-import LeanPool.ScottishBook155.StageSystem
-import LeanPool.ScottishBook155.SuccessorCardinal
-import LeanPool.ScottishBook155.TransfiniteConstruction
-import LeanPool.ScottishBook155.TransfinitePrefix
+module
+
+public import LeanPool.ScottishBook155.AdjunctionFormula
+public import LeanPool.ScottishBook155.AdjunctionRetraction
+public import LeanPool.ScottishBook155.AdjunctionRetractiveEnvelope
+public import LeanPool.ScottishBook155.AttachmentMap
+public import LeanPool.ScottishBook155.BentSeedStage
+public import LeanPool.ScottishBook155.BookkeepingSchedule
+public import LeanPool.ScottishBook155.CardinalControl
+public import LeanPool.ScottishBook155.Claim14
+public import LeanPool.ScottishBook155.CoherentBiSystem
+public import LeanPool.ScottishBook155.CoherentLimit
+public import LeanPool.ScottishBook155.CoherentRetractionLimit
+public import LeanPool.ScottishBook155.CollapsedQuotient
+public import LeanPool.ScottishBook155.CombinedEmbedding
+public import LeanPool.ScottishBook155.CompletedLimitMap
+public import LeanPool.ScottishBook155.DenseSequenceCardinal
+public import LeanPool.ScottishBook155.DirectedLimitStage
+public import LeanPool.ScottishBook155.EnumeratedStage
+public import LeanPool.ScottishBook155.FinalAssembly
+public import LeanPool.ScottishBook155.FinalChainAssembly
+public import LeanPool.ScottishBook155.InitialSegmentOrder
+public import LeanPool.ScottishBook155.KuratowskiCoordinate
+public import LeanPool.ScottishBook155.LimitCardinal
+public import LeanPool.ScottishBook155.LimitStageCore
+public import LeanPool.ScottishBook155.LpTruncation
+public import LeanPool.ScottishBook155.NormedDirectLimit
+public import LeanPool.ScottishBook155.Paper1
+public import LeanPool.ScottishBook155.PrefixGlue
+public import LeanPool.ScottishBook155.Preliminaries
+public import LeanPool.ScottishBook155.ProtectedChain
+public import LeanPool.ScottishBook155.ProtectedChainCore
+public import LeanPool.ScottishBook155.ProtectedChainLimit
+public import LeanPool.ScottishBook155.ProtectedChainLimitAppend
+public import LeanPool.ScottishBook155.ProtectedChainReindex
+public import LeanPool.ScottishBook155.ProtectedChainSingleton
+public import LeanPool.ScottishBook155.ProtectedChainSuccessor
+public import LeanPool.ScottishBook155.ProtectedChainTransport
+public import LeanPool.ScottishBook155.ProtectedEnvelope
+public import LeanPool.ScottishBook155.ProtectedExtension
+public import LeanPool.ScottishBook155.ProtectedExtensionAssembly
+public import LeanPool.ScottishBook155.ProtectedExtensionTheorem
+public import LeanPool.ScottishBook155.RecursionCardinal
+public import LeanPool.ScottishBook155.RegularDirectLimit
+public import LeanPool.ScottishBook155.RelativeEnvelope
+public import LeanPool.ScottishBook155.RetractiveEnvelope
+public import LeanPool.ScottishBook155.ScheduledSuccessor
+public import LeanPool.ScottishBook155.Solution
+public import LeanPool.ScottishBook155.StageSystem
+public import LeanPool.ScottishBook155.SuccessorCardinal
+public import LeanPool.ScottishBook155.TransfiniteConstruction
+public import LeanPool.ScottishBook155.TransfinitePrefix
+
 
 /-!
 # A counterexample to Scottish Book Problem 155

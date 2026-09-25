@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import LeanPool.ScottishBook155.CoherentRetractionLimit
+module
+
+public import LeanPool.ScottishBook155.CoherentRetractionLimit
+
 
 /-!
 # Coherent bidirectional systems
@@ -12,6 +15,8 @@ An increasing family of normed spaces equipped with coherent contractive
 retractions supplies both a directed system and the projection system used at
 completed limit stages.
 -/
+
+@[expose] public section
 
 namespace ScottishBook155
 
