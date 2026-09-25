@@ -28,11 +28,12 @@ universe uTheta uAlpha
 variable {Theta : Type uTheta} {D : Type*} {alpha : Type uAlpha}
   [MeasurableSpace Theta] [MeasurableSpace alpha] [StandardBorelSpace alpha] [Nonempty alpha]
 
-private def trajectoryCoordinate : ℕ → Type (max uTheta uAlpha)
+/-- The initial parameter and state at zero, followed by lifted state observations. -/
+def trajectoryCoordinate : ℕ → Type (max uTheta uAlpha)
   | 0 => ULift.{max uTheta uAlpha} (Theta × alpha)
   | _ + 1 => ULift.{max uTheta uAlpha} alpha
 
-private instance instMeasurableSpaceTrajectoryCoordinate (n : ℕ) : MeasurableSpace
+instance instMeasurableSpaceTrajectoryCoordinate (n : ℕ) : MeasurableSpace
     (trajectoryCoordinate (Theta := Theta) (alpha := alpha) n) :=
   match n with
   | 0 => (inferInstance : MeasurableSpace (ULift.{max uTheta uAlpha} (Theta × alpha)))
@@ -46,20 +47,22 @@ private theorem measurable_down_trajectoryCoordinate :
     Measurable (ULift.down : ULift.{max uTheta uAlpha} alpha → alpha) := by
   simpa only [trajectoryCoordinate] using! measurable_down
 
-private def historyInitial (n : ℕ)
+/-- Extract the immutable parameter and initial state from an augmented history. -/
+def historyInitial (n : ℕ)
     (path : (i : ↑(Finset.Iic n)) →
       trajectoryCoordinate (Theta := Theta) (alpha := alpha) i) :
     ULift.{max uTheta uAlpha} (Theta × alpha) :=
   path ⟨0, Finset.mem_Iic.mpr (Nat.zero_le n)⟩
 
-private def historyObservation (n : ℕ)
+/-- Extract one observed state from an augmented finite history. -/
+def historyObservation (n : ℕ)
     (path : (i : ↑(Finset.Iic n)) →
       trajectoryCoordinate (Theta := Theta) (alpha := alpha) i) (i : Fin n) :
     ULift.{max uTheta uAlpha} alpha :=
   path ⟨i + 1, Finset.mem_Iic.mpr i.isLt⟩
 
 /-- An augmented history is exactly the immutable data and its observed prefix. -/
-private def historyEquiv (n : ℕ) :
+def historyEquiv (n : ℕ) :
     ((i : ↑(Finset.Iic n)) → trajectoryCoordinate (Theta := Theta) (alpha := alpha) i) ≃ᵐ
       ((Theta × alpha) × (Fin n → alpha)) where
   toFun path :=
@@ -116,7 +119,8 @@ private theorem historyEquiv_snd_apply (n : ℕ) (path) (i : Fin n) :
 
 attribute [irreducible] historyEquiv
 
-private def parameterizedTrajStep
+/-- The next conditional observation kernel, transported to augmented histories. -/
+def parameterizedTrajStep
     (P : ParameterizedSubMarkovKernelSemigroup Theta alpha)
     (hP : ∀ theta, (P.toSubMarkovKernelSemigroup theta).IsConservative)
     (e : ℕ ≃ D) (iota : D ↪ NNReal) (n : ℕ) :
@@ -126,7 +130,7 @@ private def parameterizedTrajStep
       (γ := trajectoryCoordinate (Theta := Theta) (alpha := alpha) (n + 1)) ULift.up).comap
     (historyEquiv n) (historyEquiv n).measurable
 
-private instance isMarkovKernel_parameterizedTrajStep
+instance isMarkovKernel_parameterizedTrajStep
     (P : ParameterizedSubMarkovKernelSemigroup Theta alpha)
     (hP : ∀ theta, (P.toSubMarkovKernelSemigroup theta).IsConservative)
     (e : ℕ ≃ D) (iota : D ↪ NNReal) (n : ℕ) :
@@ -139,7 +143,8 @@ private instance isMarkovKernel_parameterizedTrajStep
       (by simpa only [trajectoryCoordinate] using! measurable_up)
   exact Kernel.IsMarkovKernel.comap _ (historyEquiv n).measurable
 
-private def initialHistory (q : Theta × alpha) :
+/-- The augmented history containing only the initial parameter and state. -/
+def initialHistory (q : Theta × alpha) :
     (i : ↑(Finset.Iic 0)) → trajectoryCoordinate (Theta := Theta) (alpha := alpha) i :=
   fun i ↦ by
     rcases i with ⟨_ | k, hi⟩
@@ -158,7 +163,8 @@ private theorem measurable_initialHistory :
   · simp only [Finset.mem_Iic] at hi
     omega
 
-private def eraseAugmentation (e : ℕ ≃ D)
+/-- Remove the immutable coordinate and reindex observations by the dense-time labels. -/
+def eraseAugmentation (e : ℕ ≃ D)
     (path : (n : ℕ) → trajectoryCoordinate (Theta := Theta) (alpha := alpha) n) : D → alpha :=
   fun d ↦ (path (e.symm d + 1)).down
 
@@ -491,7 +497,7 @@ def parameterizedDenseTimeTrajectory
     (e : ℕ ≃ D) (iota : D ↪ NNReal) : Kernel (Theta × alpha) (D → alpha) :=
   ((Kernel.traj (X := trajectoryCoordinate (Theta := Theta) (alpha := alpha))
       (parameterizedTrajStep P hP e iota) 0).comap initialHistory
-        measurable_initialHistory).map (eraseAugmentation e)
+        (by exact measurable_initialHistory)).map (eraseAugmentation e)
 
 /-- The parameterized dense-time trajectory kernel is Markov. -/
 theorem isMarkovKernel_parameterizedDenseTimeTrajectory

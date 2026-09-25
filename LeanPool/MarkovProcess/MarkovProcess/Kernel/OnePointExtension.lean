@@ -303,7 +303,8 @@ private theorem norm_onePointSemigroupAction_le (t : NNReal) (g : C₀(OnePoint 
             (g.toBCF.norm_coe_le_norm OnePoint.infty) (sub_nonneg.mpr hmass1)
         _ = ‖g‖ := by ring
 
-private noncomputable def onePointSemigroupLinearMap (t : NNReal) :
+/-- The compactified semigroup action, bundled as a linear map. -/
+noncomputable def onePointSemigroupLinearMap (t : NNReal) :
     C₀(OnePoint X, ℝ) →ₗ[ℝ] C₀(OnePoint X, ℝ) where
   toFun := R.onePointSemigroupAction t
   map_add' g h := by
