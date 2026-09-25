@@ -64,7 +64,8 @@ namespace OSforGFF
 /-- The embedding `toComplex : S(ℝ⁴,ℝ) → S(ℝ⁴,ℂ)` is injective.
     Follows from injectivity of `ℝ → ℂ` applied pointwise.
 -/
-theorem toComplex_injective : Function.Injective (toComplex : TestFunction → TestFunctionℂ) := by
+theorem toComplex_injective :
+    Function.Injective (toComplex : OSforGFF.TestFunction → TestFunctionℂ) := by
   intro f g h
   ext x
   have hx : toComplex f x = toComplex g x := congr_fun (congr_arg _ h) x
@@ -115,9 +116,9 @@ private lemma eq_zero_of_continuous_ae_zero
     so vanishing of the product forces `𝓕(toComplex f) = 0`, hence `f = 0`
     by Fourier injectivity.
 -/
-theorem sqrtPropagatorMap_eq_zero_iff (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
+theorem sqrtPropagatorMap_eq_zero_iff (m : ℝ) [Fact (0 < m)] (f : OSforGFF.TestFunction) :
     (∀ k : SpaceTime, sqrtPropagatorMap m f k = 0) ↔ f = 0 := by
-  have h_tc_0 : toComplex (0 : TestFunction) = 0 := by ext x; simp [toComplex_apply]
+  have h_tc_0 : toComplex (0 : OSforGFF.TestFunction) = 0 := by ext x; simp [toComplex_apply]
   constructor
   · intro h
     -- Each factor: 𝓕(toComplex f)(k) * w(k) = 0, and w(k) > 0, so 𝓕(toComplex f)(k) = 0
@@ -176,7 +177,7 @@ theorem embeddingMap_injective (m : ℝ) [Fact (0 < m)] :
     ⟹ ‖T f‖ > 0 ⟹ ‖T f‖² > 0`.
 -/
 theorem freeCovarianceFormR_strictPos (m : ℝ) [Fact (0 < m)]
-    (f : TestFunction) (hf : f ≠ 0) :
+    (f : OSforGFF.TestFunction) (hf : f ≠ 0) :
     0 < freeCovarianceFormR m f f := by
   rw [freeCovarianceFormR_eq_normSq m f]
   have h_ne : embeddingMap m f ≠ 0 := by
@@ -190,7 +191,7 @@ theorem freeCovarianceFormR_strictPos (m : ℝ) [Fact (0 < m)]
     Equivalently, the pushforward by the pairing is a non-degenerate Gaussian.
 -/
 theorem gaussianFreeField_variance_pos (m : ℝ) [Fact (0 < m)]
-    (f : TestFunction) (hf : f ≠ 0) :
+    (f : OSforGFF.TestFunction) (hf : f ≠ 0) :
     0 < ∫ ω, (distributionPairingCLM f ω) ^ 2 ∂(muGFF m).toMeasure := by
   rw [gff_second_moment_eq_covariance]
   exact freeCovarianceFormR_strictPos m f hf
@@ -203,11 +204,11 @@ theorem gaussianFreeField_variance_pos (m : ℝ) [Fact (0 < m)]
     function on ℝ⁴, which exists by `ContDiff.exists_eq_one_of_isOpen`.
 -/
 theorem gaussianFreeField_not_dirac (m : ℝ) [Fact (0 < m)] :
-    ∃ f : TestFunction, f ≠ 0 ∧
+    ∃ f : OSforGFF.TestFunction, f ≠ 0 ∧
       0 < ∫ ω, (distributionPairingCLM f ω) ^ 2 ∂(muGFF m).toMeasure := by
   -- Schwartz space on ℝ⁴ is nontrivial: exhibit a nonzero element.
   -- This uses the existence of smooth compactly-supported bump functions.
-  have ⟨f, hf⟩ : ∃ f : TestFunction, f ≠ 0 := by
+  have ⟨f, hf⟩ : ∃ f : OSforGFF.TestFunction, f ≠ 0 := by
     let φ : ContDiffBump (0 : SpaceTime) := ⟨1, 2, by norm_num, by norm_num⟩
     refine ⟨φ.hasCompactSupport.toSchwartzMap φ.contDiff, fun h => ?_⟩
     have h1 : φ (0 : SpaceTime) = 1 :=
